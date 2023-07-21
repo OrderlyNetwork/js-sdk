@@ -1,0 +1,19 @@
+{
+  "name": "@orderly/hooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev":"tsup --watch",
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsup": "^7.1.0",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.1.6"
+  }
+}
