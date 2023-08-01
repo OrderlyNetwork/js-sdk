@@ -1,0 +1,56 @@
+import { JSXElementConstructor } from "react";
+
+export interface ModalState {
+  id: string;
+  args?: Record<string, unknown>;
+  visible?: boolean;
+  delayVisible?: boolean;
+  keepMounted?: boolean;
+}
+
+export interface ModalStore {
+  [key: string]: ModalState;
+}
+
+export interface ModalAction {
+  type: string;
+  payload: {
+    id: string;
+    args?: Record<string, unknown>;
+    flags?: Record<string, unknown>;
+  };
+}
+
+export interface ModalCallbacks {
+  [modal: string]: {
+    resolve: (value: unknown) => void;
+    reject: (reason: unknown) => void;
+    promise: Promise<unknown>;
+  };
+}
+
+export type ModalArgs<T> = T extends
+  | keyof JSX.IntrinsicElements
+  | JSXElementConstructor<any>
+  ? Omit<React.ComponentProps<T>, "id">
+  : Record<string, unknown>;
+
+export interface ModalHandler<Props = Record<string, unknown>>
+  extends ModalState {
+  visible: boolean;
+  keepMounted: boolean;
+  show: (args?: Props) => Promise<unknown>;
+  hide: () => Promise<unknown>;
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+
+  remove: () => void;
+
+  resolveHide: (args?: unknown) => void;
+}
+
+export interface ModalHocProps {
+  id: string;
+  defaultVisible?: boolean;
+  keepMounted?: boolean;
+}

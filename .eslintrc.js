@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  // This tells ESLint to load the config from the package `eslint-config-custom`
+  // This tells ESLint to load the constants from the package `eslint-constants-custom`
   extends: ["custom"],
   settings: {
     next: {

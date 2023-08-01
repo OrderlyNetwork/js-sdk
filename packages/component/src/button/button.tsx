@@ -18,7 +18,7 @@ const buttonVariants = cva(["rounded-md transition-colors"], {
      * @default default
      */
     size: {
-      small: "px-1 h-[28px]",
+      small: "px-2 h-[28px]",
       default: "px-2 py-1 h-[40px]",
       large: "px-6 py-3",
     },

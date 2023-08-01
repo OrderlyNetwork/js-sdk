@@ -1,0 +1,20 @@
+{
+  "name": "@orderly/cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "orderly": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "maogege",
+  "license": "ISC",
+  "dependencies": {
+    "configstore": "^6.0.0",
+    "enquirer": "^2.4.1",
+    "yargs": "^17.7.2"
+  }
+}

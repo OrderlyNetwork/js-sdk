@@ -2,14 +2,14 @@ import React, { Fragment, ReactNode, useEffect, useState } from "react";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { Tab, TabProps } from "./tab";
 import { TabPaneProps } from "./tabPane";
-import { TabItem, TabList } from "./tabList";
+import { TabBarExtraRender, TabItem, TabList } from "./tabList";
 import { TabContextProvider } from "./tabContext";
 import { TabContent } from "./tabContent";
 
 export interface TabsProps {
   value?: string;
   onTabChange?: (value: string) => void;
-  tabBarExtra?: ReactNode;
+  tabBarExtra?: ReactNode | TabBarExtraRender;
   keepAlive?: boolean;
 }
 
@@ -64,6 +64,8 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = (props) => {
   const child = useMemo(() => {
     return children[activeIndex];
   }, [children, activeIndex]);
+
+  //   const extraNode
 
   return (
     <TabContextProvider>

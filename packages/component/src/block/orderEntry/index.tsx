@@ -5,12 +5,12 @@ import { Slider } from "@/slider";
 import {
   FC,
   FormEvent,
-  FormEventHandler,
   forwardRef,
   useCallback,
   useImperativeHandle,
 } from "react";
 import { Select } from "@/select";
+import { Switch } from "@/switch";
 
 export interface OrderEntryProps {
   onSubmit?: (value: any) => Promise<any>;
@@ -63,11 +63,16 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             prefix={<InputMask>Qunatity</InputMask>}
             suffix={<InputMask>BTC</InputMask>}
           />
-          <Slider />
+          <div className="py-1">
+            <Slider />
+          </div>
           <Input
             prefix={<InputMask>Total ~</InputMask>}
             suffix={<InputMask>USDC</InputMask>}
           />
+          <div className="flex py-1">
+            <Switch label="Reduce only" />
+          </div>
           <Button type="submit">Buy/Long</Button>
         </div>
       </form>

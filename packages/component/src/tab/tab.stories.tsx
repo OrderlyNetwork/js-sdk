@@ -86,22 +86,23 @@ export const Dsibaled: Story = {
 export const ExtraNode: Story = {
   render: () => {
     const [value, setValue] = useState("1");
-    const { toggleContentVisible } = useTab();
     return (
       <Tabs
         value={value}
         onTabChange={(value) => setValue(value)}
-        tabBarExtra={
+        tabBarExtra={({ toggleContentVisible, contentVisible }) => (
           <button
             className="border px-2 bg-slate-100"
-            onClick={() => toggleContentVisible()}
+            onClick={() => {
+              toggleContentVisible();
+            }}
           >
-            Extra node
+            {`${contentVisible ? "Close" : "Open"}`}
           </button>
-        }
+        )}
       >
         <TabPane title="Tab 1" value="1">
-          Tab 1
+          <div className="bg-green-200 h-[300px]">Tab 1</div>
         </TabPane>
         <TabPane title="Tab 2" value="2">
           Tab 2

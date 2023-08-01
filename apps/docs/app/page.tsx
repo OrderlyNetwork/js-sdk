@@ -1,10 +1,12 @@
-import { Header } from "ui";
+"use client";
 
-export default function Page() {
+import { trpc } from "@/providers/trpcProvider";
+import Image from "next/image";
+
+export default function Home() {
   return (
-    <>
-      <Header text="Docs" />
-      <div className="text-red-500">tailwind css text</div>
-    </>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      Index
+    </main>
   );
 }

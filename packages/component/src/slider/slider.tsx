@@ -1,6 +1,8 @@
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import type { SliderProps } from "@radix-ui/react-slider";
+import type { SliderProps as PrimitiveProps } from "@radix-ui/react-slider";
 import React from "react";
+
+interface SliderProps extends PrimitiveProps {}
 
 export const Slider = React.forwardRef<any, SliderProps>(
   (props, forwardedRef) => {

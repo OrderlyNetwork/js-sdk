@@ -9,7 +9,23 @@ export const ChartView = () => {
 
   return (
     <div className="bg-slate-100">
-      <Tabs value={activeTab} onTabChange={setActiveTab}>
+      <Tabs
+        value={activeTab}
+        onTabChange={setActiveTab}
+        tabBarExtra={(context) => {
+          return (
+            <div className="flex items-center">
+              <button
+                onClick={() => {
+                  context.toggleContentVisible();
+                }}
+              >
+                Toggle
+              </button>
+            </div>
+          );
+        }}
+      >
         <TabPane title="Chart" value="tradingView">
           <TradingView />
         </TabPane>

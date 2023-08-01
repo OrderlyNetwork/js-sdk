@@ -1,14 +1,10 @@
-// module.exports = {
-//   reactStrictMode: true,
-//   transpilePackages: ["ui"],
-// };
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: [
+    "@douyinfe/semi-ui",
+    // "@douyinfe/semi-icons",
+    // "@douyinfe/semi-illustrations",
+  ],
+};
 
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-})
-
-module.exports = withNextra({
-  reactStrictMode: true,
-  transpilePackages: ["ui"]
-})
+module.exports = nextConfig;

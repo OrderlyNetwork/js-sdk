@@ -3,6 +3,7 @@ import {
   PropsWithChildren,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -11,6 +12,7 @@ import {
 } from "react";
 import { TabIndicator } from "./indicator";
 import { Tab } from "./tab";
+import { TabContext, TabContextState } from "./tabContext";
 
 export type TabItem = {
   title: string;
@@ -18,18 +20,22 @@ export type TabItem = {
   disabled?: boolean;
 };
 
+export type TabBarExtraRender = (tabContext: TabContextState) => ReactNode;
+
 interface TabListProps {
   tabs: TabItem[];
   value?: string;
   //   activeIndex: number;
   onTabChange?: (value: string) => void;
-  tabBarExtra?: ReactNode;
+  tabBarExtra?: ReactNode | TabBarExtraRender;
+  className?: string;
 }
 
 export const TabList: FC<TabListProps> = (props) => {
   const [left, setLeft] = useState(0);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const tabContext = useContext(TabContext);
 
   const calcLeft = useCallback((target: HTMLButtonElement) => {
     const { left, width } = target.getBoundingClientRect();
@@ -39,7 +45,7 @@ export const TabList: FC<TabListProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    let activeTab = boxRef.current?.querySelector(".actived");
+    let activeTab = boxRef.current?.querySelector(".active");
     if (!activeTab) {
       activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
     }
@@ -54,6 +60,14 @@ export const TabList: FC<TabListProps> = (props) => {
     },
     [props.onTabChange]
   );
+
+  const extraNode = useMemo(() => {
+    if (typeof props.tabBarExtra === "undefined") return null;
+    if (typeof props.tabBarExtra === "function") {
+      return props.tabBarExtra(tabContext);
+    }
+    return props.tabBarExtra;
+  }, [props.tabBarExtra, tabContext]);
 
   return (
     <div className="flex border-b">
@@ -76,7 +90,7 @@ export const TabList: FC<TabListProps> = (props) => {
         </div>
         <TabIndicator left={left} />
       </div>
-      {typeof props.tabBarExtra !== "undefined" && props.tabBarExtra}
+      {extraNode}
     </div>
   );
 };

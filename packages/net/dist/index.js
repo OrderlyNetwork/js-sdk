@@ -26,17 +26,31 @@ __export(src_exports, {
 module.exports = __toCommonJS(src_exports);
 
 // src/fetch/index.ts
-function baseFetch(url, options) {
-  return fetch(url, options);
+function request(url, options) {
+  if (!url.startsWith("http")) {
+    throw new Error("url must start with http(s)");
+  }
+  return fetch(url, {
+    ...options,
+    headers: _createHeaders(options.headers)
+  });
+}
+function _createHeaders(headers = {}) {
+  const _headers = new Headers(headers);
+  if (!_headers.has("Content-Type")) {
+    _headers.append("Content-Type", "application/json");
+  }
+  return _headers;
 }
 function get(url) {
-  return baseFetch(url, {
+  return request(url, {
     method: "GET"
   });
 }
-function post(url) {
-  return baseFetch(url, {
-    method: "POST"
+function post(url, data) {
+  return request(url, {
+    method: "POST",
+    body: JSON.stringify(data)
   });
 }
 // Annotate the CommonJS export names for ESM import in node:

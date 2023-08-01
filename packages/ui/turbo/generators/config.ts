@@ -21,7 +21,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: "append",
-        path: "index.tsx",
+        path: "index.ts",
         pattern: /(\/\/ component exports)/g,
         template: 'export * from "./{{pascalCase name}}";',
       },

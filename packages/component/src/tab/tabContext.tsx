@@ -1,14 +1,11 @@
 import React, { FC, PropsWithChildren, useState } from "react";
 
-export interface TabContextValue {
+export interface TabContextState {
   contentVisible: boolean;
   toggleContentVisible: () => void;
 }
 
-const TabContext = React.createContext<TabContextValue>({
-  contentVisible: true,
-  toggleContentVisible: () => {},
-});
+const TabContext = React.createContext<TabContextState>({} as TabContextState);
 
 const TabContextProvider: FC<PropsWithChildren> = (props) => {
   const [visible, setVisible] = useState(true);
@@ -17,7 +14,6 @@ const TabContextProvider: FC<PropsWithChildren> = (props) => {
       value={{
         contentVisible: visible,
         toggleContentVisible: () => {
-          console.log("toggleContentVisible");
           setVisible((visible) => !visible);
         },
       }}
