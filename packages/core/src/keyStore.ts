@@ -1,18 +1,20 @@
+import { OrderlyKeyPair } from "./keyPair";
+
 export interface KeyStore {
-  getOrderlyKey: () => string;
-  generateKey: () => string;
+  getOrderlyKey: () => OrderlyKeyPair;
+  generateKey: () => OrderlyKeyPair;
   setKey: (orderlyKey: string, secretKey: string) => void;
 }
 
-class BaseKeyStore implements KeyStore {
+class LocalStorageStore implements KeyStore {
   constructor(private readonly networkId: string) {}
 
-  getOrderlyKey(): string {
-    return "orderly";
+  getOrderlyKey(): OrderlyKeyPair {
+    return { publicKey: "", secretKey: "" };
   }
 
   generateKey() {
-    return "";
+    return { publicKey: "", secretKey: "" };
   }
 
   setKey(orderlyKey: string, secretKey: string) {

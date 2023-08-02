@@ -1,8 +1,8 @@
 import { TabPane, Tabs } from "@/tab";
-import { TradingView } from "./tradingView";
 import { TradeHistory } from "./tradeHistory";
 import { useState } from "react";
 import { TradeData } from "./tradeData";
+import { TradingView } from "@/block/tradingView";
 
 export const ChartView = () => {
   const [activeTab, setActiveTab] = useState("tradingView");
@@ -27,7 +27,21 @@ export const ChartView = () => {
         }}
       >
         <TabPane title="Chart" value="tradingView">
-          <TradingView />
+          <TradingView
+            height={320}
+            intervals={[
+              "1",
+              "3",
+              "5",
+              "15",
+              "30",
+              "60",
+              "240",
+              "720",
+              "1D",
+              "1W",
+            ]}
+          />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">
           <TradeHistory />

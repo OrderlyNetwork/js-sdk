@@ -27,7 +27,7 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
   }
 
   return (
-    <div className="flex flex-row gap-9">
+    <div className="flex flex-row gap-[40px]">
       {props.buttons.map((item, index) => {
         return (
           <_Button

@@ -7,8 +7,8 @@ export interface Signer {
 class BaseSigner implements Signer {
   constructor(private readonly keyStore: KeyStore) {}
 
-  async sign<T>(data: T): Promise<T> {
+  async sign<T>(message: T): Promise<T> {
     const orderlyKey = this.keyStore.getOrderlyKey();
-    return Promise.resolve(data);
+    return Promise.resolve(message);
   }
 }

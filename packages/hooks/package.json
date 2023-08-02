@@ -2,7 +2,9 @@
   "name": "@orderly/hooks",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
@@ -19,12 +21,18 @@
     "jest": "^29.6.1",
     "react": "^18.2.0",
     "react-test-renderer": "^18.2.0",
+    "rxjs": "^7.8.1",
     "tsconfig": "workspace:*",
     "tsup": "^7.1.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
     "@orderly/net": "workspace:*",
-    "swr": "^2.2.0"
+    "rxjs-hooks": "0.8.0-alpha.0",
+    "swr": "^2.2.0",
+    "use-constant": "^1.1.1"
+  },
+  "peerDependencies": {
+    "rxjs": "^7.8.1"
   }
 }

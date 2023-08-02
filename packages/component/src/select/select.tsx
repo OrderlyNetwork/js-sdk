@@ -30,7 +30,7 @@ export interface SelectProps
    * @default false
    * */
   loading?: boolean;
-  label: string;
+  label?: string;
   //   className?: string;
 }
 
@@ -49,7 +49,10 @@ const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
       )}
       onClick={() => setOpen(!open)}
     >
-      <div className="flex-1">{props.label}</div>
+      <div className="flex-1">
+        {typeof props.label !== "undefined" && <>{props.label}</>}
+      </div>
+
       <TriangleDownIcon />
     </div>
   );

@@ -1,7 +1,2 @@
-interface TradingViewProps {
-  symbol: string;
-}
-
-export const TradingView = () => {
-  return <div>TradingView</div>;
-};
+export { TradingView } from "./tradingView";
+export type { TradingViewChartProps } from "./tradingViewChart";

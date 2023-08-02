@@ -24,82 +24,6 @@ importers:
         specifier: latest
         version: 1.10.6
 
-  apps/_docs:
-    dependencies:
-      '@douyinfe/semi-ui':
-        specifier: ^2.39.2
-        version: 2.39.2(react-dom@18.2.0)(react@18.2.0)
-      '@orderly/react':
-        specifier: workspace:*
-        version: link:../../packages/component
-      '@trpc/client':
-        specifier: ^10.35.0
-        version: 10.35.0(@trpc/server@10.35.0)
-      '@trpc/next':
-        specifier: ^10.35.0
-        version: 10.35.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/react-query@10.35.0)(@trpc/server@10.35.0)(next@13.4.1)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/react':
-        specifier: ^9.27.4
-        version: 9.27.4(@trpc/client@10.35.0)(@trpc/server@10.35.0)(react-dom@18.2.0)(react-query@3.39.3)(react@18.2.0)
-      '@trpc/server':
-        specifier: ^10.35.0
-        version: 10.35.0
-      next:
-        specifier: ^13.4.1
-        version: 13.4.1(react-dom@18.2.0)(react@18.2.0)
-      nextra:
-        specifier: ^2.10.0
-        version: 2.10.0(next@13.4.1)(react-dom@18.2.0)(react@18.2.0)
-      nextra-theme-docs:
-        specifier: ^2.10.0
-        version: 2.10.0(next@13.4.1)(nextra@2.10.0)(react-dom@18.2.0)(react@18.2.0)
-      prisma:
-        specifier: ^5.0.0
-        version: 5.0.0
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-query:
-        specifier: ^3.39.3
-        version: 3.39.3(react-dom@18.2.0)(react@18.2.0)
-      ui:
-        specifier: workspace:*
-        version: link:../../packages/ui
-      zod:
-        specifier: ^3.21.4
-        version: 3.21.4
-    devDependencies:
-      '@types/node':
-        specifier: ^17.0.12
-        version: 17.0.45
-      '@types/react':
-        specifier: ^18.0.22
-        version: 18.2.15
-      '@types/react-dom':
-        specifier: ^18.0.7
-        version: 18.2.7
-      autoprefixer:
-        specifier: ^10.4.14
-        version: 10.4.14(postcss@8.4.26)
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
-      postcss:
-        specifier: ^8.4.26
-        version: 8.4.26
-      tailwindcss:
-        specifier: ^3.3.3
-        version: 3.3.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^4.5.3
-        version: 4.9.5
-
   apps/docs:
     dependencies:
       '@douyinfe/semi-ui':
@@ -159,6 +83,12 @@ importers:
       next:
         specifier: ^13.4.1
         version: 13.4.1(react-dom@18.2.0)(react@18.2.0)
+      nextra:
+        specifier: ^2.10.0
+        version: 2.10.0(next@13.4.1)(react-dom@18.2.0)(react@18.2.0)
+      nextra-theme-docs:
+        specifier: ^2.10.0
+        version: 2.10.0(next@13.4.1)(nextra@2.10.0)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.26
         version: 8.4.26
@@ -239,6 +169,9 @@ importers:
 
   packages/component:
     dependencies:
+      '@orderly/net':
+        specifier: workspace:*
+        version: link:../net
       '@radix-ui/react-dialog':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
@@ -411,9 +344,15 @@ importers:
       '@orderly/net':
         specifier: workspace:*
         version: link:../net
+      rxjs-hooks:
+        specifier: 0.8.0-alpha.0
+        version: 0.8.0-alpha.0(react@18.2.0)(rxjs@7.8.1)
       swr:
         specifier: ^2.2.0
         version: 2.2.0(react@18.2.0)
+      use-constant:
+        specifier: ^1.1.1
+        version: 1.1.1(react@18.2.0)
     devDependencies:
       '@babel/preset-typescript':
         specifier: ^7.22.5
@@ -436,6 +375,9 @@ importers:
       react-test-renderer:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -466,6 +408,9 @@ importers:
       jest:
         specifier: ^29.6.1
         version: 29.6.1(@types/node@17.0.45)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -5362,27 +5307,6 @@ packages:
       '@trpc/server': 10.35.0
     dev: false
 
-  /@trpc/next@10.35.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/react-query@10.35.0)(@trpc/server@10.35.0)(next@13.4.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-mUp7OrsF/vwxPOjZ6lP4X0XVxXA8N7PaWys6NgigUaKsGZ9pht5QyQNfprVpIv7PnSknLuICY/fKEBL9+zfH3A==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.35.0
-      '@trpc/react-query': 10.35.0
-      '@trpc/server': 10.35.0
-      next: '*'
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@tanstack/react-query': 4.32.0(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.35.0(@trpc/server@10.35.0)
-      '@trpc/react-query': 10.35.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/server@10.35.0)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server': 10.35.0
-      next: 13.4.1(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-ssr-prepass: 1.5.0(react@18.2.0)
-    dev: false
-
   /@trpc/next@10.35.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/react-query@10.36.0)(@trpc/server@10.35.0)(next@13.4.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-mUp7OrsF/vwxPOjZ6lP4X0XVxXA8N7PaWys6NgigUaKsGZ9pht5QyQNfprVpIv7PnSknLuICY/fKEBL9+zfH3A==}
     peerDependencies:
@@ -5402,22 +5326,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
-    dev: false
-
-  /@trpc/react-query@10.35.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/server@10.35.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-tPC14UAIlrMlPZgN5TGOzcgqI4dEBUaJSmc+PjLmLfP+7vcNwOweCSdvq9gsDBCZf9aYq3Bf6KFi90ej+0ZUjQ==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.35.0
-      '@trpc/server': 10.35.0
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@tanstack/react-query': 4.32.0(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.35.0(@trpc/server@10.35.0)
-      '@trpc/server': 10.35.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@trpc/react-query@10.36.0(@tanstack/react-query@4.32.0)(@trpc/client@10.35.0)(@trpc/server@10.35.0)(react-dom@18.2.0)(react@18.2.0):
@@ -16430,6 +16338,19 @@ packages:
     resolution: {integrity: sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==}
     dev: false
 
+  /rxjs-hooks@0.8.0-alpha.0(react@18.2.0)(rxjs@7.8.1):
+    resolution: {integrity: sha512-rgHaHEJPVsEZhqjHjEMu1k/7CxxmkGaaRXOBHySaN8a1web7WGL28XUylDVDerlXj1mUkPIz/LI7GfNfeLkQVQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      rxjs: '>=7.0.0'
+    dependencies:
+      react: 18.2.0
+      rxjs: 7.8.1
+      tslib: 2.6.0
+      use-constant: 1.1.1(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
   /rxjs@6.6.7:
     resolution: {integrity: sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==}
     engines: {npm: '>=2.0.0'}
@@ -16441,7 +16362,6 @@ packages:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
       tslib: 2.6.0
-    dev: true
 
   /sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
@@ -18402,6 +18322,14 @@ packages:
       '@types/react': 18.2.5
       react: 18.2.0
       tslib: 2.6.0
+    dev: false
+
+  /use-constant@1.1.1(react@18.2.0):
+    resolution: {integrity: sha512-sy2ttlE4kuAnNbp2P6a5aTZiGYwsZojkqaGZ31yDDjIurteUS8GOcYiPGmJ3y/LHOHkdazDdVRBZPzH3RZHffA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /use-resize-observer@9.1.0(react-dom@18.2.0)(react@18.2.0):
