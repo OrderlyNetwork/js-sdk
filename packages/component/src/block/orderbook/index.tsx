@@ -4,25 +4,34 @@ import { Bids } from "./bids";
 import { Asks } from "./asks";
 import { MarkPrice } from "./markPrice";
 import { DepthSelect } from "@/block/orderbook/depthSelect";
+import { OrderBookProvider } from "@/block/orderbook/orderContext";
 
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
   markPrice: string;
   lastPrice: string;
-  onItemClick?: () => void;
+  onItemClick?: (item: number[]) => void;
   depth: number[];
   onDepthChange?: (depth: number) => void;
+  //
+  autoSize?: boolean;
+  level?: number;
+
+  cellHeight?: number;
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
   return (
-    <div>
+    <OrderBookProvider
+      cellHeight={props.cellHeight ?? 22}
+      onItemClick={props.onItemClick}
+    >
       <Header priceUnit={"USDC"} qtyUnit={"BTC"} />
-      <Bids data={[]} />
+      <Asks data={props.asks} />
       <MarkPrice />
-      <Asks data={[]} />
+      <Bids data={props.bids} />
       <DepthSelect depth={props.depth} value={0.0001} />
-    </div>
+    </OrderBookProvider>
   );
 };

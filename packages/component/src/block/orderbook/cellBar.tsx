@@ -1,18 +1,24 @@
 import { FC, useMemo } from "react";
+import { cn } from "@/utils/css";
 
 interface CellBarProps {
   width: number;
+  className?: string;
 }
 
 export const CellBar: FC<CellBarProps> = (props) => {
-  const transform = useMemo(
-    () => ({ transform: `translateX(${props.width}%)` }),
-    [props.width]
-  );
+  console.log("CellBar", props.width);
+  const transform = useMemo(() => {
+    const x = Math.max(props.width, 1);
+    return { transform: `translateX(-${x}%)` };
+  }, [props.width]);
 
   return (
     <div
-      className="absolute left-0 top-0 h-full w-full bg-red-500/25"
+      className={cn(
+        "absolute right-[-100%] top-0 h-full w-full transition-transform pointer-events-none",
+        props.className
+      )}
       style={transform}
     />
   );

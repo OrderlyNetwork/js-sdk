@@ -18,6 +18,7 @@ export const Default: Story = {
   args: {
     label: "Unreal.PnL",
     value: "123456",
+    coloring: true,
   },
   // description: "Description",
 };

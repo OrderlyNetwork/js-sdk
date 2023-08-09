@@ -1,4 +1,4 @@
-import { Button } from ".";
+import Button from ".";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SegmentedButton } from "./segmented";
 import React from "react";

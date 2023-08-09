@@ -8,12 +8,20 @@
         --orderly-color-primary:51 95 252;
         --orderly-color-background:27 32 40;
         --orderly-color-background-contrast: 255 255 255;
-        /* rounded */
 
+        --orderly-color-trading-loss: 255 0 0;
+        --orderly-color-trading-profit: 0 255 0;
+
+
+        /* rounded */
         --orderly-rounded: 6px;
         --orderly-rounded-sm: 4px;
         --orderly-rounded-lg: 16px;
         --orderly-rounded-full: 9999px;
+
+        /* components */
+        --orderly-orderbook-cell-height: 22px;
+        --orderly-orderbook-cell-font-size: 12px;
 
     }
 }

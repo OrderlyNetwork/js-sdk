@@ -16,7 +16,10 @@ export const Header: FC<Props> = (props) => {
         <span>Price</span>
         <span>{`(${props.priceUnit})`}</span>
       </div>
-      <div className={"flex items-center"}>
+      <div
+        className={"flex items-center"}
+        onClick={() => props.onModeChange?.("amount")}
+      >
         <div className={"flex flex-col items-end"}>
           <span>Qty</span>
           <span>{`(${props.qtyUnit})`}</span>

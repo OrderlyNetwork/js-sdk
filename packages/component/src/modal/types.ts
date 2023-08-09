@@ -17,7 +17,7 @@ export interface ModalAction {
   payload: {
     id: string;
     args?: Record<string, unknown>;
-    flags?: Record<string, unknown>;
+    states?: Record<string, unknown>;
   };
 }
 
@@ -45,6 +45,8 @@ export interface ModalHandler<Props = Record<string, unknown>>
   reject: (reason?: unknown) => void;
 
   remove: () => void;
+
+  setStates: (states: Record<string, unknown>) => void;
 
   resolveHide: (args?: unknown) => void;
 }

@@ -1,0 +1,26 @@
+{
+    "index": {
+      "title": "Home",
+      "type": "page"
+    },
+    "frameworks": {
+      "title": "Frameworks",
+      "type": "page"
+    },
+    "dev": {
+      "title": "Dev Tool",
+      "type": "menu",
+      "items":{
+        "theming":{
+            "title":"Theming Tool",
+            "href":"/dev/theming"
+        }
+        
+        
+      }
+    },
+    "about": {
+      "title": "About",
+      "type": "page"
+    }
+  }

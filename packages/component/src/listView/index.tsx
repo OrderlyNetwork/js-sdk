@@ -1,13 +1,18 @@
 import { ListTile } from "./listTile";
 import { ListView } from "./listView";
 import { SeparatedListView } from "./separated";
+import { EmptyView } from "./emptyView";
 
 type ListViewType = typeof ListView & {
   separated: typeof SeparatedListView;
   listTile: typeof ListTile;
+  emptyView: typeof EmptyView;
 };
 
-(ListView as ListViewType).separated = SeparatedListView;
-(ListView as ListViewType).listTile = ListTile;
+const Component = ListView as ListViewType;
 
-export { ListView };
+Component.separated = SeparatedListView;
+Component.listTile = ListTile;
+Component.emptyView = EmptyView;
+
+export { Component as ListView };

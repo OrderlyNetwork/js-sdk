@@ -27,7 +27,7 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
   }
 
   return (
-    <div className="flex flex-row gap-[40px]">
+    <div className="flex flex-row gap-[36px]">
       {props.buttons.map((item, index) => {
         return (
           <_Button
@@ -54,6 +54,7 @@ const _Button = ({
   const isFirstChild = index === 0;
   return (
     <button
+      type="button"
       onClick={(event) => onClick(value, event)}
       className={twMerge(
         cx(

@@ -5,6 +5,13 @@ import { Select } from ".";
 const meta: Meta<typeof Select> = {
   component: Select,
   title: "Base/Select",
+  args: {
+    options: [
+      { label: "Option 1", value: "option1" },
+      { label: "Option 2", value: "option2" },
+      { label: "Option 3", value: "option3" },
+    ],
+  },
 };
 
 export default meta;
@@ -15,5 +22,12 @@ export const Default: Story = {
   args: {
     size: "default",
     label: "Select",
+    placeholder: "Select",
+  },
+};
+
+export const WithValue: Story = {
+  render: (args) => {
+    return <Select {...args} value={"option2"} />;
   },
 };

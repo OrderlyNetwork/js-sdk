@@ -5,17 +5,19 @@ import { OrderEntry } from ".";
 const meta: Meta = {
   title: "Block/OrderEntry",
   component: OrderEntry,
+  argTypes: {
+    onSubmit: { action: "submit" },
+    onDeposit: { action: "deposit" },
+  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof OrderEntry>;
 
-// storybook action
-
 export const Default: Story = {
-  // render: () => <OrderEntry />,
-  argTypes: {
-    onSubmit: { action: "submit" },
+  args: {
+    pair: "BTC/USDT",
+    // collateral: 100,
   },
 };

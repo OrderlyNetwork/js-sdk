@@ -19,6 +19,8 @@ export const ALREADY_MOUNTED: Record<string, boolean> = {};
 
 export const ModalContext = createContext<ModalStore>(initialState);
 
+export const ModalIdContext = createContext<string | null>(null);
+
 export const modalCallbacks: ModalCallbacks = {};
 export const hideModalCallbacks: ModalCallbacks = {};
 
@@ -68,13 +70,25 @@ function removeModal(id: string): ModalAction {
   };
 }
 
+function setModalStates(
+  id: string,
+  states: Record<string, unknown>
+): ModalAction {
+  return {
+    type: "SET_MODAL_STATES",
+    payload: {
+      id,
+      states,
+    },
+  };
+}
+
 //------- reducer actions --------
 
 const reducer = (state: ModalStore, action: ModalAction) => {
+  const { id, args } = action.payload;
   switch (action.type) {
     case "SHOW_MODAL": {
-      const { id, args } = action.payload;
-
       return {
         ...state,
         [id]: {
@@ -82,18 +96,32 @@ const reducer = (state: ModalStore, action: ModalAction) => {
           id,
           args,
           visible: !!ALREADY_MOUNTED[id],
+          delayVisible: !ALREADY_MOUNTED[id],
         },
       };
     }
     case "HIDE_MODAL": {
       return {
         ...state,
+        [id]: {
+          ...state[id],
+          visible: false,
+        },
       };
     }
 
     case "DESTROY_MODAL": {
+      const newState = { ...state };
+      delete newState[id];
+      return newState;
+    }
+    case "SET_MODAL_STATES": {
       return {
         ...state,
+        [id]: {
+          ...state[id],
+          ...action.payload.states,
+        },
       };
     }
     default:
@@ -216,8 +244,13 @@ function remove(id: string) {
   delete hideModalCallbacks[id];
 }
 
+function setStates(id: string, states: Record<string, unknown>) {
+  dispatch(setModalStates(id, states));
+}
+
 export const modalActions = {
   show,
   hide,
   remove,
+  setStates,
 };

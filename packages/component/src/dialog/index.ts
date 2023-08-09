@@ -1,1 +1,2 @@
-export { Dialog } from "./dialog";
+export * from "./dialog";
+export { SimpleDialog } from "./simpleDialog";

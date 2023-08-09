@@ -41,7 +41,13 @@ export const BuilderNavBar = () => {
           </Link>
         </div>
         <div>
-          <Link href={`/dev/theming/${params?.id}/components`}>
+          <Link
+            href={`/dev/theming/${params?.id}/config`}
+            className={clsx(
+              pathname === `/dev/theming/${params?.id}/config` &&
+                "text-blue-600"
+            )}
+          >
             Base config
           </Link>
         </div>

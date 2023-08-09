@@ -1,7 +1,13 @@
 import { cva, VariantProps, cx } from "class-variance-authority";
-import { FC, SelectHTMLAttributes, useState } from "react";
+import { FC, SelectHTMLAttributes, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
+import { ActionSheet } from "@/bottomSheet/actionSheet/actionSheet";
+
+export type SelectOption = {
+  value: string;
+  label: string;
+};
 
 const selectVariants = cva(["rounded-md transition-colors"], {
   variants: {
@@ -23,7 +29,10 @@ const selectVariants = cva(["rounded-md transition-colors"], {
 });
 
 export interface SelectProps
-  extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "disabled" | "size">,
+  extends Omit<
+      SelectHTMLAttributes<HTMLSelectElement>,
+      "disabled" | "size" | "onChange"
+    >,
     VariantProps<typeof selectVariants> {
   /**
    * If `true`, the button will show a loading indicator.
@@ -31,30 +40,56 @@ export interface SelectProps
    * */
   loading?: boolean;
   label?: string;
+  options: SelectOption[];
+  onChange?: (value: string) => void;
   //   className?: string;
 }
 
 const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
   const [open, setOpen] = useState(false);
-  return (
-    <div
-      className={twMerge(
-        "flex flex-row items-center bg-slate-300 rounded focus-within:outline outline-red-400",
-        selectVariants({
-          size,
-          disabled,
-          className,
-        }),
-        cx(open && "bg-slate-400")
-      )}
-      onClick={() => setOpen(!open)}
-    >
-      <div className="flex-1">
-        {typeof props.label !== "undefined" && <>{props.label}</>}
-      </div>
 
-      <TriangleDownIcon />
-    </div>
+  const value = useMemo(() => {
+    return props.value || props.label || props.placeholder;
+  }, [props.value]);
+
+  const options = useMemo<any[]>(() => {
+    return props.options || [];
+  }, [props]);
+
+  return (
+    <>
+      <div
+        className={twMerge(
+          "flex flex-row items-center bg-slate-300 rounded focus-within:outline outline-red-400",
+          selectVariants({
+            size,
+            disabled: disabled || options.length === 0,
+            className,
+          }),
+          cx(open && "bg-slate-400")
+        )}
+        onClick={() => {
+          if (options.length === 0) return;
+          setOpen(!open);
+        }}
+      >
+        <div className="flex-1 px-2">
+          {typeof value !== "undefined" && <>{value}</>}
+        </div>
+
+        <TriangleDownIcon />
+      </div>
+      <ActionSheet
+        actionSheets={options}
+        isOpen={open}
+        onValueChange={(value) => {
+          // console.log(value);
+          props.onChange?.(value);
+        }}
+        value={props.value}
+        onClose={() => setOpen(false)}
+      />
+    </>
   );
 };
 

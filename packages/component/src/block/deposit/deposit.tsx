@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Input } from "@/input";
-import { Button } from "@/button";
+import Button from "@/button";
 
 export interface DepositProps {
-    onDeposit?: () => void;
+  onDeposit?: () => void;
 }
 
 export const Deposit: FC<DepositProps> = (props) => {

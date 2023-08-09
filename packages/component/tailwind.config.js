@@ -3,17 +3,24 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
+  mode: "jit",
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  // content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  purge: ["./src/**/*.{ts,js,tsx,jsx}"],
   theme: {
     extend: {
       colors: {
         background: {
           DEFAULT: "rgb(var(--orderly-color-background) / <alpha-value>)",
-          contrast: "rgb(var(--orderly-color-background-contrast) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-background-contrast) / <alpha-value>)",
         },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
+        },
+        trade: {
+          loss: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
+          profit: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
         },
         brand: {
           100: "#535E7B",

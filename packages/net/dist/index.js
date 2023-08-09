@@ -70,9 +70,14 @@ function request(url, options) {
       throw new Error("url must start with http(s)");
     }
     const urlInstance = new URL(url);
-    const response = yield fetch(url, __spreadProps(__spreadValues({}, options), {
+    const response = yield fetch(urlInstance, __spreadProps(__spreadValues({}, options), {
+      // mode: "cors",
+      // credentials: "include",
       headers: _createHeaders(options.headers)
-    }));
+    })).catch((err) => {
+      console.error("::::::::::", err);
+      throw new Error(err);
+    });
     if (response.ok) {
       return response.json();
     }
@@ -82,7 +87,7 @@ function request(url, options) {
 function _createHeaders(headers = {}) {
   const _headers = new Headers(headers);
   if (!_headers.has("Content-Type")) {
-    _headers.append("Content-Type", "application/json");
+    _headers.append("Content-Type", "application/json;charset=utf-8");
   }
   return _headers;
 }

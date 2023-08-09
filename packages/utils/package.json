@@ -1,0 +1,23 @@
+{
+  "name": "@orderly/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "maogege",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.1",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "decimal.js-light": "^2.5.1"
+  }
+}

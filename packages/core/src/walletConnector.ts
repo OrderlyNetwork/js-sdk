@@ -7,3 +7,9 @@ class BaseConnector implements WalletConnector {
     return Promise.resolve();
   }
 }
+
+class Blocknative implements WalletConnector {
+  connect() {
+    return Promise.resolve();
+  }
+}

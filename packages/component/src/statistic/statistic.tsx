@@ -1,11 +1,10 @@
-import { FC, useMemo } from "react";
-import { cx } from "class-variance-authority";
-import { mergeClassNames } from "@/utils/css";
+import { FC, ReactNode, useMemo } from "react";
+import { cn } from "@/utils/css";
 
 export interface StatisticProps {
-  label: string;
-  value: string;
-  percent?: number;
+  label: string | ReactNode;
+  value: string | number | ReactNode;
+
   coloring?: boolean;
   className?: string;
   align?: "left" | "right" | "center";
@@ -28,28 +27,37 @@ const coloringClasses: Record<string, string> = {
 
 export const Statistic: FC<StatisticProps> = (props) => {
   const { align = "left" } = props;
+
+  const labelElement = useMemo(() => {
+    if (typeof props.label === "string") {
+      return props.label;
+    }
+    return props.label;
+  }, [props.label]);
+
   // 给Value添加颜色
   // lose, profit, neutral
-
   const colorClassName = useMemo(() => {
-    if (typeof props.coloring === "undefined") return "";
+    if (!props.coloring) return "";
+    if (typeof props.value !== "number" && typeof props.value !== "string")
+      return "";
 
-    // get the first string from the value
-    const firstChar = props.value[0];
-    if (firstChar === "-") {
-      return coloringClasses.lose;
-    } else {
-      return coloringClasses.profit;
-    }
+    const firstChar = String(props.value).charAt(0);
+    if (firstChar === "-") return coloringClasses.lose;
+    return coloringClasses.profit;
   }, [props.coloring, props.value]);
 
+  const valueElement = useMemo(() => {
+    if (typeof props.value === "string" || typeof props.value === "number") {
+      return <span>{props.value}</span>;
+    }
+    return props.value;
+  }, [props.value]);
+
   return (
-    <div className={mergeClassNames(props.className, alignClasses[align])}>
-      <div>{props.label}</div>
-      <div className={colorClassName}>
-        <span>{props.value}</span>
-        {typeof props.percent !== "undefined" && <span>{props.percent}</span>}
-      </div>
+    <div className={cn(props.className, alignClasses[align])}>
+      <div>{labelElement}</div>
+      <div className={colorClassName}>{valueElement}</div>
     </div>
   );
 };

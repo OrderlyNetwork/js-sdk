@@ -1,4 +1,4 @@
-import { mergeClassNames } from "@/utils/css";
+import { cn } from "@/utils/css";
 import React, { FC, useEffect, useMemo } from "react";
 
 type Size = "small" | "medium" | "large";
@@ -49,7 +49,7 @@ export const Coin: FC<CoinProps> = (props) => {
 
   return (
     <div
-      className={mergeClassNames("inline-block", props.className)}
+      className={cn("inline-block", props.className)}
       style={{
         width: size,
         height: size,

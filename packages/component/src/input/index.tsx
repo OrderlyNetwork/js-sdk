@@ -1,6 +1,6 @@
 import React, { FC, InputHTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils/css";
 
 const inputVariants = cva(["rounded"], {
   variants: {
@@ -33,19 +33,22 @@ export const Input: FC<InputProps> = ({
 }) => {
   return (
     <div
-      className={twMerge(
+      className={cn(
         "flex flex-row items-center bg-slate-300 rounded focus-within:outline outline-red-400",
         inputVariants({
           size,
           // disabled,
-          className,
         })
       )}
     >
       {prefix}
       <input
         type="text"
-        className="bg-transparent p-3 flex-1 focus-visible:outline-none min-w-0"
+        {...props}
+        className={cn(
+          "bg-transparent p-3 flex-1 focus-visible:outline-none min-w-0",
+          className
+        )}
       />
       {suffix}
     </div>

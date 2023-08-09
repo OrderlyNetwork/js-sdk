@@ -9,7 +9,7 @@ interface DepthSelectProps {
 export const DepthSelect: FC<DepthSelectProps> = (props) => {
   return (
     <div className={"py-2"}>
-      <Select size={"small"} />
+      <Select size={"small"} value={"0.001"} />
     </div>
   );
 };
