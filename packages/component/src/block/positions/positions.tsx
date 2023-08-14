@@ -5,26 +5,26 @@ import { ListView } from "@/listView";
 import { FC } from "react";
 
 interface PositionsViewProps {
-  dataSource: any[];
+  dataSource: any[] | null;
   // actions
   onLimitClose?: (position: any) => void;
   onMarketClose?: (position: any) => void;
   onMarketCloseAll?: () => void;
   loadMore?: () => void;
+  isLoading?: boolean;
 }
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
     <div>
       <Overview onMarketCloseAll={props.onMarketCloseAll} />
-      <div>
+      <>
         <ListView.separated<any>
           dataSource={props.dataSource}
           renderItem={(item, index) => {
             return (
               <PositionCell
                 item={item}
-                key={index}
                 onLimitClose={props.onLimitClose}
                 onMarketClose={props.onMarketClose}
               />
@@ -35,7 +35,7 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
           }}
           onEndReached={props.loadMore}
         />
-      </div>
+      </>
     </div>
   );
 };

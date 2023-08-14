@@ -7,7 +7,6 @@ interface CellBarProps {
 }
 
 export const CellBar: FC<CellBarProps> = (props) => {
-  console.log("CellBar", props.width);
   const transform = useMemo(() => {
     const x = Math.max(props.width, 1);
     return { transform: `translateX(-${x}%)` };

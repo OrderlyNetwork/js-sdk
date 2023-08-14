@@ -2,6 +2,7 @@ import { FC, useContext, useMemo } from "react";
 import { CellBar } from "./cellBar";
 import { queries } from "@storybook/testing-library";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
+import { commify } from "@orderly/utils";
 
 export enum OrderBookCellType {
   BID = "bid",
@@ -22,8 +23,6 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
   const { cellHeight, onItemClick } = useContext(OrderBookContext);
 
-  console.log("width", width, props.accumulated, props.count);
-
   return (
     <div
       className="overflow-hidden relative cursor-pointer hover:bg-slate-50 odd:bg-slate-100 odd:hover:bg-slate-50"
@@ -41,7 +40,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
               : "text-trade-profit"
           }
         >
-          {Number.isNaN(props.price) ? "-" : props.price}
+          {Number.isNaN(props.price) ? "-" : commify(props.price)}
         </div>
         <div>{Number.isNaN(props.quantity) ? "-" : props.quantity}</div>
       </div>

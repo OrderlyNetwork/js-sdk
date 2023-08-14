@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
-declare function get(url: string, options?: any): Promise<any>;
-declare function post(url: string, data: any, options?: any): Promise<any>;
+declare function get(url: string, options?: RequestInit): Promise<unknown>;
+declare function post(url: string, data: any, options?: Omit<RequestInit, "method">): Promise<any>;
 
 type NetworkId = "testnet" | "mainnet";
 type WSOptions = {
@@ -10,6 +10,7 @@ type WSOptions = {
     accountId?: string;
 };
 declare class WS {
+    private static __topicRefCountMap;
     private wsSubject;
     private authenticated;
     constructor(options: WSOptions);
@@ -26,4 +27,6 @@ declare class WS {
     private generateMessage;
 }
 
-export { WS, get, post };
+declare const __ORDERLY_API_URL_KEY__: string;
+
+export { WS, __ORDERLY_API_URL_KEY__, get, post };

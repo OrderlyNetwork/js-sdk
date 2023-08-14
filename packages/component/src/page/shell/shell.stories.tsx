@@ -5,7 +5,7 @@ import { WooPage } from "./woo";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 
 const meta: Meta = {
-  title: "Example/Woo",
+  title: "App/Woo",
   component: WooPage,
   parameters: {
     layout: "fullscreen",

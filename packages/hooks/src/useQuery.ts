@@ -6,7 +6,11 @@ import { OrderlyContext } from "./orderlyContext";
 
 import { get } from "@orderly/net";
 
-const fetcher = (url: string) => fetch(url,).then((res) => res.json());
+const fetcher = (url: string) => get(url);
+
+export type useQueryOptions = {
+  formatter?: (data: any) => any;
+};
 
 /**
  * useQuery
@@ -16,9 +20,10 @@ const fetcher = (url: string) => fetch(url,).then((res) => res.json());
  */
 export const useQuery = <T>(
   query: string,
-  options?: SWRConfiguration
+  options?: SWRConfiguration & useQueryOptions
 ): SWRResponse<T> => {
   const { apiBaseUrl } = useContext(OrderlyContext);
+  const { formatter, ...swrOptions } = options || {};
   // check the query is public api
   if (!query.startsWith("/public")) {
     throw new Error("useQuery is only for public api");
@@ -28,5 +33,6 @@ export const useQuery = <T>(
     throw new Error("please add OrderlyProvider to your app");
   }
 
-  return useSWR<T>(`${apiBaseUrl}${query}`, fetcher, options);
+  // @ts-ignore
+  return useSWR<T>(`${apiBaseUrl}${query}`, fetcher, swrOptions);
 };

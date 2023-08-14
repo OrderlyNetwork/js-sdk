@@ -2,7 +2,7 @@ import { cn } from "@/utils/css";
 import { VariantProps, cva } from "class-variance-authority";
 import { FC, PropsWithChildren } from "react";
 
-const tagVariants = cva(["rounded", "px-2", "text-sm", "inline-block"], {
+const tagVariants = cva(["rounded-[4px]", "px-2", "text-sm", "inline-block"], {
   variants: {
     size: {
       small: "h-[16px]",

@@ -58,6 +58,7 @@ var __async = (__this, __arguments, generator) => {
 var src_exports = {};
 __export(src_exports, {
   WS: () => ws_default,
+  __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   get: () => get,
   post: () => post
 });
@@ -75,7 +76,6 @@ function request(url, options) {
       // credentials: "include",
       headers: _createHeaders(options.headers)
     })).catch((err) => {
-      console.error("::::::::::", err);
       throw new Error(err);
     });
     if (response.ok) {
@@ -92,14 +92,22 @@ function _createHeaders(headers = {}) {
   return _headers;
 }
 function get(url, options) {
-  return request(url, {
-    method: "GET"
+  return __async(this, null, function* () {
+    const res = yield request(url, __spreadValues({
+      method: "GET"
+    }, options));
+    if (res.success) {
+      return res.data;
+    }
+    throw new Error(res.message);
   });
 }
 function post(url, data, options) {
-  return request(url, {
-    method: "POST",
-    body: JSON.stringify(data)
+  return __async(this, null, function* () {
+    return request(url, __spreadValues({
+      method: "POST",
+      body: JSON.stringify(data)
+    }, options));
   });
 }
 
@@ -170,10 +178,19 @@ var WS = class {
     });
   }
   bindSubscribe() {
-    this.wsSubject.subscribe((message) => {
-      const handler = messageHandlers.get(message.event);
-      if (handler) {
-        handler.handle(message, this.send.bind(this));
+    const send = this.send.bind(this);
+    this.wsSubject.subscribe({
+      next(message) {
+        const handler = messageHandlers.get(message.event);
+        if (handler) {
+          handler.handle(message, send);
+        }
+      },
+      error(err) {
+        console.log("WS Error: ", err);
+      },
+      complete() {
+        console.log("WS Connection closed");
       }
     });
   }
@@ -187,11 +204,7 @@ var WS = class {
     this.wsSubject.next(message);
   }
   observe(params, unsubscribe, messageFilter) {
-    const [subscribeMessage, unsubscribeMessage, filter] = this.generateMessage(
-      params,
-      unsubscribe,
-      messageFilter
-    );
+    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
     return new import_rxjs.Observable((observer) => {
       try {
         this.send(subscribeMessage);
@@ -202,7 +215,7 @@ var WS = class {
         next: (x) => {
           try {
             if (filter(x)) {
-              observer.next(x);
+              observer.next(messageFormatter(x));
             }
           } catch (err) {
             observer.error(err);
@@ -213,7 +226,6 @@ var WS = class {
       });
       return () => {
         try {
-          console.log("******* unsubscribe", unsubscribeMessage);
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
@@ -229,7 +241,7 @@ var WS = class {
   }
   generateMessage(params, unsubscribe, messageFilter) {
     let subscribeMessage, unsubscribeMessage;
-    let filter;
+    let filter, messageFormatter = (message) => message.data;
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
       unsubscribeMessage = { event: "unsubscribe", topic: params };
@@ -239,13 +251,19 @@ var WS = class {
       unsubscribeMessage = typeof unsubscribe === "function" ? unsubscribe() : unsubscribe;
       filter = messageFilter || ((message) => true);
     }
-    return [subscribeMessage, unsubscribeMessage, filter];
+    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
   }
 };
+// the topic reference count;
+WS.__topicRefCountMap = /* @__PURE__ */ new Map();
 var ws_default = WS;
+
+// src/constants.ts
+var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   WS,
+  __ORDERLY_API_URL_KEY__,
   get,
   post
 });

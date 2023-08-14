@@ -1,12 +1,16 @@
-import { OrderEntry } from "@/block/orderEntry";
 import { NavBar } from "./sections/navbar";
 import { DataListView } from "./sections/dataList";
 import { ChartView } from "./sections/chartView";
-import { OrderBook } from "@/block/orderbook";
 import { MyOrderBook } from "./sections/orderbook";
 import { MyOrderEntry } from "./sections/orderEntry";
+import { FC } from "react";
+import { AccountStatus } from "@/block/accountStatus";
 
-export const TradingPage = () => {
+interface TradingPageProps {
+  symbol: string;
+}
+
+export const TradingPage: FC<TradingPageProps> = (props) => {
   return (
     <>
       <NavBar />
@@ -18,8 +22,8 @@ export const TradingPage = () => {
         <MyOrderEntry />
       </div>
       <DataListView />
-      <div className="bg-slate-200 fixed left-0 right-0 bottom-0">
-        bottom bar
+      <div className="fixed left-0 bottom-0 w-screen bg-slate-700 p-2">
+        <AccountStatus />
       </div>
     </>
   );

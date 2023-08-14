@@ -11,6 +11,7 @@ interface PositionCellProps {
 }
 
 export const PositionCell: FC<PositionCellProps> = (props) => {
+  const { item } = props;
   return (
     <div>
       <div className="flex items-center py-2">
@@ -23,7 +24,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic label="Total PnL" value="123456" coloring align="right" />
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <Statistic label="Qty." value="0.123" coloring />
+        <Statistic label="Qty." value={item["position_qty"]} coloring />
         <Statistic
           label={
             <div>
@@ -46,11 +47,11 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label={
             <div>
-              <span>Notional</span>
+              <span>Avg. Open</span>
               <span>(USDC)</span>
             </div>
           }
-          value="123456"
+          value={item["average_open_price"]}
         />
         <Statistic
           label={
@@ -59,7 +60,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </div>
           }
-          value="123456"
+          value={item["mark_price"]}
         />
         <Statistic
           label={
@@ -68,7 +69,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </div>
           }
-          value="123456"
+          value={item["est_liq_price"]}
           coloring
           align="right"
         />

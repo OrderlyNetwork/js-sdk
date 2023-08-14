@@ -9,7 +9,6 @@ async function request(url: string, options: RequestInit) {
     // credentials: "include",
     headers: _createHeaders(options.headers),
   }).catch((err) => {
-    console.error("::::::::::", err);
     throw new Error(err);
   });
 
@@ -30,15 +29,26 @@ function _createHeaders(headers: HeadersInit = {}): HeadersInit {
   return _headers;
 }
 
-function get(url: string, options?: any): Promise<any> {
-  return request(url, {
+async function get(url: string, options?: RequestInit): Promise<unknown> {
+  const res = await request(url, {
     method: "GET",
+    ...options,
   });
+
+  if (res.success) {
+    return res.data;
+  }
+  throw new Error(res.message);
 }
-function post(url: string, data: any, options?: any): Promise<any> {
+async function post(
+  url: string,
+  data: any,
+  options?: Omit<RequestInit, "method">
+): Promise<any> {
   return request(url, {
     method: "POST",
     body: JSON.stringify(data),
+    ...options,
   });
 }
 

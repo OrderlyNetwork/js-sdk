@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BehaviorSubject, Subscription } from "rxjs";
-import { startWith, map, scan, withLatestFrom } from "rxjs/operators";
+import { startWith, map, scan, withLatestFrom, tap } from "rxjs/operators";
 import { merge } from "rxjs";
 import { useWebSocketClient } from "../useWebSocketClient";
 import { pick, propOr, set } from "ramda";
@@ -64,6 +64,7 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
+  if (data.length === 0) return update;
   while (update.length > 0) {
     const item = update.shift();
     if (item) {
@@ -153,10 +154,11 @@ export const useOrderbook = (pair: string, initial?: OrderbookData) => {
 
     lastSubscriberRef.current = merge(orderbookRequest$, orderbookUpdate$)
       .pipe(
+        // tap((data) => console.log(data)),
         map<any, OrderbookData>(
-          (data) =>
-            pick(["asks", "bids"], propOr({}, "data", data)) as OrderbookData
+          (data) => pick(["asks", "bids"], data) as OrderbookData
         ),
+        tap((data) => console.log(data)),
         scan<OrderbookData, OrderbookData>((acc, curr) => {
           if (!acc.asks && !acc.bids) {
             return curr;

@@ -27,7 +27,10 @@ const buttonVariants = cva(["rounded-md transition-colors min-w-[60px]"], {
       primary: "text-primary hover:bg-primary hover:text-white",
       secondary:
         "text-secondary bg-transparent hover:bg-secondary hover:text-white",
+      tertiary: "text-white bg-slate-500",
       success: "text-success bg-transparent hover:bg-success hover:text-white",
+      buy: "text-white bg-trade-profit",
+      sell: "text-white bg-trade-loss",
     },
     fullWidth: {
       true: "w-full",
@@ -52,7 +55,13 @@ const buttonVariants = cva(["rounded-md transition-colors min-w-[60px]"], {
       variant: "outlined",
       color: "primary",
       class:
-        "text-primary bg-transparent border border-primary hover:bg-primary hover:text-white",
+        "text-primary bg-transparent border border-primary hover:bg-slate-100 hover:text-primary",
+    },
+    {
+      variant: "outlined",
+      color: "sell",
+      class:
+        "text-trade-loss bg-transparent border border-trade-loss hover:bg-trade-loss hover:text-white",
     },
   ],
   defaultVariants: {

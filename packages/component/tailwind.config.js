@@ -20,14 +20,22 @@ module.exports = {
         },
         trade: {
           loss: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
+          "loss-foreground":
+            "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
           profit: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
+          "profit-foreground":
+            "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
         },
+
         brand: {
           100: "#535E7B",
         },
       },
       borderRadius: {
         DEFAULT: "6px",
+      },
+      fontSize: {
+        headertitle: "20px",
       },
     },
     // colors:{

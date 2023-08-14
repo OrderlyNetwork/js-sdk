@@ -1,8 +1,8 @@
 import type { Meta } from "@storybook/react";
-
+import React from "react";
 import { OrderBook } from ".";
 import { StoryObj } from "@storybook/react";
-import { useOrderbook } from "@orderly/hooks";
+import { useOrderbook, useInfo } from "@orderly/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 
 const meta: Meta = {
@@ -39,8 +39,10 @@ export const Default: Story = {
 
 export const WithData: Story = {
   render: (args) => {
-    const [data] = useOrderbook("PERP_ETH_USDC");
+    const [data, { onDepthChange }] = useOrderbook("PERP_ETH_USDC");
+    const { data: info } = useInfo("PERP_ETH_USDC");
     // console.log(data);
+    console.log(info);
     return (
       <OrderBook
         {...args}

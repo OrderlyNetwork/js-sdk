@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "maogege",
+  "author": "leo",
   "license": "ISC",
   "dependencies": {
     "configstore": "^6.0.0",

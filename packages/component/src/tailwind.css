@@ -9,8 +9,10 @@
         --orderly-color-background:27 32 40;
         --orderly-color-background-contrast: 255 255 255;
 
-        --orderly-color-trading-loss: 255 0 0;
-        --orderly-color-trading-profit: 0 255 0;
+        --orderly-color-trading-loss: 255 68 124;
+        --orderly-color-trading-loss-contrast: 40 46 58;
+        --orderly-color-trading-profit: 0 180 158;
+        --orderly-color-trading-profit-contrast: 40 46 58;
 
 
         /* rounded */
@@ -19,9 +21,14 @@
         --orderly-rounded-lg: 16px;
         --orderly-rounded-full: 9999px;
 
+        /* font */
+        --orderly-header-title-font-size: 20px;
+
         /* components */
         --orderly-orderbook-cell-height: 22px;
         --orderly-orderbook-cell-font-size: 12px;
+
+
 
     }
 }

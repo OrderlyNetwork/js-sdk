@@ -1,11 +1,13 @@
 import { type PropsWithChildren, FC } from "react";
-import { cx } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils/css";
 
 export type SegmentedItem = {
   label: string;
   value: string;
   disabled?: boolean;
+  className?: string;
+  activeClassName?: string;
 };
 
 export interface SegmentedButtonProps {
@@ -36,6 +38,8 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
             key={index}
             index={index}
             isActive={item.value === props.value}
+            className={item.className}
+            activeClassName={item.activeClassName}
             onClick={props.onClick}
           />
         );
@@ -50,6 +54,8 @@ const _Button = ({
   isActive,
   index,
   onClick,
+  className,
+  activeClassName,
 }: SegmentedItem & { index: number; isActive: boolean; onClick: Function }) => {
   const isFirstChild = index === 0;
   return (
@@ -57,13 +63,15 @@ const _Button = ({
       type="button"
       onClick={(event) => onClick(value, event)}
       className={twMerge(
-        cx(
+        cn(
           "min-w-0 flex-1 py-1 bg-slate-300 relative after:block after:bg-slate-300 after:absolute after:w-[40px] after:h-full after:top-0 after:z-10 h-[32px]",
-          isActive && "bg-red-500 after:bg-red-500",
+          isActive && "bg-primary after:bg-primary",
           isFirstChild &&
             "rounded-l-md after:right-[-15px] after:skew-x-[-35deg]",
           !isFirstChild &&
-            "rounded-r-md after:left-[-15px] after:skew-x-[-35deg]"
+            "rounded-r-md after:left-[-15px] after:skew-x-[-35deg]",
+          className,
+          isActive && activeClassName
         )
       )}
     >

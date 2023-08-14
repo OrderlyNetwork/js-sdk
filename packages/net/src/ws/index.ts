@@ -11,7 +11,10 @@ export type WSOptions = {
   networkId?: NetworkId;
   accountId?: string;
 };
+
 class WS {
+  // the topic reference count;
+  private static __topicRefCountMap: Map<string, number> = new Map();
   private wsSubject: WebSocketSubject<any>;
 
   private authenticated: boolean = false;
@@ -46,11 +49,20 @@ class WS {
 
   private bindSubscribe() {
     /// 处理ping,auth等消息
-    this.wsSubject.subscribe((message) => {
-      const handler = messageHandlers.get(message.event);
-      if (handler) {
-        handler.handle(message, this.send.bind(this));
-      }
+    const send = this.send.bind(this);
+    this.wsSubject.subscribe({
+      next(message) {
+        const handler = messageHandlers.get(message.event);
+        if (handler) {
+          handler.handle(message, send);
+        }
+      },
+      error(err) {
+        console.log("WS Error: ", err);
+      },
+      complete() {
+        console.log("WS Connection closed");
+      },
     });
   }
 
@@ -77,14 +89,12 @@ class WS {
     unsubscribe?: () => any,
     messageFilter?: (value: T) => boolean
   ): Observable<T> {
-    const [subscribeMessage, unsubscribeMessage, filter] = this.generateMessage(
-      params,
-      unsubscribe,
-      messageFilter
-    );
+    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] =
+      this.generateMessage(params, unsubscribe, messageFilter);
 
     return new Observable((observer: Observer<T>) => {
       try {
+        //TODO: add ref count, only send subscribe message when ref count is 0
         this.send(subscribeMessage);
       } catch (err) {
         observer.error(err);
@@ -94,7 +104,7 @@ class WS {
         next: (x) => {
           try {
             if (filter(x)) {
-              observer.next(x);
+              observer.next(messageFormatter(x));
             }
           } catch (err) {
             observer.error(err);
@@ -106,7 +116,7 @@ class WS {
 
       return () => {
         try {
-          console.log("******* unsubscribe", unsubscribeMessage);
+          // console.log("******* unsubscribe", unsubscribeMessage);
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
@@ -126,10 +136,16 @@ class WS {
     params: any,
     unsubscribe?: () => any,
     messageFilter?: (value: any) => boolean
-  ): [Record<string, any>, Record<string, any>, (message: any) => boolean] {
+  ): [
+    Record<string, any>,
+    Record<string, any>,
+    (message: any) => boolean,
+    (message: any) => any
+  ] {
     let subscribeMessage: Record<string, any>,
       unsubscribeMessage: Record<string, any>;
-    let filter: (message: any) => boolean;
+    let filter: (message: any) => boolean,
+      messageFormatter: (message: any) => any = (message: any) => message.data;
 
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
@@ -142,7 +158,7 @@ class WS {
       filter = messageFilter || ((message: any) => true);
     }
 
-    return [subscribeMessage, unsubscribeMessage, filter];
+    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
   }
 }
 

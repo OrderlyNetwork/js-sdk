@@ -23,6 +23,7 @@ export interface OrderlyContextState {
   // coin cion generator
   coinGenerator?: CoinGenerator;
   ws: WebSocketAdpater;
+  fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
 }
 

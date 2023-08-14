@@ -15,6 +15,9 @@ import { Select } from "@/select";
 import { Switch } from "@/switch";
 import Button from "@/button";
 import { OrderSide, OrderType, OrderValue } from "./types";
+import { RadioGroup, Radio } from "@/radioGroup";
+import { Checkbox } from "@/checkbox/checkbox";
+import { Label } from "@/label";
 
 export interface OrderEntryProps {
   onSubmit?: (value: OrderValue) => Promise<any>;
@@ -54,6 +57,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       type: OrderType.Limit,
       price: "",
       qty: "",
+      symbol: props.pair,
     });
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
@@ -61,7 +65,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const onSubmit = useCallback(
       (event: FormEvent) => {
         event.preventDefault();
-        props.onSubmit?.(values);
+        props.onSubmit?.({
+          // symbol: props.pair,
+          ...values,
+        });
       },
       [values]
     );
@@ -88,8 +95,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         <div className="flex flex-col gap-2">
           <SegmentedButton
             buttons={[
-              { label: "Buy", value: "buy" },
-              { label: "Sell", value: "sell" },
+              {
+                label: "Buy",
+                value: "buy",
+                activeClassName:
+                  "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
+              },
+              {
+                label: "Sell",
+                value: "sell",
+                activeClassName:
+                  "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
+              },
             ]}
             value={values.side}
             onClick={function (value: string, event: Event): void {
@@ -157,7 +174,29 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           <div className="flex py-1">
             <Switch label="Reduce only" />
           </div>
-          <Button type="submit">{buttonText}</Button>
+          <div>
+            <RadioGroup className="grid-cols-3">
+              <Radio value={"postOnly"}>Post Only</Radio>
+              <Radio value={"ioc"}>IOC</Radio>
+              <Radio value={"fok"}>FOK</Radio>
+            </RadioGroup>
+          </div>
+          <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
+              <Checkbox id="orderConfirm" />
+              <Label htmlFor="orderConfirm">Order Confirm</Label>
+            </div>
+            <div className="flex gap-2 items-center">
+              <Checkbox id="hidden" />
+              <Label htmlFor="hidden">Hidden</Label>
+            </div>
+          </div>
+          <Button
+            type="submit"
+            color={values.side === OrderSide.Buy ? "buy" : "sell"}
+          >
+            {buttonText}
+          </Button>
         </div>
       </form>
     );

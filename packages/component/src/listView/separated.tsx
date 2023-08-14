@@ -1,6 +1,7 @@
 import { ListViewProps } from "./listView";
 import { ListView } from ".";
 import { useMemo } from "react";
+import React from "react";
 
 export interface SeparatedListViewProps<T> extends ListViewProps<T> {
   renderSeparator: (item: T, index: number) => React.ReactNode;
@@ -16,10 +17,10 @@ export const SeparatedListView = <T,>(props: SeparatedListViewProps<T>) => {
   return ListView({
     ...rest,
     renderItem: (item, index) => (
-      <>
+      <React.Fragment key={index}>
         {props.renderItem(item, index)}
         {index + 1 < length ? renderSeparator?.(item, index) : null}
-      </>
+      </React.Fragment>
     ),
   });
 };

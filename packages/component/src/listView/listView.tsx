@@ -1,11 +1,15 @@
+import React from "react";
 import { FC, useEffect, useMemo, useRef } from "react";
 import { EmptyView } from "./emptyView";
+import { cn } from "@/utils/css";
+import { Spinner } from "@/spinner";
 
 export interface ListViewProps<T> {
-  dataSource: T[];
+  dataSource: T[] | null;
   renderItem: (item: T, index: number) => React.ReactNode;
   //
   className?: string;
+  isLoading?: boolean;
 
   onEndReached?: () => void;
 }
@@ -21,6 +25,9 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     };
 
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
+      if (props.isLoading) {
+        return;
+      }
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           props.onEndReached?.();
@@ -33,7 +40,7 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     return () => {
       observer.current?.disconnect();
     };
-  }, [props.onEndReached]);
+  }, [props.onEndReached, props.isLoading, props.dataSource]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -42,17 +49,38 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
   }, []);
 
   const listViewElement = useMemo(() => {
+    if (!props.dataSource) {
+      return null;
+    }
+
     if (!Array.isArray(props.dataSource) || props.dataSource.length <= 0) {
       return <EmptyView />;
     }
 
-    return props.dataSource.map((item, index) => props.renderItem(item, index));
+    return props.dataSource.map((item, index) => (
+      <React.Fragment key={index}>
+        {props.renderItem(item, index)}
+      </React.Fragment>
+    ));
   }, [props.dataSource]);
 
+  const loadingViewElement = useMemo(() => {
+    if (!props.isLoading) {
+      return null;
+    }
+
+    return (
+      <div className="absolute w-full h-full z-20 left-0 top-0 bottom-0 right-0 bg-white/50 flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }, [props.isLoading]);
+
   return (
-    <div className={props.className}>
+    <div className={cn("relative min-h-[120px]", props.className)}>
       <div className="list-view-inner">{listViewElement}</div>
       <div ref={sentinelRef} />
+      {loadingViewElement}
     </div>
   );
 };

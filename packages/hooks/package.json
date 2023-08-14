@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@orderly/net": "workspace:*",
+    "@orderly/core": "workspace:*",
     "ramda": "^0.29.0",
     "rxjs-hooks": "0.8.0-alpha.0",
     "swr": "^2.2.0",

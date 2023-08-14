@@ -1,5 +1,5 @@
 import { WS } from "@orderly/net";
-import { FC, PropsWithChildren, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import {
   useConstant,
   OrderlyProvider as Provider,
@@ -7,6 +7,7 @@ import {
 } from "@orderly/hooks";
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
+import { __ORDERLY_API_URL_KEY__ } from "@orderly/net";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
@@ -27,6 +28,14 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         url: "wss://ws.orderly.org/ws/stream/OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
       })
   );
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      //set apiUrl to window;
+      (window as any)[__ORDERLY_API_URL_KEY__] = apiBaseUrl;
+    }
+  }, [apiBaseUrl]);
+
   return (
     <Provider value={{ ws, apiBaseUrl }}>
       <ModalProvider>{children}</ModalProvider>

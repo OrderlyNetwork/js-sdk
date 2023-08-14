@@ -1,4 +1,5 @@
 export { useQuery } from "./useQuery";
+export { useMutation } from "./useMutation";
 export { usePrivateQuery } from "./usePrivateQuery";
 
 export { useTradingView } from "./useTradingView";

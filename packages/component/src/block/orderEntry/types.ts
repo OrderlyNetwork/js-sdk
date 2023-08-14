@@ -9,6 +9,7 @@ export enum OrderSide {
 }
 
 export type OrderValue = {
+  symbol: string;
   price: string;
   qty: string;
   type: OrderType;
