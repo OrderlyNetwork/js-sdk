@@ -1,6 +1,7 @@
 /** @type { import('@storybook/react').Preview } */
+import { withThemeByDataAttribute } from "@storybook/addon-styling";
 
-import '../src/tailwind.css'; // tailwind css
+import "../src/tailwind.css"; // tailwind css
 
 const preview = {
   parameters: {
@@ -18,3 +19,17 @@ const preview = {
 };
 
 export default preview;
+
+export const decorators = [
+  withThemeByDataAttribute({
+    themes: {
+      // light: "light",
+      // dark: "dark",
+      "woo/dark": "",
+      "woo/light": "woo_light",
+      orderly: "orderly",
+    },
+    defaultTheme: "woo/dark",
+    attributeName: "data-o-theme",
+  }),
+];

@@ -1,10 +1,11 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { Header } from "./header";
 import { Bids } from "./bids";
 import { Asks } from "./asks";
 import { MarkPrice } from "./markPrice";
 import { DepthSelect } from "@/block/orderbook/depthSelect";
 import { OrderBookProvider } from "@/block/orderbook/orderContext";
+import { QtyMode } from "./types";
 
 export interface OrderBookProps {
   asks: any[];
@@ -22,6 +23,8 @@ export interface OrderBookProps {
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
+  const onModeChange = useCallback((mode: QtyMode) => {}, []);
+
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 22}

@@ -1,5 +1,6 @@
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { OrderBookCell, OrderBookCellType } from "./cell";
+import { OrderBookContext } from "./orderContext";
 
 interface OrderBookListProps {
   type: OrderBookCellType;
@@ -9,6 +10,7 @@ interface OrderBookListProps {
 
 export const ListBox: FC<OrderBookListProps> = (props) => {
   const { data } = props;
+  const { mode } = useContext(OrderBookContext);
 
   return (
     <div className="flex flex-col gap-[1px]">
@@ -22,6 +24,7 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
             accumulated={item[2]}
             count={props.countQty}
             type={props.type}
+            mode={mode}
           />
         );
       })}

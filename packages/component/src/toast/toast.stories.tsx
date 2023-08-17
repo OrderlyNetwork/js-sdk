@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import toast, { Toaster } from "react-hot-toast";
-import { OrderlyProvider } from "../provider/orderlyProvider";
+import { OrderlyProvider } from "../provider";
 
 const meta: Meta<typeof Toaster> = {
   component: Toaster,

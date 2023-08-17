@@ -6,6 +6,10 @@ import { X } from "lucide-react";
 
 const inputVariants = cva(["rounded"], {
   variants: {
+    variant: {
+      outlined: "border border-slate-300",
+      filled: "bg-fill",
+    },
     size: {
       small: "h-[28px]",
       default: "h-[40px]",
@@ -22,6 +26,7 @@ const inputVariants = cva(["rounded"], {
   },
   defaultVariants: {
     size: "default",
+    variant: "filled",
   },
 });
 
@@ -41,14 +46,16 @@ export interface InputProps
 export const Input: FC<InputProps> = ({
   className,
   size,
+  variant,
   fullWidth,
   disabled,
   prefix,
   suffix,
+  onClean,
   ...props
 }) => {
   const cleanButton = useMemo(() => {
-    if (typeof props.onClean === "undefined") {
+    if (typeof onClean === "undefined") {
       return null;
     }
     return (
@@ -57,27 +64,29 @@ export const Input: FC<InputProps> = ({
         onMouseDown={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          props.onClean?.();
+          onClean?.();
         }}
       >
         <span
           className={
-            "inline-flex rounded-full bg-black/20 w-[18px] h-[18px] items-center justify-center"
+            "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
           }
         >
-          <X size={12} />
+          <X size={16} />
         </span>
       </button>
     );
-  }, [props.onClean]);
+  }, [onClean]);
   return (
     <div
       className={cn(
-        "flex flex-row items-center bg-slate-300 rounded focus-within:outline outline-red-400",
+        "flex flex-row items-center rounded focus-within:outline focus-within:outline-1 outline-primary",
         inputVariants({
           size,
           fullWidth,
           disabled,
+          variant,
+          className,
         })
       )}
     >
@@ -88,8 +97,7 @@ export const Input: FC<InputProps> = ({
         disabled={!!disabled}
         className={cn(
           "bg-transparent p-3 flex-1 focus-visible:outline-none w-full peer",
-          typeof prefix !== "undefined" && "px-0",
-          className
+          typeof prefix !== "undefined" && "px-0"
         )}
       />
       {cleanButton}

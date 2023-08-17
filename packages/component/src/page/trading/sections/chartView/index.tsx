@@ -8,7 +8,7 @@ export const ChartView = () => {
   const [activeTab, setActiveTab] = useState("tradingView");
 
   return (
-    <div className="bg-slate-100">
+    <div>
       <Tabs
         value={activeTab}
         onTabChange={setActiveTab}

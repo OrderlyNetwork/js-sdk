@@ -1,5 +1,8 @@
 import {useCallback, useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
+import { useWebSocketClient } from "../useWebSocketClient";
+import {type WS } from "@orderly/core";
+
 
 interface MarketInfo {
 
@@ -10,6 +13,19 @@ export const useFetures = ()=>{
     const {data,isLoading,error} = useQuery<MarketInfo[]>(`/public/futures`);
 
     const [sortedData,setSortedData] = useState(data);
+
+    const ws = useWebSocketClient();
+
+    useEffect(() => {
+        const sub = ws.observe<WS.Ticker>(`tickers`).subscribe((value) => {
+            console.log("useTickers", value);
+            // setData(value);
+        });
+
+        return () => {
+            sub.unsubscribe();
+        };
+    }, []);
 
     useEffect(() => {
         if(data){

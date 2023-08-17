@@ -20,6 +20,7 @@ export const usePrivateQuery = <T>(
 
   const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
 
+  // @ts-ignore
   return useSWR<T>(`${apiBaseUrl}${query}`, fetcher, {
     ...options,
     use: [signatureMiddleware, ...middleware],

@@ -3,17 +3,17 @@
 import { cn } from "@/utils/css";
 // import { cva } from "class-variance-authority";
 import React, { FC, useEffect, useMemo } from "react";
+import { Size } from "./types";
 
-type Size = "small" | "medium" | "large";
-
-export type NetworkImageType = "coin" | "chain";
+export type NetworkImageType = "coin" | "chain" | "placeholder";
 
 export interface NetworkImageProps {
-  name: string;
-  id?: string;
+  name?: string;
+  id?: number;
   size?: Size | number;
   backgroundColor?: string;
   className?: string;
+  rounded?: boolean;
   type: NetworkImageType;
 }
 
@@ -22,6 +22,10 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
 
   useEffect(() => {
+    if (props.type === "placeholder") {
+      return;
+    }
+
     const img = new Image();
 
     img.onload = function () {
@@ -34,16 +38,16 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
 
     if (props.type === "coin") {
       // coin logos
-      img.src = `https://oss.woo.network/static/symbol_logo/${props.name.toUpperCase()}.png`;
+      img.src = `https://oss.woo.network/static/symbol_logo/${props.name!.toUpperCase()}.png`;
     }
     if (props.type === "chain") {
-      img.src = `https://oss.woo.network/static/network_logo/${props.name.toUpperCase()}.png`;
+      img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
     }
 
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-  }, []);
+  }, [props.type]);
 
   const icon = useMemo(() => {
     if (!url) {
@@ -63,7 +67,12 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
 
   return (
     <div
-      className={cn("inline-block", props.className)}
+      className={cn(
+        "inline-block",
+        props.type === "placeholder" && "bg-slate-200",
+        props.rounded && "rounded-full",
+        props.className
+      )}
       style={{
         width: size,
         height: size,

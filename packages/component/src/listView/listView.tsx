@@ -5,7 +5,7 @@ import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
 
 export interface ListViewProps<T> {
-  dataSource: T[] | null;
+  dataSource: T[] | null | undefined;
   renderItem: (item: T, index: number) => React.ReactNode;
   //
   className?: string;
@@ -53,7 +53,7 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
       return null;
     }
 
-    if (!Array.isArray(props.dataSource) || props.dataSource.length <= 0) {
+    if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
       return <EmptyView />;
     }
 
@@ -65,16 +65,16 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
   }, [props.dataSource]);
 
   const loadingViewElement = useMemo(() => {
-    if (!props.isLoading) {
+    if (!props.isLoading && !!props.dataSource) {
       return null;
     }
 
     return (
-      <div className="absolute w-full h-full z-20 left-0 top-0 bottom-0 right-0 bg-white/50 flex justify-center items-center">
+      <div className="absolute w-full h-full z-20 left-0 top-0 bottom-0 right-0 flex justify-center items-center">
         <Spinner />
       </div>
     );
-  }, [props.isLoading]);
+  }, [props.isLoading, props.dataSource]);
 
   return (
     <div className={cn("relative min-h-[120px]", props.className)}>

@@ -6,10 +6,11 @@ import { OrderlyContext } from "./orderlyContext";
 
 import { get } from "@orderly/net";
 
-const fetcher = (url: string) => get(url);
+const fetcher = (url: string, queryOptions: useQueryOptions<any>) =>
+  get(url, {}, queryOptions?.formatter);
 
-export type useQueryOptions = {
-  formatter?: (data: any) => any;
+export type useQueryOptions<T> = {
+  formatter?: (data:any) => T;
 };
 
 /**
@@ -20,7 +21,7 @@ export type useQueryOptions = {
  */
 export const useQuery = <T>(
   query: string,
-  options?: SWRConfiguration & useQueryOptions
+  options?: SWRConfiguration & useQueryOptions<T>
 ): SWRResponse<T> => {
   const { apiBaseUrl } = useContext(OrderlyContext);
   const { formatter, ...swrOptions } = options || {};
@@ -34,5 +35,9 @@ export const useQuery = <T>(
   }
 
   // @ts-ignore
-  return useSWR<T>(`${apiBaseUrl}${query}`, fetcher, swrOptions);
+  return useSWR<T>(
+    `${apiBaseUrl}${query}`,
+    (url) => fetcher(url, { formatter }),
+    swrOptions
+  );
 };

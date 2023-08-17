@@ -1,9 +1,10 @@
+// @ts-ignore
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { BottomSheet } from ".";
 import { useState } from "react";
-import { Button } from "../button";
+import Button from "../button";
 import { modal } from "../modal";
 import { OrderlyProvider } from "../provider/orderlyProvider";
 

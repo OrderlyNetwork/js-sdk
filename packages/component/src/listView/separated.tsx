@@ -8,7 +8,7 @@ export interface SeparatedListViewProps<T> extends ListViewProps<T> {
 }
 
 export const SeparatedListView = <T,>(props: SeparatedListViewProps<T>) => {
-  const { renderSeparator, ...rest } = props;
+  const { renderSeparator, renderItem, ...rest } = props;
   const length = useMemo(
     () => props.dataSource?.length ?? 0,
     [props.dataSource]
@@ -16,9 +16,9 @@ export const SeparatedListView = <T,>(props: SeparatedListViewProps<T>) => {
 
   return ListView({
     ...rest,
-    renderItem: (item, index) => (
+    renderItem: (item: T, index) => (
       <React.Fragment key={index}>
-        {props.renderItem(item, index)}
+        {renderItem(item, index)}
         {index + 1 < length ? renderSeparator?.(item, index) : null}
       </React.Fragment>
     ),

@@ -1,31 +1,31 @@
 {
   "name": "@orderly/react",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 3000",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "pnpm exec chromatic --project-token=chpt_189e4e9465d2fdb"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "@orderly/hooks": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-intl": "^6.4.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
+    "@orderly/core": "workspace:*",
     "@orderly/hooks": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -42,7 +42,10 @@
     "@tailwindcss/typography": "^0.5.9",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@web3-onboard/injected-wallets": "^2.10.4",
+    "@web3-onboard/react": "^2.8.11",
     "autoprefixer": "^10.4.14",
+    "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
     "postcss": "^8.4.26",
     "prop-types": "^15.8.1",
@@ -54,6 +57,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "storybook": "^7.1.0",
     "tailwindcss": "^3.3.3",
+    "tailwindcss-animate": "^1.0.6",
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
@@ -78,5 +82,7 @@
     "react-hot-toast": "^2.4.1",
     "react-modal-sheet": "^2.0.0",
     "tailwind-merge": "^1.14.0"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "@orderly/react@0.0.1"
 }

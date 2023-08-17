@@ -1,13 +1,32 @@
+import { FC, useMemo, useState } from "react";
 import { SearchForm } from "@/block/markets/sections/search";
-import { ListView } from "@/listView";
 import { MarketListView } from "@/block/markets/sections/listView";
+import { SortDirection } from "@/block/markets/sections/sortItem";
+import { API } from "@orderly/core";
 
-export const Markets = () => {
+export interface MarketsProps {
+  dataSource?: API.MarketInfo[];
+  onSortBy?: (key: string, direction: SortDirection) => void;
+  onItemClick?: (item: API.MarketInfo) => void;
+}
+
+export const Markets: FC<MarketsProps> = (props) => {
+  const [searchKey, setSearchKey] = useState<string>("");
+
+  const dataSource = useMemo(() => {
+    if (searchKey) {
+      return props.dataSource?.filter((item) =>
+        new RegExp(searchKey, "i").test(item.symbol)
+      );
+    }
+    return props.dataSource;
+  }, [props.dataSource, searchKey]);
+
   return (
-    <div>
+    <>
       <h3 className={"text-[20px] py-3"}>Markets</h3>
-      <SearchForm />
-      <MarketListView />
-    </div>
+      <SearchForm onChange={setSearchKey} value={searchKey} />
+      <MarketListView dataSource={dataSource} onItemClick={props.onItemClick} />
+    </>
   );
 };

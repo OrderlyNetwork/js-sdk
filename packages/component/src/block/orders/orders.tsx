@@ -3,6 +3,7 @@ import { FC } from "react";
 import { Divider } from "@/divider";
 import { OrderCell } from "@/block/orders/cell";
 import { Toolbar } from "./toolbar";
+import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 
 export interface OrdersViewProps {
   dataSource: any[];
@@ -14,7 +15,7 @@ export interface OrdersViewProps {
 
 export const OrdersView: FC<OrdersViewProps> = (props) => {
   return (
-    <>
+    <StatisticStyleProvider labelClassName={"text-sm text-base-contrast/30"}>
       <Toolbar onCancelAll={props.onCancelAll} />
       <Divider />
       <ListView.separated
@@ -29,6 +30,6 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
           />
         )}
       ></ListView.separated>
-    </>
+    </StatisticStyleProvider>
   );
 };

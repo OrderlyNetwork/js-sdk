@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+// @ts-ignore
 import React from "react";
 import { SimpleSheet } from ".";
 

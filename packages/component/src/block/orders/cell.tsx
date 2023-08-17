@@ -19,11 +19,13 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     );
   }, [order]);
   return (
-    <>
-      <div className="flex item-center gap-2">
+    <div className={"p-4"}>
+      <div className="flex items-center gap-2">
         {typeTag}
         <div className="flex-1">BTC-PERP</div>
-        <div>2022-08-30 17:19:47</div>
+        <div className={"text-sm text-base-contrast/30"}>
+          2022-08-30 17:19:47
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Statistic label="Qty." value={order.quantity ?? "-"} coloring />
@@ -37,6 +39,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           fullWidth
           variant="outlined"
           size="small"
+          color="tertiary"
           onClick={() => props.onEdit?.(order)}
         >
           Edit
@@ -44,12 +47,13 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
         <Button
           fullWidth
           variant="outlined"
+          color="tertiary"
           size="small"
           onClick={() => props.onCancel?.(order)}
         >
           Cancel
         </Button>
       </div>
-    </>
+    </div>
   );
 };

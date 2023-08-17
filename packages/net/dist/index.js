@@ -76,6 +76,7 @@ function request(url, options) {
       // credentials: "include",
       headers: _createHeaders(options.headers)
     })).catch((err) => {
+      console.log("fetch error", err);
       throw new Error(err);
     });
     if (response.ok) {
@@ -91,12 +92,18 @@ function _createHeaders(headers = {}) {
   }
   return _headers;
 }
-function get(url, options) {
+function get(url, options, getter) {
   return __async(this, null, function* () {
     const res = yield request(url, __spreadValues({
       method: "GET"
     }, options));
     if (res.success) {
+      if (typeof getter === "function") {
+        return getter(res.data);
+      }
+      if (Array.isArray(res.data["rows"])) {
+        return res.data["rows"];
+      }
       return res.data;
     }
     throw new Error(res.message);
@@ -150,7 +157,7 @@ var messageHandlers = /* @__PURE__ */ new Map([
 ]);
 
 // src/ws/index.ts
-var WS = class {
+var _WS = class _WS {
   constructor(options) {
     this.authenticated = false;
     this.wsSubject = this.createSubject(options);
@@ -207,7 +214,11 @@ var WS = class {
     const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
     return new import_rxjs.Observable((observer) => {
       try {
-        this.send(subscribeMessage);
+        const refCount = _WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+        if (refCount === 0) {
+          this.send(subscribeMessage);
+          _WS.__topicRefCountMap.set(subscribeMessage.topic, refCount + 1);
+        }
       } catch (err) {
         observer.error(err);
       }
@@ -226,9 +237,15 @@ var WS = class {
       });
       return () => {
         try {
+          const refCount = _WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+          if (refCount > 1) {
+            _WS.__topicRefCountMap.set(subscribeMessage.topic, refCount - 1);
+            return;
+          }
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
+          _WS.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }
@@ -255,7 +272,8 @@ var WS = class {
   }
 };
 // the topic reference count;
-WS.__topicRefCountMap = /* @__PURE__ */ new Map();
+_WS.__topicRefCountMap = /* @__PURE__ */ new Map();
+var WS = _WS;
 var ws_default = WS;
 
 // src/constants.ts

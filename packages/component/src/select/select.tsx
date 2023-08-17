@@ -9,7 +9,7 @@ export type SelectOption = {
   label: string;
 };
 
-const selectVariants = cva(["rounded-md transition-colors"], {
+const selectVariants = cva(["rounded transition-colors bg-fill"], {
   variants: {
     size: {
       small: "px-1 h-[28px]",
@@ -60,7 +60,7 @@ const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
     <>
       <div
         className={twMerge(
-          "flex flex-row items-center bg-slate-300 rounded focus-within:outline outline-red-400",
+          "flex flex-row items-center rounded focus-within:outline outline-red-400",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,

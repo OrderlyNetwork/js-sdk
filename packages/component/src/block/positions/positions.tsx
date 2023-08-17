@@ -3,6 +3,7 @@ import { PositionCell } from "./cell";
 import { Overview } from "./overview";
 import { ListView } from "@/listView";
 import { FC } from "react";
+import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 
 interface PositionsViewProps {
   dataSource: any[] | null;
@@ -16,26 +17,29 @@ interface PositionsViewProps {
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
-    <div>
-      <Overview onMarketCloseAll={props.onMarketCloseAll} />
-      <>
-        <ListView.separated<any>
-          dataSource={props.dataSource}
-          renderItem={(item, index) => {
-            return (
-              <PositionCell
-                item={item}
-                onLimitClose={props.onLimitClose}
-                onMarketClose={props.onMarketClose}
-              />
-            );
-          }}
-          renderSeparator={(item, index) => {
-            return <Divider key={index} />;
-          }}
-          onEndReached={props.loadMore}
-        />
-      </>
-    </div>
+    <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
+      <div>
+        <Overview onMarketCloseAll={props.onMarketCloseAll} />
+        <Divider />
+        <>
+          <ListView.separated<any>
+            dataSource={props.dataSource}
+            renderItem={(item, index) => {
+              return (
+                <PositionCell
+                  item={item}
+                  onLimitClose={props.onLimitClose}
+                  onMarketClose={props.onMarketClose}
+                />
+              );
+            }}
+            renderSeparator={(item, index) => {
+              return <Divider key={index} />;
+            }}
+            onEndReached={props.loadMore}
+          />
+        </>
+      </div>
+    </StatisticStyleProvider>
   );
 };

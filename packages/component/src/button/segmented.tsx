@@ -64,12 +64,10 @@ const _Button = ({
       onClick={(event) => onClick(value, event)}
       className={twMerge(
         cn(
-          "min-w-0 flex-1 py-1 bg-slate-300 relative after:block after:bg-slate-300 after:absolute after:w-[40px] after:h-full after:top-0 after:z-10 h-[32px]",
+          "min-w-0 flex-1 py-1 bg-fill relative after:block after:bg-fill after:absolute after:w-[40px] after:h-full after:top-0 after:z-10 h-[32px]",
           isActive && "bg-primary after:bg-primary",
-          isFirstChild &&
-            "rounded-l-md after:right-[-15px] after:skew-x-[-35deg]",
-          !isFirstChild &&
-            "rounded-r-md after:left-[-15px] after:skew-x-[-35deg]",
+          isFirstChild && "rounded-l after:right-[-15px] after:skew-x-[-35deg]",
+          !isFirstChild && "rounded-r after:left-[-15px] after:skew-x-[-35deg]",
           className,
           isActive && activeClassName
         )

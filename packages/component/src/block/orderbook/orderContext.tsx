@@ -1,7 +1,10 @@
-import { createContext, FC, PropsWithChildren } from "react";
+import { createContext, FC, PropsWithChildren, useState } from "react";
+import { QtyMode } from "./types";
 
 export interface OrderBookContextValue {
   cellHeight: number;
+  mode: QtyMode;
+  onModeChange?: (mode: QtyMode) => void;
   onItemClick?: (item: number[]) => void;
 }
 
@@ -17,9 +20,15 @@ interface OrderBookProviderProps {
 export const OrderBookProvider: FC<
   PropsWithChildren<OrderBookProviderProps>
 > = (props) => {
+  const [mode, setMode] = useState<QtyMode>("quantity");
   return (
     <OrderBookContext.Provider
-      value={{ cellHeight: props.cellHeight, onItemClick: props.onItemClick }}
+      value={{
+        cellHeight: props.cellHeight,
+        onItemClick: props.onItemClick,
+        mode,
+        onModeChange: setMode,
+      }}
     >
       {props.children}
     </OrderBookContext.Provider>

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ListView } from ".";
 import { ReactNode } from "react";
 import { ListTile } from "./listTile";
+// @ts-ignore
 import React from "react";
 
 const meta: Meta<typeof ListView> = {

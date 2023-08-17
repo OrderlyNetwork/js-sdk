@@ -48,14 +48,14 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
       </div>
       <Paper className="bg-slate-600/20">
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-sm text-tertiary">
           <span>Instrument</span>
           <span>Available Balance</span>
         </div>
         <Divider />
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <NetworkImage name={"USDC"} type={"coin"} />
+            <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
             <span>USDC</span>
           </div>
           <div>123,456</div>

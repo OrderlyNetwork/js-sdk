@@ -7,22 +7,43 @@ import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/withdraw/sections/summary";
 import Button from "@/button";
 import { WalletPicker } from "../pickers/walletPicker";
+import { cn } from "@/utils/css";
+import { NetworkImage } from "@/icon/networkImage";
 
-export interface WithdrawProps {}
+export enum WithdrawStatus {
+  NotSupported = "NotSupported",
+  NotConnected = "NotConnected",
+  Unsettle = "Unsettle",
+  InsufficientBalance = "InsufficientBalance",
+  Normal = "Normal",
+}
 
-export const Withdraw: FC<WithdrawProps> = (props) => {
+export interface WithdrawProps {
+  status: WithdrawStatus;
+}
+
+export const Withdraw: FC<WithdrawProps> = ({
+  status = WithdrawStatus.Normal,
+}) => {
   return (
     <>
-      <div className="flex">
+      <div className="flex items-center py-2">
         <div className="flex-1">Your WOOFi DEX Wallet</div>
-        <Coin name="WOO" size="small" />
+        <Coin name="WOO" />
       </div>
-      <QuantityInput />
-      <Divider className={"py-4"}>
+      <QuantityInput
+        tokens={[]}
+        className={cn(status !== WithdrawStatus.Normal && "outline outline-1", {
+          "outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
+          "outline-yellow-500": status === WithdrawStatus.Unsettle,
+        })}
+      />
+      <Divider className={"py-3"}>
         <ArrowDown size={20} className={"text-primary"} />
       </Divider>
       <div className={"flex items-center"}>
         <div className={"flex-1"}>Your Web3 Wallet</div>
+        <NetworkImage type={"placeholder"} rounded />
       </div>
       <div className={"py-2"}>
         <WalletPicker />
@@ -31,7 +52,8 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
 
       <Summary />
       <div>
-        <Button fullWidth>Switch to NEAR Mainnet</Button>
+        {/*<Button fullWidth>Switch to NEAR Mainnet</Button>*/}
+        <Button fullWidth>Withdraw</Button>
       </div>
     </>
   );

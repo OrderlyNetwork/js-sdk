@@ -24,9 +24,9 @@ export const Overview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between bg-base-200 p-3">
         <Statistic label="Unreal PnL" value="-1,234.56" coloring />
-        <Statistic label="Notional" value="123,456" />
+        <Statistic label="Notional" value="123456" rule="price" />
         <Statistic
           label="Unsettled PnL"
           value="123,456"
@@ -34,11 +34,12 @@ export const Overview: FC<OverviewProps> = (props) => {
           align="right"
         />
       </div>
-      <div className="flex justify-between py-2 items-center">
-        <Select size={"small"} options={[]} value={"All side"} />
+      <div className="flex justify-between py-3 px-3 items-center">
+        <div>Show all instruments</div>
         <Button
           variant={"outlined"}
           size={"small"}
+          color={"tertiary"}
           onClick={() => onMarketCloseAll()}
         >
           Market Close All

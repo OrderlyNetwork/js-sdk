@@ -9,6 +9,7 @@ async function request(url: string, options: RequestInit) {
     // credentials: "include",
     headers: _createHeaders(options.headers),
   }).catch((err) => {
+    console.log("fetch error", err);
     throw new Error(err);
   });
 
@@ -29,13 +30,24 @@ function _createHeaders(headers: HeadersInit = {}): HeadersInit {
   return _headers;
 }
 
-async function get(url: string, options?: RequestInit): Promise<unknown> {
+async function get<R>(
+  url: string,
+  options?: RequestInit,
+  getter?: (data: any) => R
+): Promise<R> {
   const res = await request(url, {
     method: "GET",
     ...options,
   });
 
   if (res.success) {
+    if (typeof getter === "function") {
+      return getter(res.data);
+    }
+    // 根据返回的数据结构，返回需要的数据
+    if (Array.isArray(res.data["rows"])) {
+      return res.data["rows"] as R;
+    }
     return res.data;
   }
   throw new Error(res.message);

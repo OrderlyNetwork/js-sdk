@@ -15,6 +15,7 @@ interface ListTileProps {
   avatar?: string | React.ReactNode | NetworkImageProps;
   title?: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
+  onClick?: () => void;
 }
 
 export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
@@ -45,12 +46,12 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
       return (
         <div className={"flex flex-col gap-1"}>
           {props.title && (
-            <div key={"title"} className={"text-lg font-semibold"}>
+            <div key={"title"} className={"font-semibold"}>
               {props.title}
             </div>
           )}
           {props.subtitle && (
-            <div key={"subtitle"} className={"text-sm text-gray-500"}>
+            <div key={"subtitle"} className={"text-sm text-base-contrast/50"}>
               {props.subtitle}
             </div>
           )}
@@ -62,7 +63,13 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   }, [props.title, props.subtitle, props.children]);
 
   return (
-    <div className={cn("p-4 flex gap-2", props.className)}>
+    <div
+      className={cn(
+        "py-3 flex gap-2 hover:bg-base-200 active:bg-base-300",
+        props.className
+      )}
+      onClick={props.onClick}
+    >
       {leading}
       <div className={"flex-1"}>{children}</div>
       {props.tailing}

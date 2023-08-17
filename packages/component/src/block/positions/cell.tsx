@@ -1,5 +1,5 @@
 import Button from "@/button";
-import { Coin } from "@/icon";
+import { Coin, NetworkImage } from "@/icon";
 import { Statistic } from "@/statistic";
 import { FC } from "react";
 
@@ -13,61 +13,74 @@ interface PositionCellProps {
 export const PositionCell: FC<PositionCellProps> = (props) => {
   const { item } = props;
   return (
-    <div>
+    <div className="p-3">
       <div className="flex items-center py-2">
-        <div className="flex-1 text-lg">
+        <div className="flex-1">
           <div className="flex items-center">
-            <Coin name="BTC" />
+            <NetworkImage type="coin" name="BTC" size={"small"} />
             <span className="ml-2">BTC-PERP</span>
           </div>
         </div>
-        <Statistic label="Total PnL" value="123456" coloring align="right" />
+        <Statistic
+          label={
+            <>
+              <span>Unreal.PnL</span>
+              <span>(USDC)</span>
+            </>
+          }
+          value="123456"
+          rule="price"
+          coloring
+          align="right"
+        />
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Statistic label="Qty." value={item["position_qty"]} coloring />
         <Statistic
+          rule="price"
           label={
-            <div>
+            <>
               <span>Margin</span>
               <span>(USDC)</span>
-            </div>
+            </>
           }
           value="123456"
         />
         <Statistic
           label={
-            <div>
+            <>
               <span>Notional</span>
               <span>(USDC)</span>
-            </div>
+            </>
           }
+          rule="price"
           value="123456"
           align="right"
         />
         <Statistic
           label={
-            <div>
+            <>
               <span>Avg. Open</span>
               <span>(USDC)</span>
-            </div>
+            </>
           }
           value={item["average_open_price"]}
         />
         <Statistic
           label={
-            <div>
+            <>
               <span>Mark Price</span>
               <span>(USDC)</span>
-            </div>
+            </>
           }
           value={item["mark_price"]}
         />
         <Statistic
           label={
-            <div>
+            <>
               <span>Liq.Price</span>
               <span>(USDC)</span>
-            </div>
+            </>
           }
           value={item["est_liq_price"]}
           coloring
@@ -78,6 +91,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Button
           variant={"outlined"}
           size={"small"}
+          color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
         >
           Limit close
@@ -85,6 +99,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Button
           variant={"outlined"}
           size={"small"}
+          color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
         >
           Market close

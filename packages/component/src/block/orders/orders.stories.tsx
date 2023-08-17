@@ -11,6 +11,9 @@ const meta: Meta<typeof OrdersView> = {
   //   tags: ["autodocs"],
   component: OrdersView,
   title: "Block/OrdersView",
+  parameters: {
+    layout: "fullscreen",
+  },
   decorators: [
     (Story) => (
       <OrderlyProvider>

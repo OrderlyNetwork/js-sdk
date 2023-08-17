@@ -2,33 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-    :root{
-        /* colors */
-        --orderly-color-primary:51 95 252;
-        --orderly-color-background:27 32 40;
-        --orderly-color-background-contrast: 255 255 255;
+@layer base {
+  :root {
+    /* colors */
+    --orderly-color-primary: 51 95 252;
+    --orderly-color-secondary: 255 255 255;
+    --orderly-color-tertiary: 109 112 117;
+    --orderly-color-quaternary: 218 218 218;
+    /*--orderly-color-disabled:218 218 218;*/
 
-        --orderly-color-trading-loss: 255 68 124;
-        --orderly-color-trading-loss-contrast: 40 46 58;
-        --orderly-color-trading-profit: 0 180 158;
-        --orderly-color-trading-profit-contrast: 40 46 58;
+    --orderly-color-danger: 255 68 124;
 
+    --orderly-color-background: 27 32 40;
+    --orderly-color-background-contrast: 255 255 255;
 
-        /* rounded */
-        --orderly-rounded: 6px;
-        --orderly-rounded-sm: 4px;
-        --orderly-rounded-lg: 16px;
-        --orderly-rounded-full: 9999px;
+    --orderly-color-trading-loss: 255 68 124;
+    --orderly-color-trading-loss-contrast: 40 46 58;
+    --orderly-color-trading-profit: 0 180 158;
+    --orderly-color-trading-profit-contrast: 40 46 58;
 
-        /* font */
-        --orderly-header-title-font-size: 20px;
+    --orderly-color-neutral: 27 32 40;
 
-        /* components */
-        --orderly-orderbook-cell-height: 22px;
-        --orderly-orderbook-cell-font-size: 12px;
+    --orderly-color-base-100: 24 28 35;
+    --orderly-color-base-200: 27 32 40;
+    --orderly-color-base-300: 24 28 35;
+    --orderly-color-base-contract: 255 255 255;
 
+    /*brand color*/
+    /*--orderly-brand-50: 255 255 255;*/
+    /*--orderly-brand-100: 255 255 255;*/
+    /*--orderly-brand-200: 255 255 255;*/
+    /*--orderly-brand-300: 255 255 255;*/
+    /*--orderly-brand-400: 255 255 255;*/
+    /*--orderly-brand-500: 255 255 255;*/
+    /*--orderly-brand-600: 255 255 255;*/
+    /*--orderly-brand-700: 255 255 255;*/
+    /*--orderly-brand-800: 255 255 255;*/
+    /*--orderly-brand-900: 7 8 10;*/
 
+    --orderly-color-fill: 40 46 58;
+    --orderly-color-fill-active: 40 46 58;
 
-    }
+    --orderly-color-divider: 32 37 45;
+
+    /* shadows */
+    /*--orderly-button-shadow: 0 0 0 1px rgba(255,255,255,.1) inset, 0 4px 0 0 ;*/
+    --orderly-button-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1) inset,
+      0 -3px 1px 0 rgba(0, 0, 0, 0.15) inset;
+
+    /* rounded */
+    --orderly-rounded: 6px;
+    --orderly-rounded-sm: 4px;
+    --orderly-rounded-lg: 16px;
+    --orderly-rounded-full: 9999px;
+
+    /* font */
+    --orderly-header-title-font-size: 20px;
+
+    /* components */
+    --orderly-orderbook-cell-height: 22px;
+    --orderly-orderbook-cell-font-size: 12px;
+  }
+
+  [data-o-theme="woo_light"] {
+    /* colors */
+    --orderly-color-primary: 83 94 123;
+    --orderly-color-secondary: 255 255 255;
+    --orderly-color-tertiary: 218 218 218;
+    --orderly-color-quaternary: 218 218 218;
+    /*--orderly-color-disabled:218 218 218;*/
+
+    --orderly-color-background: 27 32 40;
+    --orderly-color-background-contrast: 255 255 255;
+
+    --orderly-color-fill: 226 232 240;
+    --orderly-color-fill-active: 40 46 58;
+
+    --orderly-color-divider: 218 218 218;
+
+    --orderly-color-trading-loss: 255 68 124;
+    --orderly-color-trading-loss-contrast: 40 46 58;
+    --orderly-color-trading-profit: 0 180 158;
+    --orderly-color-trading-profit-contrast: 40 46 58;
+
+    --orderly-color-base-100: 248 250 252;
+    --orderly-color-base-200: 241 245 249;
+    --orderly-color-base-300: 226 232 240;
+    --orderly-color-base-contract: 15 23 42;
+  }
+  [data-o-theme="orderly"] {
+    /* colors */
+    --orderly-color-primary: 203 66 218;
+    --orderly-color-secondary: 255 255 255;
+    --orderly-color-tertiary: 218 218 218;
+    --orderly-color-quaternary: 218 218 218;
+    /*--orderly-color-disabled:218 218 218;*/
+
+    --orderly-color-background: 27 32 40;
+    --orderly-color-background-contrast: 255 255 255;
+
+    --orderly-color-trading-loss: 255 68 124;
+    --orderly-color-trading-loss-contrast: 40 46 58;
+    --orderly-color-trading-profit: 0 180 158;
+    --orderly-color-trading-profit-contrast: 40 46 58;
+
+    --orderly-button-shadow: none;
+  }
+
+  html {
+    color: rgb(var(--orderly-color-base-contract));
+    background-color: rgb(var(--orderly-color-base-100));
+  }
 }

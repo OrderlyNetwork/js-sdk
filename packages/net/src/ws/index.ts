@@ -95,7 +95,13 @@ class WS {
     return new Observable((observer: Observer<T>) => {
       try {
         //TODO: add ref count, only send subscribe message when ref count is 0
-        this.send(subscribeMessage);
+        // 如果已经订阅过了，就不再发送订阅消息
+        const refCount = WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+        if (refCount === 0) {
+          // WS.__topicRefCountMap.set(subscribeMessage.topic, WS.__topicRefCountMap.get(subscribeMessage.topic) + 1);
+          this.send(subscribeMessage);
+          WS.__topicRefCountMap.set(subscribeMessage.topic, refCount + 1);
+        }
       } catch (err) {
         observer.error(err);
       }
@@ -117,9 +123,16 @@ class WS {
       return () => {
         try {
           // console.log("******* unsubscribe", unsubscribeMessage);
+          const refCount =
+            WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+          if (refCount > 1) {
+            WS.__topicRefCountMap.set(subscribeMessage.topic, refCount - 1);
+            return;
+          }
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
+          WS.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }

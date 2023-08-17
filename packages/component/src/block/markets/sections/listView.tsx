@@ -1,43 +1,89 @@
 import { ListView } from "@/listView";
 import { Divider } from "@/divider";
-import { useCallback } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { Statistic } from "@/statistic";
+import { SortDirection } from "@/block/markets/sections/sortItem";
+import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
+import { API } from "@orderly/core";
+import { Numeral } from "@/text";
 
 interface MarketListViewProps {
-  dataSource: any[];
+  dataSource?: API.MarketInfo[];
+  onItemClick?: (item: API.MarketInfo) => void;
 }
 
-export const MarketListView = () => {
-  const renderItem = useCallback(() => {
+type DataItem = API.MarketInfo & { change: number };
+
+const sortFunc = {
+  vol: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
+    return direction === SortDirection.ASC
+      ? a["24h_volumn"] - b["24h_volumn"]
+      : b["24h_volumn"] - a["24h_volumn"];
+  },
+  price: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
+    return direction === SortDirection.ASC
+      ? a["24h_close"] - b["24h_close"]
+      : b["24h_close"] - a["24h_close"];
+  },
+  change: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
+    return direction === SortDirection.ASC
+      ? a.change - b.change
+      : b.change - a.change;
+  },
+};
+
+export const MarketListView: FC<MarketListViewProps> = (props) => {
+  const renderItem = useCallback((item: DataItem) => {
     return (
       <ListView.listTile
-        className={"p-0"}
         title={"BTC-PERP"}
-        subtitle={"226.33M"}
+        subtitle={item["24h_volumn"]}
         avatar={{
           type: "coin",
           name: "BTC",
         }}
         tailing={
-          <Statistic label={"24h"} value={"-0.01%"} align={"right"} coloring />
+          <Statistic
+            label={<Numeral rule={"price"}>{item["24h_close"]}</Numeral>}
+            value={item.change}
+            rule={"percentages"}
+            align={"right"}
+            coloring
+            valueClassName={"text-sm"}
+          />
         }
+        onClick={() => {
+          props.onItemClick?.(item);
+        }}
       />
     );
   }, []);
+  const [sortCondition, setSortCondition] = useState<SortCondition>({});
 
   const renderSeparator = useCallback(() => {
     return <Divider />;
   }, []);
 
+  const dataSource = useMemo<DataItem[] | undefined>(() => {
+    const newDataSource = props.dataSource?.map((item) => ({
+      ...item,
+      change: (item["24h_close"] - item["24h_open"]) / item["24h_open"],
+    }));
+    if (typeof sortCondition.key === "undefined") {
+      return newDataSource;
+    }
+
+    return newDataSource?.sort(
+      sortFunc[sortCondition.key](sortCondition.direction ?? SortDirection.ASC)
+    );
+  }, [props.dataSource, sortCondition]);
+
   return (
     <>
-      <div className={"flex justify-between text-sm"}>
-        <div>Instrument</div>
-        <div>Change%</div>
-      </div>
+      <SortGroup onChange={setSortCondition} />
       <Divider />
-      <ListView.separated
-        dataSource={[1, 2]}
+      <ListView.separated<DataItem>
+        dataSource={dataSource}
         renderItem={renderItem}
         renderSeparator={renderSeparator}
       />

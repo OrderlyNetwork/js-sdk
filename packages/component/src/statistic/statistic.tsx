@@ -1,5 +1,7 @@
-import { FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useContext, useMemo } from "react";
 import { cn } from "@/utils/css";
+import { Numeral } from "@/text";
+import { StatisticStyleContext } from "./defaultStaticStyle";
 
 export interface StatisticProps {
   label: string | ReactNode;
@@ -7,10 +9,15 @@ export interface StatisticProps {
 
   coloring?: boolean;
   className?: string;
+  labelClassName?: string;
+  valueClassName?: string;
+  rule?: "percentages" | "price" | "text";
   align?: "left" | "right" | "center";
 
+  asChild?: boolean;
+
   // FormattedPrice
-  as?: "price" | "date";
+  // as?: "price" | "date";
 }
 
 const alignClasses: Record<string, string> = {
@@ -20,13 +27,14 @@ const alignClasses: Record<string, string> = {
 };
 
 const coloringClasses: Record<string, string> = {
-  lose: "text-red-500",
-  profit: "text-green-500",
-  neutral: "text-slate-500",
+  lose: "text-trade-loss",
+  profit: "text-trade-profit",
+  neutral: "text-base-contrast/50",
 };
 
 export const Statistic: FC<StatisticProps> = (props) => {
-  const { align = "left" } = props;
+  const { align = "left", rule, asChild } = props;
+  const { labelClassName, valueClassName } = useContext(StatisticStyleContext);
 
   const labelElement = useMemo(() => {
     if (typeof props.label === "string") {
@@ -42,22 +50,41 @@ export const Statistic: FC<StatisticProps> = (props) => {
     if (typeof props.value !== "number" && typeof props.value !== "string")
       return "";
 
-    const firstChar = String(props.value).charAt(0);
-    if (firstChar === "-") return coloringClasses.lose;
+    // if (props.value === 0) return coloringClasses.neutral;
+
+    const num = Number(props.value);
+
+    if (Number.isNaN(num)) {
+      // console.warn(`if coloring, value is need number: ${props.value}`);
+      return "";
+    }
+    if (num === 0) return coloringClasses.neutral;
+    if (num < 0) return coloringClasses.lose;
+
+    // const firstChar = String(props.value).charAt(0);
+    // if (firstChar === "-") return coloringClasses.lose;
     return coloringClasses.profit;
   }, [props.coloring, props.value]);
 
+  // ---------- create value element ----------
   const valueElement = useMemo(() => {
     if (typeof props.value === "string" || typeof props.value === "number") {
+      if (typeof rule !== "undefined") {
+        return <Numeral rule={rule}>{props.value}</Numeral>;
+      }
       return <span>{props.value}</span>;
     }
     return props.value;
-  }, [props.value]);
+  }, [props.value, rule]);
 
   return (
     <div className={cn(props.className, alignClasses[align])}>
-      <div>{labelElement}</div>
-      <div className={colorClassName}>{valueElement}</div>
+      <div className={cn(labelClassName, props.labelClassName)}>
+        {labelElement}
+      </div>
+      <div className={cn(colorClassName, props.valueClassName, valueClassName)}>
+        {valueElement}
+      </div>
     </div>
   );
 };

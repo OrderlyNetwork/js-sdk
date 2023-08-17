@@ -1,30 +1,37 @@
 import { Input } from "@/input";
 import { InputMask } from "@/input/inputMask";
 import { Search } from "lucide-react";
-import { useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 export interface SearchFormProps {
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
+  value?: string;
 }
 
-export const SearchForm = () => {
-  const [key, setKey] = useState<string>("");
+export const SearchForm: FC<SearchFormProps> = (props) => {
+  // const [key, setKey] = useState<string>("");
+
   const onClean = useCallback(() => {
     // console.log("clean");
-    setKey("");
+    props.onChange?.("");
   }, []);
+
+  // useEffect(() => {
+  //   props.onChange?.(key);
+  // }, [key]);
+
   return (
     <Input
       fullWidth
       placeholder={"Search instrument"}
       onClean={onClean}
-      value={key}
+      value={props.value}
       onChange={(event) => {
-        setKey(event.target.value);
+        props.onChange?.(event.target.value);
       }}
       prefix={
         <InputMask>
-          <Search />
+          <Search size={16} />
         </InputMask>
       }
     />

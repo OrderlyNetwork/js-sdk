@@ -1,9 +1,11 @@
 import { FC } from "react";
 import { Select } from "@/select";
+import { API } from "@orderly/core";
 
 export interface TokenPickerProps {
-  value?: string;
-  onChange?: (value: string) => void;
+  value?: API.Token;
+  onChange?: (value: API.Token) => void;
+  tokens: API.Token[];
 }
 
 export const TokenPicker: FC<TokenPickerProps> = (props) => {

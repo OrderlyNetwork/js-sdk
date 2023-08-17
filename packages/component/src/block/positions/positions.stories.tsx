@@ -13,6 +13,9 @@ const meta: Meta = {
     loadMore: { action: "loadMore" },
     onMarketCloseAll: { action: "onMarketCloseAll" },
   },
+  parameters: {
+    layout: "fullscreen",
+  },
   args: {
     // dataSource: [],
   },

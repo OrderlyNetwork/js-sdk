@@ -6,6 +6,8 @@ export { useTradingView } from "./useTradingView";
 
 export { usePrivateObserve } from "./usePrivateObserve";
 export { useTopicObserve } from "./useTopicObserve";
+export { useConfig } from "./useConfig";
+export { ConfigDataProvider } from "./provider/config";
 
 export { useUserInfo } from "./useUserInfo";
 

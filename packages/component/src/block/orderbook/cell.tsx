@@ -3,6 +3,7 @@ import { CellBar } from "./cellBar";
 import { queries } from "@storybook/testing-library";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
 import { commify } from "@orderly/utils";
+import { QtyMode } from "./types";
 
 export enum OrderBookCellType {
   BID = "bid",
@@ -17,15 +18,22 @@ export interface OrderBookCellProps {
   count: number;
   accumulated: number;
   type: OrderBookCellType;
+  mode: QtyMode;
 }
 
 export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
   const { cellHeight, onItemClick } = useContext(OrderBookContext);
 
+  const qty = Number.isNaN(props.quantity)
+    ? "-"
+    : props.mode === "amount"
+    ? props.quantity * props.price
+    : props.quantity;
+
   return (
     <div
-      className="overflow-hidden relative cursor-pointer hover:bg-slate-50 odd:bg-slate-100 odd:hover:bg-slate-50"
+      className="overflow-hidden relative cursor-pointer "
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
@@ -42,7 +50,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         >
           {Number.isNaN(props.price) ? "-" : commify(props.price)}
         </div>
-        <div>{Number.isNaN(props.quantity) ? "-" : props.quantity}</div>
+        <div className={"text-base-contrast/70"}>{qty}</div>
       </div>
       {Number.isNaN(width) ? null : (
         <CellBar

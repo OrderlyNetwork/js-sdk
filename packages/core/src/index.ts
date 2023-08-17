@@ -7,3 +7,8 @@ export {
 } from "./signer";
 
 export { getMockSigner, getDefaultSigner } from "./helper";
+
+export * as wallet from "./wallet";
+
+export * from "./types/api";
+export * from "./types/base";
