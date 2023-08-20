@@ -1,23 +1,21 @@
-import { MarketOverview } from "@/block/marketOverview";
+import { SimpleMarketOverview } from "@/block/marketOverview";
 import { Logo } from "@/logo";
+import { ChevronDown } from "lucide-react";
+import { FC } from "react";
 
-export const NavBar = () => {
+interface NavBarProps {
+  symbol: string;
+}
+
+export const NavBar: FC<NavBarProps> = (props) => {
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center px-3">
       <div className="grow flex flex-row items-center gap-4">
-        <div>BTC-PERP</div>
-        <MarketOverview
-          items={{
-            price: {
-              lastPrice: "123456",
-              percentChange: "12.34%",
-            },
-            fundingRate: {
-              fundingRate: "",
-              timout: 123,
-            },
-          }}
-        />
+        <button className={"flex items-center"}>
+          <span>BTC-PERP</span>
+          <ChevronDown size={16} />
+        </button>
+        <SimpleMarketOverview change={0.1234} markPrice={312304.23} />
       </div>
       <Logo link={""} image={""} />
     </div>

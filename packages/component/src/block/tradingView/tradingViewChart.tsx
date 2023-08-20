@@ -51,7 +51,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   interval = "1",
   range = undefined,
   timezone = "UTC",
-  theme = "light",
+  theme = "dark",
   style = "1",
   locale = "en",
   toolbar_bg = "#f1f3f6",
@@ -73,8 +73,10 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   disabled_features = [
     "control_bar",
     "timeframes_toolbar",
+    "go_to_date",
     "timezone_menu",
     "symbol_info",
+    "create_volume_indicator_by_default",
   ],
   enabled_features = undefined,
   container_id,
@@ -86,12 +88,17 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   const uid = useId();
   container_id = container_id || `tradingview_${uid}`;
   return (
-    <div id="tradingview_widget_wrapper" className="w-full h-full">
+    <div
+      id="tradingview_widget_wrapper"
+      className="w-full h-full"
+      style={{ height }}
+    >
       <Widget
         scriptHTML={{
           ...(!autosize ? { width } : { width: "100%" }),
           ...(!autosize ? { height } : { height: "100%" }),
           autosize,
+          fullscreen: true,
           symbol,
           ...(!range ? { interval } : { range }),
           timezone,
@@ -121,13 +128,24 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
           container_id,
           overrides: {
             // borderColor: "red",
+            "mainSeriesProperties.candleStyle.upColor": "#439687",
+            "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
+            "mainSeriesProperties.candleStyle.borderColor": "#378658",
+            "mainSeriesProperties.candleStyle.borderUpColor": "#439687",
+            "mainSeriesProperties.candleStyle.borderDownColor": "#DE5E57",
+            // volumePaneSize: "small",
+          },
+          loading_screen: {
+            backgroundColor: "#000000",
+            foregroundColor: "#000000",
           },
           ...props,
         }}
         scriptSRC="https://s3.tradingview.com/tv.js"
+        // scriptSRC="https://futures-dex-iap.woo.org/assets/woo-chart/charting_library/charting_library.js"
         containerId={container_id}
         type="Widget"
-      ></Widget>
+      />
     </div>
   );
 };

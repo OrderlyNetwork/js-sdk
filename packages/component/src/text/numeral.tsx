@@ -28,7 +28,15 @@ export interface NumeralProps {
   className?: string;
 
   coloring?: boolean;
+
+  loading?: boolean;
 }
+
+const coloringClasses: Record<string, string> = {
+  lose: "text-trade-loss",
+  profit: "text-trade-profit",
+  neutral: "text-base-contrast/50",
+};
 
 const Numeral: FC<NumeralProps> = (props) => {
   const { rule = "price", coloring, precision, truncate = false } = props;
@@ -77,7 +85,7 @@ const Numeral: FC<NumeralProps> = (props) => {
     return coloringClasses.profit;
   }, [props.coloring, props.children]);
 
-  return <span className={cn(props.className)}>{child}</span>;
+  return <span className={cn(colorClassName, props.className)}>{child}</span>;
 };
 
 export type CombinedComponent = typeof Numeral & {

@@ -2,7 +2,7 @@ import { FC, useContext, useMemo } from "react";
 import { CellBar } from "./cellBar";
 import { queries } from "@storybook/testing-library";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
-import { commify } from "@orderly/utils";
+import { commify, Decimal } from "@orderly/utils";
 import { QtyMode } from "./types";
 
 export enum OrderBookCellType {
@@ -28,7 +28,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const qty = Number.isNaN(props.quantity)
     ? "-"
     : props.mode === "amount"
-    ? props.quantity * props.price
+    ? new Decimal(props.quantity).mul(props.price).toNumber()
     : props.quantity;
 
   return (

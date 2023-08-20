@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
+  MouseEvent,
   useMemo,
   useRef,
   useState,
@@ -29,6 +30,7 @@ interface TabListProps {
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
   className?: string;
+  showIdentifier?: boolean;
 }
 
 export const TabList: FC<TabListProps> = (props) => {
@@ -53,7 +55,7 @@ export const TabList: FC<TabListProps> = (props) => {
   }, [calcLeft, props.value]);
 
   const onItemClick = useCallback(
-    (value, event) => {
+    (value: any, event: MouseEvent<HTMLButtonElement>) => {
       if (typeof props.onTabChange === "undefined") return;
       calcLeft(event.target);
       props.onTabChange?.(value);
@@ -70,7 +72,7 @@ export const TabList: FC<TabListProps> = (props) => {
   }, [props.tabBarExtra, tabContext]);
 
   return (
-    <div className="flex border-b">
+    <div className="flex border-b border-b-divider px-2">
       <div className="pb-1 relative flex-1">
         <div className="flex" ref={boxRef}>
           {props.tabs.map((item, index) => {
@@ -78,7 +80,7 @@ export const TabList: FC<TabListProps> = (props) => {
               <Tab
                 key={index}
                 title={item.title}
-                value={item.value}
+                value={item.value ?? index}
                 disabled={item.disabled}
                 active={
                   !!item.value && !!props.value && item.value === props.value
@@ -88,7 +90,7 @@ export const TabList: FC<TabListProps> = (props) => {
             );
           })}
         </div>
-        <TabIndicator left={left} />
+        {props.showIdentifier && <TabIndicator left={left} />}
       </div>
       {extraNode}
     </div>

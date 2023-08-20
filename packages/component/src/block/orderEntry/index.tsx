@@ -19,6 +19,8 @@ import { RadioGroup, Radio } from "@/radioGroup";
 import { Checkbox } from "@/checkbox/checkbox";
 import { Label } from "@/label";
 import { Divider } from "@/divider";
+import { Collapsible, CollapsibleContent } from "@/collapsible";
+import { OrderOptions } from "./sections/orderOptions";
 
 export interface OrderEntryProps {
   onSubmit?: (value: OrderValue) => Promise<any>;
@@ -133,10 +135,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           <Picker
             label={"Limit Order"}
             value={values.type}
+            color={values.side === OrderSide.Buy ? "buy" : "sell"}
             options={[
-              { label: "Limit", value: "limit" },
+              { label: "Limit Order", value: "limit" },
               {
-                label: "Market",
+                label: "Market Order",
                 value: "market",
               },
             ]}
@@ -177,36 +180,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={"USDC"}
           />
           <Divider />
-          <div className="flex gap-2 items-center py-1">
-            <Switch id="reduceOnly" />
-            <Label htmlFor="reduceOnly">Reduce Only</Label>
-          </div>
-          <div>
-            <RadioGroup className="flex gap-3">
-              <Radio value={"postOnly"}>Post Only</Radio>
-              <Radio value={"ioc"}>IOC</Radio>
-              <Radio value={"fok"}>FOK</Radio>
-            </RadioGroup>
-          </div>
-          <div className="flex gap-5">
-            <div className="flex gap-2 items-center">
-              <Checkbox id="orderConfirm" />
-              <Label htmlFor="orderConfirm">Order Confirm</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Checkbox id="hidden" />
-              <Label htmlFor="hidden">Hidden</Label>
-            </div>
-          </div>
-          <div className={"py-3"}>
-            <Button
-              type="submit"
-              color={values.side === OrderSide.Buy ? "buy" : "sell"}
-              fullWidth
-            >
-              {buttonText}
-            </Button>
-          </div>
+          <OrderOptions />
+
+          <Button
+            type="submit"
+            color={values.side === OrderSide.Buy ? "buy" : "sell"}
+            fullWidth
+          >
+            {buttonText}
+          </Button>
         </div>
       </form>
     );

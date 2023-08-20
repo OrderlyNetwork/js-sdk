@@ -3,6 +3,7 @@ import { TradeHistory } from "./tradeHistory";
 import { useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView } from "@/block/tradingView";
+import { ChevronDown } from "lucide-react";
 
 export const ChartView = () => {
   const [activeTab, setActiveTab] = useState("tradingView");
@@ -10,17 +11,19 @@ export const ChartView = () => {
   return (
     <div>
       <Tabs
+        showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
         tabBarExtra={(context) => {
           return (
             <div className="flex items-center">
               <button
+                className={"px-5"}
                 onClick={() => {
                   context.toggleContentVisible();
                 }}
               >
-                Toggle
+                <ChevronDown size={16} />
               </button>
             </div>
           );
@@ -29,18 +32,8 @@ export const ChartView = () => {
         <TabPane title="Chart" value="tradingView">
           <TradingView
             height={320}
-            intervals={[
-              "1",
-              "3",
-              "5",
-              "15",
-              "30",
-              "60",
-              "240",
-              "720",
-              "1D",
-              "1W",
-            ]}
+            theme={"dark"}
+            // intervals={}
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">

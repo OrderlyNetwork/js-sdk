@@ -7,7 +7,13 @@ interface InputTheme {
 }
 
 export interface ThemeConfigValue {
-  palette: {};
+  palette: {
+    primary: string;
+    secondary: string;
+    success: string;
+    warning: string;
+    danger: string;
+  };
   components: {
     input: InputTheme;
   };

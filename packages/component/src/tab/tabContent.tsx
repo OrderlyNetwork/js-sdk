@@ -6,15 +6,11 @@ import { twMerge } from "tailwind-merge";
 export const TabContent: FC<PropsWithChildren> = (props) => {
   const { contentVisible } = useContext(TabContext);
 
-  //   if (!contentVisible) {
-  //     return null;
-  //   }
-
   return (
     <div
       className={twMerge(
         cx(
-          "transition-all grid grid-rows-[1fr]",
+          "transition-all grid",
           contentVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         )
       )}

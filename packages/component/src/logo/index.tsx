@@ -8,7 +8,7 @@ export interface LogoProps {
 export const Logo: FC<LogoProps> = ({ link = "/" }) => {
   return (
     <div
-      className="bg-red-100 flex flex-row justify-center items-center"
+      className="flex flex-row justify-center items-center"
       style={{ width: "50px", height: "50px" }}
     >
       <a href={link}>WOO</a>

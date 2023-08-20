@@ -9,9 +9,11 @@ interface SimpleMarketOverviewProps {
 
 export const SimpleMarketOverview: FC<SimpleMarketOverviewProps> = (props) => {
   return (
-    <div className={"flex gap-4"}>
-      <Text>31205.80</Text>
-      <Numeral rule={"percentages"}>0.1234</Numeral>
+    <div className={"flex gap-4 items-center"}>
+      <Numeral>{props.markPrice}</Numeral>
+      <Numeral rule={"percentages"} coloring>
+        {props.change}
+      </Numeral>
     </div>
   );
 };

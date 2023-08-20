@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, forwardRef } from "react";
+import React, { createRef, useEffect, forwardRef, useRef } from "react";
 
 interface WidgetProps {
   scriptHTML: any;
@@ -11,7 +11,8 @@ declare const TradingView: any;
 
 export const Widget = forwardRef<any, WidgetProps>(
   ({ scriptHTML, scriptSRC, containerId, type }, ref) => {
-    const containerRef: { current: HTMLDivElement | null } = createRef();
+    // const containerRef: { current: HTMLDivElement | null } = createRef();
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
       let refValue: any;
@@ -33,6 +34,8 @@ export const Widget = forwardRef<any, WidgetProps>(
                   ? (ref = new TradingView.MediumWidget(scriptHTML))
                   : undefined
               );
+
+              console.log(script.innerHTML);
             }
           };
         } else {

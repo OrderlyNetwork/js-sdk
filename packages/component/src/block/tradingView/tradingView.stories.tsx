@@ -12,7 +12,9 @@ export default meta;
 type Story = StoryObj<typeof TradingView>;
 
 export const Default: Story = {
-  render: (args) => {
+  render: (args, { globals }) => {
+    const { symbol } = globals;
+    console.log(symbol);
     return (
       <div style={{ width: "100%", height: "300px" }}>
         <TradingView {...args} />
@@ -21,8 +23,8 @@ export const Default: Story = {
   },
   args: {
     // autosize: true,
-    width: 375,
+    width: "100%",
     height: 320,
-    intervals: ["1", "3", "5", "15", "30", "60", "240", "720", "1D", "1W"],
+    // intervals: ["1", "3", "5", "15", "30", "60", "240", "720", "1D", "1W"],
   },
 };

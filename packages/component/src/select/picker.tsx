@@ -49,7 +49,18 @@ export interface PickerProps
 export type PickerRef = {};
 export const Picker = forwardRef<PickerRef, PickerProps>(
   (
-    { size, value, label, placeholder, className, options, disabled, ...props },
+    {
+      size,
+      color,
+      value,
+      label,
+      placeholder,
+      className,
+      options,
+      fullWidth,
+      disabled,
+      ...props
+    },
     ref
   ) => {
     const [open, setOpen] = useState(false);
@@ -69,6 +80,8 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
           className={cn(
             pickerVariants({
               size,
+              color,
+              fullWidth,
               disabled: disabled || options.length === 0,
               className,
             })

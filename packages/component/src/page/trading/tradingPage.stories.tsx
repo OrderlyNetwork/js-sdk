@@ -23,7 +23,11 @@ export default meta;
 type Story = StoryObj<typeof TradingPage>;
 
 export const Default: Story = {
-  args: {
-    symbol: "BTC/USDT",
+  render: (args, { globals }) => {
+    const { symbol } = globals;
+    return <TradingPage symbol={symbol} {...args} />;
   },
+  // args: {
+  //   symbol: "BTC/USDT",
+  // },
 };

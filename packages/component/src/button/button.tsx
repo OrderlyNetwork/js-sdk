@@ -80,7 +80,7 @@ const buttonVariants = cva(
         variant: "outlined",
         color: "primary",
         class:
-          "text-primary bg-transparent border border-primary hover:bg-primary/10 hover:text-primary",
+          "text-primary bg-transparent border border-primary hover:bg-primary/10",
       },
       {
         variant: "outlined",
@@ -100,6 +100,12 @@ const buttonVariants = cva(
         color: "sell",
         class:
           "text-trade-loss bg-transparent border border-trade-loss hover:bg-trade-loss/10 hover:text-white",
+      },
+      {
+        variant: "text",
+        color: "primary",
+        class:
+          "text-primary bg-transparent hover:text-primary hover:bg-primary/10",
       },
     ],
     defaultVariants: {

@@ -1,26 +1,23 @@
 import React, { FC } from "react";
-import { cx } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils/css";
 
 export interface TabProps {
   title: string;
   active?: boolean;
-  value: string;
+  value: string | number;
   disabled?: boolean;
   icon?: React.ReactNode;
-  onClick: (value: string, event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (value: any, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Tab: FC<TabProps> = (props) => {
   const { active, disabled } = props;
   return (
     <button
-      className={twMerge(
-        cx(
-          "mx-2 text-slate-400",
-          active && "text-slate-900 active",
-          disabled && "cursor-not-allowed text-slate-300"
-        )
+      className={cn(
+        "mx-2 text-base-contrast/40 h-[32px]",
+        active && "text-base-contrast active",
+        disabled && "cursor-not-allowed text-slate-300"
       )}
       disabled={props.disabled}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {

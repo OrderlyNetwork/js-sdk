@@ -67,9 +67,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           variant={"outlined"}
           size={"small"}
           color={"buy"}
-          // className={
-          //   "border-gradient-br-blue-green-gray-900 border-transparent border-solid"
-          // }
+          className={"border-[rgba(38,254,254,1)]"}
         >
           <NetworkImage id={1} type="chain" size={"small"} />
           <ChevronDown size={16} className="ml-2" />
@@ -90,7 +88,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               <Button
                 size={"small"}
                 variant={"gradient"}
-                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE]"
+                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100"
                 loading={props.loading}
               >
                 {buttonLabel}

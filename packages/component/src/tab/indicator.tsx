@@ -1,6 +1,5 @@
-import { cx } from "class-variance-authority";
 import { FC, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils/css";
 
 export interface TabIndicatorProps {
   left?: number;
@@ -20,11 +19,9 @@ export const TabIndicator: FC<TabIndicatorProps> = ({
 
   return (
     <div
-      className={twMerge(
-        cx(
-          "absolute bottom-0 left-0 h-[3px] bg-slate-500 transition-transform",
-          className
-        )
+      className={cn(
+        "absolute bottom-0 left-0 h-[3px] bg-base-contrast transition-transform",
+        className
       )}
       style={cssTransform}
     />

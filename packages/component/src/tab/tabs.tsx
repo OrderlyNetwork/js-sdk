@@ -11,10 +11,15 @@ export interface TabsProps {
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
   keepAlive?: boolean;
+  // 是否显示tab指示器，default: true
+  showIdentifier?: boolean;
 }
 
 // it's controlled component;
-export const Tabs: FC<PropsWithChildren<TabsProps>> = (props) => {
+export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
+  showIdentifier = true,
+  ...props
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const [tabList, children] = useMemo(() => {
@@ -69,15 +74,16 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = (props) => {
 
   return (
     <TabContextProvider>
-      <div>
+      <>
         <TabList
           tabs={tabList}
           onTabChange={props.onTabChange}
           value={props.value}
           tabBarExtra={props.tabBarExtra}
+          showIdentifier={showIdentifier}
         />
         <TabContent>{child}</TabContent>
-      </div>
+      </>
     </TabContextProvider>
   );
 };

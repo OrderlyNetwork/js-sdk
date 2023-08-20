@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Select } from ".";
+import { Picker, Select } from ".";
 
 const meta: Meta<typeof Select> = {
   component: Select,
   title: "Base/Select",
   args: {
+    label: "Order Type",
     options: [
       { label: "Option 1", value: "option1" },
       { label: "Option 2", value: "option2" },
@@ -23,6 +24,12 @@ export const Default: Story = {
     size: "default",
     label: "Select",
     placeholder: "Select",
+  },
+};
+
+export const PickerStyle: Story = {
+  render: (args) => {
+    return <Picker {...args} fullWidth />;
   },
 };
 

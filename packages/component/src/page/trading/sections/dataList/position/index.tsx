@@ -1,10 +1,6 @@
 import { PositionHeader } from "./positionHeader";
+import { PositionsView } from "@/block/positions";
 
 export const PositionPane = () => {
-  return (
-    <div>
-      <PositionHeader />
-      Position Pane
-    </div>
-  );
+  return <PositionsView dataSource={[]} />;
 };

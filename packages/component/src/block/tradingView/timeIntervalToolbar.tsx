@@ -1,24 +1,82 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TimeInterval } from "./types";
+import { cn } from "@/utils/css";
+
+export type TimeIntervalItem = {
+  value: string;
+  label: string;
+};
+
+export const defaultTimeInterval = [
+  { value: "1", label: "1m" },
+  {
+    value: "3",
+    label: "3m",
+  },
+  {
+    value: "5",
+    label: "5m",
+  },
+  {
+    value: "15",
+    label: "15m",
+  },
+  {
+    value: "30",
+    label: "30m",
+  },
+  {
+    value: "60",
+    label: "1h",
+  },
+  {
+    value: "240",
+    label: "4h",
+  },
+  {
+    value: "720",
+    label: "12h",
+  },
+  {
+    value: "1D",
+    label: "D",
+  },
+  {
+    value: "1W",
+    label: "W",
+  },
+];
 
 export interface TimeIntervalToolbarProps {
-  intervals: TimeInterval[];
+  intervals?: TimeIntervalItem[];
+  timeInterval?: TimeInterval;
   onIntervalChange?: (interval: TimeInterval) => void;
 }
 
-export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = (props) => {
+export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
+  intervals = defaultTimeInterval,
+  onIntervalChange,
+}) => {
+  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
+    () => intervals[0].value as TimeInterval
+  );
+
   return (
     <div className="flex justify-around">
-      {props.intervals.map((interval) => {
+      {intervals.map((interval) => {
         return (
           <button
-            className="p-3 flex-1"
-            key={interval}
+            className={cn(
+              "p-3 flex-1 text-base-contrast/20",
+              timeInterval === interval.value && "text-base-contrast"
+            )}
+            key={interval.value}
             onClick={() => {
-              props.onIntervalChange?.(interval);
+              setTimeInterval(interval.value as TimeInterval);
+              onIntervalChange?.(interval.value as TimeInterval);
             }}
           >
-            {interval}
+            {interval.label}
           </button>
         );
       })}

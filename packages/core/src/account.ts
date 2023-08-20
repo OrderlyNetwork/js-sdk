@@ -19,6 +19,12 @@ export interface AccountState {
 
   balance: string;
   leverage: number;
+
+  // portfolio
+  // 仓位 id[]
+  positon?: string[];
+  // 挂单 id[]
+  orders?: string[];
 }
 
 /**
@@ -94,6 +100,20 @@ export class Account {
 
   get stateValue(): AccountState {
     return this._state$.getValue();
+  }
+
+  set position(position: string[]) {
+    this._state$.next({
+      ...this.stateValue,
+      positon: position,
+    });
+  }
+
+  set orders(orders: string[]) {
+    this._state$.next({
+      ...this.stateValue,
+      orders,
+    });
   }
 
   // 检查账户状态

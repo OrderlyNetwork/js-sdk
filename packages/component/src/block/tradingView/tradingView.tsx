@@ -1,5 +1,7 @@
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import {
+  defaultTimeInterval,
+  type TimeIntervalItem,
   TimeIntervalToolbar,
   type TimeIntervalToolbarProps,
 } from "./timeIntervalToolbar";
@@ -7,6 +9,7 @@ import {
   TradingViewChart,
   type TradingViewChartProps,
 } from "./tradingViewChart";
+import { TimeInterval } from "@/block/tradingView/types";
 
 export const TradingView: FC<
   TradingViewChartProps & TimeIntervalToolbarProps
@@ -24,9 +27,18 @@ export const TradingView: FC<
     };
   }, [chartProps.width, chartProps.height]);
 
+  const onIntervalChange = useCallback((interval: TimeInterval) => {}, []);
+
   return (
-    <div style={{ ...size }}>
-      <TimeIntervalToolbar intervals={intervals} />
+    <div>
+      <TimeIntervalToolbar
+        intervals={intervals}
+        // timeInterval={timeInterval}
+        onIntervalChange={(timeInterval) => {
+          // setTimeInterval(timeInterval);
+          onIntervalChange(timeInterval);
+        }}
+      />
       <TradingViewChart {...chartProps} {...size} />
     </div>
   );

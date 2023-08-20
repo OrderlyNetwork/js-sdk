@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { SimpleMarketOverview } from ".";
 import * as React from "react";
-import { useMarketInfo, useTickerStream, useFundingRate } from "@orderly/hooks";
+// import { useMarketInfo, useTickerStream, useFundingRate } from "@orderly/hooks";
 import { OrderlyProvider } from "../../provider";
 import { useMemo } from "react";
 
@@ -14,7 +14,7 @@ const meta: Meta = {
   //   },
   decorators: [
     (Story) => (
-      <OrderlyProvider>
+      <OrderlyProvider configStore={undefined}>
         <Story />
       </OrderlyProvider>
     ),
