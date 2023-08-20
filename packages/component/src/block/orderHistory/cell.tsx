@@ -16,18 +16,20 @@ export const Cell: FC<HistoryCellProps> = (props) => {
     );
   }, [props.item]);
   return (
-    <div className="p-3">
+    <div className="p-4">
       <div className="flex justify-between items-center">
         <div className="flex-1 flex items-center">
           {typeTag}
-          <div className="px-2 text-lg">BTC-PERP</div>
+          <div className="px-2">BTC-PERP</div>
         </div>
-        <div>2022-08-30 17:19:47</div>
+        <div className={"text-sm text-base-contrast/30"}>
+          2022-08-30 17:19:47
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Statistic label="Qty." value={item.quantity ?? "-"} coloring />
         <Statistic label="Filled" value={item.executed ?? "-"} />
-        <Statistic label="Margin(USDC)" value="1,000.00" align="right" />
+        <Statistic label="Status" value="Filled" align="right" />
         <Statistic label="Limit Price(USDC)" value={item.price ?? "-"} />
         <Statistic label="Mark Price(USDC)" value="30,000.00" />
       </div>

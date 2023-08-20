@@ -12,9 +12,24 @@ const preview = {
         date: /Date$/,
       },
     },
+
     // viewport:{
     //   defaultViewport: 'largeMobile'
     // }
+  },
+  globalTypes: {
+    symbol: {
+      description: "Internationalization locale",
+      defaultValue: "PERP_ETH_USDC",
+      toolbar: {
+        icon: "database",
+        items: [
+          { value: "PERP_ETH_USDC", title: "PERP_ETH_USDC" },
+          { value: "PERP_NEAR_USDC", title: "PERP_NEAR_USDC" },
+      
+        ],
+      },
+    },
   },
 };
 

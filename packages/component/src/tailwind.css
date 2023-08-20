@@ -6,12 +6,15 @@
   :root {
     /* colors */
     --orderly-color-primary: 51 95 252;
-    --orderly-color-secondary: 255 255 255;
+    --orderly-color-secondary: 51 57 72;
     --orderly-color-tertiary: 109 112 117;
     --orderly-color-quaternary: 218 218 218;
     /*--orderly-color-disabled:218 218 218;*/
-
+    
     --orderly-color-danger: 255 68 124;
+    --orderly-color-success: 27 32 40;
+    --orderly-color-warning: 255 68 124;
+
 
     --orderly-color-background: 27 32 40;
     --orderly-color-background-contrast: 255 255 255;
@@ -25,7 +28,7 @@
 
     --orderly-color-base-100: 24 28 35;
     --orderly-color-base-200: 27 32 40;
-    --orderly-color-base-300: 24 28 35;
+    --orderly-color-base-300: 32 37 47;
     --orderly-color-base-contract: 255 255 255;
 
     /*brand color*/
@@ -41,6 +44,13 @@
     /*--orderly-brand-900: 7 8 10;*/
 
     --orderly-color-fill: 40 46 58;
+    --orderly-color-fill-dark: 40 46 58;
+    --orderly-color-fill-light: 75 83 105;
+
+    --orderly-color-popover: 51 57 72;
+    --orderly-color-popover-foreground: 255 255 255;
+
+
     --orderly-color-fill-active: 40 46 58;
 
     --orderly-color-divider: 32 37 45;
@@ -101,7 +111,15 @@
     --orderly-color-background: 27 32 40;
     --orderly-color-background-contrast: 255 255 255;
 
-    --orderly-color-trading-loss: 255 68 124;
+    --orderly-color-fill: 36 32 47;
+    --orderly-color-fill-active: 40 46 58;
+
+    --orderly-color-base-100: 29 26 38;
+    --orderly-color-base-200: 27 32 40;
+    --orderly-color-base-300: 32 37 47;
+    --orderly-color-base-contract: 255 255 255;
+
+    --orderly-color-trading-loss: 244 86 171;
     --orderly-color-trading-loss-contrast: 40 46 58;
     --orderly-color-trading-profit: 0 180 158;
     --orderly-color-trading-profit-contrast: 40 46 58;
@@ -114,3 +132,5 @@
     background-color: rgb(var(--orderly-color-base-100));
   }
 }
+
+

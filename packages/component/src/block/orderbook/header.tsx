@@ -1,7 +1,7 @@
 import { FC, useContext, useMemo } from "react";
-import { TriangleDownIcon } from "@radix-ui/react-icons";
 import { QtyMode } from "./types";
 import { OrderBookContext } from "./orderContext";
+import { ChevronDown } from "lucide-react";
 
 interface Props {
   priceUnit: string;
@@ -33,7 +33,7 @@ export const Header: FC<Props> = (props) => {
           <span>Qty</span>
           <span>{`(${currency})`}</span>
         </div>
-        <TriangleDownIcon />
+        <ChevronDown />
       </div>
     </div>
   );

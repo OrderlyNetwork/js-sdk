@@ -1,1 +1,1 @@
-export { AccountStatus } from "./accountStatus";
+export { AccountStatusBar } from "./accountStatusBar";

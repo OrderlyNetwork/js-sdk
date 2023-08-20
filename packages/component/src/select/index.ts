@@ -1,3 +1,3 @@
-import { Select } from "./select";
+export { Select } from "./select";
 
-export { Select };
+export { Picker } from "./picker";

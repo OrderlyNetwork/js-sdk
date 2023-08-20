@@ -17,9 +17,6 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
       // @ts-ignore
       return fetcher(url, {
         headers: {
-          // "orderly-key": signature["orderly-key"],
-          // "orderly-timestamp": signature["orderly-timestamp"],
-          // "orderly-signature": signature["orderly-signature"],
           ...signature,
           "orderly-account-id":
             "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",

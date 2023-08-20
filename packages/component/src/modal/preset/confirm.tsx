@@ -19,8 +19,13 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
         hide();
         resolve(true);
       }}
+      onCancel={() => {
+        hide();
+      }}
     >
-      {props.content}
+      <div className={"py-5 text-[12px] text-base-contrast/50"}>
+        {props.content}
+      </div>
     </SimpleDialog>
   );
 });

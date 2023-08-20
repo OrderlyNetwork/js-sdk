@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import * as React from "react";
 import { OrderlyProvider } from "../provider";
 import { Numeral } from "./numeral";
+import { NumeralTotal } from "./numeralTotal";
 // import { ConfigDataProvider } from "@orderly/hooks";
 
 const meta: Meta<typeof Numeral> = {
@@ -11,7 +12,7 @@ const meta: Meta<typeof Numeral> = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyProvider>
+        <OrderlyProvider configStore={undefined}>
           <Story />
         </OrderlyProvider>
       );
@@ -25,7 +26,7 @@ type Story = StoryObj<typeof Numeral>;
 
 export const Default: Story = {
   args: {
-    children: 2323.0,
+    children: 2323.023,
   },
 };
 
@@ -36,6 +37,17 @@ export const Percentage: Story = {
   },
 };
 
-export const WithConfig = () => {
-  return <Numeral.symbol symbol="PERP_ETH_USDC">232.323422</Numeral.symbol>;
+export const Total: Story = {
+  render: () => {
+    return <NumeralTotal price={1680.0} quantity={1.2} />;
+  },
+};
+
+export const WithConfig: Story = {
+  render: (args, { globals }) => {
+    return <Numeral.symbol symbol={globals.symbol}>232.323422</Numeral.symbol>;
+  },
+  args: {
+    // symbol: globals.symbol,
+  },
 };

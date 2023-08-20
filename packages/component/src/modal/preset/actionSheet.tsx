@@ -4,7 +4,7 @@ import { modalActions } from "@/modal/modalContext";
 import {
   ActionSheet,
   type ActionSheetItem,
-} from "@/bottomSheet/actionSheet/actionSheet";
+} from "@/sheet/actionSheet/actionSheet";
 import { useEffect } from "react";
 
 export const InnerActionSheet = create<{ items: ActionSheetItem[] }>(
@@ -18,7 +18,7 @@ export const InnerActionSheet = create<{ items: ActionSheetItem[] }>(
     }, []);
 
     return (
-      <ActionSheet isOpen={visible} onClose={hide} actionSheets={props.items} />
+      <ActionSheet open={visible} onClose={hide} actionSheets={props.items} />
     );
   }
 );

@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { Observable } from "rxjs";
+import { type ConfigStore } from "@orderly/core";
 
 type CoinGenerator = (coin: string) => string;
 
@@ -25,6 +26,8 @@ export interface OrderlyContextState {
   ws: WebSocketAdpater;
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
+  configStore: ConfigStore;
+  // account: Account;
 }
 
 export const OrderlyContext = createContext<OrderlyContextState>(

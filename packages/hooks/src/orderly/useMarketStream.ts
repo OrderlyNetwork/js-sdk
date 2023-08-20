@@ -2,16 +2,16 @@ import { useObservable } from "rxjs-hooks";
 import { useQuery } from "../useQuery";
 import { useWebSocketClient } from "../useWebSocketClient";
 import { withLatestFrom, map, startWith } from "rxjs/operators";
-import { type WS } from "@orderly/core";
+import { type WSMessage } from "@orderly/core";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export const useMarketStream = () => {
   // get listing of all markets from /public/info
   const ws = useWebSocketClient();
-  const { data } = useQuery<WS.Ticker[]>(`/public/futures`);
+  const { data } = useQuery<WSMessage.Ticker[]>(`/public/futures`);
   const config = useSymbolsInfo();
 
-  const value = useObservable<WS.Ticker[] | null, WS.Ticker[][]>(
+  const value = useObservable<WSMessage.Ticker[] | null, WSMessage.Ticker[][]>(
     (_, input$) =>
       ws.observe<any>("tickers").pipe(
         startWith([]),
@@ -23,7 +23,7 @@ export const useMarketStream = () => {
 
           return args[1].map((item) => {
             const ticker = args[0].find(
-              (t: WS.Ticker) => t.symbol === item.symbol
+              (t: WSMessage.Ticker) => t.symbol === item.symbol
             );
             if (ticker) {
               // console.log(config[item.symbol]());
@@ -41,7 +41,7 @@ export const useMarketStream = () => {
         })
       ),
     null,
-    [data as WS.Ticker[]]
+    [data as WSMessage.Ticker[]]
   );
 
   // return listing;

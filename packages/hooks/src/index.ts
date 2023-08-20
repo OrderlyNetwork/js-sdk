@@ -9,7 +9,7 @@ export { useTopicObserve } from "./useTopicObserve";
 export { useConfig } from "./useConfig";
 export { ConfigDataProvider } from "./provider/config";
 
-export { useUserInfo } from "./useUserInfo";
+export { useAccount } from "./useAccount";
 
 export { useWebSocketClient } from "./useWebSocketClient";
 

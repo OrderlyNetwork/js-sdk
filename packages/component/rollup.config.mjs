@@ -38,6 +38,7 @@ export default [
     external: [
         // ...Object.keys(packageJson.dependencies || {}),
         ...Object.keys(packageJson.peerDependencies || {}),
+        ...Object.keys(packageJson.devDependencies || {}),
     ],
   },
   {

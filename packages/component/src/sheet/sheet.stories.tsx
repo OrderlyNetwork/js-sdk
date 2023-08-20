@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React from "react";
-import { SimpleSheet } from ".";
+import {
+  ActionSheet,
+  ActionSheetContent,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SimpleSheet,
+} from ".";
 
 const meta: Meta = {
   title: "Base/Sheet",
@@ -36,6 +43,67 @@ export const Default: Story = {
           <div>sheet body</div>
         </SimpleSheet>
       </>
+    );
+  },
+};
+
+export const ActionListview: Story = {
+  render: (args) => {
+    return (
+      <ActionSheetContent
+        actionSheets={[
+          {
+            label: "Action 1",
+            value: "action1",
+          },
+          {
+            label: "Action 2",
+            value: "action2",
+          },
+          {
+            label: "Action 3",
+            value: "action3",
+          },
+          { label: "---", value: "---", type: "division" },
+          {
+            label: "Cancel",
+            value: "cancel",
+          },
+        ]}
+      />
+    );
+  },
+};
+
+export const ActionSheetStyle: Story = {
+  render: (args) => {
+    return (
+      <ActionSheet
+        onValueChange={(value) => {
+          console.log(value);
+        }}
+        actionSheets={[
+          {
+            label: "Action 1",
+            value: "action1",
+          },
+          {
+            label: "Action 2",
+            value: "action2",
+          },
+          {
+            label: "Action 3",
+            value: "action3",
+          },
+          { label: "---", value: "---", type: "division" },
+          {
+            label: "Cancel",
+            value: "cancel",
+          },
+        ]}
+      >
+        <button>Open</button>
+      </ActionSheet>
     );
   },
 };

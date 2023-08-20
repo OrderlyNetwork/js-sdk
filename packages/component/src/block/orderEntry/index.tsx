@@ -1,5 +1,5 @@
 import { InputMask } from "@/input/inputMask";
-import { Input } from "../../input";
+import { Input } from "@/input";
 
 import { Slider } from "@/slider";
 import {
@@ -11,13 +11,14 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { Select } from "@/select";
+import { Picker, Select } from "@/select";
 import { Switch } from "@/switch";
 import Button from "@/button";
 import { OrderSide, OrderType, OrderValue } from "./types";
 import { RadioGroup, Radio } from "@/radioGroup";
 import { Checkbox } from "@/checkbox/checkbox";
 import { Label } from "@/label";
+import { Divider } from "@/divider";
 
 export interface OrderEntryProps {
   onSubmit?: (value: OrderValue) => Promise<any>;
@@ -92,7 +93,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     return (
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <SegmentedButton
             buttons={[
               {
@@ -114,7 +115,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             }}
           />
           <div className={"flex justify-between items-center"}>
-            <div className="flex gap-1 text-gray-500">
+            <div className="flex gap-1 text-gray-500 text-sm">
               <span>Free Collat.</span>
               {`${props.collateral ?? "--"}`}
               <span>USDC</span>
@@ -129,7 +130,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               Deposit
             </Button>
           </div>
-          <Select
+          <Picker
             label={"Limit Order"}
             value={values.type}
             options={[
@@ -139,13 +140,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 value: "market",
               },
             ]}
-            onChange={(value) => {
+            onValueChange={(value) => {
               setValue("type", value);
             }}
           />
           <Input
-            prefix={<InputMask>Price</InputMask>}
-            suffix={<InputMask>USDC</InputMask>}
+            prefix={"Price"}
+            suffix={"USDC"}
             value={values.price}
             className="text-right"
             onChange={(event) => {
@@ -154,8 +155,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             }}
           />
           <Input
-            prefix={<InputMask>Qunatity</InputMask>}
-            suffix={<InputMask>BTC</InputMask>}
+            prefix={"Qunatity"}
+            suffix={"BTC"}
             value={values.qty}
             className="text-right"
             onChange={(event) => {
@@ -163,25 +164,31 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               setValue("qty", event.target.value);
             }}
           />
-          <div className="py-1">
-            <Slider />
+          <div>
+            <Slider
+              color={values.side === OrderSide.Buy ? "buy" : "sell"}
+              step={25}
+            />
           </div>
           <Input
             className={"text-right"}
-            prefix={<InputMask>Total ≈</InputMask>}
-            suffix={<InputMask>USDC</InputMask>}
+            readOnly
+            prefix={"Total"}
+            suffix={"USDC"}
           />
-          <div className="flex py-1">
-            <Switch label="Reduce only" />
+          <Divider />
+          <div className="flex gap-2 items-center py-1">
+            <Switch id="reduceOnly" />
+            <Label htmlFor="reduceOnly">Reduce Only</Label>
           </div>
           <div>
-            <RadioGroup className="grid-cols-3">
+            <RadioGroup className="flex gap-3">
               <Radio value={"postOnly"}>Post Only</Radio>
               <Radio value={"ioc"}>IOC</Radio>
               <Radio value={"fok"}>FOK</Radio>
             </RadioGroup>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-5">
             <div className="flex gap-2 items-center">
               <Checkbox id="orderConfirm" />
               <Label htmlFor="orderConfirm">Order Confirm</Label>
@@ -191,12 +198,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               <Label htmlFor="hidden">Hidden</Label>
             </div>
           </div>
-          <Button
-            type="submit"
-            color={values.side === OrderSide.Buy ? "buy" : "sell"}
-          >
-            {buttonText}
-          </Button>
+          <div className={"py-3"}>
+            <Button
+              type="submit"
+              color={values.side === OrderSide.Buy ? "buy" : "sell"}
+              fullWidth
+            >
+              {buttonText}
+            </Button>
+          </div>
         </div>
       </form>
     );

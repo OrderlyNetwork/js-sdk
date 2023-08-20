@@ -18,6 +18,7 @@ module.exports = {
         },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
+          // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--orderly-color-secondary) / <alpha-value>)",
@@ -46,11 +47,21 @@ module.exports = {
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
         },
+        success:{
+          DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
+        },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
         // },
         // 用于input等填充色
-        fill: "rgb(var(--orderly-color-fill) / <alpha-value>)",
+        fill: {
+          DEFAULT: "rgb(var(--orderly-color-fill) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-fill-light) / <alpha-value>)",
+        },
+        popover:{
+          DEFAULT:'rgb(var(--orderly-color-popover) / <alpha-value>)',
+          foreground:'rgb(var(--orderly-color-popover-foreground) / <alpha-value>)',
+        },
         divider: "rgb(var(--orderly-color-divider) / <alpha-value>)",
         // disable:'',
         trade: {
@@ -85,6 +96,42 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // linearBorderGradients: ({theme})=>({
+      //   colors:{
+      //     'primary': [theme('colors.primary'), theme('colors.secondary')],
+      //   }
+      // })
+    },
+    linearBorderGradients: {
+      directions: {
+        // defaults to these values
+        t: "to top",
+        tr: "to top right",
+        r: "to right",
+        br: "to bottom right",
+        b: "to bottom",
+        bl: "to bottom left",
+        l: "to left",
+        tl: "to top left",
+      },
+      colors: {
+        // defaults to {}
+        red: "#f00",
+        "red-blue": ["#f00", "#00f"],
+        "blue-green": ["#0000ff", "#00FF00"],
+        "red-green-blue": ["#f00", "#0f0", "#00f"],
+        "black-white-with-stops": ["#000", "#000 45%", "#fff 55%", "#fff"],
+      },
+      background: {
+        "gray-50": "#F9FAFB",
+        "gray-900": "#111827",
+      },
+      borders: {
+        // defaults to these values (optional)
+        1: "1px",
+        2: "2px",
+        4: "4px",
+      },
     },
     // colors:{
     //   primary: '#FF6363',
@@ -93,6 +140,7 @@ module.exports = {
   plugins: [
     require("@tailwindcss/typography"),
     require("tailwindcss-animate"),
+    require("tailwindcss-border-gradient-radius"),
     plugin(function ({ addBase }) {
       addBase({
         html: { fontSize: "14px" },

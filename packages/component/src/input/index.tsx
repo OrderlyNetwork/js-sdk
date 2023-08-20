@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/css";
 import button from "@/button";
 import { X } from "lucide-react";
+import { InputMask } from "./inputMask";
 
 const inputVariants = cva(["rounded"], {
   variants: {
@@ -36,10 +37,11 @@ export interface InputProps
       "size" | "prefix" | "disabled"
     >,
     VariantProps<typeof inputVariants> {
-  prefix?: React.ReactNode;
+  prefix?: string | React.ReactNode;
   suffix?: React.ReactNode;
   // clearable?: boolean;
   onClean?: () => void;
+  fixClassName?: string;
   // disabled?: boolean;
 }
 
@@ -77,31 +79,58 @@ export const Input: FC<InputProps> = ({
       </button>
     );
   }, [onClean]);
+
+  const prefixElement = useMemo(() => {
+    if (typeof prefix === "undefined") {
+      return null;
+    }
+
+    if (typeof prefix === "string") {
+      return <InputMask className="text-sm">{prefix}</InputMask>;
+    }
+
+    return prefix;
+  }, [prefix]);
+
+  const suffixElement = useMemo(() => {
+    if (typeof suffix === "undefined") {
+      return null;
+    }
+
+    if (typeof suffix === "string") {
+      return <InputMask className="text-sm">{suffix}</InputMask>;
+    }
+
+    return suffix;
+  }, [suffix]);
+
   return (
     <div
       className={cn(
-        "flex flex-row items-center rounded focus-within:outline focus-within:outline-1 outline-primary",
+        "flex flex-row items-center rounded focus-within:outline focus-within:outline-1 outline-primary ",
         inputVariants({
           size,
           fullWidth,
           disabled,
           variant,
-          className,
-        })
+          // className,
+        }),
+        props.readOnly && "focus-within:outline-none"
       )}
     >
-      {prefix}
+      {prefixElement}
       <input
         type="text"
         {...props}
         disabled={!!disabled}
         className={cn(
           "bg-transparent p-3 flex-1 focus-visible:outline-none w-full peer",
-          typeof prefix !== "undefined" && "px-0"
+          typeof prefix !== "undefined" && "px-0",
+          className
         )}
       />
       {cleanButton}
-      {suffix}
+      {suffixElement}
     </div>
   );
 };

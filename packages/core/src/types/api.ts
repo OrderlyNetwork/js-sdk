@@ -66,9 +66,31 @@ export declare namespace API {
     quote: string;
     type: string;
   }
+
+  export interface Order{
+    symbol:                 string;
+    status:                 string;
+    side:                   string;
+    order_id:               number;
+    user_id:                number;
+    price:                  number | null;
+    type:                   string;
+    quantity:               number;
+    amount:                 null;
+    visible:                number;
+    executed:               number;
+    total_fee:              number;
+    fee_asset:              string;
+    client_order_id:        null;
+    average_executed_price: number;
+    created_time:           number;
+    updated_time:           number;
+    reduce_only:            boolean;
+  }
+
 }
 
-export declare namespace WS {
+export declare namespace WSMessage {
   export interface Ticker {
     symbol: string;
     open: number;

@@ -3,10 +3,15 @@ import { Select } from "@/select";
 import { Statistic } from "@/statistic";
 import { FC } from "react";
 import { modal } from "@/modal";
+import { Checkbox } from "@/checkbox";
+import { Label } from "@/label";
 
 interface OverviewProps {
   onMarketCloseAll?: () => void;
   canCloseAll?: boolean;
+
+  showAllSymbol?: boolean;
+  onShowAllSymbolChange?: (value: boolean) => void;
 }
 
 export const Overview: FC<OverviewProps> = (props) => {
@@ -35,7 +40,16 @@ export const Overview: FC<OverviewProps> = (props) => {
         />
       </div>
       <div className="flex justify-between py-3 px-3 items-center">
-        <div>Show all instruments</div>
+        <div className={"flex items-center gap-2"}>
+          <Checkbox
+            id={"showAll"}
+            checked={props.showAllSymbol}
+            onCheckedChange={props.onShowAllSymbolChange}
+          />
+          <Label htmlFor={"showAll"} className={"text-base-contrast/60"}>
+            Show all instruments
+          </Label>
+        </div>
         <Button
           variant={"outlined"}
           size={"small"}

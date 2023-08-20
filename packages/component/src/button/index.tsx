@@ -1,6 +1,5 @@
 import { Button as BaseButton, buttonVariants, ButtonProps } from "./button";
 import { ConnectGuardButton } from "./connectGuardButton";
-import { IconButton } from "./iconButton";
 import { SegmentedButton, type SegmentedButtonProps } from "./segmented";
 import { SiginGuardButton } from "./siginGuardButton";
 

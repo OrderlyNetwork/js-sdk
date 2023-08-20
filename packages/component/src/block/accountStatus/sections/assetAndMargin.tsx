@@ -5,6 +5,9 @@ import { Paper } from "@/layout";
 import { RiskIndicator } from "@/riskIndicator";
 import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
+import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
+import { Numeral } from "@/text";
+import { EyeOff } from "lucide-react";
 import { FC } from "react";
 
 export interface AssetAndMarginProps {
@@ -14,16 +17,35 @@ export interface AssetAndMarginProps {
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   return (
-    <div>
-      <div>
-        <Statistic label="Total Value" value="166,983.23" />
+    <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
+      <div className="pt-3">
+        <Statistic
+          label={
+            <div className="flex gap-2 text-base items-center">
+              <span>Total Value</span>
+              <EyeOff className="text-primary" size={14} />
+            </div>
+          }
+          value="166983.23"
+          rule="price"
+        />
       </div>
-      <div className="grid grid-cols-2">
-        <Statistic label="Unreal.PnL(USDC)" value="166,983.23" coloring />
-        <Statistic label="Unreal.PnL(USDC)" value="166,983.23" coloring />
+      <div className="grid grid-cols-2 py-4">
+        <Statistic
+          label="Unreal.PnL(USDC)"
+          value="166983.23"
+          rule="price"
+          coloring
+        />
+        <Statistic
+          label="Unsettled PnL(USDC)"
+          value="166983.23"
+          rule="price"
+          coloring
+        />
       </div>
       <Divider />
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 py-4">
         <Statistic
           label="Margin Ratio"
           value={
@@ -36,7 +58,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
         <Statistic label="Free / Total Collateral(USDC)" value="166,983.23" />
       </div>
-      <Divider />
+
       <div>
         <Statistic
           label="Max Account Leverage"
@@ -47,26 +69,27 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           }
         />
       </div>
+      <Divider className="py-4" />
       <Paper className="bg-slate-600/20">
-        <div className="flex justify-between text-sm text-tertiary">
+        <div className="flex justify-between text-sm text-base-contrast">
           <span>Instrument</span>
           <span>Available Balance</span>
         </div>
-        <Divider />
+        <Divider className="py-3" />
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
             <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
             <span>USDC</span>
           </div>
-          <div>123,456</div>
+          <Numeral>123456</Numeral>
         </div>
       </Paper>
-      <div className="flex gap-2 py-5">
+      <div className="flex gap-3 py-5">
         <Button fullWidth>Deposit</Button>
         <Button fullWidth variant={"outlined"}>
           Withdraw
         </Button>
       </div>
-    </div>
+    </StatisticStyleProvider>
   );
 };

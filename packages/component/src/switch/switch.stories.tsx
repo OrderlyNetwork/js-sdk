@@ -17,6 +17,6 @@ type Story = StoryObj<typeof Switch>;
 export const Default: Story = {
   // render: (args) => <Switch label="Take profit / Stop loss" {...args} />,
   args: {
-    label: "Take profit / Stop loss",
+    // label: "Take profit / Stop loss",
   },
 };

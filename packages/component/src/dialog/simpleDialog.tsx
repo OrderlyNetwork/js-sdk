@@ -29,7 +29,12 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
 
     if (typeof props.onCancel === "function") {
       buttons.push(
-        <Button key="cancel" type="button" onClick={props.onCancel}>
+        <Button
+          key="cancel"
+          type="button"
+          onClick={props.onCancel}
+          color={"danger"}
+        >
           Cancel
         </Button>
       );

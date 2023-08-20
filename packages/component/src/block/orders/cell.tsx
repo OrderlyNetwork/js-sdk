@@ -2,6 +2,8 @@ import Button from "@/button";
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { FC, useMemo } from "react";
+import { Numeral } from "@/text/numeral";
+// import {type Order} from '@orderly/core'
 
 interface OrderCellProps {
   order: any;
@@ -13,8 +15,8 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
   const { order } = props;
   const typeTag = useMemo(() => {
     return (
-      <Tag color="buy" size="small">
-        Buy
+      <Tag color={order.side === "BUY" ? "buy" : "sell"} size="small">
+        {order.side === "BUY" ? "Buy" : "Sell"}
       </Tag>
     );
   }, [order]);
@@ -30,11 +32,20 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
       <div className="grid grid-cols-3 gap-2">
         <Statistic label="Qty." value={order.quantity ?? "-"} coloring />
         <Statistic label="Filled" value={order.executed ?? "-"} />
-        <Statistic label="Margin(USDC)" value="1,000.00" align="right" />
+        <Statistic
+          label="Est.Total(USDC)"
+          value={
+            <Numeral.total
+              price={props.order.price ?? 1}
+              quantity={props.order.quantity}
+            />
+          }
+          align="right"
+        />
         <Statistic label="Limit Price(USDC)" value={order.price ?? "-"} />
         <Statistic label="Mark Price(USDC)" value="30,000.00" />
       </div>
-      <div className="flex gap-2 py-2">
+      <div className="flex gap-3 py-2">
         <Button
           fullWidth
           variant="outlined"

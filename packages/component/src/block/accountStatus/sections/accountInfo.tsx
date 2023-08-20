@@ -1,15 +1,23 @@
 import { Avatar } from "@/avatar";
 import Button, { IconButton } from "@/button";
 import { Share, Copy } from "lucide-react";
+import { FC } from "react";
+import { Text } from "@/text";
 
-export const AccountInfo = () => {
+export interface AccountInfoProps {
+  onDisconnect?: () => void;
+  accountId?: string;
+}
+
+export const AccountInfo: FC<AccountInfoProps> = (props) => {
+  const { onDisconnect, accountId } = props;
   return (
     <div>
-      <div className="flex py-5">
+      <div className="flex py-6">
         <div className="flex-1 flex ">
           <Avatar />
           <div className="flex flex-col">
-            <div>0x78E5...c86f</div>
+            <Text rule={"address"}>{accountId}</Text>
             <div className="text-xs">Arbitrum</div>
           </div>
         </div>
@@ -22,9 +30,18 @@ export const AccountInfo = () => {
           </IconButton>
         </div>
       </div>
-      <Button variant={"outlined"} color={"sell"} fullWidth>
-        Disconnect
-      </Button>
+      <div className="py-4">
+        <Button
+          variant={"outlined"}
+          color={"sell"}
+          fullWidth
+          onClick={() => {
+            onDisconnect?.();
+          }}
+        >
+          Disconnect
+        </Button>
+      </div>
     </div>
   );
 };

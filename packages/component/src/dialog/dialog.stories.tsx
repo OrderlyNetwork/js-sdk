@@ -59,7 +59,7 @@ export const CommandStyle: Story = {
     const showConfirm = () => {
       modal
         .confirm({
-          title: "Edit Order",
+          title: "Confirm Order",
           content:
             "You agree changing the quantity of ETH-PERP order to 1.0500.",
         })

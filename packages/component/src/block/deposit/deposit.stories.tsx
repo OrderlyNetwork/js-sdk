@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Deposit } from ".";
 import { OrderlyProvider } from "../../provider";
 import { useToken } from "@orderly/hooks";
+import React from "react";
 
 const meta: Meta<typeof Deposit> = {
   component: Deposit,

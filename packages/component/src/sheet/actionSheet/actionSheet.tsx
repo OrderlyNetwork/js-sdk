@@ -1,22 +1,29 @@
-import React, { FC, useMemo } from "react";
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  PropsWithChildren,
+  useMemo,
+} from "react";
 import { ActionItem, BaseActionSheetItem } from "./actionItem";
-import { useModal } from "@/modal";
-import Sheet from "react-modal-sheet";
-import { ActionListView } from "@/bottomSheet/actionSheet/actionListView";
+
+import { ActionSheetContent } from "@/sheet/actionSheet/actionSheetContent";
+import { Sheet, SheetContent, SheetTrigger } from "@/sheet";
 
 export type SystemActionSheetItem = "Cancel" | "Confirm" | "---";
 
 export type ActionSheetItem = BaseActionSheetItem | SystemActionSheetItem;
 
-export interface ActionSheetProps {
+export interface ActionSheetProps
+  extends ComponentPropsWithoutRef<typeof Sheet> {
   actionSheets: ActionSheetItem[];
   value?: React.SelectHTMLAttributes<HTMLSelectElement>["value"];
   onValueChange?: (value: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
+  open?: boolean;
+  onClose?: () => void;
 }
 
-export const ActionSheet: FC<ActionSheetProps> = (props) => {
+export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
+  // create actionSheet items
   const items = useMemo<BaseActionSheetItem[]>(() => {
     const items: BaseActionSheetItem[] = [];
 
@@ -28,7 +35,7 @@ export const ActionSheet: FC<ActionSheetProps> = (props) => {
               label: "Cancel",
               value: "cancel",
               onClick: () => {
-                props.onClose();
+                props.onClose?.();
               },
             });
           } else if (action === "Confirm") {
@@ -53,22 +60,19 @@ export const ActionSheet: FC<ActionSheetProps> = (props) => {
   }, [props.actionSheets]);
 
   return (
-    <Sheet
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      detent={"content-height"}
-    >
-      <Sheet.Container>
-        <Sheet.Content>
-          <ActionListView
-            actionSheets={items}
-            onClose={props.onClose}
-            onValueChange={props.onValueChange}
-            value={props.value}
-          />
-        </Sheet.Content>
-      </Sheet.Container>
-      <Sheet.Backdrop />
+    <Sheet open={props.open} onOpenChange={props.onOpenChange}>
+      {typeof props.children !== "undefined" && (
+        <SheetTrigger>{props.children}</SheetTrigger>
+      )}
+
+      <SheetContent closeable={false} className={"p-0"}>
+        <ActionSheetContent
+          actionSheets={items}
+          onClose={props.onClose}
+          onValueChange={props.onValueChange}
+          value={props.value}
+        />
+      </SheetContent>
     </Sheet>
   );
 };

@@ -1,4 +1,4 @@
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { X } from "lucide-react";
 import React, { FC, useMemo } from "react";
 
 export interface BottomSheetHeaderProps {
@@ -22,7 +22,7 @@ export const BottomSheetHeader: FC<BottomSheetHeaderProps> = (props) => {
     if (typeof props.trailing === "undefined") {
       return (
         <button onClick={() => props.onClose()}>
-          <Cross2Icon fontSize={"20"} />
+          <X fontSize={"20"} />
         </button>
       );
     }

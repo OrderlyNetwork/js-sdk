@@ -17,6 +17,7 @@ const iconButtonVariants = cva(
       },
       color: {
         primary: "text-primary",
+        tertiary: "text-tertiary",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed",

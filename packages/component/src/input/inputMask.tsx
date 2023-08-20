@@ -7,7 +7,7 @@ export const InputMask: FC<PropsWithChildren<{ className?: string }>> = (
   return (
     <div
       className={cn(
-        "h-full flex flex-col justify-center px-3",
+        "h-full flex flex-col justify-center px-3 text-base-contrast/60",
         props.className
       )}
     >

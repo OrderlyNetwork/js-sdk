@@ -18,6 +18,21 @@ export type SignedMessagePayload = {
   "orderly-signature": string;
 };
 
+/**
+ * 签名
+ * @example
+ * ```ts
+ * const signer = new BaseSigner(keyStore);
+ * const payload = await signer.sign({
+ *  url: "https://api.orderly.io/get_account?address=0x1234567890&brokerId=woofi_dex",
+*   method: "GET",
+*   data: {
+*     address: "0x1234567890",
+*     brokerId: "woofi_dex",
+*    },
+*  });
+ *  ```
+ */
 export interface Signer {
   sign: (data: MessageFactor) => Promise<SignedMessagePayload>;
 }

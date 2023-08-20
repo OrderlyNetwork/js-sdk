@@ -7,6 +7,9 @@ import { OrderlyProvider } from "../../provider/orderlyProvider";
 const meta: Meta = {
   title: "Block/HistoryListView",
   component: HistoryListView,
+  parameters: {
+    layout: "fullscreen",
+  },
 
   args: {
     // dataSource: [],
@@ -30,10 +33,10 @@ export const Default: Story = {
   },
 };
 
-// export const WithData: Story = {
-//   render: (args) => {
-//     const [data, { loading }] = usePositionStream();
-//     console.log(data);
-//     return <HistoryListView {...args} dataSource={data} />;
-//   },
-// };
+export const WithHooks: Story = {
+  render: (args) => {
+    // const [data, { loading }] = usePositionStream();
+    // console.log(data);
+    return <HistoryListView {...args} />;
+  },
+};

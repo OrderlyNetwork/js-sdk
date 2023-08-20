@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo } from "react";
 import { cn } from "@/utils/css";
 
-type SheetItemType = "division" | "data";
+type SheetItemType = "division" | "data" | "cancel";
 
 export interface BaseActionSheetItem {
   label: string;
@@ -37,10 +37,10 @@ export const ActionItem: FC<ActionSheetProps> = (props) => {
   return (
     <div
       className={cn(
-        "flex justify-center items-center h-[52px] text-lg border-t border-solid first:border-t-0",
-        "peer-[+_&]:border-t-0",
+        "flex justify-center items-center text-lg h-[52px]",
+
         {
-          "text-blue-500": props.active,
+          "text-primary": props.active,
         }
       )}
       onClick={onItemClick}

@@ -1,1 +1,2 @@
-export { MarketOverview } from "./marketOverview";
+// export { MarketOverview } from "./marketOverview";
+export { SimpleMarketOverview } from "./simpleMarketOverview";

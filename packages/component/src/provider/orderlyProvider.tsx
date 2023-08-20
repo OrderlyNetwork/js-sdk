@@ -7,11 +7,13 @@ import {
 } from "@orderly/hooks";
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
-import { __ORDERLY_API_URL_KEY__ } from "@orderly/net";
+import { type ConfigStore } from "@orderly/core";
+import { TooltipProvider } from "@/tooltip/tooltip";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
   networkId?: string;
+  configStore: ConfigStore;
 }
 
 export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
@@ -29,16 +31,11 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
       })
   );
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      //set apiUrl to window;
-      (window as any)[__ORDERLY_API_URL_KEY__] = apiBaseUrl;
-    }
-  }, [apiBaseUrl]);
-
   return (
-    <Provider value={{ ws, apiBaseUrl }}>
-      <ModalProvider>{children}</ModalProvider>
+    <Provider value={{ ws, apiBaseUrl, configStore: props.configStore }}>
+      <ModalProvider>
+        <TooltipProvider>{children}</TooltipProvider>
+      </ModalProvider>
       <Toaster />
     </Provider>
   );

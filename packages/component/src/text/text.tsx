@@ -1,6 +1,8 @@
-import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import { FC, HTMLAttributes, PropsWithChildren, useMemo } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { TradingPair } from "./tradingPair";
+import { cn } from "@/utils/css";
+import { Slot } from "@radix-ui/react-slot";
 
 const textVariants = cva([], {
   variants: {
@@ -17,13 +19,42 @@ const textVariants = cva([], {
   },
 });
 
+export type TextRule = "date" | "address" | "text";
+
 export interface TextProps
   extends HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof textVariants> {
   asChildren?: boolean;
+  rule?: TextRule;
+  // if rule is address, show str range
+  range?: [number, number];
 }
 const Text: FC<PropsWithChildren<TextProps>> = (props) => {
-  return <span></span>;
+  const { variant, rule, asChildren, type, className, children, ...rest } =
+    props;
+  const Comp = asChildren ? Slot : "span";
+
+  const content = useMemo(() => {
+    if (typeof children === "undefined") return "--";
+    if (typeof rule === "undefined" || rule === "text") return children;
+    if (rule === "address") {
+      const address = children as string;
+      const [start, end] = props.range ?? [6, 4];
+      const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
+      return `${address.replace(reg, "$1...$3")}`;
+    }
+    if (rule === "date") return new Date(children as string).toLocaleString();
+
+    return children;
+  }, [children, rule]);
+
+  return (
+    <Comp
+      {...rest}
+      className={cn(textVariants({ variant, type, className }))}
+      children={content}
+    />
+  );
 };
 
 export type CombinedText = typeof Text & {

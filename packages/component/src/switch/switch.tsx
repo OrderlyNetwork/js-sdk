@@ -1,28 +1,51 @@
-import { Root, Thumb, SwitchProps } from "@radix-ui/react-switch";
-import { FC, useId } from "react";
+"use client";
 
-interface MySwitchProps extends SwitchProps {
-  label?: string;
-}
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+import { cn } from "@/utils/css";
+import { VariantProps, cva } from "class-variance-authority";
 
-export const Switch: FC<MySwitchProps> = (props) => {
-  const { label, ...switchProps } = props;
-  const id = useId();
+const switchVariants = cva("", {
+  variants: {
+    color: {
+      primary:
+        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-fill-light",
+      profit:
+        "data-[state=checked]:bg-trade-profit data-[state=unchecked]:bg-fill-light",
+      loss: "data-[state=checked]:bg-trade-loss data-[state=unchecked]:bg-fill-light",
+    },
+  },
+  defaultVariants: {
+    color: "primary",
+  },
+});
 
-  return (
-    <div className="flex flex-row items-center">
-      <Root
-        id={id}
-        {...switchProps}
-        className="w-[28px] h-[14px] bg-slate-400 rounded-full relative focus:shadow-[0_0_0_2px] focus:shadow-black data-[state=checked]:bg-black outline-none cursor-default"
-      >
-        <Thumb className="block w-[10px] h-[10px] bg-white rounded-full shadow-[0_2px_2px] shadow-blackA7 transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[19px]" />
-      </Root>
-      {typeof label !== "undefined" && (
-        <label htmlFor={id} className="ml-2">
-          {label}
-        </label>
+interface SwitchProps
+  extends Omit<
+      React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
+      "color"
+    >,
+    VariantProps<typeof switchVariants> {}
+
+const Switch = React.forwardRef<
+  React.ElementRef<typeof SwitchPrimitives.Root>,
+  SwitchProps
+>(({ className, color, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      "peer inline-flex h-[14px] w-[32px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 ",
+      switchVariants({ color, className })
+    )}
+    {...props}
+    ref={ref}
+  >
+    <SwitchPrimitives.Thumb
+      className={cn(
+        "pointer-events-none block h-[10px] w-[10px] rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
       )}
-    </div>
-  );
-};
+    />
+  </SwitchPrimitives.Root>
+));
+Switch.displayName = SwitchPrimitives.Root.displayName;
+
+export { Switch };

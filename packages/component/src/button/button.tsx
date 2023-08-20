@@ -1,10 +1,18 @@
-import type { ButtonHTMLAttributes, FC, PropsWithChildren } from "react";
+import {
+  useMemo,
+  type ButtonHTMLAttributes,
+  type FC,
+  type PropsWithChildren,
+} from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/css";
+import { Spinner } from "@/spinner";
 
 const buttonVariants = cva(
-  ["rounded transition-colors min-w-[60px] align-middle"],
+  [
+    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center",
+  ],
   {
     variants: {
       /**
@@ -28,12 +36,13 @@ const buttonVariants = cva(
       color: {
         primary: "text-primary hover:bg-primary hover:text-white",
         secondary:
-          "text-secondary bg-transparent hover:bg-secondary hover:text-white",
-        tertiary: "text-white bg-slate-500",
+          "text-secondary bg-secondary hover:bg-secondary hover:text-white",
+        tertiary: "bg-tertiary",
         success:
           "text-success bg-transparent hover:bg-success hover:text-white",
         buy: "text-white bg-trade-profit hover:bg-trade-profit/90",
         sell: "text-white bg-trade-loss hover:bg-trade-loss/90",
+        danger: "text-danger bg-danger hover:bg-danger/90",
       },
       // evlevation: {
       //
@@ -55,13 +64,29 @@ const buttonVariants = cva(
       {
         variant: "contained",
         color: "primary",
-        class: "text-white bg-primary hover:bg-primary hover:text-white",
+        class: "bg-primary hover:bg-primary/90 text-base-contrast",
+      },
+      {
+        variant: "contained",
+        color: "secondary",
+        class: "bg-secondary text-base-contrast hover:bg-secondary/90",
+      },
+      {
+        variant: "contained",
+        color: "danger",
+        class: "bg-danger text-base-contrast hover:bg-danger/90",
       },
       {
         variant: "outlined",
         color: "primary",
         class:
           "text-primary bg-transparent border border-primary hover:bg-primary/10 hover:text-primary",
+      },
+      {
+        variant: "outlined",
+        color: "buy",
+        class:
+          "text-trade-profit bg-transparent border border-trade-profit hover:bg-trade-profit/10 hover:text-trade-profit",
       },
       {
         variant: "outlined",
@@ -104,8 +129,15 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
   variant,
   fullWidth,
   disabled,
+  loading,
   ...props
 }) => {
+  const children = useMemo(() => {
+    if (!!loading) {
+      return <Spinner size={"small"} />;
+    }
+    return props.children;
+  }, [props.children, loading]);
   return (
     <button
       className={cn(
@@ -119,7 +151,9 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 };
 

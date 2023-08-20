@@ -1,8 +1,9 @@
 import { cva, VariantProps, cx } from "class-variance-authority";
 import { FC, SelectHTMLAttributes, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { TriangleDownIcon } from "@radix-ui/react-icons";
-import { ActionSheet } from "@/bottomSheet/actionSheet/actionSheet";
+
+import { ActionSheet } from "@/sheet/actionSheet/actionSheet";
+import { ChevronDown } from "lucide-react";
 
 export type SelectOption = {
   value: string;
@@ -77,11 +78,11 @@ const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
           {typeof value !== "undefined" && <>{value}</>}
         </div>
 
-        <TriangleDownIcon />
+        <ChevronDown size={16} />
       </div>
       <ActionSheet
         actionSheets={options}
-        isOpen={open}
+        open={open}
         onValueChange={(value) => {
           // console.log(value);
           props.onChange?.(value);

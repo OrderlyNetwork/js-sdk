@@ -4,6 +4,8 @@ import * as React from "react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cn } from "@/utils/css";
 import { Circle } from "lucide-react";
+import { Label } from "@/label";
+import { useId } from "react";
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -27,13 +29,13 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square h-[14px] w-[14px] rounded-full border-2 border-base-contrast/70 text-base-contrast/70 ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+        <Circle className="h-[7px] w-[7px] fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
@@ -50,13 +52,22 @@ const Radio: React.FC<
   >
 > = (props) => {
   const { children, ...rest } = props;
+  const uid = useId();
+  const id = props.id || uid;
 
   return (
-    <label className="flex items-center gap-2">
-      <RadioGroupItem {...rest}></RadioGroupItem>
-      <span>{children}</span>
-    </label>
+    <div className={"flex gap-1 items-center"}>
+      <RadioGroupItem {...rest} id={id}></RadioGroupItem>
+      <Label htmlFor={id}>{children}</Label>
+    </div>
   );
+
+  // return (
+  //   <label className="flex items-center gap-2 text-base-contrast/70">
+  //     <RadioGroupItem {...rest}></RadioGroupItem>
+  //     <span>{children}</span>
+  //   </label>
+  // );
 };
 
 export { RadioGroup, RadioGroupItem, Radio };

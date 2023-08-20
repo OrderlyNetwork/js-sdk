@@ -1,9 +1,24 @@
 import { FC } from "react";
 import { BasePickerProps } from "./types";
-import { Select } from "@/select";
+import { Picker } from "@/select";
 
 interface SidePickerProps extends BasePickerProps<any> {}
 
 export const SidePicker: FC<SidePickerProps> = () => {
-  return <Select size={"small"} options={[]} label="All Side"></Select>;
+  return (
+    <Picker
+      size={"small"}
+      options={[
+        {
+          label: "Buy",
+          value: "buy",
+        },
+        {
+          label: "Sell",
+          value: "sell",
+        },
+      ]}
+      label="All Side"
+    ></Picker>
+  );
 };

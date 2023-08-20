@@ -3,6 +3,7 @@ import { ListView } from "@/listView";
 import { FC } from "react";
 import { HistoryToolbar } from "./historyToolbar";
 import { Cell } from "./cell";
+import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 
 export interface OrderHistoryListViewProps {
   isLoading: boolean;
@@ -11,7 +12,7 @@ export interface OrderHistoryListViewProps {
 
 export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
   return (
-    <>
+    <StatisticStyleProvider labelClassName={"text-sm text-base-contrast/30"}>
       <HistoryToolbar />
       <Divider />
       <ListView.separated
@@ -20,6 +21,6 @@ export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
         renderSeparator={(_, index) => <Divider />}
         renderItem={(item, index) => <Cell item={item} />}
       />
-    </>
+    </StatisticStyleProvider>
   );
 };
