@@ -8,6 +8,7 @@ import type {
   Timezone,
   WidgetFeatures,
 } from "./types";
+import DataFeed from "./dataFeed";
 
 export type TradingViewChartProps = {
   width?: number | string;
@@ -41,13 +42,15 @@ export type TradingViewChartProps = {
 
   container_id?: string;
   children?: never;
+  // =========== special props ===========
+  apiBaseUrl: string;
 };
 
 export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   width = 980,
   height = 610,
   autosize = false,
-  symbol = "NASDAQ:AAPL",
+  symbol,
   interval = "1",
   range = undefined,
   timezone = "UTC",
@@ -71,11 +74,14 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   watchlist = undefined,
   //   studies = undefined,
   disabled_features = [
+    "header_widget",
     "control_bar",
+    "left_toolbar",
+    // "header_widget_dom_node",
     "timeframes_toolbar",
     "go_to_date",
     "timezone_menu",
-    "symbol_info",
+    // "symbol_info",
     "create_volume_indicator_by_default",
   ],
   enabled_features = undefined,
@@ -98,7 +104,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
           ...(!autosize ? { width } : { width: "100%" }),
           ...(!autosize ? { height } : { height: "100%" }),
           autosize,
-          fullscreen: true,
+          fullscreen: false,
           symbol,
           ...(!range ? { interval } : { range }),
           timezone,
@@ -133,15 +139,22 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
             "mainSeriesProperties.candleStyle.borderColor": "#378658",
             "mainSeriesProperties.candleStyle.borderUpColor": "#439687",
             "mainSeriesProperties.candleStyle.borderDownColor": "#DE5E57",
+            "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
+            "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             // volumePaneSize: "small",
           },
-          loading_screen: {
-            backgroundColor: "#000000",
-            foregroundColor: "#000000",
-          },
+          // loading_screen: {
+          //   backgroundColor: "#000000",
+          //   foregroundColor: "#000000",
+          // },
+          datafeed: new DataFeed({
+            apiBaseUrl: props.apiBaseUrl,
+          }),
+          library_path: "/tradingview/charting_library/",
           ...props,
         }}
-        scriptSRC="https://s3.tradingview.com/tv.js"
+        // scriptSRC="https://s3.tradingview.com/tv.js"
+        scriptSRC="/tradingview/charting_library/charting_library.js"
         // scriptSRC="https://futures-dex-iap.woo.org/assets/woo-chart/charting_library/charting_library.js"
         containerId={container_id}
         type="Widget"

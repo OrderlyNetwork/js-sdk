@@ -124,7 +124,7 @@ export const Input: FC<InputProps> = ({
         {...props}
         disabled={!!disabled}
         className={cn(
-          "bg-transparent p-3 flex-1 focus-visible:outline-none w-full peer",
+          "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer",
           typeof prefix !== "undefined" && "px-0",
           className
         )}

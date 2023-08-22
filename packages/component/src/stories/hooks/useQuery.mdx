@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="hook/useQuery" />
+
+# useQuery
+
+```shell
+yarn add @orderly/hooks
+```
+
+## Usage
+
+```tsx
+import { useQuery } from "../useQuery";
+
+import { type API } from "@orderly/core";
+
+export const useMarketInfo = (symbol: string) => {
+  return useQuery<API.MarketInfo>(`/public/futures/${symbol}`);
+};
+```
+
+## APIs

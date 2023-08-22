@@ -10,17 +10,24 @@ export type WSOptions = {
   url?: string;
   networkId?: NetworkId;
   accountId?: string;
+
+  onSigntureRequest: (accountId: string) => Promise<any>;
 };
 
-class WS {
+class WebSocket {
   // the topic reference count;
   private static __topicRefCountMap: Map<string, number> = new Map();
   private wsSubject: WebSocketSubject<any>;
+  private privateWsSubject?: WebSocketSubject<any>;
 
   private authenticated: boolean = false;
 
   constructor(options: WSOptions) {
     this.wsSubject = this.createSubject(options);
+
+    if (!!options.accountId) {
+      this.privateWsSubject = this.createPrivateSubject(options);
+    }
 
     this.bindSubscribe();
   }
@@ -33,7 +40,7 @@ class WS {
     }
 
     return webSocket({
-      url,
+      url: `${url}${options.accountId}`,
       openObserver: {
         next: () => {
           console.log("Connection ok");
@@ -45,6 +52,32 @@ class WS {
         },
       },
     });
+  }
+
+  private createPrivateSubject(options: WSOptions): WebSocketSubject<any> {
+    const url = WS_URL[options.networkId || "testnet"].private;
+    const ws = webSocket({
+      url: `${url}${options.accountId}`,
+      openObserver: {
+        next: () => {
+          console.log("Private connection ok");
+          if (this.authenticated || !options.accountId) return;
+
+          options.onSigntureRequest?.(options.accountId).then((signature) => {
+            this.authenticate(options.accountId!, signature);
+          });
+        },
+      },
+      closeObserver: {
+        next: () => {
+          console.log("Private connection closed");
+          this.authenticated = false;
+        },
+      },
+    });
+    // authenticate
+
+    return ws;
   }
 
   private bindSubscribe() {
@@ -64,31 +97,99 @@ class WS {
         console.log("WS Connection closed");
       },
     });
+
+    if (!this.privateWsSubject) return;
+
+    this.privateWsSubject.subscribe({
+      next(message) {
+        const handler = messageHandlers.get(message.event);
+        if (handler) {
+          handler.handle(message, send);
+        }
+      },
+      error(err) {
+        console.log("WS Error: ", err);
+      },
+      complete() {
+        console.log("WS Connection closed");
+      },
+    });
   }
 
-  private authenticate() {
+  private authenticate(
+    accountId: string,
+    message: {
+      publicKey: string;
+      signature: string;
+      timestamp: number;
+    }
+  ) {
     if (this.authenticated) return;
-    this.wsSubject.next({ type: "authenticate" });
-    this.authenticated = true;
+    if (!this.privateWsSubject) {
+      console.error("private ws not connected");
+      return;
+    }
+
+    console.log("push auth message:", message);
+    this.privateWsSubject?.next({
+      id: accountId,
+      event: "auth",
+      params: {
+        orderly_key: message.publicKey,
+        sign: message.signature,
+        timestamp: message.timestamp,
+      },
+    });
+    // this.wsSubject.next({ type: "authenticate" });
+    // this.authenticated = true;
   }
 
   send(message: any) {
     this.wsSubject.next(message);
   }
 
-  observe<T>(topic: string): Observable<T>;
-  observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-  observe<T>(
-    params: {
-      event: string;
-    } & Record<string, any>,
-    unsubscribe?: () => any
-  ): Observable<T>;
+  get isAuthed() {
+    return this.authenticated;
+  }
+
+  // observe<T>(topic: string): Observable<T>;
+  // observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
+  // observe<T>(
+  //   params: {
+  //     event: string;
+  //   } & Record<string, any>,
+  //   unsubscribe?: () => any
+  // ): Observable<T>;
   observe<T>(
     params: any,
     unsubscribe?: () => any,
     messageFilter?: (value: T) => boolean
   ): Observable<T> {
+    return this._observe(false, params, unsubscribe, messageFilter);
+  }
+
+  // privateObserve<T>(topic: string): Observable<T>;
+  // privateObserve<T>(topic: string, unsubscribe?: () => any): Observable<T>;
+  // privateObserve<T>(
+  //   params: {
+  //     event: string;
+  //   } & Record<string, any>,
+  //   unsubscribe?: () => any
+  // ): Observable<T>;
+  privateObserve<T>(
+    params: any,
+    unsubscribe?: () => any,
+    messageFilter?: (value: T) => boolean
+  ): Observable<T> {
+    return this._observe(true, params, unsubscribe, messageFilter);
+  }
+
+  private _observe<T>(
+    isPrivate: boolean,
+    params: any,
+    unsubscribe?: () => any,
+    messageFilter?: (value: T) => boolean
+  ) {
     const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] =
       this.generateMessage(params, unsubscribe, messageFilter);
 
@@ -96,11 +197,15 @@ class WS {
       try {
         //TODO: add ref count, only send subscribe message when ref count is 0
         // 如果已经订阅过了，就不再发送订阅消息
-        const refCount = WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+        const refCount =
+          WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
           // WS.__topicRefCountMap.set(subscribeMessage.topic, WS.__topicRefCountMap.get(subscribeMessage.topic) + 1);
           this.send(subscribeMessage);
-          WS.__topicRefCountMap.set(subscribeMessage.topic, refCount + 1);
+          WebSocket.__topicRefCountMap.set(
+            subscribeMessage.topic,
+            refCount + 1
+          );
         }
       } catch (err) {
         observer.error(err);
@@ -124,25 +229,24 @@ class WS {
         try {
           // console.log("******* unsubscribe", unsubscribeMessage);
           const refCount =
-            WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+            WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
           if (refCount > 1) {
-            WS.__topicRefCountMap.set(subscribeMessage.topic, refCount - 1);
+            WebSocket.__topicRefCountMap.set(
+              subscribeMessage.topic,
+              refCount - 1
+            );
             return;
           }
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
-          WS.__topicRefCountMap.delete(subscribeMessage.topic);
+          WebSocket.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }
         subscription.unsubscribe();
       };
     });
-  }
-
-  privateObserve(topic: string): Observable<any> {
-    return this.observe(topic);
   }
 
   private generateMessage(
@@ -173,6 +277,12 @@ class WS {
 
     return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
   }
+
+  // 取消所有订阅
+  desotry() {
+    this.wsSubject.unsubscribe();
+    this.privateWsSubject?.unsubscribe();
+  }
 }
 
-export default WS;
+export default WebSocket;

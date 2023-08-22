@@ -1,8 +1,12 @@
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
 
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+
+// import { remarkNpm2Yarn } from 'remark-npm2yarn'
+
 const config = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  staticDirs: ["../public"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -16,6 +20,14 @@ const config = {
       },
     },
     "@storybook/addon-mdx-gfm",
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        loaderOptions: {
+          injectStoryParameters: false,
+        },
+      },
+    },
   ],
   framework: {
     name: "@storybook/react-webpack5",

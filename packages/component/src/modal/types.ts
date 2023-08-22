@@ -41,6 +41,7 @@ export interface ModalHandler<Props = Record<string, unknown>>
   keepMounted: boolean;
   show: (args?: Props) => Promise<unknown>;
   hide: () => Promise<unknown>;
+  onOpenChange: (visible: boolean) => void;
   resolve: (value?: unknown) => void;
   reject: (reason?: unknown) => void;
 

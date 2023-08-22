@@ -5,6 +5,9 @@ import { TradingView } from ".";
 const meta: Meta<typeof TradingView> = {
   component: TradingView,
   title: "Block/TradingView",
+  parameters: {
+    layout: "fullscreen",
+  },
 };
 
 export default meta;
@@ -17,7 +20,7 @@ export const Default: Story = {
     console.log(symbol);
     return (
       <div style={{ width: "100%", height: "300px" }}>
-        <TradingView {...args} />
+        <TradingView {...args} symbol={symbol} />
       </div>
     );
   },
@@ -25,6 +28,7 @@ export const Default: Story = {
     // autosize: true,
     width: "100%",
     height: 320,
+    apiBaseUrl: "",
     // intervals: ["1", "3", "5", "15", "30", "60", "240", "720", "1D", "1W"],
   },
 };

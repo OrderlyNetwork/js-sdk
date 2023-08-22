@@ -18,7 +18,6 @@ export const MODAL_REGISTRY = new Map<string, ModalRegistry>();
 export const create = <P extends {}>(
   Comp: React.ComponentType<P>
 ): FC<P & ModalHocProps> => {
-  console.log("///// create HOC");
   // return higher order component
   return ({ id, defaultVisible, keepMounted, ...props }) => {
     const { args, show } = useModal(id);

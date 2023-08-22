@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as React from "react";
 import { OrderlyProvider } from "../provider";
-import { Numeral } from "./numeral";
+import { Numeral } from ".";
 import { NumeralTotal } from "./numeralTotal";
 // import { ConfigDataProvider } from "@orderly/hooks";
 
@@ -27,6 +27,7 @@ type Story = StoryObj<typeof Numeral>;
 export const Default: Story = {
   args: {
     children: 2323.023,
+    rule: "price",
   },
 };
 

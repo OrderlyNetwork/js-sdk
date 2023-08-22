@@ -9,17 +9,19 @@ const textVariants = cva([], {
     variant: {},
     type: {
       primary: "text-primary",
-      secondary: "text-gray-500",
-      tertiary: "text-gray-400",
+      secondary: "text-secondary",
+      tertiary: "text-tertiary",
       quaternary: "text-gray-300",
       warning: "text-warning",
       danger: "text-danger",
       success: "text-success",
+      buy: "text-trade-profit",
+      sell: "text-trade-loss",
     },
   },
 });
 
-export type TextRule = "date" | "address" | "text";
+export type TextRule = "date" | "address" | "text" | "symbol";
 
 export interface TextProps
   extends HTMLAttributes<HTMLSpanElement>,
@@ -28,8 +30,9 @@ export interface TextProps
   rule?: TextRule;
   // if rule is address, show str range
   range?: [number, number];
+  loading?: boolean;
 }
-const Text: FC<PropsWithChildren<TextProps>> = (props) => {
+export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
   const { variant, rule, asChildren, type, className, children, ...rest } =
     props;
   const Comp = asChildren ? Slot : "span";
@@ -44,6 +47,10 @@ const Text: FC<PropsWithChildren<TextProps>> = (props) => {
       return `${address.replace(reg, "$1...$3")}`;
     }
     if (rule === "date") return new Date(children as string).toLocaleString();
+    if (rule === "symbol") {
+      const arr = (children as string).split("_");
+      return `${arr[1]}-${arr[0]}`;
+    }
 
     return children;
   }, [children, rule]);
@@ -56,11 +63,3 @@ const Text: FC<PropsWithChildren<TextProps>> = (props) => {
     />
   );
 };
-
-export type CombinedText = typeof Text & {
-  tradingPair: typeof TradingPair;
-};
-
-(Text as CombinedText).tradingPair = TradingPair;
-
-export { Text };

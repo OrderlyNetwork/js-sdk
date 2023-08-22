@@ -3,6 +3,8 @@ import React from "react";
 import { usePositionStream } from "@orderly/hooks";
 import { PositionsView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
+import { modal } from "@/modal";
+import { ClosePositionPane } from "./sections/closeForm";
 
 const meta: Meta = {
   title: "Block/PositionsView",
@@ -21,7 +23,7 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider>
+      <OrderlyProvider configStore={undefined}>
         <Story />
       </OrderlyProvider>
     ),
@@ -34,12 +36,64 @@ type Story = StoryObj<typeof PositionsView>;
 
 export const Default: Story = {
   args: {
-    dataSource: [1, 2, 3, 4],
+    dataSource: [
+      {
+        symbol: "PERP_ETH_USDC",
+        position_qty: 0.01,
+        cost_position: 18.58986,
+        last_sum_unitary_funding: 0.0,
+        pending_long_qty: 0.0,
+        pending_short_qty: 0.0,
+        settle_price: 1858.986,
+        average_open_price: 1857.5,
+        unsettled_pnl: -2.81596,
+        mark_price: 1672.6,
+        est_liq_price: 0.0,
+        timestamp: 1691644867041,
+        mmr: 0.0275,
+        imr: 0.2,
+        IMR_withdraw_orders: 0.2,
+        MMR_with_orders: 0.0275,
+        pnl_24_h: 0.0,
+        notional: 18.57,
+        fee_24_h: 0.0,
+      },
+      {
+        symbol: "PERP_NEAR_USDC",
+        position_qty: 5.0,
+        cost_position: 6.79243,
+        last_sum_unitary_funding: 0.17939,
+        pending_long_qty: 0.0,
+        pending_short_qty: 0.0,
+        settle_price: 1.358486,
+        average_open_price: 1.3574,
+        unsettled_pnl: -1.57318,
+        mark_price: 1.2197,
+        est_liq_price: 0.0,
+        timestamp: 1692063942690,
+        mmr: 0.05,
+        imr: 0.2,
+        notional: 6.79,
+        IMR_withdraw_orders: 0.2,
+        MMR_with_orders: 0.05,
+        pnl_24_h: 0.0,
+        fee_24_h: 0.0,
+      },
+    ],
+    onLimitClose: async (position) => {
+      console.log(position);
+      const result = await modal.sheet({
+        title: "Limit Close",
+        content: <ClosePositionPane position={position} />,
+      });
+
+      console.log("result", result);
+    },
   },
 };
 
-export const WithData: Story = {
-  render: (args) => {
+export const WithHooks: Story = {
+  render: (args, context) => {
     const [data, { loading }] = usePositionStream();
     console.log(data);
     return <PositionsView {...args} dataSource={data} />;

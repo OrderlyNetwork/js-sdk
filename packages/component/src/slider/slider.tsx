@@ -38,7 +38,7 @@ const Slider = React.forwardRef<
       props.defaultValue ?? []
     );
 
-    const { min, max, step } = props;
+    const { min = 0, max = 100, step } = props;
 
     // const spanRef = useRef<HTMLSpanElement | null>(null);
 
@@ -48,20 +48,20 @@ const Slider = React.forwardRef<
       if (Array.isArray(marks) && marks.length > 0) {
         return marks;
       }
-      if (typeof step !== "undefined") {
-        const marks: SliderMark[] = [];
+      // if (typeof step !== "undefined") {
+      //   const marks: SliderMark[] = [];
 
-        const steps = (max ?? 100) / step;
+      //   const steps = (max ?? 100) / step;
 
-        for (let i = 0; i <= steps; i++) {
-          marks.push({
-            value: i * step,
-            label: `${i * step}`,
-          });
-        }
+      //   for (let i = 0; i <= steps; i++) {
+      //     marks.push({
+      //       value: i * step,
+      //       label: `${i * step}`,
+      //     });
+      //   }
 
-        return marks;
-      }
+      //   return marks;
+      // }
     }, [marks, step]);
 
     const onValueChangeInner = (value: number[]) => {
@@ -107,8 +107,8 @@ const Slider = React.forwardRef<
               value={innerValue}
               color={color}
               marks={innerMasks}
-              min={min ?? 0}
-              max={max ?? 100}
+              min={min}
+              max={max}
             />
           )}
           <SliderPrimitive.Thumb
@@ -124,7 +124,12 @@ const Slider = React.forwardRef<
             aria-label="Volume"
           >
             {showTip && (
-              <SliderTip value={innerValue} className={bgClassName} />
+              <SliderTip
+                value={innerValue}
+                className={bgClassName}
+                max={max}
+                min={0}
+              />
             )}
           </SliderPrimitive.Thumb>
         </SliderPrimitive.Root>

@@ -42,10 +42,13 @@ module.exports = {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
           300: "rgb(var(--orderly-color-base-300) / <alpha-value>)",
-          contrast: "rgb(var(--orderly-color-base-contract) / <alpha-value>)",
+          contrast: "rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
         },
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
+        },
+        warning: {
+          DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",

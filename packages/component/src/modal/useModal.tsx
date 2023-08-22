@@ -66,6 +66,13 @@ export function useModal(modal?: any, args?: any): ModalHandler {
 
   const remove = useCallback(() => modalActions.remove(id), [id]);
 
+  const onOpenChange = useCallback(
+    (isOpen: boolean) => {
+      isOpen ? () => {} : hide();
+    },
+    [id]
+  );
+
   const setStates = useCallback(
     (states: Record<string, unknown>) => modalActions.setStates(id, states),
     [id]
@@ -100,6 +107,7 @@ export function useModal(modal?: any, args?: any): ModalHandler {
 
     show,
     hide,
+    onOpenChange,
     setStates,
     remove,
     resolve,

@@ -102,6 +102,9 @@ export class Account {
     return this._state$.getValue();
   }
 
+  /**
+   * set user positions count
+   */
   set position(position: string[]) {
     this._state$.next({
       ...this.stateValue,

@@ -1,4 +1,5 @@
 import React, { createRef, useEffect, forwardRef, useRef } from "react";
+import { IChartingLibraryWidget } from "@/@types/charting_library";
 
 interface WidgetProps {
   scriptHTML: any;
@@ -9,7 +10,7 @@ interface WidgetProps {
 
 declare const TradingView: any;
 
-export const Widget = forwardRef<any, WidgetProps>(
+export const Widget = forwardRef<IChartingLibraryWidget, WidgetProps>(
   ({ scriptHTML, scriptSRC, containerId, type }, ref) => {
     // const containerRef: { current: HTMLDivElement | null } = createRef();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -34,8 +35,6 @@ export const Widget = forwardRef<any, WidgetProps>(
                   ? (ref = new TradingView.MediumWidget(scriptHTML))
                   : undefined
               );
-
-              console.log(script.innerHTML);
             }
           };
         } else {

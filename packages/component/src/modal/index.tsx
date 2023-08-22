@@ -2,6 +2,7 @@ import { modalActions } from "./modalContext";
 import { register, unregister } from "./modalHelper";
 import { actionSheet } from "@/modal/preset/actionSheet";
 import { confirm } from "./preset/confirm";
+import { sheet } from "./preset/sheet";
 
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";
@@ -13,5 +14,8 @@ export const modal = {
   ...modalActions,
   actionSheet,
   confirm,
+  sheet,
+  // alert
+  //actionSheet
   /// toast
 };

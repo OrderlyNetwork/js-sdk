@@ -5,7 +5,7 @@ import { create } from "@/modal/modalHelper";
 import { modalActions } from "@/modal/modalContext";
 export interface ConfirmProps {
   title: string;
-  content: string;
+  content: React.ReactNode;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {

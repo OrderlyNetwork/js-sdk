@@ -82,7 +82,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
       <div className={cn(labelClassName, props.labelClassName)}>
         {labelElement}
       </div>
-      <div className={cn(colorClassName, props.valueClassName, valueClassName)}>
+      <div className={cn(valueClassName, props.valueClassName, colorClassName)}>
         {valueElement}
       </div>
     </div>

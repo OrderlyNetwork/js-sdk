@@ -57,7 +57,7 @@ var __async = (__this, __arguments, generator) => {
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  WS: () => ws_default,
+  WebSocket: () => ws_default,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   get: () => get,
   post: () => post
@@ -124,8 +124,10 @@ var import_webSocket = require("rxjs/webSocket");
 // src/ws/contants.ts
 var WS_URL = {
   testnet: {
-    public: "wss://testnet-ws.orderly.org/ws/stream/",
-    private: "wss://testnet-ws-private.orderly.org/v2/ws/private/stream/"
+    // public: "wss://testnet-ws.orderly.org/ws/stream/",
+    public: "wss://dev-ws-v2.orderly.org/ws/stream/",
+    private: "wss://dev-ws-private-v2.orderly.org/wsprivate/v2/ws/private/stream/"
+    // private: "wss://testnet-ws-private.orderly.org/v2/ws/private/stream/",
   },
   mainnet: {
     public: "wss://mainnet-ws.orderly.io",
@@ -157,10 +159,13 @@ var messageHandlers = /* @__PURE__ */ new Map([
 ]);
 
 // src/ws/index.ts
-var _WS = class _WS {
+var _WebSocket = class _WebSocket {
   constructor(options) {
     this.authenticated = false;
     this.wsSubject = this.createSubject(options);
+    if (!!options.accountId) {
+      this.privateWsSubject = this.createPrivateSubject(options);
+    }
     this.bindSubscribe();
   }
   createSubject(options) {
@@ -171,7 +176,7 @@ var _WS = class _WS {
       url = WS_URL[options.networkId || "testnet"].public;
     }
     return (0, import_webSocket.webSocket)({
-      url,
+      url: `${url}${options.accountId}`,
       openObserver: {
         next: () => {
           console.log("Connection ok");
@@ -183,6 +188,30 @@ var _WS = class _WS {
         }
       }
     });
+  }
+  createPrivateSubject(options) {
+    const url = WS_URL[options.networkId || "testnet"].private;
+    const ws = (0, import_webSocket.webSocket)({
+      url: `${url}${options.accountId}`,
+      openObserver: {
+        next: () => {
+          var _a;
+          console.log("Private connection ok");
+          if (this.authenticated || !options.accountId)
+            return;
+          (_a = options.onSigntureRequest) == null ? void 0 : _a.call(options, options.accountId).then((signature) => {
+            this.authenticate(options.accountId, signature);
+          });
+        }
+      },
+      closeObserver: {
+        next: () => {
+          console.log("Private connection closed");
+          this.authenticated = false;
+        }
+      }
+    });
+    return ws;
   }
   bindSubscribe() {
     const send = this.send.bind(this);
@@ -200,24 +229,81 @@ var _WS = class _WS {
         console.log("WS Connection closed");
       }
     });
+    if (!this.privateWsSubject)
+      return;
+    this.privateWsSubject.subscribe({
+      next(message) {
+        const handler = messageHandlers.get(message.event);
+        if (handler) {
+          handler.handle(message, send);
+        }
+      },
+      error(err) {
+        console.log("WS Error: ", err);
+      },
+      complete() {
+        console.log("WS Connection closed");
+      }
+    });
   }
-  authenticate() {
+  authenticate(accountId, message) {
+    var _a;
     if (this.authenticated)
       return;
-    this.wsSubject.next({ type: "authenticate" });
-    this.authenticated = true;
+    if (!this.privateWsSubject) {
+      console.error("private ws not connected");
+      return;
+    }
+    console.log("push auth message:", message);
+    (_a = this.privateWsSubject) == null ? void 0 : _a.next({
+      id: accountId,
+      event: "auth",
+      params: {
+        orderly_key: message.publicKey,
+        sign: message.signature,
+        timestamp: message.timestamp
+      }
+    });
   }
   send(message) {
     this.wsSubject.next(message);
   }
+  get isAuthed() {
+    return this.authenticated;
+  }
+  // observe<T>(topic: string): Observable<T>;
+  // observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
+  // observe<T>(
+  //   params: {
+  //     event: string;
+  //   } & Record<string, any>,
+  //   unsubscribe?: () => any
+  // ): Observable<T>;
   observe(params, unsubscribe, messageFilter) {
+    return this._observe(false, params, unsubscribe, messageFilter);
+  }
+  // privateObserve<T>(topic: string): Observable<T>;
+  // privateObserve<T>(topic: string, unsubscribe?: () => any): Observable<T>;
+  // privateObserve<T>(
+  //   params: {
+  //     event: string;
+  //   } & Record<string, any>,
+  //   unsubscribe?: () => any
+  // ): Observable<T>;
+  privateObserve(params, unsubscribe, messageFilter) {
+    return this._observe(true, params, unsubscribe, messageFilter);
+  }
+  _observe(isPrivate, params, unsubscribe, messageFilter) {
     const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
     return new import_rxjs.Observable((observer) => {
       try {
-        const refCount = _WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+        const refCount = _WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
           this.send(subscribeMessage);
-          _WS.__topicRefCountMap.set(subscribeMessage.topic, refCount + 1);
+          _WebSocket.__topicRefCountMap.set(
+            subscribeMessage.topic,
+            refCount + 1
+          );
         }
       } catch (err) {
         observer.error(err);
@@ -237,24 +323,24 @@ var _WS = class _WS {
       });
       return () => {
         try {
-          const refCount = _WS.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+          const refCount = _WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
           if (refCount > 1) {
-            _WS.__topicRefCountMap.set(subscribeMessage.topic, refCount - 1);
+            _WebSocket.__topicRefCountMap.set(
+              subscribeMessage.topic,
+              refCount - 1
+            );
             return;
           }
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
-          _WS.__topicRefCountMap.delete(subscribeMessage.topic);
+          _WebSocket.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }
         subscription.unsubscribe();
       };
     });
-  }
-  privateObserve(topic) {
-    return this.observe(topic);
   }
   generateMessage(params, unsubscribe, messageFilter) {
     let subscribeMessage, unsubscribeMessage;
@@ -270,17 +356,23 @@ var _WS = class _WS {
     }
     return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
   }
+  // 取消所有订阅
+  desotry() {
+    var _a;
+    this.wsSubject.unsubscribe();
+    (_a = this.privateWsSubject) == null ? void 0 : _a.unsubscribe();
+  }
 };
 // the topic reference count;
-_WS.__topicRefCountMap = /* @__PURE__ */ new Map();
-var WS = _WS;
-var ws_default = WS;
+_WebSocket.__topicRefCountMap = /* @__PURE__ */ new Map();
+var WebSocket = _WebSocket;
+var ws_default = WebSocket;
 
 // src/constants.ts
 var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  WS,
+  WebSocket,
   __ORDERLY_API_URL_KEY__,
   get,
   post

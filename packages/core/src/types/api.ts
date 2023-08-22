@@ -67,27 +67,47 @@ export declare namespace API {
     type: string;
   }
 
-  export interface Order{
-    symbol:                 string;
-    status:                 string;
-    side:                   string;
-    order_id:               number;
-    user_id:                number;
-    price:                  number | null;
-    type:                   string;
-    quantity:               number;
-    amount:                 null;
-    visible:                number;
-    executed:               number;
-    total_fee:              number;
-    fee_asset:              string;
-    client_order_id:        null;
+  export interface Order {
+    symbol: string;
+    status: string;
+    side: string;
+    order_id: number;
+    user_id: number;
+    price: number | null;
+    type: string;
+    quantity: number;
+    amount: null;
+    visible: number;
+    executed: number;
+    total_fee: number;
+    fee_asset: string;
+    client_order_id: null;
     average_executed_price: number;
-    created_time:           number;
-    updated_time:           number;
-    reduce_only:            boolean;
+    created_time: number;
+    updated_time: number;
+    reduce_only: boolean;
   }
 
+  export interface Position {
+    symbol: string;
+    position_qty: number;
+    cost_position: number;
+    last_sum_unitary_funding: number;
+    pending_long_qty: number;
+    pending_short_qty: number;
+    settle_price: number;
+    average_open_price: number;
+    unsettled_pnl: number;
+    mark_price: number;
+    est_liq_price: number;
+    timestamp: number;
+    mmr: number;
+    imr: number;
+    IMR_withdraw_orders: number;
+    MMR_with_orders: number;
+    pnl_24_h: number;
+    fee_24_h: number;
+  }
 }
 
 export declare namespace WSMessage {

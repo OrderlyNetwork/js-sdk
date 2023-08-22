@@ -1,6 +1,5 @@
 import { FC, useCallback, useMemo, useState } from "react";
 import {
-  defaultTimeInterval,
   type TimeIntervalItem,
   TimeIntervalToolbar,
   type TimeIntervalToolbarProps,

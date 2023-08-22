@@ -19,7 +19,6 @@ export { default as useConstant } from "use-constant";
 
 export * from "./orderlyContext";
 export * from "./orderly/orderlyHooks";
-export { type WebSocketAdpater } from "./orderlyContext";
 
 import useSWR, { type SWRConfiguration } from "swr";
 

@@ -13,9 +13,9 @@ const preview = {
       },
     },
 
-    // viewport:{
-    //   defaultViewport: 'largeMobile'
-    // }
+    viewport:{
+      defaultViewport: 'mobile2'
+    }
   },
   globalTypes: {
     symbol: {

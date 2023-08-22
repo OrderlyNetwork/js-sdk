@@ -1,13 +1,18 @@
 import { cn } from "@/utils/css";
 import { FC } from "react";
+import { convertValueToPercentage } from "./utils";
 
 export interface SliderTipProps {
   value: number[];
   className?: string;
+  min: number;
+  max: number;
 }
 
 export const SliderTip: FC<SliderTipProps> = (props) => {
-  const { className } = props;
+  const { className, min, max } = props;
+  const value = props.value[0] ?? 0;
+  const percent = convertValueToPercentage(value, min, max);
   return (
     <span
       className={cn(
@@ -16,7 +21,7 @@ export const SliderTip: FC<SliderTipProps> = (props) => {
       )}
       style={{ lineHeight: "19px" }}
     >
-      {`${props.value[0]}%`}
+      {`${percent.toFixed()}%`}
     </span>
   );
 };

@@ -4,7 +4,7 @@ import { MessageFactor, getMockSigner } from "@orderly/core";
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {
     const extendedFetcher = async (url: string) => {
-      console.log("signature middleware::", key, url);
+      // console.log("signature middleware::", key, url);
       const signer = getMockSigner();
 
       const payload: MessageFactor = {

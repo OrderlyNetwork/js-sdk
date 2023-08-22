@@ -38,7 +38,7 @@ const coloringClasses: Record<string, string> = {
   neutral: "text-base-contrast/50",
 };
 
-const Numeral: FC<NumeralProps> = (props) => {
+export const Numeral: FC<NumeralProps> = (props) => {
   const { rule = "price", coloring, precision, truncate = false } = props;
   // TODO: check precision
 
@@ -87,19 +87,3 @@ const Numeral: FC<NumeralProps> = (props) => {
 
   return <span className={cn(colorClassName, props.className)}>{child}</span>;
 };
-
-export type CombinedComponent = typeof Numeral & {
-  /**
-   * 需要搭配 @orderly/hooks 使用
-   */
-  symbol: typeof NumeralWithConfig;
-  total: typeof NumeralTotal;
-};
-
-const CombinedComponent = Numeral as CombinedComponent;
-CombinedComponent.symbol = NumeralWithConfig;
-CombinedComponent.total = NumeralTotal;
-
-// (Numeral as CombinedComponent).symbol = NumeralWithConfig;
-
-export { CombinedComponent as Numeral };

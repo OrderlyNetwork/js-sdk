@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import { OrderlyProvider } from "../provider";
-import { Text } from "./text";
+import { Text } from ".";
 
 const meta: Meta<typeof Text> = {
   component: Text,
@@ -23,6 +23,12 @@ export default meta;
 type Story = StoryObj<typeof Text>;
 
 export const Default: Story = {
+  args: {
+    children: "Normal Text",
+  },
+};
+
+export const TextStyles: Story = {
   render: (args) => {
     return (
       <div className={"flex flex-col gap-3"}>

@@ -1,6 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWebSocketClient } from "../useWebSocketClient";
+import { positions } from "@orderly/futures";
+import { useObservable } from "rxjs-hooks";
+import { map } from "rxjs/operators";
+import { type API } from "@orderly/core";
 
 export interface PositionReturn {
   data: any[];
@@ -8,34 +12,14 @@ export interface PositionReturn {
   close: (qty: number) => void;
 }
 
-export type Position = {
-  symbol: string;
-  position_qty: number;
-  cost_position: number;
-  last_sum_unitary_funding: number;
-  pending_long_qty: number;
-  pending_short_qty: number;
-  settle_price: number;
-  average_open_price: number;
-  unsettled_pnl: number;
-  mark_price: number;
-  est_liq_price: number;
-  timestamp: number;
-  mmr: number;
-  imr: number;
-  IMR_withdraw_orders: number;
-  MMR_with_orders: number;
-  pnl_24_h: number;
-  fee_24_h: number;
-};
-
-// [data,{loading,close}]
-export const usePositionStream = () => {
+export const usePositionStream = (symbol?: string) => {
   // const [data, setData] = useState<Position[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hideOthers, setHideOthers] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
+  const [visibledSymbol, setVisibleSymbol] = useState<string | undefined>(
+    symbol
+  );
 
-  const { data, error } = usePrivateQuery<{ rows: Position[] }>("/positions", {
+  const { data, error } = usePrivateQuery<API.Position[]>(`/positions`, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
@@ -43,22 +27,68 @@ export const usePositionStream = () => {
 
   // console.log("positions", positions);
 
-  const toggleHideOthers = useCallback(() => {
-    setHideOthers((prev) => !prev);
+  const aggregatedData = useMemo(() => {
+    const aggregatedData = {
+      unrealizedPnl: NaN,
+      unrealPnl: NaN,
+      notional: NaN,
+    };
+
+    return aggregatedData;
+  }, [data]);
+
+  type PositionArray = API.Position[] | undefined;
+
+  const value = useObservable<PositionArray, PositionArray[]>(
+    (_, input$) =>
+      input$.pipe(
+        map((data) => {
+          return data[0];
+        }),
+        map((data) => {
+          console.log("obser", data);
+          return data?.map((item) => {
+            return {
+              ...item,
+              notional: positions.notional(
+                item.position_qty,
+                item.average_open_price
+              ),
+            };
+          });
+        })
+      ),
+    undefined,
+    [data]
+  );
+
+  const showSymbol = useCallback((symbol: string) => {
+    setVisibleSymbol(symbol);
   }, []);
 
-  useEffect(() => {}, []);
+  /**
+   * 返回数据格式
+   * {
+   *     data:Position[],
+   *     overView:{
+   *      unrealizedPnl: number;
+   *      unrealPnl: number;
+   *      notional: number;
+   *     }
+   * }
+   */
 
   return [
-    data?.rows || null,
+    value,
+    aggregatedData,
     {
       close: (qty: number) => {},
       loading: false,
-      hideOthers,
+      showSymbol,
       error,
       loadMore: () => {},
       refresh: () => {},
-      toggleHideOthers,
+      // toggleHideOthers,
       // filter: (filter: string) => {},
     },
   ];

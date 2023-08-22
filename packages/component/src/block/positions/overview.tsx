@@ -29,17 +29,18 @@ export const Overview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="flex justify-between bg-base-200 p-3">
-        <Statistic label="Unreal PnL" value="-1,234.56" coloring />
+      <div className="flex justify-between bg-base-200 px-4 py-3">
+        <Statistic label="Unreal PnL" value="-1234.56" coloring rule="price" />
         <Statistic label="Notional" value="123456" rule="price" />
         <Statistic
           label="Unsettled PnL"
-          value="123,456"
+          value="123456"
+          rule="price"
           coloring
           align="right"
         />
       </div>
-      <div className="flex justify-between py-3 px-3 items-center">
+      <div className="flex justify-between py-3 px-4 items-center">
         <div className={"flex items-center gap-2"}>
           <Checkbox
             id={"showAll"}

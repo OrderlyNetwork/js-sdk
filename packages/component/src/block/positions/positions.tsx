@@ -17,7 +17,10 @@ interface PositionsViewProps {
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
-    <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
+    <StatisticStyleProvider
+      labelClassName="text-sm text-base-contrast/30"
+      valueClassName={"text-base-contrast/80"}
+    >
       <div>
         <Overview onMarketCloseAll={props.onMarketCloseAll} />
         <Divider />

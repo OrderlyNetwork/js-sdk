@@ -15,6 +15,8 @@ export interface NetworkImageProps {
   className?: string;
   rounded?: boolean;
   type: NetworkImageType;
+
+  symbol?: string;
 }
 
 // TODO: 添加icon生成adpater
@@ -22,6 +24,13 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
 
   useEffect(() => {
+    if (
+      typeof props.type === "undefined" &&
+      typeof props.symbol === "undefined"
+    ) {
+      throw new Error("NetworkImage must have a type or symbol");
+    }
+
     if (props.type === "placeholder") {
       return;
     }
@@ -37,8 +46,13 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     };
 
     if (props.type === "coin") {
+      let name = props.name;
+      if (typeof props.symbol === "string") {
+        const arr = props.symbol?.split("_");
+        name = arr[1];
+      }
       // coin logos
-      img.src = `https://oss.woo.network/static/symbol_logo/${props.name!.toUpperCase()}.png`;
+      img.src = `https://oss.woo.network/static/symbol_logo/${name!.toUpperCase()}.png`;
     }
     if (props.type === "chain") {
       img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
@@ -47,7 +61,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-  }, [props.type]);
+  }, [props.type, props.symbol]);
 
   const icon = useMemo(() => {
     if (!url) {

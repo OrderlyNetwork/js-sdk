@@ -12,7 +12,8 @@ const fetcher = (url: string, init: RequestInit) => get(url, init);
  * @param options
  */
 export const usePrivateQuery = <T>(
-  query: string,
+  // query: string,
+  query: Parameters<typeof useSWR>["0"],
   options?: SWRConfiguration
 ): SWRResponse<T> => {
   const { apiBaseUrl } = useContext(OrderlyContext);

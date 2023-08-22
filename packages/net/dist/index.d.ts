@@ -8,25 +8,27 @@ type WSOptions = {
     url?: string;
     networkId?: NetworkId;
     accountId?: string;
+    onSigntureRequest: (accountId: string) => Promise<any>;
 };
-declare class WS {
+declare class WebSocket {
     private static __topicRefCountMap;
     private wsSubject;
+    private privateWsSubject?;
     private authenticated;
     constructor(options: WSOptions);
     private createSubject;
+    private createPrivateSubject;
     private bindSubscribe;
     private authenticate;
     send(message: any): void;
-    observe<T>(topic: string): Observable<T>;
-    observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-    observe<T>(params: {
-        event: string;
-    } & Record<string, any>, unsubscribe?: () => any): Observable<T>;
-    privateObserve(topic: string): Observable<any>;
+    get isAuthed(): boolean;
+    observe<T>(params: any, unsubscribe?: () => any, messageFilter?: (value: T) => boolean): Observable<T>;
+    privateObserve<T>(params: any, unsubscribe?: () => any, messageFilter?: (value: T) => boolean): Observable<T>;
+    private _observe;
     private generateMessage;
+    desotry(): void;
 }
 
 declare const __ORDERLY_API_URL_KEY__: string;
 
-export { WS, __ORDERLY_API_URL_KEY__, get, post };
+export { WebSocket, __ORDERLY_API_URL_KEY__, get, post };

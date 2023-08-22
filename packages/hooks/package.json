@@ -1,6 +1,6 @@
 {
   "name": "@orderly/hooks",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -29,6 +29,7 @@
   "dependencies": {
     "@orderly/net": "workspace:*",
     "@orderly/core": "workspace:*",
+    "@orderly/futures": "workspace:*",
     "ramda": "^0.29.0",
     "rxjs-hooks": "0.8.0-alpha.0",
     "swr": "^2.2.0",

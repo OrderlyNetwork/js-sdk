@@ -38,7 +38,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       </div>
 
       <div className="py-5">
-        <Slider />
+        <Slider color={"primary"} />
       </div>
 
       <div className="grid grid-cols-2 gap-3 py-5">

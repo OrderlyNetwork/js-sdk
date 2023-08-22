@@ -2,6 +2,7 @@ import Button from "@/button";
 import { Coin, NetworkImage } from "@/icon";
 import { Statistic } from "@/statistic";
 import { FC } from "react";
+import { Text } from "@/text";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
@@ -13,12 +14,12 @@ interface PositionCellProps {
 export const PositionCell: FC<PositionCellProps> = (props) => {
   const { item } = props;
   return (
-    <div className="p-3">
+    <div className="px-4">
       <div className="flex items-center py-2">
         <div className="flex-1">
-          <div className="flex items-center">
-            <NetworkImage type="coin" name="BTC" size={"small"} />
-            <span className="ml-2">BTC-PERP</span>
+          <div className="flex items-center space-x-2">
+            <NetworkImage type="coin" symbol={item.symbol} size={"small"} />
+            <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>
         <Statistic
@@ -28,7 +29,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value="123456"
+          value={item["unsettled_pnl"]}
           rule="price"
           coloring
           align="right"
@@ -54,7 +55,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
             </>
           }
           rule="price"
-          value="123456"
+          value={item["notional"]}
           align="right"
         />
         <Statistic

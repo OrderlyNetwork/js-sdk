@@ -25,12 +25,12 @@ export type SignedMessagePayload = {
  * const signer = new BaseSigner(keyStore);
  * const payload = await signer.sign({
  *  url: "https://api.orderly.io/get_account?address=0x1234567890&brokerId=woofi_dex",
-*   method: "GET",
-*   data: {
-*     address: "0x1234567890",
-*     brokerId: "woofi_dex",
-*    },
-*  });
+ *   method: "GET",
+ *   data: {
+ *     address: "0x1234567890",
+ *     brokerId: "woofi_dex",
+ *    },
+ *  });
  *  ```
  */
 export interface Signer {
@@ -41,7 +41,7 @@ export class BaseSigner implements Signer {
   constructor(private readonly keyStore: KeyStore) {}
 
   async sign(message: MessageFactor): Promise<SignedMessagePayload> {
-    const orderlyKeyPair = this.keyStore.getOrderlyKey();
+    // const orderlyKeyPair = this.keyStore.getOrderlyKey();
     const url = new URL(message.url);
     const timestamp = Date.now().toString();
     let msgStr = [
@@ -52,19 +52,39 @@ export class BaseSigner implements Signer {
     if (message.data && Object.keys(message.data).length) {
       msgStr += JSON.stringify(message.data);
     }
-    const u8 = Buffer.from(msgStr);
+    // const u8 = Buffer.from(msgStr);
 
-    const signature = await orderlyKeyPair.sign(u8);
+    // const signature = await orderlyKeyPair.sign(u8);
     // console.log("signature", signature);
-    const signHex = Buffer.from(signature).toString("base64");
+    // const signHex = Buffer.from(signature).toString("base64");
     // console.log("signHex", signHex);
-    const b64 = base64url(signHex);
+    // const b64 = base64url(signHex);
     // console.log("b64", b64);
 
+    const { signature, publicKey } = await this.signText(msgStr);
+
     return {
-      "orderly-key": await orderlyKeyPair.getPublicKey(),
+      "orderly-key": publicKey,
       "orderly-timestamp": timestamp,
-      "orderly-signature": b64,
+      "orderly-signature": signature,
+    };
+  }
+
+  async signText(
+    text: string
+  ): Promise<{ signature: string; publicKey: string }> {
+    const orderlyKeyPair = this.keyStore.getOrderlyKey();
+    const u8 = Buffer.from(text);
+
+    const signature = await orderlyKeyPair.sign(u8);
+
+    const signHex = Buffer.from(signature).toString("base64");
+
+    const b64 = base64url(signHex);
+
+    return {
+      signature: b64,
+      publicKey: await orderlyKeyPair.getPublicKey(),
     };
   }
 }

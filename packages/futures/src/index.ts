@@ -1,3 +1,3 @@
 export * from "./order";
 
-export { type Position } from "./position";
+export * as positions from "./positions";

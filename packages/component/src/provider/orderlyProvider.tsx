@@ -1,4 +1,3 @@
-import { WS } from "@orderly/net";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import {
   useConstant,
@@ -15,6 +14,10 @@ interface OrderlyProviderProps {
   networkId?: string;
   configStore: ConfigStore;
 }
+//
+// API_URL: "https://dev-api-v2.orderly.org"
+// WS_URL: "wss://dev-ws-v2.orderly.org"
+// WS_PRIVATE_URL: "wss://dev-ws-private-v2.orderly.org"
 
 export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   props
@@ -24,15 +27,9 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     // "https://api.orderly.org/v1"
     "https://futures-api.orderly.org/v1"
   );
-  const ws = useConstant(
-    () =>
-      new WS({
-        url: "wss://ws.orderly.org/ws/stream/OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
-      })
-  );
 
   return (
-    <Provider value={{ ws, apiBaseUrl, configStore: props.configStore }}>
+    <Provider value={{ apiBaseUrl, configStore: props.configStore }}>
       <ModalProvider>
         <TooltipProvider>{children}</TooltipProvider>
       </ModalProvider>
