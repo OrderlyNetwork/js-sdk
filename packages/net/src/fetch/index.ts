@@ -1,4 +1,5 @@
 async function request(url: string, options: RequestInit) {
+  console.log("request", url, options);
   if (!url.startsWith("http")) {
     throw new Error("url must start with http(s)");
   }
@@ -9,7 +10,6 @@ async function request(url: string, options: RequestInit) {
     // credentials: "include",
     headers: _createHeaders(options.headers),
   }).catch((err) => {
-    console.log("fetch error", err);
     throw new Error(err);
   });
 
@@ -20,6 +20,7 @@ async function request(url: string, options: RequestInit) {
 }
 
 function _createHeaders(headers: HeadersInit = {}): HeadersInit {
+  console.log("headers", headers);
   const _headers = new Headers(headers);
   // _headers.append("Accept", "application/json");
 
@@ -33,7 +34,7 @@ function _createHeaders(headers: HeadersInit = {}): HeadersInit {
 async function get<R>(
   url: string,
   options?: RequestInit,
-  getter?: (data: any) => R
+  formatter?: (data: any) => R
 ): Promise<R> {
   const res = await request(url, {
     method: "GET",
@@ -41,8 +42,8 @@ async function get<R>(
   });
 
   if (res.success) {
-    if (typeof getter === "function") {
-      return getter(res.data);
+    if (typeof formatter === "function") {
+      return formatter(res.data);
     }
     // 根据返回的数据结构，返回需要的数据
     if (Array.isArray(res.data["rows"])) {
@@ -57,11 +58,13 @@ async function post(
   data: any,
   options?: Omit<RequestInit, "method">
 ): Promise<any> {
-  return request(url, {
+  const res = await request(url, {
     method: "POST",
     body: JSON.stringify(data),
     ...options,
   });
+
+  return res;
 }
 
 export { get, post };

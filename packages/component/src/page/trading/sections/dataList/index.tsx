@@ -7,7 +7,11 @@ import { HistoryPane } from "./history";
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
   return (
-    <Tabs value={activeTab} onTabChange={setActiveTab}>
+    <Tabs
+      value={activeTab}
+      onTabChange={setActiveTab}
+      tabBarClassName="bg-base-200"
+    >
       <TabPane title="Positions(2)" value="positions">
         <PositionPane />
       </TabPane>

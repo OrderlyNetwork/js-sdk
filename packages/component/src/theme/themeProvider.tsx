@@ -6,6 +6,11 @@ interface InputTheme {
   };
 }
 
+interface NumeralTheme {
+  // if the value is not a number or not a valid number, the component will show this string
+  errorCover: string;
+}
+
 export interface ThemeConfigValue {
   palette: {
     primary: string;
@@ -16,6 +21,7 @@ export interface ThemeConfigValue {
   };
   components: {
     input: InputTheme;
+    numeral: NumeralTheme;
   };
 }
 

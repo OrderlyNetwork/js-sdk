@@ -6,15 +6,24 @@ import { modal } from "@/modal";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 
+export type AggregatedData = {
+  unsettledPnl: number;
+  unrealPnl: number;
+  notional: number;
+};
+
 interface OverviewProps {
   onMarketCloseAll?: () => void;
   canCloseAll?: boolean;
+
+  aggregated?: AggregatedData;
 
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
 }
 
-export const Overview: FC<OverviewProps> = (props) => {
+export const PositionOverview: FC<OverviewProps> = (props) => {
+  const { aggregated } = props;
   const onMarketCloseAll = () => {
     modal
       .confirm({
@@ -30,11 +39,16 @@ export const Overview: FC<OverviewProps> = (props) => {
   return (
     <>
       <div className="flex justify-between bg-base-200 px-4 py-3">
-        <Statistic label="Unreal PnL" value="-1234.56" coloring rule="price" />
-        <Statistic label="Notional" value="123456" rule="price" />
+        <Statistic
+          label="Unreal. PnL"
+          value={aggregated?.unrealPnl}
+          coloring
+          rule="price"
+        />
+        <Statistic label="Notional" value={aggregated?.notional} rule="price" />
         <Statistic
           label="Unsettled PnL"
-          value="123456"
+          value={aggregated?.unsettledPnl}
           rule="price"
           coloring
           align="right"

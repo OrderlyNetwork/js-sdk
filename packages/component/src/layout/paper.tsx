@@ -7,7 +7,7 @@ const paperVariants = cva(["rounded p-3"], {
   variants: {
     variant: {
       outline: "border border-slate-500 ",
-      contained: "bg-white",
+      contained: "bg-base-100",
     },
     square: {
       true: "rounded-none",

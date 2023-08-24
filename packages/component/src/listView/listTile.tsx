@@ -8,7 +8,7 @@ import { cn } from "@/utils/css";
 
 // type avatarType
 
-interface ListTileProps {
+export interface ListTileProps {
   className?: string;
   tailing?: React.ReactNode;
   // leading?: React.ReactNode;
@@ -16,6 +16,7 @@ interface ListTileProps {
   title?: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
@@ -65,8 +66,9 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   return (
     <div
       className={cn(
-        "py-3 flex gap-2 hover:bg-base-200 active:bg-base-300",
-        props.className
+        "py-3 flex gap-3 hover:bg-base-200 active:bg-base-300",
+        props.className,
+        props.disabled && "opacity-60 cursor-not-allowed"
       )}
       onClick={props.onClick}
     >

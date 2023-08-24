@@ -66,8 +66,10 @@ const _Button = ({
         cn(
           "min-w-0 flex-1 py-1 bg-fill text-base-contrast/20 relative after:block after:bg-fill after:absolute after:w-[30px] after:h-full after:top-0 after:z-10 h-[32px]",
           isActive && "bg-primary after:bg-primary",
-          isFirstChild && "rounded-l after:right-[-15px] after:skew-x-[-25deg]",
-          !isFirstChild && "rounded-r after:left-[-15px] after:skew-x-[-25deg]",
+          isFirstChild &&
+            "rounded-l after:right-[-15px] after:skew-x-[-25deg] pl-[15px]",
+          !isFirstChild &&
+            "rounded-r after:left-[-15px] after:skew-x-[-25deg] pr-[15px]",
           className,
           isActive && activeClassName
         )

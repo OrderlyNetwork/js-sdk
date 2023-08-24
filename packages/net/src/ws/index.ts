@@ -84,7 +84,7 @@ class WebSocket {
     /// 处理ping,auth等消息
     const send = this.send.bind(this);
     this.wsSubject.subscribe({
-      next(message) {
+      next: (message) => {
         const handler = messageHandlers.get(message.event);
         if (handler) {
           handler.handle(message, send);
@@ -101,7 +101,11 @@ class WebSocket {
     if (!this.privateWsSubject) return;
 
     this.privateWsSubject.subscribe({
-      next(message) {
+      next: (message) => {
+        if (message.event === "auth") {
+          this.authenticated = true;
+          return;
+        }
         const handler = messageHandlers.get(message.event);
         if (handler) {
           handler.handle(message, send);
@@ -132,7 +136,7 @@ class WebSocket {
 
     console.log("push auth message:", message);
     this.privateWsSubject?.next({
-      id: accountId,
+      id: "auth",
       event: "auth",
       params: {
         orderly_key: message.publicKey,

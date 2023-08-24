@@ -36,6 +36,7 @@ type Story = StoryObj<typeof PositionsView>;
 
 export const Default: Story = {
   args: {
+    aggregated: {},
     dataSource: [
       {
         symbol: "PERP_ETH_USDC",
@@ -94,8 +95,15 @@ export const Default: Story = {
 
 export const WithHooks: Story = {
   render: (args, context) => {
-    const [data, { loading }] = usePositionStream();
-    console.log(data);
-    return <PositionsView {...args} dataSource={data} />;
+    const [data, info, { loading }] = usePositionStream();
+    // console.log("********", data, info.maintenance_margin_ratio());
+
+    return (
+      <PositionsView
+        {...args}
+        dataSource={data.rows}
+        aggregated={data.aggregated}
+      />
+    );
   },
 };

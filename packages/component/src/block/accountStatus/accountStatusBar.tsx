@@ -13,6 +13,7 @@ export type AccountStatus =
   | "NotConnected"
   | "Connected"
   | "NotSignedIn"
+  | "EnabledTrading"
   | "SignedIn";
 
 interface AccountStatusProps {

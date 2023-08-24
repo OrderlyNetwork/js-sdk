@@ -1,4 +1,4 @@
-import { ListView } from "@/listView";
+import { ListTile, ListView } from "@/listView";
 import { Divider } from "@/divider";
 import { FC, useCallback, useMemo, useState } from "react";
 import { Statistic } from "@/statistic";
@@ -35,17 +35,13 @@ const sortFunc = {
 export const MarketListView: FC<MarketListViewProps> = (props) => {
   const renderItem = useCallback((item: DataItem) => {
     return (
-      <ListView.listTile
-        title={"BTC-PERP"}
-        subtitle={item["24h_volumn"]}
-        avatar={{
-          type: "coin",
-          name: "BTC",
-        }}
+      <ListTile.symbol
+        subtitle={item["24h_volumn"] ?? "--"}
+        symbol={item["symbol"]}
         tailing={
           <Statistic
             label={<Numeral rule={"price"}>{item["24h_close"]}</Numeral>}
-            value={item.change}
+            value={!Number.isNaN(item.change) ? item.change : 0}
             rule={"percentages"}
             align={"right"}
             coloring

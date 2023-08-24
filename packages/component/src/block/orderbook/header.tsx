@@ -18,7 +18,7 @@ export const Header: FC<Props> = (props) => {
     return props.qtyUnit;
   }, [mode]);
   return (
-    <div className="flex flex-row justify-between text-tertiary text-sm pb-1">
+    <div className="flex flex-row justify-between text-tertiary text-xs pb-2">
       <div className={"flex flex-col"}>
         <span>Price</span>
         <span>{`(${props.priceUnit})`}</span>

@@ -1,8 +1,11 @@
 import { useQuery } from "../useQuery";
-import { type API } from "@orderly/core";
+import { type API } from "@orderly/types";
+import { createGetter } from "../utils/createGetter";
 
 export const useSymbolsInfo = () => {
-  const { data, isLoading } = useQuery<API.SymbolExt[]>(`/public/info`, {
+  const { data = {} } = useQuery<API.SymbolExt[]>(`/public/info`, {
+    focusThrottleInterval: 1000 * 60 * 60 * 24,
+    revalidateOnFocus: false,
     formatter(data: { rows: API.Symbol[] }) {
       if (!data?.rows || !data?.rows?.length) {
         return {};
@@ -14,8 +17,8 @@ export const useSymbolsInfo = () => {
         const arr = item.symbol.split("_");
         obj[item.symbol] = {
           ...item,
-          base: arr[2],
-          quote: arr[1],
+          base: arr[1],
+          quote: arr[2],
           type: arr[0],
         };
       }
@@ -24,23 +27,5 @@ export const useSymbolsInfo = () => {
     },
   });
 
-  return new Proxy(
-    {},
-    {
-      get(target: any, property, receiver) {
-        if (property === "isLoading") return isLoading;
-        return (value: string, defaultValue: any) => {
-          if (value) {
-            // console.log(data, property, value);
-            if (!data) return defaultValue;
-            return (data as any)[property]?.[value] ?? defaultValue;
-          } else {
-            return target[property];
-          }
-
-          // return data[value][property];
-        };
-      },
-    }
-  );
+  return createGetter<API.SymbolExt>(data as API.SymbolExt);
 };

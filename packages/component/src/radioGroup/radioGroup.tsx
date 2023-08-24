@@ -29,7 +29,7 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-[16px] w-[16px] rounded-full border-2 border-base-contrast/70 text-base-contrast/70 ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square h-[16px] w-[16px] rounded-full border-2 border-base-contrast/50 text-base-contrast/50 ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
@@ -61,13 +61,6 @@ const Radio: React.FC<
       <Label htmlFor={id}>{children}</Label>
     </div>
   );
-
-  // return (
-  //   <label className="flex items-center gap-2 text-base-contrast/70">
-  //     <RadioGroupItem {...rest}></RadioGroupItem>
-  //     <span>{children}</span>
-  //   </label>
-  // );
 };
 
 export { RadioGroup, RadioGroupItem, Radio };

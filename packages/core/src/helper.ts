@@ -4,7 +4,7 @@ import { BaseSigner } from "./signer";
 export const getMockSigner = (secretKey?: string) => {
   const mockKeyStore = new MockKeyStore(
     secretKey ||
-      "0cc31f8a253c92b5cf9461f8d7a128ef24083eb8556f5a73831558fade2c3ff4"
+      "c24fe227663f5a73493cad3f4049514f70623177272d57fffa8cb895fa1f92de"
   );
 
   return new BaseSigner(mockKeyStore);

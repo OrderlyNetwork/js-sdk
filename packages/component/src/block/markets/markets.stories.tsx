@@ -71,7 +71,7 @@ export const Default: Story = {
 export const WithHooks: Story = {
   render: () => {
     const { data } = useMarketStream();
-    useSymbolsInfo();
+    // useSymbolsInfo();
     // console.log("*****", data);
     return <Markets dataSource={data} />;
   },

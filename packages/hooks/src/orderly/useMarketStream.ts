@@ -9,7 +9,7 @@ export const useMarketStream = () => {
   // get listing of all markets from /public/info
   const ws = useWebSocketClient();
   const { data } = useQuery<WSMessage.Ticker[]>(`/public/futures`);
-  const config = useSymbolsInfo();
+  // const config = useSymbolsInfo();
 
   const value = useObservable<WSMessage.Ticker[] | null, WSMessage.Ticker[][]>(
     (_, input$) =>
@@ -32,6 +32,7 @@ export const useMarketStream = () => {
                 ["24h_close"]: ticker.close,
                 ["24h_open"]: ticker.open,
                 ["24h_volumn"]: ticker.volume,
+                change: 0,
               };
             }
             return item;

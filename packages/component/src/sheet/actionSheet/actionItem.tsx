@@ -26,7 +26,7 @@ export const ActionItem: FC<ActionSheetProps> = (props) => {
     if (typeof action.onClick === "function") {
       action.onClick(action);
     } else {
-      props.onClick?.({ value: action.value, index: props.index });
+      props.onClick?.({ ...action, index: props.index });
     }
   }, [action]);
 
@@ -37,7 +37,7 @@ export const ActionItem: FC<ActionSheetProps> = (props) => {
   return (
     <div
       className={cn(
-        "flex justify-center items-center text-lg h-[52px]",
+        "flex justify-center items-center text-lg h-[52px] cursor-pointer",
 
         {
           "text-primary": props.active,

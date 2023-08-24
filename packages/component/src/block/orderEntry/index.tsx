@@ -1,4 +1,5 @@
-import { InputMask } from "@/input/inputMask";
+"use client";
+
 import { Input } from "@/input";
 
 import { Slider } from "@/slider";
@@ -9,40 +10,51 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
-import { Picker, Select } from "@/select";
-import { Switch } from "@/switch";
+import { Picker } from "@/select";
 import Button from "@/button";
-import { OrderSide, OrderType, OrderValue } from "./types";
-import { RadioGroup, Radio } from "@/radioGroup";
-import { Checkbox } from "@/checkbox/checkbox";
-import { Label } from "@/label";
+
 import { Divider } from "@/divider";
-import { Collapsible, CollapsibleContent } from "@/collapsible";
 import { OrderOptions } from "./sections/orderOptions";
 
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
+import { modal } from "@/modal";
+
 export interface OrderEntryProps {
-  onSubmit?: (value: OrderValue) => Promise<any>;
+  onSubmit?: () => Promise<any>;
   onDeposit?: () => Promise<void>;
   markPrice?: number;
-  // maxQty:number;
+  maxQty: number;
 
-  pair: string;
-  available: number;
-  collateral?: number;
+  symbol: string;
+
+  symbolConfig: API.SymbolExt;
+
+  freeCollateral?: number;
+
+  // 订单表单数据
+  values?: OrderEntity;
+  setValue?: (name: keyof OrderEntity, value: any) => void;
+  errors?: any;
+
+  showConfirm?: boolean;
+  onConfirmChange?: (value: boolean) => void;
 }
 
 interface OrderEntryRef {
   reset: () => void;
-  setValues: (values: Partial<OrderValue>) => void;
-  setValue: (name: keyof OrderValue, value: any) => void;
+  setValues: (values: Partial<OrderEntity>) => void;
+  setValue: (name: keyof OrderEntity, value: any) => void;
 }
 
-const { SegmentedButton } = Button;
+const { Segmented: SegmentedButton } = Button;
 
 export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
   (props, ref) => {
+    const { values, setValue, freeCollateral, symbolConfig } = props;
+
     useImperativeHandle(
       ref,
       () => {
@@ -55,23 +67,34 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       []
     );
 
-    const [values, setValues] = useState<OrderValue>({
-      side: OrderSide.Buy,
-      type: OrderType.Limit,
-      price: "",
-      qty: "",
-      symbol: props.pair,
-    });
-
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
+
+    const priceInputRef = useRef<HTMLInputElement | null>(null);
 
     const onSubmit = useCallback(
       (event: FormEvent) => {
         event.preventDefault();
-        props.onSubmit?.({
-          // symbol: props.pair,
-          ...values,
-        });
+        //check need show confirm
+        Promise.resolve()
+          .then(() => {
+            if (props.showConfirm) {
+              return modal.confirm({
+                title: "Confirm Order",
+                content: (
+                  <div className="text-danger">
+                    Are you sure you want to place this order?
+                  </div>
+                ),
+              });
+            }
+            return true;
+          })
+          .then(() => {
+            return props.onSubmit?.();
+          })
+          .then((res) => {
+            console.log("component:", res);
+          });
       },
       [values]
     );
@@ -81,17 +104,21 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       props.onDeposit?.();
     }, []);
 
-    const setValue = useCallback((name: string, value: any) => {
-      setValues((prev) => ({ ...prev, [name]: value }));
-    }, []);
-
     useEffect(() => {
-      if (values.side === OrderSide.Buy) {
+      if (!values || values.side === OrderSide.BUY) {
         setButtonText("Buy / Long");
       } else {
         setButtonText("Sell / Short");
       }
-    }, [values.side]);
+    }, [values]);
+
+    // useEffect(() => {
+    //   if (values?.order_type === OrderType.LIMIT) {
+    //     setTimeout(() => {
+    //       priceInputRef.current?.focus();
+    //     }, 300);
+    //   }
+    // }, [values]);
 
     return (
       <form onSubmit={onSubmit}>
@@ -100,26 +127,27 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             buttons={[
               {
                 label: "Buy",
-                value: "buy",
+                value: OrderSide.BUY,
                 activeClassName:
                   "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
               },
               {
                 label: "Sell",
-                value: "sell",
+                value: OrderSide.SELL,
                 activeClassName:
                   "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
               },
             ]}
-            value={values.side}
+            value={values?.side ?? OrderSide.SELL}
             onClick={function (value: string, event: Event): void {
-              setValue("side", value);
+              // setValue("side", value);
+              setValue?.("side", value);
             }}
           />
           <div className={"flex justify-between items-center"}>
             <div className="flex gap-1 text-gray-500 text-sm">
               <span>Free Collat.</span>
-              {`${props.collateral ?? "--"}`}
+              {`${freeCollateral ?? "--"}`}
               <span>USDC</span>
             </div>
             <Button
@@ -133,58 +161,71 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             </Button>
           </div>
           <Picker
-            label={"Limit Order"}
-            value={values.type}
-            color={values.side === OrderSide.Buy ? "buy" : "sell"}
+            label={"Order Type"}
+            value={values?.order_type}
+            color={values?.side === OrderSide.BUY ? "buy" : "sell"}
             options={[
-              { label: "Limit Order", value: "limit" },
+              { label: "Limit Order", value: "LIMIT" },
               {
                 label: "Market Order",
-                value: "market",
+                value: "MARKET",
               },
             ]}
-            onValueChange={(value) => {
-              setValue("type", value);
+            onValueChange={(value: any) => {
+              setValue?.("order_type", value.value);
             }}
           />
           <Input
+            ref={priceInputRef}
             prefix={"Price"}
-            suffix={"USDC"}
-            value={values.price}
+            suffix={symbolConfig?.quote}
+            value={values?.order_price}
             className="text-right"
+            readOnly={values?.order_type === OrderType.MARKET}
             onChange={(event) => {
               console.log(event.target.value);
-              setValue("price", event.target.value);
+              setValue?.("order_price", event.target.value);
             }}
           />
           <Input
             prefix={"Qunatity"}
-            suffix={"BTC"}
-            value={values.qty}
+            suffix={symbolConfig?.base}
+            value={values?.order_quantity}
             className="text-right"
+            error={!!props.errors?.order_quantity}
+            helpText={props.errors?.order_quantity}
             onChange={(event) => {
               console.log(event.target.value);
-              setValue("qty", event.target.value);
+              setValue?.("order_quantity", event.target.value);
             }}
           />
           <div>
             <Slider
-              color={values.side === OrderSide.Buy ? "buy" : "sell"}
-              step={25}
+              color={values?.side === OrderSide.BUY ? "buy" : "sell"}
+              markCount={4}
             />
           </div>
           <Input
             className={"text-right"}
-            readOnly
-            prefix={"Total"}
-            suffix={"USDC"}
+            value={values?.total}
+            prefix={"Total ≈"}
+            suffix={symbolConfig?.quote}
+            onChange={(event) => {
+              // console.log(event.target.value);
+              setValue?.("total", event.target.value);
+            }}
           />
           <Divider />
-          <OrderOptions />
+          <OrderOptions
+            showConfirm={props.showConfirm}
+            onConfirmChange={props.onConfirmChange}
+            values={values}
+            setValue={setValue}
+          />
 
           <Button
             type="submit"
-            color={values.side === OrderSide.Buy ? "buy" : "sell"}
+            color={values?.side === OrderSide.BUY ? "buy" : "sell"}
             fullWidth
           >
             {buttonText}

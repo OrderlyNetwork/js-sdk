@@ -9,6 +9,7 @@ export type MessageType =
   | "authenticate"
   | "message"
   | "error"
+  | "auth"
   | "close";
 
 export const messageHandlers = new Map<MessageType, MessageHandler>([

@@ -24,8 +24,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
 ) => {
   const { children, networkId = "testnet" } = props;
   const [apiBaseUrl, setApiBaseUrl] = useState<string>(
-    // "https://api.orderly.org/v1"
-    "https://futures-api.orderly.org/v1"
+    "https://dev-api-v2.orderly.org/v1"
   );
 
   return (

@@ -27,9 +27,12 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@orderly/net": "workspace:*",
     "@orderly/core": "workspace:*",
     "@orderly/futures": "workspace:*",
+    "@orderly/net": "workspace:*",
+    "@orderly/types": "workspace:*",
+    "@orderly/utils": "workspace:*",
+    "formik": "^2.4.3",
     "ramda": "^0.29.0",
     "rxjs-hooks": "0.8.0-alpha.0",
     "swr": "^2.2.0",

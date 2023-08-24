@@ -61,7 +61,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-  }, [props.type, props.symbol]);
+  }, [props.type, props.symbol, props.name]);
 
   const icon = useMemo(() => {
     if (!url) {

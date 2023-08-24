@@ -10,10 +10,9 @@ export { getMockSigner, getDefaultSigner } from "./helper";
 
 export { default as SimpleDI } from "./di/simpleDI";
 
-export { Account ,type AccountState} from "./account";
+export { Account, AccountStatusEnum, type AccountState } from "./account";
 export * from "./configStore";
 
 export * as wallet from "./wallet";
 
 export * from "./types/api";
-export * from "./types/base";

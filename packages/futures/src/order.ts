@@ -1,69 +1,120 @@
-export interface OrderPayload {
-  symbol: string;
-  order_type: string;
-  order_price?: number;
-  order_quantity?: number;
-  order_amount?: number;
-  visible_quantity?: number;
-  reduce_only: boolean;
-  side: string;
-  broker_id?: string;
-}
+import { OrderType, type API, OrderEntity } from "@orderly/types";
 
-export enum OrderType {
-  LIMIT = "LIMIT",
-  MARKET = "MARKET",
-  IOC = "IOC",
-  FOK = "FOK",
-  POST_ONLY = "POST_ONLY",
-  ASK = "ASK",
-  BID = "BID",
-}
+export type VerifyResult =
+  | { [P in keyof OrderEntity]?: string }
+  | null
+  | undefined;
+
+type ValuesDepConfig = {
+  token: API.TokenInfo;
+  symbol: API.SymbolExt;
+  maxQty: number;
+};
 
 export interface OrderCreator {
-  create: (values: OrderPayload) => OrderPayload;
+  create: (values: OrderEntity) => OrderEntity;
+  validate: (
+    values: OrderEntity,
+    configs: ValuesDepConfig,
+    verifyAll?: boolean
+  ) => VerifyResult;
 }
 
 export abstract class BaseOrderCreator implements OrderCreator {
-  abstract create(values: OrderPayload): OrderPayload;
+  abstract create(values: OrderEntity): OrderEntity;
+  abstract validate(
+    values: OrderEntity,
+    config: ValuesDepConfig,
+    verifyAll?: boolean
+  ): VerifyResult;
 
-  baseOrder(data: OrderPayload): OrderPayload {
-    return {
-      symbol: data.symbol,
+  baseOrder(data: OrderEntity): OrderEntity {
+    const order: any = {
+      // symbol: data.symbol,
       order_type: data.order_type,
       side: data.side,
       reduce_only: data.reduce_only,
+      order_quantity: data.order_quantity,
     };
+
+    if (data.visible_quantity === 0) {
+      order.visible_quantity = data.visible_quantity;
+    }
+
+    return order;
+  }
+
+  baseValidate(
+    values: OrderEntity,
+    configs: ValuesDepConfig,
+    verifyAll?: boolean
+  ): VerifyResult {
+    const errors: { [P in keyof OrderEntity]?: string } = {};
+    const baseTick = configs.symbol.base_tick;
+
+    console.log("baseValidate", values, configs, verifyAll, baseTick);
+    const { order_quantity } = values;
+
+    if (verifyAll) {
+      if (!order_quantity) {
+        errors.order_quantity = "quantity is required";
+      }
+    }
+
+    return errors;
   }
 }
 
 export class LimitOrderCreator extends BaseOrderCreator {
-  create(values: OrderPayload): OrderPayload {
+  create(values: OrderEntity): OrderEntity {
     return {
       ...this.baseOrder(values),
+      order_price: values.order_price,
     };
+  }
+  validate(
+    values: OrderEntity,
+    config: ValuesDepConfig,
+    verifyAll?: boolean
+  ): VerifyResult {
+    const errors = this.baseValidate(values, config, verifyAll);
+    return null;
   }
 }
 
 export class MarketOrderCreator extends BaseOrderCreator {
-  create(values: OrderPayload): OrderPayload {
+  create(values: OrderEntity): OrderEntity {
     return {
       ...this.baseOrder(values),
     };
   }
+  validate(
+    values: OrderEntity,
+    configs: ValuesDepConfig,
+    verifyAll?: boolean
+  ): VerifyResult {
+    return super.baseValidate(values, configs, verifyAll);
+  }
 }
 export class GeneralOrderCreator extends BaseOrderCreator {
-  create(data: OrderPayload): OrderPayload {
+  create(data: OrderEntity): OrderEntity {
     return {
       ...this.baseOrder(data),
       order_price: data.order_price,
       order_quantity: data.order_quantity,
     };
   }
+  validate(
+    values: OrderEntity,
+    configs: ValuesDepConfig,
+    verifyAll?: boolean
+  ): VerifyResult {
+    return super.baseValidate(values, configs, verifyAll);
+  }
 }
 
 export class OrderFactory {
-  static createOrder(type: OrderType): OrderCreator | null {
+  static create(type: OrderType): OrderCreator | null {
     switch (type) {
       case OrderType.LIMIT:
         return new LimitOrderCreator();

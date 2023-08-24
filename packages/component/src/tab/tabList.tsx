@@ -14,6 +14,7 @@ import {
 import { TabIndicator } from "./indicator";
 import { Tab } from "./tab";
 import { TabContext, TabContextState } from "./tabContext";
+import { cn } from "@/utils/css";
 
 export type TabItem = {
   title: string;
@@ -72,7 +73,7 @@ export const TabList: FC<TabListProps> = (props) => {
   }, [props.tabBarExtra, tabContext]);
 
   return (
-    <div className="flex border-b border-b-divider px-2">
+    <div className={cn("flex border-b border-b-divider px-2", props.className)}>
       <div className="pb-1 relative flex-1">
         <div className="flex" ref={boxRef}>
           {props.tabs.map((item, index) => {

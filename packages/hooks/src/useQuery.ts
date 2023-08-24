@@ -1,17 +1,17 @@
 "use client";
 
 import { useContext } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+import useSWR, { SWRResponse } from "swr";
 import { OrderlyContext } from "./orderlyContext";
 
-import { get } from "@orderly/net";
+import { fetcher, useQueryOptions } from "./utils/fetcher";
 
-const fetcher = (url: string, queryOptions: useQueryOptions<any>) =>
-  get(url, {}, queryOptions?.formatter);
+// const fetcher = (url: string, queryOptions: useQueryOptions<any>) =>
+//   get(url, {}, queryOptions?.formatter);
 
-export type useQueryOptions<T> = {
-  formatter?: (data:any) => T;
-};
+// export type useQueryOptions<T> = {
+//   formatter?: (data:any) => T;
+// };
 
 /**
  * useQuery
@@ -21,7 +21,7 @@ export type useQueryOptions<T> = {
  */
 export const useQuery = <T>(
   query: string,
-  options?: SWRConfiguration & useQueryOptions<T>
+  options?: useQueryOptions<T>
 ): SWRResponse<T> => {
   const { apiBaseUrl } = useContext(OrderlyContext);
   const { formatter, ...swrOptions } = options || {};
@@ -37,7 +37,7 @@ export const useQuery = <T>(
   // @ts-ignore
   return useSWR<T>(
     `${apiBaseUrl}${query}`,
-    (url) => fetcher(url, { formatter }),
+    (url, init) => fetcher(url, init, { formatter }),
     swrOptions
   );
 };

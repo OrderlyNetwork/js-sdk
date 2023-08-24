@@ -7,6 +7,10 @@ import { sheet } from "./preset/sheet";
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";
 
+export type modalPersetName = "actionSheet" | "confirm" | "sheet";
+
+export const modalPerset: Record<string, string> = {};
+
 export const modal = {
   register,
   unregister,

@@ -1,9 +1,10 @@
 import { forwardRef, SelectHTMLAttributes, useMemo, useState } from "react";
-import { cva, cx, VariantProps } from "class-variance-authority";
-import { ChevronDown } from "lucide-react";
+import { cva, VariantProps } from "class-variance-authority";
+
 import { SelectOption } from "@/select/select";
 import { cn } from "@/utils/css";
-import { ActionSheet } from "@/sheet";
+import { ActionSheet, ActionSheetItem } from "@/sheet";
+import { ArrowIcon } from "@/icon";
 
 const pickerVariants = cva(
   "flex flex-row items-stretch rounded focus-within:outline outline-primary bg-fill text-base-contrast/50",
@@ -37,13 +38,14 @@ const pickerVariants = cva(
 export interface PickerProps
   extends Omit<
       SelectHTMLAttributes<HTMLSelectElement>,
-      "disabled" | "size" | "color"
+      "disabled" | "size" | "color" | "value"
     >,
     VariantProps<typeof pickerVariants> {
   loading?: boolean;
   label?: string;
   options: SelectOption[];
-  onValueChange?: (value: string) => void;
+  value?: SelectOption | string | number;
+  onValueChange?: (value: any) => void;
 }
 
 export type PickerRef = {};
@@ -65,16 +67,38 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
   ) => {
     const [open, setOpen] = useState(false);
 
+    const selectedItem = useMemo<SelectOption | undefined>(() => {
+      if (value && !!(value as SelectOption).value) {
+        return value as SelectOption;
+      }
+
+      if (typeof value === "number" || typeof value === "string") {
+        const option = options.find((option) => option.value === value);
+        if (option) {
+          return option;
+        }
+      }
+    }, [value, options]);
+
     const text = useMemo(() => {
-      return value || label || placeholder;
-    }, [value, label, placeholder]);
+      if (selectedItem) {
+        return selectedItem.label;
+      }
+      return placeholder || label || "";
+    }, [selectedItem, label, placeholder]);
+
+    const actions: ActionSheetItem[] = useMemo(() => {
+      return [...options, "---", "Cancel"];
+    }, [options]);
 
     return (
       <ActionSheet
-        actionSheets={options}
+        actionSheets={actions}
         onOpenChange={setOpen}
         open={open}
         onClose={() => setOpen(false)}
+        value={selectedItem}
+        onValueChange={props.onValueChange}
       >
         <div
           className={cn(
@@ -91,7 +115,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
             {text}
           </div>
           <div className={"flex items-center"}>
-            <ChevronDown size={16} className={"text-inherit"} />
+            <ArrowIcon size={12} className={"text-inherit"} />
           </div>
         </div>
       </ActionSheet>

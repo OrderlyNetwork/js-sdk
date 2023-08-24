@@ -4,7 +4,7 @@ export { useFetures } from "./useFetures";
 export { useMarketInfo } from "./useMarketInfo";
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export { useInfo } from "./useInfo";
-export { useToken } from "./useToken";
+export { useTokenInfo } from "./useTokenInfo";
 export { useMarketStream } from "./useMarketStream";
 
 export { useTickerStream } from "./useTickerStream";

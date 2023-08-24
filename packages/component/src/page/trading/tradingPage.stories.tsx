@@ -31,3 +31,5 @@ export const Default: Story = {
   //   symbol: "BTC/USDT",
   // },
 };
+
+export const CustomizeTheme: Story = {};

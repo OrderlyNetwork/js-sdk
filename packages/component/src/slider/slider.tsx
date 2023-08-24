@@ -14,6 +14,7 @@ interface SliderProps
   extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
   color: SliderColor;
   marks?: SliderMark[];
+  markCount?: number;
   markLabelVisible?: boolean;
   showTip?: boolean;
 }
@@ -26,6 +27,7 @@ const Slider = React.forwardRef<
     {
       className,
       marks,
+      markCount,
       markLabelVisible,
       color = "primary",
       showTip = true,
@@ -48,21 +50,34 @@ const Slider = React.forwardRef<
       if (Array.isArray(marks) && marks.length > 0) {
         return marks;
       }
+
+      if (typeof markCount !== "undefined") {
+        const marks: SliderMark[] = [];
+        const piece = (max ?? 100) / markCount;
+        const len = markCount - 1;
+
+        for (let i = 0; i <= len; i++) {
+          marks.push({
+            value: i * piece,
+            label: `${i * piece}`,
+          });
+        }
+
+        marks.push({
+          value: max ?? 100,
+          label: `100`,
+        });
+
+        return marks;
+      }
       // if (typeof step !== "undefined") {
       //   const marks: SliderMark[] = [];
 
       //   const steps = (max ?? 100) / step;
 
-      //   for (let i = 0; i <= steps; i++) {
-      //     marks.push({
-      //       value: i * step,
-      //       label: `${i * step}`,
-      //     });
-      //   }
-
       //   return marks;
       // }
-    }, [marks, step]);
+    }, [marks, markCount]);
 
     const onValueChangeInner = (value: number[]) => {
       // if (Array.isArray(innerMasks) && innerMasks.length > 0) {

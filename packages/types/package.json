@@ -2,11 +2,26 @@
   "name": "@orderly/types",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "jest"
   },
   "keywords": [],
-  "author": "maogege",
+  "author": "leo",
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "@types/jest": "^29.5.3",
+    "babel-jest": "^29.6.1",
+    "jest": "^29.6.1",
+    "tsup": "^7.1.0",
+    "tsconfig": "workspace:*"
+    
+  },
   "license": "ISC"
 }

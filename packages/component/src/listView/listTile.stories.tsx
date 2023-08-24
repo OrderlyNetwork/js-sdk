@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 import { OrderlyProvider } from "../provider";
-import { ListTile } from "./listTile";
+import { ListTile } from ".";
 import { Statistic } from "../statistic";
 
 const meta: Meta<typeof ListTile> = {
@@ -10,7 +11,7 @@ const meta: Meta<typeof ListTile> = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyProvider>
+        <OrderlyProvider configStore={undefined}>
           <Story />
         </OrderlyProvider>
       );
@@ -40,5 +41,12 @@ export const Default: Story = {
         valueClassName={"text-sm"}
       />
     ),
+  },
+};
+
+export const WithSymbol: Story = {
+  render: (args, { globals }) => {
+    const { symbol } = globals;
+    return <ListTile.symbol {...args} symbol={symbol} />;
   },
 };

@@ -8,6 +8,8 @@ export interface MarketsProps {
   dataSource?: API.MarketInfo[];
   onSortBy?: (key: string, direction: SortDirection) => void;
   onItemClick?: (item: API.MarketInfo) => void;
+
+  className?: string;
 }
 
 export const Markets: FC<MarketsProps> = (props) => {

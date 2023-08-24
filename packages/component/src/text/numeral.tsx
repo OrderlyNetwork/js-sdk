@@ -4,7 +4,7 @@ import { commify, getDecimalLength } from "@orderly/utils";
 import { NumeralWithConfig } from "./numeralWithConfig";
 import { NumeralTotal } from "@/text/numeralTotal";
 
-export type NumeralRule = "percentages" | "price" | "text";
+export type NumeralRule = "percentages" | "price";
 
 export interface NumeralProps {
   rule?: NumeralRule;
@@ -44,13 +44,13 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
   const num = Number(props.children);
 
-  if (Number.isNaN(num)) {
-    throw new Error(
-      `Numeral: children must be a number, but got ${props.children}`
-    );
-  }
-
   const child = useMemo(() => {
+    if (Number.isNaN(num)) {
+      return "--";
+      // throw new Error(
+      //   `Numeral: children must be a number, but got ${props.children}`
+      // );
+    }
     if (rule === "percentages") {
       return `${(num * 100).toFixed(2)}%`;
     }

@@ -13,6 +13,8 @@ export interface TabsProps {
   keepAlive?: boolean;
   // 是否显示tab指示器，default: true
   showIdentifier?: boolean;
+
+  tabBarClassName?: string;
 }
 
 // it's controlled component;
@@ -81,6 +83,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
           value={props.value}
           tabBarExtra={props.tabBarExtra}
           showIdentifier={showIdentifier}
+          className={props.tabBarClassName}
         />
         <TabContent>{child}</TabContent>
       </>

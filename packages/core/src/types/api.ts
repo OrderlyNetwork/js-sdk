@@ -88,6 +88,20 @@ export declare namespace API {
     reduce_only: boolean;
   }
 
+  export interface PositionInfo {
+    margin_ratio: number;
+    initial_margin_ratio: number;
+    maintenance_margin_ratio: number;
+    open_margin_ratio: number;
+    current_margin_ratio_with_orders: number;
+    initial_margin_ratio_with_orders: number;
+    maintenance_margin_ratio_with_orders: number;
+    total_collateral_value: number;
+    free_collateral: number;
+    rows: Position[];
+    total_pnl_24_h: number;
+  }
+
   export interface Position {
     symbol: string;
     position_qty: number;

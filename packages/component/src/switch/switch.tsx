@@ -14,6 +14,10 @@ const switchVariants = cva("", {
         "data-[state=checked]:bg-trade-profit data-[state=unchecked]:bg-fill-light",
       loss: "data-[state=checked]:bg-trade-loss data-[state=unchecked]:bg-fill-light",
     },
+    // size:{
+    //   default:"",
+    //   lager:"peer h-[20px] w-[40px]",
+    // }
   },
   defaultVariants: {
     color: "primary",

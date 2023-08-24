@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-declare function get<R>(url: string, options?: RequestInit, getter?: (data: any) => R): Promise<R>;
+declare function get<R>(url: string, options?: RequestInit, formatter?: (data: any) => R): Promise<R>;
 declare function post(url: string, data: any, options?: Omit<RequestInit, "method">): Promise<any>;
 
 type NetworkId = "testnet" | "mainnet";

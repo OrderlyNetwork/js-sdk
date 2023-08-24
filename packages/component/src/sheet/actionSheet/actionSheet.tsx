@@ -16,7 +16,7 @@ export type ActionSheetItem = BaseActionSheetItem | SystemActionSheetItem;
 export interface ActionSheetProps
   extends ComponentPropsWithoutRef<typeof Sheet> {
   actionSheets: ActionSheetItem[];
-  value?: React.SelectHTMLAttributes<HTMLSelectElement>["value"];
+  value?: BaseActionSheetItem;
   onValueChange?: (value: string) => void;
   open?: boolean;
   onClose?: () => void;

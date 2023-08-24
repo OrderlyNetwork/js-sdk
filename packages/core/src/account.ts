@@ -10,6 +10,14 @@ export type AccountStatus =
   | "NotSignedIn"
   | "SignedIn";
 
+export enum AccountStatusEnum {
+  NotConnected = 0,
+  Connected = 1,
+  NotSignedIn = 2,
+  SignedIn = 3,
+  EnableTrading = 4,
+}
+
 export interface AccountState {
   status: AccountStatus;
 

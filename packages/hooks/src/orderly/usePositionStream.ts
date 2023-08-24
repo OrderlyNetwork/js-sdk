@@ -5,6 +5,8 @@ import { positions } from "@orderly/futures";
 import { useObservable } from "rxjs-hooks";
 import { map } from "rxjs/operators";
 import { type API } from "@orderly/core";
+import { type SWRConfiguration } from "swr";
+import { createGetter } from "../utils/createGetter";
 
 export interface PositionReturn {
   data: any[];
@@ -12,30 +14,29 @@ export interface PositionReturn {
   close: (qty: number) => void;
 }
 
-export const usePositionStream = (symbol?: string) => {
+export const usePositionStream = (
+  symbol?: string,
+  options?: SWRConfiguration
+) => {
   // const [data, setData] = useState<Position[]>([]);
   // const [loading, setLoading] = useState<boolean>(false);
   const [visibledSymbol, setVisibleSymbol] = useState<string | undefined>(
     symbol
   );
 
-  const { data, error } = usePrivateQuery<API.Position[]>(`/positions`, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, error, isLoading } = usePrivateQuery<API.PositionInfo>(
+    `/positions`,
+    {
+      // revalidateOnFocus: false,
+      // revalidateOnReconnect: false,
+      ...options,
+      formatter: (data) => data,
+    }
+  );
+
   const ws = useWebSocketClient();
 
   // console.log("positions", positions);
-
-  const aggregatedData = useMemo(() => {
-    const aggregatedData = {
-      unrealizedPnl: NaN,
-      unrealPnl: NaN,
-      notional: NaN,
-    };
-
-    return aggregatedData;
-  }, [data]);
 
   type PositionArray = API.Position[] | undefined;
 
@@ -46,7 +47,7 @@ export const usePositionStream = (symbol?: string) => {
           return data[0];
         }),
         map((data) => {
-          console.log("obser", data);
+          // console.log("obser", data);
           return data?.map((item) => {
             return {
               ...item,
@@ -59,8 +60,22 @@ export const usePositionStream = (symbol?: string) => {
         })
       ),
     undefined,
-    [data]
+    [data?.rows]
   );
+
+  // 合计数据
+  const aggregatedData = useMemo(() => {
+    const aggregatedData = {
+      unsettledPnl: NaN,
+      unrealPnl: NaN,
+      notional: NaN,
+    };
+
+    if (value && value.length) {
+    }
+
+    return aggregatedData;
+  }, [value]);
 
   const showSymbol = useCallback((symbol: string) => {
     setVisibleSymbol(symbol);
@@ -76,11 +91,16 @@ export const usePositionStream = (symbol?: string) => {
    *      notional: number;
    *     }
    * }
+   *
    */
 
+  // type getType = ReturnType<
+  //   typeof createGetter<Omit<API.PositionInfo, "rows">>
+  // >;
+
   return [
-    value,
-    aggregatedData,
+    { rows: value, aggregated: aggregatedData },
+    createGetter<Omit<API.PositionInfo, "rows">>(data as any, 1),
     {
       close: (qty: number) => {},
       loading: false,

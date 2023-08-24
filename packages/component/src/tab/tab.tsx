@@ -15,7 +15,7 @@ export const Tab: FC<TabProps> = (props) => {
   return (
     <button
       className={cn(
-        "mx-2 text-base-contrast/40 h-[32px]",
+        "mx-3 text-base-contrast/40 h-[32px]",
         active && "text-base-contrast active",
         disabled && "cursor-not-allowed text-slate-300"
       )}

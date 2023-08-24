@@ -67,6 +67,7 @@ module.exports = __toCommonJS(src_exports);
 // src/fetch/index.ts
 function request(url, options) {
   return __async(this, null, function* () {
+    console.log("request", url, options);
     if (!url.startsWith("http")) {
       throw new Error("url must start with http(s)");
     }
@@ -76,7 +77,6 @@ function request(url, options) {
       // credentials: "include",
       headers: _createHeaders(options.headers)
     })).catch((err) => {
-      console.log("fetch error", err);
       throw new Error(err);
     });
     if (response.ok) {
@@ -86,20 +86,21 @@ function request(url, options) {
   });
 }
 function _createHeaders(headers = {}) {
+  console.log("headers", headers);
   const _headers = new Headers(headers);
   if (!_headers.has("Content-Type")) {
     _headers.append("Content-Type", "application/json;charset=utf-8");
   }
   return _headers;
 }
-function get(url, options, getter) {
+function get(url, options, formatter) {
   return __async(this, null, function* () {
     const res = yield request(url, __spreadValues({
       method: "GET"
     }, options));
     if (res.success) {
-      if (typeof getter === "function") {
-        return getter(res.data);
+      if (typeof formatter === "function") {
+        return formatter(res.data);
       }
       if (Array.isArray(res.data["rows"])) {
         return res.data["rows"];
@@ -111,10 +112,11 @@ function get(url, options, getter) {
 }
 function post(url, data, options) {
   return __async(this, null, function* () {
-    return request(url, __spreadValues({
+    const res = yield request(url, __spreadValues({
       method: "POST",
       body: JSON.stringify(data)
     }, options));
+    return res;
   });
 }
 
@@ -126,8 +128,9 @@ var WS_URL = {
   testnet: {
     // public: "wss://testnet-ws.orderly.org/ws/stream/",
     public: "wss://dev-ws-v2.orderly.org/ws/stream/",
-    private: "wss://dev-ws-private-v2.orderly.org/wsprivate/v2/ws/private/stream/"
-    // private: "wss://testnet-ws-private.orderly.org/v2/ws/private/stream/",
+    // private:
+    //   "wss://dev-ws-private-v2.orderly.org/wsprivate/v2/ws/private/stream/",
+    private: "wss://dev-ws-private-v2.orderly.org/v2/ws/private/stream/"
   },
   mainnet: {
     public: "wss://mainnet-ws.orderly.io",
@@ -216,7 +219,7 @@ var _WebSocket = class _WebSocket {
   bindSubscribe() {
     const send = this.send.bind(this);
     this.wsSubject.subscribe({
-      next(message) {
+      next: (message) => {
         const handler = messageHandlers.get(message.event);
         if (handler) {
           handler.handle(message, send);
@@ -232,7 +235,11 @@ var _WebSocket = class _WebSocket {
     if (!this.privateWsSubject)
       return;
     this.privateWsSubject.subscribe({
-      next(message) {
+      next: (message) => {
+        if (message.event === "auth") {
+          this.authenticated = true;
+          return;
+        }
         const handler = messageHandlers.get(message.event);
         if (handler) {
           handler.handle(message, send);
@@ -256,7 +263,7 @@ var _WebSocket = class _WebSocket {
     }
     console.log("push auth message:", message);
     (_a = this.privateWsSubject) == null ? void 0 : _a.next({
-      id: accountId,
+      id: "auth",
       event: "auth",
       params: {
         orderly_key: message.publicKey,

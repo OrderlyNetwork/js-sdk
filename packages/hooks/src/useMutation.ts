@@ -13,7 +13,7 @@ const fetcher = (
   url: string,
   options: { arg: { data?: any; signature: SignedMessagePayload } }
 ) => {
-  console.log("muation fetcher", url, options);
+  // console.log("muation fetcher", url, options);
   return post(url, options.arg.data, {
     headers: {
       ...options.arg.signature,

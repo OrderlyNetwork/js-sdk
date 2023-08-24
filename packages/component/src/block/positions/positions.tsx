@@ -1,12 +1,14 @@
 import { Divider } from "@/divider";
 import { PositionCell } from "./cell";
-import { Overview } from "./overview";
+import { AggregatedData, PositionOverview } from "./overview";
 import { ListView } from "@/listView";
 import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 
 interface PositionsViewProps {
   dataSource: any[] | null;
+
+  aggregated: AggregatedData;
   // actions
   onLimitClose?: (position: any) => void;
   onMarketClose?: (position: any) => void;
@@ -22,7 +24,10 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
       valueClassName={"text-base-contrast/80"}
     >
       <div>
-        <Overview onMarketCloseAll={props.onMarketCloseAll} />
+        <PositionOverview
+          onMarketCloseAll={props.onMarketCloseAll}
+          aggregated={props.aggregated}
+        />
         <Divider />
         <>
           <ListView.separated<any>

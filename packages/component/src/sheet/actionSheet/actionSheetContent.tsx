@@ -1,11 +1,11 @@
 import { ActionItem, type BaseActionSheetItem } from "./actionItem";
-import React, { FC } from "react";
+import React, { FC, Fragment } from "react";
 import { ActionDivision } from "@/sheet/actionSheet/actionDivision";
 import { Divider } from "@/divider";
 
 export interface ActionSheetContentProps {
   actionSheets: BaseActionSheetItem[];
-  value?: React.SelectHTMLAttributes<HTMLSelectElement>["value"];
+  value?: BaseActionSheetItem;
   onValueChange?: (value: any) => void;
   onClose?: () => void;
 }
@@ -17,7 +17,7 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
           return <ActionDivision key={index} />;
         }
         return (
-          <>
+          <Fragment key={action.value || index}>
             <ActionItem
               onClick={(value) => {
                 // console.log(value);
@@ -30,7 +30,7 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
                   action.onClick(action);
                   // props.onClose();
                 } else {
-                  props.onValueChange?.(value.value || "");
+                  props.onValueChange?.(value);
                   props.onClose?.();
                 }
 
@@ -40,14 +40,13 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
               action={action}
               active={
                 typeof props.value !== "undefined" &&
-                props.value === action.value
+                props.value.value === action.value
               }
-              key={action.value || index}
             />
             {index < props.actionSheets.length - 1 && (
               <Divider className={"border-base-contrast/10"} />
             )}
-          </>
+          </Fragment>
         );
       })}
     </>
