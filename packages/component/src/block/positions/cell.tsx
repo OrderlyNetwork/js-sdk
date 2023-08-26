@@ -29,7 +29,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value={item["unsettled_pnl"]}
+          value={item["unrealized_pnl"]}
           rule="price"
           coloring
           align="right"
@@ -45,7 +45,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value="123456"
+          value="--"
         />
         <Statistic
           label={

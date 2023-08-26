@@ -47,7 +47,7 @@ export const WithHook: Story = {
   render: (args, { globals }) => {
     // console.log(globals);
     const [symbol, setSymbol] = React.useState(globals.symbol);
-    const [{ data, isLoading }] = useOrderStream({
+    const [data, { isLoading }] = useOrderStream({
       status: OrderStatus.COMPLETED,
       symbol: symbol,
     });

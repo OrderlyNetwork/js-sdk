@@ -5,17 +5,14 @@ export interface ConfigStore {
 }
 
 export class MemoryConfigStore implements ConfigStore {
-  private map!:Map<string,any> ;
+  private map!: Map<string, any>;
 
   constructor() {
     this._restore();
   }
 
   private _restore() {
-    this.map = new Map([
-        ['apiBaseUrl', 'https://futures-api.orderly.org/v1'],
-
-    ]);
+    this.map = new Map([["apiBaseUrl", "https://futures-api.orderly.org/v1"]]);
   }
 
   get<T>(key: string): T {
@@ -26,8 +23,7 @@ export class MemoryConfigStore implements ConfigStore {
     this.map.set(key, value);
   }
 
-  clear(): void {
-  }
+  clear(): void {}
 }
 
-export const memoryConfigStoreInstance = new MemoryConfigStore();
+// export const memoryConfigStoreInstance = new MemoryConfigStore();

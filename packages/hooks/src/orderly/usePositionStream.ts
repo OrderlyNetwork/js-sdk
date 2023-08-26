@@ -4,9 +4,11 @@ import { useWebSocketClient } from "../useWebSocketClient";
 import { positions } from "@orderly/futures";
 import { useObservable } from "rxjs-hooks";
 import { map } from "rxjs/operators";
-import { type API } from "@orderly/core";
+
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
+import { useFundingRates } from "./useFundingRates";
+import { type API } from "@orderly/types";
 
 export interface PositionReturn {
   data: any[];
@@ -24,6 +26,8 @@ export const usePositionStream = (
     symbol
   );
 
+  const fundingRates = useFundingRates();
+
   const { data, error, isLoading } = usePrivateQuery<API.PositionInfo>(
     `/positions`,
     {
@@ -38,7 +42,11 @@ export const usePositionStream = (
 
   // console.log("positions", positions);
 
-  type PositionArray = API.Position[] | undefined;
+  type PositionArray =
+    | (API.Position & {
+        sum_unitary_funding?: number;
+      })[]
+    | undefined;
 
   const value = useObservable<PositionArray, PositionArray[]>(
     (_, input$) =>
@@ -55,6 +63,11 @@ export const usePositionStream = (
                 item.position_qty,
                 item.average_open_price
               ),
+              unrealized_pnl: positions.unrealizedPnL({
+                qty: item.position_qty,
+                openPrice: item.average_open_price,
+                markPrice: item.mark_price,
+              }),
             };
           });
         })
@@ -66,37 +79,31 @@ export const usePositionStream = (
   // 合计数据
   const aggregatedData = useMemo(() => {
     const aggregatedData = {
-      unsettledPnl: NaN,
-      unrealPnl: NaN,
+      unsettledPnL: NaN,
+      unrealPnL: NaN,
       notional: NaN,
     };
 
     if (value && value.length) {
+      aggregatedData.unrealPnL = positions.totalUnrealizedPnL(value);
+      aggregatedData.notional = positions.totalNotional(value);
+      aggregatedData.unsettledPnL = positions.totalUnsettlementPnL(
+        value.map((item) => ({
+          ...item,
+          sum_unitary_funding: fundingRates[item.symbol]?.(
+            "sum_unitary_funding",
+            0
+          ),
+        }))
+      );
     }
 
     return aggregatedData;
-  }, [value]);
+  }, [value, fundingRates]);
 
   const showSymbol = useCallback((symbol: string) => {
     setVisibleSymbol(symbol);
   }, []);
-
-  /**
-   * 返回数据格式
-   * {
-   *     data:Position[],
-   *     overView:{
-   *      unrealizedPnl: number;
-   *      unrealPnl: number;
-   *      notional: number;
-   *     }
-   * }
-   *
-   */
-
-  // type getType = ReturnType<
-  //   typeof createGetter<Omit<API.PositionInfo, "rows">>
-  // >;
 
   return [
     { rows: value, aggregated: aggregatedData },

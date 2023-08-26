@@ -16,8 +16,9 @@ export enum OrderSide {
 export interface OrderEntity {
   symbol?: string;
   order_type: OrderType;
-  order_price?: number;
-  order_quantity?: number;
+  order_type_ext?: OrderType;
+  order_price?: string | number;
+  order_quantity?: string | number;
   order_amount?: number;
   // 是否显示在orderbook, 默认=order_quantity, =0时不显示,
   visible_quantity?: number;
@@ -26,6 +27,6 @@ export interface OrderEntity {
   broker_id?: string;
 
   // internal fields
-  total?: number;
+  total?: string | number;
   // hideInOrderbook?: boolean;
 }

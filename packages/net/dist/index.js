@@ -67,7 +67,6 @@ module.exports = __toCommonJS(src_exports);
 // src/fetch/index.ts
 function request(url, options) {
   return __async(this, null, function* () {
-    console.log("request", url, options);
     if (!url.startsWith("http")) {
       throw new Error("url must start with http(s)");
     }
@@ -86,7 +85,6 @@ function request(url, options) {
   });
 }
 function _createHeaders(headers = {}) {
-  console.log("headers", headers);
   const _headers = new Headers(headers);
   if (!_headers.has("Content-Type")) {
     _headers.append("Content-Type", "application/json;charset=utf-8");
@@ -165,6 +163,17 @@ var messageHandlers = /* @__PURE__ */ new Map([
 var _WebSocket = class _WebSocket {
   constructor(options) {
     this.authenticated = false;
+    this._pendingPrivateSubscribe = [];
+    this.send = (message) => {
+      this.wsSubject.next(message);
+    };
+    this.privateSend = (message) => {
+      if (!this.privateWsSubject) {
+        console.warn("private ws not connected");
+        return;
+      }
+      this.privateWsSubject.next(message);
+    };
     this.wsSubject = this.createSubject(options);
     if (!!options.accountId) {
       this.privateWsSubject = this.createPrivateSubject(options);
@@ -217,12 +226,11 @@ var _WebSocket = class _WebSocket {
     return ws;
   }
   bindSubscribe() {
-    const send = this.send.bind(this);
     this.wsSubject.subscribe({
       next: (message) => {
         const handler = messageHandlers.get(message.event);
         if (handler) {
-          handler.handle(message, send);
+          handler.handle(message, this.send);
         }
       },
       error(err) {
@@ -238,11 +246,12 @@ var _WebSocket = class _WebSocket {
       next: (message) => {
         if (message.event === "auth") {
           this.authenticated = true;
+          this._sendPendingPrivateMessage();
           return;
         }
         const handler = messageHandlers.get(message.event);
         if (handler) {
-          handler.handle(message, send);
+          handler.handle(message, this.privateSend);
         }
       },
       error(err) {
@@ -272,9 +281,6 @@ var _WebSocket = class _WebSocket {
       }
     });
   }
-  send(message) {
-    this.wsSubject.next(message);
-  }
   get isAuthed() {
     return this.authenticated;
   }
@@ -301,12 +307,21 @@ var _WebSocket = class _WebSocket {
     return this._observe(true, params, unsubscribe, messageFilter);
   }
   _observe(isPrivate, params, unsubscribe, messageFilter) {
+    if (isPrivate && !this.privateWsSubject) {
+      throw new Error("private ws not connected");
+    }
+    const subject = isPrivate ? this.privateWsSubject : this.wsSubject;
+    const sendFunc = isPrivate ? this.privateSend : this.send;
     const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
     return new import_rxjs.Observable((observer) => {
+      if (isPrivate && !this.authenticated) {
+        this._pendingPrivateSubscribe.push(params);
+        return;
+      }
       try {
         const refCount = _WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
-          this.send(subscribeMessage);
+          sendFunc(subscribeMessage);
           _WebSocket.__topicRefCountMap.set(
             subscribeMessage.topic,
             refCount + 1
@@ -315,7 +330,7 @@ var _WebSocket = class _WebSocket {
       } catch (err) {
         observer.error(err);
       }
-      const subscription = this.wsSubject.subscribe({
+      const subscription = subject.subscribe({
         next: (x) => {
           try {
             if (filter(x)) {
@@ -362,6 +377,14 @@ var _WebSocket = class _WebSocket {
       filter = messageFilter || ((message) => true);
     }
     return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
+  }
+  _sendPendingPrivateMessage() {
+    if (this._pendingPrivateSubscribe.length === 0)
+      return;
+    this._pendingPrivateSubscribe.forEach((params) => {
+      this.privateObserve(params).subscribe();
+    });
+    this._pendingPrivateSubscribe = [];
   }
   // 取消所有订阅
   desotry() {

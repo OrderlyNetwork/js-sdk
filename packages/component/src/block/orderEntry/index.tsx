@@ -38,6 +38,7 @@ export interface OrderEntryProps {
   values?: OrderEntity;
   setValue?: (name: keyof OrderEntity, value: any) => void;
   errors?: any;
+  submitCount?: number;
 
   showConfirm?: boolean;
   onConfirmChange?: (value: boolean) => void;
@@ -53,19 +54,16 @@ const { Segmented: SegmentedButton } = Button;
 
 export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
   (props, ref) => {
-    const { values, setValue, freeCollateral, symbolConfig } = props;
+    const {
+      values,
+      setValue,
+      freeCollateral,
+      symbolConfig,
+      errors,
+      submitCount = 0,
+    } = props;
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          reset: () => {},
-          setValues: (values: any) => {},
-          setValue: (name: string, value: any) => {},
-        };
-      },
-      []
-    );
+    console.log("render OrderEntry", errors);
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
@@ -179,7 +177,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             ref={priceInputRef}
             prefix={"Price"}
             suffix={symbolConfig?.quote}
-            value={values?.order_price}
+            error={!!props.errors?.order_price && submitCount > 0}
+            helpText={props.errors?.order_price}
+            value={
+              values?.order_type === OrderType.MARKET
+                ? "Market"
+                : values?.order_price
+            }
             className="text-right"
             readOnly={values?.order_type === OrderType.MARKET}
             onChange={(event) => {
@@ -192,7 +196,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.base}
             value={values?.order_quantity}
             className="text-right"
-            error={!!props.errors?.order_quantity}
+            error={!!props.errors?.order_quantity && submitCount > 0}
             helpText={props.errors?.order_quantity}
             onChange={(event) => {
               console.log(event.target.value);

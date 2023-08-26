@@ -62,7 +62,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
               <div className="flex gap-2 items-center">
                 <Checkbox
                   id="hidden"
-                  checked={props.values.visible_quantity === 0}
+                  checked={props.values?.visible_quantity === 0}
                   onCheckedChange={(checked) => {
                     props.setValue?.("visible_quantity", checked ? 0 : 1);
                   }}

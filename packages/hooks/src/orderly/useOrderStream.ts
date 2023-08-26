@@ -51,27 +51,28 @@ export const useOrderStream = ({
   /**
    * 取消所有订单
    */
-  const cancelAllOrders = useCallback(() => {
-
-  },[res.data]);
+  const cancelAllOrders = useCallback(() => {}, [res.data]);
 
   /**
    * 更新单个订单
    */
-  const updateOrder = useCallback((id: string, data: any) => {},[])
+  const updateOrder = useCallback((id: string, data: any) => {}, []);
 
   /**
    * 取消单个订单
    */
-  const cancelOrder = useCallback((id: string) => {},[])
+  const cancelOrder = useCallback((id: string) => {}, []);
 
   return [
-    {
-      ...res,
-      data: res.data?.reduce((acc, cur) => {
-        return [...acc, ...cur];
-      }, []),
-    },
+    res.data?.reduce((acc, cur) => {
+      return [...acc, ...cur];
+    }, []),
+    // {
+    //   ...res,
+    //   data: res.data?.reduce((acc, cur) => {
+    //     return [...acc, ...cur];
+    //   }, []),
+    // },
     {
       cancelAllOrders,
       updateOrder,

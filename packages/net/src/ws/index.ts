@@ -22,6 +22,8 @@ class WebSocket {
 
   private authenticated: boolean = false;
 
+  private _pendingPrivateSubscribe: any[] = [];
+
   constructor(options: WSOptions) {
     this.wsSubject = this.createSubject(options);
 
@@ -82,12 +84,12 @@ class WebSocket {
 
   private bindSubscribe() {
     /// 处理ping,auth等消息
-    const send = this.send.bind(this);
+
     this.wsSubject.subscribe({
       next: (message) => {
         const handler = messageHandlers.get(message.event);
         if (handler) {
-          handler.handle(message, send);
+          handler.handle(message, this.send);
         }
       },
       error(err) {
@@ -104,11 +106,15 @@ class WebSocket {
       next: (message) => {
         if (message.event === "auth") {
           this.authenticated = true;
+          // 认证成功后，发送之前的订阅消息
+          this._sendPendingPrivateMessage();
           return;
         }
+
         const handler = messageHandlers.get(message.event);
+
         if (handler) {
-          handler.handle(message, send);
+          handler.handle(message, this.privateSend);
         }
       },
       error(err) {
@@ -148,9 +154,18 @@ class WebSocket {
     // this.authenticated = true;
   }
 
-  send(message: any) {
+  send = (message: any) => {
     this.wsSubject.next(message);
-  }
+  };
+
+  privateSend = (message: any) => {
+    if (!this.privateWsSubject) {
+      console.warn("private ws not connected");
+      return;
+    }
+
+    this.privateWsSubject.next(message);
+  };
 
   get isAuthed() {
     return this.authenticated;
@@ -194,10 +209,23 @@ class WebSocket {
     unsubscribe?: () => any,
     messageFilter?: (value: T) => boolean
   ) {
+    if (isPrivate && !this.privateWsSubject) {
+      throw new Error("private ws not connected");
+    }
+
+    const subject = isPrivate ? this.privateWsSubject : this.wsSubject;
+    const sendFunc = isPrivate ? this.privateSend : this.send;
+
     const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] =
       this.generateMessage(params, unsubscribe, messageFilter);
 
     return new Observable((observer: Observer<T>) => {
+      // 如果是private ws, 但是没有连接，就先缓存起来，等连接上了再订阅
+      if (isPrivate && !this.authenticated) {
+        this._pendingPrivateSubscribe.push(params);
+        return;
+      }
+
       try {
         //TODO: add ref count, only send subscribe message when ref count is 0
         // 如果已经订阅过了，就不再发送订阅消息
@@ -205,7 +233,8 @@ class WebSocket {
           WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
           // WS.__topicRefCountMap.set(subscribeMessage.topic, WS.__topicRefCountMap.get(subscribeMessage.topic) + 1);
-          this.send(subscribeMessage);
+          // this.send(subscribeMessage);
+          sendFunc(subscribeMessage);
           WebSocket.__topicRefCountMap.set(
             subscribeMessage.topic,
             refCount + 1
@@ -215,7 +244,7 @@ class WebSocket {
         observer.error(err);
       }
 
-      const subscription = this.wsSubject.subscribe({
+      const subscription = subject!.subscribe({
         next: (x) => {
           try {
             if (filter(x)) {
@@ -280,6 +309,14 @@ class WebSocket {
     }
 
     return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
+  }
+
+  private _sendPendingPrivateMessage() {
+    if (this._pendingPrivateSubscribe.length === 0) return;
+    this._pendingPrivateSubscribe.forEach((params) => {
+      this.privateObserve(params).subscribe();
+    });
+    this._pendingPrivateSubscribe = [];
   }
 
   // 取消所有订阅

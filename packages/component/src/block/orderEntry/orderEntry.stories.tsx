@@ -66,30 +66,17 @@ export const Default: Story = {};
 export const WithHook: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    const { onSubmit, maxQty, values, setValue, freeCollateral, symbolConfig } =
-      useOrderEntry(symbol);
+    const formState = useOrderEntry(symbol);
 
-    return (
-      <OrderEntry
-        {...args}
-        symbol={symbol}
-        maxQty={maxQty}
-        setValue={setValue}
-        freeCollateral={freeCollateral}
-        values={values}
-        symbolConfig={symbolConfig}
-        onSubmit={() => {
-          return onSubmit();
-        }}
-      />
-    );
+    return <OrderEntry {...args} {...formState} />;
   },
 };
 
 export const WithoutOrderlyUI: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    const { onSubmit, maxQty, values, setValue } = useOrderEntry(symbol);
+    const { onSubmit, maxQty, values, setValue, errors, markPrice } =
+      useOrderEntry(symbol);
     // console.log("values", values);
     return (
       <div className="flex flex-col gap-3 text-black">
@@ -143,6 +130,18 @@ export const WithoutOrderlyUI: Story = {
         >
           Create Order
         </button>
+
+        <div className="text-white/70 flex flex-col gap-5">
+          <div>{`MarkPrice:${markPrice}`}</div>
+          <div>
+            <div>Values:</div>
+            {JSON.stringify(values, null, 2)}
+          </div>
+          <div className="text-danger">
+            <div>Errors:</div>
+            {JSON.stringify(errors, null, 2)}
+          </div>
+        </div>
       </div>
     );
   },

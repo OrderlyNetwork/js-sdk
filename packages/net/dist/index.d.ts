@@ -15,17 +15,20 @@ declare class WebSocket {
     private wsSubject;
     private privateWsSubject?;
     private authenticated;
+    private _pendingPrivateSubscribe;
     constructor(options: WSOptions);
     private createSubject;
     private createPrivateSubject;
     private bindSubscribe;
     private authenticate;
-    send(message: any): void;
+    send: (message: any) => void;
+    privateSend: (message: any) => void;
     get isAuthed(): boolean;
     observe<T>(params: any, unsubscribe?: () => any, messageFilter?: (value: T) => boolean): Observable<T>;
     privateObserve<T>(params: any, unsubscribe?: () => any, messageFilter?: (value: T) => boolean): Observable<T>;
     private _observe;
     private generateMessage;
+    private _sendPendingPrivateMessage;
     desotry(): void;
 }
 

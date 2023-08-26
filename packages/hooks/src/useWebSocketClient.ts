@@ -1,11 +1,13 @@
-import { useContext, useEffect, useMemo } from "react";
 import { getMockSigner, SimpleDI } from "@orderly/core";
 
 import { WebSocket } from "@orderly/net";
+import useConstant from "use-constant";
+
+const WS_NAME = "websocketClient";
 
 export const useWebSocketClient = () => {
-  const ws = useMemo(() => {
-    let websocketClient = SimpleDI.get<WebSocket>("websocketClient");
+  const ws = useConstant(() => {
+    let websocketClient = SimpleDI.get<WebSocket>(WS_NAME);
 
     if (!websocketClient) {
       websocketClient = new WebSocket({
@@ -21,10 +23,10 @@ export const useWebSocketClient = () => {
         },
       });
 
-      SimpleDI.registerByName("websocketClient", websocketClient);
+      SimpleDI.registerByName(WS_NAME, websocketClient);
     }
     return websocketClient;
-  }, []);
+  });
 
   return ws;
 };

@@ -3,10 +3,13 @@ import useConstant from "use-constant";
 import { Account, SimpleDI, AccountState } from "@orderly/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useObservable } from "rxjs-hooks";
+import { API } from "@orderly/types";
+import { usePrivateQuery } from "./usePrivateQuery";
 
 export const useAccount = (): {
   account: AccountState;
   login: (address: string) => void;
+  info: API.AccountInfo | undefined;
 } => {
   const { configStore } = useContext(OrderlyContext);
 
@@ -24,6 +27,11 @@ export const useAccount = (): {
     return account;
   });
 
+  const { data: accountInfo } =
+    usePrivateQuery<API.AccountInfo>("/client/info");
+
+  // console.log(accountInfo);
+
   const state = useObservable<AccountState>(
     () => account.state$,
     account.stateValue
@@ -36,10 +44,12 @@ export const useAccount = (): {
     [account]
   );
 
-  console.log(state);
+  // console.log(state);
+  //maxLeverage
 
   return {
     account: state!,
+    info: accountInfo,
     login,
   };
 };

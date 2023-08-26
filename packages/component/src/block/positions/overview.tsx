@@ -7,8 +7,8 @@ import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 
 export type AggregatedData = {
-  unsettledPnl: number;
-  unrealPnl: number;
+  unsettledPnL: number;
+  unrealPnL: number;
   notional: number;
 };
 
@@ -41,14 +41,14 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
       <div className="flex justify-between bg-base-200 px-4 py-3">
         <Statistic
           label="Unreal. PnL"
-          value={aggregated?.unrealPnl}
+          value={aggregated?.unrealPnL}
           coloring
           rule="price"
         />
         <Statistic label="Notional" value={aggregated?.notional} rule="price" />
         <Statistic
           label="Unsettled PnL"
-          value={aggregated?.unsettledPnl}
+          value={aggregated?.unsettledPnL}
           rule="price"
           coloring
           align="right"

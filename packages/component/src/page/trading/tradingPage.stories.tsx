@@ -2,6 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { TradingPage } from ".";
+import { OrderlyProvider } from "../../provider";
 
 const meta: Meta = {
   title: "Page/Trading",
@@ -16,6 +17,13 @@ const meta: Meta = {
       options: ["BTC/USDT", "ETH/USDT"],
     },
   },
+  decorators: [
+    (Story) => (
+      <OrderlyProvider configStore={undefined}>
+        <Story />
+      </OrderlyProvider>
+    ),
+  ],
 };
 
 export default meta;

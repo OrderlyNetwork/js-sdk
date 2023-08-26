@@ -11,9 +11,9 @@ yarn add @orderly/hooks
 ## Usage
 
 ```tsx
-import { useQuery } from "../useQuery";
+import { useQuery } from "@orderly/hooks";
 
-import { type API } from "@orderly/core";
+import { type API } from "@orderly/types";
 
 export const useMarketInfo = (symbol: string) => {
   return useQuery<API.MarketInfo>(`/public/futures/${symbol}`);

@@ -133,6 +133,30 @@ export declare namespace API {
     pnl_24_h: number;
     fee_24_h: number;
   }
+
+  export interface Holding {
+    token: string;
+    holding: number;
+    frozen: number;
+    pending_short: number;
+    updated_time: number;
+  }
+
+  export interface AccountInfo {
+    account_id: string;
+    email: string;
+    account_mode: string;
+    tier: string;
+    futures_tier: string;
+    maintenance_cancel_orders: boolean;
+    taker_fee_rate: number;
+    maker_fee_rate: number;
+    max_leverage: number;
+    futures_taker_fee_rate: number;
+    futures_maker_fee_rate: number;
+    imr_factor: { [key: string]: number };
+    max_notional: { [key: string]: number };
+  }
 }
 
 export declare namespace WSMessage {
@@ -145,5 +169,9 @@ export declare namespace WSMessage {
     volume: number;
     amount: number;
     count: number;
+  }
+  export interface MarkPrice {
+    symbol: string;
+    price: number;
   }
 }

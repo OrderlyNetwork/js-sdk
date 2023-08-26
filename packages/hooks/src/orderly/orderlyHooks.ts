@@ -12,4 +12,6 @@ export { useFundingRate } from "./useFundingRate";
 export { usePositionStream } from "./usePositionStream";
 export { useOrderStream, OrderStatus } from "./useOrderStream";
 
+export { useCollateral } from "./useCollateral";
+
 // export { useOrderStream } from "./useOrderStream";

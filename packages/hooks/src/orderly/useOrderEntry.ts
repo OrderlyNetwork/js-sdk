@@ -1,81 +1,42 @@
 import { useMutation } from "../useMutation";
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { OrderFactory, type OrderCreator } from "@orderly/futures";
+import { OrderFactory, type OrderCreator, orderUtils } from "@orderly/futures";
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal } from "@orderly/utils";
+import { Decimal, getPrecisionByNumber } from "@orderly/utils";
 import { useTokenInfo } from "./useTokenInfo";
 import { useFormik } from "formik";
+import { useObservable } from "rxjs-hooks";
+import { useWebSocketClient } from "../useWebSocketClient";
+import { switchMap, map, takeWhile } from "rxjs/operators";
+import { compose, head } from "ramda";
+import {
+  OrderEntityKey,
+  baseInputHandle,
+  getCalculateHandler,
+  orderEntityFormatHandle,
+} from "../utils/orderEntryHelper";
+import { useCollateral } from "./useCollateral";
 
 export interface OrderEntryReturn {
   onSubmit: (values?: OrderEntity) => Promise<any>;
-  // validator: (values: OrderEntity) => Promise<any>;
-  setValue: (field: keyof OrderEntity, value: any) => void;
+
+  setValue: (field: OrderEntityKey, value: any) => void;
   maxQty: number;
   freeCollateral: number;
   values: OrderEntity;
+  markPrice: number;
   errors: Partial<Record<keyof OrderEntity, string>>;
 
   symbolConfig: API.SymbolExt;
-}
 
-interface OrderState {
-  // symbol: string;
-  values: OrderEntity;
-  errors: Partial<Record<keyof OrderEntity, string>>;
-  loading?: boolean;
-  dirty: boolean;
   submitCount: number;
+
+  //
+  onFocus?: (field: keyof OrderEntity) => void;
+  onBlur?: (field: keyof OrderEntity) => void;
 }
-
-enum ActionKind {
-  UpdateField,
-  Error,
-  Loading,
-}
-
-interface OrderEntryAction {
-  type: ActionKind;
-  payload: any;
-}
-
-function orderReducer(state: OrderState, action: OrderEntryAction): OrderState {
-  switch (action.type) {
-    case ActionKind.UpdateField:
-      // 校验数据是否满足要求
-      return {
-        ...state,
-        dirty: true,
-        values: action.payload,
-      };
-    case ActionKind.Loading:
-      return {
-        ...state,
-        loading: action.payload,
-      };
-
-    case ActionKind.Error:
-      return {
-        ...state,
-        errors: action.payload,
-      };
-
-    default:
-      return state;
-  }
-}
-
-const initialState: OrderState = {
-  values: {
-    order_type: OrderType.LIMIT,
-    side: OrderSide.BUY,
-  },
-  errors: {},
-  loading: false,
-  dirty: false,
-  submitCount: 0,
-};
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -96,95 +57,85 @@ export const useOrderEntry = (
 ): OrderEntryReturn => {
   const { mutation } = useMutation<OrderEntity, any>("/order");
   const [freeCollateral, setFreeCollateral] = useState(0);
-  const [marketPrice, setMarketPrice] = useState(100);
+
+  //----- collaterals
+  const collateral = useCollateral();
+
   const symbolInfo = useSymbolsInfo();
   const tokenInfo = useTokenInfo();
 
-  const [state, dispatch] = useReducer(
-    orderReducer,
-    initialState,
-    (initialState) => ({
-      ...initialState,
-      values: {
-        ...initialState.values,
-        ...initialValue,
-      },
-    })
+  const baseDP = useMemo(
+    () => getPrecisionByNumber(symbolInfo[symbol]("base_tick", 0)),
+    [symbolInfo]
   );
+  const quoteDP = useMemo(() => {
+    return tokenInfo.USDC("decimals", 0);
+  }, [tokenInfo]);
+
+  // 订阅maskPrice
+  const ws = useWebSocketClient();
+
+  const markPrice = useObservable(
+    (_, input$) =>
+      input$.pipe(
+        switchMap(([symbol]) => {
+          return ws.observe(`${symbol}@markprice`).pipe(
+            map((data: any) => data.price)
+            // takeWhile(() => type === OrderType.MARKET)
+          );
+        })
+      ),
+    0,
+    [symbol]
+  );
+
+  // console.log(markPrice);
+
+  const formik = useFormik<OrderEntity>({
+    initialValues: {
+      order_type: OrderType.LIMIT,
+      side: OrderSide.BUY,
+      order_quantity: "",
+      total: "",
+      order_price: "",
+      visible_quantity: 1,
+      ...initialValue,
+    },
+    validate: (values) => {
+      const creator = OrderFactory.create(values.order_type);
+
+      return creator?.validate(values, {
+        symbol: symbolInfo[symbol](),
+        token: tokenInfo[symbol](),
+        maxQty,
+        markPrice: markPrice,
+      }) as any;
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
 
   //maxQty
   // const maxQty = useObservable(() => interval(1000), 0);
   const maxQty = 100;
 
   const orderCreator = useMemo<OrderCreator | null>(() => {
-    if (!state.values.order_type) return null;
-    return OrderFactory.create(state.values.order_type);
-  }, [state.values]);
+    // if (!state.values.order_type) return null;
+    // return OrderFactory.create(state.values.order_type);
+    return null;
+  }, []);
 
-  // 格式化数据和计算数据
-  const calculateValues = useCallback(
-    (values: OrderEntity, input: string, value: any): OrderEntity => {
-      const newValues = { ...values, [input]: value };
-      // const symbolConfig = symbolInfo[symbol]();
+  const setValue = (field: OrderEntityKey, value: any) => {
+    const fieldHandler = getCalculateHandler(field);
+    const newValues = compose(
+      head,
+      orderEntityFormatHandle(baseDP, quoteDP),
+      fieldHandler,
+      baseInputHandle
+    )([formik.values, field, value, markPrice, { baseDP, quoteDP }]);
 
-      // if (newValues.order_type === OrderType.MARKET) {
-      switch (input) {
-        case "order_type":
-        // 如果是从市价单转换为限价单，需要把当前市价赋值给限价单
-        case "order_quantity": {
-          const quantity = new Decimal(value);
-          return {
-            ...newValues,
-            // order_quantity: quantity.toFixed(),
-            total: quantity.mul(marketPrice).toNumber(),
-          };
-        }
-
-        case "total":
-          return {
-            ...newValues,
-            order_quantity: new Decimal(value).div(marketPrice).toNumber(),
-          };
-
-        // case "order_type":
-        default:
-          return newValues;
-      }
-      // }
-
-      // return newValues;
-    },
-    [symbolInfo, symbol]
-  );
-
-  const setValue = (field: keyof OrderEntity, value: any) => {
-    if (!orderCreator) {
-      console.warn("orderCreator is null");
-      return;
-    }
-    const newValue = calculateValues(state.values, field, value);
-
-    console.log("-------");
-    const errors = orderCreator.validate(newValue, {
-      token: tokenInfo[symbol](),
-      symbol: symbolInfo[symbol](),
-      maxQty,
-    });
-    if (errors) {
-      dispatch({
-        type: ActionKind.Error,
-        payload: { errors },
-      });
-      return;
-    }
-    dispatch({
-      type: ActionKind.Error,
-      payload: { errors: undefined },
-    });
-    dispatch({
-      type: ActionKind.UpdateField,
-      payload: newValue,
-    });
+    formik.setValues(newValues, true);
   };
 
   /**
@@ -203,24 +154,10 @@ export const useOrderEntry = (
           throw new Error("symbol is null");
         }
 
-        const errors = orderCreator.validate(state.values, {
-          token: tokenInfo[symbol](),
-          symbol: symbolInfo[symbol](),
-          maxQty,
-        });
-
-        if (errors) {
-          dispatch({
-            type: ActionKind.Error,
-            payload: { errors },
-          });
-          return Promise.reject(errors);
-        }
-
-        return mutation({
-          ...orderCreator.create(state.values),
-          symbol,
-        });
+        // return mutation({
+        //   ...orderCreator.create(state.values),
+        //   symbol,
+        // });
       })
       .then((res) => {
         console.log(res);
@@ -229,30 +166,28 @@ export const useOrderEntry = (
       });
   };
 
-  const formik = useFormik<OrderEntity>({
-    initialValues: {
-      order_type: OrderType.LIMIT,
-      side: OrderSide.BUY,
-      order_quantity: 0,
-      total: 0,
-    },
-    validate: (values) => {},
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
+  // symbol 变化的时候重置表单
+  useEffect(() => {
+    if (symbol !== formik.values.symbol) {
+      formik.resetForm();
+    }
+  }, [symbol, formik.values.symbol]);
 
-  console.log(formik);
+  // console.log(formik);
+  // market order时计算total
+  // useEffect(() => {}, [formik.values.order_type, formik.values.order_quantity]);
+
+  // console.log(formik);
 
   return {
     maxQty: 100,
-    // ...state,
     values: formik.values,
     errors: formik.errors,
     freeCollateral,
+    markPrice,
     setValue,
     onSubmit,
+    submitCount: formik.submitCount,
     symbolConfig: symbolInfo[symbol](),
-    // validator: orderCreator.validate,
   };
 };
