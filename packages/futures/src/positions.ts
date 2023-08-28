@@ -1,5 +1,6 @@
 import { API } from "@orderly/types";
 import { Decimal } from "@orderly/utils";
+import { IMRFactorPower } from "./constants";
 
 /**
  * 单个仓位价值
@@ -57,12 +58,18 @@ export function totalUnrealizedPnL(positions: API.Position[]): number {
   }, 0);
 }
 
+export type LiqPriceInputs = {
+  markPrice: number;
+  totalCollateral: number;
+  positionQty: number;
+};
+
 /**
  * 单个仓位强平价格
  * @param qty
  * @returns
  *
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(qty: number) {
   return 0;
@@ -126,4 +133,33 @@ export function totalUnsettlementPnL(
       })
     );
   }, 0);
+}
+
+/**
+ * 计算仓位强平价格
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
+ */
+export function MMR(inputs: {
+  baseMMR: number;
+  baseIMR: number;
+  IMRFactor: number;
+  positionNotional: number;
+  IMR_factor_power: number;
+}): number {
+  const {
+    baseMMR,
+    baseIMR,
+    IMRFactor,
+    positionNotional,
+    IMR_factor_power = IMRFactorPower,
+  } = inputs;
+  return Math.max(
+    baseMMR,
+    new Decimal(baseMMR)
+      .div(baseIMR)
+      .mul(IMRFactor)
+      .mul(Math.abs(positionNotional))
+      .toPower(IMR_factor_power)
+      .toNumber()
+  );
 }

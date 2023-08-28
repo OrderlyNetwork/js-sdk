@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React, { useEffect, useId, useRef } from "react";
 
 import { Widget } from "./widget";
 import type {
@@ -9,6 +9,7 @@ import type {
   WidgetFeatures,
 } from "./types";
 import DataFeed from "./dataFeed";
+import { IChartingLibraryWidget } from "@/@types/charting_library";
 
 export type TradingViewChartProps = {
   width?: number | string;
@@ -92,6 +93,12 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
   ...props
 }) => {
   const uid = useId();
+  const chartRef = useRef<IChartingLibraryWidget | null>(null);
+
+  useEffect(() => {
+    console.log("chartRef", chartRef);
+  });
+
   container_id = container_id || `tradingview_${uid}`;
   return (
     <div
@@ -134,6 +141,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
           container_id,
           overrides: {
             // borderColor: "red",
+            // "paneProperties.background": "red",
             "mainSeriesProperties.candleStyle.upColor": "#439687",
             "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
             "mainSeriesProperties.candleStyle.borderColor": "#378658",
@@ -158,6 +166,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
         // scriptSRC="https://futures-dex-iap.woo.org/assets/woo-chart/charting_library/charting_library.js"
         containerId={container_id}
         type="Widget"
+        ref={chartRef}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { OrderEntry } from ".";
 import { OrderlyProvider } from "../../provider";
 
 import { useOrderEntry } from "@orderly/hooks";
+import { MemoryConfigStore } from "@orderly/core";
 
 const meta: Meta = {
   title: "Block/OrderEntry",
@@ -15,7 +16,7 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={undefined}>
+      <OrderlyProvider configStore={new MemoryConfigStore()}>
         <Story />
       </OrderlyProvider>
     ),

@@ -6,6 +6,7 @@ export type OrderEntityKey = keyof OrderEntity & string;
 // index 3: markPrice
 type orderEntryInputs = [
   OrderEntity,
+  // to update field
   OrderEntityKey,
   any,
   number,
@@ -17,8 +18,17 @@ type orderEntryInputs = [
 
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
 
+const needNumberOnlyFields = ["order_quantity", "order_price", "total"];
+
 export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
-  const [values, input, value, markPrice, config] = inputs;
+  let [values, input, value, markPrice, config] = inputs;
+
+  if (needNumberOnlyFields.includes(input)) {
+    //清理千分位符
+    value = value.toString();
+    value = value.replace(/,/g, "");
+    value = value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+  }
 
   return [
     {
@@ -87,16 +97,16 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   // 输入价格的时候， total也需要联动
   const price = new Decimal(value);
   const priceDP = price.dp();
+
+  if (priceDP > config.quoteDP) {
+    price.toDecimalPlaces(config.quoteDP);
+    values.order_price = price.toNumber();
+  }
+
   price.toDecimalPlaces(Math.min(priceDP, config.quoteDP));
 
   if (!values.order_quantity) {
-    return [
-      { ...values, order_price: price.toNumber() },
-      input,
-      value,
-      markPrice,
-      config,
-    ];
+    return [values, input, value, markPrice, config];
   }
 
   const total = price.mul(values.order_quantity);
@@ -105,7 +115,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   total.toDecimalPlaces(Math.min(quantityDP, config.baseDP));
 
   return [
-    { ...values, order_price: price.toNumber(), total: total.toNumber() },
+    { ...values, total: total.toNumber() },
     input,
     value,
     markPrice,
@@ -182,7 +192,6 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   }
 
   const quantity = total.div(price);
-  quantity.toDecimalPlaces(Math.min(config.baseDP, quantity.dp()));
 
   return [
     {

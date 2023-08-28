@@ -1,11 +1,16 @@
 import { TabPane, Tabs } from "@/tab";
 import { TradeHistory } from "./tradeHistory";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
 
-export const ChartView = () => {
+interface ChartViewProps {
+  symbol: string;
+}
+
+export const ChartView: FC<ChartViewProps> = (props) => {
+  const { symbol } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
 
   return (
@@ -33,7 +38,9 @@ export const ChartView = () => {
           <TradingView
             height={320}
             theme={"dark"}
-            // intervals={}
+            symbol={symbol}
+            autosize={false}
+            apiBaseUrl={""} // intervals={}
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">

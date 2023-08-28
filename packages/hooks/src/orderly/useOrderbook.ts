@@ -3,7 +3,7 @@ import { BehaviorSubject, Subscription } from "rxjs";
 import { startWith, map, scan, withLatestFrom, tap } from "rxjs/operators";
 import { merge } from "rxjs";
 import { useWebSocketClient } from "../useWebSocketClient";
-import { pick, propOr, set } from "ramda";
+import { pick } from "ramda";
 import useConstant from "use-constant";
 
 export type OrderBookItem = number[];
@@ -51,7 +51,6 @@ export const reduceOrderbook = (
   level: number,
   data: OrderbookData
 ): OrderbookData => {
-  // console.log(data)
   const asks = reduceItems(depth, level, data.asks).reverse();
   const bids = reduceItems(depth, level, data.bids);
   return {
@@ -99,16 +98,22 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
   };
 };
 
+export type OrderbookOptions = {
+  level?: number;
+};
+
 /**
  * @name useOrderbook
  * @description React hook that returns the current orderbook for a given market
  */
-export const useOrderbook = (pair: string, initial?: OrderbookData) => {
-  const [data, setData] = useState<OrderbookData>(
-    initial ?? { asks: [], bids: [] }
-  );
+export const useOrderbook = (
+  symbol: string,
+  initial: OrderbookData = { asks: [], bids: [] },
+  options?: OrderbookOptions
+) => {
+  const [data, setData] = useState<OrderbookData>(initial);
   const [depth, setDepth] = useState(0.001);
-  const [level, setLevel] = useState(12);
+  const [level, setLevel] = useState(() => options?.level ?? 10);
 
   const ws = useWebSocketClient();
 
@@ -120,25 +125,25 @@ export const useOrderbook = (pair: string, initial?: OrderbookData) => {
         event: "request",
         params: {
           type: "orderbook",
-          symbol: pair,
+          symbol: symbol,
         },
       },
       undefined,
       (message: any) => message.event === "request"
     );
-  }, [pair]);
+  }, [symbol]);
 
   const orderbookUpdate$ = useMemo(() => {
     return ws
-      .observe(`${pair}@orderbookupdate`, () => ({
+      .observe(`${symbol}@orderbookupdate`, () => ({
         event: "subscribe",
-        topic: `${pair}@orderbookupdate`,
+        topic: `${symbol}@orderbookupdate`,
       }))
       .pipe(
         startWith({ asks: [], bids: [] })
         // filter((message: any) => !!message.success)
       );
-  }, [pair]);
+  }, [symbol]);
 
   const orderbookOptions$ = useConstant(() => {
     return new BehaviorSubject({

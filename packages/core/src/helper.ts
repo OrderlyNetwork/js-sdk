@@ -1,3 +1,5 @@
+import { MemoryConfigStore } from "./configStore";
+import SimpleDI from "./di/simpleDI";
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
 
@@ -18,4 +20,8 @@ export const getDefaultSigner = () => {
   const localStorageStore = new LocalStorageStore("", "");
 
   return new BaseSigner(localStorageStore);
+};
+
+export const getMemoryConfigStore = () => {
+  return new MemoryConfigStore();
 };

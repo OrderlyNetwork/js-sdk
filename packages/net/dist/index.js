@@ -57,7 +57,7 @@ var __async = (__this, __arguments, generator) => {
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  WebSocket: () => ws_default,
+  WebSocketClient: () => ws_default,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   get: () => get,
   post: () => post
@@ -160,7 +160,7 @@ var messageHandlers = /* @__PURE__ */ new Map([
 ]);
 
 // src/ws/index.ts
-var _WebSocket = class _WebSocket {
+var _WebSocketClient = class _WebSocketClient {
   constructor(options) {
     this.authenticated = false;
     this._pendingPrivateSubscribe = [];
@@ -188,7 +188,7 @@ var _WebSocket = class _WebSocket {
       url = WS_URL[options.networkId || "testnet"].public;
     }
     return (0, import_webSocket.webSocket)({
-      url: `${url}${options.accountId}`,
+      url: `${url}${options.accountId || ""}`,
       openObserver: {
         next: () => {
           console.log("Connection ok");
@@ -319,10 +319,10 @@ var _WebSocket = class _WebSocket {
         return;
       }
       try {
-        const refCount = _WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+        const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
           sendFunc(subscribeMessage);
-          _WebSocket.__topicRefCountMap.set(
+          _WebSocketClient.__topicRefCountMap.set(
             subscribeMessage.topic,
             refCount + 1
           );
@@ -345,9 +345,9 @@ var _WebSocket = class _WebSocket {
       });
       return () => {
         try {
-          const refCount = _WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+          const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
           if (refCount > 1) {
-            _WebSocket.__topicRefCountMap.set(
+            _WebSocketClient.__topicRefCountMap.set(
               subscribeMessage.topic,
               refCount - 1
             );
@@ -356,7 +356,7 @@ var _WebSocket = class _WebSocket {
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
-          _WebSocket.__topicRefCountMap.delete(subscribeMessage.topic);
+          _WebSocketClient.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }
@@ -394,15 +394,15 @@ var _WebSocket = class _WebSocket {
   }
 };
 // the topic reference count;
-_WebSocket.__topicRefCountMap = /* @__PURE__ */ new Map();
-var WebSocket = _WebSocket;
-var ws_default = WebSocket;
+_WebSocketClient.__topicRefCountMap = /* @__PURE__ */ new Map();
+var WebSocketClient = _WebSocketClient;
+var ws_default = WebSocketClient;
 
 // src/constants.ts
 var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  WebSocket,
+  WebSocketClient,
   __ORDERLY_API_URL_KEY__,
   get,
   post

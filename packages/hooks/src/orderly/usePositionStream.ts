@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { useWebSocketClient } from "../useWebSocketClient";
 import { positions } from "@orderly/futures";
 import { useObservable } from "rxjs-hooks";
-import { map } from "rxjs/operators";
+import { combineLatestWith, map } from "rxjs/operators";
 
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
 import { type API } from "@orderly/types";
+import { useMarkPricesSubject } from "./useMarkPricesSubject";
 
 export interface PositionReturn {
   data: any[];
@@ -27,6 +27,7 @@ export const usePositionStream = (
   );
 
   const fundingRates = useFundingRates();
+  const markPrices$ = useMarkPricesSubject();
 
   const { data, error, isLoading } = usePrivateQuery<API.PositionInfo>(
     `/positions`,
@@ -38,27 +39,32 @@ export const usePositionStream = (
     }
   );
 
-  const ws = useWebSocketClient();
-
-  // console.log("positions", positions);
-
   type PositionArray =
     | (API.Position & {
         sum_unitary_funding?: number;
       })[]
     | undefined;
 
+  // TODO: 动态更新 markprice
   const value = useObservable<PositionArray, PositionArray[]>(
     (_, input$) =>
       input$.pipe(
         map((data) => {
           return data[0];
         }),
-        map((data) => {
+        combineLatestWith(markPrices$),
+        // map(([data, markprices]) => {
+        //   console.log("markprices", data, markprices);
+        //   return [];
+        // })
+        map(([data, markPrices]) => {
           // console.log("obser", data);
           return data?.map((item) => {
+            const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+
             return {
               ...item,
+              mark_price: price,
               notional: positions.notional(
                 item.position_qty,
                 item.average_open_price
@@ -66,7 +72,7 @@ export const usePositionStream = (
               unrealized_pnl: positions.unrealizedPnL({
                 qty: item.position_qty,
                 openPrice: item.average_open_price,
-                markPrice: item.mark_price,
+                markPrice: price,
               }),
             };
           });

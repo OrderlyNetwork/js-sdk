@@ -37,7 +37,10 @@ export default [
     ],
     external: [
         // ...Object.keys(packageJson.dependencies || {}),
-        ...Object.keys(packageJson.peerDependencies || {}),
+        // ...Object.keys(packageJson.peerDependencies || {}),
+        'react',
+        'react-dom',
+        'react-intl',
         ...Object.keys(packageJson.devDependencies || {}),
     ],
   },

@@ -1,0 +1,21 @@
+import { Meta, Canvas } from "@storybook/blocks";
+import * as MaxQtyStories from "./useMaxQty.stories";
+
+<Meta of={MaxQtyStories} />
+
+# useMaxQty
+
+## Usage
+
+```tsx
+import { useMaxQty } from "@orderly/hooks";
+import { OrderSide } from "@orderly/types";
+
+const SimpleComponent = () => {
+  //...
+  const maxQty = useMaxQty("PERP_ETH_USDC", OrderSide.BUY);
+  //...
+};
+```
+
+<Canvas of={MaxQtyStories.Default} />

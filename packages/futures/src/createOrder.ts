@@ -31,7 +31,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
       // symbol: data.symbol,
       order_type: data.order_type,
       side: data.side,
-      reduce_only: data.reduce_only,
+      // reduce_only: data.reduce_only,
       order_quantity: data.order_quantity,
     };
 
@@ -48,6 +48,8 @@ export abstract class BaseOrderCreator implements OrderCreator {
   ): Promise<VerifyResult> {
     const errors: { [P in keyof OrderEntity]?: string } = {};
 
+    const { maxQty } = configs;
+
     // console.log("baseValidate", values, configs);
     const { order_quantity, total } = values;
 
@@ -59,7 +61,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
       const qty = new Decimal(order_quantity);
       if (qty.lt(base_min)) {
         errors.order_quantity = `quantity must be greater than ${base_min}`;
-      } else if (qty.gt(base_max)) {
+      } else if (qty.gt(maxQty)) {
         errors.order_quantity = `quantity must be less than ${base_max}`;
       }
     }

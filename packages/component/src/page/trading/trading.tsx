@@ -16,10 +16,10 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
     <>
       <NavBar symbol={props.symbol} />
       <Divider />
-      <ChartView />
+      <ChartView symbol={props.symbol} />
 
       <div className="grid grid-cols-[3fr_4fr] box-border p-2">
-        <MyOrderBook />
+        <MyOrderBook symbol={props.symbol} />
         <MyOrderEntry />
       </div>
       <DataListView />

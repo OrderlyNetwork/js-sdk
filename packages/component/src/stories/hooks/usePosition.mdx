@@ -1,0 +1,20 @@
+import { Meta, Canvas } from "@storybook/blocks";
+import * as PositionHookStories from "./usePosition.stories";
+
+<Meta of={PositionHookStories} />
+
+# usePositionStream
+
+## Usage
+
+```tsx
+import { usePositionStream } from "@orderly/hooks";
+
+const SimpleComponent = () => {
+  //...
+  const [{ totalCollateral, freeCollateral }] = usePosition();
+  //...
+};
+```
+
+<Canvas of={PositionHookStories.Default} />

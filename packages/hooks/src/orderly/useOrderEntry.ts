@@ -6,11 +6,11 @@ import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly/utils";
 import { useTokenInfo } from "./useTokenInfo";
-import { useFormik } from "formik";
+import { type FormikErrors, useFormik } from "formik";
 import { useObservable } from "rxjs-hooks";
 import { useWebSocketClient } from "../useWebSocketClient";
 import { switchMap, map, takeWhile } from "rxjs/operators";
-import { compose, head } from "ramda";
+import { compose, head, type } from "ramda";
 import {
   OrderEntityKey,
   baseInputHandle,
@@ -18,9 +18,11 @@ import {
   orderEntityFormatHandle,
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
+import { useMaxQty } from "./useMaxQty";
 
 export interface OrderEntryReturn {
   onSubmit: (values?: OrderEntity) => Promise<any>;
+  validateForm: (values?: any) => Promise<FormikErrors<OrderEntity>>;
 
   setValue: (field: OrderEntityKey, value: any) => void;
   maxQty: number;
@@ -56,10 +58,8 @@ export const useOrderEntry = (
   options?: UseOrderEntryOptions
 ): OrderEntryReturn => {
   const { mutation } = useMutation<OrderEntity, any>("/order");
-  const [freeCollateral, setFreeCollateral] = useState(0);
-
-  //----- collaterals
-  const collateral = useCollateral();
+  // const [freeCollateral, setFreeCollateral] = useState(0);
+  const { freeCollateral } = useCollateral();
 
   const symbolInfo = useSymbolsInfo();
   const tokenInfo = useTokenInfo();
@@ -93,7 +93,7 @@ export const useOrderEntry = (
 
   const formik = useFormik<OrderEntity>({
     initialValues: {
-      order_type: OrderType.LIMIT,
+      order_type: OrderType.MARKET,
       side: OrderSide.BUY,
       order_quantity: "",
       total: "",
@@ -116,15 +116,7 @@ export const useOrderEntry = (
     },
   });
 
-  //maxQty
-  // const maxQty = useObservable(() => interval(1000), 0);
-  const maxQty = 100;
-
-  const orderCreator = useMemo<OrderCreator | null>(() => {
-    // if (!state.values.order_type) return null;
-    // return OrderFactory.create(state.values.order_type);
-    return null;
-  }, []);
+  const maxQty = useMaxQty(symbol, formik.values.side);
 
   const setValue = (field: OrderEntityKey, value: any) => {
     const fieldHandler = getCalculateHandler(field);
@@ -144,8 +136,22 @@ export const useOrderEntry = (
    * @returns
    */
   const onSubmit = (values?: OrderEntity) => {
+    values = values || formik.values;
+
+    if (
+      typeof values.order_type === "undefined" ||
+      (values.order_type !== OrderType.MARKET &&
+        values.order_type !== OrderType.LIMIT)
+    ) {
+      throw new Error("order_type is error");
+    }
+
     return Promise.resolve()
       .then(() => {
+        const orderCreator = OrderFactory.create(values.order_type);
+
+        console.log(orderCreator);
+
         if (!orderCreator) {
           throw new Error("orderCreator is null");
         }
@@ -154,10 +160,14 @@ export const useOrderEntry = (
           throw new Error("symbol is null");
         }
 
-        // return mutation({
-        //   ...orderCreator.create(state.values),
-        //   symbol,
-        // });
+        const data = orderCreator.create(values);
+
+        console.log(data);
+
+        return mutation({
+          ...data,
+          symbol,
+        });
       })
       .then((res) => {
         console.log(res);
@@ -180,13 +190,15 @@ export const useOrderEntry = (
   // console.log(formik);
 
   return {
-    maxQty: 100,
+    maxQty,
+    // formState,
     values: formik.values,
     errors: formik.errors,
     freeCollateral,
     markPrice,
     setValue,
     onSubmit,
+    validateForm: formik.validateForm,
     submitCount: formik.submitCount,
     symbolConfig: symbolInfo[symbol](),
   };

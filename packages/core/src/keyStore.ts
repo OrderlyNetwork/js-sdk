@@ -13,6 +13,9 @@ export class LocalStorageStore implements KeyStore {
   ) {}
 
   getOrderlyKey(): OrderlyKeyPair {
+    //TODO: get secretKey from localStorage, and return a OrderlyKeyPair
+    //
+
     return new BaseOrderlyKeyPair("");
   }
 
@@ -29,6 +32,7 @@ export class LocalStorageStore implements KeyStore {
     return `orderly_${this.networkId}_`;
   }
 }
+// Woo是用readux管理状态，需要另外实现针对 woo 的存取方法
 
 export class MockKeyStore implements KeyStore {
   constructor(private readonly secretKey: string) {}

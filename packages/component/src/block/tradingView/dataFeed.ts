@@ -5,13 +5,23 @@ import {
   ResolutionString,
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
+import { WebSocketClient } from "@orderly/net";
+
+// const OrderlyRe;
 
 export default class DataFeed implements IBasicDataFeed {
+  private wsClient: WebSocketClient;
+  private _subscriber?: any;
   constructor(
     private readonly configuration: {
       apiBaseUrl: string;
     }
-  ) {}
+  ) {
+    this.wsClient = new WebSocketClient({
+      accountId:
+        "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
+    });
+  }
   async onReady(callback: OnReadyCallback) {
     console.log("[onReady]: Method call");
 
@@ -27,39 +37,45 @@ export default class DataFeed implements IBasicDataFeed {
     extension
   ) {
     console.log("[resolveSymbol]: Method call", symbolName);
-    const symbolArr = symbolName.split("_");
-    const symbolInfo: LibrarySymbolInfo = {
-      // name: `${symbolArr[1]}/${symbolArr[2]}`,
-      name: symbolName,
-      full_name: symbolName,
-      // description: symbolName,
-      description: `${symbolArr[1]}/${symbolArr[2]}`,
-      type: "crypto",
-      session: "24x7",
-      exchange: "",
-      listed_exchange: "",
-      pricescale: 100,
-      minmov: 1,
-      supported_resolutions: defaultTimeInterval.map(
-        (item) => item.value
-      ) as ResolutionString[],
-      has_intraday: true,
-      // intraday_multipliers: Resolutions,
-      has_daily: true,
+    fetch(`https://api.orderly.org/tv/symbol_info?group=${symbolName}`)
+      .then((res) => res.json())
+      .then((data) => data && data.s === "ok")
+      .then((res) => {
+        console.log(res);
+        const symbolArr = symbolName.split("_");
+        const symbolInfo: LibrarySymbolInfo = {
+          // name: `${symbolArr[1]}/${symbolArr[2]}`,
+          name: symbolName,
+          full_name: symbolName,
+          // description: symbolName,
+          description: `${symbolArr[1]}/${symbolArr[2]}`,
+          type: "crypto",
+          session: "24x7",
+          exchange: "",
+          listed_exchange: "",
+          pricescale: 100,
+          minmov: 1,
+          supported_resolutions: defaultTimeInterval.map(
+            (item) => item.value
+          ) as ResolutionString[],
+          has_intraday: true,
+          // intraday_multipliers: Resolutions,
+          has_daily: true,
+          currency_code: "USDC",
 
-      // has_weekly_and_monthly: true,
-      // has_empty_bars: true,
-      // has_no_volume: false,
-      // visible_plots_set:
-      // // volume_precision: Number(volumePrecision),
-      // timezone: getTimeZoneCity() || 'Asia/Shanghai',
-      // timezone: "Etc/UTC",
-      timezone: "Asia/Shanghai",
-      format: "price",
-    };
-    setTimeout(() => {
-      onSymbolResolvedCallback(symbolInfo);
-    }, 0);
+          // has_weekly_and_monthly: true,
+          // has_empty_bars: true,
+          // has_no_volume: false,
+          // visible_plots_set:
+          // // volume_precision: Number(volumePrecision),
+          // timezone: getTimeZoneCity() || 'Asia/Shanghai',
+          // timezone: "Etc/UTC",
+          timezone: "Asia/Shanghai",
+          format: "price",
+        };
+
+        onSymbolResolvedCallback(symbolInfo);
+      });
   }
   getBars(
     symbolInfo: LibrarySymbolInfo,
@@ -69,6 +85,7 @@ export default class DataFeed implements IBasicDataFeed {
     onErrorCallback
   ) {
     // console.log("[getBars]: Method call", symbolInfo);
+    let resolutionNum = 1;
     fetch(
       `https://api.orderly.org/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolution}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
     )
@@ -101,13 +118,25 @@ export default class DataFeed implements IBasicDataFeed {
   ) {
     console.log(
       "[subscribeBars]: Method call with subscriberUID:",
-      subscriberUID
+      subscriberUID,
+      symbolInfo,
+      resolution
     );
+
+    this._subscriber = this.wsClient
+      .observe<any>(`${symbolInfo.full_name}@kline_1m`)
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
   unsubscribeBars(subscriberUID) {
     console.log(
       "[unsubscribeBars]: Method call with subscriberUID:",
       subscriberUID
     );
+
+    if (this._subscriber) {
+      this._subscriber.unsubscribe();
+    }
   }
 }

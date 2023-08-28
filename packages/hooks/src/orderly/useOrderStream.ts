@@ -1,6 +1,10 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { type SWRInfiniteResponse } from "swr/infinite";
 import { useCallback } from "react";
+import { useObservable } from "rxjs-hooks";
+import { combineLatestWith, map } from "rxjs/operators";
+import { useMarkPricesSubject } from "./useMarkPricesSubject";
+import { API } from "@orderly/types";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -23,6 +27,8 @@ export const useOrderStream = ({
   symbol?: string;
   status?: OrderStatus;
 } = {}) => {
+  const markPrices$ = useMarkPricesSubject();
+
   const res = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
       // TODO: 检查是否有下一页
@@ -48,6 +54,24 @@ export const useOrderStream = ({
     }
   );
 
+  const orders = useObservable<API.OrderExt[] | null, API.Order[][]>(
+    (_, input$) =>
+      input$.pipe(
+        map(([data]) => {
+          return data.flat();
+        }),
+        combineLatestWith(markPrices$),
+        map(([data, markPrices]) => {
+          return data.map((item: API.Order) => ({
+            ...item,
+            mark_price: (markPrices as any)[item.symbol] ?? 0,
+          }));
+        })
+      ),
+    null,
+    [res.data ?? []]
+  );
+
   /**
    * 取消所有订单
    */
@@ -64,9 +88,7 @@ export const useOrderStream = ({
   const cancelOrder = useCallback((id: string) => {}, []);
 
   return [
-    res.data?.reduce((acc, cur) => {
-      return [...acc, ...cur];
-    }, []),
+    orders,
     // {
     //   ...res,
     //   data: res.data?.reduce((acc, cur) => {

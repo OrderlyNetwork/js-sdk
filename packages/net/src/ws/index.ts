@@ -11,10 +11,10 @@ export type WSOptions = {
   networkId?: NetworkId;
   accountId?: string;
 
-  onSigntureRequest: (accountId: string) => Promise<any>;
+  onSigntureRequest?: (accountId: string) => Promise<any>;
 };
 
-class WebSocket {
+class WebSocketClient {
   // the topic reference count;
   private static __topicRefCountMap: Map<string, number> = new Map();
   private wsSubject: WebSocketSubject<any>;
@@ -42,7 +42,7 @@ class WebSocket {
     }
 
     return webSocket({
-      url: `${url}${options.accountId}`,
+      url: `${url}${options.accountId || ""}`,
       openObserver: {
         next: () => {
           console.log("Connection ok");
@@ -230,12 +230,12 @@ class WebSocket {
         //TODO: add ref count, only send subscribe message when ref count is 0
         // 如果已经订阅过了，就不再发送订阅消息
         const refCount =
-          WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+          WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
         if (refCount === 0) {
           // WS.__topicRefCountMap.set(subscribeMessage.topic, WS.__topicRefCountMap.get(subscribeMessage.topic) + 1);
           // this.send(subscribeMessage);
           sendFunc(subscribeMessage);
-          WebSocket.__topicRefCountMap.set(
+          WebSocketClient.__topicRefCountMap.set(
             subscribeMessage.topic,
             refCount + 1
           );
@@ -262,9 +262,9 @@ class WebSocket {
         try {
           // console.log("******* unsubscribe", unsubscribeMessage);
           const refCount =
-            WebSocket.__topicRefCountMap.get(subscribeMessage.topic) || 0;
+            WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
           if (refCount > 1) {
-            WebSocket.__topicRefCountMap.set(
+            WebSocketClient.__topicRefCountMap.set(
               subscribeMessage.topic,
               refCount - 1
             );
@@ -273,7 +273,7 @@ class WebSocket {
           if (!!unsubscribeMessage) {
             this.send(unsubscribeMessage);
           }
-          WebSocket.__topicRefCountMap.delete(subscribeMessage.topic);
+          WebSocketClient.__topicRefCountMap.delete(subscribeMessage.topic);
         } catch (err) {
           observer.error(err);
         }
@@ -326,4 +326,4 @@ class WebSocket {
   }
 }
 
-export default WebSocket;
+export default WebSocketClient;

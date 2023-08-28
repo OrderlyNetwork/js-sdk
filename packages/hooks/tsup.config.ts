@@ -6,6 +6,7 @@ export default defineConfig({
   target: "es6",
   splitting: false,
   sourcemap: true,
+  treeshake: true,
   clean: true,
   dts: true,
   external: ["react", "react-dom", "rxjs"],

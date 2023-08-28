@@ -103,6 +103,10 @@ export declare namespace API {
     reduce_only: boolean;
   }
 
+  export interface OrderExt extends Order {
+    mark_price: string;
+  }
+
   export interface FundingRate {
     symbol: string;
     est_funding_rate: number;

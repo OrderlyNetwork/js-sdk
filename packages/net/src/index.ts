@@ -1,4 +1,4 @@
 export { get, post } from "./fetch";
 
-export { default as WebSocket } from "./ws";
+export { default as WebSocketClient } from "./ws";
 export { __ORDERLY_API_URL_KEY__ } from "./constants";

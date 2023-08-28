@@ -8,9 +8,9 @@ type WSOptions = {
     url?: string;
     networkId?: NetworkId;
     accountId?: string;
-    onSigntureRequest: (accountId: string) => Promise<any>;
+    onSigntureRequest?: (accountId: string) => Promise<any>;
 };
-declare class WebSocket {
+declare class WebSocketClient {
     private static __topicRefCountMap;
     private wsSubject;
     private privateWsSubject?;
@@ -34,4 +34,4 @@ declare class WebSocket {
 
 declare const __ORDERLY_API_URL_KEY__: string;
 
-export { WebSocket, __ORDERLY_API_URL_KEY__, get, post };
+export { WebSocketClient, __ORDERLY_API_URL_KEY__, get, post };

@@ -57,9 +57,10 @@ const Slider = React.forwardRef<
         const len = markCount - 1;
 
         for (let i = 0; i <= len; i++) {
+          const value = Math.ceil(i * piece);
           marks.push({
-            value: i * piece,
-            label: `${i * piece}`,
+            value,
+            label: `${value}`,
           });
         }
 
@@ -77,7 +78,7 @@ const Slider = React.forwardRef<
 
       //   return marks;
       // }
-    }, [marks, markCount]);
+    }, [marks, markCount, max]);
 
     const onValueChangeInner = (value: number[]) => {
       // if (Array.isArray(innerMasks) && innerMasks.length > 0) {
@@ -119,7 +120,7 @@ const Slider = React.forwardRef<
           {/* marks */}
           {Array.isArray(innerMasks) && innerMasks.length > 0 && (
             <SliderMarks
-              value={innerValue}
+              value={props.value}
               color={color}
               marks={innerMasks}
               min={min}
@@ -140,7 +141,7 @@ const Slider = React.forwardRef<
           >
             {showTip && (
               <SliderTip
-                value={innerValue}
+                value={props.value}
                 className={bgClassName}
                 max={max}
                 min={0}

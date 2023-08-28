@@ -3,29 +3,31 @@ import { SimpleDialog } from "@/dialog/simpleDialog";
 import { useModal } from "@/modal";
 import { create } from "@/modal/modalHelper";
 import { modalActions } from "@/modal/modalContext";
+import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
   title: string;
   content: React.ReactNode;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
-  const { visible, hide, resolve } = useModal();
+  const { visible, hide, resolve, reject } = useModal();
   return (
     <SimpleDialog
       open={visible}
       title={props.title}
       closable={false}
       onOk={() => {
-        hide();
         resolve(true);
+        hide();
       }}
       onCancel={() => {
+        reject(false);
         hide();
       }}
     >
-      <div className={"py-5 text-[12px] text-base-contrast/50"}>
-        {props.content}
-      </div>
+      <DialogBody>
+        <div className={"py-5 text-[12px]"}>{props.content}</div>
+      </DialogBody>
     </SimpleDialog>
   );
 });

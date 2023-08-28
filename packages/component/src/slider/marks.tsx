@@ -13,7 +13,7 @@ export type SliderMark = {
 };
 
 export interface SliderMarksProps {
-  value: number[];
+  value?: number[];
   marks?: SliderMark[];
   color: "primary" | "buy" | "sell";
   // width: number;
@@ -25,6 +25,8 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
   const { marks, value } = props;
 
   // const spanRef = useRef<HTMLSpanElement | null>(null);
+
+  const _value = useMemo(() => value?.[0] ?? 0, [value]);
 
   return (
     <>
@@ -43,11 +45,11 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
               "absolute top-0 w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
               {
                 "border-primary bg-primary":
-                  props.color === "primary" && value[0] >= mark.value,
+                  props.color === "primary" && _value >= mark.value,
                 "border-trade-profit bg-trade-profit":
-                  props.color === "buy" && value[0] >= mark.value,
+                  props.color === "buy" && _value >= mark.value,
                 "border-trade-loss bg-trade-loss":
-                  props.color === "sell" && value[0] >= mark.value,
+                  props.color === "sell" && _value >= mark.value,
               }
             )}
             style={{

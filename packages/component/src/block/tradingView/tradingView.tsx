@@ -1,44 +1,130 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  type TimeIntervalItem,
   TimeIntervalToolbar,
   type TimeIntervalToolbarProps,
 } from "./timeIntervalToolbar";
-import {
-  TradingViewChart,
-  type TradingViewChartProps,
-} from "./tradingViewChart";
+import { type TradingViewChartProps } from "./tradingViewChart";
 import { TimeInterval } from "@/block/tradingView/types";
+import { IChartingLibraryWidget, widget } from "@/@types/charting_library";
+import DataFeed from "./dataFeed";
 
-export const TradingView: FC<
-  TradingViewChartProps & TimeIntervalToolbarProps
+declare const TradingView: any;
+
+export const TradingViewChart: FC<
+  TradingViewChartProps &
+    TimeIntervalToolbarProps & {
+      library_path: string;
+    }
 > = (props) => {
-  const { intervals, ...chartProps } = props;
+  const {
+    intervals,
+    disabled_features = [
+      "header_widget",
+      "control_bar",
+      "left_toolbar",
+      // "header_widget_dom_node",
+      "timeframes_toolbar",
+      "go_to_date",
+      "timezone_menu",
+      // "symbol_info",
+      "create_volume_indicator_by_default",
+    ],
+
+    library_path = "/tradingview/charting_library/charting_library.js",
+    ...chartProps
+  } = props;
+
+  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
+    () => (intervals?.[0].value ?? "1") as TimeInterval
+  );
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const size = useMemo<{ width: string; height: string }>(() => {
-    if (chartProps.autosize) {
-      return { width: "100%", height: "100%" };
-    }
-
     return {
-      width: `${chartProps.width}px`,
+      // width: `${chartProps.width}px`,
+      width: "100%",
       height: `${chartProps.height}px`,
     };
   }, [chartProps.width, chartProps.height]);
 
-  const onIntervalChange = useCallback((interval: TimeInterval) => {}, []);
+  const wigetRef = useRef<IChartingLibraryWidget | null>(null);
+
+  const onIntervalChange = useCallback((interval: TimeInterval) => {
+    setTimeInterval(interval);
+    wigetRef.current?.activeChart().setResolution(interval);
+  }, []);
+
+  useEffect(() => {
+    if (props.symbol) {
+      // console.log("wigetRef.current", wigetRef.current?.activeChart());
+      wigetRef.current?.activeChart().setSymbol(props.symbol);
+    }
+  }, [props.symbol]);
+
+  useEffect(() => {
+    let refValue: any;
+
+    if (containerRef.current) {
+      const script = document.createElement("script");
+      script.setAttribute("data-nscript", "afterInteractive");
+      script.src = library_path;
+      script.async = true;
+      script.type = "text/javascript";
+
+      script.onload = () => {
+        if (typeof TradingView !== undefined) {
+          wigetRef.current = new TradingView.widget({
+            symbol: props.symbol,
+            container: containerRef.current,
+            interval: "1",
+            theme: "Dark",
+            overrides: {
+              "paneProperties.background": "#ffffff",
+              "mainSeriesProperties.style": 1,
+              "mainSeriesProperties.candleStyle.upColor": "#439687",
+              "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
+              "mainSeriesProperties.candleStyle.borderColor": "#378658",
+              "mainSeriesProperties.candleStyle.borderUpColor": "#439687",
+              "mainSeriesProperties.candleStyle.borderDownColor": "#DE5E57",
+              "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
+              "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
+            },
+            preset: "mobile",
+            datafeed: new DataFeed({
+              apiBaseUrl: props.apiBaseUrl,
+            }),
+            library_path: "/tradingview/charting_library/",
+            disabled_features,
+            width: "100%",
+            ...chartProps,
+          });
+        }
+      };
+
+      containerRef.current.appendChild(script);
+      refValue = containerRef.current;
+    }
+    return () => {
+      if (refValue) {
+        while (refValue.firstChild) {
+          refValue.removeChild(refValue.firstChild);
+        }
+      }
+    };
+  }, []);
 
   return (
     <div>
       <TimeIntervalToolbar
         intervals={intervals}
-        // timeInterval={timeInterval}
+        timeInterval={timeInterval}
         onIntervalChange={(timeInterval) => {
-          // setTimeInterval(timeInterval);
           onIntervalChange(timeInterval);
         }}
       />
-      <TradingViewChart {...chartProps} {...size} />
+      {/* <TradingViewChart {...chartProps} {...size} /> */}
+      <div className="w-full h-full" ref={containerRef}></div>
     </div>
   );
 };

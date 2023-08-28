@@ -393,6 +393,21 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
+      '@babel/core':
+        specifier: ^7.22.9
+        version: 7.22.9
+      '@babel/preset-env':
+        specifier: ^7.22.9
+        version: 7.22.9(@babel/core@7.22.9)
+      '@babel/preset-typescript':
+        specifier: ^7.22.5
+        version: 7.22.5(@babel/core@7.22.9)
+      '@types/jest':
+        specifier: ^29.5.3
+        version: 29.5.3
+      babel-jest:
+        specifier: ^29.6.1
+        version: 29.6.1(@babel/core@7.22.9)
       jest:
         specifier: ^29.6.1
         version: 29.6.1(@types/node@17.0.45)
@@ -14821,7 +14836,7 @@ packages:
     dependencies:
       '@jest/schemas': 29.6.0
       ansi-styles: 5.2.0
-      react-is: 18.1.0
+      react-is: 18.2.0
     dev: true
 
   /pretty-hrtime@1.0.3:

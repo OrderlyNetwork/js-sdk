@@ -1,0 +1,91 @@
+import { MemoryConfigStore } from "@orderly/core";
+import { OrderlyProvider } from "../../provider";
+import React, { FC } from "react";
+import { Meta, StoryObj } from "@storybook/react";
+
+import { useMaxQty } from "@orderly/hooks";
+
+import { OrderSide } from "@orderly/types";
+
+const MaxQtyDemo: FC<{
+  symbol: string;
+  maxQty: number;
+  side?: OrderSide;
+  onSideChange?: (side: OrderSide) => void;
+}> = (props) => {
+  return (
+    <div className="text-black space-y-3">
+      <div className="flex gap-5">
+        <div className="flex gap-2">
+          <input
+            type="radio"
+            id="buy"
+            name="side"
+            value={OrderSide.BUY}
+            checked={props.side === OrderSide.BUY}
+            onChange={(event) => {
+              props.onSideChange?.(event.target.value as OrderSide);
+            }}
+          />
+          <label htmlFor="buy">{OrderSide.BUY}</label>
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            type="radio"
+            id="sell"
+            name="side"
+            value={OrderSide.SELL}
+            checked={props.side === OrderSide.SELL}
+            onChange={(event) => {
+              props.onSideChange?.(event.target.value as OrderSide);
+            }}
+          />
+          <label htmlFor="sell">{OrderSide.SELL}</label>
+        </div>
+      </div>
+      <hr />
+      <div className="flex gap-5">
+        <span>Symbol:</span>
+        <span>{props.symbol}</span>
+      </div>
+      <div className="flex gap-5">
+        <span>Max Qty:</span>
+        <span>{props.maxQty}</span>
+      </div>
+    </div>
+  );
+};
+
+const meta: Meta = {
+  title: "hooks/useMaxQty",
+  component: MaxQtyDemo,
+  decorators: [
+    (Story) => {
+      return (
+        <OrderlyProvider configStore={new MemoryConfigStore()}>
+          <Story />
+        </OrderlyProvider>
+      );
+    },
+  ],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof MaxQtyDemo>;
+
+export const Default: Story = {
+  render: (args, { globals }) => {
+    const [side, setSide] = React.useState<OrderSide>(OrderSide.BUY);
+    const maxQty = useMaxQty(globals.symbol, side);
+    return (
+      <MaxQtyDemo
+        symbol={globals.symbol}
+        maxQty={maxQty}
+        side={side}
+        onSideChange={setSide}
+      />
+    );
+  },
+};

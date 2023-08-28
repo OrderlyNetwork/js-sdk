@@ -1,6 +1,10 @@
-import { Decimal } from "@orderly/utils";
+import { Decimal, zero } from "@orderly/utils";
 import { IMRFactorPower } from "./constants";
 import { API, OrderSide, OrderType, type WSMessage } from "@orderly/types";
+
+export type ResultOptions = {
+  dp: number;
+};
 
 /**
  * 用戶帳戶當前可用保證金的價值總和 (USDC計價)
@@ -91,7 +95,7 @@ export type IMRInputs = {
   baseIMR: number;
   IMR_Factor: number;
   positionNotional: number;
-  orderNotional: number;
+  ordersNotional: number;
   IMR_factor_power?: number;
 };
 
@@ -100,13 +104,13 @@ export type IMRInputs = {
  * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
 export function IMR(inputs: IMRInputs): number {
-  // console.log("inputs", inputs);
+  // console.log("IMR inputs", inputs);
   const {
     maxLeverage,
     baseIMR,
     IMR_Factor,
     positionNotional,
-    orderNotional,
+    ordersNotional: orderNotional,
     IMR_factor_power = IMRFactorPower,
   } = inputs;
   return Math.max(
@@ -141,7 +145,10 @@ export function sellOrdersFilter_by_symbol(
   );
 }
 
-function getQtyFromPositions(
+/**
+ * 从仓位列表中获取指定symbol的仓位数量
+ */
+export function getQtyFromPositions(
   positions: API.Position[],
   symbol: string
 ): number {
@@ -149,7 +156,10 @@ function getQtyFromPositions(
   return position?.position_qty || 0;
 }
 
-function getQtyFromOrdersBySide(
+/**
+ * 从订单列表中获取指定symbol的看多，看空订单数量，
+ */
+export function getQtyFromOrdersBySide(
   orders: API.Order[],
   symbol: string,
   side: OrderSide
@@ -161,6 +171,26 @@ function getQtyFromOrdersBySide(
   return ordersBySide.reduce((acc, cur) => {
     return acc + cur.quantity;
   }, 0);
+}
+
+export function getPositonsAndOrdersNotionalBySymbol(inputs: {
+  positions: API.Position[];
+  orders: API.Order[];
+  symbol: string;
+  markPrice: number;
+}): number {
+  const { positions, orders, symbol, markPrice } = inputs;
+  const positionQty = getQtyFromPositions(positions, symbol);
+  const buyOrdersQty = getQtyFromOrdersBySide(orders, symbol, OrderSide.BUY);
+  const sellOrdersQty = getQtyFromOrdersBySide(orders, symbol, OrderSide.SELL);
+
+  const markPriceDecimal = new Decimal(markPrice);
+
+  return markPriceDecimal
+    .mul(positionQty)
+    .add(markPriceDecimal.mul(new Decimal(buyOrdersQty).add(sellOrdersQty)))
+    .abs()
+    .toNumber();
 }
 
 export type TotalInitialMarginWithOrdersInputs = {
@@ -218,7 +248,7 @@ export function totalInitialMarginWithOrders(
 
     const imr = IMR({
       positionNotional: markPriceDecimal.mul(positionQty).toNumber(),
-      orderNotional: markPriceDecimal
+      ordersNotional: markPriceDecimal
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber(),
       maxLeverage,
@@ -250,12 +280,14 @@ export function groupOrdersBySymbol(orders: API.Order[]) {
 }
 
 /**
- * 从仓位和订单中提取所有的symbol
- * @returns
+ * Extracts all unique symbols from positions and orders.
+ * @param positions - An array of position objects.
+ * @param orders - An array of order objects.
+ * @returns An array of unique symbols.
  */
-function extractSymbols(
-  positions: API.Position[],
-  orders: API.Order[]
+export function extractSymbols(
+  positions: Pick<API.Position, "symbol">[],
+  orders: Pick<API.Order, "symbol">[]
 ): string[] {
   const symbols = new Set<string>();
 
@@ -272,8 +304,100 @@ function extractSymbols(
 
 //=========== max qty ==================
 
+// function otherIM(inputs: {}): number {}
+
+export type OtherIMsInputs = {
+  // 传入除当前symbol外的其他symbol的仓位列表
+  positions: API.Position[];
+  // 传入除当前symbol外的其他symbol的订单列表
+  orders: API.Order[];
+
+  markPrices: { [key: string]: number };
+  maxLeverage: number;
+  symbolInfo: any;
+  IMR_Factors: { [key: string]: number };
+};
+/**
+ * 除当前symbol外的其他symbol已占用的总保证金
+ */
+export function otherIMs(inputs: OtherIMsInputs): number {
+  // console.log("inputs", inputs);
+
+  const {
+    orders,
+    positions,
+    maxLeverage,
+    IMR_Factors,
+    symbolInfo,
+    markPrices,
+  } = inputs;
+
+  const symbols = extractSymbols(positions, orders);
+
+  return symbols
+    .reduce((acc, cur) => {
+      const symbol = cur;
+
+      if (typeof markPrices[symbol] === "undefined") {
+        console.warn("markPrices[%s] is undefined", symbol);
+        return acc;
+      }
+
+      const markPriceDecimal = new Decimal(markPrices[symbol] || 0);
+
+      const positionQty = getQtyFromPositions(positions, symbol);
+      const positionNotional = markPriceDecimal.mul(positionQty).toNumber();
+
+      const buyOrdersQty = getQtyFromOrdersBySide(
+        orders,
+        symbol,
+        OrderSide.BUY
+      );
+      const sellOrdersQty = getQtyFromOrdersBySide(
+        orders,
+        symbol,
+        OrderSide.SELL
+      );
+
+      const ordersNotional = markPriceDecimal
+        .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
+        .toNumber();
+
+      const IMR_Factor = IMR_Factors[symbolInfo[symbol]("base")];
+
+      if (!IMR_Factor) {
+        console.warn("IMR_Factor is not found:", symbol);
+        return acc;
+      }
+
+      const imr = IMR({
+        maxLeverage,
+
+        IMR_Factor,
+        baseIMR: symbolInfo[symbol]("base_imr", 0),
+        positionNotional,
+        ordersNotional,
+      });
+
+      const positionQtyWithOrders = positionQtyWithOrders_by_symbol({
+        positionQty,
+        buyOrdersQty,
+        sellOrdersQty,
+      });
+
+      const positionNotionalWithOrders = positionNotionalWithOrder_by_symbol({
+        markPrice: markPrices[symbol] || 0,
+        positionQtyWithOrders,
+      });
+
+      return acc.add(positionNotionalWithOrders.mul(imr));
+    }, zero)
+    .toNumber();
+}
+
 export type MaxQtyInputs = {
-  side: OrderSide;
+  symbol: string;
+
   //單次開倉最大 Qty 限制,  /v1/public/info.base_max
   baseMaxQty: number;
   /**
@@ -283,6 +407,10 @@ export type MaxQtyInputs = {
   totalCollateral: number;
   maxLeverage: number;
   baseIMR: number;
+  /**
+   * @see otherIMs
+   */
+  otherIMs: number;
   markPrice: number;
   // 已开仓数量
   positionQty: number;
@@ -290,23 +418,114 @@ export type MaxQtyInputs = {
   buyOrdersQty: number;
   // 已挂空单数量
   sellOrdersQty: number;
+
+  IMR_Factor: number;
 };
 
 /**
  * 最大可下单数量
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-Order-QTY}
  */
-export function maxQty(inputs: MaxQtyInputs): number {
-  if (inputs.side === OrderSide.BUY) {
+export function maxQty(
+  side: OrderSide,
+  inputs: MaxQtyInputs,
+  options?: ResultOptions
+): number {
+  // console.log("inputs", inputs, side);
+  if (side === OrderSide.BUY) {
     return maxQtyByLong(inputs);
   }
   return maxQtyByShort(inputs);
 }
 
 export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
-  return 0;
+  // console.log("maxQtyByLong", inputs);
+  try {
+    const {
+      baseMaxQty,
+      totalCollateral,
+      otherIMs,
+      maxLeverage,
+      baseIMR,
+      markPrice,
+      IMR_Factor,
+      positionQty,
+      buyOrdersQty,
+    } = inputs;
+
+    const totalCollateralDecimal = new Decimal(totalCollateral);
+
+    const factor_1 = totalCollateralDecimal
+      .sub(otherIMs)
+      .div(Math.max(1 / maxLeverage, baseIMR))
+      .div(markPrice)
+      .sub(new Decimal(positionQty).add(buyOrdersQty).abs().mul(0.995))
+      .toNumber();
+
+    const factor_2 = totalCollateralDecimal
+      .sub(otherIMs)
+      .div(IMR_Factor)
+      .toPower(1 / 1.8)
+      .div(markPrice)
+      .sub(
+        new Decimal(positionQty)
+          .add(buyOrdersQty)
+          .abs()
+          .div(markPrice)
+          .mul(0.995)
+      )
+      .toNumber();
+
+    return Math.min(baseMaxQty, factor_1, factor_2);
+  } catch (error) {
+    console.log("error", error);
+    return 0;
+  }
 }
 
 export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
-  return 0;
+  // console.log("maxQtyByShort", inputs);
+  try {
+    const {
+      baseMaxQty,
+      totalCollateral,
+      otherIMs,
+      maxLeverage,
+      baseIMR,
+      markPrice,
+      IMR_Factor,
+      positionQty,
+      buyOrdersQty,
+      sellOrdersQty,
+    } = inputs;
+
+    const totalCollateralDecimal = new Decimal(totalCollateral);
+
+    // TODO: confirm this formula is correct with @carbo
+    const factor_1 = totalCollateralDecimal
+      .sub(otherIMs)
+      .div(Math.max(1 / maxLeverage, baseIMR))
+      .div(markPrice)
+      .add(new Decimal(positionQty).add(sellOrdersQty).abs().mul(0.995))
+      .toNumber();
+
+    const factor_2 = totalCollateralDecimal
+      .sub(otherIMs)
+      .div(IMR_Factor)
+      .toPower(1 / 1.8)
+      .div(markPrice)
+      .add(
+        new Decimal(positionQty)
+          .add(sellOrdersQty)
+          .abs()
+          .div(markPrice)
+          .mul(0.995)
+      )
+      .toNumber();
+
+    return Math.min(baseMaxQty, factor_1, factor_2);
+  } catch (error) {
+    console.log("error", error);
+    return 0;
+  }
 }

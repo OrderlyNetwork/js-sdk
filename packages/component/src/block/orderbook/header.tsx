@@ -1,7 +1,8 @@
 import { FC, useContext, useMemo } from "react";
-import { QtyMode } from "./types";
+
 import { OrderBookContext } from "./orderContext";
-import { ChevronDown } from "lucide-react";
+
+import { ArrowIcon } from "@/icon";
 
 interface Props {
   priceUnit: string;
@@ -29,11 +30,11 @@ export const Header: FC<Props> = (props) => {
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
         }
       >
-        <div className={"flex flex-col items-end"}>
+        <div className={"flex flex-col items-end mr-1"}>
           <span>Qty</span>
           <span>{`(${currency})`}</span>
         </div>
-        <ChevronDown />
+        <ArrowIcon size={10} />
       </div>
     </div>
   );

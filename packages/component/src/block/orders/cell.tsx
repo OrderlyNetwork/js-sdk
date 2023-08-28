@@ -3,10 +3,11 @@ import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { FC, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
+import { API } from "@orderly/types";
 // import {type Order} from '@orderly/core'
 
 interface OrderCellProps {
-  order: any;
+  order: API.OrderExt;
   onCancel?: (order: any) => void;
   onEdit?: (order: any) => void;
 }
@@ -43,7 +44,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           align="right"
         />
         <Statistic label="Limit Price(USDC)" value={order.price ?? "-"} />
-        <Statistic label="Mark Price(USDC)" value="30,000.00" />
+        <Statistic label="Mark Price(USDC)" value={order.mark_price} />
       </div>
       <div className="flex gap-3 py-2">
         <Button

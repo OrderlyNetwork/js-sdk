@@ -8,10 +8,11 @@ import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly/futures";
 import { useOrderStream } from "./useOrderStream";
-import { WSMessage, API } from "@orderly/types";
+import { type WSMessage, type API } from "@orderly/types";
 import { useAccount } from "../useAccount";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, zero } from "@orderly/utils";
+import { useMarkPriceStream } from "./useMarkPriceStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;
@@ -33,20 +34,7 @@ export const useCollateral = (dp: number = 6): CollateralOutputs => {
   const { info: accountInfo } = useAccount();
   const symbolInfo = useSymbolsInfo();
 
-  const markPrices = useObservable(
-    () =>
-      ws.observe("markprices").pipe(
-        map((data: WSMessage.MarkPrice[]) => {
-          const prices: { [key: string]: number } = {};
-
-          data.forEach((item) => {
-            prices[item.symbol] = item.price;
-          });
-          return prices;
-        })
-      ),
-    {}
-  );
+  const markPrices = useMarkPriceStream();
 
   // console.log("----- markPrices", markPrices);
 
@@ -61,7 +49,6 @@ export const useCollateral = (dp: number = 6): CollateralOutputs => {
       merge(input$).pipe(
         filter((data) => !!data[0]),
         map(([data, unsettlemnedPnL]: [API.Holding[], number]) => {
-          console.log(data);
           //取出 USDC
           const nonUSDC: API.Holding[] = [];
           let USDC_holding = 0;

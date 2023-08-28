@@ -28,13 +28,13 @@ export const Widget = forwardRef<IChartingLibraryWidget, WidgetProps>(
         if (type === "Widget" || type === "MediumWidget") {
           script.onload = () => {
             if (typeof TradingView !== undefined) {
-              script.innerHTML = JSON.stringify(
-                type === "Widget"
-                  ? (ref = new TradingView.widget(scriptHTML))
-                  : type === "MediumWidget"
-                  ? (ref = new TradingView.MediumWidget(scriptHTML))
-                  : undefined
-              );
+              // script.innerHTML = JSON.stringify(
+              type === "Widget"
+                ? (ref = new TradingView.widget(scriptHTML))
+                : type === "MediumWidget"
+                ? (ref = new TradingView.MediumWidget(scriptHTML))
+                : undefined;
+              // );
             }
           };
         } else {

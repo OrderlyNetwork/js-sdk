@@ -21,10 +21,12 @@ import { OrderOptions } from "./sections/orderOptions";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
 import { modal } from "@/modal";
+import { OrderConfirmView } from "./sections/orderConfirmView";
 
 export interface OrderEntryProps {
   onSubmit?: () => Promise<any>;
   onDeposit?: () => Promise<void>;
+  validateForm?: (values?: any) => Promise<any>;
   markPrice?: number;
   maxQty: number;
 
@@ -60,10 +62,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       freeCollateral,
       symbolConfig,
       errors,
+      maxQty,
+      symbol,
       submitCount = 0,
     } = props;
 
-    console.log("render OrderEntry", errors);
+    // console.log("render OrderEntry", errors);
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
@@ -73,28 +77,42 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       (event: FormEvent) => {
         event.preventDefault();
         //check need show confirm
-        Promise.resolve()
-          .then(() => {
+
+        props
+          .validateForm?.()
+          .then((errors) => {
+            console.log("errors:::", errors);
+            const keys = Object.keys(errors);
+            if (keys.length > 0) {
+              throw errors;
+            }
             if (props.showConfirm) {
               return modal.confirm({
                 title: "Confirm Order",
                 content: (
-                  <div className="text-danger">
-                    Are you sure you want to place this order?
-                  </div>
+                  <OrderConfirmView
+                    order={values!}
+                    symbol={symbol}
+                    base={symbolConfig["base"]}
+                    quote={symbolConfig.quote}
+                  />
                 ),
               });
             }
             return true;
           })
-          .then(() => {
+          .then((isOk) => {
+            console.log("isOk:::", isOk);
             return props.onSubmit?.();
           })
           .then((res) => {
             console.log("component:", res);
+          })
+          .catch((err) => {
+            console.log("order entry::", err);
           });
       },
-      [values]
+      [values, symbol]
     );
 
     const onDeposit = useCallback((event: FormEvent) => {
@@ -177,7 +195,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             ref={priceInputRef}
             prefix={"Price"}
             suffix={symbolConfig?.quote}
-            error={!!props.errors?.order_price && submitCount > 0}
+            error={!!props.errors?.order_price}
             helpText={props.errors?.order_price}
             value={
               values?.order_type === OrderType.MARKET
@@ -187,7 +205,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             className="text-right"
             readOnly={values?.order_type === OrderType.MARKET}
             onChange={(event) => {
-              console.log(event.target.value);
               setValue?.("order_price", event.target.value);
             }}
           />
@@ -196,17 +213,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.base}
             value={values?.order_quantity}
             className="text-right"
-            error={!!props.errors?.order_quantity && submitCount > 0}
+            error={!!props.errors?.order_quantity}
             helpText={props.errors?.order_quantity}
             onChange={(event) => {
-              console.log(event.target.value);
               setValue?.("order_quantity", event.target.value);
             }}
           />
           <div>
             <Slider
               color={values?.side === OrderSide.BUY ? "buy" : "sell"}
+              min={0}
+              max={maxQty}
               markCount={4}
+              step={symbolConfig?.["base_tick"]}
+              value={[Number(values?.order_quantity ?? 0)]}
+              onValueChange={(value) => {
+                // console.log("onValueChange", value);
+                if (typeof value[0] !== "undefined") {
+                  setValue?.("order_quantity", value[0]);
+                }
+              }}
             />
           </div>
           <Input
