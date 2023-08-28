@@ -1,6 +1,6 @@
 import { map } from "rxjs/operators";
 import { useWebSocketClient } from "../useWebSocketClient";
-import { WSMessage } from "@orderly/types";
+import { WSMessage } from "@orderly.network/types";
 import useConstant from "use-constant";
 
 export const useMarkPricesSubject = () => {

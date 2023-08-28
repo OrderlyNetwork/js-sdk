@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
 import { useWebSocketClient } from "../useWebSocketClient";
-import { WSMessage } from "@orderly/core";
+import { WSMessage } from "@orderly.network/core";
 
 export const useTickerStream = (symbol: string) => {
   const [data, setData] = useState<WSMessage.Ticker | null>(null);
@@ -9,13 +9,17 @@ export const useTickerStream = (symbol: string) => {
     throw new Error("useFuturesForSymbol requires a symbol");
   }
 
+  // const config =
+
   const ws = useWebSocketClient();
 
   useEffect(() => {
-    const sub = ws.observe<WSMessage.Ticker>(`${symbol}@ticker`).subscribe((value) => {
-      console.log("useTicker", value);
-      setData(value);
-    });
+    const sub = ws
+      .observe<WSMessage.Ticker>(`${symbol}@ticker`)
+      .subscribe((value) => {
+        console.log("useTicker", value);
+        setData(value);
+      });
 
     return () => {
       sub.unsubscribe();

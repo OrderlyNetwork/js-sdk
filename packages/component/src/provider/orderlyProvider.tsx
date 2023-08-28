@@ -3,10 +3,10 @@ import {
   useConstant,
   OrderlyProvider as Provider,
   type WebSocketAdpater,
-} from "@orderly/hooks";
+} from "@orderly.network/hooks";
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
-import { type ConfigStore } from "@orderly/core";
+import { type ConfigStore } from "@orderly.network/core";
 import { TooltipProvider } from "@/tooltip/tooltip";
 
 interface OrderlyProviderProps {

@@ -3,14 +3,14 @@ import { Text } from "@/text";
 import { Numeral } from "@/text/numeral";
 
 interface SimpleMarketOverviewProps {
-  markPrice: number;
+  price: number;
   change: number;
 }
 
 export const SimpleMarketOverview: FC<SimpleMarketOverviewProps> = (props) => {
   return (
     <div className={"flex gap-4 items-center"}>
-      <Numeral>{props.markPrice}</Numeral>
+      <Numeral>{props.price}</Numeral>
       <Numeral rule={"percentages"} coloring>
         {props.change}
       </Numeral>

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React from "react";
 import { OrdersView } from ".";
-import { useOrderStream, OrderStatus } from "@orderly/hooks";
+import { useOrderStream, OrderStatus } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 // import { OrderEditFormDialog } from "./dialog/editor";
 import { modal } from "../../modal";

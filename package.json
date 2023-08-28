@@ -8,13 +8,13 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@turbo/gen": "^1.9.7",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
-
   "packageManager": "pnpm@7.15.0",
   "name": "orderly-web"
 }

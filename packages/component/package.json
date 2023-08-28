@@ -1,5 +1,5 @@
 {
-  "name": "@orderly/components",
+  "name": "@orderly.network/components",
   "version": "0.0.1",
   "description": "",
   "main": "dist/cjs/index.js",
@@ -25,8 +25,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
-    "@orderly/core": "workspace:*",
-    "@orderly/hooks": "workspace:*",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.2",
@@ -69,9 +69,9 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@orderly/net": "workspace:*",
-    "@orderly/utils": "workspace:*",
-    "@orderly/types": "workspace:*",
+    "@orderly.network/net": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
@@ -90,5 +90,5 @@
     "tailwind-merge": "^1.14.0"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@orderly/react@0.0.1"
+  "_id": "@orderly.network/react@0.0.1"
 }

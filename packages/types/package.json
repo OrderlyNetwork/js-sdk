@@ -1,5 +1,5 @@
 {
-  "name": "@orderly/types",
+  "name": "@orderly.network/types",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -23,5 +23,7 @@
     "tsconfig": "workspace:*"
     
   },
-  "license": "ISC"
+  "publishConfig": {
+    "access": "public"
+  }
 }

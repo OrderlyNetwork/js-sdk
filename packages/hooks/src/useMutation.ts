@@ -1,11 +1,11 @@
 import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 
-import { post } from "@orderly/net";
+import { post } from "@orderly.network/net";
 import {
   type MessageFactor,
   type SignedMessagePayload,
   getMockSigner,
-} from "@orderly/core";
+} from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useContext } from "react";
 

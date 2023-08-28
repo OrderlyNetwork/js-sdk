@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren, ReactNode } from "react";
-import { useUserInfo } from "@orderly/hooks";
+import { useUserInfo } from "@orderly.network/hooks";
 
 export interface SiginGuardButtonProps {
   placeholder?: ReactNode;

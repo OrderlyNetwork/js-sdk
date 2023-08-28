@@ -29,6 +29,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       onChange={(event) => {
         props.onChange?.(event.target.value);
       }}
+      // className="bg-base-100"
       prefix={
         <InputMask>
           <Search size={16} />

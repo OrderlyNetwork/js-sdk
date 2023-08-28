@@ -1,5 +1,4 @@
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
-import { cva } from "class-variance-authority";
 import { cn } from "@/utils/css";
 
 // const pageVariants = cva([],{

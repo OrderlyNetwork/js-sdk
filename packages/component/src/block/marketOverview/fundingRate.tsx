@@ -1,6 +1,6 @@
 import { Statistic } from "@/statistic";
 import { FC, useEffect, useState } from "react";
-import { timeConvertString } from "@orderly/utils";
+import { timeConvertString } from "@orderly.network/utils";
 
 export interface FundingRateProps {
   fundingRate: string;

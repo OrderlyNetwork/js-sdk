@@ -1,10 +1,14 @@
 import { useMutation } from "../useMutation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { OrderFactory, type OrderCreator, orderUtils } from "@orderly/futures";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
+import {
+  OrderFactory,
+  type OrderCreator,
+  orderUtils,
+} from "@orderly.network/futures";
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal, getPrecisionByNumber } from "@orderly/utils";
+import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useTokenInfo } from "./useTokenInfo";
 import { type FormikErrors, useFormik } from "formik";
 import { useObservable } from "rxjs-hooks";
@@ -116,7 +120,11 @@ export const useOrderEntry = (
     },
   });
 
-  const maxQty = useMaxQty(symbol, formik.values.side);
+  const maxQty = useMaxQty(
+    symbol,
+    formik.values.side,
+    formik.values.reduce_only
+  );
 
   const setValue = (field: OrderEntityKey, value: any) => {
     const fieldHandler = getCalculateHandler(field);
@@ -182,6 +190,12 @@ export const useOrderEntry = (
       formik.resetForm();
     }
   }, [symbol, formik.values.symbol]);
+
+  useEffect(() => {
+    if (formik.values.reduce_only) {
+      // formik.setFieldValue("order_type", OrderType.LIMIT);
+    }
+  }, [formik.values.reduce_only]);
 
   // console.log(formik);
   // market order时计算total

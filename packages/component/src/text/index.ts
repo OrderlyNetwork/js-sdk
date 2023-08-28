@@ -6,7 +6,7 @@ import { Text } from "./text";
 
 export type CombinedComponent = typeof Numeral & {
   /**
-   * 需要搭配 @orderly/hooks 使用
+   * 需要搭配 @orderly.network/hooks 使用
    */
   symbol: typeof NumeralWithConfig;
   total: typeof NumeralTotal;

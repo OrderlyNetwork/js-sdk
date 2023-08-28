@@ -3,7 +3,7 @@ import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
 import { Info } from "lucide-react";
 import { FC, useMemo } from "react";
-import { AccountStatusEnum } from "@orderly/core";
+import { AccountStatusEnum } from "@orderly.network/core";
 import { StepItem } from "./sections/step";
 import { create, register } from "@/modal/modalHelper";
 import {

@@ -4,8 +4,8 @@ import React from "react";
 import { OrderEntry } from ".";
 import { OrderlyProvider } from "../../provider";
 
-import { useOrderEntry } from "@orderly/hooks";
-import { MemoryConfigStore } from "@orderly/core";
+import { useOrderEntry } from "@orderly.network/hooks";
+import { MemoryConfigStore } from "@orderly.network/core";
 
 const meta: Meta = {
   title: "Block/OrderEntry",

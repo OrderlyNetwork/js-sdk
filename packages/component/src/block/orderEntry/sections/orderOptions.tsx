@@ -4,7 +4,7 @@ import { Label } from "@/label";
 import { Radio, RadioGroup } from "@/radioGroup";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
-import { OrderEntity } from "@orderly/types";
+import { OrderEntity } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 

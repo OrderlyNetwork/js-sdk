@@ -1,50 +1,43 @@
-import { useObservable } from "rxjs-hooks";
 import { useQuery } from "../useQuery";
+
+import { type API } from "@orderly.network/types";
 import { useWebSocketClient } from "../useWebSocketClient";
-import { withLatestFrom, map, startWith } from "rxjs/operators";
-import { type WSMessage } from "@orderly/core";
-import { useSymbolsInfo } from "./useSymbolsInfo";
+import { useObservable } from "rxjs-hooks";
+import { combineLatestWith, map } from "rxjs/operators";
+import { Decimal } from "@orderly.network/utils";
 
-export const useMarketStream = () => {
-  // get listing of all markets from /public/info
+export const useMarketStream = (symbol: string) => {
+  if (!symbol) {
+    throw new Error("symbol is required");
+  }
+  const { data: info } = useQuery<API.MarketInfo>(`/public/futures/${symbol}`);
   const ws = useWebSocketClient();
-  const { data } = useQuery<WSMessage.Ticker[]>(`/public/futures`);
-  // const config = useSymbolsInfo();
 
-  const value = useObservable<WSMessage.Ticker[] | null, WSMessage.Ticker[][]>(
+  const ticker = useObservable<
+    API.MarketInfo | null,
+    [API.MarketInfo | undefined]
+  >(
     (_, input$) =>
-      ws.observe<any>("tickers").pipe(
-        startWith([]),
-        withLatestFrom(input$.pipe(map((args) => args[0]))),
-        map((args) => {
-          if (args[0].length === 0) {
-            return args[1];
-          }
-
-          return args[1].map((item) => {
-            const ticker = args[0].find(
-              (t: WSMessage.Ticker) => t.symbol === item.symbol
-            );
-            if (ticker) {
-              // console.log(config[item.symbol]());
-              return {
-                ...item,
-                ["24h_close"]: ticker.close,
-                ["24h_open"]: ticker.open,
-                ["24h_volumn"]: ticker.volume,
-                change: 0,
-              };
-            }
-            return item;
-          });
-
-          // return args[1];
+      input$.pipe(
+        map(([config]) => config),
+        combineLatestWith(ws.observe(`${symbol}@ticker`)),
+        map(([config, ticker]: [API.MarketInfo, any]) => {
+          // console.log(config, ticker);
+          return {
+            ...config,
+            ["24h_close"]: ticker.close,
+            ["24h_open"]: ticker.open,
+            ["24h_volumn"]: ticker.volume,
+            change: new Decimal(ticker.close)
+              .minus(ticker.open)
+              .div(ticker.open)
+              .toNumber(),
+          };
         })
       ),
     null,
-    [data as WSMessage.Ticker[]]
+    [info]
   );
 
-  // return listing;
-  return { data: value };
+  return ticker;
 };

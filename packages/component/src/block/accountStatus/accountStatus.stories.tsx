@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { AccountStatusBar } from ".";
 import * as React from "react";
-import { useAccount } from "@orderly/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "./accountStatusBar";
 import { OrderlyProvider } from "../../provider";
-import { MemoryConfigStore } from "@orderly/core";
+import { MemoryConfigStore } from "@orderly.network/core";
 import { init, useConnectWallet } from "@web3-onboard/react";
 import { onboardConfig } from "../../../mock/onboardConfig";
 import { useEffect } from "react";

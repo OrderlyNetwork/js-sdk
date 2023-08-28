@@ -1,25 +1,40 @@
-import { MemoryConfigStore } from "@orderly/core";
+import { MemoryConfigStore } from "@orderly.network/core";
 import { OrderlyProvider } from "../../provider";
 import React, { FC, useMemo } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { API } from "@orderly/types";
+import { API } from "@orderly.network/types";
 
-import { usePosition } from "@orderly/hooks";
+import { usePositionStream } from "@orderly.network/hooks";
 
 const PositionHookDemo: FC<{
   data: API.Position[];
 }> = (props) => {
   const children = useMemo(() => {
-    return props.data.map((position) => {
+    return props.data.map((position, index) => {
       return (
-        <div>
-          <div className="flex gap-2">
-            <button className="border rounded px-2 border-slate-500">
-              Limit Colose
-            </button>
-            <button className="border rounded px-2 border-slate-500">
-              Market Close
-            </button>
+        <div key={index}>
+          <div>
+            <pre>{JSON.stringify(position, null, 2)}</pre>
+          </div>
+          <div>
+            <div className="flex gap-2 p-2 bg-slate-100">
+              <input
+                type="text"
+                placeholder="Qty"
+                className="border border-slate-500 px-2"
+              />
+              <input
+                type="text"
+                placeholder="Price"
+                className="border border-slate-500 px-2"
+              />
+              <button className="border rounded px-2 border-slate-500">
+                Limit Close
+              </button>
+              <button className="border rounded px-2 border-slate-500">
+                Market Close
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -32,6 +47,8 @@ const PositionHookDemo: FC<{
           Market Close All
         </button>
       </div>
+      <hr className="my-3" />
+      <div>{children}</div>
     </div>
   );
 };
@@ -56,6 +73,8 @@ type Story = StoryObj<typeof PositionHookDemo>;
 
 export const Default: Story = {
   render: () => {
-    return <PositionHookDemo data={[]} />;
+    const [positions] = usePositionStream();
+
+    return <PositionHookDemo data={positions?.rows ?? []} />;
   },
 };

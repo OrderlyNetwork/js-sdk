@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Select } from "@/select";
-import { API } from "@orderly/core";
+import { API } from "@orderly.network/core";
 
 export interface TokenPickerProps {
   value?: API.Token;

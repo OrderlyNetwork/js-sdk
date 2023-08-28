@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Numeral, NumeralProps } from "./numeral";
-import { useSymbolsInfo } from "@orderly/hooks";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 
 /**
- * 根据symbol配置进行截断，需要搭配 @orderly/hooks 使用
+ * 根据symbol配置进行截断，需要搭配 @orderly.network/hooks 使用
  * @param props
  * @returns
  */
@@ -15,7 +15,5 @@ export const NumeralWithConfig: FC<
 
   //   console.log("config***", data, isLoading, error);
 
-  return (
-    <Numeral {...props} precision={config[props.symbol]("quote_tick", 2)} />
-  );
+  return <Numeral {...props} dp={config[props.symbol]("quote_tick", 2)} />;
 };

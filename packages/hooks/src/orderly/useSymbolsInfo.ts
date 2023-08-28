@@ -1,5 +1,5 @@
 import { useQuery } from "../useQuery";
-import { type API } from "@orderly/types";
+import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
 
 export const useSymbolsInfo = () => {
@@ -20,6 +20,7 @@ export const useSymbolsInfo = () => {
           base: arr[1],
           quote: arr[2],
           type: arr[0],
+          name: `${arr[1]}-${arr[0]}`,
         };
       }
 

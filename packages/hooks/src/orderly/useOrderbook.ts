@@ -163,7 +163,7 @@ export const useOrderbook = (
         map<any, OrderbookData>(
           (data) => pick(["asks", "bids"], data) as OrderbookData
         ),
-        tap((data) => console.log(data)),
+        // tap((data) => console.log(data)),
         scan<OrderbookData, OrderbookData>((acc, curr) => {
           if (!acc.asks && !acc.bids) {
             return curr;

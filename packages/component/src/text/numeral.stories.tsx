@@ -3,7 +3,7 @@ import * as React from "react";
 import { OrderlyProvider } from "../provider";
 import { Numeral } from ".";
 import { NumeralTotal } from "./numeralTotal";
-// import { ConfigDataProvider } from "@orderly/hooks";
+// import { ConfigDataProvider } from "@orderly.network/hooks";
 
 const meta: Meta<typeof Numeral> = {
   component: Numeral,

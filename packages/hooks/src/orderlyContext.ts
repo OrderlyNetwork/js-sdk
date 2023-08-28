@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { Observable } from "rxjs";
-import { type ConfigStore } from "@orderly/core";
-import { MemoryConfigStore } from "@orderly/core";
+import { type ConfigStore } from "@orderly.network/core";
+import { MemoryConfigStore } from "@orderly.network/core";
 
 type CoinGenerator = (coin: string) => string;
 

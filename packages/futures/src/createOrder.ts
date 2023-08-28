@@ -1,5 +1,5 @@
-import { OrderType, type API, OrderEntity } from "@orderly/types";
-import { Decimal } from "@orderly/utils";
+import { OrderType, type API, OrderEntity } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { maxPrice, minPrice } from "./order";
 
 export type VerifyResult = { [P in keyof OrderEntity]?: string };

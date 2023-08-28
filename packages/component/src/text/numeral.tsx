@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { commify, getDecimalLength } from "@orderly/utils";
+import { commify, getDecimalLength } from "@orderly.network/utils";
 import { NumeralWithConfig } from "./numeralWithConfig";
 import { NumeralTotal } from "@/text/numeralTotal";
 
@@ -66,7 +66,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
   }, [num, precision]);
 
   const colorClassName = useMemo(() => {
-    if (!props.coloring) return "";
+    if (!coloring) return "";
 
     // if (props.value === 0) return coloringClasses.neutral;
 
@@ -83,7 +83,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     // const firstChar = String(props.value).charAt(0);
     // if (firstChar === "-") return coloringClasses.lose;
     return coloringClasses.profit;
-  }, [props.coloring, props.children]);
+  }, [coloring, props.children]);
 
   return <span className={cn(colorClassName, props.className)}>{child}</span>;
 };

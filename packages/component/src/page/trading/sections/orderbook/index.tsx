@@ -1,5 +1,5 @@
 import { OrderBook } from "@/block/orderbook";
-import { useOrderbook, useInfo } from "@orderly/hooks";
+import { useOrderbook, useInfo } from "@orderly.network/hooks";
 import { FC } from "react";
 
 interface MyOrderBookProps {
@@ -20,7 +20,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
         bids={data.bids}
         markPrice={""}
         lastPrice={""}
-        depth={[0.001, 0.01]}
+        depth={[0.0001, 0.001]}
       />
     </div>
   );

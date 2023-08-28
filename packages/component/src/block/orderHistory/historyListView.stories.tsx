@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { usePositionStream } from "@orderly/hooks";
+import { usePositionStream } from "@orderly.network/hooks";
 import { HistoryListView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 

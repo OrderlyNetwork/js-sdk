@@ -1,55 +1,48 @@
-import {useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
 import { useWebSocketClient } from "../useWebSocketClient";
-import {type WSMessage } from "@orderly/core";
+import { type WSMessage } from "@orderly.network/core";
 
-
-interface MarketInfo {
-
-}
+interface MarketInfo {}
 
 // api: /public/futures
-export const useFetures = ()=>{
-    const {data,isLoading,error} = useQuery<MarketInfo[]>(`/public/futures`);
+export const useFetures = () => {
+  const { data, isLoading, error } = useQuery<MarketInfo[]>(`/public/futures`);
 
-    const [sortedData,setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(data);
 
-    const ws = useWebSocketClient();
+  const ws = useWebSocketClient();
 
-    useEffect(() => {
-        const sub = ws.observe<WSMessage.Ticker>(`tickers`).subscribe((value) => {
-            console.log("useTickers", value);
-            // setData(value);
-        });
+  useEffect(() => {
+    const sub = ws.observe<WSMessage.Ticker>(`tickers`).subscribe((value) => {
+      console.log("useTickers", value);
+      // setData(value);
+    });
 
-        return () => {
-            sub.unsubscribe();
-        };
-    }, []);
+    return () => {
+      sub.unsubscribe();
+    };
+  }, []);
 
-    useEffect(() => {
-        if(data){
-            const sortedData = data.sort((a,b)=>{
-                return 0;
-            });
-            setSortedData(sortedData);
-        }
-    }, [data]);
-
-    const sortBy = useCallback((key:string)=>{
-
-    },[data]);
-
-    const filterBy = useCallback((key:string)=>{
-
-    },[data]);
-
-    return {
-        // ...data,
-        data:sortedData,
-        sortBy,
-        filterBy,
-        isLoading,
-        error,
+  useEffect(() => {
+    if (data) {
+      const sortedData = data.sort((a, b) => {
+        return 0;
+      });
+      setSortedData(sortedData);
     }
-}
+  }, [data]);
+
+  const sortBy = useCallback((key: string) => {}, [data]);
+
+  const filterBy = useCallback((key: string) => {}, [data]);
+
+  return {
+    // ...data,
+    data: sortedData,
+    sortBy,
+    filterBy,
+    isLoading,
+    error,
+  };
+};

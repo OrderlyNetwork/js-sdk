@@ -1,4 +1,4 @@
-import { useOrderbook } from "@orderly/hooks";
+import { useOrderbook } from "@orderly.network/hooks";
 import { useState } from "react";
 
 import { TradingPage } from "../trading";

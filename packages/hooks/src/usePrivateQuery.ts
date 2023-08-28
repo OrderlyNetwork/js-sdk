@@ -2,7 +2,7 @@
 
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
-import { get } from "@orderly/net";
+import { get } from "@orderly.network/net";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 import { fetcher, useQueryOptions } from "./utils/fetcher";

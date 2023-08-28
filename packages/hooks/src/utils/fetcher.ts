@@ -1,4 +1,4 @@
-import { get } from "@orderly/net";
+import { get } from "@orderly.network/net";
 import { type SWRConfiguration } from "swr";
 
 export const fetcher = (

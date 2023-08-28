@@ -2,7 +2,7 @@ import { FC, useMemo, useState } from "react";
 import { SearchForm } from "@/block/markets/sections/search";
 import { MarketListView } from "@/block/markets/sections/listView";
 import { SortDirection } from "@/block/markets/sections/sortItem";
-import { API } from "@orderly/core";
+import { API } from "@orderly.network/core";
 
 export interface MarketsProps {
   dataSource?: API.MarketInfo[];

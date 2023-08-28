@@ -1,5 +1,5 @@
 {
-  "name": "@orderly/futures",
+  "name": "@orderly.network/futures",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -14,7 +14,7 @@
   "author": "leo",
   "license": "ISC",
   "peerDependencies": {
-    "@orderly/types": "workspace:*"
+    "@orderly.network/types": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
@@ -29,7 +29,10 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@orderly/types": "workspace:*",
-    "@orderly/utils": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -5,7 +5,7 @@ import {
   ResolutionString,
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
-import { WebSocketClient } from "@orderly/net";
+import { WebSocketClient } from "@orderly.network/net";
 
 // const OrderlyRe;
 

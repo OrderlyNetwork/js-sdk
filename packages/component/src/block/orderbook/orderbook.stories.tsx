@@ -3,7 +3,7 @@ import type { Meta } from "@storybook/react";
 import React from "react";
 import { OrderBook } from ".";
 import { StoryObj } from "@storybook/react";
-import { useOrderbook, useInfo } from "@orderly/hooks";
+import { useOrderbook, useInfo } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 
 const meta: Meta = {

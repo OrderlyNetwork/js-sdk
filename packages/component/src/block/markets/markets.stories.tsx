@@ -4,7 +4,7 @@ import React from "react";
 import { Markets } from ".";
 import { OrderlyProvider } from "../../provider";
 
-import { useSymbolsInfo, useMarketStream } from "@orderly/hooks";
+import { useSymbolsInfo, useMarketStream } from "@orderly.network/hooks";
 import { Sheet, SheetContent, SheetTrigger } from "../../sheet";
 import Button from "../../button";
 

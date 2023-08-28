@@ -80,6 +80,7 @@ export declare namespace API {
     base: string;
     quote: string;
     type: string;
+    name: string;
   }
 
   export interface Order {

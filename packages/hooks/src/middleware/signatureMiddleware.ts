@@ -1,5 +1,5 @@
 import { SWRHook, Middleware } from "swr";
-import { MessageFactor, getMockSigner } from "@orderly/core";
+import { MessageFactor, getMockSigner } from "@orderly.network/core";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {

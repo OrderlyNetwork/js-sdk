@@ -1,9 +1,9 @@
 import { useCallback, useContext, useState } from "react";
 import useConstant from "use-constant";
-import { Account, SimpleDI, AccountState } from "@orderly/core";
+import { Account, SimpleDI, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useObservable } from "rxjs-hooks";
-import { API } from "@orderly/types";
+import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "./usePrivateQuery";
 
 export const useAccount = (): {

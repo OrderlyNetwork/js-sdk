@@ -15,11 +15,12 @@ import {
 } from "react";
 import { Picker } from "@/select";
 import Button from "@/button";
+import { Numeral, Text } from "@/text";
 
 import { Divider } from "@/divider";
 import { OrderOptions } from "./sections/orderOptions";
 
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly/types";
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { OrderConfirmView } from "./sections/orderConfirmView";
 
@@ -27,6 +28,7 @@ export interface OrderEntryProps {
   onSubmit?: () => Promise<any>;
   onDeposit?: () => Promise<void>;
   validateForm?: (values?: any) => Promise<any>;
+  resetForm?: () => void;
   markPrice?: number;
   maxQty: number;
 
@@ -59,6 +61,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const {
       values,
       setValue,
+      resetForm,
       freeCollateral,
       symbolConfig,
       errors,
@@ -67,8 +70,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       submitCount = 0,
     } = props;
 
-    // console.log("render OrderEntry", errors);
-
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
     const priceInputRef = useRef<HTMLInputElement | null>(null);
@@ -76,8 +77,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const onSubmit = useCallback(
       (event: FormEvent) => {
         event.preventDefault();
-        //check need show confirm
-
         props
           .validateForm?.()
           .then((errors) => {
@@ -106,7 +105,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return props.onSubmit?.();
           })
           .then((res) => {
-            console.log("component:", res);
+            resetForm?.();
           })
           .catch((err) => {
             console.log("order entry::", err);
@@ -163,7 +162,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           <div className={"flex justify-between items-center"}>
             <div className="flex gap-1 text-gray-500 text-sm">
               <span>Free Collat.</span>
-              {`${freeCollateral ?? "--"}`}
+              <Numeral rule="price" className="text-base-contrast/80">{`${
+                freeCollateral ?? "--"
+              }`}</Numeral>
+
               <span>USDC</span>
             </div>
             <Button
@@ -225,6 +227,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               min={0}
               max={maxQty}
               markCount={4}
+              disabled={maxQty === 0}
               step={symbolConfig?.["base_tick"]}
               value={[Number(values?.order_quantity ?? 0)]}
               onValueChange={(value) => {

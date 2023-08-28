@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { Statistic } from "@/statistic";
 import { SortDirection } from "@/block/markets/sections/sortItem";
 import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
-import { API } from "@orderly/core";
+import { API } from "@orderly.network/core";
 import { Numeral } from "@/text";
 
 interface MarketListViewProps {

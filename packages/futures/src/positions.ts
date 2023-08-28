@@ -1,5 +1,5 @@
-import { API } from "@orderly/types";
-import { Decimal } from "@orderly/utils";
+import { API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
 /**
@@ -62,17 +62,28 @@ export type LiqPriceInputs = {
   markPrice: number;
   totalCollateral: number;
   positionQty: number;
+  MMR: number;
 };
 
 /**
  * 单个仓位强平价格
- * @param qty
- * @returns
  *
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
-export function liqPrice(qty: number) {
-  return 0;
+export function liqPrice(inputs: LiqPriceInputs): number {
+  const { markPrice, totalCollateral, positionQty, MMR } = inputs;
+  const totalNotional = notional(positionQty, markPrice);
+
+  return Math.max(
+    new Decimal(markPrice)
+      .add(
+        new Decimal(totalCollateral)
+          .sub(new Decimal(totalNotional).mul(MMR))
+          .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
+      )
+      .toNumber(),
+    0
+  );
 }
 
 export type UnsettlementPnLInputs = {

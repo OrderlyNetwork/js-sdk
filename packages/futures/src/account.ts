@@ -1,6 +1,11 @@
-import { Decimal, zero } from "@orderly/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
-import { API, OrderSide, OrderType, type WSMessage } from "@orderly/types";
+import {
+  API,
+  OrderSide,
+  OrderType,
+  type WSMessage,
+} from "@orderly.network/types";
 
 export type ResultOptions = {
   dp: number;
@@ -431,7 +436,6 @@ export function maxQty(
   inputs: MaxQtyInputs,
   options?: ResultOptions
 ): number {
-  // console.log("inputs", inputs, side);
   if (side === OrderSide.BUY) {
     return maxQtyByLong(inputs);
   }
@@ -457,9 +461,10 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
 
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR))
+      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
       .div(markPrice)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs().mul(0.995))
+      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
+      .mul(0.995)
       .toNumber();
 
     const factor_2 = totalCollateralDecimal
@@ -467,13 +472,8 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .sub(
-        new Decimal(positionQty)
-          .add(buyOrdersQty)
-          .abs()
-          .div(markPrice)
-          .mul(0.995)
-      )
+      .sub(new Decimal(positionQty).add(buyOrdersQty).abs().div(markPrice))
+      .mul(0.995)
       .toNumber();
 
     return Math.min(baseMaxQty, factor_1, factor_2);
@@ -501,12 +501,12 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
 
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
-    // TODO: confirm this formula is correct with @carbo
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR))
+      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
       .div(markPrice)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs().mul(0.995))
+      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
+      .mul(0.995)
       .toNumber();
 
     const factor_2 = totalCollateralDecimal
@@ -514,13 +514,8 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .add(
-        new Decimal(positionQty)
-          .add(sellOrdersQty)
-          .abs()
-          .div(markPrice)
-          .mul(0.995)
-      )
+      .add(new Decimal(positionQty).add(sellOrdersQty).abs().div(markPrice))
+      .mul(0.995)
       .toNumber();
 
     return Math.min(baseMaxQty, factor_1, factor_2);

@@ -1,6 +1,6 @@
 import { Numeral, NumeralProps } from "@/text/numeral";
 import { FC, useMemo } from "react";
-import { Decimal } from "@orderly/utils";
+import { Decimal } from "@orderly.network/utils";
 
 export interface NumeralTotalProps extends Omit<NumeralProps, "children"> {
   price: number;

@@ -6,12 +6,12 @@ import { merge } from "rxjs";
 import { map, filter } from "rxjs/operators";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { account } from "@orderly/futures";
+import { account } from "@orderly.network/futures";
 import { useOrderStream } from "./useOrderStream";
-import { type WSMessage, type API } from "@orderly/types";
+import { type WSMessage, type API } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal, zero } from "@orderly/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { useMarkPriceStream } from "./useMarkPriceStream";
 
 export type CollateralOutputs = {

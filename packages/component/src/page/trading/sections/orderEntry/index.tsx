@@ -1,9 +1,17 @@
 import { OrderEntry } from "@/block/orderEntry";
+import { FC } from "react";
+import { useOrderEntry } from "@orderly.network/hooks";
 
-export const MyOrderEntry = () => {
+interface MyOrderEntryProps {
+  symbol: string;
+}
+
+export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
+  const { symbol } = props;
+  const formState = useOrderEntry(symbol);
   return (
     <div className="pl-1">
-      <OrderEntry symbol={""} available={0} />
+      <OrderEntry {...formState} />
     </div>
   );
 };

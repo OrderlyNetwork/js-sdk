@@ -3,8 +3,8 @@ import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { FC, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
-import { API } from "@orderly/types";
-// import {type Order} from '@orderly/core'
+import { API } from "@orderly.network/types";
+// import {type Order} from '@orderly.network/core'
 
 interface OrderCellProps {
   order: API.OrderExt;

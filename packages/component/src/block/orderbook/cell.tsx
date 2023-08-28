@@ -2,7 +2,7 @@ import { FC, useContext, useMemo } from "react";
 import { CellBar } from "./cellBar";
 import { queries } from "@storybook/testing-library";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
-import { commify, Decimal } from "@orderly/utils";
+import { commify, Decimal } from "@orderly.network/utils";
 import { QtyMode } from "./types";
 
 export enum OrderBookCellType {

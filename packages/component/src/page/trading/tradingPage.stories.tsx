@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { TradingPage } from ".";
 import { OrderlyProvider } from "../../provider";
+import { MemoryConfigStore } from "@orderly.network/core";
 
 const meta: Meta = {
   title: "Page/Trading",
@@ -19,7 +20,7 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={undefined}>
+      <OrderlyProvider configStore={new MemoryConfigStore()}>
         <Story />
       </OrderlyProvider>
     ),

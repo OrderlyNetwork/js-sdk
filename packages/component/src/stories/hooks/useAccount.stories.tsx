@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
 import { Meta, StoryObj } from "@storybook/react";
-import { useAccount } from "@orderly/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider";
-import { MemoryConfigStore } from "@orderly/core";
-import { API } from "@orderly/types";
+import { MemoryConfigStore } from "@orderly.network/core";
+import { API } from "@orderly.network/types";
 
 const AccountDemo: FC<{
   info: API.AccountInfo;

@@ -15,7 +15,7 @@ import { Sheet, SheetContent, SheetDescription, SheetTrigger } from "@/sheet";
 import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { Text } from "@/text";
-import { type API } from "@orderly/core";
+import { type API } from "@orderly.network/core";
 import { Info } from "lucide-react";
 import { FC, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";

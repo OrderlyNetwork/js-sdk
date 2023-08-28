@@ -1,9 +1,9 @@
-import { MemoryConfigStore } from "@orderly/core";
+import { MemoryConfigStore } from "@orderly.network/core";
 import { OrderlyProvider } from "../../provider";
 import React, { FC } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
-import { useCollateral } from "@orderly/hooks";
+import { useCollateral } from "@orderly.network/hooks";
 
 const CollateralDemo: FC<{
   totalCollateral: number;

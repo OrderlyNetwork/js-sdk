@@ -1,5 +1,5 @@
 {
-  "name": "@orderly/utils",
+  "name": "@orderly.network/utils",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -26,5 +26,8 @@
   "dependencies": {
     "dayjs": "^1.11.9",
     "decimal.js-light": "^2.5.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

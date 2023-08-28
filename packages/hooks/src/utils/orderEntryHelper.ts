@@ -1,5 +1,5 @@
-import { OrderEntity, OrderType } from "@orderly/types";
-import { Decimal } from "@orderly/utils";
+import { OrderEntity, OrderType } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 
 export type OrderEntityKey = keyof OrderEntity & string;
 

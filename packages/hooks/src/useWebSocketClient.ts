@@ -1,13 +1,13 @@
-import { getMockSigner, SimpleDI } from "@orderly/core";
+import { getMockSigner, SimpleDI } from "@orderly.network/core";
 
-import { WebSocketClient } from "@orderly/net";
+import { WebSocketClient } from "@orderly.network/net";
 import useConstant from "use-constant";
 
 export const WS_NAME = "websocketClient";
 
 export const useWebSocketClient = () => {
   const ws = useConstant(() => {
-    let websocketClient = SimpleDI.get<WebSocket>(WS_NAME);
+    let websocketClient = SimpleDI.get<WebSocketClient>(WS_NAME);
 
     if (!websocketClient) {
       websocketClient = new WebSocketClient({

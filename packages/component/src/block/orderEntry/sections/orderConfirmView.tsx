@@ -1,4 +1,4 @@
-import { OrderEntity, OrderSide, OrderType } from "@orderly/types";
+import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useMemo } from "react";
 import { Text } from "@/text";
 

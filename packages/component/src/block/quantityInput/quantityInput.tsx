@@ -1,6 +1,6 @@
 import Button from "@/button";
 import { FC, useRef } from "react";
-import { type API } from "@orderly/core";
+import { type API } from "@orderly.network/core";
 import { NetworkImage } from "@/icon/networkImage";
 import { ChevronDown } from "lucide-react";
 import { Divider } from "@/divider";

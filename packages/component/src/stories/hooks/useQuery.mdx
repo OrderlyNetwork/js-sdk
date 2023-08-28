@@ -5,15 +5,15 @@ import { Meta } from "@storybook/blocks";
 # useQuery
 
 ```shell
-yarn add @orderly/hooks
+yarn add @orderly.network/hooks
 ```
 
 ## Usage
 
 ```tsx
-import { useQuery } from "@orderly/hooks";
+import { useQuery } from "@orderly.network/hooks";
 
-import { type API } from "@orderly/types";
+import { type API } from "@orderly.network/types";
 
 export const useMarketInfo = (symbol: string) => {
   return useQuery<API.MarketInfo>(`/public/futures/${symbol}`);

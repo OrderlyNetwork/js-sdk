@@ -1,17 +1,19 @@
-import { MemoryConfigStore } from "@orderly/core";
+import { MemoryConfigStore } from "@orderly.network/core";
 import { OrderlyProvider } from "../../provider";
 import React, { FC } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
-import { useMaxQty } from "@orderly/hooks";
+import { useMaxQty } from "@orderly.network/hooks";
 
-import { OrderSide } from "@orderly/types";
+import { OrderSide } from "@orderly.network/types";
 
 const MaxQtyDemo: FC<{
   symbol: string;
   maxQty: number;
   side?: OrderSide;
   onSideChange?: (side: OrderSide) => void;
+  reduceOnly?: boolean;
+  onReduceOnlyChange?: (reduceOnly: boolean) => void;
 }> = (props) => {
   return (
     <div className="text-black space-y-3">
@@ -42,6 +44,19 @@ const MaxQtyDemo: FC<{
             }}
           />
           <label htmlFor="sell">{OrderSide.SELL}</label>
+        </div>
+        <div className="flex gap-2">
+          <input
+            type="checkbox"
+            id="reduceOnly"
+            name="reduceOnly"
+            value="both"
+            checked={props.reduceOnly}
+            onChange={(event) => {
+              props.onReduceOnlyChange?.(event.target.checked);
+            }}
+          />
+          <label htmlFor="reduceOnly">Reduce Only</label>
         </div>
       </div>
       <hr />
@@ -78,13 +93,16 @@ type Story = StoryObj<typeof MaxQtyDemo>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const [side, setSide] = React.useState<OrderSide>(OrderSide.BUY);
-    const maxQty = useMaxQty(globals.symbol, side);
+    const [reduceOnly, setReduceOnly] = React.useState<boolean>(false);
+    const maxQty = useMaxQty(globals.symbol, side, reduceOnly);
     return (
       <MaxQtyDemo
         symbol={globals.symbol}
         maxQty={maxQty}
         side={side}
         onSideChange={setSide}
+        reduceOnly={reduceOnly}
+        onReduceOnlyChange={setReduceOnly}
       />
     );
   },

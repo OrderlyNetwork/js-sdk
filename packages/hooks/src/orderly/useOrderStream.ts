@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useObservable } from "rxjs-hooks";
 import { combineLatestWith, map } from "rxjs/operators";
 import { useMarkPricesSubject } from "./useMarkPricesSubject";
-import { API } from "@orderly/types";
+import { API } from "@orderly.network/types";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;

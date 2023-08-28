@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { positions } from "@orderly/futures";
+import { positions } from "@orderly.network/futures";
 import { useObservable } from "rxjs-hooks";
 import { combineLatestWith, map } from "rxjs/operators";
 
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
-import { type API } from "@orderly/types";
+import { type API } from "@orderly.network/types";
 import { useMarkPricesSubject } from "./useMarkPricesSubject";
 
 export interface PositionReturn {
@@ -29,7 +29,7 @@ export const usePositionStream = (
   const fundingRates = useFundingRates();
   const markPrices$ = useMarkPricesSubject();
 
-  const { data, error, isLoading } = usePrivateQuery<API.PositionInfo>(
+  const { data, error, isLoading } = usePrivateQuery<API.Position>(
     `/positions`,
     {
       // revalidateOnFocus: false,
@@ -65,6 +65,12 @@ export const usePositionStream = (
             return {
               ...item,
               mark_price: price,
+              est_liq_price: positions.liqPrice({
+                markPrice: price,
+                totalCollateral: 0,
+                positionQty: 0,
+                MMR: 0,
+              }),
               notional: positions.notional(
                 item.position_qty,
                 item.average_open_price
@@ -113,7 +119,7 @@ export const usePositionStream = (
 
   return [
     { rows: value, aggregated: aggregatedData },
-    createGetter<Omit<API.PositionInfo, "rows">>(data as any, 1),
+    createGetter<Omit<API.Position, "rows">>(data as any, 1),
     {
       close: (qty: number) => {},
       loading: false,

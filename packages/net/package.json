@@ -1,5 +1,5 @@
 {
-  "name": "@orderly/net",
+  "name": "@orderly.network/net",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -26,5 +26,9 @@
   },
   "peerDependencies": {
     "rxjs": "^7.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
+
 }
