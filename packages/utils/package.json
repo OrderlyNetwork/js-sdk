@@ -10,7 +10,9 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "leo",
+  "files": [
+    "dist"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.22.9",
