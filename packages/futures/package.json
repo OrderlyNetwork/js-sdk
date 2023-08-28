@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/futures",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -16,6 +16,9 @@
   "peerDependencies": {
     "@orderly.network/types": "workspace:*"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
