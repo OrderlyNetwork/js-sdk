@@ -1,7 +1,8 @@
-// import "./tailwind.css";
-
 // export { Button } from "./button";
 export { OrderlyProvider } from "./provider";
 
-export * from "./button";
+export { default as Button } from "./button";
 export * from "./input";
+export * from "./tab";
+
+export * from "./page";

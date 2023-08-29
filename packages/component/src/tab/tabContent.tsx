@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext } from "react";
+import React, { FC, PropsWithChildren, useContext } from "react";
 import { TabContext } from "./tabContext";
 import { cx } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";

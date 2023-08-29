@@ -85,9 +85,9 @@ export default class DataFeed implements IBasicDataFeed {
     onErrorCallback
   ) {
     // console.log("[getBars]: Method call", symbolInfo);
-    let resolutionNum = 1;
+    let resolutionNum = resolution < 5 ? 1 : resolution;
     fetch(
-      `https://api.orderly.org/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolution}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
+      `https://api.orderly.org/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolutionNum}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
     )
       .then((res) => res.json())
       .then((res) => {
@@ -116,12 +116,12 @@ export default class DataFeed implements IBasicDataFeed {
     subscriberUID,
     onResetCacheNeededCallback
   ) {
-    console.log(
-      "[subscribeBars]: Method call with subscriberUID:",
-      subscriberUID,
-      symbolInfo,
-      resolution
-    );
+    // console.log(
+    //   "[subscribeBars]: Method call with subscriberUID:",
+    //   subscriberUID,
+    //   symbolInfo,
+    //   resolution
+    // );
 
     this._subscriber = this.wsClient
       .observe<any>(`${symbolInfo.full_name}@kline_1m`)

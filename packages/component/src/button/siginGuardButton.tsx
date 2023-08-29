@@ -1,5 +1,6 @@
 import type { FC, PropsWithChildren, ReactNode } from "react";
-import { useUserInfo } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
+import React from "react";
 
 export interface SiginGuardButtonProps {
   placeholder?: ReactNode;
@@ -8,7 +9,7 @@ export interface SiginGuardButtonProps {
 export const SiginGuardButton: FC<PropsWithChildren<SiginGuardButtonProps>> = (
   props
 ) => {
-  const { connected } = useUserInfo();
+  const { connected } = useAccount();
   if (!connected) {
     return <div>SiginGuardButton</div>;
   }

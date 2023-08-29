@@ -3,7 +3,6 @@ import { useQuery } from "../useQuery";
 import { useWebSocketClient } from "../useWebSocketClient";
 import { withLatestFrom, map, startWith } from "rxjs/operators";
 import { type WSMessage } from "@orderly.network/core";
-import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info

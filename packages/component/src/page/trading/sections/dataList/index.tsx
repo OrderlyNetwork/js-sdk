@@ -1,5 +1,5 @@
 import { TabPane, Tabs } from "@/tab";
-import { useState } from "react";
+import React, { useState } from "react";
 import { PositionPane } from "./position";
 import { OrdersPane } from "@/page/trading/sections/dataList/orders";
 import { HistoryPane } from "./history";

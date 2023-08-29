@@ -1,6 +1,6 @@
 import { SimpleMarketOverview } from "@/block/marketOverview";
 import { FC } from "react";
-import { useMarketStream } from "@orderly.network/hooks";
+import { useTickerStream } from "@orderly.network/hooks";
 
 interface Props {
   symbol: string;
@@ -8,7 +8,7 @@ interface Props {
 
 export const MarketOverview: FC<Props> = (props) => {
   const { symbol } = props;
-  const data = useMarketStream(symbol);
+  const data = useTickerStream(symbol);
 
   return (
     <SimpleMarketOverview

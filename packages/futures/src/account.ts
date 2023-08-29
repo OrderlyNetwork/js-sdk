@@ -11,6 +11,33 @@ export type ResultOptions = {
   dp: number;
 };
 
+export type TotalValueInputs = {
+  totalUnsettlementPnL: number;
+
+  USDCHolding: number;
+  nonUSDCHolding: {
+    holding: number;
+    markPrice: number;
+    //保證金替代率 暂时默认0
+    discount: number;
+  }[];
+};
+/**
+ * 用戶總資產價值 (USDC計價)，包含無法作為保證金的資產
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Value}
+ */
+export function totalValue(inputs: TotalValueInputs): number {
+  const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
+    return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
+  }, zero);
+
+  return nonUSDCHoldingValue
+    .add(USDCHolding)
+    .add(totalUnsettlementPnL)
+    .toNumber();
+}
+
 /**
  * 用戶帳戶當前可用保證金的價值總和 (USDC計價)
  *
@@ -46,14 +73,15 @@ export type TotalCollateralValueInputs = {
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D}
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): number {
-  const nonUSDCHoldingValue = inputs.nonUSDCHolding.reduce((acc, cur) => {
+  const { USDCHolding, nonUSDCHolding } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return (
       acc +
       new Decimal(cur.holding).mul(cur.markPrice).mul(cur.discount).toNumber()
     );
   }, 0);
 
-  return new Decimal(inputs.USDCHolding)
+  return new Decimal(USDCHolding)
     .add(nonUSDCHoldingValue)
     .add(inputs.unsettlementPnL)
     .toNumber();
@@ -425,6 +453,8 @@ export type MaxQtyInputs = {
   sellOrdersQty: number;
 
   IMR_Factor: number;
+
+  takerFeeRate: number;
 };
 
 /**
@@ -455,16 +485,22 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       IMR_Factor,
       positionQty,
       buyOrdersQty,
+      takerFeeRate,
     } = inputs;
 
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
+      .div(
+        new Decimal(takerFeeRate)
+          .mul(2)
+          .mul(0.0001)
+          .add(Math.max(1 / maxLeverage, baseIMR))
+      )
       .div(markPrice)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .mul(0.995)
+      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .toNumber();
 
     const factor_2 = totalCollateralDecimal
@@ -472,7 +508,12 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs().div(markPrice))
+      .sub(
+        new Decimal(positionQty)
+          .add(buyOrdersQty)
+          .abs()
+          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+      )
       .mul(0.995)
       .toNumber();
 
@@ -497,16 +538,23 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       positionQty,
       buyOrdersQty,
       sellOrdersQty,
+      takerFeeRate,
     } = inputs;
 
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
+      .div(
+        new Decimal(takerFeeRate)
+          .mul(2)
+          .mul(0.0001)
+          .add(Math.max(1 / maxLeverage, baseIMR))
+      )
       .div(markPrice)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
       .mul(0.995)
+      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
+
       .toNumber();
 
     const factor_2 = totalCollateralDecimal
@@ -514,7 +562,12 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs().div(markPrice))
+      .add(
+        new Decimal(positionQty)
+          .add(buyOrdersQty)
+          .abs()
+          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+      )
       .mul(0.995)
       .toNumber();
 

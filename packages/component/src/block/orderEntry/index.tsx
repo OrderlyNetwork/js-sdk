@@ -23,6 +23,7 @@ import { OrderOptions } from "./sections/orderOptions";
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { OrderConfirmView } from "./sections/orderConfirmView";
+import { toast } from "@/toast";
 
 export interface OrderEntryProps {
   onSubmit?: () => Promise<any>;
@@ -37,6 +38,7 @@ export interface OrderEntryProps {
   symbolConfig: API.SymbolExt;
 
   freeCollateral?: number;
+  isSubmitting: boolean;
 
   // 订单表单数据
   values?: OrderEntity;
@@ -101,17 +103,17 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return true;
           })
           .then((isOk) => {
-            console.log("isOk:::", isOk);
             return props.onSubmit?.();
           })
           .then((res) => {
+            toast.success("Successfully!");
             resetForm?.();
           })
           .catch((err) => {
             console.log("order entry::", err);
           });
       },
-      [values, symbol]
+      [values, symbol, resetForm]
     );
 
     const onDeposit = useCallback((event: FormEvent) => {
@@ -221,23 +223,23 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               setValue?.("order_quantity", event.target.value);
             }}
           />
-          <div>
-            <Slider
-              color={values?.side === OrderSide.BUY ? "buy" : "sell"}
-              min={0}
-              max={maxQty}
-              markCount={4}
-              disabled={maxQty === 0}
-              step={symbolConfig?.["base_tick"]}
-              value={[Number(values?.order_quantity ?? 0)]}
-              onValueChange={(value) => {
-                // console.log("onValueChange", value);
-                if (typeof value[0] !== "undefined") {
-                  setValue?.("order_quantity", value[0]);
-                }
-              }}
-            />
-          </div>
+
+          <Slider
+            color={values?.side === OrderSide.BUY ? "buy" : "sell"}
+            min={0}
+            max={maxQty}
+            markCount={4}
+            disabled={maxQty === 0}
+            step={symbolConfig?.["base_tick"]}
+            value={[Number(values?.order_quantity ?? 0)]}
+            onValueChange={(value) => {
+              // console.log("onValueChange", value);
+              if (typeof value[0] !== "undefined") {
+                setValue?.("order_quantity", value[0]);
+              }
+            }}
+          />
+
           <Input
             className={"text-right"}
             value={values?.total}
@@ -258,6 +260,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
           <Button
             type="submit"
+            loading={props.isSubmitting}
             color={values?.side === OrderSide.BUY ? "buy" : "sell"}
             fullWidth
           >

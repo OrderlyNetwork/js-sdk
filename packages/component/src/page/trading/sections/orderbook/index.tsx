@@ -1,5 +1,5 @@
 import { OrderBook } from "@/block/orderbook";
-import { useOrderbook, useInfo } from "@orderly.network/hooks";
+import { useOrderbook, useSymbolsInfo } from "@orderly.network/hooks";
 import { FC } from "react";
 
 interface MyOrderBookProps {
@@ -11,16 +11,19 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const [data, { onDepthChange }] = useOrderbook(symbol, undefined, {
     level: 7,
   });
-  const { data: info } = useInfo(symbol);
+  const config = useSymbolsInfo();
+  const symbolInfo = config?.[symbol];
   return (
     <div className="pr-1">
       <OrderBook
         level={7}
         asks={data.asks}
         bids={data.bids}
-        markPrice={""}
-        lastPrice={""}
+        markPrice={data.markPrice}
+        lastPrice={data.middlePrice}
         depth={[0.0001, 0.001]}
+        base={symbolInfo("base")}
+        quote={symbolInfo("quote")}
       />
     </div>
   );

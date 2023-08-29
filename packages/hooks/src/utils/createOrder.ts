@@ -1,8 +1,12 @@
 import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { maxPrice, minPrice } from "./order";
+import { order } from "@orderly.network/futures";
 
 export type VerifyResult = { [P in keyof OrderEntity]?: string };
+export type OrderFormEntity = Pick<
+  OrderEntity,
+  "order_price" | "order_quantity" | "total"
+>;
 
 type ValuesDepConfig = {
   token: API.TokenInfo;
@@ -14,22 +18,24 @@ type ValuesDepConfig = {
 export interface OrderCreator {
   create: (values: OrderEntity) => OrderEntity;
   validate: (
-    values: OrderEntity,
+    values: OrderFormEntity,
     configs: ValuesDepConfig
   ) => Promise<VerifyResult>;
 }
 
+const { maxPrice, minPrice } = order;
+
 export abstract class BaseOrderCreator implements OrderCreator {
   abstract create(values: OrderEntity): OrderEntity;
   abstract validate(
-    values: OrderEntity,
+    values: OrderFormEntity,
     config: ValuesDepConfig
   ): Promise<VerifyResult>;
 
   baseOrder(data: OrderEntity): OrderEntity {
     const order: any = {
       // symbol: data.symbol,
-      order_type: data.order_type,
+      order_type: !!data.order_type_ext ? data.order_type_ext : data.order_type,
       side: data.side,
       // reduce_only: data.reduce_only,
       order_quantity: data.order_quantity,
@@ -43,7 +49,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
   }
 
   baseValidate(
-    values: OrderEntity,
+    values: OrderFormEntity,
     configs: ValuesDepConfig
   ): Promise<VerifyResult> {
     const errors: { [P in keyof OrderEntity]?: string } = {};
@@ -88,7 +94,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
     };
   }
   validate(
-    values: OrderEntity,
+    values: OrderFormEntity,
     config: ValuesDepConfig
   ): Promise<VerifyResult> {
     return this.baseValidate(values, config).then((errors) => {
@@ -124,12 +130,18 @@ export class MarketOrderCreator extends BaseOrderCreator {
     };
   }
   validate(
-    values: OrderEntity,
+    values: OrderFormEntity,
     configs: ValuesDepConfig
   ): Promise<VerifyResult> {
     return this.baseValidate(values, configs);
   }
 }
+
+export class PostOnlyOrderCreator extends LimitOrderCreator {}
+
+export class FOKOrderCreator extends LimitOrderCreator {}
+export class IOCOrderCreator extends LimitOrderCreator {}
+
 export class GeneralOrderCreator extends BaseOrderCreator {
   create(data: OrderEntity): OrderEntity {
     return {
@@ -139,7 +151,7 @@ export class GeneralOrderCreator extends BaseOrderCreator {
     };
   }
   validate(
-    values: OrderEntity,
+    values: OrderFormEntity,
     configs: ValuesDepConfig
   ): Promise<VerifyResult> {
     return super.baseValidate(values, configs);
@@ -157,12 +169,12 @@ export class OrderFactory {
       //     return new AskOrderCreator();
       //   case OrderType.BID:
       //     return new BidOrderCreator();
-      //   case OrderType.IOC:
-      //     return new IOCOrderCreator();
-      //   case OrderType.FOK:
-      //     return new FOKOrderCreator();
-      //   case OrderType.POST_ONLY:
-      //     return new PostOnlyOrderCreator();
+      case OrderType.IOC:
+        return new IOCOrderCreator();
+      case OrderType.FOK:
+        return new FOKOrderCreator();
+      case OrderType.POST_ONLY:
+        return new PostOnlyOrderCreator();
 
       default:
         return new GeneralOrderCreator();

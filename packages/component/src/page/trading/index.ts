@@ -1,3 +1,5 @@
-import { TradingPage } from "./trading";
-
-export { TradingPage };
+export { TradingPage } from "./trading";
+export {
+  TradingPageContext,
+  type TradingPageContextValue,
+} from "./context/tradingPageContext";

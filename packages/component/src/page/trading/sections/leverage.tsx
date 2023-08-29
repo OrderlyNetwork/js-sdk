@@ -1,6 +1,6 @@
 import { LeverageView } from "@/block/leverage";
 import { useFundingRate, useAccount } from "@orderly.network/hooks";
-import { FC } from "react";
+import React, { FC } from "react";
 
 interface Props {
   symbol: string;

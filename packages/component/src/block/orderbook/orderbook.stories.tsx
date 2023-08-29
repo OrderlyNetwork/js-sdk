@@ -80,8 +80,8 @@ export const WithData: Story = {
         asks={data.asks}
         bids={data.bids}
         depth={[]}
-        lastPrice={""}
-        markPrice={""}
+        lastPrice={data.middlePrice}
+        markPrice={data.markPrice}
       />
     );
   },

@@ -1,10 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BehaviorSubject, Subscription } from "rxjs";
-import { startWith, map, scan, withLatestFrom, tap } from "rxjs/operators";
+import {
+  startWith,
+  map,
+  scan,
+  withLatestFrom,
+  tap,
+  switchMap,
+  debounceTime,
+} from "rxjs/operators";
 import { merge } from "rxjs";
 import { useWebSocketClient } from "../useWebSocketClient";
-import { pick } from "ramda";
+import { pick, pathOr, defaultTo, last, compose, head } from "ramda";
 import useConstant from "use-constant";
+import { useTickerStream } from "./useTickerStream";
+import { useObservable } from "rxjs-hooks";
 
 export type OrderBookItem = number[];
 
@@ -12,6 +22,10 @@ export type OrderbookData = {
   asks: OrderBookItem[];
   bids: OrderBookItem[];
 };
+
+const asksFirstPath = compose(defaultTo(0), head, last, pathOr([], ["asks"]));
+// const asksFirstPath = pathOr(0, ["asks", 0,]);
+const bidsFirstPath = pathOr(0, ["bids", 0, 0]);
 
 const paddingFn = (len: number) =>
   Array(len).fill([Number.NaN, Number.NaN, Number.NaN] as OrderBookItem);
@@ -111,13 +125,21 @@ export const useOrderbook = (
   initial: OrderbookData = { asks: [], bids: [] },
   options?: OrderbookOptions
 ) => {
+  if (!symbol) {
+    throw new Error("useOrderbook requires a symbol");
+  }
+
   const [data, setData] = useState<OrderbookData>(initial);
   const [depth, setDepth] = useState(0.001);
   const [level, setLevel] = useState(() => options?.level ?? 10);
 
   const ws = useWebSocketClient();
 
-  const lastSubscriberRef = useRef<Subscription | undefined>();
+  const orderbookSubscriberRef = useRef<Subscription | undefined>();
+
+  const ticker = useTickerStream(symbol);
+
+  // console.log("ticker:::::::", ticker);
 
   const orderbookRequest$ = useMemo(() => {
     return ws.observe(
@@ -152,18 +174,31 @@ export const useOrderbook = (
     });
   });
 
+  const markPrice = useObservable(
+    (_, input$) =>
+      input$.pipe(
+        debounceTime(200),
+        switchMap(([symbol]) => {
+          return ws
+            .observe(`${symbol}@markprice`)
+            .pipe(map((data: any) => data.price));
+        })
+      ),
+    0,
+    [symbol]
+  );
+
   useEffect(() => {
-    if (lastSubscriberRef.current) {
-      lastSubscriberRef.current.unsubscribe();
+    if (orderbookSubscriberRef.current) {
+      orderbookSubscriberRef.current.unsubscribe();
     }
 
-    lastSubscriberRef.current = merge(orderbookRequest$, orderbookUpdate$)
+    orderbookSubscriberRef.current = merge(orderbookRequest$, orderbookUpdate$)
       .pipe(
         // tap((data) => console.log(data)),
         map<any, OrderbookData>(
           (data) => pick(["asks", "bids"], data) as OrderbookData
         ),
-        // tap((data) => console.log(data)),
         scan<OrderbookData, OrderbookData>((acc, curr) => {
           if (!acc.asks && !acc.bids) {
             return curr;
@@ -178,7 +213,7 @@ export const useOrderbook = (
       });
 
     () => {
-      return lastSubscriberRef.current?.unsubscribe();
+      return orderbookSubscriberRef.current?.unsubscribe();
     };
   }, [orderbookRequest$, orderbookUpdate$]);
 
@@ -191,7 +226,33 @@ export const useOrderbook = (
     });
   }, []);
 
-  return [data, { onDepthChange, depth }];
+  // markPrice, lastPrice
+
+  const middlePrice = useMemo(() => {
+    let asksFrist = 0,
+      bidsFirst = 0;
+
+    if (data.asks.length > 0) {
+      asksFrist = data.asks[data.bids.length - 1][0];
+    }
+
+    if (data.bids.length > 0) {
+      bidsFirst = data.bids[0][0];
+    }
+
+    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
+
+    // const asksFirst = asksFirstPath(data);
+    // const bidsFirst = bidsFirstPath(data);
+    // console.log("asksFirst", asksFrist, bidsFirst, ticker["24h_close"]);
+
+    return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
+  }, [ticker, data]);
+
+  return [
+    { ...data, markPrice, middlePrice },
+    { onDepthChange, depth },
+  ];
 };
 
 export type useOrderbookReturn = ReturnType<typeof useOrderbook>;

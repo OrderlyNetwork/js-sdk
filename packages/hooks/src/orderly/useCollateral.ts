@@ -3,7 +3,7 @@ import { useWebSocketClient } from "../useWebSocketClient";
 import { usePrivateQuery } from "../usePrivateQuery";
 
 import { merge } from "rxjs";
-import { map, filter } from "rxjs/operators";
+import { map, filter, debounceTime } from "rxjs/operators";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
@@ -17,6 +17,7 @@ import { useMarkPriceStream } from "./useMarkPriceStream";
 export type CollateralOutputs = {
   totalCollateral: number;
   freeCollateral: number;
+  totalValue: number;
 };
 
 const totalUnsettlementPnLPath = pathOr(0, [0, "aggregated", "unsettledPnL"]);
@@ -27,8 +28,6 @@ const positionsPath = pathOr([], [0, "rows"]);
  * @returns
  */
 export const useCollateral = (dp: number = 6): CollateralOutputs => {
-  const ws = useWebSocketClient();
-
   const positions = usePositionStream();
   const orders = useOrderStream();
   const { info: accountInfo } = useAccount();
@@ -47,31 +46,48 @@ export const useCollateral = (dp: number = 6): CollateralOutputs => {
   const totalCollateral = useObservable<Decimal, any>(
     (_, input$) =>
       merge(input$).pipe(
+        debounceTime(100),
         filter((data) => !!data[0]),
-        map(([data, unsettlemnedPnL]: [API.Holding[], number]) => {
-          //取出 USDC
-          const nonUSDC: API.Holding[] = [];
-          let USDC_holding = 0;
+        map(
+          ([data, unsettlemnedPnL, markPrices]: [
+            API.Holding[],
+            number,
+            any
+          ]) => {
+            //取出 USDC
+            const nonUSDC: {
+              holding: number;
+              markPrice: number;
+              //保證金替代率 暂时默认0
+              discount: number;
+            }[] = [];
+            let USDC_holding = 0;
 
-          data.forEach((item) => {
-            if (item.token === "USDC") {
-              USDC_holding = item.holding;
-            } else {
-              nonUSDC.push(item);
-            }
-          });
+            data.forEach((item) => {
+              if (item.token === "USDC") {
+                USDC_holding = item.holding;
+              } else {
+                nonUSDC.push({
+                  holding: item.holding,
+                  // markPrice: markPrices[item.token] ?? 0,
+                  markPrice: 0,
+                  discount: 0,
+                });
+              }
+            });
 
-          const number = account.totalCollateral({
-            USDCHolding: USDC_holding,
-            nonUSDCHolding: nonUSDC,
-            unsettlementPnL: unsettlemnedPnL,
-          });
+            const number = account.totalCollateral({
+              USDCHolding: USDC_holding,
+              nonUSDCHolding: nonUSDC,
+              unsettlementPnL: unsettlemnedPnL,
+            });
 
-          return new Decimal(number);
-        })
+            return new Decimal(number);
+          }
+        )
       ),
     zero,
-    [data, totalUnsettlementPnLPath(positions)]
+    [data, totalUnsettlementPnLPath(positions), markPrices]
   );
 
   const totalInitialMarginWithOrders = useObservable<any, any>(
@@ -103,5 +119,6 @@ export const useCollateral = (dp: number = 6): CollateralOutputs => {
       })
       .toDecimalPlaces(dp)
       .toNumber(),
+    totalValue: 0,
   };
 };

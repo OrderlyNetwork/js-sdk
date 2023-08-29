@@ -3,11 +3,9 @@ import { Observable } from "rxjs";
 import { type ConfigStore } from "@orderly.network/core";
 import { MemoryConfigStore } from "@orderly.network/core";
 
-type CoinGenerator = (coin: string) => string;
-
 export interface OrderlyContextState {
   // coin cion generator
-  coinGenerator?: CoinGenerator;
+
   // ws: WebSocketAdpater;
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
@@ -16,7 +14,7 @@ export interface OrderlyContextState {
 }
 
 export const OrderlyContext = createContext<OrderlyContextState>({
-  configStore: new MemoryConfigStore(),
+  // configStore: new MemoryConfigStore(),
 } as OrderlyContextState);
 
 export const OrderlyProvider = OrderlyContext.Provider;

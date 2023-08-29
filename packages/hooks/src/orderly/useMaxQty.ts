@@ -155,6 +155,7 @@ export const useMaxQty = (
                       baseMaxQty: getSymbolInfo("base_max"),
                       totalCollateral,
                       maxLeverage: accountInfo.max_leverage,
+                      takerFeeRate: accountInfo.taker_fee_rate,
                       baseIMR: getSymbolInfo("base_imr"),
                       otherIMs,
                       positionQty,

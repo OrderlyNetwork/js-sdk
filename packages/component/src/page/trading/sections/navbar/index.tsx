@@ -1,4 +1,3 @@
-import { SimpleMarketOverview } from "@/block/marketOverview";
 import { Logo } from "@/logo";
 import { FC } from "react";
 import { Market } from "./market";

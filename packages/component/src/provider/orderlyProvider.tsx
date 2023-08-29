@@ -1,6 +1,5 @@
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import React, { FC, PropsWithChildren, useEffect, useState } from "react";
 import {
-  useConstant,
   OrderlyProvider as Provider,
   type WebSocketAdpater,
 } from "@orderly.network/hooks";

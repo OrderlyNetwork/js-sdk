@@ -86,6 +86,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
+    useEffect(() => {
+      if (typeof error === "undefined") {
+        return;
+      }
+      setShowTooltip(!!error);
+    }, [error]);
+
     const cleanButton = useMemo(() => {
       if (typeof onClean === "undefined") {
         return null;

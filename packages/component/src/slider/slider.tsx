@@ -36,10 +36,6 @@ const Slider = React.forwardRef<
     },
     ref
   ) => {
-    const [innerValue, setInnerValue] = React.useState<number[]>(
-      props.defaultValue ?? []
-    );
-
     const { min = 0, max = 100, step } = props;
 
     // const spanRef = useRef<HTMLSpanElement | null>(null);
@@ -71,19 +67,9 @@ const Slider = React.forwardRef<
 
         return marks;
       }
-      // if (typeof step !== "undefined") {
-      //   const marks: SliderMark[] = [];
-
-      //   const steps = (max ?? 100) / step;
-
-      //   return marks;
-      // }
     }, [marks, markCount, max]);
 
     const onValueChangeInner = (value: number[]) => {
-      // if (Array.isArray(innerMasks) && innerMasks.length > 0) {
-      setInnerValue(value);
-      // }
       onValueChange?.(value);
     };
 
@@ -117,7 +103,7 @@ const Slider = React.forwardRef<
               )}
             />
           </SliderPrimitive.Track>
-          {/* marks */}
+
           {Array.isArray(innerMasks) && innerMasks.length > 0 && (
             <SliderMarks
               value={props.value}

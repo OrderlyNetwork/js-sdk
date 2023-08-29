@@ -4,7 +4,7 @@ import {
   Toaster as PrimitiveToaster,
   ToastOptions,
 } from "react-hot-toast";
-import { FC } from "react";
+import React, { FC } from "react";
 
 interface ToastProps extends ToastOptions {}
 export const Toaster: FC<ToastProps> = (props) => {

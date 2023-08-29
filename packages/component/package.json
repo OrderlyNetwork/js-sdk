@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c",
+    "build": "rollup -c && pnpm run build-tailwind",
+    "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build",
@@ -70,8 +71,8 @@
   },
   "dependencies": {
     "@orderly.network/net": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
@@ -81,6 +82,7 @@
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-toast": "^1.1.4",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@radix-ui/react-use-size": "^1.0.1",
     "@use-gesture/react": "^10.2.27",

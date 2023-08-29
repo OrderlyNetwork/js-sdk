@@ -10,29 +10,32 @@ import { QtyMode } from "./types";
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
-  markPrice: string;
-  lastPrice: string;
+  markPrice: number;
+  lastPrice: number;
   onItemClick?: (item: number[]) => void;
   depth: number[];
   onDepthChange?: (depth: number) => void;
   //
   autoSize?: boolean;
   level?: number;
+  base: string;
+  quote: string;
 
   cellHeight?: number;
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
-  const onModeChange = useCallback((mode: QtyMode) => {}, []);
+  const { lastPrice, markPrice, quote, base } = props;
+  // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 22}
       onItemClick={props.onItemClick}
     >
-      <Header priceUnit={"USDC"} qtyUnit={"BTC"} />
+      <Header quote={quote} base={base} />
       <Asks data={props.asks} />
-      <MarkPrice />
+      <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
       <Bids data={props.bids} />
       <DepthSelect depth={props.depth} value={0.0001} />
     </OrderBookProvider>

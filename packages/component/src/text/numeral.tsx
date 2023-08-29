@@ -1,6 +1,6 @@
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { commify, getDecimalLength } from "@orderly.network/utils";
+import { commify, getPrecisionByNumber } from "@orderly.network/utils";
 import { NumeralWithConfig } from "./numeralWithConfig";
 import { NumeralTotal } from "@/text/numeralTotal";
 
@@ -56,7 +56,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     }
 
     const truncatedNum = num.toFixed(
-      precision ? getDecimalLength(precision) : 2
+      precision ? getPrecisionByNumber(precision) : 2
     );
 
     if (rule === "price") {

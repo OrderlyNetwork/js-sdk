@@ -5,17 +5,22 @@ import {
 } from "./timeIntervalToolbar";
 import { type TradingViewChartProps } from "./tradingViewChart";
 import { TimeInterval } from "@/block/tradingView/types";
-import { IChartingLibraryWidget, widget } from "@/@types/charting_library";
+import {
+  IChartingLibraryWidget,
+  ResolutionString,
+  widget,
+} from "@/@types/charting_library";
 import DataFeed from "./dataFeed";
+import React from "react";
 
 declare const TradingView: any;
 
-export const TradingViewChart: FC<
-  TradingViewChartProps &
-    TimeIntervalToolbarProps & {
-      library_path: string;
-    }
-> = (props) => {
+export type TradingViewChartConfig = TradingViewChartProps &
+  TimeIntervalToolbarProps & {
+    scriptSRC?: string;
+  };
+
+export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   const {
     intervals,
     disabled_features = [
@@ -30,7 +35,7 @@ export const TradingViewChart: FC<
       "create_volume_indicator_by_default",
     ],
 
-    library_path = "/tradingview/charting_library/charting_library.js",
+    scriptSRC = "/tradingview/charting_library/charting_library.js",
     ...chartProps
   } = props;
 
@@ -52,7 +57,7 @@ export const TradingViewChart: FC<
 
   const onIntervalChange = useCallback((interval: TimeInterval) => {
     setTimeInterval(interval);
-    wigetRef.current?.activeChart().setResolution(interval);
+    wigetRef.current?.activeChart().setResolution(interval as ResolutionString);
   }, []);
 
   useEffect(() => {
@@ -68,7 +73,7 @@ export const TradingViewChart: FC<
     if (containerRef.current) {
       const script = document.createElement("script");
       script.setAttribute("data-nscript", "afterInteractive");
-      script.src = library_path;
+      script.src = scriptSRC;
       script.async = true;
       script.type = "text/javascript";
 

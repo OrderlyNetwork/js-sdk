@@ -6,8 +6,8 @@ import useConstant from "use-constant";
 export const useMarkPricesSubject = () => {
   const ws = useWebSocketClient();
   return useConstant(() =>
-    ws.observe("markprices").pipe(
-      map((data: WSMessage.MarkPrice[]) => {
+    ws.observe<{ [key: string]: number }>("markprices").pipe(
+      map<any, any>((data: WSMessage.MarkPrice[]) => {
         const prices: { [key: string]: number } = {};
 
         data.forEach((item) => {

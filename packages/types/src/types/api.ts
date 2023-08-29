@@ -33,6 +33,10 @@ export declare namespace API {
     "24h_amount": number;
   }
 
+  export interface MarketInfoExt extends MarketInfo {
+    change: number;
+  }
+
   /**
    * v1/public/info
    */
@@ -116,6 +120,20 @@ export declare namespace API {
     last_funding_rate_timestamp: number;
     next_funding_time: number;
     sum_unitary_funding: number;
+  }
+
+  export interface PositionInfo {
+    margin_ratio: number;
+    initial_margin_ratio: number;
+    maintenance_margin_ratio: number;
+    open_margin_ratio: number;
+    current_margin_ratio_with_orders: number;
+    initial_margin_ratio_with_orders: number;
+    maintenance_margin_ratio_with_orders: number;
+    total_collateral_value: number;
+    free_collateral: number;
+    rows: Position[];
+    total_pnl_24_h: number;
   }
 
   export interface Position {

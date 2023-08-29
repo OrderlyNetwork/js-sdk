@@ -4,7 +4,7 @@ import { KeyStore } from "./keyStore";
 import { base64url } from "./utils";
 
 import { Buffer } from "buffer";
-window.Buffer = window.Buffer || Buffer;
+// window.Buffer = window.Buffer || Buffer;
 
 export type MessageFactor = {
   url: string;

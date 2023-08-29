@@ -84,7 +84,6 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
             </>
           }
           value={item["est_liq_price"]}
-          coloring
           align="right"
         />
       </div>

@@ -2,7 +2,7 @@ import Button from "@/button";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 
 import { AccountInfo } from "./sections/accountInfo";
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 
 import { Text } from "@/text";
 import { NetworkImage } from "@/icon";

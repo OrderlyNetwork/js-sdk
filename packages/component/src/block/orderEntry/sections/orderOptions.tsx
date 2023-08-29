@@ -4,6 +4,7 @@ import { Label } from "@/label";
 import { Radio, RadioGroup } from "@/radioGroup";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
+import { OrderType } from "@orderly.network/types";
 import { OrderEntity } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
@@ -47,13 +48,21 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
       <Collapsible open={open}>
         <CollapsibleContent>
           <div className="pb-2 space-y-4">
-            <div>
-              <RadioGroup className="flex gap-5">
-                <Radio value={"postOnly"}>Post Only</Radio>
-                <Radio value={"ioc"}>IOC</Radio>
-                <Radio value={"fok"}>FOK</Radio>
-              </RadioGroup>
-            </div>
+            {props.values?.order_type === OrderType.LIMIT && (
+              <div>
+                <RadioGroup
+                  className="flex gap-5"
+                  onValueChange={(value) => {
+                    // console.log("value", value);
+                    props.setValue?.("order_type_ext", value);
+                  }}
+                >
+                  <Radio value={OrderType.POST_ONLY}>Post Only</Radio>
+                  <Radio value={OrderType.IOC}>IOC</Radio>
+                  <Radio value={OrderType.FOK}>FOK</Radio>
+                </RadioGroup>
+              </div>
+            )}
             <div className="flex gap-5">
               <div className="flex gap-2 items-center">
                 <Checkbox id="orderConfirm" checked={props.showConfirm} />
