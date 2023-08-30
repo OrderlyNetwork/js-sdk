@@ -116,7 +116,7 @@ module.exports = {
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px" },
+        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
       });
     }),
   ],
