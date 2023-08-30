@@ -40,8 +40,14 @@ export const Step: Story = {
 };
 
 export const Marks: Story = {
+  render: (args) => {
+    const [value, setValue] = React.useState(args.defaultValue);
+    return <Slider {...args} value={value} onValueChange={setValue} />;
+  },
   args: {
     defaultValue: [50],
+    min: 0,
+    max: 100,
     marks: [
       { value: 0, label: "0" },
       { value: 25, label: "25" },

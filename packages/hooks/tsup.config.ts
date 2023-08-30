@@ -9,5 +9,5 @@ export default defineConfig({
   treeshake: true,
   clean: true,
   dts: true,
-  external: ["react", "react-dom", "rxjs"],
+  external: ["react", "react-dom"],
 });

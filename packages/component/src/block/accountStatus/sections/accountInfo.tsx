@@ -1,7 +1,7 @@
 import { Avatar } from "@/avatar";
 import Button, { IconButton } from "@/button";
 import { Share, Copy } from "lucide-react";
-import { FC } from "react";
+import React, { FC } from "react";
 import { Text } from "@/text";
 
 export interface AccountInfoProps {

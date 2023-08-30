@@ -1,3 +1,4 @@
+import React from "react";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   TimeIntervalToolbar,
@@ -11,13 +12,14 @@ import {
   widget,
 } from "@/@types/charting_library";
 import DataFeed from "./dataFeed";
-import React from "react";
 
 declare const TradingView: any;
 
 export type TradingViewChartConfig = TradingViewChartProps &
   TimeIntervalToolbarProps & {
     scriptSRC?: string;
+    library_path: string;
+    customCssUrl?: string;
   };
 
 export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
@@ -36,6 +38,8 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
     ],
 
     scriptSRC = "/tradingview/charting_library/charting_library.js",
+    library_path = "/tradingview/charting_library/",
+    customCssUrl,
     ...chartProps
   } = props;
 
@@ -99,9 +103,10 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
             datafeed: new DataFeed({
               apiBaseUrl: props.apiBaseUrl,
             }),
-            library_path: "/tradingview/charting_library/",
+            library_path,
             disabled_features,
             width: "100%",
+            customCssUrl,
             ...chartProps,
           });
         }
