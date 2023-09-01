@@ -3,39 +3,44 @@ import useConstant from "use-constant";
 import { Account, SimpleDI, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useObservable } from "rxjs-hooks";
-import { API } from "@orderly.network/types";
-import { usePrivateQuery } from "./usePrivateQuery";
 
 export const useAccount = (): {
-  account: AccountState;
+  account: Account;
+  state: AccountState;
   login: (address: string) => void;
-  info: API.AccountInfo | undefined;
+  // info: API.AccountInfo | undefined;
 } => {
-  const { configStore } = useContext(OrderlyContext);
+  const { configStore, keyStore, walletAdapter } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new Error("configStore is not defined, please use OrderlyProvider");
+
+  if (!keyStore) {
+    throw new Error(
+      "keyStore is not defined, please use OrderlyProvider and provide keyStore"
+    );
+  }
 
   const account = useConstant(() => {
     let account = SimpleDI.get<Account>("account");
 
     if (!account) {
-      account = new Account(configStore);
+      account = new Account(configStore, keyStore, walletAdapter);
 
       SimpleDI.registerByName("account", account);
     }
     return account;
   });
 
-  const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/client/info");
-
-  // console.log(accountInfo);
-
   const state = useObservable<AccountState>(
     () => account.state$,
     account.stateValue
   );
+
+  // const { data: accountInfo } =
+  //   usePrivateQuery<API.AccountInfo>("/client/info");
+
+  // console.log(accountInfo);
 
   const login = useCallback(
     (address: string) => {
@@ -44,12 +49,11 @@ export const useAccount = (): {
     [account]
   );
 
-  // console.log(state);
-  //maxLeverage
-
   return {
-    account: state!,
-    info: accountInfo,
+    // account: state!,
+    account,
+    state,
+    // info: {},
     login,
   };
 };

@@ -133,6 +133,10 @@ export function totalUnsettlementPnL(
     sum_unitary_funding: number;
   })[]
 ): number {
+  if (!Array.isArray(positions) || positions.length === 0) {
+    return 0;
+  }
+
   return positions.reduce((acc, cur) => {
     return (
       acc +

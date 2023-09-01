@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { positions } from "@orderly.network/futures";
-import { useObservable } from "rxjs-hooks";
-import { combineLatestWith, debounce, debounceTime, map } from "rxjs/operators";
 
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
@@ -10,13 +8,19 @@ import { useFundingRates } from "./useFundingRates";
 import { type API } from "@orderly.network/types";
 import { useMarkPricesSubject } from "./useMarkPricesSubject";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { useAccount } from "../useAccount";
-import { useCollateral } from "./useCollateral";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { propOr } from "ramda";
+import { OrderEntity } from "@orderly.network/types";
+import { useMutation } from "../useMutation";
+// import { useAccount } from "../useAccount";
+// import { useDataSource } from "../useDataSource";
 
 export interface PositionReturn {
   data: any[];
   loading: boolean;
-  close: (qty: number) => void;
+  close: (
+    order: Pick<OrderEntity, "order_type" | "order_price" | "side">
+  ) => void;
 }
 
 export const usePositionStream = (
@@ -24,13 +28,17 @@ export const usePositionStream = (
   options?: SWRConfiguration
 ) => {
   // const [data, setData] = useState<Position[]>([]);
-  // const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [visibledSymbol, setVisibleSymbol] = useState<string | undefined>(
     symbol
   );
 
   const symbolInfo = useSymbolsInfo();
-  const { info: accountInfo } = useAccount();
+  // const { info: accountInfo } = useAccount();
+  const { data: accountInfo } =
+    usePrivateQuery<API.AccountInfo>("/client/info");
+
+  const { mutation } = useMutation<OrderEntity, any>("/order");
 
   const fundingRates = useFundingRates();
   const markPrices$ = useMarkPricesSubject();
@@ -43,6 +51,9 @@ export const usePositionStream = (
       // revalidateOnReconnect: false,
       ...options,
       formatter: (data) => data,
+      onError: (err) => {
+        console.log("usePositionStream error", err);
+      },
     }
   );
 
@@ -52,59 +63,57 @@ export const usePositionStream = (
       })[]
     | undefined;
 
-  // TODO: 动态更新 markprice
-  const value = useObservable<PositionArray, [PositionArray, any, any]>(
-    (_, input$) =>
-      input$.pipe(
-        // map((data) => {
-        //   return data[0];
-        // }),
-        combineLatestWith(markPrices$),
-        debounceTime(100),
-        map(([[data, symbolInfo, accountInfo], markPrices]) => {
-          // console.log("obser", data);
-          let totalCollateral = 0;
+  const { data: markPrices } = useMarkPricesStream();
 
-          return data?.map((item) => {
-            const price = (markPrices as any)[item.symbol] ?? item.mark_price;
-            const info = symbolInfo?.[item.symbol];
-            // console.log("info", info("base_mmr"));
+  const formatedPositions = useMemo(() => {
+    if (!data?.rows || !symbolInfo || !accountInfo) return null;
 
-            const MMR = positions.MMR({
-              baseMMR: info("base_mmr"),
-              baseIMR: info("base_imr"),
-              IMRFactor: accountInfo.imr_factor[info("base")],
-              positionNotional: positions.notional(item.position_qty, price),
-              IMR_factor_power: 4 / 5,
-            });
+    let totalCollateral = 0;
 
-            // console.log("MMR", MMR);
+    return data.rows.map((item: API.Position) => {
+      // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+      const price = propOr(
+        item.mark_price,
+        item.symbol,
+        markPrices
+      ) as unknown as number;
+      const info = symbolInfo?.[item.symbol];
+      // console.log("info", info("base_mmr"));
 
-            return {
-              ...item,
-              mark_price: price,
-              est_liq_price: positions.liqPrice({
-                markPrice: price,
-                totalCollateral,
-                positionQty: item.position_qty,
-                MMR,
-              }),
-              notional: positions.notional(
-                item.position_qty,
-                item.average_open_price
-              ),
-              unrealized_pnl: positions.unrealizedPnL({
-                qty: item.position_qty,
-                openPrice: item.average_open_price,
-                markPrice: price,
-              }),
-            };
-          });
-        })
-      ),
-    undefined,
-    [data?.rows, symbolInfo, accountInfo]
-  );
+      const MMR = positions.MMR({
+        baseMMR: info("base_mmr"),
+        baseIMR: info("base_imr"),
+        IMRFactor: accountInfo.imr_factor[info("base")] as number,
+        positionNotional: positions.notional(
+          item.position_qty,
+          price
+        ) as number,
+        IMR_factor_power: 4 / 5,
+      });
+
+      // console.log("MMR", MMR);
+
+      return {
+        ...item,
+        mark_price: price,
+        est_liq_price: positions.liqPrice({
+          markPrice: price,
+          totalCollateral,
+          positionQty: item.position_qty,
+          MMR,
+        }),
+        notional: positions.notional(
+          item.position_qty,
+          item.average_open_price
+        ),
+        unrealized_pnl: positions.unrealizedPnL({
+          qty: item.position_qty,
+          openPrice: item.average_open_price,
+          markPrice: price,
+        }),
+      };
+    });
+  }, [data?.rows, symbolInfo, accountInfo, markPrices]);
 
   // 合计数据
   const aggregatedData = useMemo(() => {
@@ -114,11 +123,12 @@ export const usePositionStream = (
       notional: NaN,
     };
 
-    if (value && value.length) {
-      aggregatedData.unrealPnL = positions.totalUnrealizedPnL(value);
-      aggregatedData.notional = positions.totalNotional(value);
+    if (formatedPositions && formatedPositions.length) {
+      aggregatedData.unrealPnL =
+        positions.totalUnrealizedPnL(formatedPositions);
+      aggregatedData.notional = positions.totalNotional(formatedPositions);
       aggregatedData.unsettledPnL = positions.totalUnsettlementPnL(
-        value.map((item) => ({
+        formatedPositions.map((item) => ({
           ...item,
           sum_unitary_funding: fundingRates[item.symbol]?.(
             "sum_unitary_funding",
@@ -129,17 +139,26 @@ export const usePositionStream = (
     }
 
     return aggregatedData;
-  }, [value, fundingRates]);
+  }, [formatedPositions, fundingRates]);
 
   const showSymbol = useCallback((symbol: string) => {
     setVisibleSymbol(symbol);
   }, []);
 
+  // console.log("usePositionStream ***", data, formatedPositions);
+
+  const onClosePosition = useCallback(
+    (order: Pick<OrderEntity, "order_type" | "order_price" | "side">) => {
+      return mutation(order).finally(() => {});
+    },
+    []
+  );
+
   return [
-    { rows: value, aggregated: aggregatedData },
+    { rows: formatedPositions, aggregated: aggregatedData },
     createGetter<Omit<API.Position, "rows">>(data as any, 1),
     {
-      close: (qty: number) => {},
+      close: onClosePosition,
       loading: false,
       showSymbol,
       error,
@@ -149,4 +168,8 @@ export const usePositionStream = (
       // filter: (filter: string) => {},
     },
   ];
+
+  // const dataSource = useDataSource();
+
+  // useObservable(()=>dataSource.positions$,[])
 };

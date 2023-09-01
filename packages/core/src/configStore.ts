@@ -12,7 +12,7 @@ export class MemoryConfigStore implements ConfigStore {
   }
 
   private _restore() {
-    this.map = new Map([["apiBaseUrl", "https://futures-api.orderly.org/v1"]]);
+    this.map = new Map([["apiBaseUrl", "https://dev-api-v2.orderly.org/v1"]]);
   }
 
   get<T>(key: string): T {

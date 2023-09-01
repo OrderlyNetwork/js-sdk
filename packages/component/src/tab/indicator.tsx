@@ -10,7 +10,7 @@ export interface TabIndicatorProps {
 
 export const TabIndicator: FC<TabIndicatorProps> = ({
   left = 0,
-  width = 30,
+  width = 40,
   className,
 }) => {
   const cssTransform = useMemo(() => {

@@ -5,6 +5,8 @@ import { PositionsView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "./sections/closeForm";
+import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
   title: "Block/PositionsView",
@@ -23,7 +25,11 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={undefined}>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        keyStore={new WooKeyStore()}
+        walletAdapter={new Web3WalletAdapter()}
+      >
         <Story />
       </OrderlyProvider>
     ),

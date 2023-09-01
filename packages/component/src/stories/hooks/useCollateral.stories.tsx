@@ -4,10 +4,12 @@ import React, { FC } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
 import { useCollateral } from "@orderly.network/hooks";
+import { WooKeyStore } from "../mock/woo.keystore";
 
 const CollateralDemo: FC<{
   totalCollateral: number;
   freeCollateral: number;
+  totalValue: number;
 }> = (props) => {
   return (
     <div className="text-black">
@@ -19,6 +21,10 @@ const CollateralDemo: FC<{
         <span>Free Collateral:</span>
         <span>{props.freeCollateral}</span>
       </div>
+      <div className="flex gap-5">
+        <span>Total Value:</span>
+        <span>{props.totalValue}</span>
+      </div>
     </div>
   );
 };
@@ -29,7 +35,10 @@ const meta: Meta = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
+        <OrderlyProvider
+          configStore={new MemoryConfigStore()}
+          keyStore={new WooKeyStore("testnet")}
+        >
           <Story />
         </OrderlyProvider>
       );
@@ -48,6 +57,7 @@ export const Default: Story = {
       <CollateralDemo
         totalCollateral={collateral.totalCollateral}
         freeCollateral={collateral.freeCollateral}
+        totalValue={collateral.totalValue}
       />
     );
   },

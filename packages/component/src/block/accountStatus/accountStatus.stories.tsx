@@ -5,11 +5,12 @@ import * as React from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "./accountStatusBar";
 import { OrderlyProvider } from "../../provider";
-import { MemoryConfigStore } from "@orderly.network/core";
+import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
 import { init, useConnectWallet } from "@web3-onboard/react";
 import { onboardConfig } from "../../../mock/onboardConfig";
 import { useEffect } from "react";
 import wallets from "@web3-onboard/injected-wallets/dist/wallets";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta<typeof AccountStatusBar> = {
   //   tags: ["autodocs"],
@@ -26,7 +27,11 @@ const meta: Meta<typeof AccountStatusBar> = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={new MemoryConfigStore()}>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        keyStore={new WooKeyStore("testnet")}
+        walletAdapter={new Web3WalletAdapter()}
+      >
         <Story />
       </OrderlyProvider>
     ),
@@ -56,7 +61,7 @@ export const Default: Story = {
 
 export const WithHook: Story = {
   render: (args) => {
-    const { account, login } = useAccount();
+    const { account, login, state, info } = useAccount();
     const [
       {
         wallet, // the wallet that has been connected or null if not yet connected
@@ -77,15 +82,19 @@ export const WithHook: Story = {
         wallet.accounts.length > 0
       ) {
         // updateBalances(wallet.accounts);
-        login(wallet.accounts[0].address);
+        // login(wallet.accounts[0].address);
+        account.address = wallet.accounts[0].address;
       }
     }, [wallet]);
+
+    // console.log("account state", state);
 
     return (
       <AccountStatusBar
         {...args}
-        status={account.status}
-        address={account.address}
+        status={state.status}
+        address={state.address}
+        accountInfo={info}
         onConnect={() => {
           connect();
         }}

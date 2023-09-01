@@ -6,3 +6,14 @@ export enum AccountStatusEnum {
   DisabledTrading = 4,
   EnableTrading = 5,
 }
+
+export enum SystemStateEnum {
+  Loading = 0,
+  Error = 1,
+  Ready = 10,
+}
+
+export enum ExchangeStatusEnum {
+  Normal = 0,
+  Maintain = 1,
+}

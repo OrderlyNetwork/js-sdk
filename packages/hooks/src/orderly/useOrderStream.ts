@@ -1,10 +1,11 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { type SWRInfiniteResponse } from "swr/infinite";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useObservable } from "rxjs-hooks";
 import { combineLatestWith, map } from "rxjs/operators";
-import { useMarkPricesSubject } from "./useMarkPricesSubject";
 import { API } from "@orderly.network/types";
+import { useMarketsStream } from "./useMarketsStream";
+import { useMarkPricesStream } from "./useMarkPricesStream";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -27,7 +28,9 @@ export const useOrderStream = ({
   symbol?: string;
   status?: OrderStatus;
 } = {}) => {
-  const markPrices$ = useMarkPricesSubject();
+  // const markPrices$ = useMarkPricesSubject();
+
+  const { data: markPrices = {} } = useMarkPricesStream();
 
   const res = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
@@ -54,23 +57,38 @@ export const useOrderStream = ({
     }
   );
 
-  const orders = useObservable<API.OrderExt[] | null, API.Order[][]>(
-    (_, input$) =>
-      input$.pipe(
-        map(([data]) => {
-          return data.flat();
-        }),
-        combineLatestWith(markPrices$),
-        map(([data, markPrices]) => {
-          return data.map((item: API.Order) => ({
-            ...item,
-            mark_price: (markPrices as any)[item.symbol] ?? 0,
-          }));
-        })
-      ),
-    null,
-    [res.data ?? []]
-  );
+  // const _orders = useObservable<API.OrderExt[] | null, API.Order[][]>(
+  //   (_, input$) =>
+  //     input$.pipe(
+  //       map(([data]) => {
+  //         return data.flat();
+  //       }),
+  //       combineLatestWith(markPrices$),
+  //       map(([data, markPrices]) => {
+  //         return data.map((item: API.Order) => ({
+  //           ...item,
+  //           mark_price: (markPrices as any)[item.symbol] ?? 0,
+  //         }));
+  //       })
+  //     ),
+  //   null,
+  //   [res.data ?? []]
+  // );
+
+  const orders = useMemo(() => {
+    if (!res.data) {
+      return null;
+    }
+
+    console.log("orders:::", markPrices);
+
+    return res.data?.flat().map((item) => {
+      return {
+        ...item,
+        mark_price: (markPrices as any)[item.symbol] ?? 0,
+      };
+    });
+  }, [res.data, markPrices]);
 
   /**
    * 取消所有订单

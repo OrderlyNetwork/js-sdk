@@ -11,6 +11,7 @@ export interface AccountInfoProps {
 
 export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect, accountId } = props;
+
   return (
     <div>
       <div className="flex py-6">

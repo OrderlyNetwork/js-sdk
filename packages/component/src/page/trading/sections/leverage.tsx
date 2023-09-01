@@ -1,5 +1,5 @@
 import { LeverageView } from "@/block/leverage";
-import { useFundingRate, useAccount } from "@orderly.network/hooks";
+import { useFundingRate, useAccountInfo } from "@orderly.network/hooks";
 import React, { FC } from "react";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 export const MyLeverageView: FC<Props> = (props) => {
   const data = useFundingRate(props.symbol);
-  const { info } = useAccount();
+  const { data: info } = useAccountInfo();
 
   return (
     <div className="px-3 py-2">

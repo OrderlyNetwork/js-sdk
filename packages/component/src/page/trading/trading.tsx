@@ -9,6 +9,9 @@ import { Divider } from "@/divider";
 import { MyLeverageView } from "./sections/leverage";
 import { TradingPageProvider } from "./context/tradingPageContext";
 import { TradingViewChartConfig } from "@/block/tradingView";
+import { AccountStatusEnum, SystemStateEnum } from "@orderly.network/types";
+import { BottomNavBar } from "./sections/bottombar";
+import { Page } from "@/layout";
 
 interface TradingPageProps {
   symbol: string;
@@ -35,9 +38,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           <MyOrderEntry symbol={props.symbol} />
         </div>
         <DataListView />
-        <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-2 border-t border-base-300 z-30">
-          <AccountStatusBar chains={[]} status={"NotConnected"} />
-        </div>
+        <BottomNavBar />
       </div>
     </TradingPageProvider>
   );

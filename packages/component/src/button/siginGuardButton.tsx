@@ -10,6 +10,7 @@ export const SiginGuardButton: FC<PropsWithChildren<SiginGuardButtonProps>> = (
   props
 ) => {
   const { connected } = useAccount();
+  // const connected = false;
   if (!connected) {
     return <div>SiginGuardButton</div>;
   }

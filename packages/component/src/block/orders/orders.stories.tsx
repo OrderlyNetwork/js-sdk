@@ -6,6 +6,8 @@ import { useOrderStream, OrderStatus } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 // import { OrderEditFormDialog } from "./dialog/editor";
 import { modal } from "../../modal";
+import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta<typeof OrdersView> = {
   //   tags: ["autodocs"],
@@ -20,7 +22,11 @@ const meta: Meta<typeof OrdersView> = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        keyStore={new WooKeyStore("testnet")}
+        walletAdapter={new Web3WalletAdapter()}
+      >
         <Story />
       </OrderlyProvider>
     ),

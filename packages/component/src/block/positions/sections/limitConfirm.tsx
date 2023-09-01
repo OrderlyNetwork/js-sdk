@@ -1,6 +1,13 @@
 import { Text } from "@/text";
+import { API } from "@orderly.network/types";
+import { FC } from "react";
 
-export const LimitConfirm = () => {
+interface Props {
+  position: API.Position;
+}
+
+export const LimitConfirm: FC<Props> = (props) => {
+  const { position } = props;
   return (
     <div>
       <div className="grid grid-cols-2">

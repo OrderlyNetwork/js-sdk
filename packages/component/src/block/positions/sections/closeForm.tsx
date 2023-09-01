@@ -19,21 +19,40 @@ import { type API } from "@orderly.network/core";
 import { Info } from "lucide-react";
 import { FC, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";
-import { useModal } from "@/modal";
+import { modal, useModal } from "@/modal";
+import { useSymbolsInfo, useMarkPricesStream } from "@orderly.network/hooks";
 
 export interface ClosePositionPaneProps {
-  position: API.Position;
+  position?: API.Position;
   onConfirm?: () => void;
 
   onCancel?: () => void;
 }
 export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   const { position } = props;
-  const { hide } = useModal();
+  const { hide, reject, resolve } = useModal();
+
+  const { data: markPrices } = useMarkPricesStream();
+
+  const symbolInfo = useSymbolsInfo()[position?.symbol];
+  const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
+  const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
+
   const typeText = useMemo(() => {
-    if (position.position_qty > 0) return <Text type={"sell"}>Limit Sell</Text>;
+    if (position?.position_qty ?? 0 > 0)
+      return <Text type={"sell"}>Limit Sell</Text>;
     return <Text type={"buy"}>Limit Buy</Text>;
-  }, [position.position_qty]);
+  }, [position?.position_qty]);
+
+  const onConfirm = () => {
+    modal.confirm({
+      title: "Limit Close",
+      content: <LimitConfirm position={position} />,
+    });
+  };
+
+  if (!position) return null;
+
   return (
     <>
       <div className="pb-3 pt-5">{position.symbol}</div>
@@ -45,16 +64,16 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
         />
         <Statistic
           label="Last Price"
-          value="1000.00"
+          value={markPrices?.[position.symbol]}
           labelClassName="text-sm text-base-contrast/30"
         />
       </div>
       <Divider className="py-5" />
       <div className="flex flex-col gap-5">
-        <Input prefix="Price" suffix="USDC" className="text-right" />
+        <Input prefix="Price" suffix={quote} className="text-right" />
         <Input
           prefix="Quantity"
-          suffix="BTC"
+          suffix={base}
           className="text-right"
           defaultValue={position.position_qty}
         />
@@ -97,38 +116,15 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
           color={"secondary"}
           onClick={() => {
             // props.onCancel?.()
+            reject();
             hide();
           }}
         >
           Cancel
         </Button>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button fullWidth>Confirm</Button>
-          </DialogTrigger>
-          <DialogContent closable={false}>
-            <DialogHeader>
-              <DialogTitle className="flex justify-center items-center space-x-2">
-                <Info className="text-warning" />
-                <span>Limit Close</span>
-              </DialogTitle>
-            </DialogHeader>
-            <DialogDescription className="bg-base-100 px-5 py-2">
-              You agree to close
-              <span className="text-warning text-base inline-block px-2">
-                101.04934603 ETH
-              </span>
-              position at limit price.
-            </DialogDescription>
-            <DialogBody>
-              <LimitConfirm />
-            </DialogBody>
-            <DialogFooter>
-              <Button color={"danger"}>Cancel</Button>
-              <Button>Confirm</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <Button fullWidth onClick={() => onConfirm()}>
+          Confirm
+        </Button>
       </div>
     </>
   );

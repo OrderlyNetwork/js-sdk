@@ -8,6 +8,8 @@ import {
 } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useContext } from "react";
+import { SimpleDI } from "@orderly.network/core";
+import { Account } from "@orderly.network/core";
 
 const fetcher = (
   url: string,
@@ -31,9 +33,9 @@ export const useMutation = <T, E>(
   if (!url.startsWith("http")) {
     url = `${apiBaseUrl}${url}`;
   }
-
+  let account = SimpleDI.get<Account>("account");
   // sign message;
-  const signer = getMockSigner();
+  const signer = account.signer;
   const { trigger, data, error, reset, isMutating } = useSWRMutation(
     url,
     fetcher,

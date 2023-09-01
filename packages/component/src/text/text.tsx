@@ -31,10 +31,19 @@ export interface TextProps
   // if rule is address, show str range
   range?: [number, number];
   loading?: boolean;
+  symbolElement?: "quote" | "base";
 }
 export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
-  const { variant, rule, asChildren, type, className, children, ...rest } =
-    props;
+  const {
+    variant,
+    rule,
+    asChildren,
+    type,
+    className,
+    children,
+    symbolElement,
+    ...rest
+  } = props;
   const Comp = asChildren ? Slot : "span";
 
   const content = useMemo(() => {
@@ -49,6 +58,12 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
     if (rule === "date") return new Date(children as string).toLocaleString();
     if (rule === "symbol") {
       const arr = (children as string).split("_");
+      if (typeof symbolElement !== "undefined") {
+        if (symbolElement === "base") {
+          return arr[1];
+        }
+        return arr[2];
+      }
       return `${arr[1]}-${arr[0]}`;
     }
 

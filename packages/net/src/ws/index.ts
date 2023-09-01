@@ -209,6 +209,13 @@ class WebSocketClient {
     unsubscribe?: () => any,
     messageFilter?: (value: T) => boolean
   ) {
+    console.log(
+      "observe---------------------------",
+      params,
+      unsubscribe,
+      messageFilter
+    );
+
     if (isPrivate && !this.privateWsSubject) {
       throw new Error("private ws not connected");
     }

@@ -1,5 +1,17 @@
 # @orderly.network/types
 
+## 0.0.6
+
+### Patch Changes
+
+- fix bug & update
+
+## 0.0.5
+
+### Patch Changes
+
+- fix & update
+
 ## 0.0.4
 
 ### Patch Changes

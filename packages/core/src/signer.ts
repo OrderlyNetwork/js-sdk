@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyStore } from "./keyStore";
+import { OrderlyKeyStore } from "./keyStore";
 import { base64url } from "./utils";
 
 import { Buffer } from "buffer";
@@ -35,10 +35,11 @@ export type SignedMessagePayload = {
  */
 export interface Signer {
   sign: (data: MessageFactor) => Promise<SignedMessagePayload>;
+  signText: (text: string) => Promise<{ signature: string; publicKey: string }>;
 }
 
 export class BaseSigner implements Signer {
-  constructor(private readonly keyStore: KeyStore) {}
+  constructor(private readonly keyStore: OrderlyKeyStore) {}
 
   async sign(message: MessageFactor): Promise<SignedMessagePayload> {
     // const orderlyKeyPair = this.keyStore.getOrderlyKey();

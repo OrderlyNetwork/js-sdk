@@ -5,25 +5,33 @@ import { EyeOff } from "lucide-react";
 import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";
+import { type API, AccountStatusEnum } from "@orderly.network/types";
 
 interface AccountTotalProps {
-  status: AccountStatusBar;
-  balance?: string;
+  status: AccountStatusEnum;
+  totalValue?: number;
   currency?: string;
+  accountInfo?: API.AccountInfo;
 }
 
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
-  const { currency = "USDC" } = props;
+  const { currency = "USDC", accountInfo } = props;
+
+  // console.log("accountInfo", accountInfo);
 
   const balance = useMemo(() => {
-    if (props.status !== "SignedIn") {
+    if (props.status !== AccountStatusEnum.SignedIn) {
       return "--";
     }
 
-    return <Numeral rule="price">{props.balance ?? 0}</Numeral>;
-  }, [props.status, props.balance]);
+    return <Numeral rule="price">{props.totalValue ?? 0}</Numeral>;
+  }, [props.status, props.totalValue]);
 
-  if (props.status !== "SignedIn") {
+  const maxLerverage = useMemo(() => {
+    return accountInfo?.max_leverage ?? "-";
+  }, [accountInfo]);
+
+  if (props.status !== AccountStatusEnum.SignedIn) {
     return (
       <div className="flex items-center">
         <div className="flex flex-col">
@@ -59,7 +67,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           <Divider vertical className="px-3" />
 
           <div className="border border-solid px-2 rounded border-primary text-primary text-sm">
-            1x
+            {`${maxLerverage}x`}
           </div>
         </div>
       </SheetTrigger>

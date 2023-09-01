@@ -1,8 +1,12 @@
 import { BehaviorSubject } from "rxjs";
 import { getMockSigner } from "./helper";
 import { MessageFactor } from "./signer";
-import { SimpleWallet, WalletClient } from "./wallet";
+
 import { ConfigStore } from "./configStore";
+import { OrderlyKeyStore } from "./keyStore";
+import { WalletAdapter } from "./wallet/adapter";
+import { Signer } from "./signer";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export type AccountStatus =
   | "NotConnected"
@@ -10,16 +14,8 @@ export type AccountStatus =
   | "NotSignedIn"
   | "SignedIn";
 
-export enum AccountStatusEnum {
-  NotConnected = 0,
-  Connected = 1,
-  NotSignedIn = 2,
-  SignedIn = 3,
-  EnableTrading = 4,
-}
-
 export interface AccountState {
-  status: AccountStatus;
+  status: AccountStatusEnum;
 
   accountId?: string;
   userId?: string;
@@ -44,9 +40,10 @@ export interface AccountState {
  * ```
  */
 export class Account {
-  //   wallet?: WalletClient;
+  // private walletClient?: WalletClient;
+  private _singer?: Signer;
   private _state$ = new BehaviorSubject<AccountState>({
-    status: "NotConnected",
+    status: AccountStatusEnum.NotConnected,
 
     balance: "",
     leverage: Number.NaN,
@@ -56,10 +53,16 @@ export class Account {
 
   constructor(
     private readonly configStore: ConfigStore,
-    private walletClient?: WalletClient
+    private readonly keyStore: OrderlyKeyStore,
+    // wallet?: WalletAdapter
+    private readonly walletClient: WalletAdapter // private walletClient?: WalletClient
   ) {
-    if (walletClient) {
-      this._checkAccount();
+    // const accountId = this.keyStore.getAccountId();
+    const address = this.keyStore.getAddress();
+    console.log("address", address);
+    if (typeof address !== "undefined") {
+      // this.walletClient = new SimpleWallet(address);
+      this.address = address;
     }
   }
 
@@ -69,12 +72,8 @@ export class Account {
    */
   login(address: string) {
     if (!address) throw new Error("address is required");
-    this._state$.next({
-      ...this.stateValue,
-      status: "SignedIn",
-      address,
-    });
-    this.wallet = address;
+
+    // this.wallet = address;
   }
 
   logout() {
@@ -91,14 +90,16 @@ export class Account {
   /**
    * 为账户设置钱包
    */
-  set wallet(wallet: WalletClient | string) {
-    // 如果是字符串，就是钱包地址，使用SimpleWallet初始化
-    if (typeof wallet === "string") {
-      this.walletClient = new SimpleWallet(wallet);
-    } else {
-      this.walletClient = wallet;
-    }
-    this._checkAccount();
+  set address(address: string) {
+    if (!address) throw new Error("address is required");
+
+    this._state$.next({
+      ...this.stateValue,
+      status: AccountStatusEnum.Connected,
+      address,
+    });
+
+    this._checkAccount(address);
   }
 
   // subscribe the account state change
@@ -108,6 +109,11 @@ export class Account {
 
   get stateValue(): AccountState {
     return this._state$.getValue();
+  }
+
+  get accountId(): string | undefined {
+    const state = this.stateValue;
+    return state.accountId;
   }
 
   /**
@@ -128,20 +134,28 @@ export class Account {
   }
 
   // 检查账户状态
-  private async _checkAccount() {
-    if (!this.walletClient) return;
+  private async _checkAccount(address: string) {
+    // if (!this.walletClient) return;
     console.log("check account is esist");
     try {
       // check account is exist
-      const accountInfo = await this._checkAccountExist();
+      const accountInfo = await this._checkAccountExist(address);
       console.log(accountInfo);
-      if (accountInfo && accountInfo.accountId) {
+      if (
+        accountInfo &&
+        accountInfo.account_id &&
+        accountInfo.account_id !== this.stateValue.accountId
+      ) {
+        console.log("account next function::");
         this._state$.next({
           ...this.stateValue,
-          status: "SignedIn",
-          accountId: accountInfo.accountId,
-          userId: accountInfo.userId,
+          status: AccountStatusEnum.SignedIn,
+          accountId: accountInfo.account_id,
+          userId: accountInfo.user_id,
         });
+
+        this.keyStore.setAccountId(accountInfo.account_id);
+        this.keyStore.setAddress(address);
       }
       // check orderlyKey state
     } catch (err) {
@@ -149,9 +163,9 @@ export class Account {
     }
   }
 
-  private async _checkAccountExist() {
+  private async _checkAccountExist(address: string) {
     const res = await this._fetch(
-      `/get_account?address=${this.walletClient?.address}&brokerId=woofi_dex`
+      `/get_account?address=${address}&broker_id=woofi_dex`
     );
 
     if (res.success) {
@@ -159,6 +173,13 @@ export class Account {
     } else {
       throw new Error(res.message);
     }
+  }
+
+  get signer(): Signer {
+    if (!this._singer) {
+      this._singer = getMockSigner();
+    }
+    return this._singer;
   }
 
   private async getAccountInfo() {}

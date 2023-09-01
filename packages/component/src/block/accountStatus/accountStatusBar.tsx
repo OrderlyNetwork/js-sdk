@@ -1,13 +1,14 @@
+import React, { FC, useMemo } from "react";
 import Button from "@/button";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 
 import { AccountInfo } from "./sections/accountInfo";
-import React, { FC, useMemo } from "react";
 
 import { Text } from "@/text";
 import { NetworkImage } from "@/icon";
 import { ChevronDown } from "lucide-react";
 import { AccountTotal } from "./sections/accountTotal";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export type AccountStatus =
   | "NotConnected"
@@ -18,11 +19,13 @@ export type AccountStatus =
 
 interface AccountStatusProps {
   className?: string;
-  status: AccountStatus;
+  status: AccountStatusEnum;
   chains: string[];
   address?: string;
   balance?: string;
   currency?: string;
+  totalValue?: number;
+  accountInfo: any;
 
   loading?: boolean;
 
@@ -32,17 +35,17 @@ interface AccountStatusProps {
 }
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
-  const { status = "NotConnected" } = props;
+  const { status = AccountStatusEnum.NotConnected } = props;
 
   const buttonLabel = useMemo(() => {
     switch (status) {
-      case "NotConnected":
+      case AccountStatusEnum.NotConnected:
         return "Connect Wallet";
-      case "Connected":
+      case AccountStatusEnum.Connected:
 
-      case "NotSignedIn":
+      case AccountStatusEnum.NotSignedIn:
 
-      case "SignedIn":
+      case AccountStatusEnum.SignedIn:
         return (
           <Text rule="address" range={[4, 4]}>
             {props.address}
@@ -53,11 +56,12 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
 
   return (
     <div className="flex items-center justify-between h-[44px]">
-      {status !== "NotConnected" ? (
+      {status !== AccountStatusEnum.NotConnected ? (
         <AccountTotal
           status={status}
           currency={props.currency}
-          balance={props.balance}
+          totalValue={props.totalValue}
+          accountInfo={props.accountInfo}
         />
       ) : (
         <div />
@@ -73,7 +77,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           <NetworkImage id={1} type="chain" size={"small"} />
           <ChevronDown size={16} className="ml-2" />
         </Button>
-        {status === "NotConnected" ? (
+        {status === AccountStatusEnum.NotConnected ? (
           <Button
             size={"small"}
             loading={props.loading}
@@ -95,7 +99,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
                 {buttonLabel}
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent forceMount>
               <SheetHeader>My account</SheetHeader>
               <AccountInfo onDisconnect={props.onDisconnect} />
             </SheetContent>

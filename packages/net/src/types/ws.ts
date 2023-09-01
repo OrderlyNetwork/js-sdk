@@ -11,5 +11,5 @@ export type SendFunc = (message: any) => void;
 
 export interface MessageHandler {
   // wsSubject: WebSocketSubject<any>;
-  handle: (message: any, send: (message: SendFunc) => void) => void;
+  handle: (message: any, send: (message: any) => void) => void;
 }

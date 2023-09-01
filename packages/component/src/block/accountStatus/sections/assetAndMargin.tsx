@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import Button from "@/button";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
@@ -8,7 +9,7 @@ import { Statistic } from "@/statistic";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
 import { EyeOff } from "lucide-react";
-import { FC } from "react";
+import { useCollateral, usePositionStream } from "@orderly.network/hooks";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -16,6 +17,8 @@ export interface AssetAndMarginProps {
 }
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
+  const { totalCollateral, freeCollateral, totalValue } = useCollateral();
+  const [{ aggregated }] = usePositionStream();
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
       <div className="pt-3">
@@ -26,20 +29,20 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <EyeOff className="text-primary" size={14} />
             </div>
           }
-          value="166983.23"
+          value={totalValue}
           rule="price"
         />
       </div>
       <div className="grid grid-cols-2 py-4">
         <Statistic
           label="Unreal.PnL(USDC)"
-          value="166983.23"
+          value={aggregated.unrealPnL}
           rule="price"
           coloring
         />
         <Statistic
           label="Unsettled PnL(USDC)"
-          value="166983.23"
+          value={aggregated.unsettledPnL}
           rule="price"
           coloring
         />
@@ -56,7 +59,10 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             </div>
           }
         />
-        <Statistic label="Free / Total Collateral(USDC)" value="166,983.23" />
+        <Statistic
+          label="Free / Total Collateral(USDC)"
+          value={`${freeCollateral} / ${totalCollateral}`}
+        />
       </div>
 
       <div>

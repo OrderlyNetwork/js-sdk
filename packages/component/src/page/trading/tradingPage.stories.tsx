@@ -4,6 +4,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TradingPage } from ".";
 import { OrderlyProvider } from "../../provider";
 import { MemoryConfigStore } from "@orderly.network/core";
+import { useAppState } from "@orderly.network/hooks";
+import { Page } from "../../layout";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
   title: "Page/Trading",
@@ -20,7 +23,12 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={new MemoryConfigStore()}>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        walletAdapter={undefined}
+        keyStore={new WooKeyStore("testnet")}
+        logoUrl="/woo_fi_logo.svg"
+      >
         <Story />
       </OrderlyProvider>
     ),
@@ -34,7 +42,12 @@ type Story = StoryObj<typeof TradingPage>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    return <TradingPage symbol={symbol} {...args} />;
+    const appState = useAppState();
+    return (
+      <Page systemState={appState.systemState}>
+        <TradingPage symbol={symbol} {...args} />
+      </Page>
+    );
   },
   // args: {
   //   symbol: "BTC/USDT",

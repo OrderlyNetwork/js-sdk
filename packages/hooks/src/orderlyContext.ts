@@ -1,15 +1,25 @@
 import { createContext } from "react";
-import { Observable } from "rxjs";
-import { type ConfigStore } from "@orderly.network/core";
-import { MemoryConfigStore } from "@orderly.network/core";
 
-export interface OrderlyContextState {
+import {
+  type ConfigStore,
+  type OrderlyKeyStore,
+  type WalletAdapter,
+} from "@orderly.network/core";
+
+export interface OrderlyAppConfig {
+  logoUrl: string;
+  theme: any;
+}
+export interface OrderlyContextState extends OrderlyAppConfig {
   // coin cion generator
 
   // ws: WebSocketAdpater;
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
   configStore: ConfigStore;
+  keyStore: OrderlyKeyStore;
+  walletAdapter: WalletAdapter;
+  networkId: string;
   // account: Account;
 }
 

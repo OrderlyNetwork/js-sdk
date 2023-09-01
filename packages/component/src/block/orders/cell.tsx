@@ -4,7 +4,7 @@ import { Tag } from "@/tag";
 import { FC, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
 import { API } from "@orderly.network/types";
-// import {type Order} from '@orderly.network/core'
+import { Text } from "@/text";
 
 interface OrderCellProps {
   order: API.OrderExt;
@@ -25,9 +25,11 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     <div className={"p-4"}>
       <div className="flex items-center gap-2">
         {typeTag}
-        <div className="flex-1">BTC-PERP</div>
+        <div className="flex-1">
+          <Text rule="symbol">{order.symbol}</Text>
+        </div>
         <div className={"text-sm text-base-contrast/30"}>
-          2022-08-30 17:19:47
+          <Text rule="date">{order.created_time}</Text>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">

@@ -26,16 +26,13 @@ export type TotalValueInputs = {
  * 用戶總資產價值 (USDC計價)，包含無法作為保證金的資產
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Value}
  */
-export function totalValue(inputs: TotalValueInputs): number {
+export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
   }, zero);
 
-  return nonUSDCHoldingValue
-    .add(USDCHolding)
-    .add(totalUnsettlementPnL)
-    .toNumber();
+  return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
 
 /**
@@ -165,7 +162,10 @@ export function buyOrdersFilter_by_symbol(
   symbol: string
 ): API.Order[] {
   return orders.filter(
-    (item) => item.symbol === symbol && item.side === OrderSide.BUY
+    (item) =>
+      item.symbol === symbol &&
+      item.side === OrderSide.BUY &&
+      item.status === "NEW"
   );
 }
 
@@ -174,7 +174,10 @@ export function sellOrdersFilter_by_symbol(
   symbol: string
 ): API.Order[] {
   return orders.filter(
-    (item) => item.symbol === symbol && item.side === OrderSide.SELL
+    (item) =>
+      item.symbol === symbol &&
+      item.side === OrderSide.SELL &&
+      item.status === "NEW"
   );
 }
 
@@ -185,6 +188,9 @@ export function getQtyFromPositions(
   positions: API.Position[],
   symbol: string
 ): number {
+  if (!positions) {
+    return 0;
+  }
   const position = positions.find((item) => item.symbol === symbol);
   return position?.position_qty || 0;
 }
@@ -249,6 +255,9 @@ export function totalInitialMarginWithOrders(
     maxLeverage,
     symbolInfo,
   } = inputs;
+
+  // console.log("totalInitialMarginWithOrders inputs", inputs);
+
   const symbols = extractSymbols(positions, orders);
 
   const total_initial_margin_with_orders = symbols.reduce((acc, cur) => {
