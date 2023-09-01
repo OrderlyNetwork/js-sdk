@@ -1,7 +1,8 @@
+import { API } from "@orderly.network/types";
 import React, { PropsWithChildren } from "react";
 
 export interface TradingPageContextValue {
-  onSymbolChange?: (symbol: string) => void;
+  onSymbolChange?: (symbol: API.Symbol) => void;
   symbol: string;
 }
 
@@ -10,7 +11,7 @@ export const TradingPageContext = React.createContext<TradingPageContextValue>(
 );
 
 export interface TradingPageProviderProps {
-  onSymbolChange?: (symbol: string) => void;
+  onSymbolChange?: (symbol: API.Symbol) => void;
   symbol: string;
 }
 

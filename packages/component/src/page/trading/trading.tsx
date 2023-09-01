@@ -4,12 +4,10 @@ import { DataListView } from "./sections/dataList";
 import { ChartView } from "./sections/chartView";
 import { MyOrderBook } from "./sections/orderbook";
 import { MyOrderEntry } from "./sections/orderEntry";
-import { AccountStatusBar } from "@/block/accountStatus";
 import { Divider } from "@/divider";
 import { MyLeverageView } from "./sections/leverage";
 import { TradingPageProvider } from "./context/tradingPageContext";
 import { TradingViewChartConfig } from "@/block/tradingView";
-import { AccountStatusEnum, SystemStateEnum } from "@orderly.network/types";
 import { BottomNavBar } from "./sections/bottombar";
 import { Page } from "@/layout";
 

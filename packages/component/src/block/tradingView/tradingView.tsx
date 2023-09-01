@@ -17,7 +17,7 @@ declare const TradingView: any;
 
 export type TradingViewChartConfig = TradingViewChartProps &
   TimeIntervalToolbarProps & {
-    scriptSRC?: string;
+    scriptSRC: string;
     library_path: string;
     customCssUrl?: string;
   };
@@ -37,8 +37,8 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
       "create_volume_indicator_by_default",
     ],
 
-    scriptSRC = "/tradingview/charting_library/charting_library.js",
-    library_path = "/tradingview/charting_library/",
+    scriptSRC,
+    library_path,
     customCssUrl,
     ...chartProps
   } = props;
@@ -99,7 +99,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
               "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
               "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             },
-            preset: "mobile",
+            // preset: "mobile",
             datafeed: new DataFeed({
               apiBaseUrl: props.apiBaseUrl,
             }),

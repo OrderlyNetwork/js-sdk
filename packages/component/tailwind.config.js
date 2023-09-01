@@ -8,6 +8,7 @@ module.exports = {
   darkMode: ["class"],
   // content: ["./src/**/*.{ts,js,tsx,jsx}"],
   purge: ["./src/**/*.{ts,js,tsx,jsx}"],
+  // prefix: 'orderly-',
   theme: {
     extend: {
       colors: {
@@ -117,6 +118,7 @@ module.exports = {
     plugin(function ({ addBase }) {
       addBase({
         html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
       });
     }),
   ],
