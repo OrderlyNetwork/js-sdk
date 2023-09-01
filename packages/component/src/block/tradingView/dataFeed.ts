@@ -36,8 +36,8 @@ export default class DataFeed implements IBasicDataFeed {
     onResolveErrorCallback,
     extension
   ) {
-    console.log("[resolveSymbol]: Method call", symbolName);
-    fetch(`https://api.orderly.org/tv/symbol_info?group=${symbolName}`)
+    // console.log("[resolveSymbol]: Method call", symbolName);
+    fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=${symbolName}`)
       .then((res) => res.json())
       .then((data) => data && data.s === "ok")
       .then((res) => {
@@ -87,7 +87,7 @@ export default class DataFeed implements IBasicDataFeed {
     // console.log("[getBars]: Method call", symbolInfo);
     let resolutionNum = resolution < 5 ? 1 : resolution;
     fetch(
-      `https://api.orderly.org/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolutionNum}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
+      `${this.configuration.apiBaseUrl}/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolutionNum}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
     )
       .then((res) => res.json())
       .then((res) => {

@@ -49,9 +49,12 @@ export const Default: Story = {
       </Page>
     );
   },
-  // args: {
-  //   symbol: "BTC/USDT",
-  // },
+  args: {
+    tradingViewConfig: {
+      scriptSRC: "/tradingview/charting_library/charting_library.js",
+      library_path: "/tradingview/charting_library/",
+    },
+  },
 };
 
 export const CustomizeTheme: Story = {};

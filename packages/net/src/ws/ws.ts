@@ -169,7 +169,7 @@ export class WS {
     if (typeof message === "undefined") return;
     if (this.publicSocket.readyState === WebSocket.OPEN) {
       this.publicSocket.send(message);
-      console.log("WebSocket message sent:", message);
+      // console.log("WebSocket message sent:", message);
     } else {
       console.warn("WebSocket connection is not open. Cannot send message.");
     }

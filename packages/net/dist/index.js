@@ -430,7 +430,6 @@ var WS = class {
         return;
       if (this.publicSocket.readyState === WebSocket.OPEN) {
         this.publicSocket.send(message);
-        console.log("WebSocket message sent:", message);
       } else {
         console.warn("WebSocket connection is not open. Cannot send message.");
       }

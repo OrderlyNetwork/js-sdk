@@ -74,8 +74,9 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           color={"buy"}
           className={"border-[rgba(38,254,254,1)]"}
         >
-          <NetworkImage id={1} type="chain" size={"small"} />
-          <ChevronDown size={16} className="ml-2" />
+          {/* <NetworkImage id={1} type="chain" size={"small"} /> */}
+          <span>Testnet</span>
+          <ChevronDown size={16} />
         </Button>
         {status === AccountStatusEnum.NotConnected ? (
           <Button

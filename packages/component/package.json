@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/components",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -50,8 +50,10 @@
     "@web3-onboard/injected-wallets": "^2.10.4",
     "@web3-onboard/react": "^2.8.11",
     "autoprefixer": "^10.4.14",
+    "bs58": "^5.0.0",
     "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
+    "ethers": "^6.7.1",
     "postcss": "^8.4.26",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

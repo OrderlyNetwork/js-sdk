@@ -33,8 +33,6 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
           headers: {
             ...signature,
             "orderly-account-id": account.accountId,
-            // "orderly-account-id":
-            //   "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
           },
         });
       };

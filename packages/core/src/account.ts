@@ -1,6 +1,6 @@
 import { BehaviorSubject } from "rxjs";
 import { getMockSigner } from "./helper";
-import { MessageFactor } from "./signer";
+import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore";
 import { OrderlyKeyStore } from "./keyStore";
@@ -146,7 +146,7 @@ export class Account {
         accountInfo.account_id &&
         accountInfo.account_id !== this.stateValue.accountId
       ) {
-        console.log("account next function::");
+        // console.log("account next function::");
         this._state$.next({
           ...this.stateValue,
           status: AccountStatusEnum.SignedIn,
@@ -177,7 +177,8 @@ export class Account {
 
   get signer(): Signer {
     if (!this._singer) {
-      this._singer = getMockSigner();
+      // this._singer = getMockSigner();
+      this._singer = new BaseSigner(this.keyStore);
     }
     return this._singer;
   }
@@ -187,7 +188,7 @@ export class Account {
   private async getBalance() {}
 
   private async _fetch(url: string) {
-    const signer = getMockSigner();
+    const signer = this.signer;
     const requestUrl = `${this.configStore.get<string>("apiBaseUrl")}${url}`;
     const payload: MessageFactor = {
       method: "GET",

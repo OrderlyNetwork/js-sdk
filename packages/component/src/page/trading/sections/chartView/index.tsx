@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TabPane, Tabs } from "@/tab";
 import { TradeHistory } from "./tradeHistory";
 import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
+import { OrderlyContext } from "@orderly.network/hooks";
 
 interface ChartViewProps {
   symbol: string;
@@ -14,6 +15,9 @@ interface ChartViewProps {
 export const ChartView: FC<ChartViewProps> = (props) => {
   const { symbol, tradingViewConfig } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
+  const { klineDataUrl } = useContext(OrderlyContext);
+
+  console.log("klineDataUrl", klineDataUrl);
 
   return (
     <div>
@@ -42,6 +46,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
             theme={"dark"}
             symbol={symbol}
             autosize={false}
+            apiBaseUrl={klineDataUrl}
             {...tradingViewConfig}
           />
         </TabPane>

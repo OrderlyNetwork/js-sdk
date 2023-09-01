@@ -1,7 +1,12 @@
-import React, { FC, PropsWithChildren, useEffect, useState } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   OrderlyProvider as Provider,
-  DataSourceProvider,
   type WebSocketAdpater,
 } from "@orderly.network/hooks";
 import { ModalProvider } from "@/modal/modalContext";
@@ -31,14 +36,21 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   props
 ) => {
   const { children, networkId = "testnet", logoUrl, keyStore } = props;
-  const [apiBaseUrl, setApiBaseUrl] = useState<string>(
-    "https://dev-api-v2.orderly.org/v1"
-  );
+  const apiBaseUrl = useMemo(() => {
+    return props.configStore.get("apiBaseUrl");
+  }, [props.configStore]);
+  const klineDataUrl = useMemo(() => {
+    return props.configStore.get("klineDataUrl");
+  }, [props.configStore]);
+  // const [apiBaseUrl, setApiBaseUrl] = useState<string>(
+  //   "https://dev-api-v2.orderly.org/v1"
+  // );
 
   return (
     <Provider
       value={{
         apiBaseUrl,
+        klineDataUrl,
         configStore: props.configStore,
         logoUrl,
         keyStore,

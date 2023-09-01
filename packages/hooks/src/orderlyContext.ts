@@ -16,6 +16,7 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   // ws: WebSocketAdpater;
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
+  klineDataUrl: string;
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
   walletAdapter: WalletAdapter;

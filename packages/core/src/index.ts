@@ -11,7 +11,7 @@ export {
   BaseSigner,
 } from "./signer";
 
-export { type OrderlyKeyPair } from "./keyPair";
+export { type OrderlyKeyPair, BaseOrderlyKeyPair } from "./keyPair";
 
 export { getMockSigner, getDefaultSigner } from "./helper";
 

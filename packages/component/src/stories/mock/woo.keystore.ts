@@ -1,8 +1,18 @@
-import { BaseKeyStore, OrderlyKeyPair } from "@orderly.network/core";
+import {
+  BaseKeyStore,
+  OrderlyKeyPair,
+  BaseOrderlyKeyPair,
+} from "@orderly.network/core";
+
+import { decodeBase58, ethers } from "ethers";
 
 export class WooKeyStore extends BaseKeyStore {
   getOrderlyKey(): OrderlyKeyPair {
-    return "";
+    const parsedConfigs = this.parseLocalStorageConfigs();
+    const orderlyKey = parsedConfigs["orderlyKey"];
+    const secretKey = decodeBase58(orderlyKey).toString(16);
+    console.log("=======>>>>>>  secretKey", orderlyKey, secretKey);
+    return new BaseOrderlyKeyPair(secretKey);
   }
   getAccountId(): string | undefined {
     try {
