@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -34,7 +34,6 @@
     "@orderly.network/net": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "formik": "^2.4.3",
     "ramda": "^0.29.0",
     "rxjs-hooks": "0.8.0-alpha.0",
     "swr": "^2.2.0",

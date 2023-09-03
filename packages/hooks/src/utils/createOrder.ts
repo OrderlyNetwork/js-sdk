@@ -2,7 +2,9 @@ import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { order } from "@orderly.network/futures";
 
-export type VerifyResult = { [P in keyof OrderEntity]?: string };
+export type VerifyResult = {
+  [P in keyof OrderEntity]?: { type: string; message: string };
+};
 export type OrderFormEntity = Pick<
   OrderEntity,
   "order_price" | "order_quantity" | "total"
@@ -35,7 +37,12 @@ export abstract class BaseOrderCreator implements OrderCreator {
   baseOrder(data: OrderEntity): OrderEntity {
     const order: any = {
       // symbol: data.symbol,
-      order_type: !!data.order_type_ext ? data.order_type_ext : data.order_type,
+      order_type:
+        data.order_type === OrderType.LIMIT
+          ? !!data.order_type_ext
+            ? data.order_type_ext
+            : data.order_type
+          : data.order_type,
       side: data.side,
       // reduce_only: data.reduce_only,
       order_quantity: data.order_quantity,
@@ -52,23 +59,35 @@ export abstract class BaseOrderCreator implements OrderCreator {
     values: OrderFormEntity,
     configs: ValuesDepConfig
   ): Promise<VerifyResult> {
-    const errors: { [P in keyof OrderEntity]?: string } = {};
+    const errors: {
+      [P in keyof OrderEntity]?: { type: string; message: string };
+    } = {};
 
     const { maxQty } = configs;
 
-    // console.log("baseValidate", values, configs);
+    console.log("baseValidate", values, configs);
     const { order_quantity, total } = values;
 
     if (!order_quantity) {
-      errors.order_quantity = "quantity is required";
+      errors.order_quantity = {
+        type: "required",
+        message: "quantity is required",
+      };
     } else {
       //// 需要用MaxQty+base_max, base_min来判断
       const { base_max, base_min } = configs.symbol;
       const qty = new Decimal(order_quantity);
       if (qty.lt(base_min)) {
-        errors.order_quantity = `quantity must be greater than ${base_min}`;
+        errors.order_quantity = {
+          type: "min",
+          message: `quantity must be greater than ${base_min}`,
+        };
+        // errors.order_quantity = `quantity must be greater than ${base_min}`;
       } else if (qty.gt(maxQty)) {
-        errors.order_quantity = `quantity must be less than ${base_max}`;
+        errors.order_quantity = {
+          type: "max",
+          message: `quantity must be less than ${maxQty}`,
+        };
       }
     }
 
@@ -76,9 +95,15 @@ export abstract class BaseOrderCreator implements OrderCreator {
       const { quote_max, quote_min } = configs.symbol;
       const totalNumber = new Decimal(total);
       if (totalNumber.lt(quote_min)) {
-        errors.total = `Quantity should be greater than ${quote_min}`;
+        errors.total = {
+          type: "min",
+          message: `Quantity should be greater or equal than ${quote_min}`,
+        };
       } else if (totalNumber.gt(quote_max)) {
-        errors.total = `Quantity should be less or equal than ${quote_max}`;
+        errors.total = {
+          type: "max",
+          message: `Quantity should be less or equal than ${quote_max}`,
+        };
       }
     }
 
@@ -103,7 +128,10 @@ export class LimitOrderCreator extends BaseOrderCreator {
       const { order_price } = values;
 
       if (!order_price) {
-        errors.order_price = "price is required";
+        errors.order_price = {
+          type: "required",
+          message: "price is required",
+        };
       } else {
         const price = new Decimal(order_price);
         const { symbol } = config;
@@ -112,9 +140,15 @@ export class LimitOrderCreator extends BaseOrderCreator {
         const minPriceNumber = minPrice(config.markPrice, price_range);
 
         if (price.lt(minPriceNumber)) {
-          errors.order_price = `price must be greater than ${minPriceNumber}`;
+          errors.order_price = {
+            type: "min",
+            message: `price must be greater than ${minPriceNumber}`,
+          };
         } else if (price.gt(maxPriceNumber)) {
-          errors.order_price = `price must be less than ${maxPriceNumber}`;
+          errors.order_price = {
+            type: "max",
+            message: `price must be less than ${maxPriceNumber}`,
+          };
         }
       }
 
@@ -125,8 +159,12 @@ export class LimitOrderCreator extends BaseOrderCreator {
 
 export class MarketOrderCreator extends BaseOrderCreator {
   create(values: OrderEntity): OrderEntity {
+    const data = this.baseOrder(values);
+
+    delete data["order_price"];
+
     return {
-      ...this.baseOrder(values),
+      ...data,
     };
   }
   validate(

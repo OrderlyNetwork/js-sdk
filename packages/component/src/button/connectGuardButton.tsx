@@ -1,5 +1,7 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { FC, PropsWithChildren, ReactNode, useContext } from "react";
 import { Button } from "@/button/button";
+import { useAccount, OrderlyContext } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
@@ -10,12 +12,14 @@ export interface ConnectGuardButtonProps {
 export const ConnectGuardButton: FC<
   PropsWithChildren<ConnectGuardButtonProps>
 > = (props) => {
-  const { connected } = props;
+  const { state } = useAccount();
 
-  if (!connected) {
+  const { onWalletConnect } = useContext(OrderlyContext);
+
+  if (state.status === AccountStatusEnum.NotConnected) {
     if (typeof props.placeholder === "undefined") {
       return (
-        <Button fullWidth onClick={() => props.onConnectWallet?.()}>
+        <Button type="button" fullWidth onClick={() => onWalletConnect?.()}>
           Connect Wallet
         </Button>
       );

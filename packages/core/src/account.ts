@@ -40,6 +40,7 @@ export interface AccountState {
  * ```
  */
 export class Account {
+  static instanceName = "account";
   // private walletClient?: WalletClient;
   private _singer?: Signer;
   private _state$ = new BehaviorSubject<AccountState>({

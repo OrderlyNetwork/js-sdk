@@ -1,8 +1,6 @@
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 import { useEffect, useState } from "react";
-import { useObservable } from "rxjs-hooks";
-import { combineLatestWith, timeInterval } from "rxjs/operators";
 import { timeConvertString } from "@orderly.network/utils";
 
 export const useFundingRate = (symbol: string) => {

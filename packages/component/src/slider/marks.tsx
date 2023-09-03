@@ -19,6 +19,8 @@ export interface SliderMarksProps {
   // width: number;
   min: number;
   max: number;
+
+  disabled?: boolean;
 }
 
 export const SliderMarks: FC<SliderMarksProps> = (props) => {
@@ -27,6 +29,8 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
   // const spanRef = useRef<HTMLSpanElement | null>(null);
 
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
+
+  // console.log("SliderMarks", _value, marks);
 
   return (
     <>

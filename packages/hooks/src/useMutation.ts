@@ -1,6 +1,6 @@
 import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 
-import { post } from "@orderly.network/net";
+import { post, del } from "@orderly.network/net";
 import {
   type MessageFactor,
   type SignedMessagePayload,
@@ -8,6 +8,7 @@ import {
 import { OrderlyContext } from "./orderlyContext";
 import { useContext } from "react";
 import { SimpleDI, Account } from "@orderly.network/core";
+import { useAccountInstance } from "./useAccountInstance";
 
 const fetcher = (
   url: string,
@@ -17,32 +18,51 @@ const fetcher = (
   return post(url, options.arg.data, {
     headers: {
       ...options.arg.signature,
-      // "orderly-account-id":
-      //   "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
     },
   });
 };
 
+const deleteFetcher = (
+  url: string,
+  options: { arg: { data?: any; signature: SignedMessagePayload } }
+) => {
+  // console.log("muation fetcher", url, options);
+  return del(url, options.arg.data, {
+    headers: {
+      ...options.arg.signature,
+    },
+  });
+};
+
+type HTTP_METHOD = "POST" | "PUT" | "DELETE" | "GET";
+
+// export const useMutation = (
+//   url: string,
+//   method: any
+// ):any
 export const useMutation = <T, E>(
   url: string,
-  options?: SWRMutationConfiguration<T, E>
+  options?: SWRMutationConfiguration<T, E>,
+  method: HTTP_METHOD = "POST"
 ) => {
   const { apiBaseUrl } = useContext(OrderlyContext);
   if (!url.startsWith("http")) {
     url = `${apiBaseUrl}${url}`;
   }
-  let account = SimpleDI.get<Account>("account");
+
+  // let account = SimpleDI.get<Account>("account");
+  const account = useAccountInstance();
   // sign message;
   const signer = account.signer;
   const { trigger, data, error, reset, isMutating } = useSWRMutation(
     url,
-    fetcher,
+    method === "POST" ? fetcher : deleteFetcher,
     options
   );
 
   const mutation = async (data: any) => {
     const payload: MessageFactor = {
-      method: "POST",
+      method,
       url,
       data,
     };
@@ -58,11 +78,13 @@ export const useMutation = <T, E>(
     });
   };
 
-  return {
+  return [
     mutation,
-    data,
-    error,
-    reset,
-    isMutating,
-  };
+    {
+      data,
+      error,
+      reset,
+      isMutating,
+    },
+  ];
 };

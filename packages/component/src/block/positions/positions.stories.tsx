@@ -100,15 +100,22 @@ export const Default: Story = {
 };
 
 export const WithHooks: Story = {
-  render: (args, context) => {
-    const [data, info, { loading }] = usePositionStream();
+  render: (args, { globals }) => {
+    const [symbol, setSymbol] = React.useState(globals.symbol);
+    const [data, info, { loading }] = usePositionStream(symbol);
     // console.log("********", data, info.maintenance_margin_ratio());
+
+    const onShowAllSymbolChange = (isAll: boolean) => {
+      setSymbol(isAll ? "" : globals.symbol);
+    };
 
     return (
       <PositionsView
         {...args}
         dataSource={data.rows}
         aggregated={data.aggregated}
+        showAllSymbol={symbol === ""}
+        onShowAllSymbolChange={onShowAllSymbolChange}
       />
     );
   },

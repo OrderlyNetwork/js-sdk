@@ -36,13 +36,15 @@ const Slider = React.forwardRef<
     },
     ref
   ) => {
-    const { min = 0, max = 100, step } = props;
+    const { min = 0, max = 100, step, value = 0 } = props;
 
     // const spanRef = useRef<HTMLSpanElement | null>(null);
 
     // const size = useSize(spanRef.current);
 
     const innerMasks = useMemo(() => {
+      if (max === 0) return [];
+
       if (Array.isArray(marks) && marks.length > 0) {
         return marks;
       }
@@ -82,7 +84,7 @@ const Slider = React.forwardRef<
         },
         props.disabled && "bg-fill-light"
       );
-    }, [color]);
+    }, [color, props.disabled]);
 
     return (
       <div className={cn("relative", !!markLabelVisible && "pb-[18px]")}>

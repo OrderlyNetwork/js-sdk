@@ -1,53 +1,130 @@
 import Button from "@/button";
-import {
-  DialogContent,
-  DialogTrigger,
-  Dialog,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogBody,
-  DialogFooter,
-} from "@/dialog";
+
 import { Divider } from "@/divider";
 import { Input } from "@/input";
-import { Sheet, SheetContent, SheetDescription, SheetTrigger } from "@/sheet";
 import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { Text } from "@/text";
 import { type API } from "@orderly.network/core";
 import { Info } from "lucide-react";
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";
 import { modal, useModal } from "@/modal";
-import { useSymbolsInfo, useMarkPricesStream } from "@orderly.network/hooks";
+import {
+  useSymbolsInfo,
+  useMarkPricesStream,
+  useOrderEntry,
+} from "@orderly.network/hooks";
+import { Controller, useForm } from "react-hook-form";
+import { OrderSide, OrderType } from "@orderly.network/types";
+import { toast } from "@/toast";
 
 export interface ClosePositionPaneProps {
   position?: API.Position;
   onConfirm?: () => void;
+  needConfirm?: boolean;
+  side: OrderSide;
 
   onCancel?: () => void;
+  onClose: (res: any) => void;
 }
 export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
-  const { position } = props;
-  const { hide, reject, resolve } = useModal();
+  const { position, side } = props;
 
-  const { data: markPrices } = useMarkPricesStream();
+  // const { hide, reject, resolve } = useModal();
+
+  const { markPrice, maxQty, helper, onSubmit } = useOrderEntry(
+    position?.symbol,
+    side,
+    true
+  );
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    getValues,
+    setValue,
+
+    formState: { errors, submitCount, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      // order_price: markPrice,
+    },
+    values: {
+      order_price: "",
+      order_quantity: position?.position_qty,
+      symbol: position?.symbol,
+      order_type: OrderType.LIMIT,
+      side: side,
+    },
+    resolver: async (values) => {
+      const errors = await helper.validator(values);
+      return {
+        values,
+        errors,
+      };
+    },
+  });
 
   const symbolInfo = useSymbolsInfo()[position?.symbol];
+
+  // console.log(symbolInfo());
+
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
 
   const typeText = useMemo(() => {
-    if (position?.position_qty ?? 0 > 0)
-      return <Text type={"sell"}>Limit Sell</Text>;
+    if (side === OrderSide.SELL) return <Text type={"sell"}>Limit Sell</Text>;
     return <Text type={"buy"}>Limit Buy</Text>;
-  }, [position?.position_qty]);
+  }, [side]);
 
-  const onConfirm = () => {
-    modal.confirm({
+  const onConfirm = (data: any) => {
+    return modal.confirm({
       title: "Limit Close",
-      content: <LimitConfirm position={position} />,
+      content: (
+        <LimitConfirm order={data} base={base} quote={quote} side={side} />
+      ),
+    });
+  };
+
+  const onFormSubmit = useCallback(
+    (data: any) => {
+      return onConfirm(data).then(
+        () => {
+          return onSubmit(data).then(
+            (res: any) => {
+              // console.log(res);
+              if (res.success) {
+                toast.success("Order placed successfully");
+              }
+              props.onClose(res);
+            },
+            (error: Error) => {
+              toast.error(error.message);
+            }
+          );
+        },
+        () => {
+          console.log("cancel");
+        }
+      );
+    },
+    [side, quote]
+  );
+
+  const onFieldChange = (name: string, value: any) => {
+    const newValues = helper.calculate(getValues(), name, value);
+    // console.log("newValues", newValues);
+
+    if (name === "order_price") {
+      setValue("order_price", newValues.order_price, {
+        shouldValidate: submitCount > 0,
+      });
+    }
+
+    setValue("order_quantity", newValues.order_quantity, {
+      shouldValidate: submitCount > 0,
     });
   };
 
@@ -64,68 +141,99 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
         />
         <Statistic
           label="Last Price"
-          value={markPrices?.[position.symbol]}
+          value={markPrice}
+          rule="price"
           labelClassName="text-sm text-base-contrast/30"
         />
       </div>
       <Divider className="py-5" />
-      <div className="flex flex-col gap-5">
-        <Input prefix="Price" suffix={quote} className="text-right" />
-        <Input
-          prefix="Quantity"
-          suffix={base}
-          className="text-right"
-          defaultValue={position.position_qty}
-        />
-      </div>
+      <form onSubmit={handleSubmit(onFormSubmit)}>
+        <div className="flex flex-col gap-5">
+          <Controller
+            name="order_price"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  prefix="Price"
+                  suffix={quote}
+                  helpText={errors.order_price?.message}
+                  error={!!errors.order_price}
+                  className="text-right"
+                  value={field.value}
+                  onChange={(e) => {
+                    // field.onChange(e.target.value)
+                    onFieldChange("order_price", e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            name="order_quantity"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  prefix="Quantity"
+                  suffix={base}
+                  helpText={errors.order_quantity?.message}
+                  error={!!errors.order_quantity}
+                  className="text-right"
+                  value={field.value}
+                  onChange={(e) => {
+                    // field.onChange(e.target.value)
+                    onFieldChange("order_quantity", e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+        </div>
 
-      <div className="py-5">
-        <Slider
-          step={0.01}
-          min={0}
-          max={position.position_qty}
-          color={"buy"}
-          marks={[
-            {
-              value: 0,
-              label: "0%",
-            },
-            {
-              value: 25,
-              label: "25%",
-            },
-            {
-              value: 50,
-              label: "50%",
-            },
-            {
-              value: 75,
-              label: "75%",
-            },
-            {
-              value: 100,
-              label: "100%",
-            },
-          ]}
-        />
-      </div>
+        <div className="py-5">
+          <Controller
+            name="order_quantity"
+            control={control}
+            render={({ field }) => {
+              // console.log([Number(field.value ?? 0)], symbolInfo("base_tick"));
+              return (
+                <Slider
+                  step={symbolInfo("base_tick")}
+                  min={0}
+                  max={maxQty}
+                  color={"buy"}
+                  markCount={4}
+                  value={[Number(field.value ?? 0)]}
+                  onValueChange={(value) => {
+                    console.log(value);
+                    // if (typeof value[0] !== "undefined") {
+                    //   field.onChange(value[0]);
+                    // }
+                    setValue("order_quantity", value[0]);
+                  }}
+                />
+              );
+            }}
+          />
+        </div>
 
-      <div className="grid grid-cols-2 gap-3 py-5">
-        <Button
-          fullWidth
-          color={"secondary"}
-          onClick={() => {
-            // props.onCancel?.()
-            reject();
-            hide();
-          }}
-        >
-          Cancel
-        </Button>
-        <Button fullWidth onClick={() => onConfirm()}>
-          Confirm
-        </Button>
-      </div>
+        <div className="grid grid-cols-2 gap-3 py-5">
+          <Button
+            fullWidth
+            type="button"
+            color={"secondary"}
+            onClick={() => {
+              props.onCancel?.();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button fullWidth type="submit" loading={isSubmitting}>
+            Confirm
+          </Button>
+        </div>
+      </form>
     </>
   );
 };

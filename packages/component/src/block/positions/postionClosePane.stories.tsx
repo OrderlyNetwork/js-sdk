@@ -3,6 +3,9 @@ import React from "react";
 
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { ClosePositionPane } from "./sections/closeForm";
+import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
+import { OrderSide } from "@orderly.network/types";
 
 const meta: Meta = {
   title: "Block/ClosePositionPane",
@@ -12,7 +15,7 @@ const meta: Meta = {
   args: {
     position: {
       symbol: "PERP_ETH_USDC",
-      position_qty: 0.01,
+      position_qty: 0.151,
       cost_position: 18.58986,
       last_sum_unitary_funding: 0.0,
       pending_long_qty: 0.0,
@@ -30,10 +33,15 @@ const meta: Meta = {
       pnl_24_h: 0.0,
       fee_24_h: 0.0,
     },
+    side: OrderSide.SELL,
   },
   decorators: [
     (Story) => (
-      <OrderlyProvider>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        keyStore={new WooKeyStore()}
+        walletAdapter={new Web3WalletAdapter()}
+      >
         <Story />
       </OrderlyProvider>
     ),

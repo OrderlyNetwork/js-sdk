@@ -30,6 +30,8 @@ export interface NumeralProps {
   coloring?: boolean;
 
   loading?: boolean;
+
+  surfix?: React.ReactNode;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -39,7 +41,13 @@ const coloringClasses: Record<string, string> = {
 };
 
 export const Numeral: FC<NumeralProps> = (props) => {
-  const { rule = "price", coloring, precision, truncate = false } = props;
+  const {
+    rule = "price",
+    coloring,
+    precision,
+    surfix,
+    truncate = false,
+  } = props;
   // TODO: check precision
 
   const num = Number(props.children);
@@ -47,9 +55,6 @@ export const Numeral: FC<NumeralProps> = (props) => {
   const child = useMemo(() => {
     if (Number.isNaN(num)) {
       return "--";
-      // throw new Error(
-      //   `Numeral: children must be a number, but got ${props.children}`
-      // );
     }
     if (rule === "percentages") {
       return `${(num * 100).toFixed(2)}%`;
@@ -80,10 +85,21 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (num === 0) return coloringClasses.neutral;
     if (num < 0) return coloringClasses.lose;
 
-    // const firstChar = String(props.value).charAt(0);
-    // if (firstChar === "-") return coloringClasses.lose;
     return coloringClasses.profit;
   }, [coloring, props.children]);
 
-  return <span className={cn(colorClassName, props.className)}>{child}</span>;
+  const childWithUnit = useMemo(() => {
+    if (typeof surfix === "undefined") return child;
+    // return `${child} ${unit}`;
+    return (
+      <span className="flex gap-1">
+        {child}
+        {surfix}
+      </span>
+    );
+  }, [child, surfix]);
+
+  return (
+    <span className={cn(colorClassName, props.className)}>{childWithUnit}</span>
+  );
 };

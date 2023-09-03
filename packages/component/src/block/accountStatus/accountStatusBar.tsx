@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useContext, useMemo } from "react";
 import Button from "@/button";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 
@@ -9,6 +9,8 @@ import { NetworkImage } from "@/icon";
 import { ChevronDown } from "lucide-react";
 import { AccountTotal } from "./sections/accountTotal";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { Logo } from "@/logo";
+import { OrderlyContext } from "@orderly.network/hooks";
 
 export type AccountStatus =
   | "NotConnected"
@@ -36,6 +38,7 @@ interface AccountStatusProps {
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
+  const { logoUrl } = useContext(OrderlyContext);
 
   const buttonLabel = useMemo(() => {
     switch (status) {
@@ -101,7 +104,9 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               </Button>
             </SheetTrigger>
             <SheetContent forceMount>
-              <SheetHeader>My account</SheetHeader>
+              <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
+                My account
+              </SheetHeader>
               <AccountInfo onDisconnect={props.onDisconnect} />
             </SheetContent>
           </Sheet>

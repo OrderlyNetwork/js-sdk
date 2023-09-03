@@ -3,6 +3,7 @@ import Button, { IconButton } from "@/button";
 import { Share, Copy } from "lucide-react";
 import React, { FC } from "react";
 import { Text } from "@/text";
+import { useAccount } from "@orderly.network/hooks";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -11,6 +12,7 @@ export interface AccountInfoProps {
 
 export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect, accountId } = props;
+  const { account } = useAccount();
 
   return (
     <div>
@@ -18,8 +20,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         <div className="flex-1 flex ">
           <Avatar />
           <div className="flex flex-col">
-            <Text rule={"address"}>{accountId}</Text>
-            <div className="text-xs">Arbitrum</div>
+            <Text rule={"address"}>{account.accountId}</Text>
+            <div className="text-xs">Testnet</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -31,11 +33,11 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </IconButton>
         </div>
       </div>
-      <div className="py-4">
+      <div className="py-4 grid grid-cols-2 gap-3">
+        <Button variant={"outlined"}>Get test USDC</Button>
         <Button
           variant={"outlined"}
           color={"sell"}
-          fullWidth
           onClick={() => {
             onDisconnect?.();
           }}

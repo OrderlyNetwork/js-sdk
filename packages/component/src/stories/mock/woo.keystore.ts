@@ -4,14 +4,14 @@ import {
   BaseOrderlyKeyPair,
 } from "@orderly.network/core";
 
-import { decodeBase58, ethers } from "ethers";
+import { decodeBase58 } from "ethers";
 
 export class WooKeyStore extends BaseKeyStore {
   getOrderlyKey(): OrderlyKeyPair {
     const parsedConfigs = this.parseLocalStorageConfigs();
     const orderlyKey = parsedConfigs["orderlyKey"];
     const secretKey = decodeBase58(orderlyKey).toString(16);
-    console.log("=======>>>>>>  secretKey", orderlyKey, secretKey);
+
     return new BaseOrderlyKeyPair(secretKey);
   }
   getAccountId(): string | undefined {

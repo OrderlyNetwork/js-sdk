@@ -20,6 +20,7 @@ export type TradingViewChartConfig = TradingViewChartProps &
     scriptSRC?: string;
     library_path: string;
     customCssUrl?: string;
+    apiBaseUrl: string;
   };
 
 export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {

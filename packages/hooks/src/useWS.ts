@@ -1,4 +1,4 @@
-import { SimpleDI, getMockSigner } from "@orderly.network/core";
+import { Account, SimpleDI, getMockSigner } from "@orderly.network/core";
 import { WS } from "@orderly.network/net";
 import useConstant from "use-constant";
 
@@ -7,14 +7,14 @@ export const useWS = () => {
   const ws = useConstant(() => {
     // return getWebSocketClient(account);
     let websocketClient = SimpleDI.get<WS>(WS_NAME);
+    const account = SimpleDI.get<Account>(Account.instanceName);
 
     if (!websocketClient) {
       websocketClient = new WS({
-        accountId:
-          "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
+        // accountId: "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
         networkId: "testnet",
         onSigntureRequest: async (accountId: string) => {
-          const signer = getMockSigner();
+          const signer = account.signer;
           const timestamp = new Date().getTime();
           const result = await signer.signText(timestamp.toString());
 

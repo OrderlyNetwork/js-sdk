@@ -12,8 +12,7 @@ export function getWebSocketClient(
 
   if (!websocketClient) {
     websocketClient = new WebSocketClient({
-      accountId:
-        "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
+      accountId: account.accountId || "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
       // accountId: account.accountId,
       networkId,
       onSigntureRequest: async (accountId: string) => {

@@ -6,12 +6,13 @@ import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
 import { type API } from "@orderly.network/types";
-import { useMarkPricesSubject } from "./useMarkPricesSubject";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { propOr } from "ramda";
 import { OrderEntity } from "@orderly.network/types";
 import { useMutation } from "../useMutation";
+import { getCalculateHandler } from "../utils/orderEntryHelper";
+import { useAccount } from "../useAccount";
 // import { useAccount } from "../useAccount";
 // import { useDataSource } from "../useDataSource";
 
@@ -27,8 +28,6 @@ export const usePositionStream = (
   symbol?: string,
   options?: SWRConfiguration
 ) => {
-  // const [data, setData] = useState<Position[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [visibledSymbol, setVisibleSymbol] = useState<string | undefined>(
     symbol
   );
@@ -38,30 +37,19 @@ export const usePositionStream = (
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/client/info");
 
-  const { mutation } = useMutation<OrderEntity, any>("/order");
-
   const fundingRates = useFundingRates();
-  const markPrices$ = useMarkPricesSubject();
+
   // const { totalCollateral } = useCollateral();
 
-  const { data, error, isLoading } = usePrivateQuery<API.PositionInfo>(
-    `/positions`,
-    {
-      // revalidateOnFocus: false,
-      // revalidateOnReconnect: false,
-      ...options,
-      formatter: (data) => data,
-      onError: (err) => {
-        console.log("usePositionStream error", err);
-      },
-    }
-  );
-
-  type PositionArray =
-    | (API.Position & {
-        sum_unitary_funding?: number;
-      })[]
-    | undefined;
+  const { data, error } = usePrivateQuery<API.PositionInfo>(`/positions`, {
+    // revalidateOnFocus: false,
+    // revalidateOnReconnect: false,
+    ...options,
+    formatter: (data) => data,
+    onError: (err) => {
+      console.log("usePositionStream error", err);
+    },
+  });
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -70,7 +58,16 @@ export const usePositionStream = (
 
     let totalCollateral = 0;
 
-    return data.rows.map((item: API.Position) => {
+    const filteredData =
+      typeof symbol === "undefined" || symbol === ""
+        ? data.rows.filter((item) => {
+            return item.position_qty !== 0;
+          })
+        : data.rows.filter((item) => {
+            return item.symbol === symbol && item.position_qty !== 0;
+          });
+
+    return filteredData.map((item: API.Position) => {
       // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
       const price = propOr(
         item.mark_price,
@@ -113,7 +110,7 @@ export const usePositionStream = (
         }),
       };
     });
-  }, [data?.rows, symbolInfo, accountInfo, markPrices]);
+  }, [data?.rows, symbolInfo, accountInfo, markPrices, symbol]);
 
   // 合计数据
   const aggregatedData = useMemo(() => {
@@ -147,23 +144,17 @@ export const usePositionStream = (
 
   // console.log("usePositionStream ***", data, formatedPositions);
 
-  const onClosePosition = useCallback(
-    (order: Pick<OrderEntity, "order_type" | "order_price" | "side">) => {
-      return mutation(order).finally(() => {});
-    },
-    []
-  );
-
   return [
     { rows: formatedPositions, aggregated: aggregatedData },
     createGetter<Omit<API.Position, "rows">>(data as any, 1),
     {
-      close: onClosePosition,
+      // close: onClosePosition,
       loading: false,
       showSymbol,
       error,
       loadMore: () => {},
       refresh: () => {},
+
       // toggleHideOthers,
       // filter: (filter: string) => {},
     },

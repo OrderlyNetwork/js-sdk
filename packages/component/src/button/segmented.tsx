@@ -13,7 +13,8 @@ export type SegmentedItem = {
 export interface SegmentedButtonProps {
   buttons: SegmentedItem[];
   value?: string;
-  onClick: (value: string, event: Event) => void;
+  // onClick: (value: string, event: Event) => void;
+  onChange?: (value: string) => void;
 }
 
 export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
@@ -40,7 +41,7 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
             isActive={item.value === props.value}
             className={item.className}
             activeClassName={item.activeClassName}
-            onClick={props.onClick}
+            onChange={props.onChange}
           />
         );
       })}
@@ -53,15 +54,15 @@ const _Button = ({
   value,
   isActive,
   index,
-  onClick,
+  onChange,
   className,
   activeClassName,
-}: SegmentedItem & { index: number; isActive: boolean; onClick: Function }) => {
+}: SegmentedItem & { index: number; isActive: boolean; onChange: any }) => {
   const isFirstChild = index === 0;
   return (
     <button
       type="button"
-      onClick={(event) => onClick(value, event)}
+      onClick={(event) => onChange(value)}
       className={twMerge(
         cn(
           "min-w-0 flex-1 py-1 bg-fill text-base-contrast/20 relative after:block after:bg-fill after:absolute after:w-[30px] after:h-full after:top-0 after:z-10 h-[32px]",

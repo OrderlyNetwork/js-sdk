@@ -77,7 +77,7 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
   }, [props.isLoading, props.dataSource]);
 
   return (
-    <div className={cn("relative min-h-[120px]", props.className)}>
+    <div className={cn("relative min-h-[180px]", props.className)}>
       <div className="list-view-inner space-y-3">{listViewElement}</div>
       <div ref={sentinelRef} />
       {loadingViewElement}

@@ -26,6 +26,8 @@ interface OrderlyProviderProps {
   walletAdapter: WalletAdapter;
 
   logoUrl?: string;
+
+  onWalletConnect?: () => void;
 }
 //
 // API_URL: "https://dev-api-v2.orderly.org"
@@ -35,16 +37,25 @@ interface OrderlyProviderProps {
 export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   props
 ) => {
-  const { children, networkId = "testnet", logoUrl, keyStore } = props;
+  const {
+    children,
+    networkId = "testnet",
+    logoUrl,
+    keyStore,
+    configStore,
+    onWalletConnect,
+  } = props;
+
+  if (!configStore) {
+    throw new Error("configStore is required");
+  }
+
   const apiBaseUrl = useMemo(() => {
-    return props.configStore.get("apiBaseUrl");
-  }, [props.configStore]);
+    return configStore.get("apiBaseUrl");
+  }, [configStore]);
   const klineDataUrl = useMemo(() => {
-    return props.configStore.get("klineDataUrl");
-  }, [props.configStore]);
-  // const [apiBaseUrl, setApiBaseUrl] = useState<string>(
-  //   "https://dev-api-v2.orderly.org/v1"
-  // );
+    return configStore.get("klineDataUrl");
+  }, [configStore]);
 
   return (
     <Provider
@@ -55,6 +66,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         logoUrl,
         keyStore,
         networkId,
+        onWalletConnect,
       }}
     >
       <TooltipProvider>

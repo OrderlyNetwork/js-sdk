@@ -28,7 +28,14 @@ const positionsPath = pathOr([], [0, "rows"]);
  * 用户保证金
  * @returns
  */
-export const useCollateral = (dp: number = 6): CollateralOutputs => {
+
+type Options = {
+  dp: number;
+};
+export const useCollateral = (
+  options: Options = { dp: 6 }
+): CollateralOutputs => {
+  const { dp } = options;
   const positions = usePositionStream();
   // const { data: positions } = usePrivateQuery<API.PositionInfo>(`/positions`);
 

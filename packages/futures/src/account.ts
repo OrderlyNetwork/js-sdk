@@ -586,3 +586,27 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
     return 0;
   }
 }
+
+export type TotalMarginRatioInputs = {
+  totalCollateral: number;
+  markPrices: { [key: string]: number };
+  positions: API.Position[];
+};
+/**
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Margin-Ratio}
+ */
+export function totalMarginRatio(
+  inputs: TotalMarginRatioInputs,
+  dp?: number
+): number {
+  const { totalCollateral, markPrices, positions } = inputs;
+
+  const totalCollateralDecimal = new Decimal(totalCollateral);
+
+  const totalPositionNotional = positions.reduce((acc, cur) => {
+    const markPrice = markPrices[cur.symbol] || 0;
+    return acc.add(new Decimal(cur.position_qty).mul(markPrice));
+  }, zero);
+
+  return totalCollateralDecimal.div(totalPositionNotional).toNumber();
+}

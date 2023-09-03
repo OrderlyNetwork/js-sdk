@@ -21,6 +21,8 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   keyStore: OrderlyKeyStore;
   walletAdapter: WalletAdapter;
   networkId: string;
+
+  onWalletConnect?: () => void;
   // account: Account;
 }
 

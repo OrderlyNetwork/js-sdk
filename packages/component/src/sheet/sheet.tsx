@@ -91,15 +91,21 @@ SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({
   className,
+  leading,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col space-y-2 text-center text-headertitle",
-      className
-    )}
-    {...props}
-  />
+}: React.HTMLAttributes<HTMLDivElement> & {
+  leading?: React.ReactNode;
+}) => (
+  <div className="grid grid-cols-[40px_1fr_40px] items-center">
+    <div>{leading}</div>
+    <div
+      className={cn(
+        "flex flex-col space-y-2 text-center text-headertitle",
+        className
+      )}
+      {...props}
+    />
+  </div>
 );
 SheetHeader.displayName = "SheetHeader";
 

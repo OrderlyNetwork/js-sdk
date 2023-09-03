@@ -60,6 +60,7 @@ __export(src_exports, {
   WS: () => WS,
   WebSocketClient: () => ws_default,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
+  del: () => del,
   get: () => get,
   post: () => post
 });
@@ -76,13 +77,17 @@ function request(url, options) {
       // mode: "cors",
       // credentials: "include",
       headers: _createHeaders(options.headers)
-    })).catch((err) => {
-      throw new Error(err);
-    });
+    }));
     if (response.ok) {
-      return response.json();
+      const res = yield response.json();
+      if (res.success) {
+        return res;
+      } else {
+        throw new Error(res);
+      }
     }
-    throw new Error(response.statusText);
+    const error = yield response.json();
+    throw new Error(error.message || error.code || error);
   });
 }
 function _createHeaders(headers = {}) {
@@ -113,6 +118,15 @@ function post(url, data, options) {
   return __async(this, null, function* () {
     const res = yield request(url, __spreadValues({
       method: "POST",
+      body: JSON.stringify(data)
+    }, options));
+    return res;
+  });
+}
+function del(url, data, options) {
+  return __async(this, null, function* () {
+    const res = yield request(url, __spreadValues({
+      method: "DELETE",
       body: JSON.stringify(data)
     }, options));
     return res;
@@ -410,6 +424,7 @@ var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 
 // src/ws/ws.ts
 var defaultMessageFormatter = (message) => message.data;
+var COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 var WS = class {
   constructor(options) {
     this.options = options;
@@ -419,8 +434,6 @@ var WS = class {
     this.authenticated = false;
     this._pendingPrivateSubscribe = [];
     this._pendingPublicSubscribe = [];
-    this._subscriptionPublicTopics = [];
-    this._subscriptionPrivateTopics = [];
     this._eventHandlers = /* @__PURE__ */ new Map();
     this.send = (message) => {
       if (typeof message !== "string") {
@@ -446,7 +459,7 @@ var WS = class {
     } else {
       url = WS_URL[options.networkId || "testnet"].public;
     }
-    this.publicSocket = new WebSocket(`${url}${options.accountId}`);
+    this.publicSocket = new WebSocket(`${url}${COMMON_ID}`);
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
@@ -464,7 +477,7 @@ var WS = class {
     console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb]) => {
-        this.subscription(params, cb);
+        this.subscribe(params, cb);
       });
       this._pendingPublicSubscribe = [];
     }
@@ -474,7 +487,7 @@ var WS = class {
     console.log("Private WebSocket connection opened:");
     if (this._pendingPrivateSubscribe.length > 0) {
       this._pendingPrivateSubscribe.forEach(([params, cb]) => {
-        this.subscription(params, cb);
+        this.subscribe(params, cb);
       });
       this._pendingPrivateSubscribe = [];
     }
@@ -487,11 +500,15 @@ var WS = class {
       if (commoneHandler) {
         commoneHandler.handle(message, this.send);
       } else {
-        const eventhandler = this._eventHandlers.get(message.topic);
-        if (eventhandler == null ? void 0 : eventhandler.cb) {
-          eventhandler.cb.forEach((cb) => {
+        const eventhandler = this._eventHandlers.get(
+          message.topic || message.event
+        );
+        if (eventhandler == null ? void 0 : eventhandler.callback) {
+          eventhandler.callback.forEach((cb) => {
             const data = cb.formatter ? cb.formatter(message) : defaultMessageFormatter(message);
-            cb.onMessage(data);
+            if (data) {
+              cb.onMessage(data);
+            }
           });
         }
       }
@@ -506,7 +523,7 @@ var WS = class {
     console.error("WebSocket error:", event);
     this._eventHandlers.forEach((value, key) => {
       if (!value.isPrivate) {
-        this._pendingPublicSubscribe.push([value.params, value.cb]);
+        this._pendingPublicSubscribe.push([value.params, value.callback]);
         this._eventHandlers.delete(key);
       }
     });
@@ -516,7 +533,7 @@ var WS = class {
     console.error("Private WebSocket error:", event);
     this._eventHandlers.forEach((value, key) => {
       if (value.isPrivate) {
-        this._pendingPrivateSubscribe.push([value.params, value.cb]);
+        this._pendingPrivateSubscribe.push([value.params, value.callback]);
         this._eventHandlers.delete(key);
       }
     });
@@ -526,70 +543,112 @@ var WS = class {
     this.publicSocket.close();
     (_a = this.privateSocket) == null ? void 0 : _a.close();
   }
-  authenticate(accountId, message) {
-    if (this.authenticated)
-      return;
-    if (!this.privateSocket) {
-      console.error("private ws not connected");
-      return;
-    }
-    console.log("push auth message:", message);
-    this.privateSocket.send(
-      JSON.stringify({
-        id: "auth",
-        event: "auth",
-        params: {
-          orderly_key: message.publicKey,
-          sign: message.signature,
-          timestamp: message.timestamp
-        }
-      })
+  set accountId(accountId) {
+  }
+  authenticate(accountId) {
+    return __async(this, null, function* () {
+      var _a, _b;
+      if (this.authenticated)
+        return;
+      if (!this.privateSocket) {
+        console.error("private ws not connected");
+        return;
+      }
+      const message = yield (_b = (_a = this.options).onSigntureRequest) == null ? void 0 : _b.call(_a, accountId);
+      console.log("push auth message:", message);
+      this.privateSocket.send(
+        JSON.stringify({
+          id: "auth",
+          event: "auth",
+          params: {
+            orderly_key: message.publicKey,
+            sign: message.signature,
+            timestamp: message.timestamp
+          }
+        })
+      );
+    });
+  }
+  privateSubscribe(params, callback) {
+  }
+  subscribe(params, callback, once) {
+    console.log("\u{1F449}", params, callback, this.publicSocket.readyState);
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      callback.onUnsubscribe
     );
-  }
-  privateSubscription(params, cb) {
-  }
-  subscription(params, cb) {
-    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params);
-    const unsubscribe = () => {
-      console.log("unsubscribeMessage", unsubscribeMessage);
-      this.publicSocket.send(JSON.stringify(unsubscribeMessage));
-    };
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, cb]);
-      return unsubscribe;
+      this._pendingPublicSubscribe.push([params, callback]);
+      if (!once) {
+        return () => {
+          this.unsubscribe(subscribeMessage);
+        };
+      }
+      return;
     }
-    const handler = this._eventHandlers.get(subscribeMessage.topic);
+    const topic = subscribeMessage.topic || subscribeMessage.event;
+    const handler = this._eventHandlers.get(topic);
+    const callbacks = __spreadProps(__spreadValues({}, callback), {
+      onUnsubscribe
+    });
     if (!handler) {
-      this._eventHandlers.set(subscribeMessage.topic, {
+      this._eventHandlers.set(topic, {
         params,
-        cb: [cb]
+        callback: [callbacks]
       });
     } else {
-      handler.cb.push(cb);
+      handler.callback.push(callbacks);
     }
     this.publicSocket.send(JSON.stringify(subscribeMessage));
-    return unsubscribe;
+    if (!once) {
+      return () => {
+        this.unsubscribe(subscribeMessage);
+      };
+    }
   }
-  generateMessage(params, unsubscribe, messageFilter) {
-    let subscribeMessage, unsubscribeMessage;
-    let filter, messageFormatter = (message) => message.data;
+  onceSubscribe(params, callback) {
+    this.subscribe(params, callback, true);
+  }
+  unsubscribe(parmas) {
+    const topic = parmas.topic || parmas.event;
+    const handler = this._eventHandlers.get(topic);
+    console.log("\u{1F91C} unsubscribe", parmas, topic, handler);
+    if (!!handler && Array.isArray(handler == null ? void 0 : handler.callback)) {
+      if (handler.callback.length === 1) {
+        const unsubscribeMessage = handler.callback[0].onUnsubscribe(topic);
+        console.log("unsubscribeMessage", unsubscribeMessage);
+        this.publicSocket.send(JSON.stringify(unsubscribeMessage));
+        this._eventHandlers.delete(topic);
+      } else {
+        this._eventHandlers.set(topic, __spreadProps(__spreadValues({}, handler), {
+          callback: handler.callback.slice(0, -1)
+        }));
+      }
+    }
+  }
+  generateMessage(params, onUnsubscribe) {
+    let subscribeMessage;
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
-      unsubscribeMessage = { event: "unsubscribe", topic: params };
-      filter = (message) => message.topic === params;
     } else {
       subscribeMessage = params;
-      unsubscribeMessage = typeof unsubscribe === "function" ? unsubscribe() : unsubscribe;
-      filter = messageFilter || ((message) => true);
     }
-    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
+    if (typeof onUnsubscribe !== "function") {
+      if (typeof params === "string") {
+        console.log("\u{1F449}", params);
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params });
+      } else {
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
+      }
+    }
+    return [subscribeMessage, onUnsubscribe];
   }
   reconnectPublic() {
     if (this.publicIsReconnecting)
       return;
     this.publicIsReconnecting = true;
     console.log(`Reconnecting in ${this.reconnectInterval / 1e3} seconds...`);
-    this.publicReconnectTimeout = window.setTimeout(() => {
+    window.setTimeout(() => {
       console.log("Reconnecting...");
       this.createPublicSC(this.options);
     }, this.reconnectInterval);
@@ -600,6 +659,7 @@ var WS = class {
   WS,
   WebSocketClient,
   __ORDERLY_API_URL_KEY__,
+  del,
   get,
   post
 });

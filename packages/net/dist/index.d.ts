@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 
 declare function get<R>(url: string, options?: RequestInit, formatter?: (data: any) => R): Promise<R>;
 declare function post(url: string, data: any, options?: Omit<RequestInit, "method">): Promise<any>;
+declare function del(url: string, data: any, options?: Omit<RequestInit, "method">): Promise<any>;
 
 type NetworkId$1 = "testnet" | "mainnet";
 type WSOptions$1 = {
@@ -46,7 +47,7 @@ type WSMessageHandler = {
     onMessage: (message: any) => void;
     onError?: (error: any) => void;
     onClose?: (event: any) => void;
-    onUnsubscribe: (event: any) => string;
+    onUnsubscribe: (event: any) => any;
     formatter?: (message: any) => any;
 };
 declare class WS {
@@ -55,14 +56,10 @@ declare class WS {
     private privateSocket?;
     private publicIsReconnecting;
     private privateIsReconnecting;
-    private publicReconnectTimeout?;
-    private privateReconnectTimeout?;
     private reconnectInterval;
     private authenticated;
     private _pendingPrivateSubscribe;
     private _pendingPublicSubscribe;
-    private _subscriptionPublicTopics;
-    private _subscriptionPrivateTopics;
     private _eventHandlers;
     constructor(options: WSOptions);
     private createPublicSC;
@@ -75,11 +72,14 @@ declare class WS {
     private onPrivateError;
     send: (message: any) => void;
     close(): void;
+    set accountId(accountId: string);
     private authenticate;
-    privateSubscription(params: any, cb: WSMessageHandler): void;
-    subscription(params: any, cb: WSMessageHandler): unsubscribe;
+    privateSubscribe(params: any, callback: WSMessageHandler): void;
+    subscribe(params: any, callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">, once?: boolean): unsubscribe | undefined;
+    onceSubscribe(params: any, callback: Omit<WSMessageHandler, "onUnsubscribe">): void;
+    private unsubscribe;
     private generateMessage;
     private reconnectPublic;
 }
 
-export { NetworkId$1 as NetworkId, WS, WSOptions$1 as WSOptions, WebSocketClient, __ORDERLY_API_URL_KEY__, get, post };
+export { NetworkId$1 as NetworkId, WS, WSOptions$1 as WSOptions, WebSocketClient, __ORDERLY_API_URL_KEY__, del, get, post };

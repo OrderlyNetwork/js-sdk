@@ -57,30 +57,12 @@ export const useOrderStream = ({
     }
   );
 
-  // const _orders = useObservable<API.OrderExt[] | null, API.Order[][]>(
-  //   (_, input$) =>
-  //     input$.pipe(
-  //       map(([data]) => {
-  //         return data.flat();
-  //       }),
-  //       combineLatestWith(markPrices$),
-  //       map(([data, markPrices]) => {
-  //         return data.map((item: API.Order) => ({
-  //           ...item,
-  //           mark_price: (markPrices as any)[item.symbol] ?? 0,
-  //         }));
-  //       })
-  //     ),
-  //   null,
-  //   [res.data ?? []]
-  // );
-
   const orders = useMemo(() => {
     if (!res.data) {
       return null;
     }
 
-    console.log("orders:::", markPrices);
+    // console.log("orders:::", markPrices);
 
     return res.data?.flat().map((item) => {
       return {

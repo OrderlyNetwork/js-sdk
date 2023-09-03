@@ -1,8 +1,9 @@
-import { FC, HTMLAttributes, PropsWithChildren, useMemo } from "react";
+import React, { FC, HTMLAttributes, PropsWithChildren, useMemo } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { TradingPair } from "./tradingPair";
 import { cn } from "@/utils/css";
 import { Slot } from "@radix-ui/react-slot";
+import { dayjs } from "@orderly.network/utils";
 
 const textVariants = cva([], {
   variants: {
@@ -32,6 +33,9 @@ export interface TextProps
   range?: [number, number];
   loading?: boolean;
   symbolElement?: "quote" | "base";
+  surfix?: React.ReactNode;
+
+  formatString?: string;
 }
 export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
   const {
@@ -42,6 +46,8 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
     className,
     children,
     symbolElement,
+    surfix,
+    formatString,
     ...rest
   } = props;
   const Comp = asChildren ? Slot : "span";
@@ -55,7 +61,12 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
       const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
       return `${address.replace(reg, "$1...$3")}`;
     }
-    if (rule === "date") return new Date(children as string).toLocaleString();
+    if (rule === "date") {
+      // return new Date(children as string).toLocaleString();
+      return dayjs(children as string).format(
+        formatString ?? "YYYY-MM-DD HH:mm:ss"
+      );
+    }
     if (rule === "symbol") {
       const arr = (children as string).split("_");
       if (typeof symbolElement !== "undefined") {
@@ -70,11 +81,21 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
     return children;
   }, [children, rule]);
 
+  const contentWithSurfix = useMemo(() => {
+    if (typeof surfix === "undefined") return content;
+    return (
+      <span className="flex gap-1">
+        {content}
+        {surfix}
+      </span>
+    );
+  }, [content, surfix]);
+
   return (
     <Comp
       {...rest}
       className={cn(textVariants({ variant, type, className }))}
-      children={content}
+      children={contentWithSurfix}
     />
   );
 };

@@ -40,7 +40,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
             onEdit={props.onEditOrder}
           />
         )}
-      ></ListView.separated>
+      />
     </StatisticStyleProvider>
   );
 };

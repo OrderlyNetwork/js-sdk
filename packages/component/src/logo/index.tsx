@@ -4,10 +4,17 @@ export interface LogoProps {
   link?: string;
   image: string;
   title?: string;
+  size?: number;
 }
 
-export const Logo: FC<LogoProps> = ({ link = "/", image, title }) => {
+export const Logo: FC<LogoProps> = ({
+  link = "/",
+  image,
+  title,
+  size = 50,
+}) => {
   const [url, setUrl] = React.useState<string>();
+
   useEffect(() => {
     const img = new Image();
 
@@ -36,7 +43,7 @@ export const Logo: FC<LogoProps> = ({ link = "/", image, title }) => {
   return (
     <div
       className="flex flex-row justify-center items-center"
-      style={{ width: "50px", height: "50px" }}
+      style={{ width: `${size}px`, height: `${size}px` }}
     >
       <a href={link}>{logo}</a>
     </div>

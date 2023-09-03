@@ -7,6 +7,7 @@ import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
   title: string;
   content: React.ReactNode;
+  onOk?: () => Promise<any>;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
@@ -17,8 +18,17 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
       title={props.title}
       closable={false}
       onOk={() => {
-        resolve(true);
-        hide();
+        return Promise.resolve()
+          .then(() => {
+            if (typeof props.onOk === "function") {
+              return props.onOk();
+            }
+            return true;
+          })
+          .then(() => {
+            resolve(true);
+            hide();
+          });
       }}
       onCancel={() => {
         reject(false);

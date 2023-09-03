@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TabPane, Tabs } from "@/tab";
-import { TradeHistory } from "./tradeHistory";
+import { TradeHistoryPane } from "./tradeHistory";
 import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
@@ -17,7 +17,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   const [activeTab, setActiveTab] = useState("tradingView");
   const { klineDataUrl } = useContext(OrderlyContext);
 
-  console.log("klineDataUrl", klineDataUrl);
+  console.log("klineDataUrl", klineDataUrl, symbol);
 
   return (
     <div>
@@ -51,10 +51,10 @@ export const ChartView: FC<ChartViewProps> = (props) => {
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">
-          <TradeHistory />
+          <TradeHistoryPane symbol={symbol} />
         </TabPane>
         <TabPane title="Data" value="tradeData">
-          <TradeData />
+          <TradeData symbol={symbol} />
         </TabPane>
       </Tabs>
     </div>

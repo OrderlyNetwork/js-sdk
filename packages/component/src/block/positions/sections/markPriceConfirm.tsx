@@ -1,7 +1,7 @@
 import { Text } from "@/text";
 import { API } from "@orderly.network/types";
 import { FC, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo, useQuery } from "@orderly.network/hooks";
 
 interface Props {
   position: API.Position;

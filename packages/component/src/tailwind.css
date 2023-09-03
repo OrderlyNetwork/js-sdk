@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+ 
   :root {
+    --onboard-modal-z-index: 100;
+
     /* colors */
     --orderly-color-primary: 51 95 252;
     --orderly-color-secondary: 51 57 72;

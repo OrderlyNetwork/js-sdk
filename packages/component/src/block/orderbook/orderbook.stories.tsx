@@ -3,15 +3,22 @@ import type { Meta } from "@storybook/react";
 import React from "react";
 import { OrderBook } from ".";
 import { StoryObj } from "@storybook/react";
-import { useOrderbook, useInfo } from "@orderly.network/hooks";
+import { useOrderbookStream } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
+import { MemoryConfigStore } from "@orderly.network/core";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
   title: "Block/OrderBook",
   component: OrderBook,
   decorators: [
     (Story) => (
-      <OrderlyProvider>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        walletAdapter={undefined}
+        keyStore={new WooKeyStore("testnet")}
+        logoUrl="/woo_fi_logo.svg"
+      >
         <Story />
       </OrderlyProvider>
     ),
@@ -69,11 +76,10 @@ export const Default: Story = {
 };
 
 export const WithData: Story = {
-  render: (args) => {
-    const [data, { onDepthChange }] = useOrderbook("PERP_ETH_USDC");
-    const { data: info } = useInfo("PERP_ETH_USDC");
-    console.log(data);
-    console.log(info);
+  render: (args, { globals }) => {
+    const { symbol } = globals;
+    const [data, { onDepthChange }] = useOrderbookStream(symbol);
+
     return (
       <OrderBook
         {...args}

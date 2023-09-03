@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import Button from "@/button";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
@@ -9,7 +9,11 @@ import { Statistic } from "@/statistic";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
 import { EyeOff } from "lucide-react";
-import { useCollateral, usePositionStream } from "@orderly.network/hooks";
+import {
+  useCollateral,
+  usePositionStream,
+  useMarginRatio,
+} from "@orderly.network/hooks";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -17,11 +21,15 @@ export interface AssetAndMarginProps {
 }
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
-  const { totalCollateral, freeCollateral, totalValue } = useCollateral();
+  const { totalCollateral, freeCollateral, totalValue } = useCollateral({
+    dp: 2,
+  });
   const [{ aggregated }] = usePositionStream();
+  const marginRatio = useMarginRatio();
+
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
-      <div className="pt-3">
+      <div className="pt-5">
         <Statistic
           label={
             <div className="flex gap-2 text-base items-center">
@@ -53,7 +61,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label="Margin Ratio"
           value={
             <div className="flex items-center gap-2">
-              <div className="text-primary">123.45%</div>
+              <Numeral rule="percentages" className="text-primary">
+                {marginRatio}
+              </Numeral>
 
               <RiskIndicator height={24} />
             </div>
@@ -61,22 +71,32 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
         <Statistic
           label="Free / Total Collateral(USDC)"
-          value={`${freeCollateral} / ${totalCollateral}`}
+          value={
+            <div>
+              <Numeral>{freeCollateral}</Numeral> /{" "}
+              <Numeral>{totalCollateral}</Numeral>
+            </div>
+          }
         />
       </div>
 
       <div>
         <Statistic
-          label="Max Account Leverage"
+          label={
+            <div className="flex justify-between">
+              <span>Max Account Leverage</span>
+              <span>Current:0.00x</span>
+            </div>
+          }
           value={
-            <div className="py-4">
+            <div className="py-1">
               <Slider />
             </div>
           }
         />
       </div>
       <Divider className="py-4" />
-      <Paper className="bg-slate-600/20">
+      <Paper className="bg-base-100">
         <div className="flex justify-between text-sm text-base-contrast">
           <span>Instrument</span>
           <span>Available Balance</span>

@@ -25,8 +25,6 @@ export const useMaxQty = (
 
   const { data: orders } = usePrivateQuery<API.Order[]>(`/orders`);
 
-  // console.log("orders:::::", orders);
-
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/client/info");

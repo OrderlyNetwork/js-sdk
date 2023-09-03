@@ -10,11 +10,12 @@ import { TradingPageProvider } from "./context/tradingPageContext";
 import { TradingViewChartConfig } from "@/block/tradingView";
 import { BottomNavBar } from "./sections/bottombar";
 import { Page } from "@/layout";
+import { API } from "@orderly.network/types";
 
 interface TradingPageProps {
   symbol: string;
   tradingViewConfig: TradingViewChartConfig;
-  onSymbolChange?: (symbol: string) => void;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {

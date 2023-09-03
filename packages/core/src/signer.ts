@@ -16,6 +16,7 @@ export type SignedMessagePayload = {
   "orderly-key": string;
   "orderly-timestamp": string;
   "orderly-signature": string;
+  "orderly-account-id"?: string;
 };
 
 /**

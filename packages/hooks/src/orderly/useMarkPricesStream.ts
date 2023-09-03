@@ -1,7 +1,6 @@
 import useSWRSubscription from "swr/subscription";
 
 import { useWS } from "../useWS";
-import { useState } from "react";
 
 export const useMarkPricesStream = () => {
   const ws = useWS();
@@ -9,13 +8,11 @@ export const useMarkPricesStream = () => {
   // const [isLoading, setIsLoading] = useState(true);
 
   return useSWRSubscription("markPrices", (key, { next }) => {
-    const unsubscribe = ws.subscription(
-      { event: "subscribe", topic: "markprices" },
+    const unsubscribe = ws.subscribe(
+      // { event: "subscribe", topic: "markprices" },
+      "markprices",
       {
         onMessage: (message: any) => {
-          // if (isLoading) {
-          //   setIsLoading(false);
-          // }
           const data: Record<string, number> = Object.create(null);
 
           for (let index = 0; index < message.length; index++) {
@@ -25,9 +22,9 @@ export const useMarkPricesStream = () => {
 
           next(null, data);
         },
-        onUnsubscribe: () => {
-          return "markprices";
-        },
+        // onUnsubscribe: () => {
+        //   return "markprices";
+        // },
         onError: (error: any) => {
           console.log("error", error);
         },
@@ -37,7 +34,6 @@ export const useMarkPricesStream = () => {
     return () => {
       //unsubscribe
       console.log("unsubscribe!!!!!!!");
-      console.log("unsubscribe", unsubscribe);
       unsubscribe?.();
     };
   });

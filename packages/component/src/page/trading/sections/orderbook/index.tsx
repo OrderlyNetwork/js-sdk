@@ -1,5 +1,5 @@
 import { OrderBook } from "@/block/orderbook";
-import { useOrderbook, useSymbolsInfo } from "@orderly.network/hooks";
+import { useOrderbookStream, useSymbolsInfo } from "@orderly.network/hooks";
 import { FC } from "react";
 
 interface MyOrderBookProps {
@@ -8,7 +8,7 @@ interface MyOrderBookProps {
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const { symbol } = props;
-  const [data, { onDepthChange }] = useOrderbook(symbol, undefined, {
+  const [data, { onDepthChange }] = useOrderbookStream(symbol, undefined, {
     level: 7,
   });
   const config = useSymbolsInfo();

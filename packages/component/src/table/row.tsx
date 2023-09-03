@@ -11,7 +11,14 @@ export const Row: FC<RowProps> = (props) => {
 
   const cols = useMemo(() => {
     return columns.map((column, index) => {
-      return <Col key={index} col={column} index={index} record={record} />;
+      return (
+        <Col
+          key={column.dataIndex}
+          col={column}
+          index={index}
+          record={record}
+        />
+      );
     });
   }, [columns, record]);
 

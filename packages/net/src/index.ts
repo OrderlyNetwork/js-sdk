@@ -1,4 +1,4 @@
-export { get, post } from "./fetch";
+export { get, post, del } from "./fetch";
 
 export { default as WebSocketClient } from "./ws";
 export { type NetworkId, type WSOptions } from "./ws";

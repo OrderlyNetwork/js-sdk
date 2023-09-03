@@ -1,20 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BehaviorSubject, Subscription } from "rxjs";
-import {
-  startWith,
-  map,
-  scan,
-  withLatestFrom,
-  tap,
-  switchMap,
-  debounceTime,
-} from "rxjs/operators";
-import { merge } from "rxjs";
-import { useWebSocketClient } from "../useWebSocketClient";
-import { pick, pathOr, defaultTo, last, compose, head } from "ramda";
+
+import { pick, pathOr, defaultTo, last, compose, head, set } from "ramda";
 import useConstant from "use-constant";
 import { useTickerStream } from "./useTickerStream";
-import { useObservable } from "rxjs-hooks";
+import { useMarkPrice } from "./useMarkPrice";
+import { useWS } from "../useWS";
 
 export type OrderBookItem = number[];
 
@@ -34,7 +24,7 @@ const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-const commonSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
+// const commonSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
 const reduceItems = (depth: number, level: number, data: OrderBookItem[]) => {
   if (!Array.isArray(data) || data.length === 0) {
@@ -44,7 +34,12 @@ const reduceItems = (depth: number, level: number, data: OrderBookItem[]) => {
 
   for (let i = 0; i < data.length; i++) {
     const [price, quantity] = data[i];
-    result.push([price, quantity, quantity + (i > 0 ? result[i - 1][2] : 0)]);
+    if (isNaN(price) || isNaN(quantity)) continue;
+    result.push([
+      price,
+      quantity,
+      quantity + (result.length > 0 ? result[result.length - 1][2] : 0),
+    ]);
     // if the total is greater than the level, break
     if (i + 1 >= level) {
       break;
@@ -66,6 +61,7 @@ export const reduceOrderbook = (
   data: OrderbookData
 ): OrderbookData => {
   const asks = reduceItems(depth, level, data.asks).reverse();
+
   const bids = reduceItems(depth, level, data.bids);
   return {
     asks:
@@ -117,32 +113,34 @@ export type OrderbookOptions = {
 };
 
 /**
- * @name useOrderbook
+ * @name useOrderbookStream
  * @description React hook that returns the current orderbook for a given market
  */
-export const useOrderbook = (
+export const useOrderbookStream = (
   symbol: string,
   initial: OrderbookData = { asks: [], bids: [] },
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
-    throw new Error("useOrderbook requires a symbol");
+    throw new Error("useOrderbookStream requires a symbol");
   }
 
+  const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);
+  const [isLoading, setIsLoading] = useState(true);
   const [depth, setDepth] = useState(0.001);
   const [level, setLevel] = useState(() => options?.level ?? 10);
 
-  const ws = useWebSocketClient();
+  // console.log("useOrderbookStream -----------", data);
 
-  const orderbookSubscriberRef = useRef<Subscription | undefined>();
+  const ws = useWS();
 
   const ticker = useTickerStream(symbol);
 
-  // console.log("ticker:::::::", ticker);
+  // const orderbookRequest =
 
-  const orderbookRequest$ = useMemo(() => {
-    return ws.observe(
+  useEffect(() => {
+    ws.onceSubscribe(
       {
         event: "request",
         params: {
@@ -150,80 +148,65 @@ export const useOrderbook = (
           symbol: symbol,
         },
       },
-      undefined,
-      (message: any) => message.event === "request"
+      {
+        onMessage: (message: any) => {
+          console.log("orderbook request message", message);
+          if (!!message) {
+            const reduceOrderbookData = reduceOrderbook(depth, level, message);
+            setRequestData(reduceOrderbookData);
+            setData(reduceOrderbookData);
+          }
+          setIsLoading(false);
+        },
+      }
     );
+
+    return () => {
+      setRequestData(null);
+    };
   }, [symbol]);
 
-  const orderbookUpdate$ = useMemo(() => {
-    return ws
-      .observe(`${symbol}@orderbookupdate`, () => ({
-        event: "subscribe",
-        topic: `${symbol}@orderbookupdate`,
-      }))
-      .pipe(
-        startWith({ asks: [], bids: [] })
-        // filter((message: any) => !!message.success)
-      );
-  }, [symbol]);
+  // const {data:markPrices} = useMarkPricesStream();
 
-  const orderbookOptions$ = useConstant(() => {
-    return new BehaviorSubject({
-      depth: 0.001,
-      level: 10,
-    });
-  });
-
-  const markPrice = useObservable(
-    (_, input$) =>
-      input$.pipe(
-        debounceTime(200),
-        switchMap(([symbol]) => {
-          return ws
-            .observe(`${symbol}@markprice`)
-            .pipe(map((data: any) => data.price));
-        })
-      ),
-    0,
-    [symbol]
-  );
+  const { data: markPrice } = useMarkPrice(symbol);
 
   useEffect(() => {
-    if (orderbookSubscriberRef.current) {
-      orderbookSubscriberRef.current.unsubscribe();
-    }
+    if (!requestData) return;
 
-    orderbookSubscriberRef.current = merge(orderbookRequest$, orderbookUpdate$)
-      .pipe(
-        // tap((data) => console.log(data)),
-        map<any, OrderbookData>(
-          (data) => pick(["asks", "bids"], data) as OrderbookData
-        ),
-        scan<OrderbookData, OrderbookData>((acc, curr) => {
-          if (!acc.asks && !acc.bids) {
-            return curr;
-          }
+    const subscription = ws.subscribe(
+      {
+        event: "subscribe",
+        topic: `${symbol}@orderbookupdate`,
+      },
+      {
+        onMessage: (message: any) => {
+          // console.log("orderbook update message", message);
 
-          return mergeOrderbook(acc, curr);
-        }),
-        map((data) => reduceOrderbook(depth, level, data))
-      )
-      .subscribe((data) => {
-        setData(data);
-      });
+          setData((data) => {
+            const mergedData =
+              !message.asks && !message.bids
+                ? data
+                : mergeOrderbook(data, message);
 
-    () => {
-      return orderbookSubscriberRef.current?.unsubscribe();
+            const reducedData = reduceOrderbook(depth, level, mergedData);
+            return reducedData;
+          });
+        },
+      }
+    );
+
+    return () => {
+      subscription?.(); //unsubscribe
     };
-  }, [orderbookRequest$, orderbookUpdate$]);
+  }, [symbol, requestData]);
 
   const onDepthChange = useCallback((depth: number) => {
     console.log("Orderbook depth has changed:", depth);
-    orderbookOptions$.next({
-      ...orderbookOptions$.value,
-      depth,
-      // level,
-    });
+    // orderbookOptions$.next({
+    //   ...orderbookOptions$.value,
+    //   depth,
+    //   // level,
+    // });
   }, []);
 
   // markPrice, lastPrice
@@ -233,7 +216,7 @@ export const useOrderbook = (
       bidsFirst = 0;
 
     if (data.asks.length > 0) {
-      asksFrist = data.asks[data.bids.length - 1][0];
+      asksFrist = data.asks[data.asks.length - 1][0];
     }
 
     if (data.bids.length > 0) {
@@ -241,10 +224,6 @@ export const useOrderbook = (
     }
 
     if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
-
-    // const asksFirst = asksFirstPath(data);
-    // const bidsFirst = bidsFirstPath(data);
-    // console.log("asksFirst", asksFrist, bidsFirst, ticker["24h_close"]);
 
     return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
   }, [ticker, data]);
@@ -255,4 +234,4 @@ export const useOrderbook = (
   ];
 };
 
-export type useOrderbookReturn = ReturnType<typeof useOrderbook>;
+export type useOrderbookStreamReturn = ReturnType<typeof useOrderbookStream>;

@@ -18,8 +18,7 @@ export default class DataFeed implements IBasicDataFeed {
     }
   ) {
     this.wsClient = new WebSocketClient({
-      accountId:
-        "0x47ab075adca7dfe9dd206eb7c50a10f7b99f4f08fa6c3abd4c170d438e15093b",
+      accountId: "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
     });
   }
   async onReady(callback: OnReadyCallback) {

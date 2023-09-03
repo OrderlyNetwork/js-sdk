@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
 export const useAccountInstance = () => {
-  const { configStore, keyStore } = useContext(OrderlyContext);
+  const { configStore, keyStore, walletAdapter } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new Error("configStore is not defined, please use OrderlyProvider");
@@ -19,14 +19,14 @@ export const useAccountInstance = () => {
     let account = SimpleDI.get<Account>("account");
 
     if (!account) {
-      account = new Account(configStore, keyStore);
+      account = new Account(configStore, keyStore, walletAdapter);
 
       SimpleDI.registerByName("account", account);
     }
     return account;
   });
 
-  console.log("account instance ======>>>>>", account);
+  // console.log("account instance ======>>>>>", account);
 
   return account;
 };

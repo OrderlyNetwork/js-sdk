@@ -12,6 +12,8 @@ interface PositionsViewProps {
   // actions
   onLimitClose?: (position: any) => void;
   onMarketClose?: (position: any) => void;
+  onShowAllSymbolChange?: (isAll: boolean) => void;
+  showAllSymbol?: boolean;
   onMarketCloseAll?: () => void;
   loadMore?: () => void;
   isLoading?: boolean;
@@ -27,6 +29,8 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
         <PositionOverview
           onMarketCloseAll={props.onMarketCloseAll}
           aggregated={props.aggregated}
+          onShowAllSymbolChange={props.onShowAllSymbolChange}
+          showAllSymbol={props.showAllSymbol}
         />
         <Divider />
         <>

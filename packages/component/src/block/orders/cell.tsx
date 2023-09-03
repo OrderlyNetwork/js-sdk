@@ -5,6 +5,7 @@ import { FC, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
 import { API } from "@orderly.network/types";
 import { Text } from "@/text";
+import { NumeralTotal } from "@/text/numeralTotal";
 
 interface OrderCellProps {
   order: API.OrderExt;
@@ -22,8 +23,8 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     );
   }, [order]);
   return (
-    <div className={"p-4"}>
-      <div className="flex items-center gap-2">
+    <div className={"px-4 py-2"}>
+      <div className="flex items-center gap-2 mb-1">
         {typeTag}
         <div className="flex-1">
           <Text rule="symbol">{order.symbol}</Text>
@@ -38,7 +39,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
         <Statistic
           label="Est.Total(USDC)"
           value={
-            <Numeral.total
+            <NumeralTotal
               price={props.order.price ?? 1}
               quantity={props.order.quantity}
             />
@@ -48,21 +49,21 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
         <Statistic label="Limit Price(USDC)" value={order.price ?? "-"} />
         <Statistic label="Mark Price(USDC)" value={order.mark_price} />
       </div>
-      <div className="flex gap-3 py-2">
+      <div className="flex gap-3 justify-end mt-2">
         <Button
-          fullWidth
           variant="outlined"
           size="small"
           color="tertiary"
+          className="w-[120px]"
           onClick={() => props.onEdit?.(order)}
         >
           Edit
         </Button>
         <Button
-          fullWidth
           variant="outlined"
           color="tertiary"
           size="small"
+          className="w-[120px]"
           onClick={() => props.onCancel?.(order)}
         >
           Cancel

@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { type AccountStatusBar } from "../accountStatusBar";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 import { EyeOff } from "lucide-react";
@@ -6,6 +6,8 @@ import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";
 import { type API, AccountStatusEnum } from "@orderly.network/types";
+import { OrderlyContext } from "@orderly.network/hooks";
+import { Logo } from "@/logo";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -16,6 +18,7 @@ interface AccountTotalProps {
 
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
+  const { logoUrl } = useContext(OrderlyContext);
 
   // console.log("accountInfo", accountInfo);
 
@@ -72,7 +75,9 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         </div>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>Assets & Margin</SheetHeader>
+        <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
+          Assets & Margin
+        </SheetHeader>
         <AssetAndMarginSheet />
       </SheetContent>
     </Sheet>

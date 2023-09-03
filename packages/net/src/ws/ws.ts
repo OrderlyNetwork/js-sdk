@@ -13,21 +13,30 @@ export type WSOptions = {
 
 export type unsubscribe = () => void;
 
+export type MessageParams = {
+  event: string;
+  topic: string;
+
+  params?: any;
+  // [key: string]: any;
+};
+
 type WSMessageHandler = {
   onMessage: (message: any) => void;
   onError?: (error: any) => void;
   onClose?: (event: any) => void;
-  onUnsubscribe: (event: any) => string;
+  onUnsubscribe: (event: any) => any;
   formatter?: (message: any) => any;
 };
 
 type Topics = {
-  params: any;
+  params: MessageParams;
   isPrivate?: boolean;
-  cb: WSMessageHandler[];
+  callback: WSMessageHandler[];
 };
 
 const defaultMessageFormatter = (message: any) => message.data;
+const COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 
 export class WS {
   private publicSocket!: WebSocket;
@@ -36,18 +45,12 @@ export class WS {
   private publicIsReconnecting: boolean = false;
   private privateIsReconnecting: boolean = false;
 
-  private publicReconnectTimeout?: number;
-  private privateReconnectTimeout?: number;
-
   private reconnectInterval: number = 1000;
 
   private authenticated: boolean = false;
 
   private _pendingPrivateSubscribe: any[][] = [];
   private _pendingPublicSubscribe: any[][] = [];
-
-  private _subscriptionPublicTopics: Topics[] = [];
-  private _subscriptionPrivateTopics: Topics[] = [];
 
   private _eventHandlers: Map<string, Topics> = new Map();
 
@@ -66,7 +69,7 @@ export class WS {
     } else {
       url = WS_URL[options.networkId || "testnet"].public;
     }
-    this.publicSocket = new WebSocket(`${url}${options.accountId}`);
+    this.publicSocket = new WebSocket(`${url}${COMMON_ID}`);
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
@@ -87,7 +90,7 @@ export class WS {
     console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb]) => {
-        this.subscription(params, cb);
+        this.subscribe(params, cb);
       });
       this._pendingPublicSubscribe = [];
     }
@@ -100,7 +103,7 @@ export class WS {
 
     if (this._pendingPrivateSubscribe.length > 0) {
       this._pendingPrivateSubscribe.forEach(([params, cb]) => {
-        this.subscription(params, cb);
+        this.subscribe(params, cb);
       });
       this._pendingPrivateSubscribe = [];
     }
@@ -116,13 +119,18 @@ export class WS {
       if (commoneHandler) {
         commoneHandler.handle(message, this.send);
       } else {
-        const eventhandler = this._eventHandlers.get(message.topic);
-        if (eventhandler?.cb) {
-          eventhandler.cb.forEach((cb) => {
+        const eventhandler = this._eventHandlers.get(
+          message.topic || message.event
+        );
+        if (eventhandler?.callback) {
+          eventhandler.callback.forEach((cb) => {
             const data = cb.formatter
               ? cb.formatter(message)
               : defaultMessageFormatter(message);
-            cb.onMessage(data);
+
+            if (data) {
+              cb.onMessage(data);
+            }
           });
         }
       }
@@ -143,7 +151,7 @@ export class WS {
 
     this._eventHandlers.forEach((value, key) => {
       if (!value.isPrivate) {
-        this._pendingPublicSubscribe.push([value.params, value.cb]);
+        this._pendingPublicSubscribe.push([value.params, value.callback]);
         this._eventHandlers.delete(key);
       }
     });
@@ -156,7 +164,7 @@ export class WS {
 
     this._eventHandlers.forEach((value, key) => {
       if (value.isPrivate) {
-        this._pendingPrivateSubscribe.push([value.params, value.cb]);
+        this._pendingPrivateSubscribe.push([value.params, value.callback]);
         this._eventHandlers.delete(key);
       }
     });
@@ -180,19 +188,16 @@ export class WS {
     this.privateSocket?.close();
   }
 
-  private authenticate(
-    accountId: string,
-    message: {
-      publicKey: string;
-      signature: string;
-      timestamp: number;
-    }
-  ) {
+  set accountId(accountId: string) {}
+
+  private async authenticate(accountId: string) {
     if (this.authenticated) return;
     if (!this.privateSocket) {
       console.error("private ws not connected");
       return;
     }
+
+    const message = await this.options.onSigntureRequest?.(accountId);
 
     console.log("push auth message:", message);
     this.privateSocket.send(
@@ -210,73 +215,117 @@ export class WS {
     // this.authenticated = true;
   }
 
-  privateSubscription(params: any, cb: WSMessageHandler) {}
+  privateSubscribe(params: any, callback: WSMessageHandler) {}
 
-  subscription(params: any, cb: WSMessageHandler): unsubscribe {
-    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] =
-      this.generateMessage(params);
+  subscribe(
+    params: any,
+    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
+    once?: boolean
+  ): unsubscribe | undefined {
+    console.log("👉", params, callback, this.publicSocket.readyState);
 
-    const unsubscribe = () => {
-      console.log("unsubscribeMessage", unsubscribeMessage);
-      this.publicSocket.send(JSON.stringify(unsubscribeMessage));
-    };
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      (callback as WSMessageHandler).onUnsubscribe
+    );
 
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, cb]);
-      return unsubscribe;
+      this._pendingPublicSubscribe.push([params, callback]);
+
+      if (!once) {
+        return () => {
+          this.unsubscribe(subscribeMessage);
+        };
+      }
+      return;
     }
 
-    const handler = this._eventHandlers.get(subscribeMessage.topic);
+    const topic = subscribeMessage.topic || subscribeMessage.event;
+
+    const handler = this._eventHandlers.get(topic);
+    const callbacks = {
+      ...callback,
+      onUnsubscribe,
+    };
 
     if (!handler) {
-      this._eventHandlers.set(subscribeMessage.topic, {
+      this._eventHandlers.set(topic, {
         params,
-        cb: [cb],
+        callback: [callbacks],
       });
     } else {
-      handler.cb.push(cb);
+      handler.callback.push(callbacks);
     }
 
     this.publicSocket.send(JSON.stringify(subscribeMessage));
     // this._subscriptionPublicTopics.push({params, cb: [cb]});
 
-    return unsubscribe;
+    if (!once) {
+      return () => {
+        this.unsubscribe(subscribeMessage);
+      };
+    }
+  }
+
+  onceSubscribe(
+    params: any,
+    callback: Omit<WSMessageHandler, "onUnsubscribe">
+  ) {
+    this.subscribe(params, callback, true);
+  }
+
+  private unsubscribe(parmas: MessageParams) {
+    const topic = parmas.topic || parmas.event;
+    const handler = this._eventHandlers.get(topic);
+    console.log("🤜 unsubscribe", parmas, topic, handler);
+
+    if (!!handler && Array.isArray(handler?.callback)) {
+      if (handler!.callback.length === 1) {
+        const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
+
+        console.log("unsubscribeMessage", unsubscribeMessage);
+        this.publicSocket.send(JSON.stringify(unsubscribeMessage));
+        this._eventHandlers.delete(topic);
+        //post unsubscribe message
+      } else {
+        this._eventHandlers.set(topic, {
+          ...handler,
+          callback: handler.callback.slice(0, -1),
+        });
+      }
+    }
   }
 
   private generateMessage(
     params: any,
-    unsubscribe?: () => any,
-    messageFilter?: (value: any) => boolean
-  ): [
-    Record<string, any>,
-    Record<string, any>,
-    (message: any) => boolean,
-    (message: any) => any
-  ] {
-    let subscribeMessage: Record<string, any>,
-      unsubscribeMessage: Record<string, any>;
-    let filter: (message: any) => boolean,
-      messageFormatter: (message: any) => any = (message: any) => message.data;
+    onUnsubscribe?: (event: string) => any
+  ): [MessageParams, (event: string) => any] {
+    let subscribeMessage;
 
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
-      unsubscribeMessage = { event: "unsubscribe", topic: params };
-      filter = (message: any) => message.topic === params;
     } else {
       subscribeMessage = params;
-      unsubscribeMessage =
-        typeof unsubscribe === "function" ? unsubscribe() : unsubscribe;
-      filter = messageFilter || ((message: any) => true);
     }
 
-    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
+    if (typeof onUnsubscribe !== "function") {
+      if (typeof params === "string") {
+        console.log("👉", params);
+
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params });
+      } else {
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
+      }
+    }
+
+    return [subscribeMessage, onUnsubscribe];
   }
 
   private reconnectPublic() {
     if (this.publicIsReconnecting) return;
     this.publicIsReconnecting = true;
     console.log(`Reconnecting in ${this.reconnectInterval / 1000} seconds...`);
-    this.publicReconnectTimeout = window.setTimeout(() => {
+    window.setTimeout(() => {
       console.log("Reconnecting...");
       // this.publicIsReconnecting = false;
 

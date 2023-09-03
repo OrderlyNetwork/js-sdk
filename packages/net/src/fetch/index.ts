@@ -9,14 +9,20 @@ async function request(url: string, options: RequestInit) {
     // mode: "cors",
     // credentials: "include",
     headers: _createHeaders(options.headers),
-  }).catch((err) => {
-    throw new Error(err);
   });
 
   if (response.ok) {
-    return response.json();
+    const res = await response.json();
+    if (res.success) {
+      return res;
+    } else {
+      throw new Error(res);
+    }
   }
-  throw new Error(response.statusText);
+
+  const error = await response.json();
+
+  throw new Error(error.message || error.code || error);
 }
 
 function _createHeaders(headers: HeadersInit = {}): HeadersInit {
@@ -67,4 +73,32 @@ async function post(
   return res;
 }
 
-export { get, post };
+// async function put(
+//   url: string,
+//   data: any,
+//   options?: Omit<RequestInit, "method">
+// ): Promise<any> {
+//   const res = await request(url, {
+//     method: "PUT",
+//     body: JSON.stringify(data),
+//     ...options,
+//   });
+
+//   return res;
+// }
+
+async function del(
+  url: string,
+  data: any,
+  options?: Omit<RequestInit, "method">
+): Promise<any> {
+  const res = await request(url, {
+    method: "DELETE",
+    body: JSON.stringify(data),
+    ...options,
+  });
+
+  return res;
+}
+
+export { get, post, del };

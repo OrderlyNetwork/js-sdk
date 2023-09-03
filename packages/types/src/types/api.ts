@@ -1,3 +1,5 @@
+import { OrderSide } from "../order";
+
 export declare namespace API {
   //v1/public/token
   export interface Token {
@@ -155,6 +157,14 @@ export declare namespace API {
     MMR_with_orders: number;
     pnl_24_h: number;
     fee_24_h: number;
+  }
+
+  export interface Trade {
+    symbol: Symbol;
+    side: OrderSide;
+    executed_price: number;
+    executed_quantity: number;
+    executed_timestamp: number;
   }
 
   export interface Holding {
