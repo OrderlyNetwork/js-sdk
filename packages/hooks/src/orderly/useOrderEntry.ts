@@ -1,14 +1,13 @@
 import { useMutation } from "../useMutation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useTokenInfo } from "./useTokenInfo";
 
-import { compose, head, reduce, type } from "ramda";
+import { compose, head } from "ramda";
 import {
-  OrderEntityKey,
   baseInputHandle,
   getCalculateHandler,
   orderEntityFormatHandle,
@@ -20,9 +19,6 @@ import { useMarkPrice } from "./useMarkPrice";
 
 export interface OrderEntryReturn {
   onSubmit: (values: OrderEntity) => Promise<any>;
-  // validateForm: (values?: any) => Promise<FormikErrors<OrderEntity>>;
-  // resetForm: (nextState?: Partial<FormikState<OrderEntity>>) => void;
-
   // setValue: (field: OrderEntityKey, value: any) => void;
   maxQty: number;
   freeCollateral: number;

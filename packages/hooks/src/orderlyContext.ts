@@ -19,7 +19,7 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   klineDataUrl: string;
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
-  walletAdapter: WalletAdapter;
+  walletAdapter: { new (options: any): WalletAdapter };
   networkId: string;
 
   onWalletConnect?: () => Promise<any>;

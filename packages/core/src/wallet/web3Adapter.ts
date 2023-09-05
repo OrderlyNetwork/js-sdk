@@ -19,6 +19,6 @@ export class Web3WalletAdapter implements WalletAdapter {
     method: string,
     params: Array<any> | Record<string, any>
   ): Promise<any> {
-    return this.provider.send(method, params);
+    // return this.provider.send(method, params);
   }
 }

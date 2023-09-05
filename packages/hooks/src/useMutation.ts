@@ -44,7 +44,7 @@ export const useMutation = <T, E>(
   url: string,
   options?: SWRMutationConfiguration<T, E>,
   method: HTTP_METHOD = "POST"
-) => {
+): [any, any] => {
   const { apiBaseUrl } = useContext(OrderlyContext);
   if (!url.startsWith("http")) {
     url = `${apiBaseUrl}${url}`;
@@ -60,7 +60,7 @@ export const useMutation = <T, E>(
     options
   );
 
-  const mutation = async (data: any) => {
+  const mutation = async (data: any): Promise<any> => {
     const payload: MessageFactor = {
       method,
       url,
