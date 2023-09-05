@@ -90,6 +90,7 @@
     "@radix-ui/react-use-size": "^1.0.1",
     "@use-gesture/react": "^10.2.27",
     "class-variance-authority": "^0.6.1",
+    "ethereum-blockies-base64": "^1.0.2",
     "lucide-react": "^0.265.0",
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",

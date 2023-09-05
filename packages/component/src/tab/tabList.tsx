@@ -44,7 +44,7 @@ export const TabList: FC<TabListProps> = (props) => {
     const { left, width } = target.getBoundingClientRect();
     const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
 
-    setLeft(left - parentLeft + (width - 30) / 2);
+    setLeft(left - parentLeft + (width - 40) / 2);
   }, []);
 
   useEffect(() => {

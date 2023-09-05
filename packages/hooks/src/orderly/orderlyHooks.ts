@@ -22,4 +22,6 @@ export { useMaxQty } from "./useMaxQty";
 
 export { useMarginRatio } from "./useMarginRatio";
 
+export { useChains } from "./useChains";
+
 // export { useOrderStream } from "./useOrderStream";

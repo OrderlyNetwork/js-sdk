@@ -34,15 +34,16 @@ const buttonVariants = cva(
         large: "px-6 py-3",
       },
       color: {
-        primary: "text-primary hover:bg-primary hover:text-white",
+        primary:
+          "text-primary hover:bg-primary hover:text-white active:bg-primary/90",
         secondary:
-          "text-secondary bg-secondary hover:bg-secondary hover:text-white",
+          "text-secondary bg-secondary hover:bg-secondary hover:text-white active:bg-secondary/90",
         tertiary: "bg-tertiary",
         success:
-          "text-success bg-transparent hover:bg-success hover:text-white",
-        buy: "text-white bg-trade-profit hover:bg-trade-profit/90",
-        sell: "text-white bg-trade-loss hover:bg-trade-loss/90",
-        danger: "text-danger bg-danger hover:bg-danger/90",
+          "text-success bg-transparent hover:bg-success hover:text-white active:bg-success/90",
+        buy: "text-white bg-trade-profit hover:bg-trade-profit/90 active:bg-trade-profit/90",
+        sell: "text-white bg-trade-loss hover:bg-trade-loss/90 active:bg-trade-loss/90",
+        danger: "text-danger bg-danger hover:bg-danger/90 active:bg-danger/90",
       },
       // evlevation: {
       //

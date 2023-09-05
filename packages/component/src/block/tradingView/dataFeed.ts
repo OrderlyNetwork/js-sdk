@@ -85,6 +85,9 @@ export default class DataFeed implements IBasicDataFeed {
   ) {
     // console.log("[getBars]: Method call", symbolInfo);
     let resolutionNum = resolution < 5 ? 1 : resolution;
+    if (resolution > 60) {
+      resolutionNum = `${resolution / 60}h`;
+    }
     fetch(
       `${this.configuration.apiBaseUrl}/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolutionNum}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
     )

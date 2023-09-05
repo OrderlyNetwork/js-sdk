@@ -4,11 +4,17 @@ import { PositionsView } from "@/block/positions";
 import { usePositionStream } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "@/block/positions/sections/closeForm";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  API,
+  AccountStatusEnum,
+  OrderEntity,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { LimitConfirm } from "@/block/positions/sections/limitConfirm";
 import { MarkPriceConfirm } from "@/block/positions/sections/markPriceConfirm";
 import { PositionLimitCloseDialog } from "@/block/positions/sections/closeDialog";
-import { useMutation } from "@orderly.network/hooks";
+import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
 
@@ -22,6 +28,7 @@ export const PositionPane = () => {
   };
 
   const [data, info, { loading }] = usePositionStream(symbol);
+  const { state } = useAccount();
 
   const [postOrder] = useMutation<OrderEntity, any>("/order");
 
@@ -72,7 +79,9 @@ export const PositionPane = () => {
 
   return (
     <PositionsView
-      dataSource={data.rows}
+      dataSource={
+        state.status < AccountStatusEnum.EnableTrading ? [] : data.rows
+      }
       aggregated={data.aggregated}
       isLoading={loading}
       onLimitClose={onLimitClose}

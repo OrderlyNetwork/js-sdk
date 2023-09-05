@@ -264,6 +264,9 @@ importers:
       class-variance-authority:
         specifier: ^0.6.1
         version: 0.6.1
+      ethereum-blockies-base64:
+        specifier: ^1.0.2
+        version: 1.0.2
       lucide-react:
         specifier: ^0.265.0
         version: 0.265.0(react@18.2.0)
@@ -11434,6 +11437,12 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
+  /ethereum-blockies-base64@1.0.2:
+    resolution: {integrity: sha512-Vg2HTm7slcWNKaRhCUl/L3b4KrB8ohQXdd5Pu3OI897EcR6tVRvUqdTwAyx+dnmoDzj8e2bwBLDQ50ByFmcz6w==}
+    dependencies:
+      pnglib: 0.0.1
+    dev: false
+
   /ethers@5.5.3:
     resolution: {integrity: sha512-fTT4WT8/hTe/BLwRUtl7I5zlpF3XC3P/Xwqxc5AIP2HGlH15qpmjs0Ou78az93b1rLITzXLFxoNX63B8ZbUd7g==}
     dependencies:
@@ -15854,6 +15863,10 @@ packages:
     dependencies:
       find-up: 6.3.0
     dev: true
+
+  /pnglib@0.0.1:
+    resolution: {integrity: sha512-95ChzOoYLOPIyVmL+Y6X+abKGXUJlvOVLkB1QQkyXl7Uczc6FElUy/x01NS7r2GX6GRezloO/ecCX9h4U9KadA==}
+    dev: false
 
   /polished@4.2.2:
     resolution: {integrity: sha512-Sz2Lkdxz6F2Pgnpi9U5Ng/WdWAUZxmHrNPoVlm3aAemxoy2Qy7LGjQg4uf8qKelDAUW94F4np3iH2YPf2qefcQ==}

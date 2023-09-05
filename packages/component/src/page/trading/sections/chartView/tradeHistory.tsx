@@ -10,7 +10,7 @@ export const TradeHistoryPane: FC<TradeHistoryProps> = (props) => {
   // console.log("---------->>>>>>", symbol);
   const { data, isLoading } = useTradeStream(symbol);
   return (
-    <div className="h-[300px] overflow-y-auto p-3 ">
+    <div className="h-[300px] overflow-y-auto">
       <TradeHistory dataSource={data} loading={isLoading} />
     </div>
   );

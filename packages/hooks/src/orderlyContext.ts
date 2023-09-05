@@ -22,8 +22,11 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   walletAdapter: WalletAdapter;
   networkId: string;
 
-  onWalletConnect?: () => void;
+  onWalletConnect?: () => Promise<any>;
+  onWalletDisconnect?: () => Promise<any>;
   // account: Account;
+
+  ready: boolean;
 }
 
 export const OrderlyContext = createContext<OrderlyContextState>({

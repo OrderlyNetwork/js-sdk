@@ -14,6 +14,7 @@ export default defineConfig((options) => ({
     polyfillNode({
       polyfills: {
         buffer: true,
+        // crypto: true,
       },
     }),
   ],

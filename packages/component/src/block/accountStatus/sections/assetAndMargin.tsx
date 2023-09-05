@@ -107,7 +107,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
             <span>USDC</span>
           </div>
-          <Numeral>123456</Numeral>
+          <Numeral>0</Numeral>
         </div>
       </Paper>
       <div className="flex gap-3 py-5">

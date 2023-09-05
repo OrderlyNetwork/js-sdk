@@ -30,11 +30,11 @@ export const defaultTimeInterval = [
     label: "1h",
   },
   {
-    value: "240",
+    value: "4h",
     label: "4h",
   },
   {
-    value: "720",
+    value: "12h",
     label: "12h",
   },
   {

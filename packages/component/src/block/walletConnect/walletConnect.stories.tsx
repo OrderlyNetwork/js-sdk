@@ -3,6 +3,8 @@ import { WalletConnect } from ".";
 import React from "react";
 import { modal } from "@/modal";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
+import { MemoryConfigStore } from "@orderly.network/core";
 
 const meta: Meta<typeof WalletConnect> = {
   component: WalletConnect,
@@ -10,7 +12,11 @@ const meta: Meta<typeof WalletConnect> = {
   argTypes: {},
   decorators: [
     (Story) => (
-      <OrderlyProvider configStore={undefined}>
+      <OrderlyProvider
+        configStore={new MemoryConfigStore()}
+        walletAdapter={undefined}
+        keyStore={new WooKeyStore("testnet")}
+      >
         <Story />
       </OrderlyProvider>
     ),

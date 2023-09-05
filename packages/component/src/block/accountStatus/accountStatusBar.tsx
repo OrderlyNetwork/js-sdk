@@ -10,7 +10,8 @@ import { ChevronDown } from "lucide-react";
 import { AccountTotal } from "./sections/accountTotal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
-import { OrderlyContext } from "@orderly.network/hooks";
+import { OrderlyContext, useChains } from "@orderly.network/hooks";
+import { Chains } from "./sections/chains";
 
 export type AccountStatus =
   | "NotConnected"
@@ -40,6 +41,10 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
   const { logoUrl } = useContext(OrderlyContext);
 
+  // console.log("account status", props);
+
+  useChains();
+
   const buttonLabel = useMemo(() => {
     switch (status) {
       case AccountStatusEnum.NotConnected:
@@ -49,6 +54,8 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
       case AccountStatusEnum.NotSignedIn:
 
       case AccountStatusEnum.SignedIn:
+      case AccountStatusEnum.DisabledTrading:
+      case AccountStatusEnum.EnableTrading:
         return (
           <Text rule="address" range={[4, 4]}>
             {props.address}
@@ -71,22 +78,13 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
       )}
 
       <div className="flex gap-2">
-        <Button
-          variant={"outlined"}
-          size={"small"}
-          color={"buy"}
-          className={"border-[rgba(38,254,254,1)]"}
-        >
-          {/* <NetworkImage id={1} type="chain" size={"small"} /> */}
-          <span>Testnet</span>
-          <ChevronDown size={16} />
-        </Button>
+        <Chains />
         {status === AccountStatusEnum.NotConnected ? (
           <Button
             size={"small"}
             loading={props.loading}
             variant={"gradient"}
-            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE]"
+            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] hover:text-base-300"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
@@ -97,7 +95,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               <Button
                 size={"small"}
                 variant={"gradient"}
-                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100"
+                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300"
                 loading={props.loading}
               >
                 {buttonLabel}

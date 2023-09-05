@@ -10,9 +10,14 @@ export class WooKeyStore extends BaseKeyStore {
   getOrderlyKey(): OrderlyKeyPair {
     const parsedConfigs = this.parseLocalStorageConfigs();
     const orderlyKey = parsedConfigs["orderlyKey"];
-    const secretKey = decodeBase58(orderlyKey).toString(16);
 
-    return new BaseOrderlyKeyPair(secretKey);
+    if (!orderlyKey) {
+      return null;
+    }
+
+    // const secretKey = decodeBase58(orderlyKey).toString(16);
+
+    return new BaseOrderlyKeyPair(orderlyKey);
   }
   getAccountId(): string | undefined {
     try {
@@ -58,7 +63,9 @@ export class WooKeyStore extends BaseKeyStore {
     }
     const configs = localStorage.getItem("persist:root");
     if (!configs) {
-      throw new Error("No configs found in localStorage.");
+      // throw new Error("No configs found in localStorage.");
+      console.log("No configs found in localStorage.");
+      return {};
     }
     let parsedConfigs = JSON.parse(configs);
     if (parsedConfigs["global"]) {

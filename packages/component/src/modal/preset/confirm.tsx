@@ -16,7 +16,6 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
     <SimpleDialog
       open={visible}
       title={props.title}
-      closable={false}
       onOk={() => {
         return Promise.resolve()
           .then(() => {

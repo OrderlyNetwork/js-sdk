@@ -20,10 +20,10 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   const { logoUrl } = useContext(OrderlyContext);
 
-  // console.log("accountInfo", accountInfo);
+  // console.log("accountInfo", props);
 
   const balance = useMemo(() => {
-    if (props.status !== AccountStatusEnum.SignedIn) {
+    if (props.status < AccountStatusEnum.EnableTrading) {
       return "--";
     }
 
@@ -34,7 +34,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     return accountInfo?.max_leverage ?? "-";
   }, [accountInfo]);
 
-  if (props.status !== AccountStatusEnum.SignedIn) {
+  if (props.status < AccountStatusEnum.EnableTrading) {
     return (
       <div className="flex items-center">
         <div className="flex flex-col">

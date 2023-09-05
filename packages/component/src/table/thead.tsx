@@ -15,6 +15,7 @@ export const THead: FC<THeadProps> = (props) => {
           return (
             <td
               className={cn(
+                "px-3 py-[3px]",
                 column.align === "right" && "text-right",
                 props.className
               )}

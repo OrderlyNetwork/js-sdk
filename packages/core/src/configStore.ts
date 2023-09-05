@@ -5,13 +5,13 @@ export interface ConfigStore {
 }
 
 export class MemoryConfigStore implements ConfigStore {
-  private map!: Map<string, any>;
+  protected map!: Map<string, any>;
 
   constructor() {
     this._restore();
   }
 
-  private _restore() {
+  protected _restore() {
     this.map = new Map([
       ["apiBaseUrl", "https://dev-api-v2.orderly.org/v1"],
       ["klineDataUrl", "https://dev-api-v2.orderly.org"],
@@ -30,3 +30,24 @@ export class MemoryConfigStore implements ConfigStore {
 }
 
 // export const memoryConfigStoreInstance = new MemoryConfigStore();
+
+/**
+ *
+ */
+export class BaseConfigStore extends MemoryConfigStore {
+  constructor(private readonly configMap: Record<string, any>) {
+    super();
+  }
+
+  protected _restore() {
+    const arr = Object.entries(this.configMap);
+    this.map = new Map(arr);
+  }
+}
+
+// export class DefaultJsonConfigStore extends BaseConfigStore {
+//   constructor() {
+//     //
+//     super(configMap);
+//   }
+// }

@@ -1,5 +1,8 @@
-export class Web3WalletAdapter implements Web3WalletAdapter {
+import { WalletAdapter } from "./adapter";
+
+export class Web3WalletAdapter implements WalletAdapter {
   constructor(private readonly web3: any) {}
+
   async getBalance(address: string): Promise<any> {
     const balance = await this.web3.eth.getBalance(address);
     return balance;
@@ -11,5 +14,11 @@ export class Web3WalletAdapter implements Web3WalletAdapter {
       value: amount,
     });
     return tx;
+  }
+  async send(
+    method: string,
+    params: Array<any> | Record<string, any>
+  ): Promise<any> {
+    return this.provider.send(method, params);
   }
 }

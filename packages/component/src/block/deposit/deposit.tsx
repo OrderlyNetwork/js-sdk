@@ -10,7 +10,7 @@ import { ArrowDown } from "lucide-react";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
-import { ConnectGuardButton } from "@/button/connectGuardButton";
+import { StatusGuardButton } from "@/button/statusGuardButton";
 import { AccountStatus } from "@orderly.network/core";
 import { Chain, Wallet } from "@/block/pickers/walletPicker/walletPicker";
 import { SvgImage } from "@/icon";
@@ -104,14 +104,14 @@ export const Deposit: FC<DepositProps> = (props) => {
         <TokenQtyInput value={quantity} readOnly />
       </div>
       <Summary />
-      <ConnectGuardButton
+      <StatusGuardButton
         connected={!!props.wallet}
         onConnectWallet={props.onConnectWallet}
       >
         <Button fullWidth onClick={onDeposit}>
           Deposit
         </Button>
-      </ConnectGuardButton>
+      </StatusGuardButton>
     </div>
   );
 };

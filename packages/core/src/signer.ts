@@ -68,6 +68,13 @@ export class BaseSigner implements Signer {
     text: string
   ): Promise<{ signature: string; publicKey: string }> {
     const orderlyKeyPair = this.keyStore.getOrderlyKey();
+
+    // console.log("sign orderlyKeyPair:", orderlyKeyPair);
+
+    if (!orderlyKeyPair) {
+      throw new Error("orderlyKeyPair is not defined");
+    }
+
     const u8 = Buffer.from(text);
 
     const signature = await orderlyKeyPair.sign(u8);

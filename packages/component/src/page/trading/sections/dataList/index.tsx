@@ -12,10 +12,10 @@ export const DataListView = () => {
       onTabChange={setActiveTab}
       tabBarClassName="bg-base-200"
     >
-      <TabPane title="Positions(2)" value="positions">
+      <TabPane title="Positions" value="positions">
         <PositionPane />
       </TabPane>
-      <TabPane title="Pending(2)" value="orders">
+      <TabPane title="Pending" value="orders">
         <OrdersPane />
       </TabPane>
       <TabPane title="History" value="history">

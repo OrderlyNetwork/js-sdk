@@ -8,9 +8,19 @@ export const useAccount = (): {
   account: Account;
   state: AccountState;
   login: (address: string) => void;
+  createOrderlyKey: (remember: boolean) => Promise<string>;
+  createAccount: () => Promise<string>;
+  disconnect: () => Promise<void>;
+  connect: () => Promise<any>;
   // info: API.AccountInfo | undefined;
 } => {
-  const { configStore, keyStore, walletAdapter } = useContext(OrderlyContext);
+  const {
+    configStore,
+    keyStore,
+    walletAdapter,
+    onWalletConnect,
+    onWalletDisconnect,
+  } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new Error("configStore is not defined, please use OrderlyProvider");
@@ -37,11 +47,6 @@ export const useAccount = (): {
     account.stateValue
   );
 
-  // const { data: accountInfo } =
-  //   usePrivateQuery<API.AccountInfo>("/client/info");
-
-  // console.log(accountInfo);
-
   const login = useCallback(
     (address: string) => {
       account.login(address);
@@ -49,11 +54,35 @@ export const useAccount = (): {
     [account]
   );
 
+  const createOrderlyKey = useCallback(
+    async (remember: boolean) => {
+      return account.createOrderlyKey(remember ? 365 : 30);
+    },
+    [account]
+  );
+
+  const createAccount = useCallback(async () => {
+    return account.createAccount();
+  }, [account]);
+
+  const connect = useCallback(async () => {
+    return onWalletConnect?.();
+  }, [account]);
+
+  const disconnect = useCallback(async () => {
+    // account.disconnect();
+    return onWalletDisconnect?.();
+  }, [account]);
+
   return {
     // account: state!,
     account,
     state,
     // info: {},
     login,
+    createOrderlyKey,
+    createAccount,
+    disconnect,
+    connect,
   };
 };

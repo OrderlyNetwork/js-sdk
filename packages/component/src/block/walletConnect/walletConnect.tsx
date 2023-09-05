@@ -2,10 +2,12 @@ import { Paper } from "@/layout";
 import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
 import { Info } from "lucide-react";
-import { FC, useMemo } from "react";
-import { AccountStatusEnum } from "@orderly.network/core";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
 import { create, register } from "@/modal/modalHelper";
+import { useAccount, OrderlyContext } from "@orderly.network/hooks";
+
 import {
   Sheet,
   SheetContent,
@@ -15,10 +17,13 @@ import {
 } from "@/sheet";
 import { useModal } from "@/modal";
 import Button from "@/button";
+import { toast } from "@/toast";
+import { Logo } from "@/logo";
 
 interface WalletConnectProps {
-  onSignIn?: () => void;
-  onEnableTrading?: () => void;
+  onSignIn?: () => Promise<any>;
+  onEnableTrading?: (remember: boolean) => Promise<any>;
+  onComplete?: () => void;
   //   status?: "loggedIn" | "enabledTrading";
   status: AccountStatusEnum;
 
@@ -27,16 +32,36 @@ interface WalletConnectProps {
 
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
+  const [handleStep, setHandleStep] = useState(0);
+  const [remember, setRemember] = useState(true);
+
+  console.log("wallet connect", props);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
       return "Sign In";
     }
-    if (status < AccountStatusEnum.EnabledTrading) {
+    if (status < AccountStatusEnum.EnableTrading) {
       return "Enable Trading";
     }
-    return "";
+    return "--";
   }, [status]);
+
+  const onClick = useCallback(() => {
+    if (status < AccountStatusEnum.SignedIn) {
+      setHandleStep(1);
+      return props.onSignIn?.().finally(() => {
+        setHandleStep(0);
+      });
+    }
+    if (status < AccountStatusEnum.EnableTrading) {
+      setHandleStep(2);
+      return props.onEnableTrading?.(remember).finally(() => {
+        setHandleStep(0);
+        props.onComplete?.();
+      });
+    }
+  }, [status, remember]);
 
   return (
     <div>
@@ -45,19 +70,35 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         enable trading. Signing is free and will not send a transaction.
       </div>
 
-      <Paper>
+      <Paper className="bg-base-100">
         <ListTile
-          avatar={<StepItem active={status > 3}>1</StepItem>}
+          avatar={
+            <StepItem
+              active={status === AccountStatusEnum.NotSignedIn}
+              isLoading={handleStep === 1}
+              isCompleted={status >= AccountStatusEnum.SignedIn}
+            >
+              1
+            </StepItem>
+          }
           title="Sign In"
-          disabled={status < 1}
+          disabled={
+            status < AccountStatusEnum.NotConnected ||
+            status >= AccountStatusEnum.SignedIn
+          }
           subtitle="Confirm you are the owner of this wallet"
         />
         <ListTile
-          disabled={status < 3}
-          avatar={<StepItem active={status > 4}>2</StepItem>}
-          onClick={() => {
-            props.onEnableTrading?.();
-          }}
+          disabled={status < AccountStatusEnum.SignedIn}
+          avatar={
+            <StepItem
+              active={status > AccountStatusEnum.SignedIn}
+              isLoading={handleStep === 2}
+              isCompleted={status >= AccountStatusEnum.EnableTrading}
+            >
+              2
+            </StepItem>
+          }
           title="Enable Trading"
           subtitle="Enable secure access to our API for lightning fast trading"
         />
@@ -68,10 +109,15 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           <span>Remember me</span>
           <Info className="inline-block ml-2" size={16} />
         </div>
-        <Switch />
+        <Switch checked={remember} onCheckedChange={setRemember} />
       </div>
       <div>
-        <Button fullWidth disabled={props.loading}>
+        <Button
+          fullWidth
+          disabled={handleStep > 0}
+          onClick={onClick}
+          loading={handleStep > 0}
+        >
           {buttonLabel}
         </Button>
       </div>
@@ -80,20 +126,43 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 };
 
 export const WalletConnectSheet = create<WalletConnectProps>((props) => {
-  const { visible, hide, onOpenChange } = useModal();
+  const { visible, hide, resolve, onOpenChange } = useModal();
+  // get account status and handle sign in and enable trading
+  const { account, createOrderlyKey, createAccount } = useAccount();
+  const { logoUrl } = useContext(OrderlyContext);
+
+  // const onEnableTrading = useCallback(
+  //   (remember: boolean) => {
+  //     return account.createOrderlyKey(remember ? 365 : 30);
+  //   },
+  //   [account]
+  // );
+
+  // const onSignIn = useCallback(() => {
+  //   return account.createAccount();
+  // }, [account]);
+
+  const onComplete = useCallback(() => {
+    toast.success("Wallet connected");
+    resolve();
+    hide();
+  }, []);
+
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent>
-        <SheetHeader>
+        <SheetHeader leading={<Logo image={logoUrl} />}>
           <SheetTitle>Connect Wallet</SheetTitle>
         </SheetHeader>
-        <WalletConnect {...props} />
-        {/* <SheetFooter>
-          <Button>Sign In</Button>
-        </SheetFooter> */}
+        <WalletConnect
+          onEnableTrading={createOrderlyKey}
+          onSignIn={createAccount}
+          onComplete={onComplete}
+          {...props}
+        />
       </SheetContent>
     </Sheet>
   );
 });
 
-register("walletConnect", WalletConnectSheet);
+// register("walletConnect", WalletConnectSheet);

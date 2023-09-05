@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/input";
-import { useForm, Controller, FormProvider, set } from "react-hook-form";
+import { useForm, Controller, FormProvider } from "react-hook-form";
 import { Slider } from "@/slider";
 import {
   FC,
@@ -25,8 +25,7 @@ import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { OrderConfirmView } from "./sections/orderConfirmView";
 import { toast } from "@/toast";
-import { ConnectGuardButton } from "@/button/connectGuardButton";
-import { SiginGuardButton } from "@/button/siginGuardButton";
+import { StatusGuardButton } from "@/button/statusGuardButton";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -51,6 +50,8 @@ export interface OrderEntryProps {
   onSideChange?: (value: OrderSide) => void;
 
   helper: any;
+
+  disabled?: boolean;
 }
 
 interface OrderEntryRef {
@@ -71,6 +72,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       side,
       onSideChange,
       helper,
+      disabled,
     } = props;
 
     const { calculate, validator } = helper;
@@ -146,6 +148,17 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       [side, props.onSubmit, symbol]
     );
 
+    useEffect(() => {
+      console.log("swith symbol");
+      methods.clearErrors();
+      methods.reset({
+        // order_type: data.order_type,
+        order_price: "",
+        order_quantity: "",
+        total: "",
+      });
+    }, [symbol]);
+
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
       props.onDeposit?.();
@@ -197,14 +210,20 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 {
                   label: "Buy",
                   value: OrderSide.BUY,
+                  disabled,
                   activeClassName:
                     "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
+                  disabledClassName:
+                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
+                  disabled,
                   activeClassName:
                     "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
+                  disabledClassName:
+                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
                 },
               ]}
               onChange={(value) => {
@@ -358,18 +377,16 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               showConfirm={props.showConfirm}
               onConfirmChange={props.onConfirmChange}
             />
-            <ConnectGuardButton>
-              <SiginGuardButton>
-                <Button
-                  type="submit"
-                  loading={methods.formState.isSubmitting}
-                  color={side === OrderSide.BUY ? "buy" : "sell"}
-                  fullWidth
-                >
-                  {buttonText}
-                </Button>
-              </SiginGuardButton>
-            </ConnectGuardButton>
+            <StatusGuardButton>
+              <Button
+                type="submit"
+                loading={methods.formState.isSubmitting}
+                color={side === OrderSide.BUY ? "buy" : "sell"}
+                fullWidth
+              >
+                {buttonText}
+              </Button>
+            </StatusGuardButton>
           </div>
         </form>
       </FormProvider>

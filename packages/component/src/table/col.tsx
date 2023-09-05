@@ -37,7 +37,7 @@ export const Col: FC<ColProps> = (props) => {
   return (
     <td
       className={cn(
-        "py-[2px]",
+        "py-[2px] px-3",
         col.className,
         align === "right" && "text-right"
       )}

@@ -42,8 +42,6 @@ export default meta;
 
 type Story = StoryObj<typeof AccountStatusBar>;
 
-const web3Onboard = init(onboardConfig);
-
 export const Default: Story = {
   render: (args) => {
     return (
@@ -83,7 +81,7 @@ export const WithHook: Story = {
       ) {
         // updateBalances(wallet.accounts);
         // login(wallet.accounts[0].address);
-        account.address = wallet.accounts[0].address;
+        account.setAddress(wallet.accounts[0].address);
       }
     }, [wallet]);
 

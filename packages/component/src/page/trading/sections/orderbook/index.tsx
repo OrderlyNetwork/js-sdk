@@ -8,9 +8,13 @@ interface MyOrderBookProps {
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const { symbol } = props;
-  const [data, { onDepthChange }] = useOrderbookStream(symbol, undefined, {
-    level: 7,
-  });
+  const [data, { onDepthChange, isLoading }] = useOrderbookStream(
+    symbol,
+    undefined,
+    {
+      level: 7,
+    }
+  );
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];
   return (
@@ -24,6 +28,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
         depth={[0.0001, 0.001]}
         base={symbolInfo("base")}
         quote={symbolInfo("quote")}
+        isLoading={isLoading}
       />
     </div>
   );

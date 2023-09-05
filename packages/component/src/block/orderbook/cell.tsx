@@ -28,8 +28,8 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const qty = Number.isNaN(props.quantity)
     ? "-"
     : props.mode === "amount"
-    ? new Decimal(props.quantity).mul(props.price).toNumber()
-    : props.quantity;
+    ? commify(new Decimal(props.quantity).mul(props.price).toString())
+    : commify(props.quantity);
 
   return (
     <div

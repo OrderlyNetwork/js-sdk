@@ -37,7 +37,8 @@ export const usePrivateQuery = <T>(
 
   // @ts-ignore
   return useSWR<T>(
-    () => (account.state.status >= AccountStatusEnum.SignedIn ? query : null),
+    () =>
+      account.state.status >= AccountStatusEnum.EnableTrading ? query : null,
     // query,
     (url, init) => {
       return fetcher(url, init, { formatter });

@@ -23,7 +23,7 @@ export const usePrivateInfiniteQuery = (
 
   const result = useSWRInfinite(
     (pageIndex: number, previousPageData) =>
-      account.state.status >= AccountStatusEnum.SignedIn
+      account.state.status >= AccountStatusEnum.EnableTrading
         ? getKey(pageIndex, previousPageData)
         : null,
     fetcher,

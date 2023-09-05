@@ -48,7 +48,9 @@ export class WooKeyStore extends BaseKeyStore {
     }
     const configs = localStorage.getItem("persist:root");
     if (!configs) {
-      throw new Error("No configs found in localStorage.");
+      // throw new Error("No configs found in localStorage.");
+      console.log("No configs found in localStorage.");
+      return {};
     }
     let parsedConfigs = JSON.parse(configs);
     if (parsedConfigs["global"]) {

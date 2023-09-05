@@ -190,6 +190,29 @@ export declare namespace API {
     imr_factor: { [key: string]: number };
     max_notional: { [key: string]: number };
   }
+
+  export interface Chain {
+    dexs: string[];
+    network_infos: NetworkInfos;
+    token_infos: TokenInfo[];
+  }
+
+  export interface NetworkInfos {
+    name: string;
+    public_rpc_url: string;
+    chain_id: number;
+    currency_symbol: string;
+    bridge_enable: boolean;
+    mainnet: boolean;
+    explorer_base_url: string;
+  }
+
+  export interface TokenInfo {
+    address: string;
+    symbol: string;
+    decimals: number;
+    swap_enable: boolean;
+  }
 }
 
 export declare namespace WSMessage {

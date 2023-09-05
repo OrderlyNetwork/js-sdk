@@ -230,7 +230,7 @@ export const useOrderbookStream = (
 
   return [
     { ...data, markPrice, middlePrice },
-    { onDepthChange, depth },
+    { onDepthChange, depth, isLoading },
   ];
 };
 

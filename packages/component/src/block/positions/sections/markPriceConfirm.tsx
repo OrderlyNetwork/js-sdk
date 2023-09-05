@@ -19,7 +19,7 @@ export const MarkPriceConfirm: FC<Props> = (props) => {
         <span className="text-warning">{`${position.position_qty} ${base}`}</span>{" "}
         position at market price.
       </div>
-      <div className="py-2">
+      <div className="py-2 text-base-contrast/60">
         <span className="text-danger">(TBD)</span> Pending reduce-only orders
         will be cancelled or adjusted. Other pending orders will be cancelled
         when there is insufficient margin.

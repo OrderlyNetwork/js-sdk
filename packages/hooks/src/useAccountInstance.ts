@@ -26,7 +26,5 @@ export const useAccountInstance = () => {
     return account;
   });
 
-  // console.log("account instance ======>>>>>", account);
-
   return account;
 };
