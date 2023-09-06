@@ -13,7 +13,7 @@ export class MemoryConfigStore implements ConfigStore {
 
   protected _restore() {
     this.map = new Map([
-      ["apiBaseUrl", "https://dev-api-v2.orderly.org/v1"],
+      ["apiBaseUrl", "https://dev-api-v2.orderly.org"],
       ["klineDataUrl", "https://dev-api-v2.orderly.org"],
     ]);
   }

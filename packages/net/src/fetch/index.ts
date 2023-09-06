@@ -8,7 +8,7 @@ async function request(url: string, options: RequestInit) {
     ...options,
     // mode: "cors",
     // credentials: "include",
-    headers: _createHeaders(options.headers),
+    headers: _createHeaders(options.headers, options.method),
   });
 
   if (response.ok) {
@@ -25,13 +25,20 @@ async function request(url: string, options: RequestInit) {
   throw new Error(error.message || error.code || error);
 }
 
-function _createHeaders(headers: HeadersInit = {}): HeadersInit {
+function _createHeaders(
+  headers: HeadersInit = {},
+  method?: string
+): HeadersInit {
   // console.log("headers", headers);
   const _headers = new Headers(headers);
   // _headers.append("Accept", "application/json");
 
   if (!_headers.has("Content-Type")) {
-    _headers.append("Content-Type", "application/json;charset=utf-8");
+    if (method !== "DELETE") {
+      _headers.append("Content-Type", "application/json;charset=utf-8");
+    } else {
+      _headers.append("Content-Type", "application/x-www-form-urlencoded");
+    }
   }
 
   return _headers;
@@ -73,27 +80,13 @@ async function post(
   return res;
 }
 
-// async function put(
-//   url: string,
-//   data: any,
-//   options?: Omit<RequestInit, "method">
-// ): Promise<any> {
-//   const res = await request(url, {
-//     method: "PUT",
-//     body: JSON.stringify(data),
-//     ...options,
-//   });
-
-//   return res;
-// }
-
-async function del(
+async function put(
   url: string,
   data: any,
   options?: Omit<RequestInit, "method">
 ): Promise<any> {
   const res = await request(url, {
-    method: "DELETE",
+    method: "PUT",
     body: JSON.stringify(data),
     ...options,
   });
@@ -101,4 +94,22 @@ async function del(
   return res;
 }
 
-export { get, post, del };
+async function del(
+  url: string,
+  options?: Omit<RequestInit, "method">
+): Promise<any> {
+  const res = await request(url, {
+    method: "DELETE",
+    ...options,
+  });
+
+  return res;
+}
+
+async function mutate(url: string, init: RequestInit) {
+  const res = await request(url, init);
+
+  return res;
+}
+
+export { get, post, del, put, mutate };

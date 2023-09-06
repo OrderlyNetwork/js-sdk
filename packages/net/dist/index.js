@@ -62,7 +62,9 @@ __export(src_exports, {
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   del: () => del,
   get: () => get,
-  post: () => post
+  mutate: () => mutate,
+  post: () => post,
+  put: () => put
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -76,7 +78,7 @@ function request(url, options) {
     const response = yield fetch(urlInstance, __spreadProps(__spreadValues({}, options), {
       // mode: "cors",
       // credentials: "include",
-      headers: _createHeaders(options.headers)
+      headers: _createHeaders(options.headers, options.method)
     }));
     if (response.ok) {
       const res = yield response.json();
@@ -90,10 +92,14 @@ function request(url, options) {
     throw new Error(error.message || error.code || error);
   });
 }
-function _createHeaders(headers = {}) {
+function _createHeaders(headers = {}, method) {
   const _headers = new Headers(headers);
   if (!_headers.has("Content-Type")) {
-    _headers.append("Content-Type", "application/json;charset=utf-8");
+    if (method !== "DELETE") {
+      _headers.append("Content-Type", "application/json;charset=utf-8");
+    } else {
+      _headers.append("Content-Type", "application/x-www-form-urlencoded");
+    }
   }
   return _headers;
 }
@@ -123,12 +129,26 @@ function post(url, data, options) {
     return res;
   });
 }
-function del(url, data, options) {
+function put(url, data, options) {
   return __async(this, null, function* () {
     const res = yield request(url, __spreadValues({
-      method: "DELETE",
+      method: "PUT",
       body: JSON.stringify(data)
     }, options));
+    return res;
+  });
+}
+function del(url, options) {
+  return __async(this, null, function* () {
+    const res = yield request(url, __spreadValues({
+      method: "DELETE"
+    }, options));
+    return res;
+  });
+}
+function mutate(url, init) {
+  return __async(this, null, function* () {
+    const res = yield request(url, init);
     return res;
   });
 }
@@ -661,6 +681,8 @@ var WS = class {
   __ORDERLY_API_URL_KEY__,
   del,
   get,
-  post
+  mutate,
+  post,
+  put
 });
 //# sourceMappingURL=index.js.map

@@ -7,7 +7,7 @@ export const useTradeStream = (symbol: string) => {
   }
 
   const { data, isLoading } = useQuery<API.Trade[]>(
-    `/public/market_trades?symbol=${symbol}&limit=20`
+    `/v1/public/market_trades?symbol=${symbol}&limit=20`
   );
 
   return { data, isLoading };

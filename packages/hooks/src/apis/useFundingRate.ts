@@ -7,5 +7,5 @@ import { useEffect, useState } from "react";
  * @param symbol
  */
 export const useFundingRate = (symbol?: string) => {
-  return useQuery<FundingRate>(`/public/funding_rate`);
+  return useQuery<FundingRate>(`/v1/public/funding_rate`);
 };

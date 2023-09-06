@@ -7,7 +7,9 @@ import { useMemo } from "react";
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info
   const ws = useWS();
-  const { data: futures } = useQuery<WSMessage.Ticker[]>(`/public/futures`);
+  const { data: futures } = useQuery<WSMessage.Ticker[]>(`/v1/public/futures`, {
+    revalidateOnFocus: false,
+  });
   // const config = useSymbolsInfo();
 
   const { data: tickers } = useSWRSubscription("tickers", (_, { next }) => {

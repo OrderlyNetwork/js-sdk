@@ -24,8 +24,8 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
             }
             return true;
           })
-          .then(() => {
-            resolve(true);
+          .then((data?: any) => {
+            resolve(data);
             hide();
           });
       }}

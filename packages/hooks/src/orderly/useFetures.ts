@@ -7,17 +7,24 @@ interface MarketInfo {}
 
 // api: /public/futures
 export const useFetures = () => {
-  const { data, isLoading, error } = useQuery<MarketInfo[]>(`/public/futures`);
+  const { data, isLoading, error } = useQuery<MarketInfo[]>(
+    `/v1/public/futures`,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const [sortedData, setSortedData] = useState(data);
 
   const ws = useWebSocketClient();
 
   useEffect(() => {
-    const sub = ws.observe<WSMessage.Ticker>(`tickers`).subscribe((value) => {
-      console.log("useTickers", value);
-      // setData(value);
-    });
+    const sub = ws
+      .observe<WSMessage.Ticker>(`tickers`)
+      .subscribe((value: any) => {
+        console.log("useTickers", value);
+        // setData(value);
+      });
 
     return () => {
       sub.unsubscribe();

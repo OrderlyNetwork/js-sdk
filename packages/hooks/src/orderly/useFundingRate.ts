@@ -10,12 +10,15 @@ export const useFundingRate = (symbol: string) => {
 
   const [countDown, setCountDown] = useState("00:00:00");
 
-  const { data } = useQuery<API.FundingRate>(`/public/funding_rate/${symbol}`, {
-    fallbackData: {
-      est_funding_rate: 0,
-      next_funing_time: 0,
-    },
-  });
+  const { data } = useQuery<API.FundingRate>(
+    `/v1/public/funding_rate/${symbol}`,
+    {
+      fallbackData: {
+        est_funding_rate: 0,
+        next_funing_time: 0,
+      },
+    }
+  );
 
   useEffect(() => {
     if (!data) return;

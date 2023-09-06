@@ -1,20 +1,24 @@
 import Button from "@/button";
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
 import { API } from "@orderly.network/types";
 import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
+import { OrderListContext } from "./orderListContext";
 
 interface OrderCellProps {
   order: API.OrderExt;
-  onCancel?: (order: any) => void;
-  onEdit?: (order: any) => void;
+  // onCancel?: (order: any) => void;
+  // onEdit?: (order: any) => void;
 }
 
 export const OrderCell: FC<OrderCellProps> = (props) => {
   const { order } = props;
+
+  const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
+
   const typeTag = useMemo(() => {
     return (
       <Tag color={order.side === "BUY" ? "buy" : "sell"} size="small">
@@ -55,7 +59,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           size="small"
           color="tertiary"
           className="w-[120px]"
-          onClick={() => props.onEdit?.(order)}
+          onClick={() => onEditOrder(order)}
         >
           Edit
         </Button>
@@ -64,7 +68,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           color="tertiary"
           size="small"
           className="w-[120px]"
-          onClick={() => props.onCancel?.(order)}
+          onClick={() => onCancelOrder(order)}
         >
           Cancel
         </Button>

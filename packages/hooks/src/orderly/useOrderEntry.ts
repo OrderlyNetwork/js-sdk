@@ -16,6 +16,8 @@ import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
 import { OrderFactory, OrderFormEntity } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
+import { useSWRConfig } from "swr";
+import { unstable_serialize } from "swr/infinite";
 
 export interface OrderEntryReturn {
   onSubmit: (values: OrderEntity) => Promise<any>;
@@ -56,7 +58,8 @@ export const useOrderEntry = (
   // initialValue: Partial<OrderEntity> = {},
   options?: UseOrderEntryOptions
 ): OrderEntryReturn => {
-  const [mutation] = useMutation<OrderEntity, any>("/order");
+  const { mutate } = useSWRConfig();
+  const [doCreateOrder] = useMutation<OrderEntity, any>("/v1/order");
 
   const { freeCollateral } = useCollateral();
 
@@ -126,9 +129,15 @@ export const useOrderEntry = (
 
         const data = orderCreator.create(values!);
 
-        return mutation({
+        return doCreateOrder({
           ...data,
           symbol,
+        }).then((res: any) => {
+          if (res.success) {
+            //update orders;
+            mutate("/v1/orders?size=100&page=1$status=NEW");
+          }
+          return res;
         });
       });
   };

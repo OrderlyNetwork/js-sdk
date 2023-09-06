@@ -21,6 +21,7 @@ import { toast } from "@/toast";
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
   const [symbol, setSymbol] = React.useState("");
+
   // console.log("********", data, info.maintenance_margin_ratio());
 
   const onShowAllSymbolChange = (isAll: boolean) => {
@@ -30,12 +31,10 @@ export const PositionPane = () => {
   const [data, info, { loading }] = usePositionStream(symbol);
   const { state } = useAccount();
 
-  const [postOrder] = useMutation<OrderEntity, any>("/order");
+  const [postOrder] = useMutation<OrderEntity, any>("/v1/order");
 
   const onLimitClose = useCallback(async (position: API.Position) => {
-    console.log("onLimitClose", position);
-
-    modal
+    return modal
       .sheet({
         title: "Limit Close",
         content: (
@@ -52,7 +51,7 @@ export const PositionPane = () => {
   }, []);
 
   const onMarketClose = useCallback(async (position: API.Position) => {
-    modal
+    return modal
       .confirm({
         title: "Market Close",
         content: <MarkPriceConfirm position={position} />,

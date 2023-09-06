@@ -111,7 +111,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             title: "Confirm Order",
             content: (
               <OrderConfirmView
-                order={data}
+                order={{ ...data, side: props.side, symbol: props.symbol }}
                 symbol={symbol}
                 base={symbolConfig["base"]}
                 quote={symbolConfig.quote}
@@ -344,7 +344,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     onValueChange={(value) => {
                       // console.log("onValueChange", value);
                       if (typeof value[0] !== "undefined") {
-                        field.onChange(value[0]);
+                        // field.onChange(value[0]);
+                        onFieldChange("order_quantity", value[0]);
                       }
                     }}
                   />

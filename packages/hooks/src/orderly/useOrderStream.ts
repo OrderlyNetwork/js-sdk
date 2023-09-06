@@ -6,6 +6,8 @@ import { combineLatestWith, map } from "rxjs/operators";
 import { API } from "@orderly.network/types";
 import { useMarketsStream } from "./useMarketsStream";
 import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useMutation } from "../useMutation";
+import { OrderEntity } from "@orderly.network/types";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -31,8 +33,10 @@ export const useOrderStream = ({
   // const markPrices$ = useMarkPricesSubject();
 
   const { data: markPrices = {} } = useMarkPricesStream();
+  const [doCancelOrder] = useMutation("/v1/order", "DELETE");
+  const [doUpdateOrder] = useMutation("/v1/order", "PUT");
 
-  const res = usePrivateInfiniteQuery(
+  const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
       // TODO: 检查是否有下一页
       // if(previousPageData){
@@ -47,7 +51,7 @@ export const useOrderStream = ({
       if (symbol) {
         search.set(`symbol`, symbol);
       }
-      return `/orders?${search.toString()}`;
+      return `/v1/orders?${search.toString()}`;
     },
     {
       initialSize: 1,
@@ -58,34 +62,50 @@ export const useOrderStream = ({
   );
 
   const orders = useMemo(() => {
-    if (!res.data) {
+    if (!ordersResponse.data) {
       return null;
     }
 
     // console.log("orders:::", markPrices);
 
-    return res.data?.flat().map((item) => {
+    return ordersResponse.data?.flat().map((item) => {
       return {
         ...item,
         mark_price: (markPrices as any)[item.symbol] ?? 0,
       };
     });
-  }, [res.data, markPrices]);
+  }, [ordersResponse.data, markPrices]);
 
   /**
    * 取消所有订单
    */
-  const cancelAllOrders = useCallback(() => {}, [res.data]);
+  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
 
   /**
    * 更新单个订单
    */
-  const updateOrder = useCallback((id: string, data: any) => {}, []);
+  const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
+    console.log("updateOrder", order, orderId);
+    return doUpdateOrder({ ...order, order_id: orderId });
+  }, []);
 
   /**
    * 取消单个订单
    */
-  const cancelOrder = useCallback((id: string) => {}, []);
+  const cancelOrder = useCallback((orderId: string, symbol?: string) => {
+    return doCancelOrder(null, {
+      order_id: orderId,
+      symbol,
+    }).then((res: any) => {
+      if (res.success) {
+        return ordersResponse.mutate().then(() => {
+          return res;
+        });
+      } else {
+        throw new Error(res.message);
+      }
+    });
+  }, []);
 
   return [
     orders,

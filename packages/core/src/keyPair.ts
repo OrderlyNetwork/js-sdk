@@ -35,4 +35,8 @@ export class BaseOrderlyKeyPair implements OrderlyKeyPair {
     const publicKey = `ed25519:${bs58encode(pubKey)}`;
     return publicKey;
   }
+
+  toString() {
+    return this.privateKey;
+  }
 }

@@ -4,7 +4,7 @@ import { createGetter } from "../utils/createGetter";
 
 export const useTokenInfo = () => {
   const { data = {} } = useQuery<Record<string, API.TokenInfo>>(
-    "/public/token",
+    "/v1/public/token",
     {
       focusThrottleInterval: 1000 * 60 * 60 * 24,
       revalidateOnFocus: false,

@@ -157,6 +157,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
         }),
         className
       )}
+      disabled={Boolean(disabled)}
       {...props}
     >
       {children}

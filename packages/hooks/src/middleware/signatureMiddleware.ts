@@ -23,7 +23,7 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
 
         const payload: MessageFactor = {
           method: "GET",
-          url: fullUrl,
+          url,
         };
 
         const signature = await signer.sign(payload);

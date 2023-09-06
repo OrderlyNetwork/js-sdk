@@ -12,7 +12,12 @@ export const useTickerStream = (symbol: string) => {
   if (!symbol) {
     throw new Error("useFuturesForSymbol requires a symbol");
   }
-  const { data: info } = useQuery<API.MarketInfo>(`/public/futures/${symbol}`);
+  const { data: info } = useQuery<API.MarketInfo>(
+    `/v1/public/futures/${symbol}`,
+    {
+      revalidateOnFocus: false,
+    }
+  );
   const ws = useWS();
 
   const { data: ticker } = useSWRSubscription(

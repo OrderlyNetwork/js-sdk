@@ -23,11 +23,11 @@ export const useMaxQty = (
   // const { data: positions = [] } =
   //   usePrivateQuery<API.PositionInfo>(`/positions`);
 
-  const { data: orders } = usePrivateQuery<API.Order[]>(`/orders`);
+  const { data: orders } = usePrivateQuery<API.Order[]>(`/v1/orders`);
 
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/client/info");
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const symbolInfo = useSymbolsInfo();
 

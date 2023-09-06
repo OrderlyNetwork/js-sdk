@@ -15,6 +15,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       </Tag>
     );
   }, [props.item]);
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">

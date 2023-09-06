@@ -27,14 +27,6 @@ export const usePrivateQuery = <T>(
 
   const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
 
-  // console.log(
-  //   "lunch usePrivateQuery, account state ",
-  //   query,
-  //   account.state.status
-  // );
-
-  // console.log("usePrivateQuery account", account.state);
-
   // @ts-ignore
   return useSWR<T>(
     () =>

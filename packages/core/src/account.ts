@@ -234,7 +234,7 @@ export class Account {
 
   private async _checkAccountExist(address: string) {
     const res = await this._simpleFetch(
-      `/get_account?address=${address}&broker_id=woofi_dex`
+      `/v1/get_account?address=${address}&broker_id=woofi_dex`
     );
 
     if (res.success) {
@@ -267,7 +267,7 @@ export class Account {
       JSON.stringify(toSignatureMessage),
     ]);
 
-    const res = await this._simpleFetch("/register_account", {
+    const res = await this._simpleFetch("/v1/register_account", {
       method: "POST",
       body: JSON.stringify({
         signature: signatured,
@@ -329,7 +329,7 @@ export class Account {
 
     // this.walletClient.verify(toSignatureMessage, signatured);
 
-    const res = await this._simpleFetch("/orderly_key", {
+    const res = await this._simpleFetch("/v1/orderly_key", {
       method: "POST",
       body: JSON.stringify({
         signature: signatured,
@@ -376,7 +376,7 @@ export class Account {
 
   private async _checkOrderlyKeyState(accountId: string, orderlyKey: string) {
     const res = await this._simpleFetch(
-      `/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`
+      `/v1/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`
     );
 
     if (res.success) {
@@ -399,7 +399,7 @@ export class Account {
   private async getBalance() {}
 
   private async _getRegisterationNonce() {
-    const res = await this._simpleFetch("/registration_nonce");
+    const res = await this._simpleFetch("/v1/registration_nonce");
     console.log("getRegisterationNonce:", res);
     if (res.success) {
       return res.data?.registration_nonce;

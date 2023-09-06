@@ -34,13 +34,13 @@ export const usePositionStream = (
   const symbolInfo = useSymbolsInfo();
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/client/info");
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const fundingRates = useFundingRates();
 
   // const { totalCollateral } = useCollateral();
 
-  const { data, error } = usePrivateQuery<API.PositionInfo>(`/positions`, {
+  const { data, error } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
     ...options,

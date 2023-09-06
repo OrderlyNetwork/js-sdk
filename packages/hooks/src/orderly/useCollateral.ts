@@ -37,23 +37,26 @@ export const useCollateral = (
 ): CollateralOutputs => {
   const { dp } = options;
   const positions = usePositionStream();
-  // const { data: positions } = usePrivateQuery<API.PositionInfo>(`/positions`);
+  // const { data: positions } = usePrivateQuery<API.PositionInfo>("/v1/positions`);
 
   // const orders = useOrderStream();
-  const { data: orders } = usePrivateQuery<API.Order[]>(`/orders`);
+  const { data: orders } = usePrivateQuery<API.Order[]>(`/v1/orders`);
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/client/info");
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const symbolInfo = useSymbolsInfo();
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { data: holding } = usePrivateQuery<API.Holding[]>("/client/holding", {
-    formatter: (data) => {
-      return data.holding;
-    },
-  });
+  const { data: holding } = usePrivateQuery<API.Holding[]>(
+    "/v1/client/holding",
+    {
+      formatter: (data) => {
+        return data.holding;
+      },
+    }
+  );
 
   const [totalCollateral, totalValue] = useMemo(() => {
     if (!holding || !markPrices) {

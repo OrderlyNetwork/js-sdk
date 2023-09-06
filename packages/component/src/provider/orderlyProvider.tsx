@@ -27,7 +27,7 @@ interface OrderlyProviderProps {
   networkId?: string;
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
-  walletAdapter: WalletAdapter;
+  walletAdapter: { new (options: any): WalletAdapter };
 
   logoUrl?: string;
 
@@ -115,9 +115,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function") {
       let account = SimpleDI.get<Account>(Account.instanceName);
-      // const walletState = await disconnect();
-      // console.log("walletState", walletState);
-      return account.disconnect(currentWallet);
+
+      return disconnect(currentWallet).then(() => {
+        return account.disconnect();
+      });
     }
   }, [disconnect, currentWallet]);
 

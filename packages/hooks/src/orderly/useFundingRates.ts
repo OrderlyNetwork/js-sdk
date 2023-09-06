@@ -4,7 +4,7 @@ import { createGetter } from "../utils/createGetter";
 
 export const useFundingRates = () => {
   const { data } = useQuery<{ [key: string]: API.FundingRate }>(
-    `/public/funding_rates`,
+    `/v1/public/funding_rates`,
     {
       focusThrottleInterval: 1000 * 60 * 60 * 24,
       revalidateOnFocus: false,

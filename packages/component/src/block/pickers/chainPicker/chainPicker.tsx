@@ -65,7 +65,7 @@ export const ChainPicker: FC<ChainPickerProps> = (props) => {
   }, [props.testChains]);
 
   return (
-    <div>
+    <div className="pt-5">
       {mainnet}
       {testnet}
     </div>

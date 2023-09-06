@@ -19,9 +19,9 @@ export const useQuery = <T>(
   const { apiBaseUrl } = useContext(OrderlyContext);
   const { formatter, ...swrOptions } = options || {};
   // check the query is public api
-  if (typeof query === "string" && !query.startsWith("/public")) {
-    throw new Error("useQuery is only for public api");
-  }
+  // if (typeof query === "string" && !query.startsWith("/v1/public")) {
+  //   throw new Error("useQuery is only for public api");
+  // }
 
   if (typeof apiBaseUrl === "undefined") {
     throw new Error("please add OrderlyProvider to your app");

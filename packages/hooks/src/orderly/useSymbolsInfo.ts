@@ -3,7 +3,7 @@ import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
 
 export const useSymbolsInfo = () => {
-  const { data = {} } = useQuery<API.SymbolExt[]>(`/public/info`, {
+  const { data = {} } = useQuery<API.SymbolExt[]>(`/v1/public/info`, {
     focusThrottleInterval: 1000 * 60 * 60 * 24,
     revalidateOnFocus: false,
     formatter(data: { rows: API.Symbol[] }) {
