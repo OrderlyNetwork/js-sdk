@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
 import { commify, getPrecisionByNumber } from "@orderly.network/utils";
-import { NumeralWithConfig } from "./numeralWithConfig";
+import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
 
 export type NumeralRule = "percentages" | "price";
@@ -15,6 +15,8 @@ export interface NumeralProps {
    */
 
   precision?: number;
+
+  tick?: number;
   /**
    * 小数点后保留位截段取整方式，可选 ceil, floor, round，作用与 Math.ceil、Math.floor、Math.round 对齐,默认floor
    */
@@ -45,6 +47,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     rule = "price",
     coloring,
     precision,
+    tick,
     surfix,
     truncate = false,
   } = props;
@@ -60,9 +63,14 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return `${(num * 100).toFixed(2)}%`;
     }
 
-    const truncatedNum = num.toFixed(
-      precision ? getPrecisionByNumber(precision) : 2
-    );
+    const dp =
+      typeof precision !== "undefined"
+        ? precision
+        : tick
+        ? getPrecisionByNumber(tick)
+        : 2;
+
+    const truncatedNum = num.toFixed(dp);
 
     if (rule === "price") {
       return commify(truncatedNum);

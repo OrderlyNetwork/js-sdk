@@ -58,7 +58,6 @@ var __async = (__this, __arguments, generator) => {
 var src_exports = {};
 __export(src_exports, {
   WS: () => WS,
-  WebSocketClient: () => ws_default,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   del: () => del,
   get: () => get,
@@ -153,26 +152,8 @@ function mutate(url, init) {
   });
 }
 
-// src/ws/index.ts
-var import_webSocket = require("rxjs/webSocket");
-
-// src/ws/contants.ts
-var WS_URL = {
-  testnet: {
-    // public: "wss://testnet-ws.orderly.org/ws/stream/",
-    public: "wss://dev-ws-v2.orderly.org/ws/stream/",
-    // private:
-    //   "wss://dev-ws-private-v2.orderly.org/wsprivate/v2/ws/private/stream/",
-    private: "wss://dev-ws-private-v2.orderly.org/v2/ws/private/stream/"
-  },
-  mainnet: {
-    public: "wss://mainnet-ws.orderly.io",
-    private: "wss://mainnet-ws.orderly.io"
-  }
-};
-
-// src/ws/index.ts
-var import_rxjs = require("rxjs");
+// src/constants.ts
+var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 
 // src/ws/handler/baseHandler.ts
 var BaseHandler = class {
@@ -193,254 +174,6 @@ var PingHandler = class extends BaseHandler {
 var messageHandlers = /* @__PURE__ */ new Map([
   ["ping", new PingHandler()]
 ]);
-
-// src/ws/index.ts
-var _WebSocketClient = class _WebSocketClient {
-  constructor(options) {
-    this.authenticated = false;
-    this._pendingPrivateSubscribe = [];
-    this.send = (message) => {
-      this.wsSubject.next(message);
-    };
-    this.privateSend = (message) => {
-      if (!this.privateWsSubject) {
-        console.warn("private ws not connected");
-        return;
-      }
-      this.privateWsSubject.next(message);
-    };
-    this.wsSubject = this.createSubject(options);
-    if (!!options.accountId) {
-      this.privateWsSubject = this.createPrivateSubject(options);
-    }
-    this.bindSubscribe();
-  }
-  createSubject(options) {
-    let url;
-    if (typeof options.url === "string") {
-      url = options.url;
-    } else {
-      url = WS_URL[options.networkId || "testnet"].public;
-    }
-    return (0, import_webSocket.webSocket)({
-      url: `${url}${options.accountId || ""}`,
-      openObserver: {
-        next: () => {
-          console.log("Connection ok");
-        }
-      },
-      closeObserver: {
-        next: () => {
-          console.log("Connection closed");
-        }
-      }
-    });
-  }
-  createPrivateSubject(options) {
-    const url = WS_URL[options.networkId || "testnet"].private;
-    const ws = (0, import_webSocket.webSocket)({
-      url: `${url}${options.accountId}`,
-      openObserver: {
-        next: () => {
-          var _a;
-          console.log("Private connection ok");
-          if (this.authenticated || !options.accountId)
-            return;
-          (_a = options.onSigntureRequest) == null ? void 0 : _a.call(options, options.accountId).then((signature) => {
-            this.authenticate(options.accountId, signature);
-          });
-        }
-      },
-      closeObserver: {
-        next: () => {
-          console.log("Private connection closed");
-          this.authenticated = false;
-        }
-      }
-    });
-    return ws;
-  }
-  bindSubscribe() {
-    this.wsSubject.subscribe({
-      next: (message) => {
-        const handler = messageHandlers.get(message.event);
-        if (handler) {
-          handler.handle(message, this.send);
-        }
-      },
-      error(err) {
-        console.log("WS Error: ", err);
-      },
-      complete() {
-        console.log("WS Connection closed");
-      }
-    });
-    if (!this.privateWsSubject)
-      return;
-    this.privateWsSubject.subscribe({
-      next: (message) => {
-        if (message.event === "auth") {
-          this.authenticated = true;
-          this._sendPendingPrivateMessage();
-          return;
-        }
-        const handler = messageHandlers.get(message.event);
-        if (handler) {
-          handler.handle(message, this.privateSend);
-        }
-      },
-      error(err) {
-        console.log("WS Error: ", err);
-      },
-      complete() {
-        console.log("WS Connection closed");
-      }
-    });
-  }
-  authenticate(accountId, message) {
-    var _a;
-    if (this.authenticated)
-      return;
-    if (!this.privateWsSubject) {
-      console.error("private ws not connected");
-      return;
-    }
-    console.log("push auth message:", message);
-    (_a = this.privateWsSubject) == null ? void 0 : _a.next({
-      id: "auth",
-      event: "auth",
-      params: {
-        orderly_key: message.publicKey,
-        sign: message.signature,
-        timestamp: message.timestamp
-      }
-    });
-  }
-  get isAuthed() {
-    return this.authenticated;
-  }
-  // observe<T>(topic: string): Observable<T>;
-  // observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-  // observe<T>(
-  //   params: {
-  //     event: string;
-  //   } & Record<string, any>,
-  //   unsubscribe?: () => any
-  // ): Observable<T>;
-  observe(params, unsubscribe, messageFilter) {
-    return this._observe(false, params, unsubscribe, messageFilter);
-  }
-  // privateObserve<T>(topic: string): Observable<T>;
-  // privateObserve<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-  // privateObserve<T>(
-  //   params: {
-  //     event: string;
-  //   } & Record<string, any>,
-  //   unsubscribe?: () => any
-  // ): Observable<T>;
-  privateObserve(params, unsubscribe, messageFilter) {
-    return this._observe(true, params, unsubscribe, messageFilter);
-  }
-  _observe(isPrivate, params, unsubscribe, messageFilter) {
-    console.log(
-      "observe---------------------------",
-      params,
-      unsubscribe,
-      messageFilter
-    );
-    if (isPrivate && !this.privateWsSubject) {
-      throw new Error("private ws not connected");
-    }
-    const subject = isPrivate ? this.privateWsSubject : this.wsSubject;
-    const sendFunc = isPrivate ? this.privateSend : this.send;
-    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
-    return new import_rxjs.Observable((observer) => {
-      if (isPrivate && !this.authenticated) {
-        this._pendingPrivateSubscribe.push(params);
-        return;
-      }
-      try {
-        const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
-        if (refCount === 0) {
-          sendFunc(subscribeMessage);
-          _WebSocketClient.__topicRefCountMap.set(
-            subscribeMessage.topic,
-            refCount + 1
-          );
-        }
-      } catch (err) {
-        observer.error(err);
-      }
-      const subscription = subject.subscribe({
-        next: (x) => {
-          try {
-            if (filter(x)) {
-              observer.next(messageFormatter(x));
-            }
-          } catch (err) {
-            observer.error(err);
-          }
-        },
-        error: (err) => observer.error(err),
-        complete: () => observer.complete()
-      });
-      return () => {
-        try {
-          const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
-          if (refCount > 1) {
-            _WebSocketClient.__topicRefCountMap.set(
-              subscribeMessage.topic,
-              refCount - 1
-            );
-            return;
-          }
-          if (!!unsubscribeMessage) {
-            this.send(unsubscribeMessage);
-          }
-          _WebSocketClient.__topicRefCountMap.delete(subscribeMessage.topic);
-        } catch (err) {
-          observer.error(err);
-        }
-        subscription.unsubscribe();
-      };
-    });
-  }
-  generateMessage(params, unsubscribe, messageFilter) {
-    let subscribeMessage, unsubscribeMessage;
-    let filter, messageFormatter = (message) => message.data;
-    if (typeof params === "string") {
-      subscribeMessage = { event: "subscribe", topic: params };
-      unsubscribeMessage = { event: "unsubscribe", topic: params };
-      filter = (message) => message.topic === params;
-    } else {
-      subscribeMessage = params;
-      unsubscribeMessage = typeof unsubscribe === "function" ? unsubscribe() : unsubscribe;
-      filter = messageFilter || ((message) => true);
-    }
-    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
-  }
-  _sendPendingPrivateMessage() {
-    if (this._pendingPrivateSubscribe.length === 0)
-      return;
-    this._pendingPrivateSubscribe.forEach((params) => {
-      this.privateObserve(params).subscribe();
-    });
-    this._pendingPrivateSubscribe = [];
-  }
-  // 取消所有订阅
-  desotry() {
-    var _a;
-    this.wsSubject.unsubscribe();
-    (_a = this.privateWsSubject) == null ? void 0 : _a.unsubscribe();
-  }
-};
-// the topic reference count;
-_WebSocketClient.__topicRefCountMap = /* @__PURE__ */ new Map();
-var WebSocketClient = _WebSocketClient;
-var ws_default = WebSocketClient;
-
-// src/constants.ts
-var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 
 // src/ws/ws.ts
 var defaultMessageFormatter = (message) => message.data;
@@ -472,22 +205,30 @@ var WS = class {
       this.createPrivateSC(options);
     }
   }
-  createPublicSC(options) {
-    let url;
-    if (typeof options.url === "string") {
-      url = options.url;
-    } else {
-      url = WS_URL[options.networkId || "testnet"].public;
+  openPrivate(accountId) {
+    var _a;
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.OPEN) {
+      return;
     }
-    this.publicSocket = new WebSocket(`${url}${COMMON_ID}`);
+    this.createPrivateSC(__spreadProps(__spreadValues({}, this.options), {
+      accountId
+    }));
+  }
+  createPublicSC(options) {
+    this.publicSocket = new WebSocket(
+      `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
+    );
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
     this.publicSocket.onerror = this.onError.bind(this);
   }
   createPrivateSC(options) {
-    const url = WS_URL[options.networkId || "testnet"].private;
-    this.privateSocket = new WebSocket(`${url}${options.accountId}`);
+    console.log("to open private webSocket ---->>>>");
+    this.options = options;
+    this.privateSocket = new WebSocket(
+      `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
+    );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
     this.privateSocket.onmessage = this.onMessage.bind(this);
     this.privateSocket.onerror = this.onPrivateError.bind(this);
@@ -505,18 +246,18 @@ var WS = class {
   }
   onPrivateOpen(event) {
     console.log("Private WebSocket connection opened:");
-    if (this._pendingPrivateSubscribe.length > 0) {
-      this._pendingPrivateSubscribe.forEach(([params, cb]) => {
-        this.subscribe(params, cb);
-      });
-      this._pendingPrivateSubscribe = [];
-    }
+    this.authenticate(this.options.accountId);
     this.privateIsReconnecting = false;
   }
   onMessage(event) {
     try {
       const message = JSON.parse(event.data);
       const commoneHandler = messageHandlers.get(message.event);
+      if (message.event === "auth" && message.success) {
+        this.authenticated = true;
+        this.handlePendingPrivateTopic();
+        return;
+      }
       if (commoneHandler) {
         commoneHandler.handle(message, this.send);
       } else {
@@ -534,6 +275,14 @@ var WS = class {
       }
     } catch (e) {
       console.log("WebSocket message received:", event.data);
+    }
+  }
+  handlePendingPrivateTopic() {
+    if (this._pendingPrivateSubscribe.length > 0) {
+      this._pendingPrivateSubscribe.forEach(([params, cb]) => {
+        this.privateSubscribe(params, cb);
+      });
+      this._pendingPrivateSubscribe = [];
     }
   }
   onClose(event) {
@@ -589,7 +338,13 @@ var WS = class {
       );
     });
   }
-  privateSubscribe(params, callback) {
+  privateSubscribe(params, callback, once) {
+    var _a, _b;
+    console.log("\u{1F449}", params, callback, (_a = this.privateSocket) == null ? void 0 : _a.readyState);
+    if (((_b = this.privateSocket) == null ? void 0 : _b.readyState) !== WebSocket.OPEN) {
+      this._pendingPrivateSubscribe.push([params, callback]);
+      return;
+    }
   }
   subscribe(params, callback, once) {
     console.log("\u{1F449}", params, callback, this.publicSocket.readyState);
@@ -626,6 +381,9 @@ var WS = class {
       };
     }
   }
+  // sendPublicMessage(){
+  //   if(this.publicSocket.readyState !== )
+  // }
   onceSubscribe(params, callback) {
     this.subscribe(params, callback, true);
   }
@@ -677,7 +435,6 @@ var WS = class {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   WS,
-  WebSocketClient,
   __ORDERLY_API_URL_KEY__,
   del,
   get,

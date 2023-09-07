@@ -8,6 +8,7 @@ import { Numeral } from "@/text";
 import { type API, AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "@orderly.network/hooks";
 import { Logo } from "@/logo";
+import { AssetsContext } from "@/provider/assetsProvider";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -19,6 +20,7 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   const { logoUrl } = useContext(OrderlyContext);
+  const { onDeposit, onWithdraw } = useContext(AssetsContext);
 
   // console.log("accountInfo", props);
 
@@ -78,7 +80,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
           Assets & Margin
         </SheetHeader>
-        <AssetAndMarginSheet />
+        <AssetAndMarginSheet onDeposit={onDeposit} onWithdraw={onWithdraw} />
       </SheetContent>
     </Sheet>
   );

@@ -4,6 +4,7 @@ import { AggregatedData, PositionOverview } from "./overview";
 import { ListView } from "@/listView";
 import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
+import { SymbolProvider } from "@/provider";
 
 interface PositionsViewProps {
   dataSource: any[] | null;
@@ -38,11 +39,13 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
             dataSource={props.dataSource}
             renderItem={(item, index) => {
               return (
-                <PositionCell
-                  item={item}
-                  onLimitClose={props.onLimitClose}
-                  onMarketClose={props.onMarketClose}
-                />
+                <SymbolProvider symbol={item.symbol}>
+                  <PositionCell
+                    item={item}
+                    onLimitClose={props.onLimitClose}
+                    onMarketClose={props.onMarketClose}
+                  />
+                </SymbolProvider>
               );
             }}
             renderSeparator={(item, index) => {

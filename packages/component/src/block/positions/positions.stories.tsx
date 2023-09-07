@@ -23,17 +23,6 @@ const meta: Meta = {
   args: {
     // dataSource: [],
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore()}
-        walletAdapter={new Web3WalletAdapter()}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;
@@ -103,7 +92,6 @@ export const WithHooks: Story = {
   render: (args, { globals }) => {
     const [symbol, setSymbol] = React.useState(globals.symbol);
     const [data, info, { loading }] = usePositionStream(symbol);
-    // console.log("********", data, info.maintenance_margin_ratio());
 
     const onShowAllSymbolChange = (isAll: boolean) => {
       setSymbol(isAll ? "" : globals.symbol);
@@ -115,6 +103,7 @@ export const WithHooks: Story = {
         dataSource={data.rows}
         aggregated={data.aggregated}
         showAllSymbol={symbol === ""}
+        isLoading={loading}
         onShowAllSymbolChange={onShowAllSymbolChange}
       />
     );

@@ -11,8 +11,6 @@ export { useTopicObserve } from "./useTopicObserve";
 export { useAccount } from "./useAccount";
 export { useAppState } from "./useAppState";
 
-export { useWebSocketClient } from "./useWebSocketClient";
-
 export { useEventCallback, useObservable } from "rxjs-hooks";
 
 export { default as useConstant } from "use-constant";

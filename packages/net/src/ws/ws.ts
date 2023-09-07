@@ -1,10 +1,10 @@
-import { WS_URL } from "./contants";
 import { messageHandlers } from "./handler/handler";
 
 export type NetworkId = "testnet" | "mainnet";
 
 export type WSOptions = {
-  url?: string;
+  privateUrl: string;
+  publicUrl: string;
   networkId?: NetworkId;
   accountId?: string;
 
@@ -54,7 +54,7 @@ export class WS {
 
   private _eventHandlers: Map<string, Topics> = new Map();
 
-  constructor(private readonly options: WSOptions) {
+  constructor(private options: WSOptions) {
     this.createPublicSC(options);
 
     if (!!options.accountId) {
@@ -62,14 +62,20 @@ export class WS {
     }
   }
 
-  private createPublicSC(options: WSOptions) {
-    let url;
-    if (typeof options.url === "string") {
-      url = options.url;
-    } else {
-      url = WS_URL[options.networkId || "testnet"].public;
+  public openPrivate(accountId: string) {
+    if (this.privateSocket?.readyState === WebSocket.OPEN) {
+      return;
     }
-    this.publicSocket = new WebSocket(`${url}${COMMON_ID}`);
+    this.createPrivateSC({
+      ...this.options,
+      accountId,
+    });
+  }
+
+  private createPublicSC(options: WSOptions) {
+    this.publicSocket = new WebSocket(
+      `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
+    );
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
@@ -77,8 +83,13 @@ export class WS {
   }
 
   private createPrivateSC(options: WSOptions) {
-    const url = WS_URL[options.networkId || "testnet"].private;
-    this.privateSocket = new WebSocket(`${url}${options.accountId}`);
+    console.log("to open private webSocket ---->>>>");
+
+    this.options = options;
+
+    this.privateSocket = new WebSocket(
+      `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
+    );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
     this.privateSocket.onmessage = this.onMessage.bind(this);
     // this.privateSocket.onclose = this.onClose.bind(this);
@@ -101,12 +112,9 @@ export class WS {
   private onPrivateOpen(event: Event) {
     console.log("Private WebSocket connection opened:");
 
-    if (this._pendingPrivateSubscribe.length > 0) {
-      this._pendingPrivateSubscribe.forEach(([params, cb]) => {
-        this.subscribe(params, cb);
-      });
-      this._pendingPrivateSubscribe = [];
-    }
+    //auth
+
+    this.authenticate(this.options.accountId!);
 
     this.privateIsReconnecting = false;
   }
@@ -115,6 +123,12 @@ export class WS {
     try {
       const message = JSON.parse(event.data);
       const commoneHandler = messageHandlers.get(message.event);
+
+      if (message.event === "auth" && message.success) {
+        this.authenticated = true;
+        this.handlePendingPrivateTopic();
+        return;
+      }
 
       if (commoneHandler) {
         commoneHandler.handle(message, this.send);
@@ -140,6 +154,15 @@ export class WS {
     }
 
     // You can process the received message here
+  }
+
+  private handlePendingPrivateTopic() {
+    if (this._pendingPrivateSubscribe.length > 0) {
+      this._pendingPrivateSubscribe.forEach(([params, cb]) => {
+        this.privateSubscribe(params, cb);
+      });
+      this._pendingPrivateSubscribe = [];
+    }
   }
 
   private onClose(event: CloseEvent) {
@@ -215,7 +238,18 @@ export class WS {
     // this.authenticated = true;
   }
 
-  privateSubscribe(params: any, callback: WSMessageHandler) {}
+  privateSubscribe(
+    params: any,
+    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
+    once?: boolean
+  ) {
+    console.log("👉", params, callback, this.privateSocket?.readyState);
+
+    if (this.privateSocket?.readyState !== WebSocket.OPEN) {
+      this._pendingPrivateSubscribe.push([params, callback]);
+      return;
+    }
+  }
 
   subscribe(
     params: any,
@@ -266,6 +300,10 @@ export class WS {
       };
     }
   }
+
+  // sendPublicMessage(){
+  //   if(this.publicSocket.readyState !== )
+  // }
 
   onceSubscribe(
     params: any,

@@ -3,21 +3,21 @@ import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { FC, useContext, useMemo } from "react";
 import { Numeral } from "@/text/numeral";
-import { API } from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { OrderListContext } from "./orderListContext";
+import { SymbolContext } from "@/provider";
 
 interface OrderCellProps {
   order: API.OrderExt;
-  // onCancel?: (order: any) => void;
-  // onEdit?: (order: any) => void;
 }
 
 export const OrderCell: FC<OrderCellProps> = (props) => {
   const { order } = props;
 
   const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
+  const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
 
   const typeTag = useMemo(() => {
     return (
@@ -38,7 +38,16 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <Statistic label="Qty." value={order.quantity ?? "-"} coloring />
+        <Statistic
+          label="Qty."
+          value={order.quantity ?? "-"}
+          precision={base_dp}
+          valueClassName={
+            order.side === OrderSide.BUY
+              ? "text-trade-profit"
+              : "text-trade-loss"
+          }
+        />
         <Statistic label="Filled" value={order.executed ?? "-"} />
         <Statistic
           label="Est.Total(USDC)"
@@ -46,12 +55,18 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
             <NumeralTotal
               price={props.order.price ?? 1}
               quantity={props.order.quantity}
+              precision={quote_dp}
             />
           }
           align="right"
         />
         <Statistic label="Limit Price(USDC)" value={order.price ?? "-"} />
-        <Statistic label="Mark Price(USDC)" value={order.mark_price} />
+        <Statistic
+          label="Mark Price(USDC)"
+          rule="price"
+          precision={quote_dp}
+          value={order.mark_price}
+        />
       </div>
       <div className="flex gap-3 justify-end mt-2">
         <Button

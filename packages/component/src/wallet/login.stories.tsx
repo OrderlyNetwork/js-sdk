@@ -20,25 +20,6 @@ import { OnboardConnectorProvider } from "../provider/walletConnectorProvider";
 const meta: Meta<typeof Toaster> = {
   component: Toaster,
   title: "Block/Login",
-  decorators: [
-    (Story) => {
-      // console.log("***********", wallet);
-
-      return (
-        <OnboardConnectorProvider>
-          <OrderlyProvider
-            configStore={new MemoryConfigStore()}
-            walletAdapter={EtherAdapter}
-            // keyStore={new WooKeyStore("testnet")}
-            keyStore={new LocalStorageStore("testnet")}
-            logoUrl="/woo_fi_logo.svg"
-          >
-            <Story />
-          </OrderlyProvider>
-        </OnboardConnectorProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

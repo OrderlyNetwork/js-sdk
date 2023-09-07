@@ -81,7 +81,7 @@ export function liqPrice(inputs: LiqPriceInputs): number {
           .sub(new Decimal(totalNotional).mul(MMR))
           .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
       )
-      .todp(4, Decimal.ROUND_DOWN)
+      // .todp(4, Decimal.ROUND_DOWN)
       .toNumber(),
     0
   );

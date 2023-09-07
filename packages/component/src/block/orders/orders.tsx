@@ -6,6 +6,7 @@ import { Toolbar } from "./toolbar";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { API, OrderEntity } from "@orderly.network/types";
 import { OrderListContext, OrderListProvider } from "./orderListContext";
+import { SymbolProvider } from "@/provider";
 
 export interface OrdersViewProps {
   dataSource: any[];
@@ -37,7 +38,11 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
           isLoading={props.isLoading}
           dataSource={props.dataSource}
           renderSeparator={(_, index) => <Divider />}
-          renderItem={(item, index) => <OrderCell order={item} />}
+          renderItem={(item, index) => (
+            <SymbolProvider symbol={item.symbol}>
+              <OrderCell order={item} />
+            </SymbolProvider>
+          )}
         />
       </StatisticStyleProvider>
     </OrderListProvider>

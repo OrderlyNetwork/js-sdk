@@ -5,6 +5,7 @@ import * as React from "react";
 // import { useMarketInfo, useTickerStream, useFundingRate } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider";
 import { useMemo } from "react";
+import { useSymbolsInfo, useTickerStream } from "@orderly.network/hooks";
 
 const meta: Meta = {
   title: "Block/MarketOverview",
@@ -12,13 +13,7 @@ const meta: Meta = {
   //   parameters: {
   //     layout: "fullscreen",
   //   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider configStore={undefined}>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
+
   args: {
     // items: {
     //   price: {
@@ -41,41 +36,19 @@ export const Default: Story = {
   // description: "Description",
 };
 
-// export const WithData: Story = {
-//   render: (args) => {
-//     const { data: info } = useMarketInfo("PERP_ETH_USDC");
-//     const { data: tickerData } = useTickerStream("PERP_ETH_USDC");
-//     const { data: fundingRate } = useFundingRate("PERP_ETH_USDC");
-//
-//     // console.log(fundingRate);
-//
-//     const price = useMemo(() => {
-//       if (!tickerData)
-//         return {
-//           lastPrice: Number.NaN,
-//           percentChange: "0.00%",
-//         };
-//
-//       return {
-//         lastPrice: tickerData.close,
-//         percentChange:
-//           (
-//             ((tickerData.close - tickerData.open) / tickerData.open) *
-//             100
-//           ).toFixed(2) + "%",
-//       };
-//     }, [tickerData]);
-//
-//     return (
-//       <MarketOverview
-//         items={{
-//           price,
-//           fundingRate: {
-//             fundingRate: fundingRate.est_funding_rate.toFixed(4),
-//             timout: fundingRate.next_funding_time,
-//           },
-//         }}
-//       />
-//     );
-//   },
-// };
+export const WithHooks: Story = {
+  render: (args, { globals }) => {
+    const symbol = globals.symbol;
+    const data = useTickerStream(symbol);
+    const symbolInfo = useSymbolsInfo()[symbol];
+
+    // const symbolsInfo
+    return (
+      <SimpleMarketOverview
+        change={data?.change ?? 0}
+        price={data?.["24h_close"] ?? 0}
+        symbolInfo={symbolInfo}
+      />
+    );
+  },
+};

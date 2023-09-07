@@ -12,6 +12,7 @@ import {
   widget,
 } from "@/@types/charting_library";
 import DataFeed from "./dataFeed";
+import { useWS } from "@orderly.network/hooks";
 
 declare const TradingView: any;
 
@@ -47,6 +48,8 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   const [timeInterval, setTimeInterval] = useState<TimeInterval>(
     () => (intervals?.[0].value ?? "1") as TimeInterval
   );
+
+  const ws = useWS();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -101,9 +104,12 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
               "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             },
             preset: "mobile",
-            datafeed: new DataFeed({
-              apiBaseUrl: props.apiBaseUrl,
-            }),
+            datafeed: new DataFeed(
+              {
+                apiBaseUrl: props.apiBaseUrl,
+              },
+              ws
+            ),
             library_path,
             disabled_features,
             width: "100%",

@@ -27,6 +27,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const [{ aggregated }] = usePositionStream();
   const marginRatio = useMarginRatio();
 
+  const { onDeposit, onWithdraw } = props;
+
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
       <div className="pt-5">
@@ -111,8 +113,10 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         </div>
       </Paper>
       <div className="flex gap-3 py-5">
-        <Button fullWidth>Deposit</Button>
-        <Button fullWidth variant={"outlined"}>
+        <Button fullWidth onClick={() => onDeposit?.()}>
+          Deposit
+        </Button>
+        <Button fullWidth variant={"outlined"} onClick={() => onWithdraw?.()}>
           Withdraw
         </Button>
       </div>

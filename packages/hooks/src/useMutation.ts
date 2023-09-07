@@ -1,6 +1,6 @@
 import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 
-import { post, del, mutate } from "@orderly.network/net";
+import { mutate } from "@orderly.network/net";
 import {
   type MessageFactor,
   type SignedMessagePayload,

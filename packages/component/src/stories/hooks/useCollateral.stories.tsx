@@ -1,10 +1,7 @@
-import { MemoryConfigStore } from "@orderly.network/core";
-import { OrderlyProvider } from "../../provider";
 import React, { FC } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
 import { useCollateral } from "@orderly.network/hooks";
-import { WooKeyStore } from "../mock/woo.keystore";
 
 const CollateralDemo: FC<{
   totalCollateral: number;
@@ -32,18 +29,6 @@ const CollateralDemo: FC<{
 const meta: Meta = {
   title: "hooks/useCollateral",
   component: CollateralDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider
-          configStore={new MemoryConfigStore()}
-          keyStore={new WooKeyStore("testnet")}
-        >
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

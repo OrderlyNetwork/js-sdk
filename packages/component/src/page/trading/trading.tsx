@@ -11,6 +11,7 @@ import { TradingViewChartConfig } from "@/block/tradingView";
 import { BottomNavBar } from "./sections/bottombar";
 import { Page } from "@/layout";
 import { API } from "@orderly.network/types";
+import { AssetsProvider } from "@/provider/assetsProvider";
 
 interface TradingPageProps {
   symbol: string;
@@ -24,21 +25,23 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
-      <div className="pb-[70px]">
-        <NavBar symbol={props.symbol} />
-        <Divider />
-        <ChartView
-          symbol={props.symbol}
-          tradingViewConfig={props.tradingViewConfig}
-        />
-        <MyLeverageView symbol={props.symbol} />
-        <div className="grid grid-cols-[3fr_4fr] box-border p-2">
-          <MyOrderBook symbol={props.symbol} />
-          <MyOrderEntry symbol={props.symbol} />
+      <AssetsProvider>
+        <div className="pb-[70px]">
+          <NavBar symbol={props.symbol} />
+          <Divider />
+          <ChartView
+            symbol={props.symbol}
+            tradingViewConfig={props.tradingViewConfig}
+          />
+          <MyLeverageView symbol={props.symbol} />
+          <div className="grid grid-cols-[3fr_4fr] box-border p-2">
+            <MyOrderBook symbol={props.symbol} />
+            <MyOrderEntry symbol={props.symbol} />
+          </div>
+          <DataListView />
+          <BottomNavBar />
         </div>
-        <DataListView />
-        <BottomNavBar />
-      </div>
+      </AssetsProvider>
     </TradingPageProvider>
   );
 };

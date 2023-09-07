@@ -6,6 +6,7 @@ import { SortDirection } from "@/block/markets/sections/sortItem";
 import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
 import { API } from "@orderly.network/core";
 import { Numeral } from "@/text";
+import { NumeralWithSymbol } from "@/text/numeralWithSymbol";
 
 interface MarketListViewProps {
   dataSource?: API.MarketInfo[];
@@ -40,7 +41,11 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
         symbol={item["symbol"]}
         tailing={
           <Statistic
-            label={<Numeral rule={"price"}>{item["24h_close"]}</Numeral>}
+            label={
+              <NumeralWithSymbol rule={"price"} symbol={item.symbol}>
+                {item["24h_close"]}
+              </NumeralWithSymbol>
+            }
             value={!Number.isNaN(item.change) ? item.change : 0}
             rule={"percentages"}
             align={"right"}

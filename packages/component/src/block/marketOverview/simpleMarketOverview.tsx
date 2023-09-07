@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { Text } from "@/text";
+import { FC, useContext } from "react";
 import { Numeral } from "@/text/numeral";
+import { SymbolContext } from "@/provider";
 
 interface SimpleMarketOverviewProps {
   price: number;
@@ -8,9 +8,11 @@ interface SimpleMarketOverviewProps {
 }
 
 export const SimpleMarketOverview: FC<SimpleMarketOverviewProps> = (props) => {
+  const { quote_dp } = useContext(SymbolContext);
+  // console.log(symbolInfo("quote_dp"));
   return (
     <div className={"flex gap-4 items-center"}>
-      <Numeral>{props.price}</Numeral>
+      <Numeral precision={quote_dp}>{props.price}</Numeral>
       <Numeral rule={"percentages"} coloring>
         {props.change}
       </Numeral>

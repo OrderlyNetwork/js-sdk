@@ -5,26 +5,32 @@ import {
   ResolutionString,
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
-import { WebSocketClient } from "@orderly.network/net";
+import { WS } from "@orderly.network/net";
 
 // const OrderlyRe;
 
 export default class DataFeed implements IBasicDataFeed {
-  private wsClient: WebSocketClient;
-  private _subscriber?: any;
+  private _config?: any;
   constructor(
     private readonly configuration: {
       apiBaseUrl: string;
-    }
-  ) {
-    this.wsClient = new WebSocketClient({
-      accountId: "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
-    });
-  }
+    },
+    private readonly wsClient: WS
+  ) {}
   async onReady(callback: OnReadyCallback) {
     console.log("[onReady]: Method call");
 
-    callback({});
+    // fetch(`${this.configuration.apiBaseUrl}/tv/config`)
+
+    fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=WOO%20X`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.s === "ok") {
+          this._config = data;
+
+          callback({});
+        }
+      });
   }
   searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {
     console.log("[searchSymbols]: Method call");
@@ -36,45 +42,46 @@ export default class DataFeed implements IBasicDataFeed {
     extension
   ) {
     // console.log("[resolveSymbol]: Method call", symbolName);
-    fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=${symbolName}`)
-      .then((res) => res.json())
-      .then((data) => data && data.s === "ok")
-      .then((res) => {
-        console.log(res);
-        const symbolArr = symbolName.split("_");
-        const symbolInfo: LibrarySymbolInfo = {
-          // name: `${symbolArr[1]}/${symbolArr[2]}`,
-          name: symbolName,
-          full_name: symbolName,
-          // description: symbolName,
-          description: `${symbolArr[1]}/${symbolArr[2]}`,
-          type: "crypto",
-          session: "24x7",
-          exchange: "",
-          listed_exchange: "",
-          pricescale: 100,
-          minmov: 1,
-          supported_resolutions: defaultTimeInterval.map(
-            (item) => item.value
-          ) as ResolutionString[],
-          has_intraday: true,
-          // intraday_multipliers: Resolutions,
-          has_daily: true,
-          currency_code: "USDC",
+    // fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=${symbolName}`)
+    //   .then((res) => res.json())
+    //   // .then((data) => data && data.s === "ok")
+    //   .then((res) => {
+    // console.log("==========>>>>>>>", res);
+    const cIndex = this._config["symbol"].indexOf(symbolName);
+    console.log(cIndex, this._config);
+    const symbolInfo: LibrarySymbolInfo = {
+      // name: `${symbolArr[1]}/${symbolArr[2]}`,
+      name: symbolName,
+      full_name: symbolName,
+      // description: symbolName,
+      description: this._config["description"][cIndex],
+      type: this._config["session-regular"][cIndex] || "crypto",
+      session: this._config["session-regular"][cIndex] || "24x7",
+      exchange: "",
+      listed_exchange: "",
+      pricescale: this._config["pricescale"][cIndex],
+      minmov: this._config["minmovement"][cIndex] || 1,
+      supported_resolutions: defaultTimeInterval.map(
+        (item) => item.value
+      ) as ResolutionString[],
+      has_intraday: this._config["has-intraday"][cIndex],
+      // intraday_multipliers: Resolutions,
+      has_daily: this._config["has-daily"][cIndex],
+      currency_code: this._config["currency"][cIndex],
 
-          // has_weekly_and_monthly: true,
-          // has_empty_bars: true,
-          // has_no_volume: false,
-          // visible_plots_set:
-          // // volume_precision: Number(volumePrecision),
-          // timezone: getTimeZoneCity() || 'Asia/Shanghai',
-          // timezone: "Etc/UTC",
-          timezone: "Asia/Shanghai",
-          format: "price",
-        };
+      // has_weekly_and_monthly: true,
+      // has_empty_bars: true,
+      // has_no_volume: false,
+      // visible_plots_set:
+      // // volume_precision: Number(volumePrecision),
+      // timezone: getTimeZoneCity() || 'Asia/Shanghai',
+      // timezone: "Etc/UTC",
+      timezone: this._config["timezone"][cIndex] || "Asia/Shanghai",
+      format: "price",
+    };
 
-        onSymbolResolvedCallback(symbolInfo);
-      });
+    onSymbolResolvedCallback(symbolInfo);
+    // });
   }
   getBars(
     symbolInfo: LibrarySymbolInfo,
@@ -118,27 +125,59 @@ export default class DataFeed implements IBasicDataFeed {
     subscriberUID,
     onResetCacheNeededCallback
   ) {
-    // console.log(
-    //   "[subscribeBars]: Method call with subscriberUID:",
-    //   subscriberUID,
-    //   symbolInfo,
-    //   resolution
-    // );
+    console.log(
+      "[subscribeBars]: Method call with subscriberUID:",
+      subscriberUID,
+      symbolInfo,
+      resolution
+    );
 
-    this._subscriber = this.wsClient
-      .observe<any>(`${symbolInfo.full_name}@kline_1m`)
-      .subscribe((data) => {
-        console.log(data);
-      });
+    this.wsClient.subscribe(`${symbolInfo.full_name}@kline_1`, {
+      onMessage: (data: any) => {
+        // console.log("******* kline ******", data);
+        onRealtimeCallback({
+          time: data.endTime,
+          close: data.close,
+          open: data.open,
+          high: data.high,
+          low: data.low,
+          volume: data.volume,
+        });
+      },
+    });
+
+    // subscribe trade
+    // this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {
+    //   onMessage: (data: any) => {
+    //     console.log("******* ticker ******", data);
+    //     onRealtimeCallback({
+    //       time: Date.now(),
+    //       close: data.close,
+    //       open: data.open,
+    //       high: data.high,
+    //       low: data.low,
+    //       volume: data.volume,
+    //     });
+    //   },
+    // });
   }
-  unsubscribeBars(subscriberUID) {
+  unsubscribeBars(subscriberUID: string) {
     console.log(
       "[unsubscribeBars]: Method call with subscriberUID:",
       subscriberUID
     );
 
-    if (this._subscriber) {
-      this._subscriber.unsubscribe();
-    }
+    const arr = subscriberUID.split("_#_");
+
+    this.wsClient.send({
+      event: "unsubscribe",
+      topic: `${arr[0]}@kline_${arr[2]}`,
+    });
+
+    // this.wsClient.send({ event: "unsubscribe", topic: `${arr[0]}@ticker` });
+
+    // if (this._subscriber) {
+    //   this._subscriber.unsubscribe();
+    // }
   }
 }

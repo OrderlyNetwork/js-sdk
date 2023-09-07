@@ -3,26 +3,16 @@ import type { Meta } from "@storybook/react";
 import React from "react";
 import { OrderBook } from ".";
 import { StoryObj } from "@storybook/react";
-import { useOrderbookStream } from "@orderly.network/hooks";
+import { useOrderbookStream, useSymbolsInfo } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { MemoryConfigStore } from "@orderly.network/core";
 import { WooKeyStore } from "../../stories/mock/woo.keystore";
+import { SymbolProvider } from "../../provider";
 
 const meta: Meta = {
   title: "Block/OrderBook",
   component: OrderBook,
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        walletAdapter={undefined}
-        keyStore={new WooKeyStore("testnet")}
-        logoUrl="/woo_fi_logo.svg"
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
+
   argTypes: {
     onItemClick: { action: "itemClick" },
   },
@@ -79,16 +69,21 @@ export const WithData: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
     const [data, { onDepthChange }] = useOrderbookStream(symbol);
+    const symbolInfo = useSymbolsInfo()[symbol];
 
     return (
-      <OrderBook
-        {...args}
-        asks={data.asks}
-        bids={data.bids}
-        depth={[]}
-        lastPrice={data.middlePrice}
-        markPrice={data.markPrice}
-      />
+      <SymbolProvider symbol={symbol}>
+        <OrderBook
+          {...args}
+          asks={data.asks}
+          bids={data.bids}
+          depth={[]}
+          base={symbolInfo("base")}
+          quote={symbolInfo("quote")}
+          lastPrice={data.middlePrice}
+          markPrice={data.markPrice}
+        />
+      </SymbolProvider>
     );
   },
 };

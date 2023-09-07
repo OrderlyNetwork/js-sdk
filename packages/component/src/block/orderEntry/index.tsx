@@ -235,9 +235,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <div className={"flex justify-between items-center"}>
               <div className="flex gap-1 text-gray-500 text-sm">
                 <span>Free Collat.</span>
-                <Numeral rule="price" className="text-base-contrast/80">{`${
-                  freeCollateral ?? "--"
-                }`}</Numeral>
+                <Numeral
+                  rule="price"
+                  className="text-base-contrast/80"
+                  precision={0}
+                >{`${freeCollateral ?? "--"}`}</Numeral>
 
                 <span>USDC</span>
               </div>
@@ -285,6 +287,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               render={({ field }) => {
                 return (
                   <Input
+                    disabled={disabled}
                     ref={priceInputRef}
                     prefix={"Price"}
                     suffix={symbolConfig?.quote}
@@ -314,6 +317,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               render={({ field }) => {
                 return (
                   <Input
+                    disabled={disabled}
                     prefix={"Qunatity"}
                     suffix={symbolConfig?.base}
                     className="text-right"
@@ -359,6 +363,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               render={({ field }) => {
                 return (
                   <Input
+                    disabled={disabled}
                     className={"text-right"}
                     // value={values?.total}
                     prefix={"Total ≈"}

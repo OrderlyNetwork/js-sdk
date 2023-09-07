@@ -6,6 +6,12 @@ import {
   init,
   useConnectWallet,
 } from "@web3-onboard/react";
+import { OnboardConnectorProvider, OrderlyProvider } from "../src";
+import {
+  EtherAdapter,
+  LocalStorageStore,
+  MemoryConfigStore,
+} from "@orderly.network/core";
 
 import "../src/tailwind.css"; // tailwind css
 
@@ -48,14 +54,14 @@ const web3Onboard = init({
     gettingStartedGuide: "https://blocknative.com",
     explore: "https://blocknative.com",
   },
-  accountCenter: {
-    desktop: {
-        enabled: false,
-    },
-    mobile: {
-        enabled: false,
-    },
-},
+  // accountCenter: {
+  //   desktop: {
+  //     enabled: false,
+  //   },
+  //   mobile: {
+  //     enabled: false,
+  //   },
+  // },
   theme: "dark",
 });
 
@@ -86,6 +92,22 @@ const preview = {
       },
     },
   },
+  decorators: [
+    (Story) => {
+      return (
+        <OnboardConnectorProvider>
+          <OrderlyProvider
+            configStore={new MemoryConfigStore()}
+            walletAdapter={EtherAdapter}
+            keyStore={new LocalStorageStore("testnet")}
+            logoUrl="/woo_fi_logo.svg"
+          >
+            <Story />
+          </OrderlyProvider>
+        </OnboardConnectorProvider>
+      );
+    },
+  ],
 };
 
 export default preview;

@@ -16,17 +16,7 @@ const meta: Meta = {
     onSubmit: { action: "submit" },
     onDeposit: { action: "deposit" },
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore("testnet")}
-        walletAdapter={new Web3WalletAdapter()}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
+
   args: {
     symbol: "PERP_NEAR_USDC",
     showConfirm: true,

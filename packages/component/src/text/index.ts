@@ -1,6 +1,6 @@
 import { Numeral } from "./numeral";
 import { NumeralTotal } from "./numeralTotal";
-import { NumeralWithConfig } from "./numeralWithConfig";
+import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { TradingPair } from "./tradingPair";
 import { Text } from "./text";
 
@@ -8,12 +8,12 @@ export type CombinedComponent = typeof Numeral & {
   /**
    * 需要搭配 @orderly.network/hooks 使用
    */
-  symbol: typeof NumeralWithConfig;
+  symbol: typeof NumeralWithSymbol;
   total: typeof NumeralTotal;
 };
 
 const CombinedComponent = Numeral as CombinedComponent;
-CombinedComponent.symbol = NumeralWithConfig;
+CombinedComponent.symbol = NumeralWithSymbol;
 CombinedComponent.total = NumeralTotal;
 
 // (Numeral as CombinedComponent).symbol = NumeralWithConfig;

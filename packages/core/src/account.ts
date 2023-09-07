@@ -1,5 +1,3 @@
-import { BehaviorSubject } from "rxjs";
-import { getMockSigner } from "./helper";
 import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore";
@@ -12,6 +10,8 @@ import {
   generateRegisterAccountMessage,
   getDomain,
 } from "./utils";
+
+import EventEmitter from "eventemitter3";
 
 export type AccountStatus =
   | "NotConnected"
@@ -48,12 +48,20 @@ export class Account {
   static instanceName = "account";
   // private walletClient?: WalletClient;
   private _singer?: Signer;
-  private _state$ = new BehaviorSubject<AccountState>({
-    status: AccountStatusEnum.NotConnected,
+  // private _state$ = new BehaviorSubject<AccountState>({
+  //   status: AccountStatusEnum.NotConnected,
 
+  //   balance: "",
+  //   leverage: Number.NaN,
+  // });
+
+  private _ee = new EventEmitter();
+
+  private _state: AccountState = {
+    status: AccountStatusEnum.NotConnected,
     balance: "",
     leverage: Number.NaN,
-  });
+  };
 
   private walletClient?: any;
 
@@ -72,6 +80,8 @@ export class Account {
     //   const orderlyKey = this.keyStore.getOrderlyKey(address);
     //   this.setAddress(address);
     // }
+
+    this._bindEvents();
   }
 
   /**
@@ -106,11 +116,14 @@ export class Account {
     if (!address) throw new Error("address is required");
 
     this.keyStore.setAddress(address);
-    this._state$.next({
+
+    const nextState = {
       ...this.stateValue,
       status: AccountStatusEnum.Connected,
       address,
-    });
+    };
+
+    this._ee.emit("change:status", nextState);
 
     if (wallet) {
       this.walletClient = new this.walletAdapterClass(wallet);
@@ -120,12 +133,17 @@ export class Account {
   }
 
   // subscribe the account state change
-  get state$(): BehaviorSubject<AccountState> {
-    return this._state$;
-  }
+  // get state$(): BehaviorSubject<AccountState> {
+  //   return this._state$;
+  // }
+
+  // public get select(): EventEmitter {
+  //   return this._ee;
+  // }
 
   get stateValue(): AccountState {
-    return this._state$.getValue();
+    // return this._state$.getValue();
+    return this._state;
   }
 
   get accountId(): string | undefined {
@@ -137,16 +155,25 @@ export class Account {
    * set user positions count
    */
   set position(position: string[]) {
-    this._state$.next({
+    const nextState = {
       ...this.stateValue,
       positon: position,
-    });
+    };
+    this._ee.emit("change:status", nextState);
   }
 
   set orders(orders: string[]) {
-    this._state$.next({
+    const nextState = {
       ...this.stateValue,
       orders,
+    };
+    this._ee.emit("change:status", nextState);
+  }
+
+  private _bindEvents() {
+    this._ee.addListener("change:status", (state: AccountState) => {
+      console.log("change:status", state);
+      this._state = state;
     });
   }
 
@@ -154,6 +181,7 @@ export class Account {
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
     console.log("check account is esist");
+    let nextState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
@@ -163,13 +191,14 @@ export class Account {
         this.keyStore.setAccountId(address, accountInfo.account_id);
         // this.keyStore.setAddress(address);
 
-        // console.log("account next function::");
-        this._state$.next({
+        nextState = {
           ...this.stateValue,
           status: AccountStatusEnum.SignedIn,
           accountId: accountInfo.account_id,
           userId: accountInfo.user_id,
-        });
+        };
+        this._ee.emit("change:status", nextState);
+        // console.log("account next function::");
       } else {
         // account is not exist, add account
         // await this.addAccount(address);
@@ -180,14 +209,15 @@ export class Account {
       // get orderlyKey from keyStore
       const orderlyKey = this.keyStore.getOrderlyKey(address);
 
-      console.log("orderlyKey:", orderlyKey);
+      nextState = {
+        ...this.stateValue,
+        status: AccountStatusEnum.DisabledTrading,
+      };
 
       if (!orderlyKey) {
         console.log("orderlyKey is null");
-        this._state$.next({
-          ...this.stateValue,
-          status: AccountStatusEnum.DisabledTrading,
-        });
+        this._ee.emit("change:status", nextState);
+
         return AccountStatusEnum.DisabledTrading;
       }
 
@@ -213,10 +243,12 @@ export class Account {
           return AccountStatusEnum.DisabledTrading;
         }
 
-        this._state$.next({
+        const nextState = {
           ...this.stateValue,
           status: AccountStatusEnum.EnableTrading,
-        });
+        };
+
+        this._ee.emit("change:status", nextState);
 
         return AccountStatusEnum.EnableTrading;
       }
@@ -249,7 +281,7 @@ export class Account {
     console.log("nonce:", nonce);
 
     const keyPair = this.keyStore.generateKey();
-    const publicKey = await keyPair.getPublicKey();
+    // const publicKey = await keyPair.getPublicKey();
 
     const address = this.stateValue.address;
 
@@ -284,12 +316,15 @@ export class Account {
     if (res.success) {
       // this.keyStore.setKey(address, keyPair);
       this.keyStore.setAccountId(address, res.data.account_id);
-      this._state$.next({
+
+      const nextState = {
         ...this.stateValue,
         status: AccountStatusEnum.SignedIn,
         accountId: res.data.account_id,
         userId: res.data.user_id,
-      });
+      };
+
+      this._ee.emit("change:status", nextState);
 
       return res;
     }
@@ -346,12 +381,14 @@ export class Account {
 
     if (res.success) {
       this.keyStore.setKey(address, keyPair);
-      this._state$.next({
+      const nextState = {
         ...this.stateValue,
         status: AccountStatusEnum.EnableTrading,
         // accountId: res.data.account_id,
         // userId: res.data.user_id,
-      });
+      };
+
+      this._ee.emit("change:status", nextState);
 
       return res;
     } else {
@@ -365,13 +402,14 @@ export class Account {
     //   this.keyStore.cleanAllKey(this.stateValue.address);
     // }
 
-    this._state$.next({
+    const nextState = {
       ...this.stateValue,
       status: AccountStatusEnum.NotConnected,
       accountId: undefined,
       userId: undefined,
       address: undefined,
-    });
+    };
+    this._ee.emit("change:status", nextState);
   }
 
   private async _checkOrderlyKeyState(accountId: string, orderlyKey: string) {
@@ -414,22 +452,13 @@ export class Account {
     return fetch(requestUrl, init).then((res) => res.json());
   }
 
-  // private async _fetch(url: string) {
-  //   const signer = this.signer;
-  //   const requestUrl = `${this.configStore.get<string>("apiBaseUrl")}${url}`;
-  //   const payload: MessageFactor = {
-  //     method: "GET",
-  //     url: requestUrl,
-  //   };
-
-  //   const signature = await signer.sign(payload);
-
-  //   console.log(requestUrl);
-
-  //   return fetch(requestUrl, {
-  //     headers: {
-  //       ...signature,
-  //     },
-  //   }).then((res) => res.json());
-  // }
+  get on() {
+    return this._ee.on.bind(this._ee);
+  }
+  get once() {
+    return this._ee.once.bind(this._ee);
+  }
+  get off() {
+    return this._ee.off.bind(this._ee);
+  }
 }

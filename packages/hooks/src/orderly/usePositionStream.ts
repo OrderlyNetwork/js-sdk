@@ -12,6 +12,7 @@ import { propOr } from "ramda";
 import { OrderEntity } from "@orderly.network/types";
 
 import { useAccount } from "../useAccount";
+import { useCollateral } from "./useCollateral";
 // import { useAccount } from "../useAccount";
 // import { useDataSource } from "../useDataSource";
 
@@ -37,6 +38,8 @@ export const usePositionStream = (
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const fundingRates = useFundingRates();
+
+  // const { positions } = useDataSource();
 
   // const { totalCollateral } = useCollateral();
 

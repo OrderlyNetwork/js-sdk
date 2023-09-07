@@ -7,13 +7,11 @@ import { useSymbolsInfo } from "@orderly.network/hooks";
  * @param props
  * @returns
  */
-export const NumeralWithConfig: FC<
+export const NumeralWithSymbol: FC<
   Omit<NumeralProps, "precision"> & { symbol: string }
 > = (props) => {
   //   const { data, isLoading, error } = useSymbolsInfo();
-  const config = useSymbolsInfo();
+  const config = useSymbolsInfo()[props.symbol];
 
-  //   console.log("config***", data, isLoading, error);
-
-  return <Numeral {...props} dp={config[props.symbol]("quote_tick", 2)} />;
+  return <Numeral {...props} precision={config("quote_dp", 2)} />;
 };

@@ -44,7 +44,7 @@ export const Table = <RecordType extends unknown>(
   }, [props.dataSource]);
 
   return (
-    <div className="relative min-h-[180px]">
+    <div className="relative min-h-[180px] h-full">
       <table className={cn("border-collapse w-full", props.className)}>
         <THead columns={props.columns} className={props.headerClassName} />
 

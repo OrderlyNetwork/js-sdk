@@ -4,8 +4,10 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "version:add":"pnpm build && changeset add",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useConstant from "use-constant";
 import { Account, SimpleDI, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
@@ -42,10 +42,25 @@ export const useAccount = (): {
     return account;
   });
 
-  const state = useObservable<AccountState>(
-    () => account.state$,
-    account.stateValue
-  );
+  const [state, setState] = useState<AccountState>(account.stateValue);
+
+  // const state = useObservable<AccountState>(
+  //   () => account.state$,
+  //   account.stateValue
+  // );
+
+  const statusChangeHandler = (nextState: AccountState) => {
+    // console.log("------------>>>>>> account nextState", nextState);
+    setState(() => nextState);
+  };
+
+  useEffect(() => {
+    account.on("change:status", statusChangeHandler);
+
+    return () => {
+      account.off("change:status", statusChangeHandler);
+    };
+  }, []);
 
   const login = useCallback(
     (address: string) => {
@@ -73,6 +88,8 @@ export const useAccount = (): {
     // account.disconnect();
     return onWalletDisconnect?.();
   }, [account]);
+
+  // console.log("*********** state", state);
 
   return {
     // account: state!,

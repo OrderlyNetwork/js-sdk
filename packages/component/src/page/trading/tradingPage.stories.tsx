@@ -26,22 +26,6 @@ const meta: Meta = {
       options: ["BTC/USDT", "ETH/USDT"],
     },
   },
-  decorators: [
-    (Story) => {
-      return (
-        <OnboardConnectorProvider>
-          <OrderlyProvider
-            configStore={new MemoryConfigStore()}
-            walletAdapter={EtherAdapter}
-            keyStore={new LocalStorageStore("testnet")}
-            logoUrl="/woo_fi_logo.svg"
-          >
-            <Story />
-          </OrderlyProvider>
-        </OnboardConnectorProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

@@ -114,10 +114,12 @@ export function positionQtyWithOrders_by_symbol(
 ): number {
   const { positionQty, buyOrdersQty, sellOrdersQty } = inputs;
   const positionQtyDecimal = new Decimal(positionQty);
-  return Math.max(
+  const qty = Math.max(
     positionQtyDecimal.add(buyOrdersQty).abs().toNumber(),
     positionQtyDecimal.add(sellOrdersQty).abs().toNumber()
   );
+
+  return qty;
 }
 
 export type IMRInputs = {
