@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
-import { useWebSocketClient } from "../useWebSocketClient";
+
 import { type WSMessage } from "@orderly.network/core";
+import { useWS } from "../useWS";
 
 interface MarketInfo {}
 
@@ -16,19 +17,18 @@ export const useFetures = () => {
 
   const [sortedData, setSortedData] = useState(data);
 
-  const ws = useWebSocketClient();
+  const ws = useWS();
 
   useEffect(() => {
-    const sub = ws
-      .observe<WSMessage.Ticker>(`tickers`)
-      .subscribe((value: any) => {
-        console.log("useTickers", value);
-        // setData(value);
-      });
-
-    return () => {
-      sub.unsubscribe();
-    };
+    // const sub = ws
+    //   .observe<WSMessage.Ticker>(`tickers`)
+    //   .subscribe((value: any) => {
+    //     console.log("useTickers", value);
+    //     // setData(value);
+    //   });
+    // return () => {
+    //   sub.unsubscribe();
+    // };
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,3 @@
-import { useObservable } from "rxjs-hooks";
-import { useWebSocketClient } from "../useWebSocketClient";
 import { usePrivateQuery } from "../usePrivateQuery";
 
 import { merge } from "rxjs";
