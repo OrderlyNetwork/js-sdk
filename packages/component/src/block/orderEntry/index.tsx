@@ -19,7 +19,7 @@ import { Numeral, Text } from "@/text";
 
 import { Divider } from "@/divider";
 import { OrderOptions } from "./sections/orderOptions";
-// import {useMaxQty} from '@orderly.network/hooks'
+import { useEventEmitter } from "@orderly.network/hooks";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
@@ -98,6 +98,21 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       },
     });
 
+    const ee = useEventEmitter();
+
+    const orderbookItemClickHandler = useCallback((item: number[]) => {
+      methods.setValue("order_price", item[0].toString());
+      methods.setValue("order_type", OrderType.LIMIT);
+    }, []);
+
+    useEffect(() => {
+      ee.on("orderbook:item:click", orderbookItemClickHandler);
+
+      () => {
+        ee.off("orderbook:item:click", orderbookItemClickHandler);
+      };
+    }, []);
+
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
     const priceInputRef = useRef<HTMLInputElement | null>(null);
@@ -109,6 +124,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         return modal
           .confirm({
             title: "Confirm Order",
+            onCancel: () => {
+              return Promise.reject("cancel");
+            },
             content: (
               <OrderConfirmView
                 order={{ ...data, side: props.side, symbol: props.symbol }}
@@ -118,45 +136,48 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               />
             ),
           })
-          .then((isOk) => {
-            return props
-              .onSubmit?.({
-                ...data,
-                side: props.side,
-                symbol: props.symbol,
-              })
-              .then(
-                (res) => {
-                  if (res.success) {
-                    methods.reset({
-                      order_type: data.order_type,
-                      order_price: "",
-                      order_quantity: "",
-                      total: "",
-                    });
-                    toast.success("Successfully!");
-                  }
+          .then(
+            (isOk) => {
+              return props
+                .onSubmit?.({
+                  ...data,
+                  side: props.side,
+                  symbol: props.symbol,
+                })
+                .then(
+                  (res) => {
+                    if (res.success) {
+                      methods.reset({
+                        order_type: data.order_type,
+                        order_price: "",
+                        order_quantity: "",
+                        total: "",
+                      });
+                      toast.success("Successfully!");
+                    }
 
-                  // resetForm?.();
-                },
-                (error: Error) => {
-                  toast.error(error.message);
-                }
-              );
-          });
+                    // resetForm?.();
+                  },
+                  (error: Error) => {
+                    toast.error(error.message);
+                  }
+                );
+            },
+            (err) => {
+              console.log("submit order err", err);
+            }
+          );
       },
       [side, props.onSubmit, symbol]
     );
 
     useEffect(() => {
       console.log("swith symbol");
+
+      methods.setValue("order_price", "");
+      methods.setValue("order_quantity", "");
+      methods.setValue("total", "");
       methods.clearErrors();
-      methods.reset({
-        // order_type: data.order_type,
-        order_price: "",
-        order_quantity: "",
-        total: "",
-      });
     }, [symbol]);
 
     const onDeposit = useCallback((event: FormEvent) => {
@@ -184,7 +205,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     }, []);
 
     const onFieldChange = (name: string, value: any) => {
-      const newValues = calculate(methods.getValues(), name, value);
+      const newValues: OrderEntity = calculate(
+        methods.getValues(),
+        name,
+        value
+      );
       // console.log("newValues", newValues);
 
       if (name === "order_price") {
@@ -200,6 +225,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         shouldValidate: methods.formState.submitCount > 0,
       });
     };
+
+    // console.log("errors:", methods.formState);
 
     return (
       <FormProvider {...methods}>
@@ -291,13 +318,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     ref={priceInputRef}
                     prefix={"Price"}
                     suffix={symbolConfig?.quote}
+                    type="number"
                     error={!!methods.formState.errors?.order_price}
+                    defaultValue={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
-                    value={
-                      methods.getValues("order_type") === OrderType.MARKET
-                        ? "Market"
-                        : field.value
-                    }
+                    value={field.value}
                     className="text-right"
                     readOnly={
                       methods.getValues("order_type") === OrderType.MARKET
@@ -319,6 +344,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <Input
                     disabled={disabled}
                     prefix={"Qunatity"}
+                    type="number"
                     suffix={symbolConfig?.base}
                     className="text-right"
                     error={!!methods.formState.errors?.order_quantity}
@@ -339,6 +365,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 return (
                   <Slider
                     color={side === OrderSide.BUY ? "buy" : "sell"}
+                    markLabelVisible={false}
                     min={0}
                     max={maxQty}
                     markCount={4}
@@ -368,6 +395,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     // value={values?.total}
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
+                    type="number"
                     value={field.value}
                     onChange={(event) => {
                       // field.onChange(event.target.value);

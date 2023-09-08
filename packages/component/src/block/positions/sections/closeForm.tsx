@@ -96,7 +96,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
             (res: any) => {
               // console.log(res);
               if (res.success) {
-                toast.success("Order placed successfully");
+                toast.success("successfully");
               }
               props.onClose(res);
             },
@@ -132,7 +132,9 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   return (
     <>
-      <div className="pb-3 pt-5">{position.symbol}</div>
+      <div className="pb-3 pt-5">
+        <Text rule="symbol">{position.symbol}</Text>
+      </div>
       <div className="grid grid-cols-2">
         <Statistic
           label="Order Type"
@@ -157,6 +159,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Price"
                   suffix={quote}
+                  type="number"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
@@ -177,6 +180,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Quantity"
                   suffix={base}
+                  type="number"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="text-right"

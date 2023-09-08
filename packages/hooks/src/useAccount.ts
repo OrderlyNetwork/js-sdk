@@ -2,7 +2,6 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import useConstant from "use-constant";
 import { Account, SimpleDI, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
-import { useObservable } from "rxjs-hooks";
 
 export const useAccount = (): {
   account: Account;
@@ -84,10 +83,10 @@ export const useAccount = (): {
     return onWalletConnect?.();
   }, [account]);
 
-  const disconnect = useCallback(async () => {
+  const disconnect = async () => {
     // account.disconnect();
     return onWalletDisconnect?.();
-  }, [account]);
+  };
 
   // console.log("*********** state", state);
 

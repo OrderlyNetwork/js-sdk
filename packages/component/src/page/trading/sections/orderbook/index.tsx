@@ -9,7 +9,7 @@ interface MyOrderBookProps {
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const { symbol } = props;
-  const [data, { onDepthChange, isLoading }] = useOrderbookStream(
+  const [data, { onDepthChange, isLoading, onItemClick }] = useOrderbookStream(
     symbol,
     undefined,
     {
@@ -31,6 +31,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
           base={symbolInfo("base")}
           quote={symbolInfo("quote")}
           isLoading={isLoading}
+          onItemClick={onItemClick}
         />
       </SymbolProvider>
     </div>

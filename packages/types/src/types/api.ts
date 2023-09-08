@@ -84,7 +84,10 @@ export declare namespace API {
 
   export interface SymbolExt extends Symbol {
     base: string;
+    base_dp: number;
+
     quote: string;
+    quote_dp: number;
     type: string;
     name: string;
   }
@@ -229,5 +232,27 @@ export declare namespace WSMessage {
   export interface MarkPrice {
     symbol: string;
     price: number;
+  }
+
+  export interface Position {
+    symbol: string;
+    positionQty: number;
+    costPosition: number;
+    lastSumUnitaryFunding: number;
+    sumUnitaryFundingVersion: number;
+    pendingLongQty: number;
+    pendingShortQty: number;
+    settlePrice: number;
+    averageOpenPrice: number;
+    unsettledPnl: number;
+    pnl24H: number;
+    fee24H: number;
+    markPrice: number;
+    estLiqPrice: number;
+    version: number;
+    imr: number;
+    imrwithOrders: number;
+    mmrwithOrders: number;
+    mmr: number;
   }
 }

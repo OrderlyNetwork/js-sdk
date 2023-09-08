@@ -53,7 +53,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
           <Numeral precision={quote_dp}>{props.price}</Numeral>
         </div>
         <div className={"text-base-contrast/70"}>
-          <Numeral precision={props.mode === "amount" ? quote_dp : base_dp}>
+          <Numeral precision={props.mode === "amount" ? 2 : base_dp}>
             {qty}
           </Numeral>
         </div>

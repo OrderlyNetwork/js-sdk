@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
-export const useTradeStream = (symbol: string) => {
+export const useMarketTradeStream = (symbol: string) => {
   if (!symbol) {
     throw new Error("useTradeStream: symbol is required");
   }

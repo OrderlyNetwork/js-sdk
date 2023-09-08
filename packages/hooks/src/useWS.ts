@@ -5,6 +5,7 @@ import useConstant from "use-constant";
 import { useAccount } from "./useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "./orderlyContext";
+import { AccountState } from "@orderly.network/core";
 
 const WS_NAME = "nativeWebsocketClient";
 
@@ -31,8 +32,17 @@ export const useWS = () => {
         },
       });
 
+      // open the pirvate websocket when user login
+      account.on("change:status", (nextState: AccountState) => {
+        console.log("------------>>>>>> account nextState", nextState);
+        if (nextState.status === AccountStatusEnum.EnableTrading) {
+          websocketClient.openPrivate(nextState.accountId);
+        }
+      });
+
       SimpleDI.registerByName(WS_NAME, websocketClient);
     }
+
     return websocketClient;
   });
 

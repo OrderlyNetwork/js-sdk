@@ -44,7 +44,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
             : data.order_type
           : data.order_type,
       side: data.side,
-      // reduce_only: data.reduce_only,
+      reduce_only: data.reduce_only,
       order_quantity: data.order_quantity,
     };
 
@@ -65,7 +65,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
     const { maxQty } = configs;
 
-    // console.log("baseValidate", values, configs);
+    // console.log("=======>>>>> baseValidate", values, configs);
     const { order_quantity, total } = values;
 
     if (!order_quantity) {
@@ -75,34 +75,42 @@ export abstract class BaseOrderCreator implements OrderCreator {
       };
     } else {
       //// 需要用MaxQty+base_max, base_min来判断
-      const { base_max, base_min } = configs.symbol;
+      const { base_min, quote_dp, base_dp } = configs.symbol;
       const qty = new Decimal(order_quantity);
       if (qty.lt(base_min)) {
         errors.order_quantity = {
           type: "min",
-          message: `quantity must be greater than ${base_min}`,
+          message: `quantity must be greater than ${new Decimal(base_min).todp(
+            base_dp
+          )}`,
         };
         // errors.order_quantity = `quantity must be greater than ${base_min}`;
       } else if (qty.gt(maxQty)) {
         errors.order_quantity = {
           type: "max",
-          message: `quantity must be less than ${maxQty}`,
+          message: `quantity must be less than ${new Decimal(maxQty).todp(
+            base_dp
+          )}`,
         };
       }
     }
 
     if (!!total) {
-      const { quote_max, quote_min } = configs.symbol;
+      const { quote_max, quote_min, quote_dp } = configs.symbol;
       const totalNumber = new Decimal(total);
       if (totalNumber.lt(quote_min)) {
         errors.total = {
           type: "min",
-          message: `Quantity should be greater or equal than ${quote_min}`,
+          message: `Quantity should be greater or equal than ${new Decimal(
+            quote_min
+          ).todp(quote_dp)}`,
         };
       } else if (totalNumber.gt(quote_max)) {
         errors.total = {
           type: "max",
-          message: `Quantity should be less or equal than ${quote_max}`,
+          message: `Quantity should be less or equal than ${new Decimal(
+            quote_max
+          ).todp(quote_dp)}`,
         };
       }
     }

@@ -11,7 +11,7 @@ export { useTopicObserve } from "./useTopicObserve";
 export { useAccount } from "./useAccount";
 export { useAppState } from "./useAppState";
 
-export { useEventCallback, useObservable } from "rxjs-hooks";
+export { useEventEmitter } from "./useEventEmitter";
 
 export { default as useConstant } from "use-constant";
 export { DataSourceProvider } from "./provider/dataProvider";

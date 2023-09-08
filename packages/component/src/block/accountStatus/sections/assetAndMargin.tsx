@@ -8,17 +8,21 @@ import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
-import { EyeOff } from "lucide-react";
+import { EyeOff, RotateCw } from "lucide-react";
 import {
   useCollateral,
   usePositionStream,
   useMarginRatio,
+  useLeverage,
 } from "@orderly.network/hooks";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
   onWithdraw?: () => Promise<void>;
+  onLeverageChange?: (value: number) => void;
 }
+
+const leverageLevers = [1, 2, 3, 4, 5, 10];
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const { totalCollateral, freeCollateral, totalValue } = useCollateral({
@@ -27,7 +31,19 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const [{ aggregated }] = usePositionStream();
   const marginRatio = useMarginRatio();
 
-  const { onDeposit, onWithdraw } = props;
+  // const [leverage, { update }] = useLeverage();
+
+  // console.log("leverage", leverage);
+
+  // const marginRatio = 0.5;
+
+  // const { onDeposit, onWithdraw } = props;
+
+  // const currentLeverage = useMemo(() => {
+  //   const d = 1 / marginRatio;
+
+  //   console.log("marginRatio", marginRatio, d);
+  // }, [marginRatio]);
 
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
@@ -35,7 +51,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label={
             <div className="flex gap-2 text-base items-center">
-              <span>Total Value</span>
+              <span>Total Value (USDC)</span>
               <EyeOff className="text-primary" size={14} />
             </div>
           }
@@ -52,9 +68,17 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
         <Statistic
           label="Unsettled PnL(USDC)"
-          value={aggregated.unsettledPnL}
-          rule="price"
-          coloring
+          value={
+            <div className="flex justify-between">
+              <Numeral rule="price" coloring>
+                {aggregated.unsettledPnL}
+              </Numeral>
+              <button className="text-primary text-sm flex items-center gap-2">
+                <RotateCw size={16} />
+                <span>Settle PnL</span>
+              </button>
+            </div>
+          }
         />
       </div>
       <Divider />
@@ -87,19 +111,59 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label={
             <div className="flex justify-between">
               <span>Max Account Leverage</span>
-              <span>Current:0.00x</span>
+              <span>
+                Current:
+                <span className="text-base-contrast ml-1">0.00x</span>
+              </span>
             </div>
           }
           value={
-            <div className="py-1">
-              <Slider />
+            <div className="py-1 px-3">
+              <Slider
+                min={0}
+                max={5}
+                color={"primary"}
+                markLabelVisible
+                value={[10]}
+                marks={[
+                  {
+                    value: 0,
+                    label: "1x",
+                  },
+                  {
+                    value: 1,
+                    label: "2x",
+                  },
+                  {
+                    value: 2,
+                    label: "3x",
+                  },
+                  {
+                    value: 3,
+                    label: "4x",
+                  },
+                  {
+                    value: 4,
+                    label: "5x",
+                  },
+                  {
+                    value: 5,
+                    label: "10x",
+                  },
+                ]}
+                onValueChange={(value) => {
+                  // console.log("value", value);
+                  // props.onLeverageChange?.(leverageLevers[value[0]]);
+                  // update({ leverage: leverageLevers[value[0]] });
+                }}
+              />
             </div>
           }
         />
       </div>
       <Divider className="py-4" />
       <Paper className="bg-base-100">
-        <div className="flex justify-between text-sm text-base-contrast">
+        <div className="flex justify-between text-sm text-base-contrast/50">
           <span>Instrument</span>
           <span>Available Balance</span>
         </div>

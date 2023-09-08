@@ -18,6 +18,11 @@ export const Header: FC<Props> = (props) => {
     }
     return props.base;
   }, [mode, props.quote, props.base]);
+
+  const qtyLabel = useMemo(() => {
+    return mode === "amount" ? "Value" : "Qty";
+  }, [mode]);
+
   return (
     <div className="flex flex-row justify-between text-tertiary text-xs pb-2">
       <div className={"flex flex-col"}>
@@ -31,7 +36,7 @@ export const Header: FC<Props> = (props) => {
         }
       >
         <div className={"flex flex-col items-end mr-1"}>
-          <span>Qty</span>
+          <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>
         <ArrowIcon size={10} />

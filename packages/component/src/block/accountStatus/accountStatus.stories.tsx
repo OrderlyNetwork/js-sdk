@@ -25,17 +25,6 @@ const meta: Meta<typeof AccountStatusBar> = {
   args: {
     status: "NotConnected",
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore("testnet")}
-        walletAdapter={new Web3WalletAdapter()}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

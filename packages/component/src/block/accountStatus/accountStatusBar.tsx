@@ -1,4 +1,4 @@
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useContext, useMemo, useState } from "react";
 import Button from "@/button";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 
@@ -41,6 +41,8 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
   const { logoUrl } = useContext(OrderlyContext);
 
+  const [infoOpen, setInfoOpen] = useState(false);
+
   // console.log("account status", props);
 
   useChains();
@@ -65,7 +67,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   }, [status, props.address]);
 
   return (
-    <div className="flex items-center justify-between h-[44px]">
+    <div className="flex items-center justify-between w-full">
       {status !== AccountStatusEnum.NotConnected ? (
         <AccountTotal
           status={status}
@@ -84,13 +86,13 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
             size={"small"}
             loading={props.loading}
             variant={"gradient"}
-            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] hover:text-base-300"
+            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
           </Button>
         ) : (
-          <Sheet>
+          <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
             <SheetTrigger asChild>
               <Button
                 size={"small"}
@@ -105,7 +107,10 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
                 My account
               </SheetHeader>
-              <AccountInfo onDisconnect={props.onDisconnect} />
+              <AccountInfo
+                onDisconnect={props.onDisconnect}
+                close={() => setInfoOpen(false)}
+              />
             </SheetContent>
           </Sheet>
         )}

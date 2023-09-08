@@ -3,22 +3,54 @@ import Button, { IconButton } from "@/button";
 import { Share, Copy } from "lucide-react";
 import React, { FC, useCallback } from "react";
 import { Text } from "@/text";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount, useMutation } from "@orderly.network/hooks";
 import { toast } from "@/toast";
+import { modal } from "@/modal";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
   accountId?: string;
+
+  close?: () => void;
 }
 
 export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect } = props;
   const { account, state } = useAccount();
 
+  const [getTestUSDC, { isMutating }] = useMutation(
+    "https://testnet-operator-evm.orderly.org/v1/faucet/usdc"
+  );
+
   const onCopy = useCallback(() => {
     navigator.clipboard.writeText(state.address).then(() => {
       toast.success("Copied to clipboard");
     });
+  }, [state]);
+
+  const onGetClick = useCallback(() => {
+    return modal
+      .confirm({
+        title: "Get test USDC",
+        content:
+          "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
+        onOk: () => {
+          return getTestUSDC({
+            chain_id: account.wallet.chainId.toString(),
+            user_address: state.address,
+            broker_id: "woofi_dex",
+          }).then((res: any) => {
+            if (res.success) {
+              toast.success("Get test USDC success");
+            }
+            return res;
+          });
+        },
+      })
+      .then(() => {
+        // console.log("get test usdc");
+        props.close?.();
+      });
   }, [state]);
 
   return (
@@ -41,7 +73,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         </div>
       </div>
       <div className="py-4 grid grid-cols-2 gap-3">
-        <Button variant={"outlined"}>Get test USDC</Button>
+        <Button variant={"outlined"} onClick={onGetClick} disabled={isMutating}>
+          Get test USDC
+        </Button>
         <Button
           variant={"outlined"}
           color={"sell"}

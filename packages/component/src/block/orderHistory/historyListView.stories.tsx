@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { usePositionStream } from "@orderly.network/hooks";
+import { useOrderStream } from "@orderly.network/hooks";
 import { HistoryListView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 
@@ -14,13 +14,6 @@ const meta: Meta = {
   args: {
     // dataSource: [],
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;
@@ -35,8 +28,9 @@ export const Default: Story = {
 
 export const WithHooks: Story = {
   render: (args) => {
-    // const [data, { loading }] = usePositionStream();
-    // console.log(data);
-    return <HistoryListView {...args} />;
+    const [data, { isLoading }] = useOrderStream({ status: "" });
+
+    console.log(data);
+    return <HistoryListView dataSource={data} isLoading={isLoading} />;
   },
 };

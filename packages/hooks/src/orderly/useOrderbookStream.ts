@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { pick, pathOr, defaultTo, last, compose, head, set } from "ramda";
-import useConstant from "use-constant";
 import { useTickerStream } from "./useTickerStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";
+import { useEventEmitter } from "../useEventEmitter";
 
 export type OrderBookItem = number[];
 
@@ -12,10 +11,6 @@ export type OrderbookData = {
   asks: OrderBookItem[];
   bids: OrderBookItem[];
 };
-
-const asksFirstPath = compose(defaultTo(0), head, last, pathOr([], ["asks"]));
-// const asksFirstPath = pathOr(0, ["asks", 0,]);
-const bidsFirstPath = pathOr(0, ["bids", 0, 0]);
 
 const paddingFn = (len: number) =>
   Array(len).fill([Number.NaN, Number.NaN, Number.NaN] as OrderBookItem);
@@ -137,6 +132,8 @@ export const useOrderbookStream = (
 
   const ticker = useTickerStream(symbol);
 
+  const eventEmitter = useEventEmitter();
+
   // const orderbookRequest =
 
   useEffect(() => {
@@ -200,6 +197,10 @@ export const useOrderbookStream = (
     };
   }, [symbol, requestData]);
 
+  const onItemClick = useCallback((item: OrderBookItem) => {
+    eventEmitter.emit("orderbook:item:click", item);
+  }, []);
+
   const onDepthChange = useCallback((depth: number) => {
     console.log("Orderbook depth has changed:", depth);
     // orderbookOptions$.next({
@@ -230,7 +231,7 @@ export const useOrderbookStream = (
 
   return [
     { ...data, markPrice, middlePrice },
-    { onDepthChange, depth, isLoading },
+    { onDepthChange, depth, isLoading, onItemClick },
   ];
 };
 

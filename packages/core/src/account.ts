@@ -22,6 +22,8 @@ export type AccountStatus =
 export interface AccountState {
   status: AccountStatusEnum;
 
+  checking: boolean;
+
   accountId?: string;
   userId?: string;
   address?: string;
@@ -60,6 +62,7 @@ export class Account {
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
     balance: "",
+    checking: false,
     leverage: Number.NaN,
   };
 
@@ -114,6 +117,8 @@ export class Account {
     }
   ): Promise<AccountStatusEnum> {
     if (!address) throw new Error("address is required");
+
+    console.log("setAddress", address, wallet);
 
     this.keyStore.setAddress(address);
 
@@ -180,14 +185,17 @@ export class Account {
   // 检查账户状态
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
-    console.log("check account is esist");
+    console.log("check account is esist", address);
     let nextState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
       console.log("accountInfo:", accountInfo);
+      // 如果切换addrees时，需要清除之前的key
+
       if (accountInfo && accountInfo.account_id) {
         console.log("account is exist");
+
         this.keyStore.setAccountId(address, accountInfo.account_id);
         // this.keyStore.setAddress(address);
 
@@ -203,11 +211,21 @@ export class Account {
         // account is not exist, add account
         // await this.addAccount(address);
 
+        nextState = {
+          ...this.stateValue,
+          status: AccountStatusEnum.NotSignedIn,
+        };
+
+        this._ee.emit("change:status", nextState);
+
         return AccountStatusEnum.NotSignedIn;
       }
       // check orderlyKey state
       // get orderlyKey from keyStore
-      const orderlyKey = this.keyStore.getOrderlyKey(address);
+      // const orderlyKey = this.keyStore.getOrderlyKey(address);
+      const orderlyKey = this.keyStore.getOrderlyKey();
+
+      console.log("orderlyKey:::::::", orderlyKey);
 
       nextState = {
         ...this.stateValue,
@@ -258,13 +276,16 @@ export class Account {
       return AccountStatusEnum.NotConnected;
     } catch (err) {
       console.log("检查账户状态错误:", err);
+      // 用户从Metamask切换账户，需要重新登录
       // return this.stateValue.status;
     }
 
     return AccountStatusEnum.NotSignedIn;
   }
 
-  private async _checkAccountExist(address: string) {
+  private async _checkAccountExist(
+    address: string
+  ): Promise<{ account_id: string; user_id: string } | null> {
     const res = await this._simpleFetch(
       `/v1/get_account?address=${address}&broker_id=woofi_dex`
     );
@@ -272,7 +293,8 @@ export class Account {
     if (res.success) {
       return res.data;
     } else {
-      throw new Error(res.message);
+      // throw new Error(res.message);
+      return null;
     }
   }
 
@@ -280,7 +302,7 @@ export class Account {
     const nonce = await this._getRegisterationNonce();
     console.log("nonce:", nonce);
 
-    const keyPair = this.keyStore.generateKey();
+    // const keyPair = this.keyStore.generateKey();
     // const publicKey = await keyPair.getPublicKey();
 
     const address = this.stateValue.address;
@@ -430,6 +452,10 @@ export class Account {
       this._singer = new BaseSigner(this.keyStore);
     }
     return this._singer;
+  }
+
+  get wallet() {
+    return this.walletClient;
   }
 
   private async getAccountInfo() {}

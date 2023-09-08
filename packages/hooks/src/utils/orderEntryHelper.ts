@@ -100,7 +100,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const price = new Decimal(value);
   const priceDP = price.dp();
 
-  console.log("priceInputHandle", priceDP, config.quoteDP);
+  // console.log("priceInputHandle", priceDP, config.quoteDP);
 
   if (priceDP > config.quoteDP) {
     values.order_price = price.toDecimalPlaces(config.quoteDP).toString();

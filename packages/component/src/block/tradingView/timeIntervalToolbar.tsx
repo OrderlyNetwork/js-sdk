@@ -9,10 +9,10 @@ export type TimeIntervalItem = {
 
 export const defaultTimeInterval = [
   { value: "1", label: "1m" },
-  {
-    value: "3",
-    label: "3m",
-  },
+  // {
+  //   value: "3",
+  //   label: "3m",
+  // },
   {
     value: "5",
     label: "5m",
@@ -67,7 +67,7 @@ export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
         return (
           <button
             className={cn(
-              "p-3 flex-1 text-base-contrast/20",
+              "py-3 px-1 flex-1 text-base-contrast/20",
               timeInterval === interval.value && "text-base-contrast"
             )}
             key={interval.value}

@@ -116,7 +116,7 @@ export function positionQtyWithOrders_by_symbol(
   const positionQtyDecimal = new Decimal(positionQty);
   const qty = Math.max(
     positionQtyDecimal.add(buyOrdersQty).abs().toNumber(),
-    positionQtyDecimal.add(sellOrdersQty).abs().toNumber()
+    positionQtyDecimal.sub(sellOrdersQty).abs().toNumber()
   );
 
   return qty;

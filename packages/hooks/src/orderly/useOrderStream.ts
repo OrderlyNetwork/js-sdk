@@ -1,13 +1,13 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { type SWRInfiniteResponse } from "swr/infinite";
 import { useCallback, useMemo } from "react";
-import { useObservable } from "rxjs-hooks";
-import { combineLatestWith, map } from "rxjs/operators";
+
 import { API } from "@orderly.network/types";
 import { useMarketsStream } from "./useMarketsStream";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 import { OrderEntity } from "@orderly.network/types";
+import { useExecutionReport } from "./orderlyHooks";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -61,6 +61,8 @@ export const useOrderStream = ({
     }
   );
 
+  // useExecutionReport();
+
   const orders = useMemo(() => {
     if (!ordersResponse.data) {
       return null;
@@ -109,12 +111,6 @@ export const useOrderStream = ({
 
   return [
     orders,
-    // {
-    //   ...res,
-    //   data: res.data?.reduce((acc, cur) => {
-    //     return [...acc, ...cur];
-    //   }, []),
-    // },
     {
       cancelAllOrders,
       updateOrder,

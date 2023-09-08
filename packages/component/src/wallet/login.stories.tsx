@@ -34,18 +34,22 @@ export const Default: Story = {
       <div className={"flex gap-3"}>
         <Button
           onClick={() => {
-            onWalletConnect().then((result) => {
-              console.log("wallet connect.....", result);
-              if (
-                result &&
-                result.status &&
-                result.status < AccountStatusEnum.EnableTrading
-              ) {
-                modal.show(WalletConnectSheet, {
-                  status: result.status,
-                });
+            onWalletConnect().then(
+              (result) => {
+                if (
+                  result &&
+                  result.status &&
+                  result.status < AccountStatusEnum.EnableTrading
+                ) {
+                  modal.show(WalletConnectSheet, {
+                    status: result.status,
+                  });
+                }
+              },
+              (error) => {
+                console.log("error", error);
               }
-            });
+            );
           }}
         >
           Connect Wallet

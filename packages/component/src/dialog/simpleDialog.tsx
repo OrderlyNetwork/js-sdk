@@ -17,6 +17,7 @@ export interface BaseDialogProps {
   onOk?: () => Promise<any>;
   onCancel?: () => void;
   footer?: ReactNode;
+  onOpenChange?(open: boolean): void;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -36,6 +37,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
           onClick={props.onCancel}
           color={"danger"}
           disabled={loading}
+          fullWidth
         >
           Cancel
         </Button>
@@ -49,6 +51,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
           type="button"
           disabled={loading}
           loading={loading}
+          fullWidth
           onClick={() => {
             setLoading(true);
             props.onOk?.().finally(() => setLoading(false));
@@ -59,12 +62,21 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
       );
     }
 
-    return <DialogFooter>{buttons}</DialogFooter>;
+    return (
+      <DialogFooter
+        className={buttons.length > 1 ? "grid-cols-2" : "grid-cols-1"}
+      >
+        {buttons}
+      </DialogFooter>
+    );
   }, [props.onCancel, props.onOk, loading]);
 
   return (
-    <Dialog open={props.open}>
-      <DialogContent closable={props.closable}>
+    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+      <DialogContent
+        closable={props.closable}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
         </DialogHeader>

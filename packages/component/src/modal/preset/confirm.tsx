@@ -8,14 +8,22 @@ export interface ConfirmProps {
   title: string;
   content: React.ReactNode;
   onOk?: () => Promise<any>;
+  onCancel?: () => Promise<any>;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
-  const { visible, hide, resolve, reject } = useModal();
+  const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
     <SimpleDialog
       open={visible}
       title={props.title}
+      onOpenChange={(open) => {
+        console.log("------- open change", open);
+        if (!open) {
+          reject();
+        }
+        onOpenChange(open);
+      }}
       onOk={() => {
         return Promise.resolve()
           .then(() => {
@@ -29,10 +37,21 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
             hide();
           });
       }}
-      onCancel={() => {
-        reject(false);
-        hide();
-      }}
+      onCancel={
+        typeof props.onCancel !== "undefined"
+          ? () => {
+              return props
+                .onCancel?.()
+                .then(
+                  (data) => data,
+                  (reason?: any) => {
+                    reject(reason);
+                  }
+                )
+                .finally(() => hide());
+            }
+          : undefined
+      }
     >
       <DialogBody>
         <div className={"py-5 text-[12px]"}>{props.content}</div>

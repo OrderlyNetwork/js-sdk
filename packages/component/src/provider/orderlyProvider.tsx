@@ -21,6 +21,7 @@ import {
 import { Account, SimpleDI } from "@orderly.network/core";
 import { TooltipProvider } from "@/tooltip/tooltip";
 import { WalletConnectorContext } from "./walletConnectorProvider";
+import { WSObserver } from "@/dev/wsObserver";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
@@ -82,7 +83,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     if (connect) {
       const walletState = await connect();
 
-      console.log("walletState", walletState);
+      // console.log("walletState", walletState);
 
       if (
         Array.isArray(walletState) &&
@@ -149,6 +150,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         onWalletDisconnect: _onWalletDisconnect,
       }}
     >
+      <WSObserver />
       <TooltipProvider>
         <ModalProvider>{children}</ModalProvider>
       </TooltipProvider>

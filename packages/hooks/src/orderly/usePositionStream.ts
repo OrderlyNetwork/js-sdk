@@ -46,7 +46,9 @@ export const usePositionStream = (
   const { data, error } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
+    dedupingInterval: 5000,
     ...options,
+
     formatter: (data) => data,
     onError: (err) => {
       console.log("usePositionStream error", err);

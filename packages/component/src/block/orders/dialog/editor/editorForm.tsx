@@ -153,7 +153,9 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   return (
     <>
-      <div className="pb-3 pt-5">{order.symbol}</div>
+      <div className="pb-3 pt-5">
+        <Text rule="symbol">{order.symbol}</Text>
+      </div>
       <div className="grid grid-cols-2">
         <Statistic
           label="Order Type"
@@ -178,6 +180,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 <Input
                   prefix="Price"
                   suffix={quote}
+                  type="number"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
@@ -198,6 +201,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 <Input
                   prefix="Quantity"
                   suffix={base}
+                  type="number"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="text-right"

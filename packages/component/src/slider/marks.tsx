@@ -21,10 +21,11 @@ export interface SliderMarksProps {
   max: number;
 
   disabled?: boolean;
+  markLabelVisible?: boolean;
 }
 
 export const SliderMarks: FC<SliderMarksProps> = (props) => {
-  const { marks, value } = props;
+  const { marks, value, markLabelVisible } = props;
 
   // const spanRef = useRef<HTMLSpanElement | null>(null);
 
@@ -40,27 +41,42 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
           props.min,
           props.max
         );
+
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
 
         return (
-          <span
-            key={index}
-            className={cn(
-              "absolute top-0 w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
-              {
-                "border-primary bg-primary":
-                  props.color === "primary" && _value >= mark.value,
-                "border-trade-profit bg-trade-profit":
-                  props.color === "buy" && _value >= mark.value,
-                "border-trade-loss bg-trade-loss":
-                  props.color === "sell" && _value >= mark.value,
-              }
+          <>
+            <span
+              key={index}
+              className={cn(
+                "absolute top-0 w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
+                {
+                  "border-primary bg-primary":
+                    props.color === "primary" && _value >= mark.value,
+                  "border-trade-profit bg-trade-profit":
+                    props.color === "buy" && _value >= mark.value,
+                  "border-trade-loss bg-trade-loss":
+                    props.color === "sell" && _value >= mark.value,
+                }
+              )}
+              style={{
+                left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
+                top: "7px",
+              }}
+            />
+            {markLabelVisible && (
+              <span
+                className={cn(
+                  "absolute top-[20px] text-sm text-base-contrast/50 pointer-events-none translate-x-[-50%]"
+                )}
+                style={{
+                  left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
+                }}
+              >
+                {mark.label}
+              </span>
             )}
-            style={{
-              left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
-              top: "7px",
-            }}
-          />
+          </>
         );
       })}
     </>

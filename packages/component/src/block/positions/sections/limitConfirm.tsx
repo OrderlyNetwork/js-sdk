@@ -21,10 +21,6 @@ export const LimitConfirm: FC<Props> = (props) => {
         <div className="font-medium text-base">
           {`You will close ${order.order_quantity} ETH position at limit price.`}
         </div>
-        <div className="text-base-contrast/50">
-          <span className="text-danger">(TBD)</span> Pending reduce-only orders
-          might be cancelled or adjusted.
-        </div>
       </div>
       <Divider className="my-4" />
       <div className="mb-4 text-lg flex items-center gap-2">

@@ -33,7 +33,11 @@ export const Market: FC<Props> = (props) => {
           <ArrowIcon size={8} />
         </button>
       </SheetTrigger>
-      <SheetContent side={"left"} closeable={false}>
+      <SheetContent
+        side={"left"}
+        closeable={false}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <Markets dataSource={data} onItemClick={onSymbolClick} />
       </SheetContent>
     </Sheet>

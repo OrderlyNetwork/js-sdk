@@ -25,19 +25,29 @@ export const StatusGuardButton: FC<
 
   const onClick = useCallback(async () => {
     if (state.status === AccountStatusEnum.NotConnected) {
-      const result = await connect();
+      try {
+        const result = await connect();
 
-      if (result && result.status < AccountStatusEnum.EnableTrading) {
-        return await modal.show(WalletConnectSheet, {
-          status: result.status,
-        });
+        if (result && result.status < AccountStatusEnum.EnableTrading) {
+          return await modal.show(WalletConnectSheet, {
+            status: result.status,
+          });
+        } else {
+          return result;
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
 
     if (state.status < AccountStatusEnum.EnableTrading) {
-      return await modal.show(WalletConnectSheet, {
-        status: state.status,
-      });
+      try {
+        return await modal.show(WalletConnectSheet, {
+          status: state.status,
+        });
+      } catch (err) {
+        console.log("!!!!!", err);
+      }
     }
   }, [connect, state]);
 
@@ -46,7 +56,7 @@ export const StatusGuardButton: FC<
       return "Connect Wallet";
     }
 
-    if (state.status < AccountStatusEnum.NotSignedIn) {
+    if (state.status < AccountStatusEnum.SignedIn) {
       return "Sign in";
     }
 

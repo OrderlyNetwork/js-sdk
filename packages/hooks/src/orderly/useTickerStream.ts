@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "../useQuery";
 import useSWRSubscription from "swr/subscription";
 
-import { useObservable } from "rxjs-hooks";
 import { API } from "@orderly.network/types";
 import { combineLatestWith, map, startWith } from "rxjs/operators";
 import { Decimal } from "@orderly.network/utils";

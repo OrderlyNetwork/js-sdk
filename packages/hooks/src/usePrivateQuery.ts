@@ -3,8 +3,6 @@
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 
-import { useContext } from "react";
-import { OrderlyContext } from "./orderlyContext";
 import { fetcher, useQueryOptions } from "./utils/fetcher";
 import { useAccount } from "./useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";

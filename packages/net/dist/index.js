@@ -157,16 +157,15 @@ var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 
 // src/ws/handler/baseHandler.ts
 var BaseHandler = class {
-  // constructor(readonly wsSubject: WebSocketSubject<any>) {}
-  handle(message, send) {
+  handle(message, webSocket) {
     throw new Error("Method not implemented.");
   }
 };
 
 // src/ws/handler/ping.ts
 var PingHandler = class extends BaseHandler {
-  handle(_, send) {
-    send({ event: "pong", ts: Date.now() });
+  handle(_, webSocket) {
+    webSocket.send(JSON.stringify({ event: "pong", ts: Date.now() }));
   }
 };
 
@@ -187,7 +186,9 @@ var WS = class {
     this.authenticated = false;
     this._pendingPrivateSubscribe = [];
     this._pendingPublicSubscribe = [];
+    // all message handlers
     this._eventHandlers = /* @__PURE__ */ new Map();
+    this._eventPrivateHandlers = /* @__PURE__ */ new Map();
     this.send = (message) => {
       if (typeof message !== "string") {
         message = JSON.stringify(message);
@@ -214,12 +215,19 @@ var WS = class {
       accountId
     }));
   }
+  closePrivate() {
+    var _a;
+    this.authenticated = false;
+    this._pendingPrivateSubscribe = [];
+    this._eventPrivateHandlers.clear();
+    (_a = this.privateSocket) == null ? void 0 : _a.close();
+  }
   createPublicSC(options) {
     this.publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
     this.publicSocket.onopen = this.onOpen.bind(this);
-    this.publicSocket.onmessage = this.onMessage.bind(this);
+    this.publicSocket.onmessage = this.onPublicMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
     this.publicSocket.onerror = this.onError.bind(this);
   }
@@ -230,7 +238,7 @@ var WS = class {
       `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
     );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
-    this.privateSocket.onmessage = this.onMessage.bind(this);
+    this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
     this.privateSocket.onerror = this.onPrivateError.bind(this);
   }
   onOpen(event) {
@@ -249,7 +257,7 @@ var WS = class {
     this.authenticate(this.options.accountId);
     this.privateIsReconnecting = false;
   }
-  onMessage(event) {
+  onMessage(event, socket, handlerMap) {
     try {
       const message = JSON.parse(event.data);
       const commoneHandler = messageHandlers.get(message.event);
@@ -259,11 +267,9 @@ var WS = class {
         return;
       }
       if (commoneHandler) {
-        commoneHandler.handle(message, this.send);
+        commoneHandler.handle(message, socket);
       } else {
-        const eventhandler = this._eventHandlers.get(
-          message.topic || message.event
-        );
+        const eventhandler = handlerMap.get(message.topic || message.event);
         if (eventhandler == null ? void 0 : eventhandler.callback) {
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter ? cb.formatter(message) : defaultMessageFormatter(message);
@@ -274,8 +280,14 @@ var WS = class {
         }
       }
     } catch (e) {
-      console.log("WebSocket message received:", event.data);
+      console.log("WebSocket message received:", e, event.data);
     }
+  }
+  onPublicMessage(event) {
+    this.onMessage(event, this.publicSocket, this._eventHandlers);
+  }
+  onPrivateMessage(event) {
+    this.onMessage(event, this.privateSocket, this._eventPrivateHandlers);
   }
   handlePendingPrivateTopic() {
     if (this._pendingPrivateSubscribe.length > 0) {
@@ -324,7 +336,6 @@ var WS = class {
         return;
       }
       const message = yield (_b = (_a = this.options).onSigntureRequest) == null ? void 0 : _b.call(_a, accountId);
-      console.log("push auth message:", message);
       this.privateSocket.send(
         JSON.stringify({
           id: "auth",
@@ -338,13 +349,35 @@ var WS = class {
       );
     });
   }
-  privateSubscribe(params, callback, once) {
-    var _a, _b;
-    console.log("\u{1F449}", params, callback, (_a = this.privateSocket) == null ? void 0 : _a.readyState);
-    if (((_b = this.privateSocket) == null ? void 0 : _b.readyState) !== WebSocket.OPEN) {
+  privateSubscribe(params, callback) {
+    var _a;
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      callback.onUnsubscribe
+    );
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) !== WebSocket.OPEN) {
       this._pendingPrivateSubscribe.push([params, callback]);
-      return;
+      return () => {
+        this.unsubscribePrivate(subscribeMessage);
+      };
     }
+    const topic = subscribeMessage.topic || subscribeMessage.event;
+    const handler = this._eventPrivateHandlers.get(topic);
+    const callbacks = __spreadProps(__spreadValues({}, callback), {
+      onUnsubscribe
+    });
+    if (!handler) {
+      this._eventPrivateHandlers.set(topic, {
+        params,
+        callback: [callbacks]
+      });
+    } else {
+      handler.callback.push(callbacks);
+    }
+    this.privateSocket.send(JSON.stringify(subscribeMessage));
+    return () => {
+      this.unsubscribePrivate(subscribeMessage);
+    };
   }
   subscribe(params, callback, once) {
     console.log("\u{1F449}", params, callback, this.publicSocket.readyState);
@@ -356,7 +389,7 @@ var WS = class {
       this._pendingPublicSubscribe.push([params, callback]);
       if (!once) {
         return () => {
-          this.unsubscribe(subscribeMessage);
+          this.unsubscribePublic(subscribeMessage);
         };
       }
       return;
@@ -377,7 +410,7 @@ var WS = class {
     this.publicSocket.send(JSON.stringify(subscribeMessage));
     if (!once) {
       return () => {
-        this.unsubscribe(subscribeMessage);
+        this.unsubscribePublic(subscribeMessage);
       };
     }
   }
@@ -387,22 +420,28 @@ var WS = class {
   onceSubscribe(params, callback) {
     this.subscribe(params, callback, true);
   }
-  unsubscribe(parmas) {
+  unsubscribe(parmas, webSocket, handlerMap) {
     const topic = parmas.topic || parmas.event;
-    const handler = this._eventHandlers.get(topic);
+    const handler = handlerMap.get(topic);
     console.log("\u{1F91C} unsubscribe", parmas, topic, handler);
     if (!!handler && Array.isArray(handler == null ? void 0 : handler.callback)) {
       if (handler.callback.length === 1) {
         const unsubscribeMessage = handler.callback[0].onUnsubscribe(topic);
         console.log("unsubscribeMessage", unsubscribeMessage);
-        this.publicSocket.send(JSON.stringify(unsubscribeMessage));
-        this._eventHandlers.delete(topic);
+        webSocket.send(JSON.stringify(unsubscribeMessage));
+        handlerMap.delete(topic);
       } else {
-        this._eventHandlers.set(topic, __spreadProps(__spreadValues({}, handler), {
+        handlerMap.set(topic, __spreadProps(__spreadValues({}, handler), {
           callback: handler.callback.slice(0, -1)
         }));
       }
     }
+  }
+  unsubscribePrivate(parmas) {
+    this.unsubscribe(parmas, this.privateSocket, this._eventPrivateHandlers);
+  }
+  unsubscribePublic(parmas) {
+    this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
   }
   generateMessage(params, onUnsubscribe) {
     let subscribeMessage;

@@ -7,7 +7,7 @@ import { positions } from "@orderly.network/futures";
 import { useFundingRates } from "./orderly/useFundingRates";
 
 export const useUnsettlementPnL = () => {
-  const { data } = usePrivateQuery<API.PositionInfo>("/v1/positions`);
+  const { data } = usePrivateQuery<API.PositionInfo>(`/v1/positions`);
   const fundingRates = useFundingRates();
 
   const unSettlementPnL = useMemo(() => {

@@ -52,7 +52,9 @@ export class WS {
   private _pendingPrivateSubscribe: any[][] = [];
   private _pendingPublicSubscribe: any[][] = [];
 
+  // all message handlers
   private _eventHandlers: Map<string, Topics> = new Map();
+  private _eventPrivateHandlers: Map<string, Topics> = new Map();
 
   constructor(private options: WSOptions) {
     this.createPublicSC(options);
@@ -72,12 +74,21 @@ export class WS {
     });
   }
 
+  public closePrivate() {
+    this.authenticated = false;
+    this._pendingPrivateSubscribe = [];
+
+    this._eventPrivateHandlers.clear();
+
+    this.privateSocket?.close();
+  }
+
   private createPublicSC(options: WSOptions) {
     this.publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
     this.publicSocket.onopen = this.onOpen.bind(this);
-    this.publicSocket.onmessage = this.onMessage.bind(this);
+    this.publicSocket.onmessage = this.onPublicMessage.bind(this);
     this.publicSocket.onclose = this.onClose.bind(this);
     this.publicSocket.onerror = this.onError.bind(this);
   }
@@ -91,7 +102,7 @@ export class WS {
       `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
     );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
-    this.privateSocket.onmessage = this.onMessage.bind(this);
+    this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
     // this.privateSocket.onclose = this.onClose.bind(this);
     this.privateSocket.onerror = this.onPrivateError.bind(this);
   }
@@ -111,15 +122,16 @@ export class WS {
 
   private onPrivateOpen(event: Event) {
     console.log("Private WebSocket connection opened:");
-
     //auth
-
     this.authenticate(this.options.accountId!);
-
     this.privateIsReconnecting = false;
   }
 
-  private onMessage(event: MessageEvent) {
+  private onMessage(
+    event: MessageEvent,
+    socket: WebSocket,
+    handlerMap: Map<string, Topics>
+  ) {
     try {
       const message = JSON.parse(event.data);
       const commoneHandler = messageHandlers.get(message.event);
@@ -131,11 +143,9 @@ export class WS {
       }
 
       if (commoneHandler) {
-        commoneHandler.handle(message, this.send);
+        commoneHandler.handle(message, socket);
       } else {
-        const eventhandler = this._eventHandlers.get(
-          message.topic || message.event
-        );
+        const eventhandler = handlerMap.get(message.topic || message.event);
         if (eventhandler?.callback) {
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter
@@ -150,10 +160,18 @@ export class WS {
       }
       // console.log("WebSocket message received:", message);
     } catch (e) {
-      console.log("WebSocket message received:", event.data);
+      console.log("WebSocket message received:", e, event.data);
     }
 
     // You can process the received message here
+  }
+
+  private onPublicMessage(event: MessageEvent) {
+    this.onMessage(event, this.publicSocket, this._eventHandlers);
+  }
+
+  private onPrivateMessage(event: MessageEvent) {
+    this.onMessage(event, this.privateSocket!, this._eventPrivateHandlers);
   }
 
   private handlePendingPrivateTopic() {
@@ -222,7 +240,6 @@ export class WS {
 
     const message = await this.options.onSigntureRequest?.(accountId);
 
-    console.log("push auth message:", message);
     this.privateSocket.send(
       JSON.stringify({
         id: "auth",
@@ -240,15 +257,42 @@ export class WS {
 
   privateSubscribe(
     params: any,
-    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
-    once?: boolean
+    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">
   ) {
-    console.log("👉", params, callback, this.privateSocket?.readyState);
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      (callback as WSMessageHandler).onUnsubscribe
+    );
 
     if (this.privateSocket?.readyState !== WebSocket.OPEN) {
       this._pendingPrivateSubscribe.push([params, callback]);
-      return;
+      return () => {
+        this.unsubscribePrivate(subscribeMessage);
+      };
     }
+
+    const topic = subscribeMessage.topic || subscribeMessage.event;
+
+    const handler = this._eventPrivateHandlers.get(topic);
+    const callbacks = {
+      ...callback,
+      onUnsubscribe,
+    };
+
+    if (!handler) {
+      this._eventPrivateHandlers.set(topic, {
+        params,
+        callback: [callbacks],
+      });
+    } else {
+      handler.callback.push(callbacks);
+    }
+
+    this.privateSocket.send(JSON.stringify(subscribeMessage));
+
+    return () => {
+      this.unsubscribePrivate(subscribeMessage);
+    };
   }
 
   subscribe(
@@ -268,7 +312,7 @@ export class WS {
 
       if (!once) {
         return () => {
-          this.unsubscribe(subscribeMessage);
+          this.unsubscribePublic(subscribeMessage);
         };
       }
       return;
@@ -296,7 +340,7 @@ export class WS {
 
     if (!once) {
       return () => {
-        this.unsubscribe(subscribeMessage);
+        this.unsubscribePublic(subscribeMessage);
       };
     }
   }
@@ -312,9 +356,13 @@ export class WS {
     this.subscribe(params, callback, true);
   }
 
-  private unsubscribe(parmas: MessageParams) {
+  private unsubscribe(
+    parmas: MessageParams,
+    webSocket: WebSocket,
+    handlerMap: Map<string, Topics>
+  ) {
     const topic = parmas.topic || parmas.event;
-    const handler = this._eventHandlers.get(topic);
+    const handler = handlerMap.get(topic);
     console.log("🤜 unsubscribe", parmas, topic, handler);
 
     if (!!handler && Array.isArray(handler?.callback)) {
@@ -322,16 +370,24 @@ export class WS {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
 
         console.log("unsubscribeMessage", unsubscribeMessage);
-        this.publicSocket.send(JSON.stringify(unsubscribeMessage));
-        this._eventHandlers.delete(topic);
+        webSocket.send(JSON.stringify(unsubscribeMessage));
+        handlerMap.delete(topic);
         //post unsubscribe message
       } else {
-        this._eventHandlers.set(topic, {
+        handlerMap.set(topic, {
           ...handler,
           callback: handler.callback.slice(0, -1),
         });
       }
     }
+  }
+
+  private unsubscribePrivate(parmas: MessageParams) {
+    this.unsubscribe(parmas, this.privateSocket!, this._eventPrivateHandlers);
+  }
+
+  private unsubscribePublic(parmas: MessageParams) {
+    this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
   }
 
   private generateMessage(

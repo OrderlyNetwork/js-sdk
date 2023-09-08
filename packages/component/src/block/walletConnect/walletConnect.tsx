@@ -56,10 +56,14 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     }
     if (status < AccountStatusEnum.EnableTrading) {
       setHandleStep(2);
-      return props.onEnableTrading?.(remember).finally(() => {
-        setHandleStep(0);
-        props.onComplete?.();
-      });
+      return props
+        .onEnableTrading?.(remember)
+        .then(() => {
+          props.onComplete?.();
+        })
+        .finally(() => {
+          setHandleStep(0);
+        });
     }
   }, [status, remember]);
 
@@ -74,7 +78,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         <ListTile
           avatar={
             <StepItem
-              active={status === AccountStatusEnum.NotSignedIn}
+              active={status <= AccountStatusEnum.NotSignedIn}
               isLoading={handleStep === 1}
               isCompleted={status >= AccountStatusEnum.SignedIn}
             >
@@ -126,7 +130,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 };
 
 export const WalletConnectSheet = create<WalletConnectProps>((props) => {
-  const { visible, hide, resolve, onOpenChange } = useModal();
+  const { visible, hide, resolve, reject, onOpenChange } = useModal();
   // get account status and handle sign in and enable trading
   const { account, createOrderlyKey, createAccount } = useAccount();
   const { logoUrl } = useContext(OrderlyContext);
@@ -138,9 +142,14 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
   //   [account]
   // );
 
-  // const onSignIn = useCallback(() => {
-  //   return account.createAccount();
-  // }, [account]);
+  const onSignIn = useCallback(() => {
+    return createAccount().catch((err: Error) => {
+      // console.log("!!!!!!!!!!!!!!!!!", err);
+      reject();
+      toast.error(err.message);
+      hide();
+    });
+  }, [account]);
 
   const onComplete = useCallback(() => {
     toast.success("Wallet connected");
@@ -156,7 +165,7 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
         </SheetHeader>
         <WalletConnect
           onEnableTrading={createOrderlyKey}
-          onSignIn={createAccount}
+          onSignIn={onSignIn}
           onComplete={onComplete}
           {...props}
         />

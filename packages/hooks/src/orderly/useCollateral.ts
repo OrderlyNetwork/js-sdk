@@ -1,7 +1,5 @@
 import { usePrivateQuery } from "../usePrivateQuery";
 
-import { merge } from "rxjs";
-import { map, filter, debounceTime } from "rxjs/operators";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
@@ -12,6 +10,7 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMemo } from "react";
+import { useBalance } from "./useBalance";
 
 export type CollateralOutputs = {
   totalCollateral: number;
@@ -35,7 +34,6 @@ export const useCollateral = (
 ): CollateralOutputs => {
   const { dp } = options;
   const positions = usePositionStream();
-  // const { data: positions } = usePrivateQuery<API.PositionInfo>("/v1/positions`);
 
   // const orders = useOrderStream();
   const { data: orders } = usePrivateQuery<API.Order[]>(`/v1/orders`);
@@ -55,6 +53,9 @@ export const useCollateral = (
       },
     }
   );
+
+  /// balance
+  // const { data: balance } = useBalance();
 
   const [totalCollateral, totalValue] = useMemo(() => {
     if (!holding || !markPrices) {

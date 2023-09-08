@@ -11,6 +11,8 @@ export {
   BaseSigner,
 } from "./signer";
 
+export { default as EventEmitter } from "eventemitter3";
+
 export { type OrderlyKeyPair, BaseOrderlyKeyPair } from "./keyPair";
 
 export { getMockSigner, getDefaultSigner } from "./helper";

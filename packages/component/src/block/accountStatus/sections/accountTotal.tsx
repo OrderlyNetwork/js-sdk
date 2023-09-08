@@ -76,7 +76,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           </div>
         </div>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
           Assets & Margin
         </SheetHeader>
