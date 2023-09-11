@@ -242,7 +242,6 @@ var WS = class {
   }
   onOpen(event) {
     console.log("WebSocket connection opened:");
-    console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb]) => {
         this.subscribe(params, cb);
@@ -379,7 +378,6 @@ var WS = class {
     };
   }
   subscribe(params, callback, once) {
-    console.log("\u{1F449}", params, callback, this.publicSocket.readyState);
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
       callback.onUnsubscribe
@@ -426,7 +424,6 @@ var WS = class {
     if (!!handler && Array.isArray(handler == null ? void 0 : handler.callback)) {
       if (handler.callback.length === 1) {
         const unsubscribeMessage = handler.callback[0].onUnsubscribe(topic);
-        console.log("unsubscribeMessage", unsubscribeMessage);
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
       } else {

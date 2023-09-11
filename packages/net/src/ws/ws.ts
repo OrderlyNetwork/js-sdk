@@ -109,7 +109,7 @@ export class WS {
 
   private onOpen(event: Event) {
     console.log("WebSocket connection opened:");
-    console.log(this._pendingPublicSubscribe);
+    // console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb]) => {
         this.subscribe(params, cb);
@@ -300,7 +300,7 @@ export class WS {
     callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
     once?: boolean
   ): unsubscribe | undefined {
-    console.log("👉", params, callback, this.publicSocket.readyState);
+    // console.log("👉", params, callback, this.publicSocket.readyState);
 
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
@@ -369,7 +369,7 @@ export class WS {
       if (handler!.callback.length === 1) {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
 
-        console.log("unsubscribeMessage", unsubscribeMessage);
+        // console.log("unsubscribeMessage", unsubscribeMessage);
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
         //post unsubscribe message

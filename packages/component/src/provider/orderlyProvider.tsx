@@ -141,7 +141,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     if (connect) {
       const walletState = await connect();
 
-      console.log("walletState", walletState);
+      // console.log("walletState", walletState);
 
       if (
         Array.isArray(walletState) &&
@@ -251,12 +251,12 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     // }, [ready, currentWallet]);
   }, [ready, currentAddress, currentChainId, testChains]);
 
-  const content = useMemo(() => {
-    if (!ready) {
-      return null;
-    }
-    return props.children;
-  }, [ready]);
+  // const content = useMemo(() => {
+  //   if (!ready) {
+  //     return null;
+  //   }
+  //   return props.children;
+  // }, [ready]);
 
   return (
     <Provider
@@ -279,7 +279,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
       <WSObserver />
       <PreDataLoader />
       <TooltipProvider>
-        <ModalProvider>{content}</ModalProvider>
+        <ModalProvider>{props.children}</ModalProvider>
       </TooltipProvider>
       <Toaster />
     </Provider>

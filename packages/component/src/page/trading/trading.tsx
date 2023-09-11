@@ -20,6 +20,7 @@ interface TradingPageProps {
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
+  console.log("👉 TradingPage ====>>>", props.symbol);
   return (
     <TradingPageProvider
       symbol={props.symbol}
