@@ -19,17 +19,17 @@ export const useMarketTradeStream = (
 
   const { level = 20 } = options;
 
-  const { isLoading } = useQuery<API.Trade[]>(
-    `/v1/public/market_trades?symbol=${symbol}&limit=${level}`,
-    {
-      onSuccess: (data) => {
-        console.log("trades ^^^^^^", data);
-        if (Array.isArray(data)) {
-          setTrades(data);
-        }
-        return data;
-      },
-    }
+  const { data, isLoading } = useQuery<API.Trade[]>(
+    `/v1/public/market_trades?symbol=${symbol}&limit=${level}`
+    // {
+    //   onSuccess: (data) => {
+    //     // console.log("trades ^^^^^^", data);
+    //     if (Array.isArray(data)) {
+    //       setTrades(data);
+    //     }
+    //     return data;
+    //   },
+    // }
   );
 
   const ws = useWS();
@@ -42,9 +42,9 @@ export const useMarketTradeStream = (
     });
 
     return () => {
-      unsubscript();
+      unsubscript?.();
     };
   }, []);
 
-  return { trades, isLoading };
+  return { data, isLoading };
 };

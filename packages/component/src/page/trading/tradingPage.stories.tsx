@@ -38,7 +38,7 @@ export const Default: Story = {
     const appState = useAppState();
     return (
       <Page systemState={appState.systemState}>
-        <TradingPage symbol={symbol} {...args} />
+        <TradingPage {...args} symbol={symbol} />
       </Page>
     );
   },

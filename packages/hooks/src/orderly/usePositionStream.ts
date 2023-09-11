@@ -59,12 +59,6 @@ export const usePositionStream = (
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
     if (!data?.rows || !symbolInfo || !accountInfo) return null;
 
-    // const totalCollateral = account.totalCollateral({
-    //   USDCHolding: USDC_holding,
-    //   nonUSDCHolding: nonUSDC,
-    //   unsettlementPnL: unsettlemnedPnL,
-    // });
-
     const filteredData =
       typeof symbol === "undefined" || symbol === ""
         ? data.rows.filter((item) => {
@@ -117,7 +111,7 @@ export const usePositionStream = (
       return {
         ...item,
         mark_price: price,
-
+        mm: 0,
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
