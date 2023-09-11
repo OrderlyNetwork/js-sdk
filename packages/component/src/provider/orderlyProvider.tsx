@@ -178,6 +178,8 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
   }, [connect]);
 
+  console.log("current wallet", currentWallet);
+
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
       console.warn("🤜 disconnect wallet");

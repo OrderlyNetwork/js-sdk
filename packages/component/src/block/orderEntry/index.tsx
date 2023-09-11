@@ -402,7 +402,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     markLabelVisible={false}
                     min={0}
-                    max={maxQty}
+                    max={maxQty === 0 ? 1 : maxQty}
                     markCount={4}
                     disabled={maxQty === 0}
                     step={symbolConfig?.["base_tick"]}

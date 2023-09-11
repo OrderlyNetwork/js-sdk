@@ -62,7 +62,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       },
       onOk: () => {
         if (typeof props.onSettlement !== "function") return Promise.resolve();
-        return props.onSettlement();
+        return props.onSettlement().then(() => {
+          toast.success("PnL settled");
+        });
       },
     });
   }, []);
@@ -110,8 +112,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="text-primary text-sm flex items-center gap-1"
+                className="text-primary text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={onUnsettleClick}
+                disabled={aggregated.unsettledPnL === 0}
               >
                 <RotateCw size={14} />
                 <span>Settle PnL</span>
@@ -201,8 +204,6 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                     // console.log("res", res);
                     toast.success("Leverage updated");
                   });
-                  // props.onLeverageChange?.(leverageLevers[value[0]]);
-                  // update({ leverage: leverageLevers[value[0]] });
                 }}
               />
             </div>

@@ -1,9 +1,10 @@
 import { WalletAdapter } from "./adapter";
-import { BrowserProvider, ethers } from "ethers";
+import { BrowserProvider, ethers, getAddress } from "ethers";
 
 export interface EtherAdapterOptions {
   provider: any;
   label?: string;
+  getAddresses?: (address: string) => string;
   chain: { id: string };
 }
 
@@ -20,6 +21,10 @@ export class EtherAdapter implements WalletAdapter {
   }
   deposit(from: string, to: string, amount: string): Promise<any> {
     throw new Error("Method not implemented.");
+  }
+
+  getAddresses(address: string): string {
+    return getAddress(address);
   }
 
   get chainId(): number {

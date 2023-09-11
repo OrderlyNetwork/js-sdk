@@ -429,6 +429,10 @@ export class Account {
 
     console.log("domain:::::::::", domain);
 
+    // const fullAddress = this.walletClient?.getAddresses(address);
+
+    // console.log("fullAddress:", fullAddress);
+
     const [message, toSignatureMessage] = generateSettleMessage({
       settlePnlNonce: nonce,
       chainId: this.walletClient.chainId,
@@ -460,14 +464,14 @@ export class Account {
       }),
       headers: {
         "Content-Type": "application/json",
-        "orderly-account-id": this.stateValue.accountId!,
+        "x-account-id": this.stateValue.accountId!,
         "orderly-key": publicKey!,
         "orderly-timestamp": (message as any).timestamp.toString(),
         "orderly-signature": signatured,
       },
     });
 
-    console.log("#########", res);
+    // console.log("#########", res);
 
     if (res.success) {
       return res;

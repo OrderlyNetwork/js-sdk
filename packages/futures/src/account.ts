@@ -483,7 +483,6 @@ export function maxQty(
 }
 
 export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
-  // console.log("maxQtyByLong", inputs);
   try {
     const {
       baseMaxQty,
@@ -633,6 +632,9 @@ export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Current-account-leverage}
  */
 export function currentLeverage(totalMarginRatio: number) {
+  if (totalMarginRatio === 0) {
+    return 0;
+  }
   return 1 / totalMarginRatio;
 }
 
