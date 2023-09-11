@@ -10,17 +10,6 @@ const meta: Meta<typeof WalletConnect> = {
   component: WalletConnect,
   title: "Block/WalletConnect",
   argTypes: {},
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        walletAdapter={undefined}
-        keyStore={new WooKeyStore("testnet")}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

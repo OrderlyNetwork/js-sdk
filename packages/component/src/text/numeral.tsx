@@ -3,6 +3,7 @@ import { cn } from "@/utils/css";
 import { commify, getPrecisionByNumber } from "@orderly.network/utils";
 import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
+import { Decimal } from "@orderly.network/utils";
 
 export type NumeralRule = "percentages" | "price";
 
@@ -34,6 +35,7 @@ export interface NumeralProps {
   loading?: boolean;
 
   surfix?: React.ReactNode;
+  prefix?: React.ReactNode;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -49,6 +51,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     precision,
     tick,
     surfix,
+    prefix,
     truncate = false,
   } = props;
   // TODO: check precision
@@ -59,8 +62,12 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (Number.isNaN(num)) {
       return "--";
     }
+
+    // console.log("!!!!!!!!!!!!!!!!!!!", num);
+
+    const d = new Decimal(num);
     if (rule === "percentages") {
-      return `${(num * 100).toFixed(2)}%`;
+      return `${d.mul(100).toFixed(2)}%`;
     }
 
     const dp =
@@ -70,7 +77,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
         ? getPrecisionByNumber(tick)
         : 2;
 
-    const truncatedNum = num.toFixed(dp);
+    const truncatedNum = d.toFixed(dp);
 
     if (rule === "price") {
       return commify(truncatedNum);
@@ -97,10 +104,12 @@ export const Numeral: FC<NumeralProps> = (props) => {
   }, [coloring, props.children]);
 
   const childWithUnit = useMemo(() => {
-    if (typeof surfix === "undefined") return child;
+    if (typeof surfix === "undefined" && typeof prefix === "undefined")
+      return child;
     // return `${child} ${unit}`;
     return (
       <span className="flex gap-1">
+        {prefix}
         {child}
         {surfix}
       </span>

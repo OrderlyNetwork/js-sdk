@@ -10,6 +10,12 @@ export interface OrderlyAppConfig {
   logoUrl: string;
   theme: any;
 }
+
+export type AppStateErrors = {
+  ChainNetworkNotSupport: boolean;
+  IpNotSupport: boolean;
+  NetworkError: boolean;
+};
 export interface OrderlyContextState extends OrderlyAppConfig {
   // coin cion generator
 
@@ -24,9 +30,15 @@ export interface OrderlyContextState extends OrderlyAppConfig {
 
   onWalletConnect?: () => Promise<any>;
   onWalletDisconnect?: () => Promise<any>;
+
+  onSetChain?: (chainId: number) => Promise<any>;
   // account: Account;
 
   ready: boolean;
+
+  onAppTestChange?: (name: string) => void;
+
+  errors: AppStateErrors;
 }
 
 export const OrderlyContext = createContext<OrderlyContextState>({

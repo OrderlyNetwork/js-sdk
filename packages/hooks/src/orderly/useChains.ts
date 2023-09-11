@@ -2,7 +2,7 @@
 
 import { type API } from "@orderly.network/types";
 import { useCallback, useMemo } from "react";
-import useSWR, { SWRResponse } from "swr";
+import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -12,8 +12,10 @@ type inputOptions = {
 export const useChains = (
   networkId?: "testnet" | "mainnet",
 
-  options?: inputOptions
+  options: inputOptions & SWRConfiguration = {}
 ) => {
+  const { filter, pick, ...swrOptions } = options;
+
   const field = options?.pick;
 
   const { data } = useSWR<any>(
@@ -22,6 +24,7 @@ export const useChains = (
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      ...swrOptions,
     }
   );
 

@@ -23,7 +23,9 @@ export const useMaxQty = (
   // const { data: positions = [] } =
   //   usePrivateQuery<API.PositionInfo>(`/positions`);
 
-  const { data: orders } = usePrivateQuery<API.Order[]>(`/v1/orders`);
+  const { data: orders } = usePrivateQuery<API.Order[]>(
+    `/v1/orders?status=NEW`
+  );
 
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =

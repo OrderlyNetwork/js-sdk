@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import Button from "@/button";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
@@ -16,34 +16,56 @@ import {
   useLeverage,
 } from "@orderly.network/hooks";
 
+// import Slider from "rc-slider";
+import { modal } from "@/modal";
+import { toast } from "@/toast";
+
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
   onWithdraw?: () => Promise<void>;
+  onSettlement?: () => Promise<void>;
   onLeverageChange?: (value: number) => void;
+
+  maxLeverage?: number | string;
 }
 
 const leverageLevers = [1, 2, 3, 4, 5, 10];
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
-  const { totalCollateral, freeCollateral, totalValue } = useCollateral({
-    dp: 2,
-  });
-  const [{ aggregated }] = usePositionStream();
-  const marginRatio = useMarginRatio();
+  const { totalCollateral, freeCollateral, totalValue, availableBalance } =
+    useCollateral({
+      dp: 2,
+    });
+  const [{ aggregated, totalUnrealizedROI }] = usePositionStream();
+  const [marginRatio, currentLeverage] = useMarginRatio();
 
-  // const [leverage, { update }] = useLeverage();
+  const [maxLeverage, { update }] = useLeverage();
 
-  // console.log("leverage", leverage);
+  const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
 
-  // const marginRatio = 0.5;
+  const leverageValue = useMemo(() => {
+    const index = leverageLevers.findIndex((item) => item === leverage);
 
-  // const { onDeposit, onWithdraw } = props;
+    return index;
+  }, [leverage]);
 
-  // const currentLeverage = useMemo(() => {
-  //   const d = 1 / marginRatio;
-
-  //   console.log("marginRatio", marginRatio, d);
-  // }, [marginRatio]);
+  const onUnsettleClick = useCallback(() => {
+    return modal.confirm({
+      title: "Settle PnL",
+      content: (
+        <div className="text-base-contrast/60">
+          Are you sure you want to settle your PnL?
+        </div>
+      ),
+      onCancel: () => {
+        return Promise.reject();
+      },
+      onOk: () => {
+        if (typeof props.onSettlement !== "function") return Promise.resolve();
+        return props.onSettlement();
+      },
+    });
+  }, []);
 
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
@@ -62,7 +84,21 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div className="grid grid-cols-2 py-4">
         <Statistic
           label="Unreal.PnL(USDC)"
-          value={aggregated.unrealPnL}
+          value={
+            <div className="flex gap-1 items-center">
+              <Numeral coloring>{aggregated.unrealPnL}</Numeral>
+
+              <Numeral
+                rule="percentages"
+                coloring
+                surfix=")"
+                prefix="("
+                className="text-sm opacity-60"
+              >
+                {totalUnrealizedROI}
+              </Numeral>
+            </div>
+          }
           rule="price"
           coloring
         />
@@ -73,8 +109,11 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <Numeral rule="price" coloring>
                 {aggregated.unsettledPnL}
               </Numeral>
-              <button className="text-primary text-sm flex items-center gap-2">
-                <RotateCw size={16} />
+              <button
+                className="text-primary text-sm flex items-center gap-1"
+                onClick={onUnsettleClick}
+              >
+                <RotateCw size={14} />
                 <span>Settle PnL</span>
               </button>
             </div>
@@ -111,20 +150,23 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label={
             <div className="flex justify-between">
               <span>Max Account Leverage</span>
-              <span>
+              <span className="flex">
                 Current:
-                <span className="text-base-contrast ml-1">0.00x</span>
+                <Numeral className="text-base-contrast ml-1" surfix="x">
+                  {currentLeverage}
+                </Numeral>
               </span>
             </div>
           }
           value={
-            <div className="py-1 px-3">
+            <div className="h-[40px] mt-2 mx-2">
               <Slider
                 min={0}
                 max={5}
                 color={"primary"}
                 markLabelVisible
-                value={[10]}
+                value={[leverageValue]}
+                // markCount={5}
                 marks={[
                   {
                     value: 0,
@@ -152,7 +194,13 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   },
                 ]}
                 onValueChange={(value) => {
-                  // console.log("value", value);
+                  const _value = leverageLevers[value[0]];
+
+                  setLeverage(_value);
+                  update({ leverage: _value }).then(() => {
+                    // console.log("res", res);
+                    toast.success("Leverage updated");
+                  });
                   // props.onLeverageChange?.(leverageLevers[value[0]]);
                   // update({ leverage: leverageLevers[value[0]] });
                 }}
@@ -173,7 +221,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
             <span>USDC</span>
           </div>
-          <Numeral>0</Numeral>
+          <Numeral precision={2}>{availableBalance}</Numeral>
         </div>
       </Paper>
       <div className="flex gap-3 py-5">

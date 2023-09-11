@@ -4,6 +4,7 @@ import {
   useOrderStream,
   OrderStatus,
   useAccount,
+  useSessionStorage,
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
@@ -15,7 +16,14 @@ interface Props {
 export const OrdersPane: FC<Props> = (props) => {
   const context = useContext(TradingPageContext);
 
-  const [symbol, setSymbol] = useState("");
+  const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
+    "showAllSymbol_orders",
+    false
+  );
+
+  const [symbol, setSymbol] = useState(() =>
+    showAllSymbol ? "" : context.symbol
+  );
 
   const [data, { isLoading, cancelOrder, updateOrder }] = useOrderStream({
     status: OrderStatus.NEW,
@@ -24,6 +32,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const onShowAllSymbolChange = (isAll: boolean) => {
     setSymbol(isAll ? "" : context.symbol);
+    setShowAllSymbol(isAll);
   };
 
   const { state } = useAccount();
@@ -40,7 +49,7 @@ export const OrdersPane: FC<Props> = (props) => {
       dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
       isLoading={isLoading}
       symbol={context.symbol}
-      showAllSymbol={symbol === ""}
+      showAllSymbol={showAllSymbol}
       cancelOrder={onCancelOrder}
       onShowAllSymbolChange={onShowAllSymbolChange}
       editOrder={updateOrder}

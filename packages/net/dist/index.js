@@ -84,11 +84,10 @@ function request(url, options) {
       if (res.success) {
         return res;
       } else {
-        throw new Error(res);
+        throw new Error(res.message);
       }
     }
-    const error = yield response.json();
-    throw new Error(error.message || error.code || error);
+    throw new Error(response.statusText);
   });
 }
 function _createHeaders(headers = {}, method) {

@@ -17,6 +17,8 @@ export { type OrderlyKeyPair, BaseOrderlyKeyPair } from "./keyPair";
 
 export { getMockSigner, getDefaultSigner } from "./helper";
 
+export { type IContract, BaseContract as Contract } from "./contract";
+
 export { default as SimpleDI } from "./di/simpleDI";
 
 export { Account, type AccountState } from "./account";

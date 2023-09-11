@@ -13,8 +13,9 @@ export const usePrivateDataObserver = () => {
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
         console.info("refresh orders");
-        // console.log(data);
-        mutate("/v1/orders");
+        console.log(data);
+        // mutate("/v1/orders");
+        // mutate('/v1/orders?status=NEW')
       },
     });
     return () => unsubscribe?.();

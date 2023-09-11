@@ -22,6 +22,9 @@ import { Account, SimpleDI } from "@orderly.network/core";
 import { TooltipProvider } from "@/tooltip/tooltip";
 import { WalletConnectorContext } from "./walletConnectorProvider";
 import { WSObserver } from "@/dev/wsObserver";
+import { useChains, useSessionStorage } from "@orderly.network/hooks";
+import { API } from "@orderly.network/types";
+import { PreDataLoader } from "@/system/preDataLoader";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
@@ -34,16 +37,13 @@ interface OrderlyProviderProps {
 
   // onWalletConnect?: () => Promise<any>;
 }
-//
-// API_URL: "https://dev-api-v2.orderly.org"
-// WS_URL: "wss://dev-ws-v2.orderly.org"
-// WS_PRIVATE_URL: "wss://dev-ws-private-v2.orderly.org"
+
+const CHECK_ENTRY: Record<string, boolean> = { chains_fetch: false };
 
 export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   props
 ) => {
   const {
-    children,
     networkId = "testnet",
     logoUrl,
     keyStore,
@@ -55,12 +55,53 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   if (!configStore) {
     throw new Error("configStore is required");
   }
+  const [ready, setReady] = useSessionStorage<boolean>("APP_READY", false);
+
+  const onAppTestChange = (name: string) => {
+    CHECK_ENTRY[name] = true;
+    const isReady = Object.keys(CHECK_ENTRY).every((key) => CHECK_ENTRY[key]);
+
+    if (isReady) {
+      console.log("change app ready: true");
+      setReady(true);
+    }
+  };
 
   const {
     connect,
     disconnect,
     wallet: currentWallet,
+    setChain,
   } = useContext(WalletConnectorContext);
+
+  // const [testChains] = useChains("testnet", {
+  //   pick: "network_infos",
+  //   filter: (item: API.Chain) => item.network_infos.chain_id === 421613,
+  // });
+
+  const testChains = useMemo(() => {
+    return [
+      {
+        name: "Arbitrum Goerli",
+        public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
+        chain_id: 421613,
+        currency_symbol: "ETH",
+        bridge_enable: true,
+        mainnet: false,
+        explorer_base_url: "https://goerli.arbiscan.io/",
+      },
+    ];
+  }, []);
+
+  // console.log("testChains", testChains);
+
+  const [errors, setErrors] = useSessionStorage("APP_ERRORS", {
+    ChainNetworkNotSupport: false,
+    IpNotSupport: false,
+    NetworkError: false,
+  });
+
+  console.log("👏 app ready >>>", ready);
 
   useEffect(() => {
     let account = SimpleDI.get<Account>(Account.instanceName);
@@ -79,21 +120,45 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     return configStore.get("klineDataUrl");
   }, [configStore]);
 
+  const checkChainId = useCallback((chainId: number): boolean => {
+    console.log("*****", chainId, testChains);
+    if (!chainId || !testChains) {
+      return false;
+    }
+
+    if (typeof chainId !== "number") {
+      chainId = parseInt(chainId);
+    }
+
+    const isSupport = testChains.some(
+      (item: API.NetworkInfos) => item.chain_id === chainId
+    );
+
+    return isSupport;
+  }, []);
+
   const _onWalletConnect = useCallback(async (): Promise<any> => {
     if (connect) {
       const walletState = await connect();
 
-      // console.log("walletState", walletState);
+      console.log("walletState", walletState);
 
       if (
         Array.isArray(walletState) &&
         walletState.length > 0 &&
+        walletState[0] &&
         walletState[0].accounts.length > 0
       ) {
         const wallet = walletState[0];
 
+        ////// check chainid ///////
+
+        if (!checkChainId(wallet.chains[0].id)) {
+          return false;
+        }
+
         let account = SimpleDI.get<Account>(Account.instanceName);
-        console.log("wallet", wallet, account);
+        // console.log("wallet", wallet, account);
         if (!account) {
           throw new Error("account is not initialized");
         }
@@ -114,7 +179,8 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }, [connect]);
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
-    if (typeof disconnect === "function") {
+    if (typeof disconnect === "function" && currentWallet) {
+      console.warn("🤜 disconnect wallet");
       let account = SimpleDI.get<Account>(Account.instanceName);
 
       return disconnect(currentWallet).then(() => {
@@ -123,17 +189,74 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
   }, [disconnect, currentWallet]);
 
-  useEffect(() => {
-    // console.log("currentWallet=====>>>>>>>>>>", currentWallet);
-    let account = SimpleDI.get<Account>(Account.instanceName);
-    if (currentWallet && account) {
-      account.setAddress(currentWallet.accounts[0].address, {
-        provider: currentWallet.provider,
-        chain: currentWallet.chains[0],
-        label: currentWallet.label,
-      });
+  const _onSetChain = useCallback((chainId: number) => {
+    return setChain({ chainId }).then((success: boolean) => {
+      // console.log("setChain result::::", result);
+      if (success) {
+        setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: false }));
+      }
+
+      return success;
+    });
+  }, []);
+
+  const currentAddress = useMemo(() => {
+    if (!currentWallet) {
+      return null;
     }
+    return currentWallet.accounts[0].address;
   }, [currentWallet]);
+
+  const currentChainId = useMemo(() => {
+    if (!currentWallet) {
+      return null;
+    }
+    return currentWallet.chains[0].id;
+  }, [currentWallet]);
+
+  useEffect(() => {
+    // console.log("app ready?", ready);
+    if (ready) {
+      let account = SimpleDI.get<Account>(Account.instanceName);
+      // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
+
+      if (!!currentWallet && account) {
+        if (
+          account.address === currentAddress &&
+          currentChainId === account.chainId
+        ) {
+          return;
+        }
+        if (!checkChainId(currentChainId)) {
+          account.disconnect();
+
+          setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
+
+          console.warn("current chain not support!");
+          return;
+        } else {
+          setErrors((errors: any) => ({
+            ...errors,
+            ChainNetworkNotSupport: false,
+          }));
+        }
+
+        account.setAddress(currentWallet.accounts[0].address, {
+          provider: currentWallet.provider,
+          chain: currentWallet.chains[0],
+          label: currentWallet.label,
+        });
+      }
+    }
+    // }, [ready, currentWallet]);
+  }, [ready, currentAddress, currentChainId, testChains]);
+
+  const content = useMemo(() => {
+    if (!ready) {
+      return null;
+    }
+    return props.children;
+  }, [ready]);
 
   return (
     <Provider
@@ -145,14 +268,18 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         keyStore,
         walletAdapter,
         networkId,
-        ready: true,
+        ready,
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
+        onSetChain: _onSetChain,
+        onAppTestChange,
+        errors,
       }}
     >
       <WSObserver />
+      <PreDataLoader />
       <TooltipProvider>
-        <ModalProvider>{children}</ModalProvider>
+        <ModalProvider>{content}</ModalProvider>
       </TooltipProvider>
       <Toaster />
     </Provider>

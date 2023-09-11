@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { useQuery } from "../useQuery";
+
 import { prop } from "ramda";
 
 export const useLeverage = () => {

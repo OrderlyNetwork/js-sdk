@@ -2,7 +2,7 @@ import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { type SWRInfiniteResponse } from "swr/infinite";
 import { useCallback, useMemo } from "react";
 
-import { API } from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { useMarketsStream } from "./useMarketsStream";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
@@ -24,11 +24,15 @@ export enum OrderStatus {
 }
 
 export const useOrderStream = ({
-  status = OrderStatus.NEW,
+  status,
   symbol,
+  side,
+  size = 100,
 }: {
   symbol?: string;
   status?: OrderStatus;
+  size?: number;
+  side?: OrderSide;
 } = {}) => {
   // const markPrices$ = useMarkPricesSubject();
 
@@ -44,13 +48,23 @@ export const useOrderStream = ({
       //   const {meta} = previousPageData;
       // }
       const search = new URLSearchParams([
-        ["size", "100"],
+        ["size", size.toString()],
         ["page", `${pageIndex + 1}`],
-        [`status`, status],
+        // [`status`, status],
       ]);
+
+      if (status) {
+        search.set(`status`, status);
+      }
+
       if (symbol) {
         search.set(`symbol`, symbol);
       }
+
+      if (side) {
+        search.set(`side`, side);
+      }
+
       return `/v1/orders?${search.toString()}`;
     },
     {

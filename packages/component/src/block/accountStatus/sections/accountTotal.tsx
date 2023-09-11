@@ -20,7 +20,7 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   const { logoUrl } = useContext(OrderlyContext);
-  const { onDeposit, onWithdraw } = useContext(AssetsContext);
+  const { onDeposit, onWithdraw, onSettlement } = useContext(AssetsContext);
 
   // console.log("accountInfo", props);
 
@@ -80,7 +80,12 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
           Assets & Margin
         </SheetHeader>
-        <AssetAndMarginSheet onDeposit={onDeposit} onWithdraw={onWithdraw} />
+        <AssetAndMarginSheet
+          onDeposit={onDeposit}
+          onWithdraw={onWithdraw}
+          onSettlement={onSettlement}
+          maxLeverage={maxLerverage}
+        />
       </SheetContent>
     </Sheet>
   );

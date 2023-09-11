@@ -39,11 +39,11 @@ export const defaultTimeInterval = [
   },
   {
     value: "1D",
-    label: "D",
+    label: "1D",
   },
   {
     value: "1W",
-    label: "W",
+    label: "1W",
   },
 ];
 

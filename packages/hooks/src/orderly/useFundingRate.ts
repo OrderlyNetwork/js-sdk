@@ -44,6 +44,7 @@ export const useFundingRate = (symbol: string) => {
 
   return {
     ...data,
+    est_funding_rate: (Number(data?.est_funding_rate ?? 0) * 100).toFixed(4),
     countDown,
   };
 };

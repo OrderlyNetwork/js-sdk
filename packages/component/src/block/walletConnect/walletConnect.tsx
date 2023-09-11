@@ -31,11 +31,13 @@ interface WalletConnectProps {
 }
 
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
-  const { status = AccountStatusEnum.NotConnected } = props;
+  // const { status = AccountStatusEnum.NotConnected } = props;
+  const {
+    state: { status },
+  } = useAccount();
+
   const [handleStep, setHandleStep] = useState(0);
   const [remember, setRemember] = useState(true);
-
-  console.log("wallet connect", props);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {

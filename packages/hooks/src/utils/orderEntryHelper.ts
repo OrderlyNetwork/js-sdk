@@ -90,7 +90,7 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
-  console.log("priceInputHandle", inputs);
+  // console.log("priceInputHandle", inputs);
 
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
@@ -118,9 +118,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      total: total
-        .toDecimalPlaces(Math.min(quantityDP, config.baseDP))
-        .toString(),
+      total: total.todp(Math.max(quantityDP, config.baseDP)).toString(),
     },
     input,
     value,

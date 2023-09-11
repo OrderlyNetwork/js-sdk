@@ -30,6 +30,8 @@ export { useMarginRatio } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
 
+export { useHolding } from "./useHolding";
+
 export { useBalance } from "./useBalance";
 
 export { usePrivateDataObserver } from "./usePrivateDataObserver";

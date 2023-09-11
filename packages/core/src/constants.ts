@@ -35,3 +35,11 @@ export const definedTypes: { [key: string]: any } = {
     { name: "timestamp", type: "uint64" },
   ],
 };
+
+export const devUSDCAddressOnArbitrumTestnet =
+  "0x004d88aa993fd2100d6c8beb6cdb6bc04f565b44";
+
+export const devVaultAddressOnArbitrumTestnet =
+  "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482";
+export const devVerifyAddressOnArbitrumTestnet =
+  "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";

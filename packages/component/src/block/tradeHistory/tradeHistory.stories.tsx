@@ -7,7 +7,7 @@ import { OrderlyProvider } from "../../provider/orderlyProvider";
 
 import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
 import { WooKeyStore } from "../../stories/mock/woo.keystore";
-import { useTradeStream } from "@orderly.network/hooks";
+import { useMarketTradeStream } from "@orderly.network/hooks";
 
 const meta: Meta<typeof TradeHistory> = {
   //   tags: ["autodocs"],
@@ -103,7 +103,7 @@ export const Default: Story = {
 export const WithHook: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    const { data, isLoading } = useTradeStream(symbol);
+    const { data, isLoading } = useMarketTradeStream(symbol);
     console.log(data);
     return <TradeHistory dataSource={data} loading={isLoading} />;
   },

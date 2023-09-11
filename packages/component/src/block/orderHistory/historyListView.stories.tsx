@@ -27,8 +27,9 @@ export const Default: Story = {
 };
 
 export const WithHooks: Story = {
-  render: (args) => {
-    const [data, { isLoading }] = useOrderStream({ status: "" });
+  render: (args, { globals }) => {
+    const { symbol } = globals;
+    const [data, { isLoading }] = useOrderStream({ symbol });
 
     console.log(data);
     return <HistoryListView dataSource={data} isLoading={isLoading} />;

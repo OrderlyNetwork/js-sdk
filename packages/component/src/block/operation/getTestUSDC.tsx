@@ -29,27 +29,40 @@ export const GetTestUSDC = () => {
   }, []);
 
   const onGetClick = useCallback(() => {
-    modal
-      .confirm({
-        title: "Get test USDC",
-        content:
-          "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
-        onOk: () => {
-          return getTestUSDC({
-            chain_id: account.wallet.chainId.toString(),
-            user_address: state.address,
-            broker_id: "woofi_dex",
-          }).then((res: any) => {
-            if (res.success) {
-              toast.success("Get test USDC success");
-            }
-            return res;
+    // toast.promise(getTestUSDC({
+    //   chain_id: account.wallet.chainId.toString(),
+    //   user_address: state.address,
+    //   broker_id: "woofi_dex",
+    // }),{
+    //   loading:'Getting test USDC...',
+    //   success:'Success',
+    //   error:'Failed'
+    // })
+    const toastId = toast.loading("Getting test USDC...");
+    getTestUSDC({
+      chain_id: account.wallet.chainId.toString(),
+      user_address: state.address,
+      broker_id: "woofi_dex",
+    }).then(
+      (res: any) => {
+        if (res.success) {
+          toast.dismiss(toastId);
+          return modal.confirm({
+            title: "Get test USDC",
+            content:
+              "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
+            onOk: () => {
+              return Promise.resolve();
+            },
           });
-        },
-      })
-      .then(() => {
-        console.log("get test usdc");
-      });
+        } else {
+          return Promise.reject(res);
+        }
+      },
+      (error: Error) => {
+        toast.error(error.message);
+      }
+    );
   }, [state]);
 
   if (!show) {

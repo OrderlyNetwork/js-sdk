@@ -11,6 +11,8 @@ export const useAccount = (): {
   createAccount: () => Promise<string>;
   disconnect: () => Promise<void>;
   connect: () => Promise<any>;
+  setChain: (chainId: number) => Promise<any>;
+  // settlement: () => Promise<any>;
   // info: API.AccountInfo | undefined;
 } => {
   const {
@@ -19,6 +21,7 @@ export const useAccount = (): {
     walletAdapter,
     onWalletConnect,
     onWalletDisconnect,
+    onSetChain,
   } = useContext(OrderlyContext);
 
   if (!configStore)
@@ -83,12 +86,18 @@ export const useAccount = (): {
     return onWalletConnect?.();
   }, [account]);
 
+  // const settlement = useCallback(async () => {
+  //   return account.settlement();
+  // }, [account]);
+
   const disconnect = async () => {
     // account.disconnect();
     return onWalletDisconnect?.();
   };
 
-  // console.log("*********** state", state);
+  const setChain = async (chainId: number) => {
+    return onSetChain?.(chainId);
+  };
 
   return {
     // account: state!,
@@ -100,5 +109,7 @@ export const useAccount = (): {
     createAccount,
     disconnect,
     connect,
+    setChain,
+    // settlement,
   };
 };

@@ -10,10 +10,11 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { Picker } from "@/select";
+import { Picker, Select } from "@/select";
 import Button from "@/button";
 import { Numeral, Text } from "@/text";
 
@@ -26,6 +27,7 @@ import { modal } from "@/modal";
 import { OrderConfirmView } from "./sections/orderConfirmView";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
+import { Decimal } from "@orderly.network/utils";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -73,9 +75,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       onSideChange,
       helper,
       disabled,
+      markPrice,
     } = props;
 
     const { calculate, validator } = helper;
+
+    const totalInputFocused = useRef<boolean>(false);
 
     const methods = useForm({
       // mode: "onChange",
@@ -89,7 +94,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         reduce_only: false,
       },
       resolver: async (values) => {
-        console.log("**********  values", values);
+        // console.log("**********  values", values);
         const errors = await validator(values);
         return {
           values,
@@ -172,8 +177,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
 
     useEffect(() => {
-      console.log("swith symbol");
-
       methods.setValue("order_price", "");
       methods.setValue("order_quantity", "");
       methods.setValue("total", "");
@@ -191,6 +194,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       } else {
         setButtonText("Sell / Short");
       }
+
+      methods.clearErrors();
     }, [side]);
 
     useEffect(() => {
@@ -213,20 +218,38 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       // console.log("newValues", newValues);
 
       if (name === "order_price") {
-        methods.setValue("order_price", newValues.order_price, {
+        methods.setValue("order_price", newValues.order_price as string, {
           shouldValidate: methods.formState.submitCount > 0,
         });
       }
 
-      methods.setValue("total", newValues.total, {
+      methods.setValue("total", newValues.total as string, {
         shouldValidate: methods.formState.submitCount > 0,
       });
-      methods.setValue("order_quantity", newValues.order_quantity, {
+      methods.setValue("order_quantity", newValues.order_quantity as string, {
         shouldValidate: methods.formState.submitCount > 0,
       });
     };
 
     // console.log("errors:", methods.formState);
+
+    const totalAmount = useMemo(() => {
+      const quantity = methods.getValues("order_quantity");
+      if (
+        !markPrice ||
+        methods.getValues("order_type") !== OrderType.MARKET ||
+        totalInputFocused.current ||
+        !quantity
+      ) {
+        return methods.getValues("total");
+      }
+
+      return new Decimal(quantity).mul(markPrice).todp(4).toString();
+    }, [
+      markPrice,
+      methods.getValues("order_type"),
+      methods.getValues("order_quantity"),
+    ]);
 
     return (
       <FormProvider {...methods}>
@@ -285,7 +308,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               control={methods.control}
               render={({ field }) => {
                 return (
-                  <Picker
+                  <Select
                     label={"Order Type"}
                     value={field.value}
                     color={side === OrderSide.BUY ? "buy" : "sell"}
@@ -296,13 +319,21 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                         value: "MARKET",
                       },
                     ]}
-                    onValueChange={(value: any) => {
-                      // setValue?.("order_type", value.value);
-                      field.onChange(value.value);
+                    onChange={(value) => {
+                      field.onChange(value);
                       methods.setValue("order_price", "", {
-                        shouldValidate: true,
+                        shouldValidate: false,
                       });
+
+                      methods.clearErrors();
                     }}
+                    // onValueChange={(value: any) => {
+                    //   // setValue?.("order_type", value.value);
+                    //   field.onChange(value.value);
+                    //   methods.setValue("order_price", "", {
+                    //     shouldValidate: true,
+                    //   });
+                    // }}
                   />
                 );
               }}
@@ -318,11 +349,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     ref={priceInputRef}
                     prefix={"Price"}
                     suffix={symbolConfig?.quote}
-                    type="number"
+                    type="tel"
                     error={!!methods.formState.errors?.order_price}
-                    defaultValue={"Market"}
+                    // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
-                    value={field.value}
+                    value={
+                      methods.getValues("order_type") === OrderType.MARKET
+                        ? "Market"
+                        : field.value
+                    }
                     className="text-right"
                     readOnly={
                       methods.getValues("order_type") === OrderType.MARKET
@@ -344,7 +379,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <Input
                     disabled={disabled}
                     prefix={"Qunatity"}
-                    type="number"
+                    type="tel"
                     suffix={symbolConfig?.base}
                     className="text-right"
                     error={!!methods.formState.errors?.order_quantity}
@@ -392,11 +427,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <Input
                     disabled={disabled}
                     className={"text-right"}
-                    // value={values?.total}
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
-                    type="number"
-                    value={field.value}
+                    type="tel"
+                    // value={field.value}
+                    value={
+                      totalInputFocused.current ? field.value : totalAmount
+                    }
+                    onFocus={() => (totalInputFocused.current = true)}
+                    onBlur={() => (totalInputFocused.current = false)}
                     onChange={(event) => {
                       // field.onChange(event.target.value);
                       onFieldChange("total", event.target.value);

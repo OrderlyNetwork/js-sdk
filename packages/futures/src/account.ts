@@ -69,7 +69,7 @@ export type TotalCollateralValueInputs = {
  * 计算总保证金
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D}
  */
-export function totalCollateral(inputs: TotalCollateralValueInputs): number {
+export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
   const { USDCHolding, nonUSDCHolding } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return (
@@ -80,8 +80,7 @@ export function totalCollateral(inputs: TotalCollateralValueInputs): number {
 
   return new Decimal(USDCHolding)
     .add(nonUSDCHoldingValue)
-    .add(inputs.unsettlementPnL)
-    .toNumber();
+    .add(inputs.unsettlementPnL);
 }
 
 export function initialMarginWithOrder() {}
@@ -611,4 +610,37 @@ export function totalMarginRatio(
   }, zero);
 
   return totalCollateralDecimal.div(totalPositionNotional).toNumber();
+}
+
+export type TotalUnrealizedROIInputs = {
+  totalUnrealizedPnL: number;
+  totalValue: number;
+};
+
+/**
+ * totalUnrealizedROI
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unrealized-ROI}
+ */
+export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
+  const { totalUnrealizedPnL, totalValue } = inputs;
+
+  return new Decimal(totalUnrealizedPnL)
+    .div(totalValue - totalUnrealizedPnL)
+    .toNumber();
+}
+
+/**
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Current-account-leverage}
+ */
+export function currentLeverage(totalMarginRatio: number) {
+  return 1 / totalMarginRatio;
+}
+
+export type AvailableBalanceInputs = {
+  USDCHolding: number;
+  unsettlementPnL: number;
+};
+export function availableBalance(inputs: AvailableBalanceInputs) {
+  const { USDCHolding, unsettlementPnL } = inputs;
+  return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
 }

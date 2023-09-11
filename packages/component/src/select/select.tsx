@@ -1,9 +1,17 @@
 import { cva, VariantProps, cx } from "class-variance-authority";
-import { FC, SelectHTMLAttributes, useMemo, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { FC, SelectHTMLAttributes, useEffect, useMemo, useState } from "react";
 
 import { ActionSheet } from "@/sheet/actionSheet/actionSheet";
 import { ChevronDown } from "lucide-react";
+import { cn } from "@/utils/css";
+import { ArrowIcon } from "@/icon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/dropdown/dropdown";
+import React from "react";
 
 export type SelectOption = {
   value: string;
@@ -13,12 +21,18 @@ export type SelectOption = {
 const selectVariants = cva(["rounded transition-colors bg-fill"], {
   variants: {
     size: {
-      small: "px-1 h-[28px]",
+      small: "px-2 h-[28px]",
       default: "px-2 py-1 h-[40px]",
       large: "px-6 py-3",
     },
     fullWidth: {
       true: "w-full",
+    },
+    color: {
+      // primary: "text-primary",
+      default: "text-base-contract",
+      buy: "text-trade-profit",
+      sell: "text-trade-loss",
     },
     disabled: {
       true: "opacity-50 cursor-not-allowed",
@@ -32,7 +46,7 @@ const selectVariants = cva(["rounded transition-colors bg-fill"], {
 export interface SelectProps
   extends Omit<
       SelectHTMLAttributes<HTMLSelectElement>,
-      "disabled" | "size" | "onChange"
+      "disabled" | "size" | "onChange" | "color"
     >,
     VariantProps<typeof selectVariants> {
   /**
@@ -46,10 +60,24 @@ export interface SelectProps
   //   className?: string;
 }
 
-const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
+const Select: FC<SelectProps> = ({
+  className,
+  size,
+  disabled,
+  color,
+  ...props
+}) => {
   const [open, setOpen] = useState(false);
+  const [width, setWidth] = useState(0);
 
-  const value = useMemo(() => {
+  const label = useMemo(() => {
+    if (typeof props.value !== "undefined") {
+      const activeItem = props.options?.find(
+        (item) => item.value === props.value
+      );
+
+      if (activeItem) return activeItem.label;
+    }
     return props.value || props.label || props.placeholder;
   }, [props.value]);
 
@@ -57,40 +85,65 @@ const Select: FC<SelectProps> = ({ className, size, disabled, ...props }) => {
     return props.options || [];
   }, [props]);
 
-  return (
-    <>
-      <div
-        className={twMerge(
-          "flex flex-row items-center rounded focus-within:outline outline-red-400",
-          selectVariants({
-            size,
-            disabled: disabled || options.length === 0,
-            className,
-          }),
-          cx(open && "bg-slate-400")
-        )}
-        onClick={() => {
-          if (options.length === 0) return;
-          setOpen(!open);
-        }}
-      >
-        <div className="flex-1 px-2">
-          {typeof value !== "undefined" && <>{value}</>}
-        </div>
+  const triggerRef = React.useRef<any>(null);
 
-        <ChevronDown size={16} />
-      </div>
-      <ActionSheet
-        actionSheets={options}
-        open={open}
-        onValueChange={(value) => {
-          // console.log(value);
-          props.onChange?.(value);
-        }}
-        value={props.value}
-        onClose={() => setOpen(false)}
-      />
-    </>
+  useEffect(() => {
+    if (triggerRef.current) {
+      setWidth(triggerRef.current.offsetWidth);
+    }
+  }, []);
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <div
+          ref={triggerRef}
+          className={cn(
+            "flex flex-row items-center rounded focus-within:outline space-x-1",
+            selectVariants({
+              size,
+              disabled: disabled || options.length === 0,
+              className,
+              color,
+            }),
+            open && "bg-popover"
+          )}
+          onClick={() => {
+            if (options.length === 0) return;
+            setOpen(!open);
+          }}
+        >
+          <div className="flex-1 text-sm text-inherit">
+            {typeof label !== "undefined" && <>{label}</>}
+          </div>
+
+          <ArrowIcon
+            size={12}
+            className={cx("transition-transform", open && "rotate-180")}
+          />
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" style={{ width: `${width}px` }}>
+        {props.options?.map((option, index) => {
+          return (
+            <DropdownMenuItem
+              textValue={option.value}
+              key={index}
+              className={cn(
+                "text-base-contrast/60",
+                option.value === props.value &&
+                  (color === "buy" ? "text-trade-profit" : "text-trade-loss")
+              )}
+              onSelect={(evnet) => {
+                props.onChange?.(option.value);
+              }}
+            >
+              {option.label}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

@@ -53,7 +53,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value="--"
+          value={item["mm"]}
         />
         <Statistic
           label={
@@ -96,7 +96,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value={item["est_liq_price"]}
+          valueClassName="text-warning"
+          value={item["est_liq_price"] === 0 ? "--" : item["est_liq_price"]}
           align="right"
           rule="price"
           precision={quote_dp}

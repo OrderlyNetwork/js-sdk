@@ -43,8 +43,6 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
 
   const [infoOpen, setInfoOpen] = useState(false);
 
-  // console.log("account status", props);
-
   useChains();
 
   const buttonLabel = useMemo(() => {

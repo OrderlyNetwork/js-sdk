@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import { PositionHeader } from "./positionHeader";
 import { PositionsView } from "@/block/positions";
-import { usePositionStream } from "@orderly.network/hooks";
+import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "@/block/positions/sections/closeForm";
 import {
@@ -20,12 +20,21 @@ import { toast } from "@/toast";
 
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
-  const [symbol, setSymbol] = React.useState("");
 
   // console.log("********", data, info.maintenance_margin_ratio());
 
+  const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
+    "showAllSymbol_position",
+    false
+  );
+
+  const [symbol, setSymbol] = React.useState(() =>
+    showAllSymbol ? "" : context.symbol
+  );
+
   const onShowAllSymbolChange = (isAll: boolean) => {
     setSymbol(isAll ? "" : context.symbol);
+    setShowAllSymbol(isAll);
   };
 
   const [data, info, { loading }] = usePositionStream(symbol);
@@ -55,6 +64,9 @@ export const PositionPane = () => {
       .confirm({
         title: "Market Close",
         content: <MarkPriceConfirm position={position} />,
+        onCancel: () => {
+          return Promise.reject();
+        },
         onOk: () => {
           return postOrder({
             symbol: position.symbol,
@@ -63,7 +75,8 @@ export const PositionPane = () => {
             order_quantity: Math.abs(position.position_qty),
           })
             .then((res: any) => {
-              console.log("postOrder", res);
+              // console.log("postOrder", res);
+              toast.success("success");
             })
             .catch((err: Error) => {
               // console.log("postOrder", e);
@@ -85,7 +98,7 @@ export const PositionPane = () => {
       isLoading={loading}
       onLimitClose={onLimitClose}
       onMarketClose={onMarketClose}
-      showAllSymbol={symbol === ""}
+      showAllSymbol={showAllSymbol}
       onShowAllSymbolChange={onShowAllSymbolChange}
     />
   );

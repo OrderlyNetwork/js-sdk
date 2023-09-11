@@ -14,17 +14,7 @@ const meta: Meta = {
   title: "Block/ChainPicker",
   component: ChainPicker,
   argTypes: {},
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore("testnet")}
-        walletAdapter={new Web3WalletAdapter()}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
+
   args: {},
 };
 

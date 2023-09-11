@@ -8,13 +8,7 @@ const meta: Meta<typeof Deposit> = {
   component: Deposit,
   title: "Block/Deposit",
   tags: ["autodocs"],
-  decorators: [
-    (Story) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
+
   argTypes: {
     onDeposit: { action: "onDeposit" },
     onConnectWallet: { action: "onConnectWallet" },

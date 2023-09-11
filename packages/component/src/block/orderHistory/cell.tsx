@@ -1,6 +1,7 @@
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { Text } from "@/text";
+import { firstLetterToUpperCase } from "@/utils/string";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useMemo } from "react";
 
@@ -36,15 +37,33 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           </div>
         </div>
         <div className={"text-sm text-base-contrast/30"}>
-          <Text rule="date">{item.executed_timestamp}</Text>
+          <Text rule="date">{item.created_time}</Text>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
-        <Statistic label="Qty." value={item.quantity ?? "-"} coloring />
+        <Statistic
+          label="Qty."
+          value={item.quantity ?? "-"}
+          className={
+            item.side === OrderSide.BUY
+              ? "text-trade-profit"
+              : "text-trade-loss"
+          }
+        />
         <Statistic label="Filled" value={item.executed ?? "-"} />
-        <Statistic label="Status" value="Filled" align="right" />
-        <Statistic label="Limit Price(USDC)" value={item.price ?? "-"} />
-        <Statistic label="Mark Price(USDC)" value="30,000.00" />
+        <Statistic
+          label="Status"
+          value={firstLetterToUpperCase(item.status)}
+          align="right"
+        />
+        <Statistic
+          label="Avg. Price(USDC)"
+          value={item.average_executed_price ?? "-"}
+        />
+        <Statistic
+          label="Order Price(USDC)"
+          value={item.type === OrderType.MARKET ? "Market" : item.price}
+        />
       </div>
     </div>
   );

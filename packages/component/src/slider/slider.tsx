@@ -43,7 +43,10 @@ const Slider = React.forwardRef<
     // const size = useSize(spanRef.current);
 
     const innerMasks = useMemo(() => {
-      if (max === 0) return [];
+      let _max = max;
+      if (_max === 0) {
+        _max = 1;
+      }
 
       if (Array.isArray(marks) && marks.length > 0) {
         return marks;
@@ -51,11 +54,16 @@ const Slider = React.forwardRef<
 
       if (typeof markCount !== "undefined") {
         const marks: SliderMark[] = [];
-        const piece = (max ?? 100) / markCount;
+
+        // if(max === 0){
+
+        // }
+
+        const piece = _max / markCount;
         const len = markCount - 1;
 
         for (let i = 0; i <= len; i++) {
-          const value = Math.ceil(i * piece);
+          const value = i * piece;
           marks.push({
             value,
             label: `${value}`,
@@ -63,13 +71,15 @@ const Slider = React.forwardRef<
         }
 
         marks.push({
-          value: max ?? 100,
+          value: _max,
           label: `100`,
         });
 
         return marks;
       }
     }, [marks, markCount, max]);
+
+    // console.log("innerMasks", innerMasks);
 
     const onValueChangeInner = (value: number[]) => {
       onValueChange?.(value);
@@ -87,7 +97,7 @@ const Slider = React.forwardRef<
     }, [color, props.disabled]);
 
     return (
-      <div className={cn("relative", !!markLabelVisible && "pb-[18px]")}>
+      <div className={cn("relative")}>
         <SliderPrimitive.Root
           ref={ref}
           className={cn(
@@ -113,6 +123,7 @@ const Slider = React.forwardRef<
               marks={innerMasks}
               min={min}
               max={max}
+              markLabelVisible={markLabelVisible}
             />
           )}
           <SliderPrimitive.Thumb

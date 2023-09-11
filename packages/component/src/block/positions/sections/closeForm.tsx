@@ -82,6 +82,9 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   const onConfirm = (data: any) => {
     return modal.confirm({
       title: "Limit Close",
+      onCancel: () => {
+        return Promise.reject();
+      },
       content: (
         <LimitConfirm order={data} base={base} quote={quote} side={side} />
       ),
@@ -159,7 +162,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Price"
                   suffix={quote}
-                  type="number"
+                  type="tel"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
@@ -180,7 +183,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Quantity"
                   suffix={base}
-                  type="number"
+                  type="tel"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="text-right"
@@ -205,12 +208,11 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Slider
                   step={symbolInfo("base_tick")}
                   min={0}
-                  max={maxQty}
+                  max={position.position_qty}
                   color={"buy"}
                   markCount={4}
                   value={[Number(field.value ?? 0)]}
                   onValueChange={(value) => {
-                    console.log(value);
                     // if (typeof value[0] !== "undefined") {
                     //   field.onChange(value[0]);
                     // }

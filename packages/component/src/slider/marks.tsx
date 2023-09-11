@@ -30,17 +30,12 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
   // const spanRef = useRef<HTMLSpanElement | null>(null);
 
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
-
-  // console.log("SliderMarks", _value, marks);
+  const _max = useMemo(() => Math.max(props.max, 1), [props.max]);
 
   return (
     <>
       {marks?.map((mark, index) => {
-        const percent = convertValueToPercentage(
-          mark.value,
-          props.min,
-          props.max
-        );
+        const percent = convertValueToPercentage(mark.value, props.min, _max);
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
 
@@ -49,7 +44,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
             <span
               key={index}
               className={cn(
-                "absolute top-0 w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
+                "absolute top-[7px] w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
                 {
                   "border-primary bg-primary":
                     props.color === "primary" && _value >= mark.value,
@@ -61,7 +56,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
               )}
               style={{
                 left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
-                top: "7px",
+                // top: "7px",
               }}
             />
             {markLabelVisible && (

@@ -4,7 +4,7 @@ import { Text } from "@/text";
 import { API, OrderSide } from "@orderly.network/types";
 
 export interface TradeHistoryProps {
-  dataSource?: API.Trade[] | null;
+  dataSource?: API.Trade[];
   loading?: boolean;
 }
 

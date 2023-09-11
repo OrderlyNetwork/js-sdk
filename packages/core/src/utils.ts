@@ -1,5 +1,12 @@
 import { definedTypes } from "./constants";
 
+export type SignatureDomain = {
+  name: string;
+  version: string;
+  chainId: number;
+  verifyingContract: string;
+};
+
 export const base64url = function (aStr: string): string {
   return aStr.replace(/\+/g, "-").replace(/\//g, "_");
 };
@@ -74,6 +81,37 @@ export function generateAddOrderlyKeyMessage(inputs: {
 
   const toSignatureMessage = {
     domain: getDomain(chainId),
+    message,
+    primaryType,
+    types: typeDefinition,
+  };
+
+  return [message, toSignatureMessage];
+}
+
+export function generateSettleMessage(inputs: {
+  chainId: number;
+  settlePnlNonce: string;
+  domain: SignatureDomain;
+}) {
+  const { chainId, settlePnlNonce, domain } = inputs;
+  const primaryType = "SettlePnl";
+  const timestamp = new Date().getTime();
+
+  const typeDefinition = {
+    EIP712Domain: definedTypes.EIP712Domain,
+    [primaryType]: definedTypes[primaryType],
+  };
+
+  const message = {
+    brokerId: "woofi_dex",
+    chainId: chainId,
+    timestamp: timestamp,
+    settleNonce: settlePnlNonce,
+  };
+
+  const toSignatureMessage = {
+    domain,
     message,
     primaryType,
     types: typeDefinition,

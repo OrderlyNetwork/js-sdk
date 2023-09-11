@@ -162,6 +162,11 @@ export declare namespace API {
     fee_24_h: number;
   }
 
+  export interface PositionExt extends Position {
+    notional: number;
+    mm: number;
+  }
+
   export interface Trade {
     symbol: Symbol;
     side: OrderSide;

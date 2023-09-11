@@ -5,6 +5,7 @@ export interface WalletConnectorContextState {
   connect: () => Promise<any[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
+  setChain: (options: any) => Promise<any>;
   wallet: any;
 }
 
@@ -26,9 +27,22 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
     setPrimaryWallet, // function that can set the primary wallet and/or primary account within that wallet. The wallet that is set needs to be passed in for the first parameter and if you would like to set the primary account, the address of that account also needs to be passed in
   ] = useConnectWallet();
 
+  const [
+    {
+      chains, // the list of chains that web3-onboard was initialized with
+      connectedChain, // the current chain the user's wallet is connected to
+      settingChain, // boolean indicating if the chain is in the process of being set
+    },
+    setChain, // function to call to initiate user to switch chains in their wallet
+  ] = useSetChain();
+
+  // console.log("chains", chains, connectedChain, settingChain);
+
+  console.log("!!!!!!!", wallet);
+
   return (
     <WalletConnectorContext.Provider
-      value={{ connect, disconnect, connecting, wallet }}
+      value={{ connect, disconnect, connecting, wallet, setChain }}
     >
       {props.children}
     </WalletConnectorContext.Provider>

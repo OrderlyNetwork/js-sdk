@@ -11,15 +11,20 @@ import { Decimal, zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMemo } from "react";
 import { useBalance } from "./useBalance";
+import { parseHolding } from "../utils/parseHolding";
+import { totalUnsettlementPnLPath } from "../utils/fn";
+import { useHolding } from "./useHolding";
 
 export type CollateralOutputs = {
   totalCollateral: number;
   freeCollateral: number;
   totalValue: number;
+  availableBalance: number;
 };
 
-const totalUnsettlementPnLPath = pathOr(0, [0, "aggregated", "unsettledPnL"]);
 const positionsPath = pathOr([], [0, "rows"]);
+const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
+const unsettledPnL = pathOr(0, [0, "aggregated", "unsettledPnL"]);
 
 /**
  * 用户保证金
@@ -45,62 +50,23 @@ export const useCollateral = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { data: holding } = usePrivateQuery<API.Holding[]>(
-    "/v1/client/holding",
-    {
-      formatter: (data) => {
-        return data.holding;
-      },
-    }
-  );
+  const { usdc } = useHolding();
 
-  /// balance
-  // const { data: balance } = useBalance();
+  // const { data: holding } = usePrivateQuery<API.Holding[]>(
+  //   "/v1/client/holding",
+  //   {
+  //     formatter: (data) => {
+  //       return data.holding;
+  //     },
+  //   }
+  // );
 
   const [totalCollateral, totalValue] = useMemo(() => {
-    if (!holding || !markPrices) {
-      return [zero, zero];
-    }
-    const unsettlemnedPnL = totalUnsettlementPnLPath(positions);
-
-    // console.log("unsettlemnedPnL", unsettlemnedPnL);
-    //取出 USDC
-    const nonUSDC: {
-      holding: number;
-      markPrice: number;
-      //保證金替代率 暂时默认0
-      discount: number;
-    }[] = [];
-
-    let USDC_holding = 0;
-
-    holding.forEach((item) => {
-      if (item.token === "USDC") {
-        USDC_holding = item.holding;
-      } else {
-        nonUSDC.push({
-          holding: item.holding,
-          markPrice: markPrices[item.token] ?? 0,
-          // markPrice: 0,
-          discount: 0,
-        });
-      }
-    });
-
-    const number = account.totalCollateral({
-      USDCHolding: USDC_holding,
-      nonUSDCHolding: nonUSDC,
-      unsettlementPnL: unsettlemnedPnL,
-    });
-
-    const totalValue = account.totalValue({
-      totalUnsettlementPnL: unsettlemnedPnL,
-      USDCHolding: USDC_holding,
-      nonUSDCHolding: nonUSDC,
-    });
-
-    return [new Decimal(number), totalValue];
-  }, [holding, positions, markPrices]);
+    return [
+      pathOr(zero, [0, "totalCollateral"], positions),
+      pathOr(zero, [0, "totalValue"], positions),
+    ];
+  }, [positions, markPrices]);
 
   const totalInitialMarginWithOrders = useMemo(() => {
     if (!accountInfo || !symbolInfo || !markPrices) {
@@ -117,15 +83,24 @@ export const useCollateral = (
     });
   }, [positions, orders, markPrices, accountInfo, symbolInfo]);
 
+  const freeCollateral = useMemo(() => {
+    return account.freeCollateral({
+      totalCollateral,
+      totalInitialMarginWithOrders,
+    });
+  }, [totalCollateral, totalInitialMarginWithOrders]);
+
+  const availableBalance = useMemo(() => {
+    return account.availableBalance({
+      USDCHolding: usdc?.holding ?? 0,
+      unsettlementPnL: unsettledPnL(positions),
+    });
+  }, [usdc]);
+
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
-    freeCollateral: account
-      .freeCollateral({
-        totalCollateral,
-        totalInitialMarginWithOrders,
-      })
-      .toDecimalPlaces(dp)
-      .toNumber(),
+    freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
     totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
+    availableBalance,
   };
 };

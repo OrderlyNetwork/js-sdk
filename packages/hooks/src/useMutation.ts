@@ -23,7 +23,7 @@ const fetcher = (
     };
   }
 ) => {
-  console.log("muation fetcher", url, options);
+  // console.log("muation fetcher", url, options);
 
   const init: RequestInit = {
     method: options.arg.method,
@@ -82,7 +82,7 @@ export const useMutation = <T, E>(
       data,
     };
 
-    console.log("payload", payload);
+    // console.log("payload", payload);
 
     const signature = await signer.sign(payload);
 

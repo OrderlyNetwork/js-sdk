@@ -180,7 +180,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 <Input
                   prefix="Price"
                   suffix={quote}
-                  type="number"
+                  type="tel"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
@@ -201,7 +201,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 <Input
                   prefix="Quantity"
                   suffix={base}
-                  type="number"
+                  type="tel"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="text-right"

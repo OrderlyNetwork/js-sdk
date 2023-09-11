@@ -1,9 +1,11 @@
 import { modal } from "@/modal";
 import { FC, PropsWithChildren, createContext, useCallback } from "react";
+import { useAccountInstance } from "@orderly.network/hooks";
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
   onWithdraw: () => Promise<any>;
+  onSettlement: () => Promise<any>;
 }
 
 export const AssetsContext = createContext<AssetsContextState>(
@@ -11,6 +13,7 @@ export const AssetsContext = createContext<AssetsContextState>(
 );
 
 export const AssetsProvider: FC<PropsWithChildren> = (props) => {
+  const account = useAccountInstance();
   const onDeposit = useCallback(async () => {
     modal.sheet({
       title: "Deposit",
@@ -25,11 +28,16 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     });
   }, []);
 
+  const onSettlement = useCallback(async () => {
+    return account.settlement();
+  }, []);
+
   return (
     <AssetsContext.Provider
       value={{
         onDeposit,
         onWithdraw,
+        onSettlement,
       }}
     >
       {props.children}

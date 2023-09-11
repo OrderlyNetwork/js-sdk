@@ -6,12 +6,17 @@ import { WalletAdapter } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
+  SignatureDomain,
   generateAddOrderlyKeyMessage,
   generateRegisterAccountMessage,
+  generateSettleMessage,
   getDomain,
 } from "./utils";
 
+import merge from "lodash.merge";
+
 import EventEmitter from "eventemitter3";
+import { BaseContract, IContract } from "./contract";
 
 export type AccountStatus =
   | "NotConnected"
@@ -66,6 +71,8 @@ export class Account {
     leverage: Number.NaN,
   };
 
+  private contract: IContract;
+
   private walletClient?: any;
 
   // private config =
@@ -76,13 +83,7 @@ export class Account {
     // wallet?: WalletAdapter
     private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
   ) {
-    // const accountId = this.keyStore.getAccountId();
-    // restore from walletConnectorProvider;
-    // const address = this.keyStore.getAddress();
-    // if (!!address) {
-    //   const orderlyKey = this.keyStore.getOrderlyKey(address);
-    //   this.setAddress(address);
-    // }
+    this.contract = new BaseContract(configStore);
 
     this._bindEvents();
   }
@@ -154,6 +155,14 @@ export class Account {
   get accountId(): string | undefined {
     const state = this.stateValue;
     return state.accountId;
+  }
+
+  get address(): string | undefined {
+    return this.stateValue.address;
+  }
+
+  get chainId(): string | undefined {
+    return this.walletClient?.chainId;
   }
 
   /**
@@ -300,10 +309,6 @@ export class Account {
 
   async createAccount(): Promise<any> {
     const nonce = await this._getRegisterationNonce();
-    console.log("nonce:", nonce);
-
-    // const keyPair = this.keyStore.generateKey();
-    // const publicKey = await keyPair.getPublicKey();
 
     const address = this.stateValue.address;
 
@@ -333,15 +338,13 @@ export class Account {
       },
     });
 
-    console.log("createAccount:", res);
-
     if (res.success) {
       // this.keyStore.setKey(address, keyPair);
       this.keyStore.setAccountId(address, res.data.account_id);
 
       const nextState = {
         ...this.stateValue,
-        status: AccountStatusEnum.SignedIn,
+        status: AccountStatusEnum.DisabledTrading,
         accountId: res.data.account_id,
         userId: res.data.user_id,
       };
@@ -378,7 +381,7 @@ export class Account {
       throw new Error("address is undefined");
     }
 
-    console.log("message:", message, toSignatureMessage, address);
+    // console.log("message:", message, toSignatureMessage, address);
     const signatured = await this.walletClient.send("eth_signTypedData_v4", [
       address,
       JSON.stringify(toSignatureMessage),
@@ -412,6 +415,61 @@ export class Account {
 
       this._ee.emit("change:status", nextState);
 
+      return res;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  async settlement(): Promise<any> {
+    const nonce = await this._getSettleNonce();
+    const address = this.stateValue.address;
+
+    const domain = this.getDomain(true);
+
+    console.log("domain:::::::::", domain);
+
+    const [message, toSignatureMessage] = generateSettleMessage({
+      settlePnlNonce: nonce,
+      chainId: this.walletClient.chainId,
+      domain,
+    });
+
+    const signatured = await this.walletClient.send("eth_signTypedData_v4", [
+      address,
+      JSON.stringify(toSignatureMessage),
+    ]);
+
+    console.log(
+      "settlement:",
+      address,
+      message,
+      toSignatureMessage,
+      signatured
+    );
+
+    const publicKey = await this.keyStore.getOrderlyKey()?.getPublicKey();
+
+    const res = await this._simpleFetch("/v1/settle_pnl", {
+      method: "POST",
+      body: JSON.stringify({
+        signature: signatured,
+        message,
+        userAddress: address,
+        verifyingContract: domain.verifyingContract,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "orderly-account-id": this.stateValue.accountId!,
+        "orderly-key": publicKey!,
+        "orderly-timestamp": (message as any).timestamp.toString(),
+        "orderly-signature": signatured,
+      },
+    });
+
+    console.log("#########", res);
+
+    if (res.success) {
       return res;
     } else {
       throw new Error(res.message);
@@ -458,15 +516,40 @@ export class Account {
     return this.walletClient;
   }
 
-  private async getAccountInfo() {}
-
-  private async getBalance() {}
-
   private async _getRegisterationNonce() {
-    const res = await this._simpleFetch("/v1/registration_nonce");
+    const res = await this._simpleFetch("/v1/registration_nonce", {
+      headers: {
+        "orderly-account-id": this.stateValue.accountId!,
+      },
+    });
     console.log("getRegisterationNonce:", res);
     if (res.success) {
       return res.data?.registration_nonce;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  private async _getSettleNonce() {
+    const timestamp = Date.now().toString();
+    const url = "/v1/settle_nonce";
+    const message = [timestamp, "GET", url].join("");
+
+    const signer = this.signer;
+
+    const { publicKey, signature } = await signer.signText(message);
+
+    const res = await this._simpleFetch("/v1/settle_nonce", {
+      headers: {
+        "orderly-account-id": this.stateValue.accountId!,
+        "orderly-key": publicKey,
+        "orderly-timestamp": timestamp,
+        "orderly-signature": signature,
+      },
+    });
+
+    if (res.success) {
+      return res.data?.settle_nonce;
     } else {
       throw new Error(res.message);
     }
@@ -476,6 +559,19 @@ export class Account {
     const requestUrl = `${this.configStore.get<string>("apiBaseUrl")}${url}`;
 
     return fetch(requestUrl, init).then((res) => res.json());
+  }
+
+  private getDomain(onChainDomain?: boolean): SignatureDomain {
+    const chainId = this.walletClient.chainId;
+    // const {verifyContractAddress} = this.contract.getContractInfoByEnv();
+    return {
+      name: "Orderly",
+      version: "1",
+      chainId,
+      verifyingContract: onChainDomain
+        ? this.contract.getContractInfoByEnv().verifyContractAddress
+        : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    };
   }
 
   get on() {

@@ -12,7 +12,7 @@ export interface RiskIndicatorProps {
 
 export const RiskIndicator: FC<RiskIndicatorProps> = ({
   width = 20,
-  height = 10,
+  height = 16,
 }) => {
   return (
     <svg
@@ -20,30 +20,43 @@ export const RiskIndicator: FC<RiskIndicatorProps> = ({
       width={width}
       height={height}
       fill="none"
-      viewBox={`0 0 20 16`}
+      viewBox="0 0 20 16"
     >
       <path
-        fill="#E6C700"
-        fillRule="evenodd"
-        d="M10 4.818A8.182 8.182 0 0 0 1.818 13H0C0 7.477 4.477 3 10 3s10 4.477 10 10h-1.818A8.182 8.182 0 0 0 10 4.818Z"
-        clipRule="evenodd"
-      />
-      <path
-        fill="#FF447C"
-        d="M14.09 5.912a8.179 8.179 0 0 1 4.092 7.087H20a9.996 9.996 0 0 0-5-8.662l-.91 1.575Z"
-      />
-      <path
-        fill="#608CFF"
-        d="M4.997 4.338A9.996 9.996 0 0 0 0 12.998h1.818a8.179 8.179 0 0 1 4.088-7.085l-.909-1.575Z"
-      />
+        fill="url(#paint0_angular_1260_196407)"
+        d="M.189 13a.186.186 0 01-.187-.189 10 10 0 0119.996 0 .186.186 0 01-.187.189h-1.51a.192.192 0 01-.19-.189 8.112 8.112 0 00-16.222 0 .192.192 0 01-.19.189H.188z"
+      ></path>
       <circle
-        cx={9.875}
-        cy={12.837}
-        r={0.987}
-        fill="#e5e7eb"
-        fillOpacity={0.98}
-      />
-      <path fill="#e5e7eb" fillOpacity={0.98} d="M0 12.344h9.381v.987H0z" />
+        cx="10"
+        cy="13"
+        r="1"
+        fill="#fff"
+        fillOpacity="0.98"
+        transform="rotate(90 10 13)"
+      ></circle>
+      <path
+        fill="#fff"
+        fillOpacity="0.98"
+        d="M10.5 3H20V4H10.5z"
+        transform="rotate(90 10.5 3)"
+      ></path>
+      <defs>
+        <radialGradient
+          id="paint0_angular_1260_196407"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientTransform="matrix(9.09198 0 0 9.06808 10 13)"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0" stopColor="#FF4D82"></stop>
+          <stop offset="0.167" stopColor="#E6BF73"></stop>
+          <stop offset="0.25" stopColor="#E6D273"></stop>
+          <stop offset="0.333" stopColor="#E6E673"></stop>
+          <stop offset="0.411" stopColor="#26FEFE"></stop>
+          <stop offset="0.495" stopColor="#59B0FE"></stop>
+        </radialGradient>
+      </defs>
     </svg>
   );
 };

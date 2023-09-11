@@ -87,6 +87,18 @@ export function liqPrice(inputs: LiqPriceInputs): number {
   );
 }
 
+export type MMInputs = {
+  positionQty: number;
+  markPrice: number;
+  MMR: number;
+};
+
+export function maintenanceMargin(inputs: MMInputs) {
+  const { positionQty, markPrice, MMR } = inputs;
+
+  return new Decimal(positionQty).mul(markPrice).mul(MMR).abs().toNumber();
+}
+
 export type UnsettlementPnLInputs = {
   positionQty: number;
   markPrice: number;

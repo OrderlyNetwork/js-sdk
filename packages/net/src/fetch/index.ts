@@ -16,13 +16,11 @@ async function request(url: string, options: RequestInit) {
     if (res.success) {
       return res;
     } else {
-      throw new Error(res);
+      throw new Error(res.message);
     }
   }
 
-  const error = await response.json();
-
-  throw new Error(error.message || error.code || error);
+  throw new Error(response.statusText);
 }
 
 function _createHeaders(

@@ -102,6 +102,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       >
         <div
           className={cn(
+            "space-x-1 text-base-contrast/80",
             pickerVariants({
               size,
               color,

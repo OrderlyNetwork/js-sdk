@@ -150,12 +150,16 @@ export class LimitOrderCreator extends BaseOrderCreator {
         if (price.lt(minPriceNumber)) {
           errors.order_price = {
             type: "min",
-            message: `price must be greater than ${minPriceNumber}`,
+            message: `price must be greater than ${new Decimal(
+              minPriceNumber
+            ).todp(symbol.quote_dp)}`,
           };
         } else if (price.gt(maxPriceNumber)) {
           errors.order_price = {
             type: "max",
-            message: `price must be less than ${maxPriceNumber}`,
+            message: `price must be less than ${new Decimal(
+              maxPriceNumber
+            ).todp(symbol.quote_dp)}`,
           };
         }
       }

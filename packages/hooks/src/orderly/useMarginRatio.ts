@@ -18,5 +18,9 @@ export const useMarginRatio = () => {
     return ratio;
   }, [rows, markPrices, totalCollateral]);
 
-  return marginRatio;
+  const currentLeverage = useMemo(() => {
+    return account.currentLeverage(marginRatio);
+  }, [marginRatio]);
+
+  return [marginRatio, currentLeverage];
 };
