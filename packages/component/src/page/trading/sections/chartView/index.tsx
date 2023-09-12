@@ -20,32 +20,6 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   const [activeTab, setActiveTab] = useState("tradingView");
   const { klineDataUrl } = useContext(OrderlyContext);
 
-  // return (
-  //   <Tabs defaultValue="account">
-  //     <TabsList>
-  //       <TabsTrigger value="tradingView">TradingView</TabsTrigger>
-  //       <TabsTrigger value="tradeHistory">Trade</TabsTrigger>
-  //       <TabsTrigger value="tradeData">tradeData</TabsTrigger>
-  //     </TabsList>
-  //     <TabsContent forceMount value="tradingView">
-  //       <TradingView
-  //         height={240}
-  //         theme={"dark"}
-  //         symbol={symbol}
-  //         autosize={false}
-  //         apiBaseUrl={klineDataUrl}
-  //         {...tradingViewConfig}
-  //       />
-  //     </TabsContent>
-  //     <TabsContent forceMount value="tradeHistory">
-  //       <TradeHistoryPane symbol={symbol} />
-  //     </TabsContent>
-  //     <TabsContent forceMount value="tradeData">
-  //       <TradeData symbol={symbol} />
-  //     </TabsContent>
-  //   </Tabs>
-  // );
-
   return (
     <div>
       <Tabs
