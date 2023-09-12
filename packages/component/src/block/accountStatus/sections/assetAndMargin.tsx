@@ -133,7 +133,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {marginRatio}
               </Numeral>
 
-              <RiskIndicator height={24} />
+              {/* <RiskIndicator height={24} /> */}
             </div>
           }
         />
@@ -169,6 +169,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 color={"primary"}
                 markLabelVisible
                 value={[leverageValue]}
+                showTip={false}
                 // markCount={5}
                 marks={[
                   {
@@ -200,10 +201,17 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   const _value = leverageLevers[value[0]];
 
                   setLeverage(_value);
-                  update({ leverage: _value }).then(() => {
-                    // console.log("res", res);
-                    toast.success("Leverage updated");
-                  });
+                  update({ leverage: _value }).then(
+                    (res: any) => {
+                      // console.log("res", res);
+                      toast.success("Leverage updated");
+                    },
+                    (err: Error) => {
+                      // console.log("err", err);
+                      toast.error(err.message);
+                      setLeverage(maxLeverage ?? 1);
+                    }
+                  );
                 }}
               />
             </div>
@@ -219,20 +227,20 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Divider className="py-3" />
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
+            <NetworkImage name={"USDC"} type={"token"} size={"small"} />
             <span>USDC</span>
           </div>
           <Numeral precision={2}>{availableBalance}</Numeral>
         </div>
       </Paper>
-      <div className="flex gap-3 py-5">
+      {/* <div className="flex gap-3 py-5">
         <Button fullWidth onClick={() => {}}>
           Deposit
         </Button>
         <Button fullWidth variant={"outlined"} onClick={() => {}}>
           Withdraw
         </Button>
-      </div>
+      </div> */}
     </StatisticStyleProvider>
   );
 };

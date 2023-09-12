@@ -25,6 +25,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
         showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
+        tabBarClassName="h-[40px]"
         tabBarExtra={(context) => {
           return (
             <div className="flex items-center">
@@ -42,7 +43,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
       >
         <TabPane title="Chart" value="tradingView">
           <TradingView
-            height={258}
+            height={240}
             theme={"dark"}
             symbol={symbol}
             autosize={false}

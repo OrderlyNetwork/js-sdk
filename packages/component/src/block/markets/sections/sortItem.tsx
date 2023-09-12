@@ -1,6 +1,8 @@
 import { FC, ReactNode, useCallback } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/utils/css";
+import { ArrowIcon } from "@/icon";
+import { cx } from "class-variance-authority";
 
 export enum SortDirection {
   NONE,
@@ -39,12 +41,23 @@ export const SortItem: FC<SortItemProps> = (props) => {
     >
       <span>{props.label}</span>
       {props.currentValue?.key === props.value &&
-        props.currentValue.direction !== SortDirection.NONE &&
-        (props.currentValue?.direction === SortDirection.ASC ? (
-          <ChevronDown size={14} />
-        ) : (
-          <ChevronUp size={14} />
-        ))}
+        props.currentValue.direction !== SortDirection.NONE && (
+          <ArrowIcon
+            size={8}
+            className={cx(
+              "transition-transform",
+              props.currentValue?.direction === SortDirection.ASC
+                ? "rotate-180"
+                : "rotate-0"
+            )}
+          />
+        )}
     </div>
   );
 };
+
+// (props.currentValue?.direction === SortDirection.ASC ? (
+//   <ChevronDown size={14} />
+// ) : (
+//   <ChevronUp size={14} />
+// ))

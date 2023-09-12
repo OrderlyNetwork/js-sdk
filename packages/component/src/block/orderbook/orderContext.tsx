@@ -4,6 +4,7 @@ import { QtyMode } from "./types";
 export interface OrderBookContextValue {
   cellHeight: number;
   mode: QtyMode;
+  depth: number;
   onModeChange?: (mode: QtyMode) => void;
   onItemClick?: (item: number[]) => void;
 }
@@ -14,6 +15,7 @@ export const OrderBookContext = createContext({
 
 interface OrderBookProviderProps {
   cellHeight: number;
+  depth: number;
   onItemClick?: (item: number[]) => void;
 }
 
@@ -27,6 +29,7 @@ export const OrderBookProvider: FC<
         cellHeight: props.cellHeight,
         onItemClick: props.onItemClick,
         mode,
+        depth: props.depth,
         onModeChange: setMode,
       }}
     >

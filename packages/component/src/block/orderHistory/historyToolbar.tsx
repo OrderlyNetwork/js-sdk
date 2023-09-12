@@ -37,7 +37,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
         value: "",
       },
       {
-        label: "Open",
+        label: "Pending",
         value: OrderStatus.NEW,
       },
       {

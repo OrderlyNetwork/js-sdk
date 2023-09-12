@@ -20,7 +20,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       <div className="flex items-center py-2">
         <div className="flex-1">
           <div className="flex items-center space-x-2">
-            <NetworkImage type="coin" symbol={item.symbol} size={"small"} />
+            <NetworkImage type="symbol" symbol={item.symbol} size={"small"} />
             <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>

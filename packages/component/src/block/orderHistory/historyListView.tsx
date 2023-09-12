@@ -5,6 +5,7 @@ import { HistoryToolbar } from "./historyToolbar";
 import { Cell } from "./cell";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
+import { SymbolProvider } from "@/provider";
 
 export interface OrderHistoryListViewProps {
   isLoading: boolean;
@@ -29,7 +30,11 @@ export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
         isLoading={props.isLoading}
         dataSource={props.dataSource}
         renderSeparator={(_, index) => <Divider />}
-        renderItem={(item, index) => <Cell item={item} />}
+        renderItem={(item, index) => (
+          <SymbolProvider symbol={item.symbol}>
+            <Cell item={item} />
+          </SymbolProvider>
+        )}
       />
     </StatisticStyleProvider>
   );

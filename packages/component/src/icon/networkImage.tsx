@@ -5,7 +5,7 @@ import { cn } from "@/utils/css";
 import React, { FC, useEffect, useMemo } from "react";
 import { Size } from "./types";
 
-export type NetworkImageType = "coin" | "chain" | "placeholder";
+export type NetworkImageType = "symbol" | "chain" | "token" | "placeholder";
 
 export interface NetworkImageProps {
   name?: string;
@@ -45,7 +45,10 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
       console.log("load icon error");
     };
 
-    if (props.type === "coin") {
+    if (props.type === "token") {
+    }
+
+    if (props.type === "symbol" || props.type === "token") {
       let name = props.name;
       if (typeof props.symbol === "string") {
         const arr = props.symbol?.split("_");

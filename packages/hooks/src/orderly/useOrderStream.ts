@@ -1,6 +1,6 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { type SWRInfiniteResponse } from "swr/infinite";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { API, OrderSide } from "@orderly.network/types";
 import { useMarketsStream } from "./useMarketsStream";
@@ -8,6 +8,7 @@ import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 import { OrderEntity } from "@orderly.network/types";
 import { useExecutionReport } from "./orderlyHooks";
+import { useEventEmitter } from "../useEventEmitter";
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -35,6 +36,8 @@ export const useOrderStream = ({
   side?: OrderSide;
 } = {}) => {
   // const markPrices$ = useMarkPricesSubject();
+
+  const ee = useEventEmitter();
 
   const { data: markPrices = {} } = useMarkPricesStream();
   const [doCancelOrder] = useMutation("/v1/order", "DELETE");
@@ -91,6 +94,16 @@ export const useOrderStream = ({
       };
     });
   }, [ordersResponse.data, markPrices]);
+
+  /// Hack: 为了让订单列表能够及时更新，这里需要订阅订单的变化, 后续优化
+  useEffect(() => {
+    const handler = () => ordersResponse.mutate();
+    ee.on("orders:changed", handler);
+
+    return () => {
+      ee.off("orders:changed", handler);
+    };
+  }, []);
 
   /**
    * 取消所有订单

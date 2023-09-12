@@ -71,7 +71,7 @@ export class Account {
     leverage: Number.NaN,
   };
 
-  private contract: IContract;
+  // private contract: IContract;
 
   private walletClient?: any;
 
@@ -81,9 +81,10 @@ export class Account {
     private readonly configStore: ConfigStore,
     private readonly keyStore: OrderlyKeyStore,
     // wallet?: WalletAdapter
+    private readonly contractManger: IContract,
     private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
   ) {
-    this.contract = new BaseContract(configStore);
+    // this.contract = new BaseContract(configStore);
 
     this._bindEvents();
   }
@@ -573,7 +574,7 @@ export class Account {
       version: "1",
       chainId,
       verifyingContract: onChainDomain
-        ? this.contract.getContractInfoByEnv().verifyContractAddress
+        ? this.contractManger.getContractInfoByEnv().verifyContractAddress
         : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
     };
   }

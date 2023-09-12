@@ -58,10 +58,10 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     <Sheet>
       <SheetTrigger asChild>
         <div className="flex items-center cursor-pointer">
-          <div className="flex flex-col">
-            <div className="flex items-center text-xs text-base-contrast/70 gap-2">
+          <div className="flex flex-col text-xs">
+            <div className="flex items-center text-base-contrast/70 gap-2">
               <span>Total Value</span>
-              <EyeOff className="text-primary" size={14} />
+              <EyeOff className="text-primary" size={12} />
               <span className="text-base">≈</span>
             </div>
             <div className="flex gap-2">

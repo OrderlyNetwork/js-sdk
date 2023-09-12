@@ -208,7 +208,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Slider
                   step={symbolInfo("base_tick")}
                   min={0}
-                  max={position.position_qty}
+                  max={Math.abs(position.position_qty)}
                   color={"buy"}
                   markCount={4}
                   value={[Number(field.value ?? 0)]}

@@ -42,8 +42,6 @@ export const NotConnected: Story = {
 
 export const WithHooks: Story = {
   render: () => {
-    const { data } = useToken();
-    console.log(data);
     return <Deposit />;
   },
 };

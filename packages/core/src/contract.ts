@@ -5,6 +5,14 @@ import {
   devVerifyAddressOnArbitrumTestnet,
 } from "./constants";
 
+export type OrderlyContracts = {
+  usdcAddress: string;
+  usdcAbi: any;
+  vaultAddress: string;
+  vaultAbi: any;
+  verifyContractAddress: string;
+};
+
 export interface IContract {
   getContractInfoByEnv(): any;
 }

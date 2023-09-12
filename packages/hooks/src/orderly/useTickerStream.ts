@@ -3,7 +3,6 @@ import { useQuery } from "../useQuery";
 import useSWRSubscription from "swr/subscription";
 
 import { API } from "@orderly.network/types";
-import { combineLatestWith, map, startWith } from "rxjs/operators";
 import { Decimal } from "@orderly.network/utils";
 import { useWS } from "../useWS";
 

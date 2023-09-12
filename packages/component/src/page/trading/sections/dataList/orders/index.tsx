@@ -18,7 +18,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
     "showAllSymbol_orders",
-    false
+    true
   );
 
   const [symbol, setSymbol] = useState(() =>

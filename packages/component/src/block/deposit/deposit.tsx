@@ -11,7 +11,7 @@ import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
 import { StatusGuardButton } from "@/button/statusGuardButton";
-import { AccountStatus } from "@orderly.network/core";
+
 import { Chain, Wallet } from "@/block/pickers/walletPicker/walletPicker";
 import { SvgImage } from "@/icon";
 

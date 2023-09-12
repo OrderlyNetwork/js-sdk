@@ -1,7 +1,8 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useContext, useMemo } from "react";
 import { Column, Table } from "@/table";
-import { Text } from "@/text";
+import { Numeral, Text } from "@/text";
 import { API, OrderSide } from "@orderly.network/types";
+import { SymbolContext } from "@/provider";
 
 export interface TradeHistoryProps {
   dataSource?: API.Trade[];
@@ -9,6 +10,8 @@ export interface TradeHistoryProps {
 }
 
 export const TradeHistory: FC<TradeHistoryProps> = (props) => {
+  const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
+
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -27,25 +30,39 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
         },
       },
       {
-        title: "Price",
+        title: `Price(${quote})`,
         dataIndex: "executed_price",
         render(value, record, index) {
           return (
-            <Text type={record.side === OrderSide.BUY ? "buy" : "sell"}>
+            <Numeral
+              precision={quote_dp}
+              className={
+                record.side === OrderSide.BUY
+                  ? "text-trade-profit"
+                  : "text-trade-loss"
+              }
+            >
               {value}
-            </Text>
+            </Numeral>
           );
         },
       },
       {
-        title: "Size",
+        title: `Qty(${base})`,
         dataIndex: "executed_quantity",
         align: "right" as any,
         render(value, record, index) {
           return (
-            <Text type={record.side === OrderSide.BUY ? "buy" : "sell"}>
+            <Numeral
+              precision={base_dp}
+              className={
+                record.side === OrderSide.BUY
+                  ? "text-trade-profit"
+                  : "text-trade-loss"
+              }
+            >
               {value}
-            </Text>
+            </Numeral>
           );
         },
       },

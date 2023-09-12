@@ -5,6 +5,7 @@ import {
   type OrderlyKeyStore,
   type WalletAdapter,
 } from "@orderly.network/core";
+import { IContract } from "@orderly.network/core";
 
 export interface OrderlyAppConfig {
   logoUrl: string;
@@ -26,6 +27,7 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
   walletAdapter: { new (options: any): WalletAdapter };
+  contractManager: IContract;
   networkId: string;
 
   onWalletConnect?: () => Promise<any>;

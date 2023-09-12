@@ -1,9 +1,10 @@
+import { SymbolContext } from "@/provider";
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { Text } from "@/text";
 import { firstLetterToUpperCase } from "@/utils/string";
 import { OrderSide, OrderType } from "@orderly.network/types";
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 
 interface HistoryCellProps {
   item: any;
@@ -11,6 +12,8 @@ interface HistoryCellProps {
 
 export const Cell: FC<HistoryCellProps> = (props) => {
   const { item } = props;
+  const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
+
   const typeTag = useMemo(() => {
     if (item.side === OrderSide.SELL) {
       return (
@@ -44,13 +47,20 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           label="Qty."
           value={item.quantity ?? "-"}
+          rule="price"
+          precision={base_dp}
           className={
             item.side === OrderSide.BUY
               ? "text-trade-profit"
               : "text-trade-loss"
           }
         />
-        <Statistic label="Filled" value={item.executed ?? "-"} />
+        <Statistic
+          label="Filled"
+          value={item.executed ?? "-"}
+          rule="price"
+          precision={base_dp}
+        />
         <Statistic
           label="Status"
           value={firstLetterToUpperCase(item.status)}
@@ -58,6 +68,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           label="Avg. Price(USDC)"
+          rule="price"
+          precision={quote_dp}
           value={item.average_executed_price ?? "-"}
         />
         <Statistic

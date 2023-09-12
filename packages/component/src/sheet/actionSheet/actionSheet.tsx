@@ -62,10 +62,14 @@ export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
   return (
     <Sheet open={props.open} onOpenChange={props.onOpenChange}>
       {typeof props.children !== "undefined" && (
-        <SheetTrigger>{props.children}</SheetTrigger>
+        <SheetTrigger asChild>{props.children}</SheetTrigger>
       )}
 
-      <SheetContent closeable={false} className={"p-0"}>
+      <SheetContent
+        closeable={false}
+        className={"p-0"}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <ActionSheetContent
           actionSheets={items}
           onClose={props.onClose}

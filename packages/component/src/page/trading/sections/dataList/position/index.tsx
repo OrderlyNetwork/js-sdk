@@ -25,7 +25,7 @@ export const PositionPane = () => {
 
   const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
     "showAllSymbol_position",
-    false
+    true
   );
 
   const [symbol, setSymbol] = React.useState(() =>

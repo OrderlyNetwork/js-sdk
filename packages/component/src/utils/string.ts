@@ -1,7 +1,7 @@
 export const firstLetterToUpperCase = (str: string) => {
   // implementation
 
-  const arr = str.split(" ");
+  const arr = str.replace("_", " ").split(" ");
 
   //loop through each element of the array and capitalize the first letter.
 

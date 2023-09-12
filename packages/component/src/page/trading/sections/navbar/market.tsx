@@ -36,6 +36,7 @@ export const Market: FC<Props> = (props) => {
       <SheetContent
         side={"left"}
         closeable={false}
+        className="w-[315px]"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <Markets dataSource={data} onItemClick={onSymbolClick} />

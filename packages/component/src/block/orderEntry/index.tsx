@@ -293,7 +293,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
                 <span>USDC</span>
               </div>
-              <Button
+              {/* <Button
                 variant={"text"}
                 color="primary"
                 size={"small"}
@@ -301,7 +301,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 onClick={onDeposit}
               >
                 Deposit
-              </Button>
+              </Button> */}
             </div>
             <Controller
               name="order_type"

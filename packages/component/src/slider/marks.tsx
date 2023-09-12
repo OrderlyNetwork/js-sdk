@@ -30,7 +30,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
   // const spanRef = useRef<HTMLSpanElement | null>(null);
 
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
-  const _max = useMemo(() => Math.max(props.max, 1), [props.max]);
+  const _max = useMemo(() => (props.max === 0 ? 1 : props.max), [props.max]);
 
   return (
     <>

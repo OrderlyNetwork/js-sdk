@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React from "react";
 import { TradeHistory } from ".";
-import { OrderlyProvider } from "../../provider/orderlyProvider";
+import {
+  OrderlyProvider,
+  SymbolProvider,
+} from "../../provider/orderlyProvider";
 // import { OrderEditFormDialog } from "./dialog/editor";
 
 import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
@@ -16,6 +19,7 @@ const meta: Meta<typeof TradeHistory> = {
   parameters: {
     layout: "fullscreen",
   },
+
   argTypes: {},
 };
 
@@ -104,7 +108,11 @@ export const WithHook: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
     const { data, isLoading } = useMarketTradeStream(symbol);
-    console.log(data);
-    return <TradeHistory dataSource={data} loading={isLoading} />;
+
+    return (
+      <SymbolProvider symbol={symbol}>
+        <TradeHistory dataSource={data} loading={isLoading} />
+      </SymbolProvider>
+    );
   },
 };

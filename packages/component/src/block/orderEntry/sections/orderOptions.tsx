@@ -25,7 +25,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
   const { control, getValues, setValue } = useFormContext();
   return (
     <>
-      <div className="flex items-center py-1 justify-between">
+      <div className="flex items-center py-[2px] justify-between">
         <Controller
           name="reduce_only"
           control={control}

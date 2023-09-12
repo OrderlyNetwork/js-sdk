@@ -605,7 +605,7 @@ export function totalMarginRatio(
 
   const totalPositionNotional = positions.reduce((acc, cur) => {
     const markPrice = markPrices[cur.symbol] || 0;
-    return acc.add(new Decimal(cur.position_qty).mul(markPrice));
+    return acc.add(new Decimal(cur.position_qty).mul(markPrice).abs());
   }, zero);
 
   return totalCollateralDecimal.div(totalPositionNotional).toNumber();

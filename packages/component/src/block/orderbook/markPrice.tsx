@@ -14,7 +14,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   const { quote_dp } = useContext(SymbolContext);
   return (
     <div className="py-2 flex justify-between">
-      <div className={cn("text-trade-profit font-semibold text-[15px]")}>
+      <div className={cn("font-semibold text-[15px]")}>
         <Numeral precision={quote_dp}>{lastPrice}</Numeral>
       </div>
       <div className={"text-sm flex items-center gap-1"}>

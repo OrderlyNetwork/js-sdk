@@ -21,7 +21,7 @@ export { useOrderStream, OrderStatus } from "./useOrderStream";
 
 //useTradeStream
 export { useMarketTradeStream } from "./useMarketTradeStream";
-export { useTradeStream } from "./useTrades";
+// export { useTradeStream } from "./useTrades";
 
 export { useCollateral } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";

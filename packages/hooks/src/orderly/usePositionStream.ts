@@ -82,10 +82,7 @@ export const usePositionStream = (
 
       // console.log("info", info("base_mmr"));
 
-      const notional = positions.notional(
-        item.position_qty,
-        item.average_open_price
-      );
+      const notional = positions.notional(item.position_qty, price);
 
       const unrealPnl = positions.unrealizedPnL({
         qty: item.position_qty,

@@ -9,6 +9,7 @@ export interface ListViewProps<T> {
   renderItem: (item: T, index: number) => React.ReactNode;
   //
   className?: string;
+  contentClassName?: string;
   isLoading?: boolean;
 
   onEndReached?: () => void;
@@ -78,7 +79,9 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
 
   return (
     <div className={cn("relative min-h-[180px]", props.className)}>
-      <div className="list-view-inner space-y-3">{listViewElement}</div>
+      <div className={cn("list-view-inner space-y-3", props.contentClassName)}>
+        {listViewElement}
+      </div>
       <div ref={sentinelRef} />
       {loadingViewElement}
     </div>

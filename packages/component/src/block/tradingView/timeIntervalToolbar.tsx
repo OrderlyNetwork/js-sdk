@@ -62,7 +62,7 @@ export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
   );
 
   return (
-    <div className="flex justify-around">
+    <div className="flex justify-around h-[40px]">
       {intervals.map((interval) => {
         return (
           <button

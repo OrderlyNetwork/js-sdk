@@ -69,9 +69,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <IconButton type="button" onClick={onCopy}>
             <Copy size={20} stroke="currentcolor" />
           </IconButton>
-          <IconButton>
+          {/* <IconButton>
             <Share size={20} />
-          </IconButton>
+          </IconButton> */}
         </div>
       </div>
       <div className="py-4 grid grid-cols-2 gap-3">

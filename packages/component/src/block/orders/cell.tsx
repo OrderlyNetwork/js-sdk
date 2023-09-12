@@ -42,13 +42,19 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           label="Qty."
           value={order.quantity ?? "-"}
           precision={base_dp}
+          rule="price"
           valueClassName={
             order.side === OrderSide.BUY
               ? "text-trade-profit"
               : "text-trade-loss"
           }
         />
-        <Statistic label="Filled" value={order.executed ?? "-"} />
+        <Statistic
+          label="Filled"
+          value={order.executed ?? "-"}
+          rule="price"
+          precision={base_dp}
+        />
         <Statistic
           label="Est.Total(USDC)"
           value={
@@ -60,7 +66,12 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           }
           align="right"
         />
-        <Statistic label="Limit Price(USDC)" value={order.price ?? "-"} />
+        <Statistic
+          label="Limit Price(USDC)"
+          value={order.price ?? "-"}
+          rule="price"
+          precision={quote_dp}
+        />
         <Statistic
           label="Mark Price(USDC)"
           rule="price"

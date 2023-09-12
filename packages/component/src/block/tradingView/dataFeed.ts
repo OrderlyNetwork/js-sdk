@@ -47,40 +47,44 @@ export default class DataFeed implements IBasicDataFeed {
     //   // .then((data) => data && data.s === "ok")
     //   .then((res) => {
     // console.log("==========>>>>>>>", res);
-    const cIndex = this._config["symbol"].indexOf(symbolName);
-    console.log(cIndex, this._config);
-    const symbolInfo: LibrarySymbolInfo = {
-      // name: `${symbolArr[1]}/${symbolArr[2]}`,
-      name: symbolName,
-      full_name: symbolName,
-      // description: symbolName,
-      description: this._config["description"][cIndex],
-      type: this._config["session-regular"][cIndex] || "crypto",
-      session: this._config["session-regular"][cIndex] || "24x7",
-      exchange: "",
-      listed_exchange: "",
-      pricescale: this._config["pricescale"][cIndex],
-      minmov: this._config["minmovement"][cIndex] || 1,
-      supported_resolutions: defaultTimeInterval.map(
-        (item) => item.value
-      ) as ResolutionString[],
-      has_intraday: this._config["has-intraday"][cIndex],
-      // intraday_multipliers: Resolutions,
-      has_daily: this._config["has-daily"][cIndex],
-      currency_code: this._config["currency"][cIndex],
 
-      // has_weekly_and_monthly: true,
-      // has_empty_bars: true,
-      // has_no_volume: false,
-      // visible_plots_set:
-      // // volume_precision: Number(volumePrecision),
-      // timezone: getTimeZoneCity() || 'Asia/Shanghai',
-      // timezone: "Etc/UTC",
-      timezone: this._config["timezone"][cIndex] || "Asia/Shanghai",
-      format: "price",
-    };
+    setTimeout(() => {
+      const cIndex = this._config["symbol"].indexOf(symbolName);
+      console.log(cIndex, this._config);
+      const symbolInfo: LibrarySymbolInfo = {
+        // name: `${symbolArr[1]}/${symbolArr[2]}`,
+        name: symbolName,
+        full_name: symbolName,
+        // description: symbolName,
+        description: this._config["description"][cIndex],
+        type: this._config["session-regular"][cIndex] || "crypto",
+        session: this._config["session-regular"][cIndex] || "24x7",
+        exchange: "",
+        listed_exchange: "",
+        pricescale: this._config["pricescale"][cIndex],
+        minmov: this._config["minmovement"][cIndex] || 1,
+        supported_resolutions: defaultTimeInterval.map(
+          (item) => item.value
+        ) as ResolutionString[],
+        has_intraday: this._config["has-intraday"][cIndex],
+        // intraday_multipliers: Resolutions,
+        has_daily: this._config["has-daily"][cIndex],
+        currency_code: this._config["currency"][cIndex],
 
-    onSymbolResolvedCallback(symbolInfo);
+        // has_weekly_and_monthly: true,
+        // has_empty_bars: true,
+        // has_no_volume: false,
+        // visible_plots_set:
+        // // volume_precision: Number(volumePrecision),
+        // timezone: getTimeZoneCity() || 'Asia/Shanghai',
+        // timezone: "Etc/UTC",
+        timezone: this._config["timezone"][cIndex] || "Asia/Shanghai",
+        format: "price",
+      };
+
+      onSymbolResolvedCallback(symbolInfo);
+    }, 0);
+
     // });
   }
   getBars(

@@ -87,14 +87,17 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
 
       script.onload = () => {
         if (typeof TradingView !== undefined) {
+          console.log("TradingView????", chartProps);
+
           wigetRef.current = new TradingView.widget({
             symbol: props.symbol,
             container: containerRef.current,
             interval: "1",
-            theme: "Dark",
+            // theme: "Dark",
             overrides: {
               "paneProperties.background": "#ffffff",
-              "mainSeriesProperties.style": 1,
+              // "mainSeriesProperties.style": 1,
+
               "mainSeriesProperties.candleStyle.upColor": "#439687",
               "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
               "mainSeriesProperties.candleStyle.borderColor": "#378658",
@@ -113,7 +116,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
             library_path,
             disabled_features,
             width: "100%",
-            customCssUrl,
+            // customCssUrl,
             ...chartProps,
           });
         }
@@ -132,7 +135,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   }, []);
 
   return (
-    <div>
+    <>
       <TimeIntervalToolbar
         intervals={intervals}
         timeInterval={timeInterval}
@@ -142,6 +145,6 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
       />
       {/* <TradingViewChart {...chartProps} {...size} /> */}
       <div className="w-full h-full" ref={containerRef}></div>
-    </div>
+    </>
   );
 };

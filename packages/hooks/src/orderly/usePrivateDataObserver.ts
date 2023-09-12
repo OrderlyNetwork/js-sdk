@@ -3,19 +3,18 @@ import { useEffect } from "react";
 import { useWS } from "../useWS";
 import { useSWRConfig } from "swr";
 import { WSMessage } from "@orderly.network/types";
+import { useEventEmitter } from "../useEventEmitter";
 
 export const usePrivateDataObserver = () => {
   const ws = useWS();
   const { mutate } = useSWRConfig();
+  const ee = useEventEmitter();
 
   useEffect(() => {
     console.log("subscribe: executionreport");
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
-        console.info("refresh orders");
-        console.log(data);
-        // mutate("/v1/orders");
-        // mutate('/v1/orders?status=NEW')
+        ee.emit("orders:changed");
       },
     });
     return () => unsubscribe?.();

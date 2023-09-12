@@ -4,6 +4,7 @@ import { useTickerStream } from "./useTickerStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export type OrderBookItem = number[];
 
@@ -21,14 +22,48 @@ const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
 // const commonSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-const reduceItems = (depth: number, level: number, data: OrderBookItem[]) => {
+const reduceItems = (
+  depth: number | undefined,
+  level: number,
+  data: OrderBookItem[],
+  asks = false
+) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
   }
+  let newData = [...data];
   const result: OrderBookItem[] = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const [price, quantity] = data[i];
+  // console.log("depth:::::", depth);
+
+  if (typeof depth !== "undefined") {
+    const prices = new Map<number, number[]>();
+    for (let i = 0; i < data.length; i++) {
+      const [price, quantity] = data[i];
+      if (isNaN(price) || isNaN(quantity)) continue;
+      let priceKey;
+
+      if (asks) {
+        priceKey = Math.ceil(price / depth) * depth;
+      } else {
+        priceKey = Math.floor(price / depth) * depth;
+      }
+
+      if (prices.has(priceKey)) {
+        const item = prices.get(priceKey)!;
+        const itemPrice = item[1] + quantity;
+        // prices.push([price, quantity]);
+        prices.set(priceKey, [priceKey, itemPrice]);
+      } else {
+        prices.set(priceKey, [priceKey, quantity]);
+      }
+    }
+
+    newData = Array.from(prices.values());
+  }
+
+  for (let i = 0; i < newData.length; i++) {
+    const [price, quantity] = newData[i];
     if (isNaN(price) || isNaN(quantity)) continue;
     result.push([
       price,
@@ -51,11 +86,11 @@ const reduceItems = (depth: number, level: number, data: OrderBookItem[]) => {
  * @param data
  */
 export const reduceOrderbook = (
-  depth: number,
+  depth: number | undefined,
   level: number,
   data: OrderbookData
 ): OrderbookData => {
-  const asks = reduceItems(depth, level, data.asks).reverse();
+  const asks = reduceItems(depth, level, data.asks, true).reverse();
 
   const bids = reduceItems(depth, level, data.bids);
   return {
@@ -68,18 +103,25 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
+  // console.log("mergeItems", data, update);
   if (data.length === 0) return update;
+
   while (update.length > 0) {
     const item = update.shift();
+    // console.log("item", item);
     if (item) {
       const [price, quantity] = item;
-      if (price < data[0][0] && quantity > 0) {
-        data.unshift(item);
 
-        continue;
-      }
+      // if (price < data[0][0] && quantity > 0) {
+      //   console.log("continue", price, data[0][0], quantity);
+
+      //   data.unshift(item);
+
+      //   continue;
+      // }
 
       const index = data.findIndex(([p], index) => p === price);
+      // console.log(index);
       if (index === -1) {
         data.push(item);
       } else {
@@ -87,8 +129,9 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
           data.splice(index, 1);
 
           continue;
+        } else {
+          data[index] = item;
         }
-        data[index] = item;
       }
     }
   }
@@ -123,10 +166,22 @@ export const useOrderbookStream = (
   const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
-  const [depth, setDepth] = useState(0.001);
   const [level, setLevel] = useState(() => options?.level ?? 10);
+  const config = useSymbolsInfo()[symbol];
 
-  // console.log("useOrderbookStream -----------", data);
+  const [depth, setDepth] = useState<number | undefined>();
+
+  const depths = useMemo(() => {
+    const tick = config("quote_tick");
+
+    // console.log(tick);
+
+    return [tick, tick * 10, tick * 100, tick * 1000];
+  }, [config("quote_tick")]);
+
+  useEffect(() => {
+    setDepth(config("quote_tick"));
+  }, [config("quote_tick")]);
 
   const ws = useWS();
 
@@ -147,7 +202,7 @@ export const useOrderbookStream = (
       },
       {
         onMessage: (message: any) => {
-          console.log("orderbook request message", message);
+          // console.log("orderbook request message", message);
           if (!!message) {
             const reduceOrderbookData = reduceOrderbook(depth, level, message);
             setRequestData(reduceOrderbookData);
@@ -161,7 +216,7 @@ export const useOrderbookStream = (
     return () => {
       setRequestData(null);
     };
-  }, [symbol]);
+  }, [symbol, depth]);
 
   // const {data:markPrices} = useMarkPricesStream();
 
@@ -202,12 +257,8 @@ export const useOrderbookStream = (
   }, []);
 
   const onDepthChange = useCallback((depth: number) => {
-    console.log("Orderbook depth has changed:", depth);
-    // orderbookOptions$.next({
-    //   ...orderbookOptions$.value,
-    //   depth,
-    //   // level,
-    // });
+    // console.log("Orderbook depth has changed:", depth);
+    setDepth(() => depth);
   }, []);
 
   // markPrice, lastPrice
@@ -231,7 +282,7 @@ export const useOrderbookStream = (
 
   return [
     { ...data, markPrice, middlePrice },
-    { onDepthChange, depth, isLoading, onItemClick },
+    { onDepthChange, depth, allDepths: depths, isLoading, onItemClick },
   ];
 };
 

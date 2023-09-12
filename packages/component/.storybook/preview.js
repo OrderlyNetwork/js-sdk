@@ -8,6 +8,7 @@ import {
 } from "@web3-onboard/react";
 import { OnboardConnectorProvider, OrderlyProvider } from "../src";
 import {
+  BaseContractManager,
   EtherAdapter,
   LocalStorageStore,
   MemoryConfigStore,
@@ -99,6 +100,7 @@ const preview = {
           <OrderlyProvider
             configStore={new MemoryConfigStore()}
             walletAdapter={EtherAdapter}
+            contractManager={new BaseContractManager()}
             keyStore={new LocalStorageStore("testnet")}
             logoUrl="/woo_fi_logo.svg"
           >

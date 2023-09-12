@@ -15,6 +15,7 @@ export interface OrderBookProps {
   lastPrice: number;
   onItemClick?: (item: number[]) => void;
   depth: number[];
+  activeDepth: number;
   onDepthChange?: (depth: number) => void;
   //
   autoSize?: boolean;
@@ -28,22 +29,29 @@ export interface OrderBookProps {
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
-  const { lastPrice, markPrice, quote, base, isLoading } = props;
+  const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
   // const onModeChange = useCallback((mode: QtyMode) => {}, []);
+
+  // console.log(props.depth);
 
   return (
     <OrderBookProvider
-      cellHeight={props.cellHeight ?? 22}
+      cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
+      depth={props.activeDepth}
     >
       <div className="h-full relative">
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
-        <DepthSelect depth={props.depth} value={0.0001} />
+        <DepthSelect
+          depth={props.depth}
+          value={props.activeDepth}
+          onChange={onDepthChange}
+        />
         {isLoading && (
-          <div className="absolute left-0 top-0 right-0 bottom-0 z-10 flex items-center justify-center bg-base-100/70">
+          <div className="absolute left-0 top-0 right-0 bottom-0 z-10 flex items-center justify-center bg-base-100/70 min-h-[450px]">
             <Spinner />
           </div>
         )}

@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import useConstant from "use-constant";
 import { Account, SimpleDI, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
+import { useAccountInstance } from "./useAccountInstance";
 
 export const useAccount = (): {
   account: Account;
@@ -19,6 +20,7 @@ export const useAccount = (): {
     configStore,
     keyStore,
     walletAdapter,
+    contractManager,
     onWalletConnect,
     onWalletDisconnect,
     onSetChain,
@@ -33,16 +35,7 @@ export const useAccount = (): {
     );
   }
 
-  const account = useConstant(() => {
-    let account = SimpleDI.get<Account>("account");
-
-    if (!account) {
-      account = new Account(configStore, keyStore, walletAdapter);
-
-      SimpleDI.registerByName("account", account);
-    }
-    return account;
-  });
+  const account = useAccountInstance();
 
   const [state, setState] = useState<AccountState>(account.stateValue);
 

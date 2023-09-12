@@ -73,7 +73,12 @@ export const TabList: FC<TabListProps> = (props) => {
   }, [props.tabBarExtra, tabContext]);
 
   return (
-    <div className={cn("flex border-b border-b-divider px-2", props.className)}>
+    <div
+      className={cn(
+        "flex border-b border-b-divider px-2 items-center",
+        props.className
+      )}
+    >
       <div className="pb-1 relative flex-1">
         <div className="flex" ref={boxRef}>
           {props.tabs.map((item, index) => {

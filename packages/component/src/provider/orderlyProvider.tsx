@@ -14,6 +14,7 @@ import {
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
 import {
+  IContract,
   type ConfigStore,
   type OrderlyKeyStore,
   type WalletAdapter,
@@ -31,6 +32,7 @@ interface OrderlyProviderProps {
   networkId?: string;
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
+  contractManager: IContract;
   walletAdapter: { new (options: any): WalletAdapter };
 
   logoUrl?: string;
@@ -48,6 +50,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     logoUrl,
     keyStore,
     configStore,
+    contractManager,
     walletAdapter,
     // onWalletConnect,
   } = props;
@@ -107,7 +110,12 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     let account = SimpleDI.get<Account>(Account.instanceName);
 
     if (!account) {
-      account = new Account(configStore, keyStore, walletAdapter);
+      account = new Account(
+        configStore,
+        keyStore,
+        contractManager,
+        walletAdapter
+      );
 
       SimpleDI.registerByName(Account.instanceName, account);
     }
@@ -269,6 +277,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         logoUrl,
         keyStore,
         walletAdapter,
+        contractManager: props.contractManager,
         networkId,
         ready,
         onWalletConnect: _onWalletConnect,

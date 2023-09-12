@@ -1,11 +1,15 @@
 import React, { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { commify, getPrecisionByNumber } from "@orderly.network/utils";
+import {
+  commify,
+  getPrecisionByNumber,
+  numberToHumanStyle,
+} from "@orderly.network/utils";
 import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { Decimal } from "@orderly.network/utils";
 
-export type NumeralRule = "percentages" | "price";
+export type NumeralRule = "percentages" | "price" | "human";
 
 export interface NumeralProps {
   rule?: NumeralRule;
@@ -63,7 +67,11 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return "--";
     }
 
-    // console.log("!!!!!!!!!!!!!!!!!!!", num);
+    // console.log("!!!!!!!!!!!!!!!!!!!", num, props.precision);
+
+    if (rule === "human") {
+      return numberToHumanStyle(num);
+    }
 
     const d = new Decimal(num);
     if (rule === "percentages") {
@@ -77,7 +85,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
         ? getPrecisionByNumber(tick)
         : 2;
 
-    const truncatedNum = d.toFixed(dp);
+    let truncatedNum = d.toFixed(dp);
 
     if (rule === "price") {
       return commify(truncatedNum);
