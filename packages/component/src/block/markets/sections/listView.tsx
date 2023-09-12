@@ -43,32 +43,9 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
   const renderItem = useCallback((item: API.MarketInfoExt) => {
     return (
       <SymbolProvider symbol={item.symbol}>
-        <Cell item={item} />
+        <Cell item={item} onItemClick={props.onItemClick} />
       </SymbolProvider>
     );
-    // return (
-    //   <ListTile.symbol
-    //     subtitle={item["24h_volumn"] ?? "--"}
-    //     symbol={item["symbol"]}
-    //     tailing={
-    //       <Statistic
-    //         label={
-    //           <NumeralWithSymbol rule={"price"} symbol={item.symbol}>
-    //             {item["24h_close"]}
-    //           </NumeralWithSymbol>
-    //         }
-    //         value={!Number.isNaN(item.change) ? item.change : 0}
-    //         rule={"percentages"}
-    //         align={"right"}
-    //         coloring
-    //         valueClassName={"text-sm"}
-    //       />
-    //     }
-    //     onClick={() => {
-    //       props.onItemClick?.(item);
-    //     }}
-    //   />
-    // );
   }, []);
   const [sortCondition, setSortCondition] = useState<SortCondition>({});
 

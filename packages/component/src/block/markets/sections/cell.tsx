@@ -6,13 +6,17 @@ import { FC, useContext } from "react";
 
 export interface MarketCellProps {
   item: API.MarketInfoExt;
+  onItemClick?: (item: API.MarketInfoExt) => void;
 }
 
 export const Cell: FC<MarketCellProps> = (props) => {
-  const { item } = props;
+  const { item, onItemClick } = props;
   const { base_dp } = useContext(SymbolContext);
   return (
-    <div className="flex items-center gap-2 cursor-pointer ">
+    <div
+      className="flex items-center gap-2 cursor-pointer"
+      onClick={() => onItemClick?.(item)}
+    >
       <NetworkImage type={"symbol"} symbol={item.symbol} />
       <div className="flex flex-1 flex-col">
         <div className="flex items-center justify-between">
