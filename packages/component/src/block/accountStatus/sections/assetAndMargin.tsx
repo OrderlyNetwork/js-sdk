@@ -80,16 +80,16 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <div className="flex text-base items-center">
               <span>Total Value (USDC)</span>
               <button
-                className="text-primary p-2"
+                className="text-primary-light p-2"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggleVisible();
                 }}
               >
                 {visible ? (
-                  <EyeIcon className="text-primary" size={14} />
-                ) : (
                   <EyeOffIcon className="text-primary" size={14} />
+                ) : (
+                  <EyeIcon className="text-primary" size={14} />
                 )}
               </button>
             </div>
@@ -131,7 +131,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="text-primary text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-primary-light text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
@@ -150,7 +150,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <div className="flex items-center gap-2">
               <Numeral
                 rule="percentages"
-                className="text-primary"
+                className="text-primary-light"
                 visible={visible}
               >
                 {marginRatio}
@@ -193,7 +193,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <Slider
                 min={0}
                 max={5}
-                color={"primary"}
+                color={"primary-light"}
                 markLabelVisible
                 value={[leverageValue]}
                 showTip={false}

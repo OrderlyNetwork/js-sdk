@@ -27,6 +27,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   const [tabList, children] = useMemo(() => {
     const tabList: TabItem[] = [],
       children: ReactNode[] = [];
+
     React.Children.forEach(props.children, (child, index) => {
       const childElement = child as React.FunctionComponentElement<
         PropsWithChildren<TabPaneProps>

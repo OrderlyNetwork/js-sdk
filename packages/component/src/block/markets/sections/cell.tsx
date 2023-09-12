@@ -2,7 +2,7 @@ import { NetworkImage } from "@/icon";
 import { SymbolContext } from "@/provider";
 import { Numeral, Text } from "@/text";
 import { API } from "@orderly.network/types";
-import { FC, useContext } from "react";
+import { FC, useContext, useMemo } from "react";
 
 export interface MarketCellProps {
   item: API.MarketInfoExt;
@@ -11,7 +11,24 @@ export interface MarketCellProps {
 
 export const Cell: FC<MarketCellProps> = (props) => {
   const { item, onItemClick } = props;
-  const { base_dp } = useContext(SymbolContext);
+  const { quote_dp } = useContext(SymbolContext);
+
+  const colorClassName = useMemo(() => {
+    if (!item["24h_open"] || !item["24h_close"]) {
+      return "text-base-contrast/50";
+    }
+
+    if (item["24h_close"] > item["24h_open"]) {
+      return "text-trade-profit";
+    }
+
+    if (item["24h_close"] < item["24h_open"]) {
+      return "text-trade-loss";
+    }
+
+    return "text-base-contrast/50";
+  }, [item["24h_open"], item["24h_close"]]);
+
   return (
     <div
       className="flex items-center gap-2 cursor-pointer"
@@ -21,14 +38,17 @@ export const Cell: FC<MarketCellProps> = (props) => {
       <div className="flex flex-1 flex-col">
         <div className="flex items-center justify-between">
           <Text rule="symbol">{item.symbol}</Text>
-          <Numeral coloring precision={base_dp}>
+          <Numeral precision={quote_dp} className={colorClassName}>
             {item["24h_close"]}
           </Numeral>
         </div>
         <div className="flex items-center justify-between">
-          <Numeral rule="human" className="text-sm text-base-contrast/50">
-            {item["24h_volumn"]}
-          </Numeral>
+          <Numeral.total
+            rule="human"
+            className="text-sm text-base-contrast/50"
+            price={item["24h_close"]}
+            quantity={item["24h_volumn"]}
+          />
           <Numeral rule="percentages" className="text-sm" coloring>
             {item.change}
           </Numeral>

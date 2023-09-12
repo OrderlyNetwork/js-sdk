@@ -26,7 +26,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   useEffect(() => {
     const resizeHandler = ({ height }: { height: number }) => {
       console.log("orderEntry height change !");
-      let innerHeight = height - 115;
+      let innerHeight = height - 116;
       let cellHeight = innerHeight / 14;
 
       setCellHeight(() => cellHeight);

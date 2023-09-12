@@ -243,8 +243,8 @@ var WS = class {
   onOpen(event) {
     console.log("WebSocket connection opened:");
     if (this._pendingPublicSubscribe.length > 0) {
-      this._pendingPublicSubscribe.forEach(([params, cb]) => {
-        this.subscribe(params, cb);
+      this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
+        this.subscribe(params, cb, isOnce);
       });
       this._pendingPublicSubscribe = [];
     }
@@ -267,7 +267,8 @@ var WS = class {
       if (commoneHandler) {
         commoneHandler.handle(message, socket);
       } else {
-        const eventhandler = handlerMap.get(message.topic || message.event);
+        const topicKey = this.getTopicKeyFromMessage(message);
+        const eventhandler = handlerMap.get(topicKey);
         if (eventhandler == null ? void 0 : eventhandler.callback) {
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter ? cb.formatter(message) : defaultMessageFormatter(message);
@@ -275,6 +276,9 @@ var WS = class {
               cb.onMessage(data);
             }
           });
+          if (eventhandler.isOnce) {
+            handlerMap.delete(topicKey);
+          }
         }
       }
     } catch (e) {
@@ -383,7 +387,7 @@ var WS = class {
       callback.onUnsubscribe
     );
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, callback]);
+      this._pendingPublicSubscribe.push([params, callback, once]);
       if (!once) {
         return () => {
           this.unsubscribePublic(subscribeMessage);
@@ -391,7 +395,7 @@ var WS = class {
       }
       return;
     }
-    const topic = subscribeMessage.topic || subscribeMessage.event;
+    let topic = this.getTopicKeyFromParams(subscribeMessage);
     const handler = this._eventHandlers.get(topic);
     const callbacks = __spreadProps(__spreadValues({}, callback), {
       onUnsubscribe
@@ -399,17 +403,45 @@ var WS = class {
     if (!handler) {
       this._eventHandlers.set(topic, {
         params,
+        isOnce: once,
         callback: [callbacks]
       });
+      this.publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
       handler.callback.push(callbacks);
     }
-    this.publicSocket.send(JSON.stringify(subscribeMessage));
     if (!once) {
       return () => {
         this.unsubscribePublic(subscribeMessage);
       };
     }
+  }
+  getTopicKeyFromParams(params) {
+    let topic;
+    if (params.topic) {
+      topic = params.topic;
+    } else {
+      const eventName = params.event;
+      topic = params.event;
+      if (params.id) {
+        topic += `_${params.id}`;
+      }
+    }
+    return topic;
+  }
+  getTopicKeyFromMessage(message) {
+    let topic;
+    if (message.topic) {
+      topic = message.topic;
+    } else {
+      if (message.event) {
+        topic = `${message.event}`;
+        if (message.id) {
+          topic += `_${message.id}`;
+        }
+      }
+    }
+    return topic;
   }
   // sendPublicMessage(){
   //   if(this.publicSocket.readyState !== )

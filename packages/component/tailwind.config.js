@@ -25,6 +25,7 @@ module.exports = {
         },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
           // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {

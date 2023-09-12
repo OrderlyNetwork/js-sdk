@@ -162,7 +162,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      total: total.todp(Math.min(config.quoteDP, totalDP)).toNumber(),
+      total: total.todp(2).toNumber(),
     },
     input,
     value,

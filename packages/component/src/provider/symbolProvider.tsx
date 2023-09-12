@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext } from "react";
+import { FC, PropsWithChildren, createContext, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 
 interface SymbolContextState {
@@ -18,6 +18,7 @@ export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
   props
 ) => {
   const symbolInfo = useSymbolsInfo()[props.symbol];
+
   return (
     <SymbolContext.Provider
       value={{

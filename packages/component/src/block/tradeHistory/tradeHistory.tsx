@@ -16,7 +16,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
     return [
       {
         title: "Time",
-        dataIndex: "executed_timestamp",
+        dataIndex: "ts",
         render(value, record, index) {
           return (
             <Text
@@ -24,14 +24,14 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               formatString="HH:mm:ss"
               className="text-base-contrast/60"
             >
-              {value}
+              {value * 1000}
             </Text>
           );
         },
       },
       {
         title: `Price(${quote})`,
-        dataIndex: "executed_price",
+        dataIndex: "price",
         render(value, record, index) {
           return (
             <Numeral
@@ -49,7 +49,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       },
       {
         title: `Qty(${base})`,
-        dataIndex: "executed_quantity",
+        dataIndex: "size",
         align: "right" as any,
         render(value, record, index) {
           return (

@@ -32,6 +32,7 @@ type WSMessageHandler = {
 type Topics = {
   params: MessageParams;
   isPrivate?: boolean;
+  isOnce?: boolean;
   callback: WSMessageHandler[];
 };
 
@@ -111,8 +112,8 @@ export class WS {
     console.log("WebSocket connection opened:");
     // console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
-      this._pendingPublicSubscribe.forEach(([params, cb]) => {
-        this.subscribe(params, cb);
+      this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
+        this.subscribe(params, cb, isOnce);
       });
       this._pendingPublicSubscribe = [];
     }
@@ -145,7 +146,10 @@ export class WS {
       if (commoneHandler) {
         commoneHandler.handle(message, socket);
       } else {
-        const eventhandler = handlerMap.get(message.topic || message.event);
+        const topicKey = this.getTopicKeyFromMessage(message);
+
+        const eventhandler = handlerMap.get(topicKey);
+        // console.log("event handle::", eventhandler);
         if (eventhandler?.callback) {
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter
@@ -156,6 +160,10 @@ export class WS {
               cb.onMessage(data);
             }
           });
+
+          if (eventhandler.isOnce) {
+            handlerMap.delete(topicKey);
+          }
         }
       }
       // console.log("WebSocket message received:", message);
@@ -307,8 +315,10 @@ export class WS {
       (callback as WSMessageHandler).onUnsubscribe
     );
 
+    // console.log("params::", params);
+
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, callback]);
+      this._pendingPublicSubscribe.push([params, callback, once]);
 
       if (!once) {
         return () => {
@@ -318,7 +328,8 @@ export class WS {
       return;
     }
 
-    const topic = subscribeMessage.topic || subscribeMessage.event;
+    let topic = this.getTopicKeyFromParams(subscribeMessage);
+    // const topic = subscribeMessage.topic || subscribeMessage.event;
 
     const handler = this._eventHandlers.get(topic);
     const callbacks = {
@@ -329,13 +340,14 @@ export class WS {
     if (!handler) {
       this._eventHandlers.set(topic, {
         params,
+        isOnce: once,
         callback: [callbacks],
       });
+      this.publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
       handler.callback.push(callbacks);
     }
 
-    this.publicSocket.send(JSON.stringify(subscribeMessage));
     // this._subscriptionPublicTopics.push({params, cb: [cb]});
 
     if (!once) {
@@ -343,6 +355,40 @@ export class WS {
         this.unsubscribePublic(subscribeMessage);
       };
     }
+  }
+
+  private getTopicKeyFromParams(params: any): string {
+    let topic;
+
+    if (params.topic) {
+      topic = params.topic;
+    } else {
+      const eventName = params.event;
+      topic = params.event;
+
+      if (params.id) {
+        topic += `_${params.id}`;
+      }
+    }
+
+    return topic;
+  }
+
+  private getTopicKeyFromMessage(message: any): string {
+    let topic;
+    if (message.topic) {
+      topic = message.topic;
+    } else {
+      if (message.event) {
+        topic = `${message.event}`;
+
+        if (message.id) {
+          topic += `_${message.id}`;
+        }
+      }
+    }
+
+    return topic;
   }
 
   // sendPublicMessage(){

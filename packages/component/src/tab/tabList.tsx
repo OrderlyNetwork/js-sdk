@@ -60,8 +60,12 @@ export const TabList: FC<TabListProps> = (props) => {
       if (typeof props.onTabChange === "undefined") return;
       calcLeft(event.target);
       props.onTabChange?.(value);
+
+      if (!tabContext.contentVisible) {
+        tabContext.toggleContentVisible();
+      }
     },
-    [props.onTabChange]
+    [props.onTabChange, tabContext.contentVisible]
   );
 
   const extraNode = useMemo(() => {
@@ -89,7 +93,10 @@ export const TabList: FC<TabListProps> = (props) => {
                 value={item.value ?? index}
                 disabled={item.disabled}
                 active={
-                  !!item.value && !!props.value && item.value === props.value
+                  !!item.value &&
+                  !!props.value &&
+                  item.value === props.value &&
+                  tabContext.contentVisible
                 }
                 onClick={onItemClick}
               />

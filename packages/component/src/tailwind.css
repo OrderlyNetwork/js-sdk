@@ -16,6 +16,8 @@
 
     /* colors */
     --orderly-color-primary: 51 95 252;
+    --orderly-color-primary-light: 96 140 255;
+    
     --orderly-color-secondary: 51 57 72;
     --orderly-color-tertiary: 97 100 104;
     --orderly-color-quaternary: 218 218 218;

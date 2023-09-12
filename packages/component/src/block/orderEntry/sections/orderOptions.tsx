@@ -9,6 +9,7 @@ import { OrderEntity } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
+import { OrderTypesCheckbox } from "./orderTypes";
 
 interface OrderOptionsProps {
   // values?: OrderEntity;
@@ -53,8 +54,11 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
           onClick={() => setOpen((open) => !open)}
         >
           <ChevronDown
-            size={20}
-            className={cn("transition-transform", open && "rotate-180")}
+            size={18}
+            className={cn(
+              "transition-transform text-base-contrast/50",
+              open && "rotate-180"
+            )}
           />
         </button>
       </div>
@@ -69,7 +73,13 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 render={({ field }) => {
                   return (
                     <div>
-                      <RadioGroup
+                      <OrderTypesCheckbox
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                        }}
+                      />
+                      {/* <RadioGroup
                         value={field.value}
                         className="flex gap-5"
                         onValueChange={(value) => {
@@ -81,7 +91,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                         <Radio value={OrderType.POST_ONLY}>Post Only</Radio>
                         <Radio value={OrderType.IOC}>IOC</Radio>
                         <Radio value={OrderType.FOK}>FOK</Radio>
-                      </RadioGroup>
+                      </RadioGroup> */}
                     </div>
                   );
                 }}
@@ -89,7 +99,14 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
             )}
             <div className="flex gap-5">
               <div className="flex gap-2 items-center">
-                <Checkbox id="orderConfirm" checked={props.showConfirm} />
+                <Checkbox
+                  id="orderConfirm"
+                  checked={props.showConfirm}
+                  onCheckedChange={(checked) => {
+                    console.log(checked);
+                    props.onConfirmChange?.(!!checked);
+                  }}
+                />
                 <Label htmlFor="orderConfirm">Order Confirm</Label>
               </div>
               <Controller

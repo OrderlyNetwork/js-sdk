@@ -32,7 +32,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           <span className="text-sm text-base-contrast/50">/USDT</span>
         </div>
       </div>
-      <div className="flex flex-col gap-2 text-sm">
+      <div className="flex flex-col gap-2">
         <div className="flex justify-between ">
           <span className="text-base-contrast/50">Qty.</span>
           <span>{order.order_quantity}</span>

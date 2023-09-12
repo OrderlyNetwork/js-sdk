@@ -8,7 +8,7 @@ import { SliderTip } from "./sliderTip";
 
 // import { useSize } from "@radix-ui/react-use-size";
 
-export type SliderColor = "primary" | "buy" | "sell";
+export type SliderColor = "primary" | "primary-light" | "buy" | "sell";
 
 interface SliderProps
   extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
@@ -89,6 +89,7 @@ const Slider = React.forwardRef<
       return cn(
         {
           "bg-primary border-primary": color === "primary",
+          "bg-primary-light border-primary-light": color === "primary-light",
           "bg-trade-profit border-trade-profit": color === "buy",
           "bg-trade-loss border-trade-loss": color === "sell",
         },
@@ -131,6 +132,7 @@ const Slider = React.forwardRef<
               "block w-[10px] h-[10px] bg-fill border-[2px] border-fill-light rounded-[10px] focus:outline-none focus:w-[16px] focus:h-[16px] focus:shadow-[0_0_0_8px] focus:shadow-base-contrast/20 z-20 disabled:pointer-events-none group",
               {
                 "border-primary": color === "primary",
+                "border-primary-light": color === "primary-light",
                 "border-trade-profit": color === "buy",
                 "border-trade-loss": color === "sell",
               },

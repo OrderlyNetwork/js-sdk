@@ -111,6 +111,8 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // console.log("mergeItems", data, update);
   if (data.length === 0) return update;
 
+  data = data.filter(([price]) => !isNaN(price));
+
   while (update.length > 0) {
     const item = update.shift();
     // console.log("item", item);
@@ -200,6 +202,7 @@ export const useOrderbookStream = (
     ws.onceSubscribe(
       {
         event: "request",
+        id: `${symbol}@orderbook`,
         params: {
           type: "orderbook",
           symbol: symbol,

@@ -15,7 +15,7 @@ export type SliderMark = {
 export interface SliderMarksProps {
   value?: number[];
   marks?: SliderMark[];
-  color: "primary" | "buy" | "sell";
+  color: "primary" | "buy" | "sell" | "primary-light";
   // width: number;
   min: number;
   max: number;
@@ -48,6 +48,10 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
                 {
                   "border-primary bg-primary":
                     props.color === "primary" &&
+                    _value >= mark.value &&
+                    _value > 0,
+                  "border-primary-light bg-primary-light":
+                    props.color === "primary-light" &&
                     _value >= mark.value &&
                     _value > 0,
                   "border-trade-profit bg-trade-profit":

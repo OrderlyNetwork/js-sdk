@@ -8,10 +8,13 @@ export interface NumeralTotalProps extends Omit<NumeralProps, "children"> {
 }
 
 export const NumeralTotal: FC<NumeralTotalProps> = (props) => {
-  const { rule = "price", price, quantity, ...rest } = props;
+  const { price, quantity, ...rest } = props;
   // console.log(props);
 
   const children = useMemo(() => {
+    if (!price || !quantity) {
+      return 0;
+    }
     return new Decimal(props.price).mul(props.quantity).toNumber();
   }, [price, quantity]);
 

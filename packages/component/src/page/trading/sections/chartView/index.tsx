@@ -6,6 +6,9 @@ import { TradeData } from "./tradeData";
 import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
 import { OrderlyContext } from "@orderly.network/hooks";
+import { SymbolProvider } from "@/provider";
+import { cn } from "@/utils/css";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/tabs";
 
 interface ChartViewProps {
   symbol: string;
@@ -17,7 +20,31 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   const [activeTab, setActiveTab] = useState("tradingView");
   const { klineDataUrl } = useContext(OrderlyContext);
 
-  console.log("klineDataUrl", klineDataUrl, symbol);
+  // return (
+  //   <Tabs defaultValue="account">
+  //     <TabsList>
+  //       <TabsTrigger value="tradingView">TradingView</TabsTrigger>
+  //       <TabsTrigger value="tradeHistory">Trade</TabsTrigger>
+  //       <TabsTrigger value="tradeData">tradeData</TabsTrigger>
+  //     </TabsList>
+  //     <TabsContent forceMount value="tradingView">
+  //       <TradingView
+  //         height={240}
+  //         theme={"dark"}
+  //         symbol={symbol}
+  //         autosize={false}
+  //         apiBaseUrl={klineDataUrl}
+  //         {...tradingViewConfig}
+  //       />
+  //     </TabsContent>
+  //     <TabsContent forceMount value="tradeHistory">
+  //       <TradeHistoryPane symbol={symbol} />
+  //     </TabsContent>
+  //     <TabsContent forceMount value="tradeData">
+  //       <TradeData symbol={symbol} />
+  //     </TabsContent>
+  //   </Tabs>
+  // );
 
   return (
     <div>
@@ -35,7 +62,13 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   context.toggleContentVisible();
                 }}
               >
-                <ChevronDown size={16} />
+                <ChevronDown
+                  size={18}
+                  className={cn(
+                    "transition-transform text-base-contrast/50",
+                    context.contentVisible ? "rotate-0" : "rotate-180"
+                  )}
+                />
               </button>
             </div>
           );
@@ -55,7 +88,9 @@ export const ChartView: FC<ChartViewProps> = (props) => {
           <TradeHistoryPane symbol={symbol} />
         </TabPane>
         <TabPane title="Data" value="tradeData">
-          <TradeData symbol={symbol} />
+          <SymbolProvider symbol={symbol}>
+            <TradeData symbol={symbol} />
+          </SymbolProvider>
         </TabPane>
       </Tabs>
     </div>

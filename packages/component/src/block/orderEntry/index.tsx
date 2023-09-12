@@ -20,7 +20,7 @@ import { Numeral, Text } from "@/text";
 
 import { Divider } from "@/divider";
 import { OrderOptions } from "./sections/orderOptions";
-import { useEventEmitter } from "@orderly.network/hooks";
+import { useEventEmitter, useLocalStorage } from "@orderly.network/hooks";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
@@ -82,6 +82,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const totalInputFocused = useRef<boolean>(false);
 
+    const [needConfirm, setNeedConfirm] = useLocalStorage(
+      "orderly_order_confirm",
+      true
+    );
+
     const methods = useForm({
       // mode: "onChange",
       reValidateMode: "onChange",
@@ -126,20 +131,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       (data: any) => {
         // console.log("data", data);
 
-        return modal
-          .confirm({
-            title: "Confirm Order",
-            onCancel: () => {
-              return Promise.reject("cancel");
-            },
-            content: (
-              <OrderConfirmView
-                order={{ ...data, side: props.side, symbol: props.symbol }}
-                symbol={symbol}
-                base={symbolConfig["base"]}
-                quote={symbolConfig.quote}
-              />
-            ),
+        return Promise.resolve()
+          .then(() => {
+            if (needConfirm) {
+              return modal.confirm({
+                title: "Confirm Order",
+                onCancel: () => {
+                  return Promise.reject("cancel");
+                },
+                content: (
+                  <OrderConfirmView
+                    order={{ ...data, side: props.side, symbol: props.symbol }}
+                    symbol={symbol}
+                    base={symbolConfig["base"]}
+                    quote={symbolConfig.quote}
+                  />
+                ),
+              });
+            } else {
+              return Promise.resolve(true);
+            }
           })
           .then(
             (isOk) => {
@@ -172,8 +183,27 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               console.log("submit order err", err);
             }
           );
+
+        // return modal
+        //   .confirm({
+        //     title: "Confirm Order",
+        //     onCancel: () => {
+        //       return Promise.reject("cancel");
+        //     },
+        //     content: (
+        //       <OrderConfirmView
+        //         order={{ ...data, side: props.side, symbol: props.symbol }}
+        //         symbol={symbol}
+        //         base={symbolConfig["base"]}
+        //         quote={symbolConfig.quote}
+        //       />
+        //     ),
+        //   })
+        //   .then(
+
+        //   );
       },
-      [side, props.onSubmit, symbol]
+      [side, props.onSubmit, symbol, needConfirm]
     );
 
     useEffect(() => {
@@ -244,7 +274,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         return methods.getValues("total");
       }
 
-      return new Decimal(quantity).mul(markPrice).todp(4).toString();
+      return new Decimal(quantity).mul(markPrice).todp(2).toString();
     }, [
       markPrice,
       methods.getValues("order_type"),
@@ -447,8 +477,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
             <Divider />
             <OrderOptions
-              showConfirm={props.showConfirm}
-              onConfirmChange={props.onConfirmChange}
+              showConfirm={needConfirm}
+              onConfirmChange={setNeedConfirm}
             />
             <StatusGuardButton>
               <Button

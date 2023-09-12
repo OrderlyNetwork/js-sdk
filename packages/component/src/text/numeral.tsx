@@ -74,21 +74,21 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     // console.log("!!!!!!!!!!!!!!!!!!!", num, props.precision);
 
-    if (rule === "human") {
-      return numberToHumanStyle(num);
-    }
-
-    const d = new Decimal(num);
-    if (rule === "percentages") {
-      return `${d.mul(100).toFixed(2)}%`;
-    }
-
     const dp =
       typeof precision !== "undefined"
         ? precision
         : tick
         ? getPrecisionByNumber(tick)
         : 2;
+
+    if (rule === "human") {
+      return numberToHumanStyle(num, dp);
+    }
+
+    const d = new Decimal(num);
+    if (rule === "percentages") {
+      return `${d.mul(100).toFixed(2)}%`;
+    }
 
     let truncatedNum = d.toFixed(dp);
 

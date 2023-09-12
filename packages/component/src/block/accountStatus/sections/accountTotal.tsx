@@ -68,16 +68,16 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
             <div className="flex items-center text-base-contrast/70">
               <span>Total Value</span>
               <button
-                className="text-primary px-2"
+                className="text-primary-light px-2"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggleVisible();
                 }}
               >
                 {visible ? (
-                  <EyeIcon className="text-primary" size={12} />
-                ) : (
                   <EyeOffIcon className="text-primary" size={12} />
+                ) : (
+                  <EyeIcon className="text-primary" size={12} />
                 )}
               </button>
 
@@ -90,7 +90,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           </div>
           <Divider vertical className="px-3" />
 
-          <div className="border border-solid px-2 rounded border-primary text-primary text-sm">
+          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm">
             {`${maxLerverage}x`}
           </div>
         </div>
