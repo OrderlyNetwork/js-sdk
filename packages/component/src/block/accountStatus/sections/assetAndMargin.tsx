@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import Button from "@/button";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
@@ -8,7 +8,7 @@ import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
-import { EyeOff, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import {
   useCollateral,
   usePositionStream,
@@ -19,6 +19,8 @@ import {
 // import Slider from "rc-slider";
 import { modal } from "@/modal";
 import { toast } from "@/toast";
+import { AssetsContext } from "@/provider/assetsProvider";
+import { EyeIcon, EyeOffIcon } from "@/icon";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -38,6 +40,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     });
   const [{ aggregated, totalUnrealizedROI }] = usePositionStream();
   const [marginRatio, currentLeverage] = useMarginRatio();
+  const { visible, toggleVisible } = useContext(AssetsContext);
 
   const [maxLeverage, { update }] = useLeverage();
 
@@ -74,13 +77,26 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div className="pt-5">
         <Statistic
           label={
-            <div className="flex gap-2 text-base items-center">
+            <div className="flex text-base items-center">
               <span>Total Value (USDC)</span>
-              <EyeOff className="text-primary" size={14} />
+              <button
+                className="text-primary p-2"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleVisible();
+                }}
+              >
+                {visible ? (
+                  <EyeIcon className="text-primary" size={14} />
+                ) : (
+                  <EyeOffIcon className="text-primary" size={14} />
+                )}
+              </button>
             </div>
           }
           value={totalValue}
           rule="price"
+          visible={visible}
         />
       </div>
       <div className="grid grid-cols-2 py-4">
@@ -88,9 +104,12 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label="Unreal.PnL(USDC)"
           value={
             <div className="flex gap-1 items-center">
-              <Numeral coloring>{aggregated.unrealPnL}</Numeral>
+              <Numeral coloring visible={visible}>
+                {aggregated.unrealPnL}
+              </Numeral>
 
               <Numeral
+                visible={visible}
                 rule="percentages"
                 coloring
                 surfix=")"
@@ -108,7 +127,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label="Unsettled PnL(USDC)"
           value={
             <div className="flex justify-between">
-              <Numeral rule="price" coloring>
+              <Numeral rule="price" visible={visible} coloring>
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
@@ -129,7 +148,11 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label="Margin Ratio"
           value={
             <div className="flex items-center gap-2">
-              <Numeral rule="percentages" className="text-primary">
+              <Numeral
+                rule="percentages"
+                className="text-primary"
+                visible={visible}
+              >
                 {marginRatio}
               </Numeral>
 
@@ -141,8 +164,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           label="Free / Total Collateral(USDC)"
           value={
             <div>
-              <Numeral>{freeCollateral}</Numeral> /{" "}
-              <Numeral>{totalCollateral}</Numeral>
+              <Numeral visible={visible}>{freeCollateral}</Numeral> /{" "}
+              <Numeral visible={visible}>{totalCollateral}</Numeral>
             </div>
           }
         />
@@ -155,7 +178,11 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <span>Max Account Leverage</span>
               <span className="flex">
                 Current:
-                <Numeral className="text-base-contrast ml-1" surfix="x">
+                <Numeral
+                  className="text-base-contrast ml-1"
+                  surfix="x"
+                  visible={visible}
+                >
                   {currentLeverage}
                 </Numeral>
               </span>
@@ -230,7 +257,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <NetworkImage name={"USDC"} type={"token"} size={"small"} />
             <span>USDC</span>
           </div>
-          <Numeral precision={2}>{availableBalance}</Numeral>
+          <Numeral precision={2} visible={visible}>
+            {availableBalance}
+          </Numeral>
         </div>
       </Paper>
       {/* <div className="flex gap-3 py-5">

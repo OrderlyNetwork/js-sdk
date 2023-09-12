@@ -70,7 +70,7 @@ export const GetTestUSDC = () => {
   }
 
   return (
-    <div className="flex justify-between items-center fixed left-0 right-0 bottom-[60px] h-[40px] bg-base-300 z-20 px-2 animate-in fade-in ">
+    <div className="flex justify-between items-center fixed left-0 right-0 bottom-[44px] h-[40px] bg-base-300 z-20 px-2 animate-in fade-in ">
       <div
         className="text-sm text-base-contrast/50 cursor-pointer"
         onClick={onGetClick}

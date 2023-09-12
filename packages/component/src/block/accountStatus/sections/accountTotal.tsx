@@ -9,6 +9,7 @@ import { type API, AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "@orderly.network/hooks";
 import { Logo } from "@/logo";
 import { AssetsContext } from "@/provider/assetsProvider";
+import { EyeIcon, EyeOffIcon } from "@/icon";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -20,7 +21,8 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   const { logoUrl } = useContext(OrderlyContext);
-  const { onDeposit, onWithdraw, onSettlement } = useContext(AssetsContext);
+  const { onDeposit, onWithdraw, onSettlement, visible, toggleVisible } =
+    useContext(AssetsContext);
 
   // console.log("accountInfo", props);
 
@@ -29,8 +31,12 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
       return "--";
     }
 
-    return <Numeral rule="price">{props.totalValue ?? 0}</Numeral>;
-  }, [props.status, props.totalValue]);
+    return (
+      <Numeral rule="price" visible={visible}>
+        {props.totalValue ?? 0}
+      </Numeral>
+    );
+  }, [props.status, props.totalValue, visible]);
 
   const maxLerverage = useMemo(() => {
     return accountInfo?.max_leverage ?? "-";
@@ -59,9 +65,22 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
       <SheetTrigger asChild>
         <div className="flex items-center cursor-pointer">
           <div className="flex flex-col text-xs">
-            <div className="flex items-center text-base-contrast/70 gap-2">
+            <div className="flex items-center text-base-contrast/70">
               <span>Total Value</span>
-              <EyeOff className="text-primary" size={12} />
+              <button
+                className="text-primary px-2"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleVisible();
+                }}
+              >
+                {visible ? (
+                  <EyeIcon className="text-primary" size={12} />
+                ) : (
+                  <EyeOffIcon className="text-primary" size={12} />
+                )}
+              </button>
+
               <span className="text-base">≈</span>
             </div>
             <div className="flex gap-2">

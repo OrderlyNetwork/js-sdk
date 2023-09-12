@@ -114,11 +114,11 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   const total = price.mul(values.order_quantity);
 
-  const quantityDP = total.dp();
+  // const quantityDP = total.dp();
   return [
     {
       ...values,
-      total: total.todp(Math.max(quantityDP, config.baseDP)).toString(),
+      total: total.todp(2).toString(),
     },
     input,
     value,

@@ -1,22 +1,38 @@
-import { Dialog, DialogFooter, DialogHeader } from "@/dialog/dialog";
-import { FC } from "react";
-import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/dialog/dialog";
+import { FC, useCallback } from "react";
 import Button from "@/button";
+import { useModal } from "@/modal";
 
 export interface AlertDialogProps {
   title?: string;
   message?: string;
-  onConfirm?: () => void;
+  onOk?: () => Promise<any>;
 }
 
 export const AlertDialog: FC<AlertDialogProps> = (props) => {
-  return (
-    <Dialog>
-      <DialogHeader>Alert</DialogHeader>
+  const { title, message } = props;
+  const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
-      <DialogClose asChild>
-        <Button>OK</Button>
-      </DialogClose>
+  const onOk = useCallback(() => {
+    hide();
+  }, [props.onOk]);
+  return (
+    <Dialog open={visible} onOpenChange={onOpenChange}>
+      <DialogHeader>{title}</DialogHeader>
+
+      <DialogContent>
+        <DialogBody>{message}</DialogBody>
+      </DialogContent>
+
+      <DialogFooter>
+        <Button onClick={onOk}>Ok</Button>
+      </DialogFooter>
     </Dialog>
   );
 };

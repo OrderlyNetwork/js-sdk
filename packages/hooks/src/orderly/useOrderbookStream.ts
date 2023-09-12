@@ -5,6 +5,7 @@ import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
+import { Decimal } from "@orderly.network/utils";
 
 export type OrderBookItem = number[];
 
@@ -44,14 +45,17 @@ const reduceItems = (
       let priceKey;
 
       if (asks) {
-        priceKey = Math.ceil(price / depth) * depth;
+        priceKey = new Decimal(Math.ceil(price / depth)).mul(depth).toNumber();
       } else {
-        priceKey = Math.floor(price / depth) * depth;
+        priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
+
+      // console.log("priceKey:::", priceKey);
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
-        const itemPrice = item[1] + quantity;
+        const itemPrice = new Decimal(item[1]).add(quantity).toNumber();
+
         // prices.push([price, quantity]);
         prices.set(priceKey, [priceKey, itemPrice]);
       } else {
@@ -65,11 +69,12 @@ const reduceItems = (
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
     if (isNaN(price) || isNaN(quantity)) continue;
-    result.push([
-      price,
-      quantity,
-      quantity + (result.length > 0 ? result[result.length - 1][2] : 0),
-    ]);
+
+    const newQuantity = new Decimal(quantity)
+      .add(result.length > 0 ? result[result.length - 1][2] : 0)
+      .toNumber();
+
+    result.push([price, quantity, newQuantity]);
     // if the total is greater than the level, break
     if (i + 1 >= level) {
       break;

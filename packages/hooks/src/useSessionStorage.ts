@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { parseJSON } from "./utils/json";
 
 export function useSessionStorage<T>(
   key: string,
@@ -74,13 +75,4 @@ export function useSessionStorage<T>(
   );
 
   return [storedValue, setValue];
-}
-
-function parseJSON<T>(value: string | null): T | undefined {
-  try {
-    return value === "undefined" ? undefined : JSON.parse(value ?? "");
-  } catch {
-    console.log("parsing error on", { value });
-    return undefined;
-  }
 }

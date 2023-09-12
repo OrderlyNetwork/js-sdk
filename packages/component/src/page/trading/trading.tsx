@@ -26,23 +26,23 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
-      <AssetsProvider>
-        <div className="pb-[70px]">
-          <NavBar symbol={props.symbol} />
-          <Divider />
-          <ChartView
-            symbol={props.symbol}
-            tradingViewConfig={props.tradingViewConfig}
-          />
-          <MyLeverageView symbol={props.symbol} />
-          <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start">
-            <MyOrderBook symbol={props.symbol} />
-            <MyOrderEntry symbol={props.symbol} />
-          </div>
-          <DataListView />
-          <BottomNavBar />
+      <div className="pb-[70px]">
+        <NavBar symbol={props.symbol} />
+        <Divider />
+        <ChartView
+          symbol={props.symbol}
+          tradingViewConfig={props.tradingViewConfig}
+        />
+        <MyLeverageView symbol={props.symbol} />
+        <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start">
+          <MyOrderBook symbol={props.symbol} />
+          <MyOrderEntry symbol={props.symbol} />
         </div>
-      </AssetsProvider>
+        <DataListView />
+        <AssetsProvider>
+          <BottomNavBar />
+        </AssetsProvider>
+      </div>
     </TradingPageProvider>
   );
 };

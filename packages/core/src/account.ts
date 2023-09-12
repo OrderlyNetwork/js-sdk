@@ -428,11 +428,7 @@ export class Account {
 
     const domain = this.getDomain(true);
 
-    console.log("domain:::::::::", domain);
-
-    // const fullAddress = this.walletClient?.getAddresses(address);
-
-    // console.log("fullAddress:", fullAddress);
+    const url = "/v1/settle_pnl";
 
     const [message, toSignatureMessage] = generateSettleMessage({
       settlePnlNonce: nonce,
@@ -440,35 +436,36 @@ export class Account {
       domain,
     });
 
-    const signatured = await this.walletClient.send("eth_signTypedData_v4", [
-      address,
-      JSON.stringify(toSignatureMessage),
-    ]);
-
-    console.log(
-      "settlement:",
-      address,
-      message,
-      toSignatureMessage,
-      signatured
+    const EIP_712signatured = await this.walletClient.send(
+      "eth_signTypedData_v4",
+      [address, JSON.stringify(toSignatureMessage)]
     );
 
-    const publicKey = await this.keyStore.getOrderlyKey()?.getPublicKey();
+    const data = {
+      signature: EIP_712signatured,
+      message,
+      userAddress: address,
+      verifyingContract: domain.verifyingContract,
+    };
 
-    const res = await this._simpleFetch("/v1/settle_pnl", {
+    const payload: MessageFactor = {
       method: "POST",
-      body: JSON.stringify({
-        signature: signatured,
-        message,
-        userAddress: address,
-        verifyingContract: domain.verifyingContract,
-      }),
+      url,
+      data,
+    };
+
+    // console.log("payload", payload);
+
+    const signature = await this.signer.sign(payload);
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-        "x-account-id": this.stateValue.accountId!,
-        "orderly-key": publicKey!,
-        "orderly-timestamp": (message as any).timestamp.toString(),
-        "orderly-signature": signatured,
+        "orderly-account-id": this.stateValue.accountId!,
+
+        ...signature,
       },
     });
 

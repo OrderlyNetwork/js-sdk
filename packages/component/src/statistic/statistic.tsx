@@ -74,7 +74,11 @@ export const Statistic: FC<StatisticProps> = (props) => {
     if (typeof props.value === "string" || typeof props.value === "number") {
       if (rule === "price" || rule === "percentages") {
         return (
-          <Numeral rule={rule} precision={props.precision}>
+          <Numeral
+            rule={rule}
+            precision={props.precision}
+            visible={props.visible}
+          >
             {props.value}
           </Numeral>
         );
@@ -92,7 +96,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
       return <span>{props.value}</span>;
     }
     return props.value ?? "--";
-  }, [props.value, rule, props.precision]);
+  }, [props.value, rule, props.precision, props.visible]);
 
   return (
     <div className={cn(props.className, alignClasses[align])}>

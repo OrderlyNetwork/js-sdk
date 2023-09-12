@@ -40,6 +40,8 @@ export interface NumeralProps {
 
   surfix?: React.ReactNode;
   prefix?: React.ReactNode;
+
+  visible?: boolean;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -56,6 +58,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     tick,
     surfix,
     prefix,
+    visible,
     truncate = false,
   } = props;
   // TODO: check precision
@@ -63,6 +66,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
   const num = Number(props.children);
 
   const child = useMemo(() => {
+    if (typeof visible !== "undefined" && !visible) return "*****";
+
     if (Number.isNaN(num)) {
       return "--";
     }
@@ -91,10 +96,11 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return commify(truncatedNum);
     }
     return truncatedNum;
-  }, [num, precision]);
+  }, [num, precision, visible]);
 
   const colorClassName = useMemo(() => {
     if (!coloring) return "";
+    if (typeof visible !== "undefined" && !visible) return "";
 
     // if (props.value === 0) return coloringClasses.neutral;
 
@@ -109,7 +115,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (num < 0) return coloringClasses.lose;
 
     return coloringClasses.profit;
-  }, [coloring, props.children]);
+  }, [coloring, props.children, props.visible]);
 
   const childWithUnit = useMemo(() => {
     if (typeof surfix === "undefined" && typeof prefix === "undefined")

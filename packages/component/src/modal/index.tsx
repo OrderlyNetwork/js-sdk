@@ -3,6 +3,7 @@ import { register, unregister } from "./modalHelper";
 import { actionSheet } from "@/modal/preset/actionSheet";
 import { confirm } from "./preset/confirm";
 import { sheet } from "./preset/sheet";
+import { alert } from "./preset/alert";
 
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";
@@ -18,6 +19,7 @@ export const modal = {
   ...modalActions,
   actionSheet,
   confirm,
+  alert,
   sheet,
   // alert
   //actionSheet
