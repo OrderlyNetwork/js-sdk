@@ -6,10 +6,11 @@ import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";
 import { type API, AccountStatusEnum } from "@orderly.network/types";
-import { OrderlyContext } from "@orderly.network/hooks";
+import { OrderlyContext, useMarginRatio } from "@orderly.network/hooks";
 import { Logo } from "@/logo";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
+import { Decimal } from "@orderly.network/utils";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -23,6 +24,8 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { logoUrl } = useContext(OrderlyContext);
   const { onDeposit, onWithdraw, onSettlement, visible, toggleVisible } =
     useContext(AssetsContext);
+
+  const { currentLeverage } = useMarginRatio();
 
   // console.log("accountInfo", props);
 
@@ -91,7 +94,10 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           <Divider vertical className="px-3" />
 
           <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm">
-            {`${maxLerverage}x`}
+            {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
+            <Numeral precision={2} surfix="x">
+              {currentLeverage}
+            </Numeral>
           </div>
         </div>
       </SheetTrigger>

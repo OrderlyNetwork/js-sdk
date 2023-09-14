@@ -13,6 +13,7 @@ import { OrderEntity } from "@orderly.network/types";
 
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
+import { useAccount } from "../useAccount";
 
 export interface PositionReturn {
   data: any[];
@@ -27,9 +28,11 @@ export const usePositionStream = (
   options?: SWRConfiguration
 ) => {
   const symbolInfo = useSymbolsInfo();
-  // const { info: accountInfo } = useAccount();
+  const { state: accountState } = useAccount();
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  // console.log("account info: ", accountInfo);
 
   const { data: holding } = usePrivateQuery<API.Holding[]>(
     "/v1/client/holding",
@@ -46,6 +49,8 @@ export const usePositionStream = (
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
     dedupingInterval: 5000,
+    keepPreviousData: false,
+    revalidateIfStale: true,
     ...options,
 
     formatter: (data) => data,
@@ -54,6 +59,8 @@ export const usePositionStream = (
     },
   });
 
+  // console.log("=========== positions ============", data?.rows);
+
   const { data: markPrices } = useMarkPricesStream();
 
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
@@ -61,11 +68,9 @@ export const usePositionStream = (
 
     const filteredData =
       typeof symbol === "undefined" || symbol === ""
-        ? data.rows.filter((item) => {
-            return item.position_qty !== 0;
-          })
+        ? data.rows
         : data.rows.filter((item) => {
-            return item.symbol === symbol && item.position_qty !== 0;
+            return item.symbol === symbol;
           });
 
     let unrealPnL_total = zero,
@@ -167,32 +172,34 @@ export const usePositionStream = (
 
     const total = totalCollateral.toNumber();
 
-    return formatedPositions[0].map((item) => {
-      const info = symbolInfo?.[item.symbol];
-      const MMR = positions.MMR({
-        baseMMR: info("base_mmr"),
-        baseIMR: info("base_imr"),
-        IMRFactor: accountInfo.imr_factor[info("base")] as number,
-        positionNotional: item.notional,
-        IMR_factor_power: 4 / 5,
-      });
+    return formatedPositions[0]
+      .filter((item) => item.position_qty !== 0)
+      .map((item) => {
+        const info = symbolInfo?.[item.symbol];
+        const MMR = positions.MMR({
+          baseMMR: info("base_mmr"),
+          baseIMR: info("base_imr"),
+          IMRFactor: accountInfo.imr_factor[info("base")] as number,
+          positionNotional: item.notional,
+          IMR_factor_power: 4 / 5,
+        });
 
-      return {
-        ...item,
-        mm: positions.maintenanceMargin({
-          positionQty: item.position_qty,
-          markPrice: item.mark_price,
+        return {
+          ...item,
+          mm: positions.maintenanceMargin({
+            positionQty: item.position_qty,
+            markPrice: item.mark_price,
+            MMR,
+          }),
+          est_liq_price: positions.liqPrice({
+            markPrice: item.mark_price,
+            totalCollateral: total,
+            positionQty: item.position_qty,
+            MMR,
+          }),
           MMR,
-        }),
-        est_liq_price: positions.liqPrice({
-          markPrice: item.mark_price,
-          totalCollateral: total,
-          positionQty: item.position_qty,
-          MMR,
-        }),
-        MMR,
-      };
-    });
+        };
+      });
   }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
 
   return [

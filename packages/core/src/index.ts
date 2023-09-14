@@ -27,6 +27,4 @@ export { default as SimpleDI } from "./di/simpleDI";
 export { Account, type AccountState } from "./account";
 export * from "./configStore";
 
-export * from "./types/api";
-
 export * from "./wallet";

@@ -51,7 +51,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         {isLoading && (
-          <div className="absolute left-0 top-0 right-0 bottom-0 z-10 flex items-center justify-center bg-base-100/70 min-h-[450px]">
+          <div className="absolute left-0 top-0 right-0 bottom-0 z-10 flex items-center justify-center bg-base-100/70 h-full">
             <Spinner />
           </div>
         )}

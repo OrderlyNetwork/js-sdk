@@ -170,6 +170,7 @@ export declare namespace API {
   export interface Trade {
     symbol: Symbol;
     side: OrderSide;
+    ts: number;
     executed_price: number;
     executed_quantity: number;
     executed_timestamp: number;

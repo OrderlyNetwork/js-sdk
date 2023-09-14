@@ -162,7 +162,8 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Price"
                   suffix={quote}
-                  type="tel"
+                  type="text"
+                  inputMode="decimal"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
@@ -183,7 +184,8 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                 <Input
                   prefix="Quantity"
                   suffix={base}
-                  type="tel"
+                  type="text"
+                  inputMode="decimal"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="text-right"

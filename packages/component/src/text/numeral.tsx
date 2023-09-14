@@ -130,6 +130,10 @@ export const Numeral: FC<NumeralProps> = (props) => {
     );
   }, [child, surfix]);
 
+  if (!colorClassName && !props.className) {
+    return <>{childWithUnit}</>;
+  }
+
   return (
     <span className={cn(colorClassName, props.className)}>{childWithUnit}</span>
   );

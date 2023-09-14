@@ -24,7 +24,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               formatString="HH:mm:ss"
               className="text-base-contrast/60"
             >
-              {value * 1000}
+              {value}
             </Text>
           );
         },
@@ -68,6 +68,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       },
     ];
   }, []);
+
   return (
     <Table
       dataSource={props.dataSource}

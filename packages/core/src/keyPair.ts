@@ -12,9 +12,13 @@ export class BaseOrderlyKeyPair implements OrderlyKeyPair {
   private privateKey: string;
 
   static generateKey(): OrderlyKeyPair {
-    const privKey = ed.utils.randomPrivateKey();
+    let privKey, secretKey;
+    do {
+      privKey = ed.utils.randomPrivateKey();
+      secretKey = bs58encode(privKey);
+    } while (secretKey.length !== 44);
 
-    const secretKey = bs58encode(privKey);
+    // const secretKey = bs58encode(privKey);
 
     return new BaseOrderlyKeyPair(secretKey);
   }

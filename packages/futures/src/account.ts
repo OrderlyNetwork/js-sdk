@@ -28,6 +28,7 @@ export type TotalValueInputs = {
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
+
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
   }, zero);
@@ -497,6 +498,10 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       takerFeeRate,
     } = inputs;
 
+    if (totalCollateral === 0) {
+      return 0;
+    }
+
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
     const factor_1 = totalCollateralDecimal
@@ -511,6 +516,20 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       .mul(0.995)
       .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .toNumber();
+
+    // console.log(
+    //   "------------",
+    //   totalCollateralDecimal.toNumber(),
+    //   otherIMs,
+    //   takerFeeRate,
+    //   markPrice,
+    //   positionQty,
+    //   buyOrdersQty
+    // );
+
+    if (positionQty === 0 && buyOrdersQty === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
 
     const factor_2 = totalCollateralDecimal
       .sub(otherIMs)
@@ -528,7 +547,7 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
 
     return Math.min(baseMaxQty, factor_1, factor_2);
   } catch (error) {
-    console.log("error", error);
+    console.log("error", error, (error as any).stack);
     return 0;
   }
 }
@@ -566,6 +585,10 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
 
       .toNumber();
 
+    if (positionQty === 0 && buyOrdersQty === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
+
     const factor_2 = totalCollateralDecimal
       .sub(otherIMs)
       .div(IMR_Factor)
@@ -601,12 +624,28 @@ export function totalMarginRatio(
 ): number {
   const { totalCollateral, markPrices, positions } = inputs;
 
+  console.log("totalMarginRatio inputs", inputs);
+
+  if (totalCollateral === 0) {
+    return 0;
+  }
+
   const totalCollateralDecimal = new Decimal(totalCollateral);
 
   const totalPositionNotional = positions.reduce((acc, cur) => {
     const markPrice = markPrices[cur.symbol] || 0;
     return acc.add(new Decimal(cur.position_qty).mul(markPrice).abs());
   }, zero);
+
+  console.log(
+    "totalPositionNotional",
+    totalPositionNotional.toNumber(),
+    totalCollateralDecimal.toNumber()
+  );
+
+  if (totalPositionNotional.eq(zero)) {
+    return 0;
+  }
 
   return totalCollateralDecimal.div(totalPositionNotional).toNumber();
 }

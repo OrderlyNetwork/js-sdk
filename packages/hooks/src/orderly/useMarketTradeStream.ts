@@ -17,23 +17,9 @@ export const useMarketTradeStream = (
 
   const [trades, setTrades] = useState<API.Trade[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [prevSymbol, setPrevSymbol] = useState<string>(() => symbol);
 
   const { limit = 50 } = options;
-
-  // const { isLoading } = useQuery<API.Trade[]>(
-  //   `/v1/public/market_trades?symbol=${symbol}&limit=${level}`,
-  //   {
-  //     onSuccess: (data) => {
-  //       // console.log("trades ^^^^^^", data);
-  //       if (Array.isArray(data)) {
-  //         setTrades(() => data);
-  //       }
-  //       return data;
-  //     },
-  //   }
-  // );
-
-  // const [requestData, setRequestData] = useState<API.Trade[]>([]);
 
   const ws = useWS();
 
@@ -60,25 +46,36 @@ export const useMarketTradeStream = (
   }, [symbol]);
 
   useEffect(() => {
-    if (trades.length <= 0) return;
+    // if (trades.length <= 0) return;
 
-    const unsubscript = ws.subscribe(`@${symbol}/@trade`, {
-      onMessage: (data: any) => {
-        // console.log("ws: trade topic", data);
-        setTrades((prev) => {
-          const arr = [data, ...prev];
-          if (arr.length > limit) {
-            arr.pop();
-          }
-          return arr;
-        });
+    const unsubscript = ws.subscribe(
+      {
+        id: `${symbol}@trade`,
+        event: "subscribe",
+        topic: `${symbol}@trade`,
+        ts: Date.now(),
       },
-    });
+      {
+        onMessage: (data: any) => {
+          // console.log("ws: trade topic", data);
+          setTrades((prev) => {
+            const arr = [{ ...data, ts: Date.now() }, ...prev];
+            // console.log("arr", arr);
+            if (arr.length > limit) {
+              arr.pop();
+            }
+            return arr;
+          });
+        },
+      }
+    );
 
     return () => {
       unsubscript?.();
     };
-  }, [symbol, trades]);
+  }, [symbol]);
+
+  console.log("trades", trades);
 
   return { data: trades, isLoading };
 };

@@ -98,7 +98,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           disabled={status < AccountStatusEnum.SignedIn}
           avatar={
             <StepItem
-              active={status > AccountStatusEnum.SignedIn}
+              active={status >= AccountStatusEnum.SignedIn}
               isLoading={handleStep === 2}
               isCompleted={status >= AccountStatusEnum.EnableTrading}
             >

@@ -1,7 +1,8 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-
+    "skipLibCheck": true,
+    "module": "esnext",
   },
   "include": ["**/*.ts", "**/*.tsx","**/*.d.ts"],
   "exclude": ["node_modules"]

@@ -379,7 +379,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     ref={priceInputRef}
                     prefix={"Price"}
                     suffix={symbolConfig?.quote}
-                    type="tel"
+                    type="text"
+                    inputMode="decimal"
                     error={!!methods.formState.errors?.order_price}
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
@@ -408,8 +409,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 return (
                   <Input
                     disabled={disabled}
-                    prefix={"Qunatity"}
-                    type="tel"
+                    prefix={"Quantity"}
+                    type="text"
+                    inputMode="decimal"
                     suffix={symbolConfig?.base}
                     className="text-right"
                     error={!!methods.formState.errors?.order_quantity}
@@ -459,7 +461,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     className={"text-right"}
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
-                    type="tel"
+                    type="text"
+                    inputMode="decimal"
                     // value={field.value}
                     value={
                       totalInputFocused.current ? field.value : totalAmount

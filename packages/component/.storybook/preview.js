@@ -95,12 +95,14 @@ const preview = {
   },
   decorators: [
     (Story) => {
+      const configStore = new MemoryConfigStore();
+      const contractManager = new BaseContractManager(configStore);
       return (
         <OnboardConnectorProvider>
           <OrderlyProvider
-            configStore={new MemoryConfigStore()}
+            configStore={configStore}
             walletAdapter={EtherAdapter}
-            contractManager={new BaseContractManager()}
+            contractManager={contractManager}
             keyStore={new LocalStorageStore("testnet")}
             logoUrl="/woo_fi_logo.svg"
           >

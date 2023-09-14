@@ -34,7 +34,7 @@ export const TradeData: FC<Props> = (props) => {
           <td className="text-right">
             <Numeral.total
               rule="human"
-              precision={base_dp}
+              precision={2}
               price={ticker?.["24h_close"]}
               quantity={ticker?.["24h_volumn"]}
             />
@@ -52,12 +52,12 @@ export const TradeData: FC<Props> = (props) => {
             <Numeral precision={quote_dp}>{ticker?.["24h_low"]}</Numeral>
           </td>
         </tr>
-        <tr className="h-[28px]">
+        {/* <tr className="h-[28px]">
           <td className="text-base-contrast/50">Open Interest</td>
           <td className="text-right">
             <Text>{ticker?.["open_interest"]}</Text>
           </td>
-        </tr>
+        </tr> */}
       </table>
     </div>
   );

@@ -35,17 +35,6 @@ const meta: Meta = {
     },
     side: OrderSide.SELL,
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore()}
-        walletAdapter={new Web3WalletAdapter()}
-      >
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

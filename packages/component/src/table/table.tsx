@@ -21,8 +21,9 @@ export const Table = <RecordType extends unknown>(
   props: TableProps<RecordType>
 ) => {
   const rows = useMemo(() => {
-    return props.dataSource?.map((record, index) => {
-      return <Row key={index} columns={props.columns} record={record} />;
+    return props.dataSource?.map((record: any, index) => {
+      const key = `record.ts_${record.price}_${record.size}_${index}`;
+      return <Row key={key} columns={props.columns} record={record} />;
     });
   }, [props.dataSource, props.columns]);
 

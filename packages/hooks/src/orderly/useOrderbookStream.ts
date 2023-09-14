@@ -119,17 +119,10 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     if (item) {
       const [price, quantity] = item;
 
-      // if (price < data[0][0] && quantity > 0) {
-      //   console.log("continue", price, data[0][0], quantity);
-
-      //   data.unshift(item);
-
-      //   continue;
-      // }
-
       const index = data.findIndex(([p], index) => p === price);
       // console.log(index);
       if (index === -1) {
+        if (quantity === 0) continue;
         data.push(item);
       } else {
         if (quantity === 0) {

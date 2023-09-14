@@ -25,7 +25,11 @@ export const LeverageView: FC<LeverageViewProps> = ({
           <Info size={14} />
           <span>Max leverage</span>
         </button>
-        <Button variant={"text"} size={"small"} className="px-1 min-w-[24px]">
+        <Button
+          variant={"text"}
+          size={"small"}
+          className="px-1 min-w-[24px] text-primary-light"
+        >
           {`${maxLeverage}x`}
         </Button>
       </div>

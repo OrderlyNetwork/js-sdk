@@ -63,6 +63,29 @@ export class WS {
     if (!!options.accountId) {
       this.createPrivateSC(options);
     }
+
+    this.bindEvents();
+  }
+
+  private bindEvents() {
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", this.onVisibilityChange);
+    }
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", this.onNetworkStatusChange);
+      window.addEventListener("offline", this.onNetworkStatusChange);
+    }
+  }
+
+  private onVisibilityChange() {
+    console.log("👀👀 document visibility 👀👀", document.visibilityState);
+    if (document.visibilityState) {
+    }
+  }
+
+  private onNetworkStatusChange() {
+    console.log("👀👀 network status 👀👀", navigator.onLine);
   }
 
   public openPrivate(accountId: string) {

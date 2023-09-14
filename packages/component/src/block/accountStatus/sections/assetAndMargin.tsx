@@ -38,8 +38,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     useCollateral({
       dp: 2,
     });
-  const [{ aggregated, totalUnrealizedROI }] = usePositionStream();
-  const [marginRatio, currentLeverage] = useMarginRatio();
+  const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
+    usePositionStream();
+  const { marginRatio, currentLeverage } = useMarginRatio();
   const { visible, toggleVisible } = useContext(AssetsContext);
 
   const [maxLeverage, { update }] = useLeverage();
@@ -71,6 +72,12 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       },
     });
   }, []);
+
+  const marginRatioVal = useMemo(() => {
+    return aggregated.notional === 0
+      ? positionsInfo["margin_ratio"](10)
+      : marginRatio;
+  }, [marginRatio, aggregated]);
 
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
@@ -153,7 +160,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 className="text-primary-light"
                 visible={visible}
               >
-                {marginRatio}
+                {marginRatioVal}
               </Numeral>
 
               {/* <RiskIndicator height={24} /> */}
@@ -163,8 +170,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label="Free / Total Collateral(USDC)"
           value={
-            <div>
-              <Numeral visible={visible}>{freeCollateral}</Numeral> /{" "}
+            <div className="flex gap-1">
+              <Numeral visible={visible}>{freeCollateral}</Numeral>
+              <span>/</span>
               <Numeral visible={visible}>{totalCollateral}</Numeral>
             </div>
           }
@@ -178,11 +186,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <span>Max Account Leverage</span>
               <span className="flex">
                 Current:
-                <Numeral
-                  className="text-base-contrast ml-1"
-                  surfix="x"
-                  visible={visible}
-                >
+                <Numeral className="text-base-contrast ml-1" surfix="x">
                   {currentLeverage}
                 </Numeral>
               </span>

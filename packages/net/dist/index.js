@@ -204,6 +204,24 @@ var WS = class {
     if (!!options.accountId) {
       this.createPrivateSC(options);
     }
+    this.bindEvents();
+  }
+  bindEvents() {
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", this.onVisibilityChange);
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", this.onNetworkStatusChange);
+      window.addEventListener("offline", this.onNetworkStatusChange);
+    }
+  }
+  onVisibilityChange() {
+    console.log("\u{1F440}\u{1F440} document visibility \u{1F440}\u{1F440}", document.visibilityState);
+    if (document.visibilityState) {
+    }
+  }
+  onNetworkStatusChange() {
+    console.log("\u{1F440}\u{1F440} network status \u{1F440}\u{1F440}", navigator.onLine);
   }
   openPrivate(accountId) {
     var _a;

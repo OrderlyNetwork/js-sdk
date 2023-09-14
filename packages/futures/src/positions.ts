@@ -5,10 +5,10 @@ import { IMRFactorPower } from "./constants";
 /**
  * 单个仓位价值
  * @param qty 数量
- * @param price 价格
+ * @param mark_price 价格
  */
-export function notional(qty: number, price: number): number {
-  return new Decimal(qty).mul(price).abs().toNumber();
+export function notional(qty: number, mark_price: number): number {
+  return new Decimal(qty).mul(mark_price).abs().toNumber();
 }
 
 /**
@@ -20,7 +20,7 @@ export function notional(qty: number, price: number): number {
  */
 export function totalNotional(positions: API.Position[]): number {
   return positions.reduce((acc, cur) => {
-    return acc + notional(cur.position_qty, cur.average_open_price);
+    return acc + notional(cur.position_qty, cur.mark_price);
   }, 0);
 }
 
@@ -73,6 +73,10 @@ export type LiqPriceInputs = {
 export function liqPrice(inputs: LiqPriceInputs): number {
   const { markPrice, totalCollateral, positionQty, MMR } = inputs;
   const totalNotional = notional(positionQty, markPrice);
+
+  if (positionQty === 0) {
+    return 0;
+  }
 
   return Math.max(
     new Decimal(markPrice)

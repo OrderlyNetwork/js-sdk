@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/components",
-  "version": "0.0.28",
+  "version": "0.0.32",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -22,7 +22,8 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-intl": "^6.4.4"
+    "@web3-onboard/injected-wallets": "^2.10.4",
+    "@web3-onboard/react": "^2.8.11"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
@@ -47,10 +48,8 @@
     "@theguild/remark-npm2yarn": "^0.1.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@web3-onboard/injected-wallets": "^2.10.4",
-    "@web3-onboard/react": "^2.8.11",
+    
     "autoprefixer": "^10.4.14",
-    "bs58": "^5.0.0",
     "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
     "ethers": "^6.7.1",
@@ -92,6 +91,7 @@
     "@use-gesture/react": "^10.2.27",
     "class-variance-authority": "^0.6.1",
     "ethereum-blockies-base64": "^1.0.2",
+    "bs58": "^5.0.0",
     "lucide-react": "^0.265.0",
     "rc-slider": "^10.2.1",
     "react-hook-form": "^7.45.4",

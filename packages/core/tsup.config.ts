@@ -6,10 +6,11 @@ export default defineConfig((options) => ({
   splitting: false,
   minify: !options.watch,
   format: ["cjs", "esm"],
-  target: "es6",
+  target: "ES2020",
   sourcemap: true,
   clean: true,
   dts: true,
+  noExternal: ["bs58", "@noble/ed25519"],
   esbuildPlugins: [
     polyfillNode({
       polyfills: {

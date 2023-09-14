@@ -95,8 +95,10 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
             interval: "1",
             // theme: "Dark",
             overrides: {
-              "paneProperties.background": "#ffffff",
+              // "paneProperties.background": "#ffffff",
               // "mainSeriesProperties.style": 1,
+              "paneProperties.backgroundType": "solid",
+              "paneProperties.background": "#151822",
 
               "mainSeriesProperties.candleStyle.upColor": "#439687",
               "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
@@ -107,6 +109,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
               "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             },
             preset: "mobile",
+            // loading_screen: { backgroundColor: "#439687" },
             datafeed: new DataFeed(
               {
                 apiBaseUrl: props.apiBaseUrl,

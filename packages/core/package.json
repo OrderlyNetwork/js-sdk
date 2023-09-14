@@ -1,12 +1,13 @@
 {
   "name": "@orderly.network/core",
-  "version": "0.0.28",
+  "version": "0.0.32",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
+    "generate:ver": "genversion src/version.js --es6",
     "test": "jest"
   },
   "keywords": [],
@@ -31,6 +32,7 @@
     "@types/node": "^17.0.12",
     "babel-jest": "^29.6.1",
     "esbuild-plugin-polyfill-node": "^0.3.0",
+    "genversion": "^3.1.1",
     "jest": "^29.6.1",
     "tsconfig": "workspace:*",
     "tsup": "^7.1.0",

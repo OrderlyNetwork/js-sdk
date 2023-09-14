@@ -1,7 +1,6 @@
 import { SWRHook, Middleware } from "swr";
 import { MessageFactor, getMockSigner } from "@orderly.network/core";
-import { useAccount } from "../useAccount";
-import { useAccountInstance } from "../useAccountInstance";
+
 import { SimpleDI, Account } from "@orderly.network/core";
 import { useContext } from "react";
 import { OrderlyContext } from "../orderlyContext";
@@ -11,7 +10,8 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
   // const { account } = useAccountInstance();
   return (key, fetcher, config) => {
     try {
-      const extendedFetcher = async (url: string) => {
+      const extendedFetcher = async (args: any) => {
+        let url = Array.isArray(args) ? args[0] : args;
         // console.log("signature middleware::::::::", key, url);
 
         let account = SimpleDI.get<Account>("account");

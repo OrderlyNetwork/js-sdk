@@ -28,9 +28,11 @@ export const usePrivateQuery = <T>(
   // @ts-ignore
   return useSWR<T>(
     () =>
-      account.state.status >= AccountStatusEnum.EnableTrading ? query : null,
+      account.state.status >= AccountStatusEnum.EnableTrading
+        ? [query, account.state.accountId]
+        : null,
     // query,
-    (url, init) => {
+    (url: string, init: RequestInit) => {
       return fetcher(url, init, { formatter });
     },
     {
