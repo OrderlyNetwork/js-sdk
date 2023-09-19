@@ -2,6 +2,12 @@ import { WalletAdapter } from "./adapter";
 
 export class Web3WalletAdapter implements WalletAdapter {
   constructor(private readonly web3: any) {}
+  get chainId(): number {
+    throw new Error("Method not implemented.");
+  }
+  get addresses(): string {
+    throw new Error("Method not implemented.");
+  }
 
   async getBalance(address: string): Promise<any> {
     const balance = await this.web3.eth.getBalance(address);

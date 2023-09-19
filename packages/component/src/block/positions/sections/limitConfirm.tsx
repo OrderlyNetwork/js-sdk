@@ -24,7 +24,7 @@ export const LimitConfirm: FC<Props> = (props) => {
       </div>
       <Divider className="my-4" />
       <div className="mb-4 text-lg flex items-center gap-2">
-        <NetworkImage type={"coin"} name={"ETH"} />
+        <NetworkImage type={"token"} name={"ETH"} />
         <Text rule="symbol">{order.symbol}</Text>
       </div>
       <div className="grid grid-cols-[1fr_2fr] text-base">

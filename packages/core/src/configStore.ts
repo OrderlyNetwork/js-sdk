@@ -1,3 +1,5 @@
+export type ConfigKey = "apiBaseUrl" | "klineDataUrl";
+
 export interface ConfigStore {
   get<T>(key: string): T;
   set<T>(key: string, value: T): void;
@@ -21,6 +23,7 @@ export class MemoryConfigStore implements ConfigStore {
       ["publicWebsocketKey", "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY"],
       // ["privateWsUrl", "wss://dev-ws-private-v2.orderly.org"],
       ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
+      ["brokerId", "woofi_dex"],
       ["env", "dev-evm"],
     ]);
   }

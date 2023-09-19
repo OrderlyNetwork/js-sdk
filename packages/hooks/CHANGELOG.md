@@ -1,5 +1,77 @@
 # @orderly.network/hooks
 
+## 0.0.39
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.39
+  - @orderly.network/types@0.0.38
+  - @orderly.network/utils@0.0.32
+  - @orderly.network/core@0.0.38
+  - @orderly.network/net@1.0.36
+
+## 0.0.38
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.38
+  - @orderly.network/types@0.0.37
+  - @orderly.network/utils@0.0.31
+  - @orderly.network/core@0.0.37
+  - @orderly.network/net@1.0.35
+
+## 0.0.37
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.37
+  - @orderly.network/types@0.0.36
+  - @orderly.network/utils@0.0.30
+  - @orderly.network/core@0.0.36
+  - @orderly.network/net@1.0.34
+
+## 0.0.36
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.36
+  - @orderly.network/types@0.0.35
+  - @orderly.network/utils@0.0.29
+  - @orderly.network/core@0.0.35
+  - @orderly.network/net@1.0.33
+
+## 0.0.35
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.35
+  - @orderly.network/types@0.0.34
+  - @orderly.network/utils@0.0.28
+  - @orderly.network/core@0.0.34
+  - @orderly.network/net@1.0.32
+
+## 0.0.34
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/futures@0.0.34
+  - @orderly.network/types@0.0.33
+  - @orderly.network/utils@0.0.27
+  - @orderly.network/core@0.0.33
+  - @orderly.network/net@1.0.31
+
 ## 0.0.33
 
 ### Patch Changes

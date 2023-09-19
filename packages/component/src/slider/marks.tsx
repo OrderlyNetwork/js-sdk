@@ -1,5 +1,5 @@
 import { cn } from "@/utils/css";
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { FC, useEffect, useLayoutEffect, useRef } from "react";
 import {
   convertValueToPercentage,
@@ -40,9 +40,8 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
 
         return (
-          <>
+          <Fragment key={index}>
             <span
-              key={index}
               className={cn(
                 "absolute top-[7px] w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
                 {
@@ -69,6 +68,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
             />
             {markLabelVisible && (
               <span
+                key={index}
                 className={cn(
                   "absolute top-[20px] text-sm text-base-contrast/50 pointer-events-none translate-x-[-50%]"
                 )}
@@ -79,7 +79,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
                 {mark.label}
               </span>
             )}
-          </>
+          </Fragment>
         );
       })}
     </>

@@ -1,5 +1,13 @@
 import { cva, VariantProps, cx } from "class-variance-authority";
-import { FC, SelectHTMLAttributes, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  SelectHTMLAttributes,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useId,
+} from "react";
 
 import { ActionSheet } from "@/sheet/actionSheet/actionSheet";
 import { ChevronDown } from "lucide-react";
@@ -69,6 +77,7 @@ const Select: FC<SelectProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState(0);
+  // const uid = useId();
 
   const label = useMemo(() => {
     if (typeof props.value !== "undefined") {
@@ -85,7 +94,8 @@ const Select: FC<SelectProps> = ({
     return props.options || [];
   }, [props]);
 
-  const triggerRef = React.useRef<any>(null);
+  const triggerRef = React.useRef<HTMLDivElement | null>(null);
+  // const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (triggerRef.current) {
@@ -94,7 +104,7 @@ const Select: FC<SelectProps> = ({
   }, []);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenuTrigger asChild>
         <div
           ref={triggerRef}
@@ -108,10 +118,10 @@ const Select: FC<SelectProps> = ({
             }),
             open && "bg-popover"
           )}
-          onClick={() => {
-            if (options.length === 0) return;
-            setOpen(!open);
-          }}
+          // onClick={() => {
+          //   if (options.length === 0) return;
+          //   setOpen(!open);
+          // }}
         >
           <div className="flex-1 text-sm text-inherit">
             {typeof label !== "undefined" && <>{label}</>}
@@ -123,7 +133,15 @@ const Select: FC<SelectProps> = ({
           />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" style={{ width: `${width}px` }}>
+      <DropdownMenuContent
+        container={containerRef.current}
+        align="start"
+        style={{ width: `${width}px` }}
+        // onPointerDownOutside={(event) => {
+        //   console.log(event);
+        // }}
+        // onInteractOutside={() => setOpen(false)}
+      >
         {props.options?.map((option, index) => {
           return (
             <DropdownMenuItem

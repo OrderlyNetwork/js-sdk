@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { PositionHeader } from "./positionHeader";
 import { PositionsView } from "@/block/positions";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
@@ -17,9 +17,11 @@ import { PositionLimitCloseDialog } from "@/block/positions/sections/closeDialog
 import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
+import { TabContext } from "@/tab";
 
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
+  const tabContext = useContext(TabContext);
 
   // console.log("********", data, info.maintenance_margin_ratio());
 

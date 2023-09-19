@@ -1,5 +1,5 @@
 import { OrdersView } from "@/block/orders";
-import { FC, useCallback, useContext, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useState } from "react";
 import {
   useOrderStream,
   OrderStatus,
@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
+import { TabContext } from "@/tab";
 
 interface Props {
   // symbol: string;
@@ -15,6 +16,7 @@ interface Props {
 
 export const OrdersPane: FC<Props> = (props) => {
   const context = useContext(TradingPageContext);
+  const tabContext = useContext(TabContext);
 
   const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
     "showAllSymbol_orders",

@@ -55,14 +55,14 @@ const web3Onboard = init({
     gettingStartedGuide: "https://blocknative.com",
     explore: "https://blocknative.com",
   },
-  // accountCenter: {
-  //   desktop: {
-  //     enabled: false,
-  //   },
-  //   mobile: {
-  //     enabled: false,
-  //   },
-  // },
+  accountCenter: {
+    desktop: {
+      enabled: false,
+    },
+    mobile: {
+      enabled: false,
+    },
+  },
   theme: "dark",
 });
 
@@ -89,6 +89,7 @@ const preview = {
         items: [
           { value: "PERP_ETH_USDC", title: "PERP_ETH_USDC" },
           { value: "PERP_NEAR_USDC", title: "PERP_NEAR_USDC" },
+          { value: "PERP_BTC_USDC", title: "PERP_BTC_USDC" },
         ],
       },
     },
@@ -101,7 +102,8 @@ const preview = {
         <OnboardConnectorProvider>
           <OrderlyProvider
             configStore={configStore}
-            walletAdapter={EtherAdapter}
+            // walletAdapter={EtherAdapter}
+          getWalletAdapter={(options)=>new EtherAdapter(options)}
             contractManager={contractManager}
             keyStore={new LocalStorageStore("testnet")}
             logoUrl="/woo_fi_logo.svg"
@@ -111,21 +113,32 @@ const preview = {
         </OnboardConnectorProvider>
       );
     },
+    withThemeByDataAttribute({
+      themes: {
+        // light: "light",
+        // dark: "dark",
+        "woo/dark": "",
+        "woo/light": "woo_light",
+        orderly: "orderly",
+      },
+      defaultTheme: "woo/dark",
+      attributeName: "data-o-theme",
+    }),
   ],
 };
 
 export default preview;
 
-export const decorators = [
-  withThemeByDataAttribute({
-    themes: {
-      // light: "light",
-      // dark: "dark",
-      "woo/dark": "",
-      "woo/light": "woo_light",
-      orderly: "orderly",
-    },
-    defaultTheme: "woo/dark",
-    attributeName: "data-o-theme",
-  }),
-];
+// export const decorators = [
+//   withThemeByDataAttribute({
+//     themes: {
+//       // light: "light",
+//       // dark: "dark",
+//       "woo/dark": "",
+//       "woo/light": "woo_light",
+//       orderly: "orderly",
+//     },
+//     defaultTheme: "woo/dark",
+//     attributeName: "data-o-theme",
+//   }),
+// ];

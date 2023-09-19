@@ -1,5 +1,9 @@
 // export { Button } from "./button";
-export { OrderlyProvider, OnboardConnectorProvider } from "./provider";
+export {
+  OrderlyProvider,
+  OnboardConnectorProvider,
+  WalletConnectorContext,
+} from "./provider";
 
 export { default as Button } from "./button";
 export * from "./input";

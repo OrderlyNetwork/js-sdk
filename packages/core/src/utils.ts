@@ -29,12 +29,13 @@ export function getDomain(chainId: number, onChainDomain?: boolean) {
 export function generateRegisterAccountMessage(inputs: {
   chainId: number;
   registrationNonce: number;
+  brokerId: string;
 }) {
-  const { chainId, registrationNonce } = inputs;
+  const { chainId, registrationNonce, brokerId } = inputs;
   const now = Date.now();
   const primaryType = "Registration";
   const message = {
-    brokerId: "woofi_dex",
+    brokerId,
     chainId,
     timestamp: now,
     registrationNonce,
@@ -59,14 +60,21 @@ export function generateRegisterAccountMessage(inputs: {
 export function generateAddOrderlyKeyMessage(inputs: {
   publicKey: string;
   chainId: number;
+  brokerId: string;
   primaryType: string;
   expiration: number;
 }) {
-  const { publicKey, chainId, primaryType, expiration = 365 } = inputs;
+  const {
+    publicKey,
+    chainId,
+    primaryType,
+    brokerId,
+    expiration = 365,
+  } = inputs;
   const now = Date.now();
   // message;
   const message = {
-    brokerId: "woofi_dex",
+    brokerId,
     orderlyKey: publicKey,
     scope: "read,trading",
     chainId,
@@ -91,10 +99,11 @@ export function generateAddOrderlyKeyMessage(inputs: {
 
 export function generateSettleMessage(inputs: {
   chainId: number;
+  brokerId: string;
   settlePnlNonce: string;
   domain: SignatureDomain;
 }) {
-  const { chainId, settlePnlNonce, domain } = inputs;
+  const { chainId, settlePnlNonce, domain, brokerId } = inputs;
   const primaryType = "SettlePnl";
   const timestamp = new Date().getTime();
 
@@ -104,7 +113,7 @@ export function generateSettleMessage(inputs: {
   };
 
   const message = {
-    brokerId: "woofi_dex",
+    brokerId,
     chainId: chainId,
     timestamp: timestamp,
     settleNonce: settlePnlNonce,

@@ -1,8 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, useContext, useMemo } from "react";
 import { cn } from "@/utils/css";
+import { TabContext, type TabContextState } from "./tabContext";
+
+export type getTitleFunction = (context: TabContextState) => string;
+export type TabTitle = string | getTitleFunction;
 
 export interface TabProps {
-  title: string;
+  title: TabTitle;
   active?: boolean;
   value: string | number;
   disabled?: boolean;
@@ -12,6 +16,15 @@ export interface TabProps {
 
 export const Tab: FC<TabProps> = (props) => {
   const { active, disabled } = props;
+  const tabContext = useContext(TabContext);
+  const title = useMemo(() => {
+    if (typeof props.title === "string") {
+      return props.title;
+    }
+    if (typeof props.title === "function") {
+      return props.title(tabContext);
+    }
+  }, [props.title]);
   return (
     <button
       className={cn(
@@ -25,7 +38,7 @@ export const Tab: FC<TabProps> = (props) => {
       }}
       id={`tab-${props.value}`}
     >
-      {props.title}
+      {title}
     </button>
   );
 };

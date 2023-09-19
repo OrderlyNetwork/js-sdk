@@ -23,15 +23,6 @@ const AccountDemo: FC<{
 const meta: Meta = {
   title: "hooks/useAccount",
   component: AccountDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 type Story = StoryObj<typeof AccountDemo>;

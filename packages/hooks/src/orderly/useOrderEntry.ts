@@ -58,7 +58,7 @@ export const useOrderEntry = (
   // initialValue: Partial<OrderEntity> = {},
   options?: UseOrderEntryOptions
 ): OrderEntryReturn => {
-  const { mutate } = useSWRConfig();
+  // const { mutate } = useSWRConfig();
   const [doCreateOrder] = useMutation<OrderEntity, any>("/v1/order");
 
   const { freeCollateral } = useCollateral();
@@ -132,13 +132,13 @@ export const useOrderEntry = (
         return doCreateOrder({
           ...data,
           symbol,
-        }).then((res: any) => {
-          if (res.success) {
-            //update orders;
-            mutate("/v1/orders?size=100&page=1$status=NEW");
-          }
-          return res;
         });
+        // .then((res: any) => {
+        //   if (res.success) {
+        //     mutate("/v1/orders?size=100&page=1$status=NEW");
+        //   }
+        //   return res;
+        // });
       });
   };
 

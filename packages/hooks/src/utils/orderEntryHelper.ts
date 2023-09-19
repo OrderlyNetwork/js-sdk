@@ -149,20 +149,32 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     values.order_quantity = quantity.toNumber();
   }
 
-  let price = markPrice;
+  // if(values.order_type === OrderType.MARKET) {
 
-  if (values.order_type === OrderType.LIMIT && !!values.order_price) {
-    price = Number(values.order_price);
+  // }
+
+  if (values.order_type === OrderType.MARKET) {
+    const price = markPrice;
+    values.total = quantity.mul(price).todp(2).toNumber();
   }
 
-  const total = quantity.mul(price);
-  const totalDP = total.dp();
+  if (values.order_type === OrderType.LIMIT) {
+    if (values.order_price) {
+      const price = Number(values.order_price);
+      const total = quantity.mul(price);
+      values.total = total.todp(2).toNumber();
+    } else {
+      values.total = "";
+    }
+  }
+
+  // const totalDP = total.dp();
   // total.todp(Math.min(config.quoteDP, totalDP));
 
   return [
     {
       ...values,
-      total: total.todp(2).toNumber(),
+      // total: total.todp(2).toNumber(),
     },
     input,
     value,

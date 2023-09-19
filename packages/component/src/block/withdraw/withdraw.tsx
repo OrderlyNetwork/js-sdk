@@ -1,22 +1,14 @@
 import { Divider } from "@/divider";
-import { Coin } from "@/icon";
+import { Coin, MoveDownIcon } from "@/icon";
 import { FC } from "react";
 import { QuantityInput } from "@/block/quantityInput";
-import { ArrowDown } from "lucide-react";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/withdraw/sections/summary";
 import Button from "@/button";
 import { WalletPicker } from "../pickers/walletPicker";
 import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
-
-export enum WithdrawStatus {
-  NotSupported = "NotSupported",
-  NotConnected = "NotConnected",
-  Unsettle = "Unsettle",
-  InsufficientBalance = "InsufficientBalance",
-  Normal = "Normal",
-}
+import { WithdrawStatus } from "@orderly.network/types";
 
 export interface WithdrawProps {
   status: WithdrawStatus;
@@ -39,7 +31,7 @@ export const Withdraw: FC<WithdrawProps> = ({
         })}
       />
       <Divider className={"py-3"}>
-        <ArrowDown size={20} className={"text-primary"} />
+        <MoveDownIcon className={"text-primary-light"} />
       </Divider>
       <div className={"flex items-center"}>
         <div className={"flex-1"}>Your Web3 Wallet</div>
@@ -51,9 +43,9 @@ export const Withdraw: FC<WithdrawProps> = ({
       <TokenQtyInput />
 
       <Summary />
-      <div>
+      <div className="py-3 flex justify-center">
         {/*<Button fullWidth>Switch to NEAR Mainnet</Button>*/}
-        <Button fullWidth>Withdraw</Button>
+        <Button className="w-2/3">Withdraw</Button>
       </div>
     </>
   );

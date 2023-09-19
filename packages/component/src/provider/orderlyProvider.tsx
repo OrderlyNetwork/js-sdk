@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   OrderlyProvider as Provider,
+  SWRConfig,
   type WebSocketAdpater,
 } from "@orderly.network/hooks";
 import { ModalProvider } from "@/modal/modalContext";
@@ -18,6 +19,7 @@ import {
   type ConfigStore,
   type OrderlyKeyStore,
   type WalletAdapter,
+  getWalletAdapterFunc,
 } from "@orderly.network/core";
 import { Account, SimpleDI } from "@orderly.network/core";
 import { TooltipProvider } from "@/tooltip/tooltip";
@@ -30,10 +32,12 @@ import { PreDataLoader } from "@/system/preDataLoader";
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
   networkId?: string;
+  brokerId?: string;
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
   contractManager: IContract;
-  walletAdapter: { new (options: any): WalletAdapter };
+  // walletAdapter: { new (options: any): WalletAdapter };
+  getWalletAdapter: getWalletAdapterFunc;
 
   logoUrl?: string;
 
@@ -49,9 +53,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     networkId = "testnet",
     logoUrl,
     keyStore,
+    brokerId,
     configStore,
     contractManager,
-    walletAdapter,
+    getWalletAdapter,
     // onWalletConnect,
   } = props;
 
@@ -76,11 +81,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     wallet: currentWallet,
     setChain,
   } = useContext(WalletConnectorContext);
-
-  // const [testChains] = useChains("testnet", {
-  //   pick: "network_infos",
-  //   filter: (item: API.Chain) => item.network_infos.chain_id === 421613,
-  // });
 
   const testChains = useMemo(() => {
     return [
@@ -114,17 +114,17 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         configStore,
         keyStore,
         contractManager,
-        walletAdapter
+        getWalletAdapter
       );
 
       SimpleDI.registerByName(Account.instanceName, account);
     }
   }, []);
 
-  const apiBaseUrl = useMemo(() => {
+  const apiBaseUrl = useMemo<string>(() => {
     return configStore.get("apiBaseUrl");
   }, [configStore]);
-  const klineDataUrl = useMemo(() => {
+  const klineDataUrl = useMemo<string>(() => {
     return configStore.get("klineDataUrl");
   }, [configStore]);
 
@@ -225,7 +225,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }, [currentWallet]);
 
   useEffect(() => {
-    // console.log("app ready?", ready);
+    console.log("app ready?", ready);
     if (ready) {
       let account = SimpleDI.get<Account>(Account.instanceName);
       // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
@@ -237,6 +237,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         ) {
           return;
         }
+        // 需要确定已经拿到chains list
         if (!checkChainId(currentChainId)) {
           account.disconnect();
 
@@ -269,30 +270,33 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   // }, [ready]);
 
   return (
-    <Provider
-      value={{
-        apiBaseUrl,
-        klineDataUrl,
-        configStore: props.configStore,
-        logoUrl,
-        keyStore,
-        walletAdapter,
-        contractManager: props.contractManager,
-        networkId,
-        ready,
-        onWalletConnect: _onWalletConnect,
-        onWalletDisconnect: _onWalletDisconnect,
-        onSetChain: _onSetChain,
-        onAppTestChange,
-        errors,
-      }}
-    >
-      <WSObserver />
-      <PreDataLoader />
-      <TooltipProvider>
-        <ModalProvider>{props.children}</ModalProvider>
-      </TooltipProvider>
-      <Toaster />
-    </Provider>
+    <SWRConfig>
+      <Provider
+        value={{
+          apiBaseUrl,
+          klineDataUrl,
+          configStore: props.configStore,
+          logoUrl,
+          keyStore,
+          getWalletAdapter,
+          contractManager: props.contractManager,
+          networkId,
+          ready,
+          onWalletConnect: _onWalletConnect,
+          onWalletDisconnect: _onWalletDisconnect,
+          onSetChain: _onSetChain,
+          onAppTestChange,
+          errors,
+          brokerId,
+        }}
+      >
+        <PreDataLoader />
+        <TooltipProvider>
+          <WSObserver />
+          <ModalProvider>{props.children}</ModalProvider>
+        </TooltipProvider>
+        <Toaster />
+      </Provider>
+    </SWRConfig>
   );
 };

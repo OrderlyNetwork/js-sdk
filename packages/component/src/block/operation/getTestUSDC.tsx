@@ -30,36 +30,40 @@ export const GetTestUSDC = () => {
     localStorage.setItem(`${localStorageItem}_${state.accountId}`, "1");
   }, []);
 
-  const onGetClick = useCallback(() => {
-    const toastId = toast.loading("Getting test USDC...");
-    getTestUSDC({
-      chain_id: account.wallet.chainId.toString(),
-      user_address: state.address,
-      broker_id: "woofi_dex",
-    })
-      .then(
-        (res: any) => {
-          if (res.success) {
-            return modal.confirm({
-              title: "Get test USDC",
-              content:
-                "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
-              onOk: () => {
-                return Promise.resolve();
-              },
-            });
-          } else {
-            return Promise.reject(res);
+  const onGetClick = useCallback(
+    (event: MouseEvent) => {
+      event.preventDefault();
+      const toastId = toast.loading("Getting test USDC...");
+      getTestUSDC({
+        chain_id: account.wallet.chainId.toString(),
+        user_address: state.address,
+        broker_id: "woofi_dex",
+      })
+        .then(
+          (res: any) => {
+            if (res.success) {
+              return modal.confirm({
+                title: "Get test USDC",
+                content:
+                  "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
+                onOk: () => {
+                  return Promise.resolve();
+                },
+              });
+            } else {
+              return Promise.reject(res);
+            }
+          },
+          (error: Error) => {
+            toast.error(error.message);
           }
-        },
-        (error: Error) => {
-          toast.error(error.message);
-        }
-      )
-      .finally(() => {
-        toast.dismiss(toastId);
-      });
-  }, [state]);
+        )
+        .finally(() => {
+          toast.dismiss(toastId);
+        });
+    },
+    [state]
+  );
 
   if (!show) {
     return null;
@@ -67,13 +71,20 @@ export const GetTestUSDC = () => {
 
   return (
     <div className="flex justify-between items-center fixed left-0 right-0 bottom-[44px] h-[40px] bg-base-300 z-20 px-2 animate-in fade-in ">
-      <div
-        className="text-sm text-base-contrast/50 cursor-pointer"
-        onClick={onGetClick}
-      >
-        <span className="text-primary-light">Get test USDC</span> to start demo
-        trading
+      <div className="text-sm text-base-contrast/50 cursor-pointer">
+        <span className="text-primary-light" onClick={onGetClick}>
+          Get test USDC
+        </span>{" "}
+        and earn an NFT in our{" "}
+        <a
+          href="https://galxe.com/orderlynetwork/campaign/GCiLaU2YJm"
+          className="text-primary-light"
+        >
+          testnet campaign
+        </a>
+        !
       </div>
+      {/* Get test USDC and earn an NFT in our testnet campaign! */}
       <div className="p-2">
         <button
           className="w-[16px] h-[16px] rounded-full bg-primary-light flex justify-center items-center"

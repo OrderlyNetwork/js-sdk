@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
 
-import { type WSMessage } from "@orderly.network/core";
 import { useWS } from "../useWS";
 
 interface MarketInfo {}

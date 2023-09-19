@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren } from "react";
+import { TabTitle } from "./tab";
 
 export interface TabPaneProps {
-  title: string;
+  title: TabTitle;
   active?: boolean;
   value?: string;
   disabled?: boolean;

@@ -2,7 +2,7 @@ import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore";
 import { OrderlyKeyStore } from "./keyStore";
-import { WalletAdapter } from "./wallet/adapter";
+import { WalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
@@ -82,7 +82,7 @@ export class Account {
     private readonly keyStore: OrderlyKeyStore,
     // wallet?: WalletAdapter
     private readonly contractManger: IContract,
-    private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
+    private readonly getWalletAdapter: getWalletAdapterFunc // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
   ) {
     // this.contract = new BaseContract(configStore);
 
@@ -133,7 +133,8 @@ export class Account {
     this._ee.emit("change:status", nextState);
 
     if (wallet) {
-      this.walletClient = new this.walletAdapterClass(wallet);
+      // this.walletClient = new this.walletAdapterClass(wallet);
+      this.walletClient = this.getWalletAdapter({ ...wallet, address });
     }
 
     return await this._checkAccount(address);
@@ -320,6 +321,7 @@ export class Account {
     const [message, toSignatureMessage] = generateRegisterAccountMessage({
       registrationNonce: nonce,
       chainId: this.walletClient.chainId,
+      brokerId: this.configStore.get("brokerId"),
     });
 
     const signatured = await this.walletClient.send("eth_signTypedData_v4", [
@@ -374,6 +376,7 @@ export class Account {
       chainId: this.walletClient.chainId,
       primaryType,
       expiration,
+      brokerId: this.configStore.get("brokerId"),
     });
 
     const address = this.stateValue.address;
@@ -433,6 +436,7 @@ export class Account {
     const [message, toSignatureMessage] = generateSettleMessage({
       settlePnlNonce: nonce,
       chainId: this.walletClient.chainId,
+      brokerId: this.configStore.get("brokerId"),
       domain,
     });
 

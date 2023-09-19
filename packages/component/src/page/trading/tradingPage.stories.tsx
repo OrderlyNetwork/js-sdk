@@ -26,6 +26,13 @@ const meta: Meta = {
       options: ["BTC/USDT", "ETH/USDT"],
     },
   },
+  // decorators: [
+  //   (Story) => (
+  //     <SWRDevTools>
+  //       <Story />
+  //     </SWRDevTools>
+  //   ),
+  // ],
 };
 
 export default meta;

@@ -5,7 +5,12 @@ import { cn } from "@/utils/css";
 import React, { FC, useEffect, useMemo } from "react";
 import { Size } from "./types";
 
-export type NetworkImageType = "symbol" | "chain" | "token" | "placeholder";
+export type NetworkImageType =
+  | "symbol"
+  | "chain"
+  | "token"
+  | "placeholder"
+  | "wallet";
 
 export interface NetworkImageProps {
   name?: string;

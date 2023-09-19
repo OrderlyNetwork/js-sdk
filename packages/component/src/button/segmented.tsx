@@ -68,6 +68,7 @@ const _Button = ({
     <button
       type="button"
       onClick={(event) => onChange(value)}
+      disabled={disabled}
       className={cn(
         "min-w-0 flex-1 py-1 bg-fill text-base-contrast/20 relative after:block after:bg-fill after:absolute after:w-[30px] after:h-full after:top-0 after:z-10 h-[32px]",
         isActive && "bg-primary after:bg-primary",

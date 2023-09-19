@@ -21,6 +21,8 @@ import { modal } from "@/modal";
 import { toast } from "@/toast";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
+import { cn } from "@/utils/css";
+import { cx } from "class-variance-authority";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -74,10 +76,15 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   }, []);
 
   const marginRatioVal = useMemo(() => {
-    return aggregated.notional === 0
-      ? positionsInfo["margin_ratio"](10)
-      : marginRatio;
+    return Math.min(
+      10,
+      aggregated.notional === 0
+        ? positionsInfo["margin_ratio"](10)
+        : marginRatio
+    );
   }, [marginRatio, aggregated]);
+
+  // console.log("marginRatio", marginRatio, marginRatioVal);
 
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
@@ -157,13 +164,17 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <div className="flex items-center gap-2">
               <Numeral
                 rule="percentages"
-                className="text-primary-light"
+                className={cx({
+                  "text-primary-light": marginRatioVal >= 10,
+                  "text-warning": marginRatioVal < 10 && marginRatioVal >= 0.5,
+                  "text-danger": marginRatioVal < 0.5,
+                })}
                 visible={visible}
               >
                 {marginRatioVal}
               </Numeral>
 
-              {/* <RiskIndicator height={24} /> */}
+              <RiskIndicator value={marginRatio} />
             </div>
           }
         />

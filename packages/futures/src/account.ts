@@ -624,8 +624,6 @@ export function totalMarginRatio(
 ): number {
   const { totalCollateral, markPrices, positions } = inputs;
 
-  console.log("totalMarginRatio inputs", inputs);
-
   if (totalCollateral === 0) {
     return 0;
   }
@@ -636,12 +634,6 @@ export function totalMarginRatio(
     const markPrice = markPrices[cur.symbol] || 0;
     return acc.add(new Decimal(cur.position_qty).mul(markPrice).abs());
   }, zero);
-
-  console.log(
-    "totalPositionNotional",
-    totalPositionNotional.toNumber(),
-    totalCollateralDecimal.toNumber()
-  );
 
   if (totalPositionNotional.eq(zero)) {
     return 0;

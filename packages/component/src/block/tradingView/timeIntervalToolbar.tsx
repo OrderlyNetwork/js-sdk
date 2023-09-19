@@ -56,10 +56,11 @@ export interface TimeIntervalToolbarProps {
 export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
   intervals = defaultTimeInterval,
   onIntervalChange,
+  timeInterval,
 }) => {
-  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
-    () => intervals[0].value as TimeInterval
-  );
+  // const [timeInterval, setTimeInterval] = useState<TimeInterval>(
+  //   () => intervals[0].value as TimeInterval
+  // );
 
   return (
     <div className="flex justify-around h-[40px]">
@@ -72,7 +73,7 @@ export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
             )}
             key={interval.value}
             onClick={() => {
-              setTimeInterval(interval.value as TimeInterval);
+              // setTimeInterval(interval.value as TimeInterval);
               onIntervalChange?.(interval.value as TimeInterval);
             }}
           >

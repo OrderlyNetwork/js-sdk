@@ -6,6 +6,7 @@ import { getPrecisionByNumber } from "@orderly.network/utils";
 export const useSymbolsInfo = () => {
   const { data = {} } = useQuery<API.SymbolExt[]>(`/v1/public/info`, {
     focusThrottleInterval: 1000 * 60 * 60 * 24,
+    dedupingInterval: 1000 * 60 * 60 * 24,
     revalidateOnFocus: false,
     formatter(data: { rows: API.Symbol[] }) {
       if (!data?.rows || !data?.rows?.length) {

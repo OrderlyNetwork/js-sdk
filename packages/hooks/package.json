@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "0.0.33",
+  "version": "0.0.39",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -37,7 +37,8 @@
     "ramda": "^0.29.0",
     "rxjs-hooks": "0.8.0-alpha.0",
     "swr": "^2.2.0",
-    "use-constant": "^1.1.1"
+    "use-constant": "^1.1.1",
+    "use-debounce": "^9.0.4"
   },
   "peerDependencies": {
     "rxjs": "^7.8.1"

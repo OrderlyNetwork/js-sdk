@@ -1,8 +1,9 @@
 import { useQuery } from "../useQuery";
-import { type WSMessage } from "@orderly.network/core";
+
 import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
 import { useMemo } from "react";
+import { WSMessage } from "@orderly.network/types";
 
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info

@@ -10,6 +10,7 @@ export interface TabsProps {
   value?: string;
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
+  extraData?: any;
   keepAlive?: boolean;
   // 是否显示tab指示器，default: true
   showIdentifier?: boolean;
@@ -76,7 +77,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   //   const extraNode
 
   return (
-    <TabContextProvider>
+    <TabContextProvider data={props.extraData}>
       <>
         <TabList
           tabs={tabList}

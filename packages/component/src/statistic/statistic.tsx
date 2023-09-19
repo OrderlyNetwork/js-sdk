@@ -88,7 +88,8 @@ export const Statistic: FC<StatisticProps> = (props) => {
         rule === "date" ||
         rule === "address" ||
         rule === "text" ||
-        rule === "symbol"
+        rule === "symbol" ||
+        rule === "status"
       ) {
         return <Text rule={rule}>{props.value}</Text>;
       }

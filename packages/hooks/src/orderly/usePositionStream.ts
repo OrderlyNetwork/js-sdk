@@ -14,6 +14,7 @@ import { OrderEntity } from "@orderly.network/types";
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
+import { useEventEmitter } from "../useEventEmitter";
 
 export interface PositionReturn {
   data: any[];
@@ -28,7 +29,9 @@ export const usePositionStream = (
   options?: SWRConfiguration
 ) => {
   const symbolInfo = useSymbolsInfo();
-  const { state: accountState } = useAccount();
+
+  const ee = useEventEmitter();
+
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
@@ -45,12 +48,16 @@ export const usePositionStream = (
 
   const fundingRates = useFundingRates();
 
-  const { data, error } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
+  const {
+    data,
+    error,
+    // mutate: updatePositions,
+  } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
-    dedupingInterval: 5000,
-    keepPreviousData: false,
-    revalidateIfStale: true,
+    // dedupingInterval: 100,
+    // keepPreviousData: false,
+    // revalidateIfStale: true,
     ...options,
 
     formatter: (data) => data,
@@ -201,6 +208,12 @@ export const usePositionStream = (
         };
       });
   }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
+
+  // useEffect(() => {
+  //   ee.on("positions:changed", () => {
+  //     updatePositions();
+  //   });
+  // }, []);
 
   return [
     {

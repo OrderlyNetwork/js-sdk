@@ -28,13 +28,13 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
     >
       <div className="pb-[70px]">
         <NavBar symbol={props.symbol} />
-        <Divider />
+        {/* <Divider /> */}
         <ChartView
           symbol={props.symbol}
           tradingViewConfig={props.tradingViewConfig}
         />
         <MyLeverageView symbol={props.symbol} />
-        <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start min-h-[420px]">
+        <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start ">
           <MyOrderBook symbol={props.symbol} />
           <MyOrderEntry symbol={props.symbol} />
         </div>

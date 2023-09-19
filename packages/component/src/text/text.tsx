@@ -4,6 +4,8 @@ import { TradingPair } from "./tradingPair";
 import { cn } from "@/utils/css";
 import { Slot } from "@radix-ui/react-slot";
 import { dayjs } from "@orderly.network/utils";
+import { firstLetterToUpperCase } from "@/utils/string";
+import { OrderStatus } from "@orderly.network/types";
 
 const textVariants = cva([], {
   variants: {
@@ -22,7 +24,7 @@ const textVariants = cva([], {
   },
 });
 
-export type TextRule = "date" | "address" | "text" | "symbol";
+export type TextRule = "date" | "address" | "text" | "symbol" | "status";
 
 export interface TextProps
   extends HTMLAttributes<HTMLSpanElement>,
@@ -76,6 +78,16 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
         return arr[2];
       }
       return `${arr[1]}-${arr[0]}`;
+    }
+
+    if (rule === "status") {
+      const status = children as string;
+      if (status === OrderStatus.NEW || status === OrderStatus.OPEN) {
+        return "Pending";
+      }
+      const text = firstLetterToUpperCase(status);
+
+      return text;
     }
 
     return children;

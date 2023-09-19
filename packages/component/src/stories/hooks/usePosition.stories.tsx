@@ -55,15 +55,6 @@ const PositionHookDemo: FC<{
 const meta: Meta = {
   title: "hooks/usePositionStream",
   component: PositionHookDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

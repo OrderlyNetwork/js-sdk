@@ -34,7 +34,7 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
       suffix={
         <InputMask className={"flex-row items-center gap-2"}>
           <Divider vertical />
-          <NetworkImage name={"USDC"} type={"coin"} size={"small"} />
+          <NetworkImage name={"USDC"} type={"token"} size={"small"} />
           <span>USDC</span>
         </InputMask>
       }

@@ -27,9 +27,9 @@ export { useWS } from "./useWS";
 export * from "./orderlyContext";
 export * from "./orderly/orderlyHooks";
 
-import useSWR, { type SWRConfiguration } from "swr";
+import useSWR, { type SWRConfiguration, SWRConfig } from "swr";
 
-export { useSWR, type SWRConfiguration };
+export { useSWR, SWRConfig, type SWRConfiguration };
 
 export * as apis from "./apis";
 export * from "./orderly/orderlyHooks";

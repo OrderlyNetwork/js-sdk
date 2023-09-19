@@ -19,8 +19,6 @@ export const useAccount = (): {
   const {
     configStore,
     keyStore,
-    walletAdapter,
-    contractManager,
     onWalletConnect,
     onWalletDisconnect,
     onSetChain,

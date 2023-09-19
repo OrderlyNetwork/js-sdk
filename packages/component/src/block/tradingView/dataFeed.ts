@@ -6,6 +6,7 @@ import {
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
 import { WS } from "@orderly.network/net";
+import { ORDERLY_TRADING_VIEW_INTERVAL } from "./constants";
 
 // const OrderlyRe;
 
@@ -51,6 +52,7 @@ export default class DataFeed implements IBasicDataFeed {
     setTimeout(() => {
       const cIndex = this._config["symbol"].indexOf(symbolName);
       console.log(cIndex, this._config);
+      // const interval = localStorage.getItem(ORDERLY_TRADING_VIEW_INTERVAL)
       const symbolInfo: LibrarySymbolInfo = {
         // name: `${symbolArr[1]}/${symbolArr[2]}`,
         name: symbolName,
@@ -60,6 +62,7 @@ export default class DataFeed implements IBasicDataFeed {
         type: this._config["session-regular"][cIndex] || "crypto",
         session: this._config["session-regular"][cIndex] || "24x7",
         exchange: "",
+
         listed_exchange: "",
         pricescale: this._config["pricescale"][cIndex],
         minmov: this._config["minmovement"][cIndex] || 1,
@@ -136,19 +139,19 @@ export default class DataFeed implements IBasicDataFeed {
       resolution
     );
 
-    this.wsClient.subscribe(`${symbolInfo.full_name}@kline_1`, {
-      onMessage: (data: any) => {
-        // console.log("******* kline ******", data);
-        onRealtimeCallback({
-          time: data.endTime,
-          close: data.close,
-          open: data.open,
-          high: data.high,
-          low: data.low,
-          volume: data.volume,
-        });
-      },
-    });
+    // this.wsClient.subscribe(`${symbolInfo.full_name}@kline_1`, {
+    //   onMessage: (data: any) => {
+    //     // console.log("******* kline ******", data);
+    //     onRealtimeCallback({
+    //       time: data.endTime,
+    //       close: data.close,
+    //       open: data.open,
+    //       high: data.high,
+    //       low: data.low,
+    //       volume: data.volume,
+    //     });
+    //   },
+    // });
 
     // subscribe trade
     // this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {

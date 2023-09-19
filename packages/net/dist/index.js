@@ -176,6 +176,8 @@ var messageHandlers = /* @__PURE__ */ new Map([
 // src/ws/ws.ts
 var defaultMessageFormatter = (message) => message.data;
 var COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
+var TIME_OUT = 1e3 * 60 * 2;
+var CONNECT_LIMIT = 5;
 var WS = class {
   constructor(options) {
     this.options = options;
@@ -188,6 +190,8 @@ var WS = class {
     // all message handlers
     this._eventHandlers = /* @__PURE__ */ new Map();
     this._eventPrivateHandlers = /* @__PURE__ */ new Map();
+    this._publicRetryCount = 0;
+    this._privateRetryCount = 0;
     this.send = (message) => {
       if (typeof message !== "string") {
         message = JSON.stringify(message);
@@ -208,20 +212,71 @@ var WS = class {
   }
   bindEvents() {
     if (typeof document !== "undefined") {
-      document.addEventListener("visibilitychange", this.onVisibilityChange);
+      document.addEventListener(
+        "visibilitychange",
+        this.onVisibilityChange.bind(this)
+      );
     }
     if (typeof window !== "undefined") {
-      window.addEventListener("online", this.onNetworkStatusChange);
-      window.addEventListener("offline", this.onNetworkStatusChange);
+      window.addEventListener("online", this.onNetworkStatusChange.bind(this));
     }
   }
   onVisibilityChange() {
     console.log("\u{1F440}\u{1F440} document visibility \u{1F440}\u{1F440}", document.visibilityState);
-    if (document.visibilityState) {
+    if (document.visibilityState === "visible") {
+      this.checkSocketStatus();
     }
   }
   onNetworkStatusChange() {
     console.log("\u{1F440}\u{1F440} network status \u{1F440}\u{1F440}", navigator.onLine);
+    if (navigator.onLine) {
+      this.checkSocketStatus();
+    }
+  }
+  /**
+   * 判断当前连接状态，
+   * 1、如果已断开则重连
+   * 2、如果太久没有收到消息，则主动断开，并重连
+   * 3、从后台返回、网络状态变化时，都走以下流程
+   */
+  checkSocketStatus() {
+    var _a, _b, _c;
+    const now = Date.now();
+    console.log(
+      "\u{1F440}\u{1F440} checkNetworkStatus \u{1F440}\u{1F440}",
+      this._publicHeartbeatTime,
+      this._privateHeartbeatTime,
+      now,
+      this.publicSocket.readyState,
+      (_a = this.privateSocket) == null ? void 0 : _a.readyState
+    );
+    if (document.visibilityState !== "visible")
+      return;
+    if (!navigator.onLine)
+      return;
+    if (!this.publicIsReconnecting) {
+      if (this.publicSocket.readyState === WebSocket.CLOSED) {
+        this.reconnectPublic();
+      } else {
+        console.log(
+          "***********************",
+          this.publicSocket.readyState,
+          now - this._publicHeartbeatTime
+        );
+        if (now - this._publicHeartbeatTime > TIME_OUT) {
+          this.publicSocket.close();
+        }
+      }
+    }
+    if (!this.privateIsReconnecting) {
+      if (((_b = this.privateSocket) == null ? void 0 : _b.readyState) === WebSocket.CLOSED) {
+        this.reconnectPrivate();
+      } else {
+        if (this._privateHeartbeatTime && now - this._privateHeartbeatTime > TIME_OUT) {
+          (_c = this.privateSocket) == null ? void 0 : _c.close();
+        }
+      }
+    }
   }
   openPrivate(accountId) {
     var _a;
@@ -240,26 +295,32 @@ var WS = class {
     (_a = this.privateSocket) == null ? void 0 : _a.close();
   }
   createPublicSC(options) {
+    console.log("open public webSocket ---->>>>");
+    if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
+      return;
     this.publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onPublicMessage.bind(this);
-    this.publicSocket.onclose = this.onClose.bind(this);
-    this.publicSocket.onerror = this.onError.bind(this);
+    this.publicSocket.onclose = this.onPublicClose.bind(this);
+    this.publicSocket.onerror = this.onPublicError.bind(this);
   }
   createPrivateSC(options) {
-    console.log("to open private webSocket ---->>>>");
+    console.log("open private webSocket ---->>>>");
+    if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
+      return;
     this.options = options;
     this.privateSocket = new WebSocket(
       `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
     );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
     this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
+    this.privateSocket.onclose = this.onPrivateClose.bind(this);
     this.privateSocket.onerror = this.onPrivateError.bind(this);
   }
   onOpen(event) {
-    console.log("WebSocket connection opened:");
+    console.log("Public WebSocket connection opened");
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
         this.subscribe(params, cb, isOnce);
@@ -267,11 +328,13 @@ var WS = class {
       this._pendingPublicSubscribe = [];
     }
     this.publicIsReconnecting = false;
+    this._publicRetryCount = 0;
   }
   onPrivateOpen(event) {
-    console.log("Private WebSocket connection opened:");
+    console.log("Private WebSocket connection opened");
     this.authenticate(this.options.accountId);
     this.privateIsReconnecting = false;
+    this._privateRetryCount = 0;
   }
   onMessage(event, socket, handlerMap) {
     try {
@@ -294,9 +357,6 @@ var WS = class {
               cb.onMessage(data);
             }
           });
-          if (eventhandler.isOnce) {
-            handlerMap.delete(topicKey);
-          }
         }
       }
     } catch (e) {
@@ -305,9 +365,11 @@ var WS = class {
   }
   onPublicMessage(event) {
     this.onMessage(event, this.publicSocket, this._eventHandlers);
+    this._publicHeartbeatTime = Date.now();
   }
   onPrivateMessage(event) {
     this.onMessage(event, this.privateSocket, this._eventPrivateHandlers);
+    this._privateHeartbeatTime = Date.now();
   }
   handlePendingPrivateTopic() {
     if (this._pendingPrivateSubscribe.length > 0) {
@@ -317,26 +379,69 @@ var WS = class {
       this._pendingPrivateSubscribe = [];
     }
   }
-  onClose(event) {
-    console.log("WebSocket connection closed:", event.reason);
-  }
-  onError(event) {
-    console.error("WebSocket error:", event);
+  onPublicClose(event) {
+    console.log("public socket is closed");
     this._eventHandlers.forEach((value, key) => {
-      if (!value.isPrivate) {
-        this._pendingPublicSubscribe.push([value.params, value.callback]);
-        this._eventHandlers.delete(key);
-      }
+      value.callback.forEach((cb) => {
+        this._pendingPublicSubscribe.push([value.params, cb, value.isOnce]);
+      });
+      this._eventHandlers.delete(key);
     });
-    this.reconnectPublic();
+    setTimeout(() => this.checkSocketStatus(), 0);
+  }
+  onPrivateClose(event) {
+    console.log("private socket is closed");
+    if (this.privateIsReconnecting)
+      return;
+    this._eventPrivateHandlers.forEach((value, key) => {
+      console.log(value);
+      value.callback.forEach((cb) => {
+        this._pendingPrivateSubscribe.push([value.params, cb, value.isOnce]);
+      });
+      this._eventPrivateHandlers.delete(key);
+    });
+    this.authenticated = false;
+    setTimeout(() => this.checkSocketStatus(), 0);
+  }
+  onPublicError(event) {
+    console.error("public WebSocket error:", event);
+    this.publicIsReconnecting = false;
+    if (this.publicSocket.readyState === WebSocket.OPEN) {
+      this.publicSocket.close();
+    } else {
+      if (this._publicRetryCount > CONNECT_LIMIT)
+        return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._publicRetryCount);
+        this.reconnectPublic();
+        this._publicRetryCount++;
+      }, this._publicRetryCount * 1e3);
+    }
+    this.errorBoardscast(event, this._eventHandlers);
   }
   onPrivateError(event) {
+    var _a;
     console.error("Private WebSocket error:", event);
-    this._eventHandlers.forEach((value, key) => {
-      if (value.isPrivate) {
-        this._pendingPrivateSubscribe.push([value.params, value.callback]);
-        this._eventHandlers.delete(key);
-      }
+    this.privateIsReconnecting = false;
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.OPEN) {
+      this.privateSocket.close();
+    } else {
+      if (this._privateRetryCount > CONNECT_LIMIT)
+        return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._privateRetryCount);
+        this.reconnectPrivate();
+        this._privateRetryCount++;
+      }, this._privateRetryCount * 1e3);
+    }
+    this.errorBoardscast(event, this._eventPrivateHandlers);
+  }
+  errorBoardscast(error, eventHandlers) {
+    eventHandlers.forEach((value) => {
+      value.callback.forEach((cb) => {
+        var _a;
+        (_a = cb.onError) == null ? void 0 : _a.call(cb, error);
+      });
     });
   }
   close() {
@@ -426,7 +531,12 @@ var WS = class {
       });
       this.publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
-      handler.callback.push(callbacks);
+      if (once) {
+        handler.callback = [callbacks];
+        this.publicSocket.send(JSON.stringify(subscribeMessage));
+      } else {
+        handler.callback.push(callbacks);
+      }
     }
     if (!once) {
       return () => {
@@ -510,10 +620,26 @@ var WS = class {
     if (this.publicIsReconnecting)
       return;
     this.publicIsReconnecting = true;
-    console.log(`Reconnecting in ${this.reconnectInterval / 1e3} seconds...`);
+    console.log(
+      `Reconnecting public in ${this.reconnectInterval / 1e3} seconds...`
+    );
     window.setTimeout(() => {
-      console.log("Reconnecting...");
+      console.log("Public Reconnecting...");
       this.createPublicSC(this.options);
+    }, this.reconnectInterval);
+  }
+  reconnectPrivate() {
+    if (!this.options.accountId)
+      return;
+    if (this.privateIsReconnecting)
+      return;
+    this.privateIsReconnecting = true;
+    console.log(
+      `Reconnecting private in ${this.reconnectInterval / 1e3} seconds...`
+    );
+    window.setTimeout(() => {
+      console.log("Private Reconnecting...");
+      this.createPrivateSC(this.options);
     }, this.reconnectInterval);
   }
 };

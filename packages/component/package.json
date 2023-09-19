@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/components",
-  "version": "0.0.32",
+  "version": "0.0.38",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -21,15 +21,14 @@
   "license": "ISC",
   "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "18.2.0",
-    "@web3-onboard/injected-wallets": "^2.10.4",
-    "@web3-onboard/react": "^2.8.11"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.3",
+    "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.2",
     "@storybook/addon-essentials": "^7.1.0",
@@ -48,8 +47,10 @@
     "@theguild/remark-npm2yarn": "^0.1.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    
+    "@web3-onboard/injected-wallets": "^2.10.4",
+    "@web3-onboard/react": "^2.8.11",
     "autoprefixer": "^10.4.14",
+    "bs58": "^5.0.0",
     "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
     "ethers": "^6.7.1",
@@ -69,7 +70,8 @@
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "web3": "^4.1.1"
   },
   "dependencies": {
     "@orderly.network/net": "workspace:*",
@@ -91,7 +93,6 @@
     "@use-gesture/react": "^10.2.27",
     "class-variance-authority": "^0.6.1",
     "ethereum-blockies-base64": "^1.0.2",
-    "bs58": "^5.0.0",
     "lucide-react": "^0.265.0",
     "rc-slider": "^10.2.1",
     "react-hook-form": "^7.45.4",

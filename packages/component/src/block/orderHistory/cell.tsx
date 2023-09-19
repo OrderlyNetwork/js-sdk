@@ -63,7 +63,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           label="Status"
-          value={firstLetterToUpperCase(item.status)}
+          rule="status"
+          value={item.status}
           align="right"
         />
         <Statistic

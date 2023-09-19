@@ -68,7 +68,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           size={"small"}
           className={"flex items-center gap-1 text-base-contrast"}
         >
-          <NetworkImage type={"coin"} name={"USDC"} size={"small"} />
+          <NetworkImage type={"token"} name={"USDC"} size={"small"} />
           <span>USDC</span>
           {/*<ChevronDown size={16} />*/}
         </Button>

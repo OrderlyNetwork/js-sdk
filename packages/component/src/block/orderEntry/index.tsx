@@ -28,6 +28,7 @@ import { OrderConfirmView } from "./sections/orderConfirmView";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
+import { MSelect } from "@/select/mSelect";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -338,10 +339,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               control={methods.control}
               render={({ field }) => {
                 return (
-                  <Select
+                  <MSelect
                     label={"Order Type"}
                     value={field.value}
                     color={side === OrderSide.BUY ? "buy" : "sell"}
+                    fullWidth
                     options={[
                       { label: "Limit Order", value: "LIMIT" },
                       {

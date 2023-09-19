@@ -39,6 +39,9 @@ type Topics = {
 const defaultMessageFormatter = (message: any) => message.data;
 const COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 
+const TIME_OUT = 1000 * 60 * 2;
+const CONNECT_LIMIT = 5;
+
 export class WS {
   private publicSocket!: WebSocket;
   private privateSocket?: WebSocket;
@@ -57,6 +60,12 @@ export class WS {
   private _eventHandlers: Map<string, Topics> = new Map();
   private _eventPrivateHandlers: Map<string, Topics> = new Map();
 
+  private _publicHeartbeatTime?: number;
+  private _privateHeartbeatTime?: number;
+
+  private _publicRetryCount: number = 0;
+  private _privateRetryCount: number = 0;
+
   constructor(private options: WSOptions) {
     this.createPublicSC(options);
 
@@ -69,23 +78,93 @@ export class WS {
 
   private bindEvents() {
     if (typeof document !== "undefined") {
-      document.addEventListener("visibilitychange", this.onVisibilityChange);
+      document.addEventListener(
+        "visibilitychange",
+        this.onVisibilityChange.bind(this)
+      );
     }
 
     if (typeof window !== "undefined") {
-      window.addEventListener("online", this.onNetworkStatusChange);
-      window.addEventListener("offline", this.onNetworkStatusChange);
+      window.addEventListener("online", this.onNetworkStatusChange.bind(this));
+      // window.addEventListener("offline", this.onNetworkStatusChange);
     }
   }
 
   private onVisibilityChange() {
     console.log("👀👀 document visibility 👀👀", document.visibilityState);
-    if (document.visibilityState) {
+    if (document.visibilityState === "visible") {
+      this.checkSocketStatus();
     }
+    // else {
+    //   this.publicSocket.close();
+    //   this.privateSocket?.close();
+    // }
   }
 
   private onNetworkStatusChange() {
     console.log("👀👀 network status 👀👀", navigator.onLine);
+
+    if (navigator.onLine) {
+      this.checkSocketStatus();
+    }
+  }
+
+  /**
+   * 判断当前连接状态，
+   * 1、如果已断开则重连
+   * 2、如果太久没有收到消息，则主动断开，并重连
+   * 3、从后台返回、网络状态变化时，都走以下流程
+   */
+  private checkSocketStatus() {
+    const now = Date.now();
+
+    console.log(
+      "👀👀 checkNetworkStatus 👀👀",
+      this._publicHeartbeatTime,
+      this._privateHeartbeatTime,
+      now,
+      this.publicSocket.readyState,
+      this.privateSocket?.readyState
+    );
+
+    // check the last time
+    // 如果容器不可见，则不做处理
+    if (document.visibilityState !== "visible") return;
+    // 如果网络不可用，则不做处理
+    if (!navigator.onLine) return;
+
+    // 如果已断开，则重连
+    // public
+    if (!this.publicIsReconnecting) {
+      if (this.publicSocket.readyState === WebSocket.CLOSED) {
+        this.reconnectPublic();
+      } else {
+        console.log(
+          "***********************",
+          this.publicSocket.readyState,
+          now - this._publicHeartbeatTime!
+        );
+        if (now - this._publicHeartbeatTime! > TIME_OUT) {
+          //unsubscribe all public topic
+          this.publicSocket.close();
+        }
+      }
+    }
+
+    if (!this.privateIsReconnecting) {
+      // private
+      if (this.privateSocket?.readyState === WebSocket.CLOSED) {
+        this.reconnectPrivate();
+      } else {
+        if (
+          this._privateHeartbeatTime &&
+          now - this._privateHeartbeatTime! > TIME_OUT
+        ) {
+          // unsubscribe all private topic
+          this.privateSocket?.close();
+        }
+      }
+    }
   }
 
   public openPrivate(accountId: string) {
@@ -108,17 +187,22 @@ export class WS {
   }
 
   private createPublicSC(options: WSOptions) {
+    console.log("open public webSocket ---->>>>");
+    if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
+      return;
     this.publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
     this.publicSocket.onopen = this.onOpen.bind(this);
     this.publicSocket.onmessage = this.onPublicMessage.bind(this);
-    this.publicSocket.onclose = this.onClose.bind(this);
-    this.publicSocket.onerror = this.onError.bind(this);
+    this.publicSocket.onclose = this.onPublicClose.bind(this);
+    this.publicSocket.onerror = this.onPublicError.bind(this);
   }
 
   private createPrivateSC(options: WSOptions) {
-    console.log("to open private webSocket ---->>>>");
+    console.log("open private webSocket ---->>>>");
+    if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
+      return;
 
     this.options = options;
 
@@ -127,12 +211,13 @@ export class WS {
     );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
     this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
-    // this.privateSocket.onclose = this.onClose.bind(this);
+    this.privateSocket.onclose = this.onPrivateClose.bind(this);
     this.privateSocket.onerror = this.onPrivateError.bind(this);
   }
 
   private onOpen(event: Event) {
-    console.log("WebSocket connection opened:");
+    console.log("Public WebSocket connection opened");
+
     // console.log(this._pendingPublicSubscribe);
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
@@ -142,13 +227,15 @@ export class WS {
     }
 
     this.publicIsReconnecting = false;
+    this._publicRetryCount = 0;
   }
 
   private onPrivateOpen(event: Event) {
-    console.log("Private WebSocket connection opened:");
+    console.log("Private WebSocket connection opened");
     //auth
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
+    this._privateRetryCount = 0;
   }
 
   private onMessage(
@@ -184,11 +271,13 @@ export class WS {
             }
           });
 
-          if (eventhandler.isOnce) {
-            handlerMap.delete(topicKey);
-          }
+          // 延时删除，在重连时还需要用到
+          // if (eventhandler.isOnce) {
+          //   handlerMap.delete(topicKey);
+          // }
         }
       }
+
       // console.log("WebSocket message received:", message);
     } catch (e) {
       console.log("WebSocket message received:", e, event.data);
@@ -199,10 +288,14 @@ export class WS {
 
   private onPublicMessage(event: MessageEvent) {
     this.onMessage(event, this.publicSocket, this._eventHandlers);
+    // 更新最后收到消息的时间
+    this._publicHeartbeatTime = Date.now();
   }
 
   private onPrivateMessage(event: MessageEvent) {
     this.onMessage(event, this.privateSocket!, this._eventPrivateHandlers);
+    // 更新最后收到消息的时间
+    this._privateHeartbeatTime = Date.now();
   }
 
   private handlePendingPrivateTopic() {
@@ -214,31 +307,83 @@ export class WS {
     }
   }
 
-  private onClose(event: CloseEvent) {
-    console.log("WebSocket connection closed:", event.reason);
-  }
+  private onPublicClose(event: CloseEvent) {
+    console.log("public socket is closed");
 
-  private onError(event: Event) {
-    console.error("WebSocket error:", event);
-
+    // move handler to pending
     this._eventHandlers.forEach((value, key) => {
-      if (!value.isPrivate) {
-        this._pendingPublicSubscribe.push([value.params, value.callback]);
-        this._eventHandlers.delete(key);
-      }
+      value.callback.forEach((cb) => {
+        this._pendingPublicSubscribe.push([value.params, cb, value.isOnce]);
+      });
+
+      this._eventHandlers.delete(key);
     });
 
-    this.reconnectPublic();
+    setTimeout(() => this.checkSocketStatus(), 0);
+  }
+
+  private onPrivateClose(event: CloseEvent) {
+    console.log("private socket is closed");
+    if (this.privateIsReconnecting) return;
+    this._eventPrivateHandlers.forEach((value, key) => {
+      console.log(value);
+
+      value.callback.forEach((cb) => {
+        this._pendingPrivateSubscribe.push([value.params, cb, value.isOnce]);
+      });
+
+      this._eventPrivateHandlers.delete(key);
+    });
+    this.authenticated = false;
+
+    setTimeout(() => this.checkSocketStatus(), 0);
+  }
+
+  private onPublicError(event: Event) {
+    console.error("public WebSocket error:", event);
+    this.publicIsReconnecting = false;
+
+    if (this.publicSocket.readyState === WebSocket.OPEN) {
+      this.publicSocket.close();
+    } else {
+      // retry connect
+      if (this._publicRetryCount > CONNECT_LIMIT) return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._publicRetryCount);
+        // this.createPublicSC(this.options);
+        this.reconnectPublic();
+        this._publicRetryCount++;
+      }, this._publicRetryCount * 1000);
+    }
+
+    this.errorBoardscast(event, this._eventHandlers);
   }
 
   private onPrivateError(event: Event) {
     console.error("Private WebSocket error:", event);
+    this.privateIsReconnecting = false;
 
-    this._eventHandlers.forEach((value, key) => {
-      if (value.isPrivate) {
-        this._pendingPrivateSubscribe.push([value.params, value.callback]);
-        this._eventHandlers.delete(key);
-      }
+    if (this.privateSocket?.readyState === WebSocket.OPEN) {
+      this.privateSocket.close();
+    } else {
+      // retry connect
+      if (this._privateRetryCount > CONNECT_LIMIT) return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._privateRetryCount);
+        // this.createPublicSC(this.options);
+        this.reconnectPrivate();
+        this._privateRetryCount++;
+      }, this._privateRetryCount * 1000);
+    }
+
+    this.errorBoardscast(event, this._eventPrivateHandlers);
+  }
+
+  private errorBoardscast(error: any, eventHandlers: Map<string, Topics>) {
+    eventHandlers.forEach((value) => {
+      value.callback.forEach((cb) => {
+        cb.onError?.(error);
+      });
     });
   }
 
@@ -368,7 +513,13 @@ export class WS {
       });
       this.publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
-      handler.callback.push(callbacks);
+      // 是否once,如果是once,则替换掉之前的callback
+      if (once) {
+        handler.callback = [callbacks];
+        this.publicSocket.send(JSON.stringify(subscribeMessage));
+      } else {
+        handler.callback.push(callbacks);
+      }
     }
 
     // this._subscriptionPublicTopics.push({params, cb: [cb]});
@@ -487,12 +638,27 @@ export class WS {
   private reconnectPublic() {
     if (this.publicIsReconnecting) return;
     this.publicIsReconnecting = true;
-    console.log(`Reconnecting in ${this.reconnectInterval / 1000} seconds...`);
+    console.log(
+      `Reconnecting public in ${this.reconnectInterval / 1000} seconds...`
+    );
     window.setTimeout(() => {
-      console.log("Reconnecting...");
-      // this.publicIsReconnecting = false;
+      console.log("Public Reconnecting...");
 
       this.createPublicSC(this.options);
+    }, this.reconnectInterval);
+  }
+
+  private reconnectPrivate() {
+    if (!this.options.accountId) return;
+    if (this.privateIsReconnecting) return;
+    this.privateIsReconnecting = true;
+    console.log(
+      `Reconnecting private in ${this.reconnectInterval / 1000} seconds...`
+    );
+    window.setTimeout(() => {
+      console.log("Private Reconnecting...");
+
+      this.createPrivateSC(this.options);
     }, this.reconnectInterval);
   }
 }

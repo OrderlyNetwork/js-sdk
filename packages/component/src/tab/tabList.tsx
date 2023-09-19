@@ -12,12 +12,12 @@ import {
   useState,
 } from "react";
 import { TabIndicator } from "./indicator";
-import { Tab } from "./tab";
+import { Tab, TabTitle } from "./tab";
 import { TabContext, TabContextState } from "./tabContext";
 import { cn } from "@/utils/css";
 
 export type TabItem = {
-  title: string;
+  title: TabTitle;
   value?: string;
   disabled?: boolean;
 };
@@ -34,31 +34,51 @@ interface TabListProps {
   showIdentifier?: boolean;
 }
 
+type IndicatorBounding = {
+  left: number;
+  width: number;
+};
+
 export const TabList: FC<TabListProps> = (props) => {
-  const [left, setLeft] = useState(0);
+  const [bounding, setBounding] = useState<IndicatorBounding>({
+    left: 0,
+    width: 40,
+  });
 
   const boxRef = useRef<HTMLDivElement>(null);
   const tabContext = useContext(TabContext);
 
   const calcLeft = useCallback((target: HTMLButtonElement) => {
     const { left, width } = target.getBoundingClientRect();
+
     const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
 
-    setLeft(left - parentLeft + (width - 40) / 2);
+    // setLeft(left - parentLeft + (width - 40) / 2);
+
+    setBounding({
+      // left: left - parentLeft + (width - 40) / 2,
+      left: left - parentLeft,
+      width,
+    });
   }, []);
 
   useEffect(() => {
-    let activeTab = boxRef.current?.querySelector(".active");
-    if (!activeTab) {
-      activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
-    }
-    calcLeft(activeTab as HTMLButtonElement);
-  }, [calcLeft, props.value]);
+    setTimeout(() => {
+      let activeTab = boxRef.current?.querySelector(".active");
+      if (!activeTab) {
+        activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
+      }
+
+      if (props.showIdentifier) {
+        calcLeft(activeTab as HTMLButtonElement);
+      }
+    }, 0);
+  }, [calcLeft, props.value, props.showIdentifier]);
 
   const onItemClick = useCallback(
     (value: any, event: MouseEvent<HTMLButtonElement>) => {
       if (typeof props.onTabChange === "undefined") return;
-      calcLeft(event.target);
+      calcLeft(event.target as HTMLButtonElement);
       props.onTabChange?.(value);
 
       if (!tabContext.contentVisible) {
@@ -103,7 +123,9 @@ export const TabList: FC<TabListProps> = (props) => {
             );
           })}
         </div>
-        {props.showIdentifier && <TabIndicator left={left} />}
+        {props.showIdentifier && (
+          <TabIndicator left={bounding.left} width={bounding.width} />
+        )}
       </div>
       {extraNode}
     </div>

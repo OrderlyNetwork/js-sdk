@@ -8,7 +8,7 @@ import { useContext, useState } from "react";
 export const HistoryPane = () => {
   const [side, setSide] = useState<OrderSide | "">("");
   const [status, setStauts] = useState<OrderStatus | "">("");
-  const { symbol } = useContext(TradingPageContext);
+  // const { symbol } = useContext(TradingPageContext);
   const [data, { isLoading }] = useOrderStream({
     size: 20,
     side,

@@ -13,6 +13,7 @@ import {
 } from "@/@types/charting_library";
 import DataFeed from "./dataFeed";
 import { useWS } from "@orderly.network/hooks";
+import { ORDERLY_TRADING_VIEW_INTERVAL } from "./constants";
 
 declare const TradingView: any;
 
@@ -45,9 +46,14 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
     ...chartProps
   } = props;
 
-  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
-    () => (intervals?.[0].value ?? "1") as TimeInterval
-  );
+  const [timeInterval, setTimeInterval] = useState<TimeInterval>(() => {
+    const saved_intervals = localStorage.getItem(
+      ORDERLY_TRADING_VIEW_INTERVAL
+    ) as TimeInterval;
+
+    console.log("saved_intervals", saved_intervals);
+    return saved_intervals || ((intervals?.[0].value ?? "1") as TimeInterval);
+  });
 
   const ws = useWS();
 
@@ -66,6 +72,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   const onIntervalChange = useCallback((interval: TimeInterval) => {
     setTimeInterval(interval);
     wigetRef.current?.activeChart().setResolution(interval as ResolutionString);
+    localStorage.setItem(ORDERLY_TRADING_VIEW_INTERVAL, interval);
   }, []);
 
   useEffect(() => {
@@ -92,7 +99,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
           wigetRef.current = new TradingView.widget({
             symbol: props.symbol,
             container: containerRef.current,
-            interval: "1",
+            interval: timeInterval,
             // theme: "Dark",
             overrides: {
               // "paneProperties.background": "#ffffff",
