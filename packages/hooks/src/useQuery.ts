@@ -33,7 +33,10 @@ export const useQuery = <T>(
   return useSWR<T>(
     // `${apiBaseUrl}${query}`,
     query,
-    (url, init) => fetcher(`${apiBaseUrl}${url}`, init, { formatter }),
+    (url, init) =>
+      fetcher(url.startsWith("http") ? url : `${apiBaseUrl}${url}`, init, {
+        formatter,
+      }),
     swrOptions
   );
 };

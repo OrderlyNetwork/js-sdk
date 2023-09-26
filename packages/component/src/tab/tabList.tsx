@@ -17,7 +17,7 @@ import { TabContext, TabContextState } from "./tabContext";
 import { cn } from "@/utils/css";
 
 export type TabItem = {
-  title: TabTitle;
+  title: ReactNode;
   value?: string;
   disabled?: boolean;
 };
@@ -53,18 +53,21 @@ export const TabList: FC<TabListProps> = (props) => {
 
     const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
 
+    console.log("left", left, "parentLeft", parentLeft, width);
+
     // setLeft(left - parentLeft + (width - 40) / 2);
 
-    setBounding({
+    setBounding(() => ({
       // left: left - parentLeft + (width - 40) / 2,
       left: left - parentLeft,
       width,
-    });
+    }));
   }, []);
 
   useEffect(() => {
     setTimeout(() => {
       let activeTab = boxRef.current?.querySelector(".active");
+
       if (!activeTab) {
         activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
       }
@@ -72,13 +75,14 @@ export const TabList: FC<TabListProps> = (props) => {
       if (props.showIdentifier) {
         calcLeft(activeTab as HTMLButtonElement);
       }
-    }, 0);
-  }, [calcLeft, props.value, props.showIdentifier]);
+    }, 50);
+  }, [calcLeft, props.value, props.showIdentifier, props.tabs]);
 
   const onItemClick = useCallback(
     (value: any, event: MouseEvent<HTMLButtonElement>) => {
       if (typeof props.onTabChange === "undefined") return;
-      calcLeft(event.target as HTMLButtonElement);
+
+      calcLeft(event.currentTarget as HTMLButtonElement);
       props.onTabChange?.(value);
 
       if (!tabContext.contentVisible) {
@@ -96,15 +100,17 @@ export const TabList: FC<TabListProps> = (props) => {
     return props.tabBarExtra;
   }, [props.tabBarExtra, tabContext]);
 
+  console.log({ bounding });
+
   return (
     <div
       className={cn(
-        "flex border-b border-b-divider px-2 items-center",
+        "flex border-b border-b-divider px-3 items-center",
         props.className
       )}
     >
       <div className="pb-1 relative flex-1">
-        <div className="flex" ref={boxRef}>
+        <div className="flex space-x-5" ref={boxRef}>
           {props.tabs.map((item, index) => {
             return (
               <Tab

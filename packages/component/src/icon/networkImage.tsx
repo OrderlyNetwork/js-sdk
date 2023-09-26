@@ -2,7 +2,7 @@
 // network logo
 import { cn } from "@/utils/css";
 // import { cva } from "class-variance-authority";
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { Size } from "./types";
 
 export type NetworkImageType =
@@ -10,10 +10,12 @@ export type NetworkImageType =
   | "chain"
   | "token"
   | "placeholder"
+  | "path"
   | "wallet";
 
 export interface NetworkImageProps {
   name?: string;
+  path?: string;
   id?: number;
   size?: Size | number;
   backgroundColor?: string;
@@ -27,6 +29,9 @@ export interface NetworkImageProps {
 // TODO: 添加icon生成adpater
 export const NetworkImage: FC<NetworkImageProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
+  const [isPlaceholder, setIsPlacholder] = useState(
+    () => props.type === "placeholder"
+  );
 
   useEffect(() => {
     if (
@@ -48,10 +53,11 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
 
     img.onerror = function () {
       console.log("load icon error");
+      setIsPlacholder(true);
     };
 
-    if (props.type === "token") {
-    }
+    // if (props.type === "token") {
+    // }
 
     if (props.type === "symbol" || props.type === "token") {
       let name = props.name;
@@ -64,6 +70,14 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     }
     if (props.type === "chain") {
       img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
+    }
+
+    if (props.type === "wallet") {
+      img.src = `https://oss.woo.network/static/wallet_icon/${props.name?.toLocaleLowerCase()}.png`;
+    }
+
+    if (props.type === "path") {
+      img.src = props.path!;
     }
 
     // crypto logos
@@ -90,8 +104,8 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   return (
     <div
       className={cn(
-        "inline-block",
-        props.type === "placeholder" && "bg-slate-200",
+        "inline-block overflow-hidden",
+        isPlaceholder && "bg-slate-200",
         props.rounded && "rounded-full",
         props.className
       )}

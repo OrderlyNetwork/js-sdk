@@ -7,15 +7,6 @@ import { Text } from ".";
 const meta: Meta<typeof Text> = {
   component: Text,
   title: "Base/Text",
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

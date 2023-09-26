@@ -30,7 +30,6 @@ export interface OrderlyContextState extends OrderlyAppConfig {
 
   onWalletConnect?: () => Promise<any>;
   onWalletDisconnect?: () => Promise<any>;
-
   onSetChain?: (chainId: number) => Promise<any>;
   // account: Account;
 

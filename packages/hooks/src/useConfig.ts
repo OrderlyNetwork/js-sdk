@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
-export const useConfigure = () => {
+export const useConfig = () => {
   const { configStore } = useContext(OrderlyContext);
 
-  return {
-    get: configStore.get,
-  };
+  // console.log("##############", configStore);
+
+  return configStore;
 };

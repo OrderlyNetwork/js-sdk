@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import useConstant from "use-constant";
-import { Account, SimpleDI, AccountState } from "@orderly.network/core";
+import { Account, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
 

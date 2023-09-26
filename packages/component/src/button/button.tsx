@@ -11,7 +11,7 @@ import { Spinner } from "@/spinner";
 
 const buttonVariants = cva(
   [
-    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center",
+    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center gap-1",
   ],
   {
     variants: {
@@ -137,6 +137,8 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
   fullWidth,
   disabled,
   loading,
+  leftIcon,
+  rightIcon,
   ...props
 }) => {
   const children = useMemo(() => {
@@ -160,7 +162,9 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
       disabled={Boolean(disabled)}
       {...props}
     >
+      {leftIcon}
       {children}
+      {rightIcon}
     </button>
   );
 };

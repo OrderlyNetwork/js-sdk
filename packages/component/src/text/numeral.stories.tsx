@@ -9,15 +9,6 @@ const meta: Meta<typeof Numeral> = {
   component: Numeral,
   title: "Base/Numeral",
   tags: ["autodocs"],
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={undefined}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

@@ -46,7 +46,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   );
 
   return (
-    <div className="bg-[#5A480C] fixed left-0 right-0 bottom-[44px] h-[40px] flex items-center px-[12px] text-[#E5C700] z-10 text-sm gap-2">
+    <div className="bg-[#5A480C] fixed left-0 right-0 bottom-[64px] h-[40px] flex items-center px-[12px] text-[#E5C700] z-10 text-sm gap-2">
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>

@@ -240,16 +240,8 @@ var WS = class {
    * 3、从后台返回、网络状态变化时，都走以下流程
    */
   checkSocketStatus() {
-    var _a, _b, _c;
+    var _a, _b;
     const now = Date.now();
-    console.log(
-      "\u{1F440}\u{1F440} checkNetworkStatus \u{1F440}\u{1F440}",
-      this._publicHeartbeatTime,
-      this._privateHeartbeatTime,
-      now,
-      this.publicSocket.readyState,
-      (_a = this.privateSocket) == null ? void 0 : _a.readyState
-    );
     if (document.visibilityState !== "visible")
       return;
     if (!navigator.onLine)
@@ -258,22 +250,17 @@ var WS = class {
       if (this.publicSocket.readyState === WebSocket.CLOSED) {
         this.reconnectPublic();
       } else {
-        console.log(
-          "***********************",
-          this.publicSocket.readyState,
-          now - this._publicHeartbeatTime
-        );
         if (now - this._publicHeartbeatTime > TIME_OUT) {
           this.publicSocket.close();
         }
       }
     }
     if (!this.privateIsReconnecting) {
-      if (((_b = this.privateSocket) == null ? void 0 : _b.readyState) === WebSocket.CLOSED) {
+      if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.CLOSED) {
         this.reconnectPrivate();
       } else {
         if (this._privateHeartbeatTime && now - this._privateHeartbeatTime > TIME_OUT) {
-          (_c = this.privateSocket) == null ? void 0 : _c.close();
+          (_b = this.privateSocket) == null ? void 0 : _b.close();
         }
       }
     }

@@ -42,7 +42,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
-      // reduce_only: Boolean(order.reduce_only),
+      reduce_only: Boolean(order.reduce_only),
     },
     // values: {
 

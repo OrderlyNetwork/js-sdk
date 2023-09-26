@@ -222,6 +222,22 @@ export declare namespace API {
     decimals: number;
     swap_enable: boolean;
   }
+
+  export interface Chain {
+    token: string;
+    token_hash: string;
+    decimals: number;
+    minimum_withdraw_amount: number;
+    chain_details: ChainDetail[];
+  }
+
+  export interface ChainDetail {
+    chain_id: string;
+    chain_name?: string;
+    contract_address: string;
+    decimals: number;
+    withdrawal_fee: number;
+  }
 }
 
 export declare namespace WSMessage {

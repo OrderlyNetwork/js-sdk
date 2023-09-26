@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useContext } from "react";
-import { SimpleDI, Account } from "@orderly.network/core";
+// import { SimpleDI, Account } from "@orderly.network/core";
 import { useAccountInstance } from "./useAccountInstance";
 
 type HTTP_METHOD = "POST" | "PUT" | "DELETE";

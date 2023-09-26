@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useMutation, useAccount } from "@orderly.network/hooks";
+import { useMutation, useAccount, useConfig } from "@orderly.network/hooks";
 import { useCallback, useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@/modal";
@@ -10,6 +10,7 @@ const localStorageItem = "Orderly_GetTestUSDC";
 export const GetTestUSDC = () => {
   const { account, state } = useAccount();
   const [show, setShow] = useState(false);
+  const config = useConfig();
 
   useEffect(() => {
     const value = localStorage.getItem(
@@ -22,7 +23,7 @@ export const GetTestUSDC = () => {
   }, []);
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    "https://testnet-operator-evm.orderly.org/v1/faucet/usdc"
+    `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
   const onCloseClick = useCallback(() => {
@@ -70,7 +71,7 @@ export const GetTestUSDC = () => {
   }
 
   return (
-    <div className="flex justify-between items-center fixed left-0 right-0 bottom-[44px] h-[40px] bg-base-300 z-20 px-2 animate-in fade-in ">
+    <div className="flex justify-between items-center fixed left-0 right-0 bottom-[64px] h-[40px] bg-base-300 z-20 px-2 animate-in fade-in ">
       <div className="text-sm text-base-contrast/50 cursor-pointer">
         <span className="text-primary-light" onClick={onGetClick}>
           Get test USDC

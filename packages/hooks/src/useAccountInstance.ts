@@ -3,7 +3,7 @@ import { Account, SimpleDI } from "@orderly.network/core";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
-export const useAccountInstance = () => {
+export const useAccountInstance = (): Account => {
   const { configStore, keyStore, contractManager, getWalletAdapter } =
     useContext(OrderlyContext);
 

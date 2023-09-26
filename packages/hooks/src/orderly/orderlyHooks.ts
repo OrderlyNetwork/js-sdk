@@ -1,3 +1,5 @@
+// export { useSyncEnd } from "./useSyncEnd";
+
 export { useOrderbookStream } from "./useOrderbookStream";
 export { useOrderEntry } from "./useOrderEntry";
 export { useFetures } from "./useFetures";
@@ -29,8 +31,11 @@ export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
+export { useChain } from "./useChain";
+export { useWithdraw } from "./useWithdraw";
+export { useDeposit } from "./useDeposit";
 
-export { useHolding } from "./useHolding";
+export { useHoldingStream } from "./useHoldingStream";
 
 export { useBalance } from "./useBalance";
 

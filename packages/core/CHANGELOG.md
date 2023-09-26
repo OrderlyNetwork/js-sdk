@@ -1,5 +1,45 @@
 # @orderly.network/core
 
+## 0.0.43
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.43
+
+## 0.0.42
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.42
+
+## 0.0.41
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.41
+
+## 0.0.40
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.40
+
+## 0.0.39
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.39
+
 ## 0.0.38
 
 ### Patch Changes

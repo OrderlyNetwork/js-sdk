@@ -84,7 +84,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
             size={"small"}
             loading={props.loading}
             variant={"gradient"}
-            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300"
+            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
@@ -95,7 +95,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               <Button
                 size={"small"}
                 variant={"gradient"}
-                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300"
+                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
                 loading={props.loading}
               >
                 {buttonLabel}

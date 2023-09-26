@@ -3,6 +3,9 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "module": "esnext",
+    
+    // "allowSyntheticDefaultImports": true,
+    "esModuleInterop":true
   },
   "include": ["**/*.ts", "**/*.tsx","**/*.d.ts"],
   "exclude": ["node_modules"]

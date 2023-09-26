@@ -13,10 +13,9 @@ import {
   getDomain,
 } from "./utils";
 
-import merge from "lodash.merge";
-
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
+import { Assets } from "./assets";
 
 export type AccountStatus =
   | "NotConnected"
@@ -33,14 +32,12 @@ export interface AccountState {
   userId?: string;
   address?: string;
 
+  connectWallet?: {
+    name: string;
+  };
+
   balance: string;
   leverage: number;
-
-  // portfolio
-  // 仓位 id[]
-  positon?: string[];
-  // 挂单 id[]
-  orders?: string[];
 }
 
 /**
@@ -64,6 +61,8 @@ export class Account {
 
   private _ee = new EventEmitter();
 
+  assetsManager: Assets;
+
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
     balance: "",
@@ -73,7 +72,7 @@ export class Account {
 
   // private contract: IContract;
 
-  private walletClient?: any;
+  walletClient?: WalletAdapter;
 
   // private config =
 
@@ -85,6 +84,8 @@ export class Account {
     private readonly getWalletAdapter: getWalletAdapterFunc // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
   ) {
     // this.contract = new BaseContract(configStore);
+
+    this.assetsManager = new Assets(configStore, contractManger, this);
 
     this._bindEvents();
   }
@@ -115,19 +116,23 @@ export class Account {
     wallet?: {
       provider: any;
       chain: { id: string };
+      wallet?: {
+        name: string;
+      };
       [key: string]: any;
     }
   ): Promise<AccountStatusEnum> {
     if (!address) throw new Error("address is required");
 
-    console.log("setAddress", address, wallet);
+    // console.log("setAddress", address, wallet);
 
     this.keyStore.setAddress(address);
 
-    const nextState = {
+    const nextState: AccountState = {
       ...this.stateValue,
       status: AccountStatusEnum.Connected,
       address,
+      connectWallet: wallet?.wallet,
     };
 
     this._ee.emit("change:status", nextState);
@@ -163,7 +168,7 @@ export class Account {
     return this.stateValue.address;
   }
 
-  get chainId(): string | undefined {
+  get chainId(): number | string | undefined {
     return this.walletClient?.chainId;
   }
 
@@ -310,6 +315,10 @@ export class Account {
   }
 
   async createAccount(): Promise<any> {
+    if (!this.walletClient) {
+      return Promise.reject("walletClient is undefined");
+    }
+
     const nonce = await this._getRegisterationNonce();
 
     const address = this.stateValue.address;
@@ -324,10 +333,7 @@ export class Account {
       brokerId: this.configStore.get("brokerId"),
     });
 
-    const signatured = await this.walletClient.send("eth_signTypedData_v4", [
-      address,
-      JSON.stringify(toSignatureMessage),
-    ]);
+    const signatured = await this.signTypedData(toSignatureMessage);
 
     const res = await this._simpleFetch("/v1/register_account", {
       method: "POST",
@@ -358,12 +364,23 @@ export class Account {
     }
   }
 
+  async signTypedData(toSignatureMessage: Record<string, any>) {
+    if (!this.walletClient) {
+      return Promise.reject("walletClient is undefined");
+    }
+    return await this.walletClient.signTypedData(
+      // address,
+      this.stateValue.address!,
+      JSON.stringify(toSignatureMessage)
+    );
+  }
+
   async createOrderlyKey(expiration: number): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }
 
-    if (this.walletClient === undefined) {
+    if (!this.walletClient) {
       throw new Error("walletClient is undefined");
     }
 
@@ -386,10 +403,7 @@ export class Account {
     }
 
     // console.log("message:", message, toSignatureMessage, address);
-    const signatured = await this.walletClient.send("eth_signTypedData_v4", [
-      address,
-      JSON.stringify(toSignatureMessage),
-    ]);
+    const signatured = await this.signTypedData(toSignatureMessage);
 
     // this.walletClient.verify(toSignatureMessage, signatured);
 
@@ -425,7 +439,10 @@ export class Account {
     }
   }
 
-  async settlement(): Promise<any> {
+  async settle(): Promise<any> {
+    if (!this.walletClient) {
+      return Promise.reject("walletClient is undefined");
+    }
     const nonce = await this._getSettleNonce();
     const address = this.stateValue.address;
 
@@ -440,10 +457,7 @@ export class Account {
       domain,
     });
 
-    const EIP_712signatured = await this.walletClient.send(
-      "eth_signTypedData_v4",
-      [address, JSON.stringify(toSignatureMessage)]
-    );
+    const EIP_712signatured = await this.signTypedData(toSignatureMessage);
 
     const data = {
       signature: EIP_712signatured,
@@ -567,7 +581,10 @@ export class Account {
     return fetch(requestUrl, init).then((res) => res.json());
   }
 
-  private getDomain(onChainDomain?: boolean): SignatureDomain {
+  getDomain(onChainDomain?: boolean): SignatureDomain {
+    if (!this.walletClient) {
+      throw new Error("walletClient is undefined");
+    }
     const chainId = this.walletClient.chainId;
     // const {verifyContractAddress} = this.contract.getContractInfoByEnv();
     return {

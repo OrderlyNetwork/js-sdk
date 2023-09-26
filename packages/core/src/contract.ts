@@ -1,9 +1,12 @@
 import { ConfigStore } from "./configStore";
 import {
-  devUSDCAddressOnArbitrumTestnet,
-  devVaultAddressOnArbitrumTestnet,
-  devVerifyAddressOnArbitrumTestnet,
+  stagingUSDCAddressOnArbitrumTestnet,
+  stagingVaultAddressOnArbitrumTestnet,
+  stagingVerifyAddressOnArbitrumTestnet,
 } from "./constants";
+
+import stagingUSDCAbiOnArbitrumTestnet from "./wallet/abis/stagingUSDCAbi.json";
+import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json";
 
 export type OrderlyContracts = {
   usdcAddress: string;
@@ -14,18 +17,18 @@ export type OrderlyContracts = {
 };
 
 export interface IContract {
-  getContractInfoByEnv(): any;
+  getContractInfoByEnv(): OrderlyContracts;
 }
 
 export class BaseContract implements IContract {
   constructor(private readonly configStore: ConfigStore) {}
   getContractInfoByEnv() {
     return {
-      usdcAddress: devUSDCAddressOnArbitrumTestnet,
-      // usdcAbi: devUSDCAbiOnArbitrumTestnet,
-      vaultAddress: devVaultAddressOnArbitrumTestnet,
-      // vaultAbi: devVaultAbiOnArbitrumTestnet,
-      verifyContractAddress: devVerifyAddressOnArbitrumTestnet,
+      usdcAddress: stagingUSDCAddressOnArbitrumTestnet,
+      usdcAbi: stagingUSDCAbiOnArbitrumTestnet,
+      vaultAddress: stagingVaultAddressOnArbitrumTestnet,
+      vaultAbi: stagingVaultAbiOnArbitrumTestnet,
+      verifyContractAddress: stagingVerifyAddressOnArbitrumTestnet,
     };
   }
 }

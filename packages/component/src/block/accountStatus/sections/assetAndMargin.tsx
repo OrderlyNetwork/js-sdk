@@ -27,7 +27,7 @@ import { cx } from "class-variance-authority";
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
   onWithdraw?: () => Promise<void>;
-  onSettlement?: () => Promise<void>;
+  onSettle?: () => Promise<void>;
   onLeverageChange?: (value: number) => void;
 
   maxLeverage?: number | string;
@@ -67,8 +67,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         return Promise.reject();
       },
       onOk: () => {
-        if (typeof props.onSettlement !== "function") return Promise.resolve();
-        return props.onSettlement().then(() => {
+        if (typeof props.onSettle !== "function") return Promise.resolve();
+        return props.onSettle().then(() => {
           toast.success("PnL settled");
         });
       },

@@ -1,5 +1,5 @@
 import { createContext, useCallback } from "react";
-import { useAccount, useMutation } from "@orderly.network/hooks";
+import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { toast } from "@/toast";
 
@@ -13,8 +13,9 @@ export const MarketContext = createContext<MarketContextState>(
 
 export const MarketProvider = (props: any) => {
   const { account, state } = useAccount();
+  const config = useConfig();
   const [doGetTestUSDC, { isMutating }] = useMutation(
-    "https://testnet-operator-evm.orderly.org/v1/faucet/usdc"
+    `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
   const getTestUSDC = useCallback(() => {

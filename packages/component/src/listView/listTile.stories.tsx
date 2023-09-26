@@ -8,15 +8,6 @@ import { Statistic } from "../statistic";
 const meta: Meta<typeof ListTile> = {
   component: ListTile,
   title: "Base/ListTile",
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={undefined}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

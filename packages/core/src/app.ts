@@ -1,3 +1,6 @@
+import { Account } from "./account";
+import { Assets } from "./assets";
+
 export class App {
   // state$ = new AsyncSubject();
 
@@ -13,4 +16,8 @@ export class App {
     //   this.state$.complete();
     // }
   }
+
+  get account(): Account {}
+
+  get assets(): Assets {}
 }

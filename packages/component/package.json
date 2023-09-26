@@ -1,9 +1,10 @@
 {
   "name": "@orderly.network/components",
-  "version": "0.0.38",
+  "version": "0.0.43",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],

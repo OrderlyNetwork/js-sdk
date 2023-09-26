@@ -234,3 +234,9 @@ export const usePositionStream = (
     },
   ];
 };
+
+export const pathOr_unsettledPnLPathOr = pathOr(0, [
+  0,
+  "aggregated",
+  "unsettledPnL",
+]);

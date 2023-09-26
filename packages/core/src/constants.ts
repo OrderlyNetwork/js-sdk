@@ -36,10 +36,10 @@ export const definedTypes: { [key: string]: any } = {
   ],
 };
 
-export const devUSDCAddressOnArbitrumTestnet =
-  "0x004d88aa993fd2100d6c8beb6cdb6bc04f565b44";
+export const stagingUSDCAddressOnArbitrumTestnet =
+  "0x6aAd876244E7A1Ad44Ec4824Ce813729E5B6C291";
 
-export const devVaultAddressOnArbitrumTestnet =
-  "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482";
-export const devVerifyAddressOnArbitrumTestnet =
-  "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";
+export const stagingVaultAddressOnArbitrumTestnet =
+  "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D";
+export const stagingVerifyAddressOnArbitrumTestnet =
+  "0x1826B75e2ef249173FC735149AE4B8e9ea10abff";

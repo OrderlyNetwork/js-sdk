@@ -1,4 +1,5 @@
 import { definedTypes } from "./constants";
+import { keccak256, AbiCoder, solidityPackedKeccak256 } from "ethers";
 
 export type SignatureDomain = {
   name: string;
@@ -127,4 +128,26 @@ export function generateSettleMessage(inputs: {
   };
 
   return [message, toSignatureMessage];
+}
+
+export function parseBrokerHash(brokerId: string) {
+  return calculateStringHash(brokerId);
+}
+
+export function parseAccountId(userAddress: string, brokerId: string) {
+  const abicoder = AbiCoder.defaultAbiCoder();
+  return keccak256(
+    abicoder.encode(
+      ["address", "bytes32"],
+      [userAddress, parseBrokerHash(brokerId)]
+    )
+  );
+}
+
+export function parseTokenHash(tokenSymbol: string) {
+  return calculateStringHash(tokenSymbol);
+}
+
+function calculateStringHash(input: string) {
+  return solidityPackedKeccak256(["string"], [input]);
 }

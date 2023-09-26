@@ -15,7 +15,7 @@ export const TabIndicator: FC<TabIndicatorProps> = ({
 }) => {
   const cssTransform = useMemo(() => {
     return { transform: `translateX(${left}px)`, width: `${width}px` };
-  }, [left]);
+  }, [left, width]);
 
   return (
     <div

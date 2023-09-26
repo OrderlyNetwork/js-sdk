@@ -64,15 +64,15 @@ export const useOrderEntry = (
   const { freeCollateral } = useCollateral();
 
   const symbolInfo = useSymbolsInfo();
-  const tokenInfo = useTokenInfo();
+  // const tokenInfo = useTokenInfo();
 
   const baseDP = useMemo(
     () => getPrecisionByNumber(symbolInfo[symbol]("base_tick", 0)),
     [symbolInfo]
   );
   const quoteDP = useMemo(() => {
-    return tokenInfo.USDC("decimals", 0);
-  }, [tokenInfo]);
+    return getPrecisionByNumber(symbolInfo[symbol]("quote_tick", 0));
+  }, [symbolInfo]);
 
   // console.log("orderExtraValues", orderExtraValues);
 
@@ -114,7 +114,7 @@ export const useOrderEntry = (
     return orderCreator
       ?.validate(values, {
         symbol: symbolInfo[symbol](),
-        token: tokenInfo[symbol](),
+        // token: tokenInfo[symbol](),
         maxQty,
         markPrice: markPrice,
       })
@@ -133,12 +133,6 @@ export const useOrderEntry = (
           ...data,
           symbol,
         });
-        // .then((res: any) => {
-        //   if (res.success) {
-        //     mutate("/v1/orders?size=100&page=1$status=NEW");
-        //   }
-        //   return res;
-        // });
       });
   };
 
@@ -163,7 +157,7 @@ export const useOrderEntry = (
 
     return creator?.validate(values, {
       symbol: symbolInfo[symbol](),
-      token: tokenInfo[symbol](),
+      // token: tokenInfo[symbol](),
       maxQty,
       markPrice: markPrice,
     }) as any;

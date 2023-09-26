@@ -5,7 +5,9 @@ import { useAccountInstance, useLocalStorage } from "@orderly.network/hooks";
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
   onWithdraw: () => Promise<any>;
-  onSettlement: () => Promise<any>;
+  onSettle: () => Promise<any>;
+
+  // getBalance: (token: string) => Promise<any>;
 
   visible: boolean;
   toggleVisible: () => void;
@@ -25,14 +27,12 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   }, []);
 
   const onWithdraw = useCallback(async () => {
-    modal.sheet({
-      title: "Withdraw",
-      content: "Withdraw",
-    });
+    // 显示提现弹窗
+    return account.assetsManager.withdraw();
   }, []);
 
-  const onSettlement = useCallback(async () => {
-    return account.settlement();
+  const onSettle = useCallback(async () => {
+    return account.settle();
   }, []);
 
   const [visible, setVisible] = useLocalStorage<boolean>(
@@ -46,14 +46,19 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     });
   }, [visible]);
 
+  // const getBalance = useCallback(async (token: string) => {
+  //   return account.assetsManager.getBalance(token);
+  // }, []);
+
   return (
     <AssetsContext.Provider
       value={{
         onDeposit,
         onWithdraw,
-        onSettlement,
+        onSettle,
         visible,
         toggleVisible,
+        // getBalance,
       }}
     >
       {props.children}

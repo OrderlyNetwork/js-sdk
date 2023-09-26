@@ -1,12 +1,18 @@
-import React, { FC, useContext, useMemo } from "react";
+import React, {
+  FC,
+  ReactNode,
+  useContext,
+  useMemo,
+  isValidElement,
+} from "react";
 import { cn } from "@/utils/css";
 import { TabContext, type TabContextState } from "./tabContext";
 
 export type getTitleFunction = (context: TabContextState) => string;
-export type TabTitle = string | getTitleFunction;
+export type TabTitle = ReactNode | getTitleFunction;
 
 export interface TabProps {
-  title: TabTitle;
+  title: ReactNode;
   active?: boolean;
   value: string | number;
   disabled?: boolean;
@@ -15,20 +21,12 @@ export interface TabProps {
 }
 
 export const Tab: FC<TabProps> = (props) => {
-  const { active, disabled } = props;
-  const tabContext = useContext(TabContext);
-  const title = useMemo(() => {
-    if (typeof props.title === "string") {
-      return props.title;
-    }
-    if (typeof props.title === "function") {
-      return props.title(tabContext);
-    }
-  }, [props.title]);
+  const { active, disabled, title } = props;
+
   return (
     <button
       className={cn(
-        "mx-3 text-base-contrast/40 h-[32px]",
+        "text-base-contrast/40 h-[32px]",
         active && "text-base-contrast active",
         disabled && "cursor-not-allowed text-slate-300"
       )}

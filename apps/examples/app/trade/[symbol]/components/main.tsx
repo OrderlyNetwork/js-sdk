@@ -21,10 +21,10 @@ export const TradingMainPage = () => {
     <WalletConnectorProvider>
       <OrderlyProvider
         configStore={configStore}
-        walletAdapter={EtherAdapter}
         contractManager={contractManager}
         keyStore={new LocalStorageStore("testnet")}
         logoUrl="/woo_fi_logo.svg"
+        getWalletAdapter={(options) => new EtherAdapter(options)}
       >
         <TradingPage
           onSymbolChange={onSymbolChange}

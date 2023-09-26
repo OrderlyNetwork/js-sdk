@@ -3,9 +3,11 @@ import Button, { IconButton } from "@/button";
 import { Share, Copy } from "lucide-react";
 import React, { FC, useCallback } from "react";
 import { Text } from "@/text";
-import { useAccount, useMutation } from "@orderly.network/hooks";
+import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { modal } from "@/modal";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { WalletConnectSheet } from "@/block/walletConnect";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -18,9 +20,10 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect } = props;
   const { account, state } = useAccount();
   // const [loading,setLoading] = React.useState(false);
+  const config = useConfig();
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    "https://testnet-operator-evm.orderly.org/v1/faucet/usdc"
+    `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
   const onCopy = useCallback(() => {
@@ -30,6 +33,12 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   }, [state]);
 
   const onGetClick = useCallback(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return modal.show(WalletConnectSheet, {
+        status: state.status,
+      });
+    }
+
     return getTestUSDC({
       chain_id: account.wallet.chainId.toString(),
       user_address: state.address,

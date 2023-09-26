@@ -174,7 +174,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         const status = await account.setAddress(wallet.accounts[0].address, {
           provider: wallet.provider,
           chain: wallet.chains[0],
-          label: wallet.label,
+          wallet: {
+            name: wallet.label,
+          },
+          // label: ,
         });
 
         console.log("status", status, wallet);
@@ -226,6 +229,9 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
 
   useEffect(() => {
     console.log("app ready?", ready);
+
+    // currentWallet?.provider.detectNetwork().then((x) => console.log(x));
+
     if (ready) {
       let account = SimpleDI.get<Account>(Account.instanceName);
       // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
@@ -255,7 +261,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         account.setAddress(currentWallet.accounts[0].address, {
           provider: currentWallet.provider,
           chain: currentWallet.chains[0],
-          label: currentWallet.label,
+          wallet: {
+            name: currentWallet.label,
+          },
+          // label: currentWallet.label,
         });
       }
     }
@@ -270,33 +279,31 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   // }, [ready]);
 
   return (
-    <SWRConfig>
-      <Provider
-        value={{
-          apiBaseUrl,
-          klineDataUrl,
-          configStore: props.configStore,
-          logoUrl,
-          keyStore,
-          getWalletAdapter,
-          contractManager: props.contractManager,
-          networkId,
-          ready,
-          onWalletConnect: _onWalletConnect,
-          onWalletDisconnect: _onWalletDisconnect,
-          onSetChain: _onSetChain,
-          onAppTestChange,
-          errors,
-          brokerId,
-        }}
-      >
-        <PreDataLoader />
-        <TooltipProvider>
-          <WSObserver />
-          <ModalProvider>{props.children}</ModalProvider>
-        </TooltipProvider>
-        <Toaster />
-      </Provider>
-    </SWRConfig>
+    <Provider
+      value={{
+        apiBaseUrl,
+        klineDataUrl,
+        configStore: props.configStore,
+        logoUrl,
+        keyStore,
+        getWalletAdapter,
+        contractManager: props.contractManager,
+        networkId,
+        ready,
+        onWalletConnect: _onWalletConnect,
+        onWalletDisconnect: _onWalletDisconnect,
+        onSetChain: _onSetChain,
+        onAppTestChange,
+        errors,
+        brokerId,
+      }}
+    >
+      <PreDataLoader />
+      <TooltipProvider>
+        <WSObserver />
+        <ModalProvider>{props.children}</ModalProvider>
+      </TooltipProvider>
+      <Toaster />
+    </Provider>
   );
 };

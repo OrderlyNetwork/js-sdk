@@ -22,7 +22,7 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   const { logoUrl } = useContext(OrderlyContext);
-  const { onDeposit, onWithdraw, onSettlement, visible, toggleVisible } =
+  const { onDeposit, onWithdraw, onSettle, visible, toggleVisible } =
     useContext(AssetsContext);
 
   const { currentLeverage } = useMarginRatio();
@@ -93,7 +93,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           </div>
           <Divider vertical className="px-3" />
 
-          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm">
+          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm h-[30px] leading-[30px]">
             {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
             <Numeral precision={2} surfix="x">
               {currentLeverage}
@@ -108,7 +108,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         <AssetAndMarginSheet
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}
-          onSettlement={onSettlement}
+          onSettle={onSettle}
           maxLeverage={maxLerverage}
         />
       </SheetContent>

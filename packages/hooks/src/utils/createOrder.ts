@@ -11,7 +11,7 @@ export type OrderFormEntity = Pick<
 >;
 
 type ValuesDepConfig = {
-  token: API.TokenInfo;
+  // token: API.TokenInfo;
   symbol: API.SymbolExt;
   maxQty: number;
   markPrice: number;

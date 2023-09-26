@@ -164,10 +164,7 @@ export function buyOrdersFilter_by_symbol(
   symbol: string
 ): API.Order[] {
   return orders.filter(
-    (item) =>
-      item.symbol === symbol &&
-      item.side === OrderSide.BUY &&
-      item.status === "NEW"
+    (item) => item.symbol === symbol && item.side === OrderSide.BUY
   );
 }
 
@@ -176,10 +173,7 @@ export function sellOrdersFilter_by_symbol(
   symbol: string
 ): API.Order[] {
   return orders.filter(
-    (item) =>
-      item.symbol === symbol &&
-      item.side === OrderSide.SELL &&
-      item.status === "NEW"
+    (item) => item.symbol === symbol && item.side === OrderSide.SELL
   );
 }
 
@@ -675,5 +669,6 @@ export type AvailableBalanceInputs = {
 };
 export function availableBalance(inputs: AvailableBalanceInputs) {
   const { USDCHolding, unsettlementPnL } = inputs;
+
   return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
 }

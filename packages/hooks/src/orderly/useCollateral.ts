@@ -1,6 +1,9 @@
 import { usePrivateQuery } from "../usePrivateQuery";
 
-import { usePositionStream } from "./usePositionStream";
+import {
+  pathOr_unsettledPnLPathOr,
+  usePositionStream,
+} from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
 // import { useOrderStream } from "./useOrderStream";
@@ -13,18 +16,18 @@ import { useMemo } from "react";
 import { useBalance } from "./useBalance";
 import { parseHolding } from "../utils/parseHolding";
 import { totalUnsettlementPnLPath } from "../utils/fn";
-import { useHolding } from "./useHolding";
+import { useHoldingStream } from "./useHoldingStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;
   freeCollateral: number;
   totalValue: number;
   availableBalance: number;
+  unsettledPnL: number;
 };
 
 const positionsPath = pathOr([], [0, "rows"]);
 const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
-const unsettledPnL = pathOr(0, [0, "aggregated", "unsettledPnL"]);
 
 /**
  * 用户保证金
@@ -41,7 +44,9 @@ export const useCollateral = (
   const positions = usePositionStream();
 
   // const orders = useOrderStream();
-  const { data: orders } = usePrivateQuery<API.Order[]>(`/v1/orders`);
+  const { data: orders } = usePrivateQuery<API.Order[]>(
+    `/v1/orders?status=NEW`
+  );
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
@@ -50,7 +55,7 @@ export const useCollateral = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { usdc } = useHolding();
+  const { usdc } = useHoldingStream();
 
   // const { data: holding } = usePrivateQuery<API.Holding[]>(
   //   "/v1/client/holding",
@@ -93,14 +98,15 @@ export const useCollateral = (
   const availableBalance = useMemo(() => {
     return account.availableBalance({
       USDCHolding: usdc?.holding ?? 0,
-      unsettlementPnL: unsettledPnL(positions),
+      unsettlementPnL: pathOr_unsettledPnLPathOr(positions),
     });
-  }, [usdc]);
+  }, [usdc, pathOr_unsettledPnLPathOr(positions)]);
 
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
     freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
     totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
     availableBalance,
+    unsettledPnL: pathOr_unsettledPnLPathOr(positions),
   };
 };

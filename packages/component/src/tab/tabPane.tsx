@@ -1,11 +1,11 @@
-import { FC, PropsWithChildren } from "react";
-import { TabTitle } from "./tab";
+import { FC, PropsWithChildren, ReactNode } from "react";
 
 export interface TabPaneProps {
-  title: TabTitle;
+  title: ReactNode;
   active?: boolean;
   value?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export const TabPane: FC<PropsWithChildren<TabPaneProps>> = (props) => {

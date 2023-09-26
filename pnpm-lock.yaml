@@ -496,6 +496,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@enzoferey/ethers-error-parser':
+        specifier: ^0.2.3
+        version: 0.2.3(ethers@6.7.1)
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.0.0
@@ -557,6 +560,9 @@ importers:
       typedoc:
         specifier: ^0.24.8
         version: 0.24.8(typescript@5.1.6)
+      web3:
+        specifier: ^4.1.1
+        version: 4.1.1
 
   packages/eslint-config-custom:
     dependencies:
@@ -2538,6 +2544,14 @@ packages:
     dependencies:
       react: 18.2.0
     dev: true
+
+  /@enzoferey/ethers-error-parser@0.2.3(ethers@6.7.1):
+    resolution: {integrity: sha512-Xt5DPAwJP/Czvw6bVLuWpk+y3M5z1fKWUy3w8nLV7WLfDxoN+HmtqQ1+vgG4lvmD2Xr/bW2mBvHPyI3bKDkuXA==}
+    peerDependencies:
+      ethers: ^5.7.0
+    dependencies:
+      ethers: 6.7.1
+    dev: false
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}

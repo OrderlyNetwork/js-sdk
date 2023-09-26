@@ -12,7 +12,7 @@ export interface OrderBookProps {
   asks: any[];
   bids: any[];
   markPrice: number;
-  lastPrice: number;
+  lastPrice: number[];
   onItemClick?: (item: number[]) => void;
   depth: number[];
   activeDepth: number;

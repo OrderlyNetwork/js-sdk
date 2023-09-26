@@ -36,7 +36,7 @@ export const BottomNavBar = () => {
     <>
       {state.status === AccountStatusEnum.EnableTrading && <GetTestUSDC />}
       {errors.ChainNetworkNotSupport && <ChainIdSwtich onSetChain={setChain} />}
-      <div className="fixed left-0 bottom-0 w-screen bg-base-200 px-2 border-t border-base-contrast/10 z-30 h-[44px] flex justify-between items-center">
+      <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
         <AccountStatusBar
           chains={[]}
           status={state.status}

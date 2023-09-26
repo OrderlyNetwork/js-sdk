@@ -5,7 +5,7 @@ export default defineConfig((options) => ({
   entry: ["src/index.ts"],
   splitting: false,
   minify: !options.watch,
-  format: ["esm"],
+  format: ["cjs", "esm"],
   target: "ES2020",
   sourcemap: true,
   clean: true,

@@ -15,7 +15,7 @@ import { WalletConnectSheet } from "@/block/walletConnect";
 export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
   connected?: boolean;
-  onConnectWallet?: () => void;
+  // onConnectWallet?: () => void;
 }
 
 export const StatusGuardButton: FC<

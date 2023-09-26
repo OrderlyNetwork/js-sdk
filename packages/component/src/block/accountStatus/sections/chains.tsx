@@ -35,7 +35,9 @@ export const Chains: FC<ChainsProps> = (props) => {
           variant={"outlined"}
           size={"small"}
           color={"buy"}
-          className={"border-[rgba(38,254,254,1)] gap-1 text-base-contrast"}
+          className={
+            "border-[rgba(38,254,254,1)] gap-1 text-base-contrast h-[30px]"
+          }
         >
           {/* <NetworkImage id={1} type="chain" size={"small"} /> */}
           <span>Testnet</span>

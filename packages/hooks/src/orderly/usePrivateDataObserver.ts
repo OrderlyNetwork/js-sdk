@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useWS } from "../useWS";
 import { useSWRConfig } from "swr";
-import { WSMessage } from "@orderly.network/types";
+import { API, OrderStatus, WSMessage } from "@orderly.network/types";
 import { useEventEmitter } from "../useEventEmitter";
 import { useAccount } from "../useAccount";
 
@@ -13,14 +13,49 @@ export const usePrivateDataObserver = () => {
   const { state } = useAccount();
 
   useEffect(() => {
-    console.log("subscribe: executionreport");
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
+        const key = ["/v1/orders?status=NEW", state.accountId];
+        // console.log("------ orders push -----------", data);
+        // console.log(cache);
+
+        mutate(key, (orders: any) => {
+          // console.log(orders);
+          return Promise.resolve()
+            .then(() => {
+              if (!orders) {
+                return orders;
+              }
+              if (data.status === OrderStatus.NEW) {
+                return [
+                  {
+                    ...data,
+                    // average_executed_price:data.ava
+                    created_time: data.timestamp,
+                    order_id: data.orderId,
+                    // reduce_only
+                  },
+                  ...orders,
+                ];
+              }
+              if (data.status === OrderStatus.CANCELLED) {
+                return orders.filter(
+                  (order: any) => order.order_id !== data.orderId
+                );
+              }
+
+              return orders;
+            })
+            .catch((error) => {
+              console.log("error", error, error.stack);
+            });
+        });
+
         ee.emit("orders:changed");
       },
     });
     return () => unsubscribe?.();
-  }, []);
+  }, [state.accountId]);
 
   useEffect(() => {
     console.log("subscribe: position: %s", state.accountId);
@@ -29,10 +64,8 @@ export const usePrivateDataObserver = () => {
     const unsubscribe = ws.privateSubscribe("position", {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
         const { positions: nextPostions } = data;
-        // console.log(restConfig);
-        console.info("refresh positions:", nextPostions, state.accountId);
+
         mutate(key, (prevPositions: any) => {
-          console.log("prevPositions:::::", prevPositions);
           // return nextPostions;
           if (!!prevPositions) {
             return {

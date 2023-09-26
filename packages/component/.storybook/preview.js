@@ -102,7 +102,6 @@ const preview = {
         <OnboardConnectorProvider>
           <OrderlyProvider
             configStore={configStore}
-            // walletAdapter={EtherAdapter}
           getWalletAdapter={(options)=>new EtherAdapter(options)}
             contractManager={contractManager}
             keyStore={new LocalStorageStore("testnet")}

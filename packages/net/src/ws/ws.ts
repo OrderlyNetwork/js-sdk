@@ -118,14 +118,14 @@ export class WS {
   private checkSocketStatus() {
     const now = Date.now();
 
-    console.log(
-      "👀👀 checkNetworkStatus 👀👀",
-      this._publicHeartbeatTime,
-      this._privateHeartbeatTime,
-      now,
-      this.publicSocket.readyState,
-      this.privateSocket?.readyState
-    );
+    // console.log(
+    //   "👀👀 checkNetworkStatus 👀👀",
+    //   this._publicHeartbeatTime,
+    //   this._privateHeartbeatTime,
+    //   now,
+    //   this.publicSocket.readyState,
+    //   this.privateSocket?.readyState
+    // );
 
     // check the last time
     // 如果容器不可见，则不做处理
@@ -139,11 +139,6 @@ export class WS {
       if (this.publicSocket.readyState === WebSocket.CLOSED) {
         this.reconnectPublic();
       } else {
-        console.log(
-          "***********************",
-          this.publicSocket.readyState,
-          now - this._publicHeartbeatTime!
-        );
         if (now - this._publicHeartbeatTime! > TIME_OUT) {
           //unsubscribe all public topic
           this.publicSocket.close();

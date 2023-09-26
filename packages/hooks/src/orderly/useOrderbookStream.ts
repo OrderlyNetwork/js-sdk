@@ -76,9 +76,10 @@ const reduceItems = (
 
     result.push([price, quantity, newQuantity]);
     // if the total is greater than the level, break
-    if (i + 1 >= level) {
-      break;
-    }
+    //TODO:
+    // if (i + 1 >= level) {
+    //   break;
+    // }
   }
 
   return result;
@@ -263,6 +264,7 @@ export const useOrderbookStream = (
   }, []);
 
   // markPrice, lastPrice
+  const prevMiddlePrice = useRef<number>(0);
 
   const middlePrice = useMemo(() => {
     let asksFrist = 0,
@@ -281,8 +283,17 @@ export const useOrderbookStream = (
     return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
   }, [ticker, data]);
 
+  useEffect(() => {
+    prevMiddlePrice.current = middlePrice;
+  }, [middlePrice]);
+
   return [
-    { ...data, markPrice, middlePrice },
+    {
+      asks: data.asks.slice(-level),
+      bids: data.bids.slice(0, level),
+      markPrice: markPrice,
+      middlePrice: [prevMiddlePrice.current, middlePrice],
+    },
     { onDepthChange, depth, allDepths: depths, isLoading, onItemClick },
   ];
 };

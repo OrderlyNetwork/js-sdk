@@ -8,15 +8,6 @@ const meta: Meta<typeof Tooltip> = {
   component: Tooltip,
   title: "Base/Tooltip",
   argTypes: {},
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={undefined}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

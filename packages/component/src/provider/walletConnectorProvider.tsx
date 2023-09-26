@@ -1,12 +1,16 @@
 import { FC, PropsWithChildren, createContext } from "react";
 import { useConnectWallet, useSetChain, useWallets } from "@web3-onboard/react";
 
+export type ConnectedChain = {
+  id: string;
+};
 export interface WalletConnectorContextState {
   connect: () => Promise<any[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
   setChain: (options: any) => Promise<any>;
   wallet: any;
+  connectedChain: ConnectedChain | null;
 }
 
 export const WalletConnectorContext =
@@ -36,13 +40,24 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
     setChain, // function to call to initiate user to switch chains in their wallet
   ] = useSetChain();
 
-  // console.log("chains", chains, connectedChain, settingChain);
-
-  console.log("!!!!!!!", wallet);
+  console.log(
+    "OnboardConnectorProvider",
+    wallet,
+    chains,
+    connectedChain,
+    settingChain
+  );
 
   return (
     <WalletConnectorContext.Provider
-      value={{ connect, disconnect, connecting, wallet, setChain }}
+      value={{
+        connect,
+        disconnect,
+        connecting,
+        wallet,
+        setChain,
+        connectedChain,
+      }}
     >
       {props.children}
     </WalletConnectorContext.Provider>
