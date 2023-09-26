@@ -43,7 +43,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
     usePositionStream();
   const { marginRatio, currentLeverage } = useMarginRatio();
-  const { visible, toggleVisible } = useContext(AssetsContext);
+  const { visible, toggleVisible, onDeposit, onWithdraw } =
+    useContext(AssetsContext);
 
   const [maxLeverage, { update }] = useLeverage();
 
@@ -277,14 +278,14 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           </Numeral>
         </div>
       </Paper>
-      {/* <div className="flex gap-3 py-5">
-        <Button fullWidth onClick={() => {}}>
+      <div className="flex gap-3 py-5">
+        <Button fullWidth onClick={onDeposit}>
           Deposit
         </Button>
-        <Button fullWidth variant={"outlined"} onClick={() => {}}>
+        <Button fullWidth variant={"outlined"} onClick={onWithdraw}>
           Withdraw
         </Button>
-      </div> */}
+      </div>
     </StatisticStyleProvider>
   );
 };

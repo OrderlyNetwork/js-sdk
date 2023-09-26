@@ -1,14 +1,14 @@
-import { useContext, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { WithdrawForm } from "./withdrawForm";
-import {
-  useChain,
-  useWithdraw,
-  useAccountInstance,
-} from "@orderly.network/hooks";
+import { useChain, useWithdraw } from "@orderly.network/hooks";
 import { WalletConnectorContext } from "@/provider";
-import { AssetsProvider } from "@/provider/assetsProvider";
 
-export const Withdraw = () => {
+export interface WithdrawProps {
+  onCancel?: () => void;
+  onOk?: () => void;
+}
+
+export const Withdraw: FC<WithdrawProps> = (props) => {
   //   const { state } = useAccount();
   const { connectedChain, wallet, setChain } = useContext(
     WalletConnectorContext
@@ -16,7 +16,7 @@ export const Withdraw = () => {
 
   const { chains } = useChain("USDC");
 
-  const { maxAmount, availableBalance, unsettledPnL } = useWithdraw();
+  const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
 
   const currentChain = useMemo(() => {
     if (!connectedChain) return null;
@@ -26,29 +26,20 @@ export const Withdraw = () => {
     };
   }, [connectedChain]);
 
-  const account = useAccountInstance();
-
   return (
-    <AssetsProvider>
-      <WithdrawForm
-        address={wallet?.accounts?.[0].address}
-        chain={currentChain}
-        chains={chains?.chain_details}
-        walletName={wallet?.label}
-        switchChain={setChain}
-        decimals={chains?.decimals ?? 2}
-        minAmount={chains?.minimum_withdraw_amount ?? 1}
-        maxAmount={maxAmount}
-        availableBalance={availableBalance}
-        unsettledPnL={unsettledPnL}
-        onWithdraw={function (inputs: {
-          chainId: number;
-          token: string;
-          amount: number;
-        }): Promise<any> {
-          return account.assetsManager.withdraw(inputs);
-        }}
-      />
-    </AssetsProvider>
+    <WithdrawForm
+      address={wallet?.accounts?.[0].address}
+      chain={currentChain}
+      chains={chains?.chain_details}
+      walletName={wallet?.label}
+      switchChain={setChain}
+      decimals={chains?.decimals ?? 2}
+      minAmount={chains?.minimum_withdraw_amount ?? 1}
+      maxAmount={maxAmount}
+      availableBalance={availableBalance}
+      unsettledPnL={unsettledPnL}
+      onWithdraw={withdraw}
+      onOk={props.onOk}
+    />
   );
 };

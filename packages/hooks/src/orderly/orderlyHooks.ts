@@ -1,5 +1,3 @@
-// export { useSyncEnd } from "./useSyncEnd";
-
 export { useOrderbookStream } from "./useOrderbookStream";
 export { useOrderEntry } from "./useOrderEntry";
 export { useFetures } from "./useFetures";
@@ -36,6 +34,7 @@ export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
 
 export { useHoldingStream } from "./useHoldingStream";
+export { useWalletSubscription } from "./useWalletSubscription";
 
 export { useBalance } from "./useBalance";
 

@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "@/input";
 import Button from "@/button";
 import { QuantityInput } from "@/block/quantityInput";
@@ -32,15 +32,26 @@ export interface DepositFormProps {
 
   switchChain: (options: { chainId: string }) => Promise<any>;
 
-  approve: (amount: string) => Promise<any>;
+  approve: (amount: string | undefined) => Promise<any>;
   deposit: (amount: string) => Promise<any>;
+
+  onOk?: (data: any) => void;
 }
 
 const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
-  const { decimals, minAmount, maxAmount, walletName, address, chains, chain } =
-    props;
+  const {
+    decimals,
+    minAmount,
+    maxAmount,
+    walletName,
+    address,
+    chains,
+    chain,
+    switchChain,
+    onOk,
+  } = props;
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -55,10 +66,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     }
   }, [chain]);
 
-  // const [status, setStatus] = useState<DepositStatus>(DepositStatus.Normal);
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
-    const maxNum = Number(maxAmount);
 
     if (isNaN(num) || num <= 0) {
       toast.error("Please input a valid number");
@@ -69,11 +78,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       return;
     }
 
-    // if (num > maxNum) {
-    //   toast.error("Insufficient balance");
-    //   return;
-    // }
-
     if (submitting) return;
 
     setSubmitting(true);
@@ -83,7 +87,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       .then(
         () => {
           setQuantity("");
-          toast.success("Deposit success");
+          toast.success("Deposit request sent successfully");
+          onOk?.();
         },
         (error) => {
           toast.error(error?.errorCode);
@@ -95,7 +100,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   }, [quantity, maxAmount, submitting]);
 
   const onApprove = useCallback(() => {
-    return props.approve(quantity || maxAmount || "0");
+    return props.approve(quantity || undefined);
   }, [quantity, maxAmount]);
 
   const onValueChange = useCallback(
@@ -136,6 +141,21 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     [decimals, maxAmount]
   );
 
+  useEffect(() => {
+    //check quantity
+    if (isNaN(Number(quantity)) || !quantity) return;
+
+    const d = new Decimal(quantity);
+
+    if (d.gt(maxAmount)) {
+      setInputStatus("error");
+      setHintMessage("Insufficient balance");
+    } else {
+      setInputStatus("default");
+      setHintMessage("");
+    }
+  }, [maxAmount]);
+
   return (
     <div>
       <div className={"flex items-center py-2"}>
@@ -171,17 +191,18 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       </div>
       <Summary />
       <ActionButton
-        chain={undefined}
+        chain={chain}
+        chains={chains}
+        chainInfo={chainInfo}
         onDeposit={onDeposit}
         allowance={props.allowance}
         disabled={!quantity}
-        switchChain={function (options: { chainId: string }): Promise<any> {
-          throw new Error("Function not implemented.");
-        }}
+        switchChain={switchChain}
         loading={submitting}
         quantity={quantity}
         onApprove={onApprove}
         submitting={submitting}
+        maxQuantity={maxAmount}
       />
     </div>
   );

@@ -18,17 +18,8 @@ export enum DepositStatus {
 }
 
 export interface DepositProps {
-  // accountStatus: AccountStatus;
-  onDeposit?: () => void;
-  availableTokens?: string[];
-
-  availableNetworks?: string[];
-  availableBalance?: number;
-  wallet?: Wallet;
-  activeChain?: Chain;
-  status?: DepositStatus;
-
-  onConnectWallet?: () => void;
+  onCancel?: () => void;
+  onOk?: () => void;
 }
 
 export const Deposit: FC<DepositProps> = (props) => {
@@ -48,8 +39,6 @@ export const Deposit: FC<DepositProps> = (props) => {
 
   const { balance, allowance, approve, deposit } = useDeposit();
 
-  console.log({ balance, allowance });
-
   return (
     <DepositForm
       allowance={allowance}
@@ -63,6 +52,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       maxAmount={balance}
       approve={approve}
       deposit={deposit}
+      onOk={props.onOk}
     />
   );
 };

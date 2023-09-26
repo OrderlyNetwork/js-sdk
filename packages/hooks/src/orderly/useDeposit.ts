@@ -1,21 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccount } from "../useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+// import { Decimal } from "@orderly.network/utils";
 
 export const useDeposit = () => {
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
 
   const { account, state } = useAccount();
-  //   const {} =
+
+  // const depositQueue = useRef<string[]>([]);
 
   const fetchBalance = useCallback(async () => {
-    const balance = await account.assetsManager.getBalance(
-      account.stateValue.address!
-    );
+    const balance = await account.assetsManager.getBalance();
 
-    console.log("----- refresh balance -----", balance);
+    // console.log("----- refresh balance -----", balance);
     setBalance(() => balance);
   }, [state]);
 
@@ -24,6 +24,7 @@ export const useDeposit = () => {
 
     console.log("----- refresh allowance -----", allowance);
     setAllowance(() => allowance);
+    return allowance;
   }, []);
 
   useEffect(() => {
@@ -37,23 +38,25 @@ export const useDeposit = () => {
   const approve = useCallback(
     (amount: string) => {
       return account.assetsManager.approve(amount).then((result: any) => {
-        return fetchAllowance().then(() => result);
+        setAllowance((value) => new Decimal(value).add(amount).toString());
+        return result;
       });
     },
-    [account]
+    [account, fetchAllowance]
   );
 
   const deposit = useCallback(
     (amount: string) => {
       return account.assetsManager.deposit(amount).then((res: any) => {
-        setBalance((prev) => {
-          return new Decimal(prev).sub(amount).toString();
-        });
-        return fetchAllowance().then(() => res);
-        // return res;
+        console.log("----- deposit -----", res);
+        // depositQueue.current.push(res.hash);
+        // return fetchAllowance().then(() => res);
+        setAllowance((value) => new Decimal(value).sub(amount).toString());
+        setBalance((value) => new Decimal(value).sub(amount).toString());
+        return res;
       });
     },
-    [account, fetchBalance]
+    [account, fetchBalance, fetchAllowance]
   );
 
   return {

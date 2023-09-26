@@ -1,7 +1,7 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { API, ChainConfig, ChainInfo } from "@orderly.network/types";
+import { API, ChainConfig } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ApproveButton } from "./approveButton";
@@ -18,6 +18,7 @@ export interface ActionButtonProps {
   loading?: boolean;
   allowance: string;
   submitting: boolean;
+  maxQuantity: string;
   onApprove?: () => Promise<any>;
 }
 
@@ -35,6 +36,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     allowance,
     onApprove,
     submitting,
+    maxQuantity,
   } = props;
 
   const checkSupoort = (
@@ -53,8 +55,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const [chainNotSupport, setChainNotSupport] = useState(() =>
     checkSupoort(chain, chains)
   );
-
-  const [approveLoading, setApproveLoading] = useState(false);
 
   useEffect(() => {
     // console.log({ chain, chains });
@@ -81,6 +81,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             allowance={allowance}
             quantity={quantity}
             submitting={submitting}
+            maxQuantity={maxQuantity}
           />
         </StatusGuardButton>
       );
@@ -89,7 +90,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
-          fullWidth
+          className="min-w-[200px]"
           onClick={() => {
             const chain = chains[0];
             if (chain) {
@@ -109,7 +110,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={openChainPicker}>
+      <Button className="min-w-[200px]" onClick={openChainPicker}>
         Switch Network
       </Button>
     );
@@ -124,8 +125,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     allowance,
     onApprove,
     onDeposit,
-    approveLoading,
     submitting,
+    maxQuantity,
   ]);
 
   return (
@@ -137,7 +138,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="flex justify-center">
-        <div className="py-3 w-2/3">{actionButton}</div>
+        <div className="py-3">{actionButton}</div>
       </div>
     </>
   );

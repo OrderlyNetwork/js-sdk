@@ -48,7 +48,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   );
 
   useEffect(() => {
-    console.log({ chain, chains });
+    // console.log({ chain, chains });
     setChainNotSupport(checkSupoort(chain, chains));
   }, [chain, chains]);
 
@@ -67,7 +67,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <StatusGuardButton>
           <Button
-            fullWidth
+            className="min-w-[200px]"
             onClick={onWithdraw}
             disabled={props.disabled || props.loading}
             loading={loading}
@@ -81,7 +81,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
-          fullWidth
+          className="min-w-[200px]"
           onClick={() => {
             const chain = chains[0];
             if (chain) {
@@ -101,7 +101,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={openChainPicker}>
+      <Button className="min-w-[200px]" onClick={openChainPicker}>
         Switch Network
       </Button>
     );
@@ -124,7 +124,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="flex justify-center">
-        <div className="py-3 w-2/3">{actionButton}</div>
+        <div className="py-3">{actionButton}</div>
       </div>
     </>
   );

@@ -1,6 +1,19 @@
 import { modal } from "@/modal";
-import { FC, PropsWithChildren, createContext, useCallback } from "react";
-import { useAccountInstance, useLocalStorage } from "@orderly.network/hooks";
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useEffect,
+} from "react";
+import {
+  useAccountInstance,
+  useLocalStorage,
+  useWS,
+  useWalletSubscription,
+} from "@orderly.network/hooks";
+import { toast } from "@/toast";
+import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
@@ -19,16 +32,20 @@ export const AssetsContext = createContext<AssetsContextState>(
 
 export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   const account = useAccountInstance();
+
   const onDeposit = useCallback(async () => {
-    modal.sheet({
-      title: "Deposit",
-      content: "Deposit",
+    const result = await modal.show(DepositAndWithdrawWithSheet, {
+      activeTab: "deposit",
     });
+    console.log(result);
   }, []);
 
   const onWithdraw = useCallback(async () => {
     // 显示提现弹窗
-    return account.assetsManager.withdraw();
+    const result = await modal.show(DepositAndWithdrawWithSheet, {
+      activeTab: "withdraw",
+    });
+    console.log(result);
   }, []);
 
   const onSettle = useCallback(async () => {
@@ -46,9 +63,28 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     });
   }, [visible]);
 
-  // const getBalance = useCallback(async (token: string) => {
-  //   return account.assetsManager.getBalance(token);
-  // }, []);
+  useWalletSubscription({
+    onMessage: (data: any) => {
+      // console.log("------- wallet -------", data);
+      const { side, transStatus } = data;
+
+      if (transStatus === "COMPLETED") {
+        let msg = "";
+
+        switch (side) {
+          case "DEPOSIT":
+            msg = "Deposit success";
+            break;
+          case "WITHDRAW":
+            msg = "Withdraw success";
+            break;
+          default:
+            msg = `${side} success}`;
+        }
+        toast.success(msg);
+      }
+    },
+  });
 
   return (
     <AssetsContext.Provider

@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
 
 import { Decimal } from "@orderly.network/utils";
 import { useCollateral } from "./useCollateral";
+import { useWS } from "../useWS";
+import { useAccount } from "../useAccount";
+import { useEventEmitter } from "../useEventEmitter";
 
 export type WithdrawInputs = {
   amoutn: number;
@@ -10,17 +13,58 @@ export type WithdrawInputs = {
 };
 
 export const useWithdraw = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const { account, state } = useAccount();
 
-  // const positions = usePositionStream();
+  const [isLoading, setIsLoading] = useState(false);
+
   const { unsettledPnL, availableBalance } = useCollateral();
 
-  const withdraw = (amount: number): Promise<any> => {
-    return Promise.resolve();
-  };
+  // const withdrawQueue = useRef<number[]>([]);
+
+  const withdraw = useCallback(
+    (inputs: {
+      chainId: number;
+      token: string;
+      amount: number;
+    }): Promise<any> => {
+      return account.assetsManager.withdraw(inputs).then((res: any) => {
+        console.log("---------- withdraw -------", res);
+        // if (res.success) {
+        //   withdrawQueue.current.push(res.data.withdraw_id);
+        // }
+        return res;
+      });
+    },
+    [state]
+  );
 
   const { usdc } = useHoldingStream();
+
+  // useEffect(() => {
+  //   const unsubscribe = ws.privateSubscribe(
+  //     {
+  //       id: "wallet",
+  //       event: "subscribe",
+  //       topic: "wallet",
+  //       ts: Date.now(),
+  //     },
+  //     {
+  //       onMessage: (data: any) => {
+  //         // console.log("------- wallet -------", data);
+  //         const { id } = data;
+
+  //         if (withdrawQueue.current.includes(id)) {
+  //           withdrawQueue.current = withdrawQueue.current.filter(
+  //             (item) => item !== id
+  //           );
+  //           ee.emit("withdraw:success", data);
+  //         }
+  //       },
+  //     }
+  //   );
+
+  //   return () => unsubscribe();
+  // }, []);
 
   const maxAmount = useMemo(() => {
     if (!usdc || !usdc.holding) return 0;
@@ -29,8 +73,6 @@ export const useWithdraw = () => {
 
     return new Decimal(usdc.holding).add(unsettledPnL).toNumber();
   }, [usdc, unsettledPnL]);
-
-  // const availableBalance = 0;
 
   return { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL };
 };

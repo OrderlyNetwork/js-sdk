@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore";
 import { definedTypes } from "./constants";
@@ -170,24 +171,26 @@ export class Assets {
     return this.account.walletClient?.fromUnits(result);
   }
 
-  async approve(amount: string) {
+  async approve(amount?: string) {
+    if (!this.account.walletClient) {
+      throw new Error("walletClient is undefined");
+    }
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    const parsedAmount =
+      typeof amount !== "undefined"
+        ? this.account.walletClient.parseUnits(amount)
+        : ethers.MaxUint256.toString();
+
     const result = await this.account.walletClient?.call(
       contractAddress.usdcAddress,
       "approve",
-      [
-        contractAddress.vaultAddress,
-        this.account.walletClient.parseUnits(amount),
-        // {
-        //   from: this.account.stateValue.address,
-        // },
-      ],
+      [contractAddress.vaultAddress, parsedAmount],
       {
         abi: contractAddress.usdcAbi,
       }
     );
 
-    console.log("-----*****-----", result);
+    // console.log("-----*****-----", result);
 
     return result;
   }
@@ -207,6 +210,11 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletClient?.parseUnits(amount),
     };
+
+    debugger;
+
+    console.log(depositData);
+
     const result = await this.account.walletClient?.call(
       contractAddress.vaultAddress,
       "deposit",
@@ -216,7 +224,7 @@ export class Assets {
       }
     );
 
-    console.log("-----*****-----", result);
+    // console.log("-----*****-----", result);
 
     return result;
   }

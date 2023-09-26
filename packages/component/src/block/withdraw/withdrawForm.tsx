@@ -36,6 +36,8 @@ export interface WithdrawProps {
     token: string;
     amount: number;
   }) => Promise<any>;
+
+  onOk?: (data: any) => void;
 }
 
 const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
@@ -52,6 +54,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   unsettledPnL,
   maxAmount,
   onWithdraw,
+  onOk,
   switchChain,
 }) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
@@ -94,8 +97,10 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       .then(
         (res) => {
           console.log(res);
-          toast.success("Withdraw success");
+          toast.success("Withdraw request sent successfully");
           setQuantity("");
+
+          onOk?.(res);
         },
         (error) => {
           // console.log(error);
@@ -105,7 +110,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       .finally(() => {
         setSubmitting(false);
       });
-  }, [quantity, minAmount, inputStatus, chain, submitting]);
+  }, [quantity, minAmount, inputStatus, chain, submitting, onOk]);
 
   const onValueChange = useCallback(
     (value: any) => {
@@ -214,16 +219,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         quantity={quantity}
         loading={submitting}
       />
-
-      {/* {chainNotSupport && (
-        <div className="text-warning text-sm text-center px-[20px] py-3">
-          {chainWarningMessage}
-        </div>
-      )}
-
-      <div className="flex justify-center">
-        <div className="py-3 w-2/3">{actionButton}</div>
-      </div> */}
     </>
   );
 };

@@ -1,11 +1,12 @@
 import { OrderEntry } from "@/block/orderEntry";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useContext, useEffect, useRef, useState } from "react";
 import {
   useOrderEntry,
   useAccount,
   useEventEmitter,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, OrderSide } from "@orderly.network/types";
+import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 
 interface MyOrderEntryProps {
   symbol: string;
@@ -14,6 +15,7 @@ interface MyOrderEntryProps {
 export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   const { symbol } = props;
   const [side, setSide] = useState(OrderSide.BUY);
+  const { onDeposit } = useContext(AssetsContext);
   const [reduceOnly, setReduceOnly] = useState(false);
   const { state } = useAccount();
   const ee = useEventEmitter();
@@ -33,7 +35,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     observer.observe(containerRef.current!);
 
     return () => {
-      console.log(">?????????", containerRef.current);
+      // console.log(">?????????", containerRef.current);
       if (containerRef.current) {
         observer.unobserve(containerRef.current!);
       }
@@ -52,6 +54,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         symbol={symbol}
         onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
+        onDeposit={onDeposit}
       />
     </div>
   );
