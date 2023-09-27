@@ -1,15 +1,12 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { Input } from "@/input";
-import Button from "@/button";
+
 import { QuantityInput } from "@/block/quantityInput";
 import { WalletPicker } from "../pickers/walletPicker";
 import { Divider } from "@/divider";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
-import { StatusGuardButton } from "@/button/statusGuardButton";
 
-import { Chain, Wallet } from "@/block/pickers/walletPicker/walletPicker";
 import { MoveDownIcon, SvgImage } from "@/icon";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
@@ -69,34 +66,36 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
 
-    if (isNaN(num) || num <= 0) {
-      toast.error("Please input a valid number");
-      return;
-    }
+    return Promise.resolve().then(() => {
+      if (isNaN(num) || num <= 0) {
+        toast.error("Please input a valid number");
+        return;
+      }
 
-    if (inputStatus !== "default") {
-      return;
-    }
+      if (inputStatus !== "default") {
+        return;
+      }
 
-    if (submitting) return;
+      if (submitting) return;
 
-    setSubmitting(true);
+      setSubmitting(true);
 
-    return props
-      .deposit?.(quantity)
-      .then(
-        () => {
-          setQuantity("");
-          toast.success("Deposit request sent successfully");
-          onOk?.();
-        },
-        (error) => {
-          toast.error(error?.errorCode);
-        }
-      )
-      .finally(() => {
-        setSubmitting(false);
-      });
+      return props
+        .deposit?.(quantity)
+        .then(
+          (res: any) => {
+            setQuantity("");
+            toast.success("Deposit request sent successfully");
+            onOk?.(res);
+          },
+          (error) => {
+            toast.error(error?.errorCode);
+          }
+        )
+        .finally(() => {
+          setSubmitting(false);
+        });
+    });
   }, [quantity, maxAmount, submitting]);
 
   const onApprove = useCallback(() => {

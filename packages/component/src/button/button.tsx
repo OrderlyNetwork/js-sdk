@@ -62,10 +62,17 @@ const buttonVariants = cva(
         class:
           "text-primary bg-transparent hover:bg-slate-100 hover:text-primary",
       },
+
       {
         variant: "contained",
         color: "primary",
         class: "bg-primary hover:bg-primary/90 text-base-contrast",
+      },
+      {
+        variant: "contained",
+        color: "primary",
+        disabled: true,
+        class: "bg-base-400 hover:bg-base-400 text-base-contrast/15",
       },
       {
         variant: "contained",
@@ -143,7 +150,12 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
 }) => {
   const children = useMemo(() => {
     if (!!loading) {
-      return <Spinner size={"small"} />;
+      return (
+        <>
+          <Spinner size={"small"} className="mr-[4px]" />
+          {props.children}
+        </>
+      );
     }
     return props.children;
   }, [props.children, loading]);

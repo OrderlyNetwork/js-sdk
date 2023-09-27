@@ -90,7 +90,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
-          className="min-w-[200px]"
+          fullWidth
           onClick={() => {
             const chain = chains[0];
             if (chain) {
@@ -110,7 +110,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button className="min-w-[200px]" onClick={openChainPicker}>
+      <Button fullWidth onClick={openChainPicker}>
         Switch Network
       </Button>
     );
@@ -138,7 +138,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="flex justify-center">
-        <div className="py-3">{actionButton}</div>
+        <div className="py-3 min-w-[200px]">{actionButton}</div>
       </div>
     </>
   );

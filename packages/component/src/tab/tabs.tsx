@@ -15,12 +15,17 @@ export interface TabsProps {
   // 是否显示tab指示器，default: true
   showIdentifier?: boolean;
 
+  collapsed?: boolean;
+  onToggleCollapsed?: () => void;
+
   tabBarClassName?: string;
 }
 
 // it's controlled component;
 export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   showIdentifier = true,
+  collapsed = false,
+  onToggleCollapsed,
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -77,7 +82,11 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   //   const extraNode
 
   return (
-    <TabContextProvider data={props.extraData}>
+    <TabContextProvider
+      data={props.extraData}
+      collapsed={collapsed}
+      onToggleCollapsed={onToggleCollapsed}
+    >
       <>
         <TabList
           tabs={tabList}

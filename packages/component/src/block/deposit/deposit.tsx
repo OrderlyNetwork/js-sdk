@@ -2,8 +2,6 @@
 
 import { FC, useCallback, useContext, useMemo, useState } from "react";
 
-import { Chain, Wallet } from "@/block/pickers/walletPicker/walletPicker";
-
 import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
 import { useChain, useDeposit } from "@orderly.network/hooks";

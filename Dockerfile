@@ -12,7 +12,7 @@ WORKDIR /app
 
 FROM base AS storybook
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-# RUN pnpm build
+RUN pnpm build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd packages/component && pnpm build-storybook
 
 FROM base AS serve

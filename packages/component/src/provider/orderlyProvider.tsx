@@ -28,6 +28,7 @@ import { WSObserver } from "@/dev/wsObserver";
 import { useChains, useSessionStorage } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { PreDataLoader } from "@/system/preDataLoader";
+import toast, { useToasterStore } from "react-hot-toast";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
@@ -40,6 +41,8 @@ interface OrderlyProviderProps {
   getWalletAdapter: getWalletAdapterFunc;
 
   logoUrl?: string;
+
+  toastLimitCount?: number;
 
   // onWalletConnect?: () => Promise<any>;
 }
@@ -57,6 +60,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     configStore,
     contractManager,
     getWalletAdapter,
+    toastLimitCount = 1,
     // onWalletConnect,
   } = props;
 
@@ -64,6 +68,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     throw new Error("configStore is required");
   }
   const [ready, setReady] = useSessionStorage<boolean>("APP_READY", false);
+  const { toasts } = useToasterStore();
 
   const onAppTestChange = (name: string) => {
     CHECK_ENTRY[name] = true;
@@ -245,6 +250,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         }
         // 需要确定已经拿到chains list
         if (!checkChainId(currentChainId)) {
+          console.log("!!!! not support this chian -> disconnect wallet");
           account.disconnect();
 
           setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
@@ -271,12 +277,13 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     // }, [ready, currentWallet]);
   }, [ready, currentAddress, currentChainId, testChains]);
 
-  // const content = useMemo(() => {
-  //   if (!ready) {
-  //     return null;
-  //   }
-  //   return props.children;
-  // }, [ready]);
+  // limit toast count
+  useEffect(() => {
+    toasts
+      .filter((t) => t.visible) // Only consider visible toasts
+      .filter((_, i) => i >= toastLimitCount) // Is toast index over limit
+      .forEach((t) => toast.dismiss(t.id)); // Dismiss – Use toast.remove(t.id) removal without animation
+  }, [toasts]);
 
   return (
     <Provider

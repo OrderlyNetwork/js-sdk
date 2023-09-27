@@ -38,11 +38,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
 
   if (Number(allowance) <= 0) {
     return (
-      <Button
-        className="min-w-[200px]"
-        loading={approveLoading}
-        onClick={onClick}
-      >
+      <Button fullWidth loading={approveLoading} onClick={onClick}>
         Approve USDC
       </Button>
     );
@@ -53,11 +49,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     Number(quantity) <= Number(maxQuantity)
   ) {
     return (
-      <Button
-        className="min-w-[200px]"
-        loading={approveLoading}
-        onClick={onClick}
-      >
+      <Button fullWidth loading={approveLoading} onClick={onClick}>
         increase USDC authorized amount
       </Button>
     );
@@ -65,7 +57,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
 
   return (
     <Button
-      className="min-w-[200px]"
+      fullWidth
       onClick={onDeposit}
       disabled={!quantity || submitting}
       loading={submitting}

@@ -16,9 +16,9 @@ export type Wallet = {
 
 export interface WalletPickerProps {
   chains?: API.ChainDetail[];
-  // chain: Chain | null;
+
   chain?: ChainConfig;
-  // wallet?: Wallet;
+
   address?: string;
   onOpenPicker?: () => void;
   onChainChange?: (chainId: string) => void;
@@ -52,7 +52,9 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
           size={"small"}
           rounded
         />
-        <span className="flex-1 px-2 text-left">{chain?.chainName}</span>
+        <span className="flex-1 px-2 text-left">
+          {chain?.chainName ?? "--"}
+        </span>
         {props.chains?.length && props.chains.length > 1 && (
           <ArrowLeftRight size={16} className="text-primary-light" />
         )}

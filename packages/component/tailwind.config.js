@@ -4,16 +4,15 @@ const plugin = require("tailwindcss/plugin");
 const path = require("path");
 import colors from "tailwindcss/colors";
 
-console.log('path.dirname(require.resolve("rc-slider"))',path.join(path.dirname(require.resolve("rc-slider")), "**/*.{js,jsx}"));
 
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
-  // content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  content: ["./src/**/*.{ts,js,tsx,jsx}"],
   // purge: ["./src/**/*.{ts,js,tsx,jsx}",
   // // "./node_modules/rc-slider/**/*.{ts,js,tsx,jsx}",
   // ],
-  content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
+  // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
   // prefix: 'orderly-',
   theme: {
     extend: {
@@ -50,6 +49,7 @@ module.exports = {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
           300: "rgb(var(--orderly-color-base-300) / <alpha-value>)",
+          400: "rgb(var(--orderly-color-base-400) / <alpha-value>)",
           contrast: "rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
         },
         danger: {

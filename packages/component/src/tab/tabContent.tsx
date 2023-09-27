@@ -19,9 +19,9 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
           contentVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         )
       )}
-      onTransitionEnd={() => {
-        console.log("onTransitionEnd");
-      }}
+      // onTransitionEnd={() => {
+      //   console.log("onTransitionEnd");
+      // }}
     >
       <div className="overflow-hidden relative">{props.children}</div>
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/components",
-  "version": "0.0.43",
+  "version": "0.0.45",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -95,7 +95,6 @@
     "class-variance-authority": "^0.6.1",
     "ethereum-blockies-base64": "^1.0.2",
     "lucide-react": "^0.265.0",
-    "rc-slider": "^10.2.1",
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",
     "tailwind-merge": "^1.14.0"

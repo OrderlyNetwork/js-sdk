@@ -36,9 +36,11 @@ export const useDeposit = () => {
   }, [state]);
 
   const approve = useCallback(
-    (amount: string) => {
+    (amount: string | undefined) => {
       return account.assetsManager.approve(amount).then((result: any) => {
-        setAllowance((value) => new Decimal(value).add(amount).toString());
+        if (typeof amount !== "undefined") {
+          setAllowance((value) => new Decimal(value).add(amount).toString());
+        }
         return result;
       });
     },

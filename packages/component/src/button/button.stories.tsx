@@ -15,10 +15,18 @@ export default {
   },
 };
 
-// type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof Button>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Default = {
+export const Default: Story = {
+  render: (args) => {
+    return (
+      <div className="flex gap-3">
+        <Button {...args} />
+        <Button {...args} disabled />
+      </div>
+    );
+  },
   args: {
     children: "Button",
     variant: "contained",

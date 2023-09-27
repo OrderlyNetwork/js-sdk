@@ -177,7 +177,7 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
-      typeof amount !== "undefined"
+      typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
         : ethers.MaxUint256.toString();
 
@@ -190,7 +190,7 @@ export class Assets {
       }
     );
 
-    // console.log("-----*****-----", result);
+    console.log("-----*****-----", result);
 
     return result;
   }
@@ -210,10 +210,6 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletClient?.parseUnits(amount),
     };
-
-    debugger;
-
-    console.log(depositData);
 
     const result = await this.account.walletClient?.call(
       contractAddress.vaultAddress,

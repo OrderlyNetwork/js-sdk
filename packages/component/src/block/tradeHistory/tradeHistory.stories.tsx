@@ -8,8 +8,6 @@ import {
 } from "../../provider/orderlyProvider";
 // import { OrderEditFormDialog } from "./dialog/editor";
 
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
 import { useMarketTradeStream } from "@orderly.network/hooks";
 
 const meta: Meta<typeof TradeHistory> = {

@@ -115,7 +115,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           <span>Remember me</span>
           <Info className="inline-block ml-2" size={16} />
         </div>
-        <Switch checked={remember} onCheckedChange={setRemember} />
+        <div>
+          <Switch checked={remember} onCheckedChange={setRemember} />
+        </div>
       </div>
       <div>
         <Button
@@ -136,13 +138,6 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
   // get account status and handle sign in and enable trading
   const { account, createOrderlyKey, createAccount } = useAccount();
   const { logoUrl } = useContext(OrderlyContext);
-
-  // const onEnableTrading = useCallback(
-  //   (remember: boolean) => {
-  //     return account.createOrderlyKey(remember ? 365 : 30);
-  //   },
-  //   [account]
-  // );
 
   const onSignIn = useCallback(() => {
     return createAccount().catch((err: Error) => {

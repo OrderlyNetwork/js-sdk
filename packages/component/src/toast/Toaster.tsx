@@ -14,6 +14,7 @@ export const Toaster: FC<ToastProps> = (props) => {
     <PrimitiveToaster
       toastOptions={{
         duration: 5000,
+
         success: {
           iconTheme: {
             primary: "rgba(39, 222, 200, 1)",
