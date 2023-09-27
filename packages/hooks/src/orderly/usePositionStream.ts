@@ -13,7 +13,7 @@ import { OrderEntity } from "@orderly.network/types";
 
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useAccount } from "../useAccount";
+
 import { useEventEmitter } from "../useEventEmitter";
 
 export interface PositionReturn {
@@ -183,6 +183,9 @@ export const usePositionStream = (
       .filter((item) => item.position_qty !== 0)
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
+
+        // console.log("info", info("base_mmr"), info("base_imr"));
+
         const MMR = positions.MMR({
           baseMMR: info("base_mmr"),
           baseIMR: info("base_imr"),

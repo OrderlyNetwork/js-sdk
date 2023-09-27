@@ -60,9 +60,14 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       setHandleStep(2);
       return props
         .onEnableTrading?.(remember)
-        .then(() => {
-          props.onComplete?.();
-        })
+        .then(
+          () => {
+            props.onComplete?.();
+          },
+          (error) => {
+            toast.error(error.message);
+          }
+        )
         .finally(() => {
           setHandleStep(0);
         });
