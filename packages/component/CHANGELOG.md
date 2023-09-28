@@ -1,5 +1,37 @@
 # @orderly.network/components
 
+## 0.0.48
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.48
+  - @orderly.network/utils@0.0.42
+  - @orderly.network/net@1.0.46
+
+## 0.0.47
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.47
+  - @orderly.network/utils@0.0.41
+  - @orderly.network/net@1.0.45
+
+## 0.0.46
+
+### Patch Changes
+
+- update
+- e49f864: update
+- Updated dependencies
+- Updated dependencies [e49f864]
+  - @orderly.network/types@0.0.46
+  - @orderly.network/utils@0.0.40
+  - @orderly.network/net@1.0.44
+
 ## 0.0.45
 
 ### Patch Changes

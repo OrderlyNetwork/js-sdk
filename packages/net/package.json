@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/net",
-  "version": "1.0.43",
+  "version": "1.0.46",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

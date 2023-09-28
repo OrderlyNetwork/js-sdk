@@ -136,7 +136,7 @@ export type IMRInputs = {
  * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
 export function IMR(inputs: IMRInputs): number {
-  console.log("IMR inputs", inputs);
+  // console.log("IMR inputs", inputs);
   const {
     maxLeverage,
     baseIMR,
@@ -401,7 +401,7 @@ export function otherIMs(inputs: OtherIMsInputs): number {
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber();
 
-      const IMR_Factor = IMR_Factors[symbolInfo[symbol]("base")];
+      const IMR_Factor = IMR_Factors[symbol];
 
       if (!IMR_Factor) {
         console.warn("IMR_Factor is not found:", symbol);
