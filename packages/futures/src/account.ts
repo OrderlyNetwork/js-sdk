@@ -136,7 +136,6 @@ export type IMRInputs = {
  * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
 export function IMR(inputs: IMRInputs): number {
-  console.log("IMR inputs", inputs);
   const {
     maxLeverage,
     baseIMR,
@@ -251,8 +250,6 @@ export function totalInitialMarginWithOrders(
     maxLeverage,
     symbolInfo,
   } = inputs;
-
-  console.log("totalInitialMarginWithOrders inputs", inputs);
 
   const symbols = extractSymbols(positions, orders);
 

@@ -179,8 +179,6 @@ export function MMR(inputs: {
   positionNotional: number;
   IMR_factor_power: number;
 }): number {
-  console.log("-----------", inputs);
-
   const {
     baseMMR,
     baseIMR,
