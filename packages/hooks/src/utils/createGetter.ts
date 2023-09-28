@@ -29,6 +29,7 @@ export function createGetter<
         };
       }
       return (key: K, defaultValue: any) => {
+        // console.log("getter", property, key, defaultValue, data);
         if (key) {
           return (target as any)[property]?.[key] ?? defaultValue;
         } else {

@@ -186,10 +186,12 @@ export const usePositionStream = (
 
         // console.log("info", info("base_mmr"), info("base_imr"));
 
+        console.log("******", accountInfo, info("base"));
+
         const MMR = positions.MMR({
           baseMMR: info("base_mmr"),
           baseIMR: info("base_imr"),
-          IMRFactor: accountInfo.imr_factor[info("base")] as number,
+          IMRFactor: accountInfo.imr_factor[item.symbol] as number,
           positionNotional: item.notional,
           IMR_factor_power: 4 / 5,
         });

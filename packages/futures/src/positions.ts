@@ -71,6 +71,7 @@ export type LiqPriceInputs = {
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(inputs: LiqPriceInputs): number {
+  console.log("liqPrice:::::", inputs);
   const { markPrice, totalCollateral, positionQty, MMR } = inputs;
   const totalNotional = notional(positionQty, markPrice);
 
