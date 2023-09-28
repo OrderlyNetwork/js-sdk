@@ -22,7 +22,7 @@ export const useDeposit = () => {
   const fetchAllowance = useCallback(async () => {
     const allowance = await account.assetsManager.getAllowance();
 
-    console.log("----- refresh allowance -----", allowance);
+    // console.log("----- refresh allowance -----", allowance);
     setAllowance(() => allowance);
     return allowance;
   }, []);

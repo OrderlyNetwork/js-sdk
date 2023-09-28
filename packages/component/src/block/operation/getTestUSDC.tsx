@@ -35,6 +35,9 @@ export const GetTestUSDC = () => {
     (event: MouseEvent) => {
       event.preventDefault();
       const toastId = toast.loading("Getting test USDC...");
+      if (!account || !account.wallet) {
+        return;
+      }
       getTestUSDC({
         chain_id: account.wallet.chainId.toString(),
         user_address: state.address,

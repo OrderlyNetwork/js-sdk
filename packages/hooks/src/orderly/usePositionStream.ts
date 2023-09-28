@@ -184,6 +184,13 @@ export const usePositionStream = (
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
 
+        console.log(
+          "info -------",
+          info("base"),
+          accountInfo.imr_factor,
+          accountInfo.imr_factor[info("base")]
+        );
+
         const MMR = positions.MMR({
           baseMMR: info("base_mmr"),
           baseIMR: info("base_imr"),
