@@ -111,7 +111,7 @@ export const useMaxQty = (
       positionQty,
       buyOrdersQty,
       sellOrdersQty,
-      IMR_Factor: accountInfo.imr_factor[symbol],
+      IMR_Factor: accountInfo.imr_factor[getSymbolInfo("base")],
     });
   }, [
     orders,
