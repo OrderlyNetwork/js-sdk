@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { RiskIndicator } from ".";
+import { RiskIndicator } from "./riskIndicator";
 
 const meta: Meta<typeof RiskIndicator> = {
   component: RiskIndicator,
@@ -13,7 +13,8 @@ type Story = StoryObj<typeof RiskIndicator>;
 
 export const Default: Story = {
   args: {
-    width: 100,
-    height: 100,
+    // width: 100,
+    // height: 100,
+    value: 10,
   },
 };

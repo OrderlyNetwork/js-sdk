@@ -6,61 +6,54 @@ import { SortDirection } from "@/block/markets/sections/sortItem";
 import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
 import { API } from "@orderly.network/core";
 import { Numeral } from "@/text";
+import { NumeralWithSymbol } from "@/text/numeralWithSymbol";
+import { Cell } from "./cell";
+import { SymbolProvider } from "@/provider";
 
 interface MarketListViewProps {
   dataSource?: API.MarketInfo[];
   onItemClick?: (item: API.MarketInfo) => void;
 }
 
-type DataItem = API.MarketInfo & { change: number };
-
 const sortFunc = {
-  vol: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
-    return direction === SortDirection.ASC
-      ? a["24h_volumn"] - b["24h_volumn"]
-      : b["24h_volumn"] - a["24h_volumn"];
-  },
-  price: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
-    return direction === SortDirection.ASC
-      ? a["24h_close"] - b["24h_close"]
-      : b["24h_close"] - a["24h_close"];
-  },
-  change: (direction: SortDirection) => (a: DataItem, b: DataItem) => {
-    return direction === SortDirection.ASC
-      ? a.change - b.change
-      : b.change - a.change;
-  },
+  vol:
+    (direction: SortDirection) =>
+    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+      return direction === SortDirection.ASC
+        ? a["24h_volumn"] - b["24h_volumn"]
+        : b["24h_volumn"] - a["24h_volumn"];
+    },
+  price:
+    (direction: SortDirection) =>
+    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+      return direction === SortDirection.ASC
+        ? a["24h_close"] - b["24h_close"]
+        : b["24h_close"] - a["24h_close"];
+    },
+  change:
+    (direction: SortDirection) =>
+    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+      return direction === SortDirection.ASC
+        ? a.change - b.change
+        : b.change - a.change;
+    },
 };
 
 export const MarketListView: FC<MarketListViewProps> = (props) => {
-  const renderItem = useCallback((item: DataItem) => {
+  const renderItem = useCallback((item: API.MarketInfoExt) => {
     return (
-      <ListTile.symbol
-        subtitle={item["24h_volumn"] ?? "--"}
-        symbol={item["symbol"]}
-        tailing={
-          <Statistic
-            label={<Numeral rule={"price"}>{item["24h_close"]}</Numeral>}
-            value={!Number.isNaN(item.change) ? item.change : 0}
-            rule={"percentages"}
-            align={"right"}
-            coloring
-            valueClassName={"text-sm"}
-          />
-        }
-        onClick={() => {
-          props.onItemClick?.(item);
-        }}
-      />
+      <SymbolProvider symbol={item.symbol}>
+        <Cell item={item} onItemClick={props.onItemClick} />
+      </SymbolProvider>
     );
   }, []);
   const [sortCondition, setSortCondition] = useState<SortCondition>({});
 
   const renderSeparator = useCallback(() => {
-    return <Divider />;
+    return <Divider className="my-[16px]" />;
   }, []);
 
-  const dataSource = useMemo<DataItem[] | undefined>(() => {
+  const dataSource = useMemo<API.MarketInfoExt[] | undefined>(() => {
     const newDataSource = props.dataSource?.map((item) => ({
       ...item,
       change: (item["24h_close"] - item["24h_open"]) / item["24h_open"],
@@ -78,10 +71,12 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
     <>
       <SortGroup onChange={setSortCondition} />
       <Divider />
-      <ListView.separated<DataItem>
+      <ListView.separated<API.MarketInfoExt>
         dataSource={dataSource}
         renderItem={renderItem}
         renderSeparator={renderSeparator}
+        contentClassName="space-y-[16px]"
+        className="py-[16px]"
       />
     </>
   );

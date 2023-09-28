@@ -1,29 +1,51 @@
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { type AccountStatusBar } from "../accountStatusBar";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 import { EyeOff } from "lucide-react";
 import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";
+import { type API, AccountStatusEnum } from "@orderly.network/types";
+import { OrderlyContext, useMarginRatio } from "@orderly.network/hooks";
+import { Logo } from "@/logo";
+import { AssetsContext } from "@/provider/assetsProvider";
+import { EyeIcon, EyeOffIcon } from "@/icon";
+import { Decimal } from "@orderly.network/utils";
 
 interface AccountTotalProps {
-  status: AccountStatusBar;
-  balance?: string;
+  status: AccountStatusEnum;
+  totalValue?: number;
   currency?: string;
+  accountInfo?: API.AccountInfo;
 }
 
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
-  const { currency = "USDC" } = props;
+  const { currency = "USDC", accountInfo } = props;
+  const { logoUrl } = useContext(OrderlyContext);
+  const { onDeposit, onWithdraw, onSettle, visible, toggleVisible } =
+    useContext(AssetsContext);
+
+  const { currentLeverage } = useMarginRatio();
+
+  // console.log("accountInfo", props);
 
   const balance = useMemo(() => {
-    if (props.status !== "SignedIn") {
+    if (props.status < AccountStatusEnum.EnableTrading) {
       return "--";
     }
 
-    return <Numeral rule="price">{props.balance ?? 0}</Numeral>;
-  }, [props.status, props.balance]);
+    return (
+      <Numeral rule="price" visible={visible}>
+        {props.totalValue ?? 0}
+      </Numeral>
+    );
+  }, [props.status, props.totalValue, visible]);
 
-  if (props.status !== "SignedIn") {
+  const maxLerverage = useMemo(() => {
+    return accountInfo?.max_leverage ?? "-";
+  }, [accountInfo]);
+
+  if (props.status < AccountStatusEnum.EnableTrading) {
     return (
       <div className="flex items-center">
         <div className="flex flex-col">
@@ -45,10 +67,23 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     <Sheet>
       <SheetTrigger asChild>
         <div className="flex items-center cursor-pointer">
-          <div className="flex flex-col">
-            <div className="flex items-center text-xs text-base-contrast/70 gap-2">
+          <div className="flex flex-col text-xs">
+            <div className="flex items-center text-base-contrast/70">
               <span>Total Value</span>
-              <EyeOff className="text-primary" size={14} />
+              <button
+                className="text-primary-light px-2"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleVisible();
+                }}
+              >
+                {visible ? (
+                  <EyeOffIcon className="text-primary" size={12} />
+                ) : (
+                  <EyeIcon className="text-primary" size={12} />
+                )}
+              </button>
+
               <span className="text-base">≈</span>
             </div>
             <div className="flex gap-2">
@@ -58,14 +93,24 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           </div>
           <Divider vertical className="px-3" />
 
-          <div className="border border-solid px-2 rounded border-primary text-primary text-sm">
-            1x
+          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm h-[30px] leading-[30px] flex items-center">
+            {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
+            <Numeral precision={2} surfix="x">
+              {currentLeverage}
+            </Numeral>
           </div>
         </div>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>Assets & Margin</SheetHeader>
-        <AssetAndMarginSheet />
+      <SheetContent onOpenAutoFocus={(event) => event.preventDefault()}>
+        <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
+          Assets & Margin
+        </SheetHeader>
+        <AssetAndMarginSheet
+          onDeposit={onDeposit}
+          onWithdraw={onWithdraw}
+          onSettle={onSettle}
+          maxLeverage={maxLerverage}
+        />
       </SheetContent>
     </Sheet>
   );

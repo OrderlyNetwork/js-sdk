@@ -26,26 +26,28 @@ export const getPrecisionByNumber = (num: number | string): number => {
   return parts[1] ? parts[1].length : 0;
 };
 
-export function numberToHumanStyle(number: number): string {
-  const units = [
-    "",
-    "thousand",
-    "million",
-    "billion",
-    "trillion",
-    "quadrillion",
-  ];
-  const delimiter = ",";
+/**
+ *
+ * @example
+ * const number1 = 12345;
+ * const number2 = 987654321;
+ *
+ * console.log(numberToHumanStyle(number1)); // Output: "12.35K"
+ * console.log(numberToHumanStyle(number2)); // Output: "987.65M"
+ */
+export function numberToHumanStyle(
+  number: number,
+  decimalPlaces: number = 2
+): string {
+  const abbreviations = ["", "K", "M", "B", "T"];
 
-  if (number < 1000) {
-    return number.toString();
+  let index = 0;
+  while (number >= 1000 && index < abbreviations.length - 1) {
+    number /= 1000;
+    index++;
   }
 
-  const sign = Math.sign(number);
-  const num = Math.abs(number);
-  const exp = Math.floor(Math.log10(num) / 3);
-  const rounded = Math.round((num / Math.pow(1000, exp)) * 10) / 10;
-  const formatted = rounded.toLocaleString();
+  const roundedNumber = number.toFixed(decimalPlaces);
 
-  return (sign < 0 ? "-" : "") + formatted + " " + units[exp];
+  return `${roundedNumber}${abbreviations[index]}`;
 }

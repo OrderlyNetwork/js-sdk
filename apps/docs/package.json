@@ -1,10 +1,10 @@
 {
   "name": "@orderly/docs",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
-    "build": "next build",
+    "build:project": "next build",
     "start": "next start",
     "lint": "next lint"
   },

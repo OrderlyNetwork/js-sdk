@@ -1,107 +1,112 @@
-import { useObservable } from "rxjs-hooks";
-import { useWebSocketClient } from "../useWebSocketClient";
 import { usePrivateQuery } from "../usePrivateQuery";
 
-import { merge } from "rxjs";
-import { map, filter } from "rxjs/operators";
-import { usePositionStream } from "./usePositionStream";
+import {
+  pathOr_unsettledPnLPathOr,
+  usePositionStream,
+} from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
-import { useOrderStream } from "./useOrderStream";
+// import { useOrderStream } from "./useOrderStream";
 import { type WSMessage, type API } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useMarkPriceStream } from "./useMarkPriceStream";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useMemo } from "react";
+import { useBalance } from "./useBalance";
+import { parseHolding } from "../utils/parseHolding";
+import { totalUnsettlementPnLPath } from "../utils/fn";
+import { useHoldingStream } from "./useHoldingStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;
   freeCollateral: number;
+  totalValue: number;
+  availableBalance: number;
+  unsettledPnL: number;
 };
 
-const totalUnsettlementPnLPath = pathOr(0, [0, "aggregated", "unsettledPnL"]);
 const positionsPath = pathOr([], [0, "rows"]);
+const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
 
 /**
  * 用户保证金
  * @returns
  */
-export const useCollateral = (dp: number = 6): CollateralOutputs => {
-  const ws = useWebSocketClient();
 
+type Options = {
+  dp: number;
+};
+export const useCollateral = (
+  options: Options = { dp: 6 }
+): CollateralOutputs => {
+  const { dp } = options;
   const positions = usePositionStream();
-  const orders = useOrderStream();
-  const { info: accountInfo } = useAccount();
+
+  // const orders = useOrderStream();
+  const { data: orders } = usePrivateQuery<API.Order[]>(
+    `/v1/orders?status=NEW`
+  );
+  // const { info: accountInfo } = useAccount();
+  const { data: accountInfo } =
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
   const symbolInfo = useSymbolsInfo();
 
-  const markPrices = useMarkPriceStream();
+  const { data: markPrices } = useMarkPricesStream();
 
-  // console.log("----- markPrices", markPrices);
+  const { usdc } = useHoldingStream();
 
-  const { data } = usePrivateQuery<API.Holding[]>("/client/holding", {
-    formatter: (data) => {
-      return data.holding;
-    },
-  });
+  // const { data: holding } = usePrivateQuery<API.Holding[]>(
+  //   "/v1/client/holding",
+  //   {
+  //     formatter: (data) => {
+  //       return data.holding;
+  //     },
+  //   }
+  // );
 
-  const totalCollateral = useObservable<Decimal, any>(
-    (_, input$) =>
-      merge(input$).pipe(
-        filter((data) => !!data[0]),
-        map(([data, unsettlemnedPnL]: [API.Holding[], number]) => {
-          //取出 USDC
-          const nonUSDC: API.Holding[] = [];
-          let USDC_holding = 0;
+  const [totalCollateral, totalValue] = useMemo(() => {
+    return [
+      pathOr(zero, [0, "totalCollateral"], positions),
+      pathOr(zero, [0, "totalValue"], positions),
+    ];
+  }, [positions, markPrices]);
 
-          data.forEach((item) => {
-            if (item.token === "USDC") {
-              USDC_holding = item.holding;
-            } else {
-              nonUSDC.push(item);
-            }
-          });
+  const totalInitialMarginWithOrders = useMemo(() => {
+    if (!accountInfo || !symbolInfo || !markPrices) {
+      return 0;
+    }
 
-          const number = account.totalCollateral({
-            USDCHolding: USDC_holding,
-            nonUSDCHolding: nonUSDC,
-            unsettlementPnL: unsettlemnedPnL,
-          });
+    return account.totalInitialMarginWithOrders({
+      positions: positionsPath(positions),
+      orders: orders ?? [],
+      markPrices,
+      IMR_Factors: accountInfo.imr_factor,
+      maxLeverage: accountInfo.max_leverage,
+      symbolInfo,
+    });
+  }, [positions, orders, markPrices, accountInfo, symbolInfo]);
 
-          return new Decimal(number);
-        })
-      ),
-    zero,
-    [data, totalUnsettlementPnLPath(positions)]
-  );
+  const freeCollateral = useMemo(() => {
+    return account.freeCollateral({
+      totalCollateral,
+      totalInitialMarginWithOrders,
+    });
+  }, [totalCollateral, totalInitialMarginWithOrders]);
 
-  const totalInitialMarginWithOrders = useObservable<any, any>(
-    (_, input$) =>
-      input$.pipe(
-        filter((data) => !!data[3] && !!data[4]),
-        map(([positions, orders, markPrices, accountInfo, symbolInfo]) => {
-          return account.totalInitialMarginWithOrders({
-            positions: positionsPath(positions),
-            orders: orders?.[0] ?? [],
-            markPrices,
-            IMR_Factors: accountInfo.imr_factor,
-            maxLeverage: accountInfo.max_leverage,
-            symbolInfo,
-          });
-          // return 0;
-        })
-      ),
-    0,
-    [positions, orders, markPrices, accountInfo, symbolInfo]
-  );
+  const availableBalance = useMemo(() => {
+    return account.availableBalance({
+      USDCHolding: usdc?.holding ?? 0,
+      unsettlementPnL: pathOr_unsettledPnLPathOr(positions),
+    });
+  }, [usdc, pathOr_unsettledPnLPathOr(positions)]);
 
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
-    freeCollateral: account
-      .freeCollateral({
-        totalCollateral,
-        totalInitialMarginWithOrders,
-      })
-      .toDecimalPlaces(dp)
-      .toNumber(),
+    freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
+    totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
+    availableBalance,
+    unsettledPnL: pathOr_unsettledPnLPathOr(positions),
   };
 };

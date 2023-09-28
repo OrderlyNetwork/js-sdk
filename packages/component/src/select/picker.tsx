@@ -11,7 +11,7 @@ const pickerVariants = cva(
   {
     variants: {
       size: {
-        small: "px-2 h-[28px]",
+        small: "px-2 h-[26px] text-sm",
         default: "px-3 h-[40px]",
         large: "px-6 py-3",
       },
@@ -102,6 +102,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       >
         <div
           className={cn(
+            "space-x-1 text-base-contrast/80",
             pickerVariants({
               size,
               color,
@@ -111,7 +112,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
             })
           )}
         >
-          <div className="flex-1 flex justify-start items-center text-inherit">
+          <div className="flex-1 flex justify-start items-center text-inherit ">
             {text}
           </div>
           <div className={"flex items-center"}>

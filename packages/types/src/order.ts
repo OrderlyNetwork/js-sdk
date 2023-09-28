@@ -13,6 +13,16 @@ export enum OrderSide {
   SELL = "SELL",
 }
 
+export enum OrderStatus {
+  FILLED = "FILLED",
+  PARTIAL_FILLED = "PARTIAL_FILLED",
+  CANCELLED = "CANCELLED",
+  NEW = "NEW",
+  COMPLETED = "COMPLETED",
+  OPEN = "OPEN",
+  REJECTED = "REJECTED",
+}
+
 export interface OrderEntity {
   symbol?: string;
   order_type: OrderType;

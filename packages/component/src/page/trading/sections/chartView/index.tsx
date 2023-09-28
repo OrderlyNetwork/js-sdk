@@ -1,17 +1,28 @@
+import React, { useContext } from "react";
 import { TabPane, Tabs } from "@/tab";
-import { TradeHistory } from "./tradeHistory";
+import { TradeHistoryPane } from "./tradeHistory";
 import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
-import { TradingView } from "@/block/tradingView";
+import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
+import { OrderlyContext, useLocalStorage } from "@orderly.network/hooks";
+import { SymbolProvider } from "@/provider";
+import { cn } from "@/utils/css";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/tabs";
 
 interface ChartViewProps {
   symbol: string;
+  tradingViewConfig: TradingViewChartConfig;
 }
 
 export const ChartView: FC<ChartViewProps> = (props) => {
-  const { symbol } = props;
+  const { symbol, tradingViewConfig } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
+  const { klineDataUrl } = useContext(OrderlyContext);
+  const [collapsed, setCollapsed] = useLocalStorage(
+    "orderly:chart:collapsed",
+    true
+  );
 
   return (
     <div>
@@ -19,6 +30,9 @@ export const ChartView: FC<ChartViewProps> = (props) => {
         showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
+        tabBarClassName="h-[40px]"
+        collapsed={collapsed}
+        onToggleCollapsed={() => setCollapsed((prev: boolean) => !prev)}
         tabBarExtra={(context) => {
           return (
             <div className="flex items-center">
@@ -28,7 +42,13 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   context.toggleContentVisible();
                 }}
               >
-                <ChevronDown size={16} />
+                <ChevronDown
+                  size={18}
+                  className={cn(
+                    "transition-transform text-base-contrast/50",
+                    context.contentVisible ? "rotate-0" : "rotate-180"
+                  )}
+                />
               </button>
             </div>
           );
@@ -36,18 +56,21 @@ export const ChartView: FC<ChartViewProps> = (props) => {
       >
         <TabPane title="Chart" value="tradingView">
           <TradingView
-            height={320}
+            height={240}
             theme={"dark"}
             symbol={symbol}
             autosize={false}
-            apiBaseUrl={""} // intervals={}
+            apiBaseUrl={klineDataUrl}
+            {...tradingViewConfig}
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">
-          <TradeHistory />
+          <TradeHistoryPane symbol={symbol} />
         </TabPane>
         <TabPane title="Data" value="tradeData">
-          <TradeData />
+          <SymbolProvider symbol={symbol}>
+            <TradeData symbol={symbol} />
+          </SymbolProvider>
         </TabPane>
       </Tabs>
     </div>

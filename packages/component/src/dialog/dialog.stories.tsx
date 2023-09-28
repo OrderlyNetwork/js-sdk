@@ -15,13 +15,6 @@ import { OrderlyProvider } from "../provider/orderlyProvider";
 const meta: Meta<typeof Dialog> = {
   component: Dialog,
   title: "Base/Dialog",
-  decorators: [
-    (Story) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

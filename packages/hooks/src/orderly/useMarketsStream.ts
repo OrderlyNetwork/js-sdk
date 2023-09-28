@@ -1,49 +1,62 @@
-import { useObservable } from "rxjs-hooks";
 import { useQuery } from "../useQuery";
-import { useWebSocketClient } from "../useWebSocketClient";
-import { withLatestFrom, map, startWith } from "rxjs/operators";
-import { type WSMessage } from "@orderly.network/core";
-import { useSymbolsInfo } from "./useSymbolsInfo";
+
+import { useWS } from "../useWS";
+import useSWRSubscription from "swr/subscription";
+import { useMemo } from "react";
+import { WSMessage } from "@orderly.network/types";
 
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info
-  const ws = useWebSocketClient();
-  const { data } = useQuery<WSMessage.Ticker[]>(`/public/futures`);
+  const ws = useWS();
+  const { data: futures } = useQuery<WSMessage.Ticker[]>(`/v1/public/futures`, {
+    revalidateOnFocus: false,
+  });
   // const config = useSymbolsInfo();
 
-  const value = useObservable<WSMessage.Ticker[] | null, WSMessage.Ticker[][]>(
-    (_, input$) =>
-      ws.observe<any>("tickers").pipe(
-        startWith([]),
-        withLatestFrom(input$.pipe(map((args) => args[0]))),
-        map((args) => {
-          if (args[0].length === 0) {
-            return args[1];
-          }
+  const { data: tickers } = useSWRSubscription("tickers", (_, { next }) => {
+    const unsubscribe = ws.subscribe(
+      // { event: "subscribe", topic: "markprices" },
+      "tickers",
+      {
+        onMessage: (message: any) => {
+          next(null, message);
+        },
+        // onUnsubscribe: () => {
+        //   return "markprices";
+        // },
+        // onError: (error: any) => {
+        //   console.log("error", error);
+        // },
+      }
+    );
 
-          return args[1].map((item) => {
-            const ticker = args[0].find(
-              (t: WSMessage.Ticker) => t.symbol === item.symbol
-            );
-            if (ticker) {
-              // console.log(config[item.symbol]());
-              return {
-                ...item,
-                ["24h_close"]: ticker.close,
-                ["24h_open"]: ticker.open,
-                ["24h_volumn"]: ticker.volume,
-                change: 0,
-              };
-            }
-            return item;
-          });
+    return () => {
+      //unsubscribe
+      console.log("unsubscribe!!!!!!!");
+      unsubscribe?.();
+    };
+  });
 
-          // return args[1];
-        })
-      ),
-    null,
-    [data as WSMessage.Ticker[]]
-  );
+  const value = useMemo(() => {
+    if (!futures) return null;
+    if (!tickers) return futures;
+
+    return futures.map((item) => {
+      const ticker = tickers.find(
+        (t: WSMessage.Ticker) => t.symbol === item.symbol
+      );
+      if (ticker) {
+        return {
+          ...item,
+          ["24h_close"]: ticker.close,
+          ["24h_open"]: ticker.open,
+          ["24h_volumn"]: ticker.volume,
+          change: 0,
+        };
+      }
+      return item;
+    });
+  }, [futures, tickers]);
 
   // return listing;
   return { data: value };

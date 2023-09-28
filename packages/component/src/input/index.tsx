@@ -86,6 +86,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
+    useEffect(() => {
+      if (typeof error === "undefined") {
+        return;
+      }
+      setShowTooltip(!!error);
+    }, [error]);
+
     const cleanButton = useMemo(() => {
       if (typeof onClean === "undefined") {
         return null;
@@ -170,7 +177,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
             disabled={!!disabled}
             className={cn(
-              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer",
+              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer placeholder:text-base-contrast/20",
               typeof prefix !== "undefined" && "px-0",
               className
             )}

@@ -1,3 +1,4 @@
+import React from "react";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   TimeIntervalToolbar,
@@ -5,17 +6,26 @@ import {
 } from "./timeIntervalToolbar";
 import { type TradingViewChartProps } from "./tradingViewChart";
 import { TimeInterval } from "@/block/tradingView/types";
-import { IChartingLibraryWidget, widget } from "@/@types/charting_library";
+import {
+  IChartingLibraryWidget,
+  ResolutionString,
+  widget,
+} from "@/@types/charting_library";
 import DataFeed from "./dataFeed";
+import { useWS } from "@orderly.network/hooks";
+import { ORDERLY_TRADING_VIEW_INTERVAL } from "./constants";
 
 declare const TradingView: any;
 
-export const TradingViewChart: FC<
-  TradingViewChartProps &
-    TimeIntervalToolbarProps & {
-      library_path: string;
-    }
-> = (props) => {
+export type TradingViewChartConfig = TradingViewChartProps &
+  TimeIntervalToolbarProps & {
+    scriptSRC?: string;
+    library_path: string;
+    customCssUrl?: string;
+    apiBaseUrl: string;
+  };
+
+export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   const {
     intervals,
     disabled_features = [
@@ -30,13 +40,22 @@ export const TradingViewChart: FC<
       "create_volume_indicator_by_default",
     ],
 
-    library_path = "/tradingview/charting_library/charting_library.js",
+    scriptSRC = "/tradingview/charting_library/charting_library.js",
+    library_path = "/tradingview/charting_library/",
+    customCssUrl,
     ...chartProps
   } = props;
 
-  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
-    () => (intervals?.[0].value ?? "1") as TimeInterval
-  );
+  const [timeInterval, setTimeInterval] = useState<TimeInterval>(() => {
+    const saved_intervals = localStorage.getItem(
+      ORDERLY_TRADING_VIEW_INTERVAL
+    ) as TimeInterval;
+
+    console.log("saved_intervals", saved_intervals);
+    return saved_intervals || ((intervals?.[0].value ?? "1") as TimeInterval);
+  });
+
+  const ws = useWS();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +71,8 @@ export const TradingViewChart: FC<
 
   const onIntervalChange = useCallback((interval: TimeInterval) => {
     setTimeInterval(interval);
-    wigetRef.current?.activeChart().setResolution(interval);
+    wigetRef.current?.activeChart().setResolution(interval as ResolutionString);
+    localStorage.setItem(ORDERLY_TRADING_VIEW_INTERVAL, interval);
   }, []);
 
   useEffect(() => {
@@ -68,20 +88,25 @@ export const TradingViewChart: FC<
     if (containerRef.current) {
       const script = document.createElement("script");
       script.setAttribute("data-nscript", "afterInteractive");
-      script.src = library_path;
+      script.src = scriptSRC;
       script.async = true;
       script.type = "text/javascript";
 
       script.onload = () => {
         if (typeof TradingView !== undefined) {
+          console.log("TradingView????", chartProps);
+
           wigetRef.current = new TradingView.widget({
             symbol: props.symbol,
             container: containerRef.current,
-            interval: "1",
-            theme: "Dark",
+            interval: timeInterval,
+            // theme: "Dark",
             overrides: {
-              "paneProperties.background": "#ffffff",
-              "mainSeriesProperties.style": 1,
+              // "paneProperties.background": "#ffffff",
+              // "mainSeriesProperties.style": 1,
+              "paneProperties.backgroundType": "solid",
+              "paneProperties.background": "#151822",
+
               "mainSeriesProperties.candleStyle.upColor": "#439687",
               "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
               "mainSeriesProperties.candleStyle.borderColor": "#378658",
@@ -91,12 +116,17 @@ export const TradingViewChart: FC<
               "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             },
             preset: "mobile",
-            datafeed: new DataFeed({
-              apiBaseUrl: props.apiBaseUrl,
-            }),
-            library_path: "/tradingview/charting_library/",
+            // loading_screen: { backgroundColor: "#439687" },
+            datafeed: new DataFeed(
+              {
+                apiBaseUrl: props.apiBaseUrl,
+              },
+              ws
+            ),
+            library_path,
             disabled_features,
             width: "100%",
+            // customCssUrl,
             ...chartProps,
           });
         }
@@ -115,7 +145,7 @@ export const TradingViewChart: FC<
   }, []);
 
   return (
-    <div>
+    <>
       <TimeIntervalToolbar
         intervals={intervals}
         timeInterval={timeInterval}
@@ -125,6 +155,6 @@ export const TradingViewChart: FC<
       />
       {/* <TradingViewChart {...chartProps} {...size} /> */}
       <div className="w-full h-full" ref={containerRef}></div>
-    </div>
+    </>
   );
 };

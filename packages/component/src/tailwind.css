@@ -3,9 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0; 
+  }
+  input[type=number] {
+      -moz-appearance:textfield;
+  }
   :root {
+    --onboard-modal-z-index: 100;
+
     /* colors */
     --orderly-color-primary: 51 95 252;
+    --orderly-color-primary-light: 96 140 255;
+    
     --orderly-color-secondary: 51 57 72;
     --orderly-color-tertiary: 97 100 104;
     --orderly-color-quaternary: 218 218 218;
@@ -19,9 +31,9 @@
     --orderly-color-background: 27 32 40;
     --orderly-color-background-contrast: 255 255 255;
 
-    --orderly-color-trading-loss: 255 68 124;
+    --orderly-color-trading-loss: 233 62 113;
     --orderly-color-trading-loss-contrast: 40 46 58;
-    --orderly-color-trading-profit: 0 180 158;
+    --orderly-color-trading-profit: 3 152 134;
     --orderly-color-trading-profit-contrast: 40 46 58;
 
     --orderly-color-neutral: 27 32 40;
@@ -29,6 +41,7 @@
     --orderly-color-base-100: 24 28 35;
     --orderly-color-base-200: 27 32 40;
     --orderly-color-base-300: 32 37 47;
+    --orderly-color-base-400: 57 65 85;
     --orderly-color-base-foreground: 255 255 255;
     --orderly-color-base-muted-foreground: 32 37 47;
 
@@ -99,7 +112,7 @@
     --orderly-color-base-100: 248 250 252;
     --orderly-color-base-200: 241 245 249;
     --orderly-color-base-300: 226 232 240;
-    --orderly-color-base-contract: 15 23 42;
+    --orderly-color-base-foreground: 15 23 42;
   }
   [data-o-theme="orderly"] {
     /* colors */
@@ -128,10 +141,5 @@
     --orderly-button-shadow: none;
   }
 
-  html {
-    color: rgb(var(--orderly-color-base-foreground) / 0.9);
-    background-color: rgb(var(--orderly-color-base-100));
-  }
 }
-
 

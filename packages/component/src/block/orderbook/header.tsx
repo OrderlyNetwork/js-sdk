@@ -5,8 +5,8 @@ import { OrderBookContext } from "./orderContext";
 import { ArrowIcon } from "@/icon";
 
 interface Props {
-  priceUnit: string;
-  qtyUnit: string;
+  quote: string;
+  base: string;
   // onModeChange?: (mode: QtyMode) => void;
 }
 
@@ -14,15 +14,20 @@ export const Header: FC<Props> = (props) => {
   const { mode, onModeChange } = useContext(OrderBookContext);
   const currency = useMemo(() => {
     if (mode === "amount") {
-      return props.priceUnit;
+      return props.quote;
     }
-    return props.qtyUnit;
+    return props.base;
+  }, [mode, props.quote, props.base]);
+
+  const qtyLabel = useMemo(() => {
+    return mode === "amount" ? "Value" : "Qty";
   }, [mode]);
+
   return (
     <div className="flex flex-row justify-between text-tertiary text-xs pb-2">
       <div className={"flex flex-col"}>
         <span>Price</span>
-        <span>{`(${props.priceUnit})`}</span>
+        <span>{`(${props.quote})`}</span>
       </div>
       <div
         className={"flex items-center cursor-pointer"}
@@ -31,7 +36,7 @@ export const Header: FC<Props> = (props) => {
         }
       >
         <div className={"flex flex-col items-end mr-1"}>
-          <span>Qty</span>
+          <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>
         <ArrowIcon size={10} />

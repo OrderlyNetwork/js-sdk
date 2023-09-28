@@ -12,5 +12,5 @@ export interface Token {
  * @description get token info
  */
 export const useToken = () => {
-  return useQuery<Token[]>("/public/token");
+  return useQuery<Token[]>("/v1/public/token");
 };

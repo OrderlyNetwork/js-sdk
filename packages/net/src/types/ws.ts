@@ -1,5 +1,3 @@
-import { WebSocketSubject } from "rxjs/webSocket";
-
 export type MessageObserveTopic = {
   event: "subscribe" | "unsubscribe";
   topic: string;
@@ -11,5 +9,5 @@ export type SendFunc = (message: any) => void;
 
 export interface MessageHandler {
   // wsSubject: WebSocketSubject<any>;
-  handle: (message: any, send: (message: SendFunc) => void) => void;
+  handle: (message: any, webSocket: WebSocket) => void;
 }

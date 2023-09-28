@@ -3,9 +3,10 @@ import { cn } from "@/utils/css";
 import { Numeral, Text } from "@/text";
 import { StatisticStyleContext } from "./defaultStaticStyle";
 import { type TextRule } from "@/text/text";
-import { NumeralRule } from "@/text/numeral";
+import { NumeralProps, NumeralRule } from "@/text/numeral";
 
-export interface StatisticProps {
+export interface StatisticProps
+  extends Omit<NumeralProps, "children" | "rule"> {
   label: string | ReactNode;
   value: string | number | ReactNode;
 
@@ -72,14 +73,23 @@ export const Statistic: FC<StatisticProps> = (props) => {
   const valueElement = useMemo(() => {
     if (typeof props.value === "string" || typeof props.value === "number") {
       if (rule === "price" || rule === "percentages") {
-        return <Numeral rule={rule}>{props.value}</Numeral>;
+        return (
+          <Numeral
+            rule={rule}
+            precision={props.precision}
+            visible={props.visible}
+          >
+            {props.value}
+          </Numeral>
+        );
       }
       // "date" | "address" | "text" | "symbol"
       if (
         rule === "date" ||
         rule === "address" ||
         rule === "text" ||
-        rule === "symbol"
+        rule === "symbol" ||
+        rule === "status"
       ) {
         return <Text rule={rule}>{props.value}</Text>;
       }
@@ -87,7 +97,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
       return <span>{props.value}</span>;
     }
     return props.value ?? "--";
-  }, [props.value, rule]);
+  }, [props.value, rule, props.precision, props.visible]);
 
   return (
     <div className={cn(props.className, alignClasses[align])}>

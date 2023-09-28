@@ -1,16 +1,84 @@
-import { Select } from "@/select";
+import { Picker, Select } from "@/select";
 import { CalendarDays } from "lucide-react";
 import { IconButton } from "@/button";
 import { SidePicker } from "@/block/pickers";
+import { OrderSide, OrderStatus, OrderType } from "@orderly.network/types";
 
-export const HistoryToolbar = () => {
+import { FC, useMemo, useState } from "react";
+
+interface HistoryToolbarProps {
+  side?: OrderSide | "";
+  status?: OrderStatus | "";
+  onSideChange?: (side: OrderSide) => void;
+  onStatusChange?: (status: OrderStatus) => void;
+}
+
+export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
+  const sideOptions = useMemo(() => {
+    return [
+      {
+        label: "All",
+        value: "",
+      },
+      {
+        label: "Buy",
+        value: OrderSide.BUY,
+      },
+      {
+        label: "Sell",
+        value: OrderSide.SELL,
+      },
+    ];
+  }, []);
+  const statusOptions = useMemo(() => {
+    return [
+      {
+        label: "All Status",
+        value: "",
+      },
+      {
+        label: "Pending",
+        value: OrderStatus.NEW,
+      },
+      {
+        label: "Filled",
+        value: OrderStatus.FILLED,
+      },
+      {
+        label: "Partial Filled",
+        value: OrderStatus.PARTIAL_FILLED,
+      },
+      {
+        label: "Cancelled",
+        value: OrderStatus.CANCELLED,
+      },
+      {
+        label: "Rejected",
+        value: OrderStatus.REJECTED,
+      },
+    ];
+  }, []);
+
   return (
     <div className="flex gap-3 py-3 px-4 items-center">
-      <SidePicker />
-      <Select options={[]} label="All Status" size={"small"} />
-      <IconButton color="tertiary" size="small">
+      {/* <SidePicker /> */}
+      <Picker
+        options={sideOptions}
+        label="All Side"
+        size={"small"}
+        value={props.side ?? ""}
+        onValueChange={(item) => props.onSideChange?.(item.value)}
+      />
+      {/* <Select options={status} label="All Status" size={"small"} /> */}
+      <Picker
+        options={statusOptions}
+        size={"small"}
+        value={props.status ?? ""}
+        onValueChange={(item) => props.onStatusChange?.(item.value)}
+      />
+      {/* <IconButton color="tertiary" size="small">
         <CalendarDays size={18} />
-      </IconButton>
+      </IconButton> */}
     </div>
   );
 };

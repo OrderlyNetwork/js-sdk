@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cx } from "class-variance-authority";
+import { cn } from "@/utils/css";
 
 export type Column = {
   title: string;
@@ -36,8 +36,8 @@ export const Col: FC<ColProps> = (props) => {
 
   return (
     <td
-      className={cx(
-        "border-b",
+      className={cn(
+        "py-[2px] px-3",
         col.className,
         align === "right" && "text-right"
       )}

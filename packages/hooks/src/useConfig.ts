@@ -1,12 +1,10 @@
 import { useContext } from "react";
-import { ConfigDataContext } from "./provider/config";
+import { OrderlyContext } from "./orderlyContext";
 
 export const useConfig = () => {
-  const { config } = useContext(ConfigDataContext);
+  const { configStore } = useContext(OrderlyContext);
 
-  if (typeof config === "undefined") {
-    throw new Error("useConfig must be used within a ConfigDataProvider");
-  }
+  // console.log("##############", configStore);
 
-  return config;
+  return configStore;
 };

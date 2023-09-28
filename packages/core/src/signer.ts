@@ -1,14 +1,16 @@
 "use client";
 
-import { KeyStore } from "./keyStore";
+import { OrderlyKeyStore } from "./keyStore";
 import { base64url } from "./utils";
 
 import { Buffer } from "buffer";
-window.Buffer = window.Buffer || Buffer;
+// window.Buffer = window.Buffer || Buffer;
 
 export type MessageFactor = {
   url: string;
+
   method: "GET" | "POST" | "PUT" | "DELETE";
+
   data?: any;
 };
 
@@ -16,6 +18,7 @@ export type SignedMessagePayload = {
   "orderly-key": string;
   "orderly-timestamp": string;
   "orderly-signature": string;
+  "orderly-account-id"?: string;
 };
 
 /**
@@ -35,20 +38,20 @@ export type SignedMessagePayload = {
  */
 export interface Signer {
   sign: (data: MessageFactor) => Promise<SignedMessagePayload>;
+  signText: (text: string) => Promise<{ signature: string; publicKey: string }>;
 }
 
 export class BaseSigner implements Signer {
-  constructor(private readonly keyStore: KeyStore) {}
+  constructor(private readonly keyStore: OrderlyKeyStore) {}
 
   async sign(message: MessageFactor): Promise<SignedMessagePayload> {
-    // const orderlyKeyPair = this.keyStore.getOrderlyKey();
-    const url = new URL(message.url);
     const timestamp = Date.now().toString();
-    let msgStr = [
-      timestamp,
-      message.method.toUpperCase(),
-      url.pathname + url.search,
-    ].join("");
+    // const url = message.url.split(message.baseUrl)[1];
+
+    let msgStr = [timestamp, message.method.toUpperCase(), message.url].join(
+      ""
+    );
+
     if (message.data && Object.keys(message.data).length) {
       msgStr += JSON.stringify(message.data);
     }
@@ -66,6 +69,11 @@ export class BaseSigner implements Signer {
     text: string
   ): Promise<{ signature: string; publicKey: string }> {
     const orderlyKeyPair = this.keyStore.getOrderlyKey();
+
+    if (!orderlyKeyPair) {
+      throw new Error("orderlyKeyPair is not defined");
+    }
+
     const u8 = Buffer.from(text);
 
     const signature = await orderlyKeyPair.sign(u8);

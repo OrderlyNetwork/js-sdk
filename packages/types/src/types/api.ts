@@ -1,3 +1,5 @@
+import { OrderSide } from "../order";
+
 export declare namespace API {
   //v1/public/token
   export interface Token {
@@ -31,6 +33,10 @@ export declare namespace API {
     "24h_low": number;
     "24h_volumn": number;
     "24h_amount": number;
+  }
+
+  export interface MarketInfoExt extends MarketInfo {
+    change: number;
   }
 
   /**
@@ -78,7 +84,10 @@ export declare namespace API {
 
   export interface SymbolExt extends Symbol {
     base: string;
+    base_dp: number;
+
     quote: string;
+    quote_dp: number;
     type: string;
     name: string;
   }
@@ -118,6 +127,20 @@ export declare namespace API {
     sum_unitary_funding: number;
   }
 
+  export interface PositionInfo {
+    margin_ratio: number;
+    initial_margin_ratio: number;
+    maintenance_margin_ratio: number;
+    open_margin_ratio: number;
+    current_margin_ratio_with_orders: number;
+    initial_margin_ratio_with_orders: number;
+    maintenance_margin_ratio_with_orders: number;
+    total_collateral_value: number;
+    free_collateral: number;
+    rows: Position[];
+    total_pnl_24_h: number;
+  }
+
   export interface Position {
     symbol: string;
     position_qty: number;
@@ -137,6 +160,20 @@ export declare namespace API {
     MMR_with_orders: number;
     pnl_24_h: number;
     fee_24_h: number;
+  }
+
+  export interface PositionExt extends Position {
+    notional: number;
+    mm: number;
+  }
+
+  export interface Trade {
+    symbol: Symbol;
+    side: OrderSide;
+    ts: number;
+    executed_price: number;
+    executed_quantity: number;
+    executed_timestamp: number;
   }
 
   export interface Holding {
@@ -162,6 +199,45 @@ export declare namespace API {
     imr_factor: { [key: string]: number };
     max_notional: { [key: string]: number };
   }
+
+  export interface Chain {
+    dexs: string[];
+    network_infos: NetworkInfos;
+    token_infos: TokenInfo[];
+  }
+
+  export interface NetworkInfos {
+    name: string;
+    public_rpc_url: string;
+    chain_id: number;
+    currency_symbol: string;
+    bridge_enable: boolean;
+    mainnet: boolean;
+    explorer_base_url: string;
+  }
+
+  export interface TokenInfo {
+    address: string;
+    symbol: string;
+    decimals: number;
+    swap_enable: boolean;
+  }
+
+  export interface Chain {
+    token: string;
+    token_hash: string;
+    decimals: number;
+    minimum_withdraw_amount: number;
+    chain_details: ChainDetail[];
+  }
+
+  export interface ChainDetail {
+    chain_id: string;
+    chain_name?: string;
+    contract_address: string;
+    decimals: number;
+    withdrawal_fee: number;
+  }
 }
 
 export declare namespace WSMessage {
@@ -178,5 +254,27 @@ export declare namespace WSMessage {
   export interface MarkPrice {
     symbol: string;
     price: number;
+  }
+
+  export interface Position {
+    symbol: string;
+    positionQty: number;
+    costPosition: number;
+    lastSumUnitaryFunding: number;
+    sumUnitaryFundingVersion: number;
+    pendingLongQty: number;
+    pendingShortQty: number;
+    settlePrice: number;
+    averageOpenPrice: number;
+    unsettledPnl: number;
+    pnl24H: number;
+    fee24H: number;
+    markPrice: number;
+    estLiqPrice: number;
+    version: number;
+    imr: number;
+    imrwithOrders: number;
+    mmrwithOrders: number;
+    mmr: number;
   }
 }

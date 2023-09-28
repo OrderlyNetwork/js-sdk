@@ -9,10 +9,10 @@ export type TimeIntervalItem = {
 
 export const defaultTimeInterval = [
   { value: "1", label: "1m" },
-  {
-    value: "3",
-    label: "3m",
-  },
+  // {
+  //   value: "3",
+  //   label: "3m",
+  // },
   {
     value: "5",
     label: "5m",
@@ -30,20 +30,20 @@ export const defaultTimeInterval = [
     label: "1h",
   },
   {
-    value: "240",
+    value: "4h",
     label: "4h",
   },
   {
-    value: "720",
+    value: "12h",
     label: "12h",
   },
   {
     value: "1D",
-    label: "D",
+    label: "1D",
   },
   {
     value: "1W",
-    label: "W",
+    label: "1W",
   },
 ];
 
@@ -56,23 +56,24 @@ export interface TimeIntervalToolbarProps {
 export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
   intervals = defaultTimeInterval,
   onIntervalChange,
+  timeInterval,
 }) => {
-  const [timeInterval, setTimeInterval] = useState<TimeInterval>(
-    () => intervals[0].value as TimeInterval
-  );
+  // const [timeInterval, setTimeInterval] = useState<TimeInterval>(
+  //   () => intervals[0].value as TimeInterval
+  // );
 
   return (
-    <div className="flex justify-around">
+    <div className="flex justify-around h-[40px]">
       {intervals.map((interval) => {
         return (
           <button
             className={cn(
-              "p-3 flex-1 text-base-contrast/20",
+              "py-3 px-1 flex-1 text-base-contrast/20",
               timeInterval === interval.value && "text-base-contrast"
             )}
             key={interval.value}
             onClick={() => {
-              setTimeInterval(interval.value as TimeInterval);
+              // setTimeInterval(interval.value as TimeInterval);
               onIntervalChange?.(interval.value as TimeInterval);
             }}
           >

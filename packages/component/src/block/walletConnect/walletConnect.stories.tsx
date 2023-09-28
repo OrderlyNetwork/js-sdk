@@ -3,18 +3,13 @@ import { WalletConnect } from ".";
 import React from "react";
 import { modal } from "@/modal";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
+import { MemoryConfigStore } from "@orderly.network/core";
 
 const meta: Meta<typeof WalletConnect> = {
   component: WalletConnect,
   title: "Block/WalletConnect",
   argTypes: {},
-  decorators: [
-    (Story) => (
-      <OrderlyProvider configStore={undefined}>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

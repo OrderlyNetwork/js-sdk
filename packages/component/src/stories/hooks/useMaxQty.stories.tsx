@@ -6,6 +6,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { useMaxQty } from "@orderly.network/hooks";
 
 import { OrderSide } from "@orderly.network/types";
+import { WooKeyStore } from "../mock/woo.keystore";
 
 const MaxQtyDemo: FC<{
   symbol: string;
@@ -78,7 +79,10 @@ const meta: Meta = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
+        <OrderlyProvider
+          configStore={new MemoryConfigStore()}
+          keyStore={new WooKeyStore("testnet")}
+        >
           <Story />
         </OrderlyProvider>
       );

@@ -1,9 +1,6 @@
 /**
  * 下单时的最高价格
- * @param markprice
- * @param range
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-price
- * @returns
+ * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-price
  */
 export function maxPrice(markprice: number, range: number) {
   return markprice * (1 + range);
@@ -11,10 +8,7 @@ export function maxPrice(markprice: number, range: number) {
 
 /**
  * 下单时的最低价格
- * @param markprice
- * @param range
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Min-price
- * @returns
+ * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Min-price
  */
 export function minPrice(markprice: number, range: number) {
   return markprice * (1 - range);

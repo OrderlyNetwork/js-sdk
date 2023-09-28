@@ -8,6 +8,8 @@ import useSWRInfinite, {
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { OrderlyContext } from "./orderlyContext";
 import { get } from "@orderly.network/net";
+import { useAccount } from "./useAccount";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 const fetcher = (url: string, init: RequestInit) => get(url, init);
 
@@ -15,11 +17,15 @@ export const usePrivateInfiniteQuery = (
   getKey: SWRInfiniteKeyLoader,
   options?: SWRInfiniteConfiguration
 ) => {
+  const account = useAccount();
+
   const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
-  const { apiBaseUrl } = useContext(OrderlyContext);
 
   const result = useSWRInfinite(
-    (index, prevData) => `${apiBaseUrl}${getKey(index, prevData)}`,
+    (pageIndex: number, previousPageData) =>
+      account.state.status >= AccountStatusEnum.EnableTrading
+        ? getKey(pageIndex, previousPageData)
+        : null,
     fetcher,
     {
       ...options,

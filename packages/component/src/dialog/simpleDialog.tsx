@@ -7,19 +7,21 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/dialog/dialog";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Button from "@/button";
 
 export interface BaseDialogProps {
   open: boolean;
   title: ReactNode;
   closable?: boolean;
-  onOk?: () => void;
+  onOk?: () => Promise<any>;
   onCancel?: () => void;
   footer?: ReactNode;
+  onOpenChange?(open: boolean): void;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
+  const [loading, setLoading] = useState(false);
   const actions = useMemo(() => {
     if (!props.onCancel && !props.onOk) {
       return null;
@@ -34,6 +36,8 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
           type="button"
           onClick={props.onCancel}
           color={"danger"}
+          disabled={loading}
+          fullWidth
         >
           Cancel
         </Button>
@@ -42,23 +46,39 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
 
     if (typeof props.onOk === "function") {
       buttons.push(
-        <Button key="ok" type="button" onClick={props.onOk}>
+        <Button
+          key="ok"
+          type="button"
+          disabled={loading}
+          loading={loading}
+          fullWidth
+          onClick={() => {
+            setLoading(true);
+            props.onOk?.().finally(() => setLoading(false));
+          }}
+        >
           Ok
         </Button>
       );
     }
 
-    return <DialogFooter>{buttons}</DialogFooter>;
-  }, [props.onCancel, props.onOk]);
+    return (
+      <DialogFooter
+        className={buttons.length > 1 ? "grid-cols-2" : "grid-cols-1"}
+      >
+        {buttons}
+      </DialogFooter>
+    );
+  }, [props.onCancel, props.onOk, loading]);
 
   return (
-    <Dialog open={props.open}>
-      <DialogContent closable={props.closable}>
+    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+      <DialogContent
+        closable={props.closable}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
-          {/*<DialogDescription>*/}
-          {/*  Make changes to your profile here. Click save when you're done.*/}
-          {/*</DialogDescription>*/}
         </DialogHeader>
         {props.children}
         {actions}

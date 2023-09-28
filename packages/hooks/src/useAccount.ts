@@ -1,41 +1,59 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useConstant from "use-constant";
-import { Account, SimpleDI, AccountState } from "@orderly.network/core";
+import { Account, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
-import { useObservable } from "rxjs-hooks";
-import { API } from "@orderly.network/types";
-import { usePrivateQuery } from "./usePrivateQuery";
+import { useAccountInstance } from "./useAccountInstance";
 
 export const useAccount = (): {
-  account: AccountState;
+  account: Account;
+  state: AccountState;
   login: (address: string) => void;
-  info: API.AccountInfo | undefined;
+  createOrderlyKey: (remember: boolean) => Promise<string>;
+  createAccount: () => Promise<string>;
+  disconnect: () => Promise<void>;
+  connect: () => Promise<any>;
+  setChain: (chainId: number) => Promise<any>;
+  // settlement: () => Promise<any>;
+  // info: API.AccountInfo | undefined;
 } => {
-  const { configStore } = useContext(OrderlyContext);
+  const {
+    configStore,
+    keyStore,
+    onWalletConnect,
+    onWalletDisconnect,
+    onSetChain,
+  } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new Error("configStore is not defined, please use OrderlyProvider");
 
-  const account = useConstant(() => {
-    let account = SimpleDI.get<Account>("account");
+  if (!keyStore) {
+    throw new Error(
+      "keyStore is not defined, please use OrderlyProvider and provide keyStore"
+    );
+  }
 
-    if (!account) {
-      account = new Account(configStore);
+  const account = useAccountInstance();
 
-      SimpleDI.registerByName("account", account);
-    }
-    return account;
-  });
+  const [state, setState] = useState<AccountState>(account.stateValue);
 
-  const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/client/info");
+  // const state = useObservable<AccountState>(
+  //   () => account.state$,
+  //   account.stateValue
+  // );
 
-  // console.log(accountInfo);
+  const statusChangeHandler = (nextState: AccountState) => {
+    // console.log("------------>>>>>> account nextState", nextState);
+    setState(() => nextState);
+  };
 
-  const state = useObservable<AccountState>(
-    () => account.state$,
-    account.stateValue
-  );
+  useEffect(() => {
+    account.on("change:status", statusChangeHandler);
+
+    return () => {
+      account.off("change:status", statusChangeHandler);
+    };
+  }, []);
 
   const login = useCallback(
     (address: string) => {
@@ -44,12 +62,45 @@ export const useAccount = (): {
     [account]
   );
 
-  // console.log(state);
-  //maxLeverage
+  const createOrderlyKey = useCallback(
+    async (remember: boolean) => {
+      return account.createOrderlyKey(remember ? 365 : 30);
+    },
+    [account]
+  );
+
+  const createAccount = useCallback(async () => {
+    return account.createAccount();
+  }, [account]);
+
+  const connect = useCallback(async () => {
+    return onWalletConnect?.();
+  }, [account]);
+
+  // const settlement = useCallback(async () => {
+  //   return account.settlement();
+  // }, [account]);
+
+  const disconnect = async () => {
+    // account.disconnect();
+    return onWalletDisconnect?.();
+  };
+
+  const setChain = async (chainId: number) => {
+    return onSetChain?.(chainId);
+  };
 
   return {
-    account: state!,
-    info: accountInfo,
+    // account: state!,
+    account,
+    state,
+    // info: {},
     login,
+    createOrderlyKey,
+    createAccount,
+    disconnect,
+    connect,
+    setChain,
+    // settlement,
   };
 };

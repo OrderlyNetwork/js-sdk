@@ -4,7 +4,7 @@ import React from "react";
 import { Markets } from ".";
 import { OrderlyProvider } from "../../provider";
 
-import { useSymbolsInfo, useMarketStream } from "@orderly.network/hooks";
+import { useSymbolsInfo, useMarketsStream } from "@orderly.network/hooks";
 import { Sheet, SheetContent, SheetTrigger } from "../../sheet";
 import Button from "../../button";
 
@@ -16,13 +16,6 @@ const meta: Meta = {
   argTypes: {
     onItemClick: { action: "onItemClick" },
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;
@@ -70,7 +63,7 @@ export const Default: Story = {
 
 export const WithHooks: Story = {
   render: () => {
-    const { data } = useMarketStream();
+    const { data } = useMarketsStream();
     // useSymbolsInfo();
     // console.log("*****", data);
     return <Markets dataSource={data} />;

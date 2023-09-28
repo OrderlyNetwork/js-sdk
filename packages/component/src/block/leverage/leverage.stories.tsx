@@ -13,15 +13,6 @@ const meta: Meta<typeof LeverageView> = {
     predFundingRate: -0.001,
     countdown: "00:00:00",
   },
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

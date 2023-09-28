@@ -5,6 +5,8 @@ import { PositionsView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "./sections/closeForm";
+import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
+import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
   title: "Block/PositionsView",
@@ -21,13 +23,6 @@ const meta: Meta = {
   args: {
     // dataSource: [],
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider configStore={undefined}>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;
@@ -94,15 +89,22 @@ export const Default: Story = {
 };
 
 export const WithHooks: Story = {
-  render: (args, context) => {
-    const [data, info, { loading }] = usePositionStream();
-    // console.log("********", data, info.maintenance_margin_ratio());
+  render: (args, { globals }) => {
+    const [symbol, setSymbol] = React.useState(globals.symbol);
+    const [data, info, { loading }] = usePositionStream(symbol);
+
+    const onShowAllSymbolChange = (isAll: boolean) => {
+      setSymbol(isAll ? "" : globals.symbol);
+    };
 
     return (
       <PositionsView
         {...args}
         dataSource={data.rows}
         aggregated={data.aggregated}
+        showAllSymbol={symbol === ""}
+        isLoading={loading}
+        onShowAllSymbolChange={onShowAllSymbolChange}
       />
     );
   },

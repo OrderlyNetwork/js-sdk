@@ -11,6 +11,31 @@ export type ResultOptions = {
   dp: number;
 };
 
+export type TotalValueInputs = {
+  totalUnsettlementPnL: number;
+
+  USDCHolding: number;
+  nonUSDCHolding: {
+    holding: number;
+    markPrice: number;
+    //保證金替代率 暂时默认0
+    discount: number;
+  }[];
+};
+/**
+ * 用戶總資產價值 (USDC計價)，包含無法作為保證金的資產
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Value}
+ */
+export function totalValue(inputs: TotalValueInputs): Decimal {
+  const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
+
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
+    return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
+  }, zero);
+
+  return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
+}
+
 /**
  * 用戶帳戶當前可用保證金的價值總和 (USDC計價)
  *
@@ -45,18 +70,18 @@ export type TotalCollateralValueInputs = {
  * 计算总保证金
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D}
  */
-export function totalCollateral(inputs: TotalCollateralValueInputs): number {
-  const nonUSDCHoldingValue = inputs.nonUSDCHolding.reduce((acc, cur) => {
+export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
+  const { USDCHolding, nonUSDCHolding } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return (
       acc +
       new Decimal(cur.holding).mul(cur.markPrice).mul(cur.discount).toNumber()
     );
   }, 0);
 
-  return new Decimal(inputs.USDCHolding)
+  return new Decimal(USDCHolding)
     .add(nonUSDCHoldingValue)
-    .add(inputs.unsettlementPnL)
-    .toNumber();
+    .add(inputs.unsettlementPnL);
 }
 
 export function initialMarginWithOrder() {}
@@ -89,10 +114,12 @@ export function positionQtyWithOrders_by_symbol(
 ): number {
   const { positionQty, buyOrdersQty, sellOrdersQty } = inputs;
   const positionQtyDecimal = new Decimal(positionQty);
-  return Math.max(
+  const qty = Math.max(
     positionQtyDecimal.add(buyOrdersQty).abs().toNumber(),
-    positionQtyDecimal.add(sellOrdersQty).abs().toNumber()
+    positionQtyDecimal.sub(sellOrdersQty).abs().toNumber()
   );
+
+  return qty;
 }
 
 export type IMRInputs = {
@@ -157,6 +184,9 @@ export function getQtyFromPositions(
   positions: API.Position[],
   symbol: string
 ): number {
+  if (!positions) {
+    return 0;
+  }
   const position = positions.find((item) => item.symbol === symbol);
   return position?.position_qty || 0;
 }
@@ -221,6 +251,9 @@ export function totalInitialMarginWithOrders(
     maxLeverage,
     symbolInfo,
   } = inputs;
+
+  // console.log("totalInitialMarginWithOrders inputs", inputs);
+
   const symbols = extractSymbols(positions, orders);
 
   const total_initial_margin_with_orders = symbols.reduce((acc, cur) => {
@@ -425,6 +458,8 @@ export type MaxQtyInputs = {
   sellOrdersQty: number;
 
   IMR_Factor: number;
+
+  takerFeeRate: number;
 };
 
 /**
@@ -443,7 +478,6 @@ export function maxQty(
 }
 
 export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
-  // console.log("maxQtyByLong", inputs);
   try {
     const {
       baseMaxQty,
@@ -455,30 +489,59 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       IMR_Factor,
       positionQty,
       buyOrdersQty,
+      takerFeeRate,
     } = inputs;
+
+    if (totalCollateral === 0) {
+      return 0;
+    }
 
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
+      .div(
+        new Decimal(takerFeeRate)
+          .mul(2)
+          .mul(0.0001)
+          .add(Math.max(1 / maxLeverage, baseIMR))
+      )
       .div(markPrice)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .mul(0.995)
+      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .toNumber();
+
+    // console.log(
+    //   "------------",
+    //   totalCollateralDecimal.toNumber(),
+    //   otherIMs,
+    //   takerFeeRate,
+    //   markPrice,
+    //   positionQty,
+    //   buyOrdersQty
+    // );
+
+    if (positionQty === 0 && buyOrdersQty === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
 
     const factor_2 = totalCollateralDecimal
       .sub(otherIMs)
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs().div(markPrice))
+      .sub(
+        new Decimal(positionQty)
+          .add(buyOrdersQty)
+          .abs()
+          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+      )
       .mul(0.995)
       .toNumber();
 
     return Math.min(baseMaxQty, factor_1, factor_2);
   } catch (error) {
-    console.log("error", error);
+    console.log("error", error, (error as any).stack);
     return 0;
   }
 }
@@ -497,24 +560,40 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       positionQty,
       buyOrdersQty,
       sellOrdersQty,
+      takerFeeRate,
     } = inputs;
 
     const totalCollateralDecimal = new Decimal(totalCollateral);
 
     const factor_1 = totalCollateralDecimal
       .sub(otherIMs)
-      .div(Math.max(1 / maxLeverage, baseIMR) + 0.0006)
+      .div(
+        new Decimal(takerFeeRate)
+          .mul(2)
+          .mul(0.0001)
+          .add(Math.max(1 / maxLeverage, baseIMR))
+      )
       .div(markPrice)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
       .mul(0.995)
+      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
+
       .toNumber();
+
+    if (positionQty === 0 && buyOrdersQty === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
 
     const factor_2 = totalCollateralDecimal
       .sub(otherIMs)
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs().div(markPrice))
+      .add(
+        new Decimal(positionQty)
+          .add(buyOrdersQty)
+          .abs()
+          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+      )
       .mul(0.995)
       .toNumber();
 
@@ -523,4 +602,73 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
     console.log("error", error);
     return 0;
   }
+}
+
+export type TotalMarginRatioInputs = {
+  totalCollateral: number;
+  markPrices: { [key: string]: number };
+  positions: API.Position[];
+};
+/**
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Margin-Ratio}
+ */
+export function totalMarginRatio(
+  inputs: TotalMarginRatioInputs,
+  dp?: number
+): number {
+  const { totalCollateral, markPrices, positions } = inputs;
+
+  if (totalCollateral === 0) {
+    return 0;
+  }
+
+  const totalCollateralDecimal = new Decimal(totalCollateral);
+
+  const totalPositionNotional = positions.reduce((acc, cur) => {
+    const markPrice = markPrices[cur.symbol] || 0;
+    return acc.add(new Decimal(cur.position_qty).mul(markPrice).abs());
+  }, zero);
+
+  if (totalPositionNotional.eq(zero)) {
+    return 0;
+  }
+
+  return totalCollateralDecimal.div(totalPositionNotional).toNumber();
+}
+
+export type TotalUnrealizedROIInputs = {
+  totalUnrealizedPnL: number;
+  totalValue: number;
+};
+
+/**
+ * totalUnrealizedROI
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unrealized-ROI}
+ */
+export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
+  const { totalUnrealizedPnL, totalValue } = inputs;
+
+  return new Decimal(totalUnrealizedPnL)
+    .div(totalValue - totalUnrealizedPnL)
+    .toNumber();
+}
+
+/**
+ * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Current-account-leverage}
+ */
+export function currentLeverage(totalMarginRatio: number) {
+  if (totalMarginRatio === 0) {
+    return 0;
+  }
+  return 1 / totalMarginRatio;
+}
+
+export type AvailableBalanceInputs = {
+  USDCHolding: number;
+  unsettlementPnL: number;
+};
+export function availableBalance(inputs: AvailableBalanceInputs) {
+  const { USDCHolding, unsettlementPnL } = inputs;
+
+  return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
 }

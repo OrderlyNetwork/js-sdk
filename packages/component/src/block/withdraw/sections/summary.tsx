@@ -1,16 +1,14 @@
-import { Pencil } from "lucide-react";
+import { FC } from "react";
 
-export const Summary = () => {
+export interface SummaryProps {
+  fee: number;
+  // token:
+}
+
+export const Summary: FC<SummaryProps> = (props) => {
   return (
-    <div className={"flex items-start py-4 text-sm"}>
-      <div className={"flex-1"}>
-        <div>1 USDC = 1 USDC</div>
-        <div>Trading Fee ≈ 0 USDC</div>
-      </div>
-      <div className={"flex items-center gap-2"}>
-        <span>Slippage : 1%</span>
-        <Pencil size={14} />
-      </div>
+    <div className={"flex items-start py-4 text-sm text-base-contrast/30"}>
+      {`Fee ≈ ${props.fee} USDC`}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import { FC, useContext, useMemo } from "react";
 import { CellBar } from "./cellBar";
-import { queries } from "@storybook/testing-library";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
-import { commify, Decimal } from "@orderly.network/utils";
+import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { QtyMode } from "./types";
+import { Numeral } from "@/text/numeral";
+import { SymbolContext } from "@/provider";
 
 export enum OrderBookCellType {
   BID = "bid",
@@ -23,13 +24,18 @@ export interface OrderBookCellProps {
 
 export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
-  const { cellHeight, onItemClick } = useContext(OrderBookContext);
+  const { cellHeight, onItemClick, depth } = useContext(OrderBookContext);
+  const { base_dp, quote_dp } = useContext(SymbolContext);
 
   const qty = Number.isNaN(props.quantity)
     ? "-"
     : props.mode === "amount"
-    ? new Decimal(props.quantity).mul(props.price).toNumber()
+    ? new Decimal(props.quantity).mul(props.price).toString()
     : props.quantity;
+
+  const dp = useMemo(() => {
+    return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
+  }, [depth, quote_dp]);
 
   return (
     <div
@@ -48,9 +54,13 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
               : "text-trade-profit"
           }
         >
-          {Number.isNaN(props.price) ? "-" : commify(props.price)}
+          <Numeral precision={dp}>{props.price}</Numeral>
         </div>
-        <div className={"text-base-contrast/70"}>{qty}</div>
+        <div className={"text-base-contrast/70"}>
+          <Numeral precision={props.mode === "amount" ? 2 : base_dp}>
+            {qty}
+          </Numeral>
+        </div>
       </div>
       {Number.isNaN(width) ? null : (
         <CellBar

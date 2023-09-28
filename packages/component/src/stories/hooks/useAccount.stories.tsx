@@ -7,7 +7,7 @@ import { MemoryConfigStore } from "@orderly.network/core";
 import { API } from "@orderly.network/types";
 
 const AccountDemo: FC<{
-  info: API.AccountInfo;
+  info: any;
 }> = (props) => {
   return (
     <div className="text-black">
@@ -23,15 +23,6 @@ const AccountDemo: FC<{
 const meta: Meta = {
   title: "hooks/useAccount",
   component: AccountDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 type Story = StoryObj<typeof AccountDemo>;
@@ -41,6 +32,6 @@ export default meta;
 export const Default: Story = {
   render: () => {
     const account = useAccount();
-    return <AccountDemo info={account.info} />;
+    return <AccountDemo info={account.state} />;
   },
 };

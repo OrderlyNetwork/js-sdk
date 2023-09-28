@@ -7,7 +7,7 @@ export type OrderEntityKey = keyof OrderEntity & string;
 type orderEntryInputs = [
   OrderEntity,
   // to update field
-  OrderEntityKey,
+  string,
   any,
   number,
   {
@@ -90,6 +90,8 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
+  // console.log("priceInputHandle", inputs);
+
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
   }
@@ -98,9 +100,10 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const price = new Decimal(value);
   const priceDP = price.dp();
 
+  // console.log("priceInputHandle", priceDP, config.quoteDP);
+
   if (priceDP > config.quoteDP) {
-    price.toDecimalPlaces(config.quoteDP);
-    values.order_price = price.toNumber();
+    values.order_price = price.toDecimalPlaces(config.quoteDP).toString();
   }
 
   price.toDecimalPlaces(Math.min(priceDP, config.quoteDP));
@@ -111,11 +114,12 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   const total = price.mul(values.order_quantity);
 
-  const quantityDP = total.dp();
-  total.toDecimalPlaces(Math.min(quantityDP, config.baseDP));
-
+  // const quantityDP = total.dp();
   return [
-    { ...values, total: total.toNumber() },
+    {
+      ...values,
+      total: total.todp(2).toString(),
+    },
     input,
     value,
     markPrice,
@@ -145,20 +149,32 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     values.order_quantity = quantity.toNumber();
   }
 
-  let price = markPrice;
+  // if(values.order_type === OrderType.MARKET) {
 
-  if (values.order_type === OrderType.LIMIT && !!values.order_price) {
-    price = Number(values.order_price);
+  // }
+
+  if (values.order_type === OrderType.MARKET) {
+    const price = markPrice;
+    values.total = quantity.mul(price).todp(2).toNumber();
   }
 
-  const total = quantity.mul(price);
-  const totalDP = total.dp();
-  total.todp(Math.min(config.quoteDP, totalDP));
+  if (values.order_type === OrderType.LIMIT) {
+    if (values.order_price) {
+      const price = Number(values.order_price);
+      const total = quantity.mul(price);
+      values.total = total.todp(2).toNumber();
+    } else {
+      values.total = "";
+    }
+  }
+
+  // const totalDP = total.dp();
+  // total.todp(Math.min(config.quoteDP, totalDP));
 
   return [
     {
       ...values,
-      total: total.toNumber(),
+      // total: total.todp(2).toNumber(),
     },
     input,
     value,
@@ -217,7 +233,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 export const getCalculateHandler = (
-  fieldName: OrderEntityKey
+  fieldName: string
 ): orderEntryInputHandle => {
   switch (fieldName) {
     case "order_quantity": {

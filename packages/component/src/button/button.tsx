@@ -1,4 +1,4 @@
-import {
+import React, {
   useMemo,
   type ButtonHTMLAttributes,
   type FC,
@@ -11,7 +11,7 @@ import { Spinner } from "@/spinner";
 
 const buttonVariants = cva(
   [
-    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center",
+    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center gap-1",
   ],
   {
     variants: {
@@ -29,20 +29,21 @@ const buttonVariants = cva(
        * @default default
        */
       size: {
-        small: "px-3 h-[28px] text-sm",
+        small: "px-3 h-[26px] text-sm",
         default: "px-4 py-1 h-[40px]",
         large: "px-6 py-3",
       },
       color: {
-        primary: "text-primary hover:bg-primary hover:text-white",
+        primary:
+          "text-primary hover:bg-primary hover:text-white active:bg-primary/90",
         secondary:
-          "text-secondary bg-secondary hover:bg-secondary hover:text-white",
+          "text-secondary bg-secondary hover:bg-secondary hover:text-white active:bg-secondary/90",
         tertiary: "bg-tertiary",
         success:
-          "text-success bg-transparent hover:bg-success hover:text-white",
-        buy: "text-white bg-trade-profit hover:bg-trade-profit/90",
-        sell: "text-white bg-trade-loss hover:bg-trade-loss/90",
-        danger: "text-danger bg-danger hover:bg-danger/90",
+          "text-success bg-transparent hover:bg-success hover:text-white active:bg-success/90",
+        buy: "text-white bg-trade-profit hover:bg-trade-profit/90 active:bg-trade-profit/90",
+        sell: "text-white bg-trade-loss hover:bg-trade-loss/90 active:bg-trade-loss/90",
+        danger: "text-danger bg-danger hover:bg-danger/90 active:bg-danger/90",
       },
       // evlevation: {
       //
@@ -61,10 +62,17 @@ const buttonVariants = cva(
         class:
           "text-primary bg-transparent hover:bg-slate-100 hover:text-primary",
       },
+
       {
         variant: "contained",
         color: "primary",
         class: "bg-primary hover:bg-primary/90 text-base-contrast",
+      },
+      {
+        variant: "contained",
+        color: "primary",
+        disabled: true,
+        class: "bg-base-400 hover:bg-base-400 text-base-contrast/15",
       },
       {
         variant: "contained",
@@ -136,11 +144,18 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
   fullWidth,
   disabled,
   loading,
+  leftIcon,
+  rightIcon,
   ...props
 }) => {
   const children = useMemo(() => {
     if (!!loading) {
-      return <Spinner size={"small"} />;
+      return (
+        <>
+          <Spinner size={"small"} className="mr-[4px]" />
+          {props.children}
+        </>
+      );
     }
     return props.children;
   }, [props.children, loading]);
@@ -156,9 +171,12 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
         }),
         className
       )}
+      disabled={Boolean(disabled)}
       {...props}
     >
+      {leftIcon}
       {children}
+      {rightIcon}
     </button>
   );
 };

@@ -7,6 +7,12 @@ const meta: Meta<typeof AssetAndMarginSheet> = {
   //   tags: ["autodocs"],
   component: AssetAndMarginSheet,
   title: "Block/AccountStatus/AssetAndMargin",
+
+  argTypes: {
+    onLeverageChange: {
+      name: "onLeverageChange",
+    },
+  },
 };
 
 export default meta;

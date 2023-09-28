@@ -65,14 +65,14 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
             Show all instruments
           </Label>
         </div>
-        <Button
+        {/* <Button
           variant={"outlined"}
           size={"small"}
           color={"tertiary"}
           onClick={() => onMarketCloseAll()}
         >
           Market Close All
-        </Button>
+        </Button> */}
       </div>
     </>
   );

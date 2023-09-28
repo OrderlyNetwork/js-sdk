@@ -5,10 +5,10 @@ import { IMRFactorPower } from "./constants";
 /**
  * 单个仓位价值
  * @param qty 数量
- * @param price 价格
+ * @param mark_price 价格
  */
-export function notional(qty: number, price: number): number {
-  return new Decimal(qty).mul(price).abs().toNumber();
+export function notional(qty: number, mark_price: number): number {
+  return new Decimal(qty).mul(mark_price).abs().toNumber();
 }
 
 /**
@@ -20,7 +20,7 @@ export function notional(qty: number, price: number): number {
  */
 export function totalNotional(positions: API.Position[]): number {
   return positions.reduce((acc, cur) => {
-    return acc + notional(cur.position_qty, cur.average_open_price);
+    return acc + notional(cur.position_qty, cur.mark_price);
   }, 0);
 }
 
@@ -71,8 +71,13 @@ export type LiqPriceInputs = {
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(inputs: LiqPriceInputs): number {
+  // console.log("liqPrice:::::", inputs);
   const { markPrice, totalCollateral, positionQty, MMR } = inputs;
   const totalNotional = notional(positionQty, markPrice);
+
+  if (positionQty === 0) {
+    return 0;
+  }
 
   return Math.max(
     new Decimal(markPrice)
@@ -81,9 +86,22 @@ export function liqPrice(inputs: LiqPriceInputs): number {
           .sub(new Decimal(totalNotional).mul(MMR))
           .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
       )
+      // .todp(4, Decimal.ROUND_DOWN)
       .toNumber(),
     0
   );
+}
+
+export type MMInputs = {
+  positionQty: number;
+  markPrice: number;
+  MMR: number;
+};
+
+export function maintenanceMargin(inputs: MMInputs) {
+  const { positionQty, markPrice, MMR } = inputs;
+
+  return new Decimal(positionQty).mul(markPrice).mul(MMR).abs().toNumber();
 }
 
 export type UnsettlementPnLInputs = {
@@ -132,6 +150,10 @@ export function totalUnsettlementPnL(
     sum_unitary_funding: number;
   })[]
 ): number {
+  if (!Array.isArray(positions) || positions.length === 0) {
+    return 0;
+  }
+
   return positions.reduce((acc, cur) => {
     return (
       acc +

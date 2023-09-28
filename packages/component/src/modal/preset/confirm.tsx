@@ -7,23 +7,51 @@ import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
   title: string;
   content: React.ReactNode;
+  onOk?: () => Promise<any>;
+  onCancel?: () => Promise<any>;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
-  const { visible, hide, resolve, reject } = useModal();
+  const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
     <SimpleDialog
       open={visible}
       title={props.title}
-      closable={false}
+      onOpenChange={(open) => {
+        console.log("------- open change", open);
+        if (!open) {
+          reject();
+        }
+        onOpenChange(open);
+      }}
       onOk={() => {
-        resolve(true);
-        hide();
+        return Promise.resolve()
+          .then(() => {
+            if (typeof props.onOk === "function") {
+              return props.onOk();
+            }
+            return true;
+          })
+          .then((data?: any) => {
+            resolve(data);
+            hide();
+          });
       }}
-      onCancel={() => {
-        reject(false);
-        hide();
-      }}
+      onCancel={
+        typeof props.onCancel !== "undefined"
+          ? () => {
+              return props
+                .onCancel?.()
+                .then(
+                  (data) => data,
+                  (reason?: any) => {
+                    reject(reason);
+                  }
+                )
+                .finally(() => hide());
+            }
+          : undefined
+      }
     >
       <DialogBody>
         <div className={"py-5 text-[12px]"}>{props.content}</div>

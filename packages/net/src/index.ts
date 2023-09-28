@@ -1,4 +1,5 @@
-export { get, post } from "./fetch";
+export { get, post, del, put, mutate } from "./fetch";
 
-export { default as WebSocketClient } from "./ws";
 export { __ORDERLY_API_URL_KEY__ } from "./constants";
+
+export { WS } from "./ws/ws";

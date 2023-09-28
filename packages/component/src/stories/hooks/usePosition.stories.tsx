@@ -8,6 +8,7 @@ import { usePositionStream } from "@orderly.network/hooks";
 
 const PositionHookDemo: FC<{
   data: API.Position[];
+  aggregated: any;
 }> = (props) => {
   const children = useMemo(() => {
     return props.data.map((position, index) => {
@@ -42,10 +43,8 @@ const PositionHookDemo: FC<{
   }, [props.data]);
   return (
     <div className="text-black">
-      <div className="flex gap-2">
-        <button className="border rounded px-2 border-slate-500">
-          Market Close All
-        </button>
+      <div>
+        <pre>{JSON.stringify(props.aggregated, null, 2)}</pre>
       </div>
       <hr className="my-3" />
       <div>{children}</div>
@@ -56,15 +55,6 @@ const PositionHookDemo: FC<{
 const meta: Meta = {
   title: "hooks/usePositionStream",
   component: PositionHookDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider configStore={new MemoryConfigStore()}>
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;
@@ -75,6 +65,11 @@ export const Default: Story = {
   render: () => {
     const [positions] = usePositionStream();
 
-    return <PositionHookDemo data={positions?.rows ?? []} />;
+    return (
+      <PositionHookDemo
+        data={positions?.rows ?? []}
+        aggregated={positions.aggregated}
+      />
+    );
   },
 };

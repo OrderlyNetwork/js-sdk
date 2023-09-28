@@ -10,9 +10,13 @@ export interface TabsProps {
   value?: string;
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
+  extraData?: any;
   keepAlive?: boolean;
   // 是否显示tab指示器，default: true
   showIdentifier?: boolean;
+
+  collapsed?: boolean;
+  onToggleCollapsed?: () => void;
 
   tabBarClassName?: string;
 }
@@ -20,6 +24,8 @@ export interface TabsProps {
 // it's controlled component;
 export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   showIdentifier = true,
+  collapsed = false,
+  onToggleCollapsed,
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,6 +33,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   const [tabList, children] = useMemo(() => {
     const tabList: TabItem[] = [],
       children: ReactNode[] = [];
+
     React.Children.forEach(props.children, (child, index) => {
       const childElement = child as React.FunctionComponentElement<
         PropsWithChildren<TabPaneProps>
@@ -75,7 +82,11 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   //   const extraNode
 
   return (
-    <TabContextProvider>
+    <TabContextProvider
+      data={props.extraData}
+      collapsed={collapsed}
+      onToggleCollapsed={onToggleCollapsed}
+    >
       <>
         <TabList
           tabs={tabList}

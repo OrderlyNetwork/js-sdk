@@ -20,7 +20,7 @@ export interface Info {
  * @returns
  */
 export const useInfo = () => {
-  return useQuery<Info[]>("/public/info", {
+  return useQuery<Info[]>("/v1/public/info", {
     // refreshInterval: 1000 * 60 * 60 * 24,
   });
 };

@@ -57,10 +57,13 @@ var __async = (__this, __arguments, generator) => {
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  WebSocketClient: () => ws_default,
+  WS: () => WS,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
+  del: () => del,
   get: () => get,
-  post: () => post
+  mutate: () => mutate,
+  post: () => post,
+  put: () => put
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -74,20 +77,27 @@ function request(url, options) {
     const response = yield fetch(urlInstance, __spreadProps(__spreadValues({}, options), {
       // mode: "cors",
       // credentials: "include",
-      headers: _createHeaders(options.headers)
-    })).catch((err) => {
-      throw new Error(err);
-    });
+      headers: _createHeaders(options.headers, options.method)
+    }));
     if (response.ok) {
-      return response.json();
+      const res = yield response.json();
+      if (res.success) {
+        return res;
+      } else {
+        throw new Error(res.message);
+      }
     }
     throw new Error(response.statusText);
   });
 }
-function _createHeaders(headers = {}) {
+function _createHeaders(headers = {}, method) {
   const _headers = new Headers(headers);
   if (!_headers.has("Content-Type")) {
-    _headers.append("Content-Type", "application/json;charset=utf-8");
+    if (method !== "DELETE") {
+      _headers.append("Content-Type", "application/json;charset=utf-8");
+    } else {
+      _headers.append("Content-Type", "application/x-www-form-urlencoded");
+    }
   }
   return _headers;
 }
@@ -117,40 +127,44 @@ function post(url, data, options) {
     return res;
   });
 }
+function put(url, data, options) {
+  return __async(this, null, function* () {
+    const res = yield request(url, __spreadValues({
+      method: "PUT",
+      body: JSON.stringify(data)
+    }, options));
+    return res;
+  });
+}
+function del(url, options) {
+  return __async(this, null, function* () {
+    const res = yield request(url, __spreadValues({
+      method: "DELETE"
+    }, options));
+    return res;
+  });
+}
+function mutate(url, init) {
+  return __async(this, null, function* () {
+    const res = yield request(url, init);
+    return res;
+  });
+}
 
-// src/ws/index.ts
-var import_webSocket = require("rxjs/webSocket");
-
-// src/ws/contants.ts
-var WS_URL = {
-  testnet: {
-    // public: "wss://testnet-ws.orderly.org/ws/stream/",
-    public: "wss://dev-ws-v2.orderly.org/ws/stream/",
-    // private:
-    //   "wss://dev-ws-private-v2.orderly.org/wsprivate/v2/ws/private/stream/",
-    private: "wss://dev-ws-private-v2.orderly.org/v2/ws/private/stream/"
-  },
-  mainnet: {
-    public: "wss://mainnet-ws.orderly.io",
-    private: "wss://mainnet-ws.orderly.io"
-  }
-};
-
-// src/ws/index.ts
-var import_rxjs = require("rxjs");
+// src/constants.ts
+var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 
 // src/ws/handler/baseHandler.ts
 var BaseHandler = class {
-  // constructor(readonly wsSubject: WebSocketSubject<any>) {}
-  handle(message, send) {
+  handle(message, webSocket) {
     throw new Error("Method not implemented.");
   }
 };
 
 // src/ws/handler/ping.ts
 var PingHandler = class extends BaseHandler {
-  handle(_, send) {
-    send({ event: "pong", ts: Date.now() });
+  handle(_, webSocket) {
+    webSocket.send(JSON.stringify({ event: "pong", ts: Date.now() }));
   }
 };
 
@@ -159,252 +173,471 @@ var messageHandlers = /* @__PURE__ */ new Map([
   ["ping", new PingHandler()]
 ]);
 
-// src/ws/index.ts
-var _WebSocketClient = class _WebSocketClient {
+// src/ws/ws.ts
+var defaultMessageFormatter = (message) => message.data;
+var COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
+var TIME_OUT = 1e3 * 60 * 2;
+var CONNECT_LIMIT = 5;
+var WS = class {
   constructor(options) {
+    this.options = options;
+    this.publicIsReconnecting = false;
+    this.privateIsReconnecting = false;
+    this.reconnectInterval = 1e3;
     this.authenticated = false;
     this._pendingPrivateSubscribe = [];
+    this._pendingPublicSubscribe = [];
+    // all message handlers
+    this._eventHandlers = /* @__PURE__ */ new Map();
+    this._eventPrivateHandlers = /* @__PURE__ */ new Map();
+    this._publicRetryCount = 0;
+    this._privateRetryCount = 0;
     this.send = (message) => {
-      this.wsSubject.next(message);
+      if (typeof message !== "string") {
+        message = JSON.stringify(message);
+      }
+      if (typeof message === "undefined")
+        return;
+      if (this.publicSocket.readyState === WebSocket.OPEN) {
+        this.publicSocket.send(message);
+      } else {
+        console.warn("WebSocket connection is not open. Cannot send message.");
+      }
     };
-    this.privateSend = (message) => {
-      if (!this.privateWsSubject) {
-        console.warn("private ws not connected");
+    this.createPublicSC(options);
+    if (!!options.accountId) {
+      this.createPrivateSC(options);
+    }
+    this.bindEvents();
+  }
+  bindEvents() {
+    if (typeof document !== "undefined") {
+      document.addEventListener(
+        "visibilitychange",
+        this.onVisibilityChange.bind(this)
+      );
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("online", this.onNetworkStatusChange.bind(this));
+    }
+  }
+  onVisibilityChange() {
+    console.log("\u{1F440}\u{1F440} document visibility \u{1F440}\u{1F440}", document.visibilityState);
+    if (document.visibilityState === "visible") {
+      this.checkSocketStatus();
+    }
+  }
+  onNetworkStatusChange() {
+    console.log("\u{1F440}\u{1F440} network status \u{1F440}\u{1F440}", navigator.onLine);
+    if (navigator.onLine) {
+      this.checkSocketStatus();
+    }
+  }
+  /**
+   * 判断当前连接状态，
+   * 1、如果已断开则重连
+   * 2、如果太久没有收到消息，则主动断开，并重连
+   * 3、从后台返回、网络状态变化时，都走以下流程
+   */
+  checkSocketStatus() {
+    var _a, _b;
+    const now = Date.now();
+    if (document.visibilityState !== "visible")
+      return;
+    if (!navigator.onLine)
+      return;
+    if (!this.publicIsReconnecting) {
+      if (this.publicSocket.readyState === WebSocket.CLOSED) {
+        this.reconnectPublic();
+      } else {
+        if (now - this._publicHeartbeatTime > TIME_OUT) {
+          this.publicSocket.close();
+        }
+      }
+    }
+    if (!this.privateIsReconnecting) {
+      if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.CLOSED) {
+        this.reconnectPrivate();
+      } else {
+        if (this._privateHeartbeatTime && now - this._privateHeartbeatTime > TIME_OUT) {
+          (_b = this.privateSocket) == null ? void 0 : _b.close();
+        }
+      }
+    }
+  }
+  openPrivate(accountId) {
+    var _a;
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.OPEN) {
+      return;
+    }
+    this.createPrivateSC(__spreadProps(__spreadValues({}, this.options), {
+      accountId
+    }));
+  }
+  closePrivate() {
+    var _a;
+    this.authenticated = false;
+    this._pendingPrivateSubscribe = [];
+    this._eventPrivateHandlers.clear();
+    (_a = this.privateSocket) == null ? void 0 : _a.close();
+  }
+  createPublicSC(options) {
+    console.log("open public webSocket ---->>>>");
+    if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
+      return;
+    this.publicSocket = new WebSocket(
+      `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
+    );
+    this.publicSocket.onopen = this.onOpen.bind(this);
+    this.publicSocket.onmessage = this.onPublicMessage.bind(this);
+    this.publicSocket.onclose = this.onPublicClose.bind(this);
+    this.publicSocket.onerror = this.onPublicError.bind(this);
+  }
+  createPrivateSC(options) {
+    console.log("open private webSocket ---->>>>");
+    if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
+      return;
+    this.options = options;
+    this.privateSocket = new WebSocket(
+      `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
+    );
+    this.privateSocket.onopen = this.onPrivateOpen.bind(this);
+    this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
+    this.privateSocket.onclose = this.onPrivateClose.bind(this);
+    this.privateSocket.onerror = this.onPrivateError.bind(this);
+  }
+  onOpen(event) {
+    console.log("Public WebSocket connection opened");
+    if (this._pendingPublicSubscribe.length > 0) {
+      this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
+        this.subscribe(params, cb, isOnce);
+      });
+      this._pendingPublicSubscribe = [];
+    }
+    this.publicIsReconnecting = false;
+    this._publicRetryCount = 0;
+  }
+  onPrivateOpen(event) {
+    console.log("Private WebSocket connection opened");
+    this.authenticate(this.options.accountId);
+    this.privateIsReconnecting = false;
+    this._privateRetryCount = 0;
+  }
+  onMessage(event, socket, handlerMap) {
+    try {
+      const message = JSON.parse(event.data);
+      const commoneHandler = messageHandlers.get(message.event);
+      if (message.event === "auth" && message.success) {
+        this.authenticated = true;
+        this.handlePendingPrivateTopic();
         return;
       }
-      this.privateWsSubject.next(message);
-    };
-    this.wsSubject = this.createSubject(options);
-    if (!!options.accountId) {
-      this.privateWsSubject = this.createPrivateSubject(options);
-    }
-    this.bindSubscribe();
-  }
-  createSubject(options) {
-    let url;
-    if (typeof options.url === "string") {
-      url = options.url;
-    } else {
-      url = WS_URL[options.networkId || "testnet"].public;
-    }
-    return (0, import_webSocket.webSocket)({
-      url: `${url}${options.accountId || ""}`,
-      openObserver: {
-        next: () => {
-          console.log("Connection ok");
-        }
-      },
-      closeObserver: {
-        next: () => {
-          console.log("Connection closed");
-        }
-      }
-    });
-  }
-  createPrivateSubject(options) {
-    const url = WS_URL[options.networkId || "testnet"].private;
-    const ws = (0, import_webSocket.webSocket)({
-      url: `${url}${options.accountId}`,
-      openObserver: {
-        next: () => {
-          var _a;
-          console.log("Private connection ok");
-          if (this.authenticated || !options.accountId)
-            return;
-          (_a = options.onSigntureRequest) == null ? void 0 : _a.call(options, options.accountId).then((signature) => {
-            this.authenticate(options.accountId, signature);
+      if (commoneHandler) {
+        commoneHandler.handle(message, socket);
+      } else {
+        const topicKey = this.getTopicKeyFromMessage(message);
+        const eventhandler = handlerMap.get(topicKey);
+        if (eventhandler == null ? void 0 : eventhandler.callback) {
+          eventhandler.callback.forEach((cb) => {
+            const data = cb.formatter ? cb.formatter(message) : defaultMessageFormatter(message);
+            if (data) {
+              cb.onMessage(data);
+            }
           });
         }
-      },
-      closeObserver: {
-        next: () => {
-          console.log("Private connection closed");
-          this.authenticated = false;
-        }
       }
-    });
-    return ws;
+    } catch (e) {
+      console.log("WebSocket message received:", e, event.data);
+    }
   }
-  bindSubscribe() {
-    this.wsSubject.subscribe({
-      next: (message) => {
-        const handler = messageHandlers.get(message.event);
-        if (handler) {
-          handler.handle(message, this.send);
-        }
-      },
-      error(err) {
-        console.log("WS Error: ", err);
-      },
-      complete() {
-        console.log("WS Connection closed");
-      }
+  onPublicMessage(event) {
+    this.onMessage(event, this.publicSocket, this._eventHandlers);
+    this._publicHeartbeatTime = Date.now();
+  }
+  onPrivateMessage(event) {
+    this.onMessage(event, this.privateSocket, this._eventPrivateHandlers);
+    this._privateHeartbeatTime = Date.now();
+  }
+  handlePendingPrivateTopic() {
+    if (this._pendingPrivateSubscribe.length > 0) {
+      this._pendingPrivateSubscribe.forEach(([params, cb]) => {
+        this.privateSubscribe(params, cb);
+      });
+      this._pendingPrivateSubscribe = [];
+    }
+  }
+  onPublicClose(event) {
+    console.log("public socket is closed");
+    this._eventHandlers.forEach((value, key) => {
+      value.callback.forEach((cb) => {
+        this._pendingPublicSubscribe.push([value.params, cb, value.isOnce]);
+      });
+      this._eventHandlers.delete(key);
     });
-    if (!this.privateWsSubject)
+    setTimeout(() => this.checkSocketStatus(), 0);
+  }
+  onPrivateClose(event) {
+    console.log("private socket is closed");
+    if (this.privateIsReconnecting)
       return;
-    this.privateWsSubject.subscribe({
-      next: (message) => {
-        if (message.event === "auth") {
-          this.authenticated = true;
-          this._sendPendingPrivateMessage();
-          return;
-        }
-        const handler = messageHandlers.get(message.event);
-        if (handler) {
-          handler.handle(message, this.privateSend);
-        }
-      },
-      error(err) {
-        console.log("WS Error: ", err);
-      },
-      complete() {
-        console.log("WS Connection closed");
-      }
+    this._eventPrivateHandlers.forEach((value, key) => {
+      console.log(value);
+      value.callback.forEach((cb) => {
+        this._pendingPrivateSubscribe.push([value.params, cb, value.isOnce]);
+      });
+      this._eventPrivateHandlers.delete(key);
     });
+    this.authenticated = false;
+    setTimeout(() => this.checkSocketStatus(), 0);
   }
-  authenticate(accountId, message) {
+  onPublicError(event) {
+    console.error("public WebSocket error:", event);
+    this.publicIsReconnecting = false;
+    if (this.publicSocket.readyState === WebSocket.OPEN) {
+      this.publicSocket.close();
+    } else {
+      if (this._publicRetryCount > CONNECT_LIMIT)
+        return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._publicRetryCount);
+        this.reconnectPublic();
+        this._publicRetryCount++;
+      }, this._publicRetryCount * 1e3);
+    }
+    this.errorBoardscast(event, this._eventHandlers);
+  }
+  onPrivateError(event) {
     var _a;
-    if (this.authenticated)
-      return;
-    if (!this.privateWsSubject) {
-      console.error("private ws not connected");
-      return;
+    console.error("Private WebSocket error:", event);
+    this.privateIsReconnecting = false;
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) === WebSocket.OPEN) {
+      this.privateSocket.close();
+    } else {
+      if (this._privateRetryCount > CONNECT_LIMIT)
+        return;
+      setTimeout(() => {
+        console.log("retry connect: %s", this._privateRetryCount);
+        this.reconnectPrivate();
+        this._privateRetryCount++;
+      }, this._privateRetryCount * 1e3);
     }
-    console.log("push auth message:", message);
-    (_a = this.privateWsSubject) == null ? void 0 : _a.next({
-      id: "auth",
-      event: "auth",
-      params: {
-        orderly_key: message.publicKey,
-        sign: message.signature,
-        timestamp: message.timestamp
-      }
+    this.errorBoardscast(event, this._eventPrivateHandlers);
+  }
+  errorBoardscast(error, eventHandlers) {
+    eventHandlers.forEach((value) => {
+      value.callback.forEach((cb) => {
+        var _a;
+        (_a = cb.onError) == null ? void 0 : _a.call(cb, error);
+      });
     });
   }
-  get isAuthed() {
-    return this.authenticated;
+  close() {
+    var _a;
+    this.publicSocket.close();
+    (_a = this.privateSocket) == null ? void 0 : _a.close();
   }
-  // observe<T>(topic: string): Observable<T>;
-  // observe<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-  // observe<T>(
-  //   params: {
-  //     event: string;
-  //   } & Record<string, any>,
-  //   unsubscribe?: () => any
-  // ): Observable<T>;
-  observe(params, unsubscribe, messageFilter) {
-    return this._observe(false, params, unsubscribe, messageFilter);
+  set accountId(accountId) {
   }
-  // privateObserve<T>(topic: string): Observable<T>;
-  // privateObserve<T>(topic: string, unsubscribe?: () => any): Observable<T>;
-  // privateObserve<T>(
-  //   params: {
-  //     event: string;
-  //   } & Record<string, any>,
-  //   unsubscribe?: () => any
-  // ): Observable<T>;
-  privateObserve(params, unsubscribe, messageFilter) {
-    return this._observe(true, params, unsubscribe, messageFilter);
-  }
-  _observe(isPrivate, params, unsubscribe, messageFilter) {
-    if (isPrivate && !this.privateWsSubject) {
-      throw new Error("private ws not connected");
-    }
-    const subject = isPrivate ? this.privateWsSubject : this.wsSubject;
-    const sendFunc = isPrivate ? this.privateSend : this.send;
-    const [subscribeMessage, unsubscribeMessage, filter, messageFormatter] = this.generateMessage(params, unsubscribe, messageFilter);
-    return new import_rxjs.Observable((observer) => {
-      if (isPrivate && !this.authenticated) {
-        this._pendingPrivateSubscribe.push(params);
+  authenticate(accountId) {
+    return __async(this, null, function* () {
+      var _a, _b;
+      if (this.authenticated)
+        return;
+      if (!this.privateSocket) {
+        console.error("private ws not connected");
         return;
       }
-      try {
-        const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
-        if (refCount === 0) {
-          sendFunc(subscribeMessage);
-          _WebSocketClient.__topicRefCountMap.set(
-            subscribeMessage.topic,
-            refCount + 1
-          );
-        }
-      } catch (err) {
-        observer.error(err);
-      }
-      const subscription = subject.subscribe({
-        next: (x) => {
-          try {
-            if (filter(x)) {
-              observer.next(messageFormatter(x));
-            }
-          } catch (err) {
-            observer.error(err);
+      const message = yield (_b = (_a = this.options).onSigntureRequest) == null ? void 0 : _b.call(_a, accountId);
+      this.privateSocket.send(
+        JSON.stringify({
+          id: "auth",
+          event: "auth",
+          params: {
+            orderly_key: message.publicKey,
+            sign: message.signature,
+            timestamp: message.timestamp
           }
-        },
-        error: (err) => observer.error(err),
-        complete: () => observer.complete()
-      });
-      return () => {
-        try {
-          const refCount = _WebSocketClient.__topicRefCountMap.get(subscribeMessage.topic) || 0;
-          if (refCount > 1) {
-            _WebSocketClient.__topicRefCountMap.set(
-              subscribeMessage.topic,
-              refCount - 1
-            );
-            return;
-          }
-          if (!!unsubscribeMessage) {
-            this.send(unsubscribeMessage);
-          }
-          _WebSocketClient.__topicRefCountMap.delete(subscribeMessage.topic);
-        } catch (err) {
-          observer.error(err);
-        }
-        subscription.unsubscribe();
-      };
+        })
+      );
     });
   }
-  generateMessage(params, unsubscribe, messageFilter) {
-    let subscribeMessage, unsubscribeMessage;
-    let filter, messageFormatter = (message) => message.data;
+  privateSubscribe(params, callback) {
+    var _a;
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      callback.onUnsubscribe
+    );
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) !== WebSocket.OPEN) {
+      this._pendingPrivateSubscribe.push([params, callback]);
+      return () => {
+        this.unsubscribePrivate(subscribeMessage);
+      };
+    }
+    const topic = subscribeMessage.topic || subscribeMessage.event;
+    const handler = this._eventPrivateHandlers.get(topic);
+    const callbacks = __spreadProps(__spreadValues({}, callback), {
+      onUnsubscribe
+    });
+    if (!handler) {
+      this._eventPrivateHandlers.set(topic, {
+        params,
+        callback: [callbacks]
+      });
+    } else {
+      handler.callback.push(callbacks);
+    }
+    this.privateSocket.send(JSON.stringify(subscribeMessage));
+    return () => {
+      this.unsubscribePrivate(subscribeMessage);
+    };
+  }
+  subscribe(params, callback, once) {
+    const [subscribeMessage, onUnsubscribe] = this.generateMessage(
+      params,
+      callback.onUnsubscribe
+    );
+    if (this.publicSocket.readyState !== WebSocket.OPEN) {
+      this._pendingPublicSubscribe.push([params, callback, once]);
+      if (!once) {
+        return () => {
+          this.unsubscribePublic(subscribeMessage);
+        };
+      }
+      return;
+    }
+    let topic = this.getTopicKeyFromParams(subscribeMessage);
+    const handler = this._eventHandlers.get(topic);
+    const callbacks = __spreadProps(__spreadValues({}, callback), {
+      onUnsubscribe
+    });
+    if (!handler) {
+      this._eventHandlers.set(topic, {
+        params,
+        isOnce: once,
+        callback: [callbacks]
+      });
+      this.publicSocket.send(JSON.stringify(subscribeMessage));
+    } else {
+      if (once) {
+        handler.callback = [callbacks];
+        this.publicSocket.send(JSON.stringify(subscribeMessage));
+      } else {
+        handler.callback.push(callbacks);
+      }
+    }
+    if (!once) {
+      return () => {
+        this.unsubscribePublic(subscribeMessage);
+      };
+    }
+  }
+  getTopicKeyFromParams(params) {
+    let topic;
+    if (params.topic) {
+      topic = params.topic;
+    } else {
+      const eventName = params.event;
+      topic = params.event;
+      if (params.id) {
+        topic += `_${params.id}`;
+      }
+    }
+    return topic;
+  }
+  getTopicKeyFromMessage(message) {
+    let topic;
+    if (message.topic) {
+      topic = message.topic;
+    } else {
+      if (message.event) {
+        topic = `${message.event}`;
+        if (message.id) {
+          topic += `_${message.id}`;
+        }
+      }
+    }
+    return topic;
+  }
+  // sendPublicMessage(){
+  //   if(this.publicSocket.readyState !== )
+  // }
+  onceSubscribe(params, callback) {
+    this.subscribe(params, callback, true);
+  }
+  unsubscribe(parmas, webSocket, handlerMap) {
+    const topic = parmas.topic || parmas.event;
+    const handler = handlerMap.get(topic);
+    console.log("\u{1F91C} unsubscribe", parmas, topic, handler);
+    if (!!handler && Array.isArray(handler == null ? void 0 : handler.callback)) {
+      if (handler.callback.length === 1) {
+        const unsubscribeMessage = handler.callback[0].onUnsubscribe(topic);
+        webSocket.send(JSON.stringify(unsubscribeMessage));
+        handlerMap.delete(topic);
+      } else {
+        handlerMap.set(topic, __spreadProps(__spreadValues({}, handler), {
+          callback: handler.callback.slice(0, -1)
+        }));
+      }
+    }
+  }
+  unsubscribePrivate(parmas) {
+    this.unsubscribe(parmas, this.privateSocket, this._eventPrivateHandlers);
+  }
+  unsubscribePublic(parmas) {
+    this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
+  }
+  generateMessage(params, onUnsubscribe) {
+    let subscribeMessage;
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
-      unsubscribeMessage = { event: "unsubscribe", topic: params };
-      filter = (message) => message.topic === params;
     } else {
       subscribeMessage = params;
-      unsubscribeMessage = typeof unsubscribe === "function" ? unsubscribe() : unsubscribe;
-      filter = messageFilter || ((message) => true);
     }
-    return [subscribeMessage, unsubscribeMessage, filter, messageFormatter];
+    if (typeof onUnsubscribe !== "function") {
+      if (typeof params === "string") {
+        console.log("\u{1F449}", params);
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params });
+      } else {
+        onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
+      }
+    }
+    return [subscribeMessage, onUnsubscribe];
   }
-  _sendPendingPrivateMessage() {
-    if (this._pendingPrivateSubscribe.length === 0)
+  reconnectPublic() {
+    if (this.publicIsReconnecting)
       return;
-    this._pendingPrivateSubscribe.forEach((params) => {
-      this.privateObserve(params).subscribe();
-    });
-    this._pendingPrivateSubscribe = [];
+    this.publicIsReconnecting = true;
+    console.log(
+      `Reconnecting public in ${this.reconnectInterval / 1e3} seconds...`
+    );
+    window.setTimeout(() => {
+      console.log("Public Reconnecting...");
+      this.createPublicSC(this.options);
+    }, this.reconnectInterval);
   }
-  // 取消所有订阅
-  desotry() {
-    var _a;
-    this.wsSubject.unsubscribe();
-    (_a = this.privateWsSubject) == null ? void 0 : _a.unsubscribe();
+  reconnectPrivate() {
+    if (!this.options.accountId)
+      return;
+    if (this.privateIsReconnecting)
+      return;
+    this.privateIsReconnecting = true;
+    console.log(
+      `Reconnecting private in ${this.reconnectInterval / 1e3} seconds...`
+    );
+    window.setTimeout(() => {
+      console.log("Private Reconnecting...");
+      this.createPrivateSC(this.options);
+    }, this.reconnectInterval);
   }
 };
-// the topic reference count;
-_WebSocketClient.__topicRefCountMap = /* @__PURE__ */ new Map();
-var WebSocketClient = _WebSocketClient;
-var ws_default = WebSocketClient;
-
-// src/constants.ts
-var __ORDERLY_API_URL_KEY__ = "__ORDERLY_API_URL__";
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  WebSocketClient,
+  WS,
   __ORDERLY_API_URL_KEY__,
+  del,
   get,
-  post
+  mutate,
+  post,
+  put
 });
 //# sourceMappingURL=index.js.map

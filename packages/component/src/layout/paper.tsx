@@ -6,7 +6,7 @@ import { FC, HTMLAttributes, PropsWithChildren } from "react";
 const paperVariants = cva(["rounded p-3"], {
   variants: {
     variant: {
-      outline: "border border-slate-500 ",
+      outline: "border border-base-100 ",
       contained: "bg-base-100",
     },
     square: {

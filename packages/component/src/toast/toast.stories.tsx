@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 import toast, { Toaster } from "react-hot-toast";
 import { OrderlyProvider } from "../provider";
+import { MemoryConfigStore } from "@orderly.network/core";
+import { WooKeyStore } from "../stories/mock/woo.keystore";
 
 const meta: Meta<typeof Toaster> = {
   component: Toaster,
@@ -9,7 +12,10 @@ const meta: Meta<typeof Toaster> = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyProvider>
+        <OrderlyProvider
+          configStore={new MemoryConfigStore()}
+          keyStore={new WooKeyStore("testnet")}
+        >
           <Story />
         </OrderlyProvider>
       );

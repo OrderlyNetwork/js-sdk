@@ -1,6 +1,7 @@
 import { SimpleMarketOverview } from "@/block/marketOverview";
 import { FC } from "react";
-import { useMarketStream } from "@orderly.network/hooks";
+import { useTickerStream } from "@orderly.network/hooks";
+import { SymbolProvider } from "@/provider";
 
 interface Props {
   symbol: string;
@@ -8,12 +9,14 @@ interface Props {
 
 export const MarketOverview: FC<Props> = (props) => {
   const { symbol } = props;
-  const data = useMarketStream(symbol);
+  const data = useTickerStream(symbol);
 
   return (
-    <SimpleMarketOverview
-      change={data?.change ?? 0}
-      price={data?.["24h_close"] ?? 0}
-    />
+    <SymbolProvider symbol={symbol}>
+      <SimpleMarketOverview
+        change={data?.change ?? 0}
+        price={data?.["24h_close"] ?? 0}
+      />
+    </SymbolProvider>
   );
 };

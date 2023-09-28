@@ -1,10 +1,15 @@
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { commify, getDecimalLength } from "@orderly.network/utils";
-import { NumeralWithConfig } from "./numeralWithConfig";
+import {
+  commify,
+  getPrecisionByNumber,
+  numberToHumanStyle,
+} from "@orderly.network/utils";
+import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
+import { Decimal } from "@orderly.network/utils";
 
-export type NumeralRule = "percentages" | "price";
+export type NumeralRule = "percentages" | "price" | "human";
 
 export interface NumeralProps {
   rule?: NumeralRule;
@@ -15,6 +20,8 @@ export interface NumeralProps {
    */
 
   precision?: number;
+
+  tick?: number;
   /**
    * 小数点后保留位截段取整方式，可选 ceil, floor, round，作用与 Math.ceil、Math.floor、Math.round 对齐,默认floor
    */
@@ -30,6 +37,11 @@ export interface NumeralProps {
   coloring?: boolean;
 
   loading?: boolean;
+
+  surfix?: React.ReactNode;
+  prefix?: React.ReactNode;
+
+  visible?: boolean;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -39,34 +51,56 @@ const coloringClasses: Record<string, string> = {
 };
 
 export const Numeral: FC<NumeralProps> = (props) => {
-  const { rule = "price", coloring, precision, truncate = false } = props;
+  const {
+    rule = "price",
+    coloring,
+    precision,
+    tick,
+    surfix,
+    prefix,
+    visible,
+    truncate = false,
+  } = props;
   // TODO: check precision
 
   const num = Number(props.children);
 
   const child = useMemo(() => {
+    if (typeof visible !== "undefined" && !visible) return "*****";
+
     if (Number.isNaN(num)) {
       return "--";
-      // throw new Error(
-      //   `Numeral: children must be a number, but got ${props.children}`
-      // );
-    }
-    if (rule === "percentages") {
-      return `${(num * 100).toFixed(2)}%`;
     }
 
-    const truncatedNum = num.toFixed(
-      precision ? getDecimalLength(precision) : 2
-    );
+    // console.log("!!!!!!!!!!!!!!!!!!!", num, props.precision);
+
+    const dp =
+      typeof precision !== "undefined"
+        ? precision
+        : tick
+        ? getPrecisionByNumber(tick)
+        : 2;
+
+    if (rule === "human") {
+      return numberToHumanStyle(num, dp);
+    }
+
+    const d = new Decimal(num);
+    if (rule === "percentages") {
+      return `${d.mul(100).toFixed(2)}%`;
+    }
+
+    let truncatedNum = d.toFixed(dp);
 
     if (rule === "price") {
       return commify(truncatedNum);
     }
     return truncatedNum;
-  }, [num, precision]);
+  }, [num, precision, visible]);
 
   const colorClassName = useMemo(() => {
     if (!coloring) return "";
+    if (typeof visible !== "undefined" && !visible) return "";
 
     // if (props.value === 0) return coloringClasses.neutral;
 
@@ -80,10 +114,27 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (num === 0) return coloringClasses.neutral;
     if (num < 0) return coloringClasses.lose;
 
-    // const firstChar = String(props.value).charAt(0);
-    // if (firstChar === "-") return coloringClasses.lose;
     return coloringClasses.profit;
-  }, [coloring, props.children]);
+  }, [coloring, props.children, props.visible]);
 
-  return <span className={cn(colorClassName, props.className)}>{child}</span>;
+  const childWithUnit = useMemo(() => {
+    if (typeof surfix === "undefined" && typeof prefix === "undefined")
+      return child;
+    // return `${child} ${unit}`;
+    return (
+      <span className="flex gap-1">
+        {prefix}
+        {child}
+        {surfix}
+      </span>
+    );
+  }, [child, surfix]);
+
+  if (!colorClassName && !props.className) {
+    return <>{childWithUnit}</>;
+  }
+
+  return (
+    <span className={cn(colorClassName, props.className)}>{childWithUnit}</span>
+  );
 };

@@ -1,134 +1,243 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { positions } from "@orderly.network/futures";
-import { useObservable } from "rxjs-hooks";
-import { combineLatestWith, map } from "rxjs/operators";
+import { account, positions } from "@orderly.network/futures";
 
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
 import { type API } from "@orderly.network/types";
-import { useMarkPricesSubject } from "./useMarkPricesSubject";
+import { useSymbolsInfo } from "./useSymbolsInfo";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { pathOr, propOr } from "ramda";
+import { OrderEntity } from "@orderly.network/types";
+
+import { parseHolding } from "../utils/parseHolding";
+import { Decimal, zero } from "@orderly.network/utils";
+
+import { useEventEmitter } from "../useEventEmitter";
 
 export interface PositionReturn {
   data: any[];
   loading: boolean;
-  close: (qty: number) => void;
+  close: (
+    order: Pick<OrderEntity, "order_type" | "order_price" | "side">
+  ) => void;
 }
 
 export const usePositionStream = (
   symbol?: string,
   options?: SWRConfiguration
 ) => {
-  // const [data, setData] = useState<Position[]>([]);
-  // const [loading, setLoading] = useState<boolean>(false);
-  const [visibledSymbol, setVisibleSymbol] = useState<string | undefined>(
-    symbol
+  const symbolInfo = useSymbolsInfo();
+
+  const ee = useEventEmitter();
+
+  const { data: accountInfo } =
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  // console.log("account info: ", accountInfo);
+
+  const { data: holding } = usePrivateQuery<API.Holding[]>(
+    "/v1/client/holding",
+    {
+      formatter: (data) => {
+        return data.holding;
+      },
+    }
   );
 
   const fundingRates = useFundingRates();
-  const markPrices$ = useMarkPricesSubject();
 
-  const { data, error, isLoading } = usePrivateQuery<API.Position>(
-    `/positions`,
-    {
-      // revalidateOnFocus: false,
-      // revalidateOnReconnect: false,
-      ...options,
-      formatter: (data) => data,
-    }
-  );
+  const {
+    data,
+    error,
+    // mutate: updatePositions,
+  } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
+    // revalidateOnFocus: false,
+    // revalidateOnReconnect: false,
+    // dedupingInterval: 100,
+    // keepPreviousData: false,
+    // revalidateIfStale: true,
+    ...options,
 
-  type PositionArray =
-    | (API.Position & {
-        sum_unitary_funding?: number;
-      })[]
-    | undefined;
+    formatter: (data) => data,
+    onError: (err) => {
+      console.log("usePositionStream error", err);
+    },
+  });
 
-  // TODO: 动态更新 markprice
-  const value = useObservable<PositionArray, PositionArray[]>(
-    (_, input$) =>
-      input$.pipe(
-        map((data) => {
-          return data[0];
-        }),
-        combineLatestWith(markPrices$),
-        // map(([data, markprices]) => {
-        //   console.log("markprices", data, markprices);
-        //   return [];
-        // })
-        map(([data, markPrices]) => {
-          // console.log("obser", data);
-          return data?.map((item) => {
-            const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+  // console.log("=========== positions ============", data?.rows);
 
-            return {
-              ...item,
-              mark_price: price,
-              est_liq_price: positions.liqPrice({
-                markPrice: price,
-                totalCollateral: 0,
-                positionQty: 0,
-                MMR: 0,
-              }),
-              notional: positions.notional(
-                item.position_qty,
-                item.average_open_price
-              ),
-              unrealized_pnl: positions.unrealizedPnL({
-                qty: item.position_qty,
-                openPrice: item.average_open_price,
-                markPrice: price,
-              }),
-            };
+  const { data: markPrices } = useMarkPricesStream();
+
+  const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
+    if (!data?.rows || !symbolInfo || !accountInfo) return null;
+
+    const filteredData =
+      typeof symbol === "undefined" || symbol === ""
+        ? data.rows
+        : data.rows.filter((item) => {
+            return item.symbol === symbol;
           });
-        })
-      ),
-    undefined,
-    [data?.rows]
-  );
 
-  // 合计数据
-  const aggregatedData = useMemo(() => {
-    const aggregatedData = {
-      unsettledPnL: NaN,
-      unrealPnL: NaN,
-      notional: NaN,
-    };
+    let unrealPnL_total = zero,
+      notional_total = zero,
+      unsettlementPnL_total = zero;
 
-    if (value && value.length) {
-      aggregatedData.unrealPnL = positions.totalUnrealizedPnL(value);
-      aggregatedData.notional = positions.totalNotional(value);
-      aggregatedData.unsettledPnL = positions.totalUnsettlementPnL(
-        value.map((item) => ({
-          ...item,
-          sum_unitary_funding: fundingRates[item.symbol]?.(
-            "sum_unitary_funding",
-            0
-          ),
-        }))
-      );
+    const formatted = filteredData.map((item: API.Position) => {
+      // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+      const price = propOr(
+        item.mark_price,
+        item.symbol,
+        markPrices
+      ) as unknown as number;
+
+      // console.log("info", info("base_mmr"));
+
+      const notional = positions.notional(item.position_qty, price);
+
+      const unrealPnl = positions.unrealizedPnL({
+        qty: item.position_qty,
+        openPrice: item.average_open_price,
+        markPrice: price,
+      });
+
+      const unsettlementPnL = positions.unsettlementPnL({
+        positionQty: item.position_qty,
+        markPrice: price,
+        costPosition: item.cost_position,
+        sumUnitaryFunding: fundingRates[item.symbol]?.(
+          "sum_unitary_funding",
+          0
+        ),
+        lastSumUnitaryFunding: item.last_sum_unitary_funding,
+      });
+
+      unrealPnL_total = unrealPnL_total.add(unrealPnl);
+      notional_total = notional_total.add(notional);
+      unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
+
+      return {
+        ...item,
+        mark_price: price,
+        mm: 0,
+        notional,
+        unsettlement_pnl: unsettlementPnL,
+        unrealized_pnl: unrealPnl,
+      };
+    });
+
+    return [
+      formatted,
+      {
+        unrealPnL: unrealPnL_total.toNumber(),
+        notional: notional_total.toNumber(),
+        unsettledPnL: unsettlementPnL_total.toNumber(),
+      },
+    ];
+  }, [data?.rows, symbolInfo, accountInfo, markPrices, symbol, holding]);
+
+  // const showSymbol = useCallback((symbol: string) => {
+  //   setVisibleSymbol(symbol);
+  // }, []);
+
+  const [totalCollateral, totalValue, totalUnrealizedROI] = useMemo<
+    [Decimal, Decimal, number]
+  >(() => {
+    if (!holding || !markPrices) {
+      return [zero, zero, 0];
     }
+    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formatedPositions);
+    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formatedPositions);
 
-    return aggregatedData;
-  }, [value, fundingRates]);
+    const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
 
-  const showSymbol = useCallback((symbol: string) => {
-    setVisibleSymbol(symbol);
-  }, []);
+    const totalCollateral = account.totalCollateral({
+      USDCHolding: USDC_holding,
+      nonUSDCHolding: nonUSDC,
+      unsettlementPnL: unsettlemnedPnL,
+    });
+
+    const totalValue = account.totalValue({
+      totalUnsettlementPnL: unsettlemnedPnL,
+      USDCHolding: USDC_holding,
+      nonUSDCHolding: nonUSDC,
+    });
+
+    const totalUnrealizedROI = account.totalUnrealizedROI({
+      totalUnrealizedPnL: unrealizedPnL,
+      totalValue: totalValue.toNumber(),
+    });
+
+    return [totalCollateral, totalValue, totalUnrealizedROI];
+  }, [holding, formatedPositions, markPrices]);
+
+  const positionsRows = useMemo(() => {
+    if (!formatedPositions) return null;
+
+    if (!symbolInfo || !accountInfo) return formatedPositions[0];
+
+    const total = totalCollateral.toNumber();
+
+    return formatedPositions[0]
+      .filter((item) => item.position_qty !== 0)
+      .map((item) => {
+        const info = symbolInfo?.[item.symbol];
+
+        const MMR = positions.MMR({
+          baseMMR: info("base_mmr"),
+          baseIMR: info("base_imr"),
+          IMRFactor: accountInfo.imr_factor[info("base")] as number,
+          positionNotional: item.notional,
+          IMR_factor_power: 4 / 5,
+        });
+
+        return {
+          ...item,
+          mm: positions.maintenanceMargin({
+            positionQty: item.position_qty,
+            markPrice: item.mark_price,
+            MMR,
+          }),
+          est_liq_price: positions.liqPrice({
+            markPrice: item.mark_price,
+            totalCollateral: total,
+            positionQty: item.position_qty,
+            MMR,
+          }),
+          MMR,
+        };
+      });
+  }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
+
+  // useEffect(() => {
+  //   ee.on("positions:changed", () => {
+  //     updatePositions();
+  //   });
+  // }, []);
 
   return [
-    { rows: value, aggregated: aggregatedData },
+    {
+      rows: positionsRows,
+      aggregated: formatedPositions?.[1] ?? {},
+      totalCollateral,
+      totalValue,
+      totalUnrealizedROI,
+    },
     createGetter<Omit<API.Position, "rows">>(data as any, 1),
     {
-      close: (qty: number) => {},
+      // close: onClosePosition,
       loading: false,
-      showSymbol,
+      // showSymbol,
       error,
       loadMore: () => {},
       refresh: () => {},
-      // toggleHideOthers,
-      // filter: (filter: string) => {},
     },
   ];
 };
+
+export const pathOr_unsettledPnLPathOr = pathOr(0, [
+  0,
+  "aggregated",
+  "unsettledPnL",
+]);

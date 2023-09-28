@@ -1,0 +1,30 @@
+import { Meta, Canvas } from "@storybook/blocks";
+import * as AppStateStories from "./useAppState.stories";
+
+<Meta of={AppStateStories} />
+
+# useAppState
+
+{/* Get basic account information including current user fee rates. */}
+
+{/* [Api document link](https://dev-docs-api-v2.orderly.network/?javascript#restful-api-private-get-account-information) */}
+
+## Import
+
+```bash
+import { useAppState } from "@orderly.network/hooks";
+```
+
+## Usage
+
+```tsx
+import { useAppState } from "@orderly.network/hooks";
+
+const SimpleComponent = () => {
+  //...
+  const { systemState, exchangeState } = useAppState();
+  //...
+};
+```
+
+<Canvas of={AppStateStories.Default} />

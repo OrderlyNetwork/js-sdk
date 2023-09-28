@@ -5,7 +5,6 @@ import { OrdersView } from ".";
 import { useOrderStream, OrderStatus } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 // import { OrderEditFormDialog } from "./dialog/editor";
-import { modal } from "../../modal";
 
 const meta: Meta<typeof OrdersView> = {
   //   tags: ["autodocs"],
@@ -18,13 +17,6 @@ const meta: Meta<typeof OrdersView> = {
     onEditOrder: { action: "editOrder" },
     onCancelOrder: { action: "cancelOrder" },
   },
-  decorators: [
-    (Story) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
-  ],
 };
 
 export default meta;

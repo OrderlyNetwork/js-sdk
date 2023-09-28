@@ -23,7 +23,7 @@ export const Toolbar: FC<Props> = (props) => {
           Show all instruments
         </Label>
       </div>
-      <Button
+      {/* <Button
         variant={"outlined"}
         size={"small"}
         color={"tertiary"}
@@ -32,7 +32,7 @@ export const Toolbar: FC<Props> = (props) => {
         }}
       >
         Cancel All
-      </Button>
+      </Button> */}
     </div>
   );
 };
