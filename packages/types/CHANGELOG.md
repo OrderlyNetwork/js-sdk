@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.0.49
+
+### Patch Changes
+
+- update
+
 ## 0.0.48
 
 ### Patch Changes

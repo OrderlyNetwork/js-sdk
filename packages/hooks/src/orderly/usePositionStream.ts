@@ -187,7 +187,7 @@ export const usePositionStream = (
         const MMR = positions.MMR({
           baseMMR: info("base_mmr"),
           baseIMR: info("base_imr"),
-          IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+          IMRFactor: accountInfo.imr_factor[info("base")] as number,
           positionNotional: item.notional,
           IMR_factor_power: 4 / 5,
         });
