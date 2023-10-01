@@ -1,0 +1,10 @@
+include:
+  - project: 'orderlynetwork/orderly-devops/orderly-common/common-ci'
+    ref: main
+    file: '/common-orderly-network-dev-v2.yaml'
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+  SERVICE_NAME: storybook
+  IMAGE_NAME: storybook
