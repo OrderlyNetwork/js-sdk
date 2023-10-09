@@ -287,7 +287,7 @@ export function totalInitialMarginWithOrders(
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber(),
       maxLeverage,
-      IMR_Factor: IMR_Factors[symbolInfo[symbol]("base")],
+      IMR_Factor: IMR_Factors[symbol],
       baseIMR: symbolInfo[symbol]("base_imr", 0),
     });
 
@@ -398,7 +398,7 @@ export function otherIMs(inputs: OtherIMsInputs): number {
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber();
 
-      const IMR_Factor = IMR_Factors[symbolInfo[symbol]("base")];
+      const IMR_Factor = IMR_Factors[symbol];
 
       if (!IMR_Factor) {
         console.warn("IMR_Factor is not found:", symbol);

@@ -1,46 +1,63 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React, { useState } from "react";
-import { ChainPicker } from ".";
+import { ChainListView } from ".";
 
 import { useChains, useOrderEntry } from "@orderly.network/hooks";
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
-
-import { OrderSide } from "@orderly.network/types";
-import { OrderlyProvider } from "../../../provider";
-import { WooKeyStore } from "../../../stories/mock/woo.keystore";
+import { ChainSelect } from "./chainSelect";
 
 const meta: Meta = {
   title: "Block/ChainPicker",
-  component: ChainPicker,
-  argTypes: {},
+  component: ChainSelect,
+  argTypes: {
+    onValueChange: { action: "onValueChange" },
+  },
 
-  args: {},
+  args: {
+    value: {
+      id: 421613,
+      chainInfo: {
+        chainId: "0x66eed",
+        chainName: "Arbitrum Goerli",
+        nativeCurrency: {
+          name: "AGOR",
+          symbol: "AGOR",
+          decimals: 18,
+          fix: 4,
+        },
+        rpcUrls: ["https://goerli-rollup.arbitrum.io/rpc"],
+        blockExplorerUrls: ["https://goerli-rollup-explorer.arbitrum.io/"],
+      },
+      minGasBalance: 0.0002,
+      minCrossGasBalance: 0.002,
+      maxPrepayCrossGas: 0.03,
+      blockExplorerName: "Base",
+      chainName: "Arbitrum Goerli",
+      chainNameShort: "Arbitrum Goerli",
+      requestRpc: "https://goerli-rollup.arbitrum.io/rpc",
+      chainLogo: "",
+    },
+  },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof ChainPicker>;
+type Story = StoryObj<typeof ChainSelect>;
 
 export const Default: Story = {};
 
-export const WithHooks: Story = {
-  render: (args, { globals }) => {
-    const [mainnetChains] = useChains("mainnet", "network_infos");
-    const [testnetChains] = useChains("testnet", "network_infos");
-
-    console.log("chains", mainnetChains, testnetChains);
-
+export const ListView: Story = {
+  render: (args) => {
+    const [chains] = useChains(undefined, {
+      pick: "network_infos",
+      filter: (chain) => chain.chainId !== "0x1",
+      wooSwapEnabled: true,
+    });
     return (
-      <ChainPicker mainnetChains={mainnetChains} testChains={testnetChains} />
+      <ChainListView
+        mainnetChains={chains?.mainnet}
+        testChains={chains?.testnet}
+      />
     );
-  },
-};
-
-export const WithSheet: Story = {
-  render: (args, { globals }) => {
-    const { symbol } = globals;
-
-    return <ChainPicker mainnetChains={[]} testChains={[]} />;
   },
 };

@@ -1,7 +1,7 @@
 import Button from "@/button";
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
-import { FC, useContext, useMemo } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { Numeral } from "@/text/numeral";
 import { API, OrderSide } from "@orderly.network/types";
 import { Text } from "@/text";
@@ -15,6 +15,7 @@ interface OrderCellProps {
 
 export const OrderCell: FC<OrderCellProps> = (props) => {
   const { order } = props;
+  const [loading, setLoading] = useState(false);
 
   const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
@@ -26,6 +27,13 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
       </Tag>
     );
   }, [order]);
+
+  const cancelOrder = useCallback(() => {
+    if (loading) return;
+    setLoading(true);
+    onCancelOrder(order).finally(() => setLoading(false));
+  }, [loading, order]);
+
   return (
     <div className={"px-4 py-2"}>
       <div className="flex items-center gap-2 mb-1">
@@ -94,7 +102,8 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           color="tertiary"
           size="small"
           className="w-[120px]"
-          onClick={() => onCancelOrder(order)}
+          loading={loading}
+          onClick={cancelOrder}
         >
           Cancel
         </Button>

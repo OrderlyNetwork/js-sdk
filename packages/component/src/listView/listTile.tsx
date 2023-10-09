@@ -26,7 +26,7 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
     }
     if (
       (typeof props.avatar === "object" &&
-        (props.avatar as NetworkImageProps).type === "coin") ||
+        (props.avatar as NetworkImageProps).type === "token") ||
       (props.avatar as NetworkImageProps).type === "chain"
     ) {
       return (

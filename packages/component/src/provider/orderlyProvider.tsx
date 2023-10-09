@@ -305,7 +305,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         brokerId,
       }}
     >
-      <PreDataLoader />
+      {/* <PreDataLoader /> */}
       <TooltipProvider>
         <WSObserver />
         <ModalProvider>{props.children}</ModalProvider>

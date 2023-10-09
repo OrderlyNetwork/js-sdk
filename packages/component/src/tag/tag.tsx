@@ -9,7 +9,7 @@ const tagVariants = cva(["rounded-[4px]", "px-2", "text-sm", "inline-block"], {
       default: "h-[18px]",
     },
     color: {
-      primary: "bg-primary/25 text-primary",
+      primary: "bg-primary/25 text-primary-light",
       //   secondary: "bg-secondary text-white",
       // success: "bg-success text-white",
       // danger: "bg-danger text-white",

@@ -4,18 +4,15 @@ import { Coin, MoveDownIcon } from "@/icon";
 import { QuantityInput } from "@/block/quantityInput";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/withdraw/sections/summary";
-import Button from "@/button";
 import { WalletPicker } from "../pickers/walletPicker";
 import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
 import { API, WithdrawStatus, chainsMap } from "@orderly.network/types";
-import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { Decimal, int2hex } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
-import { set } from "react-hook-form";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;

@@ -5,14 +5,14 @@ import { Divider } from "@/divider";
 import { ChainCell } from "./chainCell";
 import { type API } from "@orderly.network/types";
 
-export interface ChainPickerProps {
+export interface ChainListViewProps {
   mainnetChains: API.NetworkInfos[];
   testChains: API.NetworkInfos[];
   value?: any;
   onChange?: (value: any) => void;
 }
 
-export const ChainPicker: FC<ChainPickerProps> = (props) => {
+export const ChainListView: FC<ChainListViewProps> = (props) => {
   const mainnet = useMemo(() => {
     if (!props.mainnetChains || props.mainnetChains.length === 0) {
       return null;
@@ -30,6 +30,7 @@ export const ChainPicker: FC<ChainPickerProps> = (props) => {
                 key={chain.chain_id}
                 name={chain.name}
                 id={chain.chain_id}
+                // bridgeless
               />
             );
           })}

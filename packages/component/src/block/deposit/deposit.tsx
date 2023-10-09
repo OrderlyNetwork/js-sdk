@@ -4,13 +4,10 @@ import { FC, useCallback, useContext, useMemo, useState } from "react";
 
 import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
-import { useChain, useDeposit } from "@orderly.network/hooks";
+import { useChain, useDeposit, useChains } from "@orderly.network/hooks";
 
 export enum DepositStatus {
-  // NotSupported = "NotSupported",
-  // NotConnected = "NotConnected",
   Checking = "Checking",
-  // Unsettle = "Unsettle",
   InsufficientBalance = "InsufficientBalance",
   Normal = "Normal",
 }
@@ -18,14 +15,24 @@ export enum DepositStatus {
 export interface DepositProps {
   onCancel?: () => void;
   onOk?: () => void;
+  supportCrossChain?: boolean;
 }
 
 export const Deposit: FC<DepositProps> = (props) => {
+  const { supportCrossChain } = props;
   const { connectedChain, wallet, setChain } = useContext(
     WalletConnectorContext
   );
 
   const { chains } = useChain("USDC");
+
+  const [bridgeChains] = useChains(undefined, {
+    filter: (item: any) => {
+      return !!item.network_infos.bridge_enable;
+    },
+  });
+
+  console.log("*******", bridgeChains);
 
   const currentChain = useMemo(() => {
     if (!connectedChain) return null;

@@ -53,7 +53,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     },
     values: {
       order_price: "",
-      order_quantity: position?.position_qty,
+      order_quantity: Math.abs(position?.position_qty),
       symbol: position?.symbol,
       order_type: OrderType.LIMIT,
       side: side,

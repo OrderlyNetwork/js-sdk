@@ -4,6 +4,7 @@ import { cn } from "@/utils/css";
 // import { cva } from "class-variance-authority";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { Size } from "./types";
+import { getSize } from "./utils";
 
 export type NetworkImageType =
   | "symbol"
@@ -93,12 +94,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   }, [url]);
 
   const size = useMemo(() => {
-    if (typeof props.size === "undefined") return "24px";
-    if (props.size === "small") return "16px";
-    if (props.size === "medium") return "24px";
-    if (props.size === "large") return "32px";
-
-    return `${props.size}px`;
+    return getSize(props.size);
   }, [props.size]);
 
   return (
@@ -119,4 +115,5 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     </div>
   );
 };
+
 NetworkImage.displayName = "NetworkImage";

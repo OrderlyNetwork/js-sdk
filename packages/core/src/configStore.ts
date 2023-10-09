@@ -16,8 +16,8 @@ export class MemoryConfigStore implements ConfigStore {
   protected _restore() {
     this.map = new Map([
       // ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
-      // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
-      ["apiBaseUrl", "https://qa-api-evm.orderly.org"],
+      ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
+      // ["apiBaseUrl", "https://qa-api-evm.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
       // ["publicWsUrl", "wss://testnet-ws-evm.orderly.org"],
       ["publicWsUrl", "wss://dev-ws-v2.orderly.org"],
@@ -25,6 +25,7 @@ export class MemoryConfigStore implements ConfigStore {
       ["privateWsUrl", "wss://dev-ws-private-v2.orderly.org"],
       // ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
+      ["swapSupportApiUrl", "https://woofi-api.mer1in.com"],
       ["brokerId", "woofi_dex"],
       ["env", "dev-evm"],
     ]);

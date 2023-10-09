@@ -165,7 +165,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           rounded
         />
       </div>
-      <div className="py-2">
+      <div className="pb-2">
         <WalletPicker address={address} chains={chains} chain={chainInfo} />
       </div>
       <QuantityInput

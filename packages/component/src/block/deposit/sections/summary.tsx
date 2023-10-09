@@ -1,11 +1,12 @@
 import { Pencil } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 export interface SummaryProps {
-  onSlippageChange?: () => void;
+  onSlippageChange?: (slippage: number) => void;
 }
 
 export const Summary: FC<SummaryProps> = (props) => {
+  const [visible, setVisible] = useState(false);
   return (
     <div className={"flex items-start py-4 text-sm text-tertiary"}>
       <div className={"flex-1"}>

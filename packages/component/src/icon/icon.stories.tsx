@@ -4,7 +4,7 @@ import { NetworkImage } from ".";
 
 const meta: Meta<typeof NetworkImage> = {
   component: NetworkImage,
-  title: "Base/Image",
+  title: "Base/Image/Simple",
   tags: ["autodocs"],
 };
 
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof NetworkImage>;
 export const Default: Story = {
   args: {
     name: "WOO",
-    type: "coin",
+    type: "token",
   },
 };
 
@@ -24,22 +24,22 @@ export const Coins: Story = {
     return (
       <div className={"flex flex-col gap-3"}>
         <div className="flex gap-3">
-          <NetworkImage name="WOO" type={"coin"} size={"small"} />
-          <NetworkImage name="BTC" type={"coin"} size={"small"} />
-          <NetworkImage name="ETH" type={"coin"} size={"small"} />
-          <NetworkImage name="NEAR" type={"coin"} size={"small"} />
+          <NetworkImage name="WOO" type={"token"} size={"small"} />
+          <NetworkImage name="BTC" type={"token"} size={"small"} />
+          <NetworkImage name="ETH" type={"token"} size={"small"} />
+          <NetworkImage name="NEAR" type={"token"} size={"small"} />
         </div>
         <div className="flex gap-3">
-          <NetworkImage name="WOO" type={"coin"} />
-          <NetworkImage name="BTC" type={"coin"} />
-          <NetworkImage name="ETH" type={"coin"} />
-          <NetworkImage name="NEAR" type={"coin"} />
+          <NetworkImage name="WOO" type={"token"} />
+          <NetworkImage name="BTC" type={"token"} />
+          <NetworkImage name="ETH" type={"token"} />
+          <NetworkImage name="NEAR" type={"token"} />
         </div>
         <div className="flex gap-3">
-          <NetworkImage name="WOO" type={"coin"} size={"large"} />
-          <NetworkImage name="BTC" type={"coin"} size={"large"} />
-          <NetworkImage name="ETH" type={"coin"} size={"large"} />
-          <NetworkImage name="NEAR" type={"coin"} size={"large"} />
+          <NetworkImage name="WOO" type={"token"} size={"large"} />
+          <NetworkImage name="BTC" type={"token"} size={"large"} />
+          <NetworkImage name="ETH" type={"token"} size={"large"} />
+          <NetworkImage name="NEAR" type={"token"} size={"large"} />
         </div>
       </div>
     );

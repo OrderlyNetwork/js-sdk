@@ -201,12 +201,12 @@ export class Account {
   // 检查账户状态
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
-    console.log("check account is esist", address);
+    // console.log("check account is esist", address);
     let nextState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
-      console.log("accountInfo:", accountInfo);
+      // console.log("accountInfo:", accountInfo);
       // 如果切换addrees时，需要清除之前的key
 
       if (accountInfo && accountInfo.account_id) {
@@ -241,8 +241,6 @@ export class Account {
       // const orderlyKey = this.keyStore.getOrderlyKey(address);
       const orderlyKey = this.keyStore.getOrderlyKey();
 
-      console.log("orderlyKey:::::::", orderlyKey);
-
       nextState = {
         ...this.stateValue,
         status: AccountStatusEnum.DisabledTrading,
@@ -262,7 +260,7 @@ export class Account {
         publicKey
       );
 
-      console.log("orderlyKeyStatus:", orderlyKeyStatus);
+      // console.log("orderlyKeyStatus:", orderlyKeyStatus);
 
       if (
         orderlyKeyStatus &&
@@ -542,7 +540,7 @@ export class Account {
         "orderly-account-id": this.stateValue.accountId!,
       },
     });
-    console.log("getRegisterationNonce:", res);
+
     if (res.success) {
       return res.data?.registration_nonce;
     } else {

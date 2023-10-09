@@ -1,4 +1,4 @@
-import { ChainPicker } from "@/block/pickers/chainPicker";
+import { ChainListView } from "@/block/pickers/chainPicker";
 import Button from "@/button";
 import {
   Dialog,
@@ -48,7 +48,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       <DialogContent>
         <DialogHeader>Swith network</DialogHeader>
         <DialogBody>
-          <ChainPicker
+          <ChainListView
             mainnetChains={[]}
             testChains={testChains}
             onChange={() => setOpen(false)}

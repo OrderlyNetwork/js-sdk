@@ -11,9 +11,15 @@ const spinnerVariants = cva(
         default: "w-8 h-8",
         large: "w-12 h-12",
       },
+      background: {
+        default: "text-base-contrast/40",
+        transparent: "text-transparent",
+      },
     },
+
     defaultVariants: {
       size: "default",
+      background: "default",
     },
   }
 );
@@ -23,12 +29,12 @@ export interface SpinnerProps
     VariantProps<typeof spinnerVariants> {}
 
 export const Spinner: FC<SpinnerProps> = (props) => {
-  const { size, className } = props;
+  const { size, background, className } = props;
   return (
     <div role="status" className="inline-block">
       <svg
         aria-hidden="true"
-        className={cn(spinnerVariants({ size, className }))}
+        className={cn(spinnerVariants({ size, className, background }))}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

@@ -5,6 +5,7 @@ import { NetworkImage } from "@/icon/networkImage";
 import { FC, useCallback, useMemo } from "react";
 import { API, ChainConfig, ChainInfo, chainsMap } from "@orderly.network/types";
 import { modal } from "@/modal";
+import { ChainSelect } from "../chainPicker";
 
 export type Wallet = {
   // token: string;
@@ -20,6 +21,9 @@ export interface WalletPickerProps {
   chain?: ChainConfig;
 
   address?: string;
+
+  networkId?: "mainnet" | "testnet";
+
   onOpenPicker?: () => void;
   onChainChange?: (chainId: string) => void;
 }
@@ -41,7 +45,8 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
   return (
     <div className={"flex gap-2"}>
       <Input disabled value={address} fullWidth />
-      <button
+      <ChainSelect value={chain} />
+      {/* <button
         className="flex w-full items-center px-2 rounded bg-fill"
         disabled={(props.chains?.length ?? 0) < 2}
         onClick={onClick}
@@ -58,7 +63,7 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
         {props.chains?.length && props.chains.length > 1 && (
           <ArrowLeftRight size={16} className="text-primary-light" />
         )}
-      </button>
+      </button> */}
     </div>
   );
 };
