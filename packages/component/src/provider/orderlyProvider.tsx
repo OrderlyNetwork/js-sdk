@@ -67,18 +67,18 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   if (!configStore) {
     throw new Error("configStore is required");
   }
-  const [ready, setReady] = useSessionStorage<boolean>("APP_READY", false);
+  // const [ready, setReady] = useSessionStorage<boolean>("APP_READY", false);
   const { toasts } = useToasterStore();
 
-  const onAppTestChange = (name: string) => {
-    CHECK_ENTRY[name] = true;
-    const isReady = Object.keys(CHECK_ENTRY).every((key) => CHECK_ENTRY[key]);
+  // const onAppTestChange = (name: string) => {
+  //   CHECK_ENTRY[name] = true;
+  //   const isReady = Object.keys(CHECK_ENTRY).every((key) => CHECK_ENTRY[key]);
 
-    if (isReady) {
-      console.log("change app ready: true");
-      setReady(true);
-    }
-  };
+  //   if (isReady) {
+  //     console.log("change app ready: true");
+  //     setReady(true);
+  //   }
+  // };
 
   const {
     connect,
@@ -86,6 +86,8 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     wallet: currentWallet,
     setChain,
   } = useContext(WalletConnectorContext);
+
+  // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
 
   const testChains = useMemo(() => {
     return [
@@ -98,6 +100,15 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         mainnet: false,
         explorer_base_url: "https://goerli.arbiscan.io/",
       },
+      {
+        chain_id: 43113,
+      },
+      {
+        chain_id: 84531,
+      },
+      {
+        chain_id: 8453,
+      },
     ];
   }, []);
 
@@ -109,7 +120,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     NetworkError: false,
   });
 
-  console.log("👏 app ready >>>", ready);
+  // console.log("👏 app ready >>>", ready);
 
   useEffect(() => {
     let account = SimpleDI.get<Account>(Account.instanceName);
@@ -133,28 +144,31 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     return configStore.get("klineDataUrl");
   }, [configStore]);
 
-  const checkChainId = useCallback((chainId: number): boolean => {
-    console.log("*****", chainId, testChains);
-    if (!chainId || !testChains) {
-      return false;
-    }
+  const checkChainId = useCallback(
+    (chainId: number): boolean => {
+      console.log("*****", chainId, testChains);
+      if (!chainId || !testChains) {
+        return false;
+      }
 
-    if (typeof chainId !== "number") {
-      chainId = parseInt(chainId);
-    }
+      if (typeof chainId !== "number") {
+        chainId = parseInt(chainId);
+      }
 
-    const isSupport = testChains.some(
-      (item: API.NetworkInfos) => item.chain_id === chainId
-    );
+      const isSupport = testChains.some(
+        (item: API.NetworkInfos) => item.chain_id === chainId
+      );
 
-    return isSupport;
-  }, []);
+      return isSupport;
+    },
+    [testChains]
+  );
 
   const _onWalletConnect = useCallback(async (): Promise<any> => {
     if (connect) {
       const walletState = await connect();
 
-      // console.log("walletState", walletState);
+      console.log("===========>>>>>>>>>>>walletState", walletState);
 
       if (
         Array.isArray(walletState) &&
@@ -233,49 +247,47 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }, [currentWallet]);
 
   useEffect(() => {
-    console.log("app ready?", ready);
-
     // currentWallet?.provider.detectNetwork().then((x) => console.log(x));
 
-    if (ready) {
-      let account = SimpleDI.get<Account>(Account.instanceName);
-      // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
+    // if (ready) {
+    let account = SimpleDI.get<Account>(Account.instanceName);
+    // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
 
-      if (!!currentWallet && account) {
-        if (
-          account.address === currentAddress &&
-          currentChainId === account.chainId
-        ) {
-          return;
-        }
-        // 需要确定已经拿到chains list
-        if (!checkChainId(currentChainId)) {
-          console.log("!!!! not support this chian -> disconnect wallet");
-          account.disconnect();
-
-          setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
-
-          console.warn("current chain not support!");
-          return;
-        } else {
-          setErrors((errors: any) => ({
-            ...errors,
-            ChainNetworkNotSupport: false,
-          }));
-        }
-
-        account.setAddress(currentWallet.accounts[0].address, {
-          provider: currentWallet.provider,
-          chain: currentWallet.chains[0],
-          wallet: {
-            name: currentWallet.label,
-          },
-          // label: currentWallet.label,
-        });
+    if (!!currentWallet && account) {
+      if (
+        account.address === currentAddress &&
+        currentChainId === account.chainId
+      ) {
+        return;
       }
+      // 需要确定已经拿到chains list
+      if (!checkChainId(currentChainId)) {
+        // console.warn("!!!! not support this chian -> disconnect wallet");
+        account.disconnect();
+
+        setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
+
+        console.warn("current chain not support!  -> disconnect wallet!!!");
+        return;
+      } else {
+        setErrors((errors: any) => ({
+          ...errors,
+          ChainNetworkNotSupport: false,
+        }));
+      }
+
+      account.setAddress(currentWallet.accounts[0].address, {
+        provider: currentWallet.provider,
+        chain: currentWallet.chains[0],
+        wallet: {
+          name: currentWallet.label,
+        },
+        // label: currentWallet.label,
+      });
     }
+    // }
     // }, [ready, currentWallet]);
-  }, [ready, currentAddress, currentChainId, testChains]);
+  }, [currentAddress, currentChainId, testChains]);
 
   // limit toast count
   useEffect(() => {
@@ -296,11 +308,11 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         getWalletAdapter,
         contractManager: props.contractManager,
         networkId,
-        ready,
+        // ready,
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
-        onAppTestChange,
+        // onAppTestChange,
         errors,
         brokerId,
       }}

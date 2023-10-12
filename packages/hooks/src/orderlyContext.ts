@@ -33,9 +33,9 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   onSetChain?: (chainId: number) => Promise<any>;
   // account: Account;
 
-  ready: boolean;
+  // ready: boolean;
 
-  onAppTestChange?: (name: string) => void;
+  // onAppTestChange?: (name: string) => void;
 
   errors: AppStateErrors;
 }

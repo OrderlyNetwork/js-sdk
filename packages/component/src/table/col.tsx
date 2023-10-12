@@ -9,6 +9,7 @@ export type Column = {
   align?: "left" | "center" | "right";
   formatter?: (value: any, record: any, index: number) => any;
   render?: (value: any, record: any, index: number) => React.ReactNode;
+  getKey?: (record: any, index: number) => string;
 };
 
 interface ColProps {

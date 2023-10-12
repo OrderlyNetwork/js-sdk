@@ -189,7 +189,10 @@ function show<T extends any, P extends any>(
   modal: string,
   args?: P
 ): Promise<T>;
-function show(modal: React.FC<any> | string, args?: any): Promise<unknown> {
+function show<T extends any, P extends any>(
+  modal: React.FC<any> | string,
+  args?: any
+): Promise<unknown> {
   const modalId = getModalId(modal);
   if (typeof modal !== "string" && !MODAL_REGISTRY.has(modalId)) {
     register(modalId, modal as React.FC);
@@ -211,7 +214,7 @@ function show(modal: React.FC<any> | string, args?: any): Promise<unknown> {
     };
   }
 
-  return modalCallbacks[modalId].promise;
+  return modalCallbacks[modalId].promise as Promise<T>;
 }
 
 function hide<T>(modal: string | FC<any>): Promise<T>;

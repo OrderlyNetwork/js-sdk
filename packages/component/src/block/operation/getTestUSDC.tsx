@@ -32,7 +32,7 @@ export const GetTestUSDC = () => {
   }, []);
 
   const onGetClick = useCallback(
-    (event: MouseEvent) => {
+    (event: any) => {
       event.preventDefault();
       const toastId = toast.loading("Getting test USDC...");
       if (!account || !account.wallet) {
@@ -79,14 +79,7 @@ export const GetTestUSDC = () => {
         <span className="text-primary-light" onClick={onGetClick}>
           Get test USDC
         </span>{" "}
-        and earn an NFT in our{" "}
-        <a
-          href="https://galxe.com/orderlynetwork/campaign/GCiLaU2YJm"
-          className="text-primary-light"
-        >
-          testnet campaign
-        </a>
-        !
+        and start trading!
       </div>
       {/* Get test USDC and earn an NFT in our testnet campaign! */}
       <div className="p-2">

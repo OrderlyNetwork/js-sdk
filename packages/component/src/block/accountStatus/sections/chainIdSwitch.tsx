@@ -1,5 +1,5 @@
-import { FC, useCallback, useState } from "react";
-import { ChainPicker } from "@/block/pickers/chainPicker";
+import { FC, useCallback, useContext, useState } from "react";
+import { ChainListView, ChainPicker } from "@/block/pickers/chainPicker";
 import {
   Dialog,
   DialogBody,
@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/dialog";
 
-import { useChains } from "@orderly.network/hooks";
+import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
 
@@ -18,11 +18,14 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
+  const { networkId } = useContext<any>(OrderlyContext);
 
-  const [testChains] = useChains("testnet", {
+  const [testChains] = useChains(networkId, {
     pick: "network_infos",
     filter: (item: API.Chain) => item.network_infos.chain_id === 421613,
   });
+
+  console.log("testChains", testChains);
 
   const onChainChange = useCallback(
     ({ id, name }: { id: number; name: string }) => {
@@ -55,11 +58,16 @@ export const ChainIdSwtich: FC<Props> = (props) => {
         <DialogContent>
           <DialogHeader>Swith network</DialogHeader>
           <DialogBody>
-            <ChainPicker
+            <ChainListView
+              mainChains={[]}
+              testChains={testChains}
+              onItemClick={onChainChange}
+            />
+            {/* <ChainPicker
               mainnetChains={[]}
               testChains={testChains}
               onChange={onChainChange}
-            />
+            /> */}
           </DialogBody>
         </DialogContent>
       </Dialog>

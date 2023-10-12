@@ -16,16 +16,18 @@ export type Wallet = {
 };
 
 export interface WalletPickerProps {
-  chains?: API.ChainDetail[];
+  // chains?: API.ChainDetail[];
 
   chain?: ChainConfig;
 
   address?: string;
 
   networkId?: "mainnet" | "testnet";
+  settingChain?: boolean;
 
   onOpenPicker?: () => void;
-  onChainChange?: (chainId: string) => void;
+  onChainChange?: (chain: any) => void;
+  onChainInited?: (chain: API.Chain) => void;
 }
 
 export const WalletPicker: FC<WalletPickerProps> = (props) => {
@@ -35,35 +37,17 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
     return props.address.replace(/^(.{6})(.*)(.{4})$/, "$1......$3");
   }, [props.address]);
 
-  const onClick = useCallback(() => {
-    console.log("open dialog");
-    modal;
-  }, []);
-
   // console.log(props);
 
   return (
     <div className={"flex gap-2"}>
       <Input disabled value={address} fullWidth />
-      <ChainSelect value={chain} />
-      {/* <button
-        className="flex w-full items-center px-2 rounded bg-fill"
-        disabled={(props.chains?.length ?? 0) < 2}
-        onClick={onClick}
-      >
-        <NetworkImage
-          id={chain?.id}
-          type={props.chain ? "chain" : "placeholder"}
-          size={"small"}
-          rounded
-        />
-        <span className="flex-1 px-2 text-left">
-          {chain?.chainName ?? "--"}
-        </span>
-        {props.chains?.length && props.chains.length > 1 && (
-          <ArrowLeftRight size={16} className="text-primary-light" />
-        )}
-      </button> */}
+      <ChainSelect
+        value={chain}
+        onValueChange={props.onChainChange}
+        onChainInited={props.onChainInited}
+        settingChain={props.settingChain}
+      />
     </div>
   );
 };

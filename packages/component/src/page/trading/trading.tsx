@@ -20,31 +20,32 @@ interface TradingPageProps {
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
-  console.log("👉 TradingPage ====>>>", props.symbol);
   return (
-    <TradingPageProvider
-      symbol={props.symbol}
-      onSymbolChange={props.onSymbolChange}
-    >
-      <div className="pb-[70px]">
-        <NavBar symbol={props.symbol} />
-        {/* <Divider /> */}
-        <ChartView
-          symbol={props.symbol}
-          tradingViewConfig={props.tradingViewConfig}
-        />
-        <MyLeverageView symbol={props.symbol} />
-        <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start ">
-          <MyOrderBook symbol={props.symbol} />
+    <Page>
+      <TradingPageProvider
+        symbol={props.symbol}
+        onSymbolChange={props.onSymbolChange}
+      >
+        <div className="pb-[70px]">
+          <NavBar symbol={props.symbol} />
+          {/* <Divider /> */}
+          <ChartView
+            symbol={props.symbol}
+            tradingViewConfig={props.tradingViewConfig}
+          />
+          <MyLeverageView symbol={props.symbol} />
+          <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start ">
+            <MyOrderBook symbol={props.symbol} />
+            <AssetsProvider>
+              <MyOrderEntry symbol={props.symbol} />
+            </AssetsProvider>
+          </div>
+          <DataListView />
           <AssetsProvider>
-            <MyOrderEntry symbol={props.symbol} />
+            <BottomNavBar />
           </AssetsProvider>
         </div>
-        <DataListView />
-        <AssetsProvider>
-          <BottomNavBar />
-        </AssetsProvider>
-      </div>
-    </TradingPageProvider>
+      </TradingPageProvider>
+    </Page>
   );
 };

@@ -5,39 +5,47 @@ import { Divider } from "@/divider";
 import { ChainCell } from "./chainCell";
 import { type API } from "@orderly.network/types";
 
+type ChainInfo = API.NetworkInfos & {
+  bridgeless: boolean;
+};
+
 export interface ChainListViewProps {
-  mainnetChains: API.NetworkInfos[];
-  testChains: API.NetworkInfos[];
+  mainChains?: ChainInfo[];
+  testChains?: ChainInfo[];
+  currentChainId?: number;
   value?: any;
-  onChange?: (value: any) => void;
+  onItemClick?: (value: any) => void;
 }
 
 export const ChainListView: FC<ChainListViewProps> = (props) => {
   const mainnet = useMemo(() => {
-    if (!props.mainnetChains || props.mainnetChains.length === 0) {
+    if (!props.mainChains || props.mainChains.length === 0) {
       return null;
     }
 
     return (
       <>
-        <div className="uppercase text-base-contrast/50 text-xs mb-2">
-          mainnet
-        </div>
+        {props.testChains && props.testChains.length > 0 && (
+          <div className="uppercase text-base-contrast/50 text-xs mb-2">
+            mainnet
+          </div>
+        )}
         <div className="flex flex-col">
-          {props.mainnetChains.map((chain, index) => {
+          {props.mainChains.map((chain, index) => {
             return (
               <ChainCell
                 key={chain.chain_id}
                 name={chain.name}
                 id={chain.chain_id}
-                // bridgeless
+                onClick={props.onItemClick}
+                bridgeless={chain.bridgeless}
               />
             );
           })}
         </div>
       </>
     );
-  }, [props.mainnetChains]);
+  }, [props.mainChains, props.testChains]);
 
   const testnet = useMemo(() => {
     if (!props.testChains || props.testChains.length === 0) {
@@ -46,9 +54,11 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
 
     return (
       <>
-        <div className="uppercase text-base-contrast/50 text-xs mb-2">
-          testnet
-        </div>
+        {props.mainChains && props.mainChains.length > 0 && (
+          <div className="uppercase text-base-contrast/50 text-xs mb-2">
+            testnet
+          </div>
+        )}
         <div className="flex flex-col">
           {props.testChains.map((chain, index) => {
             return (
@@ -56,14 +66,15 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
                 key={chain.chain_id}
                 name={chain.name}
                 id={chain.chain_id}
-                onClick={props.onChange}
+                onClick={props.onItemClick}
+                bridgeless={chain.bridgeless}
               />
             );
           })}
         </div>
       </>
     );
-  }, [props.testChains]);
+  }, [props.testChains, props.mainChains]);
 
   return (
     <div className="pt-5">

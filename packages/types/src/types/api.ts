@@ -231,6 +231,10 @@ export declare namespace API {
     chain_details: ChainDetail[];
   }
 
+  // export interface Token{
+
+  // }
+
   export interface ChainDetail {
     chain_id: string;
     chain_name?: string;

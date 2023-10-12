@@ -11,6 +11,7 @@ import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json
 export type OrderlyContracts = {
   usdcAddress: string;
   usdcAbi: any;
+  erc20Abi: any;
   vaultAddress: string;
   vaultAbi: any;
   verifyContractAddress: string;
@@ -29,6 +30,7 @@ export class BaseContract implements IContract {
       vaultAddress: stagingVaultAddressOnArbitrumTestnet,
       vaultAbi: stagingVaultAbiOnArbitrumTestnet,
       verifyContractAddress: stagingVerifyAddressOnArbitrumTestnet,
+      erc20Abi: stagingUSDCAbiOnArbitrumTestnet,
     };
   }
 }

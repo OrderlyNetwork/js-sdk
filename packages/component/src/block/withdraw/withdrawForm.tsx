@@ -176,6 +176,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       </div>
       <QuantityInput
         tokens={[]}
+        token={{
+          symbol: "USDC",
+        }}
         decimals={decimals}
         status={inputStatus}
         className={cn(status !== WithdrawStatus.Normal && "outline outline-1", {
@@ -200,7 +203,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         />
       </div>
       <div className={"py-2"}>
-        <WalletPicker address={address} chains={chains} chain={chainInfo} />
+        <WalletPicker address={address} chain={chainInfo} />
       </div>
       <TokenQtyInput amount={quantity} fee={fee} />
 

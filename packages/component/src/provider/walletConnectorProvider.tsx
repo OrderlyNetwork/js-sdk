@@ -9,8 +9,11 @@ export interface WalletConnectorContextState {
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
   setChain: (options: any) => Promise<any>;
+  switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: any;
   connectedChain: ConnectedChain | null;
+
+  settingChain: boolean;
 }
 
 export const WalletConnectorContext =
@@ -40,13 +43,44 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
     setChain, // function to call to initiate user to switch chains in their wallet
   ] = useSetChain();
 
-  console.log(
-    "OnboardConnectorProvider",
-    wallet,
-    chains,
-    connectedChain,
-    settingChain
-  );
+  const switchChain = async (options: any) => {
+    if (connectedChain?.id === options.chainId) return;
+    // await setChain(options);
+
+    if (typeof (window as any).ethereum !== "undefined") {
+      try {
+        await (window as any).ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: options.chainId }],
+        });
+      } catch (switchError: any) {
+        // console.log(switchError);
+        if (switchError.code === 4902) {
+          try {
+            await (window as any).ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: options.chainId,
+                  chainName: options.name,
+                  rpcUrls: [options.rpcUrl],
+                  blockExplorerUrls: [options.blockExplorerUrls],
+                  // token: options.token,
+                  nativeCurrency: {
+                    name: options.token,
+                    symbol: options.token,
+                    decimals: 18,
+                  },
+                },
+              ],
+            });
+          } catch (addError) {
+            // handle "add" error
+          }
+        }
+      }
+    }
+  };
 
   return (
     <WalletConnectorContext.Provider
@@ -56,7 +90,9 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
         connecting,
         wallet,
         setChain,
+        switchChain,
         connectedChain,
+        settingChain,
       }}
     >
       {props.children}

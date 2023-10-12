@@ -15,6 +15,10 @@ export interface TableProps<RecordType> {
   loading?: boolean;
   className?: string;
   headerClassName?: string;
+
+  bordered?: boolean;
+
+  gerenatedRowKey?: (record: RecordType, index: number) => string;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -22,10 +26,13 @@ export const Table = <RecordType extends unknown>(
 ) => {
   const rows = useMemo(() => {
     return props.dataSource?.map((record: any, index) => {
-      const key = `record.ts_${record.price}_${record.size}_${index}`;
+      const key =
+        typeof props.gerenatedRowKey === "function"
+          ? props.gerenatedRowKey(record, index)
+          : index; /// `record.ts_${record.price}_${record.size}_${index}`;
       return <Row key={key} columns={props.columns} record={record} />;
     });
-  }, [props.dataSource, props.columns]);
+  }, [props.dataSource, props.columns, props.gerenatedRowKey]);
 
   const maskElement = useMemo(() => {
     if (props.loading) {
@@ -47,7 +54,11 @@ export const Table = <RecordType extends unknown>(
   return (
     <div className="relative min-h-[180px] h-full">
       <table className={cn("border-collapse w-full", props.className)}>
-        <THead columns={props.columns} className={props.headerClassName} />
+        <THead
+          columns={props.columns}
+          className={props.headerClassName}
+          bordered={props.bordered}
+        />
 
         <tbody>{rows}</tbody>
       </table>

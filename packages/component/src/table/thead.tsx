@@ -5,6 +5,7 @@ import { cn } from "@/utils/css";
 export interface THeadProps {
   columns: Column[];
   className?: string;
+  bordered?: boolean;
 }
 
 export const THead: FC<THeadProps> = (props) => {
@@ -17,6 +18,7 @@ export const THead: FC<THeadProps> = (props) => {
               className={cn(
                 "px-3 py-[3px]",
                 column.align === "right" && "text-right",
+                props.bordered && "border-b border-base-contrast/20",
                 props.className
               )}
               key={column.dataIndex}

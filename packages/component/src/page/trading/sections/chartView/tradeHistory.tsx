@@ -8,7 +8,7 @@ interface TradeHistoryProps {
 
 export const TradeHistoryPane: FC<TradeHistoryProps> = (props) => {
   const { symbol } = props;
-  // console.log("---------->>>>>>", symbol);
+
   const { data, isLoading } = useMarketTradeStream(symbol);
 
   return (

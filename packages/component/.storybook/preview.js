@@ -15,12 +15,14 @@ import {
 } from "@orderly.network/core";
 
 import "../src/tailwind.css"; // tailwind css
+import chains from "./chains";
 
 const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
 
 // const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`
 const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
 const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
+
 
 const Arbitrum = {
   id: 421613,
@@ -30,7 +32,29 @@ const Arbitrum = {
   rpcUrl: "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
 };
 
-const chains = [Arbitrum];
+// const chains = [
+//   Arbitrum,
+//   //   {
+//   //   id: 97,
+//   // label:'BNB Chain Testnet',
+//   // token:'BNB',
+//   // rpcUrl:'https://data-seed-prebsc-1-s1.binance.org:8545'
+//   // }
+//   {
+//     id: 43113,
+//     // label:'BNB Chain Testnet',
+//     // token:'BNB',
+//     // rpcUrl:'https://data-seed-prebsc-1-s1.binance.org:8545'
+//   },
+//   {
+//     id: 84531,
+//     label: "Base Goerli Testnet",
+//     token: "ETH",
+//     rpcUrl: "https://goerli.basescan.org",
+//   },
+// ];
+
+
 const wallets = [injectedModule()];
 const web3Onboard = init({
   apiKey,
@@ -101,8 +125,9 @@ const preview = {
       return (
         <OnboardConnectorProvider>
           <OrderlyProvider
+            networkId="mainnet"
             configStore={configStore}
-          getWalletAdapter={(options)=>new EtherAdapter(options)}
+            getWalletAdapter={(options) => new EtherAdapter(options)}
             contractManager={contractManager}
             keyStore={new LocalStorageStore("testnet")}
             logoUrl="/woo_fi_logo.svg"

@@ -1,19 +1,27 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { OrderlyContext, useQuery, useSWR } from ".";
 
-export const usePreLoadData = (onSuccess: (name: string) => void) => {
+export const usePreLoadData = () => {
   const { configStore } = useContext(OrderlyContext);
 
-  useSWR(
+  const { error: swapSupportError, data: swapSupportData } = useSWR(
     `${configStore.get("swapSupportApiUrl")}/swap_support`,
     (url) => fetch(url).then((res) => res.json()),
     {
       revalidateOnFocus: false,
-      //   suspense: true,
-      onSuccess: (data, key, config) => {
-        onSuccess("chains_fetch");
-      },
     }
   );
-  //   useQuery("");
+
+  const { error: tokenError, data: tokenData } = useQuery("/v1/public/token", {
+    revalidateOnFocus: false,
+  });
+
+  const isDone = useMemo(() => {
+    return !!swapSupportData && !!tokenData;
+  }, [swapSupportData, tokenData]);
+
+  return {
+    error: swapSupportError || tokenError,
+    done: isDone,
+  };
 };

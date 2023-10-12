@@ -136,14 +136,23 @@ export class Assets {
     }
   }
 
-  async getBalance(): Promise<string> {
+  async getNativeBalance(): Promise<string> {
+    console.log("getNativeBalance", this.account.stateValue.address);
+    const result = await this.account.walletClient?.getBalance(
+      this.account.stateValue.address!
+    );
+
+    return this.account.walletClient!.fromUnits(result);
+  }
+
+  async getBalance(address?: string): Promise<string> {
     if (!this.account.walletClient) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
     const result = await this.account.walletClient?.call(
-      contractAddress.usdcAddress,
+      address ?? contractAddress.usdcAddress,
       "balanceOf",
       [this.account.stateValue.address],
       {
@@ -151,16 +160,46 @@ export class Assets {
       }
     );
 
+    console.log("-----*****-----", result);
+
     return this.account.walletClient?.fromUnits(result);
   }
 
-  async getAllowance() {
+  async getBalanceByAddress(address: string): Promise<string> {
+    if (!this.account.walletClient) {
+      return "0";
+    }
+    const contractAddress = this.contractManger.getContractInfoByEnv();
+
+    console.log("address:::::", address);
+
+    const result = await this.account.walletClient?.call(
+      address,
+      "balanceOf",
+      [this.account.stateValue.address],
+      {
+        abi: contractAddress.erc20Abi,
+      }
+    );
+
+    // const result = await this.account.walletClient?.getBalance(
+    //   address,
+    //   this.account.stateValue.address!,
+    //   {
+    //     abi: contractAddress.erc20Abi,
+    //   }
+    // );
+
+    return this.account.walletClient?.fromUnits(result);
+  }
+
+  async getAllowance(address?: string) {
     if (!this.account.walletClient) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const result = await this.account.walletClient?.call(
-      contractAddress.usdcAddress,
+      address ?? contractAddress.usdcAddress,
       "allowance",
       [this.account.stateValue.address, contractAddress.vaultAddress],
       {

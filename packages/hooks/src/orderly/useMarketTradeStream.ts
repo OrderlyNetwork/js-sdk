@@ -75,7 +75,5 @@ export const useMarketTradeStream = (
     };
   }, [symbol]);
 
-  console.log("trades", trades);
-
   return { data: trades, isLoading };
 };

@@ -15,11 +15,8 @@ export interface WalletAdapter {
 
   // 查询余额
   getBalance: (
-    address: string,
-    userAddress: string,
-    options: {
-      abi: any;
-    }
+    // address: string,
+    userAddress: string
   ) => Promise<any>;
 
   call(

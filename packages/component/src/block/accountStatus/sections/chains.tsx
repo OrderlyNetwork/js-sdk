@@ -49,9 +49,9 @@ export const Chains: FC<ChainsProps> = (props) => {
         <DialogHeader>Swith network</DialogHeader>
         <DialogBody>
           <ChainListView
-            mainnetChains={[]}
+            mainChains={[]}
             testChains={testChains}
-            onChange={() => setOpen(false)}
+            onItemClick={() => setOpen(false)}
           />
         </DialogBody>
       </DialogContent>

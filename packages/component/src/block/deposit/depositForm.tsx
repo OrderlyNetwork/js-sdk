@@ -1,4 +1,11 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { QuantityInput } from "@/block/quantityInput";
 import { WalletPicker } from "../pickers/walletPicker";
@@ -6,19 +13,23 @@ import { Divider } from "@/divider";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
+import { useQuery } from "@orderly.network/hooks";
 
-import { MoveDownIcon, SvgImage } from "@/icon";
+import { MoveDownIcon } from "@/icon";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
-import { Decimal } from "@orderly.network/utils";
-import { API, chainsMap } from "@orderly.network/types";
+import { Decimal, int2hex } from "@orderly.network/utils";
+import { chainsMap } from "@orderly.network/types";
 import { toast } from "@/toast";
+import { type API } from "@orderly.network/types";
 
 export interface DepositFormProps {
   decimals: number;
   // status?: WithdrawStatus;
-  chains?: API.ChainDetail[];
+  // chains?: API.ChainDetail[];
   chain: any | null;
+
+  token?: API.TokenInfo;
 
   address?: string;
   walletName?: string;
@@ -27,7 +38,20 @@ export interface DepositFormProps {
 
   allowance: string;
 
-  switchChain: (options: { chainId: string }) => Promise<any>;
+  balanceRevalidating: boolean;
+  settingChain?: boolean;
+
+  switchChain: (options: {
+    chainId: string;
+    [key: string]: any;
+  }) => Promise<any>;
+
+  switchToken?: (token: API.TokenInfo) => void;
+
+  fetchBalances?: (tokens: API.TokenInfo[]) => Promise<any>;
+  fetchBalance: (token: string) => Promise<any>;
+
+  onEnquiry?: (inputs: any) => Promise<any>;
 
   approve: (amount: string | undefined) => Promise<any>;
   deposit: (amount: string) => Promise<any>;
@@ -44,7 +68,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     maxAmount,
     walletName,
     address,
-    chains,
+    // chains,
     chain,
     switchChain,
     onOk,
@@ -53,9 +77,17 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
+  const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
+  const [needSwap, setNeedSwap] = useState<boolean>(false);
+
   const [submitting, setSubmitting] = useState(false);
 
   const [quantity, setQuantity] = useState<string>("");
+
+  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
+
+  const { data: orderlyChains, error: tokenError } =
+    useQuery<API.Chain[]>("/v1/public/token");
 
   const chainInfo = useMemo(() => {
     if (chain) {
@@ -140,6 +172,48 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     [decimals, maxAmount]
   );
 
+  const onChainChange = useCallback(
+    (chain: API.Chain) => {
+      // console.log(chain);
+      return props
+        .switchChain?.({
+          chainId: int2hex(Number(chain.network_infos.chain_id)),
+          rpcUrl: chain.network_infos.public_rpc_url,
+          token: chain.network_infos.currency_symbol,
+          // name: chain.network_infos.name,
+          label: chain.network_infos.name,
+
+          // blockExplorerUrls: chain.network_infos.explorer_base_url,
+        })
+        .then(() => {
+          // 切换成功后，设置token列表及把list[0]设置为当前token
+          setTokens(chain?.token_infos ?? []);
+          // if (chain?.token_infos?.length > 0) {
+          //   props.switchToken?.(chain.token_infos[0]);
+          // }
+        });
+    },
+    [props.switchChain]
+  );
+
+  const onChainInited = useCallback(
+    (chain: API.Chain) => {
+      // console.log("??????", chain);
+      if (chain && chain.token_infos?.length > 0) {
+        let token = chain.token_infos.find(
+          (t: API.TokenInfo) => t.symbol === "USDC"
+        );
+        if (!token) token = chain.token_infos[0];
+
+        if (!token || props.token?.symbol === token.symbol) return;
+
+        setTokens(chain.token_infos);
+        props.switchToken?.(token);
+      }
+    },
+    [props.token?.symbol]
+  );
+
   useEffect(() => {
     //check quantity
     if (isNaN(Number(quantity)) || !quantity) return;
@@ -155,6 +229,46 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     }
   }, [maxAmount]);
 
+  useEffect(() => {
+    if (!props.token || !chain) return;
+    /// check if need swap
+
+    if (props.token.symbol !== "USDC") {
+      setNeedSwap(true);
+    }
+
+    const tokenItem = orderlyChains?.find(
+      (item: any) => item.token === props.token?.symbol
+    );
+    const tokenChains = tokenItem?.chain_details ?? [];
+
+    /// check if need cross chain
+    if (
+      tokenChains.findIndex(
+        (chain: any) => Number(chain.chain_id) === chain?.id
+      ) < 0
+    ) {
+      setNeedCrossChain(true);
+    }
+  }, [props.token?.symbol, chain?.id, orderlyChains]);
+
+  useEffect(() => {
+    console.log("DepositForm", {
+      token: props.token,
+      chain,
+      needCrossChain,
+      needSwap,
+    });
+
+    const qty = Number(quantity);
+
+    if (isNaN(qty) || qty <= 0) return;
+
+    props.onEnquiry?.({ quantity, needCrossChain, needSwap }).then((res) => {
+      console.log(res);
+    });
+  }, [quantity, props.onEnquiry, needCrossChain, needSwap]);
+
   return (
     <div>
       <div className={"flex items-center py-2"}>
@@ -166,16 +280,25 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         />
       </div>
       <div className="pb-2">
-        <WalletPicker address={address} chains={chains} chain={chainInfo} />
+        <WalletPicker
+          address={address}
+          chain={chain}
+          settingChain={props.settingChain}
+          onChainChange={onChainChange}
+          onChainInited={onChainInited}
+        />
       </div>
       <QuantityInput
-        tokens={[]}
+        tokens={tokens}
+        token={props.token}
         quantity={quantity}
         maxAmount={Number(maxAmount)}
         onValueChange={onValueChange}
         status={inputStatus}
         decimals={decimals}
         hintMessage={hintMessage}
+        fetchBalance={props.fetchBalance}
+        onTokenChange={props.switchToken}
       />
 
       <Divider className={"py-4"}>
@@ -188,10 +311,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       <div className={"py-2"}>
         <TokenQtyInput amount={quantity} readOnly fee={0} />
       </div>
-      <Summary />
+      <Summary needSwap={needSwap} />
       <ActionButton
         chain={chain}
-        chains={chains}
+        // chains={chains}
         chainInfo={chainInfo}
         onDeposit={onDeposit}
         allowance={props.allowance}

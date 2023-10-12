@@ -95,7 +95,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-[18px] leading-none", className)}
+    className={cn("text-[16px] leading-none", className)}
     {...props}
   />
 ));

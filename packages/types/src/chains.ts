@@ -82,6 +82,32 @@ export const chainsMap: Map<number, ChainConfig> = new Map([
     },
   ],
   [
+    43113,
+    {
+      id: 43113,
+      chainInfo: {
+        chainId: `0x${(43113).toString(16)}`, // '0xa86a'
+        chainName: "Avalanche Fuji Testnet",
+        nativeCurrency: {
+          name: "avax",
+          symbol: "AVAX",
+          decimals: 18,
+          fix: 5,
+        },
+        rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+        blockExplorerUrls: ["https://snowtrace.io/"],
+      },
+      minGasBalance: 0.05,
+      minCrossGasBalance: 0.15,
+      maxPrepayCrossGas: 2,
+      blockExplorerName: "Snowtrace",
+      chainName: "Avalanche Fuji",
+      chainNameShort: "Avalanche Fuji",
+      chainLogo: "",
+      requestRpc: "https://rpc.ankr.com/avalanche",
+    },
+  ],
+  [
     56,
     {
       id: 56,

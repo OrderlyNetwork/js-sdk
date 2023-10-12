@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Deposit } from ".";
+import { usePreLoadData } from "@orderly.network/hooks";
 
 import React from "react";
 
@@ -28,6 +29,9 @@ export const NotConnected: Story = {
 
 export const WithHooks: Story = {
   render: () => {
+    const { error, done } = usePreLoadData();
+    console.log({ error, done });
+    if (!done) return <div>loading</div>;
     return <Deposit />;
   },
 };

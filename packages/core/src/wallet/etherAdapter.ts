@@ -30,20 +30,23 @@ export class EtherAdapter implements WalletAdapter {
   fromUnits(amount: string) {
     return ethers.formatUnits(amount, 6);
   }
-  getBalance(
-    contractId: string,
-    userAddress: string,
-    options: {
-      abi: any;
-    }
-  ): Promise<any> {
-    const contract = new ethers.Contract(
-      contractId,
-      options.abi,
-      this.provider
+  getBalance(userAddress: string): Promise<any> {
+    // const contract = new ethers.Contract(
+    //   contractId,
+    //   options.abi,
+    //   this.provider
+    // );
+    console.log("*********", userAddress);
+    // return contract.balanceOf(userAddress);
+    return this.provider!.getBalance(userAddress).then(
+      (res) => {
+        console.log("getBalance", res);
+        return res;
+      },
+      (error) => {
+        console.log("get native token balance error", error);
+      }
     );
-    // console.log("*********", contract);
-    return contract.balanceOf(userAddress);
   }
 
   deposit(from: string, to: string, amount: string): Promise<any> {

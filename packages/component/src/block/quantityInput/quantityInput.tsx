@@ -1,27 +1,32 @@
 import Button from "@/button";
 import { ChangeEvent, FC, useCallback, useMemo, useRef } from "react";
-import { type API } from "@orderly.network/core";
+
 import { NetworkImage } from "@/icon/networkImage";
 import { ChevronDown } from "lucide-react";
 import { Divider } from "@/divider";
 import { cn } from "@/utils/css";
 import { Decimal } from "@orderly.network/utils";
+import { TokenSelect } from "./tokenSelect";
+import { type API } from "@orderly.network/types";
+import { Spinner } from "@/spinner";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
 export interface QuantityInputProps {
   maxAmount?: number;
-  tokens: API.Token[];
-  token?: API.Token;
+  tokens: API.TokenInfo[];
+  token?: API.TokenInfo;
   quantity?: string;
   decimals: number;
-  onTokenChange?: (token: string) => void;
+  onTokenChange?: (token: API.TokenInfo) => void;
   // onMaxClick?: () => void;
   onValueChange?: (value: { value: string; token: string }) => void;
   className?: string;
   // errorMessages?: string;
   status?: InputStatus;
   hintMessage?: string;
+  balanceRevalidating?: boolean;
+  fetchBalance: (token: string) => Promise<any>;
 }
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -58,7 +63,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
                 // console.log(event.target.value);
                 props?.onValueChange?.({
                   value: event.target.value,
-                  token: props.token?.token ?? "",
+                  token: props.token?.symbol ?? "",
                 });
               }}
               className={
@@ -75,7 +80,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               onClick={() => {
                 props?.onValueChange?.({
                   value: `${props.maxAmount ?? 0}`,
-                  token: props.token?.token ?? "",
+                  token: props.token?.symbol ?? "",
                 });
               }}
             >
@@ -83,15 +88,12 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             </Button>
           </div>
           <Divider vertical />
-          <div
-            className={
-              "flex items-center gap-1 text-sm text-base-contrast/80 mr-2"
-            }
-          >
-            <NetworkImage type={"token"} name={"USDC"} size={"small"} />
-            <span>USDC</span>
-            {/*<ChevronDown size={16} />*/}
-          </div>
+          <TokenSelect
+            tokens={props.tokens}
+            token={props.token}
+            fetchBalance={props.fetchBalance}
+            onTokenChange={props.onTokenChange}
+          />
         </div>
         <div
           className={
@@ -99,7 +101,12 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           }
         >
           <span>{`$${amount}`}</span>
-          <div>{`Available: ${props.maxAmount ?? "-"} USDC`}</div>
+          <div className="flex items-center space-x-2">
+            <span>{`Available: ${props.maxAmount ?? "-"} ${
+              props.token?.symbol ?? ""
+            }`}</span>
+            {props.balanceRevalidating && <Spinner size={"small"} />}
+          </div>
         </div>
       </div>
       {props.hintMessage && (

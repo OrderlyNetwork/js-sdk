@@ -1,5 +1,3 @@
-// https://oss.woo.network/static/network_logo/1.png
-// network logo
 import { cn } from "@/utils/css";
 // import { cva } from "class-variance-authority";
 import React, { FC, useEffect, useMemo, useState } from "react";
@@ -30,6 +28,8 @@ export interface NetworkImageProps {
 // TODO: 添加icon生成adpater
 export const NetworkImage: FC<NetworkImageProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
+  const [loading, setLoading] = useState(false);
+
   const [isPlaceholder, setIsPlacholder] = useState(
     () => props.type === "placeholder"
   );
@@ -47,44 +47,51 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     }
 
     const img = new Image();
+    setLoading(true);
 
     img.onload = function () {
       setUrl(img.src);
+      setLoading(false);
     };
 
     img.onerror = function () {
       console.log("load icon error");
       setIsPlacholder(true);
+      setLoading(false);
     };
 
     // if (props.type === "token") {
     // }
 
-    if (props.type === "symbol" || props.type === "token") {
-      let name = props.name;
-      if (typeof props.symbol === "string") {
-        const arr = props.symbol?.split("_");
-        name = arr[1];
+    try {
+      if (props.type === "symbol" || props.type === "token") {
+        let name = props.name;
+        if (typeof props.symbol === "string") {
+          const arr = props.symbol?.split("_");
+          name = arr[1];
+        }
+        // coin logos
+        img.src = `https://oss.woo.network/static/symbol_logo/${name!.toUpperCase()}.png`;
       }
-      // coin logos
-      img.src = `https://oss.woo.network/static/symbol_logo/${name!.toUpperCase()}.png`;
-    }
-    if (props.type === "chain") {
-      img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
-    }
+      if (props.type === "chain") {
+        img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
+      }
 
-    if (props.type === "wallet") {
-      img.src = `https://oss.woo.network/static/wallet_icon/${props.name?.toLocaleLowerCase()}.png`;
-    }
+      if (props.type === "wallet") {
+        img.src = `https://oss.woo.network/static/wallet_icon/${props.name?.toLocaleLowerCase()}.png`;
+      }
 
-    if (props.type === "path") {
-      img.src = props.path!;
+      if (props.type === "path") {
+        img.src = props.path!;
+      }
+    } catch (e) {
+      console.log(e);
+      setIsPlacholder(true);
     }
-
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-  }, [props.type, props.symbol, props.name]);
+  }, [props.type, props.symbol, props.name, props.id]);
 
   const icon = useMemo(() => {
     if (!url) {
@@ -101,8 +108,9 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     <div
       className={cn(
         "inline-block overflow-hidden",
-        isPlaceholder && "bg-slate-200",
+        (isPlaceholder || loading) && "bg-slate-200",
         props.rounded && "rounded-full",
+        loading && "animate-pulse",
         props.className
       )}
       style={{
