@@ -356,8 +356,6 @@ export type OtherIMsInputs = {
  * 除当前symbol外的其他symbol已占用的总保证金
  */
 export function otherIMs(inputs: OtherIMsInputs): number {
-  // console.log("inputs", inputs);
-
   const {
     orders,
     positions,
@@ -508,16 +506,6 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
       .toNumber();
 
-    // console.log(
-    //   "------------",
-    //   totalCollateralDecimal.toNumber(),
-    //   otherIMs,
-    //   takerFeeRate,
-    //   markPrice,
-    //   positionQty,
-    //   buyOrdersQty
-    // );
-
     if (positionQty === 0 && buyOrdersQty === 0) {
       return Math.min(baseMaxQty, factor_1);
     }
@@ -544,7 +532,6 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
 }
 
 export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
-  // console.log("maxQtyByShort", inputs);
   try {
     const {
       baseMaxQty,

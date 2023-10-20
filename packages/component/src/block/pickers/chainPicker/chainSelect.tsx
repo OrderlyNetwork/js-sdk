@@ -36,8 +36,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const { value } = props;
 
-  console.log("chains", chains);
-
   const currentChain = useMemo(() => {
     if (!value || !chains) return undefined;
     return findByChainId(value.id, "network_infos");
@@ -51,19 +49,18 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       // testChains: chains?.testnet,
       // mainChains: chains,
       testChains: chains,
+      currentChainId: currentChain?.chain_id,
     });
 
     const chainInfo = findByChainId(result?.id);
 
-    // console.log(result);
     props?.onValueChange?.(chainInfo);
-  }, [chains, props.onValueChange]);
+  }, [chains, props.onValueChange, currentChain?.chain_id]);
 
   useEffect(() => {
     // 获取 到chain列表之后，初始化chain及其token列表
     if (!!chains) {
       const chainInfo = findByChainId(props.value?.id);
-      console.log("********************", props.value, chainInfo);
       if (!chainInfo) return;
       props.onChainInited?.(chainInfo);
     }

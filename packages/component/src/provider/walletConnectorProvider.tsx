@@ -9,6 +9,7 @@ export interface WalletConnectorContextState {
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
   setChain: (options: any) => Promise<any>;
+  chains: any[];
   switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: any;
   connectedChain: ConnectedChain | null;
@@ -90,6 +91,7 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
         connecting,
         wallet,
         setChain,
+        chains,
         switchChain,
         connectedChain,
         settingChain,

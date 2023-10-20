@@ -39,13 +39,14 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
                 id={chain.chain_id}
                 onClick={props.onItemClick}
                 bridgeless={chain.bridgeless}
+                selected={props.currentChainId === chain.chain_id}
               />
             );
           })}
         </div>
       </>
     );
-  }, [props.mainChains, props.testChains]);
+  }, [props.mainChains, props.testChains, props.currentChainId]);
 
   const testnet = useMemo(() => {
     if (!props.testChains || props.testChains.length === 0) {
@@ -68,13 +69,14 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
                 id={chain.chain_id}
                 onClick={props.onItemClick}
                 bridgeless={chain.bridgeless}
+                selected={props.currentChainId === chain.chain_id}
               />
             );
           })}
         </div>
       </>
     );
-  }, [props.testChains, props.mainChains]);
+  }, [props.testChains, props.mainChains, props.currentChainId]);
 
   return (
     <div className="pt-5">

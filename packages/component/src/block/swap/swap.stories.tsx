@@ -6,7 +6,7 @@ import { modal } from "@/modal";
 
 const meta: Meta<typeof Swap> = {
   component: Swap,
-  title: "Block/Swap",
+  title: "Block/Swap/Swap",
   argTypes: {
     // onChange: { action: "onChange" },
   },
@@ -19,6 +19,7 @@ const meta: Meta<typeof Swap> = {
       chain: 56,
       token: "USDC",
     },
+    swapInfo: {},
   },
 };
 

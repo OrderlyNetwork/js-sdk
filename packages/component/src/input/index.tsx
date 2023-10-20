@@ -55,7 +55,7 @@ const inputVariants = cva(["rounded"], {
 export interface InputProps
   extends Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "size" | "prefix" | "disabled"
+      "size" | "prefix" | "disabled" | "inputMode"
     >,
     VariantProps<typeof inputVariants> {
   prefix?: string | React.ReactNode;
@@ -64,6 +64,8 @@ export interface InputProps
   onClean?: () => void;
   fixClassName?: string;
   helpText?: string;
+  //
+  inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
 }
 

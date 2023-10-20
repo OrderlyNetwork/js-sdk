@@ -2,14 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "../useAccount";
 import { API, AccountStatusEnum } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { nativeTokenAddress } from "../woo/constants";
 // import { Decimal } from "@orderly.network/utils";
 
 export type useDepositOptions = {
   // from address
   address?: string;
+  decimals?: number;
 };
 
-const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 const isNativeTokenChecker = (address: string) =>
   address === nativeTokenAddress;
 
@@ -25,22 +26,38 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   // const depositQueue = useRef<string[]>([]);
 
+  const dst = useMemo(() => {
+    return {
+      symbol: "USDC",
+      address: "",
+      decimals: 6,
+      // chainId: 421613,
+      network: "Arbitrum Goerli",
+      chainId: 42161,
+    };
+  }, []);
+
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),
     [options?.address]
   );
 
-  const fetchBalanceHandler = useCallback(async (address: string) => {
-    let balance: string;
+  const fetchBalanceHandler = useCallback(
+    async (address: string, decimals?: number) => {
+      let balance: string;
 
-    if (!!address && isNativeTokenChecker(address)) {
-      balance = await account.assetsManager.getNativeBalance();
-    } else {
-      balance = await account.assetsManager.getBalance(address);
-    }
+      if (!!address && isNativeTokenChecker(address)) {
+        balance = await account.assetsManager.getNativeBalance({
+          decimals,
+        });
+      } else {
+        balance = await account.assetsManager.getBalance(address);
+      }
 
-    return balance;
-  }, []);
+      return balance;
+    },
+    []
+  );
 
   const fetchBalance = useCallback(
     async (address?: string) => {
@@ -115,14 +132,19 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const approve = useCallback(
     (amount: string | undefined) => {
-      return account.assetsManager.approve(amount).then((result: any) => {
-        if (typeof amount !== "undefined") {
-          setAllowance((value) => new Decimal(value).add(amount).toString());
-        }
-        return result;
-      });
+      if (!options?.address) {
+        throw new Error("address is required");
+      }
+      return account.assetsManager
+        .approve(options.address, amount)
+        .then((result: any) => {
+          if (typeof amount !== "undefined") {
+            setAllowance((value) => new Decimal(value).add(amount).toString());
+          }
+          return result;
+        });
     },
-    [account, fetchAllowance]
+    [account, fetchAllowance, options?.address]
   );
 
   const deposit = useCallback(
@@ -140,6 +162,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   return {
+    dst,
     balance,
     allowance,
     isNativeToken,

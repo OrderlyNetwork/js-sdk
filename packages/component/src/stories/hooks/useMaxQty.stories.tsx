@@ -76,18 +76,6 @@ const MaxQtyDemo: FC<{
 const meta: Meta = {
   title: "hooks/useMaxQty",
   component: MaxQtyDemo,
-  decorators: [
-    (Story) => {
-      return (
-        <OrderlyProvider
-          configStore={new MemoryConfigStore()}
-          keyStore={new WooKeyStore("testnet")}
-        >
-          <Story />
-        </OrderlyProvider>
-      );
-    },
-  ],
 };
 
 export default meta;

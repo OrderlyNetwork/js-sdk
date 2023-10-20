@@ -13,10 +13,10 @@ export interface ActionButtonProps {
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
   openChainPicker?: () => void;
-  chainInfo?: ChainConfig;
+  chainInfo?: Partial<ChainConfig>;
   quantity: string;
   loading?: boolean;
-  allowance: string;
+  allowance: number;
   submitting: boolean;
   maxQuantity: string;
   onApprove?: () => Promise<any>;

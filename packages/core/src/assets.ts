@@ -6,6 +6,7 @@ import { IContract } from "./contract";
 import { MessageFactor } from "./signer";
 import {
   SignatureDomain,
+  formatByUnits,
   parseAccountId,
   parseBrokerHash,
   parseTokenHash,
@@ -136,13 +137,14 @@ export class Assets {
     }
   }
 
-  async getNativeBalance(): Promise<string> {
+  async getNativeBalance(options?: { decimals?: number }): Promise<string> {
     console.log("getNativeBalance", this.account.stateValue.address);
     const result = await this.account.walletClient?.getBalance(
       this.account.stateValue.address!
     );
 
-    return this.account.walletClient!.fromUnits(result);
+    // return this.account.walletClient!.formatUnits(result);
+    return formatByUnits(result, options?.decimals);
   }
 
   async getBalance(address?: string): Promise<string> {
@@ -162,7 +164,7 @@ export class Assets {
 
     console.log("-----*****-----", result);
 
-    return this.account.walletClient?.fromUnits(result);
+    return this.account.walletClient?.formatUnits(result);
   }
 
   async getBalanceByAddress(address: string): Promise<string> {
@@ -171,7 +173,7 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    console.log("address:::::", address);
+    // console.log("address:::::", address);
 
     const result = await this.account.walletClient?.call(
       address,
@@ -182,15 +184,7 @@ export class Assets {
       }
     );
 
-    // const result = await this.account.walletClient?.getBalance(
-    //   address,
-    //   this.account.stateValue.address!,
-    //   {
-    //     abi: contractAddress.erc20Abi,
-    //   }
-    // );
-
-    return this.account.walletClient?.fromUnits(result);
+    return this.account.walletClient?.formatUnits(result);
   }
 
   async getAllowance(address?: string) {
@@ -207,10 +201,14 @@ export class Assets {
       }
     );
 
-    return this.account.walletClient?.fromUnits(result);
+    return this.account.walletClient?.formatUnits(result);
   }
 
-  async approve(amount?: string) {
+  async approve(address?: string, amount?: string) {
+    if (!address) {
+      throw new Error("address is required");
+    }
+
     if (!this.account.walletClient) {
       throw new Error("walletClient is undefined");
     }
@@ -221,11 +219,41 @@ export class Assets {
         : ethers.MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
-      contractAddress.usdcAddress,
+      // contractAddress.usdcAddress,
+      address,
       "approve",
       [contractAddress.vaultAddress, parsedAmount],
       {
         abi: contractAddress.usdcAbi,
+      }
+    );
+
+    console.log("-----*****-----", result);
+
+    return result;
+  }
+
+  async approveByAddress(inputs: { amount?: string; address: string }) {
+    const { amount, address } = inputs;
+
+    return this._approve(address, amount);
+  }
+
+  private async _approve(contractAddress: string, amount?: string) {
+    if (!this.account.walletClient) {
+      throw new Error("walletClient is undefined");
+    }
+    const parsedAmount =
+      typeof amount !== "undefined" && amount !== ""
+        ? this.account.walletClient.parseUnits(amount)
+        : ethers.MaxUint256.toString();
+    const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
+    const result = await this.account.walletClient?.call(
+      contractAddress,
+      "approve",
+      [orderlyContractAddress.vaultAddress, parsedAmount],
+      {
+        abi: orderlyContractAddress.erc20Abi,
       }
     );
 
@@ -244,7 +272,7 @@ export class Assets {
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
     const depositData = {
-      accountId: parseAccountId(this.account.stateValue.address!, brokerId!),
+      accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletClient?.parseUnits(amount),
@@ -268,5 +296,9 @@ export class Assets {
     const requestUrl = `${this.configStore.get<string>("apiBaseUrl")}${url}`;
 
     return fetch(requestUrl, init).then((res) => res.json());
+  }
+
+  get usdcAddress() {
+    return this.contractManger.getContractInfoByEnv().usdcAddress;
   }
 }

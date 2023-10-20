@@ -23,7 +23,7 @@ export const Combine: FC<CombineProps> = (props) => {
       <NetworkImage {...props.main} />
       <NetworkImage
         {...props.sub}
-        className="absolute bottom-0 right-0 outline outline-2 outline-base-100"
+        className="absolute bottom-0 right-0 outline outline-2 outline-base-100 z-10"
         rounded
       />
     </div>

@@ -5,6 +5,7 @@ import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
 import { useChain, useDeposit } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
+import { AssetsContext } from "@/provider/assetsProvider";
 
 export enum DepositStatus {
   Checking = "Checking",
@@ -19,10 +20,13 @@ export interface DepositProps {
 }
 
 export const Deposit: FC<DepositProps> = (props) => {
-  const { wooSwapEnabled } = props;
+  // const { dst } = props;
 
-  const { connectedChain, wallet, setChain, switchChain, settingChain } =
-    useContext(WalletConnectorContext);
+  const { connectedChain, wallet, setChain, settingChain } = useContext(
+    WalletConnectorContext
+  );
+
+  const { onEnquiry } = useContext(AssetsContext);
 
   const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
@@ -35,28 +39,35 @@ export const Deposit: FC<DepositProps> = (props) => {
     };
   }, [connectedChain]);
 
+  console.log("currentToken", token);
+
   const {
+    dst,
     balance,
     allowance,
     approve,
     deposit,
+    isNativeToken,
     balanceRevalidating,
     fetchBalance,
   } = useDeposit({
     address: token?.address,
+    decimals: token?.decimals,
   });
 
   return (
     <DepositForm
+      dst={dst}
       allowance={allowance}
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
       walletName={wallet?.label}
       switchChain={setChain}
-      // switchChain={switchChain}
       decimals={chains?.decimals ?? 2}
+      displayDecimals={2}
       switchToken={setToken}
       token={token}
+      isNativeToken={isNativeToken}
       minAmount={0}
       maxAmount={balance}
       approve={approve}
@@ -65,6 +76,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       onOk={props.onOk}
       balanceRevalidating={balanceRevalidating}
       settingChain={settingChain}
+      onEnquiry={onEnquiry}
     />
   );
 };

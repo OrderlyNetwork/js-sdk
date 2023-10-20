@@ -5,17 +5,16 @@ import { OrderlyKeyStore } from "./keyStore";
 import { WalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
-import {
-  SignatureDomain,
-  generateAddOrderlyKeyMessage,
-  generateRegisterAccountMessage,
-  generateSettleMessage,
-  getDomain,
-} from "./utils";
+import { SignatureDomain, calculateStringHash, parseAccountId } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
 import { Assets } from "./assets";
+import {
+  generateAddOrderlyKeyMessage,
+  generateRegisterAccountMessage,
+  generateSettleMessage,
+} from "./helper";
 
 export type AccountStatus =
   | "NotConnected"
@@ -144,16 +143,6 @@ export class Account {
 
     return await this._checkAccount(address);
   }
-
-  // subscribe the account state change
-  // get state$(): BehaviorSubject<AccountState> {
-  //   return this._state$;
-  // }
-
-  // public get select(): EventEmitter {
-  //   return this._ee;
-  // }
-
   get stateValue(): AccountState {
     // return this._state$.getValue();
     return this._state;
@@ -162,6 +151,16 @@ export class Account {
   get accountId(): string | undefined {
     const state = this.stateValue;
     return state.accountId;
+  }
+
+  get accountIdHashStr(): string | undefined {
+    if (!this.address) {
+      throw new Error("address is error");
+    }
+    if (!this.configStore.get("brokerId")) {
+      throw new Error("brokerId is undefined");
+    }
+    return parseAccountId(this.address, this.configStore.get("brokerId"));
   }
 
   get address(): string | undefined {

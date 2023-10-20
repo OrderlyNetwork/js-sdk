@@ -67,7 +67,7 @@ export declare namespace API {
     base_imr: number;
   }
 
-  export interface TokenInfo {
+  export interface TokenItem {
     token: string;
     token_hash: string;
     decimals: number;
@@ -204,6 +204,7 @@ export declare namespace API {
     dexs: string[];
     network_infos: NetworkInfos;
     token_infos: TokenInfo[];
+    // nativeToken
   }
 
   export interface NetworkInfos {
@@ -213,6 +214,7 @@ export declare namespace API {
     currency_symbol: string;
     bridge_enable: boolean;
     mainnet: boolean;
+    est_txn_mins: number;
     explorer_base_url: string;
   }
 
@@ -221,6 +223,7 @@ export declare namespace API {
     symbol: string;
     decimals: number;
     swap_enable: boolean;
+    woofi_dex_precision: number;
   }
 
   export interface Chain {

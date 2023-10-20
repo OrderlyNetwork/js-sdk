@@ -1,5 +1,54 @@
 # examples
 
+## 0.1.27
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.58
+  - @orderly.network/hooks@0.0.59
+  - @orderly.network/core@0.0.58
+
+## 0.1.26
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.57
+  - @orderly.network/hooks@0.0.58
+  - @orderly.network/core@0.0.57
+
+## 0.1.25
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.56
+  - @orderly.network/hooks@0.0.57
+  - @orderly.network/core@0.0.56
+
+## 0.1.24
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.55
+  - @orderly.network/hooks@0.0.56
+  - @orderly.network/core@0.0.55
+
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/components@0.0.54
+  - @orderly.network/hooks@0.0.55
+  - @orderly.network/core@0.0.54
+
 ## 0.1.22
 
 ### Patch Changes

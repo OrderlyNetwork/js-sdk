@@ -35,7 +35,16 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="py-3 px-[2px]">
-            <Deposit onOk={props.onOk} />
+            <Deposit
+              onOk={props.onOk}
+              dst={{
+                chainId: 0,
+                address: "",
+                decimals: 0,
+                symbol: "",
+                network: "",
+              }}
+            />
           </div>
         </TabPane>
         <TabPane

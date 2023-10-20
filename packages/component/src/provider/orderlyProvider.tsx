@@ -85,32 +85,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     disconnect,
     wallet: currentWallet,
     setChain,
+    chains,
   } = useContext(WalletConnectorContext);
 
   // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
-
-  const testChains = useMemo(() => {
-    return [
-      {
-        name: "Arbitrum Goerli",
-        public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
-        chain_id: 421613,
-        currency_symbol: "ETH",
-        bridge_enable: true,
-        mainnet: false,
-        explorer_base_url: "https://goerli.arbiscan.io/",
-      },
-      {
-        chain_id: 43113,
-      },
-      {
-        chain_id: 84531,
-      },
-      {
-        chain_id: 8453,
-      },
-    ];
-  }, []);
 
   // console.log("testChains", testChains);
 
@@ -119,8 +97,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     IpNotSupport: false,
     NetworkError: false,
   });
-
-  // console.log("👏 app ready >>>", ready);
 
   useEffect(() => {
     let account = SimpleDI.get<Account>(Account.instanceName);
@@ -137,6 +113,8 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
   }, []);
 
+  console.log("chains*****", chains);
+
   const apiBaseUrl = useMemo<string>(() => {
     return configStore.get("apiBaseUrl");
   }, [configStore]);
@@ -145,23 +123,23 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }, [configStore]);
 
   const checkChainId = useCallback(
-    (chainId: number): boolean => {
-      console.log("*****", chainId, testChains);
-      if (!chainId || !testChains) {
+    (chainId: string): boolean => {
+      console.log("*****", chainId, chains);
+      if (!chainId || !chains) {
         return false;
       }
 
-      if (typeof chainId !== "number") {
-        chainId = parseInt(chainId);
+      if (typeof chainId === "number") {
+        chainId = `0x${Number(chainId).toString(16)}`;
       }
 
-      const isSupport = testChains.some(
-        (item: API.NetworkInfos) => item.chain_id === chainId
+      const isSupport = chains.some(
+        (item: API.NetworkInfos) => item.id === chainId
       );
 
       return isSupport;
     },
-    [testChains]
+    [chains]
   );
 
   const _onWalletConnect = useCallback(async (): Promise<any> => {
@@ -287,7 +265,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
     // }
     // }, [ready, currentWallet]);
-  }, [currentAddress, currentChainId, testChains]);
+  }, [currentAddress, currentChainId, chains]);
 
   // limit toast count
   useEffect(() => {

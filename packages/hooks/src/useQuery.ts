@@ -27,8 +27,6 @@ export const useQuery = <T>(
     throw new Error("please add OrderlyProvider to your app");
   }
 
-  // query = Array.isArray(query) ? [...query,] : [query];
-
   // @ts-ignore
   return useSWR<T>(
     // `${apiBaseUrl}${query}`,

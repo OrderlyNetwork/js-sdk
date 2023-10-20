@@ -23,5 +23,11 @@ module.exports = [
         token: "ETH",
         rpcUrl: "https://base-mainnet.diamondswap.org/rpc",
       },
+      {
+        id: 42161,
+        label: "Arbitrum One",
+        token: "ETH",
+        rpcUrl: "https://arbitrum.llamarpc.com",
+      },
 
 ];

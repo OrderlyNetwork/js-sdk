@@ -17,7 +17,7 @@ export const useTokenInfo = () => {
         for (let index = 0; index < data.rows.length; index++) {
           const item = data.rows[index];
 
-          obj[item.token] = item;
+          // obj[item.token] = item;
         }
 
         return obj;

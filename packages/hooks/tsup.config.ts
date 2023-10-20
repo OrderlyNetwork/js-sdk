@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm", "cjs"],
-  target: "es6",
+  target: "ES2020",
   splitting: false,
   sourcemap: true,
   treeshake: true,

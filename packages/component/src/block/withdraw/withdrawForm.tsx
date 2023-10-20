@@ -172,12 +172,13 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     <>
       <div className="flex items-center py-2">
         <div className="flex-1">Your WOOFi DEX Wallet</div>
-        <Coin name="WOO" />
+        <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <QuantityInput
         tokens={[]}
         token={{
           symbol: "USDC",
+          decimals: 6,
         }}
         decimals={decimals}
         status={inputStatus}
@@ -189,6 +190,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         onValueChange={onValueChange}
         maxAmount={maxAmount}
         hintMessage={hintMessage}
+        markPrice={1}
       />
       <UnsettledInfo unsettledPnL={unsettledPnL} />
       <Divider className={"py-3"}>
@@ -205,7 +207,14 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <div className={"py-2"}>
         <WalletPicker address={address} chain={chainInfo} />
       </div>
-      <TokenQtyInput amount={quantity} fee={fee} />
+      <TokenQtyInput
+        amount={quantity}
+        fee={fee}
+        token={{
+          symbol: "USDC",
+          decimals: 6,
+        }}
+      />
 
       <Summary fee={fee} />
 

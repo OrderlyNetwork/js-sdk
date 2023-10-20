@@ -1,11 +1,10 @@
 import { type API } from "@orderly.network/types";
-import { useCallback, useContext, useMemo, useRef } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
-import { ChainConfig } from "@orderly.network/types";
-import { chainsMap } from "@orderly.network/types";
-import { prop } from "ramda";
+import { mergeDeepLeft, prop } from "ramda";
+import { nativeTokenAddress } from "../woo/constants";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -19,11 +18,18 @@ export const useChains = (
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { filter, pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore } = useContext(OrderlyContext);
+  const { configStore, networkId: envNetworkId } = useContext(OrderlyContext);
 
   const field = options?.pick;
 
-  const map = useRef(new Map<number, API.Chain>());
+  const map = useRef(
+    new Map<
+      number,
+      API.Chain & {
+        nativeToken?: API.TokenInfo;
+      }
+    >()
+  );
 
   const { data, error: swapSupportError } = useSWR<any>(
     () =>
@@ -33,22 +39,30 @@ export const useChains = (
     // `${configStore.get("swapSupportApiUrl")}/swap_support`,
     (url) => fetch(url).then((res) => res.json()),
     {
+      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       ...swrOptions,
     }
   );
 
-  const { data: orderlyChains, error: tokenError } =
-    useQuery<API.Chain[]>("/v1/public/token");
+  const { data: orderlyChains, error: tokenError } = useQuery<API.Chain[]>(
+    "/v1/public/token",
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 
   // console.log(orderlyChains);
 
   const chains = useMemo(() => {
     if (!orderlyChains) return undefined;
 
-    const orderlyChainsArr: API.Chain[] = [];
+    let orderlyChainsArr: API.Chain[] = [];
     const orderlyChainIds = new Set<number>();
+    // const orderlyChainsMap = new Map<number, API.Chain>();
 
     orderlyChains.forEach((item) => {
       item.chain_details.forEach((chain: any) => {
@@ -58,12 +72,9 @@ export const useChains = (
 
         const _chain: any = {
           network_infos: {
-            // name: chainInfo?.chainName ?? "--",
             name: chain.chain_name ?? "--",
             // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
             chain_id: chainId,
-            // decimals: chain.decimals,
-            // contract_address: chain.contract_address,
             bridgeless: true,
           },
           token_infos: [
@@ -81,7 +92,8 @@ export const useChains = (
 
         map.current.set(chainId, _chain);
 
-        orderlyChainsArr.push(field ? _chain[field] : _chain);
+        // orderlyChainsArr.push(field ? _chain[field] : _chain);
+        orderlyChainsArr.push(_chain);
       });
     });
 
@@ -95,10 +107,36 @@ export const useChains = (
       let mainnetArr: API.Chain[] = [];
 
       Object.keys(data.data).forEach((key) => {
-        if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
+        // if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
+
+        const chain = data.data[key];
+
+        if (orderlyChainIds.has(chain.network_infos.chain_id)) {
+          // 合并orderlys chain & wooSwap chains
+          //@ts-ignore
+          orderlyChainsArr = orderlyChainsArr.map((item) => {
+            if (item.network_infos.chain_id === chain.network_infos.chain_id) {
+              // return mergeDeepLeft(item, chain);
+              const mergedChain = {
+                ...item,
+                network_infos: {
+                  ...item.network_infos,
+                  ...chain.network_infos,
+                },
+                token_infos: chain.token_infos,
+              };
+
+              map.current.set(chain.network_infos.chain_id, mergedChain);
+            }
+
+            return item;
+          });
+
+          return;
+        }
 
         const item = {
-          ...data.data[key],
+          ...chain,
           name: key,
         };
 
@@ -111,15 +149,26 @@ export const useChains = (
         }
 
         if (item.network_infos.mainnet) {
-          mainnetArr.push(field ? item[field] : item);
+          mainnetArr.push(item);
         } else {
-          testnetArr.push(field ? item[field] : item);
+          testnetArr.push(item);
         }
       });
 
       if (orderlyChainIds.size > 0) {
-        testnetArr = [...orderlyChainsArr, ...testnetArr];
+        if (envNetworkId === "testnet") {
+          testnetArr = [...orderlyChainsArr, ...testnetArr];
+        } else {
+          mainnetArr = [...orderlyChainsArr, ...mainnetArr];
+        }
         // mainnetArr = mainnetArr.concat(orderlyChainsArr);
+      }
+
+      if (!!field) {
+        //@ts-ignore
+        testnetArr = testnetArr.map((item) => item[field]);
+        //@ts-ignore
+        mainnetArr = mainnetArr.map((item) => item[field]);
       }
 
       if (networkId === "mainnet") {
@@ -141,6 +190,12 @@ export const useChains = (
     (chainId: number, field?: string) => {
       const chain = map.current.get(chainId);
 
+      if (chain) {
+        chain.nativeToken = chain.token_infos?.find(
+          (item) => item.address === nativeTokenAddress
+        );
+      }
+
       if (typeof field === "string") {
         return prop(field, chain);
       }
@@ -150,5 +205,22 @@ export const useChains = (
     [chains, map.current]
   );
 
-  return [chains, { findByChainId, error: swapSupportError || tokenError }];
+  // const findNativeTokenByChainId = useCallback(
+  //   (chainId: number): API.TokenInfo | undefined => {
+  //     const chain = findByChainId(chainId);
+  //     if (!chain) return;
+  //     console.log("findNativeTokenByChainId", chain);
+  //   },
+  //   [chains]
+  // );
+
+  return [
+    chains,
+    {
+      findByChainId,
+      // findNativeTokenByChainId,
+      error: swapSupportError || tokenError,
+      // nativeToken,
+    },
+  ];
 };

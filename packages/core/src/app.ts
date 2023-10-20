@@ -2,7 +2,7 @@ import { Account } from "./account";
 import { Assets } from "./assets";
 
 export class App {
-  // state$ = new AsyncSubject();
+
 
   private prepare = ["symbolInfo", "clientInfo"];
 
@@ -17,7 +17,7 @@ export class App {
     // }
   }
 
-  get account(): Account {}
+  //   get account(): Account {}
 
-  get assets(): Assets {}
+  //   get assets(): Assets {}
 }

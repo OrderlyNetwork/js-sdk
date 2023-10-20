@@ -1,16 +1,19 @@
+import { SlippageDialog } from "@/block/swap";
 import { Pencil } from "lucide-react";
 import { FC } from "react";
 
-interface SlippageSettingProps {}
+interface SlippageSettingProps {
+  slippage: number;
+  onSlippageChange?: (slippage: number) => void;
+}
 
 export const SlippageSetting: FC<SlippageSettingProps> = (props) => {
   return (
-    <div
-      className={"flex items-center gap-2"}
-      //   onClick={() => props.onSlippageChange?.(1)}
-    >
-      <span>Slippage : 1%</span>
-      <Pencil size={14} />
-    </div>
+    <SlippageDialog value={props.slippage} onConfirm={props.onSlippageChange}>
+      <div className={"flex items-center gap-2 cursor-pointer"}>
+        <span>{`Slippage : ${props.slippage}%`}</span>
+        <Pencil size={14} />
+      </div>
+    </SlippageDialog>
   );
 };

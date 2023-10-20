@@ -81,11 +81,7 @@ function request(url, options) {
     }));
     if (response.ok) {
       const res = yield response.json();
-      if (res.success) {
-        return res;
-      } else {
-        throw new Error(res.message);
-      }
+      return res;
     }
     throw new Error(response.statusText);
   });

@@ -4,7 +4,7 @@ export interface WalletAdapter {
   get chainId(): number;
   get addresses(): string;
   parseUnits: (amount: string) => string;
-  fromUnits: (amount: string) => string;
+  formatUnits: (amount: string) => string;
   // getBalance: (address: string) => Promise<any>;
   // deposit: (from: string, to: string, amount: string) => Promise<any>;
   send: (
@@ -27,6 +27,9 @@ export interface WalletAdapter {
       abi: any;
     }
   ): Promise<any>;
+
+  on(eventName: any, listener: any): void;
+  off(eventName: any, listener: any): void;
 }
 
 export type WalletAdapterOptions = {

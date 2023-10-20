@@ -5,7 +5,7 @@ import { FC, useCallback, useState } from "react";
 interface ApproveButtonProps {
   onApprove?: () => Promise<any>;
   onDeposit: () => Promise<any>;
-  allowance: string;
+  allowance: number;
   maxQuantity: string;
   quantity: string;
   submitting: boolean;
@@ -36,7 +36,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       });
   }, [approveLoading, allowance, quantity]);
 
-  if (Number(allowance) <= 0) {
+  if (allowance <= 0) {
     return (
       <Button fullWidth loading={approveLoading} onClick={onClick}>
         Approve USDC
@@ -44,10 +44,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     );
   }
 
-  if (
-    Number(allowance) < Number(quantity) &&
-    Number(quantity) <= Number(maxQuantity)
-  ) {
+  if (allowance < Number(quantity) && Number(quantity) <= Number(maxQuantity)) {
     return (
       <Button fullWidth loading={approveLoading} onClick={onClick}>
         increase USDC authorized amount

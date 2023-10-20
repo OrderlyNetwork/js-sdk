@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Deposit } from ".";
 import { usePreLoadData } from "@orderly.network/hooks";
+import { AssetsProvider } from "@/provider/assetsProvider";
 
 import React from "react";
 
@@ -13,6 +14,7 @@ const meta: Meta<typeof Deposit> = {
     // onDeposit: { action: "onDeposit" },
     // onConnectWallet: { action: "onConnectWallet" },
   },
+  args: {},
 };
 
 export default meta;
@@ -20,18 +22,18 @@ export default meta;
 type Story = StoryObj<typeof Deposit>;
 
 export const Default: Story = {
-  args: {},
-};
-
-export const NotConnected: Story = {
-  args: {},
+  // args: {},
 };
 
 export const WithHooks: Story = {
-  render: () => {
+  render: (args) => {
     const { error, done } = usePreLoadData();
     console.log({ error, done });
     if (!done) return <div>loading</div>;
-    return <Deposit />;
+    return (
+      <AssetsProvider>
+        <Deposit {...args} />
+      </AssetsProvider>
+    );
   },
 };

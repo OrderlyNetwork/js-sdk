@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
-import { useTokenInfo } from "./useTokenInfo";
 
 import { compose, head } from "ramda";
 import {

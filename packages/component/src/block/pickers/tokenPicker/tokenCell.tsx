@@ -1,5 +1,6 @@
 import { NetworkImage } from "@/icon";
 import { Spinner } from "@/spinner";
+import { Numeral } from "@/text";
 import { API } from "@orderly.network/types";
 import { FC, useEffect, useState } from "react";
 
@@ -49,7 +50,13 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         </div>
       </div>
       <div className="flex-1 flex items-center">
-        {loading ? <Spinner size={"small"} /> : <span>{balance}</span>}
+        {loading ? (
+          <Spinner size={"small"} />
+        ) : (
+          <Numeral precision={token.woofi_dex_precision} padding={false}>
+            {balance}
+          </Numeral>
+        )}
       </div>
     </div>
   );

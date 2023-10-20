@@ -4,13 +4,28 @@ import { create } from "@/modal/modalHelper";
 import { Swap, SwapProps } from "./swap";
 
 export const SwapDialog = create<SwapProps>((props) => {
-  const { visible, onOpenChange } = useModal();
+  const { visible, onOpenChange, hide, resolve, reject } = useModal();
+  const onComplete = () => {
+    resolve();
+    hide();
+  };
   return (
-    <Dialog onOpenChange={onOpenChange} open={visible}>
-      <DialogContent>
+    <Dialog
+      onOpenChange={(visible: boolean) => {
+        if (!visible) {
+          reject();
+        }
+        onOpenChange(visible);
+      }}
+      open={visible}
+    >
+      <DialogContent
+        onEscapeKeyDown={(event) => event.preventDefault()}
+        onPointerDownOutside={(event) => event.preventDefault()}
+      >
         <DialogHeader>Review swap details</DialogHeader>
         <DialogBody>
-          <Swap {...props} />
+          <Swap {...props} onComplete={onComplete} />
         </DialogBody>
       </DialogContent>
     </Dialog>

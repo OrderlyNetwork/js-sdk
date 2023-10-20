@@ -28,3 +28,5 @@ export { Account, type AccountState } from "./account";
 export * from "./configStore";
 
 export * from "./wallet";
+
+export * as utils from "./utils";

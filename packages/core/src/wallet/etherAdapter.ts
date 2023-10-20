@@ -23,19 +23,12 @@ export class EtherAdapter implements WalletAdapter {
     this._address = options.address;
   }
   parseUnits(amount: string) {
-    // throw new Error("Method not implemented.");
-
     return ethers.parseUnits(amount, 6).toString();
   }
-  fromUnits(amount: string) {
+  formatUnits(amount: string) {
     return ethers.formatUnits(amount, 6);
   }
   getBalance(userAddress: string): Promise<any> {
-    // const contract = new ethers.Contract(
-    //   contractId,
-    //   options.abi,
-    //   this.provider
-    // );
     console.log("*********", userAddress);
     // return contract.balanceOf(userAddress);
     return this.provider!.getBalance(userAddress).then(
@@ -99,5 +92,13 @@ export class EtherAdapter implements WalletAdapter {
     const recovered = ethers.verifyTypedData(domain, types, message, signature);
 
     console.log("recovered", recovered);
+  }
+
+  on(eventName: any, listener: any): void {
+    this.provider?.on(eventName, listener);
+  }
+
+  off(eventName: any, listener: any): void {
+    this.provider?.off(eventName, listener);
   }
 }

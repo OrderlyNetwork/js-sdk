@@ -25,7 +25,7 @@ export class MemoryConfigStore implements ConfigStore {
       ["privateWsUrl", "wss://dev-ws-private-v2.orderly.org"],
       // ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
-      ["swapSupportApiUrl", "https://woofi-api.mer1in.com"],
+      ["swapSupportApiUrl", "https://fi-api.woo.org"],
       ["brokerId", "woofi_dex"],
       ["env", "dev-evm"],
     ]);

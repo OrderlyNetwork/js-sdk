@@ -8,6 +8,7 @@ import {
 import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { Decimal } from "@orderly.network/utils";
+import { parseNumber } from "@/utils/num";
 
 export type NumeralRule = "percentages" | "price" | "human";
 
@@ -16,7 +17,7 @@ export interface NumeralProps {
 
   /**
    * 小数点后保留位数，默认4位
-   * @default 4
+   * @default 2
    */
 
   precision?: number;
@@ -41,7 +42,12 @@ export interface NumeralProps {
   surfix?: React.ReactNode;
   prefix?: React.ReactNode;
 
+  unit?: string;
+  cureency?: string;
+
   visible?: boolean;
+  // 是否需要补齐小数点后的0
+  padding?: boolean;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -59,7 +65,10 @@ export const Numeral: FC<NumeralProps> = (props) => {
     surfix,
     prefix,
     visible,
-    truncate = false,
+    unit,
+    cureency,
+    truncate = "floor",
+    padding = true,
   } = props;
   // TODO: check precision
 
@@ -68,34 +77,13 @@ export const Numeral: FC<NumeralProps> = (props) => {
   const child = useMemo(() => {
     if (typeof visible !== "undefined" && !visible) return "*****";
 
-    if (Number.isNaN(num)) {
-      return "--";
-    }
-
-    // console.log("!!!!!!!!!!!!!!!!!!!", num, props.precision);
-
-    const dp =
-      typeof precision !== "undefined"
-        ? precision
-        : tick
-        ? getPrecisionByNumber(tick)
-        : 2;
-
-    if (rule === "human") {
-      return numberToHumanStyle(num, dp);
-    }
-
-    const d = new Decimal(num);
-    if (rule === "percentages") {
-      return `${d.mul(100).toFixed(2)}%`;
-    }
-
-    let truncatedNum = d.toFixed(dp);
-
-    if (rule === "price") {
-      return commify(truncatedNum);
-    }
-    return truncatedNum;
+    return parseNumber(num, {
+      rule,
+      precision,
+      tick,
+      truncate,
+      padding,
+    });
   }, [num, precision, visible]);
 
   const colorClassName = useMemo(() => {
@@ -118,17 +106,26 @@ export const Numeral: FC<NumeralProps> = (props) => {
   }, [coloring, props.children, props.visible]);
 
   const childWithUnit = useMemo(() => {
-    if (typeof surfix === "undefined" && typeof prefix === "undefined")
+    if (
+      typeof surfix === "undefined" &&
+      typeof prefix === "undefined" &&
+      typeof unit === "undefined" &&
+      typeof cureency === "undefined"
+    ) {
       return child;
-    // return `${child} ${unit}`;
+    }
+
+    const surfixEle = surfix ?? unit ? <span>{unit}</span> : undefined;
+    const prefixEle = prefix ?? cureency ? <span>{cureency}</span> : undefined;
+
     return (
       <span className="flex gap-1">
-        {prefix}
+        {prefixEle}
         {child}
-        {surfix}
+        {surfixEle}
       </span>
     );
-  }, [child, surfix]);
+  }, [child, surfix, unit, prefix]);
 
   if (!colorClassName && !props.className) {
     return <>{childWithUnit}</>;

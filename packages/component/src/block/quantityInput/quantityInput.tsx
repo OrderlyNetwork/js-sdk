@@ -9,6 +9,8 @@ import { Decimal } from "@orderly.network/utils";
 import { TokenSelect } from "./tokenSelect";
 import { type API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
+import { parseNumber } from "@/utils/num";
+import { MarkPrices } from "../deposit/sections/misc";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -18,6 +20,9 @@ export interface QuantityInputProps {
   token?: API.TokenInfo;
   quantity?: string;
   decimals: number;
+  // markPrices: MarkPrices;
+  markPrice: number;
+
   onTokenChange?: (token: API.TokenInfo) => void;
   // onMaxClick?: () => void;
   onValueChange?: (value: { value: string; token: string }) => void;
@@ -32,11 +37,15 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
-    return new Decimal(props.quantity || 0)
-      .mul(1)
-      .todp(props.decimals)
-      .toString();
-  }, [props.quantity, props.decimals]);
+    return (
+      new Decimal(props.quantity || 0)
+        .mul(props.markPrice)
+        // .todp(props.decimals)
+        .todp(2)
+        .toFixed(2)
+        .toString()
+    );
+  }, [props.quantity, props.decimals, props.markPrice]);
 
   return (
     <>
@@ -102,9 +111,12 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         >
           <span>{`$${amount}`}</span>
           <div className="flex items-center space-x-2">
-            <span>{`Available: ${props.maxAmount ?? "-"} ${
-              props.token?.symbol ?? ""
-            }`}</span>
+            <span>{`Available: ${
+              parseNumber(props.maxAmount ?? 0, {
+                precision: props.token?.woofi_dex_precision ?? 2,
+                rule: "price",
+              }) ?? "-"
+            } ${props.token?.symbol ?? ""}`}</span>
             {props.balanceRevalidating && <Spinner size={"small"} />}
           </div>
         </div>

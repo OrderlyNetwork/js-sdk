@@ -1,70 +1,76 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { StatusTile } from "./statusTile";
 import { Divider } from "@/divider";
 import Button from "@/button";
+import { SwapProcessStatusStatus } from "./misc";
 
 interface SwapProcessStatusProps {
-  state: SwapProcessStatusState;
-}
-
-export enum SwapProcessStatusState {
-  Bridging = 0,
-  BridgeFialed = 1,
-  Depositing = 2,
-  DepositFailed = 3,
-  Done = 4,
+  status: SwapProcessStatusStatus;
+  tx: any;
+  chainInfo: any;
+  onComplete?: () => void;
 }
 
 export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
-  const { state } = props;
+  const { status, tx, chainInfo } = props;
 
-  console.log({ state });
+  const statusUrl = useMemo(() => {
+    if (status < SwapProcessStatusStatus.Depositing || !tx) {
+      return;
+    }
+    return `${chainInfo.explorer_base_url}/tx/${tx.hash}`;
+  }, [status, tx]);
+
+  const getDepositStatus = (status: SwapProcessStatusStatus) => {
+    if (status < SwapProcessStatusStatus.Depositing) {
+      return "disabled";
+    }
+    if (status === SwapProcessStatusStatus.Depositing) {
+      return "pending";
+    }
+    if (status === SwapProcessStatusStatus.DepositFailed) {
+      return "failed";
+    }
+    return "success";
+  };
 
   return (
     <>
       <div className="py-[24px]">
         <div className="bg-base-300 rounded py-3 px-5">
           <StatusTile
-            state={
-              state > SwapProcessStatusState.Bridging
-                ? "success"
-                : state === SwapProcessStatusState.Bridging
-                ? "pending"
-                : "disabled"
-            }
-            title={"Bridging"}
-            description={"Bridge to Arbitrum via Stargate"}
-            index={1}
-          />
-          <StatusTile
-            state={
-              state < SwapProcessStatusState.Depositing
-                ? "disabled"
-                : state === SwapProcessStatusState.Depositing
-                ? "failed"
-                : "success"
-            }
+            state={getDepositStatus(status)}
             title={"Deposit"}
             description={"Deposit to WOOFi Pro"}
-            index={2}
+            index={1}
           />
           <Divider />
           <div className="flex justify-center mt-3">
-            <a href="" className="text-sm text-primary-light">
+            <button
+              className="text-sm text-primary-light disabled:text-base-contrast/10"
+              disabled={!statusUrl}
+              onClick={() => {
+                console.log("statusUrl", statusUrl);
+                (location as any).href = statusUrl;
+              }}
+            >
               View Status
-            </a>
+            </button>
           </div>
         </div>
       </div>
-      <Button fullWidth disabled>
+      {status === SwapProcessStatusStatus.DepositFailed && (
+        <div className="pb-7 text-danger text-center text-sm">
+          Failed to deposit, please try again later.
+        </div>
+      )}
+      <Button
+        fullWidth
+        disabled={status < SwapProcessStatusStatus.Done}
+        onClick={() => props.onComplete?.()}
+      >
         OK
       </Button>
-      <div className="flex justify-center text-sm gap-2 mt-3">
-        <span className="text-base-contrast/50">Need help?</span>
-        <a href="" className="text-primary-light">
-          View FAQs
-        </a>
-      </div>
     </>
   );
 };

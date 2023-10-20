@@ -1,5 +1,4 @@
 import { cn } from "@/utils/css";
-// import { cva } from "class-variance-authority";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { Size } from "./types";
 import { getSize } from "./utils";
@@ -27,6 +26,7 @@ export interface NetworkImageProps {
 
 // TODO: 添加icon生成adpater
 export const NetworkImage: FC<NetworkImageProps> = (props) => {
+  const { rounded = true } = props;
   const [url, setUrl] = React.useState<string>();
   const [loading, setLoading] = useState(false);
 
@@ -71,7 +71,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
           name = arr[1];
         }
         // coin logos
-        img.src = `https://oss.woo.network/static/symbol_logo/${name!.toUpperCase()}.png`;
+        img.src = `https://oss.woo.network/static/symbol_logo/${name}.png`;
       }
       if (props.type === "chain") {
         img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
@@ -109,7 +109,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
       className={cn(
         "inline-block overflow-hidden",
         (isPlaceholder || loading) && "bg-slate-200",
-        props.rounded && "rounded-full",
+        rounded && "rounded-full",
         loading && "animate-pulse",
         props.className
       )}

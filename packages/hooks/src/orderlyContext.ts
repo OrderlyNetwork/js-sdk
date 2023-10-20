@@ -15,7 +15,6 @@ export type AppStateErrors = {
 };
 export interface OrderlyContextState extends OrderlyAppConfig {
   // coin cion generator
-
   // ws: WebSocketAdpater;
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
   apiBaseUrl: string;
@@ -31,13 +30,10 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   onWalletConnect?: () => Promise<any>;
   onWalletDisconnect?: () => Promise<any>;
   onSetChain?: (chainId: number) => Promise<any>;
-  // account: Account;
-
-  // ready: boolean;
-
-  // onAppTestChange?: (name: string) => void;
 
   errors: AppStateErrors;
+
+  // extraApis:ExtraAPIs
 }
 
 export const OrderlyContext = createContext<OrderlyContextState>({

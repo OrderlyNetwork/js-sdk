@@ -1,6 +1,11 @@
 import { FC, useContext, useMemo } from "react";
 import { WithdrawForm } from "./withdrawForm";
-import { useChain, useWithdraw } from "@orderly.network/hooks";
+import {
+  useChain,
+  useWithdraw,
+  useChains,
+  OrderlyContext,
+} from "@orderly.network/hooks";
 import { WalletConnectorContext } from "@/provider";
 
 export interface WithdrawProps {
@@ -14,7 +19,12 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     WalletConnectorContext
   );
 
+  const { networkId } = useContext<any>(OrderlyContext);
+
   const { chains } = useChain("USDC");
+  // const [orderlyChains] = useChains(networkId, {
+  //   wooSwapEnabled: false,
+  // });
 
   const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
 

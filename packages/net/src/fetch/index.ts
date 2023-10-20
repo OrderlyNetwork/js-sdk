@@ -13,11 +13,12 @@ async function request(url: string, options: RequestInit) {
 
   if (response.ok) {
     const res = await response.json();
-    if (res.success) {
-      return res;
-    } else {
-      throw new Error(res.message);
-    }
+    return res;
+    // if (res.success) {
+    //   return res;
+    // } else {
+    //   throw new Error(res.message);
+    // }
   }
 
   throw new Error(response.statusText);
