@@ -40,8 +40,6 @@ export const Summary: FC<SummaryProps> = (props) => {
     onSlippageChange,
   } = props;
 
-  console.log("summary::::::::", props);
-
   const { from_token: markPrice, native_token: nativeMarkPrice } = markPrices;
 
   const feeElement = useMemo(() => {

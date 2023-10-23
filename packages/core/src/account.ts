@@ -2,7 +2,7 @@ import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore";
 import { OrderlyKeyStore } from "./keyStore";
-import { WalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
+import { IWalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { SignatureDomain, calculateStringHash, parseAccountId } from "./utils";
@@ -40,7 +40,7 @@ export interface AccountState {
 }
 
 /**
- * 账户
+ * Account
  * @example
  * ```ts
  * const account = new Account();
@@ -71,7 +71,7 @@ export class Account {
 
   // private contract: IContract;
 
-  walletClient?: WalletAdapter;
+  walletClient?: IWalletAdapter;
 
   // private config =
 
@@ -87,16 +87,6 @@ export class Account {
     this.assetsManager = new Assets(configStore, contractManger, this);
 
     this._bindEvents();
-  }
-
-  /**
-   * 登录
-   * @param address 钱包地址
-   */
-  login(address: string) {
-    if (!address) throw new Error("address is required");
-
-    // this.wallet = address;
   }
 
   logout() {

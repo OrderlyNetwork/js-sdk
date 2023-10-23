@@ -73,6 +73,9 @@ export interface DepositFormProps {
   deposit: (amount: string) => Promise<any>;
 
   onOk?: (data: any) => void;
+
+  needSwap: boolean;
+  needCrossChain: boolean;
 }
 
 const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
@@ -90,6 +93,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     switchChain,
     onOk,
     isNativeToken,
+    needCrossChain,
+    needSwap,
     // onEnquiry,
   } = props;
 
@@ -98,8 +103,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const [warningMessage, setWarningMessage] = useState<string>("");
 
-  const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
-  const [needSwap, setNeedSwap] = useState<boolean>(false);
+  // const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
+  // const [needSwap, setNeedSwap] = useState<boolean>(false);
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -147,12 +152,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   >(() => {
     if (chain) {
       const _item = findByChainId(chain?.id);
-      console.log("chainInfo", _item);
+
       return _item;
     }
   }, [chain]);
 
-  console.log("------------->>>>>>", props.token, chain, chainInfo);
+  // console.log("------------->>>>>>", props.token, chain, chainInfo);
 
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
@@ -285,7 +290,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const onChainChange = useCallback(
     (chain: API.Chain) => {
-      console.log("switch chain", chain);
       return props
         .switchChain?.({
           chainId: int2hex(Number(chain.network_infos.chain_id)),
@@ -293,8 +297,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           token: chain.network_infos.currency_symbol,
           // name: chain.network_infos.name,
           label: chain.network_infos.name,
-
-          // blockExplorerUrls: chain.network_infos.explorer_base_url,
+          // vaultAddress: chain.network_infos.woofi_dex_cross_chain_router,
         })
         .then(
           () => {
@@ -303,6 +306,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
             setTokens(
               chain?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
             );
+            toast.success("Network switched");
           },
           (error) => {
             // console.log(error)
@@ -347,26 +351,25 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     }
   }, [maxAmount]);
 
-  useEffect(() => {
-    if (!props.token || !chain) return;
-    /// check if need swap
+  // useEffect(() => {
+  //   if (!props.token || !chain) return;
+  //   /// check if need swap
 
-    if (props.token.symbol !== "USDC") {
-      setNeedSwap(true);
-    } else {
-      setNeedSwap(false);
-    }
+  //   if (props.token.symbol !== "USDC") {
+  //     setNeedSwap(true);
+  //   } else {
+  //     setNeedSwap(false);
+  //   }
 
-    if (chain?.id !== dst.chainId) {
-      setNeedCrossChain(true);
-      setNeedSwap(true);
-    } else {
-      setNeedCrossChain(false);
-    }
-  }, [props.token?.symbol, chain?.id, orderlyChains]);
+  //   if (chain?.id !== dst.chainId) {
+  //     setNeedCrossChain(true);
+  //     setNeedSwap(true);
+  //   } else {
+  //     setNeedCrossChain(false);
+  //   }
+  // }, [props.token?.symbol, chain?.id, orderlyChains]);
 
   const enquirySuccessHandle = (res: any) => {
-    console.log("enquirySuccessHandle", res);
     if (res.mark_prices) {
       // setMarkPrice(res.mark_price);
       const fee = needCrossChain ? res.fees_from.total : res.fees_from;
@@ -453,7 +456,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     return enquiry()
       .then(enquirySuccessHandle, enquiryErrorHandle)
       .finally(() => {
-        console.log("enquiry finished!!!!!!!!!");
         queryStop();
       });
   }, 300);
@@ -574,6 +576,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         needCrossChain={needCrossChain}
         needSwap={needSwap}
         warningMessage={warningMessage}
+        onChainChange={onChainChange}
+        currentChain={chain}
       />
       <ActionButton
         chain={chain}

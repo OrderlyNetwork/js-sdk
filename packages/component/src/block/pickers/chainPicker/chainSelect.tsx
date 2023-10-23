@@ -41,8 +41,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     return findByChainId(value.id, "network_infos");
   }, [props.value, chains]);
 
-  console.log({ currentChain });
-
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
       // mainChains: chains?.mainnet,

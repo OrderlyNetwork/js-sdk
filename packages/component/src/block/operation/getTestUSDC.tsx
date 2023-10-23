@@ -1,6 +1,11 @@
 import { X } from "lucide-react";
-import { useMutation, useAccount, useConfig } from "@orderly.network/hooks";
-import { useCallback, useEffect, useState } from "react";
+import {
+  useMutation,
+  useAccount,
+  useConfig,
+  OrderlyContext,
+} from "@orderly.network/hooks";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { toast } from "@/toast";
@@ -9,6 +14,7 @@ const localStorageItem = "Orderly_GetTestUSDC";
 
 export const GetTestUSDC = () => {
   const { account, state } = useAccount();
+  const { configStore } = useContext<any>(OrderlyContext);
   const [show, setShow] = useState(false);
   const config = useConfig();
 
@@ -41,7 +47,7 @@ export const GetTestUSDC = () => {
       getTestUSDC({
         chain_id: account.wallet.chainId.toString(),
         user_address: state.address,
-        broker_id: "woofi_dex",
+        broker_id: configStore.get("brokerId"),
       })
         .then(
           (res: any) => {

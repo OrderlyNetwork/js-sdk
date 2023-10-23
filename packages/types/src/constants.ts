@@ -17,3 +17,5 @@ export enum ExchangeStatusEnum {
   Normal = 0,
   Maintain = 1,
 }
+
+export type NetworkId = "testnet" | "mainnet";

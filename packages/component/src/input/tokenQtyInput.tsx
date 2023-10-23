@@ -23,8 +23,6 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
   const { onChange, onValueChange, onTokenChange, token, loading, ...rest } =
     props;
 
-  console.log("tokenQtyInput.tsx:  ", props);
-
   const amount = useMemo(() => {
     if (!props.amount) return "";
     const num = Number(props.amount);

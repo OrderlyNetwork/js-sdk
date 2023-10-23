@@ -64,6 +64,7 @@ export interface InputProps
   onClean?: () => void;
   fixClassName?: string;
   helpText?: string;
+  loading?: boolean;
   //
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
@@ -82,6 +83,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       error,
       onClean,
       helpText,
+      loading,
       ...props
     },
     ref

@@ -44,7 +44,7 @@ export const Default: Story = {
     const { symbol } = globals;
     const appState = useAppState();
     return (
-      <Page systemState={appState.systemState}>
+      <Page >
         <TradingPage {...args} symbol={symbol} />
       </Page>
     );

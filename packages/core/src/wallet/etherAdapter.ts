@@ -1,5 +1,5 @@
-import { WalletAdapter, WalletAdapterOptions } from "./adapter";
-import { BrowserProvider, ethers, getAddress } from "ethers";
+import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
+import { BrowserProvider, ethers, toNumber } from "ethers";
 import { getParsedEthersError } from "@enzoferey/ethers-error-parser";
 
 export interface EtherAdapterOptions {
@@ -11,7 +11,7 @@ export interface EtherAdapterOptions {
   chain: { id: string };
 }
 
-export class EtherAdapter implements WalletAdapter {
+export class EtherAdapter implements IWalletAdapter {
   private provider?: BrowserProvider;
   private _chainId: number;
   private _address: string;
@@ -22,6 +22,7 @@ export class EtherAdapter implements WalletAdapter {
     this.provider = new BrowserProvider(options.provider, "any");
     this._address = options.address;
   }
+
   parseUnits(amount: string) {
     return ethers.parseUnits(amount, 6).toString();
   }
@@ -54,6 +55,8 @@ export class EtherAdapter implements WalletAdapter {
       abi: any;
     }
   ): Promise<any> {
+    console.log("contract call:::::", address, method, params, options);
+
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
 
@@ -77,6 +80,65 @@ export class EtherAdapter implements WalletAdapter {
     params: Array<any> | Record<string, any>
   ): Promise<any> {
     return await this.provider?.send(method, params);
+  }
+
+  async sendTransaction(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    }
+  ): Promise<ethers.TransactionResponse> {
+    // throw new Error("Method not implemented.");
+
+    const singer = await this.provider?.getSigner();
+    const contract = new ethers.Contract(
+      contractAddress,
+      options.abi,
+      this.provider
+    );
+
+    // contract.interface.getAbiCoder().encode(tx.data);
+    const encodeFunctionData = contract.interface.encodeFunctionData(
+      method,
+      payload.data
+    );
+
+    const tx: ethers.TransactionRequest = {
+      from: payload.from,
+      to: payload.to,
+      data: encodeFunctionData,
+      value: payload.value,
+    };
+
+    // const _gas = contract.estimateGas[method]?.(payload.data);
+
+    // console.log("gas", _gas);
+
+    if (!singer) {
+      throw new Error("singer is not exist");
+    }
+    const gas = await this.estimateGas(tx);
+
+    tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
+    const result = await singer.sendTransaction(tx);
+
+    console.log("result", result);
+
+    return result;
+  }
+
+  private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {
+    const gas = await this.provider!.estimateGas(tx);
+
+    console.log("********** gas ***********", gas);
+    return toNumber(gas);
   }
 
   async signTypedData(address: string, data: any) {

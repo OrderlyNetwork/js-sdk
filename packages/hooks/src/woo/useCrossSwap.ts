@@ -82,16 +82,16 @@ export const useCrossSwap = () => {
     address: string;
     src: {
       fromToken: string;
-      fromAmount: string;
+      fromAmount: bigint;
       bridgeToken: string;
-      minBridgeAmount: string;
+      minBridgeAmount: bigint;
     };
     dst: {
       chainId: string;
       bridgedToken: string;
       toToken: string;
-      minToAmount: string;
-      airdropNativeAmount: string;
+      minToAmount: bigint;
+      airdropNativeAmount: bigint;
     };
   }) => {
     if (!account.walletClient) {
@@ -100,6 +100,7 @@ export const useCrossSwap = () => {
     const { address, src, dst } = inputs;
     if (loading) return;
     start();
+
     const quotoLZFee = await account.walletClient.call(
       "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
       "quoteLayerZeroFee",
@@ -109,18 +110,32 @@ export const useCrossSwap = () => {
       }
     );
 
-    const result = await account.walletClient.call(
+    // const result = await account.walletClient.call(
+    //   "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+    //   "crossSwap",
+    //   [
+    //     account.address,
+    //     src,
+    //     dst,
+    //     dstValutDeposit(),
+    //     {
+    //       value: quotoLZFee[0],
+    //     },
+    //   ],
+    //   {
+    //     abi: woofiDexCrossChainRouterAbi,
+    //   }
+    // );
+
+    const result = await account.walletClient.sendTransaction(
       "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
       "crossSwap",
-      [
-        account.address,
-        src,
-        dst,
-        dstValutDeposit(),
-        {
-          value: quotoLZFee[0],
-        },
-      ],
+      {
+        from: account.address,
+        to: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+        data: [account.address, src, dst, dstValutDeposit()],
+        value: quotoLZFee[0],
+      },
       {
         abi: woofiDexCrossChainRouterAbi,
       }

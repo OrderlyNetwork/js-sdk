@@ -4,15 +4,17 @@ import { SwapMode, SwapProcessStatusStatus } from "./misc";
 import { SwapProcessStatus } from "./swapProcessStatus";
 
 interface Props {
-  status: string;
+  bridgeStatus: string;
+
   message: any;
   tx?: any;
   mode: SwapMode;
   chainInfo?: any;
+  onComplete?: () => void;
 }
 
 export const SwapProcess = (props: Props) => {
-  console.log({ props });
+  // console.log({ props });
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
     props.mode === SwapMode.Cross
@@ -21,30 +23,36 @@ export const SwapProcess = (props: Props) => {
   );
 
   useEffect(() => {
-    if (props.status === "DELIVERED") {
+    if (props.bridgeStatus === "DELIVERED") {
       setStatus(SwapProcessStatusStatus.Depositing);
 
       //TODO: 模拟3s 后状态变更, 发布时需要移除
       setTimeout(() => {
         setStatus(SwapProcessStatusStatus.Done);
-      }, 3000);
+      }, 5000);
     }
 
-    if (props.status === "FAILED") {
+    if (props.bridgeStatus === "FAILED") {
       setStatus(SwapProcessStatusStatus.BridgeFialed);
     }
-  }, [props.status]);
+  }, [props.bridgeStatus]);
 
   //TODO: 模拟3s 后状态变更, 发布时需要移除
   useEffect(() => {
-    setTimeout(() => {
-      setStatus(SwapProcessStatusStatus.Done);
-    }, 3000);
-  }, []);
+    if (!!props.tx && props.mode === SwapMode.Single) {
+      setTimeout(() => {
+        setStatus(SwapProcessStatusStatus.Done);
+      }, 5000);
+    }
+  }, [props.tx]);
 
   if (props.mode === SwapMode.Cross) {
     return (
-      <BridgeAndSwapProcessStatus status={status} message={props.message} />
+      <BridgeAndSwapProcessStatus
+        status={status}
+        message={props.message}
+        onComplete={props.onComplete}
+      />
     );
   }
 
@@ -53,6 +61,7 @@ export const SwapProcess = (props: Props) => {
       status={status}
       tx={props.tx}
       chainInfo={props.chainInfo}
+      onComplete={props.onComplete}
     />
   );
 };

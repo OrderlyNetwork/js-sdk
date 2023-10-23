@@ -7,6 +7,5 @@ export enum SwapProcessStatusStatus {
   BridgeFialed = 1,
   Depositing = 2,
   DepositFailed = 3,
-  // Signature = 4,
-  Done = 5,
+  Done = 4,
 }

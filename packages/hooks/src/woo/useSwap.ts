@@ -280,16 +280,27 @@ export const useSwap = () => {
       if (loading) return;
       start();
 
-      const result = await account.walletClient!.call(
+      // const result = await account.walletClient!.call(
+      //   woofiDexDepositor,
+      //   "swap",
+      //   [account.address, inputs, dstValutDeposit()],
+      //   {
+      //     abi: woofiDexDepositorAbi,
+      //   }
+      // );
+
+      const result = await account.walletClient.sendTransaction(
         woofiDexDepositor,
         "swap",
-        [account.address, inputs, dstValutDeposit()],
+        {
+          from: account.address,
+          to: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+          data: [account.address, inputs, dstValutDeposit()],
+        },
         {
           abi: woofiDexDepositorAbi,
         }
       );
-
-      console.log("swap result::::::", result);
 
       stop();
 

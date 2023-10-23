@@ -9,6 +9,7 @@ export type useDepositOptions = {
   // from address
   address?: string;
   decimals?: number;
+  vaultAddress?: string;
 };
 
 const isNativeTokenChecker = (address: string) =>
@@ -104,13 +105,18 @@ export const useDeposit = (options?: useDepositOptions) => {
     // setBalance(() => balances);
   }, []);
 
-  const fetchAllowance = useCallback(
-    async (address?: string) => {
+  const getAllowance = useCallback(
+    async (address?: string, vaultAddress?: string) => {
+      console.log("getAllowance", address, vaultAddress);
       if (!address) return;
       if (address && isNativeTokenChecker(address)) return;
       if (allowanceRevalidating) return;
       setAllowanceRevalidating(true);
-      const allowance = await account.assetsManager.getAllowance(address);
+
+      const allowance = await account.assetsManager.getAllowance(
+        address,
+        vaultAddress
+      );
 
       console.log("----- refresh allowance -----", allowance);
       setAllowance(() => allowance);
@@ -127,8 +133,8 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     fetchBalance(options?.address);
 
-    fetchAllowance(options?.address);
-  }, [state.status, options?.address]);
+    getAllowance(options?.address, options?.vaultAddress);
+  }, [state.status, options?.address, options?.vaultAddress]);
 
   const approve = useCallback(
     (amount: string | undefined) => {
@@ -136,7 +142,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         throw new Error("address is required");
       }
       return account.assetsManager
-        .approve(options.address, amount)
+        .approve(options.address, amount, options?.vaultAddress)
         .then((result: any) => {
           if (typeof amount !== "undefined") {
             setAllowance((value) => new Decimal(value).add(amount).toString());
@@ -144,7 +150,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           return result;
         });
     },
-    [account, fetchAllowance, options?.address]
+    [account, getAllowance, options?.address, options?.vaultAddress]
   );
 
   const deposit = useCallback(
@@ -158,7 +164,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         return res;
       });
     },
-    [account, fetchBalance, fetchAllowance]
+    [account, fetchBalance, getAllowance]
   );
 
   return {

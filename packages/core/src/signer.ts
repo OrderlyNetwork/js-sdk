@@ -1,5 +1,3 @@
-"use client";
-
 import { OrderlyKeyStore } from "./keyStore";
 import { base64url } from "./utils";
 
@@ -31,7 +29,7 @@ export type SignedMessagePayload = {
  *   method: "GET",
  *   data: {
  *     address: "0x1234567890",
- *     brokerId: "woofi_dex",
+ *     brokerId: "woofi_pro",
  *    },
  *  });
  *  ```

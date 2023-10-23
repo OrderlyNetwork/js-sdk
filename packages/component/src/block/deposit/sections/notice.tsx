@@ -1,15 +1,41 @@
-import { FC } from "react";
+import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
+import { modal } from "@/modal";
+import { OrderlyContext, useChains } from "@orderly.network/hooks";
+import { ChainConfig } from "@orderly.network/types";
+import { FC, useContext } from "react";
 
 interface NoticeProps {
   needCrossChain: boolean;
   needSwap: boolean;
   warningMessage?: string;
+  onChainChange?: (value: any) => void;
+  // onChainIdChange?: (chainId: number) => void;
+  currentChain?: ChainConfig;
 }
 
 export const Notice: FC<NoticeProps> = (props) => {
-  const { needCrossChain, needSwap, warningMessage } = props;
+  const { needCrossChain, needSwap, warningMessage, currentChain } = props;
+  const { networkId } = useContext<any>(OrderlyContext);
+  const [chains, { findByChainId }] = useChains(networkId, {
+    wooSwapEnabled: true,
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
 
-  console.log({ needCrossChain, needSwap, warningMessage });
+  const onOpenPicker = async () => {
+    const result = await modal.show<{ id: number }, any>(ChainDialog, {
+      // mainChains: chains?.mainnet,
+      // testChains: chains?.testnet,
+      // mainChains: chains,
+      testChains: chains,
+      currentChainId: currentChain?.id,
+    });
+
+    const chainInfo = findByChainId(result?.id);
+
+    props?.onChainChange?.(chainInfo);
+  };
 
   if (warningMessage) {
     return (
@@ -23,8 +49,17 @@ export const Notice: FC<NoticeProps> = (props) => {
         <span>
           Please note that cross-chain transaction fees will be charged, or
           explore our supported
-        </span>{" "}
-        <span className="text-primary-light">Bridgeless networks</span>.
+        </span>
+        <a
+          className="text-primary-light px-1 cursor-pointer"
+          onClick={(event) => {
+            event.preventDefault();
+            onOpenPicker();
+          }}
+        >
+          Bridgeless networks
+        </a>
+        .
       </div>
     );
   }

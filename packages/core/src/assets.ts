@@ -187,7 +187,7 @@ export class Assets {
     return this.account.walletClient?.formatUnits(result);
   }
 
-  async getAllowance(address?: string) {
+  async getAllowance(address?: string, vaultAddress?: string) {
     if (!this.account.walletClient) {
       return "0";
     }
@@ -195,7 +195,10 @@ export class Assets {
     const result = await this.account.walletClient?.call(
       address ?? contractAddress.usdcAddress,
       "allowance",
-      [this.account.stateValue.address, contractAddress.vaultAddress],
+      [
+        this.account.stateValue.address,
+        vaultAddress || contractAddress.vaultAddress,
+      ],
       {
         abi: contractAddress.usdcAbi,
       }
@@ -204,7 +207,7 @@ export class Assets {
     return this.account.walletClient?.formatUnits(result);
   }
 
-  async approve(address?: string, amount?: string) {
+  async approve(address?: string, amount?: string, vaultAddress?: string) {
     if (!address) {
       throw new Error("address is required");
     }
@@ -222,7 +225,7 @@ export class Assets {
       // contractAddress.usdcAddress,
       address,
       "approve",
-      [contractAddress.vaultAddress, parsedAmount],
+      [vaultAddress || contractAddress.vaultAddress, parsedAmount],
       {
         abi: contractAddress.usdcAbi,
       }
@@ -278,6 +281,7 @@ export class Assets {
       tokenAmount: this.account.walletClient?.parseUnits(amount),
     };
 
+    // --- call deposit
     const result = await this.account.walletClient?.call(
       contractAddress.vaultAddress,
       "deposit",
@@ -286,6 +290,12 @@ export class Assets {
         abi: contractAddress.vaultAbi,
       }
     );
+
+    // const result = await this.account.walletClient?.sendTransaction({
+    //   from: this.account.stateValue.address,
+    //   to: contractAddress.vaultAddress,
+
+    // });
 
     // console.log("-----*****-----", result);
 

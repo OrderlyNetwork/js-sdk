@@ -16,7 +16,7 @@ export interface NumeralProps {
   rule?: NumeralRule;
 
   /**
-   * 小数点后保留位数，默认4位
+   * 小数点后保留位数，默认2位
    * @default 2
    */
 
@@ -45,8 +45,14 @@ export interface NumeralProps {
   unit?: string;
   cureency?: string;
 
+  /**
+   * 是否显示为*****
+   */
   visible?: boolean;
-  // 是否需要补齐小数点后的0
+  /**
+   * 是否需要补齐小数点后的0
+   * @default true
+   */
   padding?: boolean;
 }
 

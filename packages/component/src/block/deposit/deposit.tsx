@@ -1,9 +1,9 @@
 "use client";
 
-import { FC, useContext, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
-import { useChain, useDeposit } from "@orderly.network/hooks";
+import { useChain, useDeposit, useChains } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
 
@@ -22,6 +22,13 @@ export interface DepositProps {
 export const Deposit: FC<DepositProps> = (props) => {
   // const { dst } = props;
 
+  const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
+  const [needSwap, setNeedSwap] = useState<boolean>(false);
+
+  const [_, { findByChainId }] = useChains("", {
+    wooSwapEnabled: true,
+  });
+
   const { connectedChain, wallet, setChain, settingChain } = useContext(
     WalletConnectorContext
   );
@@ -33,13 +40,34 @@ export const Deposit: FC<DepositProps> = (props) => {
 
   const currentChain = useMemo(() => {
     if (!connectedChain) return null;
+
+    const chainId = parseInt(connectedChain.id);
+    const chain = findByChainId(chainId);
+
     return {
       ...connectedChain,
-      id: parseInt(connectedChain?.id),
+      id: chainId,
+      info: chain,
     };
-  }, [connectedChain]);
+  }, [connectedChain, findByChainId]);
 
-  console.log("currentToken", token);
+  useEffect(() => {
+    if (!token || !currentChain) return;
+    /// check if need swap
+
+    if (token.symbol !== "USDC") {
+      setNeedSwap(true);
+    } else {
+      setNeedSwap(false);
+    }
+
+    if (currentChain?.id !== dst.chainId) {
+      setNeedCrossChain(true);
+      setNeedSwap(true);
+    } else {
+      setNeedCrossChain(false);
+    }
+  }, [token?.symbol, currentChain?.id]);
 
   const {
     dst,
@@ -53,6 +81,11 @@ export const Deposit: FC<DepositProps> = (props) => {
   } = useDeposit({
     address: token?.address,
     decimals: token?.decimals,
+    vaultAddress: needCrossChain
+      ? currentChain?.info.network_infos.woofi_dex_cross_chain_router
+      : needSwap
+      ? currentChain?.info.network_infos.woofi_dex_depositor
+      : undefined,
   });
 
   return (
@@ -63,6 +96,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       chain={currentChain}
       walletName={wallet?.label}
       switchChain={setChain}
+      // switchChain={switchChain}
       decimals={chains?.decimals ?? 2}
       displayDecimals={2}
       switchToken={setToken}
@@ -77,6 +111,8 @@ export const Deposit: FC<DepositProps> = (props) => {
       balanceRevalidating={balanceRevalidating}
       settingChain={settingChain}
       onEnquiry={onEnquiry}
+      needCrossChain={needCrossChain}
+      needSwap={needSwap}
     />
   );
 };

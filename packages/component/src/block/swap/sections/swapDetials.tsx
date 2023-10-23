@@ -28,7 +28,7 @@ interface Props {
   info: SwapInfo;
   markPrice: number;
   nativePrice: number;
-  nativeToken: API.TokenInfo;
+  nativeToken?: API.TokenInfo;
   // transactionData: any;
 }
 
@@ -47,7 +47,7 @@ export const SwapDetails: FC<Props> = (props) => {
               <Fuel size={14} />
               <Numeral
                 unit={props.nativeToken?.symbol}
-                precision={props.nativeToken.woofi_dex_precision + 3}
+                precision={props.nativeToken?.woofi_dex_precision ?? 2 + 3}
                 truncate="round"
                 padding={false}
               >

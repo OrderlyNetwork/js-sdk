@@ -8,6 +8,7 @@ import { OrderStatus } from "@orderly.network/types";
 const meta: Meta<typeof Text> = {
   component: Text,
   title: "Base/Text",
+  tags: ["autodocs"],
 };
 
 export default meta;

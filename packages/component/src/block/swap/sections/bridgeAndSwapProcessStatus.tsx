@@ -7,6 +7,7 @@ import { SwapProcessStatusStatus } from "./misc";
 interface SwapProcessStatusProps {
   status: SwapProcessStatusStatus;
   message: any;
+  onComplete?: () => void;
 }
 
 export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (

@@ -7,7 +7,7 @@ import { useAccountInstance } from "./useAccountInstance";
 export const useAccount = (): {
   account: Account;
   state: AccountState;
-  login: (address: string) => void;
+  // login: (address: string) => void;
   createOrderlyKey: (remember: boolean) => Promise<string>;
   createAccount: () => Promise<string>;
   disconnect: () => Promise<void>;
@@ -55,12 +55,12 @@ export const useAccount = (): {
     };
   }, []);
 
-  const login = useCallback(
-    (address: string) => {
-      account.login(address);
-    },
-    [account]
-  );
+  // const login = useCallback(
+  //   (address: string) => {
+  //     account.login(address);
+  //   },
+  //   [account]
+  // );
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {
@@ -95,7 +95,7 @@ export const useAccount = (): {
     account,
     state,
     // info: {},
-    login,
+    // login,
     createOrderlyKey,
     createAccount,
     disconnect,

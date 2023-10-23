@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 import { type ConfigStore, type OrderlyKeyStore } from "@orderly.network/core";
 import { IContract, type getWalletAdapterFunc } from "@orderly.network/core";
+import { NetworkId } from "@orderly.network/types";
 
 export interface OrderlyAppConfig {
   logoUrl: string;
@@ -24,7 +25,7 @@ export interface OrderlyContextState extends OrderlyAppConfig {
   // walletAdapter: { new (options: any): WalletAdapter };
   getWalletAdapter: getWalletAdapterFunc;
   contractManager: IContract;
-  networkId: string;
+  networkId: NetworkId;
   brokerId: string;
 
   onWalletConnect?: () => Promise<any>;

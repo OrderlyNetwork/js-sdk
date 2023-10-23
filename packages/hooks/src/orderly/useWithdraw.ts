@@ -3,16 +3,24 @@ import { useHoldingStream } from "./useHoldingStream";
 
 import { Decimal } from "@orderly.network/utils";
 import { useCollateral } from "./useCollateral";
-import { useWS } from "../useWS";
+
 import { useAccount } from "../useAccount";
-import { useEventEmitter } from "../useEventEmitter";
 
 export type WithdrawInputs = {
-  amoutn: number;
-  address: string;
+  chainId: number;
+  token: string;
+  amount: number;
 };
 
-export const useWithdraw = () => {
+export interface WithdrawReturns {
+  maxAmount: number;
+  availableBalance: number;
+  unsettledPnL: number;
+  isLoading: boolean;
+  withdraw: (inputs: WithdrawInputs) => Promise<any>;
+}
+
+export const useWithdraw = (): WithdrawReturns => {
   const { account, state } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);

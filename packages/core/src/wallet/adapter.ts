@@ -1,4 +1,6 @@
-export interface WalletAdapter {
+import { TransactionRequest, TransactionResponse } from "ethers";
+
+export interface IWalletAdapter {
   //   get address(): string;
   // new (options: WalletAdapterOptions): WalletAdapter;
   get chainId(): number;
@@ -11,6 +13,20 @@ export interface WalletAdapter {
     method: string,
     params: Array<any> | Record<string, any>
   ) => Promise<any>;
+
+  sendTransaction(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    }
+  ): Promise<TransactionResponse>;
   signTypedData: (address: string, data: any) => Promise<string>;
 
   // 查询余额
@@ -45,4 +61,4 @@ export type WalletAdapterOptions = {
 
 export type getWalletAdapterFunc = (
   options: WalletAdapterOptions
-) => WalletAdapter;
+) => IWalletAdapter;

@@ -113,8 +113,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
   }, []);
 
-  console.log("chains*****", chains);
-
   const apiBaseUrl = useMemo<string>(() => {
     return configStore.get("apiBaseUrl");
   }, [configStore]);
@@ -124,7 +122,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
 
   const checkChainId = useCallback(
     (chainId: string): boolean => {
-      console.log("*****", chainId, chains);
       if (!chainId || !chains) {
         return false;
       }

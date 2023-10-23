@@ -1,4 +1,4 @@
-import { type API } from "@orderly.network/types";
+import { NetworkId, type API } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
@@ -14,7 +14,7 @@ type inputOptions = {
 };
 
 export const useChains = (
-  networkId?: "testnet" | "mainnet",
+  networkId?: NetworkId,
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { filter, pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;

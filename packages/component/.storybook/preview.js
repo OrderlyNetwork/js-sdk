@@ -129,7 +129,7 @@ const preview = {
             configStore={configStore}
             getWalletAdapter={(options) => new EtherAdapter(options)}
             contractManager={contractManager}
-            keyStore={new LocalStorageStore("testnet")}
+            keyStore={new LocalStorageStore("mainnet")}
             logoUrl="/woo_fi_logo.svg"
           >
             <Story />

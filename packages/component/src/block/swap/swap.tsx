@@ -110,8 +110,9 @@ export const Swap: FC<SwapProps> = (props) => {
         setTx(res);
         toast.success("Deposit requested");
       },
-      (error: Error) => {
-        toast.error(error.message);
+      (error: any) => {
+        console.dir(error);
+        toast.error(error?.info?.error?.message || "Error");
       }
     );
   }, [transaction, mode]);
@@ -135,10 +136,11 @@ export const Swap: FC<SwapProps> = (props) => {
     return (
       <SwapProcess
         message={message}
-        status={bridgeStatus}
+        bridgeStatus={bridgeStatus}
         chainInfo={chainInfo}
         mode={mode}
         tx={tx}
+        onComplete={props.onComplete}
       />
     );
   }, [view, swapInfo, message, bridgeStatus, mode, chainInfo, tx]);

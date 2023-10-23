@@ -1,12 +1,13 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "0.0.59",
+  "version": "0.0.61",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
+    "generate:docs": "typedoc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
     "react-test-renderer": "^18.2.0",
     "tsconfig": "workspace:*",
     "tsup": "^7.1.0",
+    "typedoc": "^0.24.8",
     "typescript": "^5.1.6"
   },
   "dependencies": {
