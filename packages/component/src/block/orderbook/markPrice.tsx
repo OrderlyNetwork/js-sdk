@@ -3,6 +3,7 @@ import { Numeral } from "@/text";
 import { cn } from "@/utils/css";
 import { Flag, MoveUpIcon } from "lucide-react";
 import { FC, useContext, useEffect, useRef } from "react";
+import { modal } from "@/modal";
 
 interface MarkPriceProps {
   markPrice: number;
@@ -18,6 +19,19 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
 
   // console.log(prevLastPrice);
   // console.log(prevLastPrice, middlePrice);
+
+  const onMarkPrice = () => {
+    modal.alert({
+      title: "Mark price",
+      message: (
+        <span className="text-sm text-base-contrast/60">
+          Obtained from a third-party oracle, the mark price is calculated as
+          the median of three prices: the last price, the fair price based on
+          the funding rate basis, and the fair price based on the order books.
+        </span>
+      ),
+    });
+  };
 
   return (
     <div className="py-2 flex justify-between">
@@ -38,7 +52,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
           />
         )}
       </div>
-      <div className={"text-sm flex items-center gap-1"}>
+      <div className={"text-sm flex items-center gap-1"} onClick={onMarkPrice}>
         <Flag size={14} className={"text-yellow-400"} />
         <Numeral precision={quote_dp}>{markPrice}</Numeral>
       </div>
