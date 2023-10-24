@@ -19,6 +19,7 @@ import { useModal } from "@/modal";
 import Button from "@/button";
 import { toast } from "@/toast";
 import { Logo } from "@/logo";
+import { modal } from "@/modal";
 
 interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -74,6 +75,22 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     }
   }, [status, remember]);
 
+  const showRememberHint = () => {
+    modal.alert({
+      title: "Remember me",
+      message: (
+        <span className="text-sm text-base-contrast/60">
+          Toggle this option to skip these steps next time you want to trade.
+        </span>
+      ),
+    });
+  };
+
+  const onRemember = useCallback((checked: boolean) => {
+    setRemember(checked);
+    showRememberHint();
+  }, []);
+
   return (
     <div>
       <div className="text-base-contrast/50 py-4">
@@ -121,7 +138,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           <Info className="inline-block ml-2" size={16} />
         </div>
         <div>
-          <Switch checked={remember} onCheckedChange={setRemember} />
+          <Switch checked={remember} onCheckedChange={onRemember} />
         </div>
       </div>
       <div>
