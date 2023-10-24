@@ -1,13 +1,10 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
-import { type SWRInfiniteResponse } from "swr/infinite";
 import { useCallback, useEffect, useMemo } from "react";
 
-import { API, OrderSide } from "@orderly.network/types";
-import { useMarketsStream } from "./useMarketsStream";
+import { OrderSide } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 import { OrderEntity } from "@orderly.network/types";
-import { useExecutionReport } from "./orderlyHooks";
 import { useEventEmitter } from "../useEventEmitter";
 export interface UserOrdersReturn {
   data: any[];

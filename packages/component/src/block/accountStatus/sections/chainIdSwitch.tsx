@@ -18,14 +18,20 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId } = useContext<any>(OrderlyContext);
+  const { networkId, onlyTestnet } = useContext<any>(OrderlyContext);
 
-  const [testChains] = useChains(networkId, {
+  const [testChains] = useChains("testnet", {
+    wooSwapEnabled: true,
     pick: "network_infos",
     filter: (item: API.Chain) => item.network_infos.chain_id === 421613,
   });
 
-  console.log("testChains", testChains);
+  const [mainChains] = useChains("mainnet", {
+    wooSwapEnabled: true,
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
 
   const onChainChange = useCallback(
     ({ id, name }: { id: number; name: string }) => {
@@ -34,7 +40,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
         .then(
           (isSuccess) => {
             if (isSuccess) {
-              toast.success("Success");
+              toast.success("Network switched");
             } else {
               toast.error("Cancel");
             }
@@ -53,21 +59,16 @@ export const ChainIdSwtich: FC<Props> = (props) => {
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <button className="text-primary">Switch network</button>
+          <button className="text-primary-light">Switch network</button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>Swith network</DialogHeader>
           <DialogBody>
             <ChainListView
-              mainChains={[]}
+              mainChains={onlyTestnet ? [] : mainChains}
               testChains={testChains}
               onItemClick={onChainChange}
             />
-            {/* <ChainPicker
-              mainnetChains={[]}
-              testChains={testChains}
-              onChange={onChainChange}
-            /> */}
           </DialogBody>
         </DialogContent>
       </Dialog>

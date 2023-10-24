@@ -7,15 +7,11 @@ import {
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
 // import { useOrderStream } from "./useOrderStream";
-import { type WSMessage, type API } from "@orderly.network/types";
-import { useAccount } from "../useAccount";
+import { type API } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal, zero } from "@orderly.network/utils";
+import { zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMemo } from "react";
-import { useBalance } from "./useBalance";
-import { parseHolding } from "../utils/parseHolding";
-import { totalUnsettlementPnLPath } from "../utils/fn";
 import { useHoldingStream } from "./useHoldingStream";
 
 export type CollateralOutputs = {

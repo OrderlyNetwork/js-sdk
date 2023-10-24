@@ -28,7 +28,8 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
     const num = Number(props.amount);
     if (isNaN(num)) return "";
     if (num <= 0) return "";
-    return commify(new Decimal(props.amount).sub(props.fee).toFixed(2));
+    // return commify(new Decimal(props.amount).sub(props.fee).toFixed(2));
+    return commify(new Decimal(props.amount).toFixed(2));
   }, [props.amount, props.fee]);
 
   return (

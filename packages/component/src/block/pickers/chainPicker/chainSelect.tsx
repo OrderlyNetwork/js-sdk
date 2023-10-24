@@ -6,7 +6,7 @@ import {
   useEffect,
   useMemo,
 } from "react";
-import { useChains, OrderlyContext } from "@orderly.network/hooks";
+import { useChains } from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
 import { ChainConfig } from "@orderly.network/types";
@@ -16,25 +16,42 @@ import { API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
 
 export interface ChainSelectProps {
+  disabled?: boolean;
   onValueChange?: (value: any) => void;
   onChainInited?: (chain: API.Chain) => void;
   // onChainIdChange?: (chainId: number) => void;
   value?: ChainConfig;
   settingChain?: boolean;
+  onlyTestnet?: boolean;
+  wooSwapEnabled?: boolean;
+  filter?: (chain: API.Chain) => boolean;
 }
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
-  const { networkId } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, wooSwapEnabled = true, disabled } = props;
 
-  const [chains, { findByChainId }] = useChains(networkId, {
-    wooSwapEnabled: true,
+  const [allChains, { findByChainId }] = useChains("", {
+    wooSwapEnabled,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
     // filter: (chain: API.Chain) => chain.network_infos.chain_id === 421613,
   });
 
+  // console.log("allChains", allChains);
+
+  const chains = useMemo(() => {
+    if (Array.isArray(allChains)) return allChains;
+
+    if (onlyTestnet) {
+      return allChains.testnet ?? [];
+    }
+    return allChains.mainnet;
+  }, [allChains, onlyTestnet]);
+
   const { value } = props;
+
+  console.log("chains", chains);
 
   const currentChain = useMemo(() => {
     if (!value || !chains) return undefined;
@@ -43,10 +60,8 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // mainChains: chains?.mainnet,
-      // testChains: chains?.testnet,
-      // mainChains: chains,
-      testChains: chains,
+      // testChains: onlyTestnet ? chains.testnet : [],
+      mainChains: chains,
       currentChainId: currentChain?.chain_id,
     });
 

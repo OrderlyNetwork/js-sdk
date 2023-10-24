@@ -47,8 +47,6 @@ interface OrderlyProviderProps {
   // onWalletConnect?: () => Promise<any>;
 }
 
-const CHECK_ENTRY: Record<string, boolean> = { chains_fetch: false };
-
 export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   props
 ) => {
@@ -69,16 +67,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }
   // const [ready, setReady] = useSessionStorage<boolean>("APP_READY", false);
   const { toasts } = useToasterStore();
-
-  // const onAppTestChange = (name: string) => {
-  //   CHECK_ENTRY[name] = true;
-  //   const isReady = Object.keys(CHECK_ENTRY).every((key) => CHECK_ENTRY[key]);
-
-  //   if (isReady) {
-  //     console.log("change app ready: true");
-  //     setReady(true);
-  //   }
-  // };
 
   const {
     connect,
@@ -126,24 +114,30 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         return false;
       }
 
+      const onlyTestnet = configStore.get("onlyTestnet");
+
       if (typeof chainId === "number") {
         chainId = `0x${Number(chainId).toString(16)}`;
       }
 
-      const isSupport = chains.some(
-        (item: API.NetworkInfos) => item.id === chainId
-      );
+      // console.log("checkChainId", chainId, chains, onlyTestnet);
+
+      if (onlyTestnet && chainId !== "0x66eed") {
+        return false;
+      }
+
+      const isSupport = chains.some((item: { id: string }) => {
+        return item.id === chainId;
+      });
 
       return isSupport;
     },
-    [chains]
+    [chains, configStore]
   );
 
   const _onWalletConnect = useCallback(async (): Promise<any> => {
     if (connect) {
       const walletState = await connect();
-
-      console.log("===========>>>>>>>>>>>walletState", walletState);
 
       if (
         Array.isArray(walletState) &&
@@ -173,8 +167,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
           },
           // label: ,
         });
-
-        console.log("status", status, wallet);
 
         return { wallet, status };
       }
@@ -224,11 +216,19 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   useEffect(() => {
     // currentWallet?.provider.detectNetwork().then((x) => console.log(x));
 
+    if (!chains || chains.length === 0) {
+      return;
+    }
     // if (ready) {
     let account = SimpleDI.get<Account>(Account.instanceName);
     // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
 
-    if (!!currentWallet && account) {
+    if (
+      !!currentWallet &&
+      Array.isArray(currentWallet.accounts) &&
+      currentWallet.accounts.length > 0 &&
+      account
+    ) {
       if (
         account.address === currentAddress &&
         currentChainId === account.chainId
@@ -238,7 +238,8 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
       // 需要确定已经拿到chains list
       if (!checkChainId(currentChainId)) {
         // console.warn("!!!! not support this chian -> disconnect wallet");
-        account.disconnect();
+        // TODO: 确定是否需要断开连接
+        // account.disconnect();
 
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
@@ -290,6 +291,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         // onAppTestChange,
         errors,
         brokerId,
+        onlyTestnet: configStore.get("onlyTestnet"),
       }}
     >
       {/* <PreDataLoader /> */}

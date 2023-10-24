@@ -20,7 +20,7 @@ export const ChainDialog = create<Omit<ChainListViewProps, "onItemClick">>(
 
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
           <DialogHeader>
             <DialogTitle>Switch network</DialogTitle>
           </DialogHeader>

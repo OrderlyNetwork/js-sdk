@@ -19,6 +19,7 @@ export interface ActionButtonProps {
   allowance: number;
   submitting: boolean;
   maxQuantity: string;
+  chainNotSupport: boolean;
   onApprove?: () => Promise<any>;
 }
 
@@ -37,29 +38,17 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     onApprove,
     submitting,
     maxQuantity,
+    chainNotSupport,
   } = props;
 
-  const checkSupoort = (
-    chain: any | null,
-    chains: API.ChainDetail[] | undefined
-  ): boolean => {
-    if (!chain || !chains) return false;
+  // const [chainNotSupport, setChainNotSupport] = useState(() =>
+  //   checkSupoort(chain, chains)
+  // );
 
-    const index = chains?.findIndex(
-      (c) => parseInt(c.chain_id) === parseInt(chain!.id)
-    );
-
-    return index < 0;
-  };
-
-  const [chainNotSupport, setChainNotSupport] = useState(() =>
-    checkSupoort(chain, chains)
-  );
-
-  useEffect(() => {
-    // console.log({ chain, chains });
-    setChainNotSupport(checkSupoort(chain, chains));
-  }, [chain, chains]);
+  // useEffect(() => {
+  //   // console.log({ chain, chains });
+  //   setChainNotSupport(checkSupoort(chain, chains));
+  // }, [chain, chains]);
 
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";

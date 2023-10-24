@@ -7,6 +7,7 @@ import { InfoIcon } from "@/icon";
 import { modal } from "@/modal";
 import { Divider } from "@/divider";
 import { SlippageSetting } from "./slippageSetting";
+import { feeDecimalsOffset } from "../utils";
 
 export interface SummaryProps {
   onSlippageChange?: (slippage: number) => void;
@@ -57,8 +58,8 @@ export const Summary: FC<SummaryProps> = (props) => {
     if (props.isNativeToken) {
       if (!!destinationGasFee) {
         const total = new Decimal(destinationGasFee).plus(fee ?? 0);
-        text = `${total.toFixed(
-          nativeToken?.woofi_dex_precision,
+        text = `${total.todp(
+          (nativeToken?.woofi_dex_precision ?? 2) + 3,
           Decimal.ROUND_HALF_EVEN
         )} ${nativeToken?.symbol}`;
 
@@ -68,7 +69,7 @@ export const Summary: FC<SummaryProps> = (props) => {
       if (!!destinationGasFee && destinationGasFee !== "0") {
         textArr.push(
           `${parseNumber(destinationGasFee, {
-            precision: nativeToken?.woofi_dex_precision ?? 2 + 3,
+            precision: (nativeToken?.woofi_dex_precision ?? 2) + 3,
             truncate: "round",
           })} ${nativeToken?.symbol}`
         );
@@ -79,7 +80,7 @@ export const Summary: FC<SummaryProps> = (props) => {
       if (!!fee) {
         textArr.push(
           `${parseNumber(fee, {
-            precision: props.src?.woofi_dex_precision ?? 2 + 3,
+            precision: (props.src?.woofi_dex_precision ?? 2) + 3,
             truncate: "round",
           })} ${props.src?.symbol}`
         );
@@ -111,7 +112,9 @@ export const Summary: FC<SummaryProps> = (props) => {
             <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               destinationGasFee,
               {
-                precision: nativeToken?.woofi_dex_precision,
+                precision: feeDecimalsOffset(
+                  nativeToken?.woofi_dex_precision ?? 2
+                ),
                 truncate: "round",
               }
             )} ${nativeToken?.symbol}`}</span>
@@ -133,7 +136,7 @@ export const Summary: FC<SummaryProps> = (props) => {
             <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               swapFee,
               {
-                precision: props.src?.woofi_dex_precision,
+                precision: feeDecimalsOffset(props.src?.woofi_dex_precision),
                 truncate: "round",
               }
             )} ${props.src?.symbol}`}</span>
@@ -152,7 +155,7 @@ export const Summary: FC<SummaryProps> = (props) => {
             <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               bridgeFee,
               {
-                precision: props.src?.woofi_dex_precision,
+                precision: feeDecimalsOffset(props.src?.woofi_dex_precision),
                 truncate: "round",
               }
             )} ${props.src?.symbol}`}</span>
@@ -184,7 +187,7 @@ export const Summary: FC<SummaryProps> = (props) => {
           {`1 ${props.src?.symbol} = ${
             props.price
               ? parseNumber(props.price, {
-                  precision: 2,
+                  precision: 3,
                   rule: "price",
                 })
               : "-"

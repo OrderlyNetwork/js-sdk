@@ -34,6 +34,7 @@ export interface OrderlyContextState extends OrderlyAppConfig {
 
   errors: AppStateErrors;
 
+  onlyTestnet: boolean;
   // extraApis:ExtraAPIs
 }
 

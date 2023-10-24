@@ -1,6 +1,5 @@
 import { ExchangeStatusEnum, SystemStateEnum } from "@orderly.network/types";
 
-import { getAppState } from "./services/appState";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 

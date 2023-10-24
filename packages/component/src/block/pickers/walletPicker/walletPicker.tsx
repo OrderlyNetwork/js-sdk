@@ -1,11 +1,8 @@
 import { Input } from "@/input";
-import { InputMask } from "@/input/inputMask";
-import { ArrowLeftRight } from "lucide-react";
-import { NetworkImage } from "@/icon/networkImage";
-import { FC, useCallback, useMemo } from "react";
-import { API, ChainConfig, ChainInfo, chainsMap } from "@orderly.network/types";
-import { modal } from "@/modal";
+import { FC, useContext, useMemo } from "react";
+import { API, ChainConfig } from "@orderly.network/types";
 import { ChainSelect } from "../chainPicker";
+import { OrderlyContext } from "@orderly.network/hooks";
 
 export type Wallet = {
   // token: string;
@@ -28,10 +25,15 @@ export interface WalletPickerProps {
   onOpenPicker?: () => void;
   onChainChange?: (chain: any) => void;
   onChainInited?: (chain: API.Chain) => void;
+
+  wooSwapEnabled?: boolean;
 }
 
 export const WalletPicker: FC<WalletPickerProps> = (props) => {
   const { chain } = props;
+
+  const { onlyTestnet } = useContext<any>(OrderlyContext);
+
   const address = useMemo(() => {
     if (!props.address) return "--";
     return props.address.replace(/^(.{6})(.*)(.{4})$/, "$1......$3");
@@ -47,6 +49,8 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
         onValueChange={props.onChainChange}
         onChainInited={props.onChainInited}
         settingChain={props.settingChain}
+        onlyTestnet={onlyTestnet}
+        wooSwapEnabled={props.wooSwapEnabled}
       />
     </div>
   );

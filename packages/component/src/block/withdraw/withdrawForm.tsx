@@ -13,6 +13,7 @@ import { Decimal } from "@orderly.network/utils";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
+import { useAppState } from "@orderly.network/hooks";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
@@ -56,6 +57,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 }) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
+  const { errors } = useAppState();
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -205,7 +207,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         />
       </div>
       <div className={"py-2"}>
-        <WalletPicker address={address} chain={chainInfo} />
+        <WalletPicker
+          address={address}
+          chain={chainInfo}
+          wooSwapEnabled={false}
+        />
       </div>
       <TokenQtyInput
         amount={quantity}
@@ -219,6 +225,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <Summary fee={fee} />
 
       <ActionButton
+        chainNotSupport={!!errors?.ChainNetworkNotSupport}
         chains={chains}
         chain={undefined}
         onWithdraw={doWithdraw}

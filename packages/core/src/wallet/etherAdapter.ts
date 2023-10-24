@@ -117,14 +117,14 @@ export class EtherAdapter implements IWalletAdapter {
       value: payload.value,
     };
 
-    // const _gas = contract.estimateGas[method]?.(payload.data);
-
-    // console.log("gas", _gas);
-
     if (!singer) {
       throw new Error("singer is not exist");
     }
     const gas = await this.estimateGas(tx);
+    // const gasPrice = await this.provider?.getGasPrice();
+    // const gasPrice = (await this.provider!.getFeeData()).gasPrice;
+
+    // console.log("gasPrice", gasPrice);
 
     tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
     const result = await singer.sendTransaction(tx);

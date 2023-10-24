@@ -1,9 +1,9 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { API, ChainConfig, ChainInfo } from "@orderly.network/types";
+import { API, ChainConfig } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 
 export interface ActionButtonProps {
   chains?: API.ChainDetail[];
@@ -15,6 +15,7 @@ export interface ActionButtonProps {
   chainInfo?: ChainConfig;
   quantity: string;
   loading?: boolean;
+  chainNotSupport: boolean;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
@@ -28,6 +29,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     chainInfo,
     quantity,
     loading,
+    chainNotSupport,
   } = props;
 
   const checkSupoort = (
@@ -42,15 +44,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
     return index < 0;
   };
-
-  const [chainNotSupport, setChainNotSupport] = useState(() =>
-    checkSupoort(chain, chains)
-  );
-
-  useEffect(() => {
-    // console.log({ chain, chains });
-    setChainNotSupport(checkSupoort(chain, chains));
-  }, [chain, chains]);
 
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";

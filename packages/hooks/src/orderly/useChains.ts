@@ -3,7 +3,7 @@ import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
-import { mergeDeepLeft, prop } from "ramda";
+import { mergeDeepRight, prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
 
 type inputOptions = {
@@ -98,12 +98,33 @@ export const useChains = (
     });
 
     if (!wooSwapEnabled) {
+      // console.log("orderlyChainsArr", orderlyChainsArr, options);
+      if (typeof options?.filter === "function") {
+        return orderlyChainsArr.filter(options.filter);
+      }
       return orderlyChainsArr;
     } else {
       //
       if (!data || !data.data) return data;
 
-      let testnetArr: API.Chain[] = [];
+      let testnetArr: API.Chain[] = [
+        //@ts-ignore
+        {
+          network_infos: {
+            name: "Arbitrum Goerli",
+            public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
+            chain_id: 421613,
+            currency_symbol: "ETH",
+            bridge_enable: true,
+            mainnet: false,
+            explorer_base_url: "https://goerli.arbiscan.io/",
+            est_txn_mins: null,
+
+            woofi_dex_cross_chain_router: "",
+            woofi_dex_depositor: "",
+          },
+        },
+      ];
       let mainnetArr: API.Chain[] = [];
 
       Object.keys(data.data).forEach((key) => {
@@ -111,34 +132,15 @@ export const useChains = (
 
         const chain = data.data[key];
 
-        if (orderlyChainIds.has(chain.network_infos.chain_id)) {
-          // 合并orderlys chain & wooSwap chains
-          //@ts-ignore
-          orderlyChainsArr = orderlyChainsArr.map((item) => {
-            if (item.network_infos.chain_id === chain.network_infos.chain_id) {
-              // return mergeDeepLeft(item, chain);
-              const mergedChain = {
-                ...item,
-                network_infos: {
-                  ...item.network_infos,
-                  ...chain.network_infos,
-                },
-                token_infos: chain.token_infos,
-              };
-
-              map.current.set(chain.network_infos.chain_id, mergedChain);
-            }
-
-            return item;
-          });
-
-          return;
-        }
-
-        const item = {
-          ...chain,
+        const item: any = mergeDeepRight(chain, {
           name: key,
-        };
+          network_infos: {
+            bridgeless: orderlyChainIds.has(chain.network_infos.chain_id),
+          },
+          token_infos: chain.token_infos.filter(
+            (token: API.TokenInfo) => !!token.swap_enable
+          ),
+        });
 
         if (item.token_infos?.length === 0) return;
 
@@ -155,14 +157,21 @@ export const useChains = (
         }
       });
 
-      if (orderlyChainIds.size > 0) {
-        if (envNetworkId === "testnet") {
-          testnetArr = [...orderlyChainsArr, ...testnetArr];
-        } else {
-          mainnetArr = [...orderlyChainsArr, ...mainnetArr];
-        }
-        // mainnetArr = mainnetArr.concat(orderlyChainsArr);
-      }
+      // if (orderlyChainIds.size > 0) {
+      //   if (envNetworkId === "testnet") {
+      //     testnetArr = [...orderlyChainsArr, ...testnetArr];
+      //   } else {
+      //     mainnetArr = [...orderlyChainsArr, ...mainnetArr];
+      //   }
+      // }
+
+      mainnetArr.sort((a, b) => {
+        return a.network_infos.bridgeless ? -1 : 1;
+      });
+
+      testnetArr.sort((a, b) => {
+        return a.network_infos.bridgeless ? -1 : 1;
+      });
 
       if (!!field) {
         //@ts-ignore

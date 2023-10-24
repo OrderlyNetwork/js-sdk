@@ -39,11 +39,11 @@ interface AccountStatusProps {
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
-  const { logoUrl } = useContext(OrderlyContext);
+  const { logoUrl, errors } = useContext(OrderlyContext);
 
   const [infoOpen, setInfoOpen] = useState(false);
 
-  useChains();
+  console.log("status", status);
 
   const buttonLabel = useMemo(() => {
     switch (status) {
@@ -66,7 +66,8 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
 
   return (
     <div className="flex items-center justify-between w-full">
-      {status !== AccountStatusEnum.NotConnected ? (
+      {status !== AccountStatusEnum.NotConnected &&
+      !errors?.ChainNetworkNotSupport ? (
         <AccountTotal
           status={status}
           currency={props.currency}
@@ -97,6 +98,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
                 variant={"gradient"}
                 className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
                 loading={props.loading}
+                disabled={props.loading || errors?.ChainNetworkNotSupport}
               >
                 {buttonLabel}
               </Button>

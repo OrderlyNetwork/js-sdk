@@ -1,9 +1,9 @@
 import { useMutation } from "../useMutation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
+import { getPrecisionByNumber } from "@orderly.network/utils";
 
 import { compose, head } from "ramda";
 import {
@@ -13,10 +13,8 @@ import {
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
-import { OrderFactory, OrderFormEntity } from "../utils/createOrder";
+import { OrderFactory } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
-import { useSWRConfig } from "swr";
-import { unstable_serialize } from "swr/infinite";
 
 export interface OrderEntryReturn {
   onSubmit: (values: OrderEntity) => Promise<any>;

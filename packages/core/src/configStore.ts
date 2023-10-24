@@ -2,6 +2,7 @@ export type ConfigKey = "apiBaseUrl" | "klineDataUrl";
 
 export interface ConfigStore {
   get<T>(key: string): T;
+  getOr<T>(key: string, defaultValue: T): T;
   set<T>(key: string, value: T): void;
   clear(): void;
 }
@@ -14,10 +15,9 @@ export class MemoryConfigStore implements ConfigStore {
   }
 
   protected _restore() {
-    this.map = new Map([
+    this.map = new Map<string, any>([
       ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
       // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
-      // ["apiBaseUrl", "https://qa-api-evm.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
       ["publicWsUrl", "wss://testnet-ws-evm.orderly.org"],
       // ["publicWsUrl", "wss://dev-ws-v2.orderly.org"],
@@ -26,13 +26,19 @@ export class MemoryConfigStore implements ConfigStore {
       ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
       ["swapSupportApiUrl", "https://fi-api.woo.org"],
-      ["brokerId", "woofi_pro"],
+      ["brokerId", "woofi_dex"],
+      ["onlyTestnet", true],
       ["env", "dev-evm"],
+      ["PROD_URL", ["dex-iap-evm.woo.org", "dex-evm.woo.org"]],
     ]);
   }
 
   get<T>(key: string): T {
     return this.map.get(key);
+  }
+
+  getOr<T>(key: string, defaultValue: T): T {
+    return this.map.get(key) ?? defaultValue;
   }
 
   set<T>(key: string, value: T): void {

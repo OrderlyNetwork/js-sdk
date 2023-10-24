@@ -214,10 +214,11 @@ export declare namespace API {
     currency_symbol: string;
     bridge_enable: boolean;
     mainnet: boolean;
-    est_txn_mins: number;
+    est_txn_mins: number | null;
     explorer_base_url: string;
-    woofi_dex_cross_chain_router: string;
-    woofi_dex_depositor: string;
+    woofi_dex_cross_chain_router?: string;
+    woofi_dex_depositor?: string;
+    bridgeless?: boolean;
   }
 
   export interface TokenInfo {

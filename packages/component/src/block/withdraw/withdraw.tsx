@@ -19,12 +19,14 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     WalletConnectorContext
   );
 
-  const { networkId } = useContext<any>(OrderlyContext);
+  const { networkId } = useContext(OrderlyContext);
 
-  const { chains } = useChain("USDC");
-  // const [orderlyChains] = useChains(networkId, {
-  //   wooSwapEnabled: false,
-  // });
+  // const { chains } = useChain("USDC");
+  const [chains] = useChains(networkId, {
+    wooSwapEnabled: false,
+  });
+
+  console.log("withdraw chains======>>>>>", chains);
 
   const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
 

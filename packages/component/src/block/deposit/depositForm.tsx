@@ -12,6 +12,7 @@ import {
   useLocalStorage,
   useChains,
   useBoolean,
+  useAppState,
 } from "@orderly.network/hooks";
 
 import { MoveDownIcon } from "@/icon";
@@ -22,7 +23,6 @@ import { Decimal, int2hex } from "@orderly.network/utils";
 import { toast } from "@/toast";
 import { type API } from "@orderly.network/types";
 import { Notice } from "./sections/notice";
-import { SlippageSetting } from "./sections/slippageSetting";
 import { modal } from "@/modal";
 import { SwapDialog } from "../swap/swapDialog";
 import { SwapMode } from "../swap/sections/misc";
@@ -97,6 +97,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     needSwap,
     // onEnquiry,
   } = props;
+
+  const { errors } = useAppState();
+
+  console.log("!!!!!!!!!!!!!", errors);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -235,7 +239,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       })
       .then(
         (res) => {
-          console.log(res);
+          console.log("********************", res);
         },
         (error) => {
           console.log(error);
@@ -321,7 +325,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     (chain: API.Chain) => {
       // console.log("??????", chain);
       if (chain && chain.token_infos?.length > 0) {
-        const tokens = chain.token_infos.filter((chain) => !!chain.swap_enable);
+        // let tokens = chain.token_infos.filter((chain) => !!chain.swap_enable);
+
+        const tokens = chain.token_infos;
+
         let token = tokens.find(
           (t: API.TokenInfo) => t.symbol === "USDC" || t.symbol === "USDbC"
         );
@@ -350,24 +357,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       setHintMessage("");
     }
   }, [maxAmount]);
-
-  // useEffect(() => {
-  //   if (!props.token || !chain) return;
-  //   /// check if need swap
-
-  //   if (props.token.symbol !== "USDC") {
-  //     setNeedSwap(true);
-  //   } else {
-  //     setNeedSwap(false);
-  //   }
-
-  //   if (chain?.id !== dst.chainId) {
-  //     setNeedCrossChain(true);
-  //     setNeedSwap(true);
-  //   } else {
-  //     setNeedCrossChain(false);
-  //   }
-  // }, [props.token?.symbol, chain?.id, orderlyChains]);
 
   const enquirySuccessHandle = (res: any) => {
     if (res.mark_prices) {
@@ -535,6 +524,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         fetchBalance={props.fetchBalance}
         onTokenChange={props.switchToken}
         balanceRevalidating={props.balanceRevalidating}
+        disabled={errors.ChainNetworkNotSupport}
       />
 
       <Divider className={"py-4"}>
@@ -581,11 +571,13 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       />
       <ActionButton
         chain={chain}
+        // chains={chain}
         chainInfo={{ chainName: chainInfo?.network_infos?.name }}
         onDeposit={onDeposit}
         allowance={
           props.isNativeToken ? Number.MAX_VALUE : Number(props.allowance)
         }
+        chainNotSupport={!!errors?.ChainNetworkNotSupport}
         disabled={!quantity}
         switchChain={switchChain}
         loading={submitting}

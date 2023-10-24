@@ -111,7 +111,7 @@ export const Swap: FC<SwapProps> = (props) => {
         toast.success("Deposit requested");
       },
       (error: any) => {
-        console.dir(error);
+        // console.dir(error);
         toast.error(error?.info?.error?.message || "Error");
       }
     );

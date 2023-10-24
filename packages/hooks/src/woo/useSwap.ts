@@ -277,6 +277,14 @@ export const useSwap = () => {
       toToken: string;
       minToAmount: string;
     }) => {
+      if (!account.walletClient) {
+        throw new Error("walletClient is undefined");
+      }
+
+      if (!account.address) {
+        throw new Error("account.address is undefined");
+      }
+
       if (loading) return;
       start();
 
@@ -294,7 +302,7 @@ export const useSwap = () => {
         "swap",
         {
           from: account.address,
-          to: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+          to: woofiDexDepositor,
           data: [account.address, inputs, dstValutDeposit()],
         },
         {

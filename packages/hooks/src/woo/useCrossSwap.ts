@@ -97,6 +97,11 @@ export const useCrossSwap = () => {
     if (!account.walletClient) {
       throw new Error("walletClient is undefined");
     }
+
+    if (!account.address) {
+      throw new Error("account.address is undefined");
+    }
+
     const { address, src, dst } = inputs;
     if (loading) return;
     start();
@@ -131,7 +136,7 @@ export const useCrossSwap = () => {
       "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
       "crossSwap",
       {
-        from: account.address,
+        from: account.address!,
         to: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
         data: [account.address, src, dst, dstValutDeposit()],
         value: quotoLZFee[0],

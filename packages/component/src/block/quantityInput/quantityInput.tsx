@@ -15,6 +15,7 @@ import { MarkPrices } from "../deposit/sections/misc";
 export type InputStatus = "error" | "warning" | "success" | "default";
 
 export interface QuantityInputProps {
+  disabled?: boolean;
   maxAmount?: number;
   tokens: API.TokenInfo[];
   token?: API.TokenInfo;
@@ -34,6 +35,7 @@ export interface QuantityInputProps {
   fetchBalance: (token: string) => Promise<any>;
 }
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
+  const { disabled } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
@@ -66,6 +68,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               type="text"
               inputMode="decimal"
               ref={inputRef}
+              disabled={disabled}
               value={props.quantity}
               // onChange={onChange}
               onChange={(event) => {
@@ -102,6 +105,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             token={props.token}
             fetchBalance={props.fetchBalance}
             onTokenChange={props.onTokenChange}
+            disabled={disabled}
           />
         </div>
         <div
