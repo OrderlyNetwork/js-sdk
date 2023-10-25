@@ -11,6 +11,7 @@ import { SymbolContext } from "@/provider";
 
 interface OrderCellProps {
   order: API.OrderExt;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const OrderCell: FC<OrderCellProps> = (props) => {
@@ -34,11 +35,17 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     onCancelOrder(order).finally(() => setLoading(false));
   }, [loading, order]);
 
+  const onSymbol = () => {
+    props.onSymbolChange?.(order.symbol);
+    // go to the top of page
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className={"px-4 py-2"}>
       <div className="flex items-center gap-2 mb-1">
         {typeTag}
-        <div className="flex-1">
+        <div className="flex-1" onClick={onSymbol}>
           <Text rule="symbol">{order.symbol}</Text>
         </div>
         <div className={"text-sm text-base-contrast/30"}>

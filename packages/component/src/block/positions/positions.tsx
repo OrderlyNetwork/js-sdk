@@ -5,10 +5,10 @@ import { ListView } from "@/listView";
 import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { SymbolProvider } from "@/provider";
+import { API } from "@orderly.network/types";
 
 interface PositionsViewProps {
   dataSource: any[] | null;
-
   aggregated: AggregatedData;
   // actions
   onLimitClose?: (position: any) => void;
@@ -18,6 +18,7 @@ interface PositionsViewProps {
   onMarketCloseAll?: () => void;
   loadMore?: () => void;
   isLoading?: boolean;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
@@ -44,6 +45,7 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
                     item={item}
                     onLimitClose={props.onLimitClose}
                     onMarketClose={props.onMarketClose}
+                    onSymbolChange={props.onSymbolChange}
                   />
                 </SymbolProvider>
               );

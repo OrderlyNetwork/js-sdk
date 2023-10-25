@@ -6,6 +6,7 @@ import { Cell } from "./cell";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { SymbolProvider } from "@/provider";
+import { API } from "@orderly.network/types";
 
 export interface OrderHistoryListViewProps {
   isLoading: boolean;
@@ -14,6 +15,7 @@ export interface OrderHistoryListViewProps {
   status: OrderStatus | "";
   onSideChange?: (side: OrderSide) => void;
   onStatusChange?: (status: OrderStatus) => void;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
@@ -32,7 +34,7 @@ export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
         renderSeparator={(_, index) => <Divider />}
         renderItem={(item, index) => (
           <SymbolProvider symbol={item.symbol}>
-            <Cell item={item} />
+            <Cell item={item} onSymbolChange={props.onSymbolChange} />
           </SymbolProvider>
         )}
       />

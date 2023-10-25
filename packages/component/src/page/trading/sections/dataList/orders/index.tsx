@@ -55,6 +55,7 @@ export const OrdersPane: FC<Props> = (props) => {
       cancelOrder={onCancelOrder}
       onShowAllSymbolChange={onShowAllSymbolChange}
       editOrder={updateOrder}
+      onSymbolChange={context.onSymbolChange}
     />
   );
 };

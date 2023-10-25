@@ -3,11 +3,13 @@ import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { Text } from "@/text";
 import { firstLetterToUpperCase } from "@/utils/string";
+import { API } from "@orderly.network/types";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
 
 interface HistoryCellProps {
   item: any;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const Cell: FC<HistoryCellProps> = (props) => {
@@ -30,12 +32,18 @@ export const Cell: FC<HistoryCellProps> = (props) => {
     );
   }, [item]);
 
+  const onSymbol = () => {
+    props.onSymbolChange?.(item.symbol);
+    // go to the top of page
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
         <div className="flex-1 flex items-center">
           {typeTag}
-          <div className="px-2">
+          <div className="px-2" onClick={onSymbol}>
             <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>
