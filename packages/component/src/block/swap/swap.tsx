@@ -18,7 +18,7 @@ export interface SwapProps {
   transactionData: any;
   slippage: number;
 
-  chainInfo?: API.NetworkInfos;
+  chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
 
   onComplete?: () => void;
@@ -32,7 +32,7 @@ export const Swap: FC<SwapProps> = (props) => {
     slippage,
     mode,
     dst,
-    chainInfo,
+    chain: chainInfo,
     nativeToken,
   } = props;
 
@@ -81,6 +81,7 @@ export const Swap: FC<SwapProps> = (props) => {
     if (mode === SwapMode.Cross) {
       promise = doCrossSwap({
         address: "",
+        crossChainRouteAddress: chainInfo!.woofi_dex_cross_chain_router,
         src: {
           fromToken: transaction.src_infos.from_token,
           fromAmount: BigInt(transaction.src_infos.from_amount),
@@ -92,15 +93,16 @@ export const Swap: FC<SwapProps> = (props) => {
           bridgedToken: transaction.dst_infos.bridged_token,
           toToken: transaction.dst_infos.to_token,
           minToAmount: BigInt(transaction.dst_infos.min_to_amount),
-          airdropNativeAmount: 0n,
+          orderlyNativeFees: 0n,
         },
       });
     } else {
-      promise = doSingleSwap({
+      promise = doSingleSwap(chainInfo!.woofi_dex_depositor, {
         fromToken: transaction.infos.from_token,
         fromAmount: transaction.infos.from_amount,
         toToken: transaction.infos.to_token,
         minToAmount: transaction.infos.min_to_amount,
+        orderlyNativeFees: 0n,
       });
     }
 
@@ -111,8 +113,9 @@ export const Swap: FC<SwapProps> = (props) => {
         toast.success("Deposit requested");
       },
       (error: any) => {
-        // console.dir(error);
-        toast.error(error?.info?.error?.message || "Error");
+        console.dir(error);
+
+        toast.error(error.message || "Error");
       }
     );
   }, [transaction, mode]);
@@ -143,7 +146,16 @@ export const Swap: FC<SwapProps> = (props) => {
         onComplete={props.onComplete}
       />
     );
-  }, [view, swapInfo, message, bridgeStatus, mode, chainInfo, tx]);
+  }, [
+    view,
+    swapInfo,
+    message,
+    bridgeStatus,
+    mode,
+    chainInfo,
+    tx,
+    props.onComplete,
+  ]);
 
   return (
     <div>

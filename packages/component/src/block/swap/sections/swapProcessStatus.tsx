@@ -61,7 +61,7 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
       </div>
       {status === SwapProcessStatusStatus.DepositFailed && (
         <div className="pb-7 text-danger text-center text-sm">
-          Failed to deposit, please try again later.
+          Deposit failed, please try again later.
         </div>
       )}
       <Button

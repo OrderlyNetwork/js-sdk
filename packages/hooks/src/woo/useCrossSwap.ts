@@ -80,6 +80,7 @@ export const useCrossSwap = () => {
 
   const swap = async (inputs: {
     address: string;
+    crossChainRouteAddress: string;
     src: {
       fromToken: string;
       fromAmount: bigint;
@@ -102,12 +103,16 @@ export const useCrossSwap = () => {
       throw new Error("account.address is undefined");
     }
 
-    const { address, src, dst } = inputs;
+    if (!inputs.crossChainRouteAddress) {
+      throw new Error("crossChainRouteAddress is undefined");
+    }
+
+    const { address, src, dst, crossChainRouteAddress } = inputs;
     if (loading) return;
     start();
 
     const quotoLZFee = await account.walletClient.call(
-      "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+      crossChainRouteAddress,
       "quoteLayerZeroFee",
       [account.address, dst, dstValutDeposit()],
       {
@@ -116,7 +121,7 @@ export const useCrossSwap = () => {
     );
 
     // const result = await account.walletClient.call(
-    //   "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+    //   crossChainRouteAddress,
     //   "crossSwap",
     //   [
     //     account.address,
@@ -132,36 +137,42 @@ export const useCrossSwap = () => {
     //   }
     // );
 
-    const result = await account.walletClient.sendTransaction(
-      "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
-      "crossSwap",
-      {
-        from: account.address!,
-        to: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
-        data: [account.address, src, dst, dstValutDeposit()],
-        value: quotoLZFee[0],
-      },
-      {
-        abi: woofiDexCrossChainRouterAbi,
-      }
-    );
+    try {
+      const result = await account.walletClient.sendTransaction(
+        crossChainRouteAddress,
+        "crossSwap",
+        {
+          from: account.address!,
+          to: crossChainRouteAddress,
+          data: [account.address, src, dst, dstValutDeposit()],
+          value: quotoLZFee[0],
+        },
+        {
+          abi: woofiDexCrossChainRouterAbi,
+        }
+      );
 
-    account.walletClient.on(
-      {
-        address: "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
-      },
-      (log: any, event: any) => {
-        console.log("-------------", log, event);
-      }
-    );
+      account.walletClient.on(
+        {
+          address: crossChainRouteAddress,
+        },
+        (log: any, event: any) => {
+          console.log("-------------", log, event);
+        }
+      );
 
-    stop();
+      stop();
 
-    // console.log("swap result:", result);
+      // console.log("swap result:", result);
 
-    checkLayerStatus(result.hash);
+      checkLayerStatus(result.hash);
 
-    return pick(["from", "to", "hash", "value"], result);
+      return pick(["from", "to", "hash", "value"], result);
+    } catch (e: any) {
+      console.log("swap error:", e);
+      stop();
+      throw new Error(e.errorCode);
+    }
   };
 
   return {

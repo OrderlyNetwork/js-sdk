@@ -204,6 +204,7 @@ export declare namespace API {
     dexs: string[];
     network_infos: NetworkInfos;
     token_infos: TokenInfo[];
+    nativeToken?: TokenInfo;
     // nativeToken
   }
 
@@ -219,6 +220,8 @@ export declare namespace API {
     woofi_dex_cross_chain_router?: string;
     woofi_dex_depositor?: string;
     bridgeless?: boolean;
+    withdrawal_fee?: number;
+    minimum_withdraw_amount?: number;
   }
 
   export interface TokenInfo {

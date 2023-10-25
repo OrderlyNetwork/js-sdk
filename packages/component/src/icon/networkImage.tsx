@@ -30,6 +30,8 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
   const [loading, setLoading] = useState(false);
 
+  const [failed, setFailed] = useState(false);
+
   const [isPlaceholder, setIsPlacholder] = useState(
     () => props.type === "placeholder"
   );
@@ -52,11 +54,13 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     img.onload = function () {
       setUrl(img.src);
       setLoading(false);
+      setFailed(false);
     };
 
     img.onerror = function () {
       console.log("load icon error");
-      setIsPlacholder(true);
+      // setIsPlacholder(true);
+      setFailed(true);
       setLoading(false);
     };
 
@@ -94,11 +98,17 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   }, [props.type, props.symbol, props.name, props.id]);
 
   const icon = useMemo(() => {
+    if (failed) {
+      if (props.type === "chain") {
+        return <span>U</span>;
+      }
+    }
     if (!url) {
       return null;
     }
+
     return <img src={url} alt={props.name} />;
-  }, [url]);
+  }, [url, failed, props.type]);
 
   const size = useMemo(() => {
     return getSize(props.size);
@@ -111,6 +121,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
         (isPlaceholder || loading) && "bg-slate-200",
         rounded && "rounded-full",
         loading && "animate-pulse",
+        failed && "bg-base-300",
         props.className
       )}
       style={{

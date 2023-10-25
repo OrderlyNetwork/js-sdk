@@ -1,6 +1,6 @@
 import { Input } from "@/input";
 import { FC, useContext, useMemo } from "react";
-import { API, ChainConfig } from "@orderly.network/types";
+import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { ChainSelect } from "../chainPicker";
 import { OrderlyContext } from "@orderly.network/hooks";
 
@@ -15,7 +15,7 @@ export type Wallet = {
 export interface WalletPickerProps {
   // chains?: API.ChainDetail[];
 
-  chain?: ChainConfig;
+  chain: CurrentChain | null;
 
   address?: string;
 

@@ -19,3 +19,6 @@ export enum ExchangeStatusEnum {
 }
 
 export type NetworkId = "testnet" | "mainnet";
+
+export const ARBITRUM_TESTNET_CHAINID = 421613;
+export const ARBITRUM_MAINNET_CHAINID = 42161;

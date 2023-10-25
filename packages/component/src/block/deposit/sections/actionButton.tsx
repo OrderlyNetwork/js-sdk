@@ -1,37 +1,39 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { API, ChainConfig } from "@orderly.network/types";
+import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ApproveButton } from "./approveButton";
 
 export interface ActionButtonProps {
   chains?: API.ChainDetail[];
-  chain: any;
+  chain: CurrentChain | null;
+  token?: API.TokenInfo;
   onDeposit: () => Promise<any>;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
   openChainPicker?: () => void;
-  chainInfo?: Partial<ChainConfig>;
   quantity: string;
   loading?: boolean;
   allowance: number;
   submitting: boolean;
   maxQuantity: string;
   chainNotSupport: boolean;
+  needSwap: boolean;
+  needCrossChain: boolean;
   onApprove?: () => Promise<any>;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
   const {
     chain,
+    token,
     chains,
     onDeposit,
     switchChain,
     disabled,
     openChainPicker,
-    chainInfo,
     quantity,
     loading,
     allowance,
@@ -39,29 +41,28 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     submitting,
     maxQuantity,
     chainNotSupport,
+    needSwap,
+    needCrossChain,
   } = props;
-
-  // const [chainNotSupport, setChainNotSupport] = useState(() =>
-  //   checkSupoort(chain, chains)
-  // );
-
-  // useEffect(() => {
-  //   // console.log({ chain, chains });
-  //   setChainNotSupport(checkSupoort(chain, chains));
-  // }, [chain, chains]);
 
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";
 
     if (chains?.length && chains.length > 1) {
-      return `Withdrawals are not supported on ${chainInfo?.chainName}. Please switch to any of the bridgeless networks.`;
+      return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to any of the bridgeless networks.`;
     }
 
-    return `Withdrawals are not supported on ${chainInfo?.chainName}. Please switch to Arbitrum.`;
-  }, [chainNotSupport, chains, chainInfo]);
+    return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to Arbitrum.`;
+  }, [chainNotSupport, chains, chain?.info.network_infos?.name]);
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
+      let label = "Deposit";
+      if (needCrossChain) {
+        label = "Swap and deposit";
+      } else if (needSwap) {
+        label = "Bridge and deposit";
+      }
       return (
         <StatusGuardButton>
           <ApproveButton
@@ -71,6 +72,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             quantity={quantity}
             submitting={submitting}
             maxQuantity={maxQuantity}
+            token={token?.symbol}
+            label={label}
           />
         </StatusGuardButton>
       );
@@ -116,6 +119,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     onDeposit,
     submitting,
     maxQuantity,
+    needSwap,
+    needCrossChain,
   ]);
 
   return (

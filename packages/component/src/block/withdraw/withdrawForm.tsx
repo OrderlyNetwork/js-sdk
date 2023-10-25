@@ -7,18 +7,24 @@ import { Summary } from "@/block/withdraw/sections/summary";
 import { WalletPicker } from "../pickers/walletPicker";
 import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
-import { API, WithdrawStatus, chainsMap } from "@orderly.network/types";
+import {
+  API,
+  CurrentChain,
+  WithdrawStatus,
+  chainsMap,
+} from "@orderly.network/types";
 import { toast } from "@/toast";
 import { Decimal } from "@orderly.network/utils";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
-import { useAppState } from "@orderly.network/hooks";
+import { ChainDialog } from "../pickers/chainPicker/chainDialog";
+import { modal } from "@/modal";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
-  chains?: API.ChainDetail[];
-  chain: any | null;
+  chains: API.NetworkInfos[];
+  chain: CurrentChain | null;
   address?: string;
   walletName?: string;
   decimals: number;
@@ -57,19 +63,21 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 }) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
-  const { errors } = useAppState();
 
   const [submitting, setSubmitting] = useState(false);
 
-  const chainInfo = useMemo(() => {
-    if (chain) {
-      return chainsMap.get(chain?.id);
-    }
-  }, [chain]);
-
   const [quantity, setQuantity] = useState("");
 
-  // const openChainPicker = useCallback(() => {}, []);
+  const openChainPicker = useCallback(async () => {
+    const result = await modal.show<{ id: number; name: string }, any>(
+      ChainDialog,
+      {
+        testChains: chains,
+        currentChainId: chain?.id,
+      }
+    );
+    return result;
+  }, [chains, chain]);
 
   // const switchChain = useCallback((chainId: string) => {}, []);
 
@@ -102,14 +110,13 @@ export const WithdrawForm: FC<WithdrawProps> = ({
           onOk?.(res);
         },
         (error) => {
-          // console.log(error);
           toast.error(error.message);
         }
       )
       .finally(() => {
         setSubmitting(false);
       });
-  }, [quantity, minAmount, inputStatus, chain, submitting, onOk]);
+  }, [quantity, minAmount, inputStatus, chain?.id, submitting, onOk]);
 
   const onValueChange = useCallback(
     (value: any) => {
@@ -143,16 +150,19 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   const fee = useMemo(() => {
     if (!chain) return 0;
-    const item = chains?.find(
-      (c) => parseInt(c.chain_id) === parseInt(chain!.id)
-    );
+
+    const item = chains?.find((c) => c.chain_id === chain!.id);
+
+    // console.log("item", chains, chain, item);
 
     if (!item) {
       return 0;
     }
 
-    return item.withdrawal_fee;
+    return item.withdrawal_fee || 0;
   }, [chain, chains]);
+
+  console.log("fee", fee);
 
   useEffect(() => {
     const num = Number(quantity);
@@ -207,11 +217,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         />
       </div>
       <div className={"py-2"}>
-        <WalletPicker
-          address={address}
-          chain={chainInfo}
-          wooSwapEnabled={false}
-        />
+        <WalletPicker address={address} chain={chain} wooSwapEnabled={false} />
       </div>
       <TokenQtyInput
         amount={quantity}
@@ -225,15 +231,14 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <Summary fee={fee} />
 
       <ActionButton
-        chainNotSupport={!!errors?.ChainNetworkNotSupport}
         chains={chains}
-        chain={undefined}
+        chain={chain}
         onWithdraw={doWithdraw}
         disabled={!quantity}
         switchChain={switchChain}
-        chainInfo={chainInfo}
         quantity={quantity}
         loading={submitting}
+        openChainPicker={openChainPicker}
       />
     </>
   );

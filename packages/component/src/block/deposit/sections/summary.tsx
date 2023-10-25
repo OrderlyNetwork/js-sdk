@@ -120,8 +120,8 @@ export const Summary: FC<SummaryProps> = (props) => {
             )} ${nativeToken?.symbol}`}</span>
           </div>
           <div>
-            Additional gas token is required to cover the operations on the
-            destination chains.
+            Additional gas tokens are required to cover operations on the
+            destination chain.
           </div>
           <Divider />
         </>

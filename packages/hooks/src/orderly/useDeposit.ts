@@ -1,8 +1,23 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useAccount } from "../useAccount";
-import { API, AccountStatusEnum } from "@orderly.network/types";
+import {
+  API,
+  ARBITRUM_MAINNET_CHAINID,
+  ARBITRUM_TESTNET_CHAINID,
+  AccountStatusEnum,
+  NetworkId,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { nativeTokenAddress } from "../woo/constants";
+import { useChains } from "./useChains";
+import { OrderlyContext } from "../orderlyContext";
 // import { Decimal } from "@orderly.network/utils";
 
 export type useDepositOptions = {
@@ -10,6 +25,7 @@ export type useDepositOptions = {
   address?: string;
   decimals?: number;
   vaultAddress?: string;
+  networkId?: NetworkId;
 };
 
 const isNativeTokenChecker = (address: string) =>
@@ -17,8 +33,13 @@ const isNativeTokenChecker = (address: string) =>
 
 export const useDeposit = (options?: useDepositOptions) => {
   // console.log("useDeposit options:", options);
+  const { onlyTestnet } = useContext<any>(OrderlyContext);
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
+
+  const [_, { findByChainId }] = useChains(undefined, {
+    wooSwapEnabled: true,
+  });
 
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
@@ -28,13 +49,21 @@ export const useDeposit = (options?: useDepositOptions) => {
   // const depositQueue = useRef<string[]>([]);
 
   const dst = useMemo(() => {
+    const chain: API.Chain = onlyTestnet
+      ? findByChainId(ARBITRUM_TESTNET_CHAINID)
+      : findByChainId(ARBITRUM_MAINNET_CHAINID);
+    // console.log("dst chain", chain);
+    const USDC = chain?.token_infos.find((token) => token.symbol === "USDC");
+    if (!chain) {
+      throw new Error("dst chain not found");
+    }
     return {
       symbol: "USDC",
-      address: "",
-      decimals: 6,
-      // chainId: 421613,
-      network: "Arbitrum Goerli",
-      chainId: 42161,
+      address: USDC?.address,
+      decimals: USDC?.decimals,
+      chainId: chain.network_infos.chain_id,
+      network: chain.network_infos.name,
+      // chainId: 42161,
     };
   }, []);
 
@@ -127,14 +156,12 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   useEffect(() => {
-    console.log("useDeposit useEffect", state.status, options?.address);
-
-    if (state.status < AccountStatusEnum.EnableTrading) return;
+    if (state.status < AccountStatusEnum.Connected) return;
 
     fetchBalance(options?.address);
 
     getAllowance(options?.address, options?.vaultAddress);
-  }, [state.status, options?.address, options?.vaultAddress]);
+  }, [state.status, options?.address, options?.vaultAddress, account.address]);
 
   const approve = useCallback(
     (amount: string | undefined) => {
@@ -157,8 +184,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     (amount: string) => {
       // only support orderly deposit
       return account.assetsManager.deposit(amount).then((res: any) => {
-        // console.log("----- deposit -----", res);
-
         setAllowance((value) => new Decimal(value).sub(amount).toString());
         setBalance((value) => new Decimal(value).sub(amount).toString());
         return res;

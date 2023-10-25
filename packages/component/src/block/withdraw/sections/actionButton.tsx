@@ -1,21 +1,21 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { API, ChainConfig } from "@orderly.network/types";
+import { API, Chain, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 
 export interface ActionButtonProps {
-  chains?: API.ChainDetail[];
-  chain: any;
+  chains?: API.NetworkInfos[];
+  chain: CurrentChain | null;
   onWithdraw: () => void;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
-  openChainPicker?: () => void;
-  chainInfo?: ChainConfig;
+  openChainPicker?: () => Promise<{ id: number; name: string }>;
+  // chainInfo?: ChainConfig;
   quantity: string;
   loading?: boolean;
-  chainNotSupport: boolean;
+  // chainNotSupport: boolean;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
@@ -26,21 +26,23 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     switchChain,
     disabled,
     openChainPicker,
-    chainInfo,
+    // chainInfo,
     quantity,
     loading,
-    chainNotSupport,
+    // chainNotSupport,
   } = props;
 
+  const [chainNotSupport, setChainNotSupport] = useState(false);
+
+  // 检查 chain 是否支持，需要单独处理，因为deposit可以支持cross, withdraw不行
+
   const checkSupoort = (
-    chain: any | null,
-    chains: API.ChainDetail[] | undefined
+    chain: CurrentChain | null,
+    chains: API.NetworkInfos[] | undefined
   ): boolean => {
     if (!chain || !chains) return false;
 
-    const index = chains?.findIndex(
-      (c) => parseInt(c.chain_id) === parseInt(chain!.id)
-    );
+    const index = chains?.findIndex((c) => c.chain_id === chain.id);
 
     return index < 0;
   };
@@ -49,11 +51,23 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (!chainNotSupport) return "";
 
     if (chains?.length && chains.length > 1) {
-      return `Withdrawals are not supported on ${chainInfo?.chainName}. Please switch to any of the bridgeless networks.`;
+      return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to any of the bridgeless networks.`;
     }
 
-    return `Withdrawals are not supported on ${chainInfo?.chainName}. Please switch to Arbitrum.`;
-  }, [chainNotSupport, chains, chainInfo]);
+    return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to Arbitrum.`;
+  }, [chainNotSupport, chains, chain]);
+
+  useEffect(() => {
+    setChainNotSupport(checkSupoort(chain, chains));
+  }, [chains?.length, chain?.id]);
+
+  const swtichChain = (chainId: number) => {
+    toast.promise(switchChain({ chainId: int2hex(chainId) }), {
+      loading: "Loading",
+      success: (data) => `Successfully`,
+      error: (err) => `Error: ${err.toString()}`,
+    });
+  };
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
@@ -77,15 +91,17 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
           fullWidth
           onClick={() => {
             const chain = chains[0];
+            // console.log(chain);
             if (chain) {
-              toast.promise(
-                switchChain({ chainId: int2hex(Number(chain.chain_id)) }),
-                {
-                  loading: "Loading",
-                  success: (data) => `Successfully`,
-                  error: (err) => `Error: ${err.toString()}`,
-                }
-              );
+              swtichChain(chain.chain_id);
+              // toast.promise(
+              //   switchChain({ chainId: int2hex(chain.chain_id) }),
+              //   {
+              //     loading: "Loading",
+              //     success: (data) => `Successfully`,
+              //     error: (err) => `Error: ${err.toString()}`,
+              //   }
+              // );
             }
           }}
         >
@@ -94,7 +110,14 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={openChainPicker}>
+      <Button
+        fullWidth
+        onClick={() =>
+          openChainPicker?.().then(({ id }) => {
+            swtichChain(id);
+          })
+        }
+      >
         Switch Network
       </Button>
     );

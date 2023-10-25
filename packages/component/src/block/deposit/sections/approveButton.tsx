@@ -9,11 +9,21 @@ interface ApproveButtonProps {
   maxQuantity: string;
   quantity: string;
   submitting: boolean;
+  token?: string;
+  label: string;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {
-  const { onApprove, onDeposit, allowance, submitting, quantity, maxQuantity } =
-    props;
+  const {
+    onApprove,
+    onDeposit,
+    allowance,
+    submitting,
+    quantity,
+    maxQuantity,
+    token = "USDC",
+    label,
+  } = props;
 
   const [approveLoading, setApproveLoading] = useState(false);
 
@@ -39,7 +49,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
   if (allowance <= 0) {
     return (
       <Button fullWidth loading={approveLoading} onClick={onClick}>
-        Approve USDC
+        {`Approve ${token}`}
       </Button>
     );
   }
@@ -47,7 +57,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
   if (allowance < Number(quantity) && Number(quantity) <= Number(maxQuantity)) {
     return (
       <Button fullWidth loading={approveLoading} onClick={onClick}>
-        increase USDC authorized amount
+        {`increase ${token} authorized amount`}
       </Button>
     );
   }
@@ -59,7 +69,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       disabled={!quantity || submitting}
       loading={submitting}
     >
-      Deposit
+      {label}
     </Button>
   );
 };

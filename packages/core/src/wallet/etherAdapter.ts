@@ -1,6 +1,9 @@
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
 import { BrowserProvider, ethers, toNumber } from "ethers";
-import { getParsedEthersError } from "@enzoferey/ethers-error-parser";
+import {
+  EthersError,
+  getParsedEthersError,
+} from "@enzoferey/ethers-error-parser";
 
 export interface EtherAdapterOptions {
   provider: any;
@@ -95,9 +98,11 @@ export class EtherAdapter implements IWalletAdapter {
       abi: any;
     }
   ): Promise<ethers.TransactionResponse> {
-    // throw new Error("Method not implemented.");
-
     const singer = await this.provider?.getSigner();
+    if (!singer) {
+      throw new Error("singer is not exist");
+    }
+
     const contract = new ethers.Contract(
       contractAddress,
       options.abi,
@@ -117,21 +122,20 @@ export class EtherAdapter implements IWalletAdapter {
       value: payload.value,
     };
 
-    if (!singer) {
-      throw new Error("singer is not exist");
-    }
     const gas = await this.estimateGas(tx);
-    // const gasPrice = await this.provider?.getGasPrice();
-    // const gasPrice = (await this.provider!.getFeeData()).gasPrice;
-
-    // console.log("gasPrice", gasPrice);
 
     tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
-    const result = await singer.sendTransaction(tx);
 
-    console.log("result", result);
+    try {
+      const result = await singer.sendTransaction(tx);
+      console.log("result", result);
 
-    return result;
+      return result;
+    } catch (error) {
+      const parsedEthersError = getParsedEthersError(error as EthersError);
+
+      throw parsedEthersError;
+    }
   }
 
   private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {

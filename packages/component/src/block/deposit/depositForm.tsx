@@ -21,7 +21,7 @@ import { InputStatus } from "../quantityInput/quantityInput";
 import { Decimal, int2hex } from "@orderly.network/utils";
 
 import { toast } from "@/toast";
-import { type API } from "@orderly.network/types";
+import { CurrentChain, type API } from "@orderly.network/types";
 import { Notice } from "./sections/notice";
 import { modal } from "@/modal";
 import { SwapDialog } from "../swap/swapDialog";
@@ -33,7 +33,7 @@ export interface DepositFormProps {
   displayDecimals: number;
   // status?: WithdrawStatus;
   // chains?: API.ChainDetail[];
-  chain: any | null;
+  chain: CurrentChain | null;
 
   token?: API.TokenInfo;
 
@@ -100,8 +100,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const { errors } = useAppState();
 
-  console.log("!!!!!!!!!!!!!", errors);
-
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
@@ -141,26 +139,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // dstGasFee: "",
   });
 
-  const [_, { findByChainId }] = useChains("", {
-    wooSwapEnabled: true,
-    pick: "network_infos",
-  });
-
-  const { data: orderlyChains, error: tokenError } =
-    useQuery<API.Chain[]>("/v1/public/token");
-
-  const chainInfo = useMemo<
-    API.Chain & {
-      nativeToken: API.TokenInfo;
-    }
-  >(() => {
-    if (chain) {
-      const _item = findByChainId(chain?.id);
-
-      return _item;
-    }
-  }, [chain]);
-
   // console.log("------------->>>>>>", props.token, chain, chainInfo);
 
   const onDeposit = useCallback(() => {
@@ -194,6 +172,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
               setQuantity("");
               toast.success("Deposit requested");
               onOk?.(res);
+              // cleanData();
             },
             (error) => {
               toast.error(error?.errorCode);
@@ -209,10 +188,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     return Promise.resolve()
       .then(() => enquiry())
       .then((transaction) => {
+        console.log("!!!!!!!!!!!!!! enquiry res:", transaction, props.token);
         const amountValue = needCrossChain
           ? transaction.route_infos.dst.amounts[1]
           : transaction.route_infos.amounts[1];
 
+        //@ts-ignore
         return modal.show(SwapDialog, {
           src: {
             chain: chain?.id,
@@ -226,29 +207,45 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
             chain: dst.chainId,
             token: dst.symbol,
             displayDecimals: 2,
-            amount: new Decimal(amountValue).div(Math.pow(10, 6)).toString(),
+            amount: new Decimal(amountValue)
+              .div(Math.pow(10, dst.decimals))
+              .toString(),
             decimals: dst.decimals,
           },
 
           slippage,
           mode: needCrossChain ? SwapMode.Cross : SwapMode.Single,
           transactionData: transaction,
-          chainInfo: chainInfo.network_infos,
-          nativeToken: chainInfo.nativeToken,
+          chain: chain?.info.network_infos,
+          nativeToken: chain?.info.nativeToken,
         });
       })
       .then(
         (res) => {
-          console.log("********************", res);
+          console.log(
+            "******** deposit success & reset field ************",
+            res
+          );
+          cleanData();
+          setQuantity("");
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
+          toast.error(error?.message || "Error");
         }
       )
       .finally(() => {
         setSubmitting(false);
       });
-  }, [quantity, maxAmount, submitting, needCrossChain, needSwap, chainInfo]);
+  }, [
+    quantity,
+    maxAmount,
+    submitting,
+    needCrossChain,
+    needSwap,
+    chain?.info,
+    slippage,
+  ]);
 
   const onApprove = useCallback(() => {
     return props.approve(quantity || undefined);
@@ -311,6 +308,9 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
               chain?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
             );
             toast.success("Network switched");
+            // 清理数据
+            setQuantity("");
+            cleanData();
           },
           (error) => {
             // console.log(error)
@@ -431,6 +431,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         params: {
           network: dst.network,
           srcToken: props.token?.address,
+          crossChainRouteAddress:
+            chain?.info?.network_infos.woofi_dex_cross_chain_router,
           amount: new Decimal(quantity)
             .mul(10 ** props.token!.decimals)
             .toString(),
@@ -548,7 +550,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           needSwap={needSwap}
           needCrossChain={needCrossChain}
           isNativeToken={isNativeToken}
-          nativeToken={chainInfo?.nativeToken}
+          nativeToken={chain?.info?.nativeToken}
           src={props.token}
           dst={dst}
           price={transactionInfo.price}
@@ -571,8 +573,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       />
       <ActionButton
         chain={chain}
-        // chains={chain}
-        chainInfo={{ chainName: chainInfo?.network_infos?.name }}
+        token={props.token}
         onDeposit={onDeposit}
         allowance={
           props.isNativeToken ? Number.MAX_VALUE : Number(props.allowance)
@@ -585,6 +586,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         onApprove={onApprove}
         submitting={submitting}
         maxQuantity={maxAmount}
+        needCrossChain={needCrossChain}
+        needSwap={needSwap}
       />
     </div>
   );

@@ -9,7 +9,7 @@ import {
 import { useChains } from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
-import { ChainConfig } from "@orderly.network/types";
+import { ChainConfig, CurrentChain } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { ChainDialog } from "./chainDialog";
 import { API } from "@orderly.network/types";
@@ -20,7 +20,7 @@ export interface ChainSelectProps {
   onValueChange?: (value: any) => void;
   onChainInited?: (chain: API.Chain) => void;
   // onChainIdChange?: (chainId: number) => void;
-  value?: ChainConfig;
+  value: CurrentChain | null;
   settingChain?: boolean;
   onlyTestnet?: boolean;
   wooSwapEnabled?: boolean;
@@ -38,8 +38,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     // filter: (chain: API.Chain) => chain.network_infos.chain_id === 421613,
   });
 
-  // console.log("allChains", allChains);
-
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
 
@@ -51,29 +49,36 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const { value } = props;
 
-  console.log("chains", chains);
-
   const currentChain = useMemo(() => {
-    if (!value || !chains) return undefined;
-    return findByChainId(value.id, "network_infos");
-  }, [props.value, chains]);
+    if (!value || !chains || !Array.isArray(chains)) return undefined;
+    // 如果value是不支持的chain, 显示unknown
+
+    if (
+      chains.findIndex(
+        (chain: API.NetworkInfos) => chain.chain_id === value.id
+      ) < 0
+    ) {
+      return undefined;
+    }
+    return value.info.network_infos;
+  }, [value, chains]);
 
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
       // testChains: onlyTestnet ? chains.testnet : [],
       mainChains: chains,
-      currentChainId: currentChain?.chain_id,
+      currentChainId: value?.id,
     });
 
     const chainInfo = findByChainId(result?.id);
 
     props?.onValueChange?.(chainInfo);
-  }, [chains, props.onValueChange, currentChain?.chain_id]);
+  }, [chains, props.onValueChange, value?.id]);
 
   useEffect(() => {
     // 获取 到chain列表之后，初始化chain及其token列表
     if (!!chains) {
-      const chainInfo = findByChainId(props.value?.id);
+      const chainInfo = findByChainId(value?.id);
       if (!chainInfo) return;
       props.onChainInited?.(chainInfo);
     }
@@ -102,7 +107,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
         rounded
       />
       <span className="flex-1 px-2 text-left">
-        {currentChain?.name ?? "--"}
+        {currentChain?.name ?? "Unknown"}
       </span>
       {icon}
     </button>

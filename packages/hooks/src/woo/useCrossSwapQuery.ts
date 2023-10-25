@@ -24,18 +24,21 @@ export const useWooCrossSwapQuery = () => {
   }, [account]);
 
   const queryDestinationFee = useCallback(
-    async (dst: {
-      chainId: string;
-      bridgedToken: string;
-      toToken: string;
-      minToAmount: bigint;
-      airdropNativeAmount: bigint;
-    }) => {
+    async (
+      crossChainRouteAddress: string,
+      dst: {
+        chainId: string;
+        bridgedToken: string;
+        toToken: string;
+        minToAmount: bigint;
+        orderlyNativeFees: bigint;
+      }
+    ) => {
       if (!account.walletClient) {
         throw new Error("walletClient is not ready");
       }
       const quotoLZFee = await account.walletClient.call(
-        "0xC7498b7e7C9845b4B2556f2a4B7Cad2B7F2C0dC4",
+        crossChainRouteAddress,
         "quoteLayerZeroFee",
         [account.address, dst, dstValutDeposit()],
         {
@@ -50,7 +53,13 @@ export const useWooCrossSwapQuery = () => {
 
   /// swap 询价
   const query = useCallback(
-    (inputs: any) => {
+    (inputs: {
+      srcNetwork: string;
+      srcToken: string;
+      amount: bigint;
+      slippage: number;
+      crossChainRouteAddress: string;
+    }) => {
       // console.log("========>>>>>inputs", inputs);
       if (loading) return;
       start();
@@ -91,12 +100,12 @@ export const useWooCrossSwapQuery = () => {
         })
         .then((swapInfo) => {
           // console.log("swapInfo:::::", swapInfo);
-          return queryDestinationFee({
+          return queryDestinationFee(inputs.crossChainRouteAddress, {
             chainId: swapInfo.dst_infos.chain_id,
             bridgedToken: swapInfo.dst_infos.bridged_token,
             toToken: swapInfo.dst_infos.to_token,
             minToAmount: BigInt(swapInfo.dst_infos.min_to_amount),
-            airdropNativeAmount: 0n,
+            orderlyNativeFees: 0n,
           }).then((data) => {
             console.log("res::::", data);
 

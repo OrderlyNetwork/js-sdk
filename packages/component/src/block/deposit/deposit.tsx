@@ -4,7 +4,7 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
 import { useChain, useDeposit, useChains } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
 
 export enum DepositStatus {
@@ -38,7 +38,7 @@ export const Deposit: FC<DepositProps> = (props) => {
   const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
 
-  const currentChain = useMemo(() => {
+  const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
     const chainId = parseInt(connectedChain.id);
@@ -50,6 +50,24 @@ export const Deposit: FC<DepositProps> = (props) => {
       info: chain,
     };
   }, [connectedChain, findByChainId]);
+  const {
+    dst,
+    balance,
+    allowance,
+    approve,
+    deposit,
+    isNativeToken,
+    balanceRevalidating,
+    fetchBalance,
+  } = useDeposit({
+    address: token?.address,
+    decimals: token?.decimals,
+    vaultAddress: needCrossChain
+      ? currentChain?.info?.network_infos.woofi_dex_cross_chain_router
+      : needSwap
+      ? currentChain?.info.network_infos.woofi_dex_depositor
+      : undefined,
+  });
 
   useEffect(() => {
     if (!token || !currentChain) return;
@@ -67,26 +85,9 @@ export const Deposit: FC<DepositProps> = (props) => {
     } else {
       setNeedCrossChain(false);
     }
-  }, [token?.symbol, currentChain?.id]);
+  }, [token?.symbol, currentChain?.id, dst.chainId]);
 
-  const {
-    dst,
-    balance,
-    allowance,
-    approve,
-    deposit,
-    isNativeToken,
-    balanceRevalidating,
-    fetchBalance,
-  } = useDeposit({
-    address: token?.address,
-    decimals: token?.decimals,
-    vaultAddress: needCrossChain
-      ? currentChain?.info.network_infos.woofi_dex_cross_chain_router
-      : needSwap
-      ? currentChain?.info.network_infos.woofi_dex_depositor
-      : undefined,
-  });
+  console.log("needCrossChain", currentChain, dst, needCrossChain, needSwap);
 
   return (
     <DepositForm

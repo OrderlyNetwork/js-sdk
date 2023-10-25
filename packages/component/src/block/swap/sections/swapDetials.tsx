@@ -137,7 +137,7 @@ export const SwapDetails: FC<Props> = (props) => {
         </ListTile>
       </div>
       <Button fullWidth onClick={() => props.onConfirm()}>
-        Confirm to swap
+        Confirm swap
       </Button>
     </>
   );

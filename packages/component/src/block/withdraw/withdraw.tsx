@@ -7,6 +7,7 @@ import {
   OrderlyContext,
 } from "@orderly.network/hooks";
 import { WalletConnectorContext } from "@/provider";
+import { CurrentChain } from "@orderly.network/types";
 
 export interface WithdrawProps {
   onCancel?: () => void;
@@ -22,27 +23,31 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const { networkId } = useContext(OrderlyContext);
 
   // const { chains } = useChain("USDC");
-  const [chains] = useChains(networkId, {
+  const [chains, { findByChainId }] = useChains(networkId, {
     wooSwapEnabled: false,
+    pick: "network_infos",
   });
 
-  console.log("withdraw chains======>>>>>", chains);
-
-  const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
-
-  const currentChain = useMemo(() => {
+  const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
+
+    const chainId = parseInt(connectedChain.id);
+    const chain = findByChainId(chainId);
+
     return {
       ...connectedChain,
-      id: parseInt(connectedChain?.id),
+      id: chainId,
+      info: chain,
     };
-  }, [connectedChain]);
+  }, [connectedChain, findByChainId]);
+
+  const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
 
   return (
     <WithdrawForm
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
-      chains={chains?.chain_details}
+      chains={chains}
       walletName={wallet?.label}
       switchChain={setChain}
       decimals={chains?.decimals ?? 2}

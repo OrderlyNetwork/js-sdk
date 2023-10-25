@@ -78,10 +78,14 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
       {(status === SwapProcessStatusStatus.DepositFailed ||
         status === SwapProcessStatusStatus.BridgeFialed) && (
         <div className="pb-7 text-danger text-center text-sm">
-          Failed to deposit, please try again later.
+          Deposit failed, please try again later.
         </div>
       )}
-      <Button fullWidth disabled={status < SwapProcessStatusStatus.Done}>
+      <Button
+        fullWidth
+        disabled={status < SwapProcessStatusStatus.Done}
+        onClick={() => props.onComplete?.()}
+      >
         OK
       </Button>
     </>

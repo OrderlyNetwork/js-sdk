@@ -9,6 +9,12 @@ export const SwapDialog = create<SwapProps>((props) => {
     resolve();
     hide();
   };
+
+  const onCancel = () => {
+    reject();
+    hide();
+  };
+
   return (
     <Dialog
       onOpenChange={(visible: boolean) => {
@@ -25,7 +31,7 @@ export const SwapDialog = create<SwapProps>((props) => {
       >
         <DialogHeader>Review swap details</DialogHeader>
         <DialogBody>
-          <Swap {...props} onComplete={onComplete} />
+          <Swap {...props} onComplete={onComplete} onCancel={onCancel} />
         </DialogBody>
       </DialogContent>
     </Dialog>

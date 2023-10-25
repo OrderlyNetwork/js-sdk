@@ -50,9 +50,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
       case AccountStatusEnum.NotConnected:
         return "Connect Wallet";
       case AccountStatusEnum.Connected:
-
       case AccountStatusEnum.NotSignedIn:
-
       case AccountStatusEnum.SignedIn:
       case AccountStatusEnum.DisabledTrading:
       case AccountStatusEnum.EnableTrading:
@@ -79,7 +77,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
       )}
 
       <div className="flex gap-2">
-        <Chains />
+        <Chains disabled={status < AccountStatusEnum.NotConnected} />
         {status === AccountStatusEnum.NotConnected ? (
           <Button
             size={"small"}

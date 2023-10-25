@@ -163,7 +163,6 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
 
   const onSignIn = useCallback(() => {
     return createAccount().catch((err: Error) => {
-      // console.log("!!!!!!!!!!!!!!!!!", err);
       reject();
       toast.error(err.message);
       hide();

@@ -1,7 +1,7 @@
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
-import { ChainConfig } from "@orderly.network/types";
+import { ChainConfig, CurrentChain } from "@orderly.network/types";
 import { FC, useContext } from "react";
 
 interface NoticeProps {
@@ -10,7 +10,7 @@ interface NoticeProps {
   warningMessage?: string;
   onChainChange?: (value: any) => void;
   // onChainIdChange?: (chainId: number) => void;
-  currentChain?: ChainConfig;
+  currentChain: CurrentChain | null;
 }
 
 export const Notice: FC<NoticeProps> = (props) => {

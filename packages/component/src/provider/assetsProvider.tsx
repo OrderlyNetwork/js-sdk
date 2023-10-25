@@ -95,10 +95,6 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   const { query: wooCrossSwapQuery } = useWooCrossSwapQuery();
   const { query: wooSwapQuery } = useWooSwapQuery();
 
-  // const { trigger: onCrossChainSwapEnquiry } = useLazyQuery(
-  //   `${configStore.get("swapSupportApiUrl")}/woofi_dex/cross_chain_swap`
-  // );
-
   const onEnquiry = useCallback(
     (inputs: { needCrossChain: boolean; needSwap: boolean; params: any }) => {
       const { needCrossChain, needSwap, params } = inputs;

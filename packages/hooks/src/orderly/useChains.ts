@@ -42,6 +42,8 @@ export const useChains = (
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      revalidateOnMount: true, // If false, undefined data gets cached against the key.
+      dedupingInterval: 3_600_000, // dont duplicate a request w/ same key for 1hr
       ...swrOptions,
     }
   );
@@ -52,6 +54,8 @@ export const useChains = (
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      revalidateOnMount: true,
+      dedupingInterval: 3_600_000,
     }
   );
 
@@ -99,10 +103,16 @@ export const useChains = (
 
     if (!wooSwapEnabled) {
       // console.log("orderlyChainsArr", orderlyChainsArr, options);
+      let arr: any[] = orderlyChainsArr;
       if (typeof options?.filter === "function") {
-        return orderlyChainsArr.filter(options.filter);
+        arr = orderlyChainsArr.filter(options.filter);
       }
-      return orderlyChainsArr;
+
+      if (!!field) {
+        arr = arr.map((item) => item[field]);
+      }
+
+      return arr;
     } else {
       //
       if (!data || !data.data) return data;
@@ -157,14 +167,6 @@ export const useChains = (
         }
       });
 
-      // if (orderlyChainIds.size > 0) {
-      //   if (envNetworkId === "testnet") {
-      //     testnetArr = [...orderlyChainsArr, ...testnetArr];
-      //   } else {
-      //     mainnetArr = [...orderlyChainsArr, ...mainnetArr];
-      //   }
-      // }
-
       mainnetArr.sort((a, b) => {
         return a.network_infos.bridgeless ? -1 : 1;
       });
@@ -194,6 +196,8 @@ export const useChains = (
       };
     }
   }, [data, networkId, field, options, orderlyChains, wooSwapEnabled]);
+
+  // const dstToken = useMemo(() => {},[]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {

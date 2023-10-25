@@ -1,3 +1,4 @@
+import { FC, useContext, useMemo, useState } from "react";
 import { ChainListView } from "@/block/pickers/chainPicker";
 import Button from "@/button";
 import {
@@ -8,24 +9,19 @@ import {
   DialogTrigger,
 } from "@/dialog";
 import { type API } from "@orderly.network/types";
-import { ChevronDown } from "lucide-react";
-import { useChains, OrderlyContext, useBoolean } from "@orderly.network/hooks";
-import { FC, useContext, useMemo, useState } from "react";
+import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { WalletConnectorContext } from "@/provider";
 
 interface ChainsProps {
-  //   mainnetChains: API.NetworkInfos[];
-  //   testChains: API.NetworkInfos[];
+  disabled?: boolean;
 }
 
 export const Chains: FC<ChainsProps> = (props) => {
-  //   const { mainnetChains, testChains } = props;
+  const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { networkId, onlyTestnet } = useContext<any>(OrderlyContext);
-
-  // const [switching,{start,stop}] = useBoolean(false)
+  const { onlyTestnet } = useContext<any>(OrderlyContext);
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: true,
@@ -57,9 +53,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
 
     return <NetworkImage id={chain.chain_id} type="chain" />;
-
-    console.log("\\\\\\", chain);
-  }, [connectedChain]);
+  }, [connectedChain, findByChainId]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -69,18 +63,17 @@ export const Chains: FC<ChainsProps> = (props) => {
           size={"small"}
           color={"buy"}
           loading={settingChain}
+          disabled={disabled}
           className={
             "border-[rgba(38,254,254,1)] gap-1 text-base-contrast h-[30px]"
           }
         >
-          {/* <NetworkImage id={1} type="chain" size={"small"} /> */}
-
           {chainName}
-          {/* <ChevronDown size={16} className="rotate-180" /> */}
+
           <ArrowIcon size={12} />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <DialogHeader>Swith network</DialogHeader>
         <DialogBody>
           <ChainListView

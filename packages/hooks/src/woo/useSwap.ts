@@ -5,15 +5,15 @@ import { utils } from "@orderly.network/core";
 import { pick } from "ramda";
 import { OrderlyContext } from "../orderlyContext";
 
-const woofiDexDepositor = "0xfD7ed9D3d4fD88595AF6a87f798ffDB42b4D7ccB";
 const woofiDexDepositorAbi = [
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
+    anonymous: false,
     inputs: [
-      { internalType: "address", name: "_weth", type: "address" },
-      { internalType: "address", name: "_wooRouter", type: "address" },
+      { indexed: false, internalType: "uint8", name: "version", type: "uint8" },
     ],
-    stateMutability: "nonpayable",
-    type: "constructor",
+    name: "Initialized",
+    type: "event",
   },
   {
     anonymous: false,
@@ -102,6 +102,12 @@ const woofiDexDepositorAbi = [
       },
       {
         indexed: false,
+        internalType: "uint256",
+        name: "orderlyNativeFees",
+        type: "uint256",
+      },
+      {
+        indexed: false,
         internalType: "bytes32",
         name: "accountId",
         type: "bytes32",
@@ -143,6 +149,20 @@ const woofiDexDepositorAbi = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "_wooRouter", type: "address" }],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "orderlyFeeToggle",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "owner",
     outputs: [{ internalType: "address", name: "", type: "address" }],
@@ -166,6 +186,13 @@ const woofiDexDepositorAbi = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bool", name: "_orderlyFeeToggle", type: "bool" }],
+    name: "setOrderlyFeeToggle",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -196,8 +223,13 @@ const woofiDexDepositorAbi = [
           { internalType: "uint256", name: "fromAmount", type: "uint256" },
           { internalType: "address", name: "toToken", type: "address" },
           { internalType: "uint256", name: "minToAmount", type: "uint256" },
+          {
+            internalType: "uint256",
+            name: "orderlyNativeFees",
+            type: "uint256",
+          },
         ],
-        internalType: "struct IWOOFiDexRouter.Infos",
+        internalType: "struct IWOOFiDexDepositor.Infos",
         name: "infos",
         type: "tuple",
       },
@@ -207,7 +239,7 @@ const woofiDexDepositorAbi = [
           { internalType: "bytes32", name: "brokerHash", type: "bytes32" },
           { internalType: "bytes32", name: "tokenHash", type: "bytes32" },
         ],
-        internalType: "struct IWOOFiDexRouter.VaultDeposit",
+        internalType: "struct IWOOFiDexDepositor.VaultDeposit",
         name: "vaultDeposit",
         type: "tuple",
       },
@@ -233,17 +265,8 @@ const woofiDexDepositorAbi = [
   },
   {
     inputs: [],
-    name: "weth",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "wooRouter",
-    outputs: [
-      { internalType: "contract IWooRouterV2", name: "", type: "address" },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -271,12 +294,16 @@ export const useSwap = () => {
   }, [account]);
 
   const swap = useCallback(
-    async (inputs: {
-      fromToken: string;
-      fromAmount: string;
-      toToken: string;
-      minToAmount: string;
-    }) => {
+    async (
+      woofiDexDepositorAdress: string,
+      inputs: {
+        fromToken: string;
+        fromAmount: string;
+        toToken: string;
+        minToAmount: string;
+        orderlyNativeFees: bigint;
+      }
+    ) => {
       if (!account.walletClient) {
         throw new Error("walletClient is undefined");
       }
@@ -288,31 +315,40 @@ export const useSwap = () => {
       if (loading) return;
       start();
 
-      // const result = await account.walletClient!.call(
-      //   woofiDexDepositor,
-      //   "swap",
-      //   [account.address, inputs, dstValutDeposit()],
-      //   {
-      //     abi: woofiDexDepositorAbi,
-      //   }
-      // );
+      console.log("---------", inputs);
 
-      const result = await account.walletClient.sendTransaction(
-        woofiDexDepositor,
-        "swap",
-        {
-          from: account.address,
-          to: woofiDexDepositor,
-          data: [account.address, inputs, dstValutDeposit()],
-        },
-        {
-          abi: woofiDexDepositorAbi,
-        }
-      );
+      try {
+        // const result = await account.walletClient!.call(
+        //   // woofiDexDepositorAdress,
+        //   woofiDexDepositorAdress,
+        //   "swap",
+        //   [account.address, inputs, dstValutDeposit()],
+        //   {
+        //     abi: woofiDexDepositorAbi,
+        //   }
+        // );
 
-      stop();
+        const result = await account.walletClient.sendTransaction(
+          woofiDexDepositorAdress,
+          "swap",
+          {
+            from: account.address,
+            to: woofiDexDepositorAdress,
+            data: [account.address, inputs, dstValutDeposit()],
+          },
+          {
+            abi: woofiDexDepositorAbi,
+          }
+        );
 
-      return pick(["from", "to", "hash", "value"], result);
+        stop();
+
+        return pick(["from", "to", "hash", "value"], result);
+      } catch (e: any) {
+        console.log("调用合约报错：", e);
+
+        throw new Error(e.errorCode);
+      }
     },
     [loading, account]
   );
