@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency=15",
     "lint": "turbo run lint",
     "version:add":"pnpm build && changeset add",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
