@@ -14,11 +14,10 @@ export interface OrdersViewProps {
   isLoading: boolean;
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
-
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
-
   symbol: string;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const OrdersView: FC<OrdersViewProps> = (props) => {
@@ -40,7 +39,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
           renderSeparator={(_, index) => <Divider />}
           renderItem={(item, index) => (
             <SymbolProvider symbol={item.symbol}>
-              <OrderCell order={item} />
+              <OrderCell order={item} onSymbolChange={props.onSymbolChange} />
             </SymbolProvider>
           )}
         />

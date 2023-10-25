@@ -102,6 +102,7 @@ export const PositionPane = () => {
       onMarketClose={onMarketClose}
       showAllSymbol={showAllSymbol}
       onShowAllSymbolChange={onShowAllSymbolChange}
+      onSymbolChange={context.onSymbolChange}
     />
   );
 };

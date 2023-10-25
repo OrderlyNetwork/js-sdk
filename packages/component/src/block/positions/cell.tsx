@@ -4,24 +4,34 @@ import { Statistic } from "@/statistic";
 import { FC, useContext } from "react";
 import { Text } from "@/text";
 import { SymbolContext } from "@/provider";
+import { API } from "@orderly.network/types";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
   onMarketClose?: (position: any) => void;
-
   item: any;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
 export const PositionCell: FC<PositionCellProps> = (props) => {
   const { item } = props;
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
+
+  const onSymbol = () => {
+    props.onSymbolChange?.(item.symbol);
+    // go to the top of page
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="px-4">
       <div className="flex items-center py-2">
         <div className="flex-1">
           <div className="flex items-center space-x-2">
             <NetworkImage type="symbol" symbol={item.symbol} size={"small"} />
-            <Text rule="symbol">{item.symbol}</Text>
+            <Text rule="symbol" onClick={onSymbol}>
+              {item.symbol}
+            </Text>
           </div>
         </div>
         <Statistic

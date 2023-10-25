@@ -13,7 +13,7 @@ export const HistoryPane = () => {
   const [side, setSide] = useState<OrderSide | "">("");
   const [status, setStauts] = useState<OrderStatus | "">("");
   const { state } = useAccount();
-  // const { symbol } = useContext(TradingPageContext);
+  const { onSymbolChange } = useContext(TradingPageContext);
   const [data, { isLoading }] = useOrderStream({
     size: 20,
     side,
@@ -26,6 +26,7 @@ export const HistoryPane = () => {
       dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
       onSideChange={setSide}
       onStatusChange={setStauts}
+      onSymbolChange={onSymbolChange}
       side={side}
       status={status}
     />
