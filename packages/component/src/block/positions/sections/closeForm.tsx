@@ -49,10 +49,10 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     formState: { errors, submitCount, isSubmitting },
   } = useForm({
     defaultValues: {
-      // order_price: markPrice,
+      order_price: markPrice,
     },
     values: {
-      order_price: "",
+      // order_price: "",
       order_quantity: Math.abs(position?.position_qty),
       symbol: position?.symbol,
       order_type: OrderType.LIMIT,
@@ -167,6 +167,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="text-right"
+                  autoFocus
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
