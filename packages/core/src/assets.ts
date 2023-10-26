@@ -269,7 +269,11 @@ export class Assets {
     if (!this.account.walletClient)
       throw new Error("walletClient is undefined");
 
-    const brokerId = this.configStore.get<string>("brokerId");
+    // const brokerId = this.configStore.get<string>("brokerId");
+    // TODO: 临时测试用，正式上线需要修改
+    const brokerId = this.configStore.get<boolean>("onlyTestnet")
+      ? "woofi_dex"
+      : "woofi_pro";
 
     if (!brokerId) throw new Error("brokerId is required");
 
