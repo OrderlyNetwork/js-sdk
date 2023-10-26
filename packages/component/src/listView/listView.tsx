@@ -1,53 +1,27 @@
 import React from "react";
-import { FC, useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { EmptyView } from "./emptyView";
 import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
+import { useEndReached } from "./useEndReached";
 
 export interface ListViewProps<T> {
   dataSource: T[] | null | undefined;
   renderItem: (item: T, index: number) => React.ReactNode;
-  //
   className?: string;
   contentClassName?: string;
   isLoading?: boolean;
-
-  onEndReached?: () => void;
+  loadMore?: () => void;
 }
 
 export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
-  const observer = useRef<IntersectionObserver>();
-
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-
-    const handleObserver = (entries: IntersectionObserverEntry[]) => {
-      if (props.isLoading) {
-        return;
-      }
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          props.onEndReached?.();
-        }
-      });
-    };
-
-    observer.current = new IntersectionObserver(handleObserver, options);
-
-    return () => {
-      observer.current?.disconnect();
-    };
-  }, [props.onEndReached, props.isLoading, props.dataSource]);
-
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    observer.current?.observe(sentinelRef.current!);
-  }, []);
+  useEndReached(sentinelRef, () => {
+    if (!props.isLoading) {
+      props.loadMore?.();
+    }
+  });
 
   const listViewElement = useMemo(() => {
     if (!props.dataSource) {
@@ -82,7 +56,10 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
       <div className={cn("list-view-inner space-y-3", props.contentClassName)}>
         {listViewElement}
       </div>
-      <div ref={sentinelRef} />
+      <div
+        ref={sentinelRef}
+        className="relative invisible h-[1px] top-[-300px]"
+      />
       {loadingViewElement}
     </div>
   );

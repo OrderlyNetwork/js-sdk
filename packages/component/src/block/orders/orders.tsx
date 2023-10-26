@@ -18,6 +18,7 @@ export interface OrdersViewProps {
   onShowAllSymbolChange?: (value: boolean) => void;
   symbol: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  loadMore: () => void;
 }
 
 export const OrdersView: FC<OrdersViewProps> = (props) => {
@@ -42,6 +43,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
               <OrderCell order={item} onSymbolChange={props.onSymbolChange} />
             </SymbolProvider>
           )}
+          loadMore={props.loadMore}
         />
       </StatisticStyleProvider>
     </OrderListProvider>

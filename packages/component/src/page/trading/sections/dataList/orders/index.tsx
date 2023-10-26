@@ -27,10 +27,11 @@ export const OrdersPane: FC<Props> = (props) => {
     showAllSymbol ? "" : context.symbol
   );
 
-  const [data, { isLoading, cancelOrder, updateOrder }] = useOrderStream({
-    status: OrderStatus.NEW,
-    symbol: symbol,
-  });
+  const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
+    useOrderStream({
+      status: OrderStatus.NEW,
+      symbol: symbol,
+    });
 
   const onShowAllSymbolChange = (isAll: boolean) => {
     setSymbol(isAll ? "" : context.symbol);
@@ -56,6 +57,7 @@ export const OrdersPane: FC<Props> = (props) => {
       onShowAllSymbolChange={onShowAllSymbolChange}
       editOrder={updateOrder}
       onSymbolChange={context.onSymbolChange}
+      loadMore={loadMore}
     />
   );
 };

@@ -16,7 +16,7 @@ interface PositionsViewProps {
   onShowAllSymbolChange?: (isAll: boolean) => void;
   showAllSymbol?: boolean;
   onMarketCloseAll?: () => void;
-  loadMore?: () => void;
+  loadMore: () => void;
   isLoading?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
@@ -53,7 +53,7 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
             renderSeparator={(item, index) => {
               return <Divider key={index} />;
             }}
-            onEndReached={props.loadMore}
+            loadMore={props.loadMore}
           />
         </>
       </div>
