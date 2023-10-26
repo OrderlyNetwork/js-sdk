@@ -102,7 +102,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     >
       <NetworkImage
         id={currentChain?.chain_id}
-        type={currentChain ? "chain" : "placeholder"}
+        type={currentChain ? "chain" : "unknown"}
         size={"small"}
         rounded
       />

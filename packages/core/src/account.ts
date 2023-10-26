@@ -16,12 +16,6 @@ import {
   generateSettleMessage,
 } from "./helper";
 
-export type AccountStatus =
-  | "NotConnected"
-  | "Connected"
-  | "NotSignedIn"
-  | "SignedIn";
-
 export interface AccountState {
   status: AccountStatusEnum;
 
@@ -144,13 +138,19 @@ export class Account {
   }
 
   get accountIdHashStr(): string | undefined {
+    // TODO: 临时测试用，正式上线需要修改
+    const brokerId = this.configStore.get<boolean>("onlyTestnet")
+      ? "woofi_dex"
+      : "woofi_pro";
     if (!this.address) {
       throw new Error("address is error");
     }
-    if (!this.configStore.get("brokerId")) {
-      throw new Error("brokerId is undefined");
-    }
-    return parseAccountId(this.address, this.configStore.get("brokerId"));
+
+    console.log("accountIdHashStr", brokerId);
+    // if (!this.configStore.get("brokerId")) {
+    //   throw new Error("brokerId is undefined");
+    // }
+    return parseAccountId(this.address, brokerId);
   }
 
   get address(): string | undefined {

@@ -275,6 +275,8 @@ export class Assets {
       ? "woofi_dex"
       : "woofi_pro";
 
+    console.log("deposit brokerId", brokerId);
+
     if (!brokerId) throw new Error("brokerId is required");
 
     const contractAddress = this.contractManger.getContractInfoByEnv();

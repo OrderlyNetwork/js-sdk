@@ -43,8 +43,6 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
 
   const [infoOpen, setInfoOpen] = useState(false);
 
-  console.log("status", status);
-
   const buttonLabel = useMemo(() => {
     switch (status) {
       case AccountStatusEnum.NotConnected:

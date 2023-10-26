@@ -9,6 +9,7 @@ export type NetworkImageType =
   | "token"
   | "placeholder"
   | "path"
+  | "unknown"
   | "wallet";
 
 export interface NetworkImageProps {
@@ -44,7 +45,7 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
       throw new Error("NetworkImage must have a type or symbol");
     }
 
-    if (props.type === "placeholder") {
+    if (props.type === "placeholder" || props.type === "unknown") {
       return;
     }
 
@@ -98,11 +99,11 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   }, [props.type, props.symbol, props.name, props.id]);
 
   const icon = useMemo(() => {
-    if (failed) {
-      if (props.type === "chain") {
-        return <span>U</span>;
-      }
+    // if (failed) {
+    if (props.type === "unknown") {
+      return <span className="text-base-contrast/50 text-[10px]">U</span>;
     }
+    // }
     if (!url) {
       return null;
     }
@@ -117,11 +118,11 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
   return (
     <div
       className={cn(
-        "inline-block overflow-hidden",
+        "inline-block overflow-hidden leading-none text-center",
         (isPlaceholder || loading) && "bg-slate-200",
         rounded && "rounded-full",
         loading && "animate-pulse",
-        failed && "bg-base-300",
+        (failed || props.type === "unknown") && "bg-base-300",
         props.className
       )}
       style={{

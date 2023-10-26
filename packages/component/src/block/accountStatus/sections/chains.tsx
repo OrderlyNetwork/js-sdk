@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/dialog";
-import { type API } from "@orderly.network/types";
+import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
 import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { WalletConnectorContext } from "@/provider";
@@ -22,6 +22,9 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const [open, setOpen] = useState(false);
   const { onlyTestnet } = useContext<any>(OrderlyContext);
+  const [defaultChain, setDefaultChain] = useState<string>(
+    ARBITRUM_MAINNET_CHAINID_HEX
+  );
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: true,
@@ -42,7 +45,7 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
-      parseInt(connectedChain?.id || ""),
+      parseInt(connectedChain?.id || defaultChain),
       "network_infos"
     );
 
@@ -53,7 +56,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
 
     return <NetworkImage id={chain.chain_id} type="chain" />;
-  }, [connectedChain, findByChainId]);
+  }, [connectedChain, findByChainId, defaultChain]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -82,11 +85,18 @@ export const Chains: FC<ChainsProps> = (props) => {
             onItemClick={(item: any) => {
               // console.log(item);
               setOpen(false);
-              setChain({ chainId: item.id }).then((success: boolean) => {
-                console.log("========>>>>>>>", success);
-              });
+              if (connectedChain) {
+                setChain({ chainId: item.id }).then((success: boolean) => {
+                  // reset default chain when switch to connected chain
+                  if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+                    setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+                  }
+                });
+              } else {
+                setDefaultChain(item.id);
+              }
             }}
-            currentChainId={parseInt(connectedChain?.id || "")}
+            currentChainId={parseInt(connectedChain?.id || defaultChain)}
           />
         </DialogBody>
       </DialogContent>
