@@ -24,7 +24,7 @@ export const ChainDialog = create<Omit<ChainListViewProps, "onItemClick">>(
           <DialogHeader>
             <DialogTitle>Switch network</DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <DialogBody className="max-h-[340px] overflow-y-auto">
             <ChainListView {...props} onItemClick={onItemClick} />
           </DialogBody>
         </DialogContent>

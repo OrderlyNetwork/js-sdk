@@ -75,7 +75,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <DialogHeader>Swith network</DialogHeader>
-        <DialogBody>
+        <DialogBody className="max-h-[340px] overflow-y-auto">
           <ChainListView
             mainChains={onlyTestnet ? [] : mainChains}
             testChains={testChains}
