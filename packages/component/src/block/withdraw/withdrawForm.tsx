@@ -151,6 +151,8 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   const fee = useMemo(() => {
     if (!chain) return 0;
 
+    console.log("chain", chains, chain);
+
     const item = chains?.find((c) => c.chain_id === chain!.id);
 
     // console.log("item", chains, chain, item);
@@ -222,6 +224,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <TokenQtyInput
         amount={quantity}
         fee={fee}
+        needCalc
         token={{
           symbol: "USDC",
           decimals: 6,

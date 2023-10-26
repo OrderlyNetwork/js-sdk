@@ -25,8 +25,9 @@ export const Deposit: FC<DepositProps> = (props) => {
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
 
-  const [_, { findByChainId }] = useChains("", {
+  const [chains, { findByChainId }] = useChains("", {
     wooSwapEnabled: true,
+    pick: "network_infos",
   });
 
   const { connectedChain, wallet, setChain, settingChain } = useContext(
@@ -35,7 +36,7 @@ export const Deposit: FC<DepositProps> = (props) => {
 
   const { onEnquiry } = useContext(AssetsContext);
 
-  const { chains } = useChain("USDC");
+  // const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
 
   const currentChain = useMemo<CurrentChain | null>(() => {
@@ -95,10 +96,11 @@ export const Deposit: FC<DepositProps> = (props) => {
       allowance={allowance}
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
+      chains={chains}
       walletName={wallet?.label}
       switchChain={setChain}
       // switchChain={switchChain}
-      decimals={chains?.decimals ?? 2}
+      // decimals={chains?.decimals ?? 2}
       displayDecimals={2}
       switchToken={setToken}
       token={token}

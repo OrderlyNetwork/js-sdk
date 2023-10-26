@@ -29,10 +29,10 @@ import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 
 export interface DepositFormProps {
-  decimals: number;
+  // decimals: number;
   displayDecimals: number;
   // status?: WithdrawStatus;
-  // chains?: API.ChainDetail[];
+  chains?: API.NetworkInfos[];
   chain: CurrentChain | null;
 
   token?: API.TokenInfo;
@@ -82,12 +82,11 @@ const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
   const {
-    decimals,
     minAmount,
     maxAmount,
     walletName,
     address,
-    // chains,
+    chains,
     chain,
     dst,
     switchChain,
@@ -268,8 +267,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         } else {
           let d = new Decimal(value);
           // setQuantity(value);
-          if (d.dp() > decimals) {
-            setQuantity(d.todp(Math.min(decimals, 8)).toString());
+          if (d.dp() > dst.decimals) {
+            setQuantity(d.todp(Math.min(dst.decimals, 8)).toString());
           } else {
             setQuantity(value);
           }
@@ -286,7 +285,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         setQuantity("");
       }
     },
-    [decimals, maxAmount]
+    [dst.decimals, maxAmount]
   );
 
   const onChainChange = useCallback(
@@ -521,7 +520,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         maxAmount={Number(maxAmount)}
         onValueChange={onValueChange}
         status={inputStatus}
-        decimals={decimals}
+        decimals={dst.decimals}
         hintMessage={hintMessage}
         fetchBalance={props.fetchBalance}
         onTokenChange={props.switchToken}
@@ -564,15 +563,16 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         />
       </div>
 
-      <Notice
+      {/* <Notice
         needCrossChain={needCrossChain}
         needSwap={needSwap}
         warningMessage={warningMessage}
         onChainChange={onChainChange}
         currentChain={chain}
-      />
+      /> */}
       <ActionButton
         chain={chain}
+        chains={chains}
         token={props.token}
         onDeposit={onDeposit}
         allowance={
@@ -588,6 +588,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         maxQuantity={maxAmount}
         needCrossChain={needCrossChain}
         needSwap={needSwap}
+        warningMessage={warningMessage}
+        onChainChange={onChainChange}
       />
     </div>
   );

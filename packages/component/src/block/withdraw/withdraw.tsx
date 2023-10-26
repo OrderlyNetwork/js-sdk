@@ -28,6 +28,8 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     pick: "network_infos",
   });
 
+  console.log("chains", chains);
+
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 

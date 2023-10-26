@@ -183,6 +183,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const deposit = useCallback(
     (amount: string) => {
       // only support orderly deposit
+
       return account.assetsManager.deposit(amount).then((res: any) => {
         setAllowance((value) => new Decimal(value).sub(amount).toString());
         setBalance((value) => new Decimal(value).sub(amount).toString());

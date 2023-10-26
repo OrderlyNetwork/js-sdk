@@ -79,6 +79,8 @@ export const useChains = (
             name: chain.chain_name ?? "--",
             // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
             chain_id: chainId,
+            withdrawal_fee: chain.withdrawal_fee,
+
             bridgeless: true,
           },
           token_infos: [

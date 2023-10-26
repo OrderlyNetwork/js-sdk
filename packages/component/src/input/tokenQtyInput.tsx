@@ -15,22 +15,34 @@ export interface TokenQtyInputProps extends InputProps {
 
   loading?: boolean;
 
+  needCalc?: boolean;
+
   onTokenChange?: (token: string) => void;
   onValueChange?: (value: { value: string; token: string }) => void;
 }
 
 export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
-  const { onChange, onValueChange, onTokenChange, token, loading, ...rest } =
-    props;
+  const {
+    onChange,
+    onValueChange,
+    onTokenChange,
+    token,
+    loading,
+    needCalc = false,
+    ...rest
+  } = props;
 
   const amount = useMemo(() => {
     if (!props.amount) return "";
     const num = Number(props.amount);
     if (isNaN(num)) return "";
     if (num <= 0) return "";
-    // return commify(new Decimal(props.amount).sub(props.fee).toFixed(2));
+    if (needCalc) {
+      return commify(new Decimal(props.amount).sub(props.fee).toFixed(2));
+    }
     return commify(new Decimal(props.amount).toFixed(2));
-  }, [props.amount, props.fee]);
+    // return commify(props.amount);
+  }, [props.amount, props.fee, needCalc]);
 
   return (
     <Input

@@ -1,6 +1,6 @@
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
-import { OrderlyContext, useChains } from "@orderly.network/hooks";
+// import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { ChainConfig, CurrentChain } from "@orderly.network/types";
 import { FC, useContext } from "react";
 
@@ -8,34 +8,15 @@ interface NoticeProps {
   needCrossChain: boolean;
   needSwap: boolean;
   warningMessage?: string;
-  onChainChange?: (value: any) => void;
+  notSupportChain?: boolean;
+  // onChainChange?: (value: any) => void;
   // onChainIdChange?: (chainId: number) => void;
   currentChain: CurrentChain | null;
+  onOpenPicker: () => Promise<any>;
 }
 
 export const Notice: FC<NoticeProps> = (props) => {
   const { needCrossChain, needSwap, warningMessage, currentChain } = props;
-  const { networkId } = useContext<any>(OrderlyContext);
-  const [chains, { findByChainId }] = useChains(networkId, {
-    wooSwapEnabled: true,
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-  });
-
-  const onOpenPicker = async () => {
-    const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // mainChains: chains?.mainnet,
-      // testChains: chains?.testnet,
-      // mainChains: chains,
-      testChains: chains,
-      currentChainId: currentChain?.id,
-    });
-
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onChainChange?.(chainInfo);
-  };
 
   if (warningMessage) {
     return (
@@ -54,7 +35,7 @@ export const Notice: FC<NoticeProps> = (props) => {
           className="text-primary-light px-1 cursor-pointer"
           onClick={(event) => {
             event.preventDefault();
-            onOpenPicker();
+            props.onOpenPicker();
           }}
         >
           Bridgeless networks

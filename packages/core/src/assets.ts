@@ -266,7 +266,8 @@ export class Assets {
   }
 
   async deposit(amount: string) {
-    console.log("deposit amount:", amount);
+    if (!this.account.walletClient)
+      throw new Error("walletClient is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -282,20 +283,28 @@ export class Assets {
     };
 
     // --- call deposit
-    const result = await this.account.walletClient?.call(
+    // const result = await this.account.walletClient?.call(
+    //   contractAddress.vaultAddress,
+    //   "deposit",
+    //   [depositData],
+    //   {
+    //     abi: contractAddress.vaultAbi,
+    //   }
+    // );
+
+    const result = await this.account.walletClient?.sendTransaction(
       contractAddress.vaultAddress,
       "deposit",
-      [depositData],
+      {
+        from: this.account.stateValue.address!,
+        to: contractAddress.vaultAddress,
+        data: [depositData],
+        value: 0n,
+      },
       {
         abi: contractAddress.vaultAbi,
       }
     );
-
-    // const result = await this.account.walletClient?.sendTransaction({
-    //   from: this.account.stateValue.address,
-    //   to: contractAddress.vaultAddress,
-
-    // });
 
     // console.log("-----*****-----", result);
 

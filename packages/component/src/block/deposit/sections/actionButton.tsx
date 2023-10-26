@@ -3,11 +3,24 @@ import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
 import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ApproveButton } from "./approveButton";
+import { Notice } from "./notice";
+import { modal } from "@/modal";
+import { OrderlyContext, useChains } from "@orderly.network/hooks";
+import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 
 export interface ActionButtonProps {
-  chains?: API.ChainDetail[];
+  chains:
+    | API.NetworkInfos[]
+    | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
   chain: CurrentChain | null;
   token?: API.TokenInfo;
   onDeposit: () => Promise<any>;
@@ -22,37 +35,90 @@ export interface ActionButtonProps {
   chainNotSupport: boolean;
   needSwap: boolean;
   needCrossChain: boolean;
+  warningMessage?: string;
   onApprove?: () => Promise<any>;
+  onChainChange?: (value: any) => void;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
   const {
     chain,
     token,
-    chains,
+    // chains,
     onDeposit,
     switchChain,
     disabled,
-    openChainPicker,
+    // openChainPicker,
     quantity,
     loading,
     allowance,
     onApprove,
     submitting,
     maxQuantity,
-    chainNotSupport,
+    // chainNotSupport,
     needSwap,
     needCrossChain,
+    warningMessage,
   } = props;
+  const [chainNotSupport, setChainNotSupport] = useState(false);
+  const { onlyTestnet } = useContext(OrderlyContext);
+
+  const chains = useMemo(() => {
+    if (Array.isArray(props.chains)) return props.chains;
+
+    if (onlyTestnet) {
+      return props.chains.testnet ?? [];
+    }
+    return props.chains.mainnet;
+  }, [props.chains, onlyTestnet]);
+
+  const checkSupoort = (
+    chain: CurrentChain | null,
+    chains?: API.NetworkInfos[]
+  ): boolean => {
+    // console.log("checkSupoort", chain, chains);
+    if (!chain || !chains || !Array.isArray(chains)) return false;
+
+    const index = chains?.findIndex((c) => c.chain_id === chain.id);
+
+    return index < 0;
+  };
+
+  useEffect(() => {
+    setChainNotSupport(checkSupoort(chain, chains));
+  }, [chains?.length, chain?.id]);
+
+  // const { networkId } = useContext<any>(OrderlyContext);
+  const [_, { findByChainId }] = useChains(undefined, {
+    wooSwapEnabled: true,
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
+
+  const onOpenPicker = async () => {
+    const result = await modal.show<{ id: number }, any>(ChainDialog, {
+      // mainChains: chains?.mainnet,
+      // testChains: chains?.testnet,
+      // mainChains: chains,
+      testChains: chains,
+      currentChainId: chain?.id,
+    });
+
+    const chainInfo = findByChainId(result?.id);
+
+    props?.onChainChange?.(chainInfo);
+  };
 
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";
+    return "Please connect to a supported network.";
 
-    if (chains?.length && chains.length > 1) {
-      return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to any of the bridgeless networks.`;
-    }
+    // if (chains?.length && chains.length > 1) {
+    //   return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to any of the bridgeless networks.`;
+    // }
 
-    return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to Arbitrum.`;
+    // return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to Arbitrum.`;
   }, [chainNotSupport, chains, chain?.info.network_infos?.name]);
 
   const actionButton = useMemo(() => {
@@ -102,7 +168,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={openChainPicker}>
+      <Button fullWidth onClick={onOpenPicker}>
         Switch Network
       </Button>
     );
@@ -125,10 +191,19 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <>
-      {chainNotSupport && (
+      {chainNotSupport ? (
         <div className="text-warning text-sm text-center px-[20px] py-3">
           {chainWarningMessage}
         </div>
+      ) : (
+        <Notice
+          needCrossChain={needCrossChain}
+          needSwap={needSwap}
+          warningMessage={warningMessage}
+          onOpenPicker={onOpenPicker}
+          currentChain={chain}
+          notSupportChain={chainNotSupport}
+        />
       )}
 
       <div className="flex justify-center">
