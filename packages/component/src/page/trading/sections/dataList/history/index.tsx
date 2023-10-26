@@ -14,8 +14,7 @@ export const HistoryPane = () => {
   const [status, setStauts] = useState<OrderStatus | "">("");
   const { state } = useAccount();
   const { onSymbolChange } = useContext(TradingPageContext);
-  const [data, { isLoading }] = useOrderStream({
-    size: 20,
+  const [data, { isLoading, loadMore }] = useOrderStream({
     side,
     status,
   });
@@ -29,6 +28,7 @@ export const HistoryPane = () => {
       onSymbolChange={onSymbolChange}
       side={side}
       status={status}
+      loadMore={loadMore}
     />
   );
 };

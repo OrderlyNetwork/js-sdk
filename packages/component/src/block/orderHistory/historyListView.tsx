@@ -16,6 +16,7 @@ export interface OrderHistoryListViewProps {
   onSideChange?: (side: OrderSide) => void;
   onStatusChange?: (status: OrderStatus) => void;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  loadMore: () => void;
 }
 
 export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
@@ -37,6 +38,7 @@ export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
             <Cell item={item} onSymbolChange={props.onSymbolChange} />
           </SymbolProvider>
         )}
+        loadMore={props.loadMore}
       />
     </StatisticStyleProvider>
   );

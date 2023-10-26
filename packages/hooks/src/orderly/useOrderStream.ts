@@ -1,5 +1,5 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { OrderSide } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
@@ -25,7 +25,7 @@ export const useOrderStream = ({
   status,
   symbol,
   side,
-  size = 100,
+  size = 5,
 }: {
   symbol?: string;
   status?: OrderStatus;
@@ -42,11 +42,9 @@ export const useOrderStream = ({
 
   const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
-      // TODO: 检查是否有下一页
-      // if(previousPageData){
-      //
-      //   const {meta} = previousPageData;
-      // }
+      // reached the end
+      if (previousPageData && !previousPageData.length) return null;
+
       const search = new URLSearchParams([
         ["size", size.toString()],
         ["page", `${pageIndex + 1}`],
@@ -133,9 +131,15 @@ export const useOrderStream = ({
     });
   }, []);
 
+  const loadMore = () => {
+    ordersResponse.setSize(ordersResponse.size + 1);
+  };
+
   return [
     orders,
     {
+      isLoading: ordersResponse.isLoading,
+      loadMore,
       cancelAllOrders,
       updateOrder,
       cancelOrder,
