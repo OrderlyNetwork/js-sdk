@@ -2,9 +2,8 @@
 
 import React, { FC, PropsWithChildren } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-
 import { cn } from "@/utils/css";
-import { X } from "lucide-react";
+import { CloseIcon } from "@/icon";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -52,7 +51,7 @@ const DialogContent = React.forwardRef<
       {children}
       {closable && (
         <DialogPrimitive.Close className="absolute right-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-          <X size={24} />
+          <CloseIcon size={20} />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       )}
