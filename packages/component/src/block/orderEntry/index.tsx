@@ -29,6 +29,7 @@ import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
+import { cn } from "@/utils/css";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -391,26 +392,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               name="order_price"
               control={methods.control}
               render={({ field }) => {
+                const isMarketOrder =
+                  methods.getValues("order_type") === OrderType.MARKET;
+
                 return (
                   <Input
                     disabled={disabled}
                     ref={priceInputRef}
-                    prefix={"Price"}
+                    prefix="Price"
                     suffix={symbolConfig?.quote}
                     type="text"
                     inputMode="decimal"
                     error={!!methods.formState.errors?.order_price}
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
-                    value={
-                      methods.getValues("order_type") === OrderType.MARKET
-                        ? "Market"
-                        : field.value
+                    value={isMarketOrder ? "Market" : field.value}
+                    className={"text-right"}
+                    containerClassName={
+                      isMarketOrder ? "bg-base-300" : undefined
                     }
-                    className="text-right"
-                    readOnly={
-                      methods.getValues("order_type") === OrderType.MARKET
-                    }
+                    readOnly={isMarketOrder}
                     onChange={(event) => {
                       // field.onChange(event.target.value);
                       onFieldChange("order_price", event.target.value);
