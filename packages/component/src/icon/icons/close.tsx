@@ -9,8 +9,8 @@ export const CloseIcon: FC<IconProps> = (props) => {
   const { size = 20, viewBox, ...rest } = props;
   return (
     <svg
-      width="20"
-      height="20"
+      width={`${size}px`}
+      height={`${size}px`}
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
