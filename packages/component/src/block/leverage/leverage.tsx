@@ -1,5 +1,5 @@
 import Button from "@/button";
-import { Info } from "lucide-react";
+import { InfoIcon } from "@/icon";
 import { FC } from "react";
 
 export interface LeverageViewProps {
@@ -22,7 +22,7 @@ export const LeverageView: FC<LeverageViewProps> = ({
           className="flex items-center gap-1"
           onClick={() => onShowLeverageInfo?.()}
         >
-          <Info size={14} />
+          <InfoIcon size={14} />
           <span>Max leverage</span>
         </button>
         <Button
