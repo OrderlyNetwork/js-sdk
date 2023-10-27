@@ -18,11 +18,13 @@ export const MarketProvider = (props: any) => {
     `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
+  const brokerId = config.get("brokerId");
+
   const getTestUSDC = useCallback(() => {
     return doGetTestUSDC({
       chain_id: account.wallet.chainId.toString(),
       user_address: state.address,
-      broker_id: "woofi_dex",
+      broker_id: brokerId,
     }).then((res: any) => {
       if (res.success) {
         return modal.confirm({

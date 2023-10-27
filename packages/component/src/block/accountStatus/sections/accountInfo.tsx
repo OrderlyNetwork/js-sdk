@@ -42,7 +42,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
     return getTestUSDC({
       chain_id: account.wallet.chainId.toString(),
       user_address: state.address,
-      broker_id: "woofi_dex",
+      broker_id: config.get("brokerId"),
     }).then(
       (res: any) => {
         if (res.success) {

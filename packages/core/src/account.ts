@@ -289,8 +289,9 @@ export class Account {
   private async _checkAccountExist(
     address: string
   ): Promise<{ account_id: string; user_id: string } | null> {
+    const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${address}&broker_id=woofi_dex`
+      `/v1/get_account?address=${address}&broker_id=${brokerId}`
     );
 
     if (res.success) {
