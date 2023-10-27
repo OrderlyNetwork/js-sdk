@@ -175,7 +175,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {marginRatioVal}
               </Numeral>
 
-              <RiskIndicator value={marginRatio} />
+              <RiskIndicator value={marginRatioVal} />
             </div>
           }
         />
