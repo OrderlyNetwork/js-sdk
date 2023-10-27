@@ -56,7 +56,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
       >
         <TabPane title="Chart" value="tradingView">
           <TradingView
-            height={240}
+            height={200}
             theme={"dark"}
             symbol={symbol}
             autosize={false}

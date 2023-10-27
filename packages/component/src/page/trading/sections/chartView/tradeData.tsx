@@ -15,7 +15,7 @@ export const TradeData: FC<Props> = (props) => {
   // console.log(ticker);
 
   return (
-    <div className="h-[280px] p-4 relative">
+    <div className="h-[240px] p-4 relative">
       <table className="w-full text-sm">
         <tr className="h-[28px]">
           <td className="text-base-contrast/50">Mark Price</td>
