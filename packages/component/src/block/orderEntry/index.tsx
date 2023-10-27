@@ -342,10 +342,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               </div>
               <Button
                 variant={"text"}
-                color="primary"
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
+                className="text-primary-light"
               >
                 Deposit
               </Button>
