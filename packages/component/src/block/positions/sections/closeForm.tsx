@@ -95,7 +95,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     (data: any) => {
       return onConfirm(data).then(
         () => {
-          return onSubmit(data).then(
+          return onSubmit({ ...data, reduce_only: true }).then(
             (res: any) => {
               // console.log(res);
               if (res.success) {
