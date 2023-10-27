@@ -25,7 +25,7 @@ export const useOrderStream = ({
   status,
   symbol,
   side,
-  size = 5,
+  size = 10,
 }: {
   symbol?: string;
   status?: OrderStatus;
