@@ -55,7 +55,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       return <span>Testnet</span>;
     }
 
-    return <NetworkImage id={chain.chain_id} type="chain" />;
+    return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
   }, [connectedChain, findByChainId, defaultChain]);
 
   return (
@@ -72,8 +72,7 @@ export const Chains: FC<ChainsProps> = (props) => {
           }
         >
           {chainName}
-
-          <ArrowIcon size={12} />
+          <ArrowIcon size={8} />
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
