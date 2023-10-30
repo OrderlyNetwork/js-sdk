@@ -93,14 +93,14 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const fetchBalance = useCallback(
-    async (address?: string) => {
+    async (address?: string, decimals?: number) => {
       if (!address) return;
       // console.log("fetchBalance", address, !!address && isNativeToken(address));
 
       try {
         if (balanceRevalidating) return;
         setBalanceRevalidating(true);
-        const balance = await fetchBalanceHandler(address);
+        const balance = await fetchBalanceHandler(address, decimals);
 
         console.log("----- refresh balance -----", balance);
         setBalance(() => balance);
@@ -148,8 +148,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     // if (allowanceRevalidating) return;
     // setAllowanceRevalidating(true);
 
-    console.log("getAllowance", address, vaultAddress);
-
     prevAddress.current = key;
 
     const allowance = await account.assetsManager.getAllowance(
@@ -157,9 +155,6 @@ export const useDeposit = (options?: useDepositOptions) => {
       vaultAddress
     );
 
-    console.log("----- refresh allowance -----", {
-      allowance,
-    });
     setAllowance(() => allowance);
     // setAllowanceRevalidating(false);
     return allowance;
@@ -196,7 +191,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
 
-    fetchBalance(options?.address);
+    fetchBalance(options?.address, options?.decimals);
 
     if (dst.chainId !== options?.srcChainId) {
       getAllowance(options?.address, options?.crossChainRouteAddress);

@@ -321,8 +321,6 @@ export class WS {
     console.log("private socket is closed");
     if (this.privateIsReconnecting) return;
     this._eventPrivateHandlers.forEach((value, key) => {
-      console.log(value);
-
       value.callback.forEach((cb) => {
         this._pendingPrivateSubscribe.push([value.params, cb, value.isOnce]);
       });

@@ -1,5 +1,5 @@
 import { cn } from "@/utils/css";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Size } from "./types";
 import { getSize } from "./utils";
 
@@ -37,6 +37,8 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     () => props.type === "placeholder"
   );
 
+  const currentUrl = useRef<string>();
+
   useEffect(() => {
     if (
       typeof props.type === "undefined" &&
@@ -53,6 +55,9 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     setLoading(true);
 
     img.onload = function () {
+      if (currentUrl.current !== img.src) {
+        return;
+      }
       setUrl(img.src);
       setLoading(false);
       setFailed(false);
@@ -89,6 +94,8 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
       if (props.type === "path") {
         img.src = props.path!;
       }
+
+      currentUrl.current = img.src;
     } catch (e) {
       console.log(e);
       setIsPlacholder(true);

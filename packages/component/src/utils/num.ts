@@ -63,3 +63,5 @@ export const parseNumber = (
 
   return truncatedNum;
 };
+
+export const NumberReg = /^([0-9]{1,}[.]?[0-9]*)/;

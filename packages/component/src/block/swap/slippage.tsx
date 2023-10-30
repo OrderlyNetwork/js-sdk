@@ -1,6 +1,9 @@
 import Button from "@/button";
 import { cn } from "@/utils/css";
-import { FC, useCallback, useState } from "react";
+import { NumberReg } from "@/utils/num";
+import { Decimal } from "@orderly.network/utils";
+import { ChangeEvent, FC, FormEvent, useCallback, useState } from "react";
+import { set } from "react-hook-form";
 
 const SlippageItem = ({
   value,
@@ -46,6 +49,38 @@ export const Slippage: FC<SlippageProps> = (props) => {
     props.onConfirm?.(_value);
   }, [value, customValue]);
 
+  const onValueChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value;
+    if (value === ".") {
+      setCustomValue("0.");
+      return;
+    }
+
+    const result = (value as string).match(NumberReg);
+
+    if (Array.isArray(result)) {
+      value = result[0];
+      // value = parseFloat(value);
+      if (isNaN(parseFloat(value))) {
+        setCustomValue("");
+      } else {
+        let d = new Decimal(value);
+        // setCustomValue(value);
+        if (d.gt(10)) {
+          setCustomValue("10");
+          return;
+        }
+        if (d.dp() > 2) {
+          setCustomValue(d.todp(2).toString());
+        } else {
+          setCustomValue(value);
+        }
+      }
+    } else {
+      setCustomValue("");
+    }
+  }, []);
+
   return (
     <>
       <div className="grid grid-cols-4 gap-2">
@@ -68,9 +103,10 @@ export const Slippage: FC<SlippageProps> = (props) => {
           <input
             type="text"
             inputMode="decimal"
-            className="bg-base-300 w-0 rounded flex-1 h-full text-center"
+            className="bg-base-300 w-0 rounded flex-1 h-full text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
             value={customValue}
-            onChange={(e) => setCustomValue(e.target.value)}
+            // onChange={(e) => setCustomValue(e.target.value)}
+            onChange={onValueChange}
           />
           <span className="text-sm text-base-contrast/30">%</span>
         </div>

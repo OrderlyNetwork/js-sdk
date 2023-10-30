@@ -128,7 +128,10 @@ export const SwapDetails: FC<Props> = (props) => {
         </ListTile>
         <ListTile
           className="py-0"
-          tailing={`1 ${props.src.token} = ${info.price} ${props.dst.token}`}
+          tailing={`1 ${props.src.token} = ${parseNumber(info.price, {
+            rule: "price",
+            precision: 3,
+          })} ${props.dst.token}`}
         >
           <span className="text-base-contrast/50">Price</span>
         </ListTile>

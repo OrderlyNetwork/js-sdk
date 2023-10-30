@@ -138,9 +138,14 @@ export class Assets {
   }
 
   async getNativeBalance(options?: { decimals?: number }): Promise<string> {
-    console.log("getNativeBalance", this.account.stateValue.address);
     const result = await this.account.walletClient?.getBalance(
       this.account.stateValue.address!
+    );
+    console.log(
+      "getNativeBalance",
+      this.account.stateValue.address,
+      result,
+      options
     );
 
     // return this.account.walletClient!.formatUnits(result);
@@ -167,7 +172,7 @@ export class Assets {
       }
     );
 
-    console.log("-----*****-----", result);
+    console.log("-----*****-----", result, options);
     return formatByUnits(result, options?.decimals);
     // return this.account.walletClient?.formatUnits(result,options?.decimals);
   }
