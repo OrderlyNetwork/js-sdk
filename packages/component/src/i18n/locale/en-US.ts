@@ -1,5 +1,5 @@
 export const en = {
-  "Common.title": "Title",
+  "block.withdraw.switchNetwork": "Switch network",
 } as const;
 
 export type EN = typeof en;

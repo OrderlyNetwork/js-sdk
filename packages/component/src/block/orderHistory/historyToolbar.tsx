@@ -45,7 +45,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
         value: OrderStatus.FILLED,
       },
       {
-        label: "Partial Filled",
+        label: "Partially filled",
         value: OrderStatus.PARTIAL_FILLED,
       },
       {

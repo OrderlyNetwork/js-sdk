@@ -46,7 +46,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const buttonLabel = useMemo(() => {
     switch (status) {
       case AccountStatusEnum.NotConnected:
-        return "Connect Wallet";
+        return "Connect wallet";
       case AccountStatusEnum.Connected:
       case AccountStatusEnum.NotSignedIn:
       case AccountStatusEnum.SignedIn:

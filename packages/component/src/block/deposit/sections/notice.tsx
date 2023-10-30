@@ -28,8 +28,8 @@ export const Notice: FC<NoticeProps> = (props) => {
     return (
       <div className="text-center text-warning text-sm py-2">
         <span>
-          Please note that cross-chain transaction fees will be charged, or
-          explore our supported
+          Cross-chain transaction fees will be charged. To avoid these, use our
+          supported
         </span>
         <a
           className="text-primary-light px-1 cursor-pointer"
