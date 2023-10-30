@@ -75,6 +75,7 @@ export const PositionPane = () => {
             side: position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY,
             order_type: OrderType.MARKET,
             order_quantity: Math.abs(position.position_qty),
+            reduce_only: true,
           })
             .then((res: any) => {
               // console.log("postOrder", res);

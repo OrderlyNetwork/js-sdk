@@ -46,7 +46,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   size={18}
                   className={cn(
                     "transition-transform text-base-contrast/50",
-                    context.contentVisible ? "rotate-0" : "rotate-180"
+                    context.contentVisible ? "rotate-180" : "rotate-0"
                   )}
                 />
               </button>
@@ -56,7 +56,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
       >
         <TabPane title="Chart" value="tradingView">
           <TradingView
-            height={240}
+            height={196}
             theme={"dark"}
             symbol={symbol}
             autosize={false}

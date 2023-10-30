@@ -1,6 +1,5 @@
-import { Avatar, Blockie } from "@/avatar";
+import { Blockie } from "@/avatar";
 import Button, { IconButton } from "@/button";
-import { Share, Copy } from "lucide-react";
 import React, { FC, useCallback } from "react";
 import { Text } from "@/text";
 import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
@@ -8,6 +7,7 @@ import { toast } from "@/toast";
 import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
+import { CopyIcon } from "@/icon";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -75,8 +75,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <IconButton type="button" onClick={onCopy}>
-            <Copy size={20} stroke="currentcolor" />
+          <IconButton type="button" onClick={onCopy} className="px-0">
+            <CopyIcon size={40} />
           </IconButton>
           {/* <IconButton>
             <Share size={20} />

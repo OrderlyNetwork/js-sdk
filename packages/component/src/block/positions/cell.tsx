@@ -119,6 +119,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
+          className="w-[120px] h-[28px]"
         >
           Limit close
         </Button>
@@ -127,6 +128,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
+          className="w-[120px] h-[28px]"
         >
           Market close
         </Button>

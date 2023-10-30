@@ -8,6 +8,7 @@ interface RiskIndicatorProps {
 
 export const RiskIndicator: FC<RiskIndicatorProps> = (props) => {
   const { size = 20, value } = props;
+
   return (
     <div
       className="flex justify-center items-end"
@@ -24,9 +25,9 @@ export const RiskIndicator: FC<RiskIndicatorProps> = (props) => {
         className={cn(
           "relative w-[2px] h-[2px] rounded-full bg-white after:block after:content-[''] after:absolute after:right-0 after:w-[10px] after:h-[2px] after:bg-white/50",
           {
-            // 'rotate-0': value >= 10,
-            "rotate-90": value >= 0.5 && value < 10,
-            "rotate-180": value < 0.5,
+            "rotate-0": value > 1,
+            "rotate-90": value >= 0.05 && value <= 1,
+            "rotate-180": value < 0.05,
           }
         )}
       ></div>

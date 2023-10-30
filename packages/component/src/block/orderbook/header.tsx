@@ -2,7 +2,7 @@ import { FC, useContext, useMemo } from "react";
 
 import { OrderBookContext } from "./orderContext";
 
-import { ArrowIcon } from "@/icon";
+import { SwitchIcon } from "@/icon";
 
 interface Props {
   quote: string;
@@ -39,7 +39,7 @@ export const Header: FC<Props> = (props) => {
           <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>
-        <ArrowIcon size={10} />
+        <SwitchIcon size={8} />
       </div>
     </div>
   );

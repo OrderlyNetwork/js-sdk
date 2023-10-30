@@ -20,6 +20,7 @@ import Button from "@/button";
 import { toast } from "@/toast";
 import { Logo } from "@/logo";
 import { modal } from "@/modal";
+import { InfoIcon } from "@/icon";
 
 interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -135,7 +136,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       <div className="pt-5 pb-7 flex justify-between items-center ">
         <div className="text-base-contrast/50">
           <span>Remember me</span>
-          <Info className="inline-block ml-2" size={16} />
+          <InfoIcon className="inline-block ml-2" size={14} />
         </div>
         <div>
           <Switch checked={remember} onCheckedChange={onRemember} />

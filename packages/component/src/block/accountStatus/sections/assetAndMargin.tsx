@@ -175,7 +175,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {marginRatioVal}
               </Numeral>
 
-              <RiskIndicator value={marginRatio} />
+              <RiskIndicator value={marginRatioVal} />
             </div>
           }
         />
@@ -242,7 +242,10 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 ]}
                 onValueChange={(value) => {
                   const _value = leverageLevers[value[0]];
-
+                  setLeverage(_value);
+                }}
+                onValueCommit={(value) => {
+                  const _value = leverageLevers[value[0]];
                   setLeverage(_value);
                   update({ leverage: _value }).then(
                     (res: any) => {

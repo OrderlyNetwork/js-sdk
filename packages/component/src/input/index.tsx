@@ -68,12 +68,14 @@ export interface InputProps
   //
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
+  containerClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       className,
+      containerClassName,
       size,
       variant,
       fullWidth,
@@ -168,9 +170,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               disabled,
               variant,
               error,
-              // className,
             }),
-            (props.readOnly || !!error) && "focus-within:outline-none"
+            (props.readOnly || !!error) && "focus-within:outline-none",
+            containerClassName
           )}
         >
           {prefixElement}
