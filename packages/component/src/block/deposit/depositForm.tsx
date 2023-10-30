@@ -214,7 +214,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           slippage,
           mode: needCrossChain ? SwapMode.Cross : SwapMode.Single,
           transactionData: transaction,
-          chain: chain?.info.network_infos,
+          chain: chain?.info?.network_infos,
           nativeToken: chain?.info.nativeToken,
         });
       })

@@ -117,11 +117,11 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     return "Please connect to a supported network.";
 
     // if (chains?.length && chains.length > 1) {
-    //   return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to any of the bridgeless networks.`;
+    //   return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to any of the bridgeless networks.`;
     // }
 
-    // return `Withdrawals are not supported on ${chain?.info.network_infos?.name}. Please switch to Arbitrum.`;
-  }, [chainNotSupport, chains, chain?.info.network_infos?.name]);
+    // return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to Arbitrum.`;
+  }, [chainNotSupport, chains, chain?.info?.network_infos?.name]);
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
