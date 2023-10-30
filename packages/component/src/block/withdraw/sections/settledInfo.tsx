@@ -17,8 +17,8 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
         title: "Settle PnL",
         content: (
           <span className="text-base-contrast/50">
-            Are you sure you want to settle your PnL? Settlement will take up to
-            1 minute before you can withdraw your available balance.
+            Are you sure you want to settle your PnL? It may take one minute
+            before you can withdraw it.
           </span>
         ),
         onCancel() {

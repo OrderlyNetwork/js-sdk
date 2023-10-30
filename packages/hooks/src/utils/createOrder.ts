@@ -101,9 +101,9 @@ export abstract class BaseOrderCreator implements OrderCreator {
       if (totalNumber.lt(quote_min)) {
         errors.total = {
           type: "min",
-          message: `Quantity should be greater or equal than ${new Decimal(
-            quote_min
-          ).todp(quote_dp)}`,
+          message: `Quantity must be at least ${new Decimal(quote_min).todp(
+            quote_dp
+          )}`,
         };
       } else if (totalNumber.gt(quote_max)) {
         errors.total = {

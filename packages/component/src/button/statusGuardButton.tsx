@@ -53,7 +53,7 @@ export const StatusGuardButton: FC<
 
   const buttonLabel = useMemo(() => {
     if (state.status === AccountStatusEnum.NotConnected) {
-      return "Connect Wallet";
+      return "Connect wallet";
     }
 
     if (state.status < AccountStatusEnum.SignedIn) {
@@ -61,7 +61,7 @@ export const StatusGuardButton: FC<
     }
 
     if (state.status < AccountStatusEnum.EnableTrading) {
-      return "Enable Trading";
+      return "Enable trading";
     }
 
     return "-";

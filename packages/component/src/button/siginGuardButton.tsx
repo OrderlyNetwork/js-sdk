@@ -18,7 +18,7 @@ export const SiginGuardButton: FC<PropsWithChildren<SiginGuardButtonProps>> = (
     if (typeof props.placeholder === "undefined") {
       return (
         <Button fullWidth onClick={() => {}} type="button">
-          Connect Wallet
+          Connect wallet
         </Button>
       );
     }

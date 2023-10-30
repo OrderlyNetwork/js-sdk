@@ -16,6 +16,7 @@ import { Notice } from "./notice";
 import { modal } from "@/modal";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
+import { useTranslation } from "@/i18n";
 
 export interface ActionButtonProps {
   chains:
@@ -62,6 +63,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   } = props;
   const [chainNotSupport, setChainNotSupport] = useState(false);
   const { onlyTestnet } = useContext(OrderlyContext);
+  const t = useTranslation();
 
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
@@ -173,7 +175,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     }
     return (
       <Button fullWidth onClick={onOpenPicker}>
-        Switch Network
+        {t("block.withdraw.switchNetwork")}
       </Button>
     );
   }, [

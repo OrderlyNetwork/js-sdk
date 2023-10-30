@@ -46,7 +46,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       return "Sign In";
     }
     if (status < AccountStatusEnum.EnableTrading) {
-      return "Enable Trading";
+      return "Enable trading";
     }
     return "--";
   }, [status]);
@@ -128,7 +128,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
               2
             </StepItem>
           }
-          title="Enable Trading"
+          title="Enable trading"
           subtitle="Enable secure access to our API for lightning fast trading"
         />
       </Paper>
@@ -180,7 +180,7 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent>
         <SheetHeader leading={<Logo image={logoUrl} />}>
-          <SheetTitle>Connect Wallet</SheetTitle>
+          <SheetTitle>Connect wallet</SheetTitle>
         </SheetHeader>
         <WalletConnect
           onEnableTrading={createOrderlyKey}
