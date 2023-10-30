@@ -29,6 +29,7 @@ import { useChains, useSessionStorage } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { PreDataLoader } from "@/system/preDataLoader";
 import toast, { useToasterStore } from "react-hot-toast";
+import { LocalProvider } from "@/i18n";
 
 interface OrderlyProviderProps {
   ws?: WebSocketAdpater;
@@ -296,8 +297,10 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     >
       {/* <PreDataLoader /> */}
       <TooltipProvider>
-        <WSObserver />
-        <ModalProvider>{props.children}</ModalProvider>
+        <LocalProvider>
+          <WSObserver />
+          <ModalProvider>{props.children}</ModalProvider>
+        </LocalProvider>
       </TooltipProvider>
       <Toaster />
     </Provider>
