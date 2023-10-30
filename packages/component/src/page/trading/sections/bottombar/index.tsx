@@ -3,6 +3,7 @@ import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
+import { WalletConnectorContext } from "@/provider";
 import {
   useAccount,
   useCollateral,
@@ -18,7 +19,7 @@ export const BottomNavBar = () => {
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
   const { errors } = useAppState();
-  // const { onWalletConnect } = useContext(OrderlyContext);
+  const { connectedChain } = useContext(WalletConnectorContext);
 
   const onConnect = useCallback(() => {
     connect().then((result: { wallet: any; status: AccountStatusEnum }) => {
@@ -34,7 +35,8 @@ export const BottomNavBar = () => {
 
   return (
     <>
-      {state.status === AccountStatusEnum.EnableTrading && <GetTestUSDC />}
+      {state.status === AccountStatusEnum.EnableTrading &&
+        parseInt(connectedChain?.id!) === 421613 && <GetTestUSDC />}
       {errors.ChainNetworkNotSupport && <ChainIdSwtich onSetChain={setChain} />}
       <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
         <AccountStatusBar
