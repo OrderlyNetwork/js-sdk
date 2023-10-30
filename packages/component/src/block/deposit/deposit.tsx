@@ -1,5 +1,3 @@
-"use client";
-
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
 import { WalletConnectorContext } from "@/provider";
@@ -51,6 +49,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       info: chain,
     };
   }, [connectedChain, findByChainId]);
+
   const {
     dst,
     balance,
@@ -63,11 +62,11 @@ export const Deposit: FC<DepositProps> = (props) => {
   } = useDeposit({
     address: token?.address,
     decimals: token?.decimals,
-    vaultAddress: needCrossChain
-      ? currentChain?.info?.network_infos.woofi_dex_cross_chain_router
-      : needSwap
-      ? currentChain?.info.network_infos.woofi_dex_depositor
-      : undefined,
+    srcChainId: currentChain?.id,
+    srcToken: token?.symbol,
+    crossChainRouteAddress:
+      currentChain?.info?.network_infos.woofi_dex_cross_chain_router,
+    depositorAddress: currentChain?.info.network_infos.woofi_dex_depositor,
   });
 
   useEffect(() => {
@@ -87,8 +86,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       setNeedCrossChain(false);
     }
   }, [token?.symbol, currentChain?.id, dst.chainId]);
-
-  console.log("needCrossChain", currentChain, dst, needCrossChain, needSwap);
 
   return (
     <DepositForm

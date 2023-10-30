@@ -8,7 +8,7 @@ import { TokenCell } from "./tokenCell";
 
 export interface TokenListViewProps {
   tokens: API.TokenInfo[];
-  fetchBalance: (token: string) => Promise<any>;
+  fetchBalance: (token: string, decimals: number) => Promise<any>;
   onItemClick: (token: API.TokenInfo) => void;
 }
 

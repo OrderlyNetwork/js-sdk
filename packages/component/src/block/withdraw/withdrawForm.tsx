@@ -7,12 +7,7 @@ import { Summary } from "@/block/withdraw/sections/summary";
 import { WalletPicker } from "../pickers/walletPicker";
 import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
-import {
-  API,
-  CurrentChain,
-  WithdrawStatus,
-  chainsMap,
-} from "@orderly.network/types";
+import { API, CurrentChain, WithdrawStatus } from "@orderly.network/types";
 import { toast } from "@/toast";
 import { Decimal } from "@orderly.network/utils";
 import { ActionButton } from "./sections/actionButton";

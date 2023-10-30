@@ -11,6 +11,7 @@ interface ApproveButtonProps {
   submitting: boolean;
   token?: string;
   label: string;
+  disabled?: boolean;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {
@@ -20,6 +21,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     allowance,
     submitting,
     quantity,
+    disabled,
     maxQuantity,
     token = "USDC",
     label,
@@ -66,7 +68,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     <Button
       fullWidth
       onClick={onDeposit}
-      disabled={!quantity || submitting}
+      disabled={disabled || submitting}
       loading={submitting}
     >
       {label}

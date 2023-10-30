@@ -1,10 +1,24 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { useBoolean } from "../useBoolean";
 import { useAccountInstance } from "../useAccountInstance";
 import { utils } from "@orderly.network/core";
 import { pick } from "ramda";
 import { OrderlyContext } from "../orderlyContext";
+import { isNativeTokenChecker } from "./constants";
+import { useWalletSubscription } from "../orderly/useWalletSubscription";
+import { WS_WalletStatusEnum } from "@orderly.network/types";
 
+/**
+ * PM doc:
+ * https://www.figma.com/file/RNSrMH6zkqULTfZqYzhGRr/Dex-C4-Draft?type=design&node-id=975-21917&mode=design&t=zd8vtA5mTGTw8SVI-0
+ * 
+ * 1. fee 精度 swap_support.woofi_dex_precision+3，四捨五入
+ * 2. price 精度 = abs(woofi_dex_precision - 5)，無條件捨去
+ * 3. orderly deposit fee = $0
+ * 4. deposit pop-ups 上面 fee 括弧裡面，不顯示 fee 為 0 的 token。舉例 : dst gas fee = 0 ETH, swap fee = 0.04 USDC
+
+ * 這邊就顯示 $0.04 ( 0.04 USDC )
+ * */
 const woofiDexDepositorAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
@@ -281,14 +295,35 @@ const woofiDexDepositorAbi = [
 ];
 
 export const useSwap = () => {
+  // exec swap contract;
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
   const account = useAccountInstance();
   const { configStore } = useContext(OrderlyContext);
 
+  const [status, setStatus] = useState<WS_WalletStatusEnum>(
+    WS_WalletStatusEnum.NO
+  );
+
+  const txHash = useRef<string | undefined>();
+
+  useWalletSubscription({
+    onMessage: (message) => {
+      const { side, transStatus, trxId } = message;
+
+      if (side === "DEPOSIT" && trxId === txHash.current) {
+        setStatus(transStatus);
+      }
+    },
+  });
+
   const dstValutDeposit = useCallback(() => {
+    // TODO: 临时测试用，正式上线需要修改
+    const brokerId = configStore.get<boolean>("onlyTestnet")
+      ? "woofi_dex"
+      : "woofi_pro";
     return {
       accountId: account.accountIdHashStr,
-      brokerHash: utils.parseBrokerHash(configStore.get("brokerId")!),
+      brokerHash: utils.parseBrokerHash(brokerId),
       tokenHash: utils.parseTokenHash("USDC"),
     };
   }, [account]);
@@ -302,7 +337,8 @@ export const useSwap = () => {
         toToken: string;
         minToAmount: string;
         orderlyNativeFees: bigint;
-      }
+      },
+      config: { dst: any; src: any }
     ) => {
       if (!account.walletClient) {
         throw new Error("walletClient is undefined");
@@ -315,33 +351,30 @@ export const useSwap = () => {
       if (loading) return;
       start();
 
-      console.log("---------", inputs);
+      const txPayload = {
+        from: account.address,
+        to: woofiDexDepositorAdress,
+        data: [account.address, inputs, dstValutDeposit()],
+        value: isNativeTokenChecker(inputs.fromToken)
+          ? BigInt(inputs.fromAmount) + inputs.orderlyNativeFees
+          : inputs.orderlyNativeFees,
+      };
 
       try {
-        // const result = await account.walletClient!.call(
-        //   // woofiDexDepositorAdress,
-        //   woofiDexDepositorAdress,
-        //   "swap",
-        //   [account.address, inputs, dstValutDeposit()],
-        //   {
-        //     abi: woofiDexDepositorAbi,
-        //   }
-        // );
-
         const result = await account.walletClient.sendTransaction(
           woofiDexDepositorAdress,
           "swap",
-          {
-            from: account.address,
-            to: woofiDexDepositorAdress,
-            data: [account.address, inputs, dstValutDeposit()],
-          },
+          txPayload,
           {
             abi: woofiDexDepositorAbi,
           }
         );
 
         stop();
+
+        console.log("single swap result", result);
+
+        txHash.current = result.hash;
 
         return pick(["from", "to", "hash", "value"], result);
       } catch (e: any) {
@@ -356,5 +389,6 @@ export const useSwap = () => {
   return {
     swap,
     loading,
+    status,
   };
 };

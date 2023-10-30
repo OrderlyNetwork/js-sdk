@@ -10,7 +10,7 @@ import { NetworkImage } from "@/icon";
 import { API } from "@orderly.network/types";
 
 import { ChevronDown } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { TokenListView } from "../pickers/tokenPicker";
 
 interface TokenSelectProps {
@@ -18,12 +18,24 @@ interface TokenSelectProps {
   tokens: API.TokenInfo[];
   token?: API.TokenInfo;
   onTokenChange?: (token: API.TokenInfo) => void;
-  fetchBalance: (token: string) => Promise<any>;
+  fetchBalance: (token: string, decimals: number) => Promise<any>;
+  onClosed?: () => void;
 }
 
 export const TokenSelect: FC<TokenSelectProps> = (props) => {
-  const { tokens, token, disabled } = props;
+  const { tokens, disabled } = props;
   const [open, setOpen] = useState<boolean>(false);
+
+  const token = useMemo(() => {
+    if (!!props.token) {
+      return props.token;
+    }
+
+    // default show USDC when no token selected
+    return {
+      symbol: "USDC",
+    };
+  }, [props.token]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -45,7 +57,12 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
         </button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          props.onClosed?.();
+        }}
+      >
         <DialogHeader className="after:hidden">Select token</DialogHeader>
         <DialogBody>
           <TokenListView

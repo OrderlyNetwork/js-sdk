@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useQuery } from "../useQuery";
-import { API, chainsMap } from "@orderly.network/types";
+import { API, chainsInfoMap } from "@orderly.network/types";
 // import { CHAINS } from "../utils/chain";
 
 export const useChain = (
@@ -18,7 +18,7 @@ export const useChain = (
 
     if (item) {
       item.chain_details = item.chain_details.map((d) => {
-        const chain = chainsMap.get(Number(d.chain_id));
+        const chain = chainsInfoMap.get(Number(d.chain_id));
         return {
           ...d,
           chain_name: chain?.chainName ?? "--",

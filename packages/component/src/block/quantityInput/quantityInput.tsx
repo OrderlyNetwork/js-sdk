@@ -1,8 +1,6 @@
 import Button from "@/button";
-import { ChangeEvent, FC, useCallback, useMemo, useRef } from "react";
+import { FC, useMemo, useRef } from "react";
 
-import { NetworkImage } from "@/icon/networkImage";
-import { ChevronDown } from "lucide-react";
 import { Divider } from "@/divider";
 import { cn } from "@/utils/css";
 import { Decimal } from "@orderly.network/utils";
@@ -10,7 +8,6 @@ import { TokenSelect } from "./tokenSelect";
 import { type API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
 import { parseNumber } from "@/utils/num";
-import { MarkPrices } from "../deposit/sections/misc";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -106,6 +103,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             fetchBalance={props.fetchBalance}
             onTokenChange={props.onTokenChange}
             disabled={disabled}
+            onClosed={() => inputRef.current?.focus()}
           />
         </div>
         <div

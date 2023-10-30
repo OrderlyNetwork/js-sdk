@@ -29,5 +29,11 @@ module.exports = [
         token: "ETH",
         rpcUrl: "https://arbitrum.llamarpc.com",
       },
+      {
+        id: 56,
+        label: "BNB Chain",
+        token: "BNB",
+        rpcUrl: "https://bsc-dataseed1.binance.org/",
+      },
 
 ];

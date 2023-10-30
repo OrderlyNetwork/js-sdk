@@ -124,10 +124,13 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
       let label = "Deposit";
-      if (needCrossChain) {
+      // if (needCrossChain) {
+      //   label = "Swap and deposit";
+      // } else if (needSwap) {
+      //   label = "Bridge and deposit";
+      // }
+      if (needSwap || needCrossChain) {
         label = "Swap and deposit";
-      } else if (needSwap) {
-        label = "Bridge and deposit";
       }
       return (
         <StatusGuardButton>
@@ -140,6 +143,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             maxQuantity={maxQuantity}
             token={token?.symbol}
             label={label}
+            disabled={disabled}
           />
         </StatusGuardButton>
       );

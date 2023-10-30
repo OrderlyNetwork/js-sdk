@@ -16,14 +16,20 @@ export class MemoryConfigStore implements ConfigStore {
 
   protected _restore() {
     this.map = new Map<string, any>([
+      // PROD
+      // ["apiBaseUrl", "https://dex-iap-evm.woo.org/api"],
       ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
       // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
+      // PROD
+      // ["publicWsUrl", "wss://dex-iap-evm.woo.org/ws"],
       ["publicWsUrl", "wss://testnet-ws-evm.orderly.org"],
       // ["publicWsUrl", "wss://dev-ws-v2.orderly.org"],
       ["publicWebsocketKey", "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY"],
       // ["privateWsUrl", "wss://dev-ws-private-v2.orderly.org"],
       ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
+      // ["privateWsUrl", "wss://dex-iap-evm.woo.org"],
+      // ["privateWsUrl", "wss://dex-iap-evm.woo.org/wsprivate"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
       ["swapSupportApiUrl", "https://fi-api.woo.org"],
       ["brokerId", "woofi_dex"],

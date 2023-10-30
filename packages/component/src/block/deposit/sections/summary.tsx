@@ -200,10 +200,8 @@ export const Summary: FC<SummaryProps> = (props) => {
           />
         ) : null}
       </div>
-      <div className="mt-1 flex items-center" onClick={onShowFee}>
-        {needCrossChain || needSwap ? (
-          <InfoIcon size={14} className="mr-1" />
-        ) : null}
+      <div className="mt-1 inline-flex items-center" onClick={onShowFee}>
+        <InfoIcon size={14} className="mr-1" />
 
         <span>{feeElement}</span>
       </div>

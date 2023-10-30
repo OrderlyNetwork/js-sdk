@@ -25,7 +25,16 @@ export const WalletConnectorProvider: FC<PropsWithChildren> = (props) => {
   ] = useSetChain();
   return (
     <WalletConnectorContext.Provider
-      value={{ connect, disconnect, connecting, wallet, setChain }}
+      value={{
+        connect,
+        disconnect,
+        connecting,
+        wallet,
+        setChain,
+        chains,
+        connectedChain,
+        settingChain,
+      }}
     >
       {props.children}
     </WalletConnectorContext.Provider>

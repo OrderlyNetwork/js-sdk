@@ -8,7 +8,7 @@ interface SwapProcessStatusProps {
   status: SwapProcessStatusStatus;
   tx: any;
   chainInfo: any;
-  onComplete?: () => void;
+  onComplete?: (isSuccss: boolean) => void;
 }
 
 export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
@@ -66,8 +66,10 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
       )}
       <Button
         fullWidth
-        disabled={status < SwapProcessStatusStatus.Done}
-        onClick={() => props.onComplete?.()}
+        disabled={status < SwapProcessStatusStatus.DepositFailed}
+        onClick={() =>
+          props.onComplete?.(status === SwapProcessStatusStatus.Done)
+        }
       >
         OK
       </Button>

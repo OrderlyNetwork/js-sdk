@@ -15,7 +15,7 @@ import {
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { nativeTokenAddress } from "../woo/constants";
+import { isNativeTokenChecker, nativeTokenAddress } from "../woo/constants";
 import { useChains } from "./useChains";
 import { OrderlyContext } from "../orderlyContext";
 // import { Decimal } from "@orderly.network/utils";
@@ -24,12 +24,13 @@ export type useDepositOptions = {
   // from address
   address?: string;
   decimals?: number;
-  vaultAddress?: string;
+  // vaultAddress?: string;
+  crossChainRouteAddress?: string;
+  depositorAddress?: string;
   networkId?: NetworkId;
+  srcChainId?: number;
+  srcToken?: string;
 };
-
-const isNativeTokenChecker = (address: string) =>
-  address === nativeTokenAddress;
 
 export const useDeposit = (options?: useDepositOptions) => {
   // console.log("useDeposit options:", options);
@@ -45,6 +46,8 @@ export const useDeposit = (options?: useDepositOptions) => {
   const [allowance, setAllowance] = useState("0");
 
   const { account, state } = useAccount();
+
+  const prevAddress = useRef<string | undefined>();
 
   // const depositQueue = useRef<string[]>([]);
 
@@ -81,7 +84,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           decimals,
         });
       } else {
-        balance = await account.assetsManager.getBalance(address);
+        balance = await account.assetsManager.getBalance(address, { decimals });
       }
 
       return balance;
@@ -134,42 +137,95 @@ export const useDeposit = (options?: useDepositOptions) => {
     // setBalance(() => balances);
   }, []);
 
-  const getAllowance = useCallback(
-    async (address?: string, vaultAddress?: string) => {
-      console.log("getAllowance", address, vaultAddress);
-      if (!address) return;
-      if (address && isNativeTokenChecker(address)) return;
-      if (allowanceRevalidating) return;
-      setAllowanceRevalidating(true);
+  const getAllowance = async (address?: string, vaultAddress?: string) => {
+    // if (!address || !vaultAddress) return;
+    const key = `${address}-${vaultAddress}`;
 
-      const allowance = await account.assetsManager.getAllowance(
-        address,
-        vaultAddress
-      );
+    if (prevAddress.current === key) return;
 
-      console.log("----- refresh allowance -----", allowance);
-      setAllowance(() => allowance);
-      setAllowanceRevalidating(false);
-      return allowance;
-    },
-    [allowanceRevalidating]
-  );
+    if (!address || !vaultAddress) return;
+    if (address && isNativeTokenChecker(address)) return;
+    // if (allowanceRevalidating) return;
+    // setAllowanceRevalidating(true);
+
+    console.log("getAllowance", address, vaultAddress);
+
+    prevAddress.current = key;
+
+    const allowance = await account.assetsManager.getAllowance(
+      address,
+      vaultAddress
+    );
+
+    console.log("----- refresh allowance -----", {
+      allowance,
+    });
+    setAllowance(() => allowance);
+    // setAllowanceRevalidating(false);
+    return allowance;
+  };
+
+  const getAllowanceByDefaultAddress = async (address?: string) => {
+    if (prevAddress.current === address) return;
+
+    if (!address || isNativeTokenChecker(address)) return;
+
+    prevAddress.current = address;
+
+    const allowance = await account.assetsManager.getAllowance(address);
+
+    console.log(
+      "----- refresh allowance only orderly -----",
+
+      { allowance }
+    );
+
+    setAllowance(() => allowance);
+  };
+
+  const getVaultAddress = useCallback((): string | undefined => {
+    if (dst.chainId !== options?.srcChainId) {
+      return options?.crossChainRouteAddress;
+    } else {
+      if (dst.symbol !== options?.srcToken) {
+        return options?.depositorAddress;
+      }
+    }
+  }, [options, dst]);
 
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
 
     fetchBalance(options?.address);
 
-    getAllowance(options?.address, options?.vaultAddress);
-  }, [state.status, options?.address, options?.vaultAddress, account.address]);
+    if (dst.chainId !== options?.srcChainId) {
+      getAllowance(options?.address, options?.crossChainRouteAddress);
+    } else {
+      if (dst.symbol !== options?.srcToken) {
+        getAllowance(options?.address, options?.depositorAddress);
+      } else {
+        getAllowanceByDefaultAddress(options?.address);
+      }
+    }
+  }, [
+    state.status,
+    options?.address,
+    options?.crossChainRouteAddress,
+    options?.depositorAddress,
+    options?.srcChainId,
+    options?.srcToken,
+    account.address,
+    dst,
+  ]);
 
   const approve = useCallback(
     (amount: string | undefined) => {
       if (!options?.address) {
         throw new Error("address is required");
       }
+      const vaultAddress = getVaultAddress();
       return account.assetsManager
-        .approve(options.address, amount, options?.vaultAddress)
+        .approve(options.address, amount, vaultAddress)
         .then((result: any) => {
           if (typeof amount !== "undefined") {
             setAllowance((value) => new Decimal(value).add(amount).toString());
@@ -177,7 +233,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           return result;
         });
     },
-    [account, getAllowance, options?.address, options?.vaultAddress]
+    [account, getAllowance, options?.address]
   );
 
   const deposit = useCallback(

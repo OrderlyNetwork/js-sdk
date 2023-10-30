@@ -1,4 +1,4 @@
-import { NetworkId, type API } from "@orderly.network/types";
+import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
@@ -66,17 +66,16 @@ export const useChains = (
 
     let orderlyChainsArr: API.Chain[] = [];
     const orderlyChainIds = new Set<number>();
-    // const orderlyChainsMap = new Map<number, API.Chain>();
 
     orderlyChains.forEach((item) => {
       item.chain_details.forEach((chain: any) => {
         const chainId = Number(chain.chain_id);
         orderlyChainIds.add(chainId);
-        // const chainInfo = chainsMap.get(chainId);
+        const chainInfo = chainsInfoMap.get(chainId);
 
         const _chain: any = {
           network_infos: {
-            name: chain.chain_name ?? "--",
+            name: chain.chain_name ?? chainInfo?.chainName ?? "--",
             // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
             chain_id: chainId,
             withdrawal_fee: chain.withdrawal_fee,

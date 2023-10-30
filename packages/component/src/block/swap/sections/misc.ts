@@ -3,6 +3,7 @@ export enum SwapMode {
   Cross,
 }
 export enum SwapProcessStatusStatus {
+  NONE = -1,
   Bridging = 0,
   BridgeFialed = 1,
   Depositing = 2,

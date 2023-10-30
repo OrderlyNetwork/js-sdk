@@ -5,7 +5,10 @@ import {
   solidityPackedKeccak256,
   parseUnits,
   formatUnits,
+  Numeric,
 } from "ethers";
+
+export { parseUnits } from "ethers";
 
 export type SignatureDomain = {
   name: string;

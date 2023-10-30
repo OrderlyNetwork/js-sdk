@@ -147,7 +147,12 @@ export class Assets {
     return formatByUnits(result, options?.decimals);
   }
 
-  async getBalance(address?: string): Promise<string> {
+  async getBalance(
+    address?: string,
+    options?: {
+      decimals?: number;
+    }
+  ): Promise<string> {
     if (!this.account.walletClient) {
       return "0";
     }
@@ -163,8 +168,8 @@ export class Assets {
     );
 
     console.log("-----*****-----", result);
-
-    return this.account.walletClient?.formatUnits(result);
+    return formatByUnits(result, options?.decimals);
+    // return this.account.walletClient?.formatUnits(result,options?.decimals);
   }
 
   async getBalanceByAddress(address: string): Promise<string> {

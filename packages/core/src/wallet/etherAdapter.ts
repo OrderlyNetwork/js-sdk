@@ -58,7 +58,7 @@ export class EtherAdapter implements IWalletAdapter {
       abi: any;
     }
   ): Promise<any> {
-    console.log("contract call:::::", address, method, params, options);
+    // console.log("contract call:::::", address, method, params, options);
 
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);

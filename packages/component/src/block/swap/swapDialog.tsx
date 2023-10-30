@@ -5,8 +5,8 @@ import { Swap, SwapProps } from "./swap";
 
 export const SwapDialog = create<SwapProps>((props) => {
   const { visible, onOpenChange, hide, resolve, reject } = useModal();
-  const onComplete = () => {
-    resolve();
+  const onComplete = (isSuccss: boolean) => {
+    resolve(isSuccss);
     hide();
   };
 

@@ -26,8 +26,8 @@ export const Default: Story = {
     return (
       <OrderBook
         {...args}
-        markPrice={""}
-        lastPrice={""}
+        markPrice={1}
+        lastPrice={[1]}
         depth={[0.0001, 0.001, 0.01, 0.1]}
       />
     );

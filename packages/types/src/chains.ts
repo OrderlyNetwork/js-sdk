@@ -26,7 +26,7 @@ export interface NativeCurrency {
   fix: number;
 }
 
-export const chainsMap: Map<number, ChainConfig> = new Map([
+export const chainsInfoMap: Map<number, ChainConfig> = new Map([
   [
     1,
     {

@@ -12,7 +12,9 @@ import { useBoolean } from "../useBoolean";
 import { pick } from "ramda";
 import { type Environment, createClient } from "@layerzerolabs/scan-client";
 import { OrderlyContext } from "../orderlyContext";
-import { woofiDexCrossChainRouterAbi } from "./constants";
+import { isNativeTokenChecker, woofiDexCrossChainRouterAbi } from "./constants";
+import { WS_WalletStatusEnum } from "@orderly.network/types";
+import { useWalletSubscription } from "../orderly/useWalletSubscription";
 
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
@@ -23,16 +25,33 @@ export enum MessageStatus {
 
 export const useCrossSwap = () => {
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
+
   const [layerStatus, setLayerStatus] = useState<MessageStatus>(
     MessageStatus.INITIALIZING
   );
+
   const [bridgeMessage, setBridgeMessage] = useState<any | undefined>();
+
+  const [status, setStatus] = useState<WS_WalletStatusEnum>(
+    WS_WalletStatusEnum.NO
+  );
+  const txHashFromBridge = useRef<string | undefined>();
 
   const account = useAccountInstance();
   const { networkId, configStore } = useContext(OrderlyContext);
 
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
+
+  useWalletSubscription({
+    onMessage: (message) => {
+      const { side, transStatus, trxId } = message;
+
+      if (side === "DEPOSIT" && trxId === txHashFromBridge.current) {
+        setStatus(transStatus);
+      }
+    },
+  });
 
   const checkLayerStatus = useCallback((txHash: string) => {
     const check = async (txHash: string) => {
@@ -51,6 +70,7 @@ export const useCrossSwap = () => {
 
         if (status === MessageStatus.DELIVERED) {
           setBridgeMessage(messages[0]);
+          txHashFromBridge.current = messages[0].dstTxHash;
         }
       } else {
         setTimeout(() => {
@@ -61,6 +81,9 @@ export const useCrossSwap = () => {
 
     check(txHash);
   }, []);
+
+  //swap 的時候拿 src tx hash, cross swap 拿 dst tx hash
+  // const checkDeposit
 
   useEffect(() => {
     return () => {
@@ -145,21 +168,23 @@ export const useCrossSwap = () => {
           from: account.address!,
           to: crossChainRouteAddress,
           data: [account.address, src, dst, dstValutDeposit()],
-          value: quotoLZFee[0],
+          value: isNativeTokenChecker(inputs.src.fromToken)
+            ? BigInt(inputs.src.fromAmount) + quotoLZFee[0]
+            : quotoLZFee[0],
         },
         {
           abi: woofiDexCrossChainRouterAbi,
         }
       );
 
-      account.walletClient.on(
-        {
-          address: crossChainRouteAddress,
-        },
-        (log: any, event: any) => {
-          console.log("-------------", log, event);
-        }
-      );
+      // account.walletClient.on(
+      //   {
+      //     address: crossChainRouteAddress,
+      //   },
+      //   (log: any, event: any) => {
+      //     console.log("-------------", log, event);
+      //   }
+      // );
 
       stop();
 
@@ -178,7 +203,8 @@ export const useCrossSwap = () => {
   return {
     swap,
     loading,
-    status: layerStatus,
+    bridgeStatus: layerStatus,
+    status,
     message: bridgeMessage,
   };
 };

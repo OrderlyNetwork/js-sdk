@@ -9,3 +9,11 @@ export type CurrentChain = {
   id: number;
   info: API.Chain;
 };
+
+export enum WS_WalletStatusEnum {
+  NO = "NO",
+  FAILED = "FAILED",
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+}

@@ -1010,3 +1010,6 @@ export const woofiDexCrossChainRouterAbi = [
 ];
 
 export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+
+export const isNativeTokenChecker = (address: string) =>
+  address === nativeTokenAddress;

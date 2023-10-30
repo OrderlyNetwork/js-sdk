@@ -65,7 +65,7 @@ export interface DepositFormProps {
   switchToken?: (token: API.TokenInfo) => void;
 
   fetchBalances?: (tokens: API.TokenInfo[]) => Promise<any>;
-  fetchBalance: (token: string) => Promise<any>;
+  fetchBalance: (token: string, decimals: number) => Promise<any>;
 
   onEnquiry?: (inputs: any) => Promise<any>;
 
@@ -220,17 +220,19 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         });
       })
       .then(
-        (res) => {
+        (isSuccss) => {
           console.log(
-            "******** deposit success & reset field ************",
-            res
+            "******** deposit success & isSuccss ************",
+            isSuccss
           );
-          cleanData();
-          setQuantity("");
+          if (isSuccss) {
+            cleanData();
+            setQuantity("");
+          }
         },
         (error) => {
           // console.log(error);
-          toast.error(error?.message || "Error");
+          // toast.error(error?.message || "Error");
         }
       )
       .finally(() => {
@@ -287,6 +289,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     },
     [dst.decimals, maxAmount]
   );
+
+  const onTokenChange = (token: API.TokenInfo) => {
+    cleanData();
+    setQuantity("");
+    props.switchToken?.(token);
+  };
 
   const onChainChange = useCallback(
     (chain: API.Chain) => {
@@ -523,7 +531,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         decimals={dst.decimals}
         hintMessage={hintMessage}
         fetchBalance={props.fetchBalance}
-        onTokenChange={props.switchToken}
+        onTokenChange={onTokenChange}
         balanceRevalidating={props.balanceRevalidating}
         disabled={errors.ChainNetworkNotSupport}
       />
@@ -579,7 +587,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           props.isNativeToken ? Number.MAX_VALUE : Number(props.allowance)
         }
         chainNotSupport={!!errors?.ChainNetworkNotSupport}
-        disabled={!quantity}
+        disabled={!quantity || inputStatus === "error"}
         switchChain={switchChain}
         loading={submitting}
         quantity={quantity}

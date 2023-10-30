@@ -7,7 +7,7 @@ import { SwapProcessStatusStatus } from "./misc";
 interface SwapProcessStatusProps {
   status: SwapProcessStatusStatus;
   message: any;
-  onComplete?: () => void;
+  onComplete?: (isSuccss: boolean) => void;
 }
 
 export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
@@ -83,8 +83,13 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
       )}
       <Button
         fullWidth
-        disabled={status < SwapProcessStatusStatus.Done}
-        onClick={() => props.onComplete?.()}
+        disabled={
+          status === SwapProcessStatusStatus.Bridging ||
+          status === SwapProcessStatusStatus.Depositing
+        }
+        onClick={() =>
+          props.onComplete?.(status === SwapProcessStatusStatus.Done)
+        }
       >
         OK
       </Button>

@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from "react";
 
 interface TokenCellProps {
   token: API.TokenInfo;
-  fetchBalance: (token: string) => Promise<any>;
+  fetchBalance: (token: string, decimals: number) => Promise<any>;
   onItemClick: (token: API.TokenInfo) => void;
 }
 
@@ -20,7 +20,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
     if (loading) return;
     setLoading(true);
     props
-      .fetchBalance(token.address)
+      .fetchBalance(token.address, token.decimals)
       .then(
         (balance) => {
           //   console.log(balance);
@@ -53,7 +53,10 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         {loading ? (
           <Spinner size={"small"} />
         ) : (
-          <Numeral precision={token.woofi_dex_precision} padding={false}>
+          <Numeral
+            precision={Math.abs(token.woofi_dex_precision - 5)}
+            padding={false}
+          >
             {balance}
           </Numeral>
         )}
