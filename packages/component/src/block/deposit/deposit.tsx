@@ -65,8 +65,8 @@ export const Deposit: FC<DepositProps> = (props) => {
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
     crossChainRouteAddress:
-      currentChain?.info?.network_infos.woofi_dex_cross_chain_router,
-    depositorAddress: currentChain?.info.network_infos.woofi_dex_depositor,
+      currentChain?.info?.network_infos?.woofi_dex_cross_chain_router,
+    depositorAddress: currentChain?.info.network_infos?.woofi_dex_depositor,
   });
 
   useEffect(() => {

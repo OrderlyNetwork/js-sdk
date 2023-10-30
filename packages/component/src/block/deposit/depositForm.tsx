@@ -298,15 +298,15 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const onChainChange = useCallback(
     (value: API.Chain) => {
       console.log(value, chain);
-      if (value.network_infos.chain_id === chain?.id) return Promise.resolve();
+      if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
       return props
         .switchChain?.({
-          chainId: int2hex(Number(value.network_infos.chain_id)),
-          rpcUrl: value.network_infos.public_rpc_url,
-          token: value.network_infos.currency_symbol,
-          // name: chain.network_infos.name,
-          label: value.network_infos.name,
-          // vaultAddress: chain.network_infos.woofi_dex_cross_chain_router,
+          chainId: int2hex(Number(value.network_infos?.chain_id)),
+          rpcUrl: value.network_infos?.public_rpc_url,
+          token: value.network_infos?.currency_symbol,
+          // name: chain.network_infos?.name,
+          label: value.network_infos?.name,
+          // vaultAddress: chain.network_infos?.woofi_dex_cross_chain_router,
         })
         .then(
           () => {
@@ -440,7 +440,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           network: dst.network,
           srcToken: props.token?.address,
           crossChainRouteAddress:
-            chain?.info?.network_infos.woofi_dex_cross_chain_router,
+            chain?.info?.network_infos?.woofi_dex_cross_chain_router,
           amount: new Decimal(quantity)
             .mul(10 ** props.token!.decimals)
             .toString(),

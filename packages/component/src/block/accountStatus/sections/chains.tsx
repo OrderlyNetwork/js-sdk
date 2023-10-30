@@ -29,7 +29,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: true,
     pick: "network_infos",
-    filter: (item: API.Chain) => item.network_infos.chain_id === 421613,
+    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {

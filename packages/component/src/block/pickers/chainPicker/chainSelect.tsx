@@ -35,7 +35,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    // filter: (chain: API.Chain) => chain.network_infos.chain_id === 421613,
+    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
   });
 
   const chains = useMemo(() => {
@@ -60,7 +60,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     ) {
       return undefined;
     }
-    return value.info.network_infos;
+    return value.info?.network_infos;
   }, [value, chains]);
 
   const onClick = useCallback(async () => {
