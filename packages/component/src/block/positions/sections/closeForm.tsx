@@ -7,7 +7,7 @@ import { Statistic } from "@/statistic";
 import { Text } from "@/text";
 import { type API } from "@orderly.network/core";
 import { Info } from "lucide-react";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";
 import { modal, useModal } from "@/modal";
 import {
@@ -45,14 +45,10 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     control,
     getValues,
     setValue,
-
     formState: { errors, submitCount, isSubmitting },
   } = useForm({
-    defaultValues: {
-      order_price: markPrice,
-    },
     values: {
-      // order_price: "",
+      order_price: "",
       order_quantity: Math.abs(position?.position_qty),
       symbol: position?.symbol,
       order_type: OrderType.LIMIT,
@@ -66,6 +62,13 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
       };
     },
   });
+
+  useEffect(() => {
+    // init order_price value
+    if (!getValues()?.order_price) {
+      setValue("order_price", markPrice);
+    }
+  }, [markPrice]);
 
   const symbolInfo = useSymbolsInfo()[position?.symbol];
 
