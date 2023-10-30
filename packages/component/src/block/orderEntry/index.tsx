@@ -362,9 +362,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
-                      { label: "Limit Order", value: "LIMIT" },
+                      { label: "Limit order", value: "LIMIT" },
                       {
-                        label: "Market Order",
+                        label: "Market order",
                         value: "MARKET",
                       },
                     ]}

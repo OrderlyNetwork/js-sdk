@@ -143,12 +143,12 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
       </div>
       <div className="grid grid-cols-2">
         <Statistic
-          label="Order Type"
+          label="Order type"
           value={typeText}
           labelClassName="text-sm text-base-contrast/30"
         />
         <Statistic
-          label="Last Price"
+          label="Last price"
           value={markPrice}
           rule="price"
           labelClassName="text-sm text-base-contrast/30"

@@ -42,7 +42,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     field.onChange(checked)
                   }
                 />
-                <Label htmlFor="reduceOnly">Reduce Only</Label>
+                <Label htmlFor="reduceOnly">Reduce only</Label>
               </div>
             );
           }}
@@ -88,7 +88,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(value);
                         }}
                       >
-                        <Radio value={OrderType.POST_ONLY}>Post Only</Radio>
+                        <Radio value={OrderType.POST_ONLY}>Post only</Radio>
                         <Radio value={OrderType.IOC}>IOC</Radio>
                         <Radio value={OrderType.FOK}>FOK</Radio>
                       </RadioGroup> */}
@@ -107,7 +107,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     props.onConfirmChange?.(!!checked);
                   }}
                 />
-                <Label htmlFor="orderConfirm">Order Confirm</Label>
+                <Label htmlFor="orderConfirm">Order confirm</Label>
               </div>
               <Controller
                 name="visible_quantity"

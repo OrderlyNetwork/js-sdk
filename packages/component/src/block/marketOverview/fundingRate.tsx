@@ -34,7 +34,7 @@ export const FundingRate: FC<FundingRateProps> = (props) => {
 
   return (
     <Statistic
-      label="Pred. Funding Rate"
+      label="Pred. funding rate"
       value={
         <div className="flex items-center">
           <span className="text-yellow-500">{`${props.fundingRate}%`}</span>

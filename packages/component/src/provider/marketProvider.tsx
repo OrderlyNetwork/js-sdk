@@ -30,7 +30,7 @@ export const MarketProvider = (props: any) => {
         return modal.confirm({
           title: "Get test USDC",
           content:
-            "We’re adding 1,000 test USDC to your balance, it will take up to 3 minutes to process. Please check later.",
+            "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
           onOk: () => {
             return Promise.resolve();
           },

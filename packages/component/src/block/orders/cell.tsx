@@ -71,7 +71,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           precision={base_dp}
         />
         <Statistic
-          label="Est.Total(USDC)"
+          label="Est. total(USDC)"
           value={
             <NumeralTotal
               price={props.order.price ?? 1}
@@ -82,13 +82,13 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          label="Limit Price(USDC)"
+          label="Limit price(USDC)"
           value={order.price ?? "-"}
           rule="price"
           precision={quote_dp}
         />
         <Statistic
-          label="Mark Price(USDC)"
+          label="Mark price(USDC)"
           rule="price"
           precision={quote_dp}
           value={order.mark_price}

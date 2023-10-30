@@ -12,7 +12,7 @@ export const OrderTypesCheckbox: FC<Props> = ({ value, onValueChange }) => {
     <div className="flex items-center space-x-3">
       <OrderTypeItem
         active={value === OrderType.POST_ONLY}
-        label="Post Only"
+        label="Post only"
         value={OrderType.POST_ONLY}
         onClick={onValueChange}
       />

@@ -34,7 +34,7 @@ export const LeverageView: FC<LeverageViewProps> = ({
         </Button>
       </div>
       <div className="flex flex-col items-end text-base-contrast/30">
-        <div>Pred. Funding Rate</div>
+        <div>Pred. funding rate</div>
         <div className="flex gap-1">
           <span className="text-warning">{`${predFundingRate}%`}</span>
           <span>in</span>

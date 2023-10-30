@@ -80,7 +80,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label={
             <>
-              <span>Avg. Open</span>
+              <span>Avg. open</span>
               <span>(USDC)</span>
             </>
           }
@@ -91,7 +91,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label={
             <>
-              <span>Mark Price</span>
+              <span>Mark price</span>
               <span>(USDC)</span>
             </>
           }
@@ -102,7 +102,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label={
             <>
-              <span>Liq.Price</span>
+              <span>Liq. price</span>
               <span>(USDC)</span>
             </>
           }

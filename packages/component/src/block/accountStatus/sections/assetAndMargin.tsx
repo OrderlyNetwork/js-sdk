@@ -93,7 +93,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label={
             <div className="flex text-base items-center">
-              <span>Total Value (USDC)</span>
+              <span>Total value (USDC)</span>
               <button
                 className="text-primary-light p-2"
                 onClick={(event) => {
@@ -160,7 +160,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <Divider />
       <div className="grid grid-cols-2 py-4">
         <Statistic
-          label="Margin Ratio"
+          label="Margin ratio"
           value={
             <div className="flex items-center gap-2">
               <Numeral
@@ -180,7 +180,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           }
         />
         <Statistic
-          label="Free / Total Collateral(USDC)"
+          label="Free / Total collateral(USDC)"
           value={
             <div className="flex gap-1">
               <Numeral visible={visible}>{freeCollateral}</Numeral>
@@ -195,7 +195,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label={
             <div className="flex justify-between">
-              <span>Max Account Leverage</span>
+              <span>Max account leverage</span>
               <span className="flex">
                 Current:
                 <Numeral className="text-base-contrast ml-1" surfix="x">
@@ -268,7 +268,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <Paper className="bg-base-100">
         <div className="flex justify-between text-sm text-base-contrast/50">
           <span>Instrument</span>
-          <span>Available Balance</span>
+          <span>Available balance</span>
         </div>
         <Divider className="py-3" />
         <div className="flex justify-between">

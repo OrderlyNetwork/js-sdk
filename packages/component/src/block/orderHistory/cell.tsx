@@ -76,13 +76,13 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          label="Avg. Price(USDC)"
+          label="Avg. price(USDC)"
           rule="price"
           precision={quote_dp}
           value={item.average_executed_price ?? "-"}
         />
         <Statistic
-          label="Order Price(USDC)"
+          label="Order price(USDC)"
           value={item.type === OrderType.MARKET ? "Market" : item.price}
         />
       </div>

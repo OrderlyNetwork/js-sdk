@@ -17,7 +17,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
   const sideOptions = useMemo(() => {
     return [
       {
-        label: "All",
+        label: "All sides",
         value: "",
       },
       {
@@ -33,7 +33,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
   const statusOptions = useMemo(() => {
     return [
       {
-        label: "All Status",
+        label: "All status",
         value: "",
       },
       {
@@ -64,12 +64,11 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
       {/* <SidePicker /> */}
       <Picker
         options={sideOptions}
-        label="All Side"
         size={"small"}
         value={props.side ?? ""}
         onValueChange={(item) => props.onSideChange?.(item.value)}
       />
-      {/* <Select options={status} label="All Status" size={"small"} /> */}
+      {/* <Select options={status} label="All status" size={"small"} /> */}
       <Picker
         options={statusOptions}
         size={"small"}

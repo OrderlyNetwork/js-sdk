@@ -206,7 +206,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         <MoveDownIcon className={"text-primary-light"} />
       </Divider>
       <div className={"flex items-center"}>
-        <div className={"flex-1"}>Your Web3 Wallet</div>
+        <div className={"flex-1"}>Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
           name={walletName?.toLowerCase()}

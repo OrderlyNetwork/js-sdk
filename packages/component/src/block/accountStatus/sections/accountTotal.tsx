@@ -50,7 +50,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
       <div className="flex items-center">
         <div className="flex flex-col">
           <div className="flex items-center text-xs text-base-contrast/70 gap-2">
-            <span>Total Value</span>
+            <span>Total value</span>
 
             <span className="text-base">≈</span>
           </div>
@@ -69,7 +69,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         <div className="flex items-center cursor-pointer">
           <div className="flex flex-col text-xs">
             <div className="flex items-center text-base-contrast/70">
-              <span>Total Value</span>
+              <span>Total value</span>
               <button
                 className="text-primary-light px-2"
                 onClick={(event) => {

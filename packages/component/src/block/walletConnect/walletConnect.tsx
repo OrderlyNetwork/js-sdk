@@ -43,7 +43,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
-      return "Sign In";
+      return "Sign in";
     }
     if (status < AccountStatusEnum.EnableTrading) {
       return "Enable trading";
@@ -95,8 +95,8 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
   return (
     <div>
       <div className="text-base-contrast/50 py-4">
-        You will receive two signature requests to verify your ownership and
-        enable trading. Signing is free and will not send a transaction.
+        Sign two requests to verify ownership of your wallet and enable trading.
+        Signing is free.
       </div>
 
       <Paper className="bg-base-100">
@@ -110,12 +110,12 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
               1
             </StepItem>
           }
-          title="Sign In"
+          title="Sign in"
           disabled={
             status < AccountStatusEnum.NotConnected ||
             status >= AccountStatusEnum.SignedIn
           }
-          subtitle="Confirm you are the owner of this wallet"
+          subtitle="Confirm you own this wallet"
         />
         <ListTile
           disabled={status < AccountStatusEnum.SignedIn}
@@ -129,7 +129,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
             </StepItem>
           }
           title="Enable trading"
-          subtitle="Enable secure access to our API for lightning fast trading"
+          subtitle="Enable secure access to our API for lightning-fast trading"
         />
       </Paper>
 

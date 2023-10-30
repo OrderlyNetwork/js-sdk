@@ -423,6 +423,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       setWarningMessage(
         "Not enough liquidity. Please try again later or use another chain to deposit."
       );
+      // Not enough liquidity on the cross-chain bridge. Please try again later or use another chain to deposit.
       // clean previous data
       cleanData();
     } else {
@@ -499,7 +500,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   return (
     <div>
       <div className={"flex items-center py-2"}>
-        <div className="flex-1">Your Web3 Wallet</div>
+        <div className="flex-1">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
           name={walletName?.toLowerCase()}
@@ -541,7 +542,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <MoveDownIcon className={"text-primary-light"} />
       </Divider>
       <div className="flex py-2">
-        <div className={"flex-1"}>Your WOOFi DEX Wallet</div>
+        <div className={"flex-1"}>Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <div className={"py-2"}>

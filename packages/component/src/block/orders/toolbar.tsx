@@ -31,7 +31,7 @@ export const Toolbar: FC<Props> = (props) => {
           props.onCancelAll?.();
         }}
       >
-        Cancel All
+        Cancel all
       </Button> */}
     </div>
   );
