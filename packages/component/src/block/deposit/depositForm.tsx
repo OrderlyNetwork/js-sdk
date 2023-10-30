@@ -27,6 +27,7 @@ import { modal } from "@/modal";
 import { SwapDialog } from "../swap/swapDialog";
 import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
+import { NumberReg } from "@/utils/num";
 
 export interface DepositFormProps {
   // decimals: number;
@@ -77,8 +78,6 @@ export interface DepositFormProps {
   needSwap: boolean;
   needCrossChain: boolean;
 }
-
-const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
   const {
@@ -259,7 +258,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         return;
       }
 
-      const result = (value.value as string).match(numberReg);
+      const result = (value.value as string).match(NumberReg);
 
       if (Array.isArray(result)) {
         value = result[0];
@@ -297,14 +296,16 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   };
 
   const onChainChange = useCallback(
-    (chain: API.Chain) => {
+    (value: API.Chain) => {
+      console.log(value, chain);
+      if (value.network_infos.chain_id === chain?.id) return Promise.resolve();
       return props
         .switchChain?.({
-          chainId: int2hex(Number(chain.network_infos.chain_id)),
-          rpcUrl: chain.network_infos.public_rpc_url,
-          token: chain.network_infos.currency_symbol,
+          chainId: int2hex(Number(value.network_infos.chain_id)),
+          rpcUrl: value.network_infos.public_rpc_url,
+          token: value.network_infos.currency_symbol,
           // name: chain.network_infos.name,
-          label: chain.network_infos.name,
+          label: value.network_infos.name,
           // vaultAddress: chain.network_infos.woofi_dex_cross_chain_router,
         })
         .then(
@@ -312,7 +313,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
             // 切换成功后，设置token列表
 
             setTokens(
-              chain?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
+              value?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
             );
             toast.success("Network switched");
             // 清理数据
@@ -325,7 +326,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           }
         );
     },
-    [props.switchChain]
+    [props.switchChain, chain]
   );
 
   const onChainInited = useCallback(

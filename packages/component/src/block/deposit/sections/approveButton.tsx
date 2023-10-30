@@ -50,7 +50,12 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
 
   if (allowance <= 0) {
     return (
-      <Button fullWidth loading={approveLoading} onClick={onClick}>
+      <Button
+        fullWidth
+        loading={approveLoading}
+        onClick={onClick}
+        disabled={approveLoading}
+      >
         {`Approve ${token}`}
       </Button>
     );
@@ -58,7 +63,12 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
 
   if (allowance < Number(quantity) && Number(quantity) <= Number(maxQuantity)) {
     return (
-      <Button fullWidth loading={approveLoading} onClick={onClick}>
+      <Button
+        fullWidth
+        loading={approveLoading}
+        onClick={onClick}
+        disabled={approveLoading}
+      >
         {`increase ${token} authorized amount`}
       </Button>
     );

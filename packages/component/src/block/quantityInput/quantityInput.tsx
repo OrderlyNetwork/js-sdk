@@ -29,22 +29,23 @@ export interface QuantityInputProps {
   status?: InputStatus;
   hintMessage?: string;
   balanceRevalidating?: boolean;
-  fetchBalance: (token: string) => Promise<any>;
+  fetchBalance: (token: string, decimals: number) => Promise<any>;
 }
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
   const { disabled } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  console.log(props);
 
   const amount = useMemo(() => {
     return (
       new Decimal(props.quantity || 0)
         .mul(props.markPrice)
         // .todp(props.decimals)
-        .todp(2)
-        .toFixed(2)
+        .todp(Math.abs((props.token?.woofi_dex_precision ?? 2) - 5))
         .toString()
     );
-  }, [props.quantity, props.decimals, props.markPrice]);
+  }, [props.quantity, props.token?.woofi_dex_precision, props.markPrice]);
 
   return (
     <>
@@ -115,7 +116,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           <div className="flex items-center space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
-                precision: props.token?.woofi_dex_precision ?? 2,
+                precision: props.token?.woofi_dex_precision,
                 rule: "price",
               }) ?? "-"
             } ${props.token?.symbol ?? ""}`}</span>

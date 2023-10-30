@@ -23,7 +23,6 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
       .fetchBalance(token.address, token.decimals)
       .then(
         (balance) => {
-          //   console.log(balance);
           setBalance(balance);
         },
         (error) => {
@@ -53,10 +52,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         {loading ? (
           <Spinner size={"small"} />
         ) : (
-          <Numeral
-            precision={Math.abs(token.woofi_dex_precision - 5)}
-            padding={false}
-          >
+          <Numeral precision={token.woofi_dex_precision} padding={false}>
             {balance}
           </Numeral>
         )}
