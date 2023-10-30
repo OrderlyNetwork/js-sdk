@@ -81,6 +81,8 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     if (!chain || !chain.woofi_dex_depositor)
       return Promise.reject("No chain data");
 
+    setStatus(SwapProcessStatusStatus.Depositing);
+
     return doSingleSwap(
       chain.woofi_dex_depositor,
       {
@@ -93,7 +95,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       { dst, src }
     ).then(
       (res: any) => {
-        console.log("*******", res);
+        // console.log("*******", res);
         setTx(res);
         toast.success("Deposit requested");
       },
