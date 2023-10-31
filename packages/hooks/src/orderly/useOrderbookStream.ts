@@ -128,8 +128,6 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
       } else {
         if (quantity === 0) {
           data.splice(index, 1);
-
-          continue;
         } else {
           data[index] = item;
         }
@@ -141,9 +139,20 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
 };
 
 export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
+  const asks = mergeItems(data.asks, update.asks).sort(asksSortFn);
+  const bids = mergeItems(data.bids, update.bids).sort(bidsSortFn);
+
+  if (asks.length > 0) {
+    console.log("find first", asks[0], bids[0]);
+    const firstPrice = asks[0][0];
+    const index = bids.findIndex(item => item[0] < firstPrice);
+    if (index > 0) {
+      bids.splice(0,index+1);
+    }
+  }
   return {
-    asks: mergeItems(data.asks, update.asks).sort(asksSortFn),
-    bids: mergeItems(data.bids, update.bids).sort(bidsSortFn),
+    asks: asks,
+    bids: bids,
   };
 };
 
