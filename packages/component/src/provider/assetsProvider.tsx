@@ -12,6 +12,7 @@ import {
   useLocalStorage,
   OrderlyContext,
   useWalletSubscription,
+  useSettleSubscription,
   useWooCrossSwapQuery,
   useWooSwapQuery,
   useEventEmitter,
@@ -76,22 +77,34 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
-        let msg = "";
-
-        switch (side) {
-          case "DEPOSIT":
-            msg = "Deposit success";
-            break;
-          case "WITHDRAW":
-            msg = "Withdraw success";
-            break;
-          default:
-            msg = `${side} success}`;
-        }
+        let msg = `${capitalizeString(side)} success`;
         toast.success(msg);
+      } else if(transStatus === "FAILED") {
+        let msg = `${capitalizeString(side)} failed`;
+        toast.error(msg);
       }
 
       ee.emit("wallet:changed", data);
+    },
+  });
+
+  useSettleSubscription({
+    onMessage: (data: any) => {
+
+      const { status } = data;
+
+      console.log('settle ws: ', data);
+
+      switch(status) {
+        case "COMPLETED":
+          toast.success("Settlement success");
+          break;
+        case "FAILED":
+          toast.error("Settlement failed");
+          break;   
+          default: 
+          break;  
+      }
     },
   });
 
@@ -131,3 +144,12 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     </AssetsContext.Provider>
   );
 };
+
+
+function capitalizeString(str: string): string {
+  // 将字符串全部转换为小写
+  const lowercaseStr: string = str.toLowerCase();
+  // 将第一个字符转换为大写
+  const capitalizedStr: string = lowercaseStr.charAt(0).toUpperCase() + lowercaseStr.slice(1);
+  return capitalizedStr;
+}

@@ -62,6 +62,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       content: (
         <div className="text-base-contrast/60">
           Are you sure you want to settle your PnL?
+          Settlement will take up to 1 minute before you can withdraw your available balance.
         </div>
       ),
       onCancel: () => {
@@ -70,7 +71,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       onOk: () => {
         if (typeof props.onSettle !== "function") return Promise.resolve();
         return props.onSettle().then(() => {
-          toast.success("PnL settled");
+          toast.success("Request settlement");
         });
       },
     });
