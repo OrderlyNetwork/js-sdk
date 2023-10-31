@@ -128,8 +128,6 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
       } else {
         if (quantity === 0) {
           data.splice(index, 1);
-
-          continue;
         } else {
           data[index] = item;
         }
