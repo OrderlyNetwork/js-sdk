@@ -48,7 +48,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const { account, state } = useAccount();
 
   const prevAddress = useRef<string | undefined>();
-  const getBalanceListener = useRef<number>();
+  const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
   // const depositQueue = useRef<string[]>([]);
 
