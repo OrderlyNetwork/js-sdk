@@ -48,6 +48,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const { account, state } = useAccount();
 
   const prevAddress = useRef<string | undefined>();
+  const getBalanceListener = useRef<number>();
 
   // const depositQueue = useRef<string[]>([]);
 
@@ -232,6 +233,41 @@ export const useDeposit = (options?: useDepositOptions) => {
     },
     [account, fetchBalance, getAllowance]
   );
+
+  const loopGetBalance = async () => {
+    getBalanceListener.current && clearTimeout(getBalanceListener.current);
+    getBalanceListener.current = setTimeout(async () => {
+      const balance = await fetchBalanceHandler(
+        options?.address!,
+        options?.decimals
+      );
+
+      setBalance(balance);
+      loopGetBalance();
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (!options?.address) {
+      return;
+    }
+
+    loopGetBalance();
+
+    return () => {
+      getBalanceListener.current && clearTimeout(getBalanceListener.current);
+    };
+
+    // account.walletClient.on(
+    //   // {
+    //   //   address: options?.address,
+    //   // },
+    //   "block",
+    //   (log: any, event: any) => {
+    //     console.log("account.walletClient.on", log, event);
+    //   }
+    // );
+  }, [options?.address, options?.decimals]);
 
   return {
     dst,
