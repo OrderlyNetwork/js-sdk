@@ -143,11 +143,10 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
   const bids = mergeItems(data.bids, update.bids).sort(bidsSortFn);
 
   if (asks.length > 0) {
-    console.log("find first", asks[0], bids[0]);
     const firstPrice = asks[0][0];
-    const index = bids.findIndex(item => item[0] < firstPrice);
+    const index = bids.findIndex((item) => item[0] < firstPrice);
     if (index > 0) {
-      bids.splice(0,index+1);
+      bids.splice(0, index + 1);
     }
   }
   return {
