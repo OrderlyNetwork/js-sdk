@@ -317,10 +317,7 @@ export const useSwap = () => {
   });
 
   const dstValutDeposit = useCallback(() => {
-    // TODO: 临时测试用，正式上线需要修改
-    const brokerId = configStore.get<boolean>("onlyTestnet")
-      ? "woofi_dex"
-      : "woofi_pro";
+    const brokerId = configStore.get<string>("brokerId");
     return {
       accountId: account.accountIdHashStr,
       brokerHash: utils.parseBrokerHash(brokerId),

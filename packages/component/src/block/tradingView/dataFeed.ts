@@ -2,7 +2,10 @@ import {
   IBasicDataFeed,
   LibrarySymbolInfo,
   OnReadyCallback,
+  QuotesCallback,
+  QuotesErrorCallback,
   ResolutionString,
+  SubscribeBarsCallback,
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
 import { WS } from "@orderly.network/net";
@@ -10,14 +13,27 @@ import { ORDERLY_TRADING_VIEW_INTERVAL } from "./constants";
 
 // const OrderlyRe;
 
+let testPrice = 1819.5;
+
 export default class DataFeed implements IBasicDataFeed {
   private _config?: any;
+  private lastBar?: any;
+  private market?: Promise<any>;
+  private marketResolver?: Function;
+  private marketRejector?: Function;
+  private onRealtimeCallback?: QuotesCallback;
+
   constructor(
     private readonly configuration: {
       apiBaseUrl: string;
     },
     private readonly wsClient: WS
-  ) {}
+  ) {
+    this.market = new Promise((resolve, reject) => {
+      this.marketResolver = resolve;
+      this.marketRejector = reject;
+    });
+  }
   async onReady(callback: OnReadyCallback) {
     console.log("[onReady]: Method call");
 
@@ -36,6 +52,7 @@ export default class DataFeed implements IBasicDataFeed {
   searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {
     console.log("[searchSymbols]: Method call");
   }
+
   resolveSymbol(
     symbolName,
     onSymbolResolvedCallback,
@@ -51,7 +68,7 @@ export default class DataFeed implements IBasicDataFeed {
 
     setTimeout(() => {
       const cIndex = this._config["symbol"].indexOf(symbolName);
-      console.log(cIndex, this._config);
+      // console.log(cIndex, this._config);
       // const interval = localStorage.getItem(ORDERLY_TRADING_VIEW_INTERVAL)
       const symbolInfo: LibrarySymbolInfo = {
         // name: `${symbolArr[1]}/${symbolArr[2]}`,
@@ -94,7 +111,7 @@ export default class DataFeed implements IBasicDataFeed {
     symbolInfo: LibrarySymbolInfo,
     resolution,
     periodParams,
-    onHistoryCallback,
+    onResult,
     onErrorCallback
   ) {
     // console.log("[getBars]: Method call", symbolInfo);
@@ -109,7 +126,8 @@ export default class DataFeed implements IBasicDataFeed {
       .then((res) => {
         // console.log(res);
         if (res.s !== "ok") {
-          onHistoryCallback([], { noData: true });
+          onResult([], { noData: true });
+          this.marketRejector?.();
           return;
         }
         const bars = res.t.map((t: number, index: number) => {
@@ -122,13 +140,17 @@ export default class DataFeed implements IBasicDataFeed {
             volume: res.v[index],
           };
         });
-        onHistoryCallback(bars, { noData: false });
+
+        this.lastBar = bars[bars.length - 1];
+        this.marketResolver?.(this.lastBar);
+
+        onResult(bars, { noData: false });
       });
   }
   subscribeBars(
     symbolInfo,
-    resolution,
-    onRealtimeCallback,
+    resolution: string,
+    onTick: SubscribeBarsCallback,
     subscriberUID,
     onResetCacheNeededCallback
   ) {
@@ -139,34 +161,82 @@ export default class DataFeed implements IBasicDataFeed {
       resolution
     );
 
-    // this.wsClient.subscribe(`${symbolInfo.full_name}@kline_1`, {
-    //   onMessage: (data: any) => {
-    //     // console.log("******* kline ******", data);
-    //     onRealtimeCallback({
-    //       time: data.endTime,
-    //       close: data.close,
-    //       open: data.open,
-    //       high: data.high,
-    //       low: data.low,
-    //       volume: data.volume,
-    //     });
-    //   },
-    // });
+    // setInterval(() => {
+    //   testPrice += Math.random() - 0.5;
+    //   onRealtimeCallback({
+    //     time: Date.now(),
+    //     close: testPrice - 2,
+    //     open: testPrice,
+    //     high: testPrice + 10,
+    //     low: testPrice - 4,
+    //     volume: 10000,
+    //   });
+    // }, 1000);
+
+    const rresolution = this.parseResolution(resolution);
+
+    this.wsClient.subscribe(`${symbolInfo.full_name}@kline_${rresolution}`, {
+      onMessage: (data: any) => {
+        // console.log("******* kline ******", data);
+
+        // if (data.endTime < Date.now()) return;
+        const lastBar = {
+          time: data.endTime,
+          // time: Date.now(),
+          close: data.close,
+          open: data.open,
+          high: data.high,
+          low: data.low,
+          volume: data.volume,
+        };
+        onTick(lastBar);
+
+        this.lastBar = lastBar;
+      },
+    });
 
     // subscribe trade
-    // this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {
-    //   onMessage: (data: any) => {
-    //     console.log("******* ticker ******", data);
-    //     onRealtimeCallback({
-    //       time: Date.now(),
-    //       close: data.close,
-    //       open: data.open,
-    //       high: data.high,
-    //       low: data.low,
-    //       volume: data.volume,
-    //     });
-    //   },
-    // });
+    this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {
+      onMessage: (data: any) => {
+        // console.log("******* ticker ******", data);
+
+        const lastBar = this.lastBar;
+        // if (Date.now() < lastBar.time) return;
+        if (data.close === lastBar.close) return;
+
+        const newBar = {
+          time: lastBar.time,
+          close: data.close,
+          open: lastBar.open,
+          high: Math.max(lastBar.high, data.close),
+          low: Math.min(lastBar.low, data.close),
+          volume: data.volume,
+        };
+
+        onTick(newBar);
+
+        this.lastBar = newBar;
+
+        console.log(
+          "update mobile",
+          data.close - lastBar.open,
+          data.close,
+          lastBar.open
+        );
+
+        this.onRealtimeCallback?.([
+          {
+            s: "ok",
+            n: symbolInfo.full_name,
+            v: {
+              ch: data.close - lastBar.open,
+              chp: ((data.close - lastBar.open) / lastBar.open) * 100,
+              short_name: symbolInfo.short_name,
+            },
+          },
+        ]);
+      },
+    });
   }
   unsubscribeBars(subscriberUID: string) {
     console.log(
@@ -177,8 +247,9 @@ export default class DataFeed implements IBasicDataFeed {
     const arr = subscriberUID.split("_#_");
 
     this.wsClient.send({
+      id: "kline",
       event: "unsubscribe",
-      topic: `${arr[0]}@kline_${arr[2]}`,
+      topic: `${arr[0]}@kline_${this.parseResolution(arr[2])}`,
     });
 
     // this.wsClient.send({ event: "unsubscribe", topic: `${arr[0]}@ticker` });
@@ -186,5 +257,80 @@ export default class DataFeed implements IBasicDataFeed {
     // if (this._subscriber) {
     //   this._subscriber.unsubscribe();
     // }
+  }
+
+  getQuotes(
+    symbols: string[],
+    onDataCallback: QuotesCallback,
+    onErrorCallback: QuotesErrorCallback
+  ) {
+    console.log("[getQuotes]: Method call", symbols);
+
+    this.market?.then((data: any) => {
+      const symbol = symbols[0];
+      const cIndex = this._config["symbol"].indexOf(symbol);
+
+      onDataCallback([
+        {
+          s: "ok",
+          n: symbols[0],
+          v: {
+            ch: data.close - data.open,
+            chp: ((data.close - data.open) / data.open) * 100,
+            short_name: symbol,
+            exchange: "",
+            original_name: this._config["description"][cIndex],
+            description: this._config["description"][cIndex],
+
+            open_price: data.open,
+            high_price: data.high,
+            low_price: data.low,
+            prev_close_price: data.close,
+            volume: data.volume,
+          },
+        },
+      ]);
+    });
+  }
+  subscribeQuotes(
+    symbols: string[],
+    fastSymbols: string[],
+    onRealtimeCallback: QuotesCallback,
+    listenerGUID: string
+  ) {
+    this.onRealtimeCallback = onRealtimeCallback;
+  }
+
+  unsubscribeQuotes(subscriberUID: string): void {
+    console.log(
+      "[unsubscribeDepth]: Method call with subscriberUID:",
+      subscriberUID
+    );
+
+    this.onRealtimeCallback = undefined;
+  }
+
+  private parseResolution(resolution: string): string {
+    switch (resolution) {
+      case "1":
+        return "1m";
+      case "5":
+        return "5m";
+      case "15":
+        return "15m";
+      case "30":
+        return "30m";
+      case "60":
+        return "1h";
+      case "240":
+        return "4h";
+      case "720":
+        return "12h";
+      case "1D":
+        return "1d";
+      case "1W":
+      default:
+        return "1w";
+    }
   }
 }

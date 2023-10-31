@@ -138,18 +138,14 @@ export class Account {
   }
 
   get accountIdHashStr(): string | undefined {
-    // TODO: 临时测试用，正式上线需要修改
-    const brokerId = this.configStore.get<boolean>("onlyTestnet")
-      ? "woofi_dex"
-      : "woofi_pro";
     if (!this.address) {
       throw new Error("address is error");
     }
 
-    console.log("accountIdHashStr", brokerId);
     // if (!this.configStore.get("brokerId")) {
     //   throw new Error("brokerId is undefined");
     // }
+    const brokerId = this.configStore.get<string>("brokerId");
     return parseAccountId(this.address, brokerId);
   }
 

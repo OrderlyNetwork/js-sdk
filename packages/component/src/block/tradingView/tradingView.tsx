@@ -33,6 +33,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
       "control_bar",
       "left_toolbar",
       // "header_widget_dom_node",
+      // "legend_widget",
       "timeframes_toolbar",
       "go_to_date",
       "timezone_menu",
@@ -94,8 +95,6 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
 
       script.onload = () => {
         if (typeof TradingView !== undefined) {
-          console.log("TradingView????", chartProps);
-
           wigetRef.current = new TradingView.widget({
             symbol: props.symbol,
             container: containerRef.current,
@@ -115,7 +114,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
               "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
               "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
             },
-            preset: "mobile",
+            // preset: "mobile",
             // loading_screen: { backgroundColor: "#439687" },
             datafeed: new DataFeed(
               {
