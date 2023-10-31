@@ -79,7 +79,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
 
   // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
 
-  // console.log("testChains", testChains);
+  //
 
   const [errors, setErrors] = useSessionStorage("APP_ERRORS", {
     ChainNetworkNotSupport: false,
@@ -121,7 +121,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         chainId = `0x${Number(chainId).toString(16)}`;
       }
 
-      // console.log("checkChainId", chainId, chains, onlyTestnet);
+      //
 
       if (onlyTestnet && chainId !== "0x66eed") {
         return false;
@@ -155,7 +155,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         }
 
         let account = SimpleDI.get<Account>(Account.instanceName);
-        // console.log("wallet", wallet, account);
+        //
         if (!account) {
           throw new Error("account is not initialized");
         }
@@ -176,8 +176,6 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     }
   }, [connect]);
 
-  console.log("current wallet", currentWallet);
-
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
       console.warn("🤜 disconnect wallet");
@@ -191,7 +189,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
 
   const _onSetChain = useCallback((chainId: number) => {
     return setChain({ chainId }).then((success: boolean) => {
-      // console.log("setChain result::::", result);
+      //
       if (success) {
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: false }));
       }
@@ -215,14 +213,14 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
   }, [currentWallet]);
 
   useEffect(() => {
-    // currentWallet?.provider.detectNetwork().then((x) => console.log(x));
+    // currentWallet?.provider.detectNetwork().then((x) =>
 
     if (!chains || chains.length === 0) {
       return;
     }
     // if (ready) {
     let account = SimpleDI.get<Account>(Account.instanceName);
-    // console.log("currentWallet==== auto =>>>>>>>>>>", currentWallet, account);
+    //
 
     if (
       !!currentWallet &&

@@ -98,7 +98,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     })
       .then(
         (res) => {
-          console.log(res);
           toast.success("Withdraw request sent successfully");
           setQuantity("");
 
@@ -146,11 +145,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   const fee = useMemo(() => {
     if (!chain) return 0;
 
-    console.log("chain", chains, chain);
-
     const item = chains?.find((c) => c.chain_id === chain!.id);
 
-    // console.log("item", chains, chain, item);
+    //
 
     if (!item) {
       return 0;
@@ -158,8 +155,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
     return item.withdrawal_fee || 0;
   }, [chain, chains]);
-
-  console.log("fee", fee);
 
   useEffect(() => {
     const num = Number(quantity);

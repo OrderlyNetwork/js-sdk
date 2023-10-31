@@ -59,7 +59,7 @@ export const useChains = (
     }
   );
 
-  // console.log(orderlyChains);
+  //
 
   const chains = useMemo(() => {
     if (!orderlyChains) return undefined;
@@ -103,7 +103,7 @@ export const useChains = (
     });
 
     if (!wooSwapEnabled) {
-      // console.log("orderlyChainsArr", orderlyChainsArr, options);
+      //
       let arr: any[] = orderlyChainsArr;
       if (typeof options?.filter === "function") {
         arr = orderlyChainsArr.filter(options.filter);
@@ -223,7 +223,7 @@ export const useChains = (
   //   (chainId: number): API.TokenInfo | undefined => {
   //     const chain = findByChainId(chainId);
   //     if (!chain) return;
-  //     console.log("findNativeTokenByChainId", chain);
+  //
   //   },
   //   [chains]
   // );

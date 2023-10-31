@@ -20,7 +20,7 @@ export class EtherAdapter implements IWalletAdapter {
   private _address: string;
   constructor(options: WalletAdapterOptions) {
     // super();
-    console.log("EtherAdapter constructor", options);
+
     this._chainId = parseInt(options.chain.id, 16);
     this.provider = new BrowserProvider(options.provider, "any");
     this._address = options.address;
@@ -33,16 +33,12 @@ export class EtherAdapter implements IWalletAdapter {
     return ethers.formatUnits(amount, 6);
   }
   getBalance(userAddress: string): Promise<any> {
-    console.log("*********", userAddress);
     // return contract.balanceOf(userAddress);
     return this.provider!.getBalance(userAddress).then(
       (res) => {
-        console.log("getBalance", res);
         return res;
       },
-      (error) => {
-        console.log("get native token balance error", error);
-      }
+      (error) => {}
     );
   }
 
@@ -58,7 +54,7 @@ export class EtherAdapter implements IWalletAdapter {
       abi: any;
     }
   ): Promise<any> {
-    // console.log("contract call:::::", address, method, params, options);
+    //
 
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
@@ -128,7 +124,6 @@ export class EtherAdapter implements IWalletAdapter {
 
     try {
       const result = await singer.sendTransaction(tx);
-      console.log("result", result);
 
       return result;
     } catch (error) {
@@ -141,7 +136,6 @@ export class EtherAdapter implements IWalletAdapter {
   private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {
     const gas = await this.provider!.estimateGas(tx);
 
-    console.log("********** gas ***********", gas);
     return toNumber(gas);
   }
 
@@ -156,8 +150,6 @@ export class EtherAdapter implements IWalletAdapter {
     const { domain, types, message } = data;
 
     const recovered = ethers.verifyTypedData(domain, types, message, signature);
-
-    console.log("recovered", recovered);
   }
 
   on(eventName: any, listener: any): void {
@@ -168,7 +160,7 @@ export class EtherAdapter implements IWalletAdapter {
     this.provider?.off(eventName, listener);
   }
 
-  getContract(address: string, abi: any) {
+  getContract(address: string, abi: any): ethers.Contract {
     const contract = new ethers.Contract(address, abi, this.provider);
     return contract;
   }

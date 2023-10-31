@@ -46,8 +46,6 @@ export const withHook: Story = {
   render: (args) => {
     const [chains] = useChains();
 
-    console.log(chains);
-
     return <WalletPicker {...args} />;
   },
 };

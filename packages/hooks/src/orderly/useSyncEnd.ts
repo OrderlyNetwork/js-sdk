@@ -6,8 +6,6 @@ export const useSyncEnd = () => {
   useEffect(() => {
     fetch(`${config.get("apiBaseUrl")}/v1/public/system_info`, {
       //   method: "HEAD",
-    }).then((res) => {
-      console.log("-------->>>>>>>", res, res.headers.get("date"));
-    });
+    }).then((res) => {});
   }, []);
 };

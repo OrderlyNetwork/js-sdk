@@ -50,7 +50,6 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
               className="text-sm text-primary-light disabled:text-base-contrast/10"
               disabled={!statusUrl}
               onClick={() => {
-                console.log("statusUrl", statusUrl);
                 (location as any).href = statusUrl;
               }}
             >

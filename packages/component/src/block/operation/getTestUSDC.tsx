@@ -22,7 +22,7 @@ export const GetTestUSDC = () => {
     const value = localStorage.getItem(
       `${localStorageItem}_${state.accountId}`
     );
-    console.log("get test usdc", value);
+
     if (!value) {
       setShow(() => true);
     }

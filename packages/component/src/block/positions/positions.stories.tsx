@@ -77,13 +77,10 @@ export const Default: Story = {
       },
     ],
     onLimitClose: async (position) => {
-      console.log(position);
       const result = await modal.sheet({
         title: "Limit Close",
         content: <ClosePositionPane position={position} />,
       });
-
-      console.log("result", result);
     },
   },
 };

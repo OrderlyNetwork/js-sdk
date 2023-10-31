@@ -32,21 +32,21 @@ export const useTickerStream = (symbol: string) => {
           //   return "markprices";
           // },
           // onError: (error: any) => {
-          //   console.log("error", error);
+          //
           // },
         }
       );
 
       return () => {
         //unsubscribe
-        console.log("unsubscribe!!!!!!!");
+
         unsubscribe?.();
       };
     }
   );
 
   const value = useMemo(() => {
-    // console.log("ticker", ticker, info);
+    //
     if (!info) return null;
     if (!ticker) return info;
     const config: any = { ...info };

@@ -28,7 +28,7 @@ export const Default: Story = {
 export const WithHooks: Story = {
   render: (args) => {
     const { error, done } = usePreLoadData();
-    console.log({ error, done });
+
     if (!done) return <div>loading</div>;
     return (
       <AssetsProvider>

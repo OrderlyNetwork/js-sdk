@@ -27,7 +27,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
 
   const { currentLeverage } = useMarginRatio();
 
-  // console.log("accountInfo", props);
+  //
 
   const balance = useMemo(() => {
     if (props.status < AccountStatusEnum.EnableTrading) {

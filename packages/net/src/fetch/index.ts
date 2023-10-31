@@ -1,5 +1,5 @@
 async function request(url: string, options: RequestInit) {
-  // console.log("request", url, options);
+  //
   if (!url.startsWith("http")) {
     throw new Error("url must start with http(s)");
   }
@@ -28,7 +28,7 @@ function _createHeaders(
   headers: HeadersInit = {},
   method?: string
 ): HeadersInit {
-  // console.log("headers", headers);
+  //
   const _headers = new Headers(headers);
   // _headers.append("Accept", "application/json");
 

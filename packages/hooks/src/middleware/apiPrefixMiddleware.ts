@@ -8,7 +8,6 @@ export const apiPrefixMiddleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {
     // 将日志记录器添加到原始 fetcher。
     const extendedFetcher = (...args) => {
-      console.log("SWR apiPrefixMiddleware:", key);
       return fetcher(...args);
     };
     // key =  `${apiBaseUrl}${key}`;
@@ -20,7 +19,7 @@ export const apiPrefixMiddleware: Middleware = (useSWRNext: SWRHook) => {
   //
   //     const { apiBaseUrl } = useContext(OrderlyContext);
   //     const extendedFetcher = async (url: string) => {
-  //         console.log("===>>apiPrefix middleware::", key, url);
+  //
   //         // if (!url.startsWith("http")){
   //         //     // const apiPrefix = (window as any)[__ORDERLY_API_URL_KEY__];
   //         //     url = `${apiBaseUrl}${url}`;

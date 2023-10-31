@@ -5,9 +5,7 @@ export const useBalance = () => {
   const ws = useWS();
   const { data } = useSWRSubscription("balance", (_, { next }) => {
     const unsubscribe = ws.privateSubscribe("balance", {
-      onMessage: (data: any) => {
-        console.log(data);
-      },
+      onMessage: (data: any) => {},
     });
     return () => unsubscribe();
   });

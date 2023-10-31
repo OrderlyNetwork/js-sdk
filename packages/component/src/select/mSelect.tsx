@@ -70,7 +70,7 @@ export const MSelect: FC<SelectProps> = ({
       }, 100);
 
       return () => {
-        // console.log("======= remove eventlistener");
+        //
         document.removeEventListener("touchstart", onTouchStart);
         document.removeEventListener("click", onClick);
       };

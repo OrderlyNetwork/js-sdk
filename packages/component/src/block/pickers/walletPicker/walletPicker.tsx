@@ -39,7 +39,7 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
     return props.address.replace(/^(.{6})(.*)(.{4})$/, "$1......$3");
   }, [props.address]);
 
-  // console.log(props);
+  //
 
   return (
     <div className={"flex gap-2"}>

@@ -55,7 +55,7 @@ export const OnboardConnectorProvider: FC<PropsWithChildren> = (props) => {
           params: [{ chainId: options.chainId }],
         });
       } catch (switchError: any) {
-        // console.log(switchError);
+        //
         if (switchError.code === 4902) {
           try {
             await (window as any).ethereum.request({

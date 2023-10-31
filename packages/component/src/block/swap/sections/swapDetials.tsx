@@ -35,8 +35,6 @@ interface Props {
 export const SwapDetails: FC<Props> = (props) => {
   const { info, mode, nativePrice } = props;
 
-  console.log("swap details", props);
-
   return (
     <>
       <div className="text-sm space-y-3 py-[24px]">

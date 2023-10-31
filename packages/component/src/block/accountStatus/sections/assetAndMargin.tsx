@@ -85,7 +85,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
-  // console.log("marginRatio", marginRatio, marginRatioVal);
+  //
 
   return (
     <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
@@ -249,11 +249,11 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   setLeverage(_value);
                   update({ leverage: _value }).then(
                     (res: any) => {
-                      // console.log("res", res);
+                      //
                       toast.success("Leverage updated");
                     },
                     (err: Error) => {
-                      // console.log("err", err);
+                      //
                       toast.error(err.message);
                       setLeverage(maxLeverage ?? 1);
                     }

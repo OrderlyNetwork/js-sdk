@@ -12,8 +12,6 @@ interface OrderConfirmViewProps {
 export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   const { order, quote = "USDC", base } = props;
 
-  console.log("order", props);
-
   const type = useMemo(() => {
     const type = order.order_type === OrderType.MARKET ? "Market" : "Limit";
 

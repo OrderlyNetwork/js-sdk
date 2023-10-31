@@ -35,11 +35,11 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     onApprove?.()
       .then(
         (result) => {
-          // console.log(result);
+          //
           toast.success("Approve success");
         },
         (error) => {
-          //   console.log(error);
+          //
           toast.error(error?.errorCode);
         }
       )

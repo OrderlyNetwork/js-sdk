@@ -34,7 +34,7 @@ export const useWS = () => {
 
       // open the pirvate websocket when user login
       account.on("change:status", (nextState: AccountState) => {
-        // console.log("------------>>>>>> account nextState", nextState);
+        //
         if (
           nextState.status === AccountStatusEnum.EnableTrading &&
           nextState.accountId

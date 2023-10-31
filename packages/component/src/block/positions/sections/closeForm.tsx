@@ -72,7 +72,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   const symbolInfo = useSymbolsInfo()[position?.symbol];
 
-  // console.log(symbolInfo());
+  //
 
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
@@ -100,7 +100,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
         () => {
           return onSubmit({ ...data, reduce_only: true }).then(
             (res: any) => {
-              // console.log(res);
+              //
               if (res.success) {
                 toast.success("successfully");
               }
@@ -111,9 +111,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
             }
           );
         },
-        () => {
-          console.log("cancel");
-        }
+        () => {}
       );
     },
     [side, quote]
@@ -121,7 +119,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   const onFieldChange = (name: string, value: any) => {
     const newValues = helper.calculate(getValues(), name, value);
-    // console.log("newValues", newValues);
+    //
 
     if (name === "order_price") {
       setValue("order_price", newValues.order_price, {
@@ -209,7 +207,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
             name="order_quantity"
             control={control}
             render={({ field }) => {
-              // console.log([Number(field.value ?? 0)], symbolInfo("base_tick"));
+              //
               return (
                 <Slider
                   step={symbolInfo("base_tick")}

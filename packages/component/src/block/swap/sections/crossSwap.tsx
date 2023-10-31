@@ -37,8 +37,6 @@ export const CrossSwap: FC<SwapProps> = (props) => {
     nativeToken,
   } = props;
 
-  console.log(props);
-
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
     SwapProcessStatusStatus.NONE
   );
@@ -66,8 +64,6 @@ export const CrossSwap: FC<SwapProps> = (props) => {
 
     return info;
   }, [transaction, chainInfo?.est_txn_mins, mode, dst]);
-
-  console.log(bridgeStatus, swapStatus);
 
   useEffect(() => {
     if (bridgeStatus === "DELIVERED") {
@@ -111,13 +107,10 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       },
     }).then(
       (res: any) => {
-        console.log("*******", res);
         setTx(res);
         toast.success("Deposit requested");
       },
       (error: any) => {
-        console.log("!!!!! swap error !!!!!", error);
-
         setStatus(SwapProcessStatusStatus.BridgeFialed);
 
         toast.error(error.message || "Error");

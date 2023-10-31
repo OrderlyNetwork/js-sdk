@@ -91,7 +91,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
           fullWidth
           onClick={() => {
             const chain = chains[0];
-            // console.log(chain);
+            //
             if (chain) {
               swtichChain(chain.chain_id);
               // toast.promise(

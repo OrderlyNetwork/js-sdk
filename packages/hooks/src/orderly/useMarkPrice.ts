@@ -6,14 +6,14 @@ export const useMarkPrice = (symbol: string) => {
   return useSWRSubscription(`${symbol}@markprice`, (key, { next }) => {
     const unsubscribe = ws.subscribe(`${symbol}@markprice`, {
       onMessage: (message: any) => {
-        // console.log("markprice message", message);
+        //
         next(null, message.price);
       },
     });
 
     return () => {
       //unsubscribe
-      console.log("unsubscribe useMarkPrice !!!!!!!");
+
       unsubscribe?.();
     };
   });

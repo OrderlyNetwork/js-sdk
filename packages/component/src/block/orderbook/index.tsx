@@ -32,7 +32,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
   // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
-  // console.log(props.depth);
+  //
 
   return (
     <OrderBookProvider

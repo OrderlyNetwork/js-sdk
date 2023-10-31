@@ -65,7 +65,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
     const { maxQty } = configs;
 
-    // console.log("=======>>>>> baseValidate", values, configs);
+    //
     const { order_quantity, total } = values;
 
     if (!order_quantity) {

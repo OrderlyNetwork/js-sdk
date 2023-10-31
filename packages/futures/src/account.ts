@@ -526,7 +526,6 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
 
     return Math.min(baseMaxQty, factor_1, factor_2);
   } catch (error) {
-    console.log("error", error, (error as any).stack);
     return 0;
   }
 }
@@ -583,7 +582,6 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
 
     return Math.min(baseMaxQty, factor_1, factor_2);
   } catch (error) {
-    console.log("error", error);
     return 0;
   }
 }

@@ -18,7 +18,6 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
       open={visible}
       title={props.title}
       onOpenChange={(open) => {
-        console.log("------- open change", open);
         if (!open) {
           reject();
         }

@@ -35,7 +35,7 @@ export const usePositionStream = (
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
-  // console.log("account info: ", accountInfo);
+  //
 
   const { data: holding } = usePrivateQuery<API.Holding[]>(
     "/v1/client/holding",
@@ -61,12 +61,10 @@ export const usePositionStream = (
     ...options,
 
     formatter: (data) => data,
-    onError: (err) => {
-      console.log("usePositionStream error", err);
-    },
+    onError: (err) => {},
   });
 
-  // console.log("=========== positions ============", data?.rows);
+  //
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -92,7 +90,7 @@ export const usePositionStream = (
         markPrices
       ) as unknown as number;
 
-      // console.log("info", info("base_mmr"));
+      //
 
       const notional = positions.notional(item.position_qty, price);
 

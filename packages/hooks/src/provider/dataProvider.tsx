@@ -22,7 +22,6 @@ interface DataSourceContextState {
 export const DataSourceContext = createContext({} as DataSourceContextState);
 
 export const DataSourceProvider: FC<PropsWithChildren> = (props) => {
-  console.log("render DataSourceProvider");
   const account = useAccountInstance();
 
   const dataSource = useConstant(() => {

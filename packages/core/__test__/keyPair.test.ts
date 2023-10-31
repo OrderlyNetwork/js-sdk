@@ -14,7 +14,7 @@ describe("keyPair", () => {
 
     const publicKey = await keyPair.getPublicKey();
 
-    // console.log("publicKey", publicKey);
+    //
 
     expect(publicKey).toBe(
       "ed25519:FwPH3gH4G6NqFyYr1YD5njRC6FGNRPRXnZ5SLAxHie5J"
@@ -23,7 +23,7 @@ describe("keyPair", () => {
 
   // it("ramdom key", async () => {
   //   const keyPair = BaseOrderlyKeyPair.generateKey();
-  //   console.log("generated keyPair:", keyPair);
+  //
   // });
 
   // describe("generate orderly key, secretKey len eq 44", () => {
@@ -33,10 +33,10 @@ describe("keyPair", () => {
   //   44,
   // ]);
 
-  // console.log(keys);
+  //
 
   // test.each(keys)("secretKey len eq 44", (key, expected) => {
-  //   console.log(key, expected);
+  //
   //   expect(key.length).toBe(expected);
   // });
 

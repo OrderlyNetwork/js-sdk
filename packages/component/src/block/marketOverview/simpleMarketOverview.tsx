@@ -9,7 +9,7 @@ interface SimpleMarketOverviewProps {
 
 export const SimpleMarketOverview: FC<SimpleMarketOverviewProps> = (props) => {
   const { quote_dp } = useContext(SymbolContext);
-  // console.log(symbolInfo("quote_dp"));
+  //
   return (
     <div className={"flex gap-4 items-center"}>
       <Numeral precision={quote_dp}>{props.price}</Numeral>

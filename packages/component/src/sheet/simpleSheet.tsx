@@ -12,7 +12,6 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
     <Sheet
       open={props.open}
       onOpenChange={(open) => {
-        console.log(open);
         if (!open) {
           props.onClose?.();
         }

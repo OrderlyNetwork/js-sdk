@@ -22,11 +22,10 @@ class SWRCacheProvider implements Cache<any> {
     return this.map.keys();
   }
   get(key: string) {
-    // console.log("swr get:", key);
+    //
     return this.map.get(key);
   }
   set(key: string, value: any) {
-    console.log("swr set:", key, value);
     this.map.set(key, value);
   }
   delete(key: string) {

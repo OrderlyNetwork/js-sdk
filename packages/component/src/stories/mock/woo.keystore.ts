@@ -28,9 +28,7 @@ export class WooKeyStore extends BaseKeyStore {
       console.error(e);
     }
   }
-  setAccountId(accountId: string): void {
-    console.log("TODO: setAccountId to woo redux", accountId);
-  }
+  setAccountId(accountId: string): void {}
   getAddress(): string | undefined {
     try {
       const parsedConfigs = this.parseLocalStorageConfigs();
@@ -42,7 +40,6 @@ export class WooKeyStore extends BaseKeyStore {
   }
   setAddress(address: string): void {
     // throw new Error("Method not implemented.");
-    console.log("TODO: setAddress to woo redux", address);
   }
   generateKey(): OrderlyKeyPair {
     throw new Error("Method not implemented.");
@@ -64,14 +61,14 @@ export class WooKeyStore extends BaseKeyStore {
     const configs = localStorage.getItem("persist:root");
     if (!configs) {
       // throw new Error("No configs found in localStorage.");
-      console.log("No configs found in localStorage.");
+
       return {};
     }
     let parsedConfigs = JSON.parse(configs);
     if (parsedConfigs["global"]) {
       parsedConfigs = JSON.parse(parsedConfigs["global"]);
     }
-    console.log("parsedConfigs", parsedConfigs);
+
     return parsedConfigs;
   }
 }

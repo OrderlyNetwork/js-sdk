@@ -9,7 +9,7 @@ export interface NumeralTotalProps extends Omit<NumeralProps, "children"> {
 
 export const NumeralTotal: FC<NumeralTotalProps> = (props) => {
   const { price, quantity, ...rest } = props;
-  // console.log(props);
+  //
 
   const children = useMemo(() => {
     if (!price || !quantity) {

@@ -32,8 +32,6 @@ export const create = <P extends {}>(
 
       ALREADY_MOUNTED[id] = true;
 
-      console.log("ALREADY_MOUNTED", ALREADY_MOUNTED);
-
       return () => {
         // if(!keepMounted){
         delete ALREADY_MOUNTED[id];

@@ -138,7 +138,7 @@ const Select: FC<SelectProps> = ({
         align="start"
         style={{ width: `${width}px` }}
         // onPointerDownOutside={(event) => {
-        //   console.log(event);
+        //
         // }}
         // onInteractOutside={() => setOpen(false)}
       >

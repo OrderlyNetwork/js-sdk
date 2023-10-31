@@ -37,13 +37,13 @@ export const Default: Story = {
 
 export const WithHook: Story = {
   render: (args, { globals }) => {
-    // console.log(globals);
+    //
     const [symbol, setSymbol] = React.useState(globals.symbol);
     const [data, { isLoading }] = useOrderStream({
       status: OrderStatus.COMPLETED,
       symbol: symbol,
     });
-    // console.log("*(******", data);
+    //
     return (
       <OrdersView
         dataSource={data}
@@ -71,7 +71,7 @@ export const WithHook: Story = {
 //         order={{}}
 //         symbol="BTC-PERP"
 //         onSubmit={(values) => {
-//           // console.log(values);
+//           //
 //           modal.confirm({
 //             title: "Edit Order",
 //             content:

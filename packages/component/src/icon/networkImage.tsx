@@ -64,7 +64,6 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     };
 
     img.onerror = function () {
-      console.log("load icon error");
       // setIsPlacholder(true);
       setFailed(true);
       setLoading(false);
@@ -97,7 +96,6 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
 
       currentUrl.current = img.src;
     } catch (e) {
-      console.log(e);
       setIsPlacholder(true);
     }
     // crypto logos

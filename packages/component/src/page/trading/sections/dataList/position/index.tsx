@@ -23,7 +23,7 @@ export const PositionPane = () => {
   const context = useContext(TradingPageContext);
   const tabContext = useContext(TabContext);
 
-  // console.log("********", data, info.maintenance_margin_ratio());
+  //
 
   const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
     "showAllSymbol_position",
@@ -56,9 +56,7 @@ export const PositionPane = () => {
         ),
       })
       .then(() => {})
-      .catch((e) => {
-        console.log("cancel");
-      });
+      .catch((e) => {});
   }, []);
 
   const onMarketClose = useCallback(async (position: API.Position) => {
@@ -78,18 +76,16 @@ export const PositionPane = () => {
             reduce_only: true,
           })
             .then((res: any) => {
-              // console.log("postOrder", res);
+              //
               toast.success("success");
             })
             .catch((err: Error) => {
-              // console.log("postOrder", e);
+              //
               toast.error(err.message);
             });
         },
       })
-      .catch(() => {
-        console.log("cancel");
-      });
+      .catch(() => {});
   }, []);
 
   return (

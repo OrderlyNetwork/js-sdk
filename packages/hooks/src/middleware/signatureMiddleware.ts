@@ -12,12 +12,12 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
     try {
       const extendedFetcher = async (args: any) => {
         let url = Array.isArray(args) ? args[0] : args;
-        // console.log("signature middleware::::::::", key, url);
+        //
 
         let account = SimpleDI.get<Account>("account");
         let fullUrl = `${apiBaseUrl}${url}`;
 
-        // console.log("signature middleware account::::::::", account);
+        //
         const signer = account.signer;
         // const signer = getMockSigner();
 

@@ -35,8 +35,6 @@ export default class DataFeed implements IBasicDataFeed {
     });
   }
   async onReady(callback: OnReadyCallback) {
-    console.log("[onReady]: Method call");
-
     // fetch(`${this.configuration.apiBaseUrl}/tv/config`)
 
     fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=WOO%20X`)
@@ -49,9 +47,7 @@ export default class DataFeed implements IBasicDataFeed {
         }
       });
   }
-  searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {
-    console.log("[searchSymbols]: Method call");
-  }
+  searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {}
 
   resolveSymbol(
     symbolName,
@@ -59,16 +55,16 @@ export default class DataFeed implements IBasicDataFeed {
     onResolveErrorCallback,
     extension
   ) {
-    // console.log("[resolveSymbol]: Method call", symbolName);
+    //
     // fetch(`${this.configuration.apiBaseUrl}/tv/symbol_info?group=${symbolName}`)
     //   .then((res) => res.json())
     //   // .then((data) => data && data.s === "ok")
     //   .then((res) => {
-    // console.log("==========>>>>>>>", res);
+    //
 
     setTimeout(() => {
       const cIndex = this._config["symbol"].indexOf(symbolName);
-      // console.log(cIndex, this._config);
+      //
       // const interval = localStorage.getItem(ORDERLY_TRADING_VIEW_INTERVAL)
       const symbolInfo: LibrarySymbolInfo = {
         // name: `${symbolArr[1]}/${symbolArr[2]}`,
@@ -114,7 +110,7 @@ export default class DataFeed implements IBasicDataFeed {
     onResult,
     onErrorCallback
   ) {
-    // console.log("[getBars]: Method call", symbolInfo);
+    //
     let resolutionNum = resolution < 5 ? 1 : resolution;
     if (resolution > 60) {
       resolutionNum = `${resolution / 60}h`;
@@ -124,7 +120,7 @@ export default class DataFeed implements IBasicDataFeed {
     )
       .then((res) => res.json())
       .then((res) => {
-        // console.log(res);
+        //
         if (res.s !== "ok") {
           onResult([], { noData: true });
           this.marketRejector?.();
@@ -154,13 +150,6 @@ export default class DataFeed implements IBasicDataFeed {
     subscriberUID,
     onResetCacheNeededCallback
   ) {
-    console.log(
-      "[subscribeBars]: Method call with subscriberUID:",
-      subscriberUID,
-      symbolInfo,
-      resolution
-    );
-
     // setInterval(() => {
     //   testPrice += Math.random() - 0.5;
     //   onRealtimeCallback({
@@ -177,7 +166,7 @@ export default class DataFeed implements IBasicDataFeed {
 
     this.wsClient.subscribe(`${symbolInfo.full_name}@kline_${rresolution}`, {
       onMessage: (data: any) => {
-        // console.log("******* kline ******", data);
+        //
 
         // if (data.endTime < Date.now()) return;
         const lastBar = {
@@ -198,7 +187,7 @@ export default class DataFeed implements IBasicDataFeed {
     // subscribe trade
     this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {
       onMessage: (data: any) => {
-        // console.log("******* ticker ******", data);
+        //
 
         const lastBar = this.lastBar;
         // if (Date.now() < lastBar.time) return;
@@ -217,7 +206,7 @@ export default class DataFeed implements IBasicDataFeed {
 
         this.lastBar = newBar;
 
-        // console.log(
+        //
         //   "update mobile",
         //   data.close - lastBar.open,
         //   data.close,
@@ -239,11 +228,6 @@ export default class DataFeed implements IBasicDataFeed {
     });
   }
   unsubscribeBars(subscriberUID: string) {
-    console.log(
-      "[unsubscribeBars]: Method call with subscriberUID:",
-      subscriberUID
-    );
-
     const arr = subscriberUID.split("_#_");
 
     this.wsClient.send({
@@ -264,8 +248,6 @@ export default class DataFeed implements IBasicDataFeed {
     onDataCallback: QuotesCallback,
     onErrorCallback: QuotesErrorCallback
   ) {
-    console.log("[getQuotes]: Method call", symbols);
-
     this.market?.then((data: any) => {
       const symbol = symbols[0];
       const cIndex = this._config["symbol"].indexOf(symbol);
@@ -302,11 +284,6 @@ export default class DataFeed implements IBasicDataFeed {
   }
 
   unsubscribeQuotes(subscriberUID: string): void {
-    console.log(
-      "[unsubscribeDepth]: Method call with subscriberUID:",
-      subscriberUID
-    );
-
     this.onRealtimeCallback = undefined;
   }
 

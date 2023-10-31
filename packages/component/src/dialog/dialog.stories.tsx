@@ -57,12 +57,8 @@ export const CommandStyle: Story = {
             "You agree changing the quantity of ETH-PERP order to 1.0500.",
         })
         .then(
-          (r) => {
-            console.log("r", r);
-          },
-          (e) => {
-            console.log("e", e);
-          }
+          (r) => {},
+          (e) => {}
         );
     };
     return (

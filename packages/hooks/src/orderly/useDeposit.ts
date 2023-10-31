@@ -33,7 +33,7 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  // console.log("useDeposit options:", options);
+  //
   const { onlyTestnet } = useContext<any>(OrderlyContext);
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
@@ -55,7 +55,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     const chain: API.Chain = onlyTestnet
       ? findByChainId(ARBITRUM_TESTNET_CHAINID)
       : findByChainId(ARBITRUM_MAINNET_CHAINID);
-    // console.log("dst chain", chain);
+    //
     const USDC = chain?.token_infos.find((token) => token.symbol === "USDC");
     if (!chain) {
       throw new Error("dst chain not found");
@@ -95,14 +95,13 @@ export const useDeposit = (options?: useDepositOptions) => {
   const fetchBalance = useCallback(
     async (address?: string, decimals?: number) => {
       if (!address) return;
-      // console.log("fetchBalance", address, !!address && isNativeToken(address));
+      //
 
       try {
         if (balanceRevalidating) return;
         setBalanceRevalidating(true);
         const balance = await fetchBalanceHandler(address, decimals);
 
-        console.log("----- refresh balance -----", balance);
         setBalance(() => balance);
         setBalanceRevalidating(false);
       } catch (e) {
@@ -117,8 +116,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
     const tasks = [];
 
-    console.log("fetch balances ---->>>>", tokens);
-
     for (const token of tokens) {
       // native token skip
       if (isNativeTokenChecker(token.address)) {
@@ -129,11 +126,9 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     const balances = await Promise.all(tasks);
 
-    console.log("----- get balances from tokens -----", balances);
-
     // const balances = await account.assetsManager.getBalances(tokens);
 
-    // // console.log("----- refresh balance -----", balance);
+    // //
     // setBalance(() => balances);
   }, []);
 
@@ -168,12 +163,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     prevAddress.current = address;
 
     const allowance = await account.assetsManager.getAllowance(address);
-
-    console.log(
-      "----- refresh allowance only orderly -----",
-
-      { allowance }
-    );
 
     setAllowance(() => allowance);
   };

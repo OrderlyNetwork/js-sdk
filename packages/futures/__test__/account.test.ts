@@ -31,8 +31,6 @@ describe("extractSymbols", () => {
       symbol: "BTCUSDT",
       IMR_Factor: 0.0000048045,
     });
-
-    console.log("qty", qty);
   });
 
   // it("should handle empty positions and orders arrays", () => {

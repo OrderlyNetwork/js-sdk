@@ -21,9 +21,7 @@ export const Coin: FC<CoinProps> = (props) => {
       setUrl(img.src);
     };
 
-    img.onerror = function () {
-      console.log("load icon error");
-    };
+    img.onerror = function () {};
 
     // crypto logos
     // https://cryptologos.cc/logos/

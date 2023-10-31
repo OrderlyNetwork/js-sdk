@@ -22,7 +22,7 @@ export const useFetures = () => {
     // const sub = ws
     //   .observe<WSMessage.Ticker>(`tickers`)
     //   .subscribe((value: any) => {
-    //     console.log("useTickers", value);
+    //
     //     // setData(value);
     //   });
     // return () => {

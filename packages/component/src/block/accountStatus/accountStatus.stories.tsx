@@ -62,7 +62,6 @@ export const WithHook: Story = {
     ] = useConnectWallet();
 
     useEffect(() => {
-      console.log(wallet);
       if (
         wallet &&
         Array.isArray(wallet.accounts) &&
@@ -74,7 +73,7 @@ export const WithHook: Story = {
       }
     }, [wallet]);
 
-    // console.log("account state", state);
+    //
 
     return (
       <AccountStatusBar

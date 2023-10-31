@@ -25,9 +25,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         (balance) => {
           setBalance(balance);
         },
-        (error) => {
-          console.log(error);
-        }
+        (error) => {}
       )
       .finally(() => {
         setLoading(false);

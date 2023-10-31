@@ -17,7 +17,7 @@ type Story = StoryObj<typeof TradingView>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    console.log(symbol);
+
     return (
       <div style={{ width: "100%", height: "300px" }}>
         <TradingView {...args} symbol={symbol} />

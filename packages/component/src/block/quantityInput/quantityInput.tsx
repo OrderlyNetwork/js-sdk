@@ -35,8 +35,6 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   const { disabled } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  console.log(props);
-
   const amount = useMemo(() => {
     return (
       new Decimal(props.quantity || 0)
@@ -70,7 +68,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               value={props.quantity}
               // onChange={onChange}
               onChange={(event) => {
-                // console.log(event.target.value);
+                //
                 props?.onValueChange?.({
                   value: event.target.value,
                   token: props.token?.symbol ?? "",

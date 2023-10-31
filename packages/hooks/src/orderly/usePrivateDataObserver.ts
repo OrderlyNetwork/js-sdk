@@ -16,11 +16,11 @@ export const usePrivateDataObserver = () => {
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
         const key = ["/v1/orders?status=NEW", state.accountId];
-        // console.log("------ orders push -----------", data);
-        // console.log(cache);
+        //
+        //
 
         mutate(key, (orders: any) => {
-          // console.log(orders);
+          //
           return Promise.resolve()
             .then(() => {
               if (!orders) {
@@ -46,9 +46,7 @@ export const usePrivateDataObserver = () => {
 
               return orders;
             })
-            .catch((error) => {
-              console.log("error", error, error.stack);
-            });
+            .catch((error) => {});
         });
 
         ee.emit("orders:changed");
@@ -58,7 +56,6 @@ export const usePrivateDataObserver = () => {
   }, [state.accountId]);
 
   useEffect(() => {
-    console.log("subscribe: position: %s", state.accountId);
     if (!state.accountId) return;
     const key = ["/v1/positions", state.accountId];
     const unsubscribe = ws.privateSubscribe("position", {
@@ -105,7 +102,6 @@ export const usePrivateDataObserver = () => {
       },
     });
     return () => {
-      console.log("unsubscribe: private subscription position");
       unsubscribe?.();
     };
   }, [state.accountId]);

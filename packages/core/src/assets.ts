@@ -59,7 +59,7 @@ export class Assets {
 
     const signature = await this.account.signer.sign(payload);
 
-    // console.log("signature", signature, message, data);
+    //
 
     const res = await this._simpleFetch(url, {
       method: "POST",
@@ -141,12 +141,6 @@ export class Assets {
     const result = await this.account.walletClient?.getBalance(
       this.account.stateValue.address!
     );
-    console.log(
-      "getNativeBalance",
-      this.account.stateValue.address,
-      result,
-      options
-    );
 
     // return this.account.walletClient!.formatUnits(result);
     return formatByUnits(result, options?.decimals);
@@ -172,7 +166,6 @@ export class Assets {
       }
     );
 
-    console.log("-----*****-----", result, options);
     return formatByUnits(result, options?.decimals);
     // return this.account.walletClient?.formatUnits(result,options?.decimals);
   }
@@ -183,7 +176,7 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    // console.log("address:::::", address);
+    //
 
     const result = await this.account.walletClient?.call(
       address,
@@ -241,8 +234,6 @@ export class Assets {
       }
     );
 
-    console.log("-----*****-----", result);
-
     return result;
   }
 
@@ -270,8 +261,6 @@ export class Assets {
       }
     );
 
-    console.log("-----*****-----", result);
-
     return result;
   }
 
@@ -280,8 +269,6 @@ export class Assets {
       throw new Error("walletClient is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
-
-    console.log("deposit brokerId", brokerId);
 
     if (!brokerId) throw new Error("brokerId is required");
 
@@ -318,7 +305,7 @@ export class Assets {
       }
     );
 
-    // console.log("-----*****-----", result);
+    //
 
     return result;
   }

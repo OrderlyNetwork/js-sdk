@@ -91,7 +91,6 @@ export class WS {
   }
 
   private onVisibilityChange() {
-    console.log("👀👀 document visibility 👀👀", document.visibilityState);
     if (document.visibilityState === "visible") {
       this.checkSocketStatus();
     }
@@ -102,8 +101,6 @@ export class WS {
   }
 
   private onNetworkStatusChange() {
-    console.log("👀👀 network status 👀👀", navigator.onLine);
-
     if (navigator.onLine) {
       this.checkSocketStatus();
     }
@@ -118,7 +115,7 @@ export class WS {
   private checkSocketStatus() {
     const now = Date.now();
 
-    // console.log(
+    //
     //   "👀👀 checkNetworkStatus 👀👀",
     //   this._publicHeartbeatTime,
     //   this._privateHeartbeatTime,
@@ -182,7 +179,6 @@ export class WS {
   }
 
   private createPublicSC(options: WSOptions) {
-    console.log("open public webSocket ---->>>>");
     if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
       return;
     this.publicSocket = new WebSocket(
@@ -195,7 +191,6 @@ export class WS {
   }
 
   private createPrivateSC(options: WSOptions) {
-    console.log("open private webSocket ---->>>>");
     if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
       return;
 
@@ -211,9 +206,7 @@ export class WS {
   }
 
   private onOpen(event: Event) {
-    console.log("Public WebSocket connection opened");
-
-    // console.log(this._pendingPublicSubscribe);
+    //
     if (this._pendingPublicSubscribe.length > 0) {
       this._pendingPublicSubscribe.forEach(([params, cb, isOnce]) => {
         this.subscribe(params, cb, isOnce);
@@ -226,7 +219,6 @@ export class WS {
   }
 
   private onPrivateOpen(event: Event) {
-    console.log("Private WebSocket connection opened");
     //auth
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
@@ -254,7 +246,7 @@ export class WS {
         const topicKey = this.getTopicKeyFromMessage(message);
 
         const eventhandler = handlerMap.get(topicKey);
-        // console.log("event handle::", eventhandler);
+        //
         if (eventhandler?.callback) {
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter
@@ -273,10 +265,8 @@ export class WS {
         }
       }
 
-      // console.log("WebSocket message received:", message);
-    } catch (e) {
-      console.log("WebSocket message received:", e, event.data);
-    }
+      //
+    } catch (e) {}
 
     // You can process the received message here
   }
@@ -303,8 +293,6 @@ export class WS {
   }
 
   private onPublicClose(event: CloseEvent) {
-    console.log("public socket is closed");
-
     // move handler to pending
     this._eventHandlers.forEach((value, key) => {
       value.callback.forEach((cb) => {
@@ -318,7 +306,6 @@ export class WS {
   }
 
   private onPrivateClose(event: CloseEvent) {
-    console.log("private socket is closed");
     if (this.privateIsReconnecting) return;
     this._eventPrivateHandlers.forEach((value, key) => {
       value.callback.forEach((cb) => {
@@ -342,7 +329,6 @@ export class WS {
       // retry connect
       if (this._publicRetryCount > CONNECT_LIMIT) return;
       setTimeout(() => {
-        console.log("retry connect: %s", this._publicRetryCount);
         // this.createPublicSC(this.options);
         this.reconnectPublic();
         this._publicRetryCount++;
@@ -362,7 +348,6 @@ export class WS {
       // retry connect
       if (this._privateRetryCount > CONNECT_LIMIT) return;
       setTimeout(() => {
-        console.log("retry connect: %s", this._privateRetryCount);
         // this.createPublicSC(this.options);
         this.reconnectPrivate();
         this._privateRetryCount++;
@@ -387,7 +372,7 @@ export class WS {
     if (typeof message === "undefined") return;
     if (this.publicSocket.readyState === WebSocket.OPEN) {
       this.publicSocket.send(message);
-      // console.log("WebSocket message sent:", message);
+      //
     } else {
       console.warn("WebSocket connection is not open. Cannot send message.");
     }
@@ -469,14 +454,14 @@ export class WS {
     callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
     once?: boolean
   ): unsubscribe | undefined {
-    // console.log("👉", params, callback, this.publicSocket.readyState);
+    //
 
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
       (callback as WSMessageHandler).onUnsubscribe
     );
 
-    // console.log("params::", params);
+    //
 
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
       this._pendingPublicSubscribe.push([params, callback, once]);
@@ -576,13 +561,12 @@ export class WS {
   ) {
     const topic = parmas.topic || parmas.event;
     const handler = handlerMap.get(topic);
-    console.log("🤜 unsubscribe", parmas, topic, handler);
 
     if (!!handler && Array.isArray(handler?.callback)) {
       if (handler!.callback.length === 1) {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
 
-        // console.log("unsubscribeMessage", unsubscribeMessage);
+        //
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
         //post unsubscribe message
@@ -617,8 +601,6 @@ export class WS {
 
     if (typeof onUnsubscribe !== "function") {
       if (typeof params === "string") {
-        console.log("👉", params);
-
         onUnsubscribe = () => ({ event: "unsubscribe", topic: params });
       } else {
         onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
@@ -631,12 +613,8 @@ export class WS {
   private reconnectPublic() {
     if (this.publicIsReconnecting) return;
     this.publicIsReconnecting = true;
-    console.log(
-      `Reconnecting public in ${this.reconnectInterval / 1000} seconds...`
-    );
-    window.setTimeout(() => {
-      console.log("Public Reconnecting...");
 
+    window.setTimeout(() => {
       this.createPublicSC(this.options);
     }, this.reconnectInterval);
   }
@@ -645,12 +623,8 @@ export class WS {
     if (!this.options.accountId) return;
     if (this.privateIsReconnecting) return;
     this.privateIsReconnecting = true;
-    console.log(
-      `Reconnecting private in ${this.reconnectInterval / 1000} seconds...`
-    );
-    window.setTimeout(() => {
-      console.log("Private Reconnecting...");
 
+    window.setTimeout(() => {
       this.createPrivateSC(this.options);
     }, this.reconnectInterval);
   }

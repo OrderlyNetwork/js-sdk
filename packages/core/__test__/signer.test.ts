@@ -18,6 +18,5 @@ describe("signer test", () => {
       // data: {},
     };
     const signedMessage = await signer.sign(message);
-    console.log(signedMessage);
   });
 });

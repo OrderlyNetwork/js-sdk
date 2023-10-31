@@ -19,7 +19,7 @@ export function createGetter<
       property: propertyType<typeof depth, K, any>,
       receiver
     ): any {
-      // console.log("getter", property, receiver);
+      //
       // if (property === "isLoading") return isLoading;
       if (depth === 1) {
         //   return data[property];
@@ -29,7 +29,7 @@ export function createGetter<
         };
       }
       return (key: K, defaultValue: any) => {
-        // console.log("getter", property, key, defaultValue, data);
+        //
         if (key) {
           return (target as any)[property]?.[key] ?? defaultValue;
         } else {

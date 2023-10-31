@@ -20,7 +20,6 @@ export class AppState {
     const isReady = Object.keys(CHECK_ENTRY).every((key) => CHECK_ENTRY[key]);
 
     if (isReady) {
-      console.log("change app ready: true");
       //   setReady(true);
       this._ready = true;
     }

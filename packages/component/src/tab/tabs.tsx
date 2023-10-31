@@ -39,7 +39,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
         PropsWithChildren<TabPaneProps>
       >;
       const { displayName } = childElement.type;
-      //   console.log(displayName, childElement);
+      //
       if (displayName === "TabPane") {
         //   return childElement;
         const { title, value, disabled } = childElement.props;

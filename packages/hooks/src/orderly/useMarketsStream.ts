@@ -25,14 +25,14 @@ export const useMarketsStream = () => {
         //   return "markprices";
         // },
         // onError: (error: any) => {
-        //   console.log("error", error);
+        //
         // },
       }
     );
 
     return () => {
       //unsubscribe
-      console.log("unsubscribe!!!!!!!");
+
       unsubscribe?.();
     };
   });

@@ -49,7 +49,7 @@ export default meta;
 export const Default: Story = {
   render: () => {
     const state = useAppState();
-    console.log("state", state);
+
     return (
       <AppStateDemo
         exchangeState={state.exchangeState}

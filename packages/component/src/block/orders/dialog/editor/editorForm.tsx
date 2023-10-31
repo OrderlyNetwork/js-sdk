@@ -58,7 +58,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
-  // console.log(symbolInfo());
+  //
 
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
@@ -125,9 +125,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         (data: any) => {
           return onSubmit(data);
         },
-        () => {
-          console.log("cancel");
-        }
+        () => {}
       );
     },
     [quote, order, dirtyFields]
@@ -135,7 +133,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   const onFieldChange = (name: string, value: any) => {
     const newValues = helper.calculate(getValues(), name, value);
-    // console.log("newValues", newValues);
+    //
 
     if (name === "order_price") {
       setValue("order_price", newValues.order_price, {
@@ -222,7 +220,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
             name="order_quantity"
             control={control}
             render={({ field }) => {
-              // console.log([Number(field.value ?? 0)], symbolInfo("base_tick"));
+              //
               return (
                 <Slider
                   step={symbolInfo("base_tick")}

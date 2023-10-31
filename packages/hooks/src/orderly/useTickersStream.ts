@@ -9,7 +9,6 @@ export const useTickersStream = () => {
 
   useEffect(() => {
     const sub = ws.observe<WS.Ticker>(`tickers`).subscribe((value) => {
-      console.log("useTickers", value);
       setData(value);
     });
 

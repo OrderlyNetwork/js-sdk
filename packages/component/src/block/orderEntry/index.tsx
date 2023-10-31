@@ -101,7 +101,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         reduce_only: false,
       },
       resolver: async (values) => {
-        // console.log("**********  values", values);
+        //
         const errors = await validator(values);
         return {
           values,
@@ -131,7 +131,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const onSubmit = useCallback(
       (data: any) => {
-        // console.log("data", data);
+        //
 
         return Promise.resolve()
           .then(() => {
@@ -181,9 +181,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   }
                 );
             },
-            (err) => {
-              console.log("submit order err", err);
-            }
+            (err) => {}
           );
 
         // return modal
@@ -263,7 +261,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         name,
         value
       );
-      // console.log("newValues", newValues);
+      //
 
       if (name === "order_price") {
         methods.setValue("order_price", newValues.order_price as string, {
@@ -279,7 +277,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       });
     };
 
-    // console.log("errors:", methods.formState);
+    //
 
     const totalAmount = useMemo(() => {
       const quantity = methods.getValues("order_quantity");
@@ -459,7 +457,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     step={symbolConfig?.["base_tick"]}
                     value={[Number(field.value ?? 0)]}
                     onValueChange={(value) => {
-                      // console.log("onValueChange", value);
+                      //
                       if (typeof value[0] !== "undefined") {
                         // field.onChange(value[0]);
                         onFieldChange("order_quantity", value[0]);

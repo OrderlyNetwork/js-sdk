@@ -20,7 +20,7 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
         )
       )}
       // onTransitionEnd={() => {
-      //   console.log("onTransitionEnd");
+      //
       // }}
     >
       <div className="overflow-hidden relative">{props.children}</div>

@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const SwapProcess = (props: Props) => {
-  // console.log({ props });
+  //
   const { status } = props;
 
   if (props.mode === SwapMode.Cross) {

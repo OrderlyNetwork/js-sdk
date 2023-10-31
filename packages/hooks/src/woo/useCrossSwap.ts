@@ -56,7 +56,6 @@ export const useCrossSwap = () => {
   const checkLayerStatus = useCallback((txHash: string) => {
     const check = async (txHash: string) => {
       const { messages } = await client.getMessagesBySrcTxHash(txHash);
-      console.log("messages:", messages);
 
       if (messages.length > 0) {
         const { status } = messages[0];
@@ -182,19 +181,18 @@ export const useCrossSwap = () => {
       //     address: crossChainRouteAddress,
       //   },
       //   (log: any, event: any) => {
-      //     console.log("-------------", log, event);
+      //
       //   }
       // );
 
       stop();
 
-      // console.log("swap result:", result);
+      //
 
       checkLayerStatus(result.hash);
 
       return pick(["from", "to", "hash", "value"], result);
     } catch (e: any) {
-      console.log("swap error:", e);
       stop();
       throw new Error(e.errorCode);
     }

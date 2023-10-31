@@ -32,8 +32,8 @@ export const getPrecisionByNumber = (num: number | string): number => {
  * const number1 = 12345;
  * const number2 = 987654321;
  *
- * console.log(numberToHumanStyle(number1)); // Output: "12.35K"
- * console.log(numberToHumanStyle(number2)); // Output: "987.65M"
+ *
+ *
  */
 export function numberToHumanStyle(
   number: number,

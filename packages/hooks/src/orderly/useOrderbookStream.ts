@@ -35,7 +35,7 @@ const reduceItems = (
   let newData = [...data];
   const result: OrderBookItem[] = [];
 
-  // console.log("depth:::::", depth);
+  //
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
@@ -50,7 +50,7 @@ const reduceItems = (
         priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
 
-      // console.log("priceKey:::", priceKey);
+      //
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
@@ -109,19 +109,19 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
-  // console.log("mergeItems", data, update);
+  //
   if (data.length === 0) return update;
 
   data = data.filter(([price]) => !isNaN(price));
 
   while (update.length > 0) {
     const item = update.shift();
-    // console.log("item", item);
+    //
     if (item) {
       const [price, quantity] = item;
 
       const index = data.findIndex(([p], index) => p === price);
-      // console.log(index);
+      //
       if (index === -1) {
         if (quantity === 0) continue;
         data.push(item);
@@ -175,7 +175,7 @@ export const useOrderbookStream = (
   const depths = useMemo(() => {
     const tick = config("quote_tick");
 
-    // console.log(tick);
+    //
 
     return [tick, tick * 10, tick * 100, tick * 1000];
   }, [config("quote_tick")]);
@@ -204,7 +204,7 @@ export const useOrderbookStream = (
       },
       {
         onMessage: (message: any) => {
-          // console.log("orderbook request message", message);
+          //
           if (!!message) {
             const reduceOrderbookData = reduceOrderbook(depth, level, message);
             setRequestData(reduceOrderbookData);
@@ -234,7 +234,7 @@ export const useOrderbookStream = (
       },
       {
         onMessage: (message: any) => {
-          // console.log("orderbook update message", message);
+          //
 
           setData((data) => {
             const mergedData =
@@ -259,7 +259,7 @@ export const useOrderbookStream = (
   }, []);
 
   const onDepthChange = useCallback((depth: number) => {
-    // console.log("Orderbook depth has changed:", depth);
+    //
     setDepth(() => depth);
   }, []);
 

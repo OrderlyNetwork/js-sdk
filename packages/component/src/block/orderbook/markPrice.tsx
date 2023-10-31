@@ -17,8 +17,8 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
 
   const [prevLastPrice, middlePrice] = lastPrice;
 
-  // console.log(prevLastPrice);
-  // console.log(prevLastPrice, middlePrice);
+  //
+  //
 
   const onMarkPrice = () => {
     modal.alert({

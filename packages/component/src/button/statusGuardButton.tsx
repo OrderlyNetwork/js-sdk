@@ -35,9 +35,7 @@ export const StatusGuardButton: FC<
         } else {
           return result;
         }
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     }
 
     if (state.status < AccountStatusEnum.EnableTrading) {
@@ -45,9 +43,7 @@ export const StatusGuardButton: FC<
         return await modal.show(WalletConnectSheet, {
           status: state.status,
         });
-      } catch (err) {
-        console.log("!!!!!", err);
-      }
+      } catch (err) {}
     }
   }, [connect, state]);
 

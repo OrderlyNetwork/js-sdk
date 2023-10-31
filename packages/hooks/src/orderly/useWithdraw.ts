@@ -36,7 +36,6 @@ export const useWithdraw = (): WithdrawReturns => {
       amount: number;
     }): Promise<any> => {
       return account.assetsManager.withdraw(inputs).then((res: any) => {
-        console.log("---------- withdraw -------", res);
         // if (res.success) {
         //   withdrawQueue.current.push(res.data.withdraw_id);
         // }
@@ -58,7 +57,7 @@ export const useWithdraw = (): WithdrawReturns => {
   //     },
   //     {
   //       onMessage: (data: any) => {
-  //         // console.log("------- wallet -------", data);
+  //         //
   //         const { id } = data;
 
   //         if (withdrawQueue.current.includes(id)) {

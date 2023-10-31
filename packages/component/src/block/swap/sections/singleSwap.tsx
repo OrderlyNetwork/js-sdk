@@ -38,8 +38,6 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     nativeToken,
   } = props;
 
-  console.log(props);
-
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
     SwapProcessStatusStatus.NONE
   );
@@ -48,8 +46,6 @@ export const SingleSwap: FC<SwapProps> = (props) => {
   const [tx, setTx] = useState<any>();
 
   const { swap: doSingleSwap, status: swapStatus } = useSwap();
-
-  console.log("swap props", dst, src);
 
   const swapInfo = useMemo(() => {
     let info: any = {
@@ -95,13 +91,11 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       { dst, src }
     ).then(
       (res: any) => {
-        // console.log("*******", res);
+        //
         setTx(res);
         toast.success("Deposit requested");
       },
       (error: any) => {
-        console.log("!!!!! swap error !!!!!", error);
-
         setStatus(SwapProcessStatusStatus.DepositFailed);
 
         toast.error(error.message || "Error");

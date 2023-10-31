@@ -5,9 +5,7 @@ export const useExecutionReport = () => {
   const ws = useWS();
   const { data } = useSWRSubscription("executionreport", (_, { next }) => {
     const unsubscribe = ws.privateSubscribe("executionreport", {
-      onMessage: (data: any) => {
-        console.log(data);
-      },
+      onMessage: (data: any) => {},
     });
     return () => unsubscribe();
   });

@@ -79,9 +79,7 @@ export const ActionSheetStyle: Story = {
   render: (args) => {
     return (
       <ActionSheet
-        onValueChange={(value) => {
-          console.log(value);
-        }}
+        onValueChange={(value) => {}}
         actionSheets={[
           {
             label: "Action 1",

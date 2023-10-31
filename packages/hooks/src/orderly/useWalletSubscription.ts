@@ -16,7 +16,7 @@ export const useWalletSubscription = (options?: {
       },
       {
         onMessage: (data: any) => {
-          // console.log("------- wallet -------", data);
+          //
           options?.onMessage?.(data);
           next(data);
         },

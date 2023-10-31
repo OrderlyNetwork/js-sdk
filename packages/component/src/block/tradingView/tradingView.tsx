@@ -52,7 +52,6 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
       ORDERLY_TRADING_VIEW_INTERVAL
     ) as TimeInterval;
 
-    console.log("saved_intervals", saved_intervals);
     return saved_intervals || ((intervals?.[0].value ?? "1") as TimeInterval);
   });
 
@@ -78,7 +77,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
 
   useEffect(() => {
     if (props.symbol) {
-      // console.log("wigetRef.current", wigetRef.current?.activeChart());
+      //
       wigetRef.current?.activeChart().setSymbol(props.symbol);
     }
   }, [props.symbol]);

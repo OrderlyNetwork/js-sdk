@@ -82,7 +82,7 @@ export const Chains: FC<ChainsProps> = (props) => {
             mainChains={onlyTestnet ? [] : mainChains}
             testChains={testChains}
             onItemClick={(item: any) => {
-              // console.log(item);
+              //
               setOpen(false);
               if (connectedChain) {
                 setChain({ chainId: item.id }).then((success: boolean) => {

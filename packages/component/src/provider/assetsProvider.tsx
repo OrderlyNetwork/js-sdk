@@ -43,7 +43,6 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     const result = await modal.show(DepositAndWithdrawWithSheet, {
       activeTab: "deposit",
     });
-    console.log(result);
   }, []);
 
   const onWithdraw = useCallback(async () => {
@@ -51,7 +50,6 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     const result = await modal.show(DepositAndWithdrawWithSheet, {
       activeTab: "withdraw",
     });
-    console.log(result);
   }, []);
 
   const onSettle = useCallback(async () => {
@@ -71,7 +69,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
   useWalletSubscription({
     onMessage: (data: any) => {
-      // console.log("------- wallet -------", data);
+      //
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {

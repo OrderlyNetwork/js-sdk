@@ -80,7 +80,7 @@ export const useOrderStream = ({
       return null;
     }
 
-    // console.log("orders:::", markPrices);
+    //
 
     return ordersResponse.data?.flat().map((item) => {
       return {
@@ -109,7 +109,7 @@ export const useOrderStream = ({
    * 更新单个订单
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
-    // console.log("updateOrder", order, orderId);
+    //
     return doUpdateOrder({ ...order, order_id: orderId });
   }, []);
 

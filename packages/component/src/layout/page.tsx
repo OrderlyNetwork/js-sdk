@@ -18,8 +18,6 @@ export const Page: FC<PropsWithChildren<PageProps>> = (props) => {
   //   return null;
   // }, [props.systemState]);
 
-  console.log({ error, done });
-
   if (error) {
     return <div className="text-danger">Data load failed:</div>;
   }

@@ -56,7 +56,7 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
     //TODO:格式化只处理千分位等等问题
 
     // if (!!values.order_quantity) {
-    //   console.log("baseTick //////", baseTick);
+    //
     //   const d = new Decimal(values.order_quantity);
     //   const dp = d.dp();
     //   if (dp > quoteTick) {
@@ -90,7 +90,7 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
-  // console.log("priceInputHandle", inputs);
+  //
 
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
@@ -100,7 +100,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const price = new Decimal(value);
   const priceDP = price.dp();
 
-  // console.log("priceInputHandle", priceDP, config.quoteDP);
+  //
 
   if (priceDP > config.quoteDP) {
     values.order_price = price.toDecimalPlaces(config.quoteDP).toString();

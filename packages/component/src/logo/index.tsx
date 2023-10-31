@@ -19,13 +19,10 @@ export const Logo: FC<LogoProps> = ({
     const img = new Image();
 
     img.onload = function () {
-      console.log("load icon success");
       setUrl(img.src);
     };
 
-    img.onerror = function () {
-      console.log("load icon error");
-    };
+    img.onerror = function () {};
 
     // crypto logos
     // https://cryptologos.cc/logos/

@@ -79,7 +79,7 @@ const Slider = React.forwardRef<
       }
     }, [marks, markCount, max]);
 
-    // console.log("innerMasks", innerMasks, max, value);
+    //
 
     const onValueChangeInner = (value: number[]) => {
       onValueChange?.(value);

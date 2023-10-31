@@ -83,7 +83,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                         value={field.value}
                         className="flex gap-5"
                         onValueChange={(value) => {
-                          // console.log("value", value);
+                          // 
                           // setValue("order_type_ext", value);
                           field.onChange(value);
                         }}
@@ -103,7 +103,6 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                   id="orderConfirm"
                   checked={props.showConfirm}
                   onCheckedChange={(checked) => {
-                    console.log(checked);
                     props.onConfirmChange?.(!!checked);
                   }}
                 />

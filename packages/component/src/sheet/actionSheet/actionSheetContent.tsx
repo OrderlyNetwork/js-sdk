@@ -20,7 +20,7 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
           <Fragment key={action.value || index}>
             <ActionItem
               onClick={(value) => {
-                // console.log(value);
+                //
 
                 if (value.value === "cancel") {
                   return;

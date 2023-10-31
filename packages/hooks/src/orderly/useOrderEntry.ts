@@ -71,7 +71,7 @@ export const useOrderEntry = (
     return getPrecisionByNumber(symbolInfo[symbol]("quote_tick", 0));
   }, [symbolInfo]);
 
-  // console.log("orderExtraValues", orderExtraValues);
+  //
 
   // 订阅maskPrice
   // const ws = useWebSocketClient();
@@ -135,7 +135,6 @@ export const useOrderEntry = (
 
   const calculate = useCallback(
     (values: any, field: string, value: any) => {
-      console.log("calculate", values, field, value, markPrice);
       const fieldHandler = getCalculateHandler(field);
       const newValues = compose(
         head,

@@ -23,7 +23,7 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
         size={"small"}
         value={props.value}
         onValueChange={(value) => {
-          // console.log(value);
+          //
           props.onChange?.(value.value);
         }}
       />

@@ -137,7 +137,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // dstGasFee: "",
   });
 
-  // console.log("------------->>>>>>", props.token, chain, chainInfo);
+  //
 
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
@@ -186,7 +186,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     return Promise.resolve()
       .then(() => enquiry())
       .then((transaction) => {
-        console.log("!!!!!!!!!!!!!! enquiry res:", transaction, props.token);
         const amountValue = needCrossChain
           ? transaction.route_infos.dst.amounts[1]
           : transaction.route_infos.amounts[1];
@@ -220,17 +219,13 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       })
       .then(
         (isSuccss) => {
-          console.log(
-            "******** deposit success & isSuccss ************",
-            isSuccss
-          );
           if (isSuccss) {
             cleanData();
             setQuantity("");
           }
         },
         (error) => {
-          // console.log(error);
+          //
           // toast.error(error?.message || "Error");
         }
       )
@@ -297,7 +292,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const onChainChange = useCallback(
     (value: API.Chain) => {
-      console.log(value, chain);
       if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
       return props
         .switchChain?.({
@@ -321,7 +315,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
             cleanData();
           },
           (error) => {
-            // console.log(error)
+            //
             toast.error(`Switch chain failed: ${error.message}`);
           }
         );
@@ -331,7 +325,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const onChainInited = useCallback(
     (chain: API.Chain) => {
-      // console.log("??????", chain);
+      //
       if (chain && chain.token_infos?.length > 0) {
         // let tokens = chain.token_infos.filter((chain) => !!chain.swap_enable);
 
@@ -461,7 +455,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   }, 300);
 
   useEffect(() => {
-    // console.log("数据变更的时候重新询价", {
+    //
     //   token: props.token,
     //   chain,
     //   needCrossChain,

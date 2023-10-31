@@ -10,7 +10,5 @@ test("test usePrivateQuery hook", async () => {
     timeout: 5000,
   });
 
-  console.log(result.current.data);
-
   expect(result.current.data).toBeUndefined();
 });

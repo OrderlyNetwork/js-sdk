@@ -57,10 +57,10 @@ export const useMarketTradeStream = (
       },
       {
         onMessage: (data: any) => {
-          // console.log("ws: trade topic", data);
+          //
           setTrades((prev) => {
             const arr = [{ ...data, ts: Date.now() }, ...prev];
-            // console.log("arr", arr);
+            //
             if (arr.length > limit) {
               arr.pop();
             }

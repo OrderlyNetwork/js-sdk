@@ -38,9 +38,7 @@ export const usePrivateQuery = <T>(
     {
       ...swrOptions,
       use: [signatureMiddleware, ...middleware],
-      onError: (err) => {
-        console.log("usePrivateQuery error", err);
-      },
+      onError: (err) => {},
     }
   );
 };

@@ -12,7 +12,7 @@ export const TradeData: FC<Props> = (props) => {
   const ticker = useTickerStream(symbol);
   const { quote_dp, base_dp } = useContext(SymbolContext);
 
-  // console.log(ticker);
+  //
 
   return (
     <div className="h-[240px] p-4 relative">

@@ -369,14 +369,10 @@ export const useSwap = () => {
 
         stop();
 
-        console.log("single swap result", result);
-
         txHash.current = result.hash;
 
         return pick(["from", "to", "hash", "value"], result);
       } catch (e: any) {
-        console.log("调用合约报错：", e);
-
         throw new Error(e.errorCode);
       }
     },

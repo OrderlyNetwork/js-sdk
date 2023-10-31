@@ -107,7 +107,7 @@ export class Account {
   ): Promise<AccountStatusEnum> {
     if (!address) throw new Error("address is required");
 
-    // console.log("setAddress", address, wallet);
+    //
 
     this.keyStore.setAddress(address);
 
@@ -178,7 +178,6 @@ export class Account {
 
   private _bindEvents() {
     this._ee.addListener("change:status", (state: AccountState) => {
-      console.log("change:status", state);
       this._state = state;
     });
   }
@@ -186,17 +185,15 @@ export class Account {
   // 检查账户状态
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
-    // console.log("check account is esist", address);
+    //
     let nextState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
-      // console.log("accountInfo:", accountInfo);
+      //
       // 如果切换addrees时，需要清除之前的key
 
       if (accountInfo && accountInfo.account_id) {
-        console.log("account is exist");
-
         this.keyStore.setAccountId(address, accountInfo.account_id);
         // this.keyStore.setAddress(address);
 
@@ -207,7 +204,7 @@ export class Account {
           userId: accountInfo.user_id,
         };
         this._ee.emit("change:status", nextState);
-        // console.log("account next function::");
+        //
       } else {
         // account is not exist, add account
         // await this.addAccount(address);
@@ -232,7 +229,6 @@ export class Account {
       };
 
       if (!orderlyKey) {
-        console.log("orderlyKey is null");
         this._ee.emit("change:status", nextState);
 
         return AccountStatusEnum.DisabledTrading;
@@ -245,7 +241,7 @@ export class Account {
         publicKey
       );
 
-      // console.log("orderlyKeyStatus:", orderlyKeyStatus);
+      //
 
       if (
         orderlyKeyStatus &&
@@ -274,7 +270,6 @@ export class Account {
 
       return AccountStatusEnum.NotConnected;
     } catch (err) {
-      console.log("检查账户状态错误:", err);
       // 用户从Metamask切换账户，需要重新登录
       // return this.stateValue.status;
     }
@@ -386,7 +381,7 @@ export class Account {
       throw new Error("address is undefined");
     }
 
-    // console.log("message:", message, toSignatureMessage, address);
+    //
     const signatured = await this.signTypedData(toSignatureMessage);
 
     // this.walletClient.verify(toSignatureMessage, signatured);
@@ -404,7 +399,7 @@ export class Account {
       },
     });
 
-    // console.log("createOrderlyKey:", res);
+    //
 
     if (res.success) {
       this.keyStore.setKey(address, keyPair);
@@ -456,7 +451,7 @@ export class Account {
       data,
     };
 
-    // console.log("payload", payload);
+    //
 
     const signature = await this.signer.sign(payload);
 
@@ -471,7 +466,7 @@ export class Account {
       },
     });
 
-    // console.log("#########", res);
+    //
 
     if (res.success) {
       return res;

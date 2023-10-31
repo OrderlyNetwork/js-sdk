@@ -38,7 +38,6 @@ export const useLazyQuery = <T, R = any>(
   return useSWRMutation(
     query,
     (url: string, options: any) => {
-      console.log(url, options);
       // const {init,arg} = options;
       url = url.startsWith("http") ? url : `${apiBaseUrl}${url}`;
       if (options?.arg) {

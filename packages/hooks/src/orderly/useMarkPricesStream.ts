@@ -25,15 +25,13 @@ export const useMarkPricesStream = () => {
         // onUnsubscribe: () => {
         //   return "markprices";
         // },
-        onError: (error: any) => {
-          console.log("error", error);
-        },
+        onError: (error: any) => {},
       }
     );
 
     return () => {
       //unsubscribe
-      console.log("unsubscribe!!!!!!!");
+
       unsubscribe?.();
     };
   });

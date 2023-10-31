@@ -78,7 +78,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     chain: CurrentChain | null,
     chains?: API.NetworkInfos[]
   ): boolean => {
-    // console.log("checkSupoort", chain, chains);
+    //
     if (!chain || !chains || !Array.isArray(chains)) return false;
 
     const index = chains?.findIndex((c) => c.chain_id === chain.id);

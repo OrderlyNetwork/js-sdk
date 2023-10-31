@@ -35,7 +35,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     observer.observe(containerRef.current!);
 
     return () => {
-      // console.log(">?????????", containerRef.current);
+      //
       if (containerRef.current) {
         observer.unobserve(containerRef.current!);
       }

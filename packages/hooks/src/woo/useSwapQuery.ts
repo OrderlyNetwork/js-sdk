@@ -12,7 +12,6 @@ export const useWooSwapQuery = () => {
 
   const query = useCallback(
     (inputs: any) => {
-      console.log("inputs", inputs);
       if (loading) return;
       start();
 
@@ -51,7 +50,6 @@ export const useWooSwapQuery = () => {
     },
     [account]
   );
-  
 
   return {
     query,

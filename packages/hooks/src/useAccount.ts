@@ -43,7 +43,7 @@ export const useAccount = (): {
   // );
 
   const statusChangeHandler = (nextState: AccountState) => {
-    // console.log("------------>>>>>> account nextState", nextState);
+    //
     setState(() => nextState);
   };
 

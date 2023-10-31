@@ -12,7 +12,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
   // const [key, setKey] = useState<string>("");
 
   const onClean = useCallback(() => {
-    // console.log("clean");
+    //
     props.onChange?.("");
   }, []);
 
