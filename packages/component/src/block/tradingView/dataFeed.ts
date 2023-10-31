@@ -217,12 +217,12 @@ export default class DataFeed implements IBasicDataFeed {
 
         this.lastBar = newBar;
 
-        console.log(
-          "update mobile",
-          data.close - lastBar.open,
-          data.close,
-          lastBar.open
-        );
+        // console.log(
+        //   "update mobile",
+        //   data.close - lastBar.open,
+        //   data.close,
+        //   lastBar.open
+        // );
 
         this.onRealtimeCallback?.([
           {

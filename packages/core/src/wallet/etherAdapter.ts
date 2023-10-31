@@ -167,4 +167,9 @@ export class EtherAdapter implements IWalletAdapter {
   off(eventName: any, listener: any): void {
     this.provider?.off(eventName, listener);
   }
+
+  getContract(address: string, abi: any) {
+    const contract = new ethers.Contract(address, abi, this.provider);
+    return contract;
+  }
 }

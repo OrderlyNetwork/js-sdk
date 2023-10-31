@@ -1,5 +1,11 @@
 # @orderly.network/cli
 
+## 0.0.15
+
+### Patch Changes
+
+- update
+
 ## 0.0.14
 
 ### Patch Changes
