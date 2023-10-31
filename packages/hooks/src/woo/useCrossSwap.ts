@@ -15,6 +15,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { isNativeTokenChecker, woofiDexCrossChainRouterAbi } from "./constants";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { useWalletSubscription } from "../orderly/useWalletSubscription";
+import { useEventEmitter } from "../useEventEmitter";
 
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
@@ -30,6 +31,8 @@ export const useCrossSwap = () => {
     MessageStatus.INITIALIZING
   );
 
+  const ee = useEventEmitter();
+
   const [bridgeMessage, setBridgeMessage] = useState<any | undefined>();
 
   const [status, setStatus] = useState<WS_WalletStatusEnum>(
@@ -43,15 +46,31 @@ export const useCrossSwap = () => {
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
 
-  useWalletSubscription({
-    onMessage: (message) => {
-      const { side, transStatus, trxId } = message;
+  //TODO: useWalletSubscription
+  // useWalletSubscription({
+  //   onMessage: (message) => {
+  //     const { side, transStatus, trxId } = message;
+
+  //     if (side === "DEPOSIT" && trxId === txHashFromBridge.current) {
+  //       setStatus(transStatus);
+  //     }
+  //   },
+  // });
+
+  useEffect(() => {
+    const handler = (data: any) => {
+      const { side, transStatus, trxId } = data;
 
       if (side === "DEPOSIT" && trxId === txHashFromBridge.current) {
         setStatus(transStatus);
       }
-    },
-  });
+    };
+    ee.on("wallet:changed", handler);
+
+    return () => {
+      ee.off("wallet:changed", handler);
+    };
+  }, [txHashFromBridge.current]);
 
   const checkLayerStatus = useCallback((txHash: string) => {
     const check = async (txHash: string) => {

@@ -14,6 +14,7 @@ import {
   useWalletSubscription,
   useWooCrossSwapQuery,
   useWooSwapQuery,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
@@ -44,6 +45,8 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       activeTab: "deposit",
     });
   }, []);
+
+  const ee = useEventEmitter();
 
   const onWithdraw = useCallback(async () => {
     // 显示提现弹窗
@@ -87,6 +90,8 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
         }
         toast.success(msg);
       }
+
+      ee.emit("wallet:changed", data);
     },
   });
 

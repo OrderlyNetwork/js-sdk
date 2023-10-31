@@ -35,5 +35,11 @@ module.exports = [
         token: "BNB",
         rpcUrl: "https://bsc-dataseed1.binance.org/",
       },
+      {
+        id: 137,
+        label: "Polygon",
+        token: "MATIC",
+        rpcUrl: "https://rpc-mainnet.matic.network",
+      },
 
 ];

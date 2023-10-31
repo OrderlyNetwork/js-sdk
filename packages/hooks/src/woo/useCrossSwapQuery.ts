@@ -58,6 +58,7 @@ export const useWooCrossSwapQuery = () => {
       srcToken: string;
       amount: bigint;
       slippage: number;
+      dstToken: string;
       crossChainRouteAddress: string;
     }) => {
       //
@@ -66,10 +67,10 @@ export const useWooCrossSwapQuery = () => {
 
       const params = {
         // src_network: inputs.srcNetwork,
-        src_network: "base",
+        src_network: inputs.srcNetwork.toLowerCase(),
         dst_network: "arbitrum",
         src_token: inputs.srcToken,
-        dst_token: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", //account.assetsManager.usdcAddress,
+        dst_token: inputs.dstToken, //account.assetsManager.usdcAddress,
         src_amount: inputs.amount, //inputs.amount,
         slippage: inputs.slippage || 1,
         // to_token:account.assetsManager.usdcAddress,

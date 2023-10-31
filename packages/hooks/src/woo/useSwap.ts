@@ -1,4 +1,4 @@
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useBoolean } from "../useBoolean";
 import { useAccountInstance } from "../useAccountInstance";
 import { utils } from "@orderly.network/core";
@@ -7,6 +7,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { isNativeTokenChecker } from "./constants";
 import { useWalletSubscription } from "../orderly/useWalletSubscription";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
+import { useEventEmitter } from "../useEventEmitter";
 
 /**
  * PM doc:
@@ -305,16 +306,33 @@ export const useSwap = () => {
   );
 
   const txHash = useRef<string | undefined>();
+  const ee = useEventEmitter();
 
-  useWalletSubscription({
-    onMessage: (message) => {
-      const { side, transStatus, trxId } = message;
+  //TODO: useWalletSubscription
+  // useWalletSubscription({
+  //   onMessage: (message) => {
+  //     const { side, transStatus, trxId } = message;
+
+  //     if (side === "DEPOSIT" && trxId === txHash.current) {
+  //       setStatus(transStatus);
+  //     }
+  //   },
+  // });
+
+  useEffect(() => {
+    const handler = (data: any) => {
+      const { side, transStatus, trxId } = data;
 
       if (side === "DEPOSIT" && trxId === txHash.current) {
         setStatus(transStatus);
       }
-    },
-  });
+    };
+    ee.on("wallet:changed", handler);
+
+    return () => {
+      ee.off("wallet:changed", handler);
+    };
+  }, [txHash.current]);
 
   const dstValutDeposit = useCallback(() => {
     const brokerId = configStore.get<string>("brokerId");
