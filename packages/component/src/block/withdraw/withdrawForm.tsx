@@ -180,7 +180,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   return (
     <>
       <div className="flex items-center py-2">
-        <div className="flex-1">Your WOOFi DEX Wallet</div>
+        <div className="flex-1">Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <QuantityInput
