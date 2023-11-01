@@ -12,6 +12,7 @@ import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
 import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { WalletConnectorContext } from "@/provider";
+import { useTranslation } from "@/i18n";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -43,6 +44,8 @@ export const Chains: FC<ChainsProps> = (props) => {
     WalletConnectorContext
   );
 
+  const t = useTranslation();
+
   const chainName = useMemo(() => {
     const chain = findByChainId(
       parseInt(connectedChain?.id || defaultChain),
@@ -52,7 +55,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     if (!chain) return <span>Unknown</span>;
 
     if (chain.chain_id === 421613) {
-      return <span>Testnet</span>;
+      return <span>{t("common.testnet")}</span>;
     }
 
     return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
@@ -83,7 +86,7 @@ export const Chains: FC<ChainsProps> = (props) => {
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader>Swith network</DialogHeader>
+        <DialogHeader>{t("dialog.switchNetwork")}</DialogHeader>
         <DialogBody className="max-h-[340px] overflow-y-auto">
           <ChainListView
             mainChains={mainChains}
