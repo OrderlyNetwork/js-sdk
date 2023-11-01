@@ -11,6 +11,7 @@ import {
 import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
+import { useTranslation } from "@/i18n";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -33,6 +34,8 @@ export const ChainIdSwtich: FC<Props> = (props) => {
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
+  const t = useTranslation();
+
   const onChainChange = useCallback(
     ({ id, name }: { id: number; name: string }) => {
       props
@@ -40,9 +43,9 @@ export const ChainIdSwtich: FC<Props> = (props) => {
         .then(
           (isSuccess) => {
             if (isSuccess) {
-              toast.success("Network switched");
+              toast.success(t("toast.networkSwitched"));
             } else {
-              toast.error("Cancel");
+              toast.error(t("common.cancel"));
             }
           },
           (error) => {

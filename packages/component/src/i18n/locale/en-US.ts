@@ -12,11 +12,16 @@ export const en = {
   "common.availableBalance": "Available balance",
   "common.deposit": "Deposit",
   "common.withdraw": "Withdraw",
+  "common.cancel": "Cancel",
+  "common.ok": "OK",
   "block.accountStatus.asset&margin": "Assets & Margin",
   "block.accountStatus.instrument": "Instrument",
   "toast.copiedToClipboard": "Copied to clipboard",
   "toast.requestSettlement": "Request settlement",
   "toast.leverageUpdated": "Leverage updated",
+  "toast.networkSwitched": "Network switched",
+  "dialog.switchNetwork": "Switch network",
+  
   
   "modal.title.getTestUSDC": "Get test USDC",
   "modal.content.getTestUSDC": "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
