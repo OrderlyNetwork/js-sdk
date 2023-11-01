@@ -21,7 +21,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, configStore } = useContext<any>(OrderlyContext);
   const [defaultChain, setDefaultChain] = useState<string>(
     ARBITRUM_MAINNET_CHAINID_HEX
   );
@@ -58,6 +58,13 @@ export const Chains: FC<ChainsProps> = (props) => {
     return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
   }, [connectedChain, findByChainId, defaultChain]);
 
+  const switchDomain = (chainId: number) => {
+    const domain = configStore.get("domain");
+    const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
+    window.location.href = url;
+    // window.open(url); // test in storybook
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -79,10 +86,9 @@ export const Chains: FC<ChainsProps> = (props) => {
         <DialogHeader>Swith network</DialogHeader>
         <DialogBody className="max-h-[340px] overflow-y-auto">
           <ChainListView
-            mainChains={onlyTestnet ? [] : mainChains}
+            mainChains={mainChains}
             testChains={testChains}
             onItemClick={(item: any) => {
-              //
               setOpen(false);
               if (connectedChain) {
                 setChain({ chainId: item.id }).then((success: boolean) => {
@@ -90,6 +96,7 @@ export const Chains: FC<ChainsProps> = (props) => {
                   if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
                     setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
                   }
+                  switchDomain(item.id);
                 });
               } else {
                 setDefaultChain(item.id);
