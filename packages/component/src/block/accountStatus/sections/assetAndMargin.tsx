@@ -23,6 +23,7 @@ import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
 import { cn } from "@/utils/css";
 import { cx } from "class-variance-authority";
+import { useTranslation } from "@/i18n";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -56,13 +57,14 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     return index;
   }, [leverage]);
 
+  const t = useTranslation();
+
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
-      title: "Settle PnL",
+      title: t("common.settlePnl"),
       content: (
         <div className="text-base-contrast/60">
-          Are you sure you want to settle your PnL?
-          Settlement will take up to 1 minute before you can withdraw your available balance.
+          { t("modal.content.settlePnl")}
         </div>
       ),
       onCancel: () => {
@@ -71,7 +73,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       onOk: () => {
         if (typeof props.onSettle !== "function") return Promise.resolve();
         return props.onSettle().then(() => {
-          toast.success("Request settlement");
+          toast.success(t("toast.requestSettlement"));
         });
       },
     });
@@ -94,7 +96,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label={
             <div className="flex text-base items-center">
-              <span>Total value (USDC)</span>
+              <span>{t("common.totalValue")} (USDC)</span>
               <button
                 className="text-primary-light p-2"
                 onClick={(event) => {
@@ -117,7 +119,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       </div>
       <div className="grid grid-cols-2 py-4">
         <Statistic
-          label="Unreal.PnL(USDC)"
+          label= {t("common.unreal.Pnl") + "(USDC)"}
           value={
             <div className="flex gap-1 items-center">
               <Numeral coloring visible={visible}>
@@ -140,7 +142,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           coloring
         />
         <Statistic
-          label="Unsettled PnL(USDC)"
+          label={t("common.unsettledPnL") + "(USDC)"}
           value={
             <div className="flex justify-between">
               <Numeral rule="price" visible={visible} coloring>
@@ -152,7 +154,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 disabled={aggregated.unsettledPnL === 0}
               >
                 <RotateCw size={14} />
-                <span>Settle PnL</span>
+                <span>{t("common.settlePnl")}</span>
               </button>
             </div>
           }
@@ -161,7 +163,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <Divider />
       <div className="grid grid-cols-2 py-4">
         <Statistic
-          label="Margin ratio"
+          label={t("common.marginRatio")}
           value={
             <div className="flex items-center gap-2">
               <Numeral
@@ -196,7 +198,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         <Statistic
           label={
             <div className="flex justify-between">
-              <span>Max account leverage</span>
+              <span>{t("common.maxAccountLeverage")}</span>
               <span className="flex">
                 Current:
                 <Numeral className="text-base-contrast ml-1" surfix="x">
@@ -251,7 +253,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   update({ leverage: _value }).then(
                     (res: any) => {
                       //
-                      toast.success("Leverage updated");
+                      toast.success(t("toast.leverageUpdated"));
                     },
                     (err: Error) => {
                       //
@@ -268,8 +270,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <Divider className="py-4" />
       <Paper className="bg-base-100">
         <div className="flex justify-between text-sm text-base-contrast/50">
-          <span>Instrument</span>
-          <span>Available balance</span>
+          <span>{t("block.accountStatus.instrument")}</span>
+          <span>{t("common.availableBalance")}</span>
         </div>
         <Divider className="py-3" />
         <div className="flex justify-between">
@@ -284,10 +286,10 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       </Paper>
       <div className="flex gap-3 py-5">
         <Button fullWidth onClick={onDeposit}>
-          Deposit
+          {t("common.deposit")}
         </Button>
         <Button fullWidth variant={"outlined"} onClick={onWithdraw}>
-          Withdraw
+          {t("common.withdraw")}
         </Button>
       </div>
     </StatisticStyleProvider>

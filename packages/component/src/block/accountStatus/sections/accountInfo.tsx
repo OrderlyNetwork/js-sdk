@@ -56,7 +56,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           return modal.confirm({
             title: t("modal.title.getTestUSDC"),
             content:
-              t("modal.title.getTestUSDCContent"),
+              t("modal.content.getTestUSDC"),
             onOk: () => {
               return Promise.resolve();
             },
