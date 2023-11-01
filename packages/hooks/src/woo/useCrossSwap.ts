@@ -74,23 +74,34 @@ export const useCrossSwap = () => {
 
   const checkLayerStatus = useCallback((txHash: string) => {
     const check = async (txHash: string) => {
-      const { messages } = await client.getMessagesBySrcTxHash(txHash);
+      try {
+        const { messages } = await client.getMessagesBySrcTxHash(txHash);
 
-      if (messages.length > 0) {
-        const { status } = messages[0];
+        if (messages.length > 0) {
+          const { status } = messages[0];
 
-        if (status === MessageStatus.INFLIGHT) {
+          if (status === MessageStatus.INFLIGHT) {
+            setTimeout(() => {
+              check(txHash);
+            }, 1000);
+          }
+          setLayerStatus(status as MessageStatus);
+
+          if (status === MessageStatus.DELIVERED) {
+            setBridgeMessage(messages[0]);
+            txHashFromBridge.current = messages[0].dstTxHash;
+          }
+
+          if (status === MessageStatus.FAILED) {
+            setBridgeMessage(messages[0]);
+          }
+        } else {
           setTimeout(() => {
             check(txHash);
           }, 1000);
         }
-        setLayerStatus(status as MessageStatus);
-
-        if (status === MessageStatus.DELIVERED) {
-          setBridgeMessage(messages[0]);
-          txHashFromBridge.current = messages[0].dstTxHash;
-        }
-      } else {
+      } catch (e) {
+        // setLayerStatus(MessageStatus.FAILED);
         setTimeout(() => {
           check(txHash);
         }, 1000);

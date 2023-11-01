@@ -67,7 +67,7 @@ export const useWooCrossSwapQuery = () => {
 
       const params = {
         // src_network: inputs.srcNetwork,
-        src_network: inputs.srcNetwork.toLowerCase(),
+        src_network: inputs.srcNetwork,
         dst_network: "arbitrum",
         src_token: inputs.srcToken,
         dst_token: inputs.dstToken, //account.assetsManager.usdcAddress,

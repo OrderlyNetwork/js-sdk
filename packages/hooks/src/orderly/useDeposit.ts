@@ -66,7 +66,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       address: USDC?.address,
       decimals: USDC?.decimals,
       chainId: chain.network_infos.chain_id,
-      network: chain.network_infos.name,
+      network: chain.network_infos.shortName,
       // chainId: 42161,
     };
   }, []);

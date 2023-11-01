@@ -123,6 +123,7 @@ export const useChains = (
         {
           network_infos: {
             name: "Arbitrum Goerli",
+            shortName: "Arbitrum Goerli",
             public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
             chain_id: 421613,
             currency_symbol: "ETH",
@@ -147,6 +148,7 @@ export const useChains = (
           name: key,
           network_infos: {
             bridgeless: orderlyChainIds.has(chain.network_infos.chain_id),
+            shortName: key,
           },
           token_infos: chain.token_infos.filter(
             (token: API.TokenInfo) => !!token.swap_enable

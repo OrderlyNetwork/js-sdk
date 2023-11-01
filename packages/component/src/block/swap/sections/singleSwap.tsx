@@ -127,19 +127,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         onComplete={props.onComplete}
       />
     );
-
-    // return (
-    //   <SwapProcess
-    //     status={status}
-    //     message={message}
-    //     bridgeStatus={bridgeStatus}
-    //     chainInfo={chain}
-    //     mode={mode}
-    //     tx={tx}
-    //     onComplete={props.onComplete}
-    //   />
-    // );
-  }, [view, swapInfo, mode, chain, tx, props.onComplete]);
+  }, [view, swapInfo, mode, chain, tx, props.onComplete, status]);
 
   return (
     <div>

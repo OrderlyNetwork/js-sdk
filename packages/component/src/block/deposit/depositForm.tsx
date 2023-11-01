@@ -409,6 +409,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       ...data,
     });
 
+    // reset input status
+    setInputStatus("default");
+    setHintMessage("");
+
     setAmount("");
   };
 
@@ -421,6 +425,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       // clean previous data
       cleanData();
     } else {
+      toast.error(error.message);
       setWarningMessage("");
     }
   };
@@ -434,7 +439,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         params: {
           network: dst.network,
           srcToken: props.token?.address,
-          srcNetwork: chain?.info.network_infos?.name,
+          srcNetwork: chain?.info.network_infos?.shortName,
           dstToken: dst.address,
           crossChainRouteAddress:
             chain?.info?.network_infos?.woofi_dex_cross_chain_router,

@@ -210,6 +210,7 @@ export declare namespace API {
 
   export interface NetworkInfos {
     name: string;
+    shortName: string;
     public_rpc_url: string;
     chain_id: number;
     currency_symbol: string;

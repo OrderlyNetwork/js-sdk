@@ -81,7 +81,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
     if (swapStatus === WS_WalletStatusEnum.FAILED) {
       setStatus(SwapProcessStatusStatus.DepositFailed);
     }
-  }, [bridgeStatus, swapStatus]);
+  }, [bridgeStatus, swapStatus, status]);
 
   const doSwap = useCallback(() => {
     setView("processing");
@@ -141,16 +141,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         onComplete={props.onComplete}
       />
     );
-  }, [
-    view,
-    swapInfo,
-    message,
-    bridgeStatus,
-    mode,
-    chainInfo,
-    tx,
-    props.onComplete,
-  ]);
+  }, [view, swapInfo, message, status, mode, chainInfo, tx, props.onComplete]);
 
   return (
     <div>
