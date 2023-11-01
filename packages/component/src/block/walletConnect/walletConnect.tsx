@@ -46,7 +46,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       return "Sign in";
     }
     if (status < AccountStatusEnum.EnableTrading) {
-      return "Enable trading";
+      return "Enable Trading";
     }
     return "--";
   }, [status]);
@@ -128,7 +128,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
               2
             </StepItem>
           }
-          title="Enable trading"
+          title="Enable Trading"
           subtitle="Enable secure access to our API for lightning-fast trading"
         />
       </Paper>

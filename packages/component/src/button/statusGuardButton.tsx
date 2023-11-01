@@ -57,7 +57,7 @@ export const StatusGuardButton: FC<
     }
 
     if (state.status < AccountStatusEnum.EnableTrading) {
-      return "Enable trading";
+      return "Enable Trading";
     }
 
     return "-";
