@@ -77,7 +77,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Blockie address={state.address} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-xs">{onlyTestnet == false ? t("common.testnet") : t("common.mainnet")}</div>
+            <div className="text-xs">{onlyTestnet ? t("common.testnet") : t("common.mainnet")}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
