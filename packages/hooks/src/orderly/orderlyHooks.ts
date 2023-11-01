@@ -35,6 +35,7 @@ export { useDeposit } from "./useDeposit";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
+export { useSettleSubscription } from "./useSettleSubscription";
 
 export { useBalance } from "./useBalance";
 
