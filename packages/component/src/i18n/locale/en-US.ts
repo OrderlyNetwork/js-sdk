@@ -14,8 +14,11 @@ export const en = {
   "common.withdraw": "Withdraw",
   "common.cancel": "Cancel",
   "common.ok": "OK",
+  "common.connectWallet": "Connect wallet",
+  
   "block.accountStatus.asset&margin": "Assets & Margin",
   "block.accountStatus.instrument": "Instrument",
+  "block.accountStatus.myAccount": "My account",
   "toast.copiedToClipboard": "Copied to clipboard",
   "toast.requestSettlement": "Request settlement",
   "toast.leverageUpdated": "Leverage updated",

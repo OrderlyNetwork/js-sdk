@@ -12,6 +12,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { Chains } from "./sections/chains";
+import { useTranslation } from "@/i18n";
 
 export type AccountStatus =
   | "NotConnected"
@@ -41,12 +42,14 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
   const { logoUrl, errors } = useContext(OrderlyContext);
 
+  const t = useTranslation();
+
   const [infoOpen, setInfoOpen] = useState(false);
 
   const buttonLabel = useMemo(() => {
     switch (status) {
       case AccountStatusEnum.NotConnected:
-        return "Connect wallet";
+        return t("common.connectWallet");
       case AccountStatusEnum.Connected:
       case AccountStatusEnum.NotSignedIn:
       case AccountStatusEnum.SignedIn:
@@ -101,7 +104,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
             </SheetTrigger>
             <SheetContent forceMount>
               <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
-                My account
+                {t("block.accountStatus.myAccount")}
               </SheetHeader>
               <AccountInfo
                 onDisconnect={props.onDisconnect}
