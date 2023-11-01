@@ -1,6 +1,6 @@
 import { Blockie } from "@/avatar";
 import Button, { IconButton } from "@/button";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { Text } from "@/text";
 import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
 import { toast } from "@/toast";
@@ -8,6 +8,8 @@ import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { CopyIcon } from "@/icon";
+import { useTranslation } from "@/i18n";
+import { OrderlyContext } from "@orderly.network/hooks";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -22,13 +24,17 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   // const [loading,setLoading] = React.useState(false);
   const config = useConfig();
 
+  const { onlyTestnet } = useContext(OrderlyContext);
+
+  const t = useTranslation();
+
   const [getTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
   const onCopy = useCallback(() => {
     navigator.clipboard.writeText(state.address).then(() => {
-      toast.success("Copied to clipboard");
+      toast.success(t("toast.copiedToClipboard"));
     });
   }, [state]);
 
@@ -48,9 +54,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         if (res.success) {
           props.close?.();
           return modal.confirm({
-            title: "Get test USDC",
+            title: t("modal.title.getTestUSDC"),
             content:
-              "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+              t("modal.title.getTestUSDCContent"),
             onOk: () => {
               return Promise.resolve();
             },
@@ -71,7 +77,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Blockie address={state.address} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-xs">Testnet</div>
+            <div className="text-xs">{onlyTestnet == false ? t("common.testnet") : t("common.mainnet")}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -90,7 +96,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           disabled={isMutating}
           loading={isMutating}
         >
-          Get test USDC
+          {t("modal.title.getTestUSDC")}
         </Button>
         <Button
           variant={"outlined"}
@@ -99,7 +105,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             onDisconnect?.();
           }}
         >
-          Disconnect
+          {t("common.disconnect")}
         </Button>
       </div>
     </div>
