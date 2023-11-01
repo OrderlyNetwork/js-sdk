@@ -118,9 +118,9 @@ export class EtherAdapter implements IWalletAdapter {
       value: payload.value,
     };
 
-    const gas = await this.estimateGas(tx);
+    // const gas = await this.estimateGas(tx);
 
-    tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
+    // tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
 
     try {
       const result = await singer.sendTransaction(tx);
