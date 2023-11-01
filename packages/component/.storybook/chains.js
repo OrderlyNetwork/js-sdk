@@ -41,5 +41,11 @@ module.exports = [
         token: "MATIC",
         rpcUrl: "https://rpc-mainnet.matic.network",
       },
+      {
+        id: 43114,
+        label: "Avalanche",
+        token: "AVAX",
+        rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
+      },
 
 ];
