@@ -32,7 +32,16 @@ export class MemoryConfigStore implements ConfigStore {
       // ["privateWsUrl", "wss://dex-iap-evm.woo.org/wsprivate"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
       ["swapSupportApiUrl", "https://fi-api.woo.org"],
-      ["brokerId", "woofi_dex"],
+      [
+        "domain",
+        {
+          testnet: "https://testnet-dex-evm.woo.org",
+          mainnet: "https://dex-evm.woo.org",
+          dexMainnet: "https://dex.woo.org",
+          dexTestnet: "https://testnet-dex.woo.org",
+        },
+      ],
+      ["brokerId", "woofi_pro"],
       ["onlyTestnet", false],
       ["env", "dev-evm"],
       ["PROD_URL", ["dex-iap-evm.woo.org", "dex-evm.woo.org"]],

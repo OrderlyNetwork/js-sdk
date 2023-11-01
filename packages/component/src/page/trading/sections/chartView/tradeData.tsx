@@ -38,11 +38,12 @@ export const TradeData: FC<Props> = (props) => {
               price={ticker?.["24h_close"]}
               quantity={ticker?.["24h_volumn"]}
             />
-            <Text 
-              rule="symbol" 
-              symbolElement="quote" 
-              className="text-base-contrast/50 ml-2">
-                {symbol}
+            <Text
+              rule="symbol"
+              symbolElement="quote"
+              className="text-base-contrast/50 ml-2"
+            >
+              {symbol}
             </Text>
           </td>
         </tr>
@@ -58,18 +59,21 @@ export const TradeData: FC<Props> = (props) => {
             <Numeral precision={quote_dp}>{ticker?.["24h_low"]}</Numeral>
           </td>
         </tr>
-        {ticker?.["open_interest"] && <tr className="h-[28px]">
-          <td className="text-base-contrast/50">Open interest</td>
-          <td className="text-right">
-            <Text className="ml-2">{ticker?.["open_interest"]} </Text>
-            <Text 
-              rule="symbol" 
-              symbolElement="base" 
-              className="text-base-contrast/50">
+        {!!ticker?.["open_interest"] && (
+          <tr className="h-[28px]">
+            <td className="text-base-contrast/50">Open interest</td>
+            <td className="text-right">
+              <Text className="ml-2">{ticker?.["open_interest"]} </Text>
+              <Text
+                rule="symbol"
+                symbolElement="base"
+                className="text-base-contrast/50"
+              >
                 {symbol}
-            </Text>
-          </td>
-        </tr>}
+              </Text>
+            </td>
+          </tr>
+        )}
       </table>
     </div>
   );
