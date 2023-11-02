@@ -1,5 +1,15 @@
 # examples
 
+## 0.1.46
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.75
+  - @orderly.network/core@0.0.73
+  - @orderly.network/hooks@0.0.77
+
 ## 0.1.45
 
 ### Patch Changes
