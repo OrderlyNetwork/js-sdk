@@ -87,11 +87,6 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     });
   };
 
-  const onRemember = useCallback((checked: boolean) => {
-    setRemember(checked);
-    showRememberHint();
-  }, []);
-
   return (
     <div>
       <div className="text-base-contrast/50 py-4">
@@ -134,12 +129,12 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="pt-5 pb-7 flex justify-between items-center ">
-        <div className="text-base-contrast/50">
+        <div className="text-base-contrast/50" onClick={showRememberHint}>
           <span>Remember me</span>
           <InfoIcon className="inline-block ml-2" size={14} />
         </div>
         <div>
-          <Switch checked={remember} onCheckedChange={onRemember} />
+          <Switch checked={remember} onCheckedChange={setRemember} />
         </div>
       </div>
       <div>

@@ -10,6 +10,7 @@ import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { OrderTypesCheckbox } from "./orderTypes";
+import { modal } from "@/modal";
 
 interface OrderOptionsProps {
   // values?: OrderEntity;
@@ -24,6 +25,20 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
   // const {reduceOnly,onReduceOnlyChange} = props
   const [open, setOpen] = useState<boolean>(false);
   const { control, getValues, setValue } = useFormContext();
+
+  const showReduceOnlyHint = (reduceOnly: boolean) => {
+    modal.alert({
+      title: reduceOnly ? "Reduce only" : "Hidden",
+      message: (
+        <span className="text-sm text-base-contrast/60">
+          {reduceOnly
+            ? "Reduce only ensures that you can only reduce or close a current position so that your position size will not be increased unintentionally."
+            : "Hidden order is a limit order that does not appear in the orderbook."}
+        </span>
+      ),
+    });
+  };
+
   return (
     <>
       <div className="flex items-center py-[2px] justify-between">
@@ -42,8 +57,14 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     field.onChange(checked)
                   }
                 />
-                {/* 移除htmlFor="reduceOnly", 点击标签不触发Switch的变化 */}
-                <Label>Reduce only</Label>
+                {/* 移除htmlFor="reduceOnly", 点击标签不触发Switch开关的变化 */}
+                <Label
+                  onClick={() => {
+                    showReduceOnlyHint(field.value);
+                  }}
+                >
+                  Reduce only
+                </Label>
               </div>
             );
           }}

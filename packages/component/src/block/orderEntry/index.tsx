@@ -29,7 +29,6 @@ import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
-import { cn } from "@/utils/css";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -228,27 +227,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       methods.clearErrors();
     }, [side]);
 
-    const showReduceOnlyHint = (reduceOnly: boolean) => {
-      modal.alert({
-        title: reduceOnly ? "Reduce only" : "Hidden",
-        message: (
-          <span className="text-sm text-base-contrast/60">
-            {reduceOnly
-              ? "Reduce only ensures that you can only reduce or close a current position so that your position size will not be increased unintentionally."
-              : "Hidden order is a limit order that does not appear in the orderbook."}
-          </span>
-        ),
-        onOk: async () => {
-          props.onReduceOnlyChange?.(reduceOnly);
-        },
-      });
-    };
-
     useEffect(() => {
       const subscription = methods.watch((value, { name, type }) => {
         if (type === "change") {
           if (name === "reduce_only") {
-            showReduceOnlyHint(!!value["reduce_only"]);
           }
         }
       });
