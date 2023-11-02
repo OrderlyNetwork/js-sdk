@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/futures",
-  "version": "0.0.74",
+  "version": "0.0.75",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -478,7 +478,8 @@ var WS = class {
   subscribe(params, callback, once) {
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
-      callback.onUnsubscribe
+      callback.onUnsubscribe,
+      callback.onMessage
     );
     if (this.publicSocket.readyState !== WebSocket.OPEN) {
       this._pendingPublicSubscribe.push([params, callback, once]);
@@ -557,8 +558,12 @@ var WS = class {
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
       } else {
+        const index = handler.callback.findIndex(
+          (cb) => cb.onMessage === parmas.onMessage
+        );
+        console.log(index, handler.callback.length);
         handlerMap.set(topic, __spreadProps(__spreadValues({}, handler), {
-          callback: handler.callback.slice(0, -1)
+          callback: handler.callback.slice(index != null ? index : 0, 1)
         }));
       }
     }
@@ -569,7 +574,7 @@ var WS = class {
   unsubscribePublic(parmas) {
     this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
   }
-  generateMessage(params, onUnsubscribe) {
+  generateMessage(params, onUnsubscribe, onMessage) {
     let subscribeMessage;
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
@@ -583,7 +588,7 @@ var WS = class {
         onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
       }
     }
-    return [subscribeMessage, onUnsubscribe];
+    return [__spreadProps(__spreadValues({}, subscribeMessage), { onMessage }), onUnsubscribe];
   }
   reconnectPublic() {
     if (this.publicIsReconnecting)

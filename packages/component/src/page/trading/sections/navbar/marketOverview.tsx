@@ -11,6 +11,8 @@ export const MarketOverview: FC<Props> = (props) => {
   const { symbol } = props;
   const data = useTickerStream(symbol);
 
+  console.log("data", data?.symbol, data?.["24h_close"]);
+
   return (
     <SymbolProvider symbol={symbol}>
       <SimpleMarketOverview

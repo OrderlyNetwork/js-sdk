@@ -17,6 +17,8 @@ export type MessageParams = {
   event: string;
   topic: string;
 
+  onMessage?: (message: any) => any;
+
   params?: any;
   // [key: string]: any;
 };
@@ -458,7 +460,8 @@ export class WS {
 
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
-      (callback as WSMessageHandler).onUnsubscribe
+      (callback as WSMessageHandler).onUnsubscribe,
+      (callback as WSMessageHandler).onMessage
     );
 
     //
@@ -571,9 +574,15 @@ export class WS {
         handlerMap.delete(topic);
         //post unsubscribe message
       } else {
+        const index = handler.callback.findIndex(
+          (cb) => cb.onMessage === parmas.onMessage
+        );
+
+        console.log(index, handler.callback.length);
+
         handlerMap.set(topic, {
           ...handler,
-          callback: handler.callback.slice(0, -1),
+          callback: handler.callback.slice(index ?? 0, 1),
         });
       }
     }
@@ -589,7 +598,8 @@ export class WS {
 
   private generateMessage(
     params: any,
-    onUnsubscribe?: (event: string) => any
+    onUnsubscribe?: (event: string) => any,
+    onMessage?: (message: any) => any
   ): [MessageParams, (event: string) => any] {
     let subscribeMessage;
 
@@ -607,7 +617,7 @@ export class WS {
       }
     }
 
-    return [subscribeMessage, onUnsubscribe];
+    return [{ ...subscribeMessage, onMessage }, onUnsubscribe];
   }
 
   private reconnectPublic() {
