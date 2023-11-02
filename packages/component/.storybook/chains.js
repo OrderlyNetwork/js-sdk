@@ -47,5 +47,11 @@ module.exports = [
         token: "AVAX",
         rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
       },
+      {
+        id: 1,
+        label: "Ethereum",
+        token: "ETH",
+        rpcUrl: "https://mainnet.infura.io/v3/9155d40884554acdb17699a18a1fe348",
+      },
 
 ];

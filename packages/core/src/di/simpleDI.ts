@@ -27,6 +27,14 @@ export class SimpleDI {
     return this.getContainer().get<T>(name);
   }
 
+  static getOr<T = any>(name: string, instance: T): T {
+    const s = this.getContainer().get<T>(name);
+    if (!s) {
+      SimpleDI.registerByName(name, instance);
+    }
+    return instance;
+  }
+
   // static getByType<T>(c: new (...args: any[]) => T): T {
   //     return this.getContainer().getByType(c);
   // }

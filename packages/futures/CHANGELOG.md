@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 0.0.73
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.0.72
+  - @orderly.network/utils@0.0.60
+
 ## 0.0.72
 
 ### Patch Changes
