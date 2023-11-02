@@ -42,7 +42,8 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     field.onChange(checked)
                   }
                 />
-                <Label htmlFor="reduceOnly">Reduce only</Label>
+                {/* 移除htmlFor="reduceOnly", 点击标签不触发Switch的变化 */}
+                <Label>Reduce only</Label>
               </div>
             );
           }}
