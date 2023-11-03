@@ -35,7 +35,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
   return (
     <>
       {marks?.map((mark, index) => {
-        const percent = convertValueToPercentage(mark.value, props.min, _max);
+        const percent = convertValueToPercentage(index, props.min, _max);
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
 

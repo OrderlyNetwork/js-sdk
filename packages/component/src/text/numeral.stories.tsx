@@ -35,6 +35,21 @@ export const Total: Story = {
   },
 };
 
+export const SurfixAndPrefix: Story = {
+  render: () => {
+    return (
+      <div>
+        <Numeral
+          prefix={<span className="text-base-contrast/50">-</span>}
+          surfix={<span className="text-base-contrast/50">ETH</span>}
+        >
+          123123
+        </Numeral>
+      </div>
+    );
+  },
+};
+
 export const WithConfig: Story = {
   render: (args, { globals }) => {
     return <Numeral.symbol symbol={globals.symbol}>232.323422</Numeral.symbol>;

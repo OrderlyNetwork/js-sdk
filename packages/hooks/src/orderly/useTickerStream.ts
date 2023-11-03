@@ -17,7 +17,7 @@ export const useTickerStream = (symbol: string) => {
     }
   );
 
-  const [ticker, setTicker] = useState<API.Ticker>();
+  const [ticker, setTicker] = useState<any>();
 
   const ws = useWS();
 

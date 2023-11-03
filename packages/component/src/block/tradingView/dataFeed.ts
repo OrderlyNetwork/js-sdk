@@ -9,19 +9,20 @@ import {
 } from "@/@types/charting_library";
 import { defaultTimeInterval } from "./timeIntervalToolbar";
 import { WS } from "@orderly.network/net";
-import { ORDERLY_TRADING_VIEW_INTERVAL } from "./constants";
 
 // const OrderlyRe;
 
-let testPrice = 1819.5;
-
 export default class DataFeed implements IBasicDataFeed {
   private _config?: any;
-  private lastBar?: any;
+
   private market?: Promise<any>;
   private marketResolver?: Function;
   private marketRejector?: Function;
+
   private onRealtimeCallback?: QuotesCallback;
+
+  private handlerMap: Map<string, any> = new Map();
+  private _lastBarsCache: Map<string, any> = new Map();
 
   constructor(
     private readonly configuration: {
@@ -32,6 +33,42 @@ export default class DataFeed implements IBasicDataFeed {
     this.market = new Promise((resolve, reject) => {
       this.marketResolver = resolve;
       this.marketRejector = reject;
+    });
+
+    this.wsClient.on(".*@ticker", (message: any) => {
+      const item = this.handlerMap.get(message.topic);
+
+      if (item && typeof item.handler === "function") {
+        const { data } = message;
+        const lastBar = this._lastBarsCache.get(data.symbol) || {};
+
+        // console.log(lastBar.high, lastBar.low, data.symbol, data.close);
+
+        const newBar = {
+          time: message.ts,
+          close: data.close,
+          open: lastBar.open,
+          high: Math.max(lastBar.high, data.close),
+          low: Math.min(lastBar.low, data.close),
+          volume: data.volume,
+        };
+
+        item.handler(newBar);
+
+        this.onRealtimeCallback?.([
+          {
+            s: "ok",
+            n: data.symbol,
+            v: {
+              ch: data.close - lastBar.open,
+              chp: ((data.close - lastBar.open) / lastBar.open) * 100,
+              short_name: data.symbol,
+            },
+          },
+        ]);
+
+        this._lastBarsCache.set(data.symbol, newBar);
+      }
     });
   }
   async onReady(callback: OnReadyCallback) {
@@ -115,6 +152,7 @@ export default class DataFeed implements IBasicDataFeed {
     if (resolution > 60) {
       resolutionNum = `${resolution / 60}h`;
     }
+
     fetch(
       `${this.configuration.apiBaseUrl}/tv/history?symbol=${symbolInfo.full_name}&resolution=${resolutionNum}&from=${periodParams.from}&to=${periodParams.to}&countBack=${periodParams.countBack}`
     )
@@ -137,106 +175,82 @@ export default class DataFeed implements IBasicDataFeed {
           };
         });
 
-        this.lastBar = bars[bars.length - 1];
-        this.marketResolver?.(this.lastBar);
+        const lastBar = bars[bars.length - 1];
+        this._lastBarsCache.set(symbolInfo.full_name, lastBar);
+        this.marketResolver?.(lastBar);
 
         onResult(bars, { noData: false });
       });
   }
   subscribeBars(
-    symbolInfo,
+    symbolInfo: any,
     resolution: string,
     onTick: SubscribeBarsCallback,
-    subscriberUID,
+    subscriberUID: string,
     onResetCacheNeededCallback
   ) {
-    // setInterval(() => {
-    //   testPrice += Math.random() - 0.5;
-    //   onRealtimeCallback({
-    //     time: Date.now(),
-    //     close: testPrice - 2,
-    //     open: testPrice,
-    //     high: testPrice + 10,
-    //     low: testPrice - 4,
-    //     volume: 10000,
-    //   });
-    // }, 1000);
+    const channelString = `${symbolInfo.full_name}@ticker`;
 
-    const rresolution = this.parseResolution(resolution);
+    let subscriptionItem = this.handlerMap.get(channelString);
 
-    this.wsClient.subscribe(`${symbolInfo.full_name}@kline_${rresolution}`, {
-      onMessage: (data: any) => {
-        //
+    if (subscriptionItem) {
+      return;
+    }
 
-        // if (data.endTime < Date.now()) return;
-        const lastBar = {
-          time: data.endTime,
-          // time: Date.now(),
-          close: data.close,
-          open: data.open,
-          high: data.high,
-          low: data.low,
-          volume: data.volume,
-        };
-        onTick(lastBar);
+    // this.wsClient.send({
+    //   id: "kline",
+    //   event: "subscribe",
+    //   topic: `${symbolInfo.full_name}@kline_${resolution}`,
+    // });
 
-        this.lastBar = lastBar;
-      },
-    });
+    const _subscriber = this.wsClient.subscribe(
+      `${symbolInfo.full_name}@kline_${resolution}`,
+      {
+        onMessage: (data: any) => {
+          //
 
-    // subscribe trade
-    this.wsClient.subscribe(`${symbolInfo.full_name}@ticker`, {
-      onMessage: (data: any) => {
-        //
+          // if (data.endTime < Date.now()) return;
+          const lastBar = {
+            time: data.endTime,
+            // time: Date.now(),
+            close: data.close,
+            open: data.open,
+            high: data.high,
+            low: data.low,
+            volume: data.volume,
+          };
+          onTick(lastBar);
 
-        const lastBar = this.lastBar;
-        // if (Date.now() < lastBar.time) return;
-        if (data.close === lastBar.close) return;
+          this._lastBarsCache.set(symbolInfo.full_name, lastBar);
+        },
+      }
+    );
 
-        const newBar = {
-          time: lastBar.time,
-          close: data.close,
-          open: lastBar.open,
-          high: Math.max(lastBar.high, data.close),
-          low: Math.min(lastBar.low, data.close),
-          volume: data.volume,
-        };
+    subscriptionItem = {
+      subscriberUID,
+      topic: `${symbolInfo.full_name}@ticker`,
+      symbol: symbolInfo.full_name,
+      handler: onTick,
+      unsubscribe: _subscriber,
+    };
 
-        onTick(newBar);
-
-        this.lastBar = newBar;
-
-        //
-        //   "update mobile",
-        //   data.close - lastBar.open,
-        //   data.close,
-        //   lastBar.open
-        // );
-
-        this.onRealtimeCallback?.([
-          {
-            s: "ok",
-            n: symbolInfo.full_name,
-            v: {
-              ch: data.close - lastBar.open,
-              chp: ((data.close - lastBar.open) / lastBar.open) * 100,
-              short_name: symbolInfo.short_name,
-            },
-          },
-        ]);
-      },
-    });
+    this.handlerMap.set(channelString, subscriptionItem);
   }
   unsubscribeBars(subscriberUID: string) {
     const arr = subscriberUID.split("_#_");
 
-    this.wsClient.send({
-      id: "kline",
-      event: "unsubscribe",
-      topic: `${arr[0]}@kline_${this.parseResolution(arr[2])}`,
-    });
+    const channelString = `${arr[0]}@ticker`;
 
-    // this.wsClient.send({ event: "unsubscribe", topic: `${arr[0]}@ticker` });
+    const subscriptionItem = this.handlerMap.get(channelString);
+
+    // console.log("unsubscribeBars", subscriptionItem);
+
+    this._lastBarsCache.delete(channelString);
+
+    if (subscriptionItem) {
+      subscriptionItem.unsubscribe?.();
+      this.handlerMap.delete(channelString);
+    }
 
     // if (this._subscriber) {
     //   this._subscriber.unsubscribe();
