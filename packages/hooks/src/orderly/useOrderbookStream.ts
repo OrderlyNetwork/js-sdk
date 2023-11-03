@@ -159,13 +159,15 @@ export type OrderbookOptions = {
   level?: number;
 };
 
+const INIT_DATA = { asks: [], bids: [] };
+
 /**
  * @name useOrderbookStream
  * @description React hook that returns the current orderbook for a given market
  */
 export const useOrderbookStream = (
   symbol: string,
-  initial: OrderbookData = { asks: [], bids: [] },
+  initial: OrderbookData = INIT_DATA,
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
@@ -201,6 +203,7 @@ export const useOrderbookStream = (
   // const orderbookRequest =
 
   useEffect(() => {
+    setIsLoading(true);
     ws.onceSubscribe(
       {
         event: "request",
@@ -225,6 +228,8 @@ export const useOrderbookStream = (
 
     return () => {
       setRequestData(null);
+      // clean the data;
+      setData(INIT_DATA);
     };
   }, [symbol, depth]);
 

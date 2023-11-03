@@ -33,7 +33,7 @@ export interface AssetAndMarginProps {
   maxLeverage?: number | string;
 }
 
-const leverageLevers = [1, 2, 3, 4, 5, 10];
+// const leverageLevers = [1, 2, 3, 4, 5, 10];
 
 export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const { totalCollateral, freeCollateral, totalValue, availableBalance } =
@@ -46,7 +46,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const { visible, toggleVisible, onDeposit, onWithdraw } =
     useContext(AssetsContext);
 
-  const [maxLeverage, { update }] = useLeverage();
+  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
+
+  // console.log("leverageLevers", leverageLevers);
 
   const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
 
@@ -54,15 +56,15 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     const index = leverageLevers.findIndex((item) => item === leverage);
 
     return index;
-  }, [leverage]);
+  }, [leverage, leverageLevers]);
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
       title: "Settle PnL",
       content: (
         <div className="text-base-contrast/60">
-          Are you sure you want to settle your PnL?
-          Settlement will take up to 1 minute before you can withdraw your available balance.
+          Are you sure you want to settle your PnL? Settlement will take up to 1
+          minute before you can withdraw your available balance.
         </div>
       ),
       onCancel: () => {
@@ -209,39 +211,18 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <div className="h-[40px] mt-2 mx-2">
               <Slider
                 min={0}
-                max={5}
+                max={leverageLevers.length - 1}
                 color={"primary-light"}
                 markLabelVisible
                 value={[leverageValue]}
                 showTip={false}
                 // markCount={5}
-                marks={[
-                  {
-                    value: 0,
-                    label: "1x",
-                  },
-                  {
-                    value: 1,
-                    label: "2x",
-                  },
-                  {
-                    value: 2,
-                    label: "3x",
-                  },
-                  {
-                    value: 3,
-                    label: "4x",
-                  },
-                  {
-                    value: 4,
-                    label: "5x",
-                  },
-                  {
-                    value: 5,
-                    label: "10x",
-                  },
-                ]}
+                marks={leverageLevers.map((item: number) => ({
+                  value: item,
+                  label: `${item}x`,
+                }))}
                 onValueChange={(value) => {
+                  // console.log("value", value);
                   const _value = leverageLevers[value[0]];
                   setLeverage(_value);
                 }}
@@ -251,6 +232,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   update({ leverage: _value }).then(
                     (res: any) => {
                       //
+                      console.log(res);
                       toast.success("Leverage updated");
                     },
                     (err: Error) => {

@@ -16,39 +16,53 @@ export const useTickerStream = (symbol: string) => {
       revalidateOnFocus: false,
     }
   );
+
+  const [ticker, setTicker] = useState<any>();
+
   const ws = useWS();
 
-  const { data: ticker } = useSWRSubscription(
-    `${symbol}@ticker`,
-    (key, { next }) => {
-      const unsubscribe = ws.subscribe(
-        // { event: "subscribe", topic: "markprices" },
-        `${symbol}@ticker`,
-        {
-          onMessage: (message: any) => {
-            next(null, message);
-          },
-          // onUnsubscribe: () => {
-          //   return "markprices";
-          // },
-          // onError: (error: any) => {
-          //
-          // },
-        }
-      );
+  // const { data: ticker } = useSWRSubscription(
+  //   `${symbol}@ticker`,
+  //   (key, { next }) => {
 
-      return () => {
-        //unsubscribe
+  //     return () => {
+  //       //unsubscribe
 
-        unsubscribe?.();
-      };
-    }
-  );
+  //       unsubscribe?.();
+  //     };
+  //   }
+  // );
+
+  useEffect(() => {
+    const unsubscribe = ws.subscribe(
+      // { event: "subscribe", topic: "markprices" },
+      `${symbol}@ticker`,
+      {
+        onMessage: (message: any) => {
+          if (message.symbol !== symbol) return;
+
+          setTicker(message);
+        },
+        // onUnsubscribe: () => {
+        //   return "markprices";
+        // },
+        // onError: (error: any) => {
+        //
+        // },
+      }
+    );
+
+    return () => {
+      setTicker(undefined);
+      unsubscribe?.();
+    };
+  }, [symbol]);
 
   const value = useMemo(() => {
     //
     if (!info) return null;
     if (!ticker) return info;
+    // console.log(info, symbol, ticker);
     const config: any = { ...info };
     if (ticker.close !== undefined) {
       config["24h_close"] = ticker.close;
@@ -68,7 +82,7 @@ export const useTickerStream = (symbol: string) => {
         .toNumber();
     }
     return config;
-  }, [info, ticker]);
+  }, [info, symbol, ticker]);
 
   // return useQuery(`/public/futures/${symbol}`);
   return value;

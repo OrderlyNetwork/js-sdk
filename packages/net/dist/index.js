@@ -177,6 +177,7 @@ var CONNECT_LIMIT = 5;
 var WS = class {
   constructor(options) {
     this.options = options;
+    this._eventContainer = /* @__PURE__ */ new Map();
     this.publicIsReconnecting = false;
     this.privateIsReconnecting = false;
     this.reconnectInterval = 1e3;
@@ -194,8 +195,8 @@ var WS = class {
       }
       if (typeof message === "undefined")
         return;
-      if (this.publicSocket.readyState === WebSocket.OPEN) {
-        this.publicSocket.send(message);
+      if (this._publicSocket.readyState === WebSocket.OPEN) {
+        this._publicSocket.send(message);
       } else {
         console.warn("WebSocket connection is not open. Cannot send message.");
       }
@@ -241,11 +242,11 @@ var WS = class {
     if (!navigator.onLine)
       return;
     if (!this.publicIsReconnecting) {
-      if (this.publicSocket.readyState === WebSocket.CLOSED) {
+      if (this._publicSocket.readyState === WebSocket.CLOSED) {
         this.reconnectPublic();
       } else {
         if (now - this._publicHeartbeatTime > TIME_OUT) {
-          this.publicSocket.close();
+          this._publicSocket.close();
         }
       }
     }
@@ -276,15 +277,18 @@ var WS = class {
     (_a = this.privateSocket) == null ? void 0 : _a.close();
   }
   createPublicSC(options) {
-    if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
+    if (this._publicSocket && this._publicSocket.readyState === WebSocket.OPEN)
       return;
-    this.publicSocket = new WebSocket(
+    this._publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
-    this.publicSocket.onopen = this.onOpen.bind(this);
-    this.publicSocket.onmessage = this.onPublicMessage.bind(this);
-    this.publicSocket.onclose = this.onPublicClose.bind(this);
-    this.publicSocket.onerror = this.onPublicError.bind(this);
+    this._publicSocket.onopen = this.onOpen.bind(this);
+    this._publicSocket.addEventListener(
+      "message",
+      this.onPublicMessage.bind(this)
+    );
+    this._publicSocket.addEventListener("close", this.onPublicClose.bind(this));
+    this._publicSocket.addEventListener("error", this.onPublicError.bind(this));
   }
   createPrivateSC(options) {
     if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
@@ -335,12 +339,18 @@ var WS = class {
             }
           });
         }
+        this._eventContainer.forEach((_, key) => {
+          const reg = new RegExp(key);
+          if (reg.test(topicKey)) {
+            this.emit(key, message);
+          }
+        });
       }
     } catch (e) {
     }
   }
   onPublicMessage(event) {
-    this.onMessage(event, this.publicSocket, this._eventHandlers);
+    this.onMessage(event, this._publicSocket, this._eventHandlers);
     this._publicHeartbeatTime = Date.now();
   }
   onPrivateMessage(event) {
@@ -379,8 +389,8 @@ var WS = class {
   onPublicError(event) {
     console.error("public WebSocket error:", event);
     this.publicIsReconnecting = false;
-    if (this.publicSocket.readyState === WebSocket.OPEN) {
-      this.publicSocket.close();
+    if (this._publicSocket.readyState === WebSocket.OPEN) {
+      this._publicSocket.close();
     } else {
       if (this._publicRetryCount > CONNECT_LIMIT)
         return;
@@ -417,7 +427,7 @@ var WS = class {
   }
   close() {
     var _a;
-    this.publicSocket.close();
+    this._publicSocket.close();
     (_a = this.privateSocket) == null ? void 0 : _a.close();
   }
   set accountId(accountId) {
@@ -475,13 +485,14 @@ var WS = class {
       this.unsubscribePrivate(subscribeMessage);
     };
   }
-  subscribe(params, callback, once) {
+  subscribe(params, callback, once, id) {
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
-      callback.onUnsubscribe
+      callback.onUnsubscribe,
+      callback.onMessage
     );
-    if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, callback, once]);
+    if (this._publicSocket.readyState !== WebSocket.OPEN) {
+      this._pendingPublicSubscribe.push([params, callback, once, id]);
       if (!once) {
         return () => {
           this.unsubscribePublic(subscribeMessage);
@@ -500,11 +511,11 @@ var WS = class {
         isOnce: once,
         callback: [callbacks]
       });
-      this.publicSocket.send(JSON.stringify(subscribeMessage));
+      this._publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
       if (once) {
         handler.callback = [callbacks];
-        this.publicSocket.send(JSON.stringify(subscribeMessage));
+        this._publicSocket.send(JSON.stringify(subscribeMessage));
       } else {
         handler.callback.push(callbacks);
       }
@@ -557,9 +568,12 @@ var WS = class {
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
       } else {
-        handlerMap.set(topic, __spreadProps(__spreadValues({}, handler), {
-          callback: handler.callback.slice(0, -1)
-        }));
+        const index = handler.callback.findIndex(
+          (cb) => cb.onMessage === parmas.onMessage
+        );
+        if (index === -1)
+          return;
+        handler.callback.splice(index, 1);
       }
     }
   }
@@ -567,9 +581,9 @@ var WS = class {
     this.unsubscribe(parmas, this.privateSocket, this._eventPrivateHandlers);
   }
   unsubscribePublic(parmas) {
-    this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
+    this.unsubscribe(parmas, this._publicSocket, this._eventHandlers);
   }
-  generateMessage(params, onUnsubscribe) {
+  generateMessage(params, onUnsubscribe, onMessage) {
     let subscribeMessage;
     if (typeof params === "string") {
       subscribeMessage = { event: "subscribe", topic: params };
@@ -583,7 +597,7 @@ var WS = class {
         onUnsubscribe = () => ({ event: "unsubscribe", topic: params.topic });
       }
     }
-    return [subscribeMessage, onUnsubscribe];
+    return [__spreadProps(__spreadValues({}, subscribeMessage), { onMessage }), onUnsubscribe];
   }
   reconnectPublic() {
     if (this.publicIsReconnecting)
@@ -602,6 +616,28 @@ var WS = class {
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
     }, this.reconnectInterval);
+  }
+  get publicSocket() {
+    return this._publicSocket;
+  }
+  on(eventName, callback) {
+    var _a;
+    if (this._eventContainer.has(eventName)) {
+      (_a = this._eventContainer.get(eventName)) == null ? void 0 : _a.add(callback);
+    }
+    this._eventContainer.set(eventName, /* @__PURE__ */ new Set([callback]));
+  }
+  off(eventName, callback) {
+    var _a;
+    if (this._eventContainer.has(eventName)) {
+      (_a = this._eventContainer.get(eventName)) == null ? void 0 : _a.delete(callback);
+    }
+  }
+  emit(eventName, message) {
+    var _a;
+    if (this._eventContainer.has(eventName)) {
+      (_a = this._eventContainer.get(eventName)) == null ? void 0 : _a.forEach((cb) => cb(message));
+    }
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

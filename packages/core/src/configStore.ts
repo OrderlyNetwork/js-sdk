@@ -25,7 +25,7 @@ export class MemoryConfigStore implements ConfigStore {
       // ["publicWsUrl", "wss://dex-iap-evm.woo.org/ws"],
       ["publicWsUrl", "wss://testnet-ws-evm.orderly.org"],
       // ["publicWsUrl", "wss://dev-ws-v2.orderly.org"],
-      ["publicWebsocketKey", "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY"],
+      // ["publicWebsocketKey", "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY"],
       // ["privateWsUrl", "wss://dev-ws-private-v2.orderly.org"],
       ["privateWsUrl", "wss://testnet-ws-private-evm.orderly.org"],
       // ["privateWsUrl", "wss://dex-iap-evm.woo.org"],

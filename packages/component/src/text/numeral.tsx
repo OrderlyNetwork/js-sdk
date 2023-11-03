@@ -121,8 +121,12 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return child;
     }
 
-    const surfixEle = surfix ?? unit ? <span>{unit}</span> : undefined;
-    const prefixEle = prefix ?? cureency ? <span>{cureency}</span> : undefined;
+    const surfixEle = surfix ? surfix : unit ? <span>{unit}</span> : undefined;
+    const prefixEle = prefix ? (
+      prefix
+    ) : cureency ? (
+      <span>{cureency}</span>
+    ) : undefined;
 
     return (
       <span className="flex gap-1">

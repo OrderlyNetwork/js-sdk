@@ -87,7 +87,9 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               disabled={!props.maxAmount}
               onClick={() => {
                 props?.onValueChange?.({
-                  value: `${props.maxAmount ?? 0}`,
+                  value: parseNumber(props.maxAmount ?? 0, {
+                    precision: props.token?.woofi_dex_precision,
+                  }),
                   token: props.token?.symbol ?? "",
                 });
               }}

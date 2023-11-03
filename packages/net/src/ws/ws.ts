@@ -17,6 +17,8 @@ export type MessageParams = {
   event: string;
   topic: string;
 
+  onMessage?: (message: any) => any;
+
   params?: any;
   // [key: string]: any;
 };
@@ -43,8 +45,10 @@ const TIME_OUT = 1000 * 60 * 2;
 const CONNECT_LIMIT = 5;
 
 export class WS {
-  private publicSocket!: WebSocket;
+  private _publicSocket!: WebSocket;
   private privateSocket?: WebSocket;
+
+  private _eventContainer: Map<string, Set<Function>> = new Map();
 
   private publicIsReconnecting: boolean = false;
   private privateIsReconnecting: boolean = false;
@@ -133,12 +137,12 @@ export class WS {
     // 如果已断开，则重连
     // public
     if (!this.publicIsReconnecting) {
-      if (this.publicSocket.readyState === WebSocket.CLOSED) {
+      if (this._publicSocket.readyState === WebSocket.CLOSED) {
         this.reconnectPublic();
       } else {
         if (now - this._publicHeartbeatTime! > TIME_OUT) {
           //unsubscribe all public topic
-          this.publicSocket.close();
+          this._publicSocket.close();
         }
       }
     }
@@ -179,15 +183,21 @@ export class WS {
   }
 
   private createPublicSC(options: WSOptions) {
-    if (this.publicSocket && this.publicSocket.readyState === WebSocket.OPEN)
+    if (this._publicSocket && this._publicSocket.readyState === WebSocket.OPEN)
       return;
-    this.publicSocket = new WebSocket(
+    this._publicSocket = new WebSocket(
       `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
     );
-    this.publicSocket.onopen = this.onOpen.bind(this);
-    this.publicSocket.onmessage = this.onPublicMessage.bind(this);
-    this.publicSocket.onclose = this.onPublicClose.bind(this);
-    this.publicSocket.onerror = this.onPublicError.bind(this);
+    this._publicSocket.onopen = this.onOpen.bind(this);
+    // this.publicSocket.onmessage = this.onPublicMessage.bind(this);
+    this._publicSocket.addEventListener(
+      "message",
+      this.onPublicMessage.bind(this)
+    );
+    this._publicSocket.addEventListener("close", this.onPublicClose.bind(this));
+    this._publicSocket.addEventListener("error", this.onPublicError.bind(this));
+    // this.publicSocket.onclose = this.onPublicClose.bind(this);
+    // this.publicSocket.onerror = this.onPublicError.bind(this);
   }
 
   private createPrivateSC(options: WSOptions) {
@@ -232,6 +242,7 @@ export class WS {
   ) {
     try {
       const message = JSON.parse(event.data);
+
       const commoneHandler = messageHandlers.get(message.event);
 
       if (message.event === "auth" && message.success) {
@@ -248,6 +259,7 @@ export class WS {
         const eventhandler = handlerMap.get(topicKey);
         //
         if (eventhandler?.callback) {
+          // console.log("👀👀👀👀👀👀👀👀👀", topicKey, eventhandler?.callback);
           eventhandler.callback.forEach((cb) => {
             const data = cb.formatter
               ? cb.formatter(message)
@@ -263,6 +275,14 @@ export class WS {
           //   handlerMap.delete(topicKey);
           // }
         }
+
+        // 触发事件
+        this._eventContainer.forEach((_, key) => {
+          const reg = new RegExp(key);
+          if (reg.test(topicKey)) {
+            this.emit(key, message);
+          }
+        });
       }
 
       //
@@ -272,7 +292,7 @@ export class WS {
   }
 
   private onPublicMessage(event: MessageEvent) {
-    this.onMessage(event, this.publicSocket, this._eventHandlers);
+    this.onMessage(event, this._publicSocket, this._eventHandlers);
     // 更新最后收到消息的时间
     this._publicHeartbeatTime = Date.now();
   }
@@ -323,8 +343,8 @@ export class WS {
     console.error("public WebSocket error:", event);
     this.publicIsReconnecting = false;
 
-    if (this.publicSocket.readyState === WebSocket.OPEN) {
-      this.publicSocket.close();
+    if (this._publicSocket.readyState === WebSocket.OPEN) {
+      this._publicSocket.close();
     } else {
       // retry connect
       if (this._publicRetryCount > CONNECT_LIMIT) return;
@@ -370,8 +390,8 @@ export class WS {
       message = JSON.stringify(message);
     }
     if (typeof message === "undefined") return;
-    if (this.publicSocket.readyState === WebSocket.OPEN) {
-      this.publicSocket.send(message);
+    if (this._publicSocket.readyState === WebSocket.OPEN) {
+      this._publicSocket.send(message);
       //
     } else {
       console.warn("WebSocket connection is not open. Cannot send message.");
@@ -379,7 +399,7 @@ export class WS {
   };
 
   close() {
-    this.publicSocket.close();
+    this._publicSocket.close();
     this.privateSocket?.close();
   }
 
@@ -452,19 +472,21 @@ export class WS {
   subscribe(
     params: any,
     callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
-    once?: boolean
+    once?: boolean,
+    id?: string
   ): unsubscribe | undefined {
     //
 
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
-      (callback as WSMessageHandler).onUnsubscribe
+      (callback as WSMessageHandler).onUnsubscribe,
+      (callback as WSMessageHandler).onMessage
     );
 
     //
 
-    if (this.publicSocket.readyState !== WebSocket.OPEN) {
-      this._pendingPublicSubscribe.push([params, callback, once]);
+    if (this._publicSocket.readyState !== WebSocket.OPEN) {
+      this._pendingPublicSubscribe.push([params, callback, once, id]);
 
       if (!once) {
         return () => {
@@ -489,12 +511,12 @@ export class WS {
         isOnce: once,
         callback: [callbacks],
       });
-      this.publicSocket.send(JSON.stringify(subscribeMessage));
+      this._publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
       // 是否once,如果是once,则替换掉之前的callback
       if (once) {
         handler.callback = [callbacks];
-        this.publicSocket.send(JSON.stringify(subscribeMessage));
+        this._publicSocket.send(JSON.stringify(subscribeMessage));
       } else {
         handler.callback.push(callbacks);
       }
@@ -562,19 +584,34 @@ export class WS {
     const topic = parmas.topic || parmas.event;
     const handler = handlerMap.get(topic);
 
+    // console.log("unsubscribe", topic);
+
     if (!!handler && Array.isArray(handler?.callback)) {
+      // console.log("是否需要退订", handler.callback.length);
       if (handler!.callback.length === 1) {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
+
+        // console.log("退订参数 unsubscribeMessage", unsubscribeMessage);
 
         //
         webSocket.send(JSON.stringify(unsubscribeMessage));
         handlerMap.delete(topic);
         //post unsubscribe message
       } else {
-        handlerMap.set(topic, {
-          ...handler,
-          callback: handler.callback.slice(0, -1),
-        });
+        const index = handler.callback.findIndex(
+          (cb) => cb.onMessage === parmas.onMessage
+        );
+
+        // console.log(index, handler.callback.length);
+
+        if (index === -1) return;
+
+        handler.callback.splice(index, 1);
+
+        // handlerMap.set(topic, {
+        //   ...handler,
+        //   callback: handler.callback.splice(index, 1),
+        // });
       }
     }
   }
@@ -584,12 +621,13 @@ export class WS {
   }
 
   private unsubscribePublic(parmas: MessageParams) {
-    this.unsubscribe(parmas, this.publicSocket, this._eventHandlers);
+    this.unsubscribe(parmas, this._publicSocket, this._eventHandlers);
   }
 
   private generateMessage(
     params: any,
-    onUnsubscribe?: (event: string) => any
+    onUnsubscribe?: (event: string) => any,
+    onMessage?: (message: any) => any
   ): [MessageParams, (event: string) => any] {
     let subscribeMessage;
 
@@ -607,7 +645,7 @@ export class WS {
       }
     }
 
-    return [subscribeMessage, onUnsubscribe];
+    return [{ ...subscribeMessage, onMessage }, onUnsubscribe];
   }
 
   private reconnectPublic() {
@@ -627,5 +665,28 @@ export class WS {
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
     }, this.reconnectInterval);
+  }
+
+  get publicSocket(): WebSocket {
+    return this._publicSocket;
+  }
+
+  on(eventName: string, callback: (message: any) => any) {
+    if (this._eventContainer.has(eventName)) {
+      this._eventContainer.get(eventName)?.add(callback);
+    }
+    this._eventContainer.set(eventName, new Set([callback]));
+  }
+
+  off(eventName: string, callback: (message: any) => any) {
+    if (this._eventContainer.has(eventName)) {
+      this._eventContainer.get(eventName)?.delete(callback);
+    }
+  }
+
+  emit(eventName: string, message: any) {
+    if (this._eventContainer.has(eventName)) {
+      this._eventContainer.get(eventName)?.forEach((cb) => cb(message));
+    }
   }
 }
