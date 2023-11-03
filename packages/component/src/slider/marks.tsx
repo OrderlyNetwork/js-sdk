@@ -22,10 +22,11 @@ export interface SliderMarksProps {
 
   disabled?: boolean;
   markLabelVisible?: boolean;
+  isInnerMask?: boolean;
 }
 
 export const SliderMarks: FC<SliderMarksProps> = (props) => {
-  const { marks, value, markLabelVisible } = props;
+  const { marks, value, markLabelVisible, isInnerMask } = props;
 
   // const spanRef = useRef<HTMLSpanElement | null>(null);
 
@@ -39,6 +40,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
         const percent = convertValueToPercentage(index, 0, marks.length - 1);
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
+        const __value = isInnerMask ? mark.value : index;
 
         return (
           <Fragment key={index}>
@@ -47,15 +49,17 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
                 "absolute top-[7px] w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
                 {
                   "border-primary bg-primary":
-                    props.color === "primary" && _value >= index && _value > 0,
+                    props.color === "primary" &&
+                    _value >= __value &&
+                    _value > 0,
                   "border-primary-light bg-primary-light":
                     props.color === "primary-light" &&
-                    _value >= index &&
+                    _value >= __value &&
                     _value > 0,
                   "border-trade-profit bg-trade-profit":
-                    props.color === "buy" && _value >= index && _value > 0,
+                    props.color === "buy" && _value >= __value && _value > 0,
                   "border-trade-loss bg-trade-loss":
-                    props.color === "sell" && _value >= index && _value > 0,
+                    props.color === "sell" && _value >= __value && _value > 0,
                 }
               )}
               style={{

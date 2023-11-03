@@ -232,7 +232,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   update({ leverage: _value }).then(
                     (res: any) => {
                       //
-                      console.log(res);
+                      // console.log(res);
                       toast.success("Leverage updated");
                     },
                     (err: Error) => {

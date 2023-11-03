@@ -1,5 +1,23 @@
 # @orderly.network/react
 
+## 0.0.78
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.81
+  - @orderly.network/hooks@0.0.83
+
+## 0.0.77
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/components@0.0.80
+  - @orderly.network/hooks@0.0.82
+
 ## 0.0.76
 
 ### Patch Changes

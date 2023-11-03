@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "0.1.21",
+  "version": "0.1.23",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",

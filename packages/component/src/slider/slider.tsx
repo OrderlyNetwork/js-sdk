@@ -122,6 +122,7 @@ const Slider = React.forwardRef<
               value={props.value}
               color={color}
               marks={innerMasks}
+              isInnerMask={!Array.isArray(marks) || marks.length === 0}
               min={min}
               max={max}
               markLabelVisible={markLabelVisible}

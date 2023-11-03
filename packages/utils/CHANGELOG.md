@@ -1,5 +1,17 @@
 # @orderly.network/utils
 
+## 0.0.64
+
+### Patch Changes
+
+- update
+
+## 0.0.63
+
+### Patch Changes
+
+- update
+
 ## 0.0.62
 
 ### Patch Changes

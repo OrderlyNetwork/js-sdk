@@ -8,7 +8,9 @@ import { Label } from "@/label";
 
 export type AggregatedData = {
   unsettledPnL: number;
+
   unrealPnL: number;
+  unrealPnlROI: number;
   notional: number;
 };
 
