@@ -12,8 +12,8 @@ import { CopyIcon } from "@/icon";
 export interface AccountInfoProps {
   onDisconnect?: () => void;
   accountId?: string;
-
   close?: () => void;
+  showGetTestUSDC?: boolean;
 }
 
 export const AccountInfo: FC<AccountInfoProps> = (props) => {
@@ -83,25 +83,41 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </IconButton> */}
         </div>
       </div>
-      <div className="py-4 grid grid-cols-2 gap-3">
-        <Button
-          variant={"outlined"}
-          onClick={onGetClick}
-          disabled={isMutating}
-          loading={isMutating}
-        >
-          Get test USDC
-        </Button>
-        <Button
-          variant={"outlined"}
-          color={"sell"}
-          onClick={() => {
-            onDisconnect?.();
-          }}
-        >
-          Disconnect
-        </Button>
-      </div>
+      {props.showGetTestUSDC ? (
+        <div className="py-4 grid grid-cols-2 gap-3">
+          <Button
+            variant={"outlined"}
+            onClick={onGetClick}
+            disabled={isMutating}
+            loading={isMutating}
+          >
+            Get test USDC
+          </Button>
+
+          <Button
+            variant={"outlined"}
+            color={"sell"}
+            onClick={() => {
+              onDisconnect?.();
+            }}
+          >
+            Disconnect
+          </Button>
+        </div>
+      ) : (
+        <div className="flex justify-center">
+          <Button
+            className="w-[200px]"
+            variant={"outlined"}
+            color={"sell"}
+            onClick={() => {
+              onDisconnect?.();
+            }}
+          >
+            Disconnect
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

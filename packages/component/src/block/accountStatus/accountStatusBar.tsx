@@ -34,6 +34,7 @@ interface AccountStatusProps {
 
   onConnect?: () => void;
   onDisconnect?: () => void;
+  showGetTestUSDC?: boolean;
   // onConnected?: () => void;
 }
 
@@ -106,6 +107,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               <AccountInfo
                 onDisconnect={props.onDisconnect}
                 close={() => setInfoOpen(false)}
+                showGetTestUSDC={props.showGetTestUSDC}
               />
             </SheetContent>
           </Sheet>
