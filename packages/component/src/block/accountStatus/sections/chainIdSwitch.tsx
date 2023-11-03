@@ -63,7 +63,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>Switch network</DialogHeader>
-          <DialogBody>
+          <DialogBody className="max-h-[327.5px] overflow-y-auto">
             <ChainListView
               mainChains={onlyTestnet ? [] : mainChains}
               testChains={testChains}
