@@ -60,7 +60,7 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const switchDomain = (chainId: number) => {
     const domain = configStore.get("domain");
-    const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
+    const url = chainId === 421613 ? domain?.dexTestnet : domain?.dexMainnet;
     window.location.href = url;
     // window.open(url); // test in storybook
   };
