@@ -8,12 +8,13 @@ import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { CopyIcon } from "@/icon";
+import { useGetChains } from "./useGetChains";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
   accountId?: string;
-
   close?: () => void;
+  showGetTestUSDC?: boolean;
 }
 
 export const AccountInfo: FC<AccountInfoProps> = (props) => {
@@ -25,6 +26,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const [getTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
+
+  const chainName = useGetChains();
 
   const onCopy = useCallback(() => {
     navigator.clipboard.writeText(state.address).then(() => {
@@ -71,7 +74,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Blockie address={state.address} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-xs">Testnet</div>
+            <div className="text-xs">{chainName}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -83,25 +86,41 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </IconButton> */}
         </div>
       </div>
-      <div className="py-4 grid grid-cols-2 gap-3">
-        <Button
-          variant={"outlined"}
-          onClick={onGetClick}
-          disabled={isMutating}
-          loading={isMutating}
-        >
-          Get test USDC
-        </Button>
-        <Button
-          variant={"outlined"}
-          color={"sell"}
-          onClick={() => {
-            onDisconnect?.();
-          }}
-        >
-          Disconnect
-        </Button>
-      </div>
+      {props.showGetTestUSDC ? (
+        <div className="py-4 grid grid-cols-2 gap-3">
+          <Button
+            variant={"outlined"}
+            onClick={onGetClick}
+            disabled={isMutating}
+            loading={isMutating}
+          >
+            Get test USDC
+          </Button>
+
+          <Button
+            variant={"outlined"}
+            color={"sell"}
+            onClick={() => {
+              onDisconnect?.();
+            }}
+          >
+            Disconnect
+          </Button>
+        </div>
+      ) : (
+        <div className="flex justify-center">
+          <Button
+            className="w-[200px]"
+            variant={"outlined"}
+            color={"sell"}
+            onClick={() => {
+              onDisconnect?.();
+            }}
+          >
+            Disconnect
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

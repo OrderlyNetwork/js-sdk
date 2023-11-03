@@ -9,6 +9,8 @@ export { useTokenInfo } from "./useTokenInfo";
 export { useMarketsStream } from "./useMarketsStream";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
+export { useIndexPrice } from "./useIndexPrice";
+export { useOpenInterest } from "./useOpenInterest";
 
 // export {useMarketStream} from
 

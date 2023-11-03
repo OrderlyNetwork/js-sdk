@@ -5,6 +5,10 @@ import useSWRSubscription from "swr/subscription";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useWS } from "../useWS";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useMarkPrice } from "./useMarkPrice";
+import { useIndexPrice } from "./useIndexPrice";
+import { useOpenInterest } from "./useOpenInterest";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
@@ -58,17 +62,36 @@ export const useTickerStream = (symbol: string) => {
     };
   }, [symbol]);
 
+  const { data: markPrice } = useMarkPrice(symbol);
+  const { data: indexPrice } = useIndexPrice(symbol);
+  const { data: openInterest } = useOpenInterest(symbol);
+
   const value = useMemo(() => {
     //
     if (!info) return null;
     if (!ticker) return info;
-    // console.log(info, symbol, ticker);
-    const config: any = { ...info };
+    const config: any = { 
+      ...info, 
+      mark_price: markPrice, 
+      index_price: indexPrice,
+      open_interest: openInterest,
+    };
+
+    if (ticker.open !== undefined) {
+      config["24h_open"] = ticker.open;
+    }
+
+
     if (ticker.close !== undefined) {
       config["24h_close"] = ticker.close;
     }
-    if (ticker.open !== undefined) {
-      config["24h_open"] = ticker.open;
+
+    if (ticker.high !== undefined) {
+      config["24h_high"] = ticker.high;
+    }
+    
+    if (ticker.low !== undefined) {
+      config["24h_low"] = ticker.low;
     }
 
     if (ticker.volume !== undefined) {

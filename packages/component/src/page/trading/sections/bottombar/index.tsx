@@ -9,10 +9,11 @@ import {
   useCollateral,
   useAccountInfo,
   useAppState,
+  OrderlyContext,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 
 export const BottomNavBar = () => {
   const { state, disconnect, connect, setChain } = useAccount();
@@ -20,6 +21,7 @@ export const BottomNavBar = () => {
   const { totalValue } = useCollateral();
   const { errors } = useAppState();
   const { connectedChain } = useContext(WalletConnectorContext);
+  const { onlyTestnet } = useContext<any>(OrderlyContext);
 
   const onConnect = useCallback(() => {
     connect().then((result: { wallet: any; status: AccountStatusEnum }) => {
@@ -31,10 +33,14 @@ export const BottomNavBar = () => {
     });
   }, []);
 
+  const showGetTestUSDC = useMemo(() => {
+    // 在localstrange里面加ENABLE_MAINNET=true值就可以让onlyTestnet为true
+    return state.status === AccountStatusEnum.EnableTrading && onlyTestnet;
+  }, [state.status, onlyTestnet]);
+
   return (
     <>
-      {state.status === AccountStatusEnum.EnableTrading &&
-        parseInt(connectedChain?.id!) === 421613 && <GetTestUSDC />}
+      {showGetTestUSDC && <GetTestUSDC />}
       {errors.ChainNetworkNotSupport && <ChainIdSwtich onSetChain={setChain} />}
       <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
         <AccountStatusBar
@@ -45,6 +51,7 @@ export const BottomNavBar = () => {
           totalValue={totalValue}
           onConnect={onConnect}
           onDisconnect={disconnect}
+          showGetTestUSDC={showGetTestUSDC}
         />
       </div>
     </>
