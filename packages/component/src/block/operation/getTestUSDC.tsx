@@ -44,33 +44,32 @@ export const GetTestUSDC = () => {
       if (!account || !account.wallet) {
         return;
       }
+
       getTestUSDC({
         chain_id: account.wallet.chainId.toString(),
         user_address: state.address,
         broker_id: configStore.get("brokerId"),
-      })
-        .then(
-          (res: any) => {
-            if (res.success) {
-              return modal.confirm({
-                title: "Get test USDC",
-                content:
-                  "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
-                onOk: () => {
-                  return Promise.resolve();
-                },
-              });
-            } else {
-              return Promise.reject(res);
-            }
-          },
-          (error: Error) => {
-            toast.error(error.message);
+      }).then(
+        (res: any) => {
+          if (res.success) {
+            toast.dismiss(toastId);
+            return modal.confirm({
+              title: "Get test USDC",
+              content:
+                "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+              onOk: () => {
+                return Promise.resolve();
+              },
+            });
+          } else {
+            return Promise.reject(res);
           }
-        )
-        .finally(() => {
+        },
+        (error: Error) => {
           toast.dismiss(toastId);
-        });
+          toast.error(error.message);
+        }
+      );
     },
     [state]
   );
