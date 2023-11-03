@@ -8,6 +8,7 @@ import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { CopyIcon } from "@/icon";
+import { useGetChains } from "./useGetChains";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -25,6 +26,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const [getTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
+
+  const chainName = useGetChains();
 
   const onCopy = useCallback(() => {
     navigator.clipboard.writeText(state.address).then(() => {
@@ -71,7 +74,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Blockie address={state.address} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-xs">Testnet</div>
+            <div className="text-xs">{chainName}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
