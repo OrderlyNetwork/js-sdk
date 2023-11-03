@@ -44,4 +44,6 @@ export { useBalance } from "./useBalance";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
 export { useExecutionReport } from "./useExecutionReport";
 
+export { parseExecutionReportToToastMsg } from "./parseExecutionReport";
+
 // export { useOrderStream } from "./useOrderStream";

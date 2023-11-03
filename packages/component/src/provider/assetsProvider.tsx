@@ -13,13 +13,17 @@ import {
   OrderlyContext,
   useWalletSubscription,
   useSettleSubscription,
+  useExecutionReport,
   useWooCrossSwapQuery,
   useWooSwapQuery,
   useEventEmitter,
+  useSymbolsInfo,
+  parseExecutionReportToToastMsg,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
-import { capitalizeString } from "@/utils/string";
+import { capitalizeString, transSymbolformString } from "@orderly.network/utils";
+
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
@@ -80,7 +84,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       if (transStatus === "COMPLETED") {
         let msg = `${capitalizeString(side)} success`;
         toast.success(msg);
-      } else if(transStatus === "FAILED") {
+      } else if (transStatus === "FAILED") {
         let msg = `${capitalizeString(side)} failed`;
         toast.error(msg);
       }
@@ -96,16 +100,26 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
       console.log('settle ws: ', data);
 
-      switch(status) {
+      switch (status) {
         case "COMPLETED":
           toast.success("Settlement success");
           break;
         case "FAILED":
           toast.error("Settlement failed");
-          break;   
-          default: 
-          break;  
+          break;
+        default:
+          break;
       }
+    },
+  });
+
+  const symbolsInfo = useSymbolsInfo();
+
+  useExecutionReport({
+    onMessage: (data: any) => {
+      const { title, msg } = parseExecutionReportToToastMsg(data, symbolsInfo);
+      // TODO: show toast info
+      console.log(`parseExecutionReportToToastMsg title:${title} msg:${msg}`);
     },
   });
 
