@@ -63,11 +63,11 @@ export const TradeData: FC<Props> = (props) => {
           <tr className="h-[28px]">
             <td className="text-base-contrast/50">Open interest</td>
             <td className="text-right">
-              <Text className="ml-2">{ticker?.["open_interest"]} </Text>
+              <Text>{ticker?.["open_interest"]} </Text>
               <Text
                 rule="symbol"
                 symbolElement="base"
-                className="text-base-contrast/50"
+                className="text-base-contrast/50 ml-1"
               >
                 {symbol}
               </Text>
