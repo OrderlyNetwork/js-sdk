@@ -7,6 +7,7 @@ import { FC, useCallback, useContext } from "react";
 
 interface UnsettledInfoProps {
   unsettledPnL: number;
+  hasPositions: boolean;
 }
 
 export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
@@ -34,7 +35,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
       );
   }, []);
 
-  if (props.unsettledPnL === 0) return null;
+  if (props.unsettledPnL === 0 && props.hasPositions === false) return null;
   return (
     <div className="flex items-center justify-between mt-1">
       <div className="text-sm flex items-center space-x-1 text-base-contrast/30">
