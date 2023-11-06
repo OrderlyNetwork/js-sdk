@@ -204,6 +204,7 @@ export const useOrderbookStream = (
 
   useEffect(() => {
     setIsLoading(true);
+    let ignore = false;
     ws.onceSubscribe(
       {
         event: "request",
@@ -215,6 +216,7 @@ export const useOrderbookStream = (
       },
       {
         onMessage: (message: any) => {
+          if (ignore) return;
           //
           if (!!message) {
             const reduceOrderbookData = reduceOrderbook(depth, level, message);
@@ -228,6 +230,7 @@ export const useOrderbookStream = (
 
     return () => {
       setRequestData(null);
+      ignore = true;
       // clean the data;
       setData(INIT_DATA);
     };
