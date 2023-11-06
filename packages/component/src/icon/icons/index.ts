@@ -6,3 +6,4 @@ export { InfoIcon } from "./info";
 export { SwitchIcon } from "./switch";
 export { CloseIcon } from "./close";
 export { CopyIcon } from "./copy";
+export { WalletIcon } from "./wallet";
