@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 0.0.85
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@0.0.78
+  - @orderly.network/futures@0.0.79
+  - @orderly.network/net@1.0.78
+  - @orderly.network/types@0.0.78
+  - @orderly.network/utils@0.0.66
+
 ## 0.0.84
 
 ### Patch Changes
