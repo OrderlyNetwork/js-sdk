@@ -1,7 +1,8 @@
 import { cn } from "@/utils/css";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState, memo } from "react";
 import { Size } from "./types";
 import { getSize } from "./utils";
+import { WalletIcon } from "./icons";
 
 export type NetworkImageType =
   | "symbol"
@@ -26,7 +27,7 @@ export interface NetworkImageProps {
 }
 
 // TODO: 添加icon生成adpater
-export const NetworkImage: FC<NetworkImageProps> = (props) => {
+export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   const { rounded = true } = props;
   const [url, setUrl] = React.useState<string>();
   const [loading, setLoading] = useState(false);
@@ -120,6 +121,10 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
     return getSize(props.size);
   }, [props.size]);
 
+  if (isPlaceholder) {
+    return <WalletIcon size={20} />;
+  }
+
   return (
     <div
       className={cn(
@@ -139,6 +144,6 @@ export const NetworkImage: FC<NetworkImageProps> = (props) => {
       {icon}
     </div>
   );
-};
+});
 
 NetworkImage.displayName = "NetworkImage";

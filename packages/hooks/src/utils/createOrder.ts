@@ -133,7 +133,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
 
-      const { order_price } = values;
+      const { order_price, side } = values;
 
       if (!order_price) {
         errors.order_price = {
@@ -147,18 +147,22 @@ export class LimitOrderCreator extends BaseOrderCreator {
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
 
-        if (price.lt(minPriceNumber)) {
-          errors.order_price = {
-            type: "min",
-            message: `price must be greater than ${new Decimal(
-              minPriceNumber
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (price.gt(maxPriceNumber)) {
+        console.log(`side: ${side} value:`, values);
+
+        /// if side is 'buy', only check max price,
+        /// if side is 'sell', only check min price,
+        if (side === "BUY" && price.gt(maxPriceNumber)) {
           errors.order_price = {
             type: "max",
             message: `price must be less than ${new Decimal(
               maxPriceNumber
+            ).todp(symbol.quote_dp)}`,
+          };
+        } else if (side === "SELL" && price.lt(minPriceNumber)) {
+          errors.order_price = {
+            type: "min",
+            message: `price must be greater than ${new Decimal(
+              minPriceNumber
             ).todp(symbol.quote_dp)}`,
           };
         }

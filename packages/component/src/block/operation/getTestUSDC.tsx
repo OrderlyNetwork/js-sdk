@@ -62,6 +62,7 @@ export const GetTestUSDC = () => {
               },
             });
           } else {
+            res.message && toast.error(res.message);
             return Promise.reject(res);
           }
         },

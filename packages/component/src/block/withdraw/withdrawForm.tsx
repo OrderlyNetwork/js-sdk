@@ -27,6 +27,7 @@ export interface WithdrawProps {
   maxAmount: number;
   availableBalance: number;
   unsettledPnL: number;
+  hasPositions: boolean;
   // fee:number
   switchChain: (options: { chainId: string }) => Promise<any>;
   onWithdraw: (inputs: {
@@ -51,6 +52,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   minAmount,
   availableBalance,
   unsettledPnL,
+  hasPositions,
   maxAmount,
   onWithdraw,
   onOk,
@@ -196,7 +198,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         hintMessage={hintMessage}
         markPrice={1}
       />
-      <UnsettledInfo unsettledPnL={unsettledPnL} />
+      <UnsettledInfo unsettledPnL={unsettledPnL} hasPositions={hasPositions} />
       <Divider className={"py-3"}>
         <MoveDownIcon className={"text-primary-light"} />
       </Divider>

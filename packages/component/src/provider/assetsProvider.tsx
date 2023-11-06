@@ -102,7 +102,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
       switch (status) {
         case "COMPLETED":
-          toast.success("Settlement success");
+          toast.success("Settlement completed");
           break;
         case "FAILED":
           toast.error("Settlement failed");
