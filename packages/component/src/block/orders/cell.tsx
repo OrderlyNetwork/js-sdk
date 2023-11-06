@@ -36,7 +36,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
   }, [loading, order]);
 
   const onSymbol = () => {
-    props.onSymbolChange?.(order.symbol);
+    props.onSymbolChange?.({ symbol: order.symbol } as API.Symbol);
     // go to the top of page
     window.scrollTo(0, 0);
   };

@@ -33,7 +33,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
   }, [item]);
 
   const onSymbol = () => {
-    props.onSymbolChange?.(item.symbol);
+    props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
     // go to the top of page
     window.scrollTo(0, 0);
   };

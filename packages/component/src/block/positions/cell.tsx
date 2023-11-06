@@ -19,7 +19,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
 
   const onSymbol = () => {
-    props.onSymbolChange?.(item.symbol);
+    props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
     // go to the top of page
     window.scrollTo(0, 0);
   };
