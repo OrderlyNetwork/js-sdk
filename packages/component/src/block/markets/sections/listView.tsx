@@ -19,7 +19,7 @@ const sortFunc = {
   vol:
     (direction: SortDirection) =>
     (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
-      return direction === SortDirection.ASC
+      return direction === SortDirection.DESC
         ? a["24h_volumn"] - b["24h_volumn"]
         : b["24h_volumn"] - a["24h_volumn"];
     },
