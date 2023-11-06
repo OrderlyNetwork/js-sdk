@@ -151,6 +151,8 @@ export const useOrderEntry = (
   const validator = (values: any) => {
     const creator = OrderFactory.create(values.order_type);
 
+    // WARNING: 临时处理方案，这里values的状态更新不及时，点击Sell的时候他还是Buy
+    values["side"] = side;
     return creator?.validate(values, {
       symbol: symbolInfo[symbol](),
       // token: tokenInfo[symbol](),
