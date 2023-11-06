@@ -51,8 +51,8 @@ export default class DataFeed implements IBasicDataFeed {
           ...lastBar,
           close: data.close,
           // open: lastBar.open,
-          high: Math.max(lastBar.high, data.close),
-          low: Math.min(lastBar.low, data.close),
+          // high: Math.max(lastBar.high, data.close),
+          // low: Math.min(lastBar.low, data.close),
           // volume: data.volume,
         };
 
