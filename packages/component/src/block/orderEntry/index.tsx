@@ -82,6 +82,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const { calculate, validator } = helper;
 
     const totalInputFocused = useRef<boolean>(false);
+    const isClickForm = useRef(false);
 
     const [needConfirm, setNeedConfirm] = useLocalStorage(
       "orderly_order_confirm",
@@ -279,9 +280,30 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       methods.getValues("order_quantity"),
     ]);
 
+    useEffect(() => {
+      function handleClick() {
+        // 当用户点击表单区域外面的时候，取消error提示
+        if (!isClickForm.current) {
+          methods.clearErrors();
+        }
+        isClickForm.current = false;
+      }
+
+      document.body.addEventListener("click", handleClick);
+
+      return () => {
+        document.body.removeEventListener("click", handleClick);
+      };
+    }, []);
+
     return (
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          onClick={() => {
+            isClickForm.current = true;
+          }}
+        >
           <div className="flex flex-col gap-3">
             <SegmentedButton
               buttons={[
