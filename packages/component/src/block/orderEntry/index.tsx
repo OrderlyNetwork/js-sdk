@@ -223,7 +223,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       } else {
         setButtonText("Sell / Short");
       }
-
+      methods.setValue("side", side);
       methods.clearErrors();
     }, [side]);
 
