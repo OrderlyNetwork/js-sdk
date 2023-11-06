@@ -88,6 +88,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
+    console.log("xxxxxxxxxx index.tsx order ", side);
+
     const methods = useForm({
       // mode: "onChange",
       reValidateMode: "onChange",
