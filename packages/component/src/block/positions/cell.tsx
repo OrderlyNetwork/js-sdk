@@ -2,9 +2,10 @@ import Button from "@/button";
 import { Coin, NetworkImage } from "@/icon";
 import { Statistic } from "@/statistic";
 import { FC, useContext } from "react";
-import { Text } from "@/text";
+import { Numeral, Text } from "@/text";
 import { SymbolContext } from "@/provider";
 import { API } from "@orderly.network/types";
+import { cn } from "@/utils/css";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
@@ -41,7 +42,23 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               <span>(USDC)</span>
             </>
           }
-          value={item["unrealized_pnl"]}
+          value={
+            <div
+              className={cn(
+                "flex justify-end",
+                item["unrealized_pnl"] > 0
+                  ? "text-trade-profit"
+                  : item["unrealized_pnl"] < 0
+                  ? "text-trade-loss"
+                  : "text-base-contrast/50"
+              )}
+            >
+              <Numeral>{item["unrealized_pnl"]}</Numeral>
+              <Numeral rule="percentages" prefix="(" surfix=")">
+                {item.unsettled_pnl_ROI}
+              </Numeral>
+            </div>
+          }
           rule="price"
           coloring
           align="right"

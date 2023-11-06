@@ -30,7 +30,7 @@ export const usePositionStream = (
 ) => {
   const symbolInfo = useSymbolsInfo();
 
-  const ee = useEventEmitter();
+  // const ee = useEventEmitter();
 
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
@@ -90,6 +90,7 @@ export const usePositionStream = (
         markPrices
       ) as unknown as number;
 
+      const info = symbolInfo?.[item.symbol];
       //
 
       const notional = positions.notional(item.position_qty, price);
@@ -98,6 +99,22 @@ export const usePositionStream = (
         qty: item.position_qty,
         openPrice: item.average_open_price,
         markPrice: price,
+      });
+
+      const imr = account.IMR({
+        maxLeverage: accountInfo.max_leverage,
+        baseIMR: info("base_imr"),
+        IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
+        positionNotional: notional,
+        ordersNotional: 0,
+        IMR_factor_power: 4 / 5,
+      });
+
+      const unrealPnlROI = positions.unrealizedPnLROI({
+        positionQty: item.position_qty,
+        openPrice: item.average_open_price,
+        IMR: imr,
+        unrealizedPnL: unrealPnl,
       });
 
       const unsettlementPnL = positions.unsettlementPnL({
@@ -122,6 +139,7 @@ export const usePositionStream = (
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
+        unsettled_pnl_ROI: unrealPnlROI,
       };
     });
 

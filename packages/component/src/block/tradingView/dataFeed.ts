@@ -45,12 +45,15 @@ export default class DataFeed implements IBasicDataFeed {
         // console.log(lastBar.high, lastBar.low, data.symbol, data.close);
 
         const newBar = {
-          time: message.ts,
+          // FIXME
+          // time: message.ts,
+          // time: data.time,
+          ...lastBar,
           close: data.close,
-          open: lastBar.open,
+          // open: lastBar.open,
           high: Math.max(lastBar.high, data.close),
           low: Math.min(lastBar.low, data.close),
-          volume: data.volume,
+          // volume: data.volume,
         };
 
         item.handler(newBar);
@@ -211,7 +214,7 @@ export default class DataFeed implements IBasicDataFeed {
 
           // if (data.endTime < Date.now()) return;
           const lastBar = {
-            time: data.endTime,
+            time: data.startTime,
             // time: Date.now(),
             close: data.close,
             open: data.open,

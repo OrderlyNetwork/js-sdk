@@ -41,6 +41,19 @@ export function unrealizedPnL(inputs: UnrealPnLInputs): number {
     .toNumber();
 }
 
+export type UnrealPnLROIInputs = {
+  positionQty: number;
+  openPrice: number;
+  IMR: number;
+  unrealizedPnL: number;
+};
+export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
+  const { positionQty, openPrice, IMR, unrealizedPnL } = inputs;
+  return new Decimal(unrealizedPnL)
+    .div(new Decimal(positionQty).mul(openPrice).mul(IMR))
+    .toNumber();
+}
+
 /**
  * 所有仓位未实现盈亏
  * @param inputs

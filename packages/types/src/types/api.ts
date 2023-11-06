@@ -151,6 +151,7 @@ export declare namespace API {
     settle_price: number;
     average_open_price: number;
     unsettled_pnl: number;
+    unsettled_pnl_ROI: number;
     mark_price: number;
     est_liq_price: number;
     timestamp: number;
