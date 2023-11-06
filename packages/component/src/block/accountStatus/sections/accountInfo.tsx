@@ -59,6 +59,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             },
           });
         }
+        res.message && toast.error(res.message);
         // return Promise.reject(res);
       },
       (error: Error) => {

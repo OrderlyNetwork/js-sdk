@@ -25,19 +25,25 @@ export const MarketProvider = (props: any) => {
       chain_id: account.wallet.chainId.toString(),
       user_address: state.address,
       broker_id: brokerId,
-    }).then((res: any) => {
-      if (res.success) {
-        return modal.confirm({
-          title: "Get test USDC",
-          content:
-            "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
-          onOk: () => {
-            return Promise.resolve();
-          },
-        });
-      }
-      return Promise.reject(res);
-    });
+    })
+      .then((res: any) => {
+        if (res.success) {
+          return modal.confirm({
+            title: "Get test USDC",
+            content:
+              "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+            onOk: () => {
+              return Promise.resolve();
+            },
+          });
+        }
+        res.message && toast.error(res.message);
+        return Promise.reject(res);
+      })
+      .catch((error: Error) => {
+        toast.error(error.message);
+        // res.message && toast.error(res.message);
+      });
   }, [state]);
 
   return (
