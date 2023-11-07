@@ -59,16 +59,16 @@ export const TradeData: FC<Props> = (props) => {
             <Numeral precision={quote_dp}>{ticker?.["24h_low"]}</Numeral>
           </td>
         </tr>
-        {!!ticker?.["open_interest"] && (
-          <tr className="h-[28px]">
+        <tr className="h-[28px]">
             <td className="text-base-contrast/50">Open interest</td>
             <td className="text-right">
-              <Numeral.total
+              { ticker?.["open_interest"] ? (<Numeral.total
               rule="human"
               precision={2}
               price={ticker?.["mark_price"]}
               quantity={ticker?.["open_interest"]}
-            />
+            />) : "--" }
+              
               <Text
                 className="text-base-contrast/50 ml-2"
               >
@@ -76,7 +76,6 @@ export const TradeData: FC<Props> = (props) => {
               </Text>
             </td>
           </tr>
-        )}
       </table>
     </div>
   );
