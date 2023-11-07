@@ -17,8 +17,8 @@ export class MemoryConfigStore implements ConfigStore {
   protected _restore() {
     this.map = new Map<string, any>([
       // PROD
-      // ["apiBaseUrl", "https://dex-iap-evm.woo.org/api"],
-      ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
+      ["apiBaseUrl", "https://api-evm.orderly.org"],
+      // ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
       // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
       // PROD

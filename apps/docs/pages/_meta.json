@@ -1,10 +1,15 @@
 {
-    "index": {
-      "title": "Home",
+
+    "docs": {
+      "title": "Documntation",
       "type": "page"
     },
-    "frameworks": {
-      "title": "Frameworks",
+    "components": {
+      "title": "Components",
+      "type": "page"
+    },
+    "theme": {
+      "title": "Theme",
       "type": "page"
     },
     "dev": {
@@ -18,9 +23,5 @@
         
         
       }
-    },
-    "about": {
-      "title": "About",
-      "type": "page"
     }
   }

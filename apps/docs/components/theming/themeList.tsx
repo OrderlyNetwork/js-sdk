@@ -15,8 +15,10 @@ export const ThemeList = () => {
     <div>
       <h3 className="text-red-400">theme list</h3>
       <div>
-        {themes.data?.map((theme) => (
-          <Link href={`/dev/theming/${theme.id}`}>{theme.name}</Link>
+        {themes.data?.map((theme, index) => (
+          <Link href={`/dev/theming/${theme.id}`} key={index}>
+            {theme.name}
+          </Link>
         ))}
       </div>
     </div>
