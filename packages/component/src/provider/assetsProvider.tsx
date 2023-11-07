@@ -18,12 +18,14 @@ import {
   useWooSwapQuery,
   useEventEmitter,
   useSymbolsInfo,
-  parseExecutionReportToToastMsg,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
-import { capitalizeString, transSymbolformString } from "@orderly.network/utils";
-
+import {
+  capitalizeString,
+  transSymbolformString,
+} from "@orderly.network/utils";
+import { getOrderExecutionReportMsg } from "../block/orders/getOrderExecutionReportMsg";
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
@@ -95,10 +97,9 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
   useSettleSubscription({
     onMessage: (data: any) => {
-
       const { status } = data;
 
-      console.log('settle ws: ', data);
+      console.log("settle ws: ", data);
 
       switch (status) {
         case "COMPLETED":
@@ -117,9 +118,17 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
   useExecutionReport({
     onMessage: (data: any) => {
-      const { title, msg } = parseExecutionReportToToastMsg(data, symbolsInfo);
-      // TODO: show toast info
-      console.log(`parseExecutionReportToToastMsg title:${title} msg:${msg}`);
+      // console.log("useExecutionReport", data);
+      const { title, msg } = getOrderExecutionReportMsg(data, symbolsInfo);
+      if (title && msg) {
+        toast.success(
+          <div>
+            {title}
+            <br />
+            <div className="text-white/[0.54]">{msg}</div>
+          </div>
+        );
+      }
     },
   });
 

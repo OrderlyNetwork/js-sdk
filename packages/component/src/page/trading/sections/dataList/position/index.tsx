@@ -76,8 +76,7 @@ export const PositionPane = () => {
             reduce_only: true,
           })
             .then((res: any) => {
-              //
-              toast.success("success");
+              // toast.success("success");
             })
             .catch((err: Error) => {
               //

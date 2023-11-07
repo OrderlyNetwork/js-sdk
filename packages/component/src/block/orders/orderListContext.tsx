@@ -26,7 +26,7 @@ export const OrderListProvider: FC<
 
   const onCancelOrder = useCallback(async (order: API.Order) => {
     return cancelOrder(order.order_id, order.symbol).then(() => {
-      toast.success("Order canceled successfully");
+      // toast.success("Order canceled successfully");
     });
   }, []);
 
