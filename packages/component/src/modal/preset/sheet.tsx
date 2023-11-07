@@ -12,7 +12,11 @@ const SimpleSheet = create<SheetProps>((props) => {
   const { visible, hide, resolve, onOpenChange } = useModal();
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
-      <SheetContent>
+      <SheetContent
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+        }}
+      >
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
