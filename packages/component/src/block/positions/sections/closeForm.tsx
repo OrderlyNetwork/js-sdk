@@ -102,7 +102,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
             (res: any) => {
               //
               if (res.success) {
-                toast.success("successfully");
+                // toast.success("successfully");
               }
               props.onClose(res);
             },

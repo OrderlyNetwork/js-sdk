@@ -154,35 +154,30 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               return Promise.resolve(true);
             }
           })
-          .then(
-            (isOk) => {
-              return props
-                .onSubmit?.({
-                  ...data,
-                  side: props.side,
-                  symbol: props.symbol,
-                })
-                .then(
-                  (res) => {
-                    if (res.success) {
-                      methods.reset({
-                        order_type: data.order_type,
-                        order_price: "",
-                        order_quantity: "",
-                        total: "",
-                      });
-                      toast.success("Successfully!");
-                    }
-
-                    // resetForm?.();
-                  },
-                  (error: Error) => {
-                    toast.error(error.message);
-                  }
-                );
-            },
-            (err) => {}
-          );
+          .then((isOk) => {
+            return props
+              .onSubmit?.({
+                ...data,
+                side: props.side,
+                symbol: props.symbol,
+              })
+              .then((res) => {
+                if (res.success) {
+                  methods.reset({
+                    order_type: data.order_type,
+                    order_price: "",
+                    order_quantity: "",
+                    total: "",
+                  });
+                  // 成功后改为通过ws的状态toast
+                  // toast.success("Successfully!");
+                }
+                // resetForm?.();
+              });
+          })
+          .catch((error) => {
+            toast.error(error.message || "Failed");
+          });
 
         // return modal
         //   .confirm({
