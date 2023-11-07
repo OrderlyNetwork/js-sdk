@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.66
+
+### Patch Changes
+
+- update
+
 ## 1.0.65
 
 ### Patch Changes

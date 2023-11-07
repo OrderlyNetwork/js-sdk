@@ -1,5 +1,15 @@
 # @orderly.network/components
 
+## 0.0.84
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/net@1.0.79
+  - @orderly.network/types@0.0.79
+  - @orderly.network/utils@0.0.67
+
 ## 0.0.83
 
 ### Patch Changes
