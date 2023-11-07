@@ -37,10 +37,21 @@ export const Default: Story = {
       toast.error("Quantity should be less or equal to your max buy.");
     };
 
+    const showSubTitle = () => {
+      toast.success(
+        <div>
+          Order opened
+          <br />
+          <div className="text-white/[0.54]">Sell ETH-PERP 0.7368</div>
+        </div>
+      );
+    };
+
     return (
       <div className={"flex gap-3"}>
         <button onClick={showSuccess}>show success</button>
         <button onClick={showError}>show error</button>
+        <button onClick={showSubTitle}>show subTitle</button>
       </div>
     );
   },
