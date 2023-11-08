@@ -40,7 +40,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="flex justify-between bg-base-200 px-4 py-3">
+      <div className="flex justify-between bg-base-700 px-4 py-3">
         <Statistic
           label="Unreal. PnL"
           value={aggregated?.unrealPnL}

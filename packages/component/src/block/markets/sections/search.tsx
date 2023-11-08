@@ -26,11 +26,9 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       placeholder={"Search instrument"}
       onClean={onClean}
       value={props.value}
-      // className="bg-base-100"
       onChange={(event) => {
         props.onChange?.(event.target.value);
       }}
-      // className="bg-base-100"
       prefix={
         <InputMask>
           <Search size={16} />

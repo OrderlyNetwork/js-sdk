@@ -94,7 +94,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         Signing is free.
       </div>
 
-      <Paper className="bg-base-100">
+      <Paper className="bg-base-300">
         <ListTile
           avatar={
             <StepItem

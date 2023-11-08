@@ -18,7 +18,7 @@ const SlippageItem = ({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "rounded h-[40px] flex items-center justify-center bg-base-300 text-base-contrast/80",
+        "rounded h-[40px] flex items-center justify-center bg-base-100 text-base-contrast/80",
         isActive && "bg-primary-light text-base-contrast"
       )}
     >
@@ -103,7 +103,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
           <input
             type="text"
             inputMode="decimal"
-            className="bg-base-300 w-0 rounded flex-1 h-full text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="bg-base-100 w-0 rounded flex-1 h-full text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
             value={customValue}
             // onChange={(e) => setCustomValue(e.target.value)}
             onChange={onValueChange}

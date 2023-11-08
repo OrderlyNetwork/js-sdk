@@ -50,6 +50,10 @@ module.exports = {
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
           300: "rgb(var(--orderly-color-base-300) / <alpha-value>)",
           400: "rgb(var(--orderly-color-base-400) / <alpha-value>)",
+          500: "rgb(var(--orderly-color-base-500) / <alpha-value>)",
+          600: "rgb(var(--orderly-color-base-600) / <alpha-value>)",
+          700: "rgb(var(--orderly-color-base-700) / <alpha-value>)",
+          800: "rgb(var(--orderly-color-base-800) / <alpha-value>)",
           contrast: "rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
         },
         danger: {
@@ -124,8 +128,8 @@ module.exports = {
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
-        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
       });
     }),
   ],

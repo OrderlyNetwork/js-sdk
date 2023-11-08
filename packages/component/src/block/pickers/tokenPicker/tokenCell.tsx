@@ -34,7 +34,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
 
   return (
     <div
-      className="flex cursor-pointer hover:bg-base-100"
+      className="flex cursor-pointer hover:bg-base-800"
       onClick={() => {
         props.onItemClick(token);
       }}

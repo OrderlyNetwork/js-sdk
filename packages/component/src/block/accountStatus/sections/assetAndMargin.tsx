@@ -248,7 +248,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
       </div>
       <Divider className="py-4" />
-      <Paper className="bg-base-100">
+      <Paper className="bg-base-800">
         <div className="flex justify-between text-sm text-base-contrast/50">
           <span>Instrument</span>
           <span>Available balance</span>

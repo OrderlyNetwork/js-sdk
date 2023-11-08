@@ -22,7 +22,7 @@ export const StepItem: FC<PropsWithChildren<StepItemProps>> = (props) => {
   return (
     <div
       className={cn(
-        "flex items-center justify-center w-[32px] h-[32px] bg-base-300 rounded-full",
+        "flex items-center justify-center w-[32px] h-[32px] bg-base-100 rounded-full",
         props.active && "bg-primary",
         props.isLoading && "bg-white/10 border border-primary",
         props.isCompleted && "bg-white/10 border border-primary text-primary"

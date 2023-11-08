@@ -406,7 +406,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     value={isMarketOrder ? "Market" : field.value}
                     className={"text-right"}
                     containerClassName={
-                      isMarketOrder ? "bg-base-300" : undefined
+                      isMarketOrder ? "bg-base-100" : undefined
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {

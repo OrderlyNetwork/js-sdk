@@ -66,7 +66,7 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   return (
     <div
       className={cn(
-        "py-3 flex gap-3 hover:bg-base-200 active:bg-base-300",
+        "py-3 flex gap-3 hover:bg-base-200 active:bg-base-100",
         props.className,
         props.disabled && "opacity-60 cursor-not-allowed"
       )}

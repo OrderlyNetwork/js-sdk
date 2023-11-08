@@ -47,7 +47,7 @@ export const BottomNavBar = () => {
       {errors.ChainNetworkNotSupport && (
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
-      <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
+      <div className="fixed left-0 bottom-0 w-screen bg-base-800 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
         <AccountStatusBar
           chains={[]}
           status={state.status}

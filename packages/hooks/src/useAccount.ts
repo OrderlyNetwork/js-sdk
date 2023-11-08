@@ -89,6 +89,8 @@ export const useAccount = (): {
   //   return onSetChain?.(chainId);
   // };
 
+  // console.log("--------", state);
+
   return {
     // account: state!,
     account,

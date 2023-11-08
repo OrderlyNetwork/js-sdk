@@ -37,7 +37,7 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
   return (
     <>
       <div className="py-[24px]">
-        <div className="bg-base-300 rounded py-3 px-5">
+        <div className="bg-base-100 rounded py-3 px-5">
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}

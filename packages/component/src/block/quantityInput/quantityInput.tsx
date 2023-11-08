@@ -49,7 +49,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     <>
       <div
         className={cn(
-          "bg-fill dark:bg-base-300 rounded pl-1 pr-2 py-2 focus-within:bg-fill focus-within:outline focus-within:outline-1 outline-primary",
+          "bg-fill dark:bg-base-100 rounded pl-1 pr-2 py-2 focus-within:bg-fill focus-within:outline focus-within:outline-1 outline-primary",
           props.className,
           {
             "outline outline-1 outline-danger": props.status === "error",
