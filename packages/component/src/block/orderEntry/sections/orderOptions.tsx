@@ -26,14 +26,25 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
   const [open, setOpen] = useState<boolean>(false);
   const { control, getValues, setValue } = useFormContext();
 
-  const showReduceOnlyHint = (reduceOnly: boolean) => {
+  const showReduceOnlyHint = () => {
     modal.alert({
-      title: reduceOnly ? "Reduce only" : "Hidden",
+      title: "Reduce only",
       message: (
         <span className="text-sm text-base-contrast/60">
-          {reduceOnly
-            ? "Reduce only ensures that you can only reduce or close a current position so that your position size will not be increased unintentionally."
-            : "Hidden order is a limit order that does not appear in the orderbook."}
+          Reduce only ensures that you can only reduce or close a current
+          position so that your position size will not be increased
+          unintentionally.
+        </span>
+      ),
+    });
+  };
+
+  const showHiddenHint = () => {
+    modal.alert({
+      title: "Hidden",
+      message: (
+        <span className="text-sm text-base-contrast/60">
+          Hidden order is a limit order that does not appear in the orderbook.
         </span>
       ),
     });
@@ -57,10 +68,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     field.onChange(checked)
                   }
                 />
-                {/* 移除htmlFor="reduceOnly", 点击标签不触发Switch开关的变化 */}
+                {/* 移除htmlFor="reduceOnly", 点击标签文字不触发Switch开关的变化 */}
                 <Label
                   onClick={() => {
-                    showReduceOnlyHint(field.value);
+                    showReduceOnlyHint();
                   }}
                 >
                   Reduce only
@@ -144,7 +155,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(checked ? 0 : 1);
                         }}
                       />
-                      <Label htmlFor="hidden">Hidden</Label>
+                      <Label onClick={showHiddenHint}>Hidden</Label>
                     </div>
                   );
                 }}

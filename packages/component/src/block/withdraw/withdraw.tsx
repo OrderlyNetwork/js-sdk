@@ -45,10 +45,10 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
 
   const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
   const context = useContext(TradingPageContext);
-  const symbol  = context.symbol;
-  const [data, info, { loading }] = usePositionStream(symbol);
-  const hasPositions = data.rows.length > 0;
-  
+  const symbol = context.symbol;
+  const [data] = usePositionStream(symbol);
+  const hasPositions = data?.rows?.length > 0;
+
   return (
     <WithdrawForm
       address={wallet?.accounts?.[0].address}

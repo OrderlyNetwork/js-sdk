@@ -30,8 +30,8 @@ export class MemoryConfigStore implements ConfigStore {
     const networkId = init?.networkId || "mainnet";
     this.map = new Map<ConfigKey, any>([
       // PROD
-      ["apiBaseUrl", "https://api-evm.orderly.org"],
-      // ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
+      // ["apiBaseUrl", "https://api-evm.orderly.org"],
+      ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
       // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
       // PROD

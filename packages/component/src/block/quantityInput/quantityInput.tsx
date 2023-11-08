@@ -85,13 +85,15 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               size={"small"}
               className={"font-semibold text-primary-light px-2 min-w-[40px]"}
               disabled={!props.maxAmount}
-              onClick={() => {
+              onClick={(event) => {
                 props?.onValueChange?.({
                   value: parseNumber(props.maxAmount ?? 0, {
                     precision: props.token?.woofi_dex_precision,
                   }),
                   token: props.token?.symbol ?? "",
                 });
+                event.preventDefault();
+                event.stopPropagation();
               }}
             >
               MAX
