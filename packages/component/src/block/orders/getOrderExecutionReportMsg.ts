@@ -20,7 +20,7 @@ export function getOrderExecutionReportMsg(data: any, symbolsInfo: any) {
   switch (status) {
     case "NEW":
       title = "Order opened";
-      msg = `Order opened ${displaySide} ${displaySymbol} ${displayQuantity}`;
+      msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "FILLED":
     case "PARTIAL_FILLED":
@@ -29,15 +29,15 @@ export function getOrderExecutionReportMsg(data: any, symbolsInfo: any) {
           ? totalExecutedQuantity
           : parseNumber(totalExecutedQuantity, { precision: base_dp });
       title = "Order filled";
-      msg = `Order filled ${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
+      msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
     case "CANCELLED":
       title = "Order cancelled";
-      msg = `Order cancelled ${displaySide} ${displaySymbol} ${displayQuantity}`;
+      msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "REJECTED":
       title = "Order rejected";
-      msg = `Order rejected ${displaySide} ${displaySymbol} ${displayQuantity}`;
+      msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "REPLACED":
       title = "Order edited";

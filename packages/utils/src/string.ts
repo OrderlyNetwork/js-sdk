@@ -20,6 +20,6 @@ export function transSymbolformString(input: string): string {
         throw new Error('Invalid string format');
     }
 
-    const result = `${second}_${first}`;
+    const result = `${second}-${first}`;
     return result;
 }
