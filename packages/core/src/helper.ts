@@ -1,4 +1,4 @@
-import { MemoryConfigStore } from "./configStore";
+import { MemoryConfigStore } from "./configStore/configStore";
 import { definedTypes } from "./constants";
 
 import { LocalStorageStore, MockKeyStore } from "./keyStore";

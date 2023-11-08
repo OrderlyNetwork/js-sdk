@@ -1,4 +1,4 @@
-import { ConfigStore } from "./configStore";
+import { ConfigStore } from "./configStore/configStore";
 import {
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,

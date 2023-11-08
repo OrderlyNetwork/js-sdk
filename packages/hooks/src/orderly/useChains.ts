@@ -5,6 +5,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { mergeDeepRight, prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
+import { useConfig } from "../useConfig";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -18,7 +19,9 @@ export const useChains = (
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { filter, pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore, networkId: envNetworkId } = useContext(OrderlyContext);
+  const { configStore } = useContext(OrderlyContext);
+
+  // const envNetworkId = useConfig("networkId");
 
   const field = options?.pick;
 

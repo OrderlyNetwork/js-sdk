@@ -1,21 +1,34 @@
-export type ConfigKey = "apiBaseUrl" | "klineDataUrl";
+export type ConfigKey =
+  | "apiBaseUrl"
+  | "klineDataUrl"
+  | "privateWsUrl"
+  | "publicWsUrl"
+  | "operatorUrl"
+  | "swapSupportApiUrl"
+  | "domain"
+  | "brokerId"
+  | "networkId"
+  | "env"
+  | "PROD_URL";
 
 export interface ConfigStore {
-  get<T>(key: string): T;
-  getOr<T>(key: string, defaultValue: T): T;
-  set<T>(key: string, value: T): void;
+  get<T>(key: ConfigKey): T;
+  getOr<T>(key: ConfigKey, defaultValue: T): T;
+  set<T>(key: ConfigKey, value: T): void;
   clear(): void;
 }
 
 export class MemoryConfigStore implements ConfigStore {
-  protected map!: Map<string, any>;
+  protected map!: Map<ConfigKey, any>;
 
-  constructor() {
-    this._restore();
+  constructor(init?: any) {
+    this._restore(init);
   }
 
-  protected _restore() {
-    this.map = new Map<string, any>([
+  protected _restore(init?: Record<ConfigKey, any>) {
+    const brokerId = init?.brokerId || "woofi_pro";
+    const networkId = init?.networkId || "mainnet";
+    this.map = new Map<ConfigKey, any>([
       // PROD
       ["apiBaseUrl", "https://api-evm.orderly.org"],
       // ["apiBaseUrl", "https://testnet-api-evm.orderly.org"],
@@ -41,22 +54,23 @@ export class MemoryConfigStore implements ConfigStore {
           dexTestnet: "https://testnet-dex.woo.org",
         },
       ],
-      ["brokerId", "woofi_pro"],
-      ["onlyTestnet", false],
+      ["brokerId", brokerId],
+      // ["onlyTestnet", false],
       ["env", "dev-evm"],
+      ["networkId", networkId],
       ["PROD_URL", ["dex-iap-evm.woo.org", "dex-evm.woo.org"]],
     ]);
   }
 
-  get<T>(key: string): T {
+  get<T>(key: ConfigKey): T {
     return this.map.get(key);
   }
 
-  getOr<T>(key: string, defaultValue: T): T {
+  getOr<T>(key: ConfigKey, defaultValue: T): T {
     return this.map.get(key) ?? defaultValue;
   }
 
-  set<T>(key: string, value: T): void {
+  set<T>(key: ConfigKey, value: T): void {
     this.map.set(key, value);
   }
 
@@ -73,10 +87,10 @@ export class BaseConfigStore extends MemoryConfigStore {
     super();
   }
 
-  protected _restore() {
-    const arr = Object.entries(this.configMap);
-    this.map = new Map(arr);
-  }
+  // protected _restore() {
+  //   const arr = Object.entries(this.configMap);
+  //   this.map = new Map(arr);
+  // }
 }
 
 // export class DefaultJsonConfigStore extends BaseConfigStore {

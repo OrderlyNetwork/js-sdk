@@ -12,6 +12,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { Chains } from "./sections/chains";
+import { OrderlyAppContext } from "@/provider";
 
 export type AccountStatus =
   | "NotConnected"
@@ -40,7 +41,7 @@ interface AccountStatusProps {
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
-  const { logoUrl, errors } = useContext(OrderlyContext);
+  const { logoUrl, errors } = useContext(OrderlyAppContext);
 
   const [infoOpen, setInfoOpen] = useState(false);
 

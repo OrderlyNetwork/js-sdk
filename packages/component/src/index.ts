@@ -3,6 +3,7 @@ export {
   OrderlyProvider,
   OnboardConnectorProvider,
   WalletConnectorContext,
+  OrderlyAppProvider,
 } from "./provider";
 
 export { default as Button } from "./button";

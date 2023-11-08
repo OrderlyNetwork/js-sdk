@@ -5,7 +5,11 @@ import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
-import { OrderlyContext, useLocalStorage } from "@orderly.network/hooks";
+import {
+  OrderlyContext,
+  useLocalStorage,
+  useConfig,
+} from "@orderly.network/hooks";
 import { SymbolProvider } from "@/provider";
 import { cn } from "@/utils/css";
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/tabs";
@@ -18,7 +22,7 @@ interface ChartViewProps {
 export const ChartView: FC<ChartViewProps> = (props) => {
   const { symbol, tradingViewConfig } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
-  const { klineDataUrl } = useContext(OrderlyContext);
+  const apiBaseUrl = useConfig("apiBaseUrl");
   const [collapsed, setCollapsed] = useLocalStorage(
     "orderly:chart:collapsed",
     true
@@ -60,7 +64,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
             theme={"dark"}
             symbol={symbol}
             autosize={false}
-            apiBaseUrl={klineDataUrl}
+            apiBaseUrl={apiBaseUrl}
             {...tradingViewConfig}
           />
         </TabPane>

@@ -1,5 +1,5 @@
 import { Account } from "../src/account";
-import { memoryConfigStoreInstance } from "../src/configStore";
+import { memoryConfigStoreInstance } from "../src/configStore/configStore";
 import { SimpleWallet } from "../src/wallet";
 
 test("Account Class", () => {

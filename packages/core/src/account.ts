@@ -1,6 +1,6 @@
 import { BaseSigner, MessageFactor } from "./signer";
 
-import { ConfigStore } from "./configStore";
+import { ConfigStore } from "./configStore/configStore";
 import { OrderlyKeyStore } from "./keyStore";
 import { IWalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
 import { Signer } from "./signer";
@@ -63,6 +63,8 @@ export class Account {
     leverage: Number.NaN,
   };
 
+  private readonly contractManger;
+
   // private contract: IContract;
 
   walletClient?: IWalletAdapter;
@@ -72,13 +74,11 @@ export class Account {
   constructor(
     private readonly configStore: ConfigStore,
     private readonly keyStore: OrderlyKeyStore,
-    // wallet?: WalletAdapter
-    private readonly contractManger: IContract,
     private readonly getWalletAdapter: getWalletAdapterFunc // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
   ) {
-    // this.contract = new BaseContract(configStore);
+    this.contractManger = new BaseContract(configStore);
 
-    this.assetsManager = new Assets(configStore, contractManger, this);
+    this.assetsManager = new Assets(configStore, this.contractManger, this);
 
     this._bindEvents();
   }

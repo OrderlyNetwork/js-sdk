@@ -16,6 +16,7 @@ import { isNativeTokenChecker, woofiDexCrossChainRouterAbi } from "./constants";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { useWalletSubscription } from "../orderly/useWalletSubscription";
 import { useEventEmitter } from "../useEventEmitter";
+import { useConfig } from "../useConfig";
 
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
@@ -41,7 +42,8 @@ export const useCrossSwap = () => {
   const txHashFromBridge = useRef<string | undefined>();
 
   const account = useAccountInstance();
-  const { networkId, configStore } = useContext(OrderlyContext);
+  const { configStore } = useContext(OrderlyContext);
+  const networkId = useConfig("networkId");
 
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();

@@ -1,4 +1,12 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { QuantityInput } from "@/block/quantityInput";
 import { WalletPicker } from "../pickers/walletPicker";
@@ -28,6 +36,7 @@ import { SwapDialog } from "../swap/swapDialog";
 import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 import { NumberReg } from "@/utils/num";
+import { OrderlyAppContext } from "@/provider";
 
 export interface DepositFormProps {
   // decimals: number;
@@ -96,7 +105,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors } = useAppState();
+  const { errors } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();

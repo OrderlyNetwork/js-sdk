@@ -27,6 +27,9 @@ export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
 
 export * from "./orderlyContext";
+export type { ConfigProviderProps } from "./configProvider";
+export { OrderlyConfigProvider } from "./configProvider";
+
 export * from "./orderly/orderlyHooks";
 
 import useSWR, { type SWRConfiguration, SWRConfig } from "swr";

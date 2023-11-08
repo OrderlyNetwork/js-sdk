@@ -5,6 +5,7 @@ import useSWR, { SWRResponse } from "swr";
 import { OrderlyContext } from "./orderlyContext";
 
 import { fetcher, useQueryOptions } from "./utils/fetcher";
+import { useConfig } from "./useConfig";
 
 /**
  * useQuery
@@ -16,7 +17,7 @@ export const useQuery = <T>(
   query: Parameters<typeof useSWR>["0"],
   options?: useQueryOptions<T>
 ): SWRResponse<T> => {
-  const { apiBaseUrl } = useContext(OrderlyContext);
+  const apiBaseUrl = useConfig("apiBaseUrl");
   const { formatter, ...swrOptions } = options || {};
   // check the query is public api
   // if (typeof query === "string" && !query.startsWith("/v1/public")) {
@@ -24,7 +25,7 @@ export const useQuery = <T>(
   // }
 
   if (typeof apiBaseUrl === "undefined") {
-    throw new Error("please add OrderlyProvider to your app");
+    throw new Error("please add OrderlyConfigProvider to your app");
   }
 
   // @ts-ignore

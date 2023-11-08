@@ -6,7 +6,7 @@ import {
   init,
   useConnectWallet,
 } from "@web3-onboard/react";
-import { OnboardConnectorProvider, OrderlyProvider } from "../src";
+import { OnboardConnectorProvider, OrderlyProvider,OrderlyAppProvider } from "../src";
 import {
   BaseContractManager,
   EtherAdapter,
@@ -120,20 +120,18 @@ const preview = {
   },
   decorators: [
     (Story) => {
-      const configStore = new MemoryConfigStore();
-      const contractManager = new BaseContractManager(configStore);
+     
       return (
         <OnboardConnectorProvider>
-          <OrderlyProvider
+          <OrderlyAppProvider
             networkId="mainnet"
-            configStore={configStore}
-            getWalletAdapter={(options) => new EtherAdapter(options)}
-            contractManager={contractManager}
-            keyStore={new LocalStorageStore("mainnet")}
+            brokerId="woofi_pro"
+            onlyTestnet={false}
+       
             logoUrl="/woo_fi_logo.svg"
           >
             <Story />
-          </OrderlyProvider>
+          </OrderlyAppProvider>
         </OnboardConnectorProvider>
       );
     },

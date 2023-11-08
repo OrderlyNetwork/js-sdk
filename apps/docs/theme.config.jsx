@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 export default {
     logo: <div className="flex">
       <img src="/images/orderly.log.png" width={40}/>
@@ -15,6 +17,13 @@ export default {
     },
     primaryHue:{
       light: 293,
+    },
+    navbar:{
+      extraContent: ()=>{
+        const [count ,setCount] = useState(0)
+        return <div className="flex items-center space-x-4" onClick={()=>setCount(count=>count+1)}>{`Connnect Wallet(${count})`}</div>
+      }
     }
+  
     // ...
   }

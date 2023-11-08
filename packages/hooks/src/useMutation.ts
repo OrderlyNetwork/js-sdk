@@ -9,6 +9,7 @@ import { OrderlyContext } from "./orderlyContext";
 import { useContext } from "react";
 // import { SimpleDI, Account } from "@orderly.network/core";
 import { useAccountInstance } from "./useAccountInstance";
+import { useConfig } from "./useConfig";
 
 type HTTP_METHOD = "POST" | "PUT" | "DELETE";
 
@@ -52,7 +53,9 @@ export const useMutation = <T, E>(
   method: HTTP_METHOD = "POST",
   options?: SWRMutationConfiguration<T, E>
 ): [any, any] => {
-  const { apiBaseUrl } = useContext(OrderlyContext);
+  // const { apiBaseUrl } = useContext(OrderlyContext);
+  const apiBaseUrl = useConfig("apiBaseUrl");
+
   let fullUrl = url;
   if (!url.startsWith("http")) {
     fullUrl = `${apiBaseUrl}${url}`;
