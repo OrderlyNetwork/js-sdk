@@ -307,18 +307,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
+                    "bg-success-light text-base-contrast after:bg-success-light",
                   disabledClassName:
-                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
+                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
+                    "bg-danger-light text-base-contrast after:bg-danger-light",
                   disabledClassName:
-                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
+                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
                 },
               ]}
               onChange={(value) => {
