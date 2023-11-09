@@ -15,6 +15,17 @@ module.exports = {
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
   // prefix: 'orderly-',
   theme: {
+    fontSize: {
+      xs: '0.6875rem', // 11px
+      sm: '0.875rem', // 14px
+      base: '1rem', // 16px
+      lg: '1.125rem', // 18px
+      xl: '1.25rem', // 20px
+      '2xl': '1.5rem', // 24px
+      '3xl': '1.875rem', // 30px
+      '4xl': '2.25rem', // 36px
+      '5xl': '3rem', // 48px
+    },
     extend: {
       colors: {
         background: {
@@ -25,7 +36,7 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
-darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {
@@ -38,7 +49,7 @@ darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           DEFAULT: "rgb(var(--orderly-color-quaternary) / <alpha-value>)",
         },
 
-                // 用于页面背景色，大块元素背景色
+        // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
@@ -50,11 +61,11 @@ darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           800: "rgb(var(--orderly-color-base-800) / <alpha-value>)",
           contrast: {
             // DEFAULT:"rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
-            DEFAULT: "rgb(var(--orderly-color-base-foreground) / 98)",
-            80: "rgb(var(--orderly-color-base-foreground) / 80)",
-            54: "rgb(var(--orderly-color-base-foreground) / 54)",
-            36: "rgb(var(--orderly-color-base-foreground) / 36)",
-            20: "rgb(var(--orderly-color-base-foreground) / 20)",
+            DEFAULT: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+            80: "rgb(var(--orderly-color-base-foreground) / 0.80)",
+            54: "rgb(var(--orderly-color-base-foreground) / 0.54)",
+            36: "rgb(var(--orderly-color-base-foreground) / 0.36)",
+            20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
           },
 
         },
@@ -134,8 +145,8 @@ darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
-        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
       });
     }),
   ],
