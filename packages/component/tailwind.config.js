@@ -72,12 +72,16 @@ module.exports = {
 
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
+          "light": "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
+          "darken": "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
+          "light": "rgb(var(--orderly-color-success-light) / <alpha-value>)",
+          "darken": "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
