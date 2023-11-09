@@ -158,7 +158,8 @@
     --orderly-color-base-700: 36 32 47;
     --orderly-color-base-800: 29 26 38;
 
-    --orderly-color-base-contract: 255 255 255;
+   
+    --orderly-color-base-foreground: 255 255 255;
 
     --orderly-color-trading-loss: 244 86 171;
     --orderly-color-trading-loss-contrast: 40 46 58;

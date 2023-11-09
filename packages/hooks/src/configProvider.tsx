@@ -30,7 +30,7 @@ export const OrderlyConfigProvider: FC<
   const { configStore, keyStore, getWalletAdapter, brokerId, networkId } =
     props;
 
-  if (!brokerId) {
+  if (!brokerId || typeof configStore === "undefined") {
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
 

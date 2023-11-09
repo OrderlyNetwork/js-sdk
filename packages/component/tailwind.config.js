@@ -25,6 +25,7 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {
@@ -37,13 +38,6 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-quaternary) / <alpha-value>)",
         },
 
-        neutral: {
-          dark: "rgb(var(--orderly-color-neutral-dark) / <alpha-value>)",
-          DEFAULT: "rgb(var(--orderly-color-neutral) / <alpha-value>)",
-          light: "rgb(var(--orderly-color-neutral-light) / <alpha-value>)",
-          contrast:
-            "rgb(var(--orderly-color-neutral-contrast) / <alpha-value>)",
-        },
         // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
@@ -54,8 +48,17 @@ module.exports = {
           600: "rgb(var(--orderly-color-base-600) / <alpha-value>)",
           700: "rgb(var(--orderly-color-base-700) / <alpha-value>)",
           800: "rgb(var(--orderly-color-base-800) / <alpha-value>)",
-          contrast: "rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
+          contrast: {
+            // DEFAULT:"rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
+            DEFAULT: "rgb(var(--orderly-color-base-foreground) / 98)",
+            80: "rgb(var(--orderly-color-base-foreground) / 80)",
+            54: "rgb(var(--orderly-color-base-foreground) / 54)",
+            36: "rgb(var(--orderly-color-base-foreground) / 36)",
+            20: "rgb(var(--orderly-color-base-foreground) / 20)",
+          },
+
         },
+
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
         },
@@ -91,6 +94,7 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: "var(--orderly-rounded)",
+        
       },
       fontSize: {
         headertitle: "20px",

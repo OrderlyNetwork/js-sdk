@@ -3,7 +3,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { FC, HTMLAttributes } from "react";
 
 const spinnerVariants = cva(
-  "text-gray-200 animate-spin dark:text-gray-600 fill-blue-600",
+  "text-gray-200 animate-spin dark:text-gray-600 fill-primary",
   {
     variants: {
       size: {
