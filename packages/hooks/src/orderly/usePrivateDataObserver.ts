@@ -15,39 +15,42 @@ export const usePrivateDataObserver = () => {
   useEffect(() => {
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
-        const key = ["/v1/orders?status=NEW", state.accountId];
-        //
-        //
+        // const key = [
+        //   `/v1/orders?status=${OrderStatus.INCOMPLETE}`,
+        //   state.accountId,
+        // ];
 
-        mutate(key, (orders: any) => {
-          //
-          return Promise.resolve()
-            .then(() => {
-              if (!orders) {
-                return orders;
-              }
-              if (data.status === OrderStatus.NEW) {
-                return [
-                  {
-                    ...data,
-                    // average_executed_price:data.ava
-                    created_time: data.timestamp,
-                    order_id: data.orderId,
-                    // reduce_only
-                  },
-                  ...orders,
-                ];
-              }
-              if (data.status === OrderStatus.CANCELLED) {
-                return orders.filter(
-                  (order: any) => order.order_id !== data.orderId
-                );
-              }
+        // mutate(key, (orders: any) => {
+        //   console.log("privateSubscribe", data, orders);
 
-              return orders;
-            })
-            .catch((error) => {});
-        });
+        //   //
+        //   return Promise.resolve()
+        //     .then(() => {
+        //       if (!orders) {
+        //         return orders;
+        //       }
+        //       if (data.status === OrderStatus.NEW) {
+        //         return [
+        //           {
+        //             ...data,
+        //             // average_executed_price:data.ava
+        //             created_time: data.timestamp,
+        //             order_id: data.orderId,
+        //             // reduce_only
+        //           },
+        //           ...orders,
+        //         ];
+        //       }
+        //       if (data.status === OrderStatus.CANCELLED) {
+        //         return orders.filter(
+        //           (order: any) => order.order_id !== data.orderId
+        //         );
+        //       }
+
+        //       return orders;
+        //     })
+        //     .catch((error) => {});
+        // });
 
         ee.emit("orders:changed");
       },
