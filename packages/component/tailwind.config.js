@@ -25,7 +25,7 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
-          darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
+darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {
@@ -38,7 +38,7 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-quaternary) / <alpha-value>)",
         },
 
-        // 用于页面背景色，大块元素背景色
+                // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
@@ -94,7 +94,9 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: "var(--orderly-rounded)",
-        
+        "lg": "var(--orderly-rounded-lg)",
+        "full": "var(--orderly-rounded-full)",
+        "sm": "var(--orderly-rounded-sm)",
       },
       fontSize: {
         headertitle: "20px",
