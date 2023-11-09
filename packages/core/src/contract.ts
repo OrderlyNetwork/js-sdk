@@ -8,6 +8,10 @@ import {
 import stagingUSDCAbiOnArbitrumTestnet from "./wallet/abis/stagingUSDCAbi.json";
 import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json";
 
+/**
+ * Orderly contracts information
+ * https://wootraders.atlassian.net/wiki/spaces/ORDER/pages/343441906/Orderly+V2+Contract+Information+Board
+ */
 export type OrderlyContracts = {
   usdcAddress: string;
   usdcAbi: any;

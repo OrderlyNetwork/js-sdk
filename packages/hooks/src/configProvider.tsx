@@ -16,6 +16,16 @@ import {
 import useConstant from "use-constant";
 import { NetworkId } from "@orderly.network/types";
 
+type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
+  {
+    [K in U]-?: Required<Pick<T, K>> & Partial<Record<Exclude<U, K>, never>>;
+  }[U];
+
+type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
+  {
+    [K in R]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<R, K>>>;
+  }[R];
+
 export interface ConfigProviderProps {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
@@ -25,7 +35,9 @@ export interface ConfigProviderProps {
 }
 
 export const OrderlyConfigProvider: FC<
-  PropsWithChildren<ConfigProviderProps>
+  PropsWithChildren<
+    RequireAtLeastOne<ConfigProviderProps, "brokerId" | "configStore">
+  >
 > = (props) => {
   const { configStore, keyStore, getWalletAdapter, brokerId, networkId } =
     props;
