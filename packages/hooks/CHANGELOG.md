@@ -1,5 +1,12 @@
 # @orderly.network/hooks
 
+## 0.0.91
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/futures@0.0.85
+
 ## 0.0.90
 
 ### Patch Changes
