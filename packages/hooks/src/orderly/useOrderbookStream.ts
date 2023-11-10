@@ -139,16 +139,68 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
 };
 
 export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
-  const asks = mergeItems(data.asks, update.asks).sort(asksSortFn);
-  const bids = mergeItems(data.bids, update.bids).sort(bidsSortFn);
+  const asks = [...data.asks];
+  const bids = [...data.bids];
 
-  if (asks.length > 0) {
-    const firstPrice = asks[0][0];
-    const index = bids.findIndex((item) => item[0] < firstPrice);
-    if (index > 0) {
-      bids.splice(0, index + 1);
+  update.asks.forEach(element => {
+    for(let index = 0; index < asks.length; index++) {
+      if (element[1] === 0) {
+       
+        // remove 
+        if (element[0] === asks[index][0]) {
+          const removeItem = asks.splice(index, 1);
+          console.log("orderbookupdate asks remove", removeItem[0]);
+          break;
+        }
+
+      } else if (element[0] === asks[index][0]) {
+        // update
+        asks[index] = element;
+        break;
+      } else if (element[0] < asks[index][0]) {
+        // insert
+        asks.splice(index, 0, element);
+        break;
+      }
     }
-  }
+  });
+
+  update.bids.forEach(element => {
+    for(let index = 0; index < bids.length; index++) {
+      if (element[1] === 0) {
+       
+        // remove 
+        if (element[0] === bids[index][0]) {
+          const removeItem = bids.splice(index, 1);
+          console.log("orderbookupdate bids remove", removeItem[0]);
+          break;
+        }
+
+      } else if (element[0] === bids[index][0]) {
+        // update
+        bids[index] = element;
+        break;
+      } else if (element[0] > bids[index][0]) {
+        // insert
+        bids.splice(index, 0, element);
+        break;
+      }
+    }
+  });
+
+  // if (asks.length > 0) {
+  //   const firstPrice = asks[0][0];
+  //   const index = bids.findIndex((item) => item[0] < firstPrice);
+  //   if (index > 0) {
+  //     console.log("进入splice start", index, asks[0], bids[0]);
+  //     bids.splice(0, index + 1);
+  //     console.log("进入splice end", asks[0], bids[0]);
+  //   }
+  // }
+
+
+  console.log("orderbookupdate", update.asks.toString(), update.bids.toString(), " display: ", asks[0], bids[0]);
+
   return {
     asks: asks,
     bids: bids,
@@ -219,9 +271,21 @@ export const useOrderbookStream = (
           if (ignore) return;
           //
           if (!!message) {
-            const reduceOrderbookData = reduceOrderbook(depth, level, message);
-            setRequestData(reduceOrderbookData);
-            setData(reduceOrderbookData);
+
+            // sort and filter qty > 0
+            let bids = message.bids.sort(bidsSortFn);
+            bids = bids.filter((item: number[]) => !isNaN(item[0]));
+            bids = bids.filter((item: number[]) => item[1] > 0);
+            let asks = message.asks.sort(asksSortFn);
+            asks = asks.filter((item: number[]) => !isNaN(item[0]));
+            asks = asks.filter((item: number[]) => item[1] > 0);
+
+            // const reduceOrderbookData = reduceOrderbook(depth, level, {
+            //   bids: bids,
+            //   asks: asks,
+            // });
+            setRequestData({bids: bids, asks: asks});
+            setData({bids: bids, asks: asks});
           }
           setIsLoading(false);
         },
@@ -242,6 +306,7 @@ export const useOrderbookStream = (
 
   useEffect(() => {
     if (!requestData) return;
+    let ignore = false;
 
     const subscription = ws.subscribe(
       {
@@ -251,13 +316,13 @@ export const useOrderbookStream = (
       {
         onMessage: (message: any) => {
           //
-
+      if (ignore) return;
           setData((data) => {
             const mergedData =
               !message.asks && !message.bids
                 ? data
                 : mergeOrderbook(data, message);
-
+            return mergedData;
             const reducedData = reduceOrderbook(depth, level, mergedData);
             return reducedData;
           });
@@ -266,6 +331,7 @@ export const useOrderbookStream = (
     );
 
     return () => {
+      ignore = true;
       subscription?.(); //unsubscribe
     };
   }, [symbol, requestData]);
@@ -303,10 +369,13 @@ export const useOrderbookStream = (
     prevMiddlePrice.current = middlePrice;
   }, [middlePrice]);
 
+
+  const reducedData = reduceOrderbook(depth, level, data);
+
   return [
     {
-      asks: data.asks.slice(-level),
-      bids: data.bids.slice(0, level),
+      asks: reducedData.asks.slice(-level),
+      bids: reducedData.bids.slice(0, level),
       markPrice: markPrice,
       middlePrice: [prevMiddlePrice.current, middlePrice],
     },
