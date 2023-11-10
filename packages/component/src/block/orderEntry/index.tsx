@@ -82,6 +82,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const { calculate, validator } = helper;
 
     const totalInputFocused = useRef<boolean>(false);
+    const priceInputFocused = useRef<boolean>(false);
+    const quantityInputFocused = useRef<boolean>(false);
     const isClickForm = useRef(false);
 
     const [needConfirm, setNeedConfirm] = useLocalStorage(
@@ -101,8 +103,16 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         reduce_only: false,
       },
       resolver: async (values) => {
-        //
         const errors = await validator(values);
+        // 当Price聚集输入而Quantity没有聚集的时候，Quantity报错不提示
+        if (
+          priceInputFocused.current &&
+          !quantityInputFocused.current &&
+          errors.order_quantity
+        ) {
+          delete errors.order_quantity;
+        }
+
         return {
           values,
           errors,
@@ -413,6 +423,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                       // field.onChange(event.target.value);
                       onFieldChange("order_price", event.target.value);
                     }}
+                    onFocus={() => (priceInputFocused.current = true)}
+                    onBlur={() => (priceInputFocused.current = false)}
                   />
                 );
               }}
@@ -436,6 +448,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     onChange={(event) => {
                       onFieldChange("order_quantity", event.target.value);
                     }}
+                    onFocus={() => (quantityInputFocused.current = true)}
+                    onBlur={() => (quantityInputFocused.current = false)}
                   />
                 );
               }}
