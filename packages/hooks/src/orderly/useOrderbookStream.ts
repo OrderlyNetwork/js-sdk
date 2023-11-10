@@ -149,7 +149,6 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
         // remove 
         if (element[0] === asks[index][0]) {
           const removeItem = asks.splice(index, 1);
-          console.log("orderbookupdate asks remove", removeItem[0]);
           break;
         }
 
@@ -172,7 +171,6 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
         // remove 
         if (element[0] === bids[index][0]) {
           const removeItem = bids.splice(index, 1);
-          console.log("orderbookupdate bids remove", removeItem[0]);
           break;
         }
 
@@ -187,19 +185,6 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
       }
     }
   });
-
-  // if (asks.length > 0) {
-  //   const firstPrice = asks[0][0];
-  //   const index = bids.findIndex((item) => item[0] < firstPrice);
-  //   if (index > 0) {
-  //     console.log("进入splice start", index, asks[0], bids[0]);
-  //     bids.splice(0, index + 1);
-  //     console.log("进入splice end", asks[0], bids[0]);
-  //   }
-  // }
-
-
-  console.log("orderbookupdate", update.asks.toString(), update.bids.toString(), " display: ", asks[0], bids[0]);
 
   return {
     asks: asks,
