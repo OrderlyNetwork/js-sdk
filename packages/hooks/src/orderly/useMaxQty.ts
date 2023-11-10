@@ -10,6 +10,8 @@ import { useCollateral } from "./useCollateral";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
+import { useOrderStream } from "./useOrderStream";
+import { OrderStatus } from "@orderly.network/types";
 
 const positionsPath = pathOr([], [0, "rows"]);
 
@@ -23,9 +25,12 @@ export const useMaxQty = (
   // const { data: positions = [] } =
   //   usePrivateQuery<API.PositionInfo>(`/positions`);
 
-  const { data: orders } = usePrivateQuery<API.Order[]>(
-    `/v1/orders?status=NEW`
-  );
+  // const { data: orders } = usePrivateQuery<API.Order[]>(
+  //   `/v1/orders?status=NEW`
+  // );
+  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+
+  // console.log(orders);
 
   // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
