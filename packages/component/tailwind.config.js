@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     fontSize: {
       xs: '0.6875rem', // 11px
-      sm: '0.875rem', // 14px
+      sm: '0.75rem', // 12px
       base: '1rem', // 16px
       lg: '1.125rem', // 18px
       xl: '1.25rem', // 20px
@@ -149,8 +149,8 @@ module.exports = {
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
-        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        html: { fontSize: "16px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        body: { fontSize: "16px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
       });
     }),
   ],
