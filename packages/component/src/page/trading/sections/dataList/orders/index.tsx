@@ -29,7 +29,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
     useOrderStream({
-      status: OrderStatus.NEW,
+      status: OrderStatus.INCOMPLETE,
       symbol: symbol,
     });
 

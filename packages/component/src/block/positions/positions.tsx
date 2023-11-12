@@ -16,7 +16,7 @@ interface PositionsViewProps {
   onShowAllSymbolChange?: (isAll: boolean) => void;
   showAllSymbol?: boolean;
   onMarketCloseAll?: () => void;
-  loadMore: () => void;
+  loadMore?: () => void;
   isLoading?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
