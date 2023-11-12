@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "next dev -p 4000",
     "build:project": "next build",
+    "doc": "node ./scripts/doc.js",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.9.0",
+    "@codesandbox/sandpack-themes": "^2.0.21",
     "@douyinfe/semi-ui": "^2.39.2",
-    "@orderly.network/components":"workspace:*",
-    "@orderly.network/hooks":"workspace:*",
+    "@orderly.network/components": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
     "@prisma/client": "5.0.0",
     "@tanstack/react-query": "^4.32.0",
     "@tanstack/react-query-devtools": "^4.32.0",
@@ -34,6 +37,7 @@
     "nextra-theme-docs": "^2.13.2",
     "postcss": "^8.4.26",
     "prisma": "^5.0.0",
+    "ramda": "^0.29.0",
     "react": "18.2.0",
     "react-color-palette": "^6.2.0",
     "react-dom": "^18.2.0",
@@ -43,6 +47,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/react-color": "^3.0.6"
+    "@types/react-color": "^3.0.6",
+    "typedoc": "^0.24.8",
+    "typedoc-json-parser": "^9.0.1",
+    "typedoc-nextra": "^0.1.6"
   }
 }

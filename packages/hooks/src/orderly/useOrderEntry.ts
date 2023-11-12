@@ -52,7 +52,6 @@ export const useOrderEntry = (
   symbol: string,
   side: OrderSide,
   reduceOnly: boolean = false,
-  // initialValue: Partial<OrderEntity> = {},
   options?: UseOrderEntryOptions
 ): OrderEntryReturn => {
   // const { mutate } = useSWRConfig();
@@ -151,7 +150,6 @@ export const useOrderEntry = (
   const validator = (values: any) => {
     const creator = OrderFactory.create(values.order_type);
 
-    
     return creator?.validate(values, {
       symbol: symbolInfo[symbol](),
       // token: tokenInfo[symbol](),

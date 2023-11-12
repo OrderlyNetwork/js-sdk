@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from "react";
-import React, { useEffect, useMemo } from "react";
-import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
+import React, { useEffect } from "react";
+import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
   MemoryConfigStore,
