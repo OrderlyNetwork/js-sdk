@@ -173,6 +173,8 @@
     --orderly-rounded-full: 9999px;
 
     --orderly-button-shadow: none;
+
+    --orderly-font-size-base: 16px;
   }
 
 }

@@ -4,7 +4,6 @@ const plugin = require("tailwindcss/plugin");
 const path = require("path");
 import colors from "tailwindcss/colors";
 
-
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
@@ -16,15 +15,15 @@ module.exports = {
   // prefix: 'orderly-',
   theme: {
     fontSize: {
-      xs: '0.6875rem', // 11px
-      sm: '0.875rem', // 14px
-      base: '1rem', // 16px
-      lg: '1.125rem', // 18px
-      xl: '1.25rem', // 20px
-      '2xl': '1.5rem', // 24px
-      '3xl': '1.875rem', // 30px
-      '4xl': '2.25rem', // 36px
-      '5xl': '3rem', // 48px
+      xs: "calc(var(--orderly-font-size-base) - 5px)", // 11px
+      sm: "calc(var(--orderly-font-size-base) - 2px)", // 14px
+      base: "var(--orderly-font-size-base)", // 16px
+      lg: "calc(var(--orderly-font-size-base) + 2px)", // 18px
+      xl: "calc(var(--orderly-font-size-base) + 4px)", // 20px
+      "2xl": "calc(var(--orderly-font-size-base) + 8px)", // 24px
+      "3xl": "calc(var(--orderly-font-size-base) + 14px)", // 30px
+      "4xl": "calc(var(--orderly-font-size-base) + 20px)", // 36px
+      "5xl": "calc(var(--orderly-font-size-base) + 32px)", // 48px
     },
     extend: {
       colors: {
@@ -67,21 +66,20 @@ module.exports = {
             36: "rgb(var(--orderly-color-base-foreground) / 0.36)",
             20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
           },
-
         },
 
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
-          "light": "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
-          "darken": "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
-          "light": "rgb(var(--orderly-color-success-light) / <alpha-value>)",
-          "darken": "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-success-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
@@ -109,9 +107,9 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: "var(--orderly-rounded)",
-        "lg": "var(--orderly-rounded-lg)",
-        "full": "var(--orderly-rounded-full)",
-        "sm": "var(--orderly-rounded-sm)",
+        lg: "var(--orderly-rounded-lg)",
+        full: "var(--orderly-rounded-full)",
+        sm: "var(--orderly-rounded-sm)",
       },
       fontSize: {
         headertitle: "20px",
@@ -149,8 +147,16 @@ module.exports = {
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
-        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-800))", color: "rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        html: {
+          fontSize: "16px",
+          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
+        },
+        body: {
+          fontSize: "16px",
+          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
+        },
       });
     }),
   ],
