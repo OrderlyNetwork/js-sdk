@@ -1,6 +1,6 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { OrderSide, OrderEntity } from "@orderly.network/types";
+import { OrderSide, OrderEntity, OrderStatus } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 import { useEventEmitter } from "../useEventEmitter";
@@ -15,16 +15,16 @@ export interface UserOrdersReturn {
   cancel: (order: any) => void;
 }
 
-export enum OrderStatus {
-  FILLED = "FILLED",
-  PARTIAL_FILLED = "PARTIAL_FILLED",
-  CANCELED = "CANCELED",
-  NEW = "NEW",
-  // CANCELLED + FILLED
-  COMPLETED = "COMPLETED",
-  //  NEW + PARTIAL_FILLED
-  INCOMPLETE = "INCOMPLETE",
-}
+// export enum OrderStatus {
+//   FILLED = "FILLED",
+//   PARTIAL_FILLED = "PARTIAL_FILLED",
+//   CANCELED = "CANCELED",
+//   NEW = "NEW",
+//   // CANCELLED + FILLED
+//   COMPLETED = "COMPLETED",
+//   //  NEW + PARTIAL_FILLED
+//   INCOMPLETE = "INCOMPLETE",
+// }
 
 export const useOrderStream = ({
   status,
@@ -137,12 +137,13 @@ export const useOrderStream = ({
               return [[newData, ...prevData?.[0]], ...prevData];
             }
 
-            if(status === OrderStatus.CANCELED || status ===OrderStatus.FILLED) {
-
+            if (
+              status === OrderStatus.CANCELED ||
+              status === OrderStatus.FILLED
+            ) {
             }
 
-            if(status === OrderStatus.PARTIAL_FILLED){
-
+            if (status === OrderStatus.PARTIAL_FILLED) {
             }
 
             return prevData;
