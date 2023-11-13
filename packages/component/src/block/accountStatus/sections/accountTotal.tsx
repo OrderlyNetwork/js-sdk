@@ -92,7 +92,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
           </div>
           <Divider vertical className="px-3" />
 
-          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-sm h-[30px] leading-[30px] flex items-center">
+          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-3xs h-[30px] leading-[30px] flex items-center">
             {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
             <Numeral precision={2} surfix="x">
               {currentLeverage}

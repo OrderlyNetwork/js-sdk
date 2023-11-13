@@ -16,7 +16,7 @@ export const LeverageView: FC<LeverageViewProps> = ({
   onShowLeverageInfo,
 }) => {
   return (
-    <div className="flex justify-between items-center text-sm">
+    <div className="flex justify-between items-center text-3xs">
       <div className="text-4xs text-base-contrast-36 flex items-center">
         <button
           className="flex items-center gap-1"

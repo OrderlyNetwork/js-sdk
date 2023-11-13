@@ -169,7 +169,7 @@ export const Summary: FC<SummaryProps> = (props) => {
     modal.alert({
       title: "Fee",
       message: (
-        <div className="text-base-contrast/30 space-y-3 text-sm">{message}</div>
+        <div className="text-base-contrast/30 space-y-3 text-3xs">{message}</div>
       ),
     });
   }, [

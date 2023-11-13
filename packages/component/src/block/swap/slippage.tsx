@@ -108,10 +108,10 @@ export const Slippage: FC<SlippageProps> = (props) => {
             // onChange={(e) => setCustomValue(e.target.value)}
             onChange={onValueChange}
           />
-          <span className="text-sm text-base-contrast/30">%</span>
+          <span className="text-3xs text-base-contrast/30">%</span>
         </div>
       </div>
-      <div className="py-2 text-sm text-base-contrast/30">
+      <div className="py-2 text-3xs text-base-contrast/30">
         Your transaction will revert if the price changes unfavorably by more
         than this percentage.
       </div>

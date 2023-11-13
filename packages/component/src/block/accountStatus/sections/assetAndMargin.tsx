@@ -91,7 +91,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   //
 
   return (
-    <StatisticStyleProvider labelClassName="text-sm text-base-contrast/30">
+    <StatisticStyleProvider labelClassName="text-3xs text-base-contrast/30">
       <div className="pt-5">
         <Statistic
           label={
@@ -132,7 +132,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 coloring
                 surfix=")"
                 prefix="("
-                className="text-sm opacity-60"
+                className="text-3xs opacity-60"
               >
                 {totalUnrealizedROI}
               </Numeral>
@@ -149,7 +149,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="text-primary-light text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-primary-light text-3xs flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
@@ -249,7 +249,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       </div>
       <Divider className="py-4" />
       <Paper className="bg-base-800">
-        <div className="flex justify-between text-sm text-base-contrast/50">
+        <div className="flex justify-between text-3xs text-base-contrast/50">
           <span>Instrument</span>
           <span>Available balance</span>
         </div>

@@ -47,7 +47,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
             <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>
-        <div className={"text-sm text-base-contrast/30"}>
+        <div className={"text-3xs text-base-contrast/30"}>
           <Text rule="date">{item.created_time}</Text>
         </div>
       </div>

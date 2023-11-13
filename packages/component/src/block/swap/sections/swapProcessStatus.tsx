@@ -47,7 +47,7 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
           <Divider />
           <div className="flex justify-center mt-3">
             <button
-              className="text-sm text-primary-light disabled:text-base-contrast/10"
+              className="text-3xs text-primary-light disabled:text-base-contrast/10"
               disabled={!statusUrl}
               onClick={() => {
                 (location as any).href = statusUrl;
@@ -59,7 +59,7 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
         </div>
       </div>
       {status === SwapProcessStatusStatus.DepositFailed && (
-        <div className="pb-7 text-danger text-center text-sm">
+        <div className="pb-7 text-danger text-center text-3xs">
           Deposit failed, please try again later.
         </div>
       )}

@@ -87,7 +87,7 @@ export const MSelect: FC<SelectProps> = ({
         disabled={Boolean(disabled)}
         onClick={() => setOpen((open) => !open)}
         className={cn(
-          "flex flex-row items-center rounded space-x-1 text-sm",
+          "flex flex-row items-center rounded space-x-1 text-3xs",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,
@@ -160,7 +160,7 @@ export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
       <button
         type="button"
         className={cn(
-          "block p-2 text-inherit w-full h-full text-left text-sm",
+          "block p-2 text-inherit w-full h-full text-left text-3xs",
           className
         )}
         onClick={() => {

@@ -42,7 +42,7 @@ export const SortGroup: FC<Props> = (props) => {
   }, [sortKey, direction]);
 
   return (
-    <div className={"flex justify-between text-sm pt-5 pb-3 text-tertiary"}>
+    <div className={"flex justify-between text-3xs pt-5 pb-3 text-tertiary"}>
       <div className={"flex items-center gap-1"}>
         <div>Instrument</div>
         <div>/</div>

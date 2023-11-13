@@ -152,7 +152,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       <Divider />
 
       {content}
-      <div className="flex justify-center text-sm gap-2 mt-5">
+      <div className="flex justify-center text-3xs gap-2 mt-5">
         <span className="text-base-contrast/50">Need help?</span>
         <a href="" className="text-primary-light">
           View FAQs

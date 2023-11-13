@@ -45,11 +45,11 @@ export const Cell: FC<MarketCellProps> = (props) => {
         <div className="flex items-center justify-between">
           <Numeral.total
             rule="human"
-            className="text-sm text-base-contrast/50"
+            className="text-3xs text-base-contrast/50"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
           />
-          <Numeral rule="percentages" className="text-sm" coloring>
+          <Numeral rule="percentages" className="text-3xs" coloring>
             {item.change}
           </Numeral>
         </div>

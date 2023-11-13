@@ -43,7 +43,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
         <button
           disabled={(tokens?.length ?? 0) < 2 || disabled}
           className={
-            "flex items-center gap-1 text-sm text-base-contrast/80 mr-2 disabled:opacity-50"
+            "flex items-center gap-1 text-3xs text-base-contrast/80 mr-2 disabled:opacity-50"
           }
         >
           <NetworkImage
