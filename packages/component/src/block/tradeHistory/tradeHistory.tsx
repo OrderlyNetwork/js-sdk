@@ -74,7 +74,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       dataSource={props.dataSource}
       columns={columns}
       loading={props.loading}
-      className="text-sm"
+      className="text-3xs"
       headerClassName="text-base-contrast/40 bg-base-800"
       gerenatedRowKey={(record, index) =>
         `record.ts_${record.price}_${record.size}_${index}`

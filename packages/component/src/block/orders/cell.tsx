@@ -48,7 +48,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
         <div className="flex-1" onClick={onSymbol}>
           <Text rule="symbol">{order.symbol}</Text>
         </div>
-        <div className={"text-sm text-base-contrast/30"}>
+        <div className={"text-3xs text-base-contrast/30"}>
           <Text rule="date">{order.created_time}</Text>
         </div>
       </div>

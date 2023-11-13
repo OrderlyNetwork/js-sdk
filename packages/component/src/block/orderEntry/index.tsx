@@ -338,7 +338,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
 
             <div className={"flex justify-between items-center"}>
-              <div className="flex gap-1 text-gray-500 text-xs">
+              <div className="flex gap-1 text-gray-500 text-4xs">
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
@@ -353,7 +353,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
-                className="text-primary text-xs"
+                className="text-primary text-4xs"
               >
                 Deposit
               </Button>

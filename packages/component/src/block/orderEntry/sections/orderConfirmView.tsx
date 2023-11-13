@@ -27,7 +27,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
         <div>{type}</div>
         <div className="flex gap-1 items-end">
           <span>{base}</span>
-          <span className="text-sm text-base-contrast/50">/USDT</span>
+          <span className="text-3xs text-base-contrast/50">/USDT</span>
         </div>
       </div>
       <div className="flex flex-col gap-2">

@@ -568,7 +568,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           fee={Number(transactionInfo.fee)}
         />
       </div>
-      <div className={"flex items-start py-4 text-sm text-tertiary"}>
+      <div className={"flex items-start py-4 text-3xs text-tertiary"}>
         <Summary
           needSwap={needSwap}
           needCrossChain={needCrossChain}

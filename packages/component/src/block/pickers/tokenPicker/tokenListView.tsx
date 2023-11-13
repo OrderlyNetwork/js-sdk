@@ -29,8 +29,8 @@ export const TokenListView: FC<TokenListViewProps> = (props) => {
   return (
     <>
       <div className="flex border-b border-base-contrast/20 py-2 mb-3">
-        <span className="flex-1 text-xs text-base-contrast/50">Coin</span>
-        <span className="flex-1 text-xs text-base-contrast/50">
+        <span className="flex-1 text-4xs text-base-contrast/50">Coin</span>
+        <span className="flex-1 text-4xs text-base-contrast/50">
           Wallet Balance
         </span>
       </div>

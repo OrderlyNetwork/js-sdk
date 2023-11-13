@@ -22,7 +22,7 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
         fullWidth
         size={"small"}
         value={props.value}
-        className="text-xs text-base-contrast-54"
+        className="text-4xs text-base-contrast-54"
         onValueChange={(value) => {
           //
           props.onChange?.(value.value);

@@ -15,15 +15,16 @@ module.exports = {
   // prefix: 'orderly-',
   theme: {
     fontSize: {
-      xs: "calc(var(--orderly-font-size-base) - 5px)", // 11px
-      sm: "calc(var(--orderly-font-size-base) - 2px)", // 14px
-      base: "var(--orderly-font-size-base)", // 16px
-      lg: "calc(var(--orderly-font-size-base) + 2px)", // 18px
-      xl: "calc(var(--orderly-font-size-base) + 4px)", // 20px
-      "2xl": "calc(var(--orderly-font-size-base) + 8px)", // 24px
-      "3xl": "calc(var(--orderly-font-size-base) + 14px)", // 30px
-      "4xl": "calc(var(--orderly-font-size-base) + 20px)", // 36px
-      "5xl": "calc(var(--orderly-font-size-base) + 32px)", // 48px
+      "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
+      "3xs": "calc(var(--orderly-font-size-base) - 4px)", // if base is 16px, it will be 12px
+      "2xs": "calc(var(--orderly-font-size-base) - 3px)", // if base is 16px, it will be 13px
+      xs: "calc(var(--orderly-font-size-base) - 2px)", // if base is 16px, it will be 14px
+      sm: "calc(var(--orderly-font-size-base) - 1px)", // if base is 16px, it will be 15px
+      lg: "calc(var(--orderly-font-size-base) + 2px)", // if base is 16px, it will be 18px
+      xl: "calc(var(--orderly-font-size-base) + 4px)", // if base is 16px, it will be 20px
+      "2xl": "calc(var(--orderly-font-size-base) + 8px)", // if base is 16px, it will be 24px
+      "3xl": "calc(var(--orderly-font-size-base) + 14px)", // if base is 16px, it will be 30px
+      "4xl": "calc(var(--orderly-font-size-base) + 20px)", // if base is 16px, it will be 36px
     },
     extend: {
       colors: {
@@ -148,12 +149,12 @@ module.exports = {
     plugin(function ({ addBase }) {
       addBase({
         html: {
-          fontSize: "16px",
+          fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
         },
         body: {
-          fontSize: "16px",
+          fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
         },

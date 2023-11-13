@@ -80,7 +80,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     modal.alert({
       title: "Remember me",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="text-3xs text-base-contrast/60">
           Toggle this option to skip these steps next time you want to trade.
         </span>
       ),

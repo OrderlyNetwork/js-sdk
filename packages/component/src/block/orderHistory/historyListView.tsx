@@ -21,7 +21,7 @@ export interface OrderHistoryListViewProps {
 
 export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
   return (
-    <StatisticStyleProvider labelClassName={"text-sm text-base-contrast/30"}>
+    <StatisticStyleProvider labelClassName={"text-3xs text-base-contrast/30"}>
       <HistoryToolbar
         status={props.status}
         side={props.side}

@@ -46,7 +46,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         onItemClick?.([props.price, props.quantity]);
       }}
     >
-      <div className="flex flex-row justify-between items-center z-10 relative px-1 text-xs h-full">
+      <div className="flex flex-row justify-between items-center z-10 relative px-1 text-4xs h-full">
         <div
           className={
             props.type === OrderBookCellType.ASK

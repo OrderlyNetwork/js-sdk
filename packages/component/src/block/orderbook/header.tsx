@@ -24,7 +24,7 @@ export const Header: FC<Props> = (props) => {
   }, [mode]);
 
   return (
-    <div className="flex flex-row justify-between text-base-contrast-36 text-xs pb-2">
+    <div className="flex flex-row justify-between text-base-contrast-36 text-4xs pb-2">
       <div className={"flex flex-col"}>
         <span>Price</span>
         <span>{`(${props.quote})`}</span>
@@ -35,7 +35,7 @@ export const Header: FC<Props> = (props) => {
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
         }
       >
-        <div className={"flex flex-col text-base-contrast-36 text-xs items-end mr-1"}>
+        <div className={"flex flex-col text-base-contrast-36 text-4xs items-end mr-1"}>
           <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>

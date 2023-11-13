@@ -37,7 +37,7 @@ export const SwapDetails: FC<Props> = (props) => {
 
   return (
     <>
-      <div className="text-sm space-y-3 py-[24px]">
+      <div className="text-3xs space-y-3 py-[24px]">
         <ListTile
           className="py-0"
           tailing={

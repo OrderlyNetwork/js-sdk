@@ -53,7 +53,7 @@ const OrderTypeItem: FC<{
           <Circle className="fill-current text-current w-[10px] h-[10px]" />
         )}
       </button>
-      <span className="text-sm text-base-contrast/50">{props.label}</span>
+      <span className="text-3xs text-base-contrast/50">{props.label}</span>
     </div>
   );
 };

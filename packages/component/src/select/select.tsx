@@ -123,7 +123,7 @@ const Select: FC<SelectProps> = ({
           //   setOpen(!open);
           // }}
         >
-          <div className="flex-1 text-sm text-inherit">
+          <div className="flex-1 text-3xs text-inherit">
             {typeof label !== "undefined" && <>{label}</>}
           </div>
 

@@ -198,7 +198,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport ? (
-        <div className="text-warning text-sm text-center px-[20px] py-3">
+        <div className="text-warning text-3xs text-center px-[20px] py-3">
           {chainWarningMessage}
         </div>
       ) : (

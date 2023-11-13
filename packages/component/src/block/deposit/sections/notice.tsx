@@ -20,13 +20,13 @@ export const Notice: FC<NoticeProps> = (props) => {
 
   if (warningMessage) {
     return (
-      <div className="text-center text-warning text-sm">{warningMessage}</div>
+      <div className="text-center text-warning text-3xs">{warningMessage}</div>
     );
   }
 
   if (needCrossChain) {
     return (
-      <div className="text-center text-warning text-sm py-2">
+      <div className="text-center text-warning text-3xs py-2">
         <span>
           Cross-chain transaction fees will be charged. To avoid these, use our
           supported
@@ -47,7 +47,7 @@ export const Notice: FC<NoticeProps> = (props) => {
 
   if (needSwap) {
     return (
-      <div className="text-center text-warning text-sm">
+      <div className="text-center text-warning text-3xs">
         Please note that swap fees will be charged.
       </div>
     );

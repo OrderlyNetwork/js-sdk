@@ -71,7 +71,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
               <span
                 key={index}
                 className={cn(
-                  "absolute top-[20px] text-sm text-base-contrast/50 pointer-events-none translate-x-[-50%]"
+                  "absolute top-[20px] text-3xs text-base-contrast/50 pointer-events-none translate-x-[-50%]"
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,

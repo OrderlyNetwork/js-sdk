@@ -16,8 +16,8 @@ export const LeverageView: FC<LeverageViewProps> = ({
   onShowLeverageInfo,
 }) => {
   return (
-    <div className="flex justify-between items-center text-sm">
-      <div className="text-xs text-base-contrast-36 flex items-center">
+    <div className="flex justify-between items-center text-3xs">
+      <div className="text-4xs text-base-contrast-36 flex items-center">
         <button
           className="flex items-center gap-1"
           onClick={() => onShowLeverageInfo?.()}
@@ -28,12 +28,12 @@ export const LeverageView: FC<LeverageViewProps> = ({
         <Button
           variant={"text"}
           size={"small"}
-          className="px-1 min-w-[24px] text-xs text-primary-light"
+          className="px-1 min-w-[24px] text-4xs text-primary-light"
         >
           {`${maxLeverage}x`}
         </Button>
       </div>
-      <div className="flex flex-col items-end text-xs text-base-contrast-36">
+      <div className="flex flex-col items-end text-4xs text-base-contrast-36">
         <div>Pred. funding rate</div>
         <div className="flex gap-1">
           <span className="text-warning">{`${predFundingRate}%`}</span>

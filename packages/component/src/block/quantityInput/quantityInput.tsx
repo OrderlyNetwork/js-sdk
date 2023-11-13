@@ -111,7 +111,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "flex items-center text-sm justify-between px-2 py-1 text-base-contrast/30"
+            "flex items-center text-3xs justify-between px-2 py-1 text-base-contrast/30"
           }
         >
           <span>{`$${amount}`}</span>
@@ -129,7 +129,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       {props.hintMessage && (
         <div
           className={cn(
-            "mt-2 text-sm relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
+            "mt-2 text-3xs relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
             {
               "text-danger": props.status === "error",
               "before:bg-danger": props.status === "error",

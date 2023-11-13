@@ -30,7 +30,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
     modal.alert({
       title: "Reduce only",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="text-3xs text-base-contrast/60">
           Reduce only ensures that you can only reduce or close a current
           position so that your position size will not be increased
           unintentionally.
@@ -43,7 +43,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
     modal.alert({
       title: "Hidden",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="text-3xs text-base-contrast/60">
           Hidden order is a limit order that does not appear in the orderbook.
         </span>
       ),
