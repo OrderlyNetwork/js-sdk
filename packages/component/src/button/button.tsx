@@ -169,6 +169,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           disabled,
           fullWidth,
         }),
+        `button button-$fvariant} button-$icolor) button-${size}`,
         className
       )}
       disabled={Boolean(disabled)}
