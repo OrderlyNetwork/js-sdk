@@ -75,7 +75,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Blockie address={state.address} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-xs">{chainName}</div>
+            <div className="text-4xs">{chainName}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">

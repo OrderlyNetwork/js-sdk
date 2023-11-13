@@ -43,7 +43,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         <NetworkImage type={"token"} name={token.symbol} rounded />
         <div className="flex flex-col">
           <span>{token.symbol}</span>
-          <span className="text-xs text-base-contrast/50">{token.symbol}</span>
+          <span className="text-4xs text-base-contrast/50">{token.symbol}</span>
         </div>
       </div>
       <div className="flex-1 flex items-center">

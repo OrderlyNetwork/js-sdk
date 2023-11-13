@@ -48,7 +48,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     return (
       <div className="flex items-center">
         <div className="flex flex-col">
-          <div className="flex items-center text-xs text-base-contrast/70 gap-2">
+          <div className="flex items-center text-4xs text-base-contrast/70 gap-2">
             <span>Total value</span>
 
             <span className="text-base">≈</span>
@@ -66,7 +66,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     <Sheet>
       <SheetTrigger asChild>
         <div className="flex items-center cursor-pointer">
-          <div className="flex flex-col text-xs">
+          <div className="flex flex-col text-4xs">
             <div className="flex items-center text-base-contrast/70">
               <span>Total value</span>
               <button

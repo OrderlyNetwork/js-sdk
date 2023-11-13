@@ -49,7 +49,7 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
         />
         <div className="flex flex-col">
           <span>{fromAmount}</span>
-          <span className="text-xs text-base-contrast/50">
+          <span className="text-4xs text-base-contrast/50">
             {props.from.token}
           </span>
         </div>
@@ -58,7 +58,7 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
       <div className="flex gap-3 items-center">
         <div className="flex flex-col items-end">
           <span>{toAmount}</span>
-          <span className="text-xs text-base-contrast/50">
+          <span className="text-4xs text-base-contrast/50">
             {props.to.token}
           </span>
         </div>

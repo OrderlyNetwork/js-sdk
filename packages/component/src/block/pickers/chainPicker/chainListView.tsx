@@ -26,7 +26,7 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
     return (
       <>
         {props.testChains && props.testChains.length > 0 && (
-          <div className="uppercase text-base-contrast/50 text-xs mb-2">
+          <div className="uppercase text-base-contrast/50 text-4xs mb-2">
             mainnet
           </div>
         )}
@@ -56,7 +56,7 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
     return (
       <>
         {props.mainChains && props.mainChains.length > 0 && (
-          <div className="uppercase text-base-contrast/50 text-xs mb-2">
+          <div className="uppercase text-base-contrast/50 text-4xs mb-2">
             testnet
           </div>
         )}
