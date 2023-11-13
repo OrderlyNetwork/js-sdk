@@ -9,7 +9,8 @@ export const OrdersTabTitle = () => {
   const ee = useEventEmitter();
 
   const { data: pendings, mutate } = usePrivateQuery(
-    `/v1/orders?status=${OrderStatus.INCOMPLETE}`
+    // TODO: check OrderStatus.INCOMPLETE `/v1/orders?status=${OrderStatus.INCOMPLETE}`
+    `/v1/orders?status=INCOMPLETE`
   );
 
   // Hack: 为了让订单数字及时更新，这里需要订阅订单的变化, 这里跟列表页的有重叠，后续优化
