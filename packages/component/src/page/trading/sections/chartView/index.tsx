@@ -29,7 +29,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   );
 
   return (
-    <div>
+    <div className="text-3xs">
       <Tabs
         showIdentifier={false}
         value={activeTab}

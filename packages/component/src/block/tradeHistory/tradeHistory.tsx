@@ -22,7 +22,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
             <Text
               rule="date"
               formatString="HH:mm:ss"
-              className="text-base-contrast/60"
+              className="text-base-contrast-80"
             >
               {value}
             </Text>
@@ -38,8 +38,8 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               precision={quote_dp}
               className={
                 record.side === OrderSide.BUY
-                  ? "text-trade-profit"
-                  : "text-trade-loss"
+                  ? "text-success-light"
+                  : "text-danger-light"
               }
             >
               {value}
@@ -57,8 +57,8 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               precision={base_dp}
               className={
                 record.side === OrderSide.BUY
-                  ? "text-trade-profit"
-                  : "text-trade-loss"
+                  ? "text-success-light"
+                  : "text-danger-light"
               }
             >
               {value}
@@ -75,7 +75,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       columns={columns}
       loading={props.loading}
       className="text-3xs"
-      headerClassName="text-base-contrast/40 bg-base-800"
+      headerClassName="text-base-contrast-36 bg-base-800"
       gerenatedRowKey={(record, index) =>
         `record.ts_${record.price}_${record.size}_${index}`
       }
