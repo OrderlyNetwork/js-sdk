@@ -14,12 +14,16 @@ export enum OrderSide {
 }
 
 export enum OrderStatus {
+  OPEN = "OPEN",
+  NEW = "NEW",
   FILLED = "FILLED",
   PARTIAL_FILLED = "PARTIAL_FILLED",
   CANCELLED = "CANCELLED",
-  NEW = "NEW",
+  REPLACED = "REPLACED",
+  // CANCELLED + FILLED
   COMPLETED = "COMPLETED",
-  OPEN = "OPEN",
+  //  NEW + PARTIAL_FILLED
+  INCOMPLETE = "INCOMPLETE",
   REJECTED = "REJECTED",
 }
 

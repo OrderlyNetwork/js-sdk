@@ -151,7 +151,6 @@ export const useOrderEntry = (
   const validator = (values: any) => {
     const creator = OrderFactory.create(values.order_type);
 
-    
     return creator?.validate(values, {
       symbol: symbolInfo[symbol](),
       // token: tokenInfo[symbol](),

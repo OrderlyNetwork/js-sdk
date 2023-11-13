@@ -1,18 +1,17 @@
+import { useMemo } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
-
 import {
   pathOr_unsettledPnLPathOr,
   usePositionStream,
 } from "./usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/futures";
-// import { useOrderStream } from "./useOrderStream";
-import { type API } from "@orderly.network/types";
+import { type API, OrderStatus } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
-import { useMemo } from "react";
 import { useHoldingStream } from "./useHoldingStream";
+import { useOrderStream } from "./useOrderStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;
@@ -39,11 +38,8 @@ export const useCollateral = (
   const { dp } = options;
   const positions = usePositionStream();
 
-  // const orders = useOrderStream();
-  const { data: orders } = usePrivateQuery<API.Order[]>(
-    `/v1/orders?status=NEW`
-  );
-  // const { info: accountInfo } = useAccount();
+  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
