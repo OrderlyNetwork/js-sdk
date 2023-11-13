@@ -13,7 +13,6 @@ import {
   OrderlyContext,
   useWalletSubscription,
   useSettleSubscription,
-  useExecutionReport,
   useWooCrossSwapQuery,
   useWooSwapQuery,
   useEventEmitter,
@@ -129,7 +128,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       },
       {
         onMessage: (data: any) => {
-          console.log("executionreport", data);
+          // console.log("executionreport", data);
           const { title, msg } = getOrderExecutionReportMsg(data, symbolsInfo);
           if (title && msg) {
             toast.success(
@@ -140,6 +139,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
               </div>
             );
           }
+          ee.emit("orders:changed", data);
         },
       }
     );

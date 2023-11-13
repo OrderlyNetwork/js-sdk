@@ -1,12 +1,9 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { OrderSide, OrderEntity, OrderStatus } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
-import { useEventEmitter } from "../useEventEmitter";
-import { useExecutionReport } from "./useExecutionReport";
 import { useWS } from "../useWS";
-import { useSWRConfig } from "swr";
 
 export interface UserOrdersReturn {
   data: any[];
@@ -15,31 +12,19 @@ export interface UserOrdersReturn {
   cancel: (order: any) => void;
 }
 
-// export enum OrderStatus {
-//   FILLED = "FILLED",
-//   PARTIAL_FILLED = "PARTIAL_FILLED",
-//   CANCELED = "CANCELED",
-//   NEW = "NEW",
-//   // CANCELLED + FILLED
-//   COMPLETED = "COMPLETED",
-//   //  NEW + PARTIAL_FILLED
-//   INCOMPLETE = "INCOMPLETE",
-// }
+const chche: Record<string, boolean> = {};
 
 export const useOrderStream = ({
   status,
   symbol,
   side,
-  size = 10,
+  size = 100,
 }: {
   symbol?: string;
   status?: OrderStatus;
   size?: number;
   side?: OrderSide;
-} = {}) => {
-  // const markPrices$ = useMarkPricesSubject();
-  const { mutate, cache } = useSWRConfig();
-  // const ee = useEventEmitter();
+} = {}): any => {
   const ws = useWS();
 
   const { data: markPrices = {} } = useMarkPricesStream();
@@ -54,7 +39,6 @@ export const useOrderStream = ({
       const search = new URLSearchParams([
         ["size", size.toString()],
         ["page", `${pageIndex + 1}`],
-        // [`status`, status],
       ]);
 
       if (status) {
@@ -76,39 +60,29 @@ export const useOrderStream = ({
       onError: (err) => {
         console.error("fetch failed::::", err);
       },
+      formatter: (data) => data,
     }
   );
-
-  // const { data: report } = useExecutionReport();
-
-  // console.log("--!!!!!----", report);
 
   const orders = useMemo(() => {
     if (!ordersResponse.data) {
       return null;
     }
 
-    //
-
-    return ordersResponse.data?.flat().map((item) => {
-      return {
-        ...item,
-        mark_price: (markPrices as any)[item.symbol] ?? 0,
-      };
-    });
+    return ordersResponse.data
+      ?.map((item) => item.rows)
+      ?.flat()
+      .map((item) => {
+        return {
+          ...item,
+          mark_price: (markPrices as any)[item.symbol] ?? 0,
+        };
+      });
   }, [ordersResponse.data, markPrices]);
 
-  /// Hack: 为了让订单列表能够及时更新，这里需要订阅订单的变化, 后续优化
-  // useEffect(() => {
-  //   const handler = () => {
-  //     ordersResponse.mutate();
-  //   };
-  //   ee.on("orders:changed", handler);
-
-  //   return () => {
-  //     ee.off("orders:changed", handler);
-  //   };
-  // }, []);
+  const total = useMemo(() => {
+    return ordersResponse.data?.[0]?.meta?.total || 0;
+  }, [ordersResponse.data]);
 
   useEffect(() => {
     const unsubscribe = ws.privateSubscribe(
@@ -120,31 +94,72 @@ export const useOrderStream = ({
       },
       {
         onMessage: (data: any) => {
-          console.log("executionreport", data);
-          // console.log("cache", cache);
+          // console.log("executionreport", data);
+          const { status, orderId, timestamp } = data;
+          // const key = `${status}_${orderId}_${timestamp}`;
+          // if (chche[key]) {
+          //   return;
+          // }
+          // ordersResponse.mutate();
+          // return;
+
           ordersResponse.mutate((prevData) => {
             // console.log("prevData", prevData);
-            const { symbol, side, status } = data;
 
             // FIXME: 注意分页逻辑
-
-            const newData = {
-              ...data,
+            const newOrder = {
+              order_id: data.orderId,
+              symbol: data.symbol,
+              created_time: data.timestamp,
+              quantity: data.quantity,
+              side: data.side,
+              executed: data.totalExecutedQuantity,
+              price: data.price,
             };
 
+            const dataList = prevData?.map((item) => item.rows)?.flat() || [];
+
             if (status === OrderStatus.NEW) {
-              if (!prevData) return [[newData]];
-              return [[newData, ...prevData?.[0]], ...prevData];
+              if (!prevData) {
+                return {
+                  meta: {
+                    total: 1,
+                    records_per_page: size,
+                    current_page: 1,
+                  },
+                  rows: [newOrder],
+                };
+              }
+              const total = (prevData?.[0]?.meta?.total || 0) + 1;
+              const isNew = !dataList.find((item) => item.order_id === orderId);
+              if (isNew) {
+                const list = [newOrder, ...dataList];
+                return rePageData(list, total, size);
+              }
+
+              return prevData;
             }
 
             if (
-              status === OrderStatus.CANCELED ||
+              status === OrderStatus.CANCELLED ||
               status === OrderStatus.FILLED
             ) {
+              const total = (prevData?.[0]?.meta?.total || 0) - 1;
+              const list = dataList.filter(
+                (order: any) => order.order_id !== orderId
+              );
+              return rePageData(list!, total, size);
             }
 
             if (status === OrderStatus.PARTIAL_FILLED) {
+              return editPageData(dataList, newOrder);
             }
+
+            if (status === OrderStatus.REPLACED) {
+              return editPageData(dataList, newOrder);
+            }
+
+            // chche[key] = true;
 
             return prevData;
           });
@@ -176,9 +191,9 @@ export const useOrderStream = ({
       symbol,
     }).then((res: any) => {
       if (res.success) {
-        return ordersResponse.mutate().then(() => {
-          return res;
-        });
+        // return ordersResponse.mutate().then(() => {
+        //   return res;
+        // });
       } else {
         throw new Error(res.message);
       }
@@ -192,6 +207,7 @@ export const useOrderStream = ({
   return [
     orders,
     {
+      total,
       isLoading: ordersResponse.isLoading,
       loadMore,
       cancelAllOrders,
@@ -200,3 +216,43 @@ export const useOrderStream = ({
     },
   ];
 };
+
+// Re-page the data
+function rePageData(list: any[], total: number, pageSize: number) {
+  const newData = [] as any;
+  let rows = [];
+  let current_page = 0;
+  for (let i = 0; i < list.length; i++) {
+    rows.push(list[i]);
+    if ((i + 1) % pageSize === 0 || i === list.length - 1) {
+      newData.push({
+        meta: {
+          records_per_page: pageSize,
+          total,
+          current_page: current_page + 1,
+        },
+        rows: [...rows],
+      });
+      rows = [];
+    }
+  }
+  console.log("rePageData", list, total, newData);
+  return newData;
+}
+
+// edit page data by orderId
+function editPageData(list: any[], newOrder: any) {
+  const newData = list.map((item) => {
+    return {
+      ...item,
+      rows: item.rows.map((row: any) => {
+        if (row.order_id === newOrder.order_id) {
+          return { ...row, newOrder };
+        }
+        return row;
+      }),
+    };
+  });
+  // console.log("editPageData", newData);
+  return newData;
+}

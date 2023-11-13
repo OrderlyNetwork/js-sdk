@@ -2,13 +2,13 @@ import { OrdersView } from "@/block/orders";
 import { FC, useCallback, useContext, useEffect, useState } from "react";
 import {
   useOrderStream,
-  OrderStatus,
   useAccount,
   useSessionStorage,
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
 import { TabContext } from "@/tab";
+import { OrderStatus } from "@orderly.network/types";
 
 interface Props {
   // symbol: string;

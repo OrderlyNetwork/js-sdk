@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { type API, OrderSide, type WSMessage } from "@orderly.network/types";
+import { type API, OrderSide } from "@orderly.network/types";
 
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
@@ -22,17 +22,8 @@ export const useMaxQty = (
 ) => {
   const positionsData = usePositionStream();
 
-  // const { data: positions = [] } =
-  //   usePrivateQuery<API.PositionInfo>(`/positions`);
-
-  // const { data: orders } = usePrivateQuery<API.Order[]>(
-  //   `/v1/orders?status=NEW`
-  // );
   const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
-  // console.log(orders);
-
-  // const { info: accountInfo } = useAccount();
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 

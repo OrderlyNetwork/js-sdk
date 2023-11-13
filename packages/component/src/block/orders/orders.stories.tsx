@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React from "react";
 import { OrdersView } from ".";
-import { useOrderStream, OrderStatus } from "@orderly.network/hooks";
+import { useOrderStream } from "@orderly.network/hooks";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
+import { OrderStatus } from "@orderly.network/types";
 // import { OrderEditFormDialog } from "./dialog/editor";
 
 const meta: Meta<typeof OrdersView> = {

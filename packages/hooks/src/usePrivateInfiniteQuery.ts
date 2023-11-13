@@ -15,20 +15,25 @@ const fetcher = (url: string, init: RequestInit) => get(url, init);
 
 export const usePrivateInfiniteQuery = (
   getKey: SWRInfiniteKeyLoader,
-  options?: SWRInfiniteConfiguration
+  options?: SWRInfiniteConfiguration & {
+    formatter?: (data: any) => any;
+  }
 ) => {
+  const { formatter, ...restOptions } = options || {};
   const account = useAccount();
 
-  const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
+  const middleware = Array.isArray(restOptions?.use)
+    ? restOptions?.use ?? []
+    : [];
 
   const result = useSWRInfinite(
     (pageIndex: number, previousPageData) =>
       account.state.status >= AccountStatusEnum.EnableTrading
         ? getKey(pageIndex, previousPageData)
         : null,
-    fetcher,
+    (url: string, init: RequestInit) => get(url, init, formatter),
     {
-      ...options,
+      ...restOptions,
       use: [signatureMiddleware, ...middleware],
     }
   );

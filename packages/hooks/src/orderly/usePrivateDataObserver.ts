@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 import { useWS } from "../useWS";
 import { useSWRConfig } from "swr";
 import { API, OrderStatus, WSMessage } from "@orderly.network/types";
@@ -9,7 +8,7 @@ import { useAccount } from "../useAccount";
 export const usePrivateDataObserver = () => {
   const ws = useWS();
   const { mutate } = useSWRConfig();
-  const ee = useEventEmitter();
+  // const ee = useEventEmitter();
   const { state } = useAccount();
 
   // useEffect(() => {
