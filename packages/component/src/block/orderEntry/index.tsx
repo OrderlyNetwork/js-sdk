@@ -309,7 +309,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             isClickForm.current = true;
           }}
         >
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 text-3xs">
             <SegmentedButton
               buttons={[
                 {
@@ -515,6 +515,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
             <StatusGuardButton>
               <Button
+              className="text-xs"
                 type="submit"
                 loading={methods.formState.isSubmitting}
                 color={side === OrderSide.BUY ? "buy" : "sell"}

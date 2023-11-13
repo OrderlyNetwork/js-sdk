@@ -34,9 +34,9 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div className="py-2 flex justify-between">
+    <div className="py-2 flex justify-between text-xs ">
       <div
-        className={cn("font-semibold text-3xs flex items-center", {
+        className={cn("font-semibold flex items-center", {
           "text-trade-profit": middlePrice > prevLastPrice,
           "text-trade-loss": middlePrice < prevLastPrice,
         })}
@@ -52,7 +52,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
           />
         )}
       </div>
-      <div className={"text-3xs flex items-center gap-1"} onClick={onMarkPrice}>
+      <div className={"flex items-center gap-1"} onClick={onMarkPrice}>
         <Flag size={14} className={"text-yellow-400"} />
         <Numeral precision={quote_dp}>{markPrice}</Numeral>
       </div>
