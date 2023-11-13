@@ -89,13 +89,14 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   return (
     <div>
-      <div className="text-base-contrast/50 py-4">
+      <div className="text-base-contrast-54 text-2xs py-4">
         Sign two requests to verify ownership of your wallet and enable trading.
         Signing is free.
       </div>
 
       <Paper className="bg-base-300">
         <ListTile
+          className="text-xs"
           avatar={
             <StepItem
               active={status <= AccountStatusEnum.NotSignedIn}
@@ -113,6 +114,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           subtitle="Confirm you own this wallet"
         />
         <ListTile
+        className="text-xs"
           disabled={status < AccountStatusEnum.SignedIn}
           avatar={
             <StepItem
@@ -129,7 +131,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="pt-5 pb-7 flex justify-between items-center ">
-        <div className="text-base-contrast/50" onClick={showRememberHint}>
+        <div className="text-base-contrast-54 text-xs" onClick={showRememberHint}>
           <span>Remember me</span>
           <InfoIcon className="inline-block ml-2" size={14} />
         </div>
@@ -139,6 +141,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
+        className="text-xs text-base-contrast"
           fullWidth
           disabled={handleStep > 0}
           onClick={onClick}
