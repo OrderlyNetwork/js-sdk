@@ -157,6 +157,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Tooltip
+        className="text-base-contrast text-4xs"
         open={showTooltip}
         content={helpText ?? "input help text"}
         sideOffset={5}
