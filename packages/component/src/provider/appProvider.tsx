@@ -267,7 +267,7 @@ export const OrderlyAppProvider: FC<
       >
         <TooltipProvider>
           <LocalProvider>
-            <WSObserver />
+            {/* <WSObserver /> */}
             <ModalProvider>{props.children}</ModalProvider>
           </LocalProvider>
         </TooltipProvider>
