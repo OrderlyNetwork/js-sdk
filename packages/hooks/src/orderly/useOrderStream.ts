@@ -24,7 +24,7 @@ export const useOrderStream = ({
   status?: OrderStatus;
   size?: number;
   side?: OrderSide;
-} = {}) => {
+} = {}): any => {
   const ws = useWS();
 
   const { data: markPrices = {} } = useMarkPricesStream();

@@ -7,7 +7,7 @@ import { useAccount } from "../useAccount";
 
 export const usePrivateDataObserver = () => {
   const ws = useWS();
-  // const { mutate } = useSWRConfig();
+  const { mutate } = useSWRConfig();
   // const ee = useEventEmitter();
   const { state } = useAccount();
 
