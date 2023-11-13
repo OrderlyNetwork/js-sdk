@@ -93,7 +93,8 @@ const Slider = React.forwardRef<
           "bg-trade-profit border-trade-profit": color === "buy",
           "bg-trade-loss border-trade-loss": color === "sell",
         },
-        props.disabled && "bg-fill-light"
+        props.disabled && "bg-fill-light",
+        "text-base-600"
       );
     }, [color, props.disabled]);
 

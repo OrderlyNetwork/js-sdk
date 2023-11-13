@@ -121,7 +121,7 @@ export const MSelect: FC<SelectProps> = ({
                 value={option.value}
                 key={index}
                 className={cn(
-                  "text-base-contrast/60",
+                  "text-base-contrast-54",
                   option.value === props.value &&
                     (color === "buy" ? "text-trade-profit" : "text-trade-loss")
                 )}
