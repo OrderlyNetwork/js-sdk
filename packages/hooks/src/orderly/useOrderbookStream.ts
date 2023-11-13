@@ -139,52 +139,11 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
 };
 
 export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
-  const asks = [...data.asks];
-  const bids = [...data.bids];
+  let asks = [...data.asks];
+  let bids = [...data.bids];
 
-  update.asks.forEach(element => {
-    for(let index = 0; index < asks.length; index++) {
-      if (element[1] === 0) {
-       
-        // remove 
-        if (element[0] === asks[index][0]) {
-          const removeItem = asks.splice(index, 1);
-          break;
-        }
-
-      } else if (element[0] === asks[index][0]) {
-        // update
-        asks[index] = element;
-        break;
-      } else if (element[0] < asks[index][0]) {
-        // insert
-        asks.splice(index, 0, element);
-        break;
-      }
-    }
-  });
-
-  update.bids.forEach(element => {
-    for(let index = 0; index < bids.length; index++) {
-      if (element[1] === 0) {
-       
-        // remove 
-        if (element[0] === bids[index][0]) {
-          const removeItem = bids.splice(index, 1);
-          break;
-        }
-
-      } else if (element[0] === bids[index][0]) {
-        // update
-        bids[index] = element;
-        break;
-      } else if (element[0] > bids[index][0]) {
-        // insert
-        bids.splice(index, 0, element);
-        break;
-      }
-    }
-  });
+  asks = mergeItems(asks, update.asks).sort(asksSortFn);
+  bids = mergeItems(bids, update.bids).sort(bidsSortFn);
 
   return {
     asks: asks,
@@ -258,19 +217,17 @@ export const useOrderbookStream = (
           if (!!message) {
 
             // sort and filter qty > 0
-            let bids = message.bids.sort(bidsSortFn);
-            bids = bids.filter((item: number[]) => !isNaN(item[0]));
-            bids = bids.filter((item: number[]) => item[1] > 0);
-            let asks = message.asks.sort(asksSortFn);
-            asks = asks.filter((item: number[]) => !isNaN(item[0]));
-            asks = asks.filter((item: number[]) => item[1] > 0);
+            let bids = [...message.bids.sort(bidsSortFn)];
+            bids = bids.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
+            let asks = [...message.asks.sort(asksSortFn)];
+            asks = asks.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
 
             // const reduceOrderbookData = reduceOrderbook(depth, level, {
             //   bids: bids,
             //   asks: asks,
             // });
             setRequestData({bids: bids, asks: asks});
-            setData({bids: bids, asks: asks});
+            setData({bids: [...bids], asks: [...asks]});
           }
           setIsLoading(false);
         },
@@ -308,8 +265,8 @@ export const useOrderbookStream = (
                 ? data
                 : mergeOrderbook(data, message);
             return mergedData;
-            const reducedData = reduceOrderbook(depth, level, mergedData);
-            return reducedData;
+            // const reducedData = reduceOrderbook(depth, level, mergedData);
+            // return reducedData;
           });
         },
       }
