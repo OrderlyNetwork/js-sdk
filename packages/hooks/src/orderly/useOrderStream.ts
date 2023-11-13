@@ -1,11 +1,13 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { OrderSide } from "@orderly.network/types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { OrderSide, OrderEntity } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
-import { OrderEntity } from "@orderly.network/types";
 import { useEventEmitter } from "../useEventEmitter";
+import { useExecutionReport } from "./useExecutionReport";
+import { useWS } from "../useWS";
+import { useSWRConfig } from "swr";
+
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -18,7 +20,10 @@ export enum OrderStatus {
   PARTIAL_FILLED = "PARTIAL_FILLED",
   CANCELED = "CANCELED",
   NEW = "NEW",
+  // CANCELLED + FILLED
   COMPLETED = "COMPLETED",
+  //  NEW + PARTIAL_FILLED
+  INCOMPLETE = "INCOMPLETE",
 }
 
 export const useOrderStream = ({
@@ -33,8 +38,9 @@ export const useOrderStream = ({
   side?: OrderSide;
 } = {}) => {
   // const markPrices$ = useMarkPricesSubject();
-
-  const ee = useEventEmitter();
+  const { mutate, cache } = useSWRConfig();
+  // const ee = useEventEmitter();
+  const ws = useWS();
 
   const { data: markPrices = {} } = useMarkPricesStream();
   const [doCancelOrder] = useMutation("/v1/order", "DELETE");
@@ -73,7 +79,9 @@ export const useOrderStream = ({
     }
   );
 
-  // useExecutionReport();
+  // const { data: report } = useExecutionReport();
+
+  // console.log("--!!!!!----", report);
 
   const orders = useMemo(() => {
     if (!ordersResponse.data) {
@@ -91,13 +99,58 @@ export const useOrderStream = ({
   }, [ordersResponse.data, markPrices]);
 
   /// Hack: 为了让订单列表能够及时更新，这里需要订阅订单的变化, 后续优化
-  useEffect(() => {
-    const handler = () => ordersResponse.mutate();
-    ee.on("orders:changed", handler);
+  // useEffect(() => {
+  //   const handler = () => {
+  //     ordersResponse.mutate();
+  //   };
+  //   ee.on("orders:changed", handler);
 
-    return () => {
-      ee.off("orders:changed", handler);
-    };
+  //   return () => {
+  //     ee.off("orders:changed", handler);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe(
+      {
+        id: "executionreport_orders",
+        event: "subscribe",
+        topic: "executionreport",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          console.log("executionreport", data);
+          // console.log("cache", cache);
+          ordersResponse.mutate((prevData) => {
+            // console.log("prevData", prevData);
+            const { symbol, side, status } = data;
+
+            // FIXME: 注意分页逻辑
+
+            const newData = {
+              ...data,
+            };
+
+            if (status === OrderStatus.NEW) {
+              if (!prevData) return [[newData]];
+              return [[newData, ...prevData?.[0]], ...prevData];
+            }
+
+            if(status === OrderStatus.CANCELED || status ===OrderStatus.FILLED) {
+
+            }
+
+            if(status === OrderStatus.PARTIAL_FILLED){
+
+            }
+
+            return prevData;
+          });
+        },
+      }
+    );
+    return () => unsubscribe();
   }, []);
 
   /**

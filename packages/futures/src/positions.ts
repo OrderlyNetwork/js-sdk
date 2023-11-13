@@ -48,9 +48,18 @@ export type UnrealPnLROIInputs = {
   unrealizedPnL: number;
 };
 export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
-  const { positionQty, openPrice, IMR, unrealizedPnL } = inputs;
-  return new Decimal(unrealizedPnL)
-    .div(new Decimal(positionQty).mul(openPrice).mul(IMR))
+  const { openPrice, IMR } = inputs;
+
+  if (
+    inputs.unrealizedPnL === 0 ||
+    inputs.positionQty === 0 ||
+    openPrice === 0 ||
+    IMR === 0
+  )
+    return 0;
+
+  return new Decimal(inputs.unrealizedPnL)
+    .div(new Decimal(inputs.positionQty).mul(openPrice).mul(IMR))
     .toNumber();
 }
 

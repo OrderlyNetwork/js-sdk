@@ -282,12 +282,16 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
             setInputStatus("error");
             setHintMessage("Insufficient balance");
           } else {
+            // reset input status
             setInputStatus("default");
             setHintMessage("");
           }
         }
       } else {
         setQuantity("");
+        // reset input status when value is empty
+        setInputStatus("default");
+        setHintMessage("");
       }
     },
     [dst.decimals, maxAmount]
@@ -419,8 +423,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     });
 
     // reset input status
-    setInputStatus("default");
-    setHintMessage("");
+    // setInputStatus("default");
+    // setHintMessage("");
 
     setAmount("");
   };

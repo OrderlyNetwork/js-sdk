@@ -18,6 +18,7 @@ import {
   useWooSwapQuery,
   useEventEmitter,
   useSymbolsInfo,
+  useWS,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
@@ -47,6 +48,8 @@ export const AssetsContext = createContext<AssetsContextState>(
 export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   const { configStore } = useContext<any>(OrderlyContext);
   const account = useAccountInstance();
+
+  const ws = useWS();
 
   const onDeposit = useCallback(async () => {
     const result = await modal.show(DepositAndWithdrawWithSheet, {
@@ -116,21 +119,32 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
 
   const symbolsInfo = useSymbolsInfo();
 
-  useExecutionReport({
-    onMessage: (data: any) => {
-      // console.log("useExecutionReport", data);
-      const { title, msg } = getOrderExecutionReportMsg(data, symbolsInfo);
-      if (title && msg) {
-        toast.success(
-          <div>
-            {title}
-            <br />
-            <div className="text-white/[0.54]">{msg}</div>
-          </div>
-        );
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe(
+      {
+        id: "executionreport",
+        event: "subscribe",
+        topic: "executionreport",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          console.log("executionreport", data);
+          const { title, msg } = getOrderExecutionReportMsg(data, symbolsInfo);
+          if (title && msg) {
+            toast.success(
+              <div>
+                {title}
+                <br />
+                <div className="text-white/[0.54]">{msg}</div>
+              </div>
+            );
+          }
+        },
       }
-    },
-  });
+    );
+    return () => unsubscribe();
+  }, [symbolsInfo.symbol]);
 
   const { query: wooCrossSwapQuery } = useWooCrossSwapQuery();
   const { query: wooSwapQuery } = useWooSwapQuery();

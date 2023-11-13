@@ -49,6 +49,9 @@ export const TabList: FC<TabListProps> = (props) => {
   const tabContext = useContext(TabContext);
 
   const calcLeft = useCallback((target: HTMLButtonElement) => {
+    if (!target) {
+      return;
+    }
     const { left, width } = target.getBoundingClientRect();
 
     const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;

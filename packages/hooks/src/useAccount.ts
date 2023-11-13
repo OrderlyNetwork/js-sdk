@@ -2,6 +2,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Account, AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
+import { usePrivateQuery } from "./usePrivateQuery";
+import { API } from "@orderly.network/types";
 
 export const useAccount = (): {
   account: Account;
@@ -35,6 +37,11 @@ export const useAccount = (): {
   const account = useAccountInstance();
 
   const [state, setState] = useState<AccountState>(account.stateValue);
+
+  // const { data: userInfo } =
+  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  // console.log("userInfo", userInfo);
 
   // const state = useObservable<AccountState>(
   //   () => account.state$,
@@ -72,22 +79,6 @@ export const useAccount = (): {
     return account.createAccount();
   }, [account]);
 
-  // const connect = useCallback(async () => {
-  //   return onWalletConnect?.();
-  // }, [account]);
-
-  // // const settlement = useCallback(async () => {
-  // //   return account.settlement();
-  // // }, [account]);
-
-  // const disconnect = async () => {
-  //   // account.disconnect();
-  //   return onWalletDisconnect?.();
-  // };
-
-  // const setChain = async (chainId: number) => {
-  //   return onSetChain?.(chainId);
-  // };
 
   // console.log("--------", state);
 

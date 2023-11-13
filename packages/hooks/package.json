@@ -1,13 +1,14 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "0.0.87",
+  "version": "0.0.91",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "generate:docs": "typedoc",
+    "docs:generate": "typedoc",
+    "docs:parse": "typedoc-json-parser",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
