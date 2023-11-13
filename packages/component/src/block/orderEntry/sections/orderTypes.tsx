@@ -57,7 +57,7 @@ const OrderTypeItem: FC<{
         className={"w-[14px] h-[14px] rounded-full border-2 border-base-contrast-20"}
       >
         {props.active && (
-          <Circle className="w-[10px] h-[10px] text-primary bg-primary rounded-full" />
+          <Circle className="w-[10px] h-[10px] text-link bg-link rounded-full" />
         )}
       </button>
       <span className="text-3xs">{props.label}</span>

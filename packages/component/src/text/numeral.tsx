@@ -57,9 +57,9 @@ export interface NumeralProps {
 }
 
 const coloringClasses: Record<string, string> = {
-  lose: "text-trade-loss",
-  profit: "text-trade-profit",
-  neutral: "text-base-contrast/50",
+  lose: "text-danger-light",
+  profit: "text-success-light",
+  neutral: "text-base-contrast-54",
 };
 
 export const Numeral: FC<NumeralProps> = (props) => {

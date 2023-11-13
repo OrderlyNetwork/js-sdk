@@ -30,7 +30,7 @@ export const Market: FC<Props> = (props) => {
       <SheetTrigger asChild>
         <button className={"flex items-center gap-1"}>
           <span>{symbolConfig[symbol]("name")}</span>
-          <ArrowIcon size={8} />
+          <ArrowIcon size={8} className="fill-base-contrast-54 " />
         </button>
       </SheetTrigger>
       <SheetContent

@@ -17,7 +17,7 @@ export const ArrowIcon: FC<IconProps> = (props) => {
       {...rest}
     >
       <path
-        fill="currentColor"
+        fill="base-contrast-54"
         d="M1.739 3.75a.24.24 0 0 0-.183.394l4.26 5.145a.238.238 0 0 0 .367 0l4.261-5.145a.24.24 0 0 0-.183-.394H1.739Z"
       />
     </svg>

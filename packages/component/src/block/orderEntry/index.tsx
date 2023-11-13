@@ -342,7 +342,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
-                  className="text-base-contrast/80"
+                  className="text-base-contrast-80"
                   precision={0}
                 >{`${freeCollateral ?? "--"}`}</Numeral>
 

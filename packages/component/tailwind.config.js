@@ -48,6 +48,9 @@ module.exports = {
         quaternary: {
           DEFAULT: "rgb(var(--orderly-color-quaternary) / <alpha-value>)",
         },
+        link: {
+          DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
+        },
 
         // 用于页面背景色，大块元素背景色
         base: {
