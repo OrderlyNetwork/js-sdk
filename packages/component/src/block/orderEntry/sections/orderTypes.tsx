@@ -38,22 +38,29 @@ const OrderTypeItem: FC<{
   value: OrderType;
   onClick: (value: OrderType | "") => void;
 }> = (props) => {
+  let clsName = "flex items-center gap-1 cursor-pointer";
+  console.log("props.active", props.active);
+  if (props.active) {
+    clsName += " text-base-contrast";
+  } else {
+    clsName += " text-base-contrast-54";
+  }
   return (
     <div
-      className="flex items-center gap-1 cursor-pointer"
+      className={clsName}
       onClick={() => {
         props.onClick(props.active ? "" : props.value);
       }}
     >
       <button
         type="button"
-        className="w-[14px] h-[14px] rounded-full border-2 border-base-contrast/20 text-base-contrast/80"
+        className={"w-[14px] h-[14px] rounded-full border-2 border-base-contrast-20"}
       >
         {props.active && (
-          <Circle className="fill-current text-current w-[10px] h-[10px]" />
+          <Circle className="w-[10px] h-[10px] text-primary bg-primary rounded-full" />
         )}
       </button>
-      <span className="text-3xs text-base-contrast/50">{props.label}</span>
+      <span className="text-3xs">{props.label}</span>
     </div>
   );
 };

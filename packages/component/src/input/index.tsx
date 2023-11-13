@@ -137,7 +137,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof prefix === "string") {
-        return <InputMask className="text-3xs select-none">{prefix}</InputMask>;
+        return <InputMask className="text-3xs select-none text-base-contrast-54">{prefix}</InputMask>;
       }
 
       return prefix;
@@ -149,7 +149,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof suffix === "string") {
-        return <InputMask className="text-3xs select-none">{suffix}</InputMask>;
+        return <InputMask className="text-3xs select-none text-base-contrast-54">{suffix}</InputMask>;
       }
 
       return suffix;

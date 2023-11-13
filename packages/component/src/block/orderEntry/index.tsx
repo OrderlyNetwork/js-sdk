@@ -338,7 +338,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
 
             <div className={"flex justify-between items-center"}>
-              <div className="flex gap-1 text-gray-500 text-4xs">
+              <div className="flex gap-1 text-base-contrast-54 text-4xs">
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
@@ -366,6 +366,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <MSelect
                     label={"Order Type"}
                     value={field.value}
+                    className="bg-base-600"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
@@ -416,7 +417,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     value={isMarketOrder ? "Market" : field.value}
                     className={"text-right"}
                     containerClassName={
-                      isMarketOrder ? "bg-base-100" : undefined
+                      isMarketOrder ? "bg-base-700" : "bg-base-600"
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {
@@ -442,6 +443,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     inputMode="decimal"
                     suffix={symbolConfig?.base}
                     className="text-right"
+                    containerClassName="bg-base-600"
                     error={!!methods.formState.errors?.order_quantity}
                     helpText={methods.formState.errors?.order_quantity?.message}
                     value={field.value}
@@ -489,6 +491,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <Input
                     disabled={disabled}
                     className={"text-right"}
+                    containerClassName="bg-base-600"
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
                     type="text"

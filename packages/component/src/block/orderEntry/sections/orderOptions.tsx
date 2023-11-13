@@ -52,7 +52,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
 
   return (
     <>
-      <div className="flex items-center py-[2px] justify-between">
+      <div className="flex items-center py-[2px] justify-between text-base-contrast-54">
         <Controller
           name="reduce_only"
           control={control}
@@ -139,7 +139,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     props.onConfirmChange?.(!!checked);
                   }}
                 />
-                <Label htmlFor="orderConfirm">Order confirm</Label>
+                <Label htmlFor="orderConfirm" className="text-base-contrast-54">Order confirm</Label>
               </div>
               <Controller
                 name="visible_quantity"
@@ -155,7 +155,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(checked ? 0 : 1);
                         }}
                       />
-                      <Label onClick={showHiddenHint}>Hidden</Label>
+                      <Label onClick={showHiddenHint}  className="text-base-contrast-54">Hidden</Label>
                     </div>
                   );
                 }}
