@@ -82,8 +82,8 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           <Button
             size={"small"}
             loading={props.loading}
-            variant={"gradient"}
-            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
+            // variant={"gradient"}
+            className="bg-primary text-base-contrast text-4xs hover:text-base-300 h-[30px]"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
@@ -93,8 +93,8 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
             <SheetTrigger asChild>
               <Button
                 size={"small"}
-                variant={"gradient"}
-                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
+                // variant={"gradient"}
+                className="bg-primary text-base-contrast text-4xs hover:text-base-80 h-[30px]"
                 loading={props.loading}
                 disabled={props.loading || errors?.ChainNetworkNotSupport}
               >
