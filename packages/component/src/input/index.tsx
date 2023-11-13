@@ -117,7 +117,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
             }
           >
-            <X size={16} />
+            <X size={16} className="text-base-contrast-54" />
           </span>
         </button>
       );
@@ -184,7 +184,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
             disabled={!!disabled}
             className={cn(
-              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer placeholder:text-base-contrast/20",
+              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer placeholder:text-base-contrast-20",
               typeof prefix !== "undefined" && "px-0",
               className
             )}

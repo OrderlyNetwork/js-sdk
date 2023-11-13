@@ -62,6 +62,7 @@ module.exports = {
           600: "rgb(var(--orderly-color-base-600) / <alpha-value>)",
           700: "rgb(var(--orderly-color-base-700) / <alpha-value>)",
           800: "rgb(var(--orderly-color-base-800) / <alpha-value>)",
+          900: "rgb(var(--orderly-color-base-900) / <alpha-value>)",
           contrast: {
             // DEFAULT:"rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
             DEFAULT: "rgb(var(--orderly-color-base-foreground) / 0.98)",

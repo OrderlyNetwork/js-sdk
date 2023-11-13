@@ -15,18 +15,18 @@ export const Cell: FC<MarketCellProps> = (props) => {
 
   const colorClassName = useMemo(() => {
     if (!item["24h_open"] || !item["24h_close"]) {
-      return "text-base-contrast/50";
+      return "text-base-contrast-54";
     }
 
     if (item["24h_close"] > item["24h_open"]) {
-      return "text-trade-profit";
+      return "text-success-light";
     }
 
     if (item["24h_close"] < item["24h_open"]) {
-      return "text-trade-loss";
+      return "text-danger-light";
     }
 
-    return "text-base-contrast/50";
+    return "text-base-contrast-54";
   }, [item["24h_open"], item["24h_close"]]);
 
   return (
@@ -36,20 +36,20 @@ export const Cell: FC<MarketCellProps> = (props) => {
     >
       <NetworkImage type={"symbol"} symbol={item.symbol} />
       <div className="flex flex-1 flex-col">
-        <div className="flex items-center justify-between">
-          <Text rule="symbol">{item.symbol}</Text>
+        <div className="flex items-center justify-between text-2xs">
+          <Text rule="symbol" className="text-base-contrast">{item.symbol}</Text>
           <Numeral precision={quote_dp} className={colorClassName}>
             {item["24h_close"]}
           </Numeral>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-4xs">
           <Numeral.total
             rule="human"
-            className="text-3xs text-base-contrast/50"
+            className="text-base-contrast-54"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
           />
-          <Numeral rule="percentages" className="text-3xs" coloring>
+          <Numeral rule="percentages" coloring>
             {item.change}
           </Numeral>
         </div>
