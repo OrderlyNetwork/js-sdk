@@ -6,6 +6,7 @@ import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
+import { min } from "ramda";
 
 export type OrderBookItem = number[];
 
@@ -50,7 +51,17 @@ const reduceItems = (
         priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
 
-      //
+      if (depth < 1 && depth > 0) {
+        const priceStr = price.toString();
+        const index = priceStr.indexOf(".");
+        const decimal = priceStr.slice(index + 1);
+        const decimalDepth = depth.toString().slice(2).length;
+        const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
+        priceKey = new Decimal(priceStr.slice(0, index) + "." + decimalStr).toNumber();
+      }
+
+      // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
+
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
@@ -96,14 +107,50 @@ export const reduceOrderbook = (
   level: number,
   data: OrderbookData
 ): OrderbookData => {
-  const asks = reduceItems(depth, level, data.asks, true).reverse();
+  let asks = reduceItems(depth, level, data.asks, true);
 
-  const bids = reduceItems(depth, level, data.bids);
+  let bids = reduceItems(depth, level, data.bids);
+
+  
+  /// not empty and asks.price <= bids.price
+  if(asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
+
+    if(asks.length === 1) {
+      const [ price, qty, newQuantity ] = asks[0];
+      asks.shift();
+      asks.push([ price + (depth === undefined ? 0 : depth), qty, newQuantity ]);
+    } else {
+      const[ bidPrice ] = bids[0];
+      while(asks.length > 0) {
+        const [ askPrice, askQty, newQuantity ] = asks[0];
+        
+        if(askPrice <= bidPrice) {
+          asks.shift();
+          for(let index = 0; index < asks.length; index++) {
+            const [ price, qty, total ] = asks[index];
+
+             if(index === 0) {
+              asks[index] = [
+                price, qty + askQty, total + newQuantity
+              ];
+             } else {
+              asks[index] = [
+                price, qty, total + newQuantity
+              ];
+             }
+          }
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
+  asks = asks.reverse();
+  
   return {
-    asks:
-      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
-    bids:
-      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
+    asks: asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
+    bids: bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
   };
 };
 
@@ -226,8 +273,8 @@ export const useOrderbookStream = (
             //   bids: bids,
             //   asks: asks,
             // });
-            setRequestData({bids: bids, asks: asks});
-            setData({bids: [...bids], asks: [...asks]});
+            setRequestData({ bids: bids, asks: asks });
+            setData({ bids: [...bids], asks: [...asks] });
           }
           setIsLoading(false);
         },
@@ -258,7 +305,7 @@ export const useOrderbookStream = (
       {
         onMessage: (message: any) => {
           //
-      if (ignore) return;
+          if (ignore) return;
           setData((data) => {
             const mergedData =
               !message.asks && !message.bids
@@ -312,7 +359,10 @@ export const useOrderbookStream = (
   }, [middlePrice]);
 
 
-  const reducedData = reduceOrderbook(depth, level, data);
+  const reducedData = reduceOrderbook(depth, level, {
+    asks: [...data.asks],
+    bids: [...data.bids],
+  });
 
   return [
     {
