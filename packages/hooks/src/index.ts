@@ -3,7 +3,6 @@ export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
 export { usePrivateQuery } from "./usePrivateQuery";
 export { useBoolean } from "./useBoolean";
-// export { useConfig } from "./useConfig";
 
 export { useAccount } from "./useAccount";
 export { useAccountInstance } from "./useAccountInstance";
@@ -31,7 +30,7 @@ export { useSWR, SWRConfig, type SWRConfiguration };
 
 export * from "use-debounce";
 
-export * as apis from "./apis";
 export * from "./orderly/orderlyHooks";
+
 //---- woo only -----
 export * from "./woo/woo";

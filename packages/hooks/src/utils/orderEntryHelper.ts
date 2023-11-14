@@ -24,9 +24,10 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   let [values, input, value, markPrice, config] = inputs;
 
   if (needNumberOnlyFields.includes(input)) {
-    //清理千分位符
+    // clean the thousandths
     value = value.toString();
     value = value.replace(/,/g, "");
+    // clear extra character expect number and .
     value = value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
   }
 
@@ -45,7 +46,7 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 /**
- * 数字精度处理
+ * digital precision processing
  * @param inputs
  * @returns
  */
@@ -53,8 +54,7 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
   return function (inputs: orderEntryInputs): orderEntryInputs {
     const [values, input, value, markPrice, config] = inputs;
 
-    //TODO:格式化只处理千分位等等问题
-
+    // TODO: formatting only deals with the thousandths and so on
     // if (!!values.order_quantity) {
     //
     //   const d = new Decimal(values.order_quantity);
@@ -83,24 +83,20 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
 }
 
 /**
- * 价格输入处理
+ * price input handle
  * @param inputs
  * @returns
  */
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
-  //
-
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
   }
 
-  // 输入价格的时候， total也需要联动
+  // when entering the price, total also needs to be linked
   const price = new Decimal(value);
   const priceDP = price.dp();
-
-  //
 
   if (priceDP > config.quoteDP) {
     values.order_price = price.toDecimalPlaces(config.quoteDP).toString();
@@ -128,7 +124,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 /**
- * 数量输入处理
+ * quantity input handle
  * @param inputs
  * @returns
  */
@@ -142,8 +138,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   let quantity = new Decimal(value);
   const quantityDP = quantity.dp();
 
-  //// 检查长度进行精度处理，用处理后的值重新计算
-
+  // check the length for precision and recalculate
   if (quantityDP > config.baseDP) {
     quantity = quantity.toDecimalPlaces(config.baseDP);
     values.order_quantity = quantity.toNumber();
@@ -184,7 +179,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 /**
- * 总价输入处理
+ * total input handle
  * @param inputs
  * @returns
  */
@@ -224,7 +219,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 /**
- * 其他输入处理
+ * other input handle
  * @param inputs
  * @returns
  */

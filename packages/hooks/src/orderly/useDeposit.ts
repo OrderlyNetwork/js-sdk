@@ -50,9 +50,9 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const dst = useMemo(() => {
     const chain: API.Chain = onlyTestnet
-      ? findByChainId(ARBITRUM_TESTNET_CHAINID)
-      : findByChainId(ARBITRUM_MAINNET_CHAINID);
-    //
+      ? findByChainId(ARBITRUM_TESTNET_CHAINID)!
+      : findByChainId(ARBITRUM_MAINNET_CHAINID)!;
+
     const USDC = chain?.token_infos.find((token) => token.symbol === "USDC");
     if (!chain) {
       throw new Error("dst chain not found");
