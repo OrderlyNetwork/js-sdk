@@ -14,17 +14,15 @@ export interface UserOrdersReturn {
 
 const chche: Record<string, boolean> = {};
 
-export const useOrderStream = ({
-  status,
-  symbol,
-  side,
-  size = 100,
-}: {
+type Params = {
   symbol?: string;
   status?: OrderStatus;
   size?: number;
   side?: OrderSide;
-} = {}): any => {
+};
+
+export const useOrderStream = (params: Params) => {
+  const { status, symbol, side, size = 100 } = params;
   const ws = useWS();
 
   const { data: markPrices = {} } = useMarkPricesStream();
@@ -214,7 +212,7 @@ export const useOrderStream = ({
       updateOrder,
       cancelOrder,
     },
-  ];
+  ] as const;
 };
 
 // Re-page the data

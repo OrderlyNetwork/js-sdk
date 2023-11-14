@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";
-
-import { prop, propOr, map } from "ramda";
+import { prop } from "ramda";
 import { useQuery } from "../useQuery";
 
 export const useLeverage = () => {
@@ -34,5 +33,8 @@ export const useLeverage = () => {
             .map((item: string) => parseInt(item))
         : [],
     },
+  ] as [
+    number | undefined,
+    { update: typeof updateLeverage; config: number[] }
   ];
 };

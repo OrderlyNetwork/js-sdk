@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "../useQuery";
-import useSWRSubscription from "swr/subscription";
-
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useWS } from "../useWS";
-import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useIndexPrice } from "./useIndexPrice";
 import { useOpenInterest } from "./useOpenInterest";
@@ -24,18 +21,6 @@ export const useTickerStream = (symbol: string) => {
   const [ticker, setTicker] = useState<any>();
 
   const ws = useWS();
-
-  // const { data: ticker } = useSWRSubscription(
-  //   `${symbol}@ticker`,
-  //   (key, { next }) => {
-
-  //     return () => {
-  //       //unsubscribe
-
-  //       unsubscribe?.();
-  //     };
-  //   }
-  // );
 
   useEffect(() => {
     const unsubscribe = ws.subscribe(
@@ -70,9 +55,9 @@ export const useTickerStream = (symbol: string) => {
     //
     if (!info) return null;
     if (!ticker) return info;
-    const config: any = { 
-      ...info, 
-      mark_price: markPrice, 
+    const config: any = {
+      ...info,
+      mark_price: markPrice,
       index_price: indexPrice,
       open_interest: openInterest,
     };
@@ -81,7 +66,6 @@ export const useTickerStream = (symbol: string) => {
       config["24h_open"] = ticker.open;
     }
 
-
     if (ticker.close !== undefined) {
       config["24h_close"] = ticker.close;
     }
@@ -89,7 +73,7 @@ export const useTickerStream = (symbol: string) => {
     if (ticker.high !== undefined) {
       config["24h_high"] = ticker.high;
     }
-    
+
     if (ticker.low !== undefined) {
       config["24h_low"] = ticker.low;
     }
@@ -107,6 +91,5 @@ export const useTickerStream = (symbol: string) => {
     return config;
   }, [info, symbol, ticker]);
 
-  // return useQuery(`/public/futures/${symbol}`);
-  return value;
+  return value as API.MarketInfo;
 };

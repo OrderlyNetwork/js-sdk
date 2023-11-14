@@ -6,14 +6,11 @@ export const useOpenInterest = (symbol: string) => {
   return useSWRSubscription(`${symbol}@openinterest`, (key, { next }) => {
     const unsubscribe = ws.subscribe(`${symbol}@openinterest`, {
       onMessage: (message: any) => {
-        //
         next(null, message.openInterest);
       },
     });
 
     return () => {
-      //unsubscribe
-
       unsubscribe?.();
     };
   });

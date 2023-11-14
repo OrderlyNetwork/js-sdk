@@ -1,26 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
-
 import { Decimal } from "@orderly.network/utils";
 import { useCollateral } from "./useCollateral";
-
 import { useAccount } from "../useAccount";
 
-export type WithdrawInputs = {
-  chainId: number;
-  token: string;
-  amount: number;
-};
-
-export interface WithdrawReturns {
-  maxAmount: number;
-  availableBalance: number;
-  unsettledPnL: number;
-  isLoading: boolean;
-  withdraw: (inputs: WithdrawInputs) => Promise<any>;
-}
-
-export const useWithdraw = (): WithdrawReturns => {
+export const useWithdraw = () => {
   const { account, state } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);

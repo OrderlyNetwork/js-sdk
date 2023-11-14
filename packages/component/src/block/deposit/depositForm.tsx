@@ -20,7 +20,6 @@ import {
   useLocalStorage,
   useChains,
   useBoolean,
-  useAppState,
 } from "@orderly.network/hooks";
 
 import { MoveDownIcon } from "@/icon";

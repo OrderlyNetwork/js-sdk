@@ -1,20 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { account, positions } from "@orderly.network/futures";
-
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
-import { type API } from "@orderly.network/types";
+import { type API, OrderEntity } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { pathOr, propOr } from "ramda";
-import { OrderEntity } from "@orderly.network/types";
-
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
-
-import { useEventEmitter } from "../useEventEmitter";
 
 export interface PositionReturn {
   data: any[];
@@ -29,13 +24,8 @@ export const usePositionStream = (
   options?: SWRConfiguration
 ) => {
   const symbolInfo = useSymbolsInfo();
-
-  // const ee = useEventEmitter();
-
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
-
-  //
 
   const { data: holding } = usePrivateQuery<API.Holding[]>(
     "/v1/client/holding",
@@ -249,7 +239,7 @@ export const usePositionStream = (
       loadMore: () => {},
       refresh: () => {},
     },
-  ];
+  ] as const;
 };
 
 export const pathOr_unsettledPnLPathOr = pathOr(0, [

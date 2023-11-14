@@ -1,12 +1,8 @@
 import useSWRSubscription from "swr/subscription";
-
 import { useWS } from "../useWS";
 
 export const useMarkPricesStream = () => {
   const ws = useWS();
-  // const markPrice$ = useMarkPricesSubject();
-  // const [isLoading, setIsLoading] = useState(true);
-
   return useSWRSubscription("markPrices", (key, { next }) => {
     const unsubscribe = ws.subscribe(
       // { event: "subscribe", topic: "markprices" },
@@ -30,11 +26,7 @@ export const useMarkPricesStream = () => {
     );
 
     return () => {
-      //unsubscribe
-
       unsubscribe?.();
     };
   });
-
-  // return [data, { isLoading }];
 };

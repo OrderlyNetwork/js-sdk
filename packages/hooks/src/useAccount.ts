@@ -1,22 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Account, AccountState } from "@orderly.network/core";
+import { AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
-import { usePrivateQuery } from "./usePrivateQuery";
-import { API } from "@orderly.network/types";
 
-export const useAccount = (): {
-  account: Account;
-  state: AccountState;
-  // login: (address: string) => void;
-  createOrderlyKey: (remember: boolean) => Promise<string>;
-  createAccount: () => Promise<string>;
-  // disconnect: () => Promise<void>;
-  // connect: () => Promise<any>;
-  // setChain: (chainId: number) => Promise<any>;
-  // settlement: () => Promise<any>;
-  // info: API.AccountInfo | undefined;
-} => {
+export const useAccount = () => {
   const {
     configStore,
     keyStore,
@@ -79,11 +66,9 @@ export const useAccount = (): {
     return account.createAccount();
   }, [account]);
 
-
   // console.log("--------", state);
 
   return {
-    // account: state!,
     account,
     state,
     // info: {},

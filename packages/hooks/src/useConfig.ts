@@ -8,8 +8,6 @@ export const useConfig = <T>(
 ): T | ConfigStore => {
   const { configStore } = useContext(OrderlyContext);
 
-  //
-
   if (typeof key !== "undefined") {
     if (typeof defaultValue !== "undefined") {
       return configStore.getOr(key, defaultValue);

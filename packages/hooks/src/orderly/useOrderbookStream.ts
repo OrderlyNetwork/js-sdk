@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import { useTickerStream } from "./useTickerStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";
@@ -142,16 +141,14 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
   const asks = [...data.asks];
   const bids = [...data.bids];
 
-  update.asks.forEach(element => {
-    for(let index = 0; index < asks.length; index++) {
+  update.asks.forEach((element) => {
+    for (let index = 0; index < asks.length; index++) {
       if (element[1] === 0) {
-       
-        // remove 
+        // remove
         if (element[0] === asks[index][0]) {
           const removeItem = asks.splice(index, 1);
           break;
         }
-
       } else if (element[0] === asks[index][0]) {
         // update
         asks[index] = element;
@@ -164,16 +161,14 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
     }
   });
 
-  update.bids.forEach(element => {
-    for(let index = 0; index < bids.length; index++) {
+  update.bids.forEach((element) => {
+    for (let index = 0; index < bids.length; index++) {
       if (element[1] === 0) {
-       
-        // remove 
+        // remove
         if (element[0] === bids[index][0]) {
           const removeItem = bids.splice(index, 1);
           break;
         }
-
       } else if (element[0] === bids[index][0]) {
         // update
         bids[index] = element;
@@ -256,7 +251,6 @@ export const useOrderbookStream = (
           if (ignore) return;
           //
           if (!!message) {
-
             // sort and filter qty > 0
             let bids = message.bids.sort(bidsSortFn);
             bids = bids.filter((item: number[]) => !isNaN(item[0]));
@@ -269,8 +263,8 @@ export const useOrderbookStream = (
             //   bids: bids,
             //   asks: asks,
             // });
-            setRequestData({bids: bids, asks: asks});
-            setData({bids: bids, asks: asks});
+            setRequestData({ bids: bids, asks: asks });
+            setData({ bids: bids, asks: asks });
           }
           setIsLoading(false);
         },
@@ -301,7 +295,7 @@ export const useOrderbookStream = (
       {
         onMessage: (message: any) => {
           //
-      if (ignore) return;
+          if (ignore) return;
           setData((data) => {
             const mergedData =
               !message.asks && !message.bids
@@ -353,7 +347,6 @@ export const useOrderbookStream = (
   useEffect(() => {
     prevMiddlePrice.current = middlePrice;
   }, [middlePrice]);
-
 
   const reducedData = reduceOrderbook(depth, level, data);
 

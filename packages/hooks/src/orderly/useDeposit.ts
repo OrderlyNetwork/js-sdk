@@ -15,10 +15,9 @@ import {
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { isNativeTokenChecker, nativeTokenAddress } from "../woo/constants";
+import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
 import { OrderlyContext } from "../orderlyContext";
-// import { Decimal } from "@orderly.network/utils";
 
 export type useDepositOptions = {
   // from address
@@ -33,7 +32,6 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  //
   const { onlyTestnet } = useContext<any>(OrderlyContext);
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
@@ -49,8 +47,6 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const prevAddress = useRef<string | undefined>();
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
-
-  // const depositQueue = useRef<string[]>([]);
 
   const dst = useMemo(() => {
     const chain: API.Chain = onlyTestnet
@@ -96,7 +92,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   const fetchBalance = useCallback(
     async (address?: string, decimals?: number) => {
       if (!address) return;
-      //
 
       try {
         if (balanceRevalidating) return;
@@ -128,8 +123,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     const balances = await Promise.all(tasks);
 
     // const balances = await account.assetsManager.getBalances(tokens);
-
-    // //
     // setBalance(() => balances);
   }, []);
 
