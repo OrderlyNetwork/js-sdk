@@ -4,5 +4,5 @@
     "entryPointStrategy": "packages",
     "includeVersion": false,
     // "json": "apps/docs/_doc_meta_/documentation.json"
-    // "plugin": ["typedoc-plugin-markdown"]
+    "plugin": ["typedoc-plugin-markdown"]
   }
