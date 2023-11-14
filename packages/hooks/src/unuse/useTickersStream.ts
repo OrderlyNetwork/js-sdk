@@ -17,6 +17,5 @@ export const useTickersStream = () => {
     };
   }, []);
 
-  // return useQuery(`/public/futures/${symbol}`);
   return { data };
 };

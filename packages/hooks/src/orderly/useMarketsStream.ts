@@ -1,8 +1,7 @@
+import { useMemo } from "react";
 import { useQuery } from "../useQuery";
-
 import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
-import { useMemo } from "react";
 import { WSMessage } from "@orderly.network/types";
 
 export const useMarketsStream = () => {
@@ -11,7 +10,6 @@ export const useMarketsStream = () => {
   const { data: futures } = useQuery<WSMessage.Ticker[]>(`/v1/public/futures`, {
     revalidateOnFocus: false,
   });
-  // const config = useSymbolsInfo();
 
   const { data: tickers } = useSWRSubscription("tickers", (_, { next }) => {
     const unsubscribe = ws.subscribe(
@@ -31,8 +29,6 @@ export const useMarketsStream = () => {
     );
 
     return () => {
-      //unsubscribe
-
       unsubscribe?.();
     };
   });
@@ -58,6 +54,5 @@ export const useMarketsStream = () => {
     });
   }, [futures, tickers]);
 
-  // return listing;
   return { data: value };
 };

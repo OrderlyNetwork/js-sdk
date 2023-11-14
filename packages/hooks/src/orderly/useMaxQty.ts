@@ -121,5 +121,5 @@ export const useMaxQty = (
     reduceOnly,
   ]);
 
-  return maxQty;
+  return maxQty as number;
 };

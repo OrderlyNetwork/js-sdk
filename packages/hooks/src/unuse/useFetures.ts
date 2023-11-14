@@ -44,7 +44,6 @@ export const useFetures = () => {
   const filterBy = useCallback((key: string) => {}, [data]);
 
   return {
-    // ...data,
     data: sortedData,
     sortBy,
     filterBy,

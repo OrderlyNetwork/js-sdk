@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import { useTickerStream } from "./useTickerStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";

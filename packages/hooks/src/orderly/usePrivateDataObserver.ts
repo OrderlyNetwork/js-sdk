@@ -10,7 +10,6 @@ export const usePrivateDataObserver = () => {
   const { mutate } = useSWRConfig();
   // const ee = useEventEmitter();
   const { state } = useAccount();
-
   // useEffect(() => {
   //   const unsubscribe = ws.privateSubscribe("executionreport", {
   //     onMessage: (data: any) => {
