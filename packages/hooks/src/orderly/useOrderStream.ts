@@ -104,7 +104,6 @@ export const useOrderStream = (params: Params) => {
           ordersResponse.mutate((prevData) => {
             // console.log("prevData", prevData);
 
-            // FIXME: 注意分页逻辑
             const newOrder = {
               order_id: data.orderId,
               symbol: data.symbol,
@@ -168,12 +167,12 @@ export const useOrderStream = (params: Params) => {
   }, []);
 
   /**
-   * 取消所有订单
+   * cancel all orders
    */
   const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
 
   /**
-   * 更新单个订单
+   * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
     //
@@ -181,7 +180,7 @@ export const useOrderStream = (params: Params) => {
   }, []);
 
   /**
-   * 取消单个订单
+   * calcel order
    */
   const cancelOrder = useCallback((orderId: string, symbol?: string) => {
     return doCancelOrder(null, {
@@ -234,7 +233,7 @@ function rePageData(list: any[], total: number, pageSize: number) {
       rows = [];
     }
   }
-  console.log("rePageData", list, total, newData);
+  // console.log("rePageData", list, total, newData);
   return newData;
 }
 

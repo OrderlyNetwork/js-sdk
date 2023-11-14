@@ -1,5 +1,4 @@
 import { useCallback, useContext } from "react";
-import { useLazyQuery } from "../useLazyQuery";
 import { OrderlyContext } from "../orderlyContext";
 import { useAccountInstance } from "../useAccountInstance";
 import { useBoolean } from "../useBoolean";
@@ -51,7 +50,7 @@ export const useWooCrossSwapQuery = () => {
     []
   );
 
-  /// swap 询价
+  /// swap enquiry
   const query = useCallback(
     (inputs: {
       srcNetwork: string;

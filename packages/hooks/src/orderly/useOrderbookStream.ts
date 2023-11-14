@@ -49,8 +49,6 @@ const reduceItems = (
         priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
 
-      //
-
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
         const itemPrice = new Decimal(item[1]).add(quantity).toNumber();
@@ -75,7 +73,7 @@ const reduceItems = (
 
     result.push([price, quantity, newQuantity]);
     // if the total is greater than the level, break
-    //TODO:
+    // TODO:
     // if (i + 1 >= level) {
     //   break;
     // }
@@ -108,7 +106,6 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
-  //
   if (data.length === 0) return update;
 
   data = data.filter(([price]) => !isNaN(price));
@@ -216,8 +213,6 @@ export const useOrderbookStream = (
 
   const depths = useMemo(() => {
     const tick = config("quote_tick");
-
-    //
 
     return [tick, tick * 10, tick * 100, tick * 1000];
   }, [config("quote_tick")]);
