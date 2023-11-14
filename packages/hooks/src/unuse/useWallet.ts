@@ -1,5 +1,5 @@
 import useConstant from "use-constant";
-import { useAccountInstance } from "./useAccountInstance";
+import { useAccountInstance } from "../useAccountInstance";
 import { useMemo } from "react";
 
 export const useWallet = () => {

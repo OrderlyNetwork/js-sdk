@@ -1,7 +1,7 @@
 import { ExchangeStatusEnum, SystemStateEnum } from "@orderly.network/types";
 
 import { useContext } from "react";
-import { OrderlyContext } from "./orderlyContext";
+import { OrderlyContext } from "../orderlyContext";
 
 // app system State , loading, dataError,netError,
 // platform state

@@ -36,6 +36,7 @@ export const useSymbolsInfo = () => {
 
   return createGetter<API.SymbolExt>(data as API.SymbolExt) as Record<
     string,
-    API.Symbol
+    any
+    // (key: string, defaultValue?: any) => any
   >;
 };

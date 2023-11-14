@@ -1,19 +1,15 @@
-import { Account, SimpleDI } from "@orderly.network/core";
+import { useContext } from "react";
+import { Account, AccountState, SimpleDI } from "@orderly.network/core";
 import { WS } from "@orderly.network/net";
-import { useContext, useEffect } from "react";
 import useConstant from "use-constant";
-import { useAccount } from "./useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "./orderlyContext";
-import { AccountState } from "@orderly.network/core";
 
 const WS_NAME = "nativeWebsocketClient";
 
 export const useWS = () => {
-  // const { state } = useAccount();
   const { configStore } = useContext(OrderlyContext);
   const ws = useConstant(() => {
-    // return getWebSocketClient(account);
     let websocketClient = SimpleDI.get<WS>(WS_NAME);
     const account = SimpleDI.get<Account>(Account.instanceName);
 

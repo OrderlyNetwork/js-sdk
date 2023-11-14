@@ -1,9 +1,4 @@
-"use client";
-
-import { useContext } from "react";
 import useSWR, { SWRResponse } from "swr";
-import { OrderlyContext } from "./orderlyContext";
-
 import { fetcher, useQueryOptions } from "./utils/fetcher";
 import { useConfig } from "./useConfig";
 
@@ -19,10 +14,6 @@ export const useQuery = <T>(
 ): SWRResponse<T> => {
   const apiBaseUrl = useConfig("apiBaseUrl");
   const { formatter, ...swrOptions } = options || {};
-  // check the query is public api
-  // if (typeof query === "string" && !query.startsWith("/v1/public")) {
-  //   throw new Error("useQuery is only for public api");
-  // }
 
   if (typeof apiBaseUrl === "undefined") {
     throw new Error("please add OrderlyConfigProvider to your app");
@@ -30,7 +21,6 @@ export const useQuery = <T>(
 
   // @ts-ignore
   return useSWR<T>(
-    // `${apiBaseUrl}${query}`,
     query,
     (url, init) =>
       fetcher(url.startsWith("http") ? url : `${apiBaseUrl}${url}`, init, {
