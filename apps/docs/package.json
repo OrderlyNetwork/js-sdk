@@ -28,6 +28,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "^10.4.14",
     "clsx": "^2.0.0",
+    "decamelize": "^6.0.0",
     "eslint": "^7.32.0",
     "eslint-config-next": "^14.0.1",
     "framer-motion": "^10.13.1",
@@ -47,6 +48,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/ramda": "^0.29.3",
     "@types/react-color": "^3.0.6",
     "typedoc": "^0.24.8",
     "typedoc-json-parser": "^9.0.1",
