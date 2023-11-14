@@ -127,17 +127,10 @@ export const reduceOrderbook = (
         if(askPrice <= bidPrice) {
           asks.shift();
           for(let index = 0; index < asks.length; index++) {
-            const [ price, qty, total ] = asks[index];
-
-             if(index === 0) {
-              asks[index] = [
-                price, qty + askQty, total + newQuantity
-              ];
-             } else {
-              asks[index] = [
-                price, qty, total + newQuantity
-              ];
-             }
+            if (index === 0 ){
+              asks[index][1] += askQty;
+            }
+            asks[index][2] += newQuantity;
           }
         } else {
           break;
