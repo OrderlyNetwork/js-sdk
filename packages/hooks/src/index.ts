@@ -16,7 +16,6 @@ export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 
 export { default as useConstant } from "use-constant";
-export { DataSourceProvider } from "./provider/dataProvider";
 export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
 
