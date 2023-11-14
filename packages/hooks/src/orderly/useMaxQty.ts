@@ -63,15 +63,14 @@ export const useMaxQty = (
     if (!markPrices || !markPrices[symbol] || !orders || !accountInfo) return 0;
 
     const getSymbolInfo = symbolInfo[symbol];
-    // 当前symbol的仓位
 
-    // 当前symbol的买单
+    // current symbol buy order quantity
     const buyOrdersQty = account.getQtyFromOrdersBySide(
       orders,
       symbol,
       OrderSide.BUY
     );
-    // 当前symbol的卖单
+    // current symbol sell order quantity
     const sellOrdersQty = account.getQtyFromOrdersBySide(
       orders,
       symbol,

@@ -28,7 +28,7 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     value = value.toString();
     value = value.replace(/,/g, "");
     // clear extra character expect number and .
-    value = value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+    value = value.replace(/[^\d.]/g, "");
   }
 
   return [
