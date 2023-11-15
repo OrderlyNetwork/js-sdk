@@ -51,7 +51,7 @@ const reduceItems = (
         priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
 
-      if (depth < 1 && depth > 0) {
+      if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
         const priceStr = price.toString();
         const index = priceStr.indexOf(".");
         const decimal = priceStr.slice(index + 1);
