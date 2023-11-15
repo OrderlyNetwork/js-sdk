@@ -23,7 +23,7 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
         });
       }}
     >
-      <div className="flex-1 flex items-center space-x-3">
+      <div className="flex-1 flex items-center space-x-3 text-3xs text-base-contrast-80">
         <NetworkImage type="chain" id={id} rounded />
         <span>{name}</span>
         {bridgeless && <Tag color="primary">Bridgeless</Tag>}

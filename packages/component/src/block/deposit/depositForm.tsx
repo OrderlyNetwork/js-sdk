@@ -513,7 +513,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   return (
     <div>
       <div className={"flex items-center py-2"}>
-        <div className="flex-1">Your web3 wallet</div>
+        <div className="flex-1 text-2xs text-base-con">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
           name={walletName?.toLowerCase()}
@@ -555,7 +555,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <MoveDownIcon className={"text-primary-light"} />
       </Divider>
       <div className="flex py-2">
-        <div className={"flex-1"}>Your WOOFi Pro account</div>
+        <div className={"flex-1 text-2xs text-base-contrast"}>Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <div className={"py-2"}>
