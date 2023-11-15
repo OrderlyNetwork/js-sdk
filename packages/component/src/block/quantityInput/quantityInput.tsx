@@ -49,7 +49,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     <>
       <div
         className={cn(
-          "bg-fill dark:bg-base-100 rounded pl-1 pr-2 py-2 focus-within:bg-fill focus-within:outline focus-within:outline-1 outline-primary",
+          "bg-base-500 dark:bg-base-100 rounded pl-1 pr-2 py-2 focus-within:bg-bg-base-500 focus-within:outline focus-within:outline-1 outline-primary",
           props.className,
           {
             "outline outline-1 outline-danger": props.status === "error",
@@ -75,7 +75,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
                 });
               }}
               className={
-                "bg-transparent h-full flex-1 px-2 focus-visible:outline-none font-semibold placeholder:text-base-contrast/20"
+                "bg-transparent h-full flex-1 px-2 focus-visible:outline-none font-semibold text-sm text-base-contrast placeholder:text-base-contrast-36"
               }
               placeholder={"Quantity"}
             />
@@ -83,7 +83,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             <Button
               variant={"text"}
               size={"small"}
-              className={"font-semibold text-primary-light px-2 min-w-[40px]"}
+              className={"font-semibold text-primary-light px-2 min-w-[40px] text-3xs"}
               disabled={!props.maxAmount}
               onClick={(event) => {
                 props?.onValueChange?.({
@@ -111,7 +111,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "flex items-center text-3xs justify-between px-2 py-1 text-base-contrast/30"
+            "flex items-center text-4xs justify-between px-2 py-1 text-base-contrast-36"
           }
         >
           <span>{`$${amount}`}</span>
@@ -129,11 +129,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       {props.hintMessage && (
         <div
           className={cn(
-            "mt-2 text-3xs relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
+            "mt-2 text-4xs relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
             {
-              "text-danger": props.status === "error",
-              "before:bg-danger": props.status === "error",
-              "text-warning": props.status === "warning",
+              "text-danger-light": props.status === "error",
+              "before:bg-danger-light": props.status === "error",
+              "text-warning-light": props.status === "warning",
             }
           )}
         >

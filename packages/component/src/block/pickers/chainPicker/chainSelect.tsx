@@ -96,7 +96,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   return (
     <button
-      className="flex w-full items-center px-2 rounded bg-fill"
+      className="flex w-full items-center px-2 rounded bg-base-500"
       disabled={(chains?.length ?? 0) < 2 || props.settingChain}
       onClick={onClick}
     >
@@ -106,7 +106,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
         size={"small"}
         rounded
       />
-      <span className="flex-1 px-2 text-left">
+      <span className="flex-1 px-2 text-3xs text-left">
         {currentChain?.name ?? "Unknown"}
       </span>
       {icon}

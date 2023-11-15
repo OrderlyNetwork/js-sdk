@@ -52,11 +52,13 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
       readOnly
       value={amount}
       prefix={loading ? <Spinner size={"small"} className="mx-2" /> : undefined}
+      containerClassName="bg-base-500 rounded-borderRadius"
+      className="text-sm"
       suffix={
         <InputMask className={"flex-row items-center gap-2"}>
           <Divider vertical />
           <NetworkImage name={token.symbol} type={"token"} size={"small"} />
-          <span>{token.symbol}</span>
+          <span className="text-base-contrast-80 text-3xs">{token.symbol}</span>
         </InputMask>
       }
     />

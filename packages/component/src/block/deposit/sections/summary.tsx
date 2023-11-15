@@ -181,7 +181,7 @@ export const Summary: FC<SummaryProps> = (props) => {
   ]);
 
   return (
-    <div className={"flex-1"}>
+    <div className={"flex-1 text-4xs text-base-contrast-36"}>
       <div className="flex items-center justify-between">
         <div>
           {`1 ${props.src?.symbol} = ${
