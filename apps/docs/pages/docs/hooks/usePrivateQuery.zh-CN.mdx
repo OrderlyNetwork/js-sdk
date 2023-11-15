@@ -1,0 +1,40 @@
+# usePrivateQuery
+
+`usePrivateQuery(key, options)`
+
+网络请求 hook，用于发起 Orderly 私有 API 请求, 是对`fetch` `GET`类型请求的封装 。
+
+**Features**
+
+- 内置账号登录态检查，开发者无需检查当前用户的登录态，未登录时不会发起请求，当状态变成登录后才会发出网络请求
+- 自动完成 OrderlyKey 签名
+- 缓存请求结果，当请求参数相同时，自动使用缓存结果
+- The same key and the request is deduped, cached and shared automatically.
+- 窗口获得焦点或者网络恢复时，自动重新请求.
+
+## Usage
+
+```ts copy
+import { usePrivateQuery } from "@orderly.network/hooks";
+// get account info
+const { data, loading, error } =
+  usePrivateQuery<API.AccountInfo>("/v1/client/info",options:{});
+```
+
+**Parameters**
+
+- `key` string
+
+- `options`
+
+Type: `object`
+
+**Returns**
+
+- `loading`
+
+Type: `boolean`
+
+- `error`
+
+Type: `Error`

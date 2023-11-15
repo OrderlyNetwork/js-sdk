@@ -1,0 +1,104 @@
+import { Steps, Callout } from "nextra/components";
+
+# Hooks
+
+`@orderly.network/hooks`
+
+A collection of React hooks for implementing `Orderly JS SDK` into a React project.
+
+## Installation
+
+Inside your React project directory, run the following:
+
+```sh npm2yarn copy
+npm install @orderly.network/core @orderly.network/hooks
+```
+
+## Quick Start
+
+<Steps>
+
+### Add `OrderlyProvider`
+
+```tsx
+import type { FC, PropsWithChildren } from "react";
+import { OrderlyConfigProvider } from "@orderly.network/hooks";
+import {
+  EtherAdapter,
+  LocalStorageStore,
+  DefaultConfigStore
+} from "@orderly.network/core";
+
+const configStore = new MemoryConfigStore();
+const keyStore = new LocalStorageStore("mainnet");
+
+export const App: FC<PropsWithChildren> = ({ children }) => {
+  const brokerId = "<your id>";
+  return (
+    <OrderlyConfigProvider brokerId={brokerId} networkId="mainnet">
+      <children />
+    </OrderlyProvider>
+  );
+
+  // or you can use your own configStore, keyStore and getWalletAdapter
+  // brokerId and configStore you only need to provide one of them
+  return (
+    <OrderlyConfigProvider
+    networkId="mainnet"
+    configStore={new DefaultConfigStore({brokerId})}>
+      <children />
+    </OrderlyProvider>
+  );
+
+};
+```
+
+### Ready to go!
+
+Now you can use any Orderly hooks in your React components.
+
+```tsx
+import { OrderlyProvider } from "@orderly.network/hooks";
+
+export const UserInfo = () => {
+  const { user } = useOrderlyUser();
+
+  return (
+    <div>
+      <div>Address: {user.address}</div>
+      <div>Balance: {user.balance}</div>
+    </div>
+  );
+};
+```
+
+</Steps>
+
+## Ctageories
+
+### Base & Common
+
+提供基础的, 与具体业务无关的 hooks,
+
+- [useQuery](/docs/hooks/useQuery)
+- usePrivateQuery
+- useMutation
+- useWS
+- useBoolean
+
+### Orderly business related
+
+提供跟 Orderly 业务相关的 hooks, 通常在每个 hooks 中包含了 Orderly API 的调用, 以及对应的数据处理逻辑.
+
+Provides hooks related to Orderly business. Each hook usually contains Orderly API request and corresponding data processing logic.
+
+- useOrderEntry
+- useOrderlyUser
+
+<Callout type="info">
+  以 `stream` 结尾的 hook 表示是会实时更新的, 通常是包装了对相关 ws 的订阅.
+</Callout>
+
+## FAQ
+
+**Why need to provide a `configStore`, `keyStore` and `getWalletAdapter`?**

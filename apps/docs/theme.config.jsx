@@ -1,5 +1,4 @@
-import { useState } from "react"
-import {useAccount} from '@orderly.network/hooks'
+import {NavbarExtra} from '@/components/navbarExtra'
 
 export default {
     logo: <div className="flex">
@@ -20,12 +19,7 @@ export default {
       light: 293,
     },
     navbar:{
-      extraContent: ()=>{
-        const [count ,setCount] = useState(0)
-        const {state} = useAccount()
-        console.log('account state',state)
-        return <div className="flex items-center space-x-4" onClick={()=>setCount(count=>count+1)}>{`Connnect Wallet(${count})`}</div>
-      }
+      extraContent: NavbarExtra,
     },
     i18n: [
       { locale: 'en-US', text: 'English' },

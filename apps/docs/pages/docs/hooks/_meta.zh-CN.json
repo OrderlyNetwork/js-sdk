@@ -1,0 +1,14 @@
+{
+  "overview": "概述",
+  "request": "网络请求",
+  "account": "账户管理",
+  "assets": "资产",
+  "withdraw": "出金",
+  "deposit": "入金",
+  "markets": "市场",
+  "chains": "链",
+  "orderbook": "Orderbook",
+  "orders": "订单",
+  "positions": "持仓",
+  "faq": "FAQ"
+}

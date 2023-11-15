@@ -3,6 +3,6 @@
     "name": "Orderly JS SDK",
     "entryPointStrategy": "packages",
     "includeVersion": false,
-    // "json": "apps/docs/_doc_meta_/documentation.json"
-    "plugin": ["typedoc-plugin-markdown"]
+    "json": "apps/docs/_doc_meta_/documentation.json"
+    // "plugin": ["typedoc-plugin-markdown"]
   }

@@ -1,0 +1,120 @@
+# Account
+
+## Constructor
+
+```typescript
+const account = new Account(configStore, keyStore, getWalletAdapter);
+```
+
+**configStore**
+
+Type: `ConfigStore`
+
+**keyStore**
+
+Type: `KeyStore`
+
+## Instance properties
+
+### accountId
+
+Type: `string`
+
+当前账户的 id, 注意是 Orderly account id,不是钱包的 address;
+
+### signer
+
+Type: `Signer`
+
+## Instance methods
+
+### setAddress
+
+`setAddress(address:string):Promise<AccountState>`
+
+设置当前账户的 address, 一般在钱包连接成功后调用。调用`setAddress`后, SDK 会依次执行以下动作：
+
+1. 检查`address`是否是有效的`Orderly`用户;
+2. 检查`orderlyId`是否存在以及是否有效;
+3. 设置`account`的`status`为最新状态;
+4. 返回`account`的最新状态;
+
+可以通过`account.status`来获取当前账户的状态, 也可以通过订阅事件来获取最新状态。
+
+```typescript {6-8}
+import {Account} from '@orderly.network/core'
+
+// create account instance
+const account = new Account({...});
+
+account.on("change:status", (state: AccountState) => {
+  console.log(status);
+});
+
+// set address
+const state = await account.setAddress('0x...');
+
+```
+
+**Parameters**
+
+**Returns**
+
+`Promise<AccountState>`
+
+```typescript
+enum AccountStatus {
+  NotConnected = 0, // 未连接钱包
+  Connected = 1, // 已连接钱包
+  NotSignedIn = 2, // 但未登录
+  SignedIn = 3, // 已登录
+  DisabledTrading = 4, // 已连接钱包，已登录，未开启交易
+  EnableTrading = 5, // 已连接钱包，已登录，已开启交易
+}
+
+export interface AccountState {
+  status: AccountStatus;
+
+  checking: boolean;
+
+  accountId?: string;
+  userId?: string;
+  address?: string;
+
+  connectWallet?: {
+    name: string;
+  };
+
+  balance: string;
+  leverage: number;
+}
+```
+
+### createAccount
+
+`createAccount(): Promise<any>`
+
+**需要先连接钱包**
+
+### createOrderlyKey
+
+`signText(text: string): Promise<string>`
+
+对数据进行签名，返回签名后的数据。
+
+## Instance events
+
+### change:status
+
+```typescript
+account.on("change:status", (state: AccountState) => {
+  console.log(status);
+});
+```
+
+## Examples
+
+```typescript copy
+const signer = new Signer();
+const signedData = await signer.signText("hello world");
+```

@@ -1,0 +1,33 @@
+import { Callout } from "nextra/components";
+
+# useQuery
+
+`useQuery(key:string,options:any)`
+
+用于请求 Orderly **public** API 接口，是对`fetch` `GET`类型请求的封装。
+
+<Callout type="info">
+  **Notice:** `useQuery` can only be used for requests to the Orderly public
+  api, 如果需要请求 private api,
+  请使用[`usePrivateQuery`](/docs/hooks/usePrivateQuery).
+</Callout>
+
+**Features**
+
+- 自动管理 loading, error 状态
+- The same key and the request is deduped, cached and shared automatically.
+- 窗口获得焦点或者网络恢复时，自动重新请求.
+
+## import
+
+```ts copy
+import { usePrivateQuery } from "@orderly.network/hooks";
+```
+
+## Parameters
+
+### key
+
+Type: `string`
+
+## Returns

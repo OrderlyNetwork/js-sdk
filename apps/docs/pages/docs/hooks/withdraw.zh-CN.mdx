@@ -1,0 +1,72 @@
+# 出金
+
+`@orderly.network/hooks`提供以下 hook 来处理出金：
+
+- `useWithdraw` - 出金
+
+## Term
+
+### 可用余额
+
+`maxAmount`
+
+TODO:
+
+### 最大可提币数量
+
+`availableBalance`
+
+TODO:
+
+以上数据都可以从`useWithdraw`返回的对象中获取。
+
+```typescript
+const { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL } =
+  useWithdraw();
+```
+
+## 出金
+
+### `useWithdraw()`
+
+```typescript
+import { useWithdraw } from "@orderly.network/hooks";
+
+const { withdraw, isLoading } = useWithdraw();
+
+const res = await withdraw();
+```
+
+### 出金状态
+
+需要订阅 topic 来接收入金状态。
+
+```typescript
+import { useWS } from "@orderly.network/hooks";
+
+//...
+
+export const Example = () => {
+  const ws = useWS();
+
+  useEffect(() => {
+    const unsubscribe = ws.subscribe(
+      {
+        id: "wallet",
+        event: "subscribe",
+        topic: "wallet",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          //
+        },
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [ws]);
+};
+```

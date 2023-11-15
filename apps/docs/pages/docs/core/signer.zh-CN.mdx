@@ -1,0 +1,28 @@
+# Signer
+
+## Constructor
+
+```typescript
+const signer = new Signer();
+```
+
+## Methods
+
+### sign
+
+`sign(data: Uint8Array): Promise<Uint8Array>`
+
+### signText
+
+`signText(text: string): Promise<string>`
+
+对数据进行签名，返回签名后的数据。
+
+#### Parameters
+
+#### Examples
+
+```typescript
+const signer = new Signer();
+const signedData = await signer.signText("hello world");
+```

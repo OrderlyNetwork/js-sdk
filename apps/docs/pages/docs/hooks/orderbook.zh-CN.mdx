@@ -1,0 +1,59 @@
+import { Callout } from "nextra/components";
+import { CodeLive } from "@/components/doc/preview/codeLive";
+import orderbookRow from "@/example/orderbook.example";
+
+# Orderbook
+
+`@orderly.network/hooks`提供[`useOrderbookStream`](/)来返回格式化后的数据，方便 UI 进行展示, `symbol`参数发生变化的时候会自动订阅和取消订阅 ws, 无需手动处理。
+
+```typescript
+const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
+  useOrderbookStream(symbol, undefined, {
+    level: 7,
+  });
+```
+
+`useOrderbookStream`返回类型是一个数组, 第一个元素是格式化后的 orderbook 数据, 第二个元素是`object`，提供了一些函数和状态相关的数据。
+
+## 数据
+
+`[0]` orderbook 数据格式如下:
+
+```typescript
+// 以ETH_PERP某一时间数据为例
+{
+  asks: [
+    [],
+    ...
+  ],
+  bids: [
+    [],
+    ...
+  ],
+  markPrice: 999,
+  middlePrice: 999,
+}
+```
+
+- asks/bids 列表每一行数据依次是:
+  - 价格
+  - 数量
+  - 累计数量，计算方式是当前行的数量加上前面所有行的数量
+- asks - 订单列表,升序排序
+- bids - 订单列表,降序排序
+
+<Callout type="info">
+  **Notice:** 列表长度默认是10档，可以通过`level`参数进行修改。
+</Callout>
+
+## 深度
+
+### allDepths
+
+`allDepths`是一个数组, 里面包含了当前交易对支持所有的深度。
+
+### onDepthChange
+
+`onDepthChange`是一个函数, 通常用于在 UI 上切换深度后调用, 传入的参数是一个数字, hook 内部会根据这个参数重新对 orderbook 数据进行合并计算。
+
+<CodeLive code={orderbookRow} height={460} />

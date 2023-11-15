@@ -1,0 +1,141 @@
+# 订单
+
+`@orderly.network/hooks`提供了以下与订单相关的 hook。
+
+- `useOrderEntry` - 创建订单
+- `useOrderStream` - 订单列表、修改订单、取消订单
+
+## 创建订单
+
+`useOrderEntry` hook 会根据传入的参数返回实时数据和一些辅助函数, 查看[API](/apis/modules/)。
+
+```typescript
+export interface OrderEntryReturn {
+  onSubmit: (values: OrderEntity) => Promise<any>;
+  maxQty: number;
+  freeCollateral: number;
+  markPrice: number;
+
+  symbolConfig: API.SymbolExt;
+  helper: {
+    calculate: (values: any, field: string, value: any) => any;
+    validator: (values: any) => any;
+  };
+}
+
+const useOrderEntry = (
+  symbol: string,
+  side: OrderSide,
+  reduceOnly: boolean = false,
+  options?: UseOrderEntryOptions
+): OrderEntryReturn
+```
+
+### 实时数据
+
+`useOrderEntry` 提供了创建订单 UI 可能会用到的一些实时数据。
+
+- `maxQty`: 最大可购买数量
+- `freeCollateral`: 可用资产,不包含杠杆
+- `markPrice`: 标记价格
+
+### 计算数据
+
+`useOrderEntry` hook 提供了`calculate()`函数用来格式化用户输入的数据:
+
+- 把当前输入的数量折算成 USDC
+- 根据当前 Symbol 的精度配置截断用户输入的数量
+
+```typescript
+const {
+  helper: { calculate },
+} = useOrderEntry("PERP_ETH_USDC", OrderSide.BUY, false);
+
+const newValue = calculate(values, "order_quantity", 1);
+```
+
+### 订单数据校验
+
+前端在提交订单前，可以对数据进行校验，以提供更好的交互效果。
+
+```typescript
+const {
+  helper: { validator },
+} = useOrderEntry("PERP_ETH_USDC", OrderSide.BUY, false);
+
+const errors = validator(values);
+```
+
+### 提交订单
+
+```typescript /onSubmit/
+const { onSubmit } = useOrderEntry("PERP_ETH_USDC", OrderSide.BUY, false);
+
+const onSubmit = async (values) => {
+  const res = await onSubmit(values);
+  //...
+};
+```
+
+## 管理订单
+
+`useOrderStream`提供订单列表数据及管理功能。
+
+```typescript
+export const useOrderStream = ({
+  status,
+  symbol,
+  side,
+  size = 100,
+}: {
+  symbol?: string;
+  status?: OrderStatus;
+  size?: number;
+  side?: OrderSide;
+} = {}): any
+```
+
+### 订单列表
+
+- 支持显示所有订单或者仅显示当前 Symbol 的订单，通过`symbol`参数控制。
+- 可以根据订单状态、方向进行过滤。
+
+```typescript
+import { useOrderStream } from "@orderly.network/hooks";
+
+export const Example() = >{
+  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+
+  //...
+}
+```
+
+### 编辑订单
+
+```typescript /updateOrder/
+import { useOrderStream } from "@orderly.network/hooks";
+
+export const Example = () => {
+  const [_, { updateOrder }] = useOrderStream({ status: OrderStatus.NEW });
+  //...
+  const onEdit = async (id, values) => {
+    const res = await updateOrder(id, values);
+    //...
+  };
+};
+```
+
+### 取消订单
+
+```typescript /cancelOrder/
+import { useOrderStream } from "@orderly.network/hooks";
+
+export const Example = () => {
+  const [_, { cancelOrder }] = useOrderStream({ status: OrderStatus.NEW });
+  //...
+  const onCancel = async (orderId) => {
+    const res = await cancelOrder("<orderId>");
+    //...
+  };
+};
+```

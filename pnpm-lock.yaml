@@ -46,6 +46,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@prisma/client':
         specifier: 5.0.0
         version: 5.0.0(prisma@5.0.0)
@@ -112,6 +115,9 @@ importers:
       postcss:
         specifier: ^8.4.26
         version: 8.4.26
+      prism-react-renderer:
+        specifier: ^2.2.0
+        version: 2.2.0(react@18.2.0)
       prisma:
         specifier: ^5.0.0
         version: 5.0.0

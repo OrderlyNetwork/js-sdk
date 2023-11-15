@@ -1,0 +1,146 @@
+# 入金
+
+`@orderly.network/hooks`提供以下 hoos 来辅助完成入金流程。
+
+- [`useChains`](/) - 获取当前支持入金的链列表
+- [`useDeposit`](/) - 处理入金相关的逻辑
+
+## 支持的链列表
+
+`useChains`返回一个链列表，列表中的每个元素包含了链的[配置](/)。
+
+```typescript
+import { useChains } from "@orderly.network/hooks";
+
+const [chains, { findByChainId }] = useChains("mainnet");
+```
+
+## 钱包余额
+
+当用户在入金的 UI 的时候，通常需要显示当前 Token 的可用余额，可以用过以下两种方式来获取钱包余额。
+
+### `balance`
+
+`useDeposit`在返回中提供了`balance`字段,值为当前 token 的余额，`balance`会在`adderss`变化后重新从链上查询。
+
+```typescript
+import { useDeposit } from "@orderly.network/hooks";
+
+export const Example = () => {
+  // 用户在UI中选择了一个token
+  const [token, setToken] = useState<API.TokenInfo>();
+
+  const {
+    dst,
+    balance, // 当前token的余额
+    allowance,
+    approve,
+    deposit,
+    isNativeToken,
+    balanceRevalidating,
+    fetchBalance,
+  } = useDeposit({
+    address: token?.address,
+    decimals: token?.decimals,
+    srcToken: token?.symbol,
+    srcChainId: "",
+  });
+
+  //...
+};
+```
+
+### 查询余额
+
+`useDeposit`同时也提供了`fetchBalance()`方法来获取余额, 可以用在 Token 列表, 主动发起余额查询。
+
+```typescript /fetchBalance/
+import { useDeposit } from "@orderly.network/hooks";
+
+export const Example = () => {
+  const {
+    //...
+    fetchBalance,
+  } = useDeposit({
+    //...
+  });
+
+  const getBalance = async () => {
+    const balance = await fetchBalance(`0x...`, 6);
+  };
+
+  //...
+};
+```
+
+## allowance
+
+### `allowance`
+
+当前合约的授权额度，`allowance`会在`adderss`变化后重新从链上查询。
+
+### `approve`
+
+调用`approve`函数进行授权，如果不传入数量参数，将默认使用`ethers.MaxUint256`。
+
+```typescript /approve/
+const {
+  //...
+  approve,
+} = useDeposit({
+  //...
+});
+
+approve("<quantity?>");
+```
+
+## 入金
+
+### `deposit()`
+
+调用 `useDeposit` 返回对象里面的`deposit`函数来发起入金。
+
+```typescript /deposit/
+const {
+  //...
+  deposit,
+} = useDeposit({
+  //...
+});
+
+const res = await deposit("<quantity>");
+```
+
+### 入金状态
+
+需要订阅 topic 来接收入金状态。
+
+```typescript
+import { useWS } from "@orderly.network/hooks";
+
+//...
+
+export const Example = () => {
+  const ws = useWS();
+
+  useEffect(() => {
+    const unsubscribe = ws.subscribe(
+      {
+        id: "wallet",
+        event: "subscribe",
+        topic: "wallet",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          //
+        },
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [ws]);
+};
+```

@@ -1,0 +1,69 @@
+import { Callout } from "nextra/components";
+
+# 仓位
+
+`usePositionStream`提供了当前账户的仓位数据，包含较多的数据计算，主要包括：
+
+- 仓位价值
+- 强平价
+- 保证金
+- 未实现盈亏
+- unsettledPnL
+- 仓位数据汇总
+
+<Callout type="info">
+  如果你不想使用`usePositionStream`提供的数据，而是想自己计算，也可以安装`@orderly.network/perp`库，该库提供了所有跟仓位相关的计算公式的实现，具体[参考](/)。
+</Callout>
+
+## 列表
+
+`usePositionStream`返回的数据是一个数组类型，数组的第一项的结构如下：
+
+```typescript
+interface Position {
+      rows: positionsRows,
+      aggregated: formatedPositions?.[1] ?? {},
+      totalCollateral:number,
+      totalValue:number,
+      totalUnrealizedROI:number,
+    }
+
+```
+
+### 仓位
+
+### 汇总数据
+
+UI 通常需要展示一些汇总信息，比如总仓位价值，总保证金，总未实现盈亏等，这些数据都包含在`usePositionStream`返回的数据中。
+
+```typescript
+
+```
+
+### 其他数据
+
+[Orderly positions API](/) 返回的数据还包含了如下字段，可以通过`usePositionStream`返回的第二个元素获取：
+
+```typescript
+interface PositionInfo {
+  margin_ratio: number;
+  initial_margin_ratio: number;
+  maintenance_margin_ratio: number;
+  open_margin_ratio: number;
+  current_margin_ratio_with_orders: number;
+  initial_margin_ratio_with_orders: number;
+  maintenance_margin_ratio_with_orders: number;
+  total_collateral_value: number;
+  free_collateral: number;
+  rows: Position[];
+  total_pnl_24_h: number;
+}
+```
+
+## 管理
+
+### 平仓
+
+平仓的实现是创建一个跟仓位方向相反的订单，比如仓位是多头，那么平仓就是创建一个空头订单，反之亦然。
+
+使用`useOrderEntry`即可创建订单，具体参考[订单](/orders)。
