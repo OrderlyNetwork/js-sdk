@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/input";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { Slider } from "@/slider";
