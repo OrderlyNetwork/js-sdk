@@ -23,16 +23,16 @@ export const ColorPalette: FC<Props> = (props) => {
   // generate the color palette
   const colors = useMemo(() => {
     const colors = [];
-    for (let i = 0; i < COLORS.length; i++) {
-      const group = COLORS[i];
-      for (let j = 0; j < group.colors.length; j++) {
-        const color = group.colors[j];
-        colors.push({
-          color,
-          name: `${group.groupName.toLowerCase()}-${COLORS_NAME[j]}`,
-        });
-      }
-    }
+    // for (let i = 0; i < COLORS.length; i++) {
+    //   const group = COLORS[i];
+    //   for (let j = 0; j < group.colors.length; j++) {
+    //     const color = group.colors[j];
+    //     colors.push({
+    //       color,
+    //       name: `${group.groupName.toLowerCase()}-${COLORS_NAME[j]}`,
+    //     });
+    //   }
+    // }
 
     return [
       ...BRAND_COLORS.map((item, index) => ({

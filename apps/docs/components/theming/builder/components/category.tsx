@@ -8,7 +8,7 @@ const COMPONENTS = ["Button", "Input", "Select", "Checkbox", "Radio"];
 
 export const ComponentCategory = () => {
   const search = useSearchParams();
-  const { id } = useParams();
+  const { id } = useParams()!;
 
   const tag = search?.get("tag");
 

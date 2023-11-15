@@ -38,7 +38,7 @@ export const CodeLive: FC<Props> = (props) => {
 
   const previewView = useMemo(() => {
     console.log("code live state", state.status);
-    if (isPublic || state === AccountStatusEnum.EnableTrading) {
+    if (isPublic || state.status === AccountStatusEnum.EnableTrading) {
       return <LivePreview />;
     }
     return (
