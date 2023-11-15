@@ -40,3 +40,7 @@ docs/
 
 dev-tool
 create-orderly-app
+
+!apps/docs
+
+apps/docs/_doc_meta_

@@ -1,0 +1,27 @@
+{
+
+    "docs": {
+      "title": "Documntation",
+      "type": "page"
+    },
+    "components": {
+      "title": "Components",
+      "type": "page"
+    },
+    "api": {
+      "title": "APIs",
+      "type": "page"
+    },
+    "dev": {
+      "title": "Dev Tool",
+      "type": "menu",
+      "items":{
+        "theming":{
+            "title":"Theming Tool",
+            "href":"/dev/theming"
+        }
+        
+        
+      }
+    }
+  }
