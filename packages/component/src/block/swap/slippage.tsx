@@ -18,7 +18,7 @@ const SlippageItem = ({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "rounded h-[40px] flex items-center justify-center bg-base-100 text-base-contrast/80",
+        "rounded h-[40px] flex items-center justify-center bg-base-400 text-base-contrast text-2xs",
         isActive && "bg-primary-light text-base-contrast"
       )}
     >
@@ -103,15 +103,15 @@ export const Slippage: FC<SlippageProps> = (props) => {
           <input
             type="text"
             inputMode="decimal"
-            className="bg-base-100 w-0 rounded flex-1 h-full text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="bg-base-400 w-0 rounded flex-1 h-full text-center text-2xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
             value={customValue}
             // onChange={(e) => setCustomValue(e.target.value)}
             onChange={onValueChange}
           />
-          <span className="text-3xs text-base-contrast/30">%</span>
+          <span className="text-2xs text-base-contrast-36">%</span>
         </div>
       </div>
-      <div className="py-2 text-3xs text-base-contrast/30">
+      <div className="py-2 text-3xs text-base-contrast-36">
         Your transaction will revert if the price changes unfavorably by more
         than this percentage.
       </div>
@@ -121,6 +121,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
             fullWidth
             onClick={onConfirm}
             disabled={!value && !customValue}
+            className="text-xs"
           >
             Confirm
           </Button>

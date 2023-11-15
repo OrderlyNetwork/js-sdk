@@ -46,7 +46,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
         <span>USDC</span>
       </div>
       <Button
-        className="text-primary-light"
+        className="text-primary-light text-4xs"
         size="small"
         variant={"text"}
         leftIcon={<RotateCw size={15} />}
