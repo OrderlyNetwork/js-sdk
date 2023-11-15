@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   color: string;
-  name: string;
+  name?: string;
   onColorClick: (name: string, color: string) => void;
-  active: boolean;
+  active?: boolean;
 }
 
 export const ColorItem: FC<Props> = (props) => {
@@ -19,7 +19,7 @@ export const ColorItem: FC<Props> = (props) => {
         )}
         style={{ backgroundColor: props.color }}
         onClick={() => {
-          props.onColorClick(props.color, props.name);
+          props.onColorClick(props.color, props.name!);
         }}
       ></div>
     </Tooltip>

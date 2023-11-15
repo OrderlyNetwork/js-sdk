@@ -80,3 +80,5 @@ export const BRAND_COLORS = [
   "#07080A",
   "#040405",
 ];
+
+export const COLORS = [] as any[];

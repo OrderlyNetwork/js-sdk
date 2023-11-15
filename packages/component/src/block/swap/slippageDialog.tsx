@@ -22,7 +22,7 @@ export const SlippageDialog: FC<PropsWithChildren<SlippageDialogProps>> = (
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Slippage tolerance</DialogTitle>
+          <DialogTitle className="text-xs">Slippage tolerance</DialogTitle>
         </DialogHeader>
         <DialogBody className="py-5">
           <Slippage

@@ -155,12 +155,12 @@ module.exports = {
         html: {
           fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
-          color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
         },
         body: {
           fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
-          color: "rgb(var(--orderly-color-base-foreground) / 0.9)",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
         },
       });
     }),
