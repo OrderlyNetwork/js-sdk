@@ -22,7 +22,7 @@ export interface ConnectGuardButtonProps {
 export const StatusGuardButton: FC<
   PropsWithChildren<ConnectGuardButtonProps>
 > = (props) => {
-  const { state, connect } = useAccount();
+  const { state } = useAccount();
   const { onWalletConnect } = useContext(OrderlyAppContext);
 
   const onClick = useCallback(async () => {
@@ -47,7 +47,7 @@ export const StatusGuardButton: FC<
         });
       } catch (err) {}
     }
-  }, [connect, state]);
+  }, [state]);
 
   const buttonLabel = useMemo(() => {
     if (state.status === AccountStatusEnum.NotConnected) {

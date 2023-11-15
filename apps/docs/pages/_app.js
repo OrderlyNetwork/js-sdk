@@ -1,10 +1,17 @@
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
+import { WalletProvider } from "@/components/walletProvider";
+import { DocProvider } from "@/components/docProvider";
 import "../global.css";
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <OrderlyConfigProvider brokerId="woofi_pro" networkId="testnet">
-      <Component {...pageProps} />
-    </OrderlyConfigProvider>
+    <WalletProvider>
+      <OrderlyConfigProvider brokerId="woofi_pro" networkId="testnet">
+        <DocProvider>
+
+        <Component {...pageProps} />
+        </DocProvider>
+      </OrderlyConfigProvider>
+    </WalletProvider>
   );
 }

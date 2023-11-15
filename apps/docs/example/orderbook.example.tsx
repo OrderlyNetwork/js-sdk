@@ -23,7 +23,7 @@
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 text-sm">
           <pre>{JSON.stringify(data.bids, null, 2)}</pre>
 
           <pre>{JSON.stringify(data.asks, null, 2)}</pre>
