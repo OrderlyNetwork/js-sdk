@@ -15,14 +15,14 @@ export const getStaticProps = async (context) => {
 
   const doc = parser.parser.findByPath([moduleName, functionName]);
 
-  return { props: { doc: doc.toJSON(), categories: parser.getCategories() } };
+  return { props: { doc: doc?.toJSON(), categories: parser.getCategories() } };
 };
 
 export async function getStaticPaths() {
   return {
     paths: [
       // Object variant:
-      { params: { module: "123", name: "aa" }, locale: "zh-CN" },
+      // { params: { module: "123", name: "aa" }, locale: "zh-CN" },
     ],
     fallback: true,
   };

@@ -19,14 +19,14 @@ export const getStaticProps = async (context) => {
 
   // console.log("----doc----", doc);
 
-  return { props: { doc: doc.toJSON() } };
+  return { props: { doc: doc?.toJSON() } };
 };
 
 export async function getStaticPaths() {
   return {
     paths: [
       // Object variant:
-      { params: { module: "123", name: "aa" }, locale: "zh-CN" },
+      // { params: { module: "123", name: "aa" }, locale: "zh-CN" },
     ],
     fallback: true,
   };
