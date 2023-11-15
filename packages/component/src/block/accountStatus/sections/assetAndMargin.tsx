@@ -62,7 +62,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     return modal.confirm({
       title: "Settle PnL",
       content: (
-        <div className="text-base-contrast/60">
+        <div className="text-base-contrast-54">
           Are you sure you want to settle your PnL? Settlement will take up to 1
           minute before you can withdraw your available balance.
         </div>
