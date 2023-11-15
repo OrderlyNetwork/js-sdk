@@ -30,7 +30,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
     modal.alert({
       title: "Reduce only",
       message: (
-        <span className="text-3xs text-base-contrast/60">
+        <span className="text-2xs text-base-contrast-54">
           Reduce only ensures that you can only reduce or close a current
           position so that your position size will not be increased
           unintentionally.
@@ -139,7 +139,9 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     props.onConfirmChange?.(!!checked);
                   }}
                 />
-                <Label htmlFor="orderConfirm" className="text-base-contrast-54">Order confirm</Label>
+                <Label htmlFor="orderConfirm" className="text-base-contrast-54">
+                  Order confirm
+                </Label>
               </div>
               <Controller
                 name="visible_quantity"
@@ -155,7 +157,12 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(checked ? 0 : 1);
                         }}
                       />
-                      <Label onClick={showHiddenHint}  className="text-base-contrast-54">Hidden</Label>
+                      <Label
+                        onClick={showHiddenHint}
+                        className="text-base-contrast-54"
+                      >
+                        Hidden
+                      </Label>
                     </div>
                   );
                 }}
