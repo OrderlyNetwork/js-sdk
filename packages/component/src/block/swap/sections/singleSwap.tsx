@@ -139,7 +139,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
 
       {content}
       <div className="flex justify-center text-3xs gap-2 mt-5">
-        <span className="text-base-contrast/50">Need help?</span>
+        <span className="text-base-contrast-54">Need help?</span>
         <a href="" className="text-primary-light">
           View FAQs
         </a>

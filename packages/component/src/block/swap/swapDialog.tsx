@@ -29,7 +29,7 @@ export const SwapDialog = create<SwapProps>((props) => {
         onEscapeKeyDown={(event) => event.preventDefault()}
         onPointerDownOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader>Review swap details</DialogHeader>
+        <DialogHeader className="text-xs">Review swap details</DialogHeader>
         <DialogBody>
           <Swap {...props} onComplete={onComplete} onCancel={onCancel} />
         </DialogBody>

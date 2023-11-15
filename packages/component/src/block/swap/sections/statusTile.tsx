@@ -17,7 +17,7 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
   const leadingElement = useMemo(() => {
     if (props.state === "disabled") {
       return (
-        <div className="w-[32px] h-[32px] rounded-full bg-base-400 text-base-contrast flex justify-center items-center">
+        <div className="w-[32px] h-[32px] rounded-full bg-base-400 text-base-contrast-54 flex justify-center items-center">
           {props.index}
         </div>
       );
@@ -44,6 +44,7 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
   return (
     <ListTile
       title={props.title}
+      className="text-xs subtitle:text-3xs subtitle:text-base-contrast-36"
       subtitle={props.description}
       avatar={leadingElement}
       disabled={props.state === "disabled"}
