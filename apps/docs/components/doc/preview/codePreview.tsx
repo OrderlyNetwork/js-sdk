@@ -9,13 +9,11 @@ export const CodePreview = () => {
   return (
     <div>
       <Sandpack
-        customSetup={
-          {
-            // dependencies: {
-            //   "@orderly.network/hooks": "latest",
-            // },
-          }
-        }
+        customSetup={{
+          dependencies: {
+            "@orderly.network/hooks": "latest",
+          },
+        }}
         files={{
           "/App.js": `import { OrderlyConfigProvider } from "@orderly.network/hooks";
 
@@ -25,13 +23,13 @@ export default function Sample() {
   );
 }
 `,
-          "/node_modules/@orderly.network/hooks/package.json": {
-            hidden: true,
-            code: JSON.stringify({
-              name: "@orderly.network/hooks",
-              main: "./index.js",
-            }),
-          },
+          // "/node_modules/@orderly.network/hooks/package.json": {
+          //   hidden: true,
+          //   code: JSON.stringify({
+          //     name: "@orderly.network/hooks",
+          //     main: "./index.js",
+          //   }),
+          // },
           // "/node_modules/@orderly.network/hooks/index.js": {
           //   hidden: true,
           //   code: hookRaw,

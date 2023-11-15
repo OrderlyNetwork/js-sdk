@@ -63,7 +63,6 @@ export const CodeLive: FC<Props> = (props) => {
         style={{ height: `${height}px` }}
       >
         <LiveEditor className="h-full overflow-auto text-sm bg-[#f6f8fa] code-live" />
-
         <div className="overflow-auto h-full p-2 code-preview">
           {/* <LivePreview /> */}
           {previewView}

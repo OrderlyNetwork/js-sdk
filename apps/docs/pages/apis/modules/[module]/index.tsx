@@ -16,7 +16,7 @@ export const getStaticProps = async (context) => {
 
   return {
     props: {
-      module: module ? module.toJSON() : {},
+      module: module ? module.toJSON() : null,
       categories: parser.getCategories(),
     },
   };
@@ -37,7 +37,11 @@ export default function Module(props) {
   console.log(props);
   return (
     <ApiLayout data={props.categories || []}>
-      <ModulesSection module={props.module || {}} />
+      {props.module ? (
+        <ModulesSection module={props.module || {}} />
+      ) : (
+        <div>Not Found</div>
+      )}
     </ApiLayout>
   );
 }

@@ -1,3 +1,3 @@
 export default function Page() {
-  return <div>Types</div>;
+  return <div>APIS</div>;
 }

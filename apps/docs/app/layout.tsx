@@ -1,10 +1,8 @@
 import "./globals.css";
-import "@douyinfe/semi-ui/dist/css/semi.min.css";
+// import "@douyinfe/semi-ui/dist/css/semi.min.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 // import { UIProviders } from "./providers";
-
-import { TRPCProvider } from "@/providers/trpcProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <TRPCProvider>
-        <body className={inter.className}>{children}</body>
-      </TRPCProvider>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

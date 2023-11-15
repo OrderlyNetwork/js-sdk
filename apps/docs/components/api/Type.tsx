@@ -19,7 +19,15 @@ export const Type: FC<Props> = (props) => {
           <span>{name}</span>
           <span>&lt;</span>
           {typeArguments.map((item, index) => {
-            return <Type type={item} key={index} />;
+            if (index + 1 === typeArguments.length) {
+              return <Type type={item} key={index} />;
+            }
+            return (
+              <>
+                <Type type={item} key={index} />
+                <span>,</span>
+              </>
+            );
           })}
           <span>&gt;</span>
         </span>
