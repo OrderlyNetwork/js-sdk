@@ -38,7 +38,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
   if (props.unsettledPnL === 0 && props.hasPositions === false) return null;
   return (
     <div className="flex items-center justify-between mt-1">
-      <div className="text-3xs flex items-center space-x-1 text-base-contrast/30">
+      <div className="text-4xs flex items-center space-x-1 text-base-contrast-36">
         <span>{`Unsettled:`}</span>
         <Numeral coloring precision={6}>
           {props.unsettledPnL}

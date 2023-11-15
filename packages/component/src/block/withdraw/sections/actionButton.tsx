@@ -139,7 +139,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         </div>
       )}
 
-      <div className="flex justify-center">
+      <div className="flex justify-center text-xs">
         <div className="py-3 min-w-[200px]">{actionButton}</div>
       </div>
     </>
