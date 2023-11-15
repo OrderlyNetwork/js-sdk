@@ -176,7 +176,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   return (
     <>
-      <div className="flex items-center py-2">
+      <div className="flex items-center py-2 text-2xs text-base-contrast">
         <div className="flex-1">Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
@@ -202,7 +202,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <Divider className={"py-3"}>
         <MoveDownIcon className={"text-primary-light"} />
       </Divider>
-      <div className={"flex items-center"}>
+      <div className={"flex items-center text-2xs"}>
         <div className={"flex-1"}>Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}

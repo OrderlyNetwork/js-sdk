@@ -1,3 +1,6 @@
+import { CodeLive } from "@/components/doc/preview/codeLive";
+import accountStateRaw from "@/example/accountState.example";
+
 # 账户
 
 `@orderly.network/hooks`提供以下 hook 来处理账户相关的逻辑：
@@ -22,6 +25,12 @@ export enum AccountStatusEnum {
   EnableTrading = 5,
 }
 ```
+
+以上状态分别表示了以下几种情况：
+
+- `NotConnected`/ `Connected` - 钱包连接状态，与 Orderly API 无关；
+- `NotSignedIn` / `SignedIn` - 调用 Orderly API [`Get Account`](https://docs-api-evm.orderly.network/#restful-api-public-get-account) 或者 [`Register Account`](https://docs-api-evm.orderly.network/#restful-api-public-register-account)获取到的结果;
+- `DisabledTrading` / `EnableTrading` - 调用 Orderly API [`Get Orderly Key`](https://docs-api-evm.orderly.network/#restful-api-public-get-orderly-key) 或者 [`Add Orderly Key`](https://docs-api-evm.orderly.network/#restful-api-public-add-orderly-key)获取到的结果;
 
 ### 获取账户状态
 
@@ -95,6 +104,10 @@ const nextState = await account.setAddress("<address>", {
   },
 });
 ```
+
+### Demo
+
+<CodeLive code={accountStateRaw} isPrivate />
 
 ## 新建账户
 

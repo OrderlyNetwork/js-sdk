@@ -48,7 +48,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
   return (
     <>
       <div className="py-[24px]">
-        <div className="bg-base-100 rounded py-3 px-5">
+        <div className="bg-base-500 rounded py-3 px-5">
           <StatusTile
             state={getBridgeStatus(status)}
             title={"Bridging"}
@@ -64,7 +64,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
           <Divider />
           <div className="flex justify-center mt-3">
             <button
-              className="text-3xs text-primary-light disabled:text-base-contrast/10"
+              className="text-2xs text-primary-light disabled:text-base-contrast/10"
               disabled={!statusUrl}
               onClick={() => {
                 (location as any).href = statusUrl;
@@ -82,6 +82,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
         </div>
       )}
       <Button
+      className="text-xs"
         fullWidth
         disabled={
           status === SwapProcessStatusStatus.Bridging ||

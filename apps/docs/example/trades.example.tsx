@@ -4,7 +4,7 @@
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="text-sm">
       {data.map((item) => {
         return (
           <div key={item.ts} className="flex justify-between border-b">
