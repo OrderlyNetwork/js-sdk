@@ -7,6 +7,9 @@ const withNextra = require("nextra")({
 
 const nextConfig = {
   distDir: "dist",
+  output: "standalone",
+  // Static export cannot be used when i18n is used
+  // output: 'export',
   transpilePackages: [
     "@douyinfe/semi-ui",
     // "@douyinfe/semi-icons",
@@ -26,8 +29,7 @@ const nextConfig = {
     defaultLocale: "en-US",
   },
   typescript: {
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
+    // Dangerously allow production builds to successfully complete even if your project has type errors.
     ignoreBuildErrors: true,
   },
 };
