@@ -19,6 +19,10 @@ export const Toaster: FC<ToastProps> = (props) => {
             primary: "rgba(39, 222, 200, 1)",
             secondary: "rgba(0, 0, 0, 1)",
           },
+          style: {
+            fontSize: "14px",
+            color: "rgba(255, 255, 255, 0.98)",
+          }
         },
         error: {
           iconTheme: {
@@ -26,6 +30,10 @@ export const Toaster: FC<ToastProps> = (props) => {
 
             secondary: "rgba(0, 0, 0, 1)",
           },
+          style: {
+            fontSize: "14px",
+            color: "rgba(255, 255, 255, 0.98)",
+          }
         },
       }}
       {...props}
