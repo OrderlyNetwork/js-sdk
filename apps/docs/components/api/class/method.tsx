@@ -10,6 +10,8 @@ interface MethodProps {
 export const MethodItem: FC<MethodProps> = (props) => {
   const { method } = props;
 
+  console.log("--------->>>>>>>", method);
+
   const { name, signature } = method;
 
   const parameters = useMemo(() => {
@@ -25,7 +27,7 @@ export const MethodItem: FC<MethodProps> = (props) => {
   return (
     <div>
       <div className="text-lg font-semibold">{name}</div>
-      <div></div>
+      <div className="space-x-1 border-t border-b border-gray-300 "></div>
 
       <div>Parameters</div>
 

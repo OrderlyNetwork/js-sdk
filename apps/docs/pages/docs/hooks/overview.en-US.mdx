@@ -4,136 +4,53 @@ import { Steps, Callout, Tabs } from "nextra/components";
 
 `@orderly.network/hooks`
 
-针对 React 开发者,我们提供了一系列的 React hooks, 以便于你在 React 项目中更方便地使用 Orderly SDK 的功能, `@orderly.network/hooks`是对[`@orderly.network/core`](/) [`@orderly.network/perp`](/)的再次封装。
+The hooks libraries provides a series of React hooks for React developers to ensure a seamless integration experience through the Orderly SDK. This library is a package built on top of [`@orderly.network/core`](/) and [`@orderly.network/perp`](/).
 
-## Installation
+## Coding standards
 
-Inside your React project directory, run the following:
+- If hooks returns an array, then the first elemnet will be the actual data, and the second element will be an object containing some supporting functions.
+- All hooks ending with stream will update in real-time, via relevant websocket subscriptions.
+- All hooks ending with query is a wrapper on API requests.
 
-```sh npm2yarn copy
-npm install @orderly.network/core @orderly.network/hooks
-```
-
-## Quick Start
-
-<Steps>
-
-### 添加 `OrderlyProvider`
-
-在你的项目中, 添加 `OrderlyProvider` 组件, 通常包装根组件。
-
-<Tabs items={['使用默认配置', '自定义']}>
-  <Tabs.Tab>
-
-在新建的项目中，建议使用默认配置，只需要提供你的 brokerId ([如何获取?](/)) 即可。
-
-```tsx
-import type { FC, PropsWithChildren } from "react";
-import { OrderlyConfigProvider } from "@orderly.network/hooks";
-
-export const App: FC<PropsWithChildren> = ({ children }) => {
-  const brokerId = "<your id>";
-  return (
-    <OrderlyConfigProvider brokerId={brokerId} networkId="mainnet">
-      {children}
-    </OrderlyConfigProvider>
-  );
-};
-```
-
-</Tabs.Tab>
-  <Tabs.Tab>
-  如果项目已经存在并且已经实现了Orderly Key的创建流程，或者其他需要自定义配置的情况，可以使用 `OrderlyConfigProvider` 的 `config` 属性，传入自定义的配置。
-
-```tsx
-import type { FC, PropsWithChildren } from "react";
-import { OrderlyConfigProvider } from "@orderly.network/hooks";
-import {
-EtherAdapter,
-LocalStorageStore,
-DefaultConfigStore
-} from "@orderly.network/core";
-
-export const App: FC<PropsWithChildren> = ({ children }) => {
-const brokerId = "<your id>";
-return (
-  <OrderlyConfigProvider brokerId={brokerId} networkId="mainnet">
-    <children />
-  </OrderlyProvider>
-);
-};
-```
-
-</Tabs.Tab>
-  
-</Tabs>
-
-### 完成!
-
-Now you can use any Orderly hooks in your React components.
-
-```tsx
-import { useAccount } from "@orderly.network/hooks";
-
-export const UserInfo = () => {
-  const { account, state } = useAccount();
-
-  return (
-    <div>
-      <div>Address: {user.address}</div>
-      <div>Balance: {user.balance}</div>
-    </div>
-  );
-};
-```
-
-</Steps>
-
-## 代码规范约定
-
-- 如果 hook 返回的类型是数组，那么通常第一个元素是数据，第二个元素是一个 Object，包含一些辅助函数。
-- 以 `stream` 结尾的 hook 表示是会实时更新的, 通常是包含了对相关 ws 的订阅。
-- 以`query`结尾的 hook 是对网络请求的封装。
-
-## Hooks 列表
+## List of hooks
 
 ### Base & Common
 
-提供基础的, 与具体业务无关的 hooks, 帮助处理 UI 状态, 以及一些常用的状态管理逻辑。
+Provides basic hooks to help handle UI states, and some common state management logic.
 
-- [useQuery](/docs/hooks/useQuery) - `GET`
+- [useQuery](/docs/hooks/useQuery) - `GET` Public API
 - [usePrivateQuery](/) - `GET` Private API
-- [usePrivateLazyInfiniteQuery](/) - 支持无限加载分页查询的 usePrivateQuery
+- [usePrivateLazyInfiniteQuery](/) - A version of `usePrivateQuery` that supports infinite scrolling
 - [useLazyQuery](/)
-- [useMutation](/) - `POST`
+- [useMutation](/) - `POST` APIs
 - [useWS](/) - WebSocket client
-- [useConfig](/) - [ConfigStore](/docs/core/config-store)的实例
-- [useEventEmitter](/) - [EventEmitter](/docs/core/event-emitter)的实例
-- [useLocalStorage](/) - localStorage 增删改查
-- [useSessionStorage](/) - sessionStorage 增删改查
+- [useConfig](/) - An instance of the [ConfigStore](/docs/core/config-store)
+- [useEventEmitter](/) - An instance of the [EventEmitter](/docs/core/event-emitter)
+- [useLocalStorage](/) - Management (CRUD) of localStorage
+- [useSessionStorage](/) - Management (CRUD) of sessionStorage
 
-### Orderly API related
+### Orderly API
 
-提供跟 Orderly 业务相关的 hooks, 通常在每个 hooks 中包含了 Orderly API 的调用, 以及对应的数据处理逻辑。
+Provides a list of hooks related to Orderly's business logic. Each hooks contains usage of the Orderly API and related data calculation logic.
 
-- [useAccount](/) - 账户信息
+- [useAccount](/) - Account information
 - [useHoldingStream](/) - Holding
-- [useCollateral](/) - 资产
-- [useLeverage](/) - 杠杆
-- [useMarginRatio](/) - 保证金
-- [useOrderEntry](/) - 创建订单
-- [useFundingRate](/) - 资金费率
-- [useFundingRates](/) - 资金费率列表
-- [useChains](/) - 链
-- [useDeposit](/) - 入金
-- [useWithdraw](/) - 出金
-- [useSymbolsInfo](/) - 交易对信息
-- [useTokenInfo](/) - Token 信息
-- [useMaxQty](/) - 最大可购买数量
-- [useTickerStream](/) - Ticker
-- [useOrderStream](/) - 订单管理
-- [usePositionStream](/) - 仓位
-- [useOrderbookStream](/) - Orderbook
-- [useMarkPricesStream](/) - 标记价格
+- [useCollateral](/) - Asset information
+- [useLeverage](/) - Leverage information
+- [useMarginRatio](/) - Margin information
+- [useOrderEntry](/) - Order placement
+- [useFundingRate](/) - Funding rate information
+- [useFundingRates](/) - Batch funding rate information
+- [useChains](/) - Chain information
+- [useDeposit](/) - Deposit helper
+- [useWithdraw](/) - Withdrawal helper
+- [useSymbolsInfo](/) - Symbol information
+- [useTokenInfo](/) - Token information
+- [useMaxQty](/) - Maximum trading quantity
+- [useTickerStream](/) - Symbol market data stream
+- [useOrderStream](/) - Order management
+- [usePositionStream](/) - Position management
+- [useOrderbookStream](/) - Orderbook stream
+- [useMarkPricesStream](/) - Mark prices stream
 
-**更多 hook 请参考[API 文档](/)**
+**For more details please see [API docs](/)**

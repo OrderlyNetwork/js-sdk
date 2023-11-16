@@ -8,7 +8,7 @@ interface Props {
 
 export const Type: FC<Props> = (props) => {
   const { kind, type, name, typeArguments, properties } = props.type;
-  console.log("--------Type------>>>>", props.type);
+  // console.log("--------Type------>>>>", props.type);
 
   if (kind === "intrinsic") {
     return <span>{type}</span>;

@@ -1,3 +1,6 @@
+import { CodeLive } from "@/components/doc/preview/codeLive";
+import accountStateRaw from "@/example/accountState.example";
+
 # Account
 
 `@orderly.network/hooks` provides the following hooks for handling account-related logic:
@@ -22,6 +25,12 @@ export enum AccountStatusEnum {
   EnableTrading = 5,
 }
 ```
+
+The above statuses are represented as follows:
+
+- `NotConnected`/ `Connected` - Wallet connection status, not related to Orderly. `NotConnected` means no wallet connected, `Connected` means the wallet app is connected and we know the user's wallet address.
+- `NotSignedIn` / `SignedIn` - The result from calling [`Get Account`](https://docs-api-evm.orderly.network/#restful-api-public-get-account) or [`Register Account`](https://docs-api-evm.orderly.network/#restful-api-public-register-account). `NotSignedIn` means there's no registered account associated with the wallet address and `brokerId` pair. `SignedIn` means that an account has been previously registered with the wallet address and `brokerId` pair.
+- `DisabledTrading` / `EnableTrading` - The result from calling [`Get Orderly Key`](https://docs-api-evm.orderly.network/#restful-api-public-get-orderly-key) or [`Add Orderly Key`](https://docs-api-evm.orderly.network/#restful-api-public-add-orderly-key). `DisabledTrading` means no active Orderly Key is found in the `KeyStore`. `EnableTrading` means an active Orderly Key is found in the `KeyStore` and can be used to authenticate for any private API requests.
 
 ### Get account status
 
@@ -95,6 +104,10 @@ const nextState = await account.setAddress("<address>", {
   },
 });
 ```
+
+### Demo
+
+<CodeLive code={accountStateRaw} isPrivate />
 
 ## Create account
 

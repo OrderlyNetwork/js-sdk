@@ -10,7 +10,7 @@ export const Properties: FC<Props> = (props) => {
   return (
     <div>
       <div className="text-2xl">Properties</div>
-      <div className="space-y-5">
+      <div className="space-y-6">
         {properties.map((property) => {
           return (
             <PropertyItem

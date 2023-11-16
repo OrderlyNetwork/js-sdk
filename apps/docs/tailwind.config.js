@@ -9,6 +9,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          // DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
+          light: "rgba(176, 0, 199, 0.05)",
+         
+          // darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
+        },
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -20,7 +29,6 @@ module.exports = {
     plugin(function ({ addBase }) {
       addBase({
         html: { fontSize: "14px" },
-        
       });
     }),
   ],
