@@ -67,6 +67,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
         size={"small"}
         value={props.side ?? ""}
         onValueChange={(item) => props.onSideChange?.(item.value)}
+        className={"bg-base-contrast-20 text-4xs text-base-contrast-54"}
       />
       {/* <Select options={status} label="All status" size={"small"} /> */}
       <Picker
@@ -74,6 +75,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
         size={"small"}
         value={props.status ?? ""}
         onValueChange={(item) => props.onStatusChange?.(item.value)}
+        className={"bg-base-contrast-20 text-4xs text-base-contrast-54"}
       />
       {/* <IconButton color="tertiary" size="small">
         <CalendarDays size={18} />
