@@ -1,6 +1,9 @@
 import { FC } from "react";
 import { Union } from "./types/union";
 import { Reflection } from "./types/reflection";
+import Link from "next/link";
+import { encodeName } from "@/helper/typedocParser/name";
+import { Reference } from "./types/reference";
 
 interface Props {
   type: { kind: string; [key: string]: any };
@@ -14,32 +17,16 @@ export const Type: FC<Props> = (props) => {
     return <span>{type}</span>;
   }
 
+  if (kind === "literal") {
+    return <span>{props.type.value}</span>;
+  }
+
   if (kind === "union") {
     return <Union type={props.type} />;
   }
 
   if (kind === "reference") {
-    if (Array.isArray(typeArguments) && typeArguments.length > 0) {
-      return (
-        <span>
-          <span>{name}</span>
-          <span>&lt;</span>
-          {typeArguments.map((item, index) => {
-            if (index + 1 === typeArguments.length) {
-              return <Type type={item} key={index} />;
-            }
-            return (
-              <>
-                <Type type={item} key={index} />
-                <span className="mx-1">,</span>
-              </>
-            );
-          })}
-          <span>&gt;</span>
-        </span>
-      );
-    }
-    return <span>{name}</span>;
+    return <Reference type={props.type} />;
   }
 
   if (kind === "reflection") {

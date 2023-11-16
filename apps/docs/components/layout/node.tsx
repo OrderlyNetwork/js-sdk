@@ -13,14 +13,16 @@ export const TreeNode = ({
   return (
     <div>
       <div>
-        <Link href={`/apis/modules/${slug}`}>{name}</Link>
+        <Link href={`/apis/modules/${slug}`} className="font-semibold text-lg">
+          {name}
+        </Link>
       </div>
       <ul className="pl-5 space-y-2">
         {children?.map((item) => {
           return (
             <li key={item.id}>
               <Link
-                href={`/apis/modules/${slug}/${item.type}/${item.name}`}
+                href={`/apis/modules/${slug}/${item.name}`}
                 className="flex gap-1 items-center"
               >
                 <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />

@@ -308,34 +308,35 @@ export class ModuleParser {
   }
 
   public findByName(name: string): SearchResult | null {
+    let result: SearchResult;
     for (const classParser of this.classes) {
       if (classParser.name === name) {
-        return classParser;
+        result = classParser;
       }
 
       if (classParser.construct.name === name) {
-        return classParser.construct;
+        result = classParser.construct;
       }
 
       for (const methodParser of classParser.methods) {
         if (methodParser.name === name) {
-          return methodParser;
+          result = methodParser;
         }
 
         for (const signature of methodParser.signatures) {
           if (signature.name === name) {
-            return signature;
+            result = signature;
           }
 
           for (const typeParameter of signature.typeParameters) {
             if (typeParameter.name === name) {
-              return typeParameter;
+              result = typeParameter;
             }
           }
 
           for (const parameter of signature.parameters) {
             if (parameter.name === name) {
-              return parameter;
+              result = parameter;
             }
           }
         }
@@ -343,63 +344,69 @@ export class ModuleParser {
 
       for (const propertyParser of classParser.properties) {
         if (propertyParser.name === name) {
-          return propertyParser;
+          result = propertyParser;
         }
       }
     }
 
     for (const enumParser of this.enums) {
       if (enumParser.name === name) {
-        return enumParser;
+        result = enumParser;
       }
 
       for (const propertyParser of enumParser.members) {
         if (propertyParser.name === name) {
-          return propertyParser;
+          result = propertyParser;
         }
       }
     }
 
     for (const functionParser of this.functions) {
       if (functionParser.name === name) {
-        return functionParser;
+        result = functionParser;
       }
     }
 
     for (const interfaceParser of this.interfaces) {
       if (interfaceParser.name === name) {
-        return interfaceParser;
+        result = interfaceParser;
       }
 
       for (const propertyParser of interfaceParser.properties) {
         if (propertyParser.name === name) {
-          return propertyParser;
+          result = propertyParser;
         }
       }
     }
 
     for (const namespaceParser of this.namespaces) {
       if (namespaceParser.name === name) {
-        return namespaceParser;
+        result = namespaceParser;
       }
 
       const found = namespaceParser.find(name);
 
       if (found) {
-        return found;
+        result = found;
       }
     }
 
     for (const typeAliasParser of this.typeAliases) {
       if (typeAliasParser.name === name) {
-        return typeAliasParser;
+        result = typeAliasParser;
       }
     }
 
     for (const variableParser of this.variables) {
       if (variableParser.name === name) {
-        return variableParser;
+        result = variableParser;
       }
+    }
+
+    if (result) {
+      console.log("type::::::", result.constructor.name);
+
+      return { result, type: result.constructor.name };
     }
 
     return null;

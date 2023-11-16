@@ -12,10 +12,14 @@ interface Props {
 
 export const ClassPage: FC<Props> = (props) => {
   const { doc } = props;
-  console.log(doc);
+
+  if (!doc) {
+    return <div></div>;
+  }
+
   return (
     <div className="space-y-7">
-      <PageHeader title={doc.name} />
+      <PageHeader title={doc.name} type="Class" />
 
       <Constructor data={doc.construct} name={doc.name} />
       <Properties properties={propOr([], "properties")(doc)} />

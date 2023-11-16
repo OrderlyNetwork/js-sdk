@@ -940,6 +940,9 @@ importers:
       tsup:
         specifier: ^7.1.0
         version: 7.1.0(@swc/core@1.3.81)(postcss@8.4.26)(typescript@5.2.2)
+      typedoc:
+        specifier: ^0.24.8
+        version: 0.24.8(typescript@5.1.6)
 
   packages/utils:
     dependencies:
@@ -23997,7 +24000,7 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
   github.com/maoge8274/typedoc-json-parser/51f55c70dfb14b79dcb88be7fc18bb147a253c44:
-    resolution: {commit: 51f55c70dfb14b79dcb88be7fc18bb147a253c44, repo: git+ssh://git@github.com/maoge8274/typedoc-json-parser.git, type: git}
+    resolution: {tarball: https://codeload.github.com/maoge8274/typedoc-json-parser/tar.gz/51f55c70dfb14b79dcb88be7fc18bb147a253c44}
     name: typedoc-json-parser
     version: 9.0.1
     engines: {node: '>=18.17.0', npm: '>=6'}

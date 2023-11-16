@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { Type } from "../Type";
 
 interface UnionProps {
@@ -7,22 +7,21 @@ interface UnionProps {
 
 export const Union: FC<UnionProps> = (props) => {
   const { types } = props.type;
-  console.log("--------", types);
+  console.log("------ union --", types);
 
   return (
-    <>
-      {types.map((item, index) => {
+    <span className="space-x-1">
+      {types.map((type, index) => {
         if (index + 1 === types.length) {
-          return <Type type={item} key={index} />;
+          return <Type type={type} key={index} />;
         }
         return (
-          <>
-            <Type type={item} key={index} />
+          <Fragment key={index}>
+            <Type type={type} />
             <span className="text-slate-400">|</span>
-          </>
+          </Fragment>
         );
       })}
-    </>
+    </span>
   );
-  return <span></span>;
 };

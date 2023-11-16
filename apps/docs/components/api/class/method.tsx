@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, Fragment, useMemo } from "react";
 
 import { path } from "ramda";
 import { Type } from "../Type";
@@ -10,8 +10,6 @@ interface MethodProps {
 
 export const MethodItem: FC<MethodProps> = (props) => {
   const { method } = props;
-
-  console.log("------method--->>>>>>>", method);
 
   const { name, signature } = method;
 
@@ -35,7 +33,7 @@ export const MethodItem: FC<MethodProps> = (props) => {
         <a id={`#${name}`}></a>
         {name}
         <a href={`#${name}`}>
-          <Link size={16} className="stroke-gray-400 ml-2" />
+          <Link size={14} className="stroke-gray-400 ml-2" />
         </a>
       </div>
       <div className="border-t border-b border-gray-300 py-3">
@@ -69,12 +67,12 @@ export const MethodItem: FC<MethodProps> = (props) => {
                   }
 
                   return (
-                    <>
+                    <Fragment key={param.id}>
                       <span key={param.id} className="text-blue-400">
                         {`${param.name}${param.optional ? "?" : ""}`}
                       </span>
                       <span>,</span>
-                    </>
+                    </Fragment>
                   );
                 })}
               </span>
@@ -92,7 +90,9 @@ export const MethodItem: FC<MethodProps> = (props) => {
         })}
       </div>
 
-      <div>Parameters</div>
+      <div>
+        <strong>Parameters</strong>
+      </div>
 
       <ul>
         {parameters?.map((param: any) => {

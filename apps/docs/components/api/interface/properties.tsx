@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const Properties: FC<Props> = (props) => {
-  const { properties } = props;
+  const { properties = [] } = props;
   return (
     <div>
       <div className="text-2xl">Properties</div>

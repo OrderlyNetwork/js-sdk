@@ -14,7 +14,7 @@ export const NavBar = () => {
             <li>Document</li>
             <li>APIs</li>
           </ul>
-          <ConnectButton />
+          {/* <ConnectButton /> */}
         </div>
       </div>
     </div>

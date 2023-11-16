@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { NavBar } from "./navbar";
 import { TreeView } from "./tree";
 
@@ -11,12 +12,18 @@ export const ApiLayout = ({
   return (
     <div>
       <NavBar />
-      <div className="container mx-auto">
+      <div className="container mx-auto pb-10">
         <div className="grid grid-cols-[240px_minmax(900px,_1fr)_200px] gap-5">
-          <aside className="h-min-screen overflow-y-auto overflow-x-hidden">
+          <aside className="h-min-screen overflow-y-auto overflow-x-hidden mt-5">
             <TreeView data={data || []} />
           </aside>
-          <main>{children}</main>
+          <main>
+            <div className="flex space-x-2 text-gray-500 mt-5">
+              <Link href="/">@orderly.network</Link>
+              <Link href="/">@orderly.network</Link>
+            </div>
+            {children}
+          </main>
 
           <aside>toc</aside>
         </div>

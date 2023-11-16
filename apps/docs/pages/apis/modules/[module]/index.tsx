@@ -6,11 +6,11 @@ import { ParserServer } from "@/helper/typedocParser/parserServer";
 export const getStaticProps = async (context) => {
   const parser = ParserServer.getInstance();
 
-  console.log("------", context);
+  // console.log("------", context);
 
   const slug = context.params.module.replace(".zh-CN", "");
 
-  console.log("------", slug, decodeName(slug));
+  // console.log("------", slug, decodeName(slug));
 
   const module = parser.parser.findByPath([decodeName(slug)]);
 

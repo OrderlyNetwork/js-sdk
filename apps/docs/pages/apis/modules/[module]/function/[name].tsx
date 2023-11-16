@@ -19,7 +19,7 @@ export const getStaticProps = async (context) => {
 
   // console.log("----doc----", doc);
 
-  return { props: { doc: doc?.toJSON() } };
+  return { props: { doc: doc ? doc.toJSON() : {} } };
 };
 
 export async function getStaticPaths() {

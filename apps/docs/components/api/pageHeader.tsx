@@ -2,12 +2,16 @@ import { FC } from "react";
 
 interface Props {
   title: string;
+  type: string;
 }
 
-export const PageHeader: FC<Props> = ({ title }) => {
+export const PageHeader: FC<Props> = ({ title, type }) => {
   return (
     <div>
-      <h2 className="text-4xl py-5">{title}</h2>
+      <h2 className="text-4xl pt-2 pb-6 flex items-center gap-2">
+        <span className="text-gray-400">{type}</span>
+        <span>{title}</span>
+      </h2>
     </div>
   );
 };
