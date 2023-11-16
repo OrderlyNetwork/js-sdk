@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TypeIcon } from "../api/typeIcon";
 
 export const TreeNode = ({
   name,
@@ -19,10 +20,10 @@ export const TreeNode = ({
           return (
             <li key={item.id}>
               <Link
-                href={`/apis/modules/${slug}/${item.type}/${item.slug}`}
-                className="flex gap-1"
+                href={`/apis/modules/${slug}/${item.type}/${item.name}`}
+                className="flex gap-1 items-center"
               >
-                <span className="text-slate-400">{item.type}</span>
+                <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
                 <span>{item.name}</span>
               </Link>
             </li>

@@ -12,8 +12,8 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.9.0",
     "@codesandbox/sandpack-themes": "^2.0.21",
-    "@orderly.network/react": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@trpc/client": "^10.35.0",
     "@trpc/next": "^10.35.0",
@@ -31,6 +31,7 @@
     "eslint": "^7.32.0",
     "eslint-config-next": "^14.0.1",
     "framer-motion": "^10.13.1",
+    "lucide-react": "^0.265.0",
     "nanoid": "^4.0.2",
     "next": "^14.0.1",
     "nextra": "^2.13.2",

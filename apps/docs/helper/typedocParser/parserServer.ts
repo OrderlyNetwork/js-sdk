@@ -39,6 +39,7 @@ export class ParserServer {
           ...this.pickChildrenInfo(module.classes, "class"),
           ...this.pickChildrenInfo(module.interfaces, "interface"),
           ...this.pickChildrenInfo(module.functions, "function"),
+          ...this.pickChildrenInfo(module.enums, "enum"),
         ],
       };
     });

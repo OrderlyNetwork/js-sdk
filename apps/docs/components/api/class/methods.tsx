@@ -10,7 +10,7 @@ export const Methods: FC<Props> = (props) => {
   return (
     <div>
       <div className="text-2xl mb-5 mt-7">Methods</div>
-      <div className="space-y-5">
+      <div className="space-y-10">
         {methods.map((method) => {
           return <MethodItem key={method.id} method={method} />;
         })}

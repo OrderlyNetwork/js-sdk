@@ -15,7 +15,9 @@ export const getStaticProps = async (context) => {
 
   const doc = parser.parser.findByPath([moduleName, functionName]);
 
-  return { props: { doc: doc?.toJSON(), categories: parser.getCategories() } };
+  return {
+    props: { doc: doc ? doc.toJSON() : [], categories: parser.getCategories() },
+  };
 };
 
 export async function getStaticPaths() {
