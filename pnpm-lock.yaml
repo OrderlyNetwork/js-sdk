@@ -44,12 +44,12 @@ importers:
       '@douyinfe/semi-ui':
         specifier: ^2.39.2
         version: 2.39.2(react-dom@18.2.0)(react@18.2.0)
-      '@orderly.network/components':
-        specifier: workspace:*
-        version: link:../../packages/component
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../../packages/component
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -183,15 +183,15 @@ importers:
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.0.0
-      '@orderly.network/components':
-        specifier: workspace:*
-        version: link:../../packages/component
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../../packages/component
       '@types/node':
         specifier: ^17.0.12
         version: 17.0.12
@@ -252,15 +252,15 @@ importers:
       '@babel/preset-react':
         specifier: ^7.22.5
         version: 7.22.5(@babel/core@7.22.9)
-      '@orderly.network/components':
-        specifier: workspace:*
-        version: link:../../packages/component
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../../packages/component
       '@storybook/addon-essentials':
         specifier: ^7.3.2
         version: 7.3.2(react-dom@18.2.0)(react@18.2.0)
@@ -774,22 +774,6 @@ importers:
         version: 5.1.6
 
   packages/onboard:
-    devDependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      tsup:
-        specifier: ^7.1.0
-        version: 7.1.0(typescript@5.1.6)
-
-  packages/react:
-    dependencies:
-      '@orderly.network/components':
-        specifier: workspace:*
-        version: link:../component
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
     devDependencies:
       react:
         specifier: ^18.2.0

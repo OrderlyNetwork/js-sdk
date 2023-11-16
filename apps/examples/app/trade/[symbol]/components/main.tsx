@@ -1,6 +1,6 @@
 "use client";
 
-import { OrderlyProvider, TradingPage } from "@orderly.network/components";
+import { OrderlyProvider, TradingPage } from "@orderly.network/react";
 import {
   MemoryConfigStore,
   EtherAdapter,

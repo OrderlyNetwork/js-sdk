@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyProvider, TradingPage } from "@orderly.network/components";
+import { OrderlyProvider, TradingPage } from "@orderly.network/react";
 
 import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
 import { WooKeyStore } from "./woo.keystore";

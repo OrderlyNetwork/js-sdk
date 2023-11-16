@@ -14,7 +14,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
-    "@orderly.network/components": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@storybook/addon-essentials": "^7.3.2",

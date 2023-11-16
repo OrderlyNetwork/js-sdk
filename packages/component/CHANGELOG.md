@@ -1,4 +1,4 @@
-# @orderly.network/components
+# @orderly.network/react
 
 ## 0.0.92
 

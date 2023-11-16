@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/components",
+  "name": "@orderly.network/react",
   "version": "0.0.92",
   "description": "",
   "main": "dist/cjs/index.js",

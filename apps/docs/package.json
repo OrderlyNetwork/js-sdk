@@ -13,7 +13,7 @@
     "@codesandbox/sandpack-react": "^2.9.0",
     "@codesandbox/sandpack-themes": "^2.0.21",
     "@douyinfe/semi-ui": "^2.39.2",
-    "@orderly.network/components": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@prisma/client": "5.0.0",
