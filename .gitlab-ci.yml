@@ -6,5 +6,5 @@ include:
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_FORCE_HTTPS: "true"
-  SERVICE_NAME: storybook
-  IMAGE_NAME: storybook
+  SERVICE_NAME: web-docs
+  IMAGE_NAME: web-docs
