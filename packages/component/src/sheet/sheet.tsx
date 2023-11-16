@@ -98,7 +98,7 @@ const SheetHeader = ({
     <div>{leading}</div>
     <div
       className={cn(
-        "flex flex-col space-y-2 text-center text-headertitle",
+        "flex flex-col space-y-2 text-center text-lg text-base-contrast",
         className
       )}
       {...props}

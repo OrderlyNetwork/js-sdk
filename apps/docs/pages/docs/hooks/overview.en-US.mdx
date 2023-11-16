@@ -4,7 +4,7 @@ import { Steps, Callout, Tabs } from "nextra/components";
 
 `@orderly.network/hooks`
 
-The hooks libraries provides a series of React hooks for React developers to ensure a seamless integration experience through the Orderly SDK. This library is a package built on top of [`@orderly.network/core`](/) and [`@orderly.network/perp`](/).
+The hooks libraries provides a series of React hooks for React developers to ensure a seamless integration experience through the Orderly SDK. This library is a package built on top of [`@orderly.network/core`](/apis/modules/__orderly_network___core) and [`@orderly.network/perp`](/apis/modules/__orderly_network___prep).
 
 ## Coding standards
 
@@ -18,39 +18,39 @@ The hooks libraries provides a series of React hooks for React developers to ens
 
 Provides basic hooks to help handle UI states, and some common state management logic.
 
-- [useQuery](/docs/hooks/useQuery) - `GET` Public API
-- [usePrivateQuery](/) - `GET` Private API
-- [usePrivateLazyInfiniteQuery](/) - A version of `usePrivateQuery` that supports infinite scrolling
-- [useLazyQuery](/)
-- [useMutation](/) - `POST` APIs
-- [useWS](/) - WebSocket client
-- [useConfig](/) - An instance of the [ConfigStore](/docs/core/config-store)
-- [useEventEmitter](/) - An instance of the [EventEmitter](/docs/core/event-emitter)
-- [useLocalStorage](/) - Management (CRUD) of localStorage
-- [useSessionStorage](/) - Management (CRUD) of sessionStorage
+- [useQuery](/apis/modules/__orderly_network___hooks/useQuery) - `GET` Public API
+- [usePrivateQuery](/apis/modules/__orderly_network___hooks/usePrivateQuery) - `GET` Private API
+- [usePrivateLazyInfiniteQuery](/apis/modules/__orderly_network___hooks/usePrivateLazyInfiniteQuery) - A version of `usePrivateQuery` that supports infinite scrolling
+- [useLazyQuery](/apis/modules/__orderly_network___hooks/useLazyQuery)
+- [useMutation](/apis/modules/__orderly_network___hooks/useMutation) - `POST` APIs
+- [useWS](/apis/modules/__orderly_network___hooks/useWS) - WebSocket client
+- [useConfig](/apis/modules/__orderly_network___hooks/useConfig) - An instance of the [ConfigStore](/apis/modules/__orderly_network___hooks/ConfigStore)
+- [useEventEmitter](/apis/modules/__orderly_network___hooks/useEventEmitter) - An instance of the [EventEmitter](/apis/modules/__orderly_network___hooks/EventEmitter)
+- [useLocalStorage](/apis/modules/__orderly_network___hooks/useLocalStorage) - Management (CRUD) of localStorage
+- [useSessionStorage](/apis/modules/__orderly_network___hooks/useSessionStorage) - Management (CRUD) of sessionStorage
 
 ### Orderly API
 
 Provides a list of hooks related to Orderly's business logic. Each hooks contains usage of the Orderly API and related data calculation logic.
 
-- [useAccount](/) - Account information
-- [useHoldingStream](/) - Holding
-- [useCollateral](/) - Asset information
-- [useLeverage](/) - Leverage information
-- [useMarginRatio](/) - Margin information
-- [useOrderEntry](/) - Order placement
-- [useFundingRate](/) - Funding rate information
-- [useFundingRates](/) - Batch funding rate information
-- [useChains](/) - Chain information
-- [useDeposit](/) - Deposit helper
-- [useWithdraw](/) - Withdrawal helper
-- [useSymbolsInfo](/) - Symbol information
-- [useTokenInfo](/) - Token information
-- [useMaxQty](/) - Maximum trading quantity
-- [useTickerStream](/) - Symbol market data stream
-- [useOrderStream](/) - Order management
-- [usePositionStream](/) - Position management
-- [useOrderbookStream](/) - Orderbook stream
-- [useMarkPricesStream](/) - Mark prices stream
+- [useAccount](/apis/modules/__orderly_network___hooks/useAccount) - Account information
+- [useHoldingStream](/apis/modules/__orderly_network___hooks/useHoldingStream) - Holding
+- [useCollateral](/apis/modules/__orderly_network___hooks/useCollateral) - Asset information
+- [useLeverage](/apis/modules/__orderly_network___hooks/useLeverage) - Leverage information
+- [useMarginRatio](/apis/modules/__orderly_network___hooks/useMarginRatio) - Margin information
+- [useOrderEntry](/apis/modules/__orderly_network___hooks/useOrderEntry) - Order placement
+- [useFundingRate](/apis/modules/__orderly_network___hooks/useFundingRate) - Funding rate information
+- [useFundingRates](/apis/modules/__orderly_network___hooks/useFundingRates) - Batch funding rate information
+- [useChains](/apis/modules/__orderly_network___hooks/useChains) - Chain information
+- [useDeposit](/apis/modules/__orderly_network___hooks/useDeposit) - Deposit helper
+- [useWithdraw](/apis/modules/__orderly_network___hooks/useWithdraw) - Withdrawal helper
+- [useSymbolsInfo](/apis/modules/__orderly_network___hooks/useSymbolsInfo) - Symbol information
+- [useTokenInfo](/apis/modules/__orderly_network___hooks/useTokenInfo) - Token information
+- [useMaxQty](/apis/modules/__orderly_network___hooks/useMaxQty) - Maximum trading quantity
+- [useTickerStream](/apis/modules/__orderly_network___hooks/useTickerStream) - Symbol market data stream
+- [useOrderStream](/apis/modules/__orderly_network___hooks/useOrderStream) - Order management
+- [usePositionStream](/apis/modules/__orderly_network___hooks/usePositionStream) - Position management
+- [useOrderbookStream](/apis/modules/__orderly_network___hooks/useOrderbookStream) - Orderbook stream
+- [useMarkPricesStream](/apis/modules/__orderly_network___hooks/useMarkPricesStream) - Mark prices stream
 
-**For more details please see [API docs](/)**
+**For more details please see [API docs](/apis/modules/__orderly_network___hooks)**

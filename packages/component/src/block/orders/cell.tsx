@@ -45,33 +45,43 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     <div className={"px-4 py-2"}>
       <div className="flex items-center gap-2 mb-1">
         {typeTag}
-        <div className="flex-1" onClick={onSymbol}>
+        <div className="flex-1 text-2xs" onClick={onSymbol}>
           <Text rule="symbol">{order.symbol}</Text>
         </div>
-        <div className={"text-3xs text-base-contrast/30"}>
+        <div className={"text-4xs text-base-contrast-36"}>
           <Text rule="date">{order.created_time}</Text>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Statistic
           label="Qty."
+          labelClassName="text-4xs text-base-contrast-36"
           value={order.quantity ?? "-"}
           precision={base_dp}
           rule="price"
           valueClassName={
             order.side === OrderSide.BUY
-              ? "text-trade-profit"
-              : "text-trade-loss"
+              ? "text-trade-profit text-3xs"
+              : "text-trade-loss text-3xs"
           }
         />
         <Statistic
           label="Filled"
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           value={order.executed ?? "-"}
           rule="price"
           precision={base_dp}
         />
         <Statistic
-          label="Est. total(USDC)"
+          label={
+            <>
+              <span className="text-base-contrast-36">Est. total</span>
+              <span className="text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           value={
             <NumeralTotal
               price={props.order.price ?? 1}
@@ -82,13 +92,27 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          label="Limit price(USDC)"
+          label={
+            <>
+              <span className="text-base-contrast-36">Limit price</span>
+              <span className="text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           value={order.price ?? "-"}
           rule="price"
           precision={quote_dp}
         />
         <Statistic
-          label="Mark price(USDC)"
+          label={
+            <>
+              <span className="text-base-contrast-36">Mark price</span>
+              <span className="text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           rule="price"
           precision={quote_dp}
           value={order.mark_price}

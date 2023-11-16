@@ -20,6 +20,7 @@ module.exports = {
       "2xs": "calc(var(--orderly-font-size-base) - 3px)", // if base is 16px, it will be 13px
       xs: "calc(var(--orderly-font-size-base) - 2px)", // if base is 16px, it will be 14px
       sm: "calc(var(--orderly-font-size-base) - 1px)", // if base is 16px, it will be 15px
+      base: "calc(var(--orderly-font-size-base))", // if base is 16px, it will be 16px
       lg: "calc(var(--orderly-font-size-base) + 2px)", // if base is 16px, it will be 18px
       xl: "calc(var(--orderly-font-size-base) + 4px)", // if base is 16px, it will be 20px
       "2xl": "calc(var(--orderly-font-size-base) + 8px)", // if base is 16px, it will be 24px

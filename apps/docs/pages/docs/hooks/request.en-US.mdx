@@ -1,23 +1,32 @@
 import { Callout } from "nextra/components";
 import { CodeLive } from "@/components/doc/preview/codeLive";
 import queryConfigRaw from "@/example/queryInfo.example";
+import clientConfigRaw from "@/example/clientInfo.example";
 
 # API requests
 
 Orderly provides both public and private APIs. Public APIs can be visited directly. Private APIs requires authentication and signatures, and these can be performed using hooks from `@orderly.network/hooks`.
 
 <Callout type="info">
-  **Reminder:** Normally you would not have to use the following hooks, as `@orderly.network/hooks` already implements higher level hooks on top of the request module. For example, you can use [`usePositionStream`](/) for position management, and [`useOrderEntry`](/) for order placement. You may consider to use these hooks if you want to build out more advanced usage of Orderly, or if the provided hooks are not suitable for your use case.
+  **Reminder:** Normally you would not have to use the following hooks, as
+  `@orderly.network/hooks` already implements higher level hooks on top of the
+  request module. For example, you can use
+  [`usePositionStream`](/apis/modules/__orderly_network___hooks/usePositionStream)
+  for position management, and
+  [`useOrderEntry`](/apis/modules/__orderly_network___hooks/useOrderEntry) for
+  order placement. You may consider to use these hooks if you want to build out
+  more advanced usage of Orderly, or if the provided hooks are not suitable for
+  your use case.
 </Callout>
 
 ## RESTful API
 
 `@orderly.network/hooks` provides the following hooks for builders to access Orderly's RESTful APIs:
 
-- [useQuery](/)
-- [usePrivateQuery](/)
-- [usePrivateInfiniteQuery](/)
-- [useMutation](/)
+- [useQuery](/apis/modules/__orderly_network___hooks/useQuery)
+- [usePrivateQuery](/apis/modules/__orderly_network___hooks/usePrivateQuery)
+- [usePrivateInfiniteQuery](/apis/modules/__orderly_network___hooks/usePrivateInfiniteQuery)
+- [useMutation](/apis/modules/__orderly_network___hooks/useMutation)
 
 The above hooks are based on [swr](https://swr.vercel.app/), and have the following properties:
 
@@ -60,6 +69,8 @@ export const Example = ()=>{
   //...
 }
 ```
+
+<CodeLive code={clientConfigRaw} disabled isPublic={false} />
 
 ### Mutation
 
@@ -120,10 +131,17 @@ const { data: orders } = usePrivateInfiniteQuery(
 ```
 
 <Callout>
-  **Why are we creating different hooks for different http methods, instead of determining `GET` vs `POST` through a parameter?**
+  **Why are we creating different hooks for different http methods, instead of
+  determining `GET` vs `POST` through a parameter?**
   <ul className="list-disc">
-    <li>Single responsibility principle: A function should only be responisble for one thing.</li>
-    <li>Reduces the complexity of the code, and prevents uncertainty from any side effects of the implementation.</li>
+    <li>
+      Single responsibility principle: A function should only be responisble for
+      one thing.
+    </li>
+    <li>
+      Reduces the complexity of the code, and prevents uncertainty from any side
+      effects of the implementation.
+    </li>
   </ul>
 </Callout>
 

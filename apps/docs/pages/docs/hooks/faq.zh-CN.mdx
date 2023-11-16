@@ -2,7 +2,7 @@
 
 **✨✨ 我现在的项目里面已经实现了 `OrderlyKey` 的创建流程，如果我想保留现有代码，怎么跟 `@orderly.network/hooks` 整合呢？**
 
-可以使用自己定义一个 Class，需要实现[`OrderlyKeyStore`](/)接口的属性和方法，然后创建一个实例并传入`OrderlyConfigProvider`的`keyStore`属性中，这样你就可以在 hooks 中使用你自己创建的 OrderlyKey 了。
+可以使用自己定义一个 Class，需要实现[`OrderlyKeyStore`](/apis/modules/__orderly_network___hooks/OrderlyConfigProvider)接口的属性和方法，然后创建一个实例并传入`OrderlyConfigProvider`的`keyStore`属性中，这样你就可以在 hooks 中使用你自己创建的 OrderlyKey 了。
 
 ```ts filename="myKeyStore.ts"
 import { OrderlyKeyStore } from "@orderly.network/core";

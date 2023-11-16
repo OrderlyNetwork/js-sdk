@@ -5,11 +5,11 @@ import accountStateRaw from "@/example/accountState.example";
 
 `@orderly.network/hooks` provides the following hooks for handling account-related logic:
 
-- [`useAccount`](/): Retrieves the current account info and status. You can also use this hook to get the ['Account'](/) singleton.
-- [`useCollateral`](/): Retrieves the current balance of the account.
-- [`useLeverage`](/): Retrieves the current account leverage.
+- [`useAccount`](/apis/modules/__orderly_network___hooks/useAccount): Retrieves the current account info and status. You can also use this hook to get the ['Account'](/apis/modules/__orderly_network___hooks/Account) singleton.
+- [`useCollateral`](/apis/modules/__orderly_network___hooks/useCollateral): Retrieves the current balance of the account.
+- [`useLeverage`](/apis/modules/__orderly_network___hooks/useLeverage): Retrieves the current account leverage.
 
-{/* These hooks leverage the `Account` in `@orderly.network/core`, where `account` is a singleton. Please visit [this page](/) for information related to the `Account` instance. */}
+{/* These hooks leverage the `Account` in `@orderly.network/core`, where `account` is a singleton. Please visit [this page](/apis/modules/__orderly_network___hooks/Account) for information related to the `Account` instance. */}
 
 ## Account status
 
@@ -54,7 +54,7 @@ interface AccountState {
 }
 ```
 
-- Subscribe to the `change:status` event in the 'Account' instance. (`account` is a singleton of the `Account` instance: more information can be found [here](/))。
+- Subscribe to the `change:status` event in the 'Account' instance. (`account` is a singleton of the `Account` instance: more information can be found [here](/apis/modules/__orderly_network___hooks/Account))。
 
 ```typescript /account/
 import { useAccount } from "@orderly.network/hooks";
@@ -135,4 +135,4 @@ After the `OrderlyKey` is successfully created, it will be stored in the `KeySto
 
 ## Asset
 
-Please refer to [asset](/assets)。
+Please refer to [asset](/docs/hooks/assets)。

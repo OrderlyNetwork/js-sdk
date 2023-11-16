@@ -30,22 +30,23 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <div className="flex-1">
           <div className="flex items-center space-x-2">
             <NetworkImage type="symbol" symbol={item.symbol} size={"small"} />
-            <Text rule="symbol" onClick={onSymbol}>
+            <Text rule="symbol" onClick={onSymbol} className="text-3xs">
               {item.symbol}
             </Text>
           </div>
         </div>
         <Statistic
+          labelClassName="text-4xs"
           label={
             <>
-              <span>Unreal.PnL</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Unreal.PnL</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
           value={
             <div
               className={cn(
-                "flex justify-end",
+                "flex justify-end text-3xs",
                 item["unrealized_pnl"] > 0
                   ? "text-trade-profit"
                   : item["unrealized_pnl"] < 0
@@ -54,7 +55,12 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               )}
             >
               <Numeral>{item["unrealized_pnl"]}</Numeral>
-              <Numeral rule="percentages" prefix="(" surfix=")">
+              <Numeral
+                rule="percentages"
+                prefix="("
+                surfix=")"
+                className="text-4xs"
+              >
                 {item.unsettled_pnl_ROI}
               </Numeral>
             </div>
@@ -67,6 +73,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       <div className="grid grid-cols-3 gap-2">
         <Statistic
           label="Qty."
+          labelClassName={"text-4xs text-base-contrast-36"}
+          valueClassName={" text-3xs"}
           value={item["position_qty"]}
           coloring
           rule="price"
@@ -74,19 +82,23 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           rule="price"
+          labelClassName={"text-4xs"}
+          valueClassName={" text-3xs"}
           label={
             <>
-              <span>Margin</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Margin</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
           value={item["mm"]}
         />
         <Statistic
+          labelClassName={"text-4xs"}
+          valueClassName={" text-3xs"}
           label={
             <>
-              <span>Notional</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Notional</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
           rule="price"
@@ -95,10 +107,12 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           align="right"
         />
         <Statistic
+          labelClassName={"text-4xs"}
+          valueClassName={" text-3xs"}
           label={
             <>
-              <span>Avg. open</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Avg. open</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
           rule="price"
@@ -106,10 +120,12 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["average_open_price"]}
         />
         <Statistic
+          labelClassName={"text-4xs"}
+          valueClassName={" text-3xs"}
           label={
             <>
-              <span>Mark price</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Mark price</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
           rule="price"
@@ -117,13 +133,14 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["mark_price"]}
         />
         <Statistic
+          labelClassName={"text-4xs"}
           label={
             <>
-              <span>Liq. price</span>
-              <span>(USDC)</span>
+              <span className="text-base-contrast-36">Liq. price</span>
+              <span className="text-base-contrast-20">(USDC)</span>
             </>
           }
-          valueClassName="text-warning"
+          valueClassName="text-warning text-3xs"
           value={item["est_liq_price"] === 0 ? "--" : item["est_liq_price"]}
           align="right"
           rule="price"
@@ -136,7 +153,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
-          className="w-[120px] h-[28px]"
+          className="w-[120px] h-[28px] text-base-contrast-54 text-4xs"
         >
           Limit close
         </Button>
@@ -145,7 +162,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
-          className="w-[120px] h-[28px]"
+          className="w-[120px] h-[28px] text-base-contrast-54 text-4xs"
         >
           Market close
         </Button>
