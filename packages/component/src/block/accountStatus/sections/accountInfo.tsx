@@ -99,8 +99,10 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </Button>
 
           <Button
+            className="text-xs"
             variant={"outlined"}
             color={"sell"}
+            fullWidth
             onClick={() => {
               onDisconnect?.();
             }}
@@ -111,8 +113,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
       ) : (
         <div className="flex justify-center">
           <Button
-            className="w-[200px]"
+            className="text-xs"
             variant={"outlined"}
+            fullWidth
             color={"sell"}
             onClick={() => {
               onDisconnect?.();
