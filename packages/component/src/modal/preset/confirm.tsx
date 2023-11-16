@@ -53,7 +53,7 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
       }
     >
       <DialogBody>
-        <div className={"py-5 text-2xs"}>{props.content}</div>
+        <div className={"py-5 text-xs"}>{props.content}</div>
       </DialogBody>
     </SimpleDialog>
   );
