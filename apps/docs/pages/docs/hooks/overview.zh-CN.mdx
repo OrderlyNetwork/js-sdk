@@ -4,7 +4,7 @@ import { Steps, Callout, Tabs } from "nextra/components";
 
 `@orderly.network/hooks`
 
-针对 React 开发者,我们提供了一系列的 React hooks, 以便于你在 React 项目中更方便地使用 Orderly SDK 的功能, `@orderly.network/hooks`是对[`@orderly.network/core`](/) [`@orderly.network/perp`](/)的再次封装。
+针对 React 开发者,我们提供了一系列的 React hooks, 以便于你在 React 项目中更方便地使用 Orderly SDK 的功能, `@orderly.network/hooks`是对[`@orderly.network/core`](/apis/modules/__orderly_network___core) [`@orderly.network/perp`](/apis/modules/__orderly_network___prep)的再次封装。
 
 ## 代码规范约定
 
@@ -18,39 +18,39 @@ import { Steps, Callout, Tabs } from "nextra/components";
 
 提供基础的, 与具体业务无关的 hooks, 帮助处理 UI 状态, 以及一些常用的状态管理逻辑。
 
-- [useQuery](/docs/hooks/useQuery) - `GET`
-- [usePrivateQuery](/) - `GET` Private API
-- [usePrivateLazyInfiniteQuery](/) - 支持无限加载分页查询的 usePrivateQuery
-- [useLazyQuery](/)
-- [useMutation](/) - `POST`
-- [useWS](/) - WebSocket client
-- [useConfig](/) - [ConfigStore](/docs/core/config-store)的实例
-- [useEventEmitter](/) - [EventEmitter](/docs/core/event-emitter)的实例
-- [useLocalStorage](/) - localStorage 增删改查
-- [useSessionStorage](/) - sessionStorage 增删改查
+- [useQuery](/apis/modules/__orderly_network___hooks/useQuery) - `GET`
+- [usePrivateQuery](/apis/modules/__orderly_network___hooks/usePrivateQuery) - `GET` Private API
+- [usePrivateLazyInfiniteQuery](/apis/modules/__orderly_network___hooks/usePrivateLazyInfiniteQuery) - 支持无限加载分页查询的 usePrivateQuery
+- [useLazyQuery](/apis/modules/__orderly_network___hooks/useLazyQuery)
+- [useMutation](/apis/modules/__orderly_network___hooks/useMutation) - `POST`
+- [useWS](/apis/modules/__orderly_network___hooks/useWS) - WebSocket client
+- [useConfig](/apis/modules/__orderly_network___hooks/useConfig) - [ConfigStore](/apis/modules/__orderly_network___hooks/ConfigStore)的实例
+- [useEventEmitter](/apis/modules/__orderly_network___hooks/useEventEmitter) - [EventEmitter](/apis/modules/__orderly_network___hooks/EventEmitter)的实例
+- [useLocalStorage](/apis/modules/__orderly_network___hooks/useLocalStorage) - localStorage 增删改查
+- [useSessionStorage](/apis/modules/__orderly_network___hooks/useSessionStorage) - sessionStorage 增删改查
 
 ### Orderly API related
 
 提供跟 Orderly 业务相关的 hooks, 通常在每个 hooks 中包含了 Orderly API 的调用, 以及对应的数据处理逻辑。
 
-- [useAccount](/) - 账户信息
-- [useHoldingStream](/) - Holding
-- [useCollateral](/) - 资产
-- [useLeverage](/) - 杠杆
-- [useMarginRatio](/) - 保证金
-- [useOrderEntry](/) - 创建订单
-- [useFundingRate](/) - 资金费率
-- [useFundingRates](/) - 资金费率列表
-- [useChains](/) - 链
-- [useDeposit](/) - 入金
-- [useWithdraw](/) - 出金
-- [useSymbolsInfo](/) - 交易对信息
-- [useTokenInfo](/) - Token 信息
-- [useMaxQty](/) - 最大可购买数量
-- [useTickerStream](/) - Ticker
-- [useOrderStream](/) - 订单管理
-- [usePositionStream](/) - 仓位
-- [useOrderbookStream](/) - Orderbook
-- [useMarkPricesStream](/) - 标记价格
+- [useAccount](/apis/modules/__orderly_network___hooks/useAccount) - 账户信息
+- [useHoldingStream](/apis/modules/__orderly_network___hooks/useHoldingStream) - Holding
+- [useCollateral](/apis/modules/__orderly_network___hooks/useCollateral) - 资产
+- [useLeverage](/apis/modules/__orderly_network___hooks/useLeverage) - 杠杆
+- [useMarginRatio](/apis/modules/__orderly_network___hooks/useMarginRatio) - 保证金
+- [useOrderEntry](/apis/modules/__orderly_network___hooks/useOrderEntry) - 创建订单
+- [useFundingRate](/apis/modules/__orderly_network___hooks/useFundingRate) - 资金费率
+- [useFundingRates](/apis/modules/__orderly_network___hooks/useFundingRates) - 资金费率列表
+- [useChains](/apis/modules/__orderly_network___hooks/useChains) - 链
+- [useDeposit](/apis/modules/__orderly_network___hooks/useDeposit) - 入金
+- [useWithdraw](/apis/modules/__orderly_network___hooks/useWithdraw) - 出金
+- [useSymbolsInfo](/apis/modules/__orderly_network___hooks/useSymbolsInfo) - 交易对信息
+- [useTokenInfo](/apis/modules/__orderly_network___hooks/useTokenInfo) - Token 信息
+- [useMaxQty](/apis/modules/__orderly_network___hooks/useMaxQty) - 最大可购买数量
+- [useTickerStream](/apis/modules/__orderly_network___hooks/useTickerStream) - Ticker
+- [useOrderStream](/apis/modules/__orderly_network___hooks/useOrderStream) - 订单管理
+- [usePositionStream](/apis/modules/__orderly_network___hooks/usePositionStream) - 仓位
+- [useOrderbookStream](/apis/modules/__orderly_network___hooks/useOrderbookStream) - Orderbook
+- [useMarkPricesStream](/apis/modules/__orderly_network___hooks/useMarkPricesStream) - 标记价格
 
-**更多 hook 请参考[API 文档](/)**
+**更多 hook 请参考[API 文档](/apis/modules/__orderly_network___hooks/function)**

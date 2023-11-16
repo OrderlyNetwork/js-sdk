@@ -9,7 +9,7 @@ Orderly 提供 Public API 和 Private API 两种接口，Public API 可以直接
 
 <Callout type="info">
   **温馨提示:** 通常情况下你不需要使用到以下这些hook,
-  `@orderly.network/hooks`基于这些基础hook封装了更加简单易用的hook,比如仓位管理有[`usePositionStream`](/),创建订单有[`useOrderEntry`](/)等等，如果在[列表](/)中找不到想要的hook或者希望更灵活的使用Orderly
+  `@orderly.network/hooks`基于这些基础hook封装了更加简单易用的hook,比如仓位管理有[`usePositionStream`](/apis/modules/__orderly_network___hooks/usePositionStream),创建订单有[`useOrderEntry`](/apis/modules/__orderly_network___hooks/useOrderEntry)等等，如果在[列表](/)中找不到想要的hook或者希望更灵活的使用Orderly
   API 时你才需要考虑使用以下这些hook。
 </Callout>
 
@@ -17,10 +17,10 @@ Orderly 提供 Public API 和 Private API 两种接口，Public API 可以直接
 
 `@orderly.network/hooks` 提供了以下几种 hook 来方便开发者使用 RESTful API :
 
-- [useQuery](/)
-- [usePrivateQuery](/)
-- [usePrivateInfiniteQuery](/)
-- [useMutation](/)
+- [useQuery](/apis/modules/__orderly_network___hooks/useQuery)
+- [usePrivateQuery](/apis/modules/__orderly_network___hooks/usePrivateQuery)
+- [usePrivateInfiniteQuery](/apis/modules/__orderly_network___hooks/usePrivateInfiniteQuery)
+- [useMutation](/apis/modules/__orderly_network___hooks/useMutation)
 
 以上 hook 均基于 [swr](https://swr.vercel.app/) 封装, 所以都具有以下特性:
 

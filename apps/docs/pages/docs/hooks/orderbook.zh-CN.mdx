@@ -4,7 +4,7 @@ import orderbookRow from "@/example/orderbook.example";
 
 # Orderbook
 
-`@orderly.network/hooks`提供[`useOrderbookStream`](/)来返回格式化后的数据，方便 UI 进行展示, `symbol`参数发生变化的时候会自动订阅和取消订阅 ws, 无需手动处理。
+`@orderly.network/hooks`提供[`useOrderbookStream`](/apis/modules/__orderly_network___hooks/useOrderbookStream)来返回格式化后的数据，方便 UI 进行展示, `symbol`参数发生变化的时候会自动订阅和取消订阅 ws, 无需手动处理。
 
 ```typescript
 const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =

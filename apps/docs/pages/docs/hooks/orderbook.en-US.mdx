@@ -4,7 +4,7 @@ import orderbookRow from "@/example/orderbook.example";
 
 # Orderbook
 
-`@orderly.network/hooks` provides [`useOrderbookStream`](/) to return formatted data of the orderbook, making it easy for the orderbook to be displayed on the UI. When the `symbol` parameter changes, the hook will automatically subscribe for the data of the new symbol, thus no additional handling is required.
+`@orderly.network/hooks` provides [`useOrderbookStream`](/apis/modules/__orderly_network___hooks/useOrderbookStream) to return formatted data of the orderbook, making it easy for the orderbook to be displayed on the UI. When the `symbol` parameter changes, the hook will automatically subscribe for the data of the new symbol, thus no additional handling is required.
 
 ```typescript
 const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
@@ -43,7 +43,8 @@ const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
 - bids - List of bid order levels, sorted in descending order
 
 <Callout type="info">
-  **Notice:** The default length of the orderbook is 10. This can be modified through the `level` parameter.
+  **Notice:** The default length of the orderbook is 10. This can be modified
+  through the `level` parameter.
 </Callout>
 
 ## Depth
