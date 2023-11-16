@@ -74,36 +74,28 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
     if (dirtyFields["order_price"] && dirtyFields["order_quantity"]) {
       alertText = (
-        <div>
+        <div className={"text-base-contrast-54 text-2xs"}>
           You agree changing the price of ETH-PERP order to{" "}
-          <span className="text-warning text-base">
-            {commify(data.order_price!)}
-          </span>{" "}
-          and the quantity to{" "}
-          <span className="text-warning text-base">
-            {commify(data.order_quantity!)}
-          </span>
-          .
+          <span className="text-warning">{commify(data.order_price!)}</span> and
+          the quantity to{" "}
+          <span className="text-warning">{commify(data.order_quantity!)}</span>.
         </div>
       );
     } else {
       if (dirtyFields["order_price"]) {
         alertText = (
-          <div>
+          <div className={"text-base-contrast-54 text-2xs"}>
             You agree changing the price of ETH-PERP order to{" "}
-            <span className="text-warning text-base">
-              {commify(data.order_price!)}
-            </span>
-            .
+            <span className="text-warning">{commify(data.order_price!)}</span>.
           </div>
         );
       }
 
       if (dirtyFields["order_quantity"]) {
         alertText = (
-          <div>
+          <div className={"text-base-contrast-54 text-2xs"}>
             You agree changing the quantity of ETH-PERP order to{" "}
-            <span className="text-warning text-base">
+            <span className="text-warning">
               {commify(data.order_quantity!)}
             </span>
             .
@@ -116,6 +108,9 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       title: "Edit Order",
       content: alertText,
       onOk: () => Promise.resolve(data),
+      onCancel: () => {
+        return Promise.reject();
+      },
     });
   };
 
@@ -152,20 +147,22 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   return (
     <>
-      <div className="pb-3 pt-5">
+      <div className="pb-3 pt-5 text-xs">
         <Text rule="symbol">{order.symbol}</Text>
       </div>
       <div className="grid grid-cols-2">
         <Statistic
           label="Order type"
           value={typeText}
-          labelClassName="text-3xs text-base-contrast/30"
+          valueClassName={"text-2xs"}
+          labelClassName="text-4xs-contrast-36"
         />
         <Statistic
           label="Last price"
           value={markPrice}
           rule="price"
-          labelClassName="text-3xs text-base-contrast/30"
+          labelClassName="text-4xs-contrast-36"
+          valueClassName={"text-2xs"}
         />
       </div>
       <Divider className="py-5" />
@@ -183,7 +180,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   inputMode="decimal"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
-                  className="text-right"
+                  className="text-right text-3xs"
                   value={field.value!}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -205,7 +202,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   inputMode="decimal"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
-                  className="text-right"
+                  className="text-right text-3xs"
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -244,7 +241,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           <Button
             fullWidth
             type="button"
-            color={"secondary"}
+            variant={"outlined"}
             onClick={() => {
               props.onCancel?.();
             }}
