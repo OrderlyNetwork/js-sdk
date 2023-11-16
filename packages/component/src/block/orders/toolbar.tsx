@@ -19,7 +19,7 @@ export const Toolbar: FC<Props> = (props) => {
           checked={props.showAllSymbol}
           onCheckedChange={props.onShowAllSymbolChange}
         />
-        <Label htmlFor={"showAll"} className={"text-base-contrast/60"}>
+        <Label htmlFor={"showAll"} className={"text-base-contrast-54"}>
           Show all instruments
         </Label>
       </div>

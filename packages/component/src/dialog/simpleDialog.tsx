@@ -32,10 +32,11 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
+          className="text-xs"
           key="cancel"
           type="button"
+          variant={"outlined"}
           onClick={props.onCancel}
-          color={"danger"}
           disabled={loading}
           fullWidth
         >
@@ -47,6 +48,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
+          className="text-xs"
           key="ok"
           type="button"
           disabled={loading}

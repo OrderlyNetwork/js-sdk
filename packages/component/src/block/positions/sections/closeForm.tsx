@@ -136,20 +136,22 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   return (
     <>
-      <div className="pb-3 pt-5">
+      <div className="pb-3 pt-5 text-xs">
         <Text rule="symbol">{position.symbol}</Text>
       </div>
       <div className="grid grid-cols-2">
         <Statistic
           label="Order type"
           value={typeText}
-          labelClassName="text-3xs text-base-contrast/30"
+          valueClassName={"text-2xs"}
+          labelClassName="text-4xs text-base-contrast-36"
         />
         <Statistic
           label="Last price"
           value={markPrice}
           rule="price"
-          labelClassName="text-3xs text-base-contrast/30"
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-2xs"}
         />
       </div>
       <Divider className="py-5" />
@@ -167,7 +169,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   inputMode="decimal"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
-                  className="text-right"
+                  className="text-right text-3xs"
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -189,7 +191,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   inputMode="decimal"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
-                  className="text-right"
+                  className="text-right text-3xs"
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -229,9 +231,9 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
         <div className="grid grid-cols-2 gap-3 py-5">
           <Button
+            variant={"outlined"}
             fullWidth
             type="button"
-            color={"secondary"}
             onClick={() => {
               props.onCancel?.();
             }}

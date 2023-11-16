@@ -42,14 +42,24 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
     <>
       <div className="flex justify-between bg-base-700 px-4 py-3">
         <Statistic
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName="text-3xs"
           label="Unreal. PnL"
           value={aggregated?.unrealPnL}
           coloring
           rule="price"
         />
-        <Statistic label="Notional" value={aggregated?.notional} rule="price" />
+        <Statistic
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName="text-3xs"
+          label="Notional"
+          value={aggregated?.notional}
+          rule="price"
+        />
         <Statistic
           label="Unsettled PnL"
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName="text-3xs"
           value={aggregated?.unsettledPnL}
           rule="price"
           coloring
@@ -63,7 +73,10 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
             checked={props.showAllSymbol}
             onCheckedChange={props.onShowAllSymbolChange}
           />
-          <Label htmlFor={"showAll"} className={"text-base-contrast/60"}>
+          <Label
+            htmlFor={"showAll"}
+            className={"text-base-contrast-36 text-3xs"}
+          >
             Show all instruments
           </Label>
         </div>

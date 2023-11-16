@@ -13,7 +13,7 @@ export const EmptyView: FC<EmptyViewProps> = (props) => {
   }, [props.icon]);
 
   const text = useMemo(() => {
-    return <div>No results found.</div>;
+    return <div className={"text-3xs"}>No results found.</div>;
   }, [props.text]);
 
   return (

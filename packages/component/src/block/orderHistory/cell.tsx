@@ -43,17 +43,18 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       <div className="flex justify-between items-center">
         <div className="flex-1 flex items-center">
           {typeTag}
-          <div className="px-2" onClick={onSymbol}>
+          <div className="px-2  text-2xs" onClick={onSymbol}>
             <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>
-        <div className={"text-3xs text-base-contrast/30"}>
+        <div className={"text-4xs text-base-contrast-36"}>
           <Text rule="date">{item.created_time}</Text>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Statistic
           label="Qty."
+          labelClassName="text-4xs text-base-contrast-36"
           value={item.quantity ?? "-"}
           rule="price"
           precision={base_dp}
@@ -65,6 +66,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           label="Filled"
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           value={item.executed ?? "-"}
           rule="price"
           precision={base_dp}
@@ -72,16 +75,27 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           label="Status"
           rule="status"
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           value={item.status}
           align="right"
         />
         <Statistic
-          label="Avg. price(USDC)"
+          label={
+            <>
+              <span className="text-base-contrast-36">Avg. total</span>
+              <span className="text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           rule="price"
           precision={quote_dp}
           value={item.average_executed_price ?? "-"}
         />
         <Statistic
+          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName={"text-3xs text-base-contrast-80"}
           label="Order price(USDC)"
           value={item.type === OrderType.MARKET ? "Market" : item.price}
         />
