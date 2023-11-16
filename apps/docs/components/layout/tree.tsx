@@ -7,7 +7,6 @@ export const TreeView: FC<{ data: any }> = (props) => {
   return (
     <div className="space-y-2">
       {data.map((item) => {
-        // console.log(item);
         return (
           <TreeNode
             key={item.id}

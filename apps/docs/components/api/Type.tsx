@@ -1,15 +1,21 @@
 import { FC } from "react";
+import { Union } from "./types/union";
+import { Reflection } from "./types/reflection";
 
 interface Props {
   type: { kind: string; [key: string]: any };
 }
 
 export const Type: FC<Props> = (props) => {
-  const { kind, type, name, typeArguments } = props.type;
-  console.log(props.type);
+  const { kind, type, name, typeArguments, properties } = props.type;
+  console.log("--------Type------>>>>", props.type);
 
   if (kind === "intrinsic") {
     return <span>{type}</span>;
+  }
+
+  if (kind === "union") {
+    return <Union type={props.type} />;
   }
 
   if (kind === "reference") {
@@ -25,7 +31,7 @@ export const Type: FC<Props> = (props) => {
             return (
               <>
                 <Type type={item} key={index} />
-                <span>,</span>
+                <span className="mx-1">,</span>
               </>
             );
           })}
@@ -34,6 +40,10 @@ export const Type: FC<Props> = (props) => {
       );
     }
     return <span>{name}</span>;
+  }
+
+  if (kind === "reflection") {
+    return <Reflection type={props.type} />;
   }
 
   return <div></div>;

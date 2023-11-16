@@ -10,8 +10,6 @@ interface MethodProps {
 export const MethodItem: FC<MethodProps> = (props) => {
   const { method } = props;
 
-  console.log(method);
-
   const { name, signature } = method;
 
   const parameters = useMemo(() => {

@@ -18,7 +18,10 @@ export const TreeNode = ({
         {children?.map((item) => {
           return (
             <li key={item.id}>
-              <Link href={`/${item.slug}`} className="flex gap-1">
+              <Link
+                href={`/apis/modules/${slug}/${item.type}/${item.slug}`}
+                className="flex gap-1"
+              >
                 <span className="text-slate-400">{item.type}</span>
                 <span>{item.name}</span>
               </Link>

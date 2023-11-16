@@ -1,10 +1,10 @@
-import { Steps, Callout } from "nextra/components";
+import { Steps, Callout, Tabs } from "nextra/components";
 
 # Hooks
 
 `@orderly.network/hooks`
 
-A collection of React hooks for implementing `Orderly JS SDK` into a React project.
+针对 React 开发者,我们提供了一系列的 React hooks, 以便于你在 React 项目中更方便地使用 Orderly SDK 的功能, `@orderly.network/hooks`是对[`@orderly.network/core`](/) [`@orderly.network/perp`](/)的再次封装。
 
 ## Installation
 
@@ -18,50 +18,65 @@ npm install @orderly.network/core @orderly.network/hooks
 
 <Steps>
 
-### Add `OrderlyProvider`
+### 添加 `OrderlyProvider`
+
+在你的项目中, 添加 `OrderlyProvider` 组件, 通常包装根组件。
+
+<Tabs items={['使用默认配置', '自定义']}>
+  <Tabs.Tab>
+
+在新建的项目中，建议使用默认配置，只需要提供你的 brokerId ([如何获取?](/)) 即可。
 
 ```tsx
 import type { FC, PropsWithChildren } from "react";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
-import {
-  EtherAdapter,
-  LocalStorageStore,
-  DefaultConfigStore
-} from "@orderly.network/core";
-
-const configStore = new MemoryConfigStore();
-const keyStore = new LocalStorageStore("mainnet");
 
 export const App: FC<PropsWithChildren> = ({ children }) => {
   const brokerId = "<your id>";
   return (
     <OrderlyConfigProvider brokerId={brokerId} networkId="mainnet">
-      <children />
-    </OrderlyProvider>
+      {children}
+    </OrderlyConfigProvider>
   );
-
-  // or you can use your own configStore, keyStore and getWalletAdapter
-  // brokerId and configStore you only need to provide one of them
-  return (
-    <OrderlyConfigProvider
-    networkId="mainnet"
-    configStore={new DefaultConfigStore({brokerId})}>
-      <children />
-    </OrderlyProvider>
-  );
-
 };
 ```
 
-### Ready to go!
+</Tabs.Tab>
+  <Tabs.Tab>
+  如果项目已经存在并且已经实现了Orderly Key的创建流程，或者其他需要自定义配置的情况，可以使用 `OrderlyConfigProvider` 的 `config` 属性，传入自定义的配置。
+
+```tsx
+import type { FC, PropsWithChildren } from "react";
+import { OrderlyConfigProvider } from "@orderly.network/hooks";
+import {
+EtherAdapter,
+LocalStorageStore,
+DefaultConfigStore
+} from "@orderly.network/core";
+
+export const App: FC<PropsWithChildren> = ({ children }) => {
+const brokerId = "<your id>";
+return (
+  <OrderlyConfigProvider brokerId={brokerId} networkId="mainnet">
+    <children />
+  </OrderlyProvider>
+);
+};
+```
+
+</Tabs.Tab>
+  
+</Tabs>
+
+### 完成!
 
 Now you can use any Orderly hooks in your React components.
 
 ```tsx
-import { OrderlyProvider } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 
 export const UserInfo = () => {
-  const { user } = useOrderlyUser();
+  const { account, state } = useAccount();
 
   return (
     <div>
@@ -74,31 +89,51 @@ export const UserInfo = () => {
 
 </Steps>
 
-## Ctageories
+## 代码规范约定
+
+- 如果 hook 返回的类型是数组，那么通常第一个元素是数据，第二个元素是一个 Object，包含一些辅助函数。
+- 以 `stream` 结尾的 hook 表示是会实时更新的, 通常是包含了对相关 ws 的订阅。
+- 以`query`结尾的 hook 是对网络请求的封装。
+
+## Hooks 列表
 
 ### Base & Common
 
-提供基础的, 与具体业务无关的 hooks,
+提供基础的, 与具体业务无关的 hooks, 帮助处理 UI 状态, 以及一些常用的状态管理逻辑。
 
-- [useQuery](/docs/hooks/useQuery)
-- usePrivateQuery
-- useMutation
-- useWS
-- useBoolean
+- [useQuery](/docs/hooks/useQuery) - `GET`
+- [usePrivateQuery](/) - `GET` Private API
+- [usePrivateLazyInfiniteQuery](/) - 支持无限加载分页查询的 usePrivateQuery
+- [useLazyQuery](/)
+- [useMutation](/) - `POST`
+- [useWS](/) - WebSocket client
+- [useConfig](/) - [ConfigStore](/docs/core/config-store)的实例
+- [useEventEmitter](/) - [EventEmitter](/docs/core/event-emitter)的实例
+- [useLocalStorage](/) - localStorage 增删改查
+- [useSessionStorage](/) - sessionStorage 增删改查
 
-### Orderly business related
+### Orderly API related
 
-提供跟 Orderly 业务相关的 hooks, 通常在每个 hooks 中包含了 Orderly API 的调用, 以及对应的数据处理逻辑.
+提供跟 Orderly 业务相关的 hooks, 通常在每个 hooks 中包含了 Orderly API 的调用, 以及对应的数据处理逻辑。
 
-Provides hooks related to Orderly business. Each hook usually contains Orderly API request and corresponding data processing logic.
+- [useAccount](/) - 账户信息
+- [useHoldingStream](/) - Holding
+- [useCollateral](/) - 资产
+- [useLeverage](/) - 杠杆
+- [useMarginRatio](/) - 保证金
+- [useOrderEntry](/) - 创建订单
+- [useFundingRate](/) - 资金费率
+- [useFundingRates](/) - 资金费率列表
+- [useChains](/) - 链
+- [useDeposit](/) - 入金
+- [useWithdraw](/) - 出金
+- [useSymbolsInfo](/) - 交易对信息
+- [useTokenInfo](/) - Token 信息
+- [useMaxQty](/) - 最大可购买数量
+- [useTickerStream](/) - Ticker
+- [useOrderStream](/) - 订单管理
+- [usePositionStream](/) - 仓位
+- [useOrderbookStream](/) - Orderbook
+- [useMarkPricesStream](/) - 标记价格
 
-- useOrderEntry
-- useOrderlyUser
-
-<Callout type="info">
-  以 `stream` 结尾的 hook 表示是会实时更新的, 通常是包装了对相关 ws 的订阅.
-</Callout>
-
-## FAQ
-
-**Why need to provide a `configStore`, `keyStore` and `getWalletAdapter`?**
+**更多 hook 请参考[API 文档](/)**

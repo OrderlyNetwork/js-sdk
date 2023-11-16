@@ -1,0 +1,125 @@
+# Account
+
+`@orderly.network/hooks` provides the following hooks for handling account-related logic:
+
+- [`useAccount`](/): Retrieves the current account info and status. You can also use this hook to get the ['Account'](/) singleton.
+- [`useCollateral`](/): Retrieves the current balance of the account.
+- [`useLeverage`](/): Retrieves the current account leverage.
+
+{/* These hooks leverage the `Account` in `@orderly.network/core`, where `account` is a singleton. Please visit [this page](/) for information related to the `Account` instance. */}
+
+## Account status
+
+The `Account` object has the following statuses:
+
+```typescript
+export enum AccountStatusEnum {
+  NotConnected = 0,
+  Connected = 1,
+  NotSignedIn = 2,
+  SignedIn = 3,
+  DisabledTrading = 4,
+  EnableTrading = 5,
+}
+```
+
+### Get account status
+
+There are two ways to get the account status. You can get it either directly from `useAccount`'s value, or through subscribing to the account status change event:
+
+- Retrieve from the `state` value in `useAccount`:
+
+```typescript /state/
+const { account, state, createOrderlyKey, createAccount } = useAccount();
+```
+
+`state` also contains the following account info, as shown below:
+
+```typescript
+interface AccountState {
+  status: AccountStatusEnum;
+  checking: boolean;
+  accountId?: string;
+  userId?: string;
+  address?: string;
+}
+```
+
+- Subscribe to the `change:status` event in the 'Account' instance. (`account` is a singleton of the `Account` instance: more information can be found [here](/))。
+
+```typescript /account/
+import { useAccount } from "@orderly.network/hooks";
+const { account, state, createOrderlyKey, createAccount } = useAccount();
+
+const statusChangeHandler = (nextState: AccountState) => {
+  // do something
+};
+
+useEffect(() => {
+  account.on("change:status", statusChangeHandler);
+
+  return () => {
+    account.off("change:status", statusChangeHandler);
+  };
+}, []);
+```
+
+### Update account status
+
+`@orderly.network/hooks` currently does not provide the functionality for connecting wallets, **builders have to handle wallet connection logic themselves**.
+
+Once the user has successfully connected a wallet, use the `setAddress` method to pass the `address` to the `Account` instance. 3 additional parameters need to be passed when calling `setAddress`:
+
+- `provider` - provider according to the `EIP1193Provider` standard
+- `chain` - information regarding the connected chain, including the `id`
+- `wallet` - wallet information, including the name of the wallet app
+
+The `setAddress` method in `Account` will check the `accound_id` and the existence of any valid `OrderlyKey` from the provided `address` and update the `state`. If the `state` is `AccountStatusEnum.EnableTrading`, then the full login process in complete and the user can then access all functionalities provided by Orderly.
+
+```typescript /account/
+import { useAccount } from "@orderly.network/hooks";
+const { account, state } = useAccount();
+
+//... logic for connecting wallets ...
+
+/**
+ * setAddress will return Promise<AccountStatusEnum>, and state will be updated
+ */
+const nextState = await account.setAddress("<address>", {
+  provider: provider, // EIP1193Provider
+  chain: {
+    id: 1,
+  },
+  wallet: {
+    name: "", // Wallet app name
+  },
+});
+```
+
+## Create account
+
+{/* Use `createAccount` function */}
+
+```typescript /createAccount/
+import { useAccount } from "@orderly.network/hooks";
+const { account, state, createOrderlyKey, createAccount } = useAccount();
+
+const res = await createAccount();
+```
+
+## Orderly Key
+
+Creates an `OrderlyKey`. The validity of the `OrderlyKey` (in days) can be set.
+
+```typescript /createOrderlyKey/
+import { useAccount } from "@orderly.network/hooks";
+const { account, state, createOrderlyKey, createAccount } = useAccount();
+
+const res = await createOrderlyKey(30);
+```
+
+After the `OrderlyKey` is successfully created, it will be stored in the `KeyStore`, and will be used for API signatures later on.
+
+## Asset
+
+Please refer to [asset](/assets)。
