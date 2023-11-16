@@ -477,10 +477,10 @@ var WS = class {
         params,
         callback: [callbacks]
       });
+      this.privateSocket.send(JSON.stringify(subscribeMessage));
     } else {
       handler.callback.push(callbacks);
     }
-    this.privateSocket.send(JSON.stringify(subscribeMessage));
     return () => {
       this.unsubscribePrivate(subscribeMessage);
     };

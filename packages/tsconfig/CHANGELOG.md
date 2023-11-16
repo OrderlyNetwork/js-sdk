@@ -1,5 +1,29 @@
 # tsconfig
 
+## 0.0.82
+
+### Patch Changes
+
+- update
+
+## 0.0.81
+
+### Patch Changes
+
+- update
+
+## 0.0.80
+
+### Patch Changes
+
+- update
+
+## 0.0.79
+
+### Patch Changes
+
+- update
+
 ## 0.0.78
 
 ### Patch Changes

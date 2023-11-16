@@ -5,6 +5,7 @@ import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
+import { min } from "ramda";
 
 export type OrderBookItem = number[];
 
@@ -48,6 +49,18 @@ const reduceItems = (
       } else {
         priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
       }
+
+      if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
+        const priceStr = price.toString();
+        const index = priceStr.indexOf(".");
+        const decimal = priceStr.slice(index + 1);
+        const decimalDepth = depth.toString().slice(2).length;
+        const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
+        priceKey = new Decimal(priceStr.slice(0, index) + "." + decimalStr).toNumber();
+      }
+
+      // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
+
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
@@ -93,14 +106,43 @@ export const reduceOrderbook = (
   level: number,
   data: OrderbookData
 ): OrderbookData => {
-  const asks = reduceItems(depth, level, data.asks, true).reverse();
+  let asks = reduceItems(depth, level, data.asks, true);
 
-  const bids = reduceItems(depth, level, data.bids);
+  let bids = reduceItems(depth, level, data.bids);
+
+  
+  /// not empty and asks.price <= bids.price
+  if(asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
+
+    if(asks.length === 1) {
+      const [ price, qty, newQuantity ] = asks[0];
+      asks.shift();
+      asks.push([ price + (depth === undefined ? 0 : depth), qty, newQuantity ]);
+    } else {
+      const[ bidPrice ] = bids[0];
+      while(asks.length > 0) {
+        const [ askPrice, askQty, newQuantity ] = asks[0];
+        
+        if(askPrice <= bidPrice) {
+          asks.shift();
+          for(let index = 0; index < asks.length; index++) {
+            if (index === 0 ){
+              asks[index][1] += askQty;
+            }
+            asks[index][2] += newQuantity;
+          }
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
+  asks = asks.reverse();
+  
   return {
-    asks:
-      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
-    bids:
-      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
+    asks: asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
+    bids: bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
   };
 };
 
@@ -135,48 +177,11 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
 };
 
 export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
-  const asks = [...data.asks];
-  const bids = [...data.bids];
+  let asks = [...data.asks];
+  let bids = [...data.bids];
 
-  update.asks.forEach((element) => {
-    for (let index = 0; index < asks.length; index++) {
-      if (element[1] === 0) {
-        // remove
-        if (element[0] === asks[index][0]) {
-          const removeItem = asks.splice(index, 1);
-          break;
-        }
-      } else if (element[0] === asks[index][0]) {
-        // update
-        asks[index] = element;
-        break;
-      } else if (element[0] < asks[index][0]) {
-        // insert
-        asks.splice(index, 0, element);
-        break;
-      }
-    }
-  });
-
-  update.bids.forEach((element) => {
-    for (let index = 0; index < bids.length; index++) {
-      if (element[1] === 0) {
-        // remove
-        if (element[0] === bids[index][0]) {
-          const removeItem = bids.splice(index, 1);
-          break;
-        }
-      } else if (element[0] === bids[index][0]) {
-        // update
-        bids[index] = element;
-        break;
-      } else if (element[0] > bids[index][0]) {
-        // insert
-        bids.splice(index, 0, element);
-        break;
-      }
-    }
-  });
+  asks = mergeItems(asks, update.asks).sort(asksSortFn);
+  bids = mergeItems(bids, update.bids).sort(bidsSortFn);
 
   return {
     asks: asks,
@@ -247,19 +252,17 @@ export const useOrderbookStream = (
           //
           if (!!message) {
             // sort and filter qty > 0
-            let bids = message.bids.sort(bidsSortFn);
-            bids = bids.filter((item: number[]) => !isNaN(item[0]));
-            bids = bids.filter((item: number[]) => item[1] > 0);
-            let asks = message.asks.sort(asksSortFn);
-            asks = asks.filter((item: number[]) => !isNaN(item[0]));
-            asks = asks.filter((item: number[]) => item[1] > 0);
+            let bids = [...message.bids.sort(bidsSortFn)];
+            bids = bids.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
+            let asks = [...message.asks.sort(asksSortFn)];
+            asks = asks.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
 
             // const reduceOrderbookData = reduceOrderbook(depth, level, {
             //   bids: bids,
             //   asks: asks,
             // });
             setRequestData({ bids: bids, asks: asks });
-            setData({ bids: bids, asks: asks });
+            setData({ bids: [...bids], asks: [...asks] });
           }
           setIsLoading(false);
         },
@@ -297,8 +300,8 @@ export const useOrderbookStream = (
                 ? data
                 : mergeOrderbook(data, message);
             return mergedData;
-            const reducedData = reduceOrderbook(depth, level, mergedData);
-            return reducedData;
+            // const reducedData = reduceOrderbook(depth, level, mergedData);
+            // return reducedData;
           });
         },
       }
@@ -343,7 +346,11 @@ export const useOrderbookStream = (
     prevMiddlePrice.current = middlePrice;
   }, [middlePrice]);
 
-  const reducedData = reduceOrderbook(depth, level, data);
+
+  const reducedData = reduceOrderbook(depth, level, {
+    asks: [...data.asks],
+    bids: [...data.bids],
+  });
 
   return [
     {

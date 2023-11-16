@@ -12,6 +12,7 @@ import { BottomNavBar } from "./sections/bottombar";
 import { Page } from "@/layout";
 import { API } from "@orderly.network/types";
 import { AssetsProvider } from "@/provider/assetsProvider";
+import { useExecutionReport } from "./hooks/useExecutionReport";
 
 interface TradingPageProps {
   symbol: string;
@@ -20,6 +21,7 @@ interface TradingPageProps {
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
+  useExecutionReport();
   return (
     <Page>
       <TradingPageProvider
