@@ -1,6 +1,15 @@
 {
   "overview": "Overview",
- "request":"request",
- "withdraw":"Withdraw",
-  "faq":"FAQ"
+  "quickstart": "Quick Start",
+  "request": "API request",
+  "account": "Account",
+  "assets": "Assets",
+  "chains": "Chains",
+  "orderbook": "Orderbook",
+  "markets": "Market",
+  "deposit": "Deposit",
+  "withdraw": "Withdraw",
+  "orders": "Orders",
+  "positions": "Positions",
+  "faq": "FAQ"
 }
