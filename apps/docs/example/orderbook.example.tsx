@@ -11,9 +11,9 @@
           onChange={(event) => onDepthChange(event.target.value)}
           value={depth}
         >
-          {allDepths.map((depth) => {
+          {allDepths.map((depth, index) => {
             return (
-              <option key={depth} value={depth}>
+              <option key={index} value={depth}>
                 {depth}
               </option>
             );
