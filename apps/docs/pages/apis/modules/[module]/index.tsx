@@ -48,7 +48,6 @@ export async function getStaticPaths() {
 }
 
 export default function Module(props) {
-  console.log(props);
   return (
     <ApiLayout data={props.categories || []}>
       {props.module ? (

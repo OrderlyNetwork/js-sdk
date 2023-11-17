@@ -13,7 +13,6 @@ export const TreeView: FC<{ data: any }> = (props) => {
     ""
   );
 
-  //   console.log(data);
   return (
     <div className="space-y-2">
       <Accordion.Root
@@ -22,7 +21,6 @@ export const TreeView: FC<{ data: any }> = (props) => {
         defaultValue={defaultValue}
       >
         {data.map((item) => {
-          console.log(item.slug);
           return (
             <Accordion.Item key={item.id} value={item.slug}>
               <TreeNode

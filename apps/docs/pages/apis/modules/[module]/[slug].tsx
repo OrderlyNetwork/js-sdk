@@ -78,8 +78,6 @@ export async function getStaticPaths() {
 }
 
 export default function Page(props) {
-  console.log(props);
-
   const type = useMemo(() => {
     return props.type?.replace("Parser", "");
   }, [props.type]);
@@ -102,8 +100,25 @@ export default function Page(props) {
         return null;
     }
   }, [type, props.doc]);
+
+  const moduleName = useMemo(() => {
+    const apiName = props.doc?.name;
+    for (const category of props.categories || []) {
+      for (const item of category?.children) {
+        if (item.name === apiName) {
+          return category.name;
+        }
+      }
+    }
+  }, [props.categories, props.doc]);
+
   return (
-    <DetailsPageProvider slug={""} type={type}>
+    <DetailsPageProvider
+      slug={""}
+      type={type}
+      moduleName={moduleName!}
+      apiName={props.doc?.name}
+    >
       <ApiLayout data={props.categories}>{page}</ApiLayout>
     </DetailsPageProvider>
   );

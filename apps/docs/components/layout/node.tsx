@@ -2,6 +2,7 @@ import Link from "next/link";
 import { TypeIcon } from "../api/typeIcon";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
+import { useDetailsPageContext } from "../api/detailPageProvider";
 
 export const TreeNode = ({
   name,
@@ -12,6 +13,8 @@ export const TreeNode = ({
   slug: string;
   children?: any[];
 }) => {
+  const { setModuleName, setApiName } = useDetailsPageContext();
+
   return (
     <div>
       <Accordion.Header>
@@ -36,7 +39,14 @@ export const TreeNode = ({
             const link = `/apis/modules/${slug}/${item.name}`;
             return (
               <li key={item.id}>
-                <Link href={link} className="flex gap-1 items-center">
+                <Link
+                  href={link}
+                  onClick={() => {
+                    setModuleName?.(name);
+                    setApiName?.(item.name);
+                  }}
+                  className="flex gap-1 items-center"
+                >
                   <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
                   <span>{item.name}</span>
                 </Link>

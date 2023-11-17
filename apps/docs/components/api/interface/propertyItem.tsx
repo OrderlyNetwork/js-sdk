@@ -14,7 +14,7 @@ interface Props {
 export const PropertyItem: FC<Props> = (props) => {
   const { name, type, readonly, optional } = props;
 
-  console.log("---------PropertyItem------->>>>", props);
+  // console.log("---------PropertyItem------->>>>", props);
 
   return (
     <div className="space-y-3">

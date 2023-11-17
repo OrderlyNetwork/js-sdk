@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { NavBar } from "./navbar";
 import { TreeView } from "./tree";
+import { useDetailsPageContext } from "../api/detailPageProvider";
+import { ChevronRight } from "lucide-react";
 
 export const ApiLayout = ({
   data,
@@ -9,6 +10,8 @@ export const ApiLayout = ({
   children: React.ReactNode;
   data?: any;
 }) => {
+  const { moduleName, apiName } = useDetailsPageContext();
+
   return (
     <div>
       <NavBar />
@@ -17,13 +20,15 @@ export const ApiLayout = ({
           <aside className="h-min-screen overflow-y-auto overflow-x-hidden mt-5">
             <TreeView data={data || []} />
           </aside>
-          <main>
-            <div className="flex space-x-2 text-gray-500 mt-5">
-              <Link href="/" className="after:content-['_↗']">
-                @orderly.network
-              </Link>
-              <Link href="/">@orderly.network</Link>
-            </div>
+          <main className="mt-5">
+            {moduleName && apiName && (
+              <div className="flex space-x-2 text-gray-500 items-center">
+                {moduleName}
+                <ChevronRight size={16} />
+                <span className="font-medium">{apiName}</span>
+              </div>
+            )}
+
             {children}
           </main>
 
