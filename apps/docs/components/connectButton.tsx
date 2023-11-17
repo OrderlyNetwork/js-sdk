@@ -18,7 +18,7 @@ export const ConnectButton = () => {
 
   return (
     <button
-      className="bg-gray-700 p-2 text-white rounded hover:bg-gray-800"
+      className="bg-gray-700 p-2 text-white rounded hover:bg-gray-800 h-[35px] flex items-center"
       onClick={() => {
         connect().then((res) => {});
       }}

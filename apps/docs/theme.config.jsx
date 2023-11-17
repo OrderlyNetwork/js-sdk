@@ -31,6 +31,12 @@ export default {
     },
     footer:{
       text:'2023 © Orderly'
+    },
+    editLink:{
+      component:null
+    },
+    feedback:{
+      content:null
     }
   
     // ...
