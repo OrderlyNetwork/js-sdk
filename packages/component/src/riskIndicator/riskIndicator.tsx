@@ -11,7 +11,7 @@ export const RiskIndicator: FC<RiskIndicatorProps> = (props) => {
 
   return (
     <div
-      className="flex justify-center items-end"
+      className="orderly-flex orderly-justify-center orderly-items-end"
       style={{
         background: "url(/images/riskLevelBg.png)",
         backgroundSize: "contain",

@@ -31,7 +31,7 @@ export interface SpinnerProps
 export const Spinner: FC<SpinnerProps> = (props) => {
   const { size, background, className } = props;
   return (
-    <div role="status" className="inline-block">
+    <div role="status" className="orderly-inline-block">
       <svg
         aria-hidden="true"
         className={cn(spinnerVariants({ size, className, background }))}
@@ -49,7 +49,7 @@ export const Spinner: FC<SpinnerProps> = (props) => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="orderly-sr-only">Loading...</span>
     </div>
   );
 };

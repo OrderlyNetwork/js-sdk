@@ -39,14 +39,14 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
   return (
     <div
-      className="overflow-hidden relative cursor-pointer "
+      className="orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-"
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
         onItemClick?.([props.price, props.quantity]);
       }}
     >
-      <div className="flex flex-row justify-between items-center z-10 relative px-1 text-4xs h-full">
+      <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-items-center orderly-z-10 orderly-relative orderly-px-1 orderly-text-4xs orderly-h-full">
         <div
           className={
             props.type === OrderBookCellType.ASK
@@ -56,7 +56,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         >
           <Numeral precision={dp}>{props.price}</Numeral>
         </div>
-        <div className={"text-base-contrast-80"}>
+        <div className="orderly-text-base-contrast-80">
           <Numeral precision={props.mode === "amount" ? 2 : base_dp}>
             {qty}
           </Numeral>

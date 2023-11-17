@@ -63,7 +63,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
           props.onClosed?.();
         }}
       >
-        <DialogHeader className="after:hidden">Select token</DialogHeader>
+        <DialogHeader className="after:orderly-hidden">Select token</DialogHeader>
         <DialogBody>
           <TokenListView
             tokens={props.tokens}

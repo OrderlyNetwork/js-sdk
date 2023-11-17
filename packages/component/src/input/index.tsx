@@ -105,7 +105,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
       return (
         <button
-          className={"hidden peer-focus:flex px-3 items-center justify-center"}
+          className="orderly-hidden peer-focus:orderly-flex orderly-px-3 orderly-items-center orderly-justify-center"
           onMouseDown={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -117,7 +117,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
             }
           >
-            <X size={16} className="text-base-contrast-54" />
+            <X size={16} className="orderly-text-base-contrast-54" />
           </span>
         </button>
       );
@@ -137,7 +137,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof prefix === "string") {
-        return <InputMask className="text-3xs select-none text-base-contrast-54">{prefix}</InputMask>;
+        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54">{prefix}</InputMask>;
       }
 
       return prefix;
@@ -149,7 +149,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof suffix === "string") {
-        return <InputMask className="text-3xs select-none text-base-contrast-54">{suffix}</InputMask>;
+        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54">{suffix}</InputMask>;
       }
 
       return suffix;
@@ -157,7 +157,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Tooltip
-        className="text-base-contrast text-4xs"
+        className="orderly-text-base-contrast orderly-text-4xs"
         open={showTooltip}
         content={helpText ?? "input help text"}
         sideOffset={5}

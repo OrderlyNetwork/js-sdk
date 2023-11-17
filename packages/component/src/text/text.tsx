@@ -96,7 +96,7 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
   const contentWithSurfix = useMemo(() => {
     if (typeof surfix === "undefined") return content;
     return (
-      <span className="flex gap-1">
+      <span className="orderly-flex orderly-gap-1">
         {content}
         {surfix}
       </span>

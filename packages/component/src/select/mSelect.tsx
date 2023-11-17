@@ -81,7 +81,7 @@ export const MSelect: FC<SelectProps> = ({
   }, [open]);
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="orderly-relative" ref={containerRef}>
       <button
         type="button"
         disabled={Boolean(disabled)}
@@ -98,7 +98,7 @@ export const MSelect: FC<SelectProps> = ({
           open && "bg-popover"
         )}
       >
-        <span className="flex flex-1 text-inherit">
+        <span className="orderly-flex orderly-flex-1 orderly-text-inherit">
           {typeof label !== "undefined" && <>{label}</>}
         </span>
 

@@ -32,8 +32,8 @@ const RadioGroupItem = React.forwardRef<
       )}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-[8px] w-[8px] fill-current text-current" />
+      <RadioGroupPrimitive.Indicator className="orderly-flex orderly-items-center orderly-justify-center">
+        <Circle className="orderly-h-[8px] orderly-w-[8px] orderly-fill-current orderly-text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
@@ -54,7 +54,7 @@ const Radio: React.FC<
   const id = props.id || uid;
 
   return (
-    <div className={"flex gap-1 items-center"}>
+    <div className="orderly-flex orderly-gap-1 orderly-items-center">
       <RadioGroupItem {...rest} id={id}></RadioGroupItem>
       <Label htmlFor={id}>{children}</Label>
     </div>

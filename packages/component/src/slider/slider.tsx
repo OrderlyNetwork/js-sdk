@@ -107,7 +107,7 @@ const Slider = React.forwardRef<
           onValueChange={onValueChangeInner}
           {...props}
         >
-          <SliderPrimitive.Track className="bg-fill-light relative grow rounded-full h-[2px] z-0">
+          <SliderPrimitive.Track className="orderly-bg-fill-light orderly-relative orderly-grow orderly-rounded-full orderly-h-[2px] orderly-z-0">
             <SliderPrimitive.Range
               className={cn(
                 "absolute bg-fill-light rounded-full h-full",

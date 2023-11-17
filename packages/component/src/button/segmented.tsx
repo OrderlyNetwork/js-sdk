@@ -24,14 +24,14 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
   if (props.buttons.length < 2) {
     // throw new Error("SegmentedButton must have more than one button");
     return (
-      <div className="text-red-500">
+      <div className="orderly-text-red-500">
         SegmentedButton must have more than one button
       </div>
     );
   }
 
   return (
-    <div className="flex flex-row gap-[36px]">
+    <div className="orderly-flex orderly-flex-row orderly-gap-[36px]">
       {props.buttons.map((item, index) => {
         return (
           <_Button

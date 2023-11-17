@@ -31,21 +31,21 @@ export const Cell: FC<MarketCellProps> = (props) => {
 
   return (
     <div
-      className="flex items-center gap-2 cursor-pointer"
+      className="orderly-flex orderly-items-center orderly-gap-2 orderly-cursor-pointer"
       onClick={() => onItemClick?.(item)}
     >
       <NetworkImage type={"symbol"} symbol={item.symbol} />
-      <div className="flex flex-1 flex-col">
-        <div className="flex items-center justify-between text-2xs">
-          <Text rule="symbol" className="text-base-contrast">{item.symbol}</Text>
+      <div className="orderly-flex orderly-flex-1 orderly-flex-col">
+        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-2xs">
+          <Text rule="symbol" className="orderly-text-base-contrast">{item.symbol}</Text>
           <Numeral precision={quote_dp} className={colorClassName}>
             {item["24h_close"]}
           </Numeral>
         </div>
-        <div className="flex items-center justify-between text-4xs">
+        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-4xs">
           <Numeral.total
             rule="human"
-            className="text-base-contrast-54"
+            className="orderly-text-base-contrast-54"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
           />

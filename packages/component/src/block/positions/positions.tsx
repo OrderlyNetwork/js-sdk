@@ -24,8 +24,8 @@ interface PositionsViewProps {
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
     <StatisticStyleProvider
-      labelClassName="text-3xs text-base-contrast/30"
-      valueClassName={"text-base-contrast/80"}
+      labelClassName="orderly-text-3xs orderly-text-base-contrast/30"
+      valueClassName="orderly-text-base-contrast/80"
     >
       <div>
         <PositionOverview

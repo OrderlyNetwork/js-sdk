@@ -198,7 +198,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport ? (
-        <div className="text-warning-light text-4xs text-center px-[20px] py-3">
+        <div className="orderly-text-warning-light orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-py-3">
           {chainWarningMessage}
         </div>
       ) : (
@@ -212,8 +212,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         />
       )}
 
-      <div className="flex justify-center">
-        <div className="py-3 min-w-[200px] text-xs">{actionButton}</div>
+      <div className="orderly-flex orderly-justify-center">
+        <div className="orderly-py-3 orderly-min-w-[200px] orderly-text-xs">{actionButton}</div>
       </div>
     </>
   );

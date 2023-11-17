@@ -129,7 +129,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     return (
-      <span className="flex gap-1">
+      <span className="orderly-flex orderly-gap-1">
         {prefixEle}
         {child}
         {surfixEle}

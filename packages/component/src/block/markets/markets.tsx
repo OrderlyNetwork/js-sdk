@@ -26,7 +26,7 @@ export const Markets: FC<MarketsProps> = (props) => {
 
   return (
     <>
-      <h3 className={"text-lg text-base-contrast py-3"}>Markets</h3>
+      <h3 className="orderly-text-lg orderly-text-base-contrast orderly-py-3">Markets</h3>
       <SearchForm onChange={setSearchKey} value={searchKey} />
       <MarketListView dataSource={dataSource} onItemClick={props.onItemClick} />
     </>

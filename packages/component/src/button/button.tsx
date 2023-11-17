@@ -152,7 +152,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
     if (!!loading) {
       return (
         <>
-          <Spinner size={"small"} className="mr-[4px]" />
+          <Spinner size={"small"} className="orderly-mr-[4px]" />
           {props.children}
         </>
       );

@@ -40,34 +40,34 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="flex justify-between bg-base-700 px-4 py-3">
+      <div className="orderly-flex orderly-justify-between orderly-bg-base-700 orderly-px-4 orderly-py-3">
         <Statistic
-          labelClassName="text-4xs text-base-contrast-36"
-          valueClassName="text-3xs"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           label="Unreal. PnL"
           value={aggregated?.unrealPnL}
           coloring
           rule="price"
         />
         <Statistic
-          labelClassName="text-4xs text-base-contrast-36"
-          valueClassName="text-3xs"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           label="Notional"
           value={aggregated?.notional}
           rule="price"
         />
         <Statistic
           label="Unsettled PnL"
-          labelClassName="text-4xs text-base-contrast-36"
-          valueClassName="text-3xs"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           value={aggregated?.unsettledPnL}
           rule="price"
           coloring
           align="right"
         />
       </div>
-      <div className="flex justify-between py-3 px-4 items-center">
-        <div className={"flex items-center gap-2"}>
+      <div className="orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center">
+        <div className="orderly-flex orderly-items-center orderly-gap-2">
           <Checkbox
             id={"showAll"}
             checked={props.showAllSymbol}
@@ -75,7 +75,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
           />
           <Label
             htmlFor={"showAll"}
-            className={"text-base-contrast-36 text-3xs"}
+            className="orderly-text-base-contrast-36 orderly-text-3xs"
           >
             Show all instruments
           </Label>

@@ -33,8 +33,8 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
   }, [to.amount]);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex gap-3 items-center">
+    <div className="orderly-flex orderly-items-center orderly-justify-between">
+      <div className="orderly-flex orderly-gap-3 orderly-items-center">
         <NetworkImage.combine
           main={{
             name: from.token,
@@ -47,18 +47,18 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
             size: "small",
           }}
         />
-        <div className="flex flex-col">
-          <span className="text-xs">{fromAmount}</span>
-          <span className="text-4xs text-base-contrast-54">
+        <div className="orderly-flex orderly-flex-col">
+          <span className="orderly-text-xs">{fromAmount}</span>
+          <span className="orderly-text-4xs orderly-text-base-contrast-54">
             {props.from.token}
           </span>
         </div>
       </div>
-      <ArrowRight className="text-primary-light" size={30} />
-      <div className="flex gap-3 items-center">
-        <div className="flex flex-col items-end">
-          <span className="text-xs">{toAmount}</span>
-          <span className="text-4xs text-base-contrast-54">
+      <ArrowRight className="orderly-text-primary-light" size={30} />
+      <div className="orderly-flex orderly-gap-3 orderly-items-center">
+        <div className="orderly-flex orderly-flex-col orderly-items-end">
+          <span className="orderly-text-xs">{toAmount}</span>
+          <span className="orderly-text-4xs orderly-text-base-contrast-54">
             {props.to.token}
           </span>
         </div>

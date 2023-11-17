@@ -48,9 +48,9 @@ const DialogContent = React.forwardRef<
     >
       {children}
       {closable && (
-        <DialogPrimitive.Close className="absolute right-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <DialogPrimitive.Close className="orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
           <CloseIcon size={20} />
-          <span className="sr-only">Close</span>
+          <span className="orderly-sr-only">Close</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>

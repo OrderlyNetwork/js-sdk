@@ -58,8 +58,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         )}
         onClick={() => inputRef.current?.focus()}
       >
-        <div className="flex">
-          <div className="flex-1 flex justify-between">
+        <div className="orderly-flex">
+          <div className="orderly-flex-1 orderly-flex orderly-justify-between">
             <input
               type="text"
               inputMode="decimal"
@@ -83,7 +83,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             <Button
               variant={"text"}
               size={"small"}
-              className={"font-semibold text-primary-light px-2 min-w-[40px] text-3xs"}
+              className="orderly-font-semibold orderly-text-primary-light orderly-px-2 orderly-min-w-[40px] orderly-text-3xs"
               disabled={!props.maxAmount}
               onClick={(event) => {
                 props?.onValueChange?.({
@@ -115,7 +115,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           }
         >
           <span>{`$${amount}`}</span>
-          <div className="flex items-center space-x-2">
+          <div className="orderly-flex orderly-items-center orderly-space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
                 precision: props.token?.woofi_dex_precision,

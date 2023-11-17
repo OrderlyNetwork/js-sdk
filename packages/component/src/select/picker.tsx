@@ -112,11 +112,11 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
             })
           )}
         >
-          <div className="flex-1 flex justify-start items-center text-inherit ">
+          <div className="orderly-flex-1 orderly-flex orderly-justify-start orderly-items-center orderly-text-inherit orderly-">
             {text}
           </div>
-          <div className={"flex items-center"}>
-            <ArrowIcon size={12} className={"text-inherit"} />
+          <div className="orderly-flex orderly-items-center">
+            <ArrowIcon size={12} className="orderly-text-inherit" />
           </div>
         </div>
       </ActionSheet>

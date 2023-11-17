@@ -24,7 +24,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
     modal.alert({
       title: "Mark price",
       message: (
-        <span className="text-3xs text-base-contrast-54">
+        <span className="orderly-text-3xs orderly-text-base-contrast-54">
           Obtained from a third-party oracle, the mark price is calculated as
           the median of three prices: the last price, the fair price based on
           the funding rate basis, and the fair price based on the order books.
@@ -34,7 +34,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div className="py-2 flex justify-between text-xs ">
+    <div className="orderly-py-2 orderly-flex orderly-justify-between orderly-text-xs orderly-">
       <div
         className={cn("font-semibold flex items-center", {
           "text-trade-profit": middlePrice > prevLastPrice,
@@ -52,8 +52,8 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
           />
         )}
       </div>
-      <div className={"flex items-center gap-1"} onClick={onMarkPrice}>
-        <Flag size={14} className={"text-yellow-400"} />
+      <div className="orderly-flex orderly-items-center orderly-gap-1" onClick={onMarkPrice}>
+        <Flag size={14} className="orderly-text-yellow-400" />
         <Numeral precision={quote_dp}>{markPrice}</Numeral>
       </div>
     </div>

@@ -110,8 +110,8 @@ export const TabList: FC<TabListProps> = (props) => {
         props.className
       )}
     >
-      <div className="pb-1 relative flex-1">
-        <div className="flex space-x-5" ref={boxRef}>
+      <div className="orderly-pb-1 orderly-relative orderly-flex-1">
+        <div className="orderly-flex orderly-space-x-5" ref={boxRef}>
           {props.tabs.map((item, index) => {
             return (
               <Tab

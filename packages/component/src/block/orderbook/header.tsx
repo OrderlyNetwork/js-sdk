@@ -24,18 +24,18 @@ export const Header: FC<Props> = (props) => {
   }, [mode]);
 
   return (
-    <div className="flex flex-row justify-between text-base-contrast-36 text-4xs pb-2">
-      <div className={"flex flex-col"}>
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs orderly-pb-2">
+      <div className="orderly-flex orderly-flex-col">
         <span>Price</span>
         <span>{`(${props.quote})`}</span>
       </div>
       <div
-        className={"flex items-center cursor-pointer"}
+        className="orderly-flex orderly-items-center orderly-cursor-pointer"
         onClick={() =>
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
         }
       >
-        <div className={"flex flex-col text-base-contrast-36 text-4xs items-end mr-1"}>
+        <div className="orderly-flex orderly-flex-col orderly-text-base-contrast-36 orderly-text-4xs orderly-items-end orderly-mr-1">
           <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>

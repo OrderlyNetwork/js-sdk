@@ -50,7 +50,7 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
   const [sortCondition, setSortCondition] = useState<SortCondition>({});
 
   const renderSeparator = useCallback(() => {
-    return <Divider className="my-[16px]" />;
+    return <Divider className="orderly-my-[16px]" />;
   }, []);
 
   const dataSource = useMemo<API.MarketInfoExt[] | undefined>(() => {
@@ -75,8 +75,8 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
         dataSource={dataSource}
         renderItem={renderItem}
         renderSeparator={renderSeparator}
-        contentClassName="space-y-[16px]"
-        className="py-[16px]"
+        contentClassName="orderly-space-y-[16px]"
+        className="orderly-py-[16px]"
       />
     </>
   );

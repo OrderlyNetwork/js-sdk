@@ -107,7 +107,7 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   const icon = useMemo(() => {
     // if (failed) {
     if (props.type === "unknown") {
-      return <span className="text-base-contrast/50 text-[10px]">U</span>;
+      return <span className="orderly-text-base-contrast/50 orderly-text-[10px]">U</span>;
     }
     // }
     if (!url) {

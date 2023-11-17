@@ -14,7 +14,7 @@ export const Combine: FC<CombineProps> = (props) => {
 
   return (
     <div
-      className="relative"
+      className="orderly-relative"
       style={{
         width: size,
         height: size,
@@ -23,7 +23,7 @@ export const Combine: FC<CombineProps> = (props) => {
       <NetworkImage {...props.main} />
       <NetworkImage
         {...props.sub}
-        className="absolute bottom-0 right-0 outline outline-2 outline-base-100 z-10"
+        className="orderly-absolute orderly-bottom-0 orderly-right-0 orderly-outline orderly-outline-2 orderly-outline-base-100 orderly-z-10"
         rounded
       />
     </div>

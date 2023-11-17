@@ -24,7 +24,7 @@ export const Default: Story = {
 export const Colors: Story = {
   render: (args) => {
     return (
-      <div className="flex gap-5">
+      <div className="orderly-flex orderly-gap-5">
         <Switch {...args} />
         <Switch checked {...args} />
         <Switch checked color="profit" {...args} />

@@ -23,7 +23,7 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
       //
       // }}
     >
-      <div className="overflow-hidden relative">{props.children}</div>
+      <div className="orderly-overflow-hidden orderly-relative">{props.children}</div>
     </div>
   );
 };

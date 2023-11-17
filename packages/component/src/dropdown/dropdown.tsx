@@ -32,7 +32,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   >
     {children}
     <ArrowIcon size={12} />
-    {/* <ChevronRightIcon className="ml-auto h-4 w-4" /> */}
+    {/* <ChevronRightIcon className="orderly-ml-auto orderly-h-4 orderly-w-4" /> */}
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName =
@@ -106,9 +106,9 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     checked={checked}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="orderly-absolute orderly-left-2 orderly-flex orderly-h-3.5 orderly-w-3.5 orderly-items-center orderly-justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        {/* <CheckIcon className="h-4 w-4" /> */}
+        {/* <CheckIcon className="orderly-h-4 orderly-w-4" /> */}
         <ArrowIcon size={12} />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
@@ -130,9 +130,9 @@ const DropdownMenuRadioItem = React.forwardRef<
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="orderly-absolute orderly-left-2 orderly-flex orderly-h-3.5 orderly-w-3.5 orderly-items-center orderly-justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        {/* <DotFilledIcon className="h-4 w-4 fill-current" /> */}
+        {/* <DotFilledIcon className="orderly-h-4 orderly-w-4 orderly-fill-current" /> */}
         <ArrowIcon size={12} />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>

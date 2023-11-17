@@ -61,7 +61,7 @@ const Tooltip: React.FC<
         <TooltipPrimitive.Arrow
           width={11}
           height={5}
-          className="fill-popover"
+          className="orderly-fill-popover"
         />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Root>

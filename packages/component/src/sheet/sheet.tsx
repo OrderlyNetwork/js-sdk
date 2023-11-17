@@ -76,9 +76,9 @@ const SheetContent = React.forwardRef<
       >
         {children}
         {closeable && (
-          <SheetPrimitive.Close className="absolute right-[24px] top-[24px] rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <SheetPrimitive.Close className="orderly-absolute orderly-right-[24px] orderly-top-[24px] orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-secondary">
             <CloseIcon size={20} />
-            <span className="sr-only">Close</span>
+            <span className="orderly-sr-only">Close</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Content>
@@ -94,7 +94,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement> & {
   leading?: React.ReactNode;
 }) => (
-  <div className="grid grid-cols-[40px_1fr_40px] items-center">
+  <div className="orderly-grid orderly-grid-cols-[40px_1fr_40px] orderly-items-center">
     <div>{leading}</div>
     <div
       className={cn(

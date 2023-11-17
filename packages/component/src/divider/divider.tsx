@@ -32,7 +32,7 @@ export interface DividerProps extends VariantProps<typeof dividerVariants> {
 export const Divider: FC<PropsWithChildren<DividerProps>> = (props) => {
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
-    return <div className="px-2">{props.children}</div>;
+    return <div className="orderly-px-2">{props.children}</div>;
   }, [props.children]);
 
   return (

@@ -80,20 +80,20 @@ export const GetTestUSDC = () => {
   }
 
   return (
-    <div className="flex justify-between items-center fixed left-0 right-0 bottom-[64px] h-[40px] bg-base-100 z-20 px-2 animate-in fade-in ">
-      <div className="text-3xs text-base-contrast/50 cursor-pointer">
-        <span className="text-primary-light" onClick={onGetClick}>
+    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-bg-base-100 orderly-z-20 orderly-px-2 orderly-animate-in orderly-fade-in orderly-">
+      <div className="orderly-text-3xs orderly-text-base-contrast/50 orderly-cursor-pointer">
+        <span className="orderly-text-primary-light" onClick={onGetClick}>
           Get test USDC
         </span>{" "}
         and start trading!
       </div>
       {/* Get test USDC and earn an NFT in our testnet campaign! */}
-      <div className="p-2">
+      <div className="orderly-p-2">
         <button
-          className="w-[16px] h-[16px] rounded-full bg-primary-light flex justify-center items-center"
+          className="orderly-w-[16px] orderly-h-[16px] orderly-rounded-full orderly-bg-primary-light orderly-flex orderly-justify-center orderly-items-center"
           onClick={onCloseClick}
         >
-          <X size={14} className="text-base-100" />
+          <X size={14} className="orderly-text-base-100" />
         </button>
       </div>
     </div>

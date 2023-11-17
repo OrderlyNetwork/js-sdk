@@ -45,7 +45,7 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     }
 
     return (
-      <div className="absolute w-full h-full z-20 left-0 top-0 bottom-0 right-0 flex justify-center items-center">
+      <div className="orderly-absolute orderly-w-full orderly-h-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center">
         <Spinner />
       </div>
     );
@@ -58,7 +58,7 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
       </div>
       <div
         ref={sentinelRef}
-        className="relative invisible h-[1px] top-[-300px]"
+        className="orderly-relative orderly-invisible orderly-h-[1px] orderly-top-[-300px]"
       />
       {loadingViewElement}
     </div>

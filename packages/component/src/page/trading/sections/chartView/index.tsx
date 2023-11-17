@@ -29,19 +29,19 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   );
 
   return (
-    <div className="text-3xs">
+    <div className="orderly-text-3xs">
       <Tabs
         showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
-        tabBarClassName="h-[40px]"
+        tabBarClassName="orderly-h-[40px]"
         collapsed={collapsed}
         onToggleCollapsed={() => setCollapsed((prev: boolean) => !prev)}
         tabBarExtra={(context) => {
           return (
-            <div className="flex items-center">
+            <div className="orderly-flex orderly-items-center">
               <button
-                className={"px-5"}
+                className="orderly-px-5"
                 onClick={() => {
                   context.toggleContentVisible();
                 }}
