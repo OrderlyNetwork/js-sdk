@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Link as LinkIcon } from "lucide-react";
-import { FC, useMemo } from "react";
+import { FC, Fragment, useMemo } from "react";
 import { Type } from "../Type";
+import { path } from "ramda";
 
 interface Props {
   name: string;
@@ -24,7 +25,7 @@ export const PropertyItem: FC<Props> = (props) => {
             Optional
           </span>
         ) : null}
-        <span>{name}</span>
+        <span className="text-xl">{name}</span>
         <a href={`#${name}`}>
           <LinkIcon size={14} className="stroke-gray-400 ml-2" />
         </a>
@@ -38,9 +39,32 @@ export const PropertyItem: FC<Props> = (props) => {
           <Type type={type} />
         </span>
       </div>
-      <div>
+      <div className="space-y-4">
         <div>
           <strong>Type declaration</strong>
+        </div>
+
+        {Array.isArray(type.signatures) && type.signatures.length > 0 ? (
+          <>
+            <div>
+              <strong>Parameters</strong>
+            </div>
+            <ul className="list-inside list-disc">
+              {type.signatures.map((signature: any) => {
+                return signature.parameters.map((param: any, index: number) => {
+                  return (
+                    <li key={param.id} className="space-x-1">
+                      <span className="text-blue-500">{`${param.name}:`}</span>
+                      <Type type={param.type} />
+                    </li>
+                  );
+                });
+              })}
+            </ul>
+          </>
+        ) : null}
+        <div>
+          <strong>Returns</strong>
         </div>
       </div>
     </div>

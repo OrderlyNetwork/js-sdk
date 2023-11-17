@@ -38,7 +38,11 @@ export const Reference: FC<Props> = (props) => {
   return (
     <Link
       className="text-rose-500 font-semibold italic underline hover:text-rose-600"
-      href={`/apis/modules/${encodeName(props.type.packageName)}/${name}`}
+      href={
+        props.type.packageName
+          ? `/apis/modules/${encodeName(props.type.packageName)}/${name}`
+          : props.type.name
+      }
     >
       {name}
     </Link>

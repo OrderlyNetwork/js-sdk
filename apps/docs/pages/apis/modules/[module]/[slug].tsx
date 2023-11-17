@@ -1,6 +1,9 @@
 import { ClassPage } from "@/components/api/class";
+import { DetailsPageProvider } from "@/components/api/detailPageProvider";
 import { FunctionPage } from "@/components/api/function";
 import { InterfacePage } from "@/components/api/interface";
+import { ModulesSection } from "@/components/api/module";
+import { VariablePage } from "@/components/api/variable/index.page";
 import { ApiLayout } from "@/components/layout/apiLayout";
 import { decodeName } from "@/helper/typedocParser/name";
 import { ParserServer } from "@/helper/typedocParser/parserServer";
@@ -15,8 +18,6 @@ export const getStaticProps = async (context) => {
   const functionName = context.params.slug.replace(`.${context.locale}`, "");
 
   const doc = parser.parser.findByPath([moduleName, functionName]);
-
-  console.log("??????", doc?.type);
 
   return {
     props: {
@@ -39,8 +40,13 @@ export async function getStaticPaths() {
 
 export default function Page(props) {
   console.log(props);
+
+  const type = useMemo(() => {
+    return props.type?.replace("Parser", "");
+  }, [props.type]);
+
   const page = useMemo(() => {
-    const type = props.type?.replace("Parser", "");
+    // const type = props.type?.replace("Parser", "");
 
     switch (type) {
       case "Class":
@@ -49,16 +55,17 @@ export default function Page(props) {
         return <InterfacePage doc={props.doc || {}} />;
       case "Function":
         return <FunctionPage doc={props.doc || {}} />;
-      // case 'Variable':
-      //     return <ClassPage doc={props.doc || {}} />;
+      case "Variable":
+        return <VariablePage doc={props.doc || {}} />;
+      case "Namespace":
+        return <ModulesSection module={props.doc || {}} />;
       default:
         return null;
     }
-  }, [props.type]);
+  }, [type]);
   return (
-    <ApiLayout data={props.categories}>
-      {/* <ClassPage doc={props.doc || {}} /> */}
-      {page}
-    </ApiLayout>
+    <DetailsPageProvider slug={""} type={type}>
+      <ApiLayout data={props.categories}>{page}</ApiLayout>
+    </DetailsPageProvider>
   );
 }

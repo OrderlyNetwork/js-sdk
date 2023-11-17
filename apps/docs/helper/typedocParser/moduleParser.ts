@@ -166,8 +166,6 @@ export class ModuleParser {
       .filter((child) => child.kind === ReflectionKind.Variable)
       .map((child) => VariableParser.generateFromTypeDoc(child, id));
 
-    console.log("----->>>>", name);
-
     return new ModuleParser({
       id,
       name,

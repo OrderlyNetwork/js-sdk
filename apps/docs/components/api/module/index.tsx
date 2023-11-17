@@ -9,8 +9,8 @@ interface ModuleSectionProps {
 export const ModulesSection: FC<ModuleSectionProps> = (props) => {
   const { module } = props;
   return (
-    <div className="space-y-3">
-      <PageHeader title={module.name} />
+    <div className="space-y-5">
+      <PageHeader title={module.name} type="" />
       <ModuleSectionItem
         title="NameSpaces"
         type="namespace"

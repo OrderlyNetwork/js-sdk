@@ -19,13 +19,15 @@ export const ApiLayout = ({
           </aside>
           <main>
             <div className="flex space-x-2 text-gray-500 mt-5">
-              <Link href="/">@orderly.network</Link>
+              <Link href="/" className="after:content-['_↗']">
+                @orderly.network
+              </Link>
               <Link href="/">@orderly.network</Link>
             </div>
             {children}
           </main>
 
-          <aside>toc</aside>
+          <aside></aside>
         </div>
       </div>
     </div>

@@ -7,6 +7,15 @@ import { encodeName } from "./name";
 export class ParserServer {
   private static _instance: ParserServer;
 
+  private static _modules = [
+    "@orderly.network/core",
+    "@orderly.network/futures",
+    "@orderly.network/hooks",
+    "@orderly.network/net",
+    "@orderly.network/types",
+    "@orderly.network/utils",
+  ];
+
   parser: ProjectParser;
 
   static getInstance(): ParserServer {
@@ -30,19 +39,25 @@ export class ParserServer {
   getCategories() {
     const json = this.parser.toJSON();
 
-    return json.modules.map((module) => {
-      return {
-        name: module.name,
-        id: module.id,
-        slug: encodeName(module.name),
-        children: [
-          ...this.pickChildrenInfo(module.classes, "class"),
-          ...this.pickChildrenInfo(module.interfaces, "interface"),
-          ...this.pickChildrenInfo(module.functions, "function"),
-          ...this.pickChildrenInfo(module.enums, "enum"),
-        ],
-      };
-    });
+    return json.modules
+      .filter((module) => ParserServer._modules.includes(module.name))
+      .map((module) => {
+        console.log("--??--", module.name);
+        return {
+          name: module.name,
+          id: module.id,
+          slug: encodeName(module.name),
+          children: [
+            ...this.pickChildrenInfo(module.namespaces, "namespaces"),
+            ...this.pickChildrenInfo(module.classes, "class"),
+            ...this.pickChildrenInfo(module.interfaces, "interface"),
+            ...this.pickChildrenInfo(module.functions, "function"),
+            ...this.pickChildrenInfo(module.enums, "enum"),
+            ...this.pickChildrenInfo(module.variables, "variables"),
+            ...this.pickChildrenInfo(module.typeAliases, "typeAliases"),
+          ],
+        };
+      });
   }
 
   private pickChildrenInfo(children: any[], type: string) {

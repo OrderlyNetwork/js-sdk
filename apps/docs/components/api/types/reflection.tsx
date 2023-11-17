@@ -15,7 +15,7 @@ export const Reflection: FC<ReflectionProps> = (props) => {
         <br />
         {type.properties.map((property, index) => {
           const item = (
-            <span className="pl-5">
+            <span className="inline-block pl-5">
               <span className="text-blue-500">{property.name}</span>
               <span className="mr-1">:</span>
               <Type key={property.id} type={property.type} />

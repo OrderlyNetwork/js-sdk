@@ -7,7 +7,6 @@ interface UnionProps {
 
 export const Union: FC<UnionProps> = (props) => {
   const { types } = props.type;
-  console.log("------ union --", types);
 
   return (
     <span className="space-x-1">

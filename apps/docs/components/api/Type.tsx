@@ -4,9 +4,13 @@ import { Reflection } from "./types/reflection";
 import Link from "next/link";
 import { encodeName } from "@/helper/typedocParser/name";
 import { Reference } from "./types/reference";
+import { TypeOperator } from "./types/typeOperator";
+import { Tuple } from "./types/tuple";
+import { Array } from "./types/array";
 
 interface Props {
   type: { kind: string; [key: string]: any };
+  className?: string;
 }
 
 export const Type: FC<Props> = (props) => {
@@ -31,6 +35,18 @@ export const Type: FC<Props> = (props) => {
 
   if (kind === "reflection") {
     return <Reflection type={props.type} />;
+  }
+
+  if (kind === "typeOperator") {
+    return <TypeOperator type={props.type} />;
+  }
+
+  if (kind === "tuple") {
+    return <Tuple type={props.type} />;
+  }
+
+  if (kind === "array") {
+    return <Array type={props.type} />;
   }
 
   return <div></div>;
