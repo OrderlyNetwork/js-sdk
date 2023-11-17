@@ -7,8 +7,8 @@ export const NavBar = () => {
       <div className="flex flex-row items-center justify-between h-full max-w-[90rem] m-auto px-[24px]">
         <img src="/images/orderly.log.png" width={40} />
         <div className="flex gap-3 items-center">
-          <ul className="flex gap-3">
-            <li className="mr-[5px]"><Link  href="/docs/hooks/overview">Documentation
+          <ul className="flex gap-3 text-[#4b5563]">
+            <li className="mr-[5px]"><Link  href="/docs/hooks/overview">Docs
             </Link></li>            
             <li className="font-medium">API</li>
           </ul>
