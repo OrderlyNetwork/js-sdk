@@ -12,7 +12,7 @@ export const TreeView: FC<{ data: any }> = (props) => {
     `.${locale}` || "",
     ""
   );
-  console.log(router, query, defaultValue);
+
   //   console.log(data);
   return (
     <div className="space-y-2">

@@ -23,6 +23,8 @@ export const getStaticProps = async (context) => {
 };
 
 export async function getStaticPaths() {
+  // const parser = ParserServer.getInstance();
+
   return {
     paths: [
       // Object variant:
