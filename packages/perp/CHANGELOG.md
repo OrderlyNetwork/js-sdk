@@ -1,5 +1,16 @@
 # @orderly.network/futures
 
+## 1.0.0
+
+### Minor Changes
+
+- first publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@0.1.0
+
 ## 0.0.89
 
 ### Patch Changes
