@@ -10,13 +10,14 @@ export const FunctionPage: FC<Props> = (props) => {
   const { doc } = props;
 
   const type = useMemo(() => {
+    if (!doc || !doc.name) {
+      return "Function";
+    }
     if (doc?.name.startsWith("use")) {
       return "React Hook";
     }
     return "Function";
   }, [doc.name]);
-
-  console.log("----------doc------->>>>", doc);
 
   return (
     <div>
