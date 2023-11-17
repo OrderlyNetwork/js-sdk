@@ -11,5 +11,12 @@
   "withdraw": "Withdraw",
   "orders": "Orders",
   "positions": "Positions",
+  "example":{
+    "title":"Example",
+    "theme":{
+
+      "layout":"full"
+    }
+  },
   "faq": "FAQ"
 }
