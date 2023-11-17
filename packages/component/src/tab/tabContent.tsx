@@ -15,8 +15,8 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
     <div
       className={twMerge(
         cx(
-          "transition-all grid",
-          contentVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          "orderly-transition-all orderly-grid",
+          contentVisible ? "orderly-grid-rows-[1fr]" : "orderly-grid-rows-[0fr]"
         )
       )}
       // onTransitionEnd={() => {

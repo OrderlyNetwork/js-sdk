@@ -174,9 +174,9 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <Numeral
                 rule="percentages"
                 className={cx({
-                  "text-primary-light": marginRatioVal >= 10,
-                  "text-warning": marginRatioVal < 10 && marginRatioVal >= 0.5,
-                  "text-danger": marginRatioVal < 0.5,
+                  "orderly-text-primary-light": marginRatioVal >= 10,
+                  "orderly-text-warning": marginRatioVal < 10 && marginRatioVal >= 0.5,
+                  "orderly-text-danger": marginRatioVal < 0.5,
                 })}
                 visible={visible}
               >

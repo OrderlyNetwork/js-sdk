@@ -104,7 +104,7 @@ export const MSelect: FC<SelectProps> = ({
 
         <ArrowIcon
           size={12}
-          className={cx("transition-transform", open && "rotate-180")}
+          className={cx("orderly-transition-transform", open && "orderly-rotate-180")}
         />
       </button>
       {open && (
