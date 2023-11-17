@@ -3,9 +3,10 @@
       "title": "Documntation",
       "type": "page"
     },
-    "api": {
+    "apis": {
       "title": "API",
-      "href": "apis/modules/__orderly_network___hooks"
+      "type":"page",
+      "href": "/apis/modules/__orderly_network___hooks"
     }
     
    

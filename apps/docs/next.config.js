@@ -10,11 +10,11 @@ const nextConfig = {
   output: "standalone",
   // Static export cannot be used when i18n is used
   // output: 'export',
-  transpilePackages: [
-    "@douyinfe/semi-ui",
-    // "@douyinfe/semi-icons",
-    // "@douyinfe/semi-illustration",
-  ],
+  // transpilePackages: [
+  //   "@douyinfe/semi-ui",
+  //   // "@douyinfe/semi-icons",
+  //   // "@douyinfe/semi-illustration",
+  // ],
   webpack: (config, { isServer }) => {
     config.module.rules.push({
       test: /\.example\.(ts|tsx)$/i,

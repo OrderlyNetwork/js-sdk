@@ -12,8 +12,13 @@ export const NavbarExtra = () => {
       return <ConnectButton />;
     }
     return (
-      <div className="border p-2 rounded">
-        {state.address!.replace(reg, "$1...$3")}
+      <div className="border border-gray-400 px-2 rounded h-[35px] flex items-center">
+        <img
+          src="https://oss.woo.network/static/wallet_icon/metamask.png"
+          alt="metamask"
+          className="w-[20px] h-[20px] mr-1"
+        />
+        <span>{state.address!.replace(reg, "$1...$3")}</span>
       </div>
     );
   }, [state.status]);
