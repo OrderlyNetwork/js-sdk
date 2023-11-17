@@ -101,7 +101,7 @@ export default function Page(props) {
       default:
         return null;
     }
-  }, [type]);
+  }, [type, props.doc]);
   return (
     <DetailsPageProvider slug={""} type={type}>
       <ApiLayout data={props.categories}>{page}</ApiLayout>
