@@ -5,7 +5,7 @@ WORKDIR /app
 # multi-monorepo project, need to copy all to install dependencies
 COPY . .
 RUN npm install -g pnpm
-RUN pnpm config set registry https://registry.npmmirror.com/ && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
