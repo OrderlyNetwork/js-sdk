@@ -12,9 +12,9 @@
   "orders": "Orders",
   "positions": "Positions",
   "example":{
+    "display":"hidden",
     "title":"Example",
     "theme":{
-
       "layout":"full"
     }
   },
