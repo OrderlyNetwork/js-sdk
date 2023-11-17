@@ -38,7 +38,11 @@ export default {
     },
     feedback:{
       content:null
-    }
-  
+    },
+    useNextSeoProps() {
+      return {
+        titleTemplate: '%s',
+      };
+    },  
     // ...
   }
