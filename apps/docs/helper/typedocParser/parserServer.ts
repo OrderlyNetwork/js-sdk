@@ -42,7 +42,6 @@ export class ParserServer {
     return json.modules
       .filter((module) => ParserServer._modules.includes(module.name))
       .map((module) => {
-        console.log("--??--", module.name);
         return {
           name: module.name,
           id: module.id,

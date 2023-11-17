@@ -1,10 +1,6 @@
-import { useConfig } from "nextra-theme-docs";
 import { ConnectButton } from "../connectButton";
 
 export const NavBar = () => {
-  const config = useConfig();
-  console.log(config);
-
   return (
     <div className="h-[64px] shadow sticky top-0 z-10 bg-white">
       <div className="flex flex-row items-center justify-between h-full max-w-[90rem] m-auto">

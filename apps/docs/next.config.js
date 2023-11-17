@@ -24,10 +24,10 @@ const nextConfig = {
     // Important: return the modified config
     return config;
   },
-  i18n: {
-    locales: ["en-US", "zh-CN"],
-    defaultLocale: "en-US",
-  },
+  // i18n: {
+  //   locales: ["en-US", "zh-CN"],
+  //   defaultLocale: "en-US",
+  // },
   typescript: {
     // Dangerously allow production builds to successfully complete even if your project has type errors.
     ignoreBuildErrors: true,

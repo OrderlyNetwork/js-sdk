@@ -9,8 +9,6 @@ export const BuilderNavBar = () => {
   const params = useParams();
   const pathname = usePathname();
 
-  console.log("pathname =====>>>>", pathname);
-
   return (
     <div
       className={

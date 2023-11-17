@@ -17,6 +17,7 @@ export default {
     // },
     primaryHue:{
       light: 263,
+      dark: 262
     },
     navbar:{
       extraContent: NavbarExtra,

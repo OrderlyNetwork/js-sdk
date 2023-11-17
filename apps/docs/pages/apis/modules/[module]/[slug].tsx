@@ -15,7 +15,7 @@ export const getStaticProps = async (context) => {
   const parser = ParserServer.getInstance();
   const moduleName = decodeName(context.params.module);
 
-  const functionName = context.params.slug.replace(`.${context.locale}`, "");
+  const functionName = context.params.slug;
 
   const doc = parser.parser.findByPath([moduleName, functionName]);
 
@@ -41,49 +41,40 @@ export async function getStaticPaths() {
       const element = module.classes[index];
       paths.push({
         params: { module: module.name, slug: element.name },
-        locale: "en-US",
       });
     }
     for (let index = 0; index < module.interfaces.length; index++) {
       const element = module.interfaces[index];
       paths.push({
         params: { module: module.name, slug: element.name },
-        locale: "en-US",
       });
     }
     for (let index = 0; index < module.functions.length; index++) {
       const element = module.functions[index];
       paths.push({
         params: { module: module.name, slug: element.name },
-        locale: "en-US",
       });
     }
     for (let index = 0; index < module.variables.length; index++) {
       const element = module.variables[index];
       paths.push({
         params: { module: module.name, slug: element.name },
-        locale: "en-US",
       });
     }
     for (let index = 0; index < module.namespaces.length; index++) {
       const element = module.namespaces[index];
       paths.push({
         params: { module: module.name, slug: element.name },
-        locale: "en-US",
       });
     }
   }
 
-  return { paths: [], fallback: true };
+  // return { paths: [], fallback: true };
 
-  // return {
-  //   // paths: [
-  //   //   // Object variant:
-  //   //   { params: { module: "123", slug: "aa" }, locale: "zh-CN" },
-  //   // ],
-  //   paths,
-  //   fallback: true,
-  // };
+  return {
+    paths,
+    fallback: true,
+  };
 }
 
 export default function Page(props) {

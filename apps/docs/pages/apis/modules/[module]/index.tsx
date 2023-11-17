@@ -8,7 +8,7 @@ export const getStaticProps = async (context) => {
 
   // console.log("------", context);
 
-  const slug = context.params.module.replace(".zh-CN", "");
+  const slug = context.params.module;
 
   // console.log("------", slug, decodeName(slug));
 
@@ -34,12 +34,10 @@ export async function getStaticPaths() {
 
     paths.push({
       params: { module: element.name },
-      locale: "en-US",
     });
 
     paths.push({
       params: { module: element.name },
-      locale: "zh-CN",
     });
   }
 
