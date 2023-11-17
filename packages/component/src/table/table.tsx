@@ -53,7 +53,7 @@ export const Table = <RecordType extends unknown>(
 
   return (
     <div className="orderly-relative orderly-min-h-[180px] orderly-h-full">
-      <table className={cn("border-collapse w-full", props.className)}>
+      <table className={cn("orderly-border-collapse orderly-w-full", props.className)}>
         <THead
           columns={props.columns}
           className={props.headerClassName}

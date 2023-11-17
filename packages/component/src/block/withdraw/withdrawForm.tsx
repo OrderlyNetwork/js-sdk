@@ -188,9 +188,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         }}
         decimals={decimals}
         status={inputStatus}
-        className={cn(status !== WithdrawStatus.Normal && "outline outline-1", {
-          "outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
-          "outline-yellow-500": status === WithdrawStatus.Unsettle,
+        className={cn(status !== WithdrawStatus.Normal && "orderly-outline orderly-outline-1", {
+          "orderly-outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
+          "orderly-outline-yellow-500": status === WithdrawStatus.Unsettle,
         })}
         quantity={quantity}
         onValueChange={onValueChange}

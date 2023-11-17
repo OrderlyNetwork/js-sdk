@@ -66,9 +66,9 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   return (
     <div
       className={cn(
-        "py-3 flex gap-3 hover:bg-base-200 active:bg-base-100",
+        "orderly-py-3 orderly-flex orderly-gap-3 hover:orderly-bg-base-200 active:orderly-bg-base-100",
         props.className,
-        props.disabled && "opacity-60 cursor-not-allowed"
+        props.disabled && "orderly-opacity-60 orderly-cursor-not-allowed"
       )}
       onClick={props.onClick}
     >

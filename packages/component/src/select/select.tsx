@@ -109,7 +109,7 @@ const Select: FC<SelectProps> = ({
         <div
           ref={triggerRef}
           className={cn(
-            "flex flex-row items-center rounded focus-within:outline space-x-1",
+            "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-1",
             selectVariants({
               size,
               disabled: disabled || options.length === 0,
@@ -148,9 +148,9 @@ const Select: FC<SelectProps> = ({
               textValue={option.value}
               key={index}
               className={cn(
-                "text-base-contrast/60",
+                "orderly-text-base-contrast/60",
                 option.value === props.value &&
-                  (color === "buy" ? "text-trade-profit" : "text-trade-loss")
+                  (color === "buy" ? "orderly-text-trade-profit" : "orderly-text-trade-loss")
               )}
               onSelect={(evnet) => {
                 props.onChange?.(option.value);

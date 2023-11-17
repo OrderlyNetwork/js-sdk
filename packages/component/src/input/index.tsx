@@ -164,7 +164,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       >
         <div
           className={cn(
-            "flex flex-row items-center rounded focus-within:outline focus-within:outline-1 outline-primary",
+            "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
             inputVariants({
               size,
               fullWidth,
@@ -172,7 +172,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               variant,
               error,
             }),
-            (props.readOnly || !!error) && "focus-within:outline-none",
+            (props.readOnly || !!error) && "orderly-focus-within:outline-none",
             containerClassName
           )}
         >
@@ -184,8 +184,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
             disabled={!!disabled}
             className={cn(
-              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer placeholder:text-base-contrast-20",
-              typeof prefix !== "undefined" && "px-0",
+              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20",
+              typeof prefix !== "undefined" && "orderly-px-0",
               className
             )}
             ref={ref}

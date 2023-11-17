@@ -106,7 +106,7 @@ export const TabList: FC<TabListProps> = (props) => {
   return (
     <div
       className={cn(
-        "flex border-b border-b-divider px-3 items-center",
+        "orderly-flex orderly-border-b orderly-border-b-divider orderly-px-3 orderly-items-center",
         props.className
       )}
     >

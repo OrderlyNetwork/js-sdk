@@ -89,8 +89,8 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
           <ChevronDown
             size={18}
             className={cn(
-              "transition-transform text-base-contrast/50",
-              open && "rotate-180"
+              "orderly-transition-transform orderly-text-base-contrast/50",
+              open && "orderly-rotate-180"
             )}
           />
         </button>

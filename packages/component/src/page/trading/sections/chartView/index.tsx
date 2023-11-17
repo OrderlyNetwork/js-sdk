@@ -49,8 +49,8 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                 <ChevronDown
                   size={18}
                   className={cn(
-                    "transition-transform text-base-contrast/50",
-                    context.contentVisible ? "rotate-180" : "rotate-0"
+                    "orderly-transition-transform orderly-text-base-contrast/50",
+                    context.contentVisible ? "orderly-rotate-180" : "orderly-rotate-0"
                   )}
                 />
               </button>

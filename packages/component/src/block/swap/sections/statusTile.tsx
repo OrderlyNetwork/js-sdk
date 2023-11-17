@@ -26,8 +26,8 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
     return (
       <div
         className={cn(
-          "w-[32px] h-[32px] rounded-full text-base-contrast flex justify-center items-center border border-primary-light",
-          props.state === "failed" && "border-danger"
+          "orderly-w-[32px] orderly-h-[32px] orderly-rounded-full orderly-text-base-contrast orderly-flex orderly-justify-center orderly-items-center orderly-border orderly-border-primary-light",
+          props.state === "failed" && "orderly-border-danger"
         )}
       >
         {props.state === "pending" ? (

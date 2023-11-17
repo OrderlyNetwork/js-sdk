@@ -49,7 +49,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     <>
       <div
         className={cn(
-          "bg-base-500 dark:bg-base-100 rounded pl-1 pr-2 py-2 focus-within:bg-bg-base-500 focus-within:outline focus-within:outline-1 outline-primary",
+          "orderly-bg-base-500 dark:orderly-bg-base-100 orderly-rounded orderly-pl-1 orderly-pr-2 orderly-py-2 focus-within:orderly-bg-bg-base-500 focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
           props.className,
           {
             "outline outline-1 outline-danger": props.status === "error",
@@ -129,11 +129,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       {props.hintMessage && (
         <div
           className={cn(
-            "mt-2 text-4xs relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
+            "orderly-mt-2 orderly-text-4xs orderly-relative before:orderly-block orderly-pl-3 before:orderly-w-[4px] before:orderly-rounded-[4px] before:orderly-h-[4px] before:orderly-absolute before:orderly-left-0 before:orderly-top-1/2 before:orderly--translate-y-1/2",
             {
-              "text-danger-light": props.status === "error",
-              "before:bg-danger-light": props.status === "error",
-              "text-warning-light": props.status === "warning",
+              "orderly-text-danger-light": props.status === "error",
+              "orderly-before:bg-danger-light": props.status === "error",
+              "orderly-text-warning-light": props.status === "warning",
             }
           )}
         >

@@ -46,12 +46,12 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={
             <div
               className={cn(
-                "flex justify-end text-3xs",
+                "orderly-flex orderly-justify-end orderly-text-3xs",
                 item["unrealized_pnl"] > 0
-                  ? "text-trade-profit"
+                  ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
-                  ? "text-trade-loss"
-                  : "text-base-contrast/50"
+                  ? "orderly-text-trade-loss"
+                  : "orderly-text-base-contrast/50"
               )}
             >
               <Numeral>{item["unrealized_pnl"]}</Numeral>

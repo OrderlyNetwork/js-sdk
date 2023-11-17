@@ -24,8 +24,8 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-3xs outline-none focus:bg-accent data-[state=open]:bg-accent",
-      inset && "pl-8",
+      "orderly-flex orderly-cursor-default orderly-select-none orderly-items-center orderly-rounded-sm orderly-px-2 orderly-py-1.5 orderly-text-3xs orderly-outline-none focus:orderly-bg-accent data-[state=open]:orderly-bg-accent",
+      inset && "orderly-pl-8",
       className
     )}
     {...props}
@@ -45,7 +45,7 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-border orderly-bg-popover orderly-p-1 orderly-text-popover-foreground orderly-shadow-lg data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -65,8 +65,8 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md bg-popover p-1 text-popover-foreground shadow-md py-2",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-bg-popover orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2",
+        "data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
         className
       )}
       {...props}
@@ -84,8 +84,8 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-2 text-3xs outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      inset && "pl-8",
+      "orderly-relative orderly-flex orderly-cursor-default orderly-select-none orderly-items-center orderly-rounded-sm orderly-px-2 orderly-py-2 orderly-text-3xs orderly-outline-none orderly-transition-colors focus:orderly-bg-accent focus:orderly-text-accent-foreground data-[disabled]:orderly-pointer-events-none data-[disabled]:orderly-opacity-50",
+      inset && "orderly-pl-8",
       className
     )}
     {...props}
@@ -100,7 +100,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-3xs outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "orderly-relative orderly-flex orderly-cursor-default orderly-select-none orderly-items-center orderly-rounded-sm orderly-py-1.5 orderly-pl-8 orderly-pr-2 orderly-text-3xs orderly-outline-none orderly-transition-colors focus:orderly-bg-accent focus:orderly-text-accent-foreground data-[disabled]:orderly-pointer-events-none data-[disabled]:orderly-opacity-50",
       className
     )}
     checked={checked}
@@ -125,7 +125,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-3xs outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "orderly-relative orderly-flex orderly-cursor-default orderly-select-none orderly-items-center orderly-rounded-sm orderly-py-1.5 orderly-pl-8 orderly-pr-2 orderly-text-3xs orderly-outline-none orderly-transition-colors focus:orderly-bg-accent focus:orderly-text-accent-foreground data-[disabled]:orderly-pointer-events-none data-[disabled]:orderly-opacity-50",
       className
     )}
     {...props}
@@ -150,8 +150,8 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "px-2 py-1.5 text-3xs font-semibold",
-      inset && "pl-8",
+      "orderly-px-2 orderly-py-1.5 orderly-text-3xs orderly-font-semibold",
+      inset && "orderly-pl-8",
       className
     )}
     {...props}
@@ -165,7 +165,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    className={cn("-orderly-mx-1 orderly-my-1 orderly-h-px orderly-bg-muted", className)}
     {...props}
   />
 ));
@@ -177,7 +177,7 @@ const DropdownMenuShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn("ml-auto text-4xs tracking-widest opacity-60", className)}
+      className={cn("orderly-ml-auto orderly-text-4xs orderly-tracking-widest orderly-opacity-60", className)}
       {...props}
     />
   );

@@ -68,8 +68,8 @@ export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
         return (
           <button
             className={cn(
-              "py-3 px-1 flex-1 text-base-contrast/20",
-              timeInterval === interval.value && "text-base-contrast"
+              "orderly-py-3 orderly-px-1 orderly-flex-1 orderly-text-base-contrast/20",
+              timeInterval === interval.value && "orderly-text-base-contrast"
             )}
             key={interval.value}
             onClick={() => {

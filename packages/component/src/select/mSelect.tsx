@@ -87,7 +87,7 @@ export const MSelect: FC<SelectProps> = ({
         disabled={Boolean(disabled)}
         onClick={() => setOpen((open) => !open)}
         className={cn(
-          "flex flex-row items-center rounded space-x-1 text-3xs",
+          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,
@@ -95,7 +95,7 @@ export const MSelect: FC<SelectProps> = ({
             color,
             fullWidth,
           }),
-          open && "bg-popover"
+          open && "orderly-bg-popover"
         )}
       >
         <span className="orderly-flex orderly-flex-1 orderly-text-inherit">
@@ -111,8 +111,8 @@ export const MSelect: FC<SelectProps> = ({
         <div
           data-state={open ? "open" : "closed"}
           className={cn(
-            "z-50 min-w-[8rem] overflow-hidden rounded-md bg-popover p-1 text-popover-foreground shadow-md py-2 absolute left-0 top-full mt-1 w-full space-y-1",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+            "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-bg-popover orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2 orderly-absolute orderly-left-0 orderly-top-full orderly-mt-1 orderly-w-full orderly-space-y-1",
+            "data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2"
           )}
         >
           {props.options?.map((option, index) => {
@@ -160,7 +160,7 @@ export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
       <button
         type="button"
         className={cn(
-          "block p-2 text-inherit w-full h-full text-left text-3xs",
+          "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs",
           className
         )}
         onClick={() => {

@@ -15,7 +15,7 @@ export const CellBar: FC<CellBarProps> = (props) => {
   return (
     <div
       className={cn(
-        "absolute right-[-100%] top-0 h-full w-full transition-transform pointer-events-none",
+        "orderly-absolute orderly-right-[-100%] orderly-top-0 orderly-h-full orderly-w-full orderly-transition-transform orderly-pointer-events-none",
         props.className
       )}
       style={transform}

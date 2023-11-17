@@ -52,8 +52,8 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
   }, [props.isLoading, props.dataSource]);
 
   return (
-    <div className={cn("relative min-h-[180px]", props.className)}>
-      <div className={cn("list-view-inner space-y-3", props.contentClassName)}>
+    <div className={cn("orderly-relative orderly-min-h-[180px]", props.className)}>
+      <div className={cn("orderly-list-view-inner orderly-space-y-3", props.contentClassName)}>
         {listViewElement}
       </div>
       <div

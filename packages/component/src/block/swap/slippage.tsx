@@ -18,8 +18,8 @@ const SlippageItem = ({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "rounded h-[40px] flex items-center justify-center bg-base-500 text-base-contrast text-2xs",
-        isActive && "bg-primary text-base-contrast"
+        "orderly-rounded orderly-h-[40px] orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-500 orderly-text-base-contrast orderly-text-2xs",
+        isActive && "orderlh-bg-primary orderly-text-base-contrast"
       )}
     >
       <span>{`${value}%`}</span>
