@@ -23,14 +23,28 @@ export const getStaticProps = async (context) => {
 };
 
 export async function getStaticPaths() {
-  // const parser = ParserServer.getInstance();
+  const parser = ParserServer.getInstance();
+  const modules = parser.parser.modules;
+
+  // return { paths: [], fallback: true };
+  const paths: any[] = [];
+
+  for (let index = 0; index < modules.length; index++) {
+    const element = modules[index];
+
+    paths.push({
+      params: { module: element.name },
+      locale: "en-US",
+    });
+
+    paths.push({
+      params: { module: element.name },
+      locale: "zh-CN",
+    });
+  }
 
   return {
-    paths: [
-      // Object variant:
-      { params: { module: "123" }, locale: "zh-CN" },
-      { params: { module: "123" }, locale: "en-US" },
-    ],
+    paths,
     fallback: true,
   };
 }

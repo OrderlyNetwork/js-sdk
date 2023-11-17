@@ -29,13 +29,61 @@ export const getStaticProps = async (context) => {
 };
 
 export async function getStaticPaths() {
-  return {
-    paths: [
-      // Object variant:
-      { params: { module: "123", slug: "aa" }, locale: "zh-CN" },
-    ],
-    fallback: true,
-  };
+  const parser = ParserServer.getInstance();
+  const modules = parser.parser.modules;
+
+  const paths: any[] = [];
+
+  for (let index = 0; index < modules.length; index++) {
+    const module = modules[index];
+
+    for (let index = 0; index < module.classes.length; index++) {
+      const element = module.classes[index];
+      paths.push({
+        params: { module: module.name, slug: element.name },
+        locale: "en-US",
+      });
+    }
+    for (let index = 0; index < module.interfaces.length; index++) {
+      const element = module.interfaces[index];
+      paths.push({
+        params: { module: module.name, slug: element.name },
+        locale: "en-US",
+      });
+    }
+    for (let index = 0; index < module.functions.length; index++) {
+      const element = module.functions[index];
+      paths.push({
+        params: { module: module.name, slug: element.name },
+        locale: "en-US",
+      });
+    }
+    for (let index = 0; index < module.variables.length; index++) {
+      const element = module.variables[index];
+      paths.push({
+        params: { module: module.name, slug: element.name },
+        locale: "en-US",
+      });
+    }
+    for (let index = 0; index < module.namespaces.length; index++) {
+      const element = module.namespaces[index];
+      paths.push({
+        params: { module: module.name, slug: element.name },
+        locale: "en-US",
+      });
+    }
+  }
+
+  return { paths: [], fallback: true };
+
+  // return {
+  //   // paths: [
+  //   //   // Object variant:
+  //   //   { params: { module: "123", slug: "aa" }, locale: "zh-CN" },
+  //   // ],
+  //   paths,
+  //   fallback: true,
+  // };
 }
 
 export default function Page(props) {
