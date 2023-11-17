@@ -32,6 +32,13 @@ const nextConfig = {
     // Dangerously allow production builds to successfully complete even if your project has type errors.
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [{
+      source: '/',
+      destination: '/docs/hooks/overview',
+      permanent: false,
+    }]
+  }
 };
 
 module.exports = withNextra(nextConfig);
