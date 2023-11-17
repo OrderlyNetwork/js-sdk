@@ -34,3 +34,4 @@ ENV HOSTNAME "0.0.0.0"
 
 WORKDIR /app/apps/docs
 
+CMD ["node", "server.js"]
