@@ -21,14 +21,14 @@ export const ModulesSection: FC<ModuleSectionProps> = (props) => {
       <ModuleSectionItem
         title="Classes"
         type="class"
-        data={module.classes}
+        data={module.classes.filter((item) => !item.external)}
         moduleName={module.name}
         slug={module.slug}
       />
       <ModuleSectionItem
         title="Interface"
         type="interface"
-        data={module.interfaces}
+        data={module.interfaces.filter((item) => !item.external)}
         moduleName={module.name}
         slug={module.slug}
       />
@@ -42,7 +42,7 @@ export const ModulesSection: FC<ModuleSectionProps> = (props) => {
       <ModuleSectionItem
         title="Enum"
         type="enum"
-        data={module.enums}
+        data={module.enums.filter((item) => !item.external)}
         moduleName={module.name}
         slug={module.slug}
       />
@@ -56,7 +56,7 @@ export const ModulesSection: FC<ModuleSectionProps> = (props) => {
       <ModuleSectionItem
         title="Function"
         type="function"
-        data={module.functions}
+        data={module.functions.filter((item) => !item.external)}
         moduleName={module.name}
         slug={module.slug}
       />

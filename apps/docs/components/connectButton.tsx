@@ -14,7 +14,7 @@ export const ConnectButton = () => {
     setWalletModules, // function to be called with an array of wallet modules to conditionally allow connection of wallet types i.e. setWalletModules([ledger, trezor, injected])
     setPrimaryWallet, // function that can set the primary wallet and/or primary account within that wallet. The wallet that is set needs to be passed in for the first parameter and if you would like to set the primary account, the address of that account also needs to be passed in
   ] = useConnectWallet();
-  const { account } = useAccount();
+  // const { account } = useAccount();
 
   return (
     <button
