@@ -39,7 +39,11 @@ interface Position {
 Usually, the UI will display some aggregated position data, for instance the total position value, total collateral, and the total unrealized ROI. These data are all provided by `usePositionStream`.
 
 ```typescript
-
+interface Aggregated {
+  unrealPnL: number;
+  notional: number;
+  unsettledPnL: number;
+}
 ```
 
 ### Position info
