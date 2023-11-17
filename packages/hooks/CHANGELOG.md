@@ -1,5 +1,11 @@
 # @orderly.network/hooks
 
+## 1.0.1
+
+### Patch Changes
+
+- fix bug
+
 ## 1.0.0
 
 ### Minor Changes

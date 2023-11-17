@@ -39,6 +39,7 @@ export const OrderlyConfigProvider: FC<
     RequireAtLeastOne<ConfigProviderProps, "brokerId" | "configStore">
   >
 > = (props) => {
+  const [account, setAccount] = React.useState<Account | null>(null);
   const { configStore, keyStore, getWalletAdapter, brokerId, networkId } =
     props;
 
@@ -73,7 +74,13 @@ export const OrderlyConfigProvider: FC<
 
       SimpleDI.registerByName(Account.instanceName, account);
     }
+
+    setAccount(account);
   }, []);
+
+  if (!account) {
+    return null;
+  }
 
   return (
     <OrderlyProvider

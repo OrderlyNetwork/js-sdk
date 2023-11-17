@@ -1,5 +1,13 @@
 # @orderly/docs
 
+## 0.1.36
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@1.0.1
+  - @orderly.network/react@0.0.93
+
 ## 0.1.35
 
 ### Patch Changes
