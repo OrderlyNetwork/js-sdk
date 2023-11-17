@@ -40,7 +40,7 @@ The above hooks are based on [swr](https://swr.vercel.app/), and have the follow
 
 Use `useQuery` to access any Public API, for example to get all available symbols on Orderly:
 
-<CodeLive code={queryConfigRaw} disabled />
+<CodeLive code={queryConfigRaw} />
 
 The `data` returned by `useQuery` is already serialized in JSON format. If you want to access the raw data, you can provide a `formatter` to override the default serialization of the hook. For example:
 
@@ -70,7 +70,7 @@ export const Example = ()=>{
 }
 ```
 
-<CodeLive code={clientConfigRaw} disabled isPrivate />
+<CodeLive code={clientConfigRaw} isPrivate />
 
 ### Mutation
 
