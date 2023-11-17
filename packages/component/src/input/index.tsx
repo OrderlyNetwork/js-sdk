@@ -12,24 +12,24 @@ import { X } from "lucide-react";
 import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 
-const inputVariants = cva(["rounded"], {
+const inputVariants = cva(["orderly-rounded"], {
   variants: {
     variant: {
-      outlined: "border border-slate-300",
-      filled: "bg-fill border border-transparent",
+      outlined: "orderly-border orderly-border-slate-300",
+      filled: "orderly-bg-fill orderly-border orderly-border-transparent",
     },
     size: {
-      small: "h-[28px]",
-      default: "h-[40px]",
+      small: "orderly-h-[28px]",
+      default: "orderly-h-[40px]",
     },
     fullWidth: {
-      true: "w-full",
+      true: "orderly-w-full",
     },
     disabled: {
-      true: "opacity-70 cursor-not-allowed",
+      true: "orderly-opacity-70 orderly-cursor-not-allowed",
     },
     error: {
-      true: "border border-danger",
+      true: "orderly-border orderly-border-danger",
     },
     // readonly:{
     //     true: "opacity-70 cursor-not-allowed"

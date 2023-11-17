@@ -6,9 +6,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 const avatarVariants = cva([], {
   variants: {
     size: {
-      small: "h-[18px] w-[18px]",
-      medium: "h-[24px] w-[24px]",
-      large: "h-[32px] w-[32px]",
+      small: "orderly-h-[18px] orderly-w-[18px]",
+      medium: "orderly-h-[24px] orderly-w-[24px]",
+      large: "orderly-h-[32px] orderly-w-[32px]",
     },
   },
   defaultVariants: {

@@ -26,24 +26,24 @@ export type SelectOption = {
   label: string;
 };
 
-const selectVariants = cva(["rounded transition-colors bg-fill"], {
+const selectVariants = cva(["orderly-rounded orderly-transition-colors orderly-bg-fill"], {
   variants: {
     size: {
-      small: "px-2 h-[28px]",
-      default: "px-2 py-1 h-[40px]",
-      large: "px-6 py-3",
+      small: "orderly-px-2 orderly-h-[28px]",
+      default: "orderly-px-2 orderly-py-1 orderly-h-[40px]",
+      large: "orderly-px-6 orderly-py-3",
     },
     fullWidth: {
-      true: "w-full",
+      true: "orderly-w-full",
     },
     color: {
       // primary: "text-primary",
-      default: "text-base-contract",
-      buy: "text-trade-profit",
-      sell: "text-trade-loss",
+      default: "orderly-text-base-contract",
+      buy: "orderly-text-trade-profit",
+      sell: "orderly-text-trade-loss",
     },
     disabled: {
-      true: "opacity-50 cursor-not-allowed",
+      true: "orderly-opacity-50 orderly-cursor-not-allowed",
     },
   },
   defaultVariants: {

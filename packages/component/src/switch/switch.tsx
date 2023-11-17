@@ -7,10 +7,10 @@ const switchVariants = cva("", {
   variants: {
     color: {
       primary:
-        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-fill-light",
+        "data-[state=checked]:orderly-bg-primary data-[state=unchecked]:orderly-bg-fill-light",
       profit:
-        "data-[state=checked]:bg-trade-profit data-[state=unchecked]:bg-fill-light",
-      loss: "data-[state=checked]:bg-trade-loss data-[state=unchecked]:bg-fill-light",
+        "data-[state=checked]:orderly-bg-trade-profit data-[state=unchecked]:orderly-bg-fill-light",
+      loss: "data-[state=checked]:orderly-bg-trade-loss data-[state=unchecked]:orderly-bg-fill-light",
     },
     // size:{
     //   default:"",
