@@ -1,6 +1,6 @@
 import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { order } from "@orderly.network/futures";
+import { order } from "@orderly.network/perp";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };

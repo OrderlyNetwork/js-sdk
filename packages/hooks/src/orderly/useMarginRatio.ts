@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { account } from "@orderly.network/futures";
+import { account } from "@orderly.network/perp";
 import { usePositionStream } from "./usePositionStream";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useCollateral } from "./useCollateral";

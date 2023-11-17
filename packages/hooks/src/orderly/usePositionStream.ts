@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { account, positions } from "@orderly.network/futures";
+import { account, positions } from "@orderly.network/perp";
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";

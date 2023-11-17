@@ -9,7 +9,7 @@ export class ParserServer {
 
   private static _modules = [
     "@orderly.network/core",
-    "@orderly.network/futures",
+    "@orderly.network/perp",
     "@orderly.network/hooks",
     "@orderly.network/net",
     "@orderly.network/types",

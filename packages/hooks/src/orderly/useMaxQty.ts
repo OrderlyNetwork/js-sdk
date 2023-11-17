@@ -4,7 +4,7 @@ import { type API, OrderSide } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
 import { useMarkPricesStream } from "./useMarkPricesStream";
-import { account } from "@orderly.network/futures";
+import { account } from "@orderly.network/perp";
 import { useCollateral } from "./useCollateral";
 
 import { usePrivateQuery } from "../usePrivateQuery";

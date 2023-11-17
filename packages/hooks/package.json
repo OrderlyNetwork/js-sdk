@@ -36,7 +36,7 @@
   "dependencies": {
     "@layerzerolabs/scan-client": "^0.0.6",
     "@orderly.network/core": "workspace:*",
-    "@orderly.network/futures": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "ramda": "^0.29.0",

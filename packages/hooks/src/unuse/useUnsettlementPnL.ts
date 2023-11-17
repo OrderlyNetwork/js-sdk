@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useMemo } from "react";
-import { positions } from "@orderly.network/futures";
+import { positions } from "@orderly.network/perp";
 import { useFundingRates } from "../orderly/useFundingRates";
 
 export const useUnsettlementPnL = () => {

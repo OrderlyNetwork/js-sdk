@@ -5,7 +5,7 @@ import {
   usePositionStream,
 } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { account } from "@orderly.network/futures";
+import { account } from "@orderly.network/perp";
 import { type API, OrderStatus } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { zero } from "@orderly.network/utils";
@@ -23,7 +23,6 @@ export type CollateralOutputs = {
 
 const positionsPath = pathOr([], [0, "rows"]);
 const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
-
 
 type Options = {
   dp: number;
