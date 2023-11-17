@@ -1,21 +1,30 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { TreeNode } from "./node";
 import * as Accordion from "@radix-ui/react-accordion";
-import clsx from "clsx";
+import { useRouter } from "next/router";
 
 export const TreeView: FC<{ data: any }> = (props) => {
   const { data } = props;
+  const router = useRouter();
+  const { locale, query } = router;
+
+  const defaultValue = (query.module as string)?.replace(
+    `.${locale}` || "",
+    ""
+  );
+  console.log(router, query, defaultValue);
   //   console.log(data);
   return (
     <div className="space-y-2">
       <Accordion.Root
         type="single"
-        // defaultValue="item-1"
         collapsible={false}
+        defaultValue={defaultValue}
       >
         {data.map((item) => {
+          console.log(item.slug);
           return (
-            <Accordion.Item key={item.id} value={item.name}>
+            <Accordion.Item key={item.id} value={item.slug}>
               <TreeNode
                 name={item.name}
                 children={item.children}

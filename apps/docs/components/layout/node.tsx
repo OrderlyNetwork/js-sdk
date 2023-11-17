@@ -18,12 +18,12 @@ export const TreeNode = ({
         <Accordion.Trigger asChild>
           <Link
             href={`/apis/modules/${slug}`}
-            className="font-semibold text-lg py-3 hover:text-gray-700 flex items-center justify-between"
+            className="font-semibold text-lg py-3 hover:text-gray-700 flex items-center justify-between group"
           >
             <span>{name}</span>
             <ChevronDown
               size={16}
-              className="text-violet10 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
+              className="ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
               aria-hidden
             />
           </Link>

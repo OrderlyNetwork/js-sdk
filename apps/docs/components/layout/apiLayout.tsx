@@ -12,7 +12,7 @@ export const ApiLayout = ({
   return (
     <div>
       <NavBar />
-      <div className="container mx-auto pb-10">
+      <div className="max-w-[90rem] mx-auto pb-10">
         <div className="grid grid-cols-[240px_minmax(900px,_1fr)_200px] gap-5">
           <aside className="h-min-screen overflow-y-auto overflow-x-hidden mt-5">
             <TreeView data={data || []} />

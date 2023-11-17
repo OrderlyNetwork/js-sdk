@@ -16,7 +16,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@orderly.network/types": "workspace:*"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
@@ -37,7 +38,6 @@
     "@orderly.network/core": "workspace:*",
     "@orderly.network/futures": "workspace:*",
     "@orderly.network/net": "workspace:*",
-    "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "ramda": "^0.29.0",
     "swr": "^2.2.4",

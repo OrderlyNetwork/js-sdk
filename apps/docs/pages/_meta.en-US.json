@@ -3,13 +3,10 @@
       "title": "Documntation",
       "type": "page"
     },
-    "components": {
-      "title": "Components",
-      "type": "page"
-    },
-    "theme": {
-      "title": "Theme",
-      "type": "page"
+    "api": {
+      "title": "API",
+      "href": "apis/modules/__orderly_network___hooks"
     }
+    
    
   }

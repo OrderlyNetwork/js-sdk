@@ -7,7 +7,7 @@ export const NavBar = () => {
 
   return (
     <div className="h-[64px] shadow sticky top-0 z-10 bg-white">
-      <div className="flex flex-row items-center justify-between h-full container m-auto">
+      <div className="flex flex-row items-center justify-between h-full max-w-[90rem] m-auto">
         <img src="/images/orderly.log.png" width={40} />
         <div className="flex gap-3 items-center">
           <ul className="flex gap-3">

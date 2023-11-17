@@ -1,8 +1,5 @@
 {
-    "core":"Core",
-    "---": {
-        "type": "separator"
-      },
-    "hooks":"Hooks",
-    "perp":"perp"
+ 
+    "hooks":"Hooks"
+    
 }
