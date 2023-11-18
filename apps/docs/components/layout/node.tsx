@@ -13,7 +13,7 @@ export const TreeNode = ({
   slug: string;
   children?: any[];
 }) => {
-  const { setModuleName, setApiName } = useDetailsPageContext();
+  const { apiName, setModuleName, setApiName } = useDetailsPageContext();
 
   return (
     <div>
@@ -45,10 +45,16 @@ export const TreeNode = ({
                     setModuleName?.(name);
                     setApiName?.(item.name);
                   }}
-                  className="flex gap-1 items-center"
+                  className="flex"
                 >
-                  <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
-                  <span>{item.name}</span>
+                  <div
+                    className={`px-[5px] py-[4px] flex items-center ${
+                      apiName === item.name ? "bg-[#c5c7c9]" : undefined
+                    }`}
+                  >
+                    <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
+                    <span className="px-[5px]">{item.name}</span>
+                  </div>
                 </Link>
               </li>
             );
