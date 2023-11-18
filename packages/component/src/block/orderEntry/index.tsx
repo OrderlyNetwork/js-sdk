@@ -315,18 +315,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "bg-success-light text-base-contrast after:bg-success-light",
+                    "orderly-bg-success-light orderly-text-base-contrast after:orderly-bg-success-light",
                   disabledClassName:
-                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "bg-danger-light text-base-contrast after:bg-danger-light",
+                    "orderly-bg-danger-light orderly-text-base-contrast after:orderly-bg-danger-light",
                   disabledClassName:
-                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
               ]}
               onChange={(value) => {
@@ -415,7 +415,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     value={isMarketOrder ? "Market" : field.value}
                     className="orderly-text-right"
                     containerClassName={
-                      isMarketOrder ? "bg-base-700" : "bg-base-600"
+                      isMarketOrder ? "orderly-bg-base-700" : "orderly-bg-base-600"
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {

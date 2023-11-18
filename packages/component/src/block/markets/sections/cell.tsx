@@ -15,18 +15,18 @@ export const Cell: FC<MarketCellProps> = (props) => {
 
   const colorClassName = useMemo(() => {
     if (!item["24h_open"] || !item["24h_close"]) {
-      return "text-base-contrast-54";
+      return "orderly-text-base-contrast-54";
     }
 
     if (item["24h_close"] > item["24h_open"]) {
-      return "text-success-light";
+      return "orderly-text-success-light";
     }
 
     if (item["24h_close"] < item["24h_open"]) {
-      return "text-danger-light";
+      return "orderly-text-danger-light";
     }
 
-    return "text-base-contrast-54";
+    return "orderly-text-base-contrast-54";
   }, [item["24h_open"], item["24h_close"]]);
 
   return (

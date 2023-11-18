@@ -61,8 +61,8 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           rule="price"
           valueClassName={
             order.side === OrderSide.BUY
-              ? "text-trade-profit text-3xs"
-              : "text-trade-loss text-3xs"
+              ? "orderly-text-trade-profit orderly-text-3xs"
+              : "orderly-text-trade-loss orderly-text-3xs"
           }
         />
         <Statistic

@@ -98,13 +98,13 @@ export const Segmented = {
               label: "Buy",
               value: "buy",
               activeClassName:
-                "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
+                "orderly-bg-trade-profit orderly-text-trade-profit-foreground after:orderly-bg-trade-profit",
             },
             {
               label: "Sell",
               value: "sell",
               activeClassName:
-                "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
+                "orderly-bg-trade-loss orderly-text-trade-loss-foreground after:orderly-bg-trade-loss",
             },
           ]}
           onClick={(value) => {

@@ -95,7 +95,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div className="orderly-pt-5">
         <Statistic
           label={
-            <div className="orderly-flex orderly-text-base orderly-items-center orderly-text-2xs orderly-text-base-contrast-54">
+            <div className="orderly-flex orderly-items-center orderly-text-2xs orderly-text-base-contrast-54">
               <span>Total value (USDC)</span>
               <button
                 className="orderly-text-primary-light orderly-p-2"
