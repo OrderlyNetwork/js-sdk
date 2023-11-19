@@ -8,6 +8,7 @@ interface ModuleSectionProps {
   data?: any[];
   slug?: string;
   isIndex?: boolean;
+  paths: string[];
 
   type:
     | "class"
@@ -22,7 +23,7 @@ interface ModuleSectionProps {
 }
 
 export const ModuleSectionItem: FC<ModuleSectionProps> = (props) => {
-  const { data, type, slug, isIndex = false } = props;
+  const { data, type, slug, paths, isIndex = false } = props;
 
   if (!data?.length) return null;
 
@@ -35,18 +36,11 @@ export const ModuleSectionItem: FC<ModuleSectionProps> = (props) => {
             <div key={item.id} className="flex items-center gap-1 py-1">
               <TypeIcon type={(type as any).substring(0, 1).toUpperCase()} />
               <Link
-                onClick={() => {
-                  // console.log(item)
-                  // window.scrollTo({
-                  //   top: 500,
-                  //   behavior: "smooth",
-                  // });
-                }}
                 className="hover:underline underline-offset-4"
                 href={
                   isIndex
                     ? `#${item.name}`
-                    : `/apis/modules/${slug}/${item.name}`
+                    : `/apis/modules/${paths.join("/")}/${item.name}`
                 }
               >
                 <span>{item.name}</span>

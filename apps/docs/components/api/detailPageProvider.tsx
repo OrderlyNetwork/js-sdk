@@ -31,6 +31,8 @@ export const DetailsPageProvider: FC<PropsWithChildren<Props>> = (props) => {
   const [moduleName, setModuleName] = useState(props.moduleName!);
   const [apiName, setApiName] = useState(props.apiName!);
 
+  // console.log("------DetailsPageProvider-------", props);
+
   useEffect(() => {
     setModuleName(moduleName);
   }, [props.moduleName]);

@@ -410,7 +410,7 @@ export class ModuleParser {
     }
 
     if (result) {
-      console.log("type::::::", result.constructor.name);
+      // console.log("type::::::", result.constructor.name);
 
       return { result, type: result.constructor.name };
     }

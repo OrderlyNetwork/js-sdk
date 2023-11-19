@@ -6,6 +6,7 @@ import { Properties } from "../interface/properties";
 import { Constructor } from "./constructor";
 import { Methods } from "./methods";
 import { Indexes } from "../indexes";
+import { Comment } from "@/components/api/comment";
 
 interface Props {
   doc: any;
@@ -23,7 +24,7 @@ export const ClassPage: FC<Props> = (props) => {
   return (
     <div className="space-y-7">
       <PageHeader title={doc.name} type="Class" />
-
+      <Comment doc={doc} />
       <Indexes doc={doc} />
 
       <Constructor data={doc.construct} name={doc.name} />

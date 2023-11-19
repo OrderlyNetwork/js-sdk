@@ -51,7 +51,10 @@ export default function Module(props) {
   return (
     <ApiLayout data={props.categories || []}>
       {props.module ? (
-        <ModulesSection module={props.module || {}} />
+        <ModulesSection
+          module={props.module || {}}
+          paths={[props.module.slug]}
+        />
       ) : (
         <div>Not Found</div>
       )}

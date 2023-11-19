@@ -12,6 +12,7 @@ export const Indexes: FC<Props> = (props) => {
   return (
     <div className="space-y-3">
       <div className="text-2xl">INDEX</div>
+
       <ModuleSectionItem
         title="Properties"
         type="property"

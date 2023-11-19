@@ -25,6 +25,7 @@ export interface IContract {
   getContractInfoByEnv(): OrderlyContracts;
 }
 
+/** @hidden */
 export class BaseContract implements IContract {
   constructor(private readonly configStore: ConfigStore) {}
   getContractInfoByEnv() {

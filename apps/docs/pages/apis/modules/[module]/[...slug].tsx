@@ -9,9 +9,10 @@ import { ApiLayout } from "@/components/layout/apiLayout";
 import { decodeName } from "@/helper/typedocParser/name";
 import { ParserServer } from "@/helper/typedocParser/parserServer";
 import { useMemo } from "react";
+import { useRouter } from "next/router";
 
 export const getStaticProps = async (context) => {
-  console.log("------", context);
+  console.log("---context---", context);
 
   const parser = ParserServer.getInstance();
   const moduleName = decodeName(context.params.module);
@@ -24,6 +25,7 @@ export const getStaticProps = async (context) => {
     props: {
       doc: doc ? doc.result.toJSON() : [],
       type: doc?.type ?? "",
+      moduleName,
       categories: parser.getCategories(),
     },
   };
@@ -70,22 +72,24 @@ export async function getStaticPaths() {
     }
   }
 
-  // return { paths: [], fallback: true };
+  return { paths: [], fallback: true };
 
-  return {
-    paths,
-    fallback: true,
-  };
+  // return {
+  //   paths,
+  //   fallback: true,
+  // };
 }
 
 export default function Page(props) {
+  const router = useRouter();
+
+  console.log("------router-------", router, props.doc);
+
   const type = useMemo(() => {
     return props.type?.replace("Parser", "");
   }, [props.type]);
 
   const page = useMemo(() => {
-    // const type = props.type?.replace("Parser", "");
-
     switch (type) {
       case "Class":
         return <ClassPage doc={props.doc || {}} />;
@@ -96,30 +100,24 @@ export default function Page(props) {
       case "Variable":
         return <VariablePage doc={props.doc || {}} />;
       case "Namespace":
-        return <ModulesSection module={props.doc || {}} />;
+        return (
+          <ModulesSection
+            module={props.doc || {}}
+            paths={[router.query.module as string, props.doc?.name]}
+          />
+        );
       case "Enum":
         return <EnumPage doc={props.doc || {}} />;
       default:
         return null;
     }
-  }, [type, props.doc]);
-
-  const moduleName = useMemo(() => {
-    const apiName = props.doc?.name;
-    for (const category of props.categories || []) {
-      for (const item of category?.children) {
-        if (item.name === apiName) {
-          return category.name;
-        }
-      }
-    }
-  }, [props.categories, props.doc]);
+  }, [type, props.doc, router.query.module]);
 
   return (
     <DetailsPageProvider
-      slug={""}
+      slug={router.query.module as string}
       type={type}
-      moduleName={moduleName!}
+      moduleName={props.moduleName}
       apiName={props.doc?.name}
     >
       <ApiLayout data={props.categories}>{page}</ApiLayout>

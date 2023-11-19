@@ -140,16 +140,42 @@ export class ProjectParser {
 
     if (!segments.length) return module;
 
-    const kind = segments.shift();
+    const kinds = segments.shift();
 
-    if (!kind) return null;
+    if (!Array.isArray(kinds)) return null;
 
-    // if(kind ==='namespace'){
-    //   const namespace = module.namespaces.find((namespace) => namespace.name === segments[0]);
-    //   return namespace;
+    let subKind = kinds.shift();
+    // const subKind = kind[0];
+
+    const subModule = module.findByName(subKind);
+
+    if (!kinds.length) {
+      return subModule;
+    }
+
+    let child: SearchResult | null = null;
+
+    while (kinds.length) {
+      // console.log("subModule", subModule);
+      const kind = kinds.shift();
+      child = subModule.result.search(kind);
+
+      if (!child || !Array.isArray(child) || child.length === 0) return null;
+
+      if (!kinds.length) {
+        return { result: child[0], type: child[0].constructor.name };
+      }
+    }
+
+    // console.log("subKind", subKind);
+    //
+    // const child = module.findByName(subKind);
+    //
+    // if (child) {
+    //   child.parent = module;
     // }
-
-    return module.findByName(kind);
+    //
+    // return child;
 
     // return module.findByPath(segments);
   }

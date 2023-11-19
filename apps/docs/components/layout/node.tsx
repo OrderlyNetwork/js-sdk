@@ -3,6 +3,7 @@ import { TypeIcon } from "../api/typeIcon";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import { useDetailsPageContext } from "../api/detailPageProvider";
+import clsx from "clsx";
 
 export const TreeNode = ({
   name,
@@ -33,7 +34,7 @@ export const TreeNode = ({
         </Accordion.Trigger>
       </Accordion.Header>
       <Accordion.Content className="text-mauve11 bg-mauve2 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden text-[15px]">
-        <ul className="pl-5 space-y-2">
+        <ul className="space-y-1">
           {children?.map((item) => {
             // console.log(item);
             const link = `/apis/modules/${slug}/${item.name}`;
@@ -45,16 +46,12 @@ export const TreeNode = ({
                     setModuleName?.(name);
                     setApiName?.(item.name);
                   }}
-                  className="flex"
+                  className={clsx("flex items-center rounded pl-5 py-1", {
+                    "bg-[rgba(0,0,0,.09)]": apiName === item.name,
+                  })}
                 >
-                  <div
-                    className={`px-[5px] py-[4px] flex items-center ${
-                      apiName === item.name ? "bg-[#c5c7c9]" : undefined
-                    }`}
-                  >
-                    <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
-                    <span className="px-[5px]">{item.name}</span>
-                  </div>
+                  <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />
+                  <span className="px-[5px]">{item.name}</span>
                 </Link>
               </li>
             );
