@@ -17,7 +17,7 @@ export const TreeView: FC<{ data: any }> = (props) => {
     <div className="space-y-2">
       <Accordion.Root
         type="single"
-        collapsible={false}
+        collapsible={true}
         defaultValue={defaultValue}
       >
         {data.map((item) => {
