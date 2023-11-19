@@ -5,6 +5,7 @@ import { propOr } from "ramda";
 import { Properties } from "../interface/properties";
 import { Constructor } from "./constructor";
 import { Methods } from "./methods";
+import { Indexes } from "../indexes";
 
 interface Props {
   doc: any;
@@ -13,6 +14,8 @@ interface Props {
 export const ClassPage: FC<Props> = (props) => {
   const { doc } = props;
 
+  console.log(doc);
+
   if (!doc) {
     return <div></div>;
   }
@@ -20,6 +23,8 @@ export const ClassPage: FC<Props> = (props) => {
   return (
     <div className="space-y-7">
       <PageHeader title={doc.name} type="Class" />
+
+      <Indexes doc={doc} />
 
       <Constructor data={doc.construct} name={doc.name} />
       <Properties properties={propOr([], "properties")(doc)} />

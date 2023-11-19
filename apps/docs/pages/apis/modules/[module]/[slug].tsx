@@ -1,5 +1,6 @@
 import { ClassPage } from "@/components/api/class";
 import { DetailsPageProvider } from "@/components/api/detailPageProvider";
+import { EnumPage } from "@/components/api/enum";
 import { FunctionPage } from "@/components/api/function";
 import { InterfacePage } from "@/components/api/interface";
 import { ModulesSection } from "@/components/api/module";
@@ -96,6 +97,8 @@ export default function Page(props) {
         return <VariablePage doc={props.doc || {}} />;
       case "Namespace":
         return <ModulesSection module={props.doc || {}} />;
+      case "Enum":
+        return <EnumPage doc={props.doc || {}} />;
       default:
         return null;
     }

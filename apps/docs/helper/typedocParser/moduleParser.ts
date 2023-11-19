@@ -80,6 +80,8 @@ export class ModuleParser {
    */
   public readonly variables: VariableParser[];
 
+  public readonly groups: any[];
+
   public constructor(data: any) {
     //   super(data);
     // const { data, version, readme, changelog } = options;
@@ -101,6 +103,7 @@ export class ModuleParser {
       namespaces,
       typeAliases,
       variables,
+      groups = [],
     } = data;
 
     // this.namespaceParentId = namespaceParentId;
@@ -114,6 +117,8 @@ export class ModuleParser {
     this.namespaces = namespaces;
     this.typeAliases = typeAliases;
     this.variables = variables;
+
+    this.groups = groups;
   }
 
   public static generateFromTypeDoc(
@@ -128,6 +133,7 @@ export class ModuleParser {
       sources = [],
       flags,
       children = [],
+      groups,
     } = reflection;
 
     if (kind !== ReflectionKind.Module) {
@@ -182,6 +188,7 @@ export class ModuleParser {
       namespaces,
       typeAliases,
       variables,
+      groups,
     });
   }
 
@@ -204,6 +211,7 @@ export class ModuleParser {
       namespaces: this.namespaces.map((parser) => parser.toJSON()),
       typeAliases: this.typeAliases.map((parser) => parser.toJSON()),
       variables: this.variables.map((parser) => parser.toJSON()),
+      groups: this.groups,
     };
   }
 
@@ -620,5 +628,7 @@ export namespace ModuleParser {
      * @since 1.0.0
      */
     variables: VariableParser.Json[];
+
+    groups: any[];
   }
 }

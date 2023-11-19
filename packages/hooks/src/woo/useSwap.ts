@@ -293,6 +293,7 @@ const woofiDexDepositorAbi = [
   { stateMutability: "payable", type: "receive" },
 ];
 
+/** @hidden */
 export const useSwap = () => {
   // exec swap contract;
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);

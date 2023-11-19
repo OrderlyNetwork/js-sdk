@@ -8,6 +8,7 @@ interface ModuleSectionProps {
 
 export const ModulesSection: FC<ModuleSectionProps> = (props) => {
   const { module } = props;
+  console.log("------module-------", module);
   return (
     <div className="space-y-5">
       <PageHeader title={module.name} type="" />

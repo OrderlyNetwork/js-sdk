@@ -5,10 +5,12 @@ import { useBoolean } from "../useBoolean";
 import { woofiDexCrossChainRouterAbi } from "./constants";
 import { utils } from "@orderly.network/core";
 
+/** @hidden */
 export type WooCrossSwapQueryOptions = {
   from: string;
 };
 
+/** @hidden */
 export const useWooCrossSwapQuery = () => {
   const { configStore } = useContext<any>(OrderlyContext);
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);

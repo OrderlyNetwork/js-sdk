@@ -31,7 +31,7 @@ export const Reference: FC<Props> = (props) => {
     );
   }
 
-  if (props.type.id === -1) {
+  if (props.type.id === -1 || !props.type.id) {
     return <span className="text-rose-500 font-semibold ">{name}</span>;
   }
 
