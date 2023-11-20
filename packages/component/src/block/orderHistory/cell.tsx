@@ -60,8 +60,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           precision={base_dp}
           className={
             item.side === OrderSide.BUY
-              ? "text-trade-profit"
-              : "text-trade-loss"
+              ? "orderly-text-trade-profit"
+              : "orderly-text-trade-loss"
           }
         />
         <Statistic

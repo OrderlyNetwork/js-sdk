@@ -38,12 +38,12 @@ const OrderTypeItem: FC<{
   value: OrderType;
   onClick: (value: OrderType | "") => void;
 }> = (props) => {
-  let clsName = "flex items-center gap-1 cursor-pointer";
+  let clsName = "orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer";
   console.log("props.active", props.active);
   if (props.active) {
-    clsName += " text-base-contrast";
+    clsName += " orderly-text-base-contrast";
   } else {
-    clsName += " text-base-contrast-54";
+    clsName += " orderly-text-base-contrast-54";
   }
   return (
     <div
