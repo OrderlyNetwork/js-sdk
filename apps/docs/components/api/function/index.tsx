@@ -24,7 +24,7 @@ export const FunctionPage: FC<Props> = (props) => {
       <PageHeader title={doc.name} type={type} />
       {doc.signatures.map((signature, index) => {
         return (
-          <div className="space-y-7">
+          <div className="space-y-7" key={signature.id}>
             <div className="space-x-1 border-t border-b border-gray-300 py-4">
               <span className="text-sky-600">{doc.name}</span>
               {Array.isArray(signature.typeParameters) &&
@@ -84,9 +84,18 @@ export const FunctionPage: FC<Props> = (props) => {
               </ul>
             </div>
             <div>
-              <div className="text-xl mb-2 font-semibold">Returns</div>
+              <strong className="text-xl mb-2 font-semibold mr-2">
+                Returns
+              </strong>
               <Type type={signature.returnType} />
             </div>
+            {/* <ul className="list-disc list-inside">{
+              signature.returnType.properties.map((item,index)=>{
+                return <li>
+                  <span>{item.name}</span>
+                </li>
+              })
+            }</ul> */}
           </div>
         );
       })}

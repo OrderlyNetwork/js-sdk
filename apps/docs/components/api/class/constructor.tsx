@@ -51,7 +51,7 @@ export const Constructor: FC<Props> = ({ data, name }) => {
         })}
       </ul>
       <div className="text-xl space-x-1">
-        <span>Returns</span>
+        <span>Returns:</span>
         <span className="italic">{name}</span>
       </div>
     </div>

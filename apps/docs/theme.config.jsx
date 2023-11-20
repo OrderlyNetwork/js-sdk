@@ -4,6 +4,7 @@ export default {
     logo: <div className="flex">
       <img src="/images/orderly.log.png" width={40}/>
     </div>,
+    logoLink:"/docs/hooks/overview",
     // project: {
     //   link: '#',
     //   icon: (
@@ -31,7 +32,17 @@ export default {
     },
     footer:{
       text:'2023 © Orderly'
-    }
-  
+    },
+    editLink:{
+      component:null
+    },
+    feedback:{
+      content:null
+    },
+    useNextSeoProps() {
+      return {
+        titleTemplate: '%s',
+      };
+    },  
     // ...
   }

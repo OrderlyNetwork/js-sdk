@@ -3,6 +3,8 @@ import { Link as LinkIcon } from "lucide-react";
 import { FC, Fragment, useMemo } from "react";
 import { Type } from "../Type";
 import { path } from "ramda";
+import { Anchor } from "@/components/layout/anchor";
+import { AnchorElement } from "@/components/layout/anchorElement";
 
 interface Props {
   name: string;
@@ -14,25 +16,33 @@ interface Props {
 export const PropertyItem: FC<Props> = (props) => {
   const { name, type, readonly, optional } = props;
 
-  console.log("---------PropertyItem------->>>>", props);
+  // console.log("---------PropertyItem------->>>>", props);
+
+  const isGetter = useMemo(() => {
+    return Array.isArray(type.signatures);
+  }, [type.signatures]);
 
   return (
     <div className="space-y-3">
       <div className="text-lg font-bold py-2 flex items-center">
-        <a id={`#${name}`}></a>
+        {/* <a id={name} className="scroll-mt-[90px]"></a> */}
+        <AnchorElement name={name} />
         {optional ? (
           <span className="border border-gray-400 rounded-full font-semibold px-2 mr-2 text-sm">
             Optional
           </span>
         ) : null}
+
         <span className="text-xl">{name}</span>
-        <a href={`#${name}`}>
+        <Anchor name={name} />
+        {/* <a href={`#${name}`}>
           <LinkIcon size={14} className="stroke-gray-400 ml-2" />
-        </a>
+        </a> */}
       </div>
       <div className="flex space-x-1 bg-primary-light p-3 rounded-lg">
         <span>
-          <span className="text-blue-500">{`${name}${
+          {isGetter ? <span className="mr-1 text-gray-500">get</span> : null}
+          <span className="text-blue-500">{`${name}${isGetter ? "()" : ""}${
             optional ? "?" : ""
           }`}</span>
           <span className="mr-1">:</span>
@@ -64,7 +74,8 @@ export const PropertyItem: FC<Props> = (props) => {
           </>
         ) : null}
         <div>
-          <strong>Returns</strong>
+          <strong className="mr-1">Returns:</strong>
+          <Type type={type} />
         </div>
       </div>
     </div>

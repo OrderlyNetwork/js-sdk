@@ -3,6 +3,8 @@ import { FC, Fragment, useMemo } from "react";
 import { path } from "ramda";
 import { Type } from "../Type";
 import { Link } from "lucide-react";
+import { Anchor } from "@/components/layout/anchor";
+import { AnchorElement } from "@/components/layout/anchorElement";
 
 interface MethodProps {
   method: any;
@@ -30,11 +32,10 @@ export const MethodItem: FC<MethodProps> = (props) => {
   return (
     <div className="space-y-3">
       <div className="text-xl font-semibold flex items-center">
-        <a id={`#${name}`}></a>
+        {/* <a id={name}></a> */}
+        <AnchorElement name={name} />
         {name}
-        <a href={`#${name}`}>
-          <Link size={14} className="stroke-gray-400 ml-2" />
-        </a>
+        <Anchor name={name} />
       </div>
       <div className="border-t border-b border-gray-300 py-3">
         {signatures?.map((signature: any) => {
@@ -92,19 +93,19 @@ export const MethodItem: FC<MethodProps> = (props) => {
 
       <div>
         <strong>Parameters</strong>
+        <ul className="list-disc list-inside">
+          {parameters?.map((param: any) => {
+            return (
+              <li key={param.id} className="flex gap-1">
+                <span className="text-blue-400">{param.name}</span>
+                <span>:</span>
+                <Type type={param.type} />
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      <ul>
-        {parameters?.map((param: any) => {
-          return (
-            <li key={param.id} className="flex gap-1">
-              <span className="text-blue-400">{param.name}</span>
-              <span>:</span>
-              <Type type={param.type} />
-            </li>
-          );
-        })}
-      </ul>
       <div className="flex gap-2">
         <strong>Returns</strong>
         <Type type={returns} />

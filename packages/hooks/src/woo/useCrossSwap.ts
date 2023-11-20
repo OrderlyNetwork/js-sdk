@@ -18,6 +18,7 @@ import { useWalletSubscription } from "../orderly/useWalletSubscription";
 import { useEventEmitter } from "../useEventEmitter";
 import { useConfig } from "../useConfig";
 
+/** @hidden */
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
   INFLIGHT = "INFLIGHT",
@@ -25,6 +26,7 @@ export enum MessageStatus {
   FAILED = "FAILED",
 }
 
+/** @hidden */
 export const useCrossSwap = () => {
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
 

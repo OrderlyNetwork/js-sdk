@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import clsx from "clsx";
 
 interface Props {
-  type: "I" | "C" | "F" | "E" | "M" | "V" | "T" | "N";
+  type: "I" | "C" | "F" | "E" | "M" | "V" | "T" | "N" | "P" | "A";
 }
 
 export const TypeIcon: FC<Props> = (props) => {
@@ -12,12 +12,15 @@ export const TypeIcon: FC<Props> = (props) => {
     switch (type) {
       case "I":
         return "text-blue-500 border-blue-500";
+      case "P":
       case "C":
         return "text-green-500 border-green-500";
+      case "A":
       case "F":
         return "text-fuchsia-500 border-fuchsia-500";
       case "E":
         return "text-rose-500 border-rose-500";
+
       case "M":
         return "text-indigo-500 border-indigo-500";
       case "V":

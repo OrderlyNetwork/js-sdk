@@ -8,21 +8,18 @@ export const TreeView: FC<{ data: any }> = (props) => {
   const router = useRouter();
   const { locale, query } = router;
 
-  const defaultValue = (query.module as string)?.replace(
-    `.${locale}` || "",
-    ""
-  );
+  if (!query.module) {
+    return null;
+  }
 
-  //   console.log(data);
   return (
     <div className="space-y-2">
       <Accordion.Root
         type="single"
         collapsible={false}
-        defaultValue={defaultValue}
+        defaultValue={query.module as string}
       >
         {data.map((item) => {
-          console.log(item.slug);
           return (
             <Accordion.Item key={item.id} value={item.slug}>
               <TreeNode

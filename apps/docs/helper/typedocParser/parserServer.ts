@@ -60,13 +60,15 @@ export class ParserServer {
   }
 
   private pickChildrenInfo(children: any[], type: string) {
-    return children.map((child) => {
-      return {
-        id: child.id,
-        name: child.name,
-        slug: encodeName(child.name),
-        type,
-      };
-    });
+    return children
+      .filter((item) => !item.external)
+      .map((child) => {
+        return {
+          id: child.id,
+          name: child.name,
+          slug: encodeName(child.name),
+          type,
+        };
+      });
   }
 }

@@ -140,16 +140,42 @@ export class ProjectParser {
 
     if (!segments.length) return module;
 
-    const kind = segments.shift();
+    const kinds = segments.shift();
 
-    if (!kind) return null;
+    if (!Array.isArray(kinds)) return null;
 
-    // if(kind ==='namespace'){
-    //   const namespace = module.namespaces.find((namespace) => namespace.name === segments[0]);
-    //   return namespace;
+    let subKind = kinds.shift();
+    // const subKind = kind[0];
+
+    const subModule = module.findByName(subKind);
+
+    if (!kinds.length) {
+      return subModule;
+    }
+
+    let child: SearchResult | null = null;
+
+    while (kinds.length) {
+      // console.log("subModule", subModule);
+      const kind = kinds.shift();
+      child = subModule.result.search(kind);
+
+      if (!child || !Array.isArray(child) || child.length === 0) return null;
+
+      if (!kinds.length) {
+        return { result: child[0], type: child[0].constructor.name };
+      }
+    }
+
+    // console.log("subKind", subKind);
+    //
+    // const child = module.findByName(subKind);
+    //
+    // if (child) {
+    //   child.parent = module;
     // }
-
-    return module.findByName(kind);
+    //
+    // return child;
 
     // return module.findByPath(segments);
   }
@@ -167,110 +193,10 @@ export class ProjectParser {
       .split(/(#|\.)/g)
       .filter((word) => word !== "." && word !== "#");
 
-    for (const classParser of this.classes) {
-      if (classParser.name.toLowerCase().includes(words[0])) {
-        if (words.length === 1) {
-          results.push(classParser);
+    for (let index = 0; index < this.modules.length; index++) {
+      const module = this.modules[index];
 
-          continue;
-        }
-
-        for (const methodParser of classParser.methods) {
-          if (methodParser.name.toLowerCase().includes(words[1])) {
-            if (words.length === 2) {
-              results.push(methodParser);
-
-              continue;
-            }
-          }
-        }
-
-        for (const propertyParser of classParser.properties) {
-          if (propertyParser.name.toLowerCase().includes(words[1])) {
-            results.push(propertyParser);
-
-            continue;
-          }
-        }
-      }
-    }
-
-    for (const enumParser of this.enums) {
-      if (enumParser.name.toLowerCase().includes(words[0])) {
-        if (words.length === 1) {
-          results.push(enumParser);
-
-          continue;
-        }
-
-        for (const enumMemberParser of enumParser.members) {
-          if (enumMemberParser.name.toLowerCase().includes(words[1])) {
-            results.push(enumMemberParser);
-
-            continue;
-          }
-        }
-      }
-    }
-
-    for (const functionParser of this.functions) {
-      if (functionParser.name.toLowerCase().includes(words[0])) {
-        results.push(functionParser);
-
-        continue;
-      }
-    }
-
-    for (const interfaceParser of this.interfaces) {
-      if (interfaceParser.name.toLowerCase().includes(words[0])) {
-        if (words.length === 1) {
-          results.push(interfaceParser);
-
-          continue;
-        }
-
-        for (const propertyParser of interfaceParser.properties) {
-          if (propertyParser.name.toLowerCase().includes(words[1])) {
-            results.push(propertyParser);
-
-            continue;
-          }
-        }
-      }
-    }
-
-    for (const namespaceParser of this.namespaces) {
-      if (namespaceParser.name.toLowerCase().includes(words[0])) {
-        if (words.length === 1) {
-          results.push(namespaceParser);
-
-          continue;
-        }
-
-        const subResults = namespaceParser.search(
-          query.substring(words[0].length)
-        );
-
-        for (const subResult of subResults) {
-          results.push(subResult);
-        }
-      }
-    }
-
-    for (const typeAliasParser of this.typeAliases) {
-      if (typeAliasParser.name.toLowerCase().includes(words[0])) {
-        results.push(typeAliasParser);
-
-        continue;
-      }
-    }
-
-    for (const variableParser of this.variables) {
-      if (variableParser.name.toLowerCase().includes(words[0])) {
-        results.push(variableParser);
-
-        continue;
-      }
+      return module.search(query);
     }
 
     return results;
@@ -290,13 +216,6 @@ export class ProjectParser {
       readme: this.readme,
       changelog: this.changelog,
       modules: this.modules.map((parser) => parser.toJSON()),
-      // classes: this.classes.map((parser) => parser.toJSON()),
-      // enums: this.enums.map((parser) => parser.toJSON()),
-      // functions: this.functions.map((parser) => parser.toJSON()),
-      // interfaces: this.interfaces.map((parser) => parser.toJSON()),
-      // namespaces: this.namespaces.map((parser) => parser.toJSON()),
-      // typeAliases: this.typeAliases.map((parser) => parser.toJSON()),
-      // variables: this.variables.map((parser) => parser.toJSON()),
     };
   }
 

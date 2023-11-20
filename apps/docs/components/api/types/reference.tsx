@@ -40,7 +40,10 @@ export const Reference: FC<Props> = (props) => {
       className="text-rose-500 font-semibold italic underline hover:text-rose-600"
       href={
         props.type.packageName
-          ? `/apis/modules/${encodeName(props.type.packageName)}/${name}`
+          ? `/apis/modules/${encodeName(props.type.packageName)}/${name.replace(
+              ".",
+              "/"
+            )}`
           : props.type.name
       }
     >

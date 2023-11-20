@@ -7,6 +7,7 @@ interface Props {
 
 export const Methods: FC<Props> = (props) => {
   const { methods } = props;
+  if (!methods.length) return null;
   return (
     <div>
       <div className="text-2xl mb-5 mt-7">Methods</div>

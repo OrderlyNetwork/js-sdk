@@ -4,6 +4,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { useAccountInstance } from "../useAccountInstance";
 import { useBoolean } from "../useBoolean";
 
+/** @hidden */
 export const useWooSwapQuery = () => {
   const { configStore } = useContext<any>(OrderlyContext);
   const account = useAccountInstance();
