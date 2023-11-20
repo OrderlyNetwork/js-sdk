@@ -1,1 +1,1 @@
-# @orderly.network/futures
+# @orderly.network/perp

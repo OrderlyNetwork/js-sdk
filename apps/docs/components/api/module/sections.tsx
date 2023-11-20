@@ -29,14 +29,14 @@ export const ModuleSectionItem: FC<ModuleSectionProps> = (props) => {
 
   return (
     <div>
-      <h3 className="text-xl font-semibold my-1">{props.title}</h3>
-      <div className="grid grid-cols-4">
+      <h3 className="text-2xl font-semibold mb-2">{props.title}</h3>
+      <div className="grid grid-cols-4 gap-x-5">
         {data?.map((item) => {
           return (
             <div key={item.id} className="flex items-center gap-1 py-1">
               <TypeIcon type={(type as any).substring(0, 1).toUpperCase()} />
               <Link
-                className="hover:underline underline-offset-4"
+                className="hover:underline underline-offset-4 break-all"
                 href={
                   isIndex
                     ? `#${item.name}`

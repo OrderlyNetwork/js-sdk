@@ -13,7 +13,7 @@ export const TreeView: FC<{ data: any }> = (props) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 py-5">
       <Accordion.Root
         type="single"
         collapsible={false}

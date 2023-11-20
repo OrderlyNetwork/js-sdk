@@ -10,6 +10,7 @@ import { decodeName } from "@/helper/typedocParser/name";
 import { ParserServer } from "@/helper/typedocParser/parserServer";
 import { useMemo } from "react";
 import { useRouter } from "next/router";
+import { TypeAliasPage } from "@/components/api/typeAlias";
 
 export const getStaticProps = async (context) => {
   // console.log("---context---", context);
@@ -111,7 +112,7 @@ export async function getStaticPaths() {
 export default function Page(props) {
   const router = useRouter();
 
-  console.log("---router.query---", props);
+  console.log("---api detail page---", props);
 
   const type = useMemo(() => {
     return props.type?.replace("Parser", "");
@@ -127,6 +128,8 @@ export default function Page(props) {
         return <FunctionPage doc={props.doc || {}} />;
       case "Variable":
         return <VariablePage doc={props.doc || {}} />;
+      case "TypeAlias":
+        return <TypeAliasPage doc={props.doc || {}} />;
       case "Namespace":
         return (
           <ModulesSection

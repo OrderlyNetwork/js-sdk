@@ -1,6 +1,6 @@
 import { encodeName } from "@/helper/typedocParser/name";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { Type } from "../Type";
 
 interface Props {
@@ -20,10 +20,10 @@ export const Reference: FC<Props> = (props) => {
             return <Type type={item} key={index} />;
           }
           return (
-            <>
+            <Fragment key={index}>
               <Type type={item} key={index} />
               <span className="mx-1">,</span>
-            </>
+            </Fragment>
           );
         })}
         <span>&gt;</span>

@@ -165,7 +165,7 @@ export class ModuleParser {
       .map((child) => NamespaceParser.generateFromTypeDoc(child, id));
 
     const typeAliases = children
-      .filter((child) => child.kind === ReflectionKind.TypeAlias)
+      .filter((child) => child.kind === ReflectionKind.Reference)
       .map((child) => TypeAliasParser.generateFromTypeDoc(child, id));
 
     const variables = children

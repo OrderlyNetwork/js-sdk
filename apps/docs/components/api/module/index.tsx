@@ -12,7 +12,7 @@ export const ModulesSection: FC<ModuleSectionProps> = (props) => {
   const { module, paths } = props;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-7">
       <PageHeader title={module.name} type="" />
       <ModuleSectionItem
         paths={paths}
