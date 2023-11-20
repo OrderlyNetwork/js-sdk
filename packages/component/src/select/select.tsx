@@ -116,7 +116,7 @@ const Select: FC<SelectProps> = ({
               className,
               color,
             }),
-            open && "bg-popover"
+            open && "orderly-bg-popover"
           )}
           // onClick={() => {
           //   if (options.length === 0) return;

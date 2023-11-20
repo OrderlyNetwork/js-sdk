@@ -116,7 +116,7 @@ export interface DialogBodyProps {
 
 const DialogBody: FC<PropsWithChildren<DialogBodyProps>> = (props) => {
   const { children, className } = props;
-  return <div className={cn("px-5", className)}>{children}</div>;
+  return <div className={cn("orderly-px-5", className)}>{children}</div>;
 };
 
 DialogBody.displayName = "DialogBody";

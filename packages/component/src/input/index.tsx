@@ -114,7 +114,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           <span
             className={
-              "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
+              "orderly-inline-flex orderly-rounded-full orderly-bg-base-contrast/20 orderly-w-[20px] orderly-h-[20px] orderly-items-center orderly-justify-center orderly-text-base-100"
             }
           >
             <X size={16} className="orderly-text-base-contrast-54" />
@@ -172,7 +172,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               variant,
               error,
             }),
-            (props.readOnly || !!error) && "orderly-focus-within:outline-none",
+            (props.readOnly || !!error) && "focus-within:orderly-outline-none",
             containerClassName
           )}
         >

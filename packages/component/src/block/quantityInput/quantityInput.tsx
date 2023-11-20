@@ -75,7 +75,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
                 });
               }}
               className={
-                "bg-transparent h-full flex-1 px-2 focus-visible:outline-none font-semibold text-sm text-base-contrast placeholder:text-base-contrast-36"
+                "orderly-bg-transparent orderly-h-full orderly-flex-1 orderly-px-2 focus-visible:orderly-outline-none orderly-font-semibold orderly-text-sm orderly-text-base-contrast placeholder:orderly-text-base-contrast-36"
               }
               placeholder={"Quantity"}
             />
@@ -111,7 +111,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "flex items-center text-4xs justify-between px-2 py-1 text-base-contrast-36"
+            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36"
           }
         >
           <span>{`$${amount}`}</span>

@@ -75,7 +75,7 @@ export const Chains: FC<ChainsProps> = (props) => {
           loading={settingChain}
           disabled={disabled}
           className={
-            "border-primary gap-1 text-base-contrast h-[30px] hover:text-primary-light hover:bg-transparent"
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent"
           }
         >
           {chainName}
