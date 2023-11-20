@@ -16,7 +16,7 @@ export const TreeView: FC<{ data: any }> = (props) => {
     <div className="space-y-2 py-5">
       <Accordion.Root
         type="single"
-        collapsible={false}
+        collapsible={true}
         defaultValue={query.module as string}
       >
         {data.map((item) => {
