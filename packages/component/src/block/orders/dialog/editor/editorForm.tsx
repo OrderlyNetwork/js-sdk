@@ -76,9 +76,14 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       alertText = (
         <div className="orderly-text-base-contrast-54 orderly-text-2xs">
           You agree changing the price of ETH-PERP order to{" "}
-          <span className="orderly-text-warning">{commify(data.order_price!)}</span> and
-          the quantity to{" "}
-          <span className="orderly-text-warning">{commify(data.order_quantity!)}</span>.
+          <span className="orderly-text-warning">
+            {commify(data.order_price!)}
+          </span>{" "}
+          and the quantity to{" "}
+          <span className="orderly-text-warning">
+            {commify(data.order_quantity!)}
+          </span>
+          .
         </div>
       );
     } else {
@@ -86,7 +91,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         alertText = (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs">
             You agree changing the price of ETH-PERP order to{" "}
-            <span className="orderly-text-warning">{commify(data.order_price!)}</span>.
+            <span className="orderly-text-warning">
+              {commify(data.order_price!)}
+            </span>
+            .
           </div>
         );
       }
@@ -178,6 +186,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   suffix={quote}
                   type="text"
                   inputMode="decimal"
+                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="orderly-text-right orderly-text-3xs"
@@ -200,6 +209,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   suffix={base}
                   type="text"
                   inputMode="decimal"
+                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="orderly-text-right orderly-text-3xs"
@@ -240,8 +250,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
           <Button
             fullWidth
-            type="button"
-            variant={"outlined"}
+            variant="contained"
+            color="tertiary"
             onClick={() => {
               props.onCancel?.();
             }}

@@ -170,6 +170,9 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="orderly-text-right orderly-text-3xs"
+                  containerClassName={
+                    "orderly-bg-base-500 orderly-rounded-borderRadius"
+                  }
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -189,6 +192,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   suffix={base}
                   type="text"
                   inputMode="decimal"
+                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
                   className="orderly-text-right orderly-text-3xs"
@@ -231,7 +235,8 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
         <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
           <Button
-            variant={"outlined"}
+            variant="contained"
+            color="tertiary"
             fullWidth
             type="button"
             onClick={() => {

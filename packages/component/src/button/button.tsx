@@ -22,8 +22,10 @@ const buttonVariants = cva(
         text: "orderly-text-slate-500 hover:orderly-bg-slate-100",
         outlined:
           "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500 hover:orderly-bg-slate-100",
-        contained: "orderly-text-white orderly-bg-slate-500 hover:orderly-bg-slate-600 orderly-shadow-button",
-        gradient: "orderly-bg-gradient-to-r orderly-from-slate-100 orderly-to-slate-600",
+        contained:
+          "orderly-text-white orderly-bg-slate-500 hover:orderly-bg-slate-600 orderly-shadow-button",
+        gradient:
+          "orderly-bg-gradient-to-r orderly-from-slate-100 orderly-to-slate-600",
       },
       /**
        * @default default
@@ -43,7 +45,8 @@ const buttonVariants = cva(
           "orderly-text-success orderly-bg-transparent hover:orderly-bg-success hover:orderly-text-white active:orderly-bg-success/90",
         buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit/90 active:orderly-bg-trade-profit/90",
         sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss/90 active:orderly-bg-trade-loss/90",
-        danger: "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
+        danger:
+          "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
       },
       // evlevation: {
       //
@@ -66,29 +69,39 @@ const buttonVariants = cva(
       {
         variant: "contained",
         color: "primary",
-        class: "orderly-bg-primary hover:orderly-bg-primary/90 orderly-text-base-contrast",
+        class:
+          "orderly-bg-primary hover:orderly-bg-primary/90 orderly-text-base-contrast",
       },
       {
         variant: "contained",
         color: "primary",
         disabled: true,
-        class: "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast/15",
+        class:
+          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast/15",
       },
       {
         variant: "contained",
         color: "secondary",
-        class: "orderly-bg-secondary orderly-text-base-contrast hover:orderly-bg-secondary/90",
+        class:
+          "orderly-bg-secondary orderly-text-base-contrast hover:orderly-bg-secondary/90",
+      },
+      {
+        variant: "contained",
+        color: "tertiary",
+        class:
+          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast",
       },
       {
         variant: "contained",
         color: "danger",
-        class: "orderly-bg-danger orderly-text-base-contrast hover:orderly-bg-danger/90",
+        class:
+          "orderly-bg-danger orderly-text-base-contrast hover:orderly-bg-danger/90",
       },
       {
         variant: "outlined",
         color: "primary",
         class:
-          "orderly-text-primary orderly-bg-transparent orderly-border orderly-border-primary hover:orderly-bg-primary/10",
+          "orderly-text-primary orderly-bg-transparent orderly-border orderly-border-primary-darken hover:orderly-bg-primary/10",
       },
       {
         variant: "outlined",
@@ -100,7 +113,7 @@ const buttonVariants = cva(
         variant: "outlined",
         color: "tertiary",
         class:
-          "orderly-text-tertiary orderly-bg-transparent orderly-border orderly-border-tertiary hover:orderly-bg-tertiary/10 hover:orderly-text-tertiary",
+          "orderly-text-base-contrast-54 orderly-bg-transparent orderly-border orderly-border-base-contrast-36 hover:orderly-bg-tertiary/10 hover:orderly-text-tertiary",
       },
 
       {

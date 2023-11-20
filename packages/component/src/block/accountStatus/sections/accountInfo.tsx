@@ -116,7 +116,6 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             className="orderly-text-xs"
             variant={"outlined"}
             fullWidth
-            color={"sell"}
             onClick={() => {
               onDisconnect?.();
             }}
