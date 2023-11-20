@@ -18,25 +18,25 @@ interface MarketListViewProps {
 const sortFunc = {
   vol:
     (direction: SortDirection) =>
-    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
-      return direction === SortDirection.DESC
-        ? a["24h_volumn"] - b["24h_volumn"]
-        : b["24h_volumn"] - a["24h_volumn"];
-    },
+      (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+        return direction === SortDirection.DESC
+          ? a["24h_volumn"] - b["24h_volumn"]
+          : b["24h_volumn"] - a["24h_volumn"];
+      },
   price:
     (direction: SortDirection) =>
-    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
-      return direction === SortDirection.ASC
-        ? a["24h_close"] - b["24h_close"]
-        : b["24h_close"] - a["24h_close"];
-    },
+      (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+        return direction === SortDirection.ASC
+          ? a["24h_close"] - b["24h_close"]
+          : b["24h_close"] - a["24h_close"];
+      },
   change:
     (direction: SortDirection) =>
-    (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
-      return direction === SortDirection.ASC
-        ? a.change - b.change
-        : b.change - a.change;
-    },
+      (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
+        return direction === SortDirection.ASC
+          ? a.change - b.change
+          : b.change - a.change;
+      },
 };
 
 export const MarketListView: FC<MarketListViewProps> = (props) => {
@@ -71,13 +71,16 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
     <>
       <SortGroup onChange={setSortCondition} />
       <Divider />
-      <ListView.separated<API.MarketInfoExt>
-        dataSource={dataSource}
-        renderItem={renderItem}
-        renderSeparator={renderSeparator}
-        contentClassName="orderly-space-y-[16px]"
-        className="orderly-py-[16px]"
-      />
+      <div className="orderly-overflow-y-scroll orderly-h-full orderly-padding-bottom-[20px]">
+        <ListView.separated<API.MarketInfoExt>
+          dataSource={dataSource}
+          renderItem={renderItem}
+          renderSeparator={renderSeparator}
+          contentClassName="orderly-space-y-[16px]"
+          className="orderly-py-[16px]"
+        />
+      </div>
+
     </>
   );
 };
