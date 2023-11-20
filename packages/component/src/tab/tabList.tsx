@@ -69,7 +69,7 @@ export const TabList: FC<TabListProps> = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      let activeTab = boxRef.current?.querySelector(".active");
+      let activeTab = boxRef.current?.querySelector(".orderly-active");
 
       if (!activeTab) {
         activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
