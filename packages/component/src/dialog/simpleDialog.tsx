@@ -35,7 +35,8 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
           className="orderly-text-xs"
           key="cancel"
           type="button"
-          variant={"outlined"}
+          variant="contained"
+          color="tertiary"
           onClick={props.onCancel}
           disabled={loading}
           fullWidth
@@ -66,7 +67,9 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
 
     return (
       <DialogFooter
-        className={buttons.length > 1 ? "orderly-grid-cols-2" : "orderly-grid-cols-1"}
+        className={
+          buttons.length > 1 ? "orderly-grid-cols-2" : "orderly-grid-cols-1"
+        }
       >
         {buttons}
       </DialogFooter>
