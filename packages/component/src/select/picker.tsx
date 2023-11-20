@@ -112,7 +112,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
             })
           )}
         >
-          <div className="orderly-flex-1 orderly-flex orderly-justify-start orderly-items-center orderly-text-inherit orderly-">
+          <div className="orderly-flex-1 orderly-flex orderly-justify-start orderly-items-center orderly-text-inherit">
             {text}
           </div>
           <div className="orderly-flex orderly-items-center">
