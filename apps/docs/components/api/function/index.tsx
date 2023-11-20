@@ -9,7 +9,6 @@ interface Props {
 export const FunctionPage: FC<Props> = (props) => {
   const { doc } = props;
 
-
   const type = useMemo(() => {
     if (!doc || !doc.name) {
       return "Function";
@@ -25,7 +24,7 @@ export const FunctionPage: FC<Props> = (props) => {
       <PageHeader title={doc.name} type={type} />
       {doc.signatures.map((signature, index) => {
         return (
-          <div className="space-y-7">
+          <div className="space-y-7" key={signature.id}>
             <div className="space-x-1 border-t border-b border-gray-300 py-4">
               <span className="text-sky-600">{doc.name}</span>
               {Array.isArray(signature.typeParameters) &&

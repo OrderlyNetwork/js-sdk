@@ -15,8 +15,6 @@ interface Props {
 export const ClassPage: FC<Props> = (props) => {
   const { doc } = props;
 
-  console.log(doc);
-
   if (!doc) {
     return <div></div>;
   }

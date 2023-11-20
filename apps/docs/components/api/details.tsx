@@ -7,7 +7,7 @@ interface Props {
 
 export const DetailsPage: FC<Props> = (props) => {
   const { doc } = props;
-  console.log(doc);
+
   return (
     <div className="space-y-7">
       <PageHeader title={doc.name} type="Class" />

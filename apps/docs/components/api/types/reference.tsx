@@ -31,7 +31,7 @@ export const Reference: FC<Props> = (props) => {
     );
   }
 
-  if (props.type.id === -1 || !props.type.id) {
+  if (props.type.id === -1) {
     return <span className="text-rose-500 font-semibold ">{name}</span>;
   }
 
@@ -40,9 +40,10 @@ export const Reference: FC<Props> = (props) => {
       className="text-rose-500 font-semibold italic underline hover:text-rose-600"
       href={
         props.type.packageName
-          ? `/apis/modules/${encodeName(props.type.packageName)}/${name
-              .split(".")
-              .join("/")}`
+          ? `/apis/modules/${encodeName(props.type.packageName)}/${name.replace(
+              ".",
+              "/"
+            )}`
           : props.type.name
       }
     >

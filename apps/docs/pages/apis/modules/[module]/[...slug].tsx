@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import { useRouter } from "next/router";
 
 export const getStaticProps = async (context) => {
-  console.log("---context---", context);
+  // console.log("---context---", context);
 
   const parser = ParserServer.getInstance();
   const moduleName = decodeName(context.params.module);
@@ -37,53 +37,81 @@ export async function getStaticPaths() {
 
   const paths: any[] = [];
 
-  for (let index = 0; index < modules.length; index++) {
-    const module = modules[index];
-
+  function generatePaths(module: any, parentPath: string[] = []) {
     for (let index = 0; index < module.classes.length; index++) {
       const element = module.classes[index];
       paths.push({
-        params: { module: module.name, slug: element.name },
+        params: { module: module.name, slug: [...parentPath, element.name] },
       });
     }
+
+    for (let index = 0; index < module.namespaces.length; index++) {
+      const element = module.namespaces[index];
+      paths.push({
+        params: { module: module.name, slug: [...parentPath, element.name] },
+      });
+
+      generatePaths(element, [...parentPath, element.name]);
+    }
+
     for (let index = 0; index < module.interfaces.length; index++) {
       const element = module.interfaces[index];
       paths.push({
-        params: { module: module.name, slug: element.name },
+        params: { module: module.name, slug: [...parentPath, element.name] },
       });
     }
     for (let index = 0; index < module.functions.length; index++) {
       const element = module.functions[index];
       paths.push({
-        params: { module: module.name, slug: element.name },
+        params: { module: module.name, slug: [...parentPath, element.name] },
       });
     }
     for (let index = 0; index < module.variables.length; index++) {
       const element = module.variables[index];
       paths.push({
-        params: { module: module.name, slug: element.name },
+        params: { module: module.name, slug: [...parentPath, element.name] },
       });
     }
     for (let index = 0; index < module.namespaces.length; index++) {
       const element = module.namespaces[index];
       paths.push({
-        params: { module: module.name, slug: element.name },
+        params: { module: module.name, slug: [...parentPath, element.name] },
+      });
+    }
+
+    for (let index = 0; index < module.enums.length; index++) {
+      const element = module.enums[index];
+      paths.push({
+        params: { module: module.name, slug: [element.name] },
+      });
+    }
+
+    for (let index = 0; index < module.typeAliases.length; index++) {
+      const element = module.typeAliases[index];
+      paths.push({
+        params: { module: module.name, slug: [element.name] },
       });
     }
   }
 
-  return { paths: [], fallback: true };
+  for (let index = 0; index < modules.length; index++) {
+    const module = modules[index];
 
-  // return {
-  //   paths,
-  //   fallback: true,
-  // };
+    generatePaths(module);
+  }
+
+  // return { paths: [], fallback: true };
+
+  return {
+    paths,
+    fallback: true,
+  };
 }
 
 export default function Page(props) {
   const router = useRouter();
 
-  console.log("------router-------", router, props.doc);
+  console.log("---router.query---", props);
 
   const type = useMemo(() => {
     return props.type?.replace("Parser", "");

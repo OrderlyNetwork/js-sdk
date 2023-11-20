@@ -10,7 +10,7 @@ interface Props {
 
 export const InterfacePage: FC<Props> = (props) => {
   const { doc } = props;
-  console.log(doc);
+
   return (
     <div>
       <PageHeader title={doc.name} type="Interface" />
