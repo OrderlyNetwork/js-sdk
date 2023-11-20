@@ -1,5 +1,4 @@
 import { type PropsWithChildren, FC } from "react";
-import { twMerge } from "tailwind-merge";
 import { cn } from "@/utils/css";
 
 export type SegmentedItem = {
