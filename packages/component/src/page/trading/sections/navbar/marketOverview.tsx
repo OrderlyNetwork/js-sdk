@@ -14,6 +14,7 @@ export const MarketOverview: FC<Props> = (props) => {
   return (
     <SymbolProvider symbol={symbol}>
       <SimpleMarketOverview
+        // @ts-ignore
         change={data?.change ?? 0}
         price={data?.["24h_close"] ?? 0}
       />

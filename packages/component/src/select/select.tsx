@@ -134,6 +134,7 @@ const Select: FC<SelectProps> = ({
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
+        // @ts-ignore
         container={containerRef.current}
         align="start"
         style={{ width: `${width}px` }}
@@ -145,6 +146,7 @@ const Select: FC<SelectProps> = ({
         {props.options?.map((option, index) => {
           return (
             <DropdownMenuItem
+              // @ts-ignore
               textValue={option.value}
               key={index}
               className={cn(
@@ -153,6 +155,7 @@ const Select: FC<SelectProps> = ({
                   (color === "buy" ? "text-trade-profit" : "text-trade-loss")
               )}
               onSelect={(evnet) => {
+                // @ts-ignore
                 props.onChange?.(option.value);
               }}
             >

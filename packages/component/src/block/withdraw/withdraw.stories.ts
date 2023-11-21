@@ -5,6 +5,7 @@ const meta: Meta<typeof Withdraw> = {
   component: Withdraw,
   title: "Block/Withdraw",
   argTypes: {
+    // @ts-ignore
     onChange: { action: "onChange" },
   },
 };

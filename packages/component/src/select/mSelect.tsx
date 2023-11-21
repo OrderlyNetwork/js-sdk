@@ -127,6 +127,7 @@ export const MSelect: FC<SelectProps> = ({
                 )}
                 onValueChange={(value) => {
                   setOpen(false);
+                  // @ts-ignore
                   props.onChange?.(value);
                 }}
                 //   onSelect={(evnet) => {

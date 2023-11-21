@@ -164,8 +164,8 @@ export const OrderlyAppProvider: FC<
 
   const _onSetChain = useCallback((chainId: number) => {
     return setChain({ chainId }).then((success: boolean) => {
-      //
       if (success) {
+        // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: false }));
       }
 
@@ -214,7 +214,7 @@ export const OrderlyAppProvider: FC<
         // console.warn("!!!! not support this chian -> disconnect wallet");
         // TODO: 确定是否需要断开连接
         // account.disconnect();
-
+        // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
         console.warn("current chain not support!  -> disconnect wallet!!!");

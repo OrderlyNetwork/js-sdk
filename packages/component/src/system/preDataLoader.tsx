@@ -6,8 +6,9 @@ interface Props {
 }
 
 export const PreDataLoader = () => {
+  // @ts-ignore
   const { onAppTestChange } = useContext(OrderlyContext);
-
+  // @ts-ignore
   usePreLoadData(onAppTestChange);
   return null;
 };

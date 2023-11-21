@@ -51,10 +51,12 @@ export const Chains: FC<ChainsProps> = (props) => {
 
     if (!chain) return <span>Unknown</span>;
 
+    // @ts-ignore
     if (chain.chain_id === 421613) {
       return <span>Testnet</span>;
     }
 
+    // @ts-ignore
     return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
   }, [connectedChain, findByChainId, defaultChain]);
 
@@ -79,14 +81,16 @@ export const Chains: FC<ChainsProps> = (props) => {
           }
         >
           {chainName}
-          <ArrowIcon size={8} className="text-base-contrast-54"/>
+          <ArrowIcon size={8} className="text-base-contrast-54" />
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <DialogHeader>Switch network</DialogHeader>
         <DialogBody className="max-h-[327.5px] overflow-y-auto">
           <ChainListView
+            // @ts-ignore
             mainChains={mainChains}
+            // @ts-ignore
             testChains={testChains}
             onItemClick={(item: any) => {
               setOpen(false);

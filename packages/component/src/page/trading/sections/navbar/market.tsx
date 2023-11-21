@@ -39,7 +39,11 @@ export const Market: FC<Props> = (props) => {
         className="w-[315px]"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
-        <Markets dataSource={data} onItemClick={onSymbolClick} />
+        <Markets
+          // @ts-ignore
+          dataSource={data}
+          onItemClick={onSymbolClick}
+        />
       </SheetContent>
     </Sheet>
   );

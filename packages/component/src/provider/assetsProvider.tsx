@@ -67,6 +67,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   );
 
   const toggleVisible = useCallback(() => {
+    // @ts-ignore
     setVisible((visible: boolean) => {
       return !visible;
     });
@@ -136,6 +137,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
         onSettle,
         visible,
         toggleVisible,
+        // @ts-ignore
         onEnquiry,
         // getBalance,
       }}

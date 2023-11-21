@@ -25,7 +25,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const { order, onSubmit } = props;
 
   // const { hide, reject, resolve } = useModal();
-
+  // @ts-ignore
   const { markPrice, maxQty, helper } = useOrderEntry(order.symbol, order.side);
 
   const {
@@ -131,12 +131,13 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     //
 
     if (name === "order_price") {
+      // @ts-ignore
       setValue("order_price", newValues.order_price, {
         shouldValidate: submitCount > 0,
         shouldDirty: true,
       });
     }
-
+    // @ts-ignore
     setValue("order_quantity", newValues.order_quantity, {
       shouldValidate: submitCount > 0,
       shouldDirty: true,

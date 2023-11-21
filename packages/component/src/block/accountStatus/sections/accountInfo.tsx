@@ -9,6 +9,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { CopyIcon } from "@/icon";
 import { useGetChains } from "./useGetChains";
+import { type ConfigStore } from "@orderly.network/core";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -21,7 +22,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect } = props;
   const { account, state } = useAccount();
   // const [loading,setLoading] = React.useState(false);
-  const config = useConfig();
+  const config = useConfig<ConfigStore>();
 
   const [getTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`
@@ -30,7 +31,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const chainName = useGetChains();
 
   const onCopy = useCallback(() => {
-    navigator.clipboard.writeText(state.address).then(() => {
+    navigator.clipboard.writeText(state.address!).then(() => {
       toast.success("Copied to clipboard");
     });
   }, [state]);
@@ -43,7 +44,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
     }
 
     return getTestUSDC({
-      chain_id: account.wallet.chainId.toString(),
+      chain_id: account.wallet?.chainId.toString(),
       user_address: state.address,
       broker_id: config.get("brokerId"),
     }).then(
@@ -72,7 +73,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
     <div>
       <div className="flex py-6">
         <div className="flex-1 flex items-center gap-2">
-          <Blockie address={state.address} />
+          <Blockie address={state.address!} />
           <div className="flex flex-col">
             <Text rule={"address"}>{account.address}</Text>
             <div className="text-4xs">{chainName}</div>

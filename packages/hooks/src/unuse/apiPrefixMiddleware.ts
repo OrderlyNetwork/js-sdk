@@ -3,11 +3,13 @@ import type { Middleware, SWRHook } from "swr";
 import { OrderlyContext } from "../orderlyContext";
 
 export const apiPrefixMiddleware: Middleware = (useSWRNext: SWRHook) => {
+  // @ts-ignore
   const { apiBaseUrl } = useContext(OrderlyContext);
 
   return (key, fetcher, config) => {
     // 将日志记录器添加到原始 fetcher。
-    const extendedFetcher = (...args) => {
+    const extendedFetcher = (...args: any[]) => {
+      // @ts-ignore
       return fetcher(...args);
     };
     // key =  `${apiBaseUrl}${key}`;

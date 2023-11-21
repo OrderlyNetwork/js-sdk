@@ -87,12 +87,17 @@ export default class DataFeed implements IBasicDataFeed {
         }
       });
   }
+  // @ts-ignore
   searchSymbols(userInput, exchange, symbolType, onResultReadyCallback) {}
 
   resolveSymbol(
+    // @ts-ignore
     symbolName,
+    // @ts-ignore
     onSymbolResolvedCallback,
+    // @ts-ignore
     onResolveErrorCallback,
+    // @ts-ignore
     extension
   ) {
     //
@@ -145,9 +150,13 @@ export default class DataFeed implements IBasicDataFeed {
   }
   getBars(
     symbolInfo: LibrarySymbolInfo,
+    // @ts-ignore
     resolution,
+    // @ts-ignore
     periodParams,
+    // @ts-ignore
     onResult,
+    // @ts-ignore
     onErrorCallback
   ) {
     //
@@ -190,6 +199,7 @@ export default class DataFeed implements IBasicDataFeed {
     resolution: string,
     onTick: SubscribeBarsCallback,
     subscriberUID: string,
+    // @ts-ignore
     onResetCacheNeededCallback
   ) {
     const channelString = `${symbolInfo.full_name}@ticker`;

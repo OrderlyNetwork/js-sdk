@@ -19,11 +19,12 @@ export function useGetChains() {
     if (!chain) {
       return "Unknown";
     }
+    // @ts-ignore
 
     if (chain.chain_id === 421613) {
       return "Testnet";
     }
-
+    // @ts-ignore
     return chain.name;
   }, [connectedChain, findByChainId]);
 

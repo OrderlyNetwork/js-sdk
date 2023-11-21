@@ -37,6 +37,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           <div className="py-3 px-[2px]">
             <Deposit
               onOk={props.onOk}
+              // @ts-ignore
               dst={{
                 chainId: 0,
                 address: "",

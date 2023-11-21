@@ -1,20 +1,14 @@
 import Button from "@/button";
-
 import { Divider } from "@/divider";
 import { Input } from "@/input";
 import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { Text } from "@/text";
-import { type API } from "@orderly.network/core";
-import { Info } from "lucide-react";
+import { type API } from "@orderly.network/types";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";
-import { modal, useModal } from "@/modal";
-import {
-  useSymbolsInfo,
-  useMarkPricesStream,
-  useOrderEntry,
-} from "@orderly.network/hooks";
+import { modal } from "@/modal";
+import { useSymbolsInfo, useOrderEntry } from "@orderly.network/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { toast } from "@/toast";
@@ -34,7 +28,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   // const { hide, reject, resolve } = useModal();
 
   const { markPrice, maxQty, helper, onSubmit } = useOrderEntry(
-    position?.symbol,
+    position?.symbol!,
     side,
     true
   );
@@ -49,7 +43,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   } = useForm({
     values: {
       order_price: undefined,
-      order_quantity: Math.abs(position?.position_qty),
+      order_quantity: Math.abs(position?.position_qty!),
       symbol: position?.symbol,
       order_type: OrderType.LIMIT,
       side: side,
@@ -70,7 +64,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     }
   }, [markPrice]);
 
-  const symbolInfo = useSymbolsInfo()[position?.symbol];
+  const symbolInfo = useSymbolsInfo()[position?.symbol!];
 
   //
 
@@ -119,14 +113,14 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   const onFieldChange = (name: string, value: any) => {
     const newValues = helper.calculate(getValues(), name, value);
-    //
 
     if (name === "order_price") {
+      // @ts-ignore
       setValue("order_price", newValues.order_price, {
         shouldValidate: submitCount > 0,
       });
     }
-
+    // @ts-ignore
     setValue("order_quantity", newValues.order_quantity, {
       shouldValidate: submitCount > 0,
     });
