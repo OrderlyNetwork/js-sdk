@@ -1,40 +1,34 @@
 // import * as hookRaw from "./hook?raw";
-import { Sandpack } from "@codesandbox/sandpack-react";
+import type { FC, CSSProperties } from "react";
+import { Sandpack, SandpackInternal } from "@codesandbox/sandpack-react";
+// import { githubLight } from "@codesandbox/sandpack-themes";
+import { atomDark } from "@codesandbox/sandpack-themes";
 
 export interface Props {
-  code: string;
+  code: Record<string, string>;
+  dependencies: Record<string, string>;
+  style?: CSSProperties;
+  options?: SandpackInternal;
 }
 
-export const CodePreview = () => {
+export const CodePreview: FC<Props> = (props) => {
+  const { code, dependencies } = props;
   return (
-    <div>
+    <div className="my-7">
       <Sandpack
+        theme={atomDark}
+        options={{
+          // editorHeight: 600,
+          ...props.options,
+        }}
         customSetup={{
           dependencies: {
             "@orderly.network/hooks": "latest",
+            axios: "latest",
+            ...dependencies,
           },
         }}
-        files={{
-          "/App.js": `import { OrderlyConfigProvider } from "@orderly.network/hooks";
-
-export default function Sample() {
-  return (<><button type="primary">Button1</button>
-      <button type="secondary">Button2</button></>
-  );
-}
-`,
-          // "/node_modules/@orderly.network/hooks/package.json": {
-          //   hidden: true,
-          //   code: JSON.stringify({
-          //     name: "@orderly.network/hooks",
-          //     main: "./index.js",
-          //   }),
-          // },
-          // "/node_modules/@orderly.network/hooks/index.js": {
-          //   hidden: true,
-          //   code: hookRaw,
-          // },
-        }}
+        files={code}
         template="react"
       />
     </div>
