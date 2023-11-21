@@ -131,7 +131,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
   ): Promise<VerifyResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
-
+      // @ts-ignore
       const { order_price, side } = values;
 
       if (!order_price) {

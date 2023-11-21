@@ -5,13 +5,8 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from "react";
-import {
-  OrderlyProvider as Provider,
-  SWRConfig,
-  type WebSocketAdpater,
-} from "@orderly.network/hooks";
+import { OrderlyProvider as Provider } from "@orderly.network/hooks";
 
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
@@ -19,21 +14,20 @@ import {
   IContract,
   type ConfigStore,
   type OrderlyKeyStore,
-  type WalletAdapter,
   getWalletAdapterFunc,
 } from "@orderly.network/core";
 import { Account, SimpleDI } from "@orderly.network/core";
 import { TooltipProvider } from "@/tooltip/tooltip";
 import { WalletConnectorContext } from "./walletConnectorProvider";
 import { WSObserver } from "@/dev/wsObserver";
-import { useChains, useSessionStorage } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { PreDataLoader } from "@/system/preDataLoader";
+import { useSessionStorage } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 
 interface OrderlyProviderProps {
-  ws?: WebSocketAdpater;
+  // @ts-ignore
+  ws?: any;
+  // ws?: WebSocketAdpater;
   networkId?: string;
   brokerId?: string;
   configStore: ConfigStore;
@@ -96,6 +90,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         configStore,
         keyStore,
         contractManager,
+        // @ts-ignore
         getWalletAdapter
       );
 
@@ -115,7 +110,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
       if (!chainId || !chains) {
         return false;
       }
-
+      // @ts-ignore
       const onlyTestnet = configStore.get("onlyTestnet");
 
       if (typeof chainId === "number") {
@@ -192,6 +187,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
     return setChain({ chainId }).then((success: boolean) => {
       //
       if (success) {
+        // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: false }));
       }
 
@@ -240,7 +236,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         // console.warn("!!!! not support this chian -> disconnect wallet");
         // TODO: 确定是否需要断开连接
         // account.disconnect();
-
+        // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
         console.warn("current chain not support!  -> disconnect wallet!!!");
@@ -283,6 +279,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         keyStore,
         getWalletAdapter,
         contractManager: props.contractManager,
+        // @ts-ignore
         networkId,
         // ready,
         onWalletConnect: _onWalletConnect,
@@ -291,6 +288,7 @@ export const OrderlyProvider: FC<PropsWithChildren<OrderlyProviderProps>> = (
         // onAppTestChange,
         errors,
         brokerId,
+        // @ts-ignore
         onlyTestnet: configStore.get("onlyTestnet"),
       }}
     >

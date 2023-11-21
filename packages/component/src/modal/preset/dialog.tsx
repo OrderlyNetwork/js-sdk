@@ -16,6 +16,7 @@ const Dialog = create<ConfirmProps>((props) => {
       open={visible}
       title={props.title}
       closable={false}
+      // @ts-ignore
       onOk={() => {
         resolve(true);
         hide();

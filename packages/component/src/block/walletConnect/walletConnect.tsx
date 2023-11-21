@@ -114,7 +114,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           subtitle="Confirm you own this wallet"
         />
         <ListTile
-        className="text-xs"
+          className="text-xs"
           disabled={status < AccountStatusEnum.SignedIn}
           avatar={
             <StepItem
@@ -131,7 +131,10 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="pt-5 pb-7 flex justify-between items-center ">
-        <div className="text-base-contrast-54 text-xs" onClick={showRememberHint}>
+        <div
+          className="text-base-contrast-54 text-xs"
+          onClick={showRememberHint}
+        >
           <span>Remember me</span>
           <InfoIcon className="inline-block ml-2" size={14} />
         </div>
@@ -141,7 +144,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
-        className="text-xs text-base-contrast"
+          className="text-xs text-base-contrast"
           fullWidth
           disabled={handleStep > 0}
           onClick={onClick}
@@ -158,6 +161,7 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   // get account status and handle sign in and enable trading
   const { account, createOrderlyKey, createAccount } = useAccount();
+  // @ts-ignore
   const { logoUrl } = useContext(OrderlyContext);
 
   const onSignIn = useCallback(() => {

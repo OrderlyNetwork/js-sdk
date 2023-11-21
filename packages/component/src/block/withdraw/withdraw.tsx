@@ -29,7 +29,7 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     wooSwapEnabled: false,
     pick: "network_infos",
   });
-
+  // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
@@ -47,16 +47,19 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const context = useContext(TradingPageContext);
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);
-  const hasPositions = data?.rows?.length > 0;
+  const hasPositions = data?.rows?.length! > 0;
 
   return (
     <WithdrawForm
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
+      // @ts-ignore
       chains={chains}
       walletName={wallet?.label}
       switchChain={setChain}
+      // @ts-ignore
       decimals={chains?.decimals ?? 2}
+      // @ts-ignore
       minAmount={chains?.minimum_withdraw_amount ?? 1}
       maxAmount={maxAmount}
       availableBalance={availableBalance}

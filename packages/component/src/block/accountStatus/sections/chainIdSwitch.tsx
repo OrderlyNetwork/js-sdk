@@ -1,5 +1,5 @@
 import { FC, useCallback, useContext, useState } from "react";
-import { ChainListView, ChainPicker } from "@/block/pickers/chainPicker";
+import { ChainListView } from "@/block/pickers/chainPicker";
 import {
   Dialog,
   DialogBody,
@@ -65,7 +65,9 @@ export const ChainIdSwtich: FC<Props> = (props) => {
           <DialogHeader className="text-xs">Switch network</DialogHeader>
           <DialogBody className="max-h-[327.5px] overflow-y-auto text-3xs">
             <ChainListView
+              // @ts-ignore
               mainChains={onlyTestnet ? [] : mainChains}
+              // @ts-ignore
               testChains={testChains}
               onItemClick={onChainChange}
             />

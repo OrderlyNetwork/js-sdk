@@ -36,6 +36,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
         onTabChange={setActiveTab}
         tabBarClassName="h-[40px]"
         collapsed={collapsed}
+        // @ts-ignore
         onToggleCollapsed={() => setCollapsed((prev: boolean) => !prev)}
         tabBarExtra={(context) => {
           return (
@@ -64,6 +65,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
             theme={"dark"}
             symbol={symbol}
             autosize={false}
+            // @ts-ignore
             apiBaseUrl={apiBaseUrl}
             {...tradingViewConfig}
           />

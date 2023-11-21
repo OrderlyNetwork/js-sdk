@@ -29,7 +29,7 @@ export interface ChainSelectProps {
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const { onlyTestnet, wooSwapEnabled = true, disabled } = props;
-
+  // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
     wooSwapEnabled,
     pick: "network_infos",
@@ -55,6 +55,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
     if (
       chains.findIndex(
+        // @ts-ignore
         (chain: API.NetworkInfos) => chain.chain_id === value.id
       ) < 0
     ) {
@@ -78,7 +79,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   useEffect(() => {
     // 获取 到chain列表之后，初始化chain及其token列表
     if (!!chains) {
-      const chainInfo = findByChainId(value?.id);
+      const chainInfo = findByChainId(value?.id!);
       if (!chainInfo) return;
       props.onChainInited?.(chainInfo);
     }

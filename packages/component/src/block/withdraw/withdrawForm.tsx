@@ -96,7 +96,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     return onWithdraw({
       amount: Number(quantity),
       token: "USDC",
-      chainId: chain?.id,
+      chainId: chain?.id!,
     })
       .then(
         (res) => {
@@ -182,6 +182,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       </div>
       <QuantityInput
         tokens={[]}
+        // @ts-ignore
         token={{
           symbol: "USDC",
           decimals: 6,

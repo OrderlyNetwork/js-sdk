@@ -37,7 +37,9 @@ export const MyLeverageView: FC<Props> = (props) => {
   return (
     <div className="px-3 py-2">
       <LeverageView
+        // @ts-ignore
         maxLeverage={info?.max_leverage ?? "-"}
+        // @ts-ignore
         predFundingRate={data.est_funding_rate}
         countdown={data.countDown}
         onShowLeverageInfo={showLeverageInfo}

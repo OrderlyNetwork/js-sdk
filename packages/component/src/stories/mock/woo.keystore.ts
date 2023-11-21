@@ -12,6 +12,7 @@ export class WooKeyStore extends BaseKeyStore {
     const orderlyKey = parsedConfigs["orderlyKey"];
 
     if (!orderlyKey) {
+      // @ts-ignore
       return null;
     }
 
@@ -44,6 +45,7 @@ export class WooKeyStore extends BaseKeyStore {
   generateKey(): OrderlyKeyPair {
     throw new Error("Method not implemented.");
   }
+  // @ts-ignore
   setKey(orderlyKey: string, secretKey: string): void {
     throw new Error("Method not implemented.");
   }

@@ -595,7 +595,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       /> */}
       <ActionButton
         chain={chain}
-        chains={chains}
+        chains={chains!}
         token={props.token}
         onDeposit={onDeposit}
         allowance={

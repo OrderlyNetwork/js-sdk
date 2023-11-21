@@ -91,7 +91,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
 
     return doCrossSwap({
       address: "",
-      crossChainRouteAddress: chainInfo!.woofi_dex_cross_chain_router,
+      crossChainRouteAddress: chainInfo!.woofi_dex_cross_chain_router!,
       src: {
         fromToken: transaction.src_infos.from_token,
         fromAmount: BigInt(transaction.src_infos.from_amount),
@@ -103,6 +103,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         bridgedToken: transaction.dst_infos.bridged_token,
         toToken: transaction.dst_infos.to_token,
         minToAmount: BigInt(transaction.dst_infos.min_to_amount),
+        // @ts-ignore
         orderlyNativeFees: 0n,
       },
     }).then(

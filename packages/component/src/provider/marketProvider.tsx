@@ -2,6 +2,7 @@ import { createContext, useCallback } from "react";
 import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { toast } from "@/toast";
+import { type ConfigStore } from "@orderly.network/core";
 
 interface MarketContextState {
   getTestUSDC: () => Promise<any>;
@@ -13,7 +14,7 @@ export const MarketContext = createContext<MarketContextState>(
 
 export const MarketProvider = (props: any) => {
   const { account, state } = useAccount();
-  const config = useConfig();
+  const config = useConfig<ConfigStore>();
   const [doGetTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
@@ -22,7 +23,7 @@ export const MarketProvider = (props: any) => {
 
   const getTestUSDC = useCallback(() => {
     return doGetTestUSDC({
-      chain_id: account.wallet.chainId.toString(),
+      chain_id: account.wallet?.chainId.toString(),
       user_address: state.address,
       broker_id: brokerId,
     })

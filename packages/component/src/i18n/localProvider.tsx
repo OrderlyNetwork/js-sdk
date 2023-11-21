@@ -22,7 +22,7 @@ export const LocalProvider: FC<LocalState & PropsWithChildren> = (props) => {
       locale={locale}
       defaultLocale={defaultLocale}
     >
-      {props.children}
+      {props.children as any}
     </IntlProvider>
   );
 };

@@ -43,12 +43,12 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       <SymbolProvider symbol={symbol}>
         <OrderBook
           level={7}
-          asks={data.asks}
-          bids={data.bids}
+          asks={data.asks!}
+          bids={data.bids!}
           markPrice={data.markPrice}
-          lastPrice={data.middlePrice}
-          depth={allDepths}
-          activeDepth={depth}
+          lastPrice={data.middlePrice!}
+          depth={allDepths!}
+          activeDepth={depth!}
           base={symbolInfo("base")}
           quote={symbolInfo("quote")}
           isLoading={isLoading}

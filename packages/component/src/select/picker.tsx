@@ -87,6 +87,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       return placeholder || label || "";
     }, [selectedItem, label, placeholder]);
 
+    // @ts-ignore
     const actions: ActionSheetItem[] = useMemo(() => {
       return [...options, "---", "Cancel"];
     }, [options]);
@@ -97,6 +98,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
         onOpenChange={setOpen}
         open={open}
         onClose={() => setOpen(false)}
+        // @ts-ignore
         value={selectedItem}
         onValueChange={props.onValueChange}
       >
