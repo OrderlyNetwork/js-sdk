@@ -24,38 +24,38 @@ export const Default: Story = {
 export const TextRules: Story = {
   render: (args) => {
     return (
-      <div className="orderly-flex orderly-flex-col orderly-gap-3">
-        <div className="orderly-flex orderly-gap-3">
-          <span className="orderly-text-green-400">Normal:</span>{" "}
+      <div className={"flex flex-col gap-3"}>
+        <div className="flex gap-3">
+          <span className="text-green-400">Normal:</span>{" "}
           <Text {...args}>Normal Text</Text>
         </div>
         <hr />
-        <div className="orderly-flex orderly-gap-3">
-          <span className="orderly-text-green-400">Date:</span>{" "}
+        <div className="flex gap-3">
+          <span className="text-green-400">Date:</span>{" "}
           <Text {...args} rule={"date"}>
             Thu Aug 17 2023 14:33:38 GMT+0800 (China Standard Time)
           </Text>
         </div>
 
         <hr />
-        <div className="orderly-flex orderly-gap-3">
-          <span className="orderly-text-green-400">Address:</span>
+        <div className="flex gap-3">
+          <span className="text-green-400">Address:</span>
           <Text {...args} rule={"address"}>
             0xd659f3DeCe290110421A71B438b4F5A375F8bE58
           </Text>
         </div>
 
         <hr />
-        <div className="orderly-flex orderly-gap-3">
-          <span className="orderly-text-green-400">Symbol:</span>
+        <div className="flex gap-3">
+          <span className="text-green-400">Symbol:</span>
           <Text {...args} rule="symbol">
             PERP_ETH_USDC
           </Text>
         </div>
 
         <hr />
-        <div className="orderly-flex orderly-gap-3">
-          <span className="orderly-text-green-400">Order Status:</span>
+        <div className="flex gap-3">
+          <span className="text-green-400">Order Status:</span>
           <Text {...args} rule="status">
             {OrderStatus.NEW}
           </Text>

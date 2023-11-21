@@ -1,4 +1,5 @@
 import { type PropsWithChildren, FC } from "react";
+import { twMerge } from "tailwind-merge";
 import { cn } from "@/utils/css";
 
 export type SegmentedItem = {
@@ -23,14 +24,14 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
   if (props.buttons.length < 2) {
     // throw new Error("SegmentedButton must have more than one button");
     return (
-      <div className="orderly-text-red-500">
+      <div className="text-red-500">
         SegmentedButton must have more than one button
       </div>
     );
   }
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-gap-[36px]">
+    <div className="flex flex-row gap-[36px]">
       {props.buttons.map((item, index) => {
         return (
           <_Button
@@ -69,12 +70,12 @@ const _Button = ({
       onClick={(event) => onChange(value)}
       disabled={disabled}
       className={cn(
-        "orderly-min-w-0 orderly-flex-1 orderly-py-1 orderly-bg-fill orderly-text-base-contrast/20 orderly-relative after:orderly-block after:orderly-bg-fill after:orderly-absolute after:orderly-w-[30px] after:orderly-h-full after:orderly-top-0 after:orderly-z-10 orderly-h-[32px]",
-        isActive && "orderly-bg-primary after:orderly-bg-primary",
+        "min-w-0 flex-1 py-1 bg-fill text-base-contrast/20 relative after:block after:bg-fill after:absolute after:w-[30px] after:h-full after:top-0 after:z-10 h-[32px]",
+        isActive && "bg-primary after:bg-primary",
         isFirstChild &&
-          "orderly-rounded-l after:orderly-right-[-15px] after:orderly-skew-x-[-25deg] orderly-pl-[15px]",
+          "rounded-l after:right-[-15px] after:skew-x-[-25deg] pl-[15px]",
         !isFirstChild &&
-          "orderly-rounded-r after:orderly-left-[-15px] after:orderly-skew-x-[-25deg] orderly-pr-[15px]",
+          "rounded-r after:left-[-15px] after:skew-x-[-25deg] pr-[15px]",
         className,
         isActive && activeClassName,
         disabled && disabledClassName

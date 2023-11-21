@@ -80,7 +80,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     modal.alert({
       title: "Remember me",
       message: (
-        <span className="orderly-text-3xs orderly-text-base-contrast/60">
+        <span className="text-3xs text-base-contrast/60">
           Toggle this option to skip these steps next time you want to trade.
         </span>
       ),
@@ -89,14 +89,14 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   return (
     <div>
-      <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-py-4">
+      <div className="text-base-contrast-54 text-2xs py-4">
         Sign two requests to verify ownership of your wallet and enable trading.
         Signing is free.
       </div>
 
-      <Paper className="orderly-bg-base-300">
+      <Paper className="bg-base-300">
         <ListTile
-          className="orderly-text-xs"
+          className="text-xs"
           avatar={
             <StepItem
               active={status <= AccountStatusEnum.NotSignedIn}
@@ -114,7 +114,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           subtitle="Confirm you own this wallet"
         />
         <ListTile
-        className="orderly-text-xs"
+          className="text-xs"
           disabled={status < AccountStatusEnum.SignedIn}
           avatar={
             <StepItem
@@ -130,10 +130,13 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
-      <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center orderly-">
-        <div className="orderly-text-base-contrast-54 orderly-text-xs" onClick={showRememberHint}>
+      <div className="pt-5 pb-7 flex justify-between items-center ">
+        <div
+          className="text-base-contrast-54 text-xs"
+          onClick={showRememberHint}
+        >
           <span>Remember me</span>
-          <InfoIcon className="orderly-inline-block orderly-ml-2" size={14} />
+          <InfoIcon className="inline-block ml-2" size={14} />
         </div>
         <div>
           <Switch checked={remember} onCheckedChange={setRemember} />
@@ -141,7 +144,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
-        className="orderly-text-xs orderly-text-base-contrast"
+          className="text-xs text-base-contrast"
           fullWidth
           disabled={handleStep > 0}
           onClick={onClick}

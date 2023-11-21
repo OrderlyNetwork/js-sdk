@@ -26,11 +26,11 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
     return (
       <>
         {props.testChains && props.testChains.length > 0 && (
-          <div className="orderly-uppercase orderly-text-base-contrast/50 orderly-text-4xs orderly-mb-2">
+          <div className="uppercase text-base-contrast/50 text-4xs mb-2">
             mainnet
           </div>
         )}
-        <div className="orderly-flex orderly-flex-col">
+        <div className="flex flex-col">
           {props.mainChains.map((chain, index) => {
             return (
               <ChainCell
@@ -56,11 +56,11 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
     return (
       <>
         {props.mainChains && props.mainChains.length > 0 && (
-          <div className="orderly-uppercase orderly-text-base-contrast/50 orderly-text-4xs orderly-mb-2">
+          <div className="uppercase text-base-contrast/50 text-4xs mb-2">
             testnet
           </div>
         )}
-        <div className="orderly-flex orderly-flex-col">
+        <div className="flex flex-col">
           {props.testChains.map((chain, index) => {
             return (
               <ChainCell
@@ -79,7 +79,7 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
   }, [props.testChains, props.mainChains, props.currentChainId]);
 
   return (
-    <div className="orderly-pt-5">
+    <div className="pt-5">
       {mainnet}
       {testnet}
     </div>

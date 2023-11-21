@@ -92,7 +92,7 @@ export const ExtraNode: Story = {
         onTabChange={(value) => setValue(value)}
         tabBarExtra={({ toggleContentVisible, contentVisible }) => (
           <button
-            className="orderly-border orderly-px-2 orderly-bg-slate-100"
+            className="border px-2 bg-slate-100"
             onClick={() => {
               toggleContentVisible();
             }}
@@ -102,7 +102,7 @@ export const ExtraNode: Story = {
         )}
       >
         <TabPane title="Tab 1" value="1">
-          <div className="orderly-bg-green-200 orderly-h-[300px]">Tab 1</div>
+          <div className="bg-green-200 h-[300px]">Tab 1</div>
         </TabPane>
         <TabPane title="Tab 2" value="2">
           Tab 2

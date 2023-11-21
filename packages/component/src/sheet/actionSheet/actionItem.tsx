@@ -37,10 +37,10 @@ export const ActionItem: FC<ActionSheetProps> = (props) => {
   return (
     <div
       className={cn(
-        "orderly-flex orderly-justify-center orderly-items-center orderly-text-lg orderly-h-[52px] orderly-cursor-pointer",
+        "flex justify-center items-center text-lg h-[52px] cursor-pointer",
 
         {
-          "orderly-text-primary": props.active,
+          "text-primary": props.active,
         }
       )}
       onClick={onItemClick}

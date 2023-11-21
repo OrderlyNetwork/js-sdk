@@ -40,7 +40,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
     >
-      <div className="orderly-h-full orderly-relative">
+      <div className="h-full relative">
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
@@ -51,7 +51,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         {isLoading && (
-          <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-z-10 orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-800/70 orderly-h-full orderly-min-h-[420px]">
+          <div className="absolute left-0 top-0 right-0 bottom-0 z-10 flex items-center justify-center bg-base-800/70 h-full min-h-[420px]">
             <Spinner />
           </div>
         )}

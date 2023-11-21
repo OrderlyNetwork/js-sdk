@@ -24,15 +24,15 @@ export interface StatisticProps
 }
 
 const alignClasses: Record<string, string> = {
-  left: "orderly-text-left",
-  right: "orderly-text-right",
-  center: "orderly-text-center",
+  left: "text-left",
+  right: "text-right",
+  center: "text-center",
 };
 
 const coloringClasses: Record<string, string> = {
-  lose: "orderly-text-trade-loss",
-  profit: "orderly-text-trade-profit",
-  neutral: "orderly-text-base-contrast/50",
+  lose: "text-trade-loss",
+  profit: "text-trade-profit",
+  neutral: "text-base-contrast/50",
 };
 
 export const Statistic: FC<StatisticProps> = (props) => {

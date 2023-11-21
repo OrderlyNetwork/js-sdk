@@ -29,7 +29,7 @@ export const Default: Story = {
         rule={"percentages"}
         align={"right"}
         coloring
-        valueClassName="orderly-text-3xs"
+        valueClassName={"text-3xs"}
       />
     ),
   },

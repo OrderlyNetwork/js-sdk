@@ -12,7 +12,7 @@ module.exports = {
   // // "./node_modules/rc-slider/**/*.{ts,js,tsx,jsx}",
   // ],
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
-  prefix: 'orderly-',
+  // prefix: 'orderly-',
   theme: {
     fontSize: {
       "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px

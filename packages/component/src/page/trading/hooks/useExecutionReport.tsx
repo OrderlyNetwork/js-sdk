@@ -29,7 +29,7 @@ export function useExecutionReport() {
           <div>
             {title}
             <br />
-            <div className="orderly-text-white/[0.54]">{msg}</div>
+            <div className="text-white/[0.54]">{msg}</div>
           </div>
         );
       }

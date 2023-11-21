@@ -2,21 +2,21 @@ import { cn } from "@/utils/css";
 import { VariantProps, cva } from "class-variance-authority";
 import { FC, PropsWithChildren } from "react";
 
-const tagVariants = cva(["orderly-rounded-[4px]", "orderly-px-2", "orderly-text-4xs", "orderly-inline-block"], {
+const tagVariants = cva(["rounded-[4px]", "px-2", "text-4xs", "inline-block"], {
   variants: {
     size: {
-      small: "orderly-h-[16px]",
-      default: "orderly-h-[18px]",
+      small: "h-[16px]",
+      default: "h-[18px]",
     },
     color: {
-      primary: "orderly-bg-primary/25 orderly-text-primary-light",
+      primary: "bg-primary/25 text-primary-light",
       //   secondary: "bg-secondary text-white",
       // success: "bg-success text-white",
       // danger: "bg-danger text-white",
       // warning: "bg-warning text-white",
       // info: "bg-info text-white",
-      buy: "orderly-bg-trade-profit/[.15] orderly-text-trade-profit",
-      sell: "orderly-bg-trade-loss/[.15] orderly-text-trade-loss",
+      buy: "bg-trade-profit/[.15] text-trade-profit",
+      sell: "bg-trade-loss/[.15] text-trade-loss",
     },
   },
   defaultVariants: {

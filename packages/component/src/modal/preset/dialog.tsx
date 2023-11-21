@@ -27,7 +27,7 @@ const Dialog = create<ConfirmProps>((props) => {
       }}
     >
       <DialogBody>
-        <div className="orderly-py-5 orderly-text-[12px]">{props.content}</div>
+        <div className={"py-5 text-[12px]"}>{props.content}</div>
       </DialogBody>
     </SimpleDialog>
   );

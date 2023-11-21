@@ -9,13 +9,13 @@ interface OrderbookDemoProps {
 
 const OrderbookDemo = (props: OrderbookDemoProps) => {
   return (
-    <div className="orderly-grid orderly-grid-cols-2 orderly-text-slate-700">
+    <div className="grid grid-cols-2 text-slate-700">
       <div>
-        <div className="orderly-bg-trade-profit orderly-text-white">Bids</div>
+        <div className="bg-trade-profit text-white">Bids</div>
         <pre>{JSON.stringify(props.data.bids, null, 2)}</pre>
       </div>
       <div>
-        <div className="orderly-bg-trade-loss orderly-text-white">Asks</div>
+        <div className="bg-trade-loss text-white">Asks</div>
         <pre>{JSON.stringify(props.data.asks, null, 2)}</pre>
       </div>
     </div>

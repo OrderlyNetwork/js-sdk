@@ -10,8 +10,8 @@ const AccountDemo: FC<{
   info: any;
 }> = (props) => {
   return (
-    <div className="orderly-text-black">
-      <div className="orderly-text-lg">Account Info</div>
+    <div className="text-black">
+      <div className="text-lg">Account Info</div>
       ------------------------
       <div>
         <pre>{JSON.stringify(props.info, null, 2)}</pre>

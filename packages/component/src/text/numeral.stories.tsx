@@ -40,8 +40,8 @@ export const SurfixAndPrefix: Story = {
     return (
       <div>
         <Numeral
-          prefix={<span className="orderly-text-base-contrast/50">-</span>}
-          surfix={<span className="orderly-text-base-contrast/50">ETH</span>}
+          prefix={<span className="text-base-contrast/50">-</span>}
+          surfix={<span className="text-base-contrast/50">ETH</span>}
         >
           123123
         </Numeral>

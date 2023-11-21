@@ -47,7 +47,7 @@ export const Coin: FC<CoinProps> = (props) => {
 
   return (
     <div
-      className={cn("orderly-inline-block", props.className)}
+      className={cn("inline-block", props.className)}
       style={{
         width: size,
         height: size,

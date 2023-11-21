@@ -8,7 +8,7 @@ const DepositDemo: FC<{
   allowance: string;
 }> = (props) => {
   return (
-    <div className="orderly-text-black">
+    <div className="text-black">
       <div>
         <span>Wallet balance:</span>
         <span>{props.balance}</span>

@@ -39,7 +39,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, []);
 
   return (
-    <div className="orderly-pr-1">
+    <div className="pr-1">
       <SymbolProvider symbol={symbol}>
         <OrderBook
           level={7}

@@ -6,9 +6,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 const avatarVariants = cva([], {
   variants: {
     size: {
-      small: "orderly-h-[18px] orderly-w-[18px]",
-      medium: "orderly-h-[24px] orderly-w-[24px]",
-      large: "orderly-h-[32px] orderly-w-[32px]",
+      small: "h-[18px] w-[18px]",
+      medium: "h-[24px] w-[24px]",
+      large: "h-[32px] w-[32px]",
     },
   },
   defaultVariants: {
@@ -27,7 +27,7 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "orderly-relative orderly-flex orderly-h-10 orderly-w-10 orderly-shrink-0 orderly-overflow-hidden orderly-rounded-full",
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
       avatarVariants({ size, className })
     )}
     {...props}
@@ -41,7 +41,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("orderly-aspect-square orderly-h-full orderly-w-full", className)}
+    className={cn("aspect-square h-full w-full", className)}
     {...props}
   />
 ));
@@ -54,7 +54,7 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "orderly-flex orderly-h-full orderly-w-full orderly-items-center orderly-justify-center orderly-rounded-full orderly-bg-base-200",
+      "flex h-full w-full items-center justify-center rounded-full bg-base-200",
       className
     )}
     {...props}

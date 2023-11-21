@@ -30,14 +30,14 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
       (props.avatar as NetworkImageProps).type === "chain"
     ) {
       return (
-        <div className="orderly-flex orderly-items-center">
+        <div className={"flex items-center"}>
           <NetworkImage {...(props.avatar as NetworkImageProps)} />
         </div>
       );
     }
 
     if (typeof props.avatar === "string") {
-      return <img src={props.avatar} className="orderly-w-10 orderly-h-10 orderly-rounded-full" />;
+      return <img src={props.avatar} className={"w-10 h-10 rounded-full"} />;
     }
     return props.avatar as React.ReactNode;
   }, [[props.avatar]]);
@@ -45,14 +45,14 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   const children = useMemo(() => {
     if (props.title || props.subtitle) {
       return (
-        <div className="orderly-flex orderly-flex-col orderly-gap-1">
+        <div className={"flex flex-col gap-1"}>
           {props.title && (
-            <div key={"title"} className="orderly-font-semibold">
+            <div key={"title"} className={"font-semibold"}>
               {props.title}
             </div>
           )}
           {props.subtitle && (
-            <div key={"subtitle"} className="orderly-text-3xs orderly-text-base-contrast-54">
+            <div key={"subtitle"} className={"text-3xs text-base-contrast-54"}>
               {props.subtitle}
             </div>
           )}
@@ -66,14 +66,14 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   return (
     <div
       className={cn(
-        "orderly-py-3 orderly-flex orderly-gap-3 hover:orderly-bg-base-200 active:orderly-bg-base-100",
+        "py-3 flex gap-3 hover:bg-base-200 active:bg-base-100",
         props.className,
-        props.disabled && "orderly-opacity-60 orderly-cursor-not-allowed"
+        props.disabled && "opacity-60 cursor-not-allowed"
       )}
       onClick={props.onClick}
     >
       {leading}
-      <div className="orderly-flex-1">{children}</div>
+      <div className={"flex-1"}>{children}</div>
       {props.tailing}
     </div>
   );

@@ -7,10 +7,10 @@ const switchVariants = cva("", {
   variants: {
     color: {
       primary:
-        "data-[state=checked]:orderly-bg-primary data-[state=unchecked]:orderly-bg-fill-light",
+        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-fill-light",
       profit:
-        "data-[state=checked]:orderly-bg-trade-profit data-[state=unchecked]:orderly-bg-fill-light",
-      loss: "data-[state=checked]:orderly-bg-trade-loss data-[state=unchecked]:orderly-bg-fill-light",
+        "data-[state=checked]:bg-trade-profit data-[state=unchecked]:bg-fill-light",
+      loss: "data-[state=checked]:bg-trade-loss data-[state=unchecked]:bg-fill-light",
     },
     // size:{
     //   default:"",
@@ -35,7 +35,7 @@ const Switch = React.forwardRef<
 >(({ className, color, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "orderly-peer orderly-inline-flex orderly-h-[14px] orderly-w-[32px] orderly-shrink-0 orderly-cursor-pointer orderly-items-center orderly-rounded-full orderly-border-2 orderly-border-transparent orderly-transition-colors focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2 focus-visible:orderly-ring-offset-background disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50",
+      "peer inline-flex h-[14px] w-[32px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 ",
       switchVariants({ color, className })
     )}
     {...props}
@@ -43,7 +43,7 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "orderly-pointer-events-none orderly-block orderly-h-[10px] orderly-w-[10px] orderly-rounded-full orderly-bg-white orderly-shadow-lg orderly-ring-0 orderly-transition-transform data-[state=checked]:orderly-translate-x-5 data-[state=unchecked]:orderly-translate-x-0"
+        "pointer-events-none block h-[10px] w-[10px] rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
       )}
     />
   </SwitchPrimitives.Root>

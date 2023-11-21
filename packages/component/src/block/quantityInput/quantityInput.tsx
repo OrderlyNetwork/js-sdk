@@ -49,7 +49,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     <>
       <div
         className={cn(
-          "orderly-bg-base-500 dark:orderly-bg-base-100 orderly-rounded orderly-pl-1 orderly-pr-2 orderly-py-2 focus-within:orderly-bg-bg-base-500 focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
+          "bg-base-500 dark:bg-base-100 rounded pl-1 pr-2 py-2 focus-within:bg-bg-base-500 focus-within:outline focus-within:outline-1 outline-primary",
           props.className,
           {
             "outline outline-1 outline-danger": props.status === "error",
@@ -58,8 +58,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         )}
         onClick={() => inputRef.current?.focus()}
       >
-        <div className="orderly-flex">
-          <div className="orderly-flex-1 orderly-flex orderly-justify-between">
+        <div className="flex">
+          <div className="flex-1 flex justify-between">
             <input
               type="text"
               inputMode="decimal"
@@ -75,7 +75,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
                 });
               }}
               className={
-                "orderly-bg-transparent orderly-h-full orderly-flex-1 orderly-px-2 focus-visible:orderly-outline-none orderly-font-semibold orderly-text-sm orderly-text-base-contrast placeholder:orderly-text-base-contrast-36"
+                "bg-transparent h-full flex-1 px-2 focus-visible:outline-none font-semibold text-sm text-base-contrast placeholder:text-base-contrast-36"
               }
               placeholder={"Quantity"}
             />
@@ -83,7 +83,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             <Button
               variant={"text"}
               size={"small"}
-              className="orderly-font-semibold orderly-text-primary-light orderly-px-2 orderly-min-w-[40px] orderly-text-3xs"
+              className={"font-semibold text-primary-light px-2 min-w-[40px] text-3xs"}
               disabled={!props.maxAmount}
               onClick={(event) => {
                 props?.onValueChange?.({
@@ -111,11 +111,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36"
+            "flex items-center text-4xs justify-between px-2 py-1 text-base-contrast-36"
           }
         >
           <span>{`$${amount}`}</span>
-          <div className="orderly-flex orderly-items-center orderly-space-x-2">
+          <div className="flex items-center space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
                 precision: props.token?.woofi_dex_precision,
@@ -129,11 +129,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       {props.hintMessage && (
         <div
           className={cn(
-            "orderly-mt-2 orderly-text-4xs orderly-relative before:orderly-block orderly-pl-3 before:orderly-w-[4px] before:orderly-rounded-[4px] before:orderly-h-[4px] before:orderly-absolute before:orderly-left-0 before:orderly-top-1/2 before:orderly--translate-y-1/2",
+            "mt-2 text-4xs relative before:block pl-3 before:w-[4px] before:rounded-[4px] before:h-[4px] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
             {
-              "orderly-text-danger-light": props.status === "error",
-              "orderly-before:bg-danger-light": props.status === "error",
-              "orderly-text-warning-light": props.status === "warning",
+              "text-danger-light": props.status === "error",
+              "before:bg-danger-light": props.status === "error",
+              "text-warning-light": props.status === "warning",
             }
           )}
         >

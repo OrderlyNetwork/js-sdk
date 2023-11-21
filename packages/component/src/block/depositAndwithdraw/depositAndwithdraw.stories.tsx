@@ -22,7 +22,7 @@ export const Default: Story = {};
 export const withSheet: Story = {
   render: () => {
     return (
-      <div className="orderly-flex orderly-gap-3">
+      <div className="flex gap-3">
         <button
           onClick={() => {
             modal.show(DepositAndWithdrawWithSheet, { activeTab: "deposit" });

@@ -42,13 +42,13 @@ export const Default: Story = {
         <div>
           Order opened
           <br />
-          <div className="orderly-text-white/[0.54]">Sell ETH-PERP 0.7368</div>
+          <div className="text-white/[0.54]">Sell ETH-PERP 0.7368</div>
         </div>
       );
     };
 
     return (
-      <div className="orderly-flex orderly-gap-3">
+      <div className={"flex gap-3"}>
         <button onClick={showSuccess}>show success</button>
         <button onClick={showError}>show error</button>
         <button onClick={showSubTitle}>show subTitle</button>

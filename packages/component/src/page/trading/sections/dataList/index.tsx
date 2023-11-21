@@ -13,7 +13,7 @@ export const DataListView = () => {
     <Tabs
       value={activeTab}
       onTabChange={setActiveTab}
-      tabBarClassName="orderly-bg-base-700 orderly-text-3xs"
+      tabBarClassName="bg-base-700 text-3xs"
     >
       <TabPane title={<PositionTabTitle />} value="positions">
         <PositionPane />

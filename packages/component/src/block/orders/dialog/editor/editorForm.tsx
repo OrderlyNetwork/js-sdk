@@ -74,36 +74,28 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
     if (dirtyFields["order_price"] && dirtyFields["order_quantity"]) {
       alertText = (
-        <div className="orderly-text-base-contrast-54 orderly-text-2xs">
+        <div className={"text-base-contrast-54 text-2xs"}>
           You agree changing the price of ETH-PERP order to{" "}
-          <span className="orderly-text-warning">
-            {commify(data.order_price!)}
-          </span>{" "}
-          and the quantity to{" "}
-          <span className="orderly-text-warning">
-            {commify(data.order_quantity!)}
-          </span>
-          .
+          <span className="text-warning">{commify(data.order_price!)}</span> and
+          the quantity to{" "}
+          <span className="text-warning">{commify(data.order_quantity!)}</span>.
         </div>
       );
     } else {
       if (dirtyFields["order_price"]) {
         alertText = (
-          <div className="orderly-text-base-contrast-54 orderly-text-2xs">
+          <div className={"text-base-contrast-54 text-2xs"}>
             You agree changing the price of ETH-PERP order to{" "}
-            <span className="orderly-text-warning">
-              {commify(data.order_price!)}
-            </span>
-            .
+            <span className="text-warning">{commify(data.order_price!)}</span>.
           </div>
         );
       }
 
       if (dirtyFields["order_quantity"]) {
         alertText = (
-          <div className="orderly-text-base-contrast-54 orderly-text-2xs">
+          <div className={"text-base-contrast-54 text-2xs"}>
             You agree changing the quantity of ETH-PERP order to{" "}
-            <span className="orderly-text-warning">
+            <span className="text-warning">
               {commify(data.order_quantity!)}
             </span>
             .
@@ -156,27 +148,27 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   return (
     <>
-      <div className="orderly-pb-3 orderly-pt-5 orderly-text-xs">
+      <div className="pb-3 pt-5 text-xs">
         <Text rule="symbol">{order.symbol}</Text>
       </div>
-      <div className="orderly-grid orderly-grid-cols-2">
+      <div className="grid grid-cols-2">
         <Statistic
           label="Order type"
           value={typeText}
-          valueClassName="orderly-text-2xs"
-          labelClassName="orderly-text-4xs-contrast-36"
+          valueClassName={"text-2xs"}
+          labelClassName="text-4xs-contrast-36"
         />
         <Statistic
           label="Last price"
           value={markPrice}
           rule="price"
-          labelClassName="orderly-text-4xs-contrast-36"
-          valueClassName="orderly-text-2xs"
+          labelClassName="text-4xs-contrast-36"
+          valueClassName={"text-2xs"}
         />
       </div>
-      <Divider className="orderly-py-5" />
+      <Divider className="py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
-        <div className="orderly-flex orderly-flex-col orderly-gap-5">
+        <div className="flex flex-col gap-5">
           <Controller
             name="order_price"
             control={control}
@@ -187,10 +179,9 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   suffix={quote}
                   type="text"
                   inputMode="decimal"
-                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
-                  className="orderly-text-right orderly-text-3xs"
+                  className="text-right text-3xs"
                   value={field.value!}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -210,10 +201,9 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   suffix={base}
                   type="text"
                   inputMode="decimal"
-                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
-                  className="orderly-text-right orderly-text-3xs"
+                  className="text-right text-3xs"
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -225,7 +215,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           />
         </div>
 
-        <div className="orderly-py-5">
+        <div className="py-5">
           <Controller
             name="order_quantity"
             control={control}
@@ -248,12 +238,11 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           />
         </div>
 
-        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
+        <div className="grid grid-cols-2 gap-3 py-5">
           <Button
             fullWidth
-            variant="contained"
-            color="tertiary"
             type="button"
+            variant={"outlined"}
             onClick={() => {
               props.onCancel?.();
             }}

@@ -11,8 +11,8 @@ interface NavBarProps {
 export const NavBar: FC<NavBarProps> = (props) => {
   const { logoUrl } = useContext(OrderlyAppContext);
   return (
-    <div className="orderly-flex orderly-flex-row orderly-items-center orderly-px-3 orderly-sticky orderly-top-0 orderly-bg-base-800 orderly-z-20 orderly-border-b orderly-border-b-divider orderly-text-3xs orderly-text-base-contrast">
-      <div className="orderly-grow orderly-flex orderly-flex-row orderly-items-center orderly-gap-4">
+    <div className="flex flex-row items-center px-3 sticky top-0 bg-base-800 z-20 border-b border-b-divider text-3xs text-base-contrast">
+      <div className="grow flex flex-row items-center gap-4">
         <Market symbol={props.symbol} />
         <MarketOverview symbol={props.symbol} />
       </div>

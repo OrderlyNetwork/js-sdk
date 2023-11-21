@@ -15,37 +15,37 @@ export const Cell: FC<MarketCellProps> = (props) => {
 
   const colorClassName = useMemo(() => {
     if (!item["24h_open"] || !item["24h_close"]) {
-      return "orderly-text-base-contrast-54";
+      return "text-base-contrast-54";
     }
 
     if (item["24h_close"] > item["24h_open"]) {
-      return "orderly-text-success-light";
+      return "text-success-light";
     }
 
     if (item["24h_close"] < item["24h_open"]) {
-      return "orderly-text-danger-light";
+      return "text-danger-light";
     }
 
-    return "orderly-text-base-contrast-54";
+    return "text-base-contrast-54";
   }, [item["24h_open"], item["24h_close"]]);
 
   return (
     <div
-      className="orderly-flex orderly-items-center orderly-gap-2 orderly-cursor-pointer"
+      className="flex items-center gap-2 cursor-pointer"
       onClick={() => onItemClick?.(item)}
     >
       <NetworkImage type={"symbol"} symbol={item.symbol} />
-      <div className="orderly-flex orderly-flex-1 orderly-flex-col">
-        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-2xs">
-          <Text rule="symbol" className="orderly-text-base-contrast">{item.symbol}</Text>
+      <div className="flex flex-1 flex-col">
+        <div className="flex items-center justify-between text-2xs">
+          <Text rule="symbol" className="text-base-contrast">{item.symbol}</Text>
           <Numeral precision={quote_dp} className={colorClassName}>
             {item["24h_close"]}
           </Numeral>
         </div>
-        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-4xs">
+        <div className="flex items-center justify-between text-4xs">
           <Numeral.total
             rule="human"
-            className="orderly-text-base-contrast-54"
+            className="text-base-contrast-54"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
           />

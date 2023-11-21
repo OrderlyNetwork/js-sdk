@@ -21,7 +21,7 @@ type Story = StoryObj<typeof Button>;
 export const Default: Story = {
   render: (args) => {
     return (
-      <div className="orderly-flex orderly-gap-3">
+      <div className="flex gap-3">
         <Button {...args} />
         <Button {...args} disabled />
       </div>
@@ -37,8 +37,8 @@ export const Default: Story = {
 export const Buttons = {
   render: () => {
     return (
-      <div className="orderly-flex orderly-flex-col orderly-gap-3">
-        <div className="orderly-flex orderly-gap-3">
+      <div className={"flex flex-col gap-3"}>
+        <div className={"flex gap-3"}>
           <Button variant={"contained"} size={"small"}>
             Contained
           </Button>
@@ -55,7 +55,7 @@ export const Buttons = {
             Outlined
           </Button>
         </div>
-        <div className="orderly-flex orderly-gap-3">
+        <div className={"flex gap-3"}>
           <Button variant={"contained"} color={"primary"}>
             Primary
           </Button>
@@ -81,7 +81,7 @@ export const Segmented = {
   render: () => {
     const [value, setValue] = React.useState("buy");
     return (
-      <div className="orderly-flex orderly-flex-col orderly-gap-3">
+      <div className={"flex flex-col gap-3"}>
         <SegmentedButton
           buttons={[
             { label: "Buy", value: "buy" },
@@ -98,13 +98,13 @@ export const Segmented = {
               label: "Buy",
               value: "buy",
               activeClassName:
-                "orderly-bg-trade-profit orderly-text-trade-profit-foreground after:orderly-bg-trade-profit",
+                "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
             },
             {
               label: "Sell",
               value: "sell",
               activeClassName:
-                "orderly-bg-trade-loss orderly-text-trade-loss-foreground after:orderly-bg-trade-loss",
+                "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
             },
           ]}
           onClick={(value) => {

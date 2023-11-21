@@ -131,16 +131,16 @@ export const SingleSwap: FC<SwapProps> = (props) => {
 
   return (
     <div>
-      <div className="orderly-py-[24px]">
+      <div className="py-[24px]">
         <SwapSymbols from={props.src} to={props.dst} swapInfo={swapInfo} />
         <SwapTime time={chain?.est_txn_mins ?? 0} />
       </div>
       <Divider />
 
       {content}
-      <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
-        <span className="orderly-text-base-contrast-54">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+      <div className="flex justify-center text-3xs gap-2 mt-5">
+        <span className="text-base-contrast-54">Need help?</span>
+        <a href="" className="text-primary-light">
           View FAQs
         </a>
       </div>

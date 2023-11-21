@@ -20,19 +20,19 @@ export const Notice: FC<NoticeProps> = (props) => {
 
   if (warningMessage) {
     return (
-      <div className="orderly-text-center orderly-text-warning orderly-text-3xs">{warningMessage}</div>
+      <div className="text-center text-warning text-3xs">{warningMessage}</div>
     );
   }
 
   if (needCrossChain) {
     return (
-      <div className="orderly-text-center orderly-text-warning orderly-text-3xs orderly-py-2">
+      <div className="text-center text-warning text-3xs py-2">
         <span>
           Cross-chain transaction fees will be charged. To avoid these, use our
           supported
         </span>
         <a
-          className="orderly-text-primary-light orderly-px-1 orderly-cursor-pointer"
+          className="text-primary-light px-1 cursor-pointer"
           onClick={(event) => {
             event.preventDefault();
             props.onOpenPicker();
@@ -47,7 +47,7 @@ export const Notice: FC<NoticeProps> = (props) => {
 
   if (needSwap) {
     return (
-      <div className="orderly-text-center orderly-text-warning orderly-text-3xs">
+      <div className="text-center text-warning text-3xs">
         Please note that swap fees will be charged.
       </div>
     );

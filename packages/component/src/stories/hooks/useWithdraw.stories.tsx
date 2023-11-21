@@ -9,7 +9,7 @@ const WithdrawDemo: FC<{
   [key: string]: any;
 }> = (props) => {
   return (
-    <div className="orderly-text-black">
+    <div className="text-black">
       <div>
         <span>Max:</span>
         <span>{props.maxAmount}</span>

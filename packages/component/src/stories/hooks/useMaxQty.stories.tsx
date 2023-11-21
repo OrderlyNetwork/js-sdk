@@ -17,9 +17,9 @@ const MaxQtyDemo: FC<{
   onReduceOnlyChange?: (reduceOnly: boolean) => void;
 }> = (props) => {
   return (
-    <div className="orderly-text-black orderly-space-y-3">
-      <div className="orderly-flex orderly-gap-5">
-        <div className="orderly-flex orderly-gap-2">
+    <div className="text-black space-y-3">
+      <div className="flex gap-5">
+        <div className="flex gap-2">
           <input
             type="radio"
             id="buy"
@@ -33,7 +33,7 @@ const MaxQtyDemo: FC<{
           <label htmlFor="buy">{OrderSide.BUY}</label>
         </div>
 
-        <div className="orderly-flex orderly-gap-2">
+        <div className="flex gap-2">
           <input
             type="radio"
             id="sell"
@@ -46,7 +46,7 @@ const MaxQtyDemo: FC<{
           />
           <label htmlFor="sell">{OrderSide.SELL}</label>
         </div>
-        <div className="orderly-flex orderly-gap-2">
+        <div className="flex gap-2">
           <input
             type="checkbox"
             id="reduceOnly"
@@ -61,11 +61,11 @@ const MaxQtyDemo: FC<{
         </div>
       </div>
       <hr />
-      <div className="orderly-flex orderly-gap-5">
+      <div className="flex gap-5">
         <span>Symbol:</span>
         <span>{props.symbol}</span>
       </div>
-      <div className="orderly-flex orderly-gap-5">
+      <div className="flex gap-5">
         <span>Max Qty:</span>
         <span>{props.maxQty}</span>
       </div>

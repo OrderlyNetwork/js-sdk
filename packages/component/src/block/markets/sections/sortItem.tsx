@@ -32,8 +32,8 @@ export const SortItem: FC<SortItemProps> = (props) => {
 
   return (
     <div
-      className={cn("orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer", {
-        "orderly-text-base-contrast":
+      className={cn("flex items-center gap-1 cursor-pointer", {
+        "text-base-contrast":
           props.currentValue?.key === props.value &&
           props.currentValue.direction !== SortDirection.NONE,
       })}
@@ -45,10 +45,10 @@ export const SortItem: FC<SortItemProps> = (props) => {
           <ArrowIcon
             size={8}
             className={cx(
-              "orderly-transition-transform",
+              "transition-transform",
               props.currentValue?.direction === SortDirection.ASC
-                ? "orderly-rotate-180"
-                : "orderly-rotate-0"
+                ? "rotate-180"
+                : "rotate-0"
             )}
           />
         )}

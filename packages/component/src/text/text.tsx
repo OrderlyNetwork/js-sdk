@@ -11,15 +11,15 @@ const textVariants = cva([], {
   variants: {
     variant: {},
     type: {
-      primary: "orderly-text-primary",
-      secondary: "orderly-text-secondary",
-      tertiary: "orderly-text-tertiary",
-      quaternary: "orderly-text-gray-300",
-      warning: "orderly-text-warning",
-      danger: "orderly-text-danger",
-      success: "orderly-text-success",
-      buy: "orderly-text-trade-profit",
-      sell: "orderly-text-trade-loss",
+      primary: "text-primary",
+      secondary: "text-secondary",
+      tertiary: "text-tertiary",
+      quaternary: "text-gray-300",
+      warning: "text-warning",
+      danger: "text-danger",
+      success: "text-success",
+      buy: "text-trade-profit",
+      sell: "text-trade-loss",
     },
   },
 });
@@ -96,7 +96,7 @@ export const Text: FC<PropsWithChildren<TextProps>> = (props) => {
   const contentWithSurfix = useMemo(() => {
     if (typeof surfix === "undefined") return content;
     return (
-      <span className="orderly-flex orderly-gap-1">
+      <span className="flex gap-1">
         {content}
         {surfix}
       </span>

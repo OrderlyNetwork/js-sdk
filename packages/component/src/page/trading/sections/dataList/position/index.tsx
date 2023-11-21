@@ -84,6 +84,7 @@ export const PositionPane = () => {
       .catch(() => {});
   }, []);
 
+  console.log("isloading", loading);
 
   return (
     <PositionsView

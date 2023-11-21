@@ -1,6 +1,7 @@
 import React, { FC, PropsWithChildren, useContext } from "react";
 import { TabContext } from "./tabContext";
-import { cn } from "@/utils/css";
+import { cx } from "class-variance-authority";
+import { twMerge } from "tailwind-merge";
 
 export interface TabContentProps {
   keepAlive?: boolean;
@@ -12,17 +13,17 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
 
   return (
     <div
-      className={cn(
-        "orderly-transition-all orderly-grid",
-        contentVisible ? "orderly-grid-rows-[1fr]" : "orderly-grid-rows-[0fr]"
+      className={twMerge(
+        cx(
+          "transition-all grid",
+          contentVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        )
       )}
       // onTransitionEnd={() => {
       //
       // }}
     >
-      <div className="orderly-overflow-hidden orderly-relative">
-        {props.children}
-      </div>
+      <div className="overflow-hidden relative">{props.children}</div>
     </div>
   );
 };

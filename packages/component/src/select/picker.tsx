@@ -7,25 +7,25 @@ import { ActionSheet, ActionSheetItem } from "@/sheet";
 import { ArrowIcon } from "@/icon";
 
 const pickerVariants = cva(
-  "orderly-flex orderly-flex-row orderly-items-stretch orderly-rounded focus-within:orderly-outline orderly-outline-primary orderly-bg-fill orderly-text-base-contrast/50",
+  "flex flex-row items-stretch rounded focus-within:outline outline-primary bg-fill text-base-contrast/50",
   {
     variants: {
       size: {
-        small: "orderly-px-2 orderly-h-[26px] orderly-text-3xs",
-        default: "orderly-px-3 orderly-h-[40px]",
-        large: "orderly-px-6 orderly-py-3",
+        small: "px-2 h-[26px] text-3xs",
+        default: "px-3 h-[40px]",
+        large: "px-6 py-3",
       },
       fullWidth: {
-        true: "orderly-w-full",
+        true: "w-full",
       },
       disabled: {
-        true: "orderly-opacity-50 orderly-cursor-not-allowed",
+        true: "opacity-50 cursor-not-allowed",
       },
       color: {
         // primary: "text-primary",
-        default: "orderly-text-base-contract",
-        buy: "orderly-text-trade-profit",
-        sell: "orderly-text-trade-loss",
+        default: "text-base-contract",
+        buy: "text-trade-profit",
+        sell: "text-trade-loss",
       },
     },
     defaultVariants: {
@@ -104,7 +104,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       >
         <div
           className={cn(
-            "orderly-space-x-1 orderly-text-base-contrast/80",
+            "space-x-1 text-base-contrast/80",
             pickerVariants({
               size,
               color,
@@ -114,11 +114,11 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
             })
           )}
         >
-          <div className="orderly-flex-1 orderly-flex orderly-justify-start orderly-items-center orderly-text-inherit">
+          <div className="flex-1 flex justify-start items-center text-inherit ">
             {text}
           </div>
-          <div className="orderly-flex orderly-items-center">
-            <ArrowIcon size={12} className="orderly-text-inherit" />
+          <div className={"flex items-center"}>
+            <ArrowIcon size={12} className={"text-inherit"} />
           </div>
         </div>
       </ActionSheet>

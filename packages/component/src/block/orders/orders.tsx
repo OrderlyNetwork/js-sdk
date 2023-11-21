@@ -27,7 +27,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
       cancelOrder={props.cancelOrder}
       editOrder={props.editOrder}
     >
-      <StatisticStyleProvider labelClassName="orderly-text-3xs orderly-text-base-contrast/30">
+      <StatisticStyleProvider labelClassName={"text-3xs text-base-contrast/30"}>
         <Toolbar
           onCancelAll={props.onCancelAll}
           onShowAllSymbolChange={props.onShowAllSymbolChange}

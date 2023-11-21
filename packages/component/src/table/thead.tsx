@@ -16,9 +16,9 @@ export const THead: FC<THeadProps> = (props) => {
           return (
             <td
               className={cn(
-                "orderly-px-3 orderly-py-[3px]",
-                column.align === "right" && "orderly-text-right",
-                props.bordered && "orderly-border-b orderly-border-base-contrast/20",
+                "px-3 py-[3px]",
+                column.align === "right" && "text-right",
+                props.bordered && "border-b border-base-contrast/20",
                 props.className
               )}
               key={column.dataIndex}

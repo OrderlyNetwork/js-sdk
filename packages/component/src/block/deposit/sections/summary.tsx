@@ -109,7 +109,7 @@ export const Summary: FC<SummaryProps> = (props) => {
         <>
           <div>
             Destination gas fee:
-            <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
+            <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               destinationGasFee,
               {
                 precision: feeDecimalsOffset(
@@ -133,7 +133,7 @@ export const Summary: FC<SummaryProps> = (props) => {
         <>
           <div>
             Swap fee:
-            <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
+            <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               swapFee,
               {
                 precision: feeDecimalsOffset(props.src?.woofi_dex_precision),
@@ -152,7 +152,7 @@ export const Summary: FC<SummaryProps> = (props) => {
         <>
           <div>
             Bridge fee:
-            <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
+            <span className="text-base-contrast/60 mx-2">{`${parseNumber(
               bridgeFee,
               {
                 precision: feeDecimalsOffset(props.src?.woofi_dex_precision),
@@ -169,7 +169,7 @@ export const Summary: FC<SummaryProps> = (props) => {
     modal.alert({
       title: "Fee",
       message: (
-        <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs">{message}</div>
+        <div className="text-base-contrast/30 space-y-3 text-3xs">{message}</div>
       ),
     });
   }, [
@@ -181,8 +181,8 @@ export const Summary: FC<SummaryProps> = (props) => {
   ]);
 
   return (
-    <div className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast-36">
-      <div className="orderly-flex orderly-items-center orderly-justify-between">
+    <div className={"flex-1 text-4xs text-base-contrast-36"}>
+      <div className="flex items-center justify-between">
         <div>
           {`1 ${props.src?.symbol} = ${
             props.price
@@ -200,8 +200,8 @@ export const Summary: FC<SummaryProps> = (props) => {
           />
         ) : null}
       </div>
-      <div className="orderly-mt-1 orderly-inline-flex orderly-items-center" onClick={onShowFee}>
-        <InfoIcon size={14} className="orderly-mr-1" />
+      <div className="mt-1 inline-flex items-center" onClick={onShowFee}>
+        <InfoIcon size={14} className="mr-1" />
 
         <span>{feeElement}</span>
       </div>

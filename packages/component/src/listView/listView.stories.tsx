@@ -68,7 +68,7 @@ export const OrdersList: Story = {
       <ListView<OrderItem>
         dataSource={dataSource}
         renderItem={function (item): ReactNode {
-          return <ListTile className="orderly-bg-red-200">{item.price}</ListTile>;
+          return <ListTile className="bg-red-200">{item.price}</ListTile>;
         }}
       />
     );

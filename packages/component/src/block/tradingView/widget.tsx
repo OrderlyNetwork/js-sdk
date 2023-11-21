@@ -53,7 +53,7 @@ export const Widget = forwardRef<IChartingLibraryWidget, WidgetProps>(
     }, [containerRef, scriptHTML, type, scriptSRC]);
 
     return (
-      <div className="orderly-w-full orderly-h-full" ref={containerRef} id={containerId} />
+      <div className="w-full h-full" ref={containerRef} id={containerId} />
     );
   }
 );
