@@ -252,6 +252,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
             fullWidth
             variant="contained"
             color="tertiary"
+            type="button"
             onClick={() => {
               props.onCancel?.();
             }}
