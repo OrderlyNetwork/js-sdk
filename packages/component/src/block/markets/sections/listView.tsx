@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { Statistic } from "@/statistic";
 import { SortDirection } from "@/block/markets/sections/sortItem";
 import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
-import { API } from "@orderly.network/core";
+import { API } from "@orderly.network/types";
 import { Numeral } from "@/text";
 import { NumeralWithSymbol } from "@/text/numeralWithSymbol";
 import { Cell } from "./cell";

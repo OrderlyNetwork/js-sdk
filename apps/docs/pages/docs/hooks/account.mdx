@@ -1,11 +1,18 @@
 import { CodeLive } from "@/components/doc/preview/codeLive";
 import accountStateRaw from "@/example/accountState.example";
 
+import { CodePreview } from "@/components/doc/preview/codePreview";
+
+import appRawCode from "@/example/web3_onboard/app.example";
+import accountRawCode from "@/example/web3_onboard/account.example";
+import walletButtonRawCode from "@/example/web3_onboard/walletButton.example";
+import walletConnectProviderRawCode from "@/example/web3_onboard/walletConnectProvider.example";
+
 # Account
 
 `@orderly.network/hooks` provides the following hooks for handling account-related logic:
 
-- [`useAccount`](/apis/modules/__orderly_network___hooks/useAccount): Retrieves the current account info and status. You can also use this hook to get the ['Account'](/apis/modules/__orderly_network___hooks/Account) singleton.
+- [`useAccount`](/apis/modules/__orderly_network___hooks/useAccount): Retrieves the current account info and status. You can also use this hook to get the ['Account'](/apis/modules/__orderly_network___core/Account) singleton.
 - [`useCollateral`](/apis/modules/__orderly_network___hooks/useCollateral): Retrieves the current balance of the account.
 - [`useLeverage`](/apis/modules/__orderly_network___hooks/useLeverage): Retrieves the current account leverage.
 
@@ -54,7 +61,7 @@ interface AccountState {
 }
 ```
 
-- Subscribe to the `change:status` event in the 'Account' instance. (`account` is a singleton of the `Account` instance: more information can be found [here](/apis/modules/__orderly_network___hooks/Account))。
+- Subscribe to the `change:status` event in the 'Account' instance. (`account` is a singleton of the `Account` instance: more information can be found [here](/apis/modules/__orderly_network___core/Account))。
 
 ```typescript /account/
 import { useAccount } from "@orderly.network/hooks";
@@ -75,7 +82,7 @@ useEffect(() => {
 
 ### Update account status
 
-`@orderly.network/hooks` currently does not provide the functionality for connecting wallets, **builders have to handle wallet connection logic themselves**.
+`@orderly.network/hooks` currently does not provide the functionality for connecting wallets, **builders have to handle wallet connection logic themselves**, [refer here](#how-to-integrate-wallet).
 
 Once the user has successfully connected a wallet, use the `setAddress` method to pass the `address` to the `Account` instance. 3 additional parameters need to be passed when calling `setAddress`:
 
@@ -105,7 +112,29 @@ const nextState = await account.setAddress("<address>", {
 });
 ```
 
-### Demo
+## How to integrate wallet?
+
+Connect to the user's wallet through a third-party wallet connection library.
+
+**web3-onboard**
+
+Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain support to your project. [more](https://onboard.blocknative.com/docs/modules/react)
+
+<CodePreview
+  dependencies={{
+    "@web3-onboard/injected-wallets": "^2.10.0",
+    "@web3-onboard/react": "^2.8.13",
+  }}
+  code={{
+    "/App.js": appRawCode,
+    "/account.tsx": accountRawCode,
+    "/walletButton.tsx": walletButtonRawCode,
+    "/walletConnectProvider.tsx": walletConnectProviderRawCode,
+  }}
+  options={{
+    editorHeight: 500,
+  }}
+/>
 
 <CodeLive code={accountStateRaw} isPrivate />
 
