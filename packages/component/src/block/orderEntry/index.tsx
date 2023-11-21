@@ -382,13 +382,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
                       methods.clearErrors();
                     }}
-                    // onValueChange={(value: any) => {
-                    //   // setValue?.("order_type", value.value);
-                    //   field.onChange(value.value);
-                    //   methods.setValue("order_price", "", {
-                    //     shouldValidate: true,
-                    //   });
-                    // }}
+                  // onValueChange={(value: any) => {
+                  //   // setValue?.("order_type", value.value);
+                  //   field.onChange(value.value);
+                  //   methods.setValue("order_price", "", {
+                  //     shouldValidate: true,
+                  //   });
+                  // }}
                   />
                 );
               }}
@@ -516,7 +516,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
             <StatusGuardButton>
               <Button
-              className="orderly-text-xs"
+                id="orderly-order-entry-confirm-button"
+                className="orderly-text-xs"
                 type="submit"
                 loading={methods.formState.isSubmitting}
                 color={side === OrderSide.BUY ? "buy" : "sell"}

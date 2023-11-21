@@ -50,8 +50,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
-                  ? "orderly-text-trade-loss"
-                  : "orderly-text-base-contrast/50"
+                    ? "orderly-text-trade-loss"
+                    : "orderly-text-base-contrast/50"
               )}
             >
               <Numeral>{item["unrealized_pnl"]}</Numeral>
@@ -149,6 +149,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       </div>
       <div className="orderly-flex orderly-justify-end orderly-items-center orderly-gap-2 orderly-py-2">
         <Button
+          id="orderly-position-cell-limit-close-button"
           variant={"outlined"}
           size={"small"}
           color={"tertiary"}
@@ -158,6 +159,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           Limit close
         </Button>
         <Button
+          id="orderly-position-cell-mark-close-button"
           variant={"outlined"}
           size={"small"}
           color={"tertiary"}

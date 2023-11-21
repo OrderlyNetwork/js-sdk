@@ -65,7 +65,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   return (
     <div className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full">
       {status !== AccountStatusEnum.NotConnected &&
-      !errors?.ChainNetworkNotSupport ? (
+        !errors?.ChainNetworkNotSupport ? (
         <AccountTotal
           status={status}
           currency={props.currency}
@@ -92,6 +92,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
             <SheetTrigger asChild>
               <Button
+                id="orderly-bottom-nav-bar-connect-button"
                 size={"small"}
                 // variant={"gradient"}
                 className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"

@@ -120,6 +120,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
       </div>
       <div className="orderly-flex orderly-gap-3 orderly-justify-end orderly-mt-2">
         <Button
+          id="orderly-pending-cell-edit-button"
           variant="outlined"
           size="small"
           color="tertiary"
@@ -129,6 +130,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           Edit
         </Button>
         <Button
+          id="orderly-pending-cell-cancel-button"
           variant="outlined"
           color="tertiary"
           size="small"

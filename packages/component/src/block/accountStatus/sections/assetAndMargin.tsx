@@ -270,10 +270,10 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         </div>
       </Paper>
       <div className="orderly-flex orderly-gap-3 orderly-py-5 orderly-text-xs">
-        <Button fullWidth onClick={onDeposit}>
+        <Button fullWidth onClick={onDeposit} id="orderly-assets-margin-deposit-button">
           Deposit
         </Button>
-        <Button fullWidth variant={"outlined"} onClick={onWithdraw}>
+        <Button fullWidth variant={"outlined"} onClick={onWithdraw} id="orderly-assets-margin-withdraw-button">
           Withdraw
         </Button>
       </div>

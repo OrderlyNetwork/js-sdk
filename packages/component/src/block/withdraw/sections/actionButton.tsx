@@ -74,6 +74,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <StatusGuardButton>
           <Button
+
             fullWidth
             onClick={onWithdraw}
             disabled={props.disabled || props.loading}
@@ -88,6 +89,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
+          id="orderly-withdraw-confirm-button"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -111,6 +113,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     }
     return (
       <Button
+        id="orderly-withdraw-confirm-button"
         fullWidth
         onClick={() =>
           openChainPicker?.().then(({ id }) => {

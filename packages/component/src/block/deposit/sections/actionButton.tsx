@@ -20,8 +20,8 @@ import { useTranslation } from "@/i18n";
 
 export interface ActionButtonProps {
   chains:
-    | API.NetworkInfos[]
-    | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
+  | API.NetworkInfos[]
+  | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
   chain: CurrentChain | null;
   token?: API.TokenInfo;
   onDeposit: () => Promise<any>;
@@ -146,6 +146,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             token={token?.symbol}
             label={label}
             disabled={disabled}
+            buttonId="orderly-deposit-confirm-button"
           />
         </StatusGuardButton>
       );
@@ -154,6 +155,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
+          id="orderly-deposit-confirm-button"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -174,7 +176,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={onOpenPicker}>
+      <Button fullWidth onClick={onOpenPicker} id="orderly-deposit-confirm-button">
         {t("block.withdraw.switchNetwork")}
       </Button>
     );
