@@ -32,7 +32,7 @@ export const useOrderStream = (params: Params) => {
   const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
       // reached the end
-      if (previousPageData && !previousPageData.length) return null;
+      if (previousPageData && !previousPageData.rows?.length) return null;
 
       const search = new URLSearchParams([
         ["size", size.toString()],
