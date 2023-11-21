@@ -31,7 +31,6 @@ export const useOrderStream = (params: Params) => {
 
   const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
-      console.log("--- pageIndex -->>>", pageIndex);
       // reached the end
       if (previousPageData && !previousPageData.rows?.length) return null;
 
@@ -56,7 +55,7 @@ export const useOrderStream = (params: Params) => {
     },
     {
       initialSize: 1,
-      revalidateFirstPage: false,
+      // revalidateFirstPage: false,
       onError: (err) => {
         console.error("fetch failed::::", err);
       },
