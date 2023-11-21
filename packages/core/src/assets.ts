@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from "ethers-v6";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore/configStore";
 import { definedTypes } from "./constants";

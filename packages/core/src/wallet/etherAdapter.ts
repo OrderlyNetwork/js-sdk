@@ -1,5 +1,5 @@
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
-import { BrowserProvider, ethers, toNumber } from "ethers";
+import { BrowserProvider, ethers, toNumber } from "ethers-v6";
 import {
   EthersError,
   getParsedEthersError,
