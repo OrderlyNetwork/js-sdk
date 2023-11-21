@@ -39,7 +39,7 @@ export const SwapDetails: FC<Props> = (props) => {
     <>
       <div className="orderly-text-4xs orderly-space-y-3 orderly-py-[24px]">
         <ListTile
-          className="orderly-py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
             <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-primary-light orderly-text-4xs">
               <Fuel size={14} />
@@ -64,7 +64,7 @@ export const SwapDetails: FC<Props> = (props) => {
         </ListTile>
 
         <ListTile
-          className="orderly-py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
             <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
               <Numeral
@@ -87,7 +87,7 @@ export const SwapDetails: FC<Props> = (props) => {
         </ListTile>
         {mode === SwapMode.Cross && (
           <ListTile
-            className="orderly-py-0"
+            className="orderly-py-0 hover:orderly-bg-transparent"
             tailing={
               <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
                 <Numeral
@@ -111,7 +111,7 @@ export const SwapDetails: FC<Props> = (props) => {
         )}
 
         <ListTile
-          className="orderly-py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
             <Numeral
               unit={props.dst.token}
@@ -126,7 +126,7 @@ export const SwapDetails: FC<Props> = (props) => {
           <span className="orderly-text-base-contrast-36">Minimum received</span>
         </ListTile>
         <ListTile
-          className="orderly-py-0 orderly-text-4xs"
+          className="orderly-py-0 orderly-text-4xs hover:orderly-bg-transparent"
           tailing={`1 ${props.src.token} = ${parseNumber(info.price, {
             rule: "price",
             precision: 3,
@@ -134,13 +134,13 @@ export const SwapDetails: FC<Props> = (props) => {
         >
           <span className="orderly-text-base-contrast-36">Price</span>
         </ListTile>
-        <ListTile className="orderly-py-0" tailing={
+        <ListTile className="orderly-py-0 hover:orderly-bg-transparent" tailing={
           <span className="orderly-text-4xs">1%</span>
         }>
           <span className="orderly-text-base-contrast-36">Slippage tolerance</span>
         </ListTile>
       </div>
-      <Button className="orderly-text-xs" fullWidth onClick={() => props.onConfirm()}>
+      <Button id="orderly-swap-config-button" className="orderly-text-xs" fullWidth onClick={() => props.onConfirm()}>
         Confirm swap
       </Button>
     </>
