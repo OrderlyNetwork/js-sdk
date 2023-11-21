@@ -42,8 +42,8 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
   //
 
   return (
-    <div className={"flex gap-2"}>
-      <Input className="text-4xs text-base-contrast-36" containerClassName="bg-base-500 rounded-borderRadius" disabled value={address} fullWidth />
+    <div className="orderly-flex orderly-gap-2">
+      <Input className="orderly-text-4xs orderly-text-base-contrast-36" containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius" disabled value={address} fullWidth />
       <ChainSelect
         value={chain}
         onValueChange={props.onChainChange}

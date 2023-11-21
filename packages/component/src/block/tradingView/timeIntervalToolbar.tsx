@@ -63,13 +63,13 @@ export const TimeIntervalToolbar: FC<TimeIntervalToolbarProps> = ({
   // );
 
   return (
-    <div className="flex justify-around h-[44px]">
+    <div className="orderly-flex orderly-justify-around orderly-h-[44px]">
       {intervals.map((interval) => {
         return (
           <button
             className={cn(
-              "py-3 px-1 flex-1 text-base-contrast/20",
-              timeInterval === interval.value && "text-base-contrast"
+              "orderly-py-3 orderly-px-1 orderly-flex-1 orderly-text-base-contrast/20",
+              timeInterval === interval.value && "orderly-text-base-contrast"
             )}
             key={interval.value}
             onClick={() => {

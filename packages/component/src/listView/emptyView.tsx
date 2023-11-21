@@ -13,13 +13,13 @@ export const EmptyView: FC<EmptyViewProps> = (props) => {
   }, [props.icon]);
 
   const text = useMemo(() => {
-    return <div className={"text-3xs"}>No results found.</div>;
+    return <div className="orderly-text-3xs">No results found.</div>;
   }, [props.text]);
 
   return (
-    <div className={"flex flex-col items-center justify-center py-[50px]"}>
+    <div className="orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-py-[50px]">
       <div>{icon}</div>
-      <div className={"p-5"}>{text}</div>
+      <div className="orderly-p-5">{text}</div>
     </div>
   );
 };

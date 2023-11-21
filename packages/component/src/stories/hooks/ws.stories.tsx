@@ -5,7 +5,7 @@ import { useWS } from "@orderly.network/hooks";
 
 const WebSocketDemo: FC<{}> = (props) => {
   return (
-    <div className="text-black">
+    <div className="orderly-text-black">
       <div>
         <button>Subscrip</button>
       </div>

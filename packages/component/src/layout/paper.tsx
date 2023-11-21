@@ -3,14 +3,14 @@ import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
 
-const paperVariants = cva(["rounded p-3"], {
+const paperVariants = cva(["orderly-rounded orderly-p-3"], {
   variants: {
     variant: {
-      outline: "border border-base-100 ",
-      contained: "bg-base-300",
+      outline: "orderly-border orderly-border-base-100 ",
+      contained: "orderly-bg-base-300",
     },
     square: {
-      true: "rounded-none",
+      true: "orderly-rounded-none",
     },
   },
   defaultVariants: {

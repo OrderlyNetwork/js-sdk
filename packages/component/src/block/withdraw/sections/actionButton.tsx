@@ -74,6 +74,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <StatusGuardButton>
           <Button
+
             fullWidth
             onClick={onWithdraw}
             disabled={props.disabled || props.loading}
@@ -88,6 +89,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (chains?.length === 1) {
       return (
         <Button
+          id="orderly-withdraw-confirm-button"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -111,6 +113,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     }
     return (
       <Button
+        id="orderly-withdraw-confirm-button"
         fullWidth
         onClick={() =>
           openChainPicker?.().then(({ id }) => {
@@ -134,13 +137,13 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport && (
-        <div className="text-warning text-3xs text-center px-[20px] py-3">
+        <div className="orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3">
           {chainWarningMessage}
         </div>
       )}
 
-      <div className="flex justify-center text-xs">
-        <div className="py-3 min-w-[200px]">{actionButton}</div>
+      <div className="orderly-flex orderly-justify-center orderly-text-xs">
+        <div className="orderly-py-3 orderly-min-w-[200px]">{actionButton}</div>
       </div>
     </>
   );

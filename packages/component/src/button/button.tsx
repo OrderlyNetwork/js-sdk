@@ -11,7 +11,7 @@ import { Spinner } from "@/spinner";
 
 const buttonVariants = cva(
   [
-    "rounded transition-colors min-w-[60px] align-middle inline-flex items-center justify-center gap-1",
+    "orderly-rounded orderly-transition-colors orderly-min-w-[60px] orderly-align-middle orderly-inline-flex orderly-items-center orderly-justify-center orderly-gap-1",
   ],
   {
     variants: {
@@ -19,40 +19,43 @@ const buttonVariants = cva(
        * @default contained
        */
       variant: {
-        text: "text-slate-500 hover:bg-slate-100",
+        text: "orderly-text-slate-500 hover:orderly-bg-slate-100",
         outlined:
-          "text-slate-500 bg-transparent border border-slate-500 hover:bg-slate-100",
-        contained: "text-white bg-slate-500 hover:bg-slate-600 shadow-button",
-        gradient: "bg-gradient-to-r from-slate-100 to-slate-600",
+          "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500 hover:orderly-bg-slate-100",
+        contained:
+          "orderly-text-white orderly-bg-slate-500 hover:orderly-bg-slate-600 orderly-shadow-button",
+        gradient:
+          "orderly-bg-gradient-to-r orderly-from-slate-100 orderly-to-slate-600",
       },
       /**
        * @default default
        */
       size: {
-        small: "px-3 h-[26px] text-3xs",
-        default: "px-4 py-1 h-[40px]",
-        large: "px-6 py-3",
+        small: "orderly-px-3 orderly-h-[26px] orderly-text-3xs",
+        default: "orderly-px-4 orderly-py-1 orderly-h-[40px]",
+        large: "orderly-px-6 orderly-py-3",
       },
       color: {
         primary:
-          "text-primary hover:bg-primary hover:text-white active:bg-primary/90",
+          "orderly-text-primary hover:orderly-bg-primary hover:orderly-text-white active:orderly-bg-primary/90",
         secondary:
-          "text-secondary bg-secondary hover:bg-secondary hover:text-white active:bg-secondary/90",
-        tertiary: "bg-tertiary",
+          "orderly-text-secondary orderly-bg-secondary hover:orderly-bg-secondary hover:orderly-text-white active:orderly-bg-secondary/90",
+        tertiary: "orderly-bg-tertiary",
         success:
-          "text-success bg-transparent hover:bg-success hover:text-white active:bg-success/90",
-        buy: "text-white bg-trade-profit hover:bg-trade-profit/90 active:bg-trade-profit/90",
-        sell: "text-white bg-trade-loss hover:bg-trade-loss/90 active:bg-trade-loss/90",
-        danger: "text-danger bg-danger hover:bg-danger/90 active:bg-danger/90",
+          "orderly-text-success orderly-bg-transparent hover:orderly-bg-success hover:orderly-text-white active:orderly-bg-success/90",
+        buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit/90 active:orderly-bg-trade-profit/90",
+        sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss/90 active:orderly-bg-trade-loss/90",
+        danger:
+          "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
       },
       // evlevation: {
       //
       // },
       fullWidth: {
-        true: "w-full",
+        true: "orderly-w-full",
       },
       disabled: {
-        true: "opacity-50 cursor-not-allowed",
+        true: "orderly-opacity-50 orderly-cursor-not-allowed",
       },
     },
     compoundVariants: [
@@ -60,60 +63,70 @@ const buttonVariants = cva(
         variant: "text",
         color: "primary",
         class:
-          "text-primary bg-transparent hover:bg-slate-100 hover:text-primary",
+          "orderly-text-primary orderly-bg-transparent hover:orderly-bg-slate-100 hover:orderly-text-primary",
       },
 
       {
         variant: "contained",
         color: "primary",
-        class: "bg-primary hover:bg-primary/90 text-base-contrast",
+        class:
+          "orderly-bg-primary hover:orderly-bg-primary/90 orderly-text-base-contrast",
       },
       {
         variant: "contained",
         color: "primary",
         disabled: true,
-        class: "bg-base-400 hover:bg-base-400 text-base-contrast/15",
+        class:
+          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast/15",
       },
       {
         variant: "contained",
         color: "secondary",
-        class: "bg-secondary text-base-contrast hover:bg-secondary/90",
+        class:
+          "orderly-bg-secondary orderly-text-base-contrast hover:orderly-bg-secondary/90",
+      },
+      {
+        variant: "contained",
+        color: "tertiary",
+        class:
+          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast",
       },
       {
         variant: "contained",
         color: "danger",
-        class: "bg-danger text-base-contrast hover:bg-danger/90",
+        class:
+          "orderly-bg-danger orderly-text-base-contrast hover:orderly-bg-danger/90",
       },
       {
         variant: "outlined",
         color: "primary",
         class:
-          "text-primary bg-transparent border border-primary hover:bg-primary/10",
+          "orderly-text-primary orderly-bg-transparent orderly-border orderly-border-primary-darken hover:orderly-bg-primary/10",
       },
       {
         variant: "outlined",
         color: "buy",
         class:
-          "text-trade-profit bg-transparent border border-trade-profit hover:bg-trade-profit/10 hover:text-trade-profit",
+          "orderly-text-trade-profit orderly-bg-transparent orderly-border orderly-border-trade-profit hover:orderly-bg-trade-profit/10 hover:orderly-text-trade-profit",
       },
       {
         variant: "outlined",
         color: "tertiary",
         class:
-          "text-tertiary bg-transparent border border-tertiary hover:bg-tertiary/10 hover:text-tertiary",
+          "orderly-text-base-contrast-54 orderly-bg-transparent orderly-border orderly-border-base-contrast-36 hover:orderly-bg-tertiary/10 hover:orderly-text-tertiary",
       },
 
       {
         variant: "outlined",
         color: "sell",
         class:
-          "text-trade-loss bg-transparent border border-trade-loss hover:bg-trade-loss/10 hover:text-white",
+          "orderly-text-trade-loss orderly-bg-transparent orderly-border orderly-border-trade-loss hover:orderly-bg-trade-loss/10 hover:orderly-text-white",
       },
       {
         variant: "text",
         color: "primary",
         class:
-          "text-primary bg-transparent hover:text-primary hover:bg-primary/10",
+          "orderly-text-primary orderly-bg-transparent hover:orderly-text-primary hover:orderly-bg-primary/10",
       },
     ],
     defaultVariants: {
@@ -126,7 +139,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "disabled" | "color">,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   /**
    * If `true`, the button will show a loading indicator.
    * @default false
@@ -152,7 +165,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
     if (!!loading) {
       return (
         <>
-          <Spinner size={"small"} className="mr-[4px]" />
+          <Spinner size={"small"} className="orderly-mr-[4px]" />
           {props.children}
         </>
       );
@@ -169,8 +182,8 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           disabled,
           fullWidth,
         }),
-        `button button-$fvariant} button-$icolor) button-${size}`,
-        className
+        className,
+        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`,
       )}
       disabled={Boolean(disabled)}
       {...props}

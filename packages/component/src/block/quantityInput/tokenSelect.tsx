@@ -43,7 +43,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
         <button
           disabled={(tokens?.length ?? 0) < 2 || disabled}
           className={
-            "flex items-center gap-1 text-3xs text-base-contrast-80 mr-2 "
+            "orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs orderly-text-base-contrast-80 orderly-mr-2 "
           }
         >
           <NetworkImage
@@ -63,7 +63,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
           props.onClosed?.();
         }}
       >
-        <DialogHeader className="after:hidden">Select token</DialogHeader>
+        <DialogHeader className="after:orderly-hidden">Select token</DialogHeader>
         <DialogBody>
           <TokenListView
             tokens={props.tokens}

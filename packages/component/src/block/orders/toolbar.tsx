@@ -12,14 +12,14 @@ interface Props {
 
 export const Toolbar: FC<Props> = (props) => {
   return (
-    <div className="flex justify-between items-center py-3 px-4">
-      <div className={"flex items-center gap-2"}>
+    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-py-3 orderly-px-4">
+      <div className="orderly-flex orderly-items-center orderly-gap-2">
         <Checkbox
           id={"showAll"}
           checked={props.showAllSymbol}
           onCheckedChange={props.onShowAllSymbolChange}
         />
-        <Label htmlFor={"showAll"} className={"text-base-contrast-54"}>
+        <Label htmlFor={"showAll"} className="orderly-text-base-contrast-54">
           Show all instruments
         </Label>
       </div>

@@ -87,17 +87,17 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const icon = useMemo(() => {
     if (props.settingChain) {
-      return <Spinner size={"small"} className="text-primary-light" />;
+      return <Spinner size={"small"} className="orderly-text-primary-light" />;
     }
     if (chains?.length > 1) {
-      return <ArrowLeftRight size={16} className="text-primary-light" />;
+      return <ArrowLeftRight size={16} className="orderly-text-primary-light" />;
     }
     return null;
   }, [chains?.length, props.settingChain]);
 
   return (
     <button
-      className="flex w-full items-center px-2 rounded bg-base-500"
+      className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
       disabled={(chains?.length ?? 0) < 2 || props.settingChain}
       onClick={onClick}
     >
@@ -107,7 +107,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
         size={"small"}
         rounded
       />
-      <span className="flex-1 px-2 text-3xs text-left">
+      <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
         {currentChain?.name ?? "Unknown"}
       </span>
       {icon}

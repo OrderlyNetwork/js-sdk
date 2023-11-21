@@ -46,19 +46,19 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
           <Fragment key={index}>
             <span
               className={cn(
-                "absolute top-[7px] w-[6px] h-[6px] rounded-[6px] border border-fill-light bg-fill pointer-events-none translate-x-[-50%]",
+                "orderly-absolute orderly-top-[7px] orderly-w-[6px] orderly-h-[6px] orderly-rounded-[6px] orderly-border orderly-border-fill-light orderly-bg-fill orderly-pointer-events-none orderly-translate-x-[-50%]",
                 {
-                  "border-primary bg-primary":
+                  "orderly-border-primary orderly-bg-primary":
                     props.color === "primary" &&
                     _value >= __value &&
                     _value > 0,
-                  "border-primary-light bg-primary-light":
+                  "orderly-border-primary-light orderly-bg-primary-light":
                     props.color === "primary-light" &&
                     _value >= __value &&
                     _value > 0,
-                  "border-trade-profit bg-trade-profit":
+                  "orderly-border-trade-profit orderly-bg-trade-profit":
                     props.color === "buy" && _value >= __value && _value > 0,
-                  "border-trade-loss bg-trade-loss":
+                  "orderly-border-trade-loss orderly-bg-trade-loss":
                     props.color === "sell" && _value >= __value && _value > 0,
                 }
               )}
@@ -71,7 +71,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
               <span
                 key={index}
                 className={cn(
-                  "absolute top-[20px] text-2xs text-base-contrast/50 pointer-events-none translate-x-[-50%]"
+                  "orderly-absolute orderly-top-[20px] orderly-text-2xs orderly-text-base-contrast/50 orderly-pointer-events-none orderly-translate-x-[-50%]"
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,

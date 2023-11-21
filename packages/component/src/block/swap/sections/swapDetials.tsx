@@ -37,11 +37,11 @@ export const SwapDetails: FC<Props> = (props) => {
 
   return (
     <>
-      <div className="text-4xs space-y-3 py-[24px]">
+      <div className="orderly-text-4xs orderly-space-y-3 orderly-py-[24px]">
         <ListTile
-          className="py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
-            <div className="flex items-center gap-1 text-primary-light text-4xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-primary-light orderly-text-4xs">
               <Fuel size={14} />
               <Numeral
                 unit={props.nativeToken?.symbol}
@@ -51,7 +51,7 @@ export const SwapDetails: FC<Props> = (props) => {
               >
                 {info.dstGasFee}
               </Numeral>
-              <span className="text-primary-light/60">{`($${new Decimal(
+              <span className="orderly-text-primary-light/60">{`($${new Decimal(
                 info.dstGasFee
               )
                 .mul(props.nativePrice)
@@ -60,13 +60,13 @@ export const SwapDetails: FC<Props> = (props) => {
             </div>
           }
         >
-          <span className="text-base-contrast-36">Destination gas fee</span>
+          <span className="orderly-text-base-contrast-36">Destination gas fee</span>
         </ListTile>
 
         <ListTile
-          className="py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
-            <div className="flex items-center gap-1 text-4xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
               <Numeral
                 unit={props.src.token}
                 padding={false}
@@ -74,7 +74,7 @@ export const SwapDetails: FC<Props> = (props) => {
               >
                 {info.swapFee}
               </Numeral>
-              <span className="text-base-contrast-36">{`($${new Decimal(
+              <span className="orderly-text-base-contrast-36">{`($${new Decimal(
                 info.swapFee
               )
                 .mul(props.markPrice)
@@ -83,13 +83,13 @@ export const SwapDetails: FC<Props> = (props) => {
             </div>
           }
         >
-          <span className="text-base-contrast-36">Swap fee</span>
+          <span className="orderly-text-base-contrast-36">Swap fee</span>
         </ListTile>
         {mode === SwapMode.Cross && (
           <ListTile
-            className="py-0"
+            className="orderly-py-0 hover:orderly-bg-transparent"
             tailing={
-              <div className="flex items-center gap-1 text-4xs">
+              <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
                 <Numeral
                   unit={props.src.token}
                   precision={props.src.displayDecimals + 3}
@@ -97,7 +97,7 @@ export const SwapDetails: FC<Props> = (props) => {
                 >
                   {info.bridgeFee}
                 </Numeral>
-                <span className="text-base-contrast-36">{`($${new Decimal(
+                <span className="orderly-text-base-contrast-36">{`($${new Decimal(
                   info.bridgeFee
                 )
                   .mul(props.markPrice)
@@ -106,41 +106,41 @@ export const SwapDetails: FC<Props> = (props) => {
               </div>
             }
           >
-            <span className="text-base-contrast-36">Bridge fee</span>
+            <span className="orderly-text-base-contrast-36">Bridge fee</span>
           </ListTile>
         )}
 
         <ListTile
-          className="py-0"
+          className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
             <Numeral
               unit={props.dst.token}
               padding={false}
               precision={props.dst.displayDecimals}
-              className="text-4xs"
+              className="orderly-text-4xs"
             >
               {info.received}
             </Numeral>
           }
         >
-          <span className="text-base-contrast-36">Minimum received</span>
+          <span className="orderly-text-base-contrast-36">Minimum received</span>
         </ListTile>
         <ListTile
-          className="py-0 text-4xs"
+          className="orderly-py-0 orderly-text-4xs hover:orderly-bg-transparent"
           tailing={`1 ${props.src.token} = ${parseNumber(info.price, {
             rule: "price",
             precision: 3,
           })} ${props.dst.token}`}
         >
-          <span className="text-base-contrast-36">Price</span>
+          <span className="orderly-text-base-contrast-36">Price</span>
         </ListTile>
-        <ListTile className="py-0" tailing={
-          <span className="text-4xs">1%</span>
+        <ListTile className="orderly-py-0 hover:orderly-bg-transparent" tailing={
+          <span className="orderly-text-4xs">1%</span>
         }>
-          <span className="text-base-contrast-36">Slippage tolerance</span>
+          <span className="orderly-text-base-contrast-36">Slippage tolerance</span>
         </ListTile>
       </div>
-      <Button className="text-xs" fullWidth onClick={() => props.onConfirm()}>
+      <Button id="orderly-swap-config-button" className="orderly-text-xs" fullWidth onClick={() => props.onConfirm()}>
         Confirm swap
       </Button>
     </>

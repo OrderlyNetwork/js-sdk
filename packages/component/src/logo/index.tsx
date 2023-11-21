@@ -39,7 +39,7 @@ export const Logo: FC<LogoProps> = ({
 
   return (
     <div
-      className="flex flex-row justify-center items-center"
+      className="orderly-flex orderly-flex-row orderly-justify-center orderly-items-center"
       style={{ width: `${size}px`, height: `${size}px` }}
     >
       <a href={link}>{logo}</a>

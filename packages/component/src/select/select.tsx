@@ -26,24 +26,24 @@ export type SelectOption = {
   label: string;
 };
 
-const selectVariants = cva(["rounded transition-colors bg-fill"], {
+const selectVariants = cva(["orderly-rounded orderly-transition-colors orderly-bg-fill"], {
   variants: {
     size: {
-      small: "px-2 h-[28px]",
-      default: "px-2 py-1 h-[40px]",
-      large: "px-6 py-3",
+      small: "orderly-px-2 orderly-h-[28px]",
+      default: "orderly-px-2 orderly-py-1 orderly-h-[40px]",
+      large: "orderly-px-6 orderly-py-3",
     },
     fullWidth: {
-      true: "w-full",
+      true: "orderly-w-full",
     },
     color: {
       // primary: "text-primary",
-      default: "text-base-contract",
-      buy: "text-trade-profit",
-      sell: "text-trade-loss",
+      default: "orderly-text-base-contract",
+      buy: "orderly-text-trade-profit",
+      sell: "orderly-text-trade-loss",
     },
     disabled: {
-      true: "opacity-50 cursor-not-allowed",
+      true: "orderly-opacity-50 orderly-cursor-not-allowed",
     },
   },
   defaultVariants: {
@@ -109,27 +109,27 @@ const Select: FC<SelectProps> = ({
         <div
           ref={triggerRef}
           className={cn(
-            "flex flex-row items-center rounded focus-within:outline space-x-1",
+            "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-1",
             selectVariants({
               size,
               disabled: disabled || options.length === 0,
               className,
               color,
             }),
-            open && "bg-popover"
+            open && "orderly-bg-popover"
           )}
           // onClick={() => {
           //   if (options.length === 0) return;
           //   setOpen(!open);
           // }}
         >
-          <div className="flex-1 text-3xs text-inherit">
+          <div className="orderly-flex-1 orderly-text-3xs orderly-text-inherit">
             {typeof label !== "undefined" && <>{label}</>}
           </div>
 
           <ArrowIcon
             size={12}
-            className={cx("transition-transform", open && "rotate-180")}
+            className={cx("orderly-transition-transform", open && "orderly-rotate-180")}
           />
         </div>
       </DropdownMenuTrigger>
@@ -150,9 +150,9 @@ const Select: FC<SelectProps> = ({
               textValue={option.value}
               key={index}
               className={cn(
-                "text-base-contrast/60",
+                "orderly-text-base-contrast/60",
                 option.value === props.value &&
-                  (color === "buy" ? "text-trade-profit" : "text-trade-loss")
+                  (color === "buy" ? "orderly-text-trade-profit" : "orderly-text-trade-loss")
               )}
               onSelect={(evnet) => {
                 // @ts-ignore

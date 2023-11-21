@@ -47,16 +47,16 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
 
   if (props.status < AccountStatusEnum.EnableTrading) {
     return (
-      <div className="flex items-center text-base-contrast-54">
-        <div className="flex flex-col">
-          <div className="flex items-center text-4xs gap-2">
+      <div className="orderly-flex orderly-items-center orderly-text-base-contrast-54">
+        <div className="orderly-flex orderly-flex-col">
+          <div className="orderly-flex orderly-items-center orderly-text-4xs orderly-gap-2">
             <span>Total value</span>
 
-            <span className="text-base">≈</span>
+            <span className="orderly-text-base">≈</span>
           </div>
-          <div className="flex gap-2">
+          <div className="orderly-flex orderly-gap-2">
             --
-            <span className="text-base-contrast/20">{currency}</span>
+            <span className="orderly-text-base-contrast/20">{currency}</span>
           </div>
         </div>
       </div>
@@ -66,34 +66,34 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className="flex items-center cursor-pointer text-base-contrast-54">
-          <div className="flex flex-col text-4xs">
-            <div className="flex items-center">
+        <div className="orderly-flex orderly-items-center orderly-cursor-pointer orderly-text-base-contrast-54">
+          <div className="orderly-flex orderly-flex-col orderly-text-4xs">
+            <div className="orderly-flex orderly-items-center">
               <span>Total value</span>
               <button
-                className="text-primary-light px-2"
+                className="orderly-text-primary-light orderly-px-2"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggleVisible();
                 }}
               >
                 {visible ? (
-                  <EyeOffIcon className="text-primary" size={12} />
+                  <EyeOffIcon className="orderly-text-primary" size={12} />
                 ) : (
-                  <EyeIcon className="text-primary" size={12} />
+                  <EyeIcon className="orderly-text-primary" size={12} />
                 )}
               </button>
 
-              <span className="text-base">≈</span>
+              <span className="orderly-text-base">≈</span>
             </div>
-            <div className="flex gap-2 text-base-contrast">
+            <div className="orderly-flex orderly-gap-2 orderly-text-base-contrast">
               {balance}
-              <span className="text-base-contrast-20">{currency}</span>
+              <span className="orderly-text-base-contrast-20">{currency}</span>
             </div>
           </div>
-          <Divider vertical className="px-3" />
+          <Divider vertical className="orderly-px-3" />
 
-          <div className="border border-solid px-2 rounded border-primary-light text-primary-light text-4xs h-[30px] leading-[30px] flex items-center">
+          <div className="orderly-border orderly-border-solid orderly-px-2 orderly-rounded orderly-border-primary-light orderly-text-primary-light orderly-text-4xs orderly-h-[30px] orderly-leading-[30px] orderly-flex orderly-items-center">
             {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
             <Numeral precision={2} surfix="x">
               {currentLeverage}

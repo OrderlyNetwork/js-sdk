@@ -34,8 +34,8 @@ type Story = StoryObj<typeof AccountStatusBar>;
 export const Default: Story = {
   render: (args) => {
     return (
-      <div className="'h-screen">
-        <div className="fiexed left-0 bottom-0">
+      <div className="orderly-'h-screen">
+        <div className="orderly-fiexed orderly-left-0 orderly-bottom-0">
           <AccountStatusBar {...args} />
         </div>
       </div>

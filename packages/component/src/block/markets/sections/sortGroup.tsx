@@ -42,8 +42,8 @@ export const SortGroup: FC<Props> = (props) => {
   }, [sortKey, direction]);
 
   return (
-    <div className={"flex justify-between text-4xs pt-5 pb-3 text-tertiary"}>
-      <div className={"flex items-center gap-1"}>
+    <div className="orderly-flex orderly-justify-between orderly-text-4xs orderly-pt-5 orderly-pb-3 orderly-text-tertiary">
+      <div className="orderly-flex orderly-items-center orderly-gap-1">
         <div>Instrument</div>
         <div>/</div>
         <SortItem
@@ -53,7 +53,7 @@ export const SortGroup: FC<Props> = (props) => {
           currentValue={currentValue}
         />
       </div>
-      <div className={"flex items-center gap-1"}>
+      <div className="orderly-flex orderly-items-center orderly-gap-1">
         <SortItem
           label={"Price"}
           value={"price"}

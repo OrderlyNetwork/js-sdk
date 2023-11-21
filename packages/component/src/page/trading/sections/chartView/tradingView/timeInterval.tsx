@@ -35,10 +35,10 @@ const timeIntervals = [
 
 export const TimeIntervals = () => {
   return (
-    <div className="flex py-2">
+    <div className="orderly-flex orderly-py-2">
       {timeIntervals.map((interval) => {
         return (
-          <button key={interval.value} className="px-2 text-slate-400">
+          <button key={interval.value} className="orderly-px-2 orderly-text-slate-400">
             {interval.name}
           </button>
         );
