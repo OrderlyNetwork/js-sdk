@@ -54,6 +54,7 @@
     "bs58": "^5.0.0",
     "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
+    "ethers": "^6.7.1",
     "postcss": "^8.4.26",
     "postcss-import": "^15.1.0",
     "prop-types": "^15.8.1",

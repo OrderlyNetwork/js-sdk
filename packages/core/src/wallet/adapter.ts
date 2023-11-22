@@ -1,4 +1,4 @@
-import { TransactionRequest, TransactionResponse } from "ethers-v6";
+import { TransactionRequest, TransactionResponse } from "ethers";
 
 export interface IWalletAdapter {
   //   get address(): string;

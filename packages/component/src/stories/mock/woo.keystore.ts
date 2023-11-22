@@ -3,6 +3,9 @@ import {
   OrderlyKeyPair,
   BaseOrderlyKeyPair,
 } from "@orderly.network/core";
+
+import { decodeBase58 } from "ethers";
+
 export class WooKeyStore extends BaseKeyStore {
   getOrderlyKey(): OrderlyKeyPair {
     const parsedConfigs = this.parseLocalStorageConfigs();

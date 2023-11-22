@@ -6,9 +6,9 @@ import {
   parseUnits,
   formatUnits,
   Numeric,
-} from "ethers-v6";
+} from "ethers";
 
-export { parseUnits } from "ethers-v6";
+export { parseUnits } from "ethers";
 
 export type SignatureDomain = {
   name: string;
