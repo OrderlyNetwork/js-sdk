@@ -1,4 +1,4 @@
-import { TransactionRequest, TransactionResponse } from "ethers-v6";
+import { TransactionRequest, TransactionResponse } from "ethers";
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
 import Web3 from "web3";
 
