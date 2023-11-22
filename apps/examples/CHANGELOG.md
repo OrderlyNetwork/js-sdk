@@ -1,5 +1,12 @@
 # examples
 
+## 0.1.68
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.2
+
 ## 0.1.67
 
 ### Patch Changes

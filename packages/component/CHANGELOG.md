@@ -1,5 +1,11 @@
 # @orderly.network/react
 
+## 0.1.2
+
+### Patch Changes
+
+- fix bug
+
 ## 0.0.94
 
 ### Patch Changes

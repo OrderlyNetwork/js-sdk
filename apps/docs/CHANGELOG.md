@@ -1,5 +1,12 @@
 # @orderly/docs
 
+## 0.1.38
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.2
+
 ## 0.1.37
 
 ### Patch Changes
