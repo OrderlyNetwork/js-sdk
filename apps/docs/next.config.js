@@ -17,7 +17,7 @@ const nextConfig = {
   // ],
   webpack: (config, { isServer }) => {
     config.module.rules.push({
-      test: /\.example\.(ts|tsx)$/i,
+      test: /\.example\.(js|ts|tsx)$/i,
       loader: "raw-loader",
     });
 
@@ -33,12 +33,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   async redirects() {
-    return [{
-      source: '/',
-      destination: '/docs/hooks/overview',
-      permanent: false,
-    }]
-  }
+    return [
+      {
+        source: "/",
+        destination: "/docs/hooks/overview",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = withNextra(nextConfig);

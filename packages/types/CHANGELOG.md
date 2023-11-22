@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.1
+
+### Patch Changes
+
+- export usePrivateInfiniteQuery
+
 ## 0.1.0
 
 ### Minor Changes

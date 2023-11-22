@@ -24,6 +24,7 @@ export const CodePreview: FC<Props> = (props) => {
         customSetup={{
           dependencies: {
             "@orderly.network/hooks": "latest",
+
             axios: "latest",
             ...dependencies,
           },
