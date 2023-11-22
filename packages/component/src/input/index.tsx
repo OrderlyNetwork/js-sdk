@@ -117,6 +117,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
             }
           >
+            {/* @ts-ignore */}
             <X size={16} className="text-base-contrast-54" />
           </span>
         </button>

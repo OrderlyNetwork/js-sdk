@@ -2,13 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React from "react";
 import { TradeHistory } from ".";
-import {
-  OrderlyProvider,
-  SymbolProvider,
-} from "../../provider/orderlyProvider";
+
 // import { OrderEditFormDialog } from "./dialog/editor";
 
 import { useMarketTradeStream } from "@orderly.network/hooks";
+import { SymbolProvider } from "../../provider/symbolProvider";
 
 const meta: Meta<typeof TradeHistory> = {
   //   tags: ["autodocs"],

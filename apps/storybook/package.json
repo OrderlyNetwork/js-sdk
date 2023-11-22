@@ -17,6 +17,7 @@
     "@orderly.network/react": "workspace:*",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
     "@storybook/addon-essentials": "^7.3.2",
     "@storybook/addon-interactions": "^7.3.2",
     "@storybook/addon-links": "^7.3.2",

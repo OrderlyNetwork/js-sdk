@@ -3,8 +3,8 @@ async function request(url: string, options: RequestInit) {
   if (!url.startsWith("http")) {
     throw new Error("url must start with http(s)");
   }
-  const urlInstance = new URL(url);
-  const response = await fetch(urlInstance, {
+  // const urlInstance = new URL(url);
+  const response = await fetch(url, {
     ...options,
     // mode: "cors",
     // credentials: "include",
@@ -59,7 +59,7 @@ async function get<R>(
     }
     // 根据返回的数据结构，返回需要的数据
     if (Array.isArray(res.data["rows"])) {
-      return res.data["rows"] as R;
+      return res.data["rows"] as unknown as R;
     }
     return res.data;
   }

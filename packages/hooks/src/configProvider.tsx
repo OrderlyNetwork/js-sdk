@@ -34,11 +34,11 @@ export interface ConfigProviderProps {
   networkId: NetworkId;
 }
 
-export const OrderlyConfigProvider: FC<
-  PropsWithChildren<
+export const OrderlyConfigProvider = (
+  props: PropsWithChildren<
     RequireAtLeastOne<ConfigProviderProps, "brokerId" | "configStore">
   >
-> = (props) => {
+) => {
   const [account, setAccount] = React.useState<Account | null>(null);
   const { configStore, keyStore, getWalletAdapter, brokerId, networkId } =
     props;

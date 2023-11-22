@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -11,6 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c && pnpm run build-tailwind",
+    "build:tsup": "tsup",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
@@ -27,7 +28,6 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
     "@orderly.network/core": "workspace:*",
-    
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -46,12 +46,11 @@
     "@storybook/theming": "^7.3.2",
     "@tailwindcss/typography": "^0.5.9",
     "@theguild/remark-npm2yarn": "^0.1.1",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@web3-onboard/injected-wallets": "^2.10.4",
-    "@web3-onboard/react": "^2.8.11",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "@orderly.network/web3-onboard": "workspace:*",
+   
     "autoprefixer": "^10.4.14",
-    "bs58": "^5.0.0",
     "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
     "ethers": "^6.7.1",
@@ -70,14 +69,14 @@
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
-    "typescript": "^4.5.2",
-    "web3": "^4.1.1"
+    "tsup": "^7.1.0",
+    "typescript": "^4.5.2"
   },
   "dependencies": {
+    "@orderly.network/hooks": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/hooks": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
@@ -95,9 +94,9 @@
     "class-variance-authority": "^0.6.1",
     "ethereum-blockies-base64": "^1.0.2",
     "lucide-react": "^0.265.0",
-    "react-intl": "^6.4.4",
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",
+    "react-intl": "^6.4.4",
     "tailwind-merge": "^1.14.0"
   },
   "publishConfig": {

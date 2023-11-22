@@ -1,18 +1,34 @@
 {
-  "name": "@orderly.network/onboard",
-  "version": "0.0.1",
+  "name": "@orderly.network/web3-onboard",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
   "license": "ISC",
+  "dependencies": {
+    "@orderly.network/hooks": "workspace:*",
+    "@web3-onboard/core": "^2.21.2",
+    "@web3-onboard/injected-wallets": "2.10.9",
+    "@web3-onboard/react": "2.8.13"
+  },
   "devDependencies": {
+    "@types/react": "^18.2.38",
     "react": "^18.2.0",
+    "tsconfig": "workspace:*",
     "tsup": "^7.1.0"
   },
   "peerDependencies": {
     "react": "^18.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

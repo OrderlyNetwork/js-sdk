@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -16,15 +16,15 @@
     "dist"
   ],
   "peerDependencies": {
-    "react": "^18.2.0",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.3",
     "@types/ramda": "^0.29.3",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.2.38",
     "jest": "^29.6.1",
     "react": "^18.2.0",
     "react-test-renderer": "^18.2.0",
@@ -36,8 +36,8 @@
   "dependencies": {
     "@layerzerolabs/scan-client": "^0.0.6",
     "@orderly.network/core": "workspace:*",
-    "@orderly.network/perp": "workspace:*",
     "@orderly.network/net": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "ramda": "^0.29.0",
     "swr": "^2.2.4",

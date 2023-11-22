@@ -23,6 +23,11 @@ export * from "./orderlyContext";
 export type { ConfigProviderProps } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
 
+export {
+  WalletConnectorContext,
+  useWalletConnector,
+} from "./walletConnectorContext";
+
 export * from "./orderly/orderlyHooks";
 
 import useSWR, { type SWRConfiguration, SWRConfig } from "swr";

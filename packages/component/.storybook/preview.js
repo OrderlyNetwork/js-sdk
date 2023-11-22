@@ -1,18 +1,10 @@
 /** @type { import('@storybook/react').Preview } */
 import { withThemeByDataAttribute } from "@storybook/addon-styling";
 import injectedModule from "@web3-onboard/injected-wallets";
-import {
-  Web3OnboardProvider,
-  init,
-  useConnectWallet,
-} from "@web3-onboard/react";
-import { OnboardConnectorProvider, OrderlyProvider,OrderlyAppProvider } from "../src";
-import {
-  BaseContractManager,
-  EtherAdapter,
-  LocalStorageStore,
-  MemoryConfigStore,
-} from "@orderly.network/core";
+
+import { OrderlyAppProvider } from "../src";
+
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 import "../src/tailwind.css"; // tailwind css
 import chains from "./chains";
@@ -22,7 +14,6 @@ const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
 // const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`
 const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
 const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
-
 
 const Arbitrum = {
   id: 421613,
@@ -54,42 +45,6 @@ const Arbitrum = {
 //   },
 // ];
 
-
-const wallets = [injectedModule()];
-const web3Onboard = init({
-  apiKey,
-  connect: {
-    autoConnectAllPreviousWallet: true,
-  },
-  wallets,
-  chains,
-  appMetadata: {
-    name: "WooFi Dex",
-    // icon: blocknativeIcon,
-    description: "WooFi Dex",
-    recommendedInjectedWallets: [
-      { name: "Coinbase", url: "https://wallet.coinbase.com/" },
-      { name: "MetaMask", url: "https://metamask.io" },
-    ],
-    agreement: {
-      version: "1.0.0",
-      termsUrl: "https://www.blocknative.com/terms-conditions",
-      privacyUrl: "https://www.blocknative.com/privacy-policy",
-    },
-    gettingStartedGuide: "https://blocknative.com",
-    explore: "https://blocknative.com",
-  },
-  accountCenter: {
-    desktop: {
-      enabled: false,
-    },
-    mobile: {
-      enabled: false,
-    },
-  },
-  theme: "dark",
-});
-
 const preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -120,20 +75,18 @@ const preview = {
   },
   decorators: [
     (Story) => {
-     
       return (
-        <OnboardConnectorProvider>
+        <ConnectorProvider>
           <OrderlyAppProvider
             networkId="mainnet"
             brokerId="woofi_pro"
             onlyTestnet={false}
-            
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"
           >
             <Story />
           </OrderlyAppProvider>
-        </OnboardConnectorProvider>
+        </ConnectorProvider>
       );
     },
     withThemeByDataAttribute({
@@ -151,4 +104,3 @@ const preview = {
 };
 
 export default preview;
-

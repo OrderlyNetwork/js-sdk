@@ -1,6 +1,5 @@
-export { OrderlyProvider } from "./orderlyProvider";
 export {
-  OnboardConnectorProvider,
+  // OnboardConnectorProvider,
   WalletConnectorContext,
 } from "./walletConnectorProvider";
 

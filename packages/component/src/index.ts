@@ -1,7 +1,7 @@
 // export { Button } from "./button";
 export {
-  OrderlyProvider,
-  OnboardConnectorProvider,
+  // OrderlyProvider,
+  // OnboardConnectorProvider,
   WalletConnectorContext,
   OrderlyAppProvider,
 } from "./provider";

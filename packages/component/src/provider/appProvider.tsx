@@ -15,6 +15,7 @@ import { TooltipProvider } from "@/tooltip/tooltip";
 import { WalletConnectorContext } from "./walletConnectorProvider";
 import { WSObserver } from "@/dev/wsObserver";
 import {
+  useWalletConnector,
   useSessionStorage,
   OrderlyConfigProvider,
   ConfigProviderProps,
@@ -74,7 +75,7 @@ export const OrderlyAppProvider: FC<
     wallet: currentWallet,
     setChain,
     chains,
-  } = useContext(WalletConnectorContext);
+  } = useWalletConnector();
 
   // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
 
@@ -88,6 +89,8 @@ export const OrderlyAppProvider: FC<
 
   const checkChainId = useCallback(
     (chainId: string): boolean => {
+      console.log("checkChainId", chainId, chains);
+
       if (!chainId || !chains) {
         return false;
       }
