@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { account, positions } from "@orderly.network/futures";
 
 import { type SWRConfiguration } from "swr";
+import useSWRSubscription from "swr/subscription";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
 import { type API } from "@orderly.network/types";
@@ -13,6 +14,7 @@ import { OrderEntity } from "@orderly.network/types";
 
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
+import { useWS } from "../useWS";
 
 import { useEventEmitter } from "../useEventEmitter";
 
@@ -51,7 +53,7 @@ export const usePositionStream = (
   const {
     data,
     error,
-    // mutate: updatePositions,
+    mutate: updatePositions,
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
@@ -61,10 +63,17 @@ export const usePositionStream = (
     ...options,
 
     formatter: (data) => data,
-    onError: (err) => {},
+    onError: (err) => { },
   });
 
   //
+
+  const positionsStream = usePositionUpdateStream((positions) => {
+    console.log("position message", positions);
+      updatePositions();
+  });
+
+
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -75,8 +84,8 @@ export const usePositionStream = (
       typeof symbol === "undefined" || symbol === ""
         ? data.rows
         : data.rows.filter((item) => {
-            return item.symbol === symbol;
-          });
+          return item.symbol === symbol;
+        });
 
     let unrealPnL_total = zero,
       notional_total = zero,
@@ -246,8 +255,8 @@ export const usePositionStream = (
       loading: false,
       // showSymbol,
       error,
-      loadMore: () => {},
-      refresh: () => {},
+      loadMore: () => { },
+      refresh: () => { },
     },
   ];
 };
@@ -257,3 +266,46 @@ export const pathOr_unsettledPnLPathOr = pathOr(0, [
   "aggregated",
   "unsettledPnL",
 ]);
+
+
+const usePositionUpdateStream = (callback: ({ }) => void) => {
+  const ws = useWS();
+  /// params { 'symbol': positionQty, ...}
+  const positionList = useRef<any>({});
+  return useSWRSubscription("positionUpdate", (key, { next }) => {
+    const unsubscribe = ws.privateSubscribe(
+      // { event: "subscribe", topic: "markprices" },
+      "position",
+      {
+        onMessage: (message: any) => {
+
+          const { positions } = message;
+
+          let update = false;
+          for (const p in positions) {
+            const { symbol, positionQty } = positions[p];
+
+            if (positionList.current[symbol] !== positionQty) {
+              update = true;
+              positionList.current[symbol] = positionQty;
+            }
+          }
+
+          if (update) {
+            callback(positions.current);
+          }
+
+          next(null, positionList);
+        },
+        // onUnsubscribe: () => {
+        //   return "markprices";
+        // },
+        onError: (error: any) => { },
+      }
+    );
+
+    return () => {
+      unsubscribe?.();
+    };
+  });
+};
