@@ -83,7 +83,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
             size={"small"}
             loading={props.loading}
             // variant={"gradient"}
-            className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-300 orderly-h-[30px]"
+            className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
