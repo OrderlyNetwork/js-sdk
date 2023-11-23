@@ -1,3 +1,9 @@
+import { Components } from "@/components/theming/components";
+
 export default function Page() {
-  return <div>Theme</div>;
+  return (
+    <div>
+      <Components />
+    </div>
+  );
 }

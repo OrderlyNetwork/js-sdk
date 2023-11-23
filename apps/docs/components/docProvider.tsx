@@ -1,5 +1,4 @@
 import { useAccount } from "@orderly.network/hooks";
-import { useConnectWallet } from "@web3-onboard/react";
 import { FC, PropsWithChildren, useEffect } from "react";
 
 export const DocProvider: FC<PropsWithChildren> = ({ children }) => {

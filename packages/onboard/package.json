@@ -2,7 +2,8 @@
   "name": "@orderly.network/web3-onboard",
   "version": "0.0.5",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",

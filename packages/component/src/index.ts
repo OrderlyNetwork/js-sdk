@@ -11,3 +11,5 @@ export * from "./input";
 export * from "./tab";
 
 export * from "./page";
+
+export * from "./block";
