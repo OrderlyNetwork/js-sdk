@@ -15,7 +15,7 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
     }));
   }, [props.depth]);
   return (
-    <div className="orderly-py-2">
+    <div className="orderly-pt-2">
       {/* <Select size={"small"} value={"0.001"} /> */}
       <Picker
         options={options}
