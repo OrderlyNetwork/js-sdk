@@ -31,6 +31,7 @@ init({
       rpcUrl: "https://rpc.ankr.com/arbitrum",
     },
   ],
+  theme: "dark",
 });
 
 export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {

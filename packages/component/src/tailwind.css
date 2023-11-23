@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 @layer base {
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    margin: 0; 
+    margin: 0;
   }
-  input[type=number] {
-      -moz-appearance:textfield;
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
   :root {
     --onboard-modal-z-index: 100;
@@ -18,16 +18,15 @@
     --orderly-color-primary: 51 95 252;
     --orderly-color-primary-light: 96 140 255;
     --orderly-color-primary-darken: 96 140 255;
-    
+
     --orderly-color-secondary: 51 57 72;
     --orderly-color-tertiary: 97 100 104;
     --orderly-color-quaternary: 218 218 218;
     /*--orderly-color-disabled:218 218 218;*/
-    
+
     --orderly-color-danger: 255 68 124;
     --orderly-color-success: 27 32 40;
     --orderly-color-warning: 229 199 0;
-
 
     --orderly-color-background: 27 32 40;
     --orderly-color-background-contrast: 255 255 255;
@@ -64,7 +63,6 @@
 
     --orderly-color-popover: 51 57 72;
     --orderly-color-popover-foreground: 255 255 255;
-
 
     --orderly-color-fill-active: 40 46 58;
 
@@ -117,7 +115,7 @@
   }
   [data-o-theme="orderly"] {
     /* colors */
-   
+
     --orderly-color-primary: 182 79 255;
     --orderly-color-primary-light: 208 140 255;
     --orderly-color-primary-darken: 152 62 214;
@@ -159,7 +157,6 @@
     --orderly-color-base-800: 29 26 38;
     --orderly-color-base-900: 22 20 28;
 
-   
     --orderly-color-base-foreground: 255 255 255;
 
     --orderly-color-trading-loss: 255 103 194;
@@ -176,7 +173,7 @@
     --orderly-button-shadow: none;
 
     --orderly-font-size-base: 16px;
+
+    --orderly-color-divider: 42 46 52;
   }
-
 }
-

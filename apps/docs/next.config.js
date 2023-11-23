@@ -17,7 +17,7 @@ const nextConfig = {
   // ],
   webpack: (config, { isServer }) => {
     config.module.rules.push({
-      test: /\.example\.(js|ts|tsx)$/i,
+      test: /\.example\.(css|js|ts|tsx)$/i,
       loader: "raw-loader",
     });
 

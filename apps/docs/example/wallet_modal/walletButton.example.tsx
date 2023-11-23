@@ -1,6 +1,6 @@
 import { useWalletConnector } from "./walletConnectProvider";
 
-export const WalletButtonExample = () => {
+export const WalletButton = () => {
   const wallet = useWalletConnector();
   return (
     <button

@@ -13,7 +13,9 @@ import modalAccountRawCode from "@/example/wallet_modal/account.example";
 import modalWalletButtonRawCode from "@/example/wallet_modal/walletButton.example";
 import modalWalletProviderRawCode from "@/example/wallet_modal/walletConnectProvider.example";
 
-import ethersRaw from "@/example/ethers.min.6.7.0.example";
+import {styleRaw} from '@/example/web3_onboard/style'
+
+
 
 # Account
 
@@ -137,47 +139,33 @@ Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain
     "/account.tsx": accountRawCode,
     "/walletButton.tsx": walletButtonRawCode,
     "/walletConnectProvider.tsx": walletConnectProviderRawCode,
-    "/node_modules/ethers-v6": {
-      hide: true,
-      code: ethersRaw,
-    },
+    "/style.css": styleRaw,
   }}
   options={{
-    editorHeight: 500,
+    editorHeight: 550,
   }}
 />{" "}
 
 <CodePreview
   dependencies={{
-    "@web3modal/ethers5": "^3.3.2",
-    ethers: "5.7.2",
+    "@web3modal/wagmi": "latest",
+    "wagmi": "latest",
+    "viem": "latest",
   }}
   code={{
     "/App.js": modalAppRawCode,
     "/account.tsx": modalAccountRawCode,
     "/walletButton.tsx": modalWalletButtonRawCode,
     "/walletConnectProvider.tsx": modalWalletProviderRawCode,
+    "/style.css": styleRaw,
   }}
   options={{
-    editorHeight: 500,
+    editorHeight: 550,
   }}
 />
 
-<iframe
-  src="https://codesandbox.io/p/devbox/wallet-connect-web3-modal-6nqh8y?file=%2Fsrc%2FApp.tsx&embed=1"
-  style={{
-    width: "100%",
-    height: "500px",
-    border: 0,
-    borderRadius: "4px",
-    overflow: "hidden",
-  }}
-  title="wallet connect web3 modal"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-></iframe>
 
-<CodeLive code={accountStateRaw} isPrivate />
+{/* <CodeLive code={accountStateRaw} isPrivate /> */}
 
 ## Create account
 

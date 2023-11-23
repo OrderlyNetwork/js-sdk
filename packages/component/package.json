@@ -1,22 +1,20 @@
 {
   "name": "@orderly.network/react",
-  "version": "0.1.4",
+  "version": "0.1.7",
   "description": "",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c && pnpm run build-tailwind",
+    "build": "tsup && pnpm run build-tailwind",
     "build:tsup": "tsup",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
-    "build-storybook": "storybook build",
-    "chromatic": "pnpm exec chromatic --project-token=chpt_189e4e9465d2fdb"
+    "build-storybook": "storybook build"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +25,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
-    "@orderly.network/core": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -48,10 +46,7 @@
     "@theguild/remark-npm2yarn": "^0.1.1",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
-    "@orderly.network/web3-onboard": "workspace:*",
-   
     "autoprefixer": "^10.4.14",
-    "chromatic": "^6.22.0",
     "eslint-config-custom": "workspace:*",
     "ethers": "^6.7.1",
     "postcss": "^8.4.26",
@@ -77,6 +72,7 @@
     "@orderly.network/net": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/core": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",

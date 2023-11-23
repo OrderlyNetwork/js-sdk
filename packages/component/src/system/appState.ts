@@ -1,4 +1,4 @@
-import { SimpleDI } from "@orderly.network/core";
+// import { SimpleDI } from "@orderly.network/core";
 
 const CHECK_ENTRY: Record<string, boolean> = { chains_fetch: false };
 
@@ -45,7 +45,7 @@ export class AppState {
   }
 }
 
-export const appStateInstance = SimpleDI.registerByName(
-  AppState.instanceName,
-  new AppState()
-);
+// export const appStateInstance = SimpleDI.registerByName(
+//   AppState.instanceName,
+//   new AppState()
+// );

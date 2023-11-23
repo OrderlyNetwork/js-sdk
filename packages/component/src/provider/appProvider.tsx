@@ -10,15 +10,14 @@ import {
 
 import { ModalProvider } from "@/modal/modalContext";
 import { Toaster } from "@/toast/Toaster";
-import { Account, SimpleDI } from "@orderly.network/core";
+
 import { TooltipProvider } from "@/tooltip/tooltip";
-import { WalletConnectorContext } from "./walletConnectorProvider";
-import { WSObserver } from "@/dev/wsObserver";
 import {
   useWalletConnector,
   useSessionStorage,
   OrderlyConfigProvider,
   ConfigProviderProps,
+  useAccountInstance,
 } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
@@ -45,7 +44,7 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
   {} as OrderlyAppContextState
 );
 
-export interface OrderlyAppProviderProps extends ConfigProviderProps {
+export interface OrderlyAppProviderProps {
   logoUrl: string;
   theme?: any;
   toastLimitCount?: number;
@@ -53,7 +52,7 @@ export interface OrderlyAppProviderProps extends ConfigProviderProps {
 }
 
 export const OrderlyAppProvider: FC<
-  PropsWithChildren<OrderlyAppProviderProps>
+  PropsWithChildren<OrderlyAppProviderProps & ConfigProviderProps>
 > = (props) => {
   const {
     logoUrl,
@@ -63,6 +62,35 @@ export const OrderlyAppProvider: FC<
     getWalletAdapter,
     brokerId,
     networkId,
+    onlyTestnet,
+    toastLimitCount,
+  } = props;
+
+  return (
+    <OrderlyConfigProvider
+      configStore={configStore}
+      keyStore={keyStore}
+      getWalletAdapter={getWalletAdapter}
+      brokerId={brokerId}
+      networkId={networkId}
+    >
+      <InnerProvider
+        logoUrl={logoUrl}
+        theme={theme}
+        onlyTestnet={onlyTestnet}
+        toastLimitCount={toastLimitCount}
+      >
+        {props.children}
+      </InnerProvider>
+    </OrderlyConfigProvider>
+  );
+};
+
+const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
+  const {
+    logoUrl,
+    theme,
+
     onlyTestnet,
     toastLimitCount = 1,
   } = props;
@@ -77,6 +105,8 @@ export const OrderlyAppProvider: FC<
     chains,
   } = useWalletConnector();
 
+  const account = useAccountInstance();
+
   // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
 
   //
@@ -89,8 +119,6 @@ export const OrderlyAppProvider: FC<
 
   const checkChainId = useCallback(
     (chainId: string): boolean => {
-      console.log("checkChainId", chainId, chains);
-
       if (!chainId || !chains) {
         return false;
       }
@@ -132,7 +160,6 @@ export const OrderlyAppProvider: FC<
           return false;
         }
 
-        let account = SimpleDI.get<Account>(Account.instanceName);
         //
         if (!account) {
           throw new Error("account is not initialized");
@@ -152,18 +179,17 @@ export const OrderlyAppProvider: FC<
     } else {
       throw new Error("walletProvider is required");
     }
-  }, [connect]);
+  }, [connect, account]);
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
       console.warn("🤜 disconnect wallet");
-      let account = SimpleDI.get<Account>(Account.instanceName);
 
       return disconnect(currentWallet).then(() => {
         return account.disconnect();
       });
     }
-  }, [disconnect, currentWallet]);
+  }, [disconnect, currentWallet, account]);
 
   const _onSetChain = useCallback((chainId: number) => {
     return setChain({ chainId }).then((success: boolean) => {
@@ -196,9 +222,6 @@ export const OrderlyAppProvider: FC<
     if (!chains || chains.length === 0) {
       return;
     }
-    // if (ready) {
-    let account = SimpleDI.get<Account>(Account.instanceName);
-    //
 
     if (
       !!currentWallet &&
@@ -240,7 +263,7 @@ export const OrderlyAppProvider: FC<
     }
     // }
     // }, [ready, currentWallet]);
-  }, [currentAddress, currentChainId, chains]);
+  }, [currentAddress, currentChainId, chains, account]);
 
   // limit toast count
   useEffect(() => {
@@ -261,21 +284,13 @@ export const OrderlyAppProvider: FC<
         onSetChain: _onSetChain,
       }}
     >
-      <OrderlyConfigProvider
-        configStore={configStore}
-        keyStore={keyStore}
-        getWalletAdapter={getWalletAdapter}
-        brokerId={brokerId}
-        networkId={networkId}
-      >
-        <TooltipProvider>
-          <LocalProvider>
-            {/* <WSObserver /> */}
-            <ModalProvider>{props.children}</ModalProvider>
-          </LocalProvider>
-        </TooltipProvider>
-        <Toaster />
-      </OrderlyConfigProvider>
+      <TooltipProvider>
+        <LocalProvider>
+          {/* <WSObserver /> */}
+          <ModalProvider>{props.children}</ModalProvider>
+        </LocalProvider>
+      </TooltipProvider>
+      <Toaster />
     </OrderlyAppContext.Provider>
   );
 };

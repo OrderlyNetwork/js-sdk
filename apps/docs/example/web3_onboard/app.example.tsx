@@ -1,5 +1,5 @@
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
-
+import "./style.css";
 import { Account } from "./account";
 import { WalletButton } from "./walletButton";
 import { WalletConnectProvider } from "./walletConnectProvider";
