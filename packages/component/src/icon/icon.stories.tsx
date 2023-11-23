@@ -22,20 +22,20 @@ export const Default: Story = {
 export const Coins: Story = {
   render: () => {
     return (
-      <div className={"flex flex-col gap-3"}>
-        <div className="flex gap-3">
+      <div className="orderly-flex orderly-flex-col orderly-gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage name="WOO" type={"token"} size={"small"} />
           <NetworkImage name="BTC" type={"token"} size={"small"} />
           <NetworkImage name="ETH" type={"token"} size={"small"} />
           <NetworkImage name="NEAR" type={"token"} size={"small"} />
         </div>
-        <div className="flex gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage name="WOO" type={"token"} />
           <NetworkImage name="BTC" type={"token"} />
           <NetworkImage name="ETH" type={"token"} />
           <NetworkImage name="NEAR" type={"token"} />
         </div>
-        <div className="flex gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage name="WOO" type={"token"} size={"large"} />
           <NetworkImage name="BTC" type={"token"} size={"large"} />
           <NetworkImage name="ETH" type={"token"} size={"large"} />
@@ -49,22 +49,22 @@ export const Coins: Story = {
 export const Chains: Story = {
   render: () => {
     return (
-      <div className={"flex flex-col gap-3"}>
-        <div className="flex gap-3">
+      <div className="orderly-flex orderly-flex-col orderly-gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage id={1} type={"chain"} size={"small"} />
           <NetworkImage id={56} type={"chain"} size={"small"} />
           <NetworkImage id={42161} type={"chain"} size={"small"} />
           <NetworkImage id={10} type={"chain"} size={"small"} />
           <NetworkImage id={250} type={"chain"} size={"small"} />
         </div>
-        <div className="flex gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage id={1} type={"chain"} />
           <NetworkImage id={56} type={"chain"} />
           <NetworkImage id={42161} type={"chain"} />
           <NetworkImage id={10} type={"chain"} />
           <NetworkImage id={250} type={"chain"} />
         </div>
-        <div className="flex gap-3">
+        <div className="orderly-flex orderly-gap-3">
           <NetworkImage id={1} type={"chain"} size={"large"} />
           <NetworkImage id={56} type={"chain"} size={"large"} />
           <NetworkImage id={42161} type={"chain"} size={"large"} />
@@ -79,12 +79,12 @@ export const Chains: Story = {
 export const CustomSize: Story = {
   render: () => {
     return (
-      <div className={"flex gap-5"}>
-        <div className={"flex flex-col items-center"}>
+      <div className="orderly-flex orderly-gap-5">
+        <div className="orderly-flex orderly-flex-col orderly-items-center">
           <NetworkImage id={56} type={"chain"} size={64} />
           <div>size: 64px</div>
         </div>
-        <div className={"flex flex-col items-center"}>
+        <div className="orderly-flex orderly-flex-col orderly-items-center">
           <NetworkImage id={56} type={"chain"} size={128} />
           <div>size: 128px</div>
         </div>

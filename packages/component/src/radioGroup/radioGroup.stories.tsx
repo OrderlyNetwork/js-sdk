@@ -22,7 +22,7 @@ type Story = StoryObj<typeof RadioGroup>;
 export const Default: Story = {
   render: (args) => {
     return (
-      <div className="flex gap-5">
+      <div className="orderly-flex orderly-gap-5">
         <RadioGroup defaultValue="1" {...args}>
           <Radio value="1">item 1</Radio>
           <Radio value="2">item 2</Radio>
@@ -31,7 +31,7 @@ export const Default: Story = {
 
         <RadioGroup
           defaultValue="2"
-          className="flex flex-row gap-5"
+          className="orderly-flex orderly-flex-row orderly-gap-5"
           orientation="horizontal"
           {...args}
         >

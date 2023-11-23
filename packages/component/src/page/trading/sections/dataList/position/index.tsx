@@ -84,6 +84,7 @@ export const PositionPane = () => {
       .catch(() => {});
   }, []);
 
+
   return (
     <PositionsView
       dataSource={

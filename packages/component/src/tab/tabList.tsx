@@ -69,7 +69,7 @@ export const TabList: FC<TabListProps> = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      let activeTab = boxRef.current?.querySelector(".active");
+      let activeTab = boxRef.current?.querySelector(".orderly-active");
 
       if (!activeTab) {
         activeTab = boxRef.current?.childNodes[0] as HTMLButtonElement;
@@ -106,12 +106,12 @@ export const TabList: FC<TabListProps> = (props) => {
   return (
     <div
       className={cn(
-        "flex border-b border-b-divider px-3 items-center",
+        "orderly-flex orderly-border-b orderly-border-b-divider orderly-px-3 orderly-items-center",
         props.className
       )}
     >
-      <div className="pb-1 relative flex-1">
-        <div className="flex space-x-5" ref={boxRef}>
+      <div className="orderly-pb-1 orderly-relative orderly-flex-1">
+        <div className="orderly-flex orderly-space-x-5" ref={boxRef}>
           {props.tabs.map((item, index) => {
             return (
               <Tab

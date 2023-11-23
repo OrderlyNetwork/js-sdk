@@ -77,16 +77,16 @@ export const Chains: FC<ChainsProps> = (props) => {
           loading={settingChain}
           disabled={disabled}
           className={
-            "border-primary gap-1 text-base-contrast h-[30px] hover:text-primary-light hover:bg-transparent"
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent"
           }
         >
           {chainName}
-          <ArrowIcon size={8} className="text-base-contrast-54" />
+          <ArrowIcon size={8} className="orderly-text-base-contrast-54"/>
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <DialogHeader>Switch network</DialogHeader>
-        <DialogBody className="max-h-[327.5px] overflow-y-auto">
+        <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
             // @ts-ignore
             mainChains={mainChains}

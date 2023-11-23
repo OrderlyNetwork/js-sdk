@@ -71,16 +71,16 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
 
   return (
     <div>
-      <div className="flex py-6">
-        <div className="flex-1 flex items-center gap-2">
+      <div className="orderly-flex orderly-py-6">
+        <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-gap-2">
           <Blockie address={state.address!} />
-          <div className="flex flex-col">
+          <div className="orderly-flex orderly-flex-col">
             <Text rule={"address"}>{account.address}</Text>
-            <div className="text-4xs">{chainName}</div>
+            <div className="orderly-text-4xs">{chainName}</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <IconButton type="button" onClick={onCopy} className="px-0">
+        <div className="orderly-flex orderly-items-center orderly-gap-2">
+          <IconButton type="button" onClick={onCopy} className="orderly-px-0">
             <CopyIcon size={40} />
           </IconButton>
           {/* <IconButton>
@@ -89,7 +89,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         </div>
       </div>
       {props.showGetTestUSDC ? (
-        <div className="py-4 grid grid-cols-2 gap-3">
+        <div className="orderly-py-4 orderly-grid orderly-grid-cols-2 orderly-gap-3">
           <Button
             variant={"outlined"}
             onClick={onGetClick}
@@ -100,7 +100,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </Button>
 
           <Button
-            className="text-xs"
+            className="orderly-text-xs"
             variant={"outlined"}
             color={"sell"}
             fullWidth
@@ -112,12 +112,11 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </Button>
         </div>
       ) : (
-        <div className="flex justify-center">
+        <div className="orderly-flex orderly-justify-center">
           <Button
-            className="text-xs"
+            className="orderly-text-xs"
             variant={"outlined"}
             fullWidth
-            color={"sell"}
             onClick={() => {
               onDisconnect?.();
             }}

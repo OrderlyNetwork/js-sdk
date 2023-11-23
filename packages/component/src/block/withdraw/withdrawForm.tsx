@@ -176,8 +176,8 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   return (
     <>
-      <div className="flex items-center py-2 text-2xs text-base-contrast">
-        <div className="flex-1">Your WOOFi Pro account</div>
+      <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast">
+        <div className="orderly-flex-1">Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <QuantityInput
@@ -189,9 +189,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         }}
         decimals={decimals}
         status={inputStatus}
-        className={cn(status !== WithdrawStatus.Normal && "outline outline-1", {
-          "outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
-          "outline-yellow-500": status === WithdrawStatus.Unsettle,
+        className={cn(status !== WithdrawStatus.Normal && "orderly-outline orderly-outline-1", {
+          "orderly-outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
+          "orderly-outline-yellow-500": status === WithdrawStatus.Unsettle,
         })}
         quantity={quantity}
         onValueChange={onValueChange}
@@ -200,18 +200,18 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         markPrice={1}
       />
       <UnsettledInfo unsettledPnL={unsettledPnL} hasPositions={hasPositions} />
-      <Divider className={"py-3"}>
-        <MoveDownIcon className={"text-primary-light"} />
+      <Divider className="orderly-py-3">
+        <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
-      <div className={"flex items-center text-2xs"}>
-        <div className={"flex-1"}>Your web3 wallet</div>
+      <div className="orderly-flex orderly-items-center orderly-text-2xs">
+        <div className="orderly-flex-1">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
           name={walletName?.toLowerCase()}
           rounded
         />
       </div>
-      <div className={"py-2"}>
+      <div className="orderly-py-2">
         <WalletPicker address={address} chain={chain} wooSwapEnabled={false} />
       </div>
       <TokenQtyInput

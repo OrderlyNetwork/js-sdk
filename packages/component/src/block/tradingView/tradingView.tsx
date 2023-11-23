@@ -152,7 +152,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         }}
       />
       {/* <TradingViewChart {...chartProps} {...size} /> */}
-      <div className="w-full h-full" ref={containerRef}></div>
+      <div className="orderly-w-full orderly-h-full" ref={containerRef}></div>
     </>
   );
 };

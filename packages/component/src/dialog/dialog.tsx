@@ -22,7 +22,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "orderly-fixed orderly-inset-0 orderly-z-50 orderly-bg-black/70 orderly-backdrop-blur-sm data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0",
       className
     )}
     {...props}
@@ -41,16 +41,16 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed py-5 left-[50%] top-[50%] z-50 grid w-full max-w-[90%] sm:max-w-lg translate-x-[-50%] translate-y-[-50%] bg-base-700 text-base-contrast shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded md:w-full",
+        "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] sm:orderly-max-w-lg orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded md:orderly-w-full",
         className
       )}
       {...props}
     >
       {children}
       {closable && (
-        <DialogPrimitive.Close className="absolute right-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <DialogPrimitive.Close className="orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
           <CloseIcon size={20} />
-          <span className="sr-only">Close</span>
+          <span className="orderly-sr-only">Close</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>
@@ -64,7 +64,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "px-5 pb-5 flex flex-col text-[16px] relative after:content after:block after:absolute after:bottom-0 after:left-5 after:right-5 after:h-[1px] after:bg-base-contrast/10 after:mt-5",
+      "orderly-px-5 orderly-pb-5 orderly-flex orderly-flex-col orderly-text-[16px] orderly-relative after:orderly-content after:orderly-block after:orderly-absolute after:orderly-bottom-0 after:orderly-left-5 after:orderly-right-5 after:orderly-h-[1px] after:orderly-bg-base-contrast/10 after:orderly-mt-5",
       className
     )}
     {...props}
@@ -78,7 +78,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "px-5 grid grid-cols-2 sm:flex sm:flex-row sm:justify-end gap-3",
+      "orderly-px-5 orderly-grid orderly-grid-cols-2 sm:orderly-flex sm:orderly-flex-row sm:orderly-justify-end orderly-gap-3",
       className
     )}
     {...props}
@@ -92,7 +92,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-xs leading-none", className)}
+    className={cn("orderly-text-xs orderly-leading-none", className)}
     {...props}
   />
 ));
@@ -104,7 +104,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-3xs text-muted-foreground text-left", className)}
+    className={cn("orderly-text-3xs orderly-text-muted-foreground orderly-text-left", className)}
     {...props}
   />
 ));
@@ -116,7 +116,7 @@ export interface DialogBodyProps {
 
 const DialogBody: FC<PropsWithChildren<DialogBodyProps>> = (props) => {
   const { children, className } = props;
-  return <div className={cn("px-5", className)}>{children}</div>;
+  return <div className={cn("orderly-px-5", className)}>{children}</div>;
 };
 
 DialogBody.displayName = "DialogBody";

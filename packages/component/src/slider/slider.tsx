@@ -86,31 +86,31 @@ const Slider = React.forwardRef<
     const bgClassName = useMemo(() => {
       return cn(
         {
-          "bg-primary border-primary": color === "primary",
-          "bg-primary-light border-primary-light": color === "primary-light",
-          "bg-trade-profit border-trade-profit": color === "buy",
-          "bg-trade-loss border-trade-loss": color === "sell",
+          "orderly-bg-primary orderly-border-primary": color === "primary",
+          "orderly-bg-primary-light orderly-border-primary-light": color === "primary-light",
+          "orderly-bg-trade-profit orderly-border-trade-profit": color === "buy",
+          "orderly-bg-trade-loss orderly-border-trade-loss": color === "sell",
         },
-        props.disabled && "bg-fill-light",
-        "text-base-600"
+        props.disabled && "orderly-bg-fill-light",
+        "orderly-text-base-600"
       );
     }, [color, props.disabled]);
 
     return (
-      <div className={cn("relative")}>
+      <div className={cn("orderly-relative")}>
         <SliderPrimitive.Root
           ref={ref}
           className={cn(
-            "relative flex items-center select-none touch-none w-full h-[20px] ",
+            "orderly-relative orderly-flex orderly-items-center orderly-select-none orderly-touch-none orderly-w-full orderly-h-[20px]",
             className
           )}
           onValueChange={onValueChangeInner}
           {...props}
         >
-          <SliderPrimitive.Track className="bg-fill-light relative grow rounded-full h-[2px] z-0">
+          <SliderPrimitive.Track className="orderly-bg-fill-light orderly-relative orderly-grow orderly-rounded-full orderly-h-[2px] orderly-z-0">
             <SliderPrimitive.Range
               className={cn(
-                "absolute bg-fill-light rounded-full h-full",
+                "orderly-absolute orderly-bg-fill-light orderly-rounded-full orderly-h-full",
                 bgClassName
               )}
             />
@@ -129,14 +129,14 @@ const Slider = React.forwardRef<
           )}
           <SliderPrimitive.Thumb
             className={cn(
-              "block w-[10px] h-[10px] bg-fill border-[2px] border-fill-light rounded-[10px] focus:outline-none focus:w-[16px] focus:h-[16px] focus:shadow-[0_0_0_8px] focus:shadow-base-contrast/20 z-20 disabled:pointer-events-none group",
+              "orderly-block orderly-w-[10px] orderly-h-[10px] orderly-bg-fill orderly-border-[2px] orderly-border-fill-light orderly-rounded-[10px] focus:orderly-outline-none focus:orderly-w-[16px] focus:orderly-h-[16px] focus:orderly-shadow-[0_0_0_8px] focus:orderly-shadow-base-contrast/20 orderly-z-20 disabled:orderly-pointer-events-none orderly-group",
               {
-                "border-primary": color === "primary",
-                "border-primary-light": color === "primary-light",
-                "border-trade-profit": color === "buy",
-                "border-trade-loss": color === "sell",
+                "orderly-border-primary": color === "primary",
+                "orderly-border-primary-light": color === "primary-light",
+                "orderly-border-trade-profit": color === "buy",
+                "orderly-border-trade-loss": color === "sell",
               },
-              props.disabled && "border-transparent bg-fill-light"
+              props.disabled && "orderly-border-transparent orderly-bg-fill-light"
             )}
             aria-label="Volume"
           >

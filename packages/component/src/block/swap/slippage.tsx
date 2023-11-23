@@ -18,8 +18,8 @@ const SlippageItem = ({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "rounded h-[40px] flex items-center justify-center bg-base-500 text-base-contrast text-2xs",
-        isActive && "bg-primary text-base-contrast"
+        "orderly-rounded orderly-h-[40px] orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-500 orderly-text-base-contrast orderly-text-2xs",
+        isActive && "orderlh-bg-primary orderly-text-base-contrast"
       )}
     >
       <span>{`${value}%`}</span>
@@ -83,7 +83,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="orderly-grid orderly-grid-cols-4 orderly-gap-2">
         <SlippageItem
           value={0.5}
           isActive={value === 0.5 && !customValue}
@@ -99,29 +99,29 @@ export const Slippage: FC<SlippageProps> = (props) => {
           isActive={value === 2 && !customValue}
           onClick={onClick}
         />
-        <div className="flex items-center gap-2">
+        <div className="orderly-flex orderly-items-center orderly-gap-2">
           <input
             type="text"
             inputMode="decimal"
-            className="bg-base-400 w-0 rounded flex-1 h-full text-center text-2xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="orderly-bg-base-400 orderly-w-0 orderly-rounded orderly-flex-1 orderly-h-full orderly-text-center orderly-text-2xs focus-visible:orderly-outline-none focus-visible:orderly-ring-1 focus-visible:orderly-ring-primary"
             value={customValue}
             // onChange={(e) => setCustomValue(e.target.value)}
             onChange={onValueChange}
           />
-          <span className="text-2xs text-base-contrast-36">%</span>
+          <span className="orderly-text-2xs orderly-text-base-contrast-36">%</span>
         </div>
       </div>
-      <div className="py-2 text-3xs text-base-contrast-36">
+      <div className="orderly-py-2 orderly-text-3xs orderly-text-base-contrast-36">
         Your transaction will revert if the price changes unfavorably by more
         than this percentage.
       </div>
-      <div className="grid grid-cols-6 mt-5">
-        <div className="col-start-2 col-span-4">
+      <div className="orderly-grid orderly-grid-cols-6 orderly-mt-5">
+        <div className="orderly-col-start-2 orderly-col-span-4">
           <Button
             fullWidth
             onClick={onConfirm}
             disabled={!value && !customValue}
-            className="text-xs"
+            className="orderly-text-xs"
           >
             Confirm
           </Button>

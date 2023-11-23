@@ -7,7 +7,7 @@ export interface SummaryProps {
 
 export const Summary: FC<SummaryProps> = (props) => {
   return (
-    <div className={"flex items-start py-4 text-4xs text-base-contrast-36"}>
+    <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-4xs orderly-text-base-contrast-36">
       {`Fee ≈ ${props.fee} USDC`}
     </div>
   );

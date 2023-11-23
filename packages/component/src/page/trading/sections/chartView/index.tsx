@@ -29,20 +29,20 @@ export const ChartView: FC<ChartViewProps> = (props) => {
   );
 
   return (
-    <div className="text-3xs">
+    <div className="orderly-text-3xs">
       <Tabs
         showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
-        tabBarClassName="h-[40px]"
+        tabBarClassName="orderly-h-[40px]"
         collapsed={collapsed}
         // @ts-ignore
         onToggleCollapsed={() => setCollapsed((prev: boolean) => !prev)}
         tabBarExtra={(context) => {
           return (
-            <div className="flex items-center">
+            <div className="orderly-flex orderly-items-center">
               <button
-                className={"px-5"}
+                className="orderly-px-5"
                 onClick={() => {
                   context.toggleContentVisible();
                 }}
@@ -50,8 +50,8 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                 <ChevronDown
                   size={18}
                   className={cn(
-                    "transition-transform text-base-contrast/50",
-                    context.contentVisible ? "rotate-180" : "rotate-0"
+                    "orderly-transition-transform orderly-text-base-contrast/50",
+                    context.contentVisible ? "orderly-rotate-180" : "orderly-rotate-0"
                   )}
                 />
               </button>

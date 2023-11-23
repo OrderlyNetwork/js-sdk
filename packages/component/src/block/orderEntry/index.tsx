@@ -307,7 +307,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             isClickForm.current = true;
           }}
         >
-          <div className="flex flex-col gap-3 text-3xs">
+          <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
             <SegmentedButton
               buttons={[
                 {
@@ -315,18 +315,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "bg-success-light text-base-contrast after:bg-success-light",
+                    "orderly-bg-success-light orderly-text-base-contrast after:orderly-bg-success-light",
                   disabledClassName:
-                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "bg-danger-light text-base-contrast after:bg-danger-light",
+                    "orderly-bg-danger-light orderly-text-base-contrast after:orderly-bg-danger-light",
                   disabledClassName:
-                    "bg-base-400 text-base-contrast-20 after:bg-base-400 cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
               ]}
               onChange={(value) => {
@@ -335,12 +335,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               value={side}
             />
 
-            <div className={"flex justify-between items-center"}>
-              <div className="flex gap-1 text-base-contrast-54 text-4xs">
+            <div className="orderly-flex orderly-justify-between orderly-items-center">
+              <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs">
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
-                  className="text-base-contrast-80"
+                  className="orderly-text-base-contrast-80"
                   precision={0}
                 >{`${freeCollateral ?? "--"}`}</Numeral>
 
@@ -351,7 +351,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
-                className="text-primary text-4xs"
+                className="orderly-text-primary orderly-text-4xs"
               >
                 Deposit
               </Button>
@@ -364,7 +364,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <MSelect
                     label={"Order Type"}
                     value={field.value}
-                    className="bg-base-600"
+                    className="orderly-bg-base-600"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
@@ -382,13 +382,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
                       methods.clearErrors();
                     }}
-                    // onValueChange={(value: any) => {
-                    //   // setValue?.("order_type", value.value);
-                    //   field.onChange(value.value);
-                    //   methods.setValue("order_price", "", {
-                    //     shouldValidate: true,
-                    //   });
-                    // }}
+                  // onValueChange={(value: any) => {
+                  //   // setValue?.("order_type", value.value);
+                  //   field.onChange(value.value);
+                  //   methods.setValue("order_price", "", {
+                  //     shouldValidate: true,
+                  //   });
+                  // }}
                   />
                 );
               }}
@@ -413,9 +413,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
                     value={isMarketOrder ? "Market" : field.value}
-                    className={"text-right"}
+                    className="orderly-text-right"
                     containerClassName={
-                      isMarketOrder ? "bg-base-700" : "bg-base-600"
+                      isMarketOrder ? "orderly-bg-base-700" : "orderly-bg-base-600"
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {
@@ -440,8 +440,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     type="text"
                     inputMode="decimal"
                     suffix={symbolConfig?.base}
-                    className="text-right"
-                    containerClassName="bg-base-600"
+                    className="orderly-text-right"
+                    containerClassName="orderly-bg-base-600"
                     error={!!methods.formState.errors?.order_quantity}
                     helpText={methods.formState.errors?.order_quantity?.message}
                     value={field.value}
@@ -488,8 +488,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 return (
                   <Input
                     disabled={disabled}
-                    className={"text-right"}
-                    containerClassName="bg-base-600"
+                    className="orderly-text-right"
+                    containerClassName="orderly-bg-base-600"
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
                     type="text"
@@ -516,7 +516,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
             <StatusGuardButton>
               <Button
-              className="text-xs"
+                id="orderly-order-entry-confirm-button"
+                className="orderly-text-xs"
                 type="submit"
                 loading={methods.formState.isSubmitting}
                 color={side === OrderSide.BUY ? "buy" : "sell"}

@@ -12,24 +12,24 @@ import { X } from "lucide-react";
 import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 
-const inputVariants = cva(["rounded"], {
+const inputVariants = cva(["orderly-rounded"], {
   variants: {
     variant: {
-      outlined: "border border-slate-300",
-      filled: "bg-fill border border-transparent",
+      outlined: "orderly-border orderly-border-slate-300",
+      filled: "orderly-bg-fill orderly-border orderly-border-transparent",
     },
     size: {
-      small: "h-[28px]",
-      default: "h-[40px]",
+      small: "orderly-h-[28px]",
+      default: "orderly-h-[40px]",
     },
     fullWidth: {
-      true: "w-full",
+      true: "orderly-w-full",
     },
     disabled: {
-      true: "opacity-70 cursor-not-allowed",
+      true: "orderly-opacity-70 orderly-cursor-not-allowed",
     },
     error: {
-      true: "border border-danger",
+      true: "orderly-border orderly-border-danger",
     },
     // readonly:{
     //     true: "opacity-70 cursor-not-allowed"
@@ -105,7 +105,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
       return (
         <button
-          className={"hidden peer-focus:flex px-3 items-center justify-center"}
+          className="orderly-hidden peer-focus:orderly-flex orderly-px-3 orderly-items-center orderly-justify-center"
           onMouseDown={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -114,11 +114,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           <span
             className={
-              "inline-flex rounded-full bg-base-contrast/20 w-[20px] h-[20px] items-center justify-center text-base-100"
+              "orderly-inline-flex orderly-rounded-full orderly-bg-base-contrast/20 orderly-w-[20px] orderly-h-[20px] orderly-items-center orderly-justify-center orderly-text-base-100"
             }
           >
             {/* @ts-ignore */}
-            <X size={16} className="text-base-contrast-54" />
+            <X size={16} className="orderly-text-base-contrast-54" />
           </span>
         </button>
       );
@@ -138,11 +138,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof prefix === "string") {
-        return (
-          <InputMask className="text-3xs select-none text-base-contrast-54">
-            {prefix}
-          </InputMask>
-        );
+        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54">{prefix}</InputMask>;
       }
 
       return prefix;
@@ -154,11 +150,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof suffix === "string") {
-        return (
-          <InputMask className="text-3xs select-none text-base-contrast-54">
-            {suffix}
-          </InputMask>
-        );
+        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54">{suffix}</InputMask>;
       }
 
       return suffix;
@@ -166,14 +158,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Tooltip
-        className="text-base-contrast text-4xs"
+        className="orderly-text-base-contrast orderly-text-4xs"
         open={showTooltip}
         content={helpText ?? "input help text"}
         sideOffset={5}
       >
         <div
           className={cn(
-            "flex flex-row items-center rounded focus-within:outline focus-within:outline-1 outline-primary",
+            "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
             inputVariants({
               size,
               fullWidth,
@@ -181,7 +173,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               variant,
               error,
             }),
-            (props.readOnly || !!error) && "focus-within:outline-none",
+            (props.readOnly || !!error) && "focus-within:orderly-outline-none",
             containerClassName
           )}
         >
@@ -193,8 +185,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...(props as any)}
             disabled={!!disabled}
             className={cn(
-              "bg-transparent px-3 flex-1 focus-visible:outline-none h-full w-full peer placeholder:text-base-contrast-20",
-              typeof prefix !== "undefined" && "px-0",
+              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20",
+              typeof prefix !== "undefined" && "orderly-px-0",
               className
             )}
             ref={ref}

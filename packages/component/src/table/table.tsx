@@ -37,7 +37,7 @@ export const Table = <RecordType extends unknown>(
   const maskElement = useMemo(() => {
     if (props.loading) {
       return (
-        <div className="absolute w-full h-full z-20 left-0 top-0 bottom-0 right-0 flex justify-center items-center">
+        <div className="orderly-absolute orderly-w-full orderly-h-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center">
           <Spinner />
         </div>
       );
@@ -45,15 +45,15 @@ export const Table = <RecordType extends unknown>(
 
     if (!!props.dataSource?.length) return null;
     return (
-      <div className="absolute left-0 top-0 right-0 bottom-0 flex items-center justify-center z-10">
-        <div className="text-center text-base-contrast/50">No Data</div>
+      <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-flex orderly-items-center orderly-justify-center orderly-z-10">
+        <div className="orderly-text-center orderly-text-base-contrast/50">No Data</div>
       </div>
     );
   }, [props.dataSource]);
 
   return (
-    <div className="relative min-h-[180px] h-full">
-      <table className={cn("border-collapse w-full", props.className)}>
+    <div className="orderly-relative orderly-min-h-[180px] orderly-h-full">
+      <table className={cn("orderly-border-collapse orderly-w-full", props.className)}>
         <THead
           columns={props.columns}
           className={props.headerClassName}

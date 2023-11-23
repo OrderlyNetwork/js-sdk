@@ -60,14 +60,14 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
   }, []);
 
   return (
-    <div className="flex gap-3 py-3 px-4 items-center">
+    <div className="orderly-flex orderly-gap-3 orderly-py-3 orderly-px-4 orderly-items-center">
       {/* <SidePicker /> */}
       <Picker
         options={sideOptions}
         size={"small"}
         value={props.side ?? ""}
         onValueChange={(item) => props.onSideChange?.(item.value)}
-        className={"bg-base-contrast-20 text-4xs text-base-contrast-54"}
+        className="orderly-bg-base-contrast-20 orderly-text-4xs orderly-text-base-contrast-54"
       />
       {/* <Select options={status} label="All status" size={"small"} /> */}
       <Picker
@@ -75,7 +75,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
         size={"small"}
         value={props.status ?? ""}
         onValueChange={(item) => props.onStatusChange?.(item.value)}
-        className={"bg-base-contrast-20 text-4xs text-base-contrast-54"}
+        className="orderly-bg-base-contrast-20 orderly-text-4xs orderly-text-base-contrast-54"
       />
       {/* <IconButton color="tertiary" size="small">
         <CalendarDays size={18} />

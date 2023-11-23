@@ -57,9 +57,9 @@ export interface NumeralProps {
 }
 
 const coloringClasses: Record<string, string> = {
-  lose: "text-danger-light",
-  profit: "text-success-light",
-  neutral: "text-base-contrast-54",
+  lose: "orderly-text-danger-light",
+  profit: "orderly-text-success-light",
+  neutral: "orderly-text-base-contrast-54",
 };
 
 export const Numeral: FC<NumeralProps> = (props) => {
@@ -129,7 +129,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     return (
-      <span className="flex gap-1">
+      <span className="orderly-flex orderly-gap-1">
         {prefixEle}
         {child}
         {surfixEle}

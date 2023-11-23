@@ -130,27 +130,27 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   return (
     <>
-      <div className="pb-3 pt-5 text-xs">
+      <div className="orderly-pb-3 orderly-pt-5 orderly-text-xs">
         <Text rule="symbol">{position.symbol}</Text>
       </div>
-      <div className="grid grid-cols-2">
+      <div className="orderly-grid orderly-grid-cols-2">
         <Statistic
           label="Order type"
           value={typeText}
-          valueClassName={"text-2xs"}
-          labelClassName="text-4xs text-base-contrast-36"
+          valueClassName="orderly-text-2xs"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
         />
         <Statistic
           label="Last price"
           value={markPrice}
           rule="price"
-          labelClassName="text-4xs text-base-contrast-36"
-          valueClassName={"text-2xs"}
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs"
         />
       </div>
-      <Divider className="py-5" />
+      <Divider className="orderly-py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
-        <div className="flex flex-col gap-5">
+        <div className="orderly-flex orderly-flex-col orderly-gap-5">
           <Controller
             name="order_price"
             control={control}
@@ -163,7 +163,10 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   inputMode="decimal"
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
-                  className="text-right text-3xs"
+                  className="orderly-text-right orderly-text-3xs"
+                  containerClassName={
+                    "orderly-bg-base-500 orderly-rounded-borderRadius"
+                  }
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -183,9 +186,10 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
                   suffix={base}
                   type="text"
                   inputMode="decimal"
+                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
                   helpText={errors.order_quantity?.message}
                   error={!!errors.order_quantity}
-                  className="text-right text-3xs"
+                  className="orderly-text-right orderly-text-3xs"
                   value={field.value}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
@@ -197,7 +201,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
           />
         </div>
 
-        <div className="py-5">
+        <div className="orderly-py-5">
           <Controller
             name="order_quantity"
             control={control}
@@ -223,9 +227,10 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3 py-5">
+        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
           <Button
-            variant={"outlined"}
+            variant="contained"
+            color="tertiary"
             fullWidth
             type="button"
             onClick={() => {

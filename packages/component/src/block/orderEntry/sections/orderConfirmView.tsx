@@ -22,29 +22,29 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   }, [order.side, order.order_type]);
 
   return (
-    <div className="grid grid-cols-2 text-base">
+    <div className="orderly-grid orderly-grid-cols-2 orderly-text-base">
       <div>
         <div>{type}</div>
-        <div className="flex gap-1 items-end">
+        <div className="orderly-flex orderly-gap-1 orderly-items-end">
           <span>{base}</span>
-          <span className="text-3xs text-base-contrast/50">/USDT</span>
+          <span className="orderly-text-3xs orderly-text-base-contrast/50">/USDT</span>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between ">
-          <span className="text-base-contrast/50">Qty.</span>
+      <div className="orderly-flex orderly-flex-col orderly-gap-2">
+        <div className="orderly-flex orderly-justify-between orderly-">
+          <span className="orderly-text-base-contrast/50">Qty.</span>
           <span>{order.order_quantity}</span>
         </div>
-        <div className="flex justify-between ">
-          <span className="text-base-contrast/50">Price</span>
+        <div className="orderly-flex orderly-justify-between orderly-">
+          <span className="orderly-text-base-contrast/50">Price</span>
           <span>
             {order.order_type === OrderType.MARKET
               ? "Market"
               : order.order_price}
           </span>
         </div>
-        <div className="flex justify-between ">
-          <span className="text-base-contrast/50">Total</span>
+        <div className="orderly-flex orderly-justify-between orderly-">
+          <span className="orderly-text-base-contrast/50">Total</span>
           <span>{order.total}</span>
         </div>
       </div>

@@ -10,7 +10,7 @@ interface SlippageSettingProps {
 export const SlippageSetting: FC<SlippageSettingProps> = (props) => {
   return (
     <SlippageDialog value={props.slippage} onConfirm={props.onSlippageChange}>
-      <div className={"flex items-center gap-2 cursor-pointer"}>
+      <div className="orderly-flex orderly-items-center orderly-gap-2 orderly-cursor-pointer">
         <span>{`Slippage : ${props.slippage}%`}</span>
         <Pencil size={14} />
       </div>

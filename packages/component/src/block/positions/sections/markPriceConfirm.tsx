@@ -13,9 +13,9 @@ export const MarkPriceConfirm: FC<Props> = (props) => {
 
   return (
     <div>
-      <div className="text-2xs text-base-contrast-54">
+      <div className="orderly-text-2xs orderly-text-base-contrast-54">
         You will close{" "}
-        <span className="text-warning">{`${position.position_qty} ${base}`}</span>{" "}
+        <span className="orderly-text-warning">{`${position.position_qty} ${base}`}</span>{" "}
         position at market price.
       </div>
     </div>
