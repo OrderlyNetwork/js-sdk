@@ -1,17 +1,18 @@
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
-import { WalletProvider } from "@/components/walletProvider";
 import { DocProvider } from "@/components/docProvider";
+import {ConnectorProvider} from '@orderly.network/web3-onboard'
+
 import "../global.css";
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <WalletProvider>
+    <ConnectorProvider>
       <OrderlyConfigProvider brokerId="orderly" networkId="testnet">
         <DocProvider>
 
         <Component {...pageProps} />
         </DocProvider>
       </OrderlyConfigProvider>
-    </WalletProvider>
+    </ConnectorProvider>
   );
 }

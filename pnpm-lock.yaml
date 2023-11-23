@@ -46,6 +46,9 @@ importers:
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@orderly.network/web3-onboard':
+        specifier: workspace:*
+        version: link:../../packages/onboard
       '@prisma/client':
         specifier: 5.0.0
         version: 5.0.0(prisma@5.0.0)
@@ -24266,7 +24269,7 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
   github.com/maoge8274/typedoc-json-parser/4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d:
-    resolution: {tarball: https://codeload.github.com/maoge8274/typedoc-json-parser/tar.gz/4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d}
+    resolution: {commit: 4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d, repo: git+ssh://git@github.com/maoge8274/typedoc-json-parser.git, type: git}
     name: typedoc-json-parser
     version: 9.0.1
     engines: {node: '>=18.17.0', npm: '>=6'}

@@ -1,4 +1,6 @@
 {
-    
-    "hooks":"Hooks"
+  "hooks": "Hooks",
+  "components": {
+    "title": "Components"
+  }
 }
