@@ -1,5 +1,13 @@
 # @orderly.network/futures
 
+## 1.0.5
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.5
+
 ## 1.0.4
 
 ### Patch Changes
