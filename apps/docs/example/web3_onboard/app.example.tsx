@@ -1,16 +1,16 @@
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import "./style.css";
 import { Account } from "./account";
-import { WalletButton } from "./walletButton";
+import { Buttons } from "./buttons";
 import { WalletConnectProvider } from "./walletConnectProvider";
 
 export default function App() {
   return (
     <OrderlyConfigProvider brokerId="orderly" networkId="testnet">
       <WalletConnectProvider>
-        <div className="App">
-          <WalletButton />
+        <div className="container">
           <Account />
+          <Buttons />
         </div>
       </WalletConnectProvider>
     </OrderlyConfigProvider>

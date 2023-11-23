@@ -7,6 +7,7 @@ import {
 } from "react";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init, useConnectWallet } from "@web3-onboard/react";
+import { useAccount } from "@orderly.network/hooks";
 
 interface WalletConnectContextState {
   connect: () => Promise<any>;
@@ -25,10 +26,10 @@ init({
   wallets: [injected],
   chains: [
     {
-      id: 42161,
-      token: "ARB-ETH",
-      label: "Arbitrum One",
-      rpcUrl: "https://rpc.ankr.com/arbitrum",
+      id: 421613,
+      token: "AGOR",
+      label: "Arbitrum Goerli",
+      rpcUrl: "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
     },
   ],
   theme: "dark",
@@ -36,9 +37,23 @@ init({
 
 export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const { account } = useAccount();
 
   useEffect(() => {
     // call account's setAdress method to update account status;
+    if (Array.isArray(wallet?.accounts) && wallet?.accounts.length) {
+      const item = wallet.accounts[0];
+      const chain = wallet.chains[0];
+      account.setAddress(item.address, {
+        provider: wallet.provider,
+        chain: {
+          id: chain.id,
+        },
+        wallet: {
+          name: wallet.label,
+        },
+      });
+    }
   }, [wallet]);
 
   return (

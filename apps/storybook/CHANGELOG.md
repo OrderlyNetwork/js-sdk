@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.75
+
+### Patch Changes
+
+- fix style bugs;
+
 ## 1.0.74
 
 ### Patch Changes

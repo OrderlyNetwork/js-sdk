@@ -175,7 +175,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 rule="percentages"
                 className={cx({
                   "orderly-text-primary-light": marginRatioVal >= 10,
-                  "orderly-text-warning": marginRatioVal < 10 && marginRatioVal >= 0.5,
+                  "orderly-text-warning":
+                    marginRatioVal < 10 && marginRatioVal >= 0.5,
                   "orderly-text-danger": marginRatioVal < 0.5,
                 })}
                 visible={visible}
@@ -206,14 +207,17 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
               <span>Max account leverage</span>
               <span className="orderly-flex">
                 Current:
-                <Numeral className="orderly-text-base-contrast orderly-ml-1" surfix="x">
+                <Numeral
+                  className="orderly-text-base-contrast orderly-ml-1"
+                  surfix="x"
+                >
                   {currentLeverage}
                 </Numeral>
               </span>
             </div>
           }
           value={
-            <div className="orderly-h-[40px] orderly-mt-2 orderly-mx-2 orderly-text-2xs">
+            <div className="orderly-h-[50px] orderly-mt-2 orderly-mx-2 orderly-text-2xs">
               <Slider
                 min={0}
                 max={leverageLevers.length - 1}
@@ -270,10 +274,19 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         </div>
       </Paper>
       <div className="orderly-flex orderly-gap-3 orderly-py-5 orderly-text-xs">
-        <Button fullWidth onClick={onDeposit} id="orderly-assets-margin-deposit-button">
+        <Button
+          fullWidth
+          onClick={onDeposit}
+          id="orderly-assets-margin-deposit-button"
+        >
           Deposit
         </Button>
-        <Button fullWidth variant={"outlined"} onClick={onWithdraw} id="orderly-assets-margin-withdraw-button">
+        <Button
+          fullWidth
+          variant={"outlined"}
+          onClick={onWithdraw}
+          id="orderly-assets-margin-withdraw-button"
+        >
           Withdraw
         </Button>
       </div>

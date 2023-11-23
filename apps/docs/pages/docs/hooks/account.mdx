@@ -5,7 +5,7 @@ import { CodePreview } from "@/components/doc/preview/codePreview";
 
 import appRawCode from "@/example/web3_onboard/app.example";
 import accountRawCode from "@/example/web3_onboard/account.example";
-import walletButtonRawCode from "@/example/web3_onboard/walletButton.example";
+import walletButtonRawCode from "@/example/web3_onboard/buttons.example";
 import walletConnectProviderRawCode from "@/example/web3_onboard/walletConnectProvider.example";
 
 import modalAppRawCode from "@/example/wallet_modal/app.example";
@@ -123,11 +123,13 @@ const nextState = await account.setAddress("<address>", {
 
 ## How to integrate wallet?
 
-Connect to the user's wallet through a third-party wallet connection library.
+Since `@orderly.network/hooks` only focus on processing the Orderly business logic, the hooks don't include the function of connecting to the wallet, but they can be easily integrated with third-party wallet connection libraries.
 
-**web3-onboard**
+Here are two examples:
 
-Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain support to your project. [more](https://onboard.blocknative.com/docs/modules/react)
+### web3-onboard
+
+> Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain support to your project. [more](https://onboard.blocknative.com/docs/modules/react)
 
 <CodePreview
   dependencies={{
@@ -137,14 +139,18 @@ Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain
   code={{
     "/App.js": appRawCode,
     "/account.tsx": accountRawCode,
-    "/walletButton.tsx": walletButtonRawCode,
+    "/buttons.tsx": walletButtonRawCode,
     "/walletConnectProvider.tsx": walletConnectProviderRawCode,
     "/style.css": styleRaw,
   }}
   options={{
     editorHeight: 550,
   }}
-/>{" "}
+/>
+
+### WalletConnect
+
+> WalletConnect provides developer toolkits empowering you to build engaging web3 experiences. [more](https://docs.walletconnect.com/)
 
 <CodePreview
   dependencies={{
@@ -173,9 +179,12 @@ Web3-Onboard is the quickest and easiest way to add multi-wallet and multi-chain
 
 ```typescript /createAccount/
 import { useAccount } from "@orderly.network/hooks";
-const { account, state, createOrderlyKey, createAccount } = useAccount();
 
-const res = await createAccount();
+function(){
+  const { account, state, createOrderlyKey, createAccount } = useAccount();
+  //...
+  const res = await createAccount();
+}
 ```
 
 ## Orderly Key
@@ -184,9 +193,12 @@ Creates an `OrderlyKey`. The validity of the `OrderlyKey` (in days) can be set.
 
 ```typescript /createOrderlyKey/
 import { useAccount } from "@orderly.network/hooks";
-const { account, state, createOrderlyKey, createAccount } = useAccount();
 
-const res = await createOrderlyKey(30);
+function(){
+  const { account, state, createOrderlyKey, createAccount } = useAccount();
+  //...
+  const res = await createOrderlyKey(30);
+}
 ```
 
 After the `OrderlyKey` is successfully created, it will be stored in the `KeyStore`, and will be used for API signatures later on.
