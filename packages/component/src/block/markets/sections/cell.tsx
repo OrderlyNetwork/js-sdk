@@ -13,21 +13,6 @@ export const Cell: FC<MarketCellProps> = (props) => {
   const { item, onItemClick } = props;
   const { quote_dp } = useContext(SymbolContext);
 
-  const colorClassName = useMemo(() => {
-    if (!item["24h_open"] || !item["24h_close"]) {
-      return "orderly-text-base-contrast-54";
-    }
-
-    if (item["24h_close"] > item["24h_open"]) {
-      return "orderly-text-success-light";
-    }
-
-    if (item["24h_close"] < item["24h_open"]) {
-      return "orderly-text-danger-light";
-    }
-
-    return "orderly-text-base-contrast-54";
-  }, [item["24h_open"], item["24h_close"]]);
 
   return (
     <div
@@ -38,7 +23,7 @@ export const Cell: FC<MarketCellProps> = (props) => {
       <div className="orderly-flex orderly-flex-1 orderly-flex-col">
         <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-2xs">
           <Text rule="symbol" className="orderly-text-base-contrast">{item.symbol}</Text>
-          <Numeral precision={quote_dp} className={colorClassName}>
+          <Numeral precision={quote_dp} className="orderly-text-base-contrast">
             {item["24h_close"]}
           </Numeral>
         </div>
