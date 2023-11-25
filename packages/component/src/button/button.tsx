@@ -46,7 +46,7 @@ const buttonVariants = cva(
         buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit active:orderly-bg-trade-profit",
         sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss active:orderly-bg-trade-loss",
         danger:
-          "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
+          "orderly-text-danger-light orderly-border-danger-darken active:orderly-border-bg-danger/90",
       },
       // evlevation: {
       //
@@ -95,7 +95,7 @@ const buttonVariants = cva(
         variant: "contained",
         color: "danger",
         class:
-          "orderly-bg-danger orderly-text-base-contrast hover:orderly-bg-danger/90",
+          "orderly-bg-danger orderly-text-base-contrast",
       },
       {
         variant: "outlined",

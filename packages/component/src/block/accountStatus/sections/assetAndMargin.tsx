@@ -62,7 +62,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     return modal.confirm({
       title: "Settle PnL",
       content: (
-        <div className="orderly-text-base-contrast-54">
+        <div className="orderly-text-base-contrast-54 orderly-text-2xs">
           Are you sure you want to settle your PnL? Settlement will take up to 1
           minute before you can withdraw your available balance.
         </div>
@@ -98,16 +98,16 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
             <div className="orderly-flex orderly-items-center orderly-text-2xs orderly-text-base-contrast-54">
               <span>Total value (USDC)</span>
               <button
-                className="orderly-text-primary-light orderly-p-2"
+                className="orderly-text-link orderly-p-2"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggleVisible();
                 }}
               >
                 {visible ? (
-                  <EyeOffIcon className="orderly-text-primary" size={16} />
+                  <EyeOffIcon size={16} />
                 ) : (
-                  <EyeIcon className="orderly-text-primary" size={16} />
+                  <EyeIcon size={16} />
                 )}
               </button>
             </div>
@@ -120,6 +120,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-2 orderly-py-4">
         <Statistic
           label="Unreal.PnL(USDC)"
+          labelClassName="orderly-text-base-contrast-36"
           value={
             <div className="orderly-flex orderly-gap-1 orderly-items-center orderly-text-2xs">
               <Numeral coloring visible={visible}>
@@ -143,6 +144,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
         <Statistic
           label="Unsettled PnL(USDC)"
+          labelClassName="orderly-text-base-contrast-36"
           value={
             <div className="orderly-flex orderly-justify-between">
               <Numeral
@@ -169,6 +171,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-2 orderly-py-4">
         <Statistic
           label="Margin ratio"
+          labelClassName="orderly-text-base-contrast-36"
           value={
             <div className="orderly-flex orderly-items-center orderly-gap-2 orderly-text-2xs">
               <Numeral
@@ -190,6 +193,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         />
         <Statistic
           label="Free / Total collateral(USDC)"
+          labelClassName="orderly-text-base-contrast-36"
           value={
             <div className="orderly-flex orderly-gap-1 orderly-text-2xs">
               <Numeral visible={visible}>{freeCollateral}</Numeral>
@@ -203,7 +207,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       <div>
         <Statistic
           label={
-            <div className="orderly-flex orderly-justify-between">
+            <div className="orderly-flex orderly-justify-between orderly-text-base-contrast-36">
               <span>Max account leverage</span>
               <span className="orderly-flex">
                 Current:

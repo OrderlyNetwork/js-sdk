@@ -227,7 +227,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
           />
         </div>
 
-        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
+        <div className="orderly-grid orderly-grid-cols-2 orderly-text-xs orderly-gap-3 orderly-py-5">
           <Button
             variant="contained"
             color="tertiary"

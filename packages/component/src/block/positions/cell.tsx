@@ -74,7 +74,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label="Qty."
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly- orderly-text-3xs"
+          valueClassName="orderly-text-3xs"
           value={item["position_qty"]}
           coloring
           rule="price"
@@ -83,7 +83,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           rule="price"
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly- orderly-text-3xs"
+          valueClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Margin</span>
@@ -94,7 +94,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly- orderly-text-3xs"
+          valueClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Notional</span>
@@ -108,7 +108,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly- orderly-text-3xs"
+          valueClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Avg. open</span>

@@ -75,7 +75,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
           />
           <Label
             htmlFor={"showAll"}
-            className="orderly-text-base-contrast-36 orderly-text-3xs"
+            className="orderly-text-base-contrast-54 orderly-text-3xs"
           >
             Show all instruments
           </Label>

@@ -26,7 +26,7 @@ export const Tab: FC<TabProps> = (props) => {
   return (
     <button
       className={cn(
-        "orderly-text-base-contrast-36 orderly-text-xs orderly-h-[32px]",
+        "orderly-text-base-contrast-36 orderly-h-[32px]",
         active && "orderly-text-base-contrast orderly-active",
         disabled && "orderly-cursor-not-allowed orderly-text-slate-300"
       )}

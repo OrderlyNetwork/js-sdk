@@ -17,7 +17,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
       .confirm({
         title: "Settle PnL",
         content: (
-          <span className="orderly-text-base-contrast/50">
+          <span className="orderly-text-base-contrast-54 orderly-text-2xs">
             Are you sure you want to settle your PnL? It may take one minute
             before you can withdraw it.
           </span>

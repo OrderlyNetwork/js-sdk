@@ -75,8 +75,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-gap-2">
           <Blockie address={state.address!} />
           <div className="orderly-flex orderly-flex-col">
-            <Text rule={"address"}>{account.address}</Text>
-            <div className="orderly-text-4xs">{chainName}</div>
+            <Text className="orderly-text-xs" rule={"address"}>{account.address}</Text>
+            <div className="orderly-text-4xs orderly-text-base-contrast-80">{chainName}</div>
           </div>
         </div>
         <div className="orderly-flex orderly-items-center orderly-gap-2">
@@ -102,7 +102,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           <Button
             className="orderly-text-xs"
             variant={"outlined"}
-            color={"sell"}
+            color={"danger"}
             fullWidth
             onClick={() => {
               onDisconnect?.();
@@ -114,8 +114,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
       ) : (
         <div className="orderly-flex orderly-justify-center">
           <Button
-            className="orderly-text-xs"
+            className="orderly-text-xs orderly-border-danger-light"
             variant={"outlined"}
+            color={"danger"}
             fullWidth
             onClick={() => {
               onDisconnect?.();

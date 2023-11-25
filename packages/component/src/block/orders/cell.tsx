@@ -118,13 +118,13 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           value={order.mark_price}
         />
       </div>
-      <div className="orderly-flex orderly-gap-3 orderly-justify-end orderly-mt-2">
+      <div className="orderly-flex orderly-gap-3 orderly-text-4xs orderly-justify-end orderly-mt-2">
         <Button
           id="orderly-pending-cell-edit-button"
           variant="outlined"
           size="small"
           color="tertiary"
-          className="orderly-w-[120px]"
+          className="orderly-w-[120px] orderly-text-4xs"
           onClick={() => onEditOrder(order)}
         >
           Edit
@@ -134,7 +134,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           variant="outlined"
           color="tertiary"
           size="small"
-          className="orderly-w-[120px]"
+          className="orderly-w-[120px] orderly-text-4xs"
           loading={loading}
           onClick={cancelOrder}
         >
