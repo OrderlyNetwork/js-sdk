@@ -70,6 +70,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 />
                 {/* 移除htmlFor="reduceOnly", 点击标签文字不触发Switch开关的变化 */}
                 <Label
+                className="orderly-text-base-contrast-54"
                   onClick={() => {
                     showReduceOnlyHint();
                   }}

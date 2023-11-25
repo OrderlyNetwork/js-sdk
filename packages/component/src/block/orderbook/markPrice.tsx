@@ -34,7 +34,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs">
+    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80">
       <div
         className={cn("orderly-font-semibold orderly-flex orderly-items-center", {
           "orderly-text-trade-profit": middlePrice > prevLastPrice,

@@ -91,7 +91,7 @@ const Slider = React.forwardRef<
           "orderly-bg-trade-profit orderly-border-trade-profit": color === "buy",
           "orderly-bg-trade-loss orderly-border-trade-loss": color === "sell",
         },
-        props.disabled && "orderly-bg-fill-light",
+        props.disabled && "orderly-bg-base-200",
         "orderly-text-base-600"
       );
     }, [color, props.disabled]);
@@ -107,10 +107,10 @@ const Slider = React.forwardRef<
           onValueChange={onValueChangeInner}
           {...props}
         >
-          <SliderPrimitive.Track className="orderly-bg-fill-light orderly-relative orderly-grow orderly-rounded-full orderly-h-[2px] orderly-z-0">
+          <SliderPrimitive.Track className="orderly-bg-base-200 orderly-relative orderly-grow orderly-rounded-full orderly-h-[2px] orderly-z-0">
             <SliderPrimitive.Range
               className={cn(
-                "orderly-absolute orderly-bg-fill-light orderly-rounded-full orderly-h-full",
+                "orderly-absolute orderly-bg-base-200 orderly-rounded-full orderly-h-full",
                 bgClassName
               )}
             />
@@ -129,14 +129,14 @@ const Slider = React.forwardRef<
           )}
           <SliderPrimitive.Thumb
             className={cn(
-              "orderly-block orderly-w-[10px] orderly-h-[10px] orderly-bg-fill orderly-border-[2px] orderly-border-fill-light orderly-rounded-[10px] focus:orderly-outline-none focus:orderly-w-[16px] focus:orderly-h-[16px] focus:orderly-shadow-[0_0_0_8px] focus:orderly-shadow-base-contrast/20 orderly-z-20 disabled:orderly-pointer-events-none orderly-group",
+              "orderly-block orderly-w-[10px] orderly-h-[10px] orderly-bg-fill orderly-border-[2px] orderly-border-base-200 orderly-rounded-[10px] focus:orderly-outline-none focus:orderly-w-[16px] focus:orderly-h-[16px] focus:orderly-shadow-[0_0_0_8px] focus:orderly-shadow-base-contrast/20 orderly-z-20 disabled:orderly-pointer-events-none orderly-group",
               {
                 "orderly-border-primary": color === "primary",
                 "orderly-border-primary-light": color === "primary-light",
                 "orderly-border-trade-profit": color === "buy",
                 "orderly-border-trade-loss": color === "sell",
               },
-              props.disabled && "orderly-border-transparent orderly-bg-fill-light"
+              props.disabled && "orderly-border-transparent orderly-bg-base-200"
             )}
             aria-label="Volume"
           >

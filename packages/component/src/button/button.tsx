@@ -43,8 +43,8 @@ const buttonVariants = cva(
         tertiary: "orderly-bg-tertiary",
         success:
           "orderly-text-success orderly-bg-transparent hover:orderly-bg-success hover:orderly-text-white active:orderly-bg-success/90",
-        buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit/90 active:orderly-bg-trade-profit/90",
-        sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss/90 active:orderly-bg-trade-loss/90",
+        buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit active:orderly-bg-trade-profit",
+        sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss active:orderly-bg-trade-loss",
         danger:
           "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
       },
