@@ -9,9 +9,12 @@ import {
   DialogTrigger,
 } from "@/dialog";
 import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
-import { useChains, OrderlyContext } from "@orderly.network/hooks";
+import {
+  useChains,
+  OrderlyContext,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
-import { WalletConnectorContext } from "@/provider";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -39,9 +42,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
-  const { connectedChain, setChain, settingChain } = useContext(
-    WalletConnectorContext
-  );
+  const { connectedChain, setChain, settingChain } = useWalletConnector();
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
@@ -81,7 +82,7 @@ export const Chains: FC<ChainsProps> = (props) => {
           }
         >
           {chainName}
-          <ArrowIcon size={8} className="orderly-text-base-contrast-54"/>
+          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>

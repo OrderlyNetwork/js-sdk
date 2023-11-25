@@ -1,8 +1,9 @@
-// import { OrderlyConfigProvider } from "@orderly.network/hooks";
-import {ConnectorProvider} from '@orderly.network/web3-onboard'
-import {OrderlyAppProvider} from '@orderly.network/react'
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { OrderlyAppProvider } from "@orderly.network/react";
 
 import "../global.css";
+
+import "@orderly.network/react/dist/styles.css";
 
 export default function MyApp({ Component, pageProps }) {
   return (

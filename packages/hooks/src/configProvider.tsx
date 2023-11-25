@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
-  MemoryConfigStore,
+  // MemoryConfigStore,
+  DefaultConfigStore,
   OrderlyKeyStore,
   getWalletAdapterFunc,
   WalletAdapterOptions,
@@ -48,7 +49,7 @@ export const OrderlyConfigProvider = (
   }
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
-    return configStore || new MemoryConfigStore({ brokerId });
+    return configStore || new DefaultConfigStore({ brokerId, networkId });
   });
 
   const innerKeyStore = useConstant<OrderlyKeyStore>(() => {

@@ -158,6 +158,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
+                {/* @ts-ignore */}
                 <RotateCw size={14} />
                 <span>Settle PnL</span>
               </button>

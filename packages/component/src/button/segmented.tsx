@@ -1,4 +1,4 @@
-import { type PropsWithChildren, FC } from "react";
+import React, { type PropsWithChildren, FC } from "react";
 import { cn } from "@/utils/css";
 
 export type SegmentedItem = {

@@ -20,7 +20,6 @@ export const ConnectorProvider = (
 
   useEffect(() => {
     initConfig(props.apiKey).then(() => {
-      console.log("inited");
       setInitialized(true);
     });
   }, []);

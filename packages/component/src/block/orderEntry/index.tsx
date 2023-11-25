@@ -1,7 +1,7 @@
 import { Input } from "@/input";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { Slider } from "@/slider";
-import {
+import React, {
   FC,
   FormEvent,
   forwardRef,
@@ -300,6 +300,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     }, []);
 
     return (
+      // @ts-ignore
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
@@ -356,6 +357,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 Deposit
               </Button>
             </div>
+            {/* @ts-ignore */}
             <Controller
               name="order_type"
               control={methods.control}
@@ -382,18 +384,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
                       methods.clearErrors();
                     }}
-                  // onValueChange={(value: any) => {
-                  //   // setValue?.("order_type", value.value);
-                  //   field.onChange(value.value);
-                  //   methods.setValue("order_price", "", {
-                  //     shouldValidate: true,
-                  //   });
-                  // }}
+                    // onValueChange={(value: any) => {
+                    //   // setValue?.("order_type", value.value);
+                    //   field.onChange(value.value);
+                    //   methods.setValue("order_price", "", {
+                    //     shouldValidate: true,
+                    //   });
+                    // }}
                   />
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_price"
               control={methods.control}
@@ -415,7 +417,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     value={isMarketOrder ? "Market" : field.value}
                     className="orderly-text-right"
                     containerClassName={
-                      isMarketOrder ? "orderly-bg-base-700" : "orderly-bg-base-600"
+                      isMarketOrder
+                        ? "orderly-bg-base-700"
+                        : "orderly-bg-base-600"
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {
@@ -428,7 +432,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_quantity"
               control={methods.control}
@@ -454,7 +458,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_quantity"
               control={methods.control}
@@ -480,7 +484,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="total"
               control={methods.control}

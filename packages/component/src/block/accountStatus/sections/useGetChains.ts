@@ -1,10 +1,10 @@
 import { useContext, useMemo } from "react";
-import { WalletConnectorContext } from "@/provider";
-import { useChains } from "@orderly.network/hooks";
+
+import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 
 export function useGetChains() {
-  const { connectedChain } = useContext(WalletConnectorContext);
+  const { connectedChain } = useWalletConnector();
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
     wooSwapEnabled: true,

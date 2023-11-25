@@ -1,13 +1,13 @@
+import React, { FC } from "react";
 import { Divider } from "@/divider";
 import { PositionCell } from "./cell";
 import { AggregatedData, PositionOverview } from "./overview";
 import { ListView } from "@/listView";
-import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { SymbolProvider } from "@/provider";
 import { API } from "@orderly.network/types";
 
-interface PositionsViewProps {
+export interface PositionsViewProps {
   dataSource: any[] | null;
   aggregated: AggregatedData;
   // actions

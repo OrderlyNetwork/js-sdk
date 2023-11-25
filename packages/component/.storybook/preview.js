@@ -78,7 +78,7 @@ const preview = {
       return (
         <ConnectorProvider>
           <OrderlyAppProvider
-            networkId="mainnet"
+            networkId="testnet"
             brokerId="woofi_pro"
             onlyTestnet={false}
             // showTestnet={true}
