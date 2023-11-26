@@ -53,7 +53,7 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
       value={amount}
       prefix={loading ? <Spinner size={"small"} className="orderly-mx-2" /> : undefined}
       containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
-      className="orderly-text-sm"
+      className="orderly-text-sm orderly-text-base-contrast-54"
       suffix={
         <InputMask className="orderly-flex-row orderly-items-center orderly-gap-2">
           <Divider vertical />

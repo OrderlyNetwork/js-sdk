@@ -85,7 +85,7 @@ export const Chains: FC<ChainsProps> = (props) => {
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader>Switch network</DialogHeader>
+        <DialogHeader  className="orderly-text-xs">Switch network</DialogHeader>
         <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
             // @ts-ignore

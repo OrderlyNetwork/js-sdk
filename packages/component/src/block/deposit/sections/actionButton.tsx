@@ -215,7 +215,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="orderly-flex orderly-justify-center">
-        <div className="orderly-py-3 orderly-min-w-[200px] orderly-text-xs">{actionButton}</div>
+        <div className="orderly-py-3 orderly-w-full orderly-text-xs">{actionButton}</div>
       </div>
     </>
   );

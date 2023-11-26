@@ -52,8 +52,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           "orderly-bg-base-500 dark:orderly-bg-base-100 orderly-rounded orderly-pl-1 orderly-pr-2 orderly-py-2 focus-within:orderly-bg-bg-base-500 focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
           props.className,
           {
-            "outline outline-1 outline-danger": props.status === "error",
-            "outline outline-1 outline-yellow-200": props.status === "warning",
+            "orderly-outline orderly-outline-1 orderly-outline-danger-light": props.status === "error",
+            "orderly-outline orderly-outline-1 orderly-outline-warning-light": props.status === "warning",
           }
         )}
         onClick={() => inputRef.current?.focus()}
@@ -83,7 +83,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             <Button
               variant={"text"}
               size={"small"}
-              className="orderly-font-semibold orderly-text-primary-light orderly-px-2 orderly-min-w-[40px] orderly-text-3xs"
+              className="orderly-font-semibold orderly-text-link orderly-px-2 orderly-min-w-[40px] orderly-text-3xs"
               disabled={!props.maxAmount}
               onClick={(event) => {
                 props?.onValueChange?.({

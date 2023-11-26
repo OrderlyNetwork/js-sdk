@@ -59,7 +59,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <button className="orderly-text-primary-light">Switch network</button>
+          <button className="orderly-text-primary-light orderly-text-xs">Switch network</button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
