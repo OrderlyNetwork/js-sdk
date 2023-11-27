@@ -1,16 +1,13 @@
-import React, { FC, useContext, useMemo, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import Button from "@/button";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 
 import { AccountInfo } from "./sections/accountInfo";
 
 import { Text } from "@/text";
-import { NetworkImage } from "@/icon";
-import { ChevronDown } from "lucide-react";
 import { AccountTotal } from "./sections/accountTotal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
-import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { Chains } from "./sections/chains";
 import { OrderlyAppContext } from "@/provider";
 
@@ -65,7 +62,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   return (
     <div className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full">
       {status !== AccountStatusEnum.NotConnected &&
-        !errors?.ChainNetworkNotSupport ? (
+      !errors?.ChainNetworkNotSupport ? (
         <AccountTotal
           status={status}
           currency={props.currency}

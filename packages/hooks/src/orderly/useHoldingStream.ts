@@ -21,7 +21,7 @@ export const useHoldingStream = () => {
     return usdc;
   }, [data]);
 
-  useSWRSubscription("holding", (_, { next }) => {
+  const { data: balance } = useSWRSubscription("holding", (_, { next }) => {
     const unsubscribe = ws.privateSubscribe(
       {
         id: "balance",
@@ -57,6 +57,7 @@ export const useHoldingStream = () => {
   return {
     data,
     usdc,
+    balance,
     isLoading,
   };
 };

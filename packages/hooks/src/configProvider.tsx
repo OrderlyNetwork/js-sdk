@@ -15,6 +15,7 @@ import {
 
 import useConstant from "use-constant";
 import { NetworkId } from "@orderly.network/types";
+import { DataCenterProvider } from "./dataProvider";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
   {
@@ -89,10 +90,9 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
-        // apiBaseUrl,
       }}
     >
-      {props.children}
+      <DataCenterProvider>{props.children}</DataCenterProvider>
     </OrderlyProvider>
   );
 };

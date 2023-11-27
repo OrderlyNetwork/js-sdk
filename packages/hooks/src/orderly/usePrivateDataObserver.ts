@@ -10,51 +10,58 @@ export const usePrivateDataObserver = () => {
   const { mutate } = useSWRConfig();
   // const ee = useEventEmitter();
   const { state } = useAccount();
-  // useEffect(() => {
-  //   const unsubscribe = ws.privateSubscribe("executionreport", {
-  //     onMessage: (data: any) => {
-  //       // const key = [
-  //       //   `/v1/orders?status=${OrderStatus.INCOMPLETE}`,
-  //       //   state.accountId,
-  //       // ];
 
-  //       mutate(key, (orders: any) => {
-  //         console.log("privateSubscribe", data, orders);
+  useEffect(() => {
+    console.log("----!!!usePrivateDataObserver!!!----");
+  }, []);
 
-  //         //
-  //         return Promise.resolve()
-  //           .then(() => {
-  //             if (!orders) {
-  //               return orders;
-  //             }
-  //             if (data.status === OrderStatus.NEW) {
-  //               return [
-  //                 {
-  //                   ...data,
-  //                   // average_executed_price:data.ava
-  //                   created_time: data.timestamp,
-  //                   order_id: data.orderId,
-  //                   // reduce_only
-  //                 },
-  //                 ...orders,
-  //               ];
-  //             }
-  //             if (data.status === OrderStatus.CANCELLED) {
-  //               return orders.filter(
-  //                 (order: any) => order.order_id !== data.orderId
-  //               );
-  //             }
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe("executionreport", {
+      onMessage: (data: any) => {
+        // const key = [
+        //   `/v1/orders?status=${OrderStatus.INCOMPLETE}`,
+        //   state.accountId,
+        // ];
 
-  //             return orders;
-  //           })
-  //           .catch((error) => {});
-  //       });
+        console.log(data);
 
-  //       // ee.emit("orders:changed");
-  //     },
-  //   });
-  //   return () => unsubscribe?.();
-  // }, [state.accountId]);
+        // mutate(key, (orders: any) => {
+        //   console.log("privateSubscribe", data, orders);
+
+        //   //
+        //   return Promise.resolve()
+        //     .then(() => {
+        //       if (!orders) {
+        //         return orders;
+        //       }
+        //       if (data.status === OrderStatus.NEW) {
+        //         return [
+        //           {
+        //             ...data,
+        //             // average_executed_price:data.ava
+        //             created_time: data.timestamp,
+        //             order_id: data.orderId,
+        //             // reduce_only
+        //           },
+        //           ...orders,
+        //         ];
+        //       }
+        //       if (data.status === OrderStatus.CANCELLED) {
+        //         return orders.filter(
+        //           (order: any) => order.order_id !== data.orderId
+        //         );
+        //       }
+
+        //       return orders;
+        //     })
+        //     .catch((error) => {});
+        // });
+
+        // ee.emit("orders:changed");
+      },
+    });
+    return () => unsubscribe?.();
+  }, [state.accountId]);
 
   useEffect(() => {
     if (!state.accountId) return;
@@ -62,6 +69,8 @@ export const usePrivateDataObserver = () => {
     const unsubscribe = ws.privateSubscribe("position", {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
         const { positions: nextPostions } = data;
+
+        console.log("ws-----data-----", data);
 
         mutate(key, (prevPositions: any) => {
           // return nextPostions;

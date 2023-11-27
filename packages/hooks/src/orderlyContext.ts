@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 import {
   type ConfigStore,
@@ -26,3 +26,7 @@ export const OrderlyContext = createContext<OrderlyConfigContextState>({
 } as OrderlyConfigContextState);
 
 export const OrderlyProvider = OrderlyContext.Provider;
+
+export const useOrderlyContext = () => {
+  return useContext(OrderlyContext);
+};

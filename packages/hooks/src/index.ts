@@ -19,7 +19,11 @@ export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
 
-export * from "./orderlyContext";
+export {
+  OrderlyProvider,
+  useOrderlyContext,
+  OrderlyContext,
+} from "./orderlyContext";
 export type { ConfigProviderProps } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
 

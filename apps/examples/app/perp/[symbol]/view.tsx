@@ -15,7 +15,7 @@ const View = (props: Props) => {
         onlyTestnet={false}
         logoUrl="/woo_fi_logo.svg"
       >
-        <TradingPage symbol={"PERP_ETH_USDC"} tradingViewConfig={undefined} />
+        <TradingPage symbol={props.symbol} tradingViewConfig={undefined} />
       </OrderlyAppProvider>
     </ConnectorProvider>
   );

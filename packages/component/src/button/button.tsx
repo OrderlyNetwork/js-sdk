@@ -139,7 +139,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "disabled" | "color">,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   /**
    * If `true`, the button will show a loading indicator.
    * @default false
@@ -183,7 +183,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           fullWidth,
         }),
         className,
-        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`,
+        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`
       )}
       disabled={Boolean(disabled)}
       {...props}

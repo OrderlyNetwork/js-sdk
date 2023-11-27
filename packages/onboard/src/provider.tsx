@@ -1,10 +1,17 @@
-import { FC, PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { initConfig } from "./config";
 import { Main } from "./main";
 
 export interface WalletConnectorProviderProps {
   apiKey?: string;
+  skipInit?: boolean;
 }
 
 export const ConnectorProvider: FC<
@@ -13,6 +20,11 @@ export const ConnectorProvider: FC<
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
+    document.body.style.setProperty("--onboard-modal-z-index", "100");
+  }, []);
+
+  useEffect(() => {
+    if (props.skipInit) return;
     initConfig(props.apiKey).then(() => {
       console.log("inited");
       setInitialized(true);
