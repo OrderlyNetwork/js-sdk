@@ -179,5 +179,14 @@
     --orderly-font-size-base: 16px;
 
     --orderly-color-divider: 42 46 52;
+
+    --orderly-font-family: 'Manrope', sans-serif;
   }
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Manrope', sans-serif;
 }

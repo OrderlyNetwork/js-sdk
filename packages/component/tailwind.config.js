@@ -28,6 +28,9 @@ module.exports = {
       "4xl": "calc(var(--orderly-font-size-base) + 20px)", // if base is 16px, it will be 36px
     },
     extend: {
+      fontFamily: {
+        manrope: ['Manrope', 'sans-serif']
+      },
       colors: {
         background: {
           DEFAULT: "rgb(var(--orderly-color-background) / <alpha-value>)",
@@ -157,11 +160,13 @@ module.exports = {
           fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+          fontFamily: "var(--orderly-font-family)",
         },
         body: {
           fontSize: "var(--orderly-font-size-base)",
           backgroundColor: "rgb(var(--orderly-color-base-800))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+          fontFamily: "var(--orderly-font-family)",
         },
       });
     }),
