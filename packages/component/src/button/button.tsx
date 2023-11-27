@@ -21,7 +21,7 @@ const buttonVariants = cva(
       variant: {
         text: "orderly-text-slate-500 hover:orderly-bg-slate-100",
         outlined:
-          "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500 hover:orderly-bg-slate-100",
+          "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500",
         contained:
           "orderly-text-white orderly-bg-slate-500 hover:orderly-bg-slate-600 orderly-shadow-button",
         gradient:

@@ -114,7 +114,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
       ) : (
         <div className="orderly-flex orderly-justify-center">
           <Button
-            className="orderly-text-xs orderly-border-danger-light"
+            className="orderly-text-xs orderly-border-danger-light hover:orderly-border-danger hover:orderly-bg-transparent"
             variant={"outlined"}
             color={"danger"}
             fullWidth
