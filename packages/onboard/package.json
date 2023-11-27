@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -14,8 +14,6 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*",
     "@web3-onboard/core": "^2.21.2",
     "@web3-onboard/injected-wallets": "2.10.9",
     "@web3-onboard/react": "2.8.13"
@@ -27,7 +25,9 @@
     "tsup": "^7.1.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/types": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

@@ -1,5 +1,14 @@
 # examples
 
+## 0.1.78
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.12
+  - @orderly.network/web3-onboard@0.0.9
+  - @orderly.network/hooks@1.0.9
+
 ## 0.1.77
 
 ### Patch Changes

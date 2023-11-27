@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
 

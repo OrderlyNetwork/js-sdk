@@ -142,7 +142,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     [chains, onlyTestnet]
   );
 
-  const _onWalletConnect = useCallback(async (): Promise<any> => {
+  const _onWalletConnect = async (): Promise<any> => {
     if (connect) {
       const walletState = await connect();
 
@@ -179,7 +179,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     } else {
       throw new Error("walletProvider is required");
     }
-  }, [connect, account]);
+  };
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {

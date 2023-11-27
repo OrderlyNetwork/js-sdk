@@ -15,7 +15,7 @@
   ],
   "compilerOptions": {
     "rootDir": "./src",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "sourceMap": true,
     "module": "esnext",
     "outDir": "dist",
