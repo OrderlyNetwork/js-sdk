@@ -9,18 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@noble/ed25519": "^2.0.0",
+   
     "@orderly.network/react": "workspace:*",
-    "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
     "@types/node": "^17.0.12",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "@web3-onboard/injected-wallets": "^2.10.4",
-    "@web3-onboard/react": "^2.8.11",
-    "@web3-onboard/walletconnect": "^2.4.6",
+
     "autoprefixer": "^10.4.14",
-    "bs58": "^5.0.0",
+
     "eslint": "^7.32.0",
     "eslint-config-next": "^13.4.1",
     "ethers": "^6.7.1",
