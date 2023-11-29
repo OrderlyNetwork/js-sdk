@@ -1,5 +1,23 @@
 # @orderly.network/onboard
 
+## 0.0.9
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.9
+  - @orderly.network/types@0.1.8
+
+## 0.0.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.0.8
+  - @orderly.network/types@0.1.7
+
 ## 0.0.7
 
 ### Patch Changes
