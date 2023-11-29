@@ -525,7 +525,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
-          wooSwapEnabled={enableSwapDeposit}
+          wooSwapEnabled={enableSwapDeposit ?? false}
         />
       </div>
       <QuantityInput

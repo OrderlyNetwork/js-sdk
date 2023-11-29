@@ -13,6 +13,7 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
   NetworkId,
+  useWalletConnector,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { isNativeTokenChecker } from "../woo/constants";
@@ -32,12 +33,12 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  const { onlyTestnet } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
 
-  const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: true,
+  const [_, { findByChainId }] = useChains("", {
+    wooSwapEnabled: enableSwapDeposit,
   });
 
   const [balance, setBalance] = useState("0");
@@ -49,7 +50,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
   const dst = useMemo(() => {
-    const chain: API.Chain = onlyTestnet
+    const chain: API.Chain = onlyTestnet || 421613 == options?.srcChainId
       ? findByChainId(ARBITRUM_TESTNET_CHAINID)!
       : findByChainId(ARBITRUM_MAINNET_CHAINID)!;
 
