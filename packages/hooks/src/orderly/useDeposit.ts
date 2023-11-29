@@ -13,7 +13,6 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
   NetworkId,
-  useWalletConnector,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { isNativeTokenChecker } from "../woo/constants";
@@ -37,7 +36,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
 
-  const [_, { findByChainId }] = useChains("", {
+  const [_, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
   });
 
