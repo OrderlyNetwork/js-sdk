@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
-import { WalletConnectorContext } from "@/provider";
+import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
 import { useChain, useDeposit, useChains, useWalletConnector } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
@@ -22,10 +22,11 @@ export const Deposit: FC<DepositProps> = (props) => {
 
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
+  const { enableSwapDeposit } = useContext(OrderlyAppContext);
 
   // @ts-ignore
   const [chains, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
   });
 

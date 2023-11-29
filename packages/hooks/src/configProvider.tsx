@@ -32,6 +32,7 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
+  enableSwapDeposit?: boolean;
 }
 
 export const OrderlyConfigProvider = (
@@ -40,7 +41,7 @@ export const OrderlyConfigProvider = (
   >
 ) => {
   const [account, setAccount] = React.useState<Account | null>(null);
-  const { configStore, keyStore, getWalletAdapter, brokerId, networkId } =
+  const { configStore, keyStore, getWalletAdapter, brokerId, networkId, enableSwapDeposit } =
     props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -89,6 +90,7 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
+        enableSwapDeposit: enableSwapDeposit,
         // apiBaseUrl,
       }}
     >

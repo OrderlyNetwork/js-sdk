@@ -21,19 +21,19 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, configStore, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const [defaultChain, setDefaultChain] = useState<string>(
     ARBITRUM_MAINNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

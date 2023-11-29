@@ -17,6 +17,7 @@ import { modal } from "@/modal";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { useTranslation } from "@/i18n";
+import { OrderlyAppContext } from "@/provider";
 
 export interface ActionButtonProps {
   chains:
@@ -64,6 +65,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const [chainNotSupport, setChainNotSupport] = useState(false);
   const { onlyTestnet } = useContext(OrderlyContext);
   const t = useTranslation();
+  const { enableSwapDeposit } = useContext(OrderlyAppContext);
+
 
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
@@ -92,7 +95,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   // const { networkId } = useContext<any>(OrderlyContext);
   const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

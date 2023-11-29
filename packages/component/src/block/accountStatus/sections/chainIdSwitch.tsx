@@ -18,16 +18,16 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId, onlyTestnet } = useContext<any>(OrderlyContext);
+  const { networkId, onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const [testChains] = useChains("testnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
   });
 
   const [mainChains] = useChains("mainnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

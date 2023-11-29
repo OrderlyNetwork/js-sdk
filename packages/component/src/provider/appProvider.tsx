@@ -36,7 +36,7 @@ export type OrderlyAppContextState = {
   onSetChain: (chainId: number) => Promise<any>;
 
   errors: AppStateErrors;
-
+  enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
 };
 
@@ -49,6 +49,7 @@ export interface OrderlyAppProviderProps {
   theme?: any;
   toastLimitCount?: number;
   onlyTestnet?: boolean;
+  enableSwapDeposit?: boolean;
 }
 
 export const OrderlyAppProvider: FC<
@@ -64,6 +65,7 @@ export const OrderlyAppProvider: FC<
     networkId,
     onlyTestnet,
     toastLimitCount,
+    enableSwapDeposit,
   } = props;
 
   return (
@@ -73,12 +75,14 @@ export const OrderlyAppProvider: FC<
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
       networkId={networkId}
+      enableSwapDeposit={enableSwapDeposit}
     >
       <InnerProvider
         logoUrl={logoUrl}
         theme={theme}
         onlyTestnet={onlyTestnet}
         toastLimitCount={toastLimitCount}
+        enableSwapDeposit={enableSwapDeposit}
       >
         {props.children}
       </InnerProvider>
@@ -93,6 +97,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
     onlyTestnet,
     toastLimitCount = 1,
+    enableSwapDeposit,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -282,6 +287,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
+        enableSwapDeposit,
       }}
     >
       <TooltipProvider>
