@@ -4,7 +4,7 @@ import { useChains,useWalletConnector } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 
 export function useGetChains() {
-  const { connectedChain } = useWalletConnector;
+  const { connectedChain } = useWalletConnector();
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
     wooSwapEnabled: true,
