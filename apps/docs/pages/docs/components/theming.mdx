@@ -9,6 +9,9 @@ import { Callout } from 'nextra/components'
 
 
 ```css filename="theme.css" copy
+/**
+常用于背景色等大块元素的颜色
+ */
 --orderly-color-base-100: 93 83 123;
 --orderly-color-base-200: 81 72 107;
 --orderly-color-base-300: 68 61 89;
@@ -19,26 +22,41 @@ import { Callout } from 'nextra/components'
 --orderly-color-base-800: 29 26 38;
 --orderly-color-base-900: 22 20 28;
 
+/**
+primary color, used for buttons, border etc
+*/
 --orderly-color-primary: 182 79 255;
 --orderly-color-primary-light: 208 140 255;
 --orderly-color-primary-darken: 152 62 214;
 
+/**
+link color
+ */
 --orderly-color-link: 182 79 255;
 
---orderly-color-quaternary: 203 66 218;
 
 --orderly-color-secondary: 255 255 255;
 --orderly-color-tertiary: 218 218 218;
 --orderly-color-quaternary: 218 218 218;
 
+/**
+error color or destructive action elements
+*/
 --orderly-color-danger: 232 88 175;
 --orderly-color-danger-light: 255 103 191;
 --orderly-color-danger-darken: 199 68 146;
 
+/**
+success color or constructive action elements
+*/
+*/
 --orderly-color-success: 3 152 134;
 --orderly-color-success-light: 0 181 159;
 --orderly-color-success-darken: 0 119 105;
 
+/**
+warning color
+*/
 --orderly-color-warning: 255 207 115;
 --orderly-color-warning-light: 229 199 0;
 --orderly-color-warning-darken: 229 199 0;
@@ -47,7 +65,7 @@ import { Callout } from 'nextra/components'
 --orderly-color-background-contrast: 255 255 255;
 
 --orderly-color-fill: 36 32 47;
---orderly-color-fill-active: 40 46 58;
+--orderly-color-fill-light: 40 46 58;
 
 --orderly-color-popover: 43 38 56;
 --orderly-color-popover-foreground: 255 255 255;
@@ -109,7 +127,7 @@ import { Callout } from 'nextra/components'
 
 通过重写某个class的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 比如:
 
-修改所有`button`组件的样式
+修改所有`button`组件的样式:
 
 ```css
 /* 
@@ -128,7 +146,7 @@ primary buttons
 }
 ```
 
-修改`button`组件`disabled`状态的样式
+修改`button`组件`disabled`状态的样式:
 
 ```css
 .orderly-button-disabled {
@@ -150,4 +168,17 @@ primary buttons
 ```
 
 **支持的id如下:**
+
+| id |module  | description  |
+| :----- | :----:| ----: |
+| orderly-deposit-confirm-button |  deposit   |  确定入金按钮   |
+| orderly-withdraw-confirm-button |  withdraw   |  确定出金按钮   |
+| orderly-assets-margin-deposit-button |  assets   |  入金按钮   |
+| orderly-assets-margin-withdraw-button |  assets   |  出金按钮   |
+| orderly-order-entry-confirm-button |  order   |  确定下单按钮   |
+| orderly-position-cell-limit-close-button |  positions   |  限价平仓按钮   |
+| orderly-position-cell-mark-close-button |  positions   |  市价平仓按钮   |
+| orderly-pending-cell-edit-button |  peding orders   |  修改进行中的订单按钮  |
+| orderly-pending-cell-cancel-button |  peding orders   |  取消进行中的订单按钮   |
+| orderly-bottom-nav-bar-connect-button |  bottom-nav-bar   |  bottombar 连接钱包按钮   |
 
