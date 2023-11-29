@@ -25,6 +25,9 @@ export const initConfig: (
         recommendedInjectedWallets: [
           { name: "Coinbase", url: "https://wallet.coinbase.com/" },
           { name: "MetaMask", url: "https://metamask.io" },
+          { name: "Trezor", url: "https://trezor.io/" },
+          { name: "Walletconnect", url: "https://walletconnect.com/"},
+          { name: "Ledger", url: "https://www.ledger.com/"}
         ],
         agreement: {
           version: "1.0.0",
