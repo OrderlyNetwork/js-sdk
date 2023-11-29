@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "@orderly.network/hooks";
 import { defaultStyles } from "./theming/mergeStyles";
 
@@ -18,6 +18,8 @@ export const DemoContextProvider = ({ children }) => {
     revalidateOnFocus: false,
   });
 
+  const cssVarWrap = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (Array.isArray(symbols)) {
       setCurrentSymbol(symbols[0].symbol);
@@ -29,7 +31,8 @@ export const DemoContextProvider = ({ children }) => {
   };
 
   const onThemeChange = (key: string, value: string) => {
-    setStyleVars((prev) => ({ ...prev, [key]: value }));
+    // setStyleVars((prev) => ({ ...prev, [key]: value }));
+    cssVarWrap.current?.style.setProperty(key, value);
   };
 
   if (!currentSymbol) return null;
@@ -38,7 +41,9 @@ export const DemoContextProvider = ({ children }) => {
     <DemoContext.Provider
       value={{ symbol: currentSymbol, onSymbolChange, onThemeChange }}
     >
-      <div style={styleVars}>{children}</div>
+      <div ref={cssVarWrap} style={styleVars}>
+        {children}
+      </div>
     </DemoContext.Provider>
   );
 };

@@ -1,0 +1,153 @@
+import { Callout } from 'nextra/components'
+
+# Theming
+
+
+## CSS Variables
+
+你可以通过定义css变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件,然后引入该文件
+
+
+```css filename="theme.css" copy
+--orderly-color-base-100: 93 83 123;
+--orderly-color-base-200: 81 72 107;
+--orderly-color-base-300: 68 61 89;
+--orderly-color-base-400: 57 52 74;
+--orderly-color-base-500: 51 46 66;
+--orderly-color-base-600: 43 38 56;
+--orderly-color-base-700: 36 32 47;
+--orderly-color-base-800: 29 26 38;
+--orderly-color-base-900: 22 20 28;
+
+--orderly-color-primary: 182 79 255;
+--orderly-color-primary-light: 208 140 255;
+--orderly-color-primary-darken: 152 62 214;
+
+--orderly-color-link: 182 79 255;
+
+--orderly-color-quaternary: 203 66 218;
+
+--orderly-color-secondary: 255 255 255;
+--orderly-color-tertiary: 218 218 218;
+--orderly-color-quaternary: 218 218 218;
+
+--orderly-color-danger: 232 88 175;
+--orderly-color-danger-light: 255 103 191;
+--orderly-color-danger-darken: 199 68 146;
+
+--orderly-color-success: 3 152 134;
+--orderly-color-success-light: 0 181 159;
+--orderly-color-success-darken: 0 119 105;
+
+--orderly-color-warning: 255 207 115;
+--orderly-color-warning-light: 229 199 0;
+--orderly-color-warning-darken: 229 199 0;
+
+--orderly-color-background: 27 32 40;
+--orderly-color-background-contrast: 255 255 255;
+
+--orderly-color-fill: 36 32 47;
+--orderly-color-fill-active: 40 46 58;
+
+--orderly-color-popover: 43 38 56;
+--orderly-color-popover-foreground: 255 255 255;
+
+
+--orderly-color-base-foreground: 255 255 255;
+
+--orderly-color-trading-loss: 255 103 194;
+--orderly-color-trading-loss-contrast: 40 46 58;
+--orderly-color-trading-profit: 0 181 159;
+--orderly-color-trading-profit-contrast: 40 46 58;
+
+/* rounded */
+--orderly-rounded: 6px;
+--orderly-rounded-sm: 4px;
+--orderly-rounded-lg: 8px;
+--orderly-rounded-full: 9999px;
+
+--orderly-button-shadow: none;
+
+--orderly-font-size-base: 16px;
+
+--orderly-color-divider: 42 46 52;
+```
+
+
+<Callout>
+  CSS variables must be defined without color space function. See the [Tailwind CSS documentation](https://tailwindcss.com/docs/text-color#changing-the-opacity) for more information.
+</Callout>
+
+
+❌ Don’t include the color space function or opacity modifiers won’t work
+
+
+```css
+/* Using modern `rgb` */
+--orderly-color-primary: rgb(182 79 255);
+--orderly-color-primary-light: rgb(208 140 255);
+--orderly-color-primary-darken: rgb(152 62 214);
+```
+
+
+✅ Define your CSS variables as channels with no color space function
+
+```CSS
+--orderly-color-primary: 182 79 255;
+--orderly-color-primary-light: 208 140 255;
+--orderly-color-primary-darken: 152 62 214;
+```
+
+
+
+## 样式覆盖
+
+如果在开发中碰到通过自定义CSS 变量不能修改样式的情况可以使用样式覆盖的方式来解决，`@orderly.network/react`组件提供以下两种方式来覆盖样式
+
+
+### className
+
+通过重写某个class的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 比如:
+
+修改所有`button`组件的样式
+
+```css
+/* 
+general buttons
+*/
+.orderly-button {
+  background-color: #000;
+  color: #fff;
+}
+/* 
+primary buttons
+*/
+.orderly-button-primary {
+  background-color: #000;
+  color: #fff;
+}
+```
+
+修改`button`组件`disabled`状态的样式
+
+```css
+.orderly-button-disabled {
+  background-color: rgba(0,0,0,0.3);
+  color: #999;
+}
+
+```
+
+### id
+
+如果想要修改某个特定组件的样式，可以通过id选择器来定义组件的样式，如比想要修改创建订单按钮的样式:
+
+```css
+#orderly-order-entry-confirm-button{
+    background-color: #000;
+    color: #fff;
+}
+```
+
+**支持的id如下:**
+
