@@ -113,7 +113,6 @@ export const useChains = (
         };
 
         if (typeof options?.filter === "function") {
-          console.log("filter chain");
           if (!options.filter(_chain)) return;
         }
 
