@@ -19,7 +19,6 @@ export const BottomNavBar = () => {
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
   const { errors } = useContext(OrderlyAppContext);
-  const { connectedChain } = useContext(WalletConnectorContext);
   const { onlyTestnet } = useContext<any>(OrderlyContext);
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
