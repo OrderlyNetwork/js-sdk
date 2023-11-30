@@ -17,7 +17,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
       .confirm({
         title: "Settle PnL",
         content: (
-          <span className="text-base-contrast/50">
+          <span className="orderly-text-base-contrast/50">
             Are you sure you want to settle your PnL? It may take one minute
             before you can withdraw it.
           </span>
@@ -37,8 +37,8 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
 
   if (props.unsettledPnL === 0 && props.hasPositions === false) return null;
   return (
-    <div className="flex items-center justify-between mt-1">
-      <div className="text-sm flex items-center space-x-1 text-base-contrast/30">
+    <div className="orderly-flex orderly-items-center orderly-justify-between orderly-mt-1">
+      <div className="orderly-text-4xs orderly-flex orderly-items-center orderly-space-x-1 orderly-text-base-contrast-36">
         <span>{`Unsettled:`}</span>
         <Numeral coloring precision={6}>
           {props.unsettledPnL}
@@ -46,7 +46,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
         <span>USDC</span>
       </div>
       <Button
-        className="text-primary-light"
+        className="orderly-text-primary-light orderly-text-4xs"
         size="small"
         variant={"text"}
         leftIcon={<RotateCw size={15} />}

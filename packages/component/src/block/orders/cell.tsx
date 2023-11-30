@@ -42,36 +42,46 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
   };
 
   return (
-    <div className={"px-4 py-2"}>
-      <div className="flex items-center gap-2 mb-1">
+    <div className="orderly-px-4 orderly-py-2">
+      <div className="orderly-flex orderly-items-center orderly-gap-2 orderly-mb-1">
         {typeTag}
-        <div className="flex-1" onClick={onSymbol}>
+        <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
           <Text rule="symbol">{order.symbol}</Text>
         </div>
-        <div className={"text-sm text-base-contrast/30"}>
+        <div className="orderly-text-4xs orderly-text-base-contrast-36">
           <Text rule="date">{order.created_time}</Text>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
         <Statistic
           label="Qty."
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           value={order.quantity ?? "-"}
           precision={base_dp}
           rule="price"
           valueClassName={
             order.side === OrderSide.BUY
-              ? "text-trade-profit"
-              : "text-trade-loss"
+              ? "orderly-text-trade-profit orderly-text-3xs"
+              : "orderly-text-trade-loss orderly-text-3xs"
           }
         />
         <Statistic
           label="Filled"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           value={order.executed ?? "-"}
           rule="price"
           precision={base_dp}
         />
         <Statistic
-          label="Est. total(USDC)"
+          label={
+            <>
+              <span className="orderly-text-base-contrast-36">Est. total</span>
+              <span className="orderly-text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           value={
             <NumeralTotal
               price={props.order.price ?? 1}
@@ -82,33 +92,49 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          label="Limit price(USDC)"
+          label={
+            <>
+              <span className="orderly-text-base-contrast-36">Limit price</span>
+              <span className="orderly-text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           value={order.price ?? "-"}
           rule="price"
           precision={quote_dp}
         />
         <Statistic
-          label="Mark price(USDC)"
+          label={
+            <>
+              <span className="orderly-text-base-contrast-36">Mark price</span>
+              <span className="orderly-text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
           value={order.mark_price}
         />
       </div>
-      <div className="flex gap-3 justify-end mt-2">
+      <div className="orderly-flex orderly-gap-3 orderly-justify-end orderly-mt-2">
         <Button
+          id="orderly-pending-cell-edit-button"
           variant="outlined"
           size="small"
           color="tertiary"
-          className="w-[120px]"
+          className="orderly-w-[120px]"
           onClick={() => onEditOrder(order)}
         >
           Edit
         </Button>
         <Button
+          id="orderly-pending-cell-cancel-button"
           variant="outlined"
           color="tertiary"
           size="small"
-          className="w-[120px]"
+          className="orderly-w-[120px]"
           loading={loading}
           onClick={cancelOrder}
         >

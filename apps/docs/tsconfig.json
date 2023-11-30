@@ -27,15 +27,21 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "noImplicitAny": false
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "pages/_app.js",
+    "pages/_app.js",
+    "example/queryInfo.example.tsx",
+    "dist/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./app/**"
   ]
 }

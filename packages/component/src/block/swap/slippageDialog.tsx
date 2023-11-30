@@ -22,9 +22,9 @@ export const SlippageDialog: FC<PropsWithChildren<SlippageDialogProps>> = (
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Slippage tolerance</DialogTitle>
+          <DialogTitle className="orderly-text-xs">Slippage tolerance</DialogTitle>
         </DialogHeader>
-        <DialogBody className="py-5">
+        <DialogBody className="orderly-py-5">
           <Slippage
             {...props}
             onConfirm={(value: number) => {

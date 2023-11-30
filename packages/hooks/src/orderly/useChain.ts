@@ -1,14 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 import { API, chainsInfoMap } from "@orderly.network/types";
-// import { CHAINS } from "../utils/chain";
 
-export const useChain = (
-  token: string
-): {
-  chains: API.Chain | null;
-  isLoading: boolean;
-} => {
+export const useChain = (token: string) => {
   const { data, isLoading } = useQuery<API.Chain[]>("/v1/public/token");
 
   const chains = useMemo(() => {

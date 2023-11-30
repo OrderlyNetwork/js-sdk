@@ -1,15 +1,16 @@
 import { useCallback, useContext } from "react";
-import { useLazyQuery } from "../useLazyQuery";
 import { OrderlyContext } from "../orderlyContext";
 import { useAccountInstance } from "../useAccountInstance";
 import { useBoolean } from "../useBoolean";
 import { woofiDexCrossChainRouterAbi } from "./constants";
 import { utils } from "@orderly.network/core";
 
+/** @hidden */
 export type WooCrossSwapQueryOptions = {
   from: string;
 };
 
+/** @hidden */
 export const useWooCrossSwapQuery = () => {
   const { configStore } = useContext<any>(OrderlyContext);
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
@@ -51,7 +52,7 @@ export const useWooCrossSwapQuery = () => {
     []
   );
 
-  /// swap 询价
+  /// swap enquiry
   const query = useCallback(
     (inputs: {
       srcNetwork: string;

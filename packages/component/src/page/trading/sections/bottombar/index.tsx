@@ -3,12 +3,11 @@ import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
-import { WalletConnectorContext } from "@/provider";
+import { OrderlyAppContext } from "@/provider";
 import {
   useAccount,
   useCollateral,
   useAccountInfo,
-  useAppState,
   OrderlyContext,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -16,21 +15,24 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { useCallback, useContext, useMemo } from "react";
 
 export const BottomNavBar = () => {
-  const { state, disconnect, connect, setChain } = useAccount();
+  const { state } = useAccount();
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
-  const { errors } = useAppState();
-  const { connectedChain } = useContext(WalletConnectorContext);
+  const { errors } = useContext(OrderlyAppContext);
   const { onlyTestnet } = useContext<any>(OrderlyContext);
+  const { onWalletConnect, onSetChain, onWalletDisconnect } =
+    useContext(OrderlyAppContext);
 
   const onConnect = useCallback(() => {
-    connect().then((result: { wallet: any; status: AccountStatusEnum }) => {
-      if (result && result.status < AccountStatusEnum.EnableTrading) {
-        modal.show(WalletConnectSheet, {
-          status: result.status,
-        });
+    onWalletConnect().then(
+      (result: { wallet: any; status: AccountStatusEnum }) => {
+        if (result && result.status < AccountStatusEnum.EnableTrading) {
+          modal.show(WalletConnectSheet, {
+            status: result.status,
+          });
+        }
       }
-    });
+    );
   }, []);
 
   const showGetTestUSDC = useMemo(() => {
@@ -41,8 +43,10 @@ export const BottomNavBar = () => {
   return (
     <>
       {showGetTestUSDC && <GetTestUSDC />}
-      {errors.ChainNetworkNotSupport && <ChainIdSwtich onSetChain={setChain} />}
-      <div className="fixed left-0 bottom-0 w-screen bg-base-200 p-[14px] pb-[20px] border-t border-base-contrast/10 z-30 h-[64px] flex justify-between items-center">
+      {errors.ChainNetworkNotSupport && (
+        <ChainIdSwtich onSetChain={onSetChain} />
+      )}
+      <div className="orderly-fixed orderly-left-0 orderly-bottom-0 orderly-w-screen orderly-bg-base-800 orderly-p-[14px] orderly-pb-[20px] orderly-border-t orderly-border-base-contrast/10 orderly-z-30 orderly-h-[64px] orderly-flex orderly-justify-between orderly-items-center">
         <AccountStatusBar
           chains={[]}
           status={state.status}
@@ -50,7 +54,7 @@ export const BottomNavBar = () => {
           accountInfo={data}
           totalValue={totalValue}
           onConnect={onConnect}
-          onDisconnect={disconnect}
+          onDisconnect={onWalletDisconnect}
           showGetTestUSDC={showGetTestUSDC}
         />
       </div>

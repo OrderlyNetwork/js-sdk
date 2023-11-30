@@ -47,8 +47,8 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
 
   return (
     <>
-      <div className="py-[24px]">
-        <div className="bg-base-300 rounded py-3 px-5">
+      <div className="orderly-py-[24px]">
+        <div className="orderly-bg-base-500 orderly-rounded orderly-py-3 orderly-px-5">
           <StatusTile
             state={getBridgeStatus(status)}
             title={"Bridging"}
@@ -62,9 +62,9 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
             index={2}
           />
           <Divider />
-          <div className="flex justify-center mt-3">
+          <div className="orderly-flex orderly-justify-center orderly-mt-3">
             <button
-              className="text-sm text-primary-light disabled:text-base-contrast/10"
+              className="orderly-text-2xs orderly-text-primary-light disabled:orderly-text-base-contrast/10"
               disabled={!statusUrl}
               onClick={() => {
                 (location as any).href = statusUrl;
@@ -77,11 +77,12 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
       </div>
       {(status === SwapProcessStatusStatus.DepositFailed ||
         status === SwapProcessStatusStatus.BridgeFialed) && (
-        <div className="pb-7 text-danger text-center text-sm">
+        <div className="orderly-pb-7 orderly-text-danger orderly-text-center orderly-text-3xs">
           Deposit failed, please try again later.
         </div>
       )}
       <Button
+      className="orderly-text-xs"
         fullWidth
         disabled={
           status === SwapProcessStatusStatus.Bridging ||

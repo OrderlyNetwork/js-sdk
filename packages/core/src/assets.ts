@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Account } from "./account";
-import { ConfigStore } from "./configStore";
+import { ConfigStore } from "./configStore/configStore";
 import { definedTypes } from "./constants";
 import { IContract } from "./contract";
 import { MessageFactor } from "./signer";
@@ -270,7 +270,7 @@ export class Assets {
 
     const brokerId = this.configStore.get<string>("brokerId");
 
-    if (!brokerId) throw new Error("brokerId is required");
+    if (!brokerId) throw new Error("[Assets]:brokerId is required");
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
 

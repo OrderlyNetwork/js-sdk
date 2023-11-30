@@ -22,7 +22,7 @@ export type TradingViewChartConfig = TradingViewChartProps &
     scriptSRC?: string;
     library_path: string;
     customCssUrl?: string;
-    apiBaseUrl: string;
+    // apiBaseUrl: string;
   };
 
 export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
@@ -152,7 +152,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         }}
       />
       {/* <TradingViewChart {...chartProps} {...size} /> */}
-      <div className="w-full h-full" ref={containerRef}></div>
+      <div className="orderly-w-full orderly-h-full" ref={containerRef}></div>
     </>
   );
 };

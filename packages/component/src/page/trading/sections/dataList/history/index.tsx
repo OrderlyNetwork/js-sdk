@@ -15,13 +15,16 @@ export const HistoryPane = () => {
   const { state } = useAccount();
   const { onSymbolChange } = useContext(TradingPageContext);
   const [data, { isLoading, loadMore }] = useOrderStream({
+    // @ts-ignore
     side,
+    // @ts-ignore
     status,
   });
 
   return (
     <HistoryListView
       isLoading={isLoading}
+      // @ts-ignore
       dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
       onSideChange={setSide}
       onStatusChange={setStauts}

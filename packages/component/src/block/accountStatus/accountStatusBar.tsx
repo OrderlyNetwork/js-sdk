@@ -12,6 +12,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { Chains } from "./sections/chains";
+import { OrderlyAppContext } from "@/provider";
 
 export type AccountStatus =
   | "NotConnected"
@@ -20,7 +21,7 @@ export type AccountStatus =
   | "EnabledTrading"
   | "SignedIn";
 
-interface AccountStatusProps {
+export interface AccountStatusProps {
   className?: string;
   status: AccountStatusEnum;
   chains: string[];
@@ -40,7 +41,7 @@ interface AccountStatusProps {
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
-  const { logoUrl, errors } = useContext(OrderlyContext);
+  const { logoUrl, errors } = useContext(OrderlyAppContext);
 
   const [infoOpen, setInfoOpen] = useState(false);
 
@@ -62,7 +63,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   }, [status, props.address]);
 
   return (
-    <div className="flex items-center justify-between w-full">
+    <div className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full">
       {status !== AccountStatusEnum.NotConnected &&
       !errors?.ChainNetworkNotSupport ? (
         <AccountTotal
@@ -75,14 +76,14 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
         <div />
       )}
 
-      <div className="flex gap-2">
+      <div className="orderly-flex orderly-gap-2">
         <Chains disabled={status < AccountStatusEnum.NotConnected} />
         {status === AccountStatusEnum.NotConnected ? (
           <Button
             size={"small"}
             loading={props.loading}
-            variant={"gradient"}
-            className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
+            // variant={"gradient"}
+            className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
             onClick={() => props.onConnect?.()}
           >
             {buttonLabel}
@@ -91,9 +92,10 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
           <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
             <SheetTrigger asChild>
               <Button
+                id="orderly-bottom-nav-bar-connect-button"
                 size={"small"}
-                variant={"gradient"}
-                className="bg-gradient-to-r from-[#26FEFE] to-[#59B0FE] text-base-100 hover:text-base-300 h-[30px]"
+                // variant={"gradient"}
+                className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
                 loading={props.loading}
                 disabled={props.loading || errors?.ChainNetworkNotSupport}
               >

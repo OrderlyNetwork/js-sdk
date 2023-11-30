@@ -24,5 +24,6 @@ export const useFundingRates = () => {
     }
   );
 
+  // @ts-ignore
   return createGetter<API.FundingRate>(data);
 };

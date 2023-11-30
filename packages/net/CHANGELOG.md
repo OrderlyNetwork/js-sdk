@@ -1,5 +1,35 @@
 # @orderly.network/net
 
+## 1.0.92
+
+### Patch Changes
+
+- update
+
+## 1.0.91
+
+### Patch Changes
+
+- fix style bugs;
+
+## 1.0.90
+
+### Patch Changes
+
+- update
+
+## 1.0.89
+
+### Patch Changes
+
+- update
+
+## 1.0.88
+
+### Patch Changes
+
+- export usePrivateInfiniteQuery
+
 ## 1.0.87
 
 ### Patch Changes

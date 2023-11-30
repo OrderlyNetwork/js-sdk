@@ -1,5 +1,79 @@
 # @orderly.network/hooks
 
+## 1.0.6
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.5
+  - @orderly.network/core@0.1.5
+  - @orderly.network/perp@1.0.5
+  - @orderly.network/net@1.0.92
+
+## 1.0.5
+
+### Patch Changes
+
+- fix style bugs;
+- Updated dependencies
+  - @orderly.network/types@0.1.4
+  - @orderly.network/core@0.1.4
+  - @orderly.network/perp@1.0.4
+  - @orderly.network/net@1.0.91
+
+## 1.0.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.3
+  - @orderly.network/core@0.1.3
+  - @orderly.network/perp@1.0.3
+  - @orderly.network/net@1.0.90
+
+## 1.0.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.2
+  - @orderly.network/core@0.1.2
+  - @orderly.network/perp@1.0.2
+  - @orderly.network/net@1.0.89
+
+## 1.0.2
+
+### Patch Changes
+
+- export usePrivateInfiniteQuery
+- Updated dependencies
+  - @orderly.network/types@0.1.1
+  - @orderly.network/core@0.1.1
+  - @orderly.network/perp@1.0.1
+  - @orderly.network/net@1.0.88
+
+## 1.0.1
+
+### Patch Changes
+
+- fix bug
+
+## 1.0.0
+
+### Minor Changes
+
+- first publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@0.1.0
+  - @orderly.network/core@0.1.0
+  - @orderly.network/perp@1.0.0
+
 ## 0.0.95
 
 ### Patch Changes

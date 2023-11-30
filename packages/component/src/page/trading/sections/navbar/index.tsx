@@ -2,17 +2,17 @@ import { Logo } from "@/logo";
 import { FC, useContext } from "react";
 import { Market } from "./market";
 import { MarketOverview } from "./marketOverview";
-import { OrderlyContext } from "@orderly.network/hooks";
+import { OrderlyAppContext } from "@/provider";
 
 interface NavBarProps {
   symbol: string;
 }
 
 export const NavBar: FC<NavBarProps> = (props) => {
-  const { logoUrl } = useContext(OrderlyContext);
+  const { logoUrl } = useContext(OrderlyAppContext);
   return (
-    <div className="flex flex-row items-center px-3 sticky top-0 bg-base-100 z-20 border-b border-b-divider">
-      <div className="grow flex flex-row items-center gap-4">
+    <div className="orderly-flex orderly-flex-row orderly-items-center orderly-px-3 orderly-sticky orderly-top-0 orderly-bg-base-800 orderly-z-20 orderly-border-b orderly-border-b-divider orderly-text-3xs orderly-text-base-contrast">
+      <div className="orderly-grow orderly-flex orderly-flex-row orderly-items-center orderly-gap-4">
         <Market symbol={props.symbol} />
         <MarketOverview symbol={props.symbol} />
       </div>

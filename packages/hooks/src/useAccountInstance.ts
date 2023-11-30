@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
 export const useAccountInstance = (): Account => {
-  const { configStore, keyStore, contractManager, getWalletAdapter } =
+  const { configStore, keyStore, getWalletAdapter } =
     useContext(OrderlyContext);
 
   if (!configStore)
@@ -23,7 +23,7 @@ export const useAccountInstance = (): Account => {
       account = new Account(
         configStore,
         keyStore,
-        contractManager,
+
         getWalletAdapter
         // walletAdapter
       );

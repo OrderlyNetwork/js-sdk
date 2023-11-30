@@ -51,12 +51,14 @@ export const TokenQtyInput: FC<TokenQtyInputProps> = (props) => {
       placeholder={"Quantity"}
       readOnly
       value={amount}
-      prefix={loading ? <Spinner size={"small"} className="mx-2" /> : undefined}
+      prefix={loading ? <Spinner size={"small"} className="orderly-mx-2" /> : undefined}
+      containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
+      className="orderly-text-sm"
       suffix={
-        <InputMask className={"flex-row items-center gap-2"}>
+        <InputMask className="orderly-flex-row orderly-items-center orderly-gap-2">
           <Divider vertical />
           <NetworkImage name={token.symbol} type={"token"} size={"small"} />
-          <span>{token.symbol}</span>
+          <span className="orderly-text-base-contrast-80 orderly-text-3xs">{token.symbol}</span>
         </InputMask>
       }
     />

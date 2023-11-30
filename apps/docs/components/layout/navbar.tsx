@@ -1,0 +1,24 @@
+import { ConnectButton } from "../connectButton";
+import Link from "next/link";
+
+export const NavBar = () => {
+  return (
+    <div className="h-[65px] sticky top-0 z-50 bg-base-500">
+      <div className="flex flex-row items-center justify-between h-full max-w-[90rem] m-auto px-[24px]">
+        <Link href="/docs/hooks/overview">
+          <img src="/images/orderly.log.png" width={40} />
+        </Link>
+
+        <div className="flex gap-3 items-center">
+          <ul className="flex gap-3 text-[#4b5563]">
+            <li className="mr-[5px]">
+              <Link href="/docs/hooks/overview">Docs</Link>
+            </li>
+            <li className="font-medium">API</li>
+          </ul>
+          {/* <ConnectButton /> */}
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -36,7 +36,15 @@ yarn-error.log*
 .vercel
 
 dist/
+lib/
+esm/
 docs/
 
 dev-tool
 create-orderly-app
+
+!apps/docs
+!apps/docs/**/*
+apps/docs/dist
+
+apps/docs/_doc_meta_

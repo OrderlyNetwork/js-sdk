@@ -1,4 +1,4 @@
-import {
+import React, {
   FC,
   PropsWithChildren,
   ReactNode,
@@ -7,10 +7,11 @@ import {
   useMemo,
 } from "react";
 import { Button } from "@/button/button";
-import { useAccount, OrderlyContext } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { WalletConnectSheet } from "@/block/walletConnect";
+import { OrderlyAppContext } from "@/provider";
 
 export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
@@ -21,12 +22,13 @@ export interface ConnectGuardButtonProps {
 export const StatusGuardButton: FC<
   PropsWithChildren<ConnectGuardButtonProps>
 > = (props) => {
-  const { state, connect } = useAccount();
+  const { state } = useAccount();
+  const { onWalletConnect } = useContext(OrderlyAppContext);
 
   const onClick = useCallback(async () => {
     if (state.status === AccountStatusEnum.NotConnected) {
       try {
-        const result = await connect();
+        const result = await onWalletConnect();
 
         if (result && result.status < AccountStatusEnum.EnableTrading) {
           return await modal.show(WalletConnectSheet, {
@@ -45,7 +47,7 @@ export const StatusGuardButton: FC<
         });
       } catch (err) {}
     }
-  }, [connect, state]);
+  }, [state]);
 
   const buttonLabel = useMemo(() => {
     if (state.status === AccountStatusEnum.NotConnected) {

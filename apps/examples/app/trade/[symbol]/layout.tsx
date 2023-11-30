@@ -9,7 +9,7 @@ import walletConnectModule, {
 } from "@web3-onboard/walletconnect";
 
 import { TradingMainPage } from "./components/main";
-import "@orderly.network/components/dist/styles.css";
+import "@orderly.network/react/dist/styles.css";
 
 import "./theme.css";
 

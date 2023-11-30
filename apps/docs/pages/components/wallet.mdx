@@ -1,0 +1,55 @@
+# Wallet connect
+
+`@orderly.network/react` 的定位是Orderly API 应用层，主要负责渲染 UI，处理用户交互事件，完成交易业务等，所以没有内置与交易无关的钱包连接功能。
+
+在需要处理钱包连接的地方，`@orderly.network/react`利用React的context机制，从最近的context获取当前已连接钱包的信息或者调用context提供的钱包连接函数。为此，`@orderly.network/hoos`定义了名为`WalletConnectorContext`的context, 任何实现了[`WalletConnectorContextState`](/)定义的。
+
+综合上
+
+
+
+## 使用 Orderly 提供的 SDK
+
+为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 会对市面上比较流行的库进行封装并提供下载。
+
+### `@orderly.network/web3-onboard`
+
+从库的名字你可以看出来 ，这是一个封装了[`web3-onboard`](https://onboard.blocknative.com/docs/modules/react)的库。
+
+#### 安装
+
+```bash npm2yarn copy
+npm install @orderly.network/web3-onboard
+```
+
+#### 使用
+
+使用`ConnectorProvider`组件包裹你的组件，通常是最顶层的根组件，`ConnectorProvider`组件接受两个参数：
+
+- `apiKey`：你在`web3-onboard`创建的 [api key](https://explorer.blocknative.com/account)
+- `options`：`web3-onboard`的配置项，具体可以参考[web3-onboard](https://onboard.blocknative.com/docs/modules/core#initialization), 这是一个可选项，如果没有传入的时候，会使用默认的配置项。
+
+```typescript copy
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+
+export const App = () => {
+  return (
+    <ConnectorProvider
+      apiKey="<Your web3-onboard's api key>"
+      options={`metadata`}
+    >
+      {/* components */}
+    </ConnectorProvider>
+  );
+};
+```
+
+Orderly 还会推出更多的钱包连接库，敬请期待。
+
+## 自定义钱包连接
+
+你也可以自定义钱包连接，只需要实现`WalletConnector`接口即可。
+
+```typescript copy
+
+```

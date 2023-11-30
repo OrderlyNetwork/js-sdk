@@ -1,4 +1,4 @@
-import { Button } from "@orderly.network/components";
+import { Button } from "@orderly.network/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

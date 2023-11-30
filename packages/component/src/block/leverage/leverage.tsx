@@ -16,10 +16,10 @@ export const LeverageView: FC<LeverageViewProps> = ({
   onShowLeverageInfo,
 }) => {
   return (
-    <div className="flex justify-between items-center text-sm">
-      <div className="text-base-contrast/30 flex items-center">
+    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-text-3xs">
+      <div className="orderly-text-4xs orderly-text-base-contrast-36 orderly-flex orderly-items-center">
         <button
-          className="flex items-center gap-1"
+          className="orderly-flex orderly-items-center orderly-gap-1"
           onClick={() => onShowLeverageInfo?.()}
         >
           <InfoIcon size={14} />
@@ -28,15 +28,15 @@ export const LeverageView: FC<LeverageViewProps> = ({
         <Button
           variant={"text"}
           size={"small"}
-          className="px-1 min-w-[24px] text-primary-light"
+          className="orderly-px-1 orderly-min-w-[24px] orderly-text-4xs orderly-text-primary-light"
         >
           {`${maxLeverage}x`}
         </Button>
       </div>
-      <div className="flex flex-col items-end text-base-contrast/30">
+      <div className="orderly-flex orderly-flex-col orderly-items-end orderly-text-4xs orderly-text-base-contrast-36">
         <div>Pred. funding rate</div>
-        <div className="flex gap-1">
-          <span className="text-warning">{`${predFundingRate}%`}</span>
+        <div className="orderly-flex orderly-gap-1">
+          <span className="orderly-text-warning">{`${predFundingRate}%`}</span>
           <span>in</span>
           <span>{countdown}</span>
         </div>

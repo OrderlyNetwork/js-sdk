@@ -16,7 +16,7 @@ export const SliderTip: FC<SliderTipProps> = (props) => {
   return (
     <span
       className={cn(
-        "absolute hidden rounded drop-shadow w-[36px] h-[19px] translate-x-[-12px] top-[-28px] font-semibold text-center group-focus:inline-block text-xs after:block after:absolute after:bottom-[-8px] after:w-0 after:h-0 after:border-4 after:left-1/2 after:translate-x-[-50%] after:border-solid after:border-transparent after:border-t-inherit text-base-100",
+        "orderly-absolute orderly-hidden orderly-rounded orderly-drop-shadow orderly-w-[36px] orderly-h-[19px] orderly-translate-x-[-12px] orderly-top-[-28px] orderly-font-semibold orderly-text-center group-focus:orderly-inline-block orderly-text-4xs after:orderly-block after:orderly-absolute after:orderly-bottom-[-8px] after:orderly-w-0 after:orderly-h-0 after:orderly-border-4 after:orderly-left-1/2 after:orderly-translate-x-[-50%] after:orderly-border-solid after:orderly-border-transparent after:orderly-border-t-inherit orderly-text-base-100",
         className
       )}
       style={{ lineHeight: "19px" }}

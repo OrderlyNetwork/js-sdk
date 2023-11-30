@@ -9,9 +9,12 @@ import {
   DialogTrigger,
 } from "@/dialog";
 import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
-import { useChains, OrderlyContext } from "@orderly.network/hooks";
+import {
+  useChains,
+  OrderlyContext,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
-import { WalletConnectorContext } from "@/provider";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -39,9 +42,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
-  const { connectedChain, setChain, settingChain } = useContext(
-    WalletConnectorContext
-  );
+  const { connectedChain, setChain, settingChain } = useWalletConnector();
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
@@ -51,10 +52,12 @@ export const Chains: FC<ChainsProps> = (props) => {
 
     if (!chain) return <span>Unknown</span>;
 
+    // @ts-ignore
     if (chain.chain_id === 421613) {
       return <span>Testnet</span>;
     }
 
+    // @ts-ignore
     return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
   }, [connectedChain, findByChainId, defaultChain]);
 
@@ -75,18 +78,20 @@ export const Chains: FC<ChainsProps> = (props) => {
           loading={settingChain}
           disabled={disabled}
           className={
-            "border-[rgba(38,254,254,1)] gap-1 text-base-contrast h-[30px]"
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent"
           }
         >
           {chainName}
-          <ArrowIcon size={8} />
+          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
         <DialogHeader>Switch network</DialogHeader>
-        <DialogBody className="max-h-[327.5px] overflow-y-auto">
+        <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
+            // @ts-ignore
             mainChains={mainChains}
+            // @ts-ignore
             testChains={testChains}
             onItemClick={(item: any) => {
               setOpen(false);

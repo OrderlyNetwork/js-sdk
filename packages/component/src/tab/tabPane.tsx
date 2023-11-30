@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import React, { FC, PropsWithChildren, ReactNode } from "react";
 
 export interface TabPaneProps {
   title: ReactNode;

@@ -73,8 +73,7 @@ function request(url, options) {
     if (!url.startsWith("http")) {
       throw new Error("url must start with http(s)");
     }
-    const urlInstance = new URL(url);
-    const response = yield fetch(urlInstance, __spreadProps(__spreadValues({}, options), {
+    const response = yield fetch(url, __spreadProps(__spreadValues({}, options), {
       // mode: "cors",
       // credentials: "include",
       headers: _createHeaders(options.headers, options.method)

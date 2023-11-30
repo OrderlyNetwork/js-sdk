@@ -1,5 +1,5 @@
+import React, { FC, useMemo, useState } from "react";
 import { ListView } from "@/listView";
-import { FC, useMemo, useState } from "react";
 import { Divider } from "@/divider";
 import { OrderCell } from "@/block/orders/cell";
 import { Toolbar } from "./toolbar";
@@ -27,7 +27,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
       cancelOrder={props.cancelOrder}
       editOrder={props.editOrder}
     >
-      <StatisticStyleProvider labelClassName={"text-sm text-base-contrast/30"}>
+      <StatisticStyleProvider labelClassName="orderly-text-3xs orderly-text-base-contrast/30">
         <Toolbar
           onCancelAll={props.onCancelAll}
           onShowAllSymbolChange={props.onShowAllSymbolChange}

@@ -16,6 +16,7 @@ const Dialog = create<ConfirmProps>((props) => {
       open={visible}
       title={props.title}
       closable={false}
+      // @ts-ignore
       onOk={() => {
         resolve(true);
         hide();
@@ -26,7 +27,7 @@ const Dialog = create<ConfirmProps>((props) => {
       }}
     >
       <DialogBody>
-        <div className={"py-5 text-[12px]"}>{props.content}</div>
+        <div className="orderly-py-5 orderly-text-[12px]">{props.content}</div>
       </DialogBody>
     </SimpleDialog>
   );

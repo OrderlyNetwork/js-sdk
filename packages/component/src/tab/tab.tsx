@@ -26,9 +26,9 @@ export const Tab: FC<TabProps> = (props) => {
   return (
     <button
       className={cn(
-        "text-base-contrast/40 h-[32px]",
-        active && "text-base-contrast active",
-        disabled && "cursor-not-allowed text-slate-300"
+        "orderly-text-base-contrast-36 orderly-text-xs orderly-h-[32px]",
+        active && "orderly-text-base-contrast orderly-active",
+        disabled && "orderly-cursor-not-allowed orderly-text-slate-300"
       )}
       disabled={props.disabled}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {

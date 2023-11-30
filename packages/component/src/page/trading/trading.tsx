@@ -28,7 +28,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
       >
-        <div className="pb-[70px]">
+        <div className="orderly-pb-[70px]">
           <NavBar symbol={props.symbol} />
           {/* <Divider /> */}
           <ChartView
@@ -36,7 +36,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
             tradingViewConfig={props.tradingViewConfig}
           />
           <MyLeverageView symbol={props.symbol} />
-          <div className="grid grid-cols-[3fr_4fr] box-border p-2 items-start ">
+          <div className="orderly-grid orderly-grid-cols-[3fr_4fr] orderly-box-border orderly-p-2 orderly-items-start">
             <MyOrderBook symbol={props.symbol} />
             <AssetsProvider>
               <MyOrderEntry symbol={props.symbol} />

@@ -18,7 +18,7 @@ export const useWalletSubscription = (options?: {
         onMessage: (data: any) => {
           //
           options?.onMessage?.(data);
-          next(data);
+          next(null, data);
         },
       }
     );

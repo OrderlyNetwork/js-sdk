@@ -1,9 +1,8 @@
 import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
-import { prop } from "ramda";
 
 export const useHoldingStream = () => {
   const ws = useWS();

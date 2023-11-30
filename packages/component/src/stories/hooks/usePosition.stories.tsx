@@ -18,21 +18,21 @@ const PositionHookDemo: FC<{
             <pre>{JSON.stringify(position, null, 2)}</pre>
           </div>
           <div>
-            <div className="flex gap-2 p-2 bg-slate-100">
+            <div className="orderly-flex orderly-gap-2 orderly-p-2 orderly-bg-slate-100">
               <input
                 type="text"
                 placeholder="Qty"
-                className="border border-slate-500 px-2"
+                className="orderly-border orderly-border-slate-500 orderly-px-2"
               />
               <input
                 type="text"
                 placeholder="Price"
-                className="border border-slate-500 px-2"
+                className="orderly-border orderly-border-slate-500 orderly-px-2"
               />
-              <button className="border rounded px-2 border-slate-500">
+              <button className="orderly-border orderly-rounded orderly-px-2 orderly-border-slate-500">
                 Limit Close
               </button>
-              <button className="border rounded px-2 border-slate-500">
+              <button className="orderly-border orderly-rounded orderly-px-2 orderly-border-slate-500">
                 Market Close
               </button>
             </div>
@@ -42,11 +42,11 @@ const PositionHookDemo: FC<{
     });
   }, [props.data]);
   return (
-    <div className="text-black">
+    <div className="orderly-text-black">
       <div>
         <pre>{JSON.stringify(props.aggregated, null, 2)}</pre>
       </div>
-      <hr className="my-3" />
+      <hr className="orderly-my-3" />
       <div>{children}</div>
     </div>
   );

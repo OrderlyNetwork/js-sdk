@@ -1,27 +1,15 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import useConstant from "use-constant";
-import { Account, AccountState } from "@orderly.network/core";
+import { AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
 
-export const useAccount = (): {
-  account: Account;
-  state: AccountState;
-  // login: (address: string) => void;
-  createOrderlyKey: (remember: boolean) => Promise<string>;
-  createAccount: () => Promise<string>;
-  disconnect: () => Promise<void>;
-  connect: () => Promise<any>;
-  setChain: (chainId: number) => Promise<any>;
-  // settlement: () => Promise<any>;
-  // info: API.AccountInfo | undefined;
-} => {
+export const useAccount = () => {
   const {
     configStore,
     keyStore,
-    onWalletConnect,
-    onWalletDisconnect,
-    onSetChain,
+    // onWalletConnect,
+    // onWalletDisconnect,
+    // onSetChain,
   } = useContext(OrderlyContext);
 
   if (!configStore)
@@ -36,6 +24,11 @@ export const useAccount = (): {
   const account = useAccountInstance();
 
   const [state, setState] = useState<AccountState>(account.stateValue);
+
+  // const { data: userInfo } =
+  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  // console.log("userInfo", userInfo);
 
   // const state = useObservable<AccountState>(
   //   () => account.state$,
@@ -73,34 +66,18 @@ export const useAccount = (): {
     return account.createAccount();
   }, [account]);
 
-  const connect = useCallback(async () => {
-    return onWalletConnect?.();
-  }, [account]);
-
-  // const settlement = useCallback(async () => {
-  //   return account.settlement();
-  // }, [account]);
-
-  const disconnect = async () => {
-    // account.disconnect();
-    return onWalletDisconnect?.();
-  };
-
-  const setChain = async (chainId: number) => {
-    return onSetChain?.(chainId);
-  };
+  // console.log("--------", state);
 
   return {
-    // account: state!,
     account,
     state,
     // info: {},
     // login,
     createOrderlyKey,
     createAccount,
-    disconnect,
-    connect,
-    setChain,
+    // disconnect,
+    // connect,
+    // setChain,
     // settlement,
   };
 };

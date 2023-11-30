@@ -13,43 +13,28 @@ export const Cell: FC<MarketCellProps> = (props) => {
   const { item, onItemClick } = props;
   const { quote_dp } = useContext(SymbolContext);
 
-  const colorClassName = useMemo(() => {
-    if (!item["24h_open"] || !item["24h_close"]) {
-      return "text-base-contrast/50";
-    }
-
-    if (item["24h_close"] > item["24h_open"]) {
-      return "text-trade-profit";
-    }
-
-    if (item["24h_close"] < item["24h_open"]) {
-      return "text-trade-loss";
-    }
-
-    return "text-base-contrast/50";
-  }, [item["24h_open"], item["24h_close"]]);
 
   return (
     <div
-      className="flex items-center gap-2 cursor-pointer"
+      className="orderly-flex orderly-items-center orderly-gap-2 orderly-cursor-pointer"
       onClick={() => onItemClick?.(item)}
     >
       <NetworkImage type={"symbol"} symbol={item.symbol} />
-      <div className="flex flex-1 flex-col">
-        <div className="flex items-center justify-between">
-          <Text rule="symbol">{item.symbol}</Text>
-          <Numeral precision={quote_dp} className={colorClassName}>
+      <div className="orderly-flex orderly-flex-1 orderly-flex-col">
+        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-2xs">
+          <Text rule="symbol" className="orderly-text-base-contrast">{item.symbol}</Text>
+          <Numeral precision={quote_dp} className="orderly-text-base-contrast">
             {item["24h_close"]}
           </Numeral>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-4xs">
           <Numeral.total
             rule="human"
-            className="text-sm text-base-contrast/50"
+            className="orderly-text-base-contrast-54"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
           />
-          <Numeral rule="percentages" className="text-sm" coloring>
+          <Numeral rule="percentages" coloring>
             {item.change}
           </Numeral>
         </div>

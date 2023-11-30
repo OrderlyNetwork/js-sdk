@@ -1,6 +1,6 @@
 import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { order } from "@orderly.network/futures";
+import { order } from "@orderly.network/perp";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -65,7 +65,6 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
     const { maxQty } = configs;
 
-    //
     const { order_quantity, total } = values;
 
     if (!order_quantity) {
@@ -74,7 +73,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
         message: "quantity is required",
       };
     } else {
-      //// 需要用MaxQty+base_max, base_min来判断
+      // need to use MaxQty+base_max, base_min to compare
       const { base_min, quote_dp, base_dp } = configs.symbol;
       const qty = new Decimal(order_quantity);
       if (qty.lt(base_min)) {
@@ -132,7 +131,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
   ): Promise<VerifyResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
-
+      // @ts-ignore
       const { order_price, side } = values;
 
       if (!order_price) {

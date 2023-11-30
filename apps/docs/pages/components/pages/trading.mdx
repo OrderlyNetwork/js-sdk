@@ -1,0 +1,46 @@
+# Trading page
+
+包含完整的交易功能页面组件，包含了以下功能：
+
+- Orderbook
+- K线图表
+- 创建订单、订单列表、订单管理
+- 仓位列表、管理
+- 资源管理，出入金
+
+```typescript copy
+import { TradingPage } from "@orderly.network/react";
+
+export default function Trading() {
+  return (
+    <TradingPage
+      symbol={"PERP_ETH_USDC"}
+      tradingViewConfig={`tradingView config`}
+      onSymbolChange={`onSymbolChange handler`}
+    />
+  );
+}
+```
+
+## APIs
+
+### symbol
+
+- Type: `string`
+- Required: true
+
+当前交易对，例如 `PERP_ETH_USDC`。
+
+### onSymbolChange
+
+- Type: (symbol: API.Symbol) => void
+- Required: false
+
+当用户选择了一个新的交易对时，会触发该事件，参数为新的交易对, [格式](/)。
+
+### tradingViewConfig
+
+- Type: `TradingViewConfig`
+- Required: false
+
+TradingView 图表配置, `@orderly.network/react`没有包含`tradingView`库，你可以通过配置使用你自己的`tradingview`库，或者下载 Orderly 提供的[资源包](/)并放到指定的位置。

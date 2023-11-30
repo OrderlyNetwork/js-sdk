@@ -1,27 +1,16 @@
 {
-
-    "docs": {
-      "title": "Documntation",
-      "type": "page"
-    },
-    "components": {
-      "title": "Components",
-      "type": "page"
-    },
-    "theme": {
-      "title": "Theme",
-      "type": "page"
-    },
-    "dev": {
-      "title": "Dev Tool",
-      "type": "menu",
-      "items":{
-        "theming":{
-            "title":"Theming Tool",
-            "href":"/dev/theming"
-        }
-        
-        
-      }
-    }
+  "docs": {
+    "title": "Docs",
+    "type": "page"
+  },
+  "components":{
+    "title": "Components",
+    "type": "page"
+  
+  },
+  "apis": {
+    "title": "API",
+    "type": "page",
+    "href": "/apis/modules/__orderly_network___hooks"
   }
+}

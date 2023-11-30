@@ -14,17 +14,15 @@ export interface UserOrdersReturn {
 
 const chche: Record<string, boolean> = {};
 
-export const useOrderStream = ({
-  status,
-  symbol,
-  side,
-  size = 100,
-}: {
+type Params = {
   symbol?: string;
   status?: OrderStatus;
   size?: number;
   side?: OrderSide;
-} = {}): any => {
+};
+
+export const useOrderStream = (params: Params) => {
+  const { status, symbol, side, size = 100 } = params;
   const ws = useWS();
 
   const { data: markPrices = {} } = useMarkPricesStream();
@@ -34,7 +32,7 @@ export const useOrderStream = ({
   const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
       // reached the end
-      if (previousPageData && !previousPageData.length) return null;
+      if (previousPageData && !previousPageData.rows?.length) return null;
 
       const search = new URLSearchParams([
         ["size", size.toString()],
@@ -57,6 +55,7 @@ export const useOrderStream = ({
     },
     {
       initialSize: 1,
+      // revalidateFirstPage: false,
       onError: (err) => {
         console.error("fetch failed::::", err);
       },
@@ -106,7 +105,6 @@ export const useOrderStream = ({
           ordersResponse.mutate((prevData) => {
             // console.log("prevData", prevData);
 
-            // FIXME: 注意分页逻辑
             const newOrder = {
               order_id: data.orderId,
               symbol: data.symbol,
@@ -170,12 +168,12 @@ export const useOrderStream = ({
   }, []);
 
   /**
-   * 取消所有订单
+   * cancel all orders
    */
   const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
 
   /**
-   * 更新单个订单
+   * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
     //
@@ -183,7 +181,7 @@ export const useOrderStream = ({
   }, []);
 
   /**
-   * 取消单个订单
+   * calcel order
    */
   const cancelOrder = useCallback((orderId: string, symbol?: string) => {
     return doCancelOrder(null, {
@@ -214,7 +212,7 @@ export const useOrderStream = ({
       updateOrder,
       cancelOrder,
     },
-  ];
+  ] as const;
 };
 
 // Re-page the data
@@ -236,7 +234,7 @@ function rePageData(list: any[], total: number, pageSize: number) {
       rows = [];
     }
   }
-  console.log("rePageData", list, total, newData);
+  // console.log("rePageData", list, total, newData);
   return newData;
 }
 

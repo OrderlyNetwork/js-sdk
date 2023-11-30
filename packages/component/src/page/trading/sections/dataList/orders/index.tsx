@@ -42,6 +42,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const onCancelOrder = useCallback(
     (orderId: number, symbol: string): Promise<any> => {
+      // @ts-ignore
       return cancelOrder(orderId, symbol);
     },
     []
@@ -49,6 +50,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   return (
     <OrdersView
+      // @ts-ignore
       dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
       isLoading={isLoading}
       symbol={context.symbol}

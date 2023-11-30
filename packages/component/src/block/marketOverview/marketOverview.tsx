@@ -28,5 +28,5 @@ export const MarketOverview: FC<MarketOverviewProps> = ({ items }) => {
     });
   }, [items]);
 
-  return <div className="flex gap-5">{children}</div>;
+  return <div className="orderly-flex orderly-gap-5">{children}</div>;
 };

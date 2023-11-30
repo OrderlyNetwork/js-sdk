@@ -39,16 +39,16 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, []);
 
   return (
-    <div className="pr-1">
+    <div className="orderly-pr-1">
       <SymbolProvider symbol={symbol}>
         <OrderBook
           level={7}
-          asks={data.asks}
-          bids={data.bids}
+          asks={data.asks!}
+          bids={data.bids!}
           markPrice={data.markPrice}
-          lastPrice={data.middlePrice}
-          depth={allDepths}
-          activeDepth={depth}
+          lastPrice={data.middlePrice!}
+          depth={allDepths!}
+          activeDepth={depth!}
           base={symbolInfo("base")}
           quote={symbolInfo("quote")}
           isLoading={isLoading}

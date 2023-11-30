@@ -19,7 +19,7 @@ export const SvgImage: FC<SvgImageProps> = (props) => {
   }, [props.size]);
   return (
     <div
-      className={"inline-block overflow-hidden p-[3px]"}
+      className="orderly-inline-block orderly-overflow-hidden orderly-p-[3px]"
       style={{
         width: size,
         height: size,

@@ -5,7 +5,11 @@ import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
 import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
-import { OrderlyContext, useLocalStorage } from "@orderly.network/hooks";
+import {
+  OrderlyContext,
+  useLocalStorage,
+  useConfig,
+} from "@orderly.network/hooks";
 import { SymbolProvider } from "@/provider";
 import { cn } from "@/utils/css";
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/tabs";
@@ -18,26 +22,27 @@ interface ChartViewProps {
 export const ChartView: FC<ChartViewProps> = (props) => {
   const { symbol, tradingViewConfig } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
-  const { klineDataUrl } = useContext(OrderlyContext);
+  const apiBaseUrl = useConfig("apiBaseUrl");
   const [collapsed, setCollapsed] = useLocalStorage(
     "orderly:chart:collapsed",
     true
   );
 
   return (
-    <div>
+    <div className="orderly-text-3xs">
       <Tabs
         showIdentifier={false}
         value={activeTab}
         onTabChange={setActiveTab}
-        tabBarClassName="h-[40px]"
+        tabBarClassName="orderly-h-[40px]"
         collapsed={collapsed}
+        // @ts-ignore
         onToggleCollapsed={() => setCollapsed((prev: boolean) => !prev)}
         tabBarExtra={(context) => {
           return (
-            <div className="flex items-center">
+            <div className="orderly-flex orderly-items-center">
               <button
-                className={"px-5"}
+                className="orderly-px-5"
                 onClick={() => {
                   context.toggleContentVisible();
                 }}
@@ -45,8 +50,8 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                 <ChevronDown
                   size={18}
                   className={cn(
-                    "transition-transform text-base-contrast/50",
-                    context.contentVisible ? "rotate-180" : "rotate-0"
+                    "orderly-transition-transform orderly-text-base-contrast/50",
+                    context.contentVisible ? "orderly-rotate-180" : "orderly-rotate-0"
                   )}
                 />
               </button>
@@ -60,7 +65,8 @@ export const ChartView: FC<ChartViewProps> = (props) => {
             theme={"dark"}
             symbol={symbol}
             autosize={false}
-            apiBaseUrl={klineDataUrl}
+            // @ts-ignore
+            apiBaseUrl={apiBaseUrl}
             {...tradingViewConfig}
           />
         </TabPane>

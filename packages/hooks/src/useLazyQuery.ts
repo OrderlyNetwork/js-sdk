@@ -1,14 +1,10 @@
-"use client";
-
-import { useContext } from "react";
 import useSWR from "swr";
-import { OrderlyContext } from "./orderlyContext";
-
 import { fetcher } from "./utils/fetcher";
 import useSWRMutation, {
   type SWRMutationConfiguration,
   SWRMutationResponse,
 } from "swr/mutation";
+import { useConfig } from "./useConfig";
 
 /**
  * useQuery
@@ -23,7 +19,7 @@ export const useLazyQuery = <T, R = any>(
     init?: RequestInit;
   }
 ): SWRMutationResponse => {
-  const { apiBaseUrl } = useContext(OrderlyContext);
+  const apiBaseUrl = useConfig("apiBaseUrl");
   const { formatter, init, ...swrOptions } = options || {};
   // check the query is public api
   // if (typeof query === "string" && !query.startsWith("/v1/public")) {
@@ -31,14 +27,13 @@ export const useLazyQuery = <T, R = any>(
   // }
 
   if (typeof apiBaseUrl === "undefined") {
-    throw new Error("please add OrderlyProvider to your app");
+    throw new Error("please add OrderlyConfigProvider to your app");
   }
 
   // @ts-ignore
   return useSWRMutation(
     query,
     (url: string, options: any) => {
-      // const {init,arg} = options;
       url = url.startsWith("http") ? url : `${apiBaseUrl}${url}`;
       if (options?.arg) {
         // const searchParams = new URLSearchParams(init.arg);
@@ -50,7 +45,6 @@ export const useLazyQuery = <T, R = any>(
           .join("&");
         url = `${url}?${queryString}`;
       }
-      // return fetch(url);
       return fetcher(url, init, {
         formatter,
       });

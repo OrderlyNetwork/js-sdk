@@ -8,7 +8,6 @@ import {
   LocalStorageStore,
   EtherAdapter,
 } from "@orderly.network/core";
-import { useAppState } from "@orderly.network/hooks";
 import { Page } from "../../layout";
 import { WooKeyStore } from "../../stories/mock/woo.keystore";
 import { OnboardConnectorProvider } from "../../provider/walletConnectorProvider";
@@ -42,9 +41,8 @@ type Story = StoryObj<typeof TradingPage>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    const appState = useAppState();
     return (
-      <Page >
+      <Page>
         <TradingPage {...args} symbol={symbol} />
       </Page>
     );

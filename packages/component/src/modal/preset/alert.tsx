@@ -29,12 +29,12 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
   return (
     <Dialog open={visible} onOpenChange={onOpenChange}>
       <DialogContent closable={false}>
-        <DialogHeader className="after:hidden items-center pt-3 pb-0">
+        <DialogHeader className="after:orderly-hidden orderly-items-center orderly-pt-3 orderly-pb-0">
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <DialogBody className="py-[20px]">{message}</DialogBody>
-        <DialogFooter className="flex justify-center">
-          <Button onClick={onOk} className="w-2/3">
+        <DialogBody className="orderly-py-[20px]">{message}</DialogBody>
+        <DialogFooter className="orderly-flex orderly-justify-center">
+          <Button onClick={onOk} className="orderly-w-2/3 orderly-text-xs orderly-text-base-contrast">
             Ok
           </Button>
         </DialogFooter>

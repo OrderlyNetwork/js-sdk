@@ -30,7 +30,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
     modal.alert({
       title: "Reduce only",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="orderly-text-2xs orderly-text-base-contrast-54">
           Reduce only ensures that you can only reduce or close a current
           position so that your position size will not be increased
           unintentionally.
@@ -43,7 +43,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
     modal.alert({
       title: "Hidden",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="orderly-text-3xs orderly-text-base-contrast/60">
           Hidden order is a limit order that does not appear in the orderbook.
         </span>
       ),
@@ -52,16 +52,16 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
 
   return (
     <>
-      <div className="flex items-center py-[2px] justify-between">
+      <div className="orderly-flex orderly-items-center orderly-py-[2px] orderly-justify-between orderly-text-base-contrast-54">
         <Controller
           name="reduce_only"
           control={control}
           render={({ field }) => {
             return (
-              <div className="flex gap-2 items-center">
+              <div className="orderly-flex orderly-gap-2 orderly-items-center">
                 <Switch
                   id="reduceOnly"
-                  color={"profit"}
+                  color={"primary"}
                   checked={field.value}
                   onCheckedChange={(checked) =>
                     // props.setValue?.("reduce_only", checked)
@@ -83,21 +83,21 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
 
         <button
           type="button"
-          className="w-[18px] h-[18px] px-5 text-base-contrast/60"
+          className="orderly-w-[18px] orderly-h-[18px] orderly-px-5 orderly-text-base-contrast/60"
           onClick={() => setOpen((open) => !open)}
         >
           <ChevronDown
             size={18}
             className={cn(
-              "transition-transform text-base-contrast/50",
-              open && "rotate-180"
+              "orderly-transition-transform orderly-text-base-contrast/50",
+              open && "orderly-rotate-180"
             )}
           />
         </button>
       </div>
       <Collapsible open={open}>
         <CollapsibleContent>
-          <div className="pb-2 space-y-4">
+          <div className="orderly-pb-2 orderly-space-y-4">
             {getValues("order_type") === OrderType.LIMIT && (
               <Controller
                 name="order_type_ext"
@@ -114,7 +114,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                       />
                       {/* <RadioGroup
                         value={field.value}
-                        className="flex gap-5"
+                        className="orderly-flex orderly-gap-5"
                         onValueChange={(value) => {
                           // 
                           // setValue("order_type_ext", value);
@@ -130,8 +130,8 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 }}
               />
             )}
-            <div className="flex gap-5">
-              <div className="flex gap-2 items-center">
+            <div className="orderly-flex orderly-gap-5">
+              <div className="orderly-flex orderly-gap-2 orderly-items-center">
                 <Checkbox
                   id="orderConfirm"
                   checked={props.showConfirm}
@@ -139,14 +139,16 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     props.onConfirmChange?.(!!checked);
                   }}
                 />
-                <Label htmlFor="orderConfirm">Order confirm</Label>
+                <Label htmlFor="orderConfirm" className="orderly-text-base-contrast-54">
+                  Order confirm
+                </Label>
               </div>
               <Controller
                 name="visible_quantity"
                 control={control}
                 render={({ field }) => {
                   return (
-                    <div className="flex gap-2 items-center">
+                    <div className="orderly-flex orderly-gap-2 orderly-items-center">
                       <Checkbox
                         id="hidden"
                         checked={field.value === 0}
@@ -155,7 +157,12 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(checked ? 0 : 1);
                         }}
                       />
-                      <Label onClick={showHiddenHint}>Hidden</Label>
+                      <Label
+                        onClick={showHiddenHint}
+                        className="orderly-text-base-contrast-54"
+                      >
+                        Hidden
+                      </Label>
                     </div>
                   );
                 }}

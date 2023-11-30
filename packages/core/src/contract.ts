@@ -1,4 +1,4 @@
-import { ConfigStore } from "./configStore";
+import { ConfigStore } from "./configStore/configStore";
 import {
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
@@ -8,6 +8,10 @@ import {
 import stagingUSDCAbiOnArbitrumTestnet from "./wallet/abis/stagingUSDCAbi.json";
 import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json";
 
+/**
+ * Orderly contracts information
+ * https://wootraders.atlassian.net/wiki/spaces/ORDER/pages/343441906/Orderly+V2+Contract+Information+Board
+ */
 export type OrderlyContracts = {
   usdcAddress: string;
   usdcAbi: any;
@@ -21,6 +25,7 @@ export interface IContract {
   getContractInfoByEnv(): OrderlyContracts;
 }
 
+/** @hidden */
 export class BaseContract implements IContract {
   constructor(private readonly configStore: ConfigStore) {}
   getContractInfoByEnv() {

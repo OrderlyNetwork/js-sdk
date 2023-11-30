@@ -44,7 +44,7 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
               }
             />
             {index < props.actionSheets.length - 1 && (
-              <Divider className={"border-base-contrast/10"} />
+              <Divider className="orderly-border-base-contrast/10" />
             )}
           </Fragment>
         );

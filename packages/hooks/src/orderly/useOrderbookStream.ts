@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import { useTickerStream } from "./useTickerStream";
 import { useMarkPrice } from "./useMarkPrice";
 import { useWS } from "../useWS";
@@ -87,7 +86,7 @@ const reduceItems = (
 
     result.push([price, quantity, newQuantity]);
     // if the total is greater than the level, break
-    //TODO:
+    // TODO:
     // if (i + 1 >= level) {
     //   break;
     // }
@@ -149,7 +148,6 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
-  //
   if (data.length === 0) return update;
 
   data = data.filter(([price]) => !isNaN(price));
@@ -221,8 +219,6 @@ export const useOrderbookStream = (
   const depths = useMemo(() => {
     const tick = config("quote_tick");
 
-    //
-
     return [tick, tick * 10, tick * 100, tick * 1000];
   }, [config("quote_tick")]);
 
@@ -255,7 +251,6 @@ export const useOrderbookStream = (
           if (ignore) return;
           //
           if (!!message) {
-
             // sort and filter qty > 0
             let bids = [...message.bids.sort(bidsSortFn)];
             bids = bids.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);

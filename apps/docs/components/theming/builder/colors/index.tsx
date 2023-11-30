@@ -1,9 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { ColorRow } from "./colorRow";
-import {
-  BRAND_COLORS,
-  COLORS,
-} from "@/components/theming/builder/colors/colors";
+import { BRAND_COLORS } from "@/components/theming/builder/colors/colors";
 import { ColorToolbar } from "./toolbar";
 import { ColorEditor } from "./colorEditor";
 import { ColorContext, ColorProvider } from "./colorContext";
@@ -18,7 +15,7 @@ export const Colors = () => {
           <div className={"mt-5"}>
             <ColorToolbar />
           </div>
-          {COLORS.map((item, index) => {
+          {/* {COLORS.map((item, index) => {
             return (
               <ColorRow
                 colors={item.colors}
@@ -26,7 +23,7 @@ export const Colors = () => {
                 name={item.groupName}
               />
             );
-          })}
+          })} */}
         </div>
         {/*<div className={"w-[280px]"}>*/}
         {/*  <ColorEditor />*/}

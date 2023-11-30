@@ -1,13 +1,13 @@
+import React, { FC } from "react";
 import { Divider } from "@/divider";
 import { PositionCell } from "./cell";
 import { AggregatedData, PositionOverview } from "./overview";
 import { ListView } from "@/listView";
-import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { SymbolProvider } from "@/provider";
 import { API } from "@orderly.network/types";
 
-interface PositionsViewProps {
+export interface PositionsViewProps {
   dataSource: any[] | null;
   aggregated: AggregatedData;
   // actions
@@ -24,8 +24,8 @@ interface PositionsViewProps {
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
     <StatisticStyleProvider
-      labelClassName="text-sm text-base-contrast/30"
-      valueClassName={"text-base-contrast/80"}
+      labelClassName="orderly-text-3xs orderly-text-base-contrast/30"
+      valueClassName="orderly-text-base-contrast/80"
     >
       <div>
         <PositionOverview

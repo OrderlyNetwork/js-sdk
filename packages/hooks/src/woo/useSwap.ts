@@ -5,20 +5,18 @@ import { utils } from "@orderly.network/core";
 import { pick } from "ramda";
 import { OrderlyContext } from "../orderlyContext";
 import { isNativeTokenChecker } from "./constants";
-import { useWalletSubscription } from "../orderly/useWalletSubscription";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { useEventEmitter } from "../useEventEmitter";
 
 /**
  * PM doc:
  * https://www.figma.com/file/RNSrMH6zkqULTfZqYzhGRr/Dex-C4-Draft?type=design&node-id=975-21917&mode=design&t=zd8vtA5mTGTw8SVI-0
- * 
- * 1. fee 精度 swap_support.woofi_dex_precision+3，四捨五入
- * 2. price 精度 = abs(woofi_dex_precision - 5)，無條件捨去
+ *
+ * 1. fee precision swap_support.woofi_dex_precision+3，round off
+ * 2. price precision = abs(woofi_dex_precision - 5)，cut off
  * 3. orderly deposit fee = $0
- * 4. deposit pop-ups 上面 fee 括弧裡面，不顯示 fee 為 0 的 token。舉例 : dst gas fee = 0 ETH, swap fee = 0.04 USDC
-
- * 這邊就顯示 $0.04 ( 0.04 USDC )
+ * 4. deposit pop-ups: don't show token when fee is 0.
+ *    e.g. dst gas fee = 0 ETH, swap fee = 0.04 USDC, it will show $0.04 ( 0.04 USDC )
  * */
 const woofiDexDepositorAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -295,6 +293,7 @@ const woofiDexDepositorAbi = [
   { stateMutability: "payable", type: "receive" },
 ];
 
+/** @hidden */
 export const useSwap = () => {
   // exec swap contract;
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);

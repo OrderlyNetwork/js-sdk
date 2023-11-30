@@ -24,19 +24,20 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       <Tabs
         value={value}
         onTabChange={setValue}
-        tabBarClassName="border-b-0 px-0"
+        tabBarClassName="orderly-border-b-0 orderly-px-0"
       >
         <TabPane
           title={
-            <div className="flex items-center gap-1">
+            <div className="orderly-flex orderly-items-center orderly-gap-1">
               <ArrowDownToLine size={15} /> <span>Deposit</span>
             </div>
           }
           value="deposit"
         >
-          <div className="py-3 px-[2px]">
+          <div className="orderly-py-3 orderly-px-[2px]">
             <Deposit
               onOk={props.onOk}
+              // @ts-ignore
               dst={{
                 chainId: 0,
                 address: "",
@@ -49,13 +50,13 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         </TabPane>
         <TabPane
           title={
-            <div className="flex items-center gap-1">
+            <div className="orderly-flex orderly-items-center orderly-gap-1">
               <ArrowUpToLine size={15} /> <span>Withdraw</span>
             </div>
           }
           value="withdraw"
         >
-          <div className="py-3 px-[2px]">
+          <div className="orderly-py-3 orderly-px-[2px]">
             <Withdraw onOk={props.onOk} />
           </div>
         </TabPane>

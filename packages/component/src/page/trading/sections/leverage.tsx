@@ -26,7 +26,7 @@ export const MyLeverageView: FC<Props> = (props) => {
     modal.alert({
       title: "Max leverage",
       message: (
-        <span className="text-sm text-base-contrast/60">
+        <span className="orderly-text-3xs orderly-text-base-contrast-54">
           This instrument supports up to {leverage}x leverage. The actual amount
           cannot exceed the max account leverage.
         </span>
@@ -35,9 +35,11 @@ export const MyLeverageView: FC<Props> = (props) => {
   }, [leverage]);
 
   return (
-    <div className="px-3 py-2">
+    <div className="orderly-px-3 orderly-py-2">
       <LeverageView
+        // @ts-ignore
         maxLeverage={info?.max_leverage ?? "-"}
+        // @ts-ignore
         predFundingRate={data.est_funding_rate}
         countdown={data.countDown}
         onShowLeverageInfo={showLeverageInfo}

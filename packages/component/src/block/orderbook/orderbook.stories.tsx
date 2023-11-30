@@ -1,12 +1,10 @@
+import React from "react";
 import type { Meta } from "@storybook/react";
 // @ts-ignore
-import React from "react";
 import { OrderBook } from ".";
 import { StoryObj } from "@storybook/react";
 import { useOrderbookStream, useSymbolsInfo } from "@orderly.network/hooks";
-import { OrderlyProvider } from "../../provider/orderlyProvider";
-import { MemoryConfigStore } from "@orderly.network/core";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
+
 import { SymbolProvider } from "../../provider";
 
 const meta: Meta = {

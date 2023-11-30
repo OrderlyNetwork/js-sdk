@@ -1,5 +1,4 @@
 import { API } from "@orderly.network/types";
-import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import { useEffect, useState } from "react";
 
@@ -17,7 +16,6 @@ export const useMarketTradeStream = (
 
   const [trades, setTrades] = useState<API.Trade[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [prevSymbol, setPrevSymbol] = useState<string>(() => symbol);
 
   const { limit = 50 } = options;
 
@@ -46,8 +44,6 @@ export const useMarketTradeStream = (
   }, [symbol]);
 
   useEffect(() => {
-    // if (trades.length <= 0) return;
-
     const unsubscript = ws.subscribe(
       {
         id: `${symbol}@trade`,
@@ -57,10 +53,8 @@ export const useMarketTradeStream = (
       },
       {
         onMessage: (data: any) => {
-          //
           setTrades((prev) => {
             const arr = [{ ...data, ts: Date.now() }, ...prev];
-            //
             if (arr.length > limit) {
               arr.pop();
             }

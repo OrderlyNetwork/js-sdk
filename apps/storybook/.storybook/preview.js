@@ -1,6 +1,6 @@
 
 import '../src/tailwind.css';
-import '@orderly.network/components/dist/styles.css'
+import '@orderly.network/react/dist/styles.css'
 
 
 

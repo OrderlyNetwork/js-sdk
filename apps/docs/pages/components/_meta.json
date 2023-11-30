@@ -1,0 +1,9 @@
+{
+    "introduction": "Introduction",
+    "getting_started": "Getting Started",
+    "theming":"Theming",
+    "wallet":"Wallet connect",
+    "Install": {
+        "type": "separator"
+      }
+}

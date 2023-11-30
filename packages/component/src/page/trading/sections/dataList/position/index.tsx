@@ -1,9 +1,7 @@
-import React, { useCallback, useContext, useEffect } from "react";
-import { PositionHeader } from "./positionHeader";
+import React, { useCallback, useContext } from "react";
 import { PositionsView } from "@/block/positions";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
 import { modal } from "@/modal";
-import { ClosePositionPane } from "@/block/positions/sections/closeForm";
 import {
   API,
   AccountStatusEnum,
@@ -11,7 +9,6 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { LimitConfirm } from "@/block/positions/sections/limitConfirm";
 import { MarkPriceConfirm } from "@/block/positions/sections/markPriceConfirm";
 import { PositionLimitCloseDialog } from "@/block/positions/sections/closeDialog";
 import { useMutation, useAccount } from "@orderly.network/hooks";
@@ -86,6 +83,7 @@ export const PositionPane = () => {
       })
       .catch(() => {});
   }, []);
+
 
   return (
     <PositionsView

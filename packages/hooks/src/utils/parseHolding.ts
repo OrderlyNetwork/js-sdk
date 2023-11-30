@@ -3,7 +3,7 @@ import { API } from "@orderly.network/types";
 type NonUSDCHolding = {
   holding: number;
   markPrice: number;
-  //保證金替代率 暂时默认0
+  // margin replacement rate, default 0
   discount: number;
 };
 

@@ -1,7 +1,12 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
-import { WalletConnectorContext } from "@/provider";
-import { useChain, useDeposit, useChains } from "@orderly.network/hooks";
+// import { WalletConnectorContext } from "@/provider";
+import {
+  useChain,
+  useDeposit,
+  useChains,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
 
@@ -23,20 +28,20 @@ export const Deposit: FC<DepositProps> = (props) => {
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
 
+  // @ts-ignore
   const [chains, { findByChainId }] = useChains("", {
     wooSwapEnabled: true,
     pick: "network_infos",
   });
 
-  const { connectedChain, wallet, setChain, settingChain } = useContext(
-    WalletConnectorContext
-  );
+  const { connectedChain, wallet, setChain, settingChain } =
+    useWalletConnector();
 
   const { onEnquiry } = useContext(AssetsContext);
 
   // const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
-
+  // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
@@ -85,14 +90,16 @@ export const Deposit: FC<DepositProps> = (props) => {
     } else {
       setNeedCrossChain(false);
     }
-  }, [token?.symbol, currentChain?.id, dst.chainId]);
+  }, [token?.symbol, currentChain?.id, dst?.chainId]);
 
   return (
     <DepositForm
+      // @ts-ignore
       dst={dst}
       allowance={allowance}
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
+      // @ts-ignore
       chains={chains}
       walletName={wallet?.label}
       switchChain={setChain}

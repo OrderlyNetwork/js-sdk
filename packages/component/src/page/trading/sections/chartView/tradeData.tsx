@@ -15,23 +15,23 @@ export const TradeData: FC<Props> = (props) => {
   //
 
   return (
-    <div className="h-[240px] p-4 relative">
-      <table className="w-full text-sm">
-        <tr className="h-[28px]">
-          <td className="text-base-contrast/50">Mark price</td>
-          <td className="text-right">
+    <div className="orderly-h-[240px] orderly-p-4 orderly-relative">
+      <table className="orderly-w-full orderly-text-3xs">
+        <tr className="orderly-h-[28px]">
+          <td className="orderly-text-base-contrast-54">Mark price</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral precision={quote_dp}>{ticker?.mark_price}</Numeral>
           </td>
         </tr>
-        <tr className="h-[28px]">
-          <td className="text-base-contrast/50">Index price</td>
-          <td className="text-right">
+        <tr className="orderly-h-[28px]">
+          <td className="orderly-text-base-contrast-54">Index price</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral precision={quote_dp}>{ticker?.index_price}</Numeral>
           </td>
         </tr>
-        <tr className="h-[28px]">
-          <td className="text-base-contrast/50">24h volume</td>
-          <td className="text-right">
+        <tr className="orderly-h-[28px]">
+          <td className="orderly-text-base-contrast-54">24h volume</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral.total
               rule="human"
               precision={2}
@@ -41,27 +41,27 @@ export const TradeData: FC<Props> = (props) => {
             <Text
               rule="symbol"
               symbolElement="quote"
-              className="text-base-contrast/50 ml-2"
+              className="orderly-text-base-contrast-36 orderly-ml-2"
             >
               {symbol}
             </Text>
           </td>
         </tr>
-        <tr className="h-[28px]">
-          <td className="text-base-contrast/50">24h high</td>
-          <td className="text-right">
+        <tr className="orderly-h-[28px]">
+          <td className="orderly-text-base-contrast-54">24h high</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral precision={quote_dp}>{ticker?.["24h_high"]}</Numeral>
           </td>
         </tr>
-        <tr className="h-[28px]">
-          <td className="text-base-contrast/50">24h low</td>
-          <td className="text-right">
+        <tr className="orderly-h-[28px]">
+          <td className="orderly-text-base-contrast-54">24h low</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral precision={quote_dp}>{ticker?.["24h_low"]}</Numeral>
           </td>
         </tr>
-        <tr className="h-[28px]">
-            <td className="text-base-contrast/50">Open interest</td>
-            <td className="text-right">
+        <tr className="orderly-h-[28px]">
+            <td className="orderly-text-base-contrast-54">Open interest</td>
+            <td className="orderly-text-right orderly-text-base-contrast">
               { ticker?.["open_interest"] ? (<Numeral.total
               rule="human"
               precision={2}
@@ -70,7 +70,7 @@ export const TradeData: FC<Props> = (props) => {
             />) : "--" }
               
               <Text
-                className="text-base-contrast/50 ml-2"
+                className="orderly-text-base-contrast-36 orderly-ml-2"
               >
                 USDC
               </Text>

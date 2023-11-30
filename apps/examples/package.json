@@ -1,6 +1,6 @@
 {
   "name": "examples",
-  "version": "0.1.64",
+  "version": "0.1.75",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3300",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@noble/ed25519": "^2.0.0",
-    "@orderly.network/components": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@types/node": "^17.0.12",

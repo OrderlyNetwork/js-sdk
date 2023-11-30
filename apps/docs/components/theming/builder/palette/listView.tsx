@@ -25,7 +25,7 @@ export const ColorPaletteListView = () => {
   }, []);
 
   const getContainer = () => {
-    return document.getElementById("previewBox");
+    return document.getElementById("previewBox")!;
   };
 
   useEffect(() => {

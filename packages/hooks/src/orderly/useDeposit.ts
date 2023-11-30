@@ -15,10 +15,10 @@ import {
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { isNativeTokenChecker, nativeTokenAddress } from "../woo/constants";
+import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
 import { OrderlyContext } from "../orderlyContext";
-// import { Decimal } from "@orderly.network/utils";
+import { useConfig } from "../useConfig";
 
 export type useDepositOptions = {
   // from address
@@ -30,16 +30,22 @@ export type useDepositOptions = {
   networkId?: NetworkId;
   srcChainId?: number;
   srcToken?: string;
+
+  /**
+   * @hidden
+   */
+  wooSwapEnabled?: boolean;
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  //
   const { onlyTestnet } = useContext<any>(OrderlyContext);
+
+  const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
 
   const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: true,
+    wooSwapEnabled: options?.wooSwapEnabled,
   });
 
   const [balance, setBalance] = useState("0");
@@ -50,14 +56,15 @@ export const useDeposit = (options?: useDepositOptions) => {
   const prevAddress = useRef<string | undefined>();
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
-  // const depositQueue = useRef<string[]>([]);
-
   const dst = useMemo(() => {
-    const chain: API.Chain = onlyTestnet
-      ? findByChainId(ARBITRUM_TESTNET_CHAINID)
-      : findByChainId(ARBITRUM_MAINNET_CHAINID);
-    //
-    const USDC = chain?.token_infos.find((token) => token.symbol === "USDC");
+    const chain: API.Chain =
+      networkId === "testnet"
+        ? findByChainId(ARBITRUM_TESTNET_CHAINID)!
+        : findByChainId(ARBITRUM_MAINNET_CHAINID)!;
+
+    const USDC = chain?.token_infos.find(
+      (token: API.TokenInfo) => token.symbol === "USDC"
+    );
     if (!chain) {
       throw new Error("dst chain not found");
     }
@@ -69,7 +76,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       network: chain.network_infos.shortName,
       // chainId: 42161,
     };
-  }, []);
+  }, [networkId]);
 
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),
@@ -96,7 +103,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   const fetchBalance = useCallback(
     async (address?: string, decimals?: number) => {
       if (!address) return;
-      //
 
       try {
         if (balanceRevalidating) return;
@@ -128,8 +134,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     const balances = await Promise.all(tasks);
 
     // const balances = await account.assetsManager.getBalances(tokens);
-
-    // //
     // setBalance(() => balances);
   }, []);
 

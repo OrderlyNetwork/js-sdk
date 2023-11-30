@@ -6,10 +6,12 @@ import {
   useChains,
   usePositionStream,
   OrderlyContext,
+  useWalletConnector,
 } from "@orderly.network/hooks";
-import { WalletConnectorContext } from "@/provider";
-import { CurrentChain } from "@orderly.network/types";
+
+import { CurrentChain, NetworkId } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
+import { useConfig } from "@orderly.network/hooks";
 
 export interface WithdrawProps {
   onCancel?: () => void;
@@ -18,18 +20,17 @@ export interface WithdrawProps {
 
 export const Withdraw: FC<WithdrawProps> = (props) => {
   //   const { state } = useAccount();
-  const { connectedChain, wallet, setChain } = useContext(
-    WalletConnectorContext
-  );
+  const { connectedChain, wallet, setChain } = useWalletConnector();
 
-  const { networkId } = useContext(OrderlyContext);
+  // const { networkId } = useContext(OrderlyContext);
+  const networkId = useConfig("networkId");
 
   // const { chains } = useChain("USDC");
-  const [chains, { findByChainId }] = useChains(networkId, {
+  const [chains, { findByChainId }] = useChains(networkId as NetworkId, {
     wooSwapEnabled: false,
     pick: "network_infos",
   });
-
+  // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
@@ -47,16 +48,19 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const context = useContext(TradingPageContext);
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);
-  const hasPositions = data?.rows?.length > 0;
+  const hasPositions = data?.rows?.length! > 0;
 
   return (
     <WithdrawForm
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
+      // @ts-ignore
       chains={chains}
       walletName={wallet?.label}
       switchChain={setChain}
+      // @ts-ignore
       decimals={chains?.decimals ?? 2}
+      // @ts-ignore
       minAmount={chains?.minimum_withdraw_amount ?? 1}
       maxAmount={maxAmount}
       availableBalance={availableBalance}

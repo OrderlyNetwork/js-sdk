@@ -1,5 +1,5 @@
 import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef } from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
@@ -10,7 +10,8 @@ type inputOptions = {
   filter?: (item: API.Chain) => boolean;
   pick?: "dexs" | "network_infos" | "token_infos";
   crossEnabled?: boolean;
-  wooSwapEnabled?: boolean; // if true, use wooSwap api, else use orderly api only
+  /** if true, use wooSwap api, else use orderly api only  */
+  wooSwapEnabled?: boolean;
 };
 
 export const useChains = (
@@ -18,7 +19,9 @@ export const useChains = (
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { filter, pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore, networkId: envNetworkId } = useContext(OrderlyContext);
+  const { configStore } = useContext(OrderlyContext);
+
+  // const envNetworkId = useConfig("networkId");
 
   const field = options?.pick;
 
@@ -61,7 +64,12 @@ export const useChains = (
 
   //
 
-  const chains = useMemo(() => {
+  const chains:
+    | API.Chain[]
+    | {
+        testnet: API.Chain[];
+        mainnet: API.Chain[];
+      } = useMemo(() => {
     if (!orderlyChains) return undefined;
 
     let orderlyChainsArr: API.Chain[] = [];
@@ -200,8 +208,6 @@ export const useChains = (
     }
   }, [data, networkId, field, options, orderlyChains, wooSwapEnabled]);
 
-  // const dstToken = useMemo(() => {},[]);
-
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
       const chain = map.current.get(chainId);
@@ -238,5 +244,5 @@ export const useChains = (
       error: swapSupportError || tokenError,
       // nativeToken,
     },
-  ];
+  ] as const;
 };

@@ -1,10 +1,8 @@
-import { useMutation } from "../useMutation";
 import { useCallback, useMemo } from "react";
-
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { getPrecisionByNumber } from "@orderly.network/utils";
-
+import { useMutation } from "../useMutation";
 import { compose, head } from "ramda";
 import {
   baseInputHandle,
@@ -16,26 +14,6 @@ import { useMaxQty } from "./useMaxQty";
 import { OrderFactory } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
 
-export interface OrderEntryReturn {
-  onSubmit: (values: OrderEntity) => Promise<any>;
-  // setValue: (field: OrderEntityKey, value: any) => void;
-  maxQty: number;
-  freeCollateral: number;
-  // values: OrderEntity;
-  markPrice: number;
-  // errors: Partial<Record<keyof OrderEntity, string>>;
-
-  symbolConfig: API.SymbolExt;
-
-  //
-  // onFocus?: (field: keyof OrderEntity) => void;
-  // onBlur?: (field: keyof OrderEntity) => void;
-  helper: {
-    calculate: (values: any, field: string, value: any) => any;
-    validator: (values: any) => any;
-  };
-}
-
 export type UseOrderEntryOptions = {
   commify?: boolean;
   validate?: (
@@ -44,7 +22,7 @@ export type UseOrderEntryOptions = {
 };
 
 /**
- * 创建订单
+ * Create Order
  * @param symbol
  * @returns
  */
@@ -52,10 +30,8 @@ export const useOrderEntry = (
   symbol: string,
   side: OrderSide,
   reduceOnly: boolean = false,
-  // initialValue: Partial<OrderEntity> = {},
   options?: UseOrderEntryOptions
-): OrderEntryReturn => {
-  // const { mutate } = useSWRConfig();
+) => {
   const [doCreateOrder] = useMutation<OrderEntity, any>("/v1/order");
 
   const { freeCollateral } = useCollateral();
@@ -71,11 +47,6 @@ export const useOrderEntry = (
     return getPrecisionByNumber(symbolInfo[symbol]("quote_tick", 0));
   }, [symbolInfo]);
 
-  //
-
-  // 订阅maskPrice
-  // const ws = useWebSocketClient();
-
   const { data: markPrice } = useMarkPrice(symbol);
 
   const maxQty = useMaxQty(
@@ -86,7 +57,7 @@ export const useOrderEntry = (
   );
 
   /**
-   * 提交订单，校验数据
+   * submit form，validate values
    * @param values
    * @returns
    */
@@ -170,7 +141,6 @@ export const useOrderEntry = (
       calculate,
       validator,
     },
-
     symbolConfig: symbolInfo[symbol](),
   };
 };

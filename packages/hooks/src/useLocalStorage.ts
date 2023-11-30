@@ -1,22 +1,11 @@
 // https://usehooks-ts.com/react-hook/use-local-storage
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { parseJSON } from "./utils/json";
 
-// declare global {
-//   interface WindowEventMap {
-//     'local-storage': CustomEvent
-//   }
-// }
-
-type SetValue<T> = Dispatch<SetStateAction<T>>;
-
-export function useLocalStorage<T>(key: string, initialValue: T): [T, any] {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [any, (value: T) => void] {
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback((): T => {
@@ -70,7 +59,6 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, any] {
 
   useEffect(() => {
     setStoredValue(readValue());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // const handleStorageChange = useCallback(

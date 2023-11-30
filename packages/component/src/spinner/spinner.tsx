@@ -3,17 +3,17 @@ import { VariantProps, cva } from "class-variance-authority";
 import { FC, HTMLAttributes } from "react";
 
 const spinnerVariants = cva(
-  "text-gray-200 animate-spin dark:text-gray-600 fill-blue-600",
+  "orderly-text-gray-200 orderly-animate-spin dark:orderly-text-gray-600 orderly-fill-primary",
   {
     variants: {
       size: {
-        small: "w-4 h-4",
-        default: "w-8 h-8",
-        large: "w-12 h-12",
+        small: "orderly-w-4 orderly-h-4",
+        default: "orderly-w-8 orderly-h-8",
+        large: "orderly-w-12 orderly-h-12",
       },
       background: {
-        default: "text-base-contrast/40",
-        transparent: "text-transparent",
+        default: "orderly-text-base-contrast/40",
+        transparent: "orderly-text-transparent",
       },
     },
 
@@ -31,7 +31,7 @@ export interface SpinnerProps
 export const Spinner: FC<SpinnerProps> = (props) => {
   const { size, background, className } = props;
   return (
-    <div role="status" className="inline-block">
+    <div role="status" className="orderly-inline-block">
       <svg
         aria-hidden="true"
         className={cn(spinnerVariants({ size, className, background }))}
@@ -49,7 +49,7 @@ export const Spinner: FC<SpinnerProps> = (props) => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="orderly-sr-only">Loading...</span>
     </div>
   );
 };

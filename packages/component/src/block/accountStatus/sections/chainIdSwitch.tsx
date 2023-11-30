@@ -1,5 +1,5 @@
 import { FC, useCallback, useContext, useState } from "react";
-import { ChainListView, ChainPicker } from "@/block/pickers/chainPicker";
+import { ChainListView } from "@/block/pickers/chainPicker";
 import {
   Dialog,
   DialogBody,
@@ -55,17 +55,19 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   );
 
   return (
-    <div className="bg-[#5A480C] fixed left-0 right-0 bottom-[64px] h-[40px] flex items-center px-[12px] text-[#E5C700] z-10 text-sm gap-2">
+    <div className="orderly-bg-[#5A480C] orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-[#E5C700] orderly-z-10 orderly-text-3xs orderly-gap-2">
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <button className="text-primary-light">Switch network</button>
+          <button className="orderly-text-primary-light">Switch network</button>
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>Switch network</DialogHeader>
-          <DialogBody className="max-h-[327.5px] overflow-y-auto">
+          <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
+          <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto orderly-text-3xs">
             <ChainListView
+              // @ts-ignore
               mainChains={onlyTestnet ? [] : mainChains}
+              // @ts-ignore
               testChains={testChains}
               onItemClick={onChainChange}
             />

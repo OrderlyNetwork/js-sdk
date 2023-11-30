@@ -4,7 +4,6 @@ const plugin = require("tailwindcss/plugin");
 const path = require("path");
 import colors from "tailwindcss/colors";
 
-
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
@@ -13,8 +12,21 @@ module.exports = {
   // // "./node_modules/rc-slider/**/*.{ts,js,tsx,jsx}",
   // ],
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
-  // prefix: 'orderly-',
+  prefix: 'orderly-',
   theme: {
+    fontSize: {
+      "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
+      "3xs": "calc(var(--orderly-font-size-base) - 4px)", // if base is 16px, it will be 12px
+      "2xs": "calc(var(--orderly-font-size-base) - 3px)", // if base is 16px, it will be 13px
+      xs: "calc(var(--orderly-font-size-base) - 2px)", // if base is 16px, it will be 14px
+      sm: "calc(var(--orderly-font-size-base) - 1px)", // if base is 16px, it will be 15px
+      base: "calc(var(--orderly-font-size-base))", // if base is 16px, it will be 16px
+      lg: "calc(var(--orderly-font-size-base) + 2px)", // if base is 16px, it will be 18px
+      xl: "calc(var(--orderly-font-size-base) + 4px)", // if base is 16px, it will be 20px
+      "2xl": "calc(var(--orderly-font-size-base) + 8px)", // if base is 16px, it will be 24px
+      "3xl": "calc(var(--orderly-font-size-base) + 14px)", // if base is 16px, it will be 30px
+      "4xl": "calc(var(--orderly-font-size-base) + 20px)", // if base is 16px, it will be 36px
+    },
     extend: {
       colors: {
         background: {
@@ -25,6 +37,7 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
           // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
         },
         secondary: {
@@ -36,30 +49,43 @@ module.exports = {
         quaternary: {
           DEFAULT: "rgb(var(--orderly-color-quaternary) / <alpha-value>)",
         },
-
-        neutral: {
-          dark: "rgb(var(--orderly-color-neutral-dark) / <alpha-value>)",
-          DEFAULT: "rgb(var(--orderly-color-neutral) / <alpha-value>)",
-          light: "rgb(var(--orderly-color-neutral-light) / <alpha-value>)",
-          contrast:
-            "rgb(var(--orderly-color-neutral-contrast) / <alpha-value>)",
+        link: {
+          DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
         },
+
         // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
           300: "rgb(var(--orderly-color-base-300) / <alpha-value>)",
           400: "rgb(var(--orderly-color-base-400) / <alpha-value>)",
-          contrast: "rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
+          500: "rgb(var(--orderly-color-base-500) / <alpha-value>)",
+          600: "rgb(var(--orderly-color-base-600) / <alpha-value>)",
+          700: "rgb(var(--orderly-color-base-700) / <alpha-value>)",
+          800: "rgb(var(--orderly-color-base-800) / <alpha-value>)",
+          900: "rgb(var(--orderly-color-base-900) / <alpha-value>)",
+          contrast: {
+            // DEFAULT:"rgb(var(--orderly-color-base-foreground) / <alpha-value>)",
+            DEFAULT: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+            80: "rgb(var(--orderly-color-base-foreground) / 0.80)",
+            54: "rgb(var(--orderly-color-base-foreground) / 0.54)",
+            36: "rgb(var(--orderly-color-base-foreground) / 0.36)",
+            20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
+          },
         },
+
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-success-light) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
@@ -87,6 +113,9 @@ module.exports = {
       },
       borderRadius: {
         DEFAULT: "var(--orderly-rounded)",
+        lg: "var(--orderly-rounded-lg)",
+        full: "var(--orderly-rounded-full)",
+        sm: "var(--orderly-rounded-sm)",
       },
       fontSize: {
         headertitle: "20px",
@@ -124,8 +153,16 @@ module.exports = {
     require("tailwindcss-animate"),
     plugin(function ({ addBase }) {
       addBase({
-        html: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
-        body: { fontSize: "14px", backgroundColor: "rgb(var(--orderly-color-base-100))",color:"rgb(var(--orderly-color-base-foreground) / 0.9)" },
+        html: {
+          fontSize: "var(--orderly-font-size-base)",
+          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+        },
+        body: {
+          fontSize: "var(--orderly-font-size-base)",
+          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+        },
       });
     }),
   ],

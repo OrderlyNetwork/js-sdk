@@ -1,10 +1,9 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { useQuery } from "../src";
-import { FundingRate } from "../src/apis/useFundingRateBySymbol";
 
 test("useQuery", async () => {
   const { result, waitForValueToChange } = renderHook(() => {
-    return useQuery<FundingRate>("/public/funding_rate");
+    return useQuery("/public/funding_rate");
   });
 
   await waitForValueToChange(() => result.current.data, {

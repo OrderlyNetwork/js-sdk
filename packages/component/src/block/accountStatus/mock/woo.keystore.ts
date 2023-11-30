@@ -2,6 +2,7 @@ import { BaseKeyStore, OrderlyKeyPair } from "@orderly.network/core";
 
 export class WooKeyStore extends BaseKeyStore {
   getOrderlyKey(): OrderlyKeyPair {
+    // @ts-ignore
     return "";
   }
   getAccountId(): string | undefined {
@@ -29,6 +30,7 @@ export class WooKeyStore extends BaseKeyStore {
   generateKey(): OrderlyKeyPair {
     throw new Error("Method not implemented.");
   }
+  // @ts-ignore
   setKey(orderlyKey: string, secretKey: string): void {
     throw new Error("Method not implemented.");
   }

@@ -1,4 +1,12 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { QuantityInput } from "@/block/quantityInput";
 import { WalletPicker } from "../pickers/walletPicker";
@@ -12,7 +20,6 @@ import {
   useLocalStorage,
   useChains,
   useBoolean,
-  useAppState,
 } from "@orderly.network/hooks";
 
 import { MoveDownIcon } from "@/icon";
@@ -28,6 +35,7 @@ import { SwapDialog } from "../swap/swapDialog";
 import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 import { NumberReg } from "@/utils/num";
+import { OrderlyAppContext } from "@/provider";
 
 export interface DepositFormProps {
   // decimals: number;
@@ -96,7 +104,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors } = useAppState();
+  const { errors } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -504,15 +512,15 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   return (
     <div>
-      <div className={"flex items-center py-2"}>
-        <div className="flex-1">Your web3 wallet</div>
+      <div className="orderly-flex orderly-items-center orderly-py-2">
+        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-con">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
           name={walletName?.toLowerCase()}
           rounded
         />
       </div>
-      <div className="pb-2">
+      <div className="orderly-pb-2">
         <WalletPicker
           address={address}
           chain={chain}
@@ -543,14 +551,14 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         disabled={errors.ChainNetworkNotSupport}
       />
 
-      <Divider className={"py-4"}>
-        <MoveDownIcon className={"text-primary-light"} />
+      <Divider className="orderly-py-4">
+        <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
-      <div className="flex py-2">
-        <div className={"flex-1"}>Your WOOFi Pro account</div>
+      <div className="orderly-flex orderly-py-2">
+        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast">Your WOOFi Pro account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
-      <div className={"py-2"}>
+      <div className="orderly-py-2">
         <TokenQtyInput
           token={dst}
           amount={amount}
@@ -559,7 +567,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           fee={Number(transactionInfo.fee)}
         />
       </div>
-      <div className={"flex items-start py-4 text-sm text-tertiary"}>
+      <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-3xs orderly-text-tertiary">
         <Summary
           needSwap={needSwap}
           needCrossChain={needCrossChain}
@@ -587,7 +595,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       /> */}
       <ActionButton
         chain={chain}
-        chains={chains}
+        chains={chains!}
         token={props.token}
         onDeposit={onDeposit}
         allowance={

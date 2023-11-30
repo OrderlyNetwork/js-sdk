@@ -9,7 +9,7 @@ export class Web3WalletAdapter implements IWalletAdapter {
     this.web3 = new Web3(options.provider);
     this._chainId = parseInt(options.chain.id, 16);
   }
-
+  // @ts-ignore
   sendTransaction(tx: TransactionRequest): Promise<TransactionResponse> {
     throw new Error("Method not implemented.");
   }

@@ -1,4 +1,4 @@
-import { WalletConnectorContext } from "@orderly.network/components";
+import { WalletConnectorContext } from "@orderly.network/react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { FC, PropsWithChildren } from "react";
 

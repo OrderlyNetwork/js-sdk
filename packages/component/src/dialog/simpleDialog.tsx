@@ -32,10 +32,12 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
+          className="orderly-text-xs"
           key="cancel"
           type="button"
+          variant="contained"
+          color="tertiary"
           onClick={props.onCancel}
-          color={"danger"}
           disabled={loading}
           fullWidth
         >
@@ -47,6 +49,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
+          className="orderly-text-xs"
           key="ok"
           type="button"
           disabled={loading}
@@ -64,7 +67,9 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
 
     return (
       <DialogFooter
-        className={buttons.length > 1 ? "grid-cols-2" : "grid-cols-1"}
+        className={
+          buttons.length > 1 ? "orderly-grid-cols-2" : "orderly-grid-cols-1"
+        }
       >
         {buttons}
       </DialogFooter>

@@ -34,5 +34,9 @@ export const useSymbolsInfo = () => {
     },
   });
 
-  return createGetter<API.SymbolExt>(data as API.SymbolExt);
+  return createGetter<API.SymbolExt>(data as API.SymbolExt) as Record<
+    string,
+    any
+    // (key: string, defaultValue?: any) => any
+  >;
 };

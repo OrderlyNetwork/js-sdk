@@ -1,7 +1,7 @@
 import Button from "@/button";
 import { Select } from "@/select";
 import { Statistic } from "@/statistic";
-import { FC } from "react";
+import React, { type FC } from "react";
 import { modal } from "@/modal";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
@@ -40,30 +40,43 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="flex justify-between bg-base-200 px-4 py-3">
+      <div className="orderly-flex orderly-justify-between orderly-bg-base-700 orderly-px-4 orderly-py-3">
         <Statistic
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           label="Unreal. PnL"
           value={aggregated?.unrealPnL}
           coloring
           rule="price"
         />
-        <Statistic label="Notional" value={aggregated?.notional} rule="price" />
+        <Statistic
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
+          label="Notional"
+          value={aggregated?.notional}
+          rule="price"
+        />
         <Statistic
           label="Unsettled PnL"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           value={aggregated?.unsettledPnL}
           rule="price"
           coloring
           align="right"
         />
       </div>
-      <div className="flex justify-between py-3 px-4 items-center">
-        <div className={"flex items-center gap-2"}>
+      <div className="orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center">
+        <div className="orderly-flex orderly-items-center orderly-gap-2">
           <Checkbox
             id={"showAll"}
             checked={props.showAllSymbol}
             onCheckedChange={props.onShowAllSymbolChange}
           />
-          <Label htmlFor={"showAll"} className={"text-base-contrast/60"}>
+          <Label
+            htmlFor={"showAll"}
+            className="orderly-text-base-contrast-36 orderly-text-3xs"
+          >
             Show all instruments
           </Label>
         </div>

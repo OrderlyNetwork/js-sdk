@@ -1,9 +1,7 @@
-"use client";
-
 import { Input } from "@/input";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { Slider } from "@/slider";
-import {
+import React, {
   FC,
   FormEvent,
   forwardRef,
@@ -302,6 +300,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     }, []);
 
     return (
+      // @ts-ignore
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
@@ -309,7 +308,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             isClickForm.current = true;
           }}
         >
-          <div className="flex flex-col gap-3">
+          <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
             <SegmentedButton
               buttons={[
                 {
@@ -317,18 +316,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "bg-trade-profit text-trade-profit-foreground after:bg-trade-profit",
+                    "orderly-bg-success-light orderly-text-base-contrast after:orderly-bg-success-light",
                   disabledClassName:
-                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "bg-trade-loss text-trade-loss-foreground after:bg-trade-loss",
+                    "orderly-bg-danger-light orderly-text-base-contrast after:orderly-bg-danger-light",
                   disabledClassName:
-                    "bg-[#394155] text-white/10 after:bg-[#394155] cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
               ]}
               onChange={(value) => {
@@ -337,12 +336,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               value={side}
             />
 
-            <div className={"flex justify-between items-center"}>
-              <div className="flex gap-1 text-gray-500 text-sm">
+            <div className="orderly-flex orderly-justify-between orderly-items-center">
+              <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs">
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
-                  className="text-base-contrast/80"
+                  className="orderly-text-base-contrast-80"
                   precision={0}
                 >{`${freeCollateral ?? "--"}`}</Numeral>
 
@@ -353,11 +352,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
-                className="text-primary-light"
+                className="orderly-text-primary orderly-text-4xs"
               >
                 Deposit
               </Button>
             </div>
+            {/* @ts-ignore */}
             <Controller
               name="order_type"
               control={methods.control}
@@ -366,6 +366,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <MSelect
                     label={"Order Type"}
                     value={field.value}
+                    className="orderly-bg-base-600"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
@@ -394,7 +395,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_price"
               control={methods.control}
@@ -414,9 +415,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
                     value={isMarketOrder ? "Market" : field.value}
-                    className={"text-right"}
+                    className="orderly-text-right"
                     containerClassName={
-                      isMarketOrder ? "bg-base-300" : undefined
+                      isMarketOrder
+                        ? "orderly-bg-base-700"
+                        : "orderly-bg-base-600"
                     }
                     readOnly={isMarketOrder}
                     onChange={(event) => {
@@ -429,7 +432,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_quantity"
               control={methods.control}
@@ -441,7 +444,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     type="text"
                     inputMode="decimal"
                     suffix={symbolConfig?.base}
-                    className="text-right"
+                    className="orderly-text-right"
+                    containerClassName="orderly-bg-base-600"
                     error={!!methods.formState.errors?.order_quantity}
                     helpText={methods.formState.errors?.order_quantity?.message}
                     value={field.value}
@@ -454,7 +458,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="order_quantity"
               control={methods.control}
@@ -480,7 +484,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 );
               }}
             />
-
+            {/* @ts-ignore */}
             <Controller
               name="total"
               control={methods.control}
@@ -488,7 +492,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 return (
                   <Input
                     disabled={disabled}
-                    className={"text-right"}
+                    className="orderly-text-right"
+                    containerClassName="orderly-bg-base-600"
                     prefix={"Total ≈"}
                     suffix={symbolConfig?.quote}
                     type="text"
@@ -515,6 +520,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
             <StatusGuardButton>
               <Button
+                id="orderly-order-entry-confirm-button"
+                className="orderly-text-xs"
                 type="submit"
                 loading={methods.formState.isSubmitting}
                 color={side === OrderSide.BUY ? "buy" : "sell"}

@@ -91,7 +91,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
 
     return doCrossSwap({
       address: "",
-      crossChainRouteAddress: chainInfo!.woofi_dex_cross_chain_router,
+      crossChainRouteAddress: chainInfo!.woofi_dex_cross_chain_router!,
       src: {
         fromToken: transaction.src_infos.from_token,
         fromAmount: BigInt(transaction.src_infos.from_amount),
@@ -103,6 +103,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         bridgedToken: transaction.dst_infos.bridged_token,
         toToken: transaction.dst_infos.to_token,
         minToAmount: BigInt(transaction.dst_infos.min_to_amount),
+        // @ts-ignore
         orderlyNativeFees: 0n,
       },
     }).then(
@@ -145,16 +146,16 @@ export const CrossSwap: FC<SwapProps> = (props) => {
 
   return (
     <div>
-      <div className="py-[24px]">
+      <div className="orderly-py-[24px]">
         <SwapSymbols from={props.src} to={props.dst} swapInfo={swapInfo} />
         <SwapTime time={chainInfo?.est_txn_mins ?? 0} />
       </div>
       <Divider />
 
       {content}
-      <div className="flex justify-center text-sm gap-2 mt-5">
-        <span className="text-base-contrast/50">Need help?</span>
-        <a href="" className="text-primary-light">
+      <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
+        <span className="orderly-text-base-contrast/50">Need help?</span>
+        <a href="" className="orderly-text-primary-light">
           View FAQs
         </a>
       </div>

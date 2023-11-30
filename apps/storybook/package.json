@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/storybook",
-  "version": "1.0.74",
+  "version": "1.0.76",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,9 +14,10 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
-    "@orderly.network/components": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
     "@storybook/addon-essentials": "^7.3.2",
     "@storybook/addon-interactions": "^7.3.2",
     "@storybook/addon-links": "^7.3.2",
