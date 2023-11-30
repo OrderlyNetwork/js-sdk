@@ -177,14 +177,14 @@ module.exports = {
           scrollbarColor: 'transparent transparent',
         },
         '.hide-scrollbar::-webkit-scrollbar': {
-          width: '8px',
+          width: '0px',
         },
         '.hide-scrollbar::-webkit-scrollbar-track': {
           backgroundColor: 'transparent',
         },
         '.hide-scrollbar::-webkit-scrollbar-thumb': {
           backgroundColor: 'transparent',
-          borderRadius: '4px',
+          borderRadius: '0px',
         },
         '.hide-scrollbar::-webkit-scrollbar-thumb:hover': {
           backgroundColor: 'transparent',
