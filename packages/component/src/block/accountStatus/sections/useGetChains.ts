@@ -2,7 +2,6 @@ import { useContext, useMemo } from "react";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
 import { useChains,useWalletConnector } from "@orderly.network/hooks";
 
-import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 
 export function useGetChains() {
