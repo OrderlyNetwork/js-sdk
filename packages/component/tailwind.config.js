@@ -170,5 +170,28 @@ module.exports = {
         },
       });
     }),
+    plugin(function ({ addUtilities }) {
+      const scrollBarUtilities = {
+        '.hide-scrollbar': {
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'transparent transparent',
+        },
+        '.hide-scrollbar::-webkit-scrollbar': {
+          width: '8px',
+        },
+        '.hide-scrollbar::-webkit-scrollbar-track': {
+          backgroundColor: 'transparent',
+        },
+        '.hide-scrollbar::-webkit-scrollbar-thumb': {
+          backgroundColor: 'transparent',
+          borderRadius: '4px',
+        },
+        '.hide-scrollbar::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: 'transparent',
+        },
+      };
+    
+      addUtilities(scrollBarUtilities);
+    }),
   ],
 };
