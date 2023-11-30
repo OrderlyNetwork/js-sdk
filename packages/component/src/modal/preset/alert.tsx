@@ -34,7 +34,7 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
         </DialogHeader>
         <DialogBody className="orderly-py-[20px]">{message}</DialogBody>
         <DialogFooter className="orderly-flex orderly-justify-center">
-          <Button onClick={onOk} className="orderly-w-2/3 orderly-text-xs orderly-text-base-contrast">
+          <Button onClick={onOk} className="orderly-w-full orderly-text-xs orderly-text-base-contrast">
             Ok
           </Button>
         </DialogFooter>
