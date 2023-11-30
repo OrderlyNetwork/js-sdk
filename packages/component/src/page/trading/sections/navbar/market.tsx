@@ -36,7 +36,7 @@ export const Market: FC<Props> = (props) => {
       <SheetContent
         side={"left"}
         closeable={false}
-        className="orderly-w-[315px]"
+        className="orderly-w-84%"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <Markets
