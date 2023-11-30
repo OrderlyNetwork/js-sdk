@@ -1,9 +1,12 @@
+import React from "react";
+import type { ButtonHTMLAttributes, FC, PropsWithChildren } from "react";
 import { cn } from "@/utils/css";
 import { VariantProps, cva } from "class-variance-authority";
-import { ButtonHTMLAttributes, FC, PropsWithChildren } from "react";
 
 const iconButtonVariants = cva(
-  ["orderly-rounded-full orderly-flex orderly-items-center orderly-justify-center"],
+  [
+    "orderly-rounded-full orderly-flex orderly-items-center orderly-justify-center",
+  ],
   {
     variants: {
       variant: {

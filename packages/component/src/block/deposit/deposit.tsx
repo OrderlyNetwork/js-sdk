@@ -1,9 +1,15 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
-import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
-import { useChain, useDeposit, useChains, useWalletConnector } from "@orderly.network/hooks";
+// import { WalletConnectorContext } from "@/provider";
+import {
+  useChain,
+  useDeposit,
+  useChains,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
+import { OrderlyAppContext } from "@/provider";
 
 export enum DepositStatus {
   Checking = "Checking",
@@ -85,7 +91,7 @@ export const Deposit: FC<DepositProps> = (props) => {
     } else {
       setNeedCrossChain(false);
     }
-  }, [token?.symbol, currentChain?.id, dst.chainId]);
+  }, [token?.symbol, currentChain?.id, dst?.chainId]);
 
   return (
     <DepositForm

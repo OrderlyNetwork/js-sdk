@@ -3,6 +3,10 @@ lockfileVersion: '6.0'
 importers:
 
   .:
+    dependencies:
+      '@orderly.network/web3-onboard':
+        specifier: workspace:^
+        version: link:packages/onboard
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -46,6 +50,9 @@ importers:
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@orderly.network/web3-onboard':
+        specifier: workspace:*
+        version: link:../../packages/onboard
       '@prisma/client':
         specifier: 5.0.0
         version: 5.0.0(prisma@5.0.0)
@@ -70,12 +77,6 @@ importers:
       '@types/node':
         specifier: ^17.0.12
         version: 17.0.12
-      '@types/react':
-        specifier: 18.2.16
-        version: 18.2.16
-      '@types/react-dom':
-        specifier: 18.2.7
-        version: 18.2.7
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.4
         version: 2.10.4
@@ -85,6 +86,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.26)
+      chroma-js:
+        specifier: ^2.4.2
+        version: 2.4.2
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
@@ -161,9 +165,15 @@ importers:
       '@types/ramda':
         specifier: ^0.29.3
         version: 0.29.3
+      '@types/react':
+        specifier: 18.2.16
+        version: 18.2.16
       '@types/react-color':
         specifier: ^3.0.6
         version: 3.0.6
+      '@types/react-dom':
+        specifier: 18.2.7
+        version: 18.2.7
       typedoc:
         specifier: ^0.24.8
         version: 0.24.8(typescript@5.1.6)
@@ -9997,7 +10007,6 @@ packages:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
     dependencies:
       '@types/react': 18.2.38
-    dev: false
 
   /@types/react-syntax-highlighter@15.5.9:
     resolution: {integrity: sha512-ven8zRSVMNkqt8ySJ2eEW5ugbfl/V/Z9S1c9UNhGqwkwVZNV5akk10rYDALxgwS25cLmN+/Q5UxlGj9CJmZ6Ew==}
@@ -10019,7 +10028,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
-    dev: false
 
   /@types/react@18.2.21:
     resolution: {integrity: sha512-neFKG/sBAwGxHgXiIxnbm3/AAVQ/cMRS93hvBpg8xYRbeQSPVABp9U2bRnPf0iI4+Ucdv3plSxKK+3CW2ENJxA==}

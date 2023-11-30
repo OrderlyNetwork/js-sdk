@@ -3,7 +3,7 @@ import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
-import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
+import { OrderlyAppContext } from "@/provider";
 import {
   useAccount,
   useCollateral,

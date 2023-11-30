@@ -1,6 +1,6 @@
+import React from "react";
 import type { FC, PropsWithChildren, ReactNode } from "react";
 import { useAccount } from "@orderly.network/hooks";
-import React from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import Button from ".";
 

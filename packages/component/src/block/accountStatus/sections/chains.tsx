@@ -9,9 +9,12 @@ import {
   DialogTrigger,
 } from "@/dialog";
 import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
-import { useChains, OrderlyContext, useWalletConnector } from "@orderly.network/hooks";
+import {
+  useChains,
+  OrderlyContext,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
-import { WalletConnectorContext } from "@/provider";
 
 interface ChainsProps {
   disabled?: boolean;

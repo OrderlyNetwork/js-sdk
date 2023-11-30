@@ -151,6 +151,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
       <Divider className="orderly-py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="orderly-flex orderly-flex-col orderly-gap-5">
+          {/* @ts-ignore */}
           <Controller
             name="order_price"
             control={control}
@@ -176,6 +177,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
               );
             }}
           />
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}
@@ -202,6 +204,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
         </div>
 
         <div className="orderly-py-5">
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}

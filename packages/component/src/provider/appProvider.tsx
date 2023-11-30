@@ -1,4 +1,4 @@
-import {
+import React, {
   FC,
   PropsWithChildren,
   createContext,
@@ -49,6 +49,10 @@ export interface OrderlyAppProviderProps {
   theme?: any;
   toastLimitCount?: number;
   onlyTestnet?: boolean;
+  /**
+   * are include testnet chains
+   */
+  includeTestnet?: boolean;
   enableSwapDeposit?: boolean;
 }
 
@@ -64,6 +68,7 @@ export const OrderlyAppProvider: FC<
     brokerId,
     networkId,
     onlyTestnet,
+    includeTestnet,
     toastLimitCount,
     enableSwapDeposit,
   } = props;

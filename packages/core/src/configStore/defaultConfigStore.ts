@@ -29,7 +29,7 @@ const API_URLS: { [key: string]: URLS } = {
 export class DefaultConfigStore implements ConfigStore {
   protected map: Map<ConfigKey, any>;
 
-  constructor(init: Record<ConfigKey, any>) {
+  constructor(init: Partial<Record<ConfigKey, any>>) {
     const env = init.env || "prod";
     const networkId = init.networkId || "mainnet";
     const urls = API_URLS[networkId];
@@ -42,6 +42,7 @@ export class DefaultConfigStore implements ConfigStore {
       ["privateWsUrl", urls["privateWsUrl"]],
       ["operatorUrl", urls["operatorUrl"]],
       ["networkId", networkId],
+      ["swapSupportApiUrl", "https://fi-api.woo.org"],
     ]);
   }
   get<T>(key: ConfigKey): T {

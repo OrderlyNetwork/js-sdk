@@ -19,12 +19,12 @@ export const CopyIcon: FC<IconProps> = (props) => {
       <path
         d="M13.75 23.75V13.75H23.75V11.25H11.25V23.75H13.75Z"
         fill="white"
-        fill-opacity="0.54"
+        fillOpacity="0.54"
       />
       <path
         d="M16.25 16.25H28.75V28.75H16.25V16.25Z"
         fill="white"
-        fill-opacity="0.54"
+        fillOpacity="0.54"
       />
     </svg>
   );

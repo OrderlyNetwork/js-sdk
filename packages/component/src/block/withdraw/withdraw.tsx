@@ -8,9 +8,10 @@ import {
   OrderlyContext,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { WalletConnectorContext } from "@/provider";
-import { CurrentChain } from "@orderly.network/types";
+
+import { CurrentChain, NetworkId } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
+import { useConfig } from "@orderly.network/hooks";
 
 export interface WithdrawProps {
   onCancel?: () => void;
@@ -21,10 +22,11 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   //   const { state } = useAccount();
   const { connectedChain, wallet, setChain } = useWalletConnector();
 
-  const { networkId } = useContext(OrderlyContext);
+  // const { networkId } = useContext(OrderlyContext);
+  const networkId = useConfig("networkId");
 
   // const { chains } = useChain("USDC");
-  const [chains, { findByChainId }] = useChains(networkId, {
+  const [chains, { findByChainId }] = useChains(networkId as NetworkId, {
     wooSwapEnabled: false,
     pick: "network_infos",
   });

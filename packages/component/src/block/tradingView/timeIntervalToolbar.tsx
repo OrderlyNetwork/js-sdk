@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { TimeInterval } from "./types";
 import { cn } from "@/utils/css";
 

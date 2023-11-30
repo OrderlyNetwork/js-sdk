@@ -1,0 +1,99 @@
+import { Steps, Tabs } from "nextra/components";
+
+# Getting started
+
+{/* ## Installation */}
+
+## Automatic Installation
+
+对于全新的项目，我们推荐使用 `create-orderly-app` 来自动创建，`create-orderly-app`会提供一个可视化的界面来让你做一些配置，然后根据你提供的配置自动生成一个完整的支持所有 Orderly 服务的去中心化交易所应用。
+
+<Tabs items={["npm", "pnpm", "yarn"]} defaultIndex="1">
+  <Tabs.Tab>
+  ```sh copy 
+  npx create-orderly-app my-exchange 
+  ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+  ```sh copy 
+  pnpm create orderly-app my-exchange 
+  ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+  ```sh copy 
+  yarn create orderly-app my-exchange 
+  ```
+  </Tabs.Tab>
+</Tabs>
+
+你可以在配置页面进行以下配置：
+
+- 选择基础框架(Next.js, CRA, Vite, Gatsby...)
+- 配置主题（颜色，字体，圆角等）
+- SEO 信息
+- 配置路由
+- 配置国际化
+
+在确定以上配置后，`create-orderly-app`将会创建一个以你的项目名命名的文件夹，并且安装所有依赖、创建路由、创建组件等所需要的文件。
+
+## Manual Installation
+
+<Steps>
+### Installation
+ 
+Inside your React project directory, run the following:
+
+```sh npm2yarn copy
+npm install @orderly.network/react
+```
+
+### Add styles
+
+引用样式文件, 在你的项目中添加以下代码。
+
+```typescript copy
+import "@orderly.network/react/dist/styles.css";
+```
+
+如果你需要自定义主题，请参考[这里](/docs/theming)。
+
+### Create route
+
+在你的项目中添加新的路由，引入 `TradingPage` 组件，并按要求提供配置参数。
+
+```typescript copy
+import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
+// 添加钱包连接provider, 为应用提供钱包连接功能
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+
+export default function Trading() {
+  return (
+    <ConnectorProvider
+      apiKey="<Your web3-onboard's api key>"
+      options={`metadata`}
+    >
+      <OrderlyAppProvider
+        networkId="testnet"
+        brokerId="<Your broker id>"
+        logoUrl="<Your brand logo url>"
+      >
+        <TradingPage
+          symbol={'PERP_ETH_USDC'}
+          tradingViewConfig={`tradingView config`}
+          onSymbolChange={`onSymbolChange handler`}
+        />
+      </OrderlyAppProvider>
+    </ConnectorProvider>
+  );
+}
+```
+
+- **必须要添加钱包连接 provider**，否则无法使用 Orderly private apis, 你可以自己实现，也可以使用 Orderly SDK 提供的库，详情请参考[Wallet connect](/)。
+- 不同的框架通常有不同的路由配置方式，可以在[这里](/)查看示例。
+- Page 组件的配置参数请参考[这里](/docs/trading-page)。
+
+### Done
+
+现在你可以启动你的项目并访问 `/trading` 路由，你将会看到一个完整的交易所页面。
+
+</Steps>

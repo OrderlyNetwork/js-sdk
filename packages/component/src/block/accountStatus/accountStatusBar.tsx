@@ -20,7 +20,7 @@ export type AccountStatus =
   | "EnabledTrading"
   | "SignedIn";
 
-interface AccountStatusProps {
+export interface AccountStatusProps {
   className?: string;
   status: AccountStatusEnum;
   chains: string[];
@@ -64,7 +64,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   return (
     <div className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full">
       {status !== AccountStatusEnum.NotConnected &&
-        !errors?.ChainNetworkNotSupport ? (
+      !errors?.ChainNetworkNotSupport ? (
         <AccountTotal
           status={status}
           currency={props.currency}

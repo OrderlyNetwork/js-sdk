@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useMemo } from "react";
+import React, { FC, PropsWithChildren, createContext, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 
 interface SymbolContextState {

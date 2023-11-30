@@ -1,7 +1,7 @@
 import Button from "@/button";
 import { Select } from "@/select";
 import { Statistic } from "@/statistic";
-import { FC } from "react";
+import React, { type FC } from "react";
 import { modal } from "@/modal";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
