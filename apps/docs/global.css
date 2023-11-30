@@ -166,4 +166,12 @@
   .code-preview button {
     all: revert;
   }
+  .color-item {
+    background: repeating-conic-gradient(
+        transparent 0 25%,
+        rgb(0 0 0 / 0.1) 0 50%
+      )
+      0 0 / 1.5em 1.5em content-box border-box;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 }

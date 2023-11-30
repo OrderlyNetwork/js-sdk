@@ -1,11 +1,21 @@
 import { Callout } from 'nextra/components'
+import {Colors} from '@/components/doc/colorBlock'
 
 # Theming
 
+`@orderly.network/react` 提供了一套默认的主题。
+
+`@orderly.network/react`组件支持自定义主题，一般情况下推荐使用CSS变量的方式来自定义主题，如需要对个别组件进行定制，也可以使用样式覆盖的方式来处理。
+
+## Colors
+
+在`@orderly.network/react`中用到的颜色如下:
+
+<Colors/>
 
 ## CSS Variables
 
-你可以通过定义css变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件,然后引入该文件
+你可以通过定义css变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件, 在文件中添加以下内容
 
 
 ```css filename="theme.css" copy
@@ -123,9 +133,9 @@ warning color
 如果在开发中碰到通过自定义CSS 变量不能修改样式的情况可以使用样式覆盖的方式来解决，`@orderly.network/react`组件提供以下两种方式来覆盖样式
 
 
-### className
+### class
 
-通过重写某个class的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 比如:
+通过重写某个class的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 例如:
 
 修改所有`button`组件的样式:
 

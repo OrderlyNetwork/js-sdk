@@ -3,6 +3,11 @@
     "title": "Docs",
     "type": "page"
   },
+  "components":{
+    "title": "Components",
+    "type": "page"
+  
+  },
   "apis": {
     "title": "API",
     "type": "page",

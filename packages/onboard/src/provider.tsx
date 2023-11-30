@@ -1,16 +1,12 @@
-import React, {
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 
+import type { InitOptions } from "@web3-onboard/core";
 import { initConfig } from "./config";
 import { Main } from "./main";
 
 export interface WalletConnectorProviderProps {
   apiKey?: string;
+  options?: InitOptions;
 }
 
 export const ConnectorProvider = (
@@ -19,7 +15,7 @@ export const ConnectorProvider = (
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    initConfig(props.apiKey).then(() => {
+    initConfig(props.apiKey, props.options).then(() => {
       setInitialized(true);
     });
   }, []);
