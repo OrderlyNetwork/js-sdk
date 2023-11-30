@@ -38,6 +38,8 @@ import { Steps, Tabs } from "nextra/components";
 
 ## Manual Installation
 
+如果你已经有一个项目了，或者你想要手动配置，那么你可以按照以下步骤来集成`@orderly.network/react`。
+
 <Steps>
 ### Installation
  
@@ -59,7 +61,7 @@ import "@orderly.network/react/dist/styles.css";
 
 ### Create route
 
-在你的项目中添加新的路由，引入 `TradingPage` 组件，并按要求提供配置参数。
+在你的项目中添加新的路由，引入 Page 类型的组件，并按要求提供配置参数, 下面以交易页举例。
 
 ```typescript copy
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
@@ -90,7 +92,7 @@ export default function Trading() {
 
 - **必须要添加钱包连接 provider**，否则无法使用 Orderly private apis, 你可以自己实现，也可以使用 Orderly SDK 提供的库，详情请参考[Wallet connect](/)。
 - 不同的框架通常有不同的路由配置方式，可以在[这里](/)查看示例。
-- Page 组件的配置参数请参考[这里](/docs/trading-page)。
+- Trading Page 组件的配置参数请参考[这里](/docs/trading-page)。
 
 ### Done
 

@@ -1,12 +1,14 @@
-# Trading page
+import { Callout } from 'nextra/components'
 
-包含完整的交易功能页面组件，包含了以下功能：
+# Trading
+
+包含完整交易功能的页面组件，包含了以下业务组件：
 
 - Orderbook
-- K线图表
+- K 线图表
 - 创建订单、订单列表、订单管理
 - 仓位列表、管理
-- 资源管理，出入金
+- 资产管理，出入金
 
 ```typescript copy
 import { TradingPage } from "@orderly.network/react";
@@ -22,6 +24,22 @@ export default function Trading() {
 }
 ```
 
+## Usage
+
+### 依赖的组件
+
+使用`TradingPage`组件的时候父组件必须包含在组件：
+
+- `OrderlyAppProvider`- 用于提供全局配置参数，全局状态管理，`Account`实例等;
+- `OrderlyWebsocketProvider` - 用于提供`websocket`连接，`Orderbook`组件需要使用`websocket`连接获取数据;
+
+### 切换交易对
+
+- 通过 `symbol` 属性设置当前交易对
+- 通过 `onSymbolChange` 属性监听用户切换交易, 该属性为可选属性，如果不设置，则用户无法切换交易,详情见[API](#onsymbolchange)
+
+
+
 ## APIs
 
 ### symbol
@@ -36,11 +54,42 @@ export default function Trading() {
 - Type: (symbol: API.Symbol) => void
 - Required: false
 
-当用户选择了一个新的交易对时，会触发该事件，参数为新的交易对, [格式](/)。
+当用户选择了一个新的交易对时，会触发该事件，参数为新的交易对。
+
+```typescript {4,9-11}
+import { TradingPage } from "@orderly.network/react";
+
+export default function Trading() {
+  const [symbol, setSymbol] = useState("PERP_ETH_USDC");
+  return (
+    <TradingPage
+      symbol={symbol}
+      tradingViewConfig={`tradingView config`}
+      onSymbolChange={(symbol) => {
+        setSymbol(symbol.symbol);
+      }}
+    />
+  );
+}
+```
 
 ### tradingViewConfig
 
 - Type: `TradingViewConfig`
 - Required: false
 
-TradingView 图表配置, `@orderly.network/react`没有包含`tradingView`库，你可以通过配置使用你自己的`tradingview`库，或者下载 Orderly 提供的[资源包](/)并放到指定的位置。
+TradingView 图表配置, `@orderly.network/react`没有包含`tradingView`库，你可以通过配置使用你自己的`tradingview`库，或者下载 Orderly 提供的[资源包](/)并放到你存在静态资源的目录下。
+
+```typescript
+interface TradingViewConfig {
+  scriptSRC: string;
+  library_path: string;
+}
+```
+
+<Callout type="warning">
+  **注意:** 如果没有配置该项，则不会显示K线图表。
+</Callout>
+
+
+
