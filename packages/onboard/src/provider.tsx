@@ -15,6 +15,10 @@ export const ConnectorProvider = (
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
+    document.body.style.setProperty("--onboard-modal-z-index", "100");
+  }, []);
+
+  useEffect(() => {
     initConfig(props.apiKey, props.options).then(() => {
       setInitialized(true);
     });
