@@ -38,6 +38,7 @@ export type OrderlyAppContextState = {
   errors: AppStateErrors;
   enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
+  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -54,6 +55,7 @@ export interface OrderlyAppProviderProps {
    */
   includeTestnet?: boolean;
   enableSwapDeposit?: boolean;
+  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 }
 
 export const OrderlyAppProvider: FC<
@@ -71,6 +73,7 @@ export const OrderlyAppProvider: FC<
     includeTestnet,
     toastLimitCount,
     enableSwapDeposit,
+    onChainChanged,
   } = props;
 
   return (
@@ -88,6 +91,7 @@ export const OrderlyAppProvider: FC<
         onlyTestnet={onlyTestnet}
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
+        onChainChanged={onChainChanged}
       >
         {props.children}
       </InnerProvider>
@@ -103,6 +107,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     onlyTestnet,
     toastLimitCount = 1,
     enableSwapDeposit,
+    onChainChanged,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -233,16 +238,19 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       return;
     }
 
+    console.log("currentWallet", currentWallet, account, currentChainId);
+    
     if (
       !!currentWallet &&
       Array.isArray(currentWallet.accounts) &&
       currentWallet.accounts.length > 0 &&
       account
-    ) {
-      if (
-        account.address === currentAddress &&
-        currentChainId === account.chainId
       ) {
+        if (
+          account.address === currentAddress &&
+          currentChainId === account.chainId
+          ) {
+        console.log("currentWallet 22 ", currentAddress, currentChainId);
         return;
       }
       // 需要确定已经拿到chains list
@@ -293,6 +301,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
         enableSwapDeposit,
+        onChainChanged,
       }}
     >
       <TooltipProvider>

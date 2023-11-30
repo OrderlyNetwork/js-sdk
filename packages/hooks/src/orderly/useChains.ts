@@ -65,7 +65,8 @@ export const useChains = (
   );
 
   const { data: orderlyChains, error: tokenError } = useQuery<API.Chain[]>(
-    "/v1/public/token",
+    // wooSwapEnabled ? "/v1/public/token" : 
+    'https://api-evm.orderly.org/v1/public/token',
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
