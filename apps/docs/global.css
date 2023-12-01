@@ -189,4 +189,10 @@
   /* .components-page button {
     all: revert;
   } */
+  .nx-text-primary-600 {
+    color: hsl(
+      var(--nextra-primary-hue) var(--nextra-primary-saturation) 65% /
+        var(--tw-text-opacity)
+    ) !important;
+  }
 }

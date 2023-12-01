@@ -16,7 +16,7 @@ export const NavbarExtra = () => {
         <img
           src="https://oss.woo.network/static/wallet_icon/metamask.png"
           alt="metamask"
-          className="w-[20px] h-[20px] mr-1"
+          className="w-[20px] h-[20px] mr-1 rounded-full overflow-hidden"
         />
         <span>{state.address!.replace(reg, "$1...$3")}</span>
       </div>

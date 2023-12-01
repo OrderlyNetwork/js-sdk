@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { SimpleDialog } from "@orderly.network/react";
+import { SimpleDialog, toast, modal } from "@orderly.network/react";
 import { CSSCodeHighline } from "@/components/cssHighline";
-
-// import { getHighlighter } from "shiki";
+import { Copy } from "lucide-react";
 
 export const EditorHeader = () => {
   const [open, setOpen] = useState(false);
@@ -15,17 +14,12 @@ export const EditorHeader = () => {
 
     const style = rootEl.style;
 
-    // style
-    console.log("style", style.cssText);
-    // getHighlighter({
-    //   theme: "nord",
-    //   langs: ["css"],
-    // }).then((highlighter) => {
-    //   const code = highlighter.codeToHtml(style.cssText, { lang: "css" });
-    //   setCode(code);
-    // });
-
-    setCode(style.cssText.replaceAll(";", ";\r\n").trimEnd());
+    setCode(
+      `:root {\r\n${style.cssText
+        .replaceAll("; ", ";\r\n")
+        .replaceAll("--", "    --")
+        .trimEnd()}\r\n}`
+    );
   };
 
   return (
@@ -39,25 +33,66 @@ export const EditorHeader = () => {
           <button
             onClick={() => {
               getThemeCode();
-              setOpen(true);
+              // setOpen(true);
+              modal.dialog({
+                title: "Theme",
+                content: (
+                  <div className="text-sm">
+                    <div className="text-sm mb-3 text-base-contrast-54">
+                      Copy and paste the following code into your CSS file.
+                    </div>
+                    <div className="relative">
+                      <div className="overflow-y-auto h-[400px] border border-base-300 rounded shadow-2xl shadow-base-900 shadow-inner">
+                        <CSSCodeHighline code={code} className="p-3" />
+                        <button
+                          className="absolute top-3 right-3 p-2 rounded z-10 bg-white/5 hover:bg-white/10 active:bg-primary/20"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            navigator.clipboard.writeText(code);
+                            toast.success("Copied to clipboard");
+                          }}
+                        >
+                          <Copy size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ),
+              });
             }}
           >
             code
           </button>
         </div>
       </div>
-      <SimpleDialog
+      {/* <SimpleDialog
         open={open}
-        title={"Code"}
+        title={"Theme"}
         onOpenChange={(open) => {
           useState(open);
         }}
       >
         <div className="p-5 text-sm">
-          <div>Copy and paste the following code into your CSS file.</div>
-          <CSSCodeHighline code={code} />
+          <div className="text-sm mb-3 text-base-contrast-54">
+            Copy and paste the following code into your CSS file.
+          </div>
+          <div className="relative">
+            <div className="overflow-y-auto h-[400px] border border-base-300 rounded shadow-2xl shadow-base-900 shadow-inner">
+              <CSSCodeHighline code={code} className="p-3" />
+              <button
+                className="absolute top-3 right-3 p-2 rounded z-10 bg-white/5 hover:bg-white/10 active:bg-primary/20"
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigator.clipboard.writeText(code);
+                  toast.success("Copied to clipboard");
+                }}
+              >
+                <Copy size={18} />
+              </button>
+            </div>
+          </div>
         </div>
-      </SimpleDialog>
+      </SimpleDialog> */}
     </>
   );
 };

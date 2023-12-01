@@ -1,8 +1,15 @@
 import { ConnectButton } from "../connectButton";
 import Link from "next/link";
 import { NavbarExtra } from "../navbarExtra";
+import clsx from "clsx";
+import { useRouter } from "next/router";
 
 export const NavBar = () => {
+  const router = useRouter();
+
+  const isActive = (path) => {
+    return router.pathname.startsWith(path);
+  };
   return (
     <div className="h-[65px] sticky top-0 z-50 border-b border-base-400 relative">
       <div className="topnav"></div>
@@ -19,13 +26,28 @@ export const NavBar = () => {
             <li className="">
               <Link href="/docs/hooks/overview">Docs</Link>
             </li>
-            <li className="">
-              <Link href="/docs/hooks/overview">Components</Link>
+            <li
+              className={clsx(
+                isActive("/componet") && "font-bold text-base-contrast"
+              )}
+            >
+              <Link href="/components/introduction">Components</Link>
             </li>
-            <li className="">
+            <li
+              className={clsx(
+                isActive("/theme") && "font-bold text-base-contrast"
+              )}
+            >
               <Link href="/theme">Theme</Link>
             </li>
-            <li className="font-bold text-base-contrast">API</li>
+            <li
+              className={clsx(
+                isActive("/apis/modules/[module]") &&
+                  "font-bold text-base-contrast"
+              )}
+            >
+              <Link href="/apis/modules/__orderly_network___hooks">APIs</Link>
+            </li>
           </ul>
           {/* <ConnectButton /> */}
           <NavbarExtra />

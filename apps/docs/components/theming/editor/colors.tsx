@@ -138,20 +138,20 @@ export const Colors = () => {
         <div className="flex gap-2 py-1">
           <ColorInput
             onChange={onThemeChange}
-            name="--orderly-color-trading-loss"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-trading-loss-contrast"
-          />
-
-          <ColorInput
-            onChange={onThemeChange}
             name="--orderly-color-trading-profit"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-trading-profit-contrast"
+          />
+
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-trading-loss"
+          />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-trading-loss-contrast"
           />
         </div>
       </div>

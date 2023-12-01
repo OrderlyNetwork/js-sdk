@@ -1,0 +1,104 @@
+import { LiveProvider, LiveEditor, LivePreview, LiveError } from "react-live";
+import {Withdraw,AssetsProvider,Page,Button,useModal,modal} from '@orderly.network/react'
+
+
+# Withdraw block component
+
+出金组件，用于用户出金操作。
+
+## 特点
+
+- 组件内部已经集成了`@orderly.network/hoooks`, 无需任何参数即可使用；
+- 组件内置钱包连接，用户状态检查等；
+- 必须包含在`OrderlyAppProvider`,`ConnectorProvider`组件内使用;
+
+## Usage
+
+### Static mode
+
+你可以在你的项目中直接展示`Withdraw`组件：
+
+
+<LiveProvider code={`<Page>
+    <Withdraw/>
+</Page>`} scope={{Withdraw,Page}}>
+<div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700">
+
+<LivePreview />
+
+</div>
+  
+  <LiveError />
+</LiveProvider>
+
+```typescript copy
+import { Withdraw } from "@orderly.network/react";
+
+export const App = () => {
+  return (
+    <Withdraw />
+  );
+};
+```
+
+### Modal模式
+
+通过对话框的模式展示`Withdraw`组件：
+
+<LiveProvider code={`()=>{
+    return (
+        <Page>
+        <Button onClick={()=>{
+            dialog({
+                title:'Withdraw',
+                content:<Withdraw/>
+            });
+        }}>Open withdraw dialog</Button>
+</Page>
+    )
+}`} scope={{Withdraw,Page,Button,dialog:modal.dialog}}>
+<div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700">
+
+<LivePreview />
+
+</div>
+  
+  <LiveError />
+</LiveProvider>
+
+
+```typescript copy
+import { Withdraw, modal } from "@orderly.network/react";
+
+const { dialog } = modal;
+
+export const App = () => {
+  return (
+    <Button
+      onClick={() => {
+        dialog({
+          title: "Withdraw",
+          content: <Withdraw />,
+        });
+      }}
+    >
+      Open deposit dialog
+    </Button>
+  );
+};
+```
+
+## AssetsProvider
+
+
+
+
+## APIs
+
+
+### onOk
+
+- Type: (result)=>void
+- Required: false
+
+出金完成后的回调函数，返回入金结果。

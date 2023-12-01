@@ -1,4 +1,86 @@
-# Next.js
+import { Steps, Tabs } from "nextra/components";
 
-Install and configure Next.js
+#  Integration Orderly SDK with Next.js
+
+Setting up Orderly SDK in a Next.js project.
+
+
+<Steps>
+### Create your project
+
+Start by creating a new Next.js project if you don’t have one set up already. The most common approach is to use [Create Next App](https://nextjs.org/docs/api-reference/create-next-app).
+ 
+```bash copy
+npx create-next-app@latest my-exchange --app --typescript --eslint
+cd my-exchange
+```
+ 
+### Add Orderly SDK
+ 
+```sh npm2yarn copy
+npm install @orderly.network/react
+```
+
+### Add new route
+
+{/* Create a new page under `app/trading.tsx` and add the following code: */}
+{/* Next.js有Page和App两种路由模式，这里以App模式为例，App Router更多信息请参考[Next.js官方文档](https://nextjs.org/docs/app/building-your-application/routing/defining-routes)。
+
+在`app`目录下新建`trade/[symbol]`目录，并创建`page.tsx`文件，添加如下代码： */}
+
+Next.js has two routing modes: Page Router and App Router. Here we take App mode as an example. For more information about App Router, please refer to [Next.js documentation](https://nextjs.org/docs/app/building-your-application/routing/defining-routes).
+
+Create a new `trade/[symbol]` directory under the `/app` directory, create a `page.tsx` file, and add the following code:
+
+```typescript filename="page.tsx" copy
+import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { useRouter } from 'next/navigation';
+
+export default function Trading({ params }: { params: { symbol: string } }) {
+  return (
+    <ConnectorProvider
+      apiKey="<Your web3-onboard's api key>"
+      options={`metadata`}
+    >
+      <OrderlyAppProvider
+        networkId="testnet"
+        brokerId="<Your broker id>"
+        logoUrl="<Your brand logo url>"
+      >
+        <TradingPage
+          symbol={params.symbol}
+          tradingViewConfig={`tradingView config`}
+          onSymbolChange={`onSymbolChange handler`}
+        />
+      </OrderlyAppProvider>
+    </ConnectorProvider>
+  );
+}
+```
+
+### Import style
+
+```typescript {3} filename="page.tsx" copy
+import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import '@orderly.network/react/dist/styles.css';
+
+export default function Trading() {
+  return (
+   {/* ... */}
+  );
+}
+```
+
+### Done
+
+现在你可以启动你的项目并访问 `/trade/PERP_ETH_USDC` 路由，你将会看到一个完整的交易所页面。
+
+```bash npm2yarn copy
+npm run dev
+```
+
+</Steps>
+
 

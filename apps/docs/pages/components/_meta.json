@@ -1,9 +1,20 @@
 {
-    "introduction": "Introduction",
-    "getting_started": "Getting Started",
-    "theming":"Theming",
-    "wallet":"Wallet connect",
-    "Install": {
-        "type": "separator"
-      }
+  "introduction": "Introduction",
+  "getting_started": "Getting Started",
+  "configuration": "Configuration",
+  "theming": "Theming",
+  "wallet": "Wallet connect",
+  "Install": {
+    "type": "separator"
+  },
+  "trading": "Trading Page",
+  "Block": {
+    "type": "separator"
+  },
+  "deposit": "Deposit",
+  "withdraw": "Withdraw",
+  "order_entry": "Order Entry",
+  "Base Component": {
+    "type": "separator"
+  }
 }

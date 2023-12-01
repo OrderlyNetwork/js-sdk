@@ -10,6 +10,7 @@ import {
   useOrderbookStream,
   useMarketTradeStream,
   usePrivateQuery,
+  useWalletConnector,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { ConnectButton } from "@/components/connectButton";
@@ -45,7 +46,7 @@ export const CodeLive: FC<Props> = (props) => {
       connecting, // boolean indicating if connection is in progress
     },
     connect, // function to call to initiate user to connect wallet
-  ] = useConnectWallet();
+  ] = useWalletConnector();
 
   const previewView = useMemo(() => {
     if (!isPrivate || state.status > AccountStatusEnum.NotConnected) {

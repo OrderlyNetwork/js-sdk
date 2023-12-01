@@ -2,7 +2,6 @@ import { Steps, Tabs } from "nextra/components";
 
 # Getting started
 
-{/* ## Installation */}
 
 ## Automatic Installation
 
@@ -10,19 +9,25 @@ import { Steps, Tabs } from "nextra/components";
 
 <Tabs items={["npm", "pnpm", "yarn"]} defaultIndex="1">
   <Tabs.Tab>
+
   ```sh copy 
   npx create-orderly-app my-exchange 
   ```
+
   </Tabs.Tab>
   <Tabs.Tab>
+
   ```sh copy 
   pnpm create orderly-app my-exchange 
   ```
+
   </Tabs.Tab>
   <Tabs.Tab>
+
   ```sh copy 
   yarn create orderly-app my-exchange 
   ```
+  
   </Tabs.Tab>
 </Tabs>
 
@@ -63,7 +68,54 @@ import "@orderly.network/react/dist/styles.css";
 
 在你的项目中添加新的路由，引入 Page 类型的组件，并按要求提供配置参数, 下面以交易页为例。
 
-```typescript copy
+```typescript filename="trading.tsx" copy
+import { TradingPage } from "@orderly.network/react";
+
+export default function Trading() {
+  return (
+    <TradingPage
+      symbol={"PERP_ETH_USDC"}
+      tradingViewConfig={`tradingView config`}
+      onSymbolChange={`onSymbolChange handler`}
+    />
+  );
+}
+```
+
+- 不同的框架通常有不同的路由配置方式，可以在[这里](/)查看示例。
+- Trading Page 组件的配置参数请参考[这里](/docs/trading-page)。
+
+### 添加钱包连接组件
+
+**必须要添加钱包连接 provider**，否则将无法使用 Orderly private apis, 你可以使用 Orderly SDK 提供的钱包连接库或者自行实现该组件，详情请参考[Wallet connect](/)。
+
+```typescript filename="trading.tsx" {7-10,16} copy
+import { TradingPage } from "@orderly.network/react";
+// Add a wallet connection provider to provide the wallet connection function for the app
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+
+export default function Trading() {
+  return (
+    <ConnectorProvider
+      apiKey="<Your web3-onboard's api key>"
+      options={`metadata`}
+    >
+      <TradingPage
+        symbol={"PERP_ETH_USDC"}
+        tradingViewConfig={`tradingView config`}
+        onSymbolChange={`onSymbolChange handler`}
+      />
+    </ConnectorProvider>
+  );
+}
+```
+
+### 添加全局配置 Provider
+
+- `OrderlyAppProvider`组件封装了`@orderly.network/hooks`内的`OrderlyConfigProvider`,你配置在`OrderlyAppProvider`组件上的参数将会被传递给`OrderlyConfigProvider`。
+- `brokerId`参数是必须，你可以在[这里](mailto:product@orderly.network)获取。
+
+```typescript filename="trading.tsx" {11-15,21} copy
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
 // Add a wallet connection provider to provide the wallet connection function for the app
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
@@ -80,7 +132,7 @@ export default function Trading() {
         logoUrl="<Your brand logo url>"
       >
         <TradingPage
-          symbol={'PERP_ETH_USDC'}
+          symbol={"PERP_ETH_USDC"}
           tradingViewConfig={`tradingView config`}
           onSymbolChange={`onSymbolChange handler`}
         />
@@ -90,16 +142,10 @@ export default function Trading() {
 }
 ```
 
-- **必须要添加钱包连接 provider**，否则无法使用 Orderly private apis, 你可以自己实现，也可以使用 Orderly SDK 提供的库，详情请参考[Wallet connect](/)。
-- 不同的框架通常有不同的路由配置方式，可以在[这里](/)查看示例。
-- Trading Page 组件的配置参数请参考[这里](/docs/trading-page)。
-
 ### Done
 
-现在你可以启动你的项目并访问 `/trading` 路由，你将会看到一个完整的交易所页面。
+现在你可以启动你的项目并访问上面定义的路由，你将会看到一个完整的交易所页面。
 
 </Steps>
 
-
 ## 配置
-
