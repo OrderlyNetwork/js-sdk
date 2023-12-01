@@ -9,6 +9,7 @@ import {
   useCollateral,
   useAccountInfo,
   OrderlyContext,
+  useWalletConnector,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 
@@ -22,6 +23,11 @@ export const BottomNavBar = () => {
   const { onlyTestnet } = useContext<any>(OrderlyContext);
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
+
+  
+    const {
+      connectedChain,
+    } = useWalletConnector();
 
   const onConnect = useCallback(() => {
     onWalletConnect().then(
@@ -37,8 +43,16 @@ export const BottomNavBar = () => {
 
   const showGetTestUSDC = useMemo(() => {
     // 在localstrange里面加ENABLE_MAINNET=true值就可以让onlyTestnet为true
-    return state.status === AccountStatusEnum.EnableTrading && onlyTestnet;
-  }, [state.status, onlyTestnet]);
+
+    const chainId = connectedChain?.id;
+    if (chainId === undefined) {
+      return false;
+    }
+
+    const isTestnetChain = parseInt(chainId, 16) === 421613;
+
+    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+  }, [state.status, connectedChain]);
 
   return (
     <>

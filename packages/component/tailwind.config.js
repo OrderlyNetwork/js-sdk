@@ -172,23 +172,14 @@ module.exports = {
     }),
     plugin(function ({ addUtilities }) {
       const scrollBarUtilities = {
-        '.hide-scrollbar': {
-          scrollbarWidth: 'thin',
-          scrollbarColor: 'transparent transparent',
-        },
+        
         '.hide-scrollbar::-webkit-scrollbar': {
-          width: '0px',
+          display: 'none'
         },
-        '.hide-scrollbar::-webkit-scrollbar-track': {
-          backgroundColor: 'transparent',
+        '.hide-scrollbar::-webkit-scrollbar-thum': {
+          display: 'none'
         },
-        '.hide-scrollbar::-webkit-scrollbar-thumb': {
-          backgroundColor: 'transparent',
-          borderRadius: '0px',
-        },
-        '.hide-scrollbar::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: 'transparent',
-        },
+       
       };
     
       addUtilities(scrollBarUtilities);
