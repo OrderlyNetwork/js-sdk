@@ -1,5 +1,14 @@
 # examples
 
+## 0.1.82
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.16
+  - @orderly.network/hooks@1.0.13
+  - @orderly.network/core@0.1.12
+
 ## 0.1.81
 
 ### Patch Changes

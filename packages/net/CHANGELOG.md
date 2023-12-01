@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.99
+
+### Patch Changes
+
+- fix bug
+
 ## 1.0.98
 
 ### Patch Changes
