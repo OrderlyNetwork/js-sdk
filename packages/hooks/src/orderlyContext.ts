@@ -18,6 +18,7 @@ export interface OrderlyConfigContextState {
   networkId: NetworkId;
 
   onlyTestnet?: boolean;
+  enableSwapDeposit?: boolean;
   // extraApis:ExtraAPIs
 }
 

@@ -21,7 +21,7 @@ const buttonVariants = cva(
       variant: {
         text: "orderly-text-slate-500 hover:orderly-bg-slate-100",
         outlined:
-          "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500 hover:orderly-bg-slate-100",
+          "orderly-text-slate-500 orderly-bg-transparent orderly-border orderly-border-slate-500",
         contained:
           "orderly-text-white orderly-bg-slate-500 hover:orderly-bg-slate-600 orderly-shadow-button",
         gradient:
@@ -43,10 +43,10 @@ const buttonVariants = cva(
         tertiary: "orderly-bg-tertiary",
         success:
           "orderly-text-success orderly-bg-transparent hover:orderly-bg-success hover:orderly-text-white active:orderly-bg-success/90",
-        buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit/90 active:orderly-bg-trade-profit/90",
-        sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss/90 active:orderly-bg-trade-loss/90",
+        buy: "orderly-text-white orderly-bg-trade-profit hover:orderly-bg-trade-profit active:orderly-bg-trade-profit",
+        sell: "orderly-text-white orderly-bg-trade-loss hover:orderly-bg-trade-loss active:orderly-bg-trade-loss",
         danger:
-          "orderly-text-danger orderly-bg-danger hover:orderly-bg-danger/90 active:orderly-bg-danger/90",
+          "orderly-text-danger-light orderly-border-danger-darken active:orderly-border-bg-danger/90",
       },
       // evlevation: {
       //
@@ -95,7 +95,7 @@ const buttonVariants = cva(
         variant: "contained",
         color: "danger",
         class:
-          "orderly-bg-danger orderly-text-base-contrast hover:orderly-bg-danger/90",
+          "orderly-bg-danger orderly-text-base-contrast",
       },
       {
         variant: "outlined",

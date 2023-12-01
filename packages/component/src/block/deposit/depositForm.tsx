@@ -15,10 +15,8 @@ import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
 import {
-  useQuery,
   useDebouncedCallback,
   useLocalStorage,
-  useChains,
   useBoolean,
 } from "@orderly.network/hooks";
 
@@ -104,7 +102,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors } = useContext(OrderlyAppContext);
+  const { errors,enableSwapDeposit } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -527,6 +525,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
+          wooSwapEnabled={enableSwapDeposit ?? false}
         />
       </div>
       <QuantityInput

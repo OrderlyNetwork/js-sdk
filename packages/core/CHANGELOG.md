@@ -1,5 +1,61 @@
 # @orderly.network/core
 
+## 0.1.12
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.12
+
+## 0.1.11
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.11
+
+## 0.1.10
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.10
+
+## 0.1.9
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.9
+
+## 0.1.8
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.8
+
+## 0.1.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.7
+
+## 0.1.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes

@@ -37,7 +37,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           />
           <MyLeverageView symbol={props.symbol} />
           <div className="orderly-grid orderly-grid-cols-[3fr_4fr] orderly-box-border orderly-p-2 orderly-items-start">
-            <MyOrderBook symbol={props.symbol} />
+            <div className="orderly-w-full"><MyOrderBook symbol={props.symbol} /></div>
             <AssetsProvider>
               <MyOrderEntry symbol={props.symbol} />
             </AssetsProvider>

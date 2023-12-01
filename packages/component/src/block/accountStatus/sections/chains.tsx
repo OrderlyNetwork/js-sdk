@@ -15,6 +15,7 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
+import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -24,19 +25,20 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, configStore, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
     ARBITRUM_MAINNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
-    wooSwapEnabled: true,
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
@@ -62,10 +64,15 @@ export const Chains: FC<ChainsProps> = (props) => {
   }, [connectedChain, findByChainId, defaultChain]);
 
   const switchDomain = (chainId: number) => {
-    const domain = configStore.get("domain");
-    const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
-    window.location.href = url;
+    // const domain = configStore.get("domain");
+    // const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
+    // window.location.href = url;
     // window.open(url); // test in storybook
+    console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
+    if (onChainChanged) {
+      console.log("onChainChanged", chainId, chainId === 421613);
+      onChainChanged(chainId, chainId === 421613);
+    }
   };
 
   return (
@@ -82,11 +89,11 @@ export const Chains: FC<ChainsProps> = (props) => {
           }
         >
           {chainName}
-          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
+          <ArrowIcon size={8} className="orderly-text-base-contrast-54"/>
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader>Switch network</DialogHeader>
+        <DialogHeader  className="orderly-text-xs">Switch network</DialogHeader>
         <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
             // @ts-ignore

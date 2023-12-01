@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "0.1.9",
+  "version": "0.1.16",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -98,7 +98,6 @@
   "publishConfig": {
     "access": "public"
   },
-
   "readme": "ERROR: No README data found!",
   "_id": "@orderly.network/react@0.0.1"
 }

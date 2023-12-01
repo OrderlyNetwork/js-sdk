@@ -28,7 +28,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       >
         <TabPane
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
               <ArrowDownToLine size={15} /> <span>Deposit</span>
             </div>
           }
@@ -50,7 +50,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         </TabPane>
         <TabPane
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
               <ArrowUpToLine size={15} /> <span>Withdraw</span>
             </div>
           }

@@ -50,7 +50,7 @@ export const ListView: Story = {
   render: (args) => {
     const [chains] = useChains(undefined, {
       pick: "network_infos",
-      wooSwapEnabled: true,
+      wooSwapEnabled: false,
     });
     return (
       <ChainListView

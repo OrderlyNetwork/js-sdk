@@ -42,7 +42,7 @@ export const SortGroup: FC<Props> = (props) => {
   }, [sortKey, direction]);
 
   return (
-    <div className="orderly-flex orderly-justify-between orderly-text-4xs orderly-pt-5 orderly-pb-3 orderly-text-tertiary">
+    <div className="orderly-flex orderly-justify-between orderly-text-4xs orderly-pt-5 orderly-pb-3 orderly-text-base-contrast-36">
       <div className="orderly-flex orderly-items-center orderly-gap-1">
         <div>Instrument</div>
         <div>/</div>

@@ -26,7 +26,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       placeholder={"Search instrument"}
       onClean={onClean}
       value={props.value}
-      containerClassName="orderly-bg-base-600"
+      containerClassName="orderly-bg-base-900"
       className="orderly-text-2xs"
       onChange={(event) => {
         props.onChange?.(event.target.value);

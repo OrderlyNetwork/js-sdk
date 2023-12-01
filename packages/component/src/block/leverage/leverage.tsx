@@ -28,7 +28,7 @@ export const LeverageView: FC<LeverageViewProps> = ({
         <Button
           variant={"text"}
           size={"small"}
-          className="orderly-px-1 orderly-min-w-[24px] orderly-text-4xs orderly-text-primary-light"
+          className="orderly-px-1 orderly-min-w-[24px] orderly-text-4xs orderly-text-link"
         >
           {`${maxLeverage}x`}
         </Button>

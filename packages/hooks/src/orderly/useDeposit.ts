@@ -38,14 +38,14 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  const { onlyTestnet } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
 
   const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: options?.wooSwapEnabled,
+    wooSwapEnabled: enableSwapDeposit,
   });
 
   const [balance, setBalance] = useState("0");

@@ -345,7 +345,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   precision={0}
                 >{`${freeCollateral ?? "--"}`}</Numeral>
 
-                <span>USDC</span>
+                <span className="orderly-text-base-contrast-36">USDC</span>
               </div>
               <Button
                 variant={"text"}

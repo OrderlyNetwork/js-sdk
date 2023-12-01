@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { type API, OrderSide } from "@orderly.network/types";
 
 import { useSymbolsInfo } from "./useSymbolsInfo";
@@ -10,8 +10,7 @@ import { useCollateral } from "./useCollateral";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { useOrderStream } from "./useOrderStream";
-import { OrderStatus } from "@orderly.network/types";
+import { useWS } from "../useWS";
 
 const positionsPath = pathOr([], [0, "rows"]);
 
@@ -22,7 +21,7 @@ export const useMaxQty = (
 ) => {
   const positionsData = usePositionStream();
 
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  // const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
@@ -32,6 +31,37 @@ export const useMaxQty = (
   const { totalCollateral } = useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
+
+  
+
+  const {
+    data: orders,
+    error,
+    mutate: updateOrder,
+  } = usePrivateQuery<API.Order[]>(`/v1/orders?status=NEW&size=99`, {
+    formatter: (data) => data.rows,
+    onError: (err) => { },
+  });
+
+  const ws = useWS();
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe(
+      {
+        id: "executionreport_orders",
+        event: "subscribe",
+        topic: "executionreport",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          console.log("refresh orders", data);
+          updateOrder();
+        },
+      }
+    );
+    return () => unsubscribe();
+  }, []);
+
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;

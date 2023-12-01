@@ -10,6 +10,7 @@ import { Logo } from "@/logo";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
 import { Decimal } from "@orderly.network/utils";
+import { OrderlyAppContext } from "@/provider";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -21,7 +22,7 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   // @ts-ignore
-  const { logoUrl } = useContext(OrderlyContext);
+  const { logoUrl, errors } = useContext(OrderlyAppContext);
   const { onDeposit, onWithdraw, onSettle, visible, toggleVisible } =
     useContext(AssetsContext);
 

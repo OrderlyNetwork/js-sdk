@@ -1,5 +1,76 @@
 # @orderly/docs
 
+## 0.1.52
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.16
+  - @orderly.network/web3-onboard@0.0.13
+  - @orderly.network/hooks@1.0.13
+  - @orderly.network/types@0.1.12
+
+## 0.1.51
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.15
+  - @orderly.network/web3-onboard@0.0.12
+  - @orderly.network/hooks@1.0.12
+  - @orderly.network/types@0.1.11
+
+## 0.1.50
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.14
+  - @orderly.network/web3-onboard@0.0.11
+  - @orderly.network/hooks@1.0.11
+  - @orderly.network/types@0.1.10
+
+## 0.1.49
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.13
+  - @orderly.network/hooks@1.0.10
+  - @orderly.network/types@0.1.9
+
+## 0.1.48
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.12
+  - @orderly.network/hooks@1.0.9
+  - @orderly.network/types@0.1.8
+
+## 0.1.47
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.11
+  - @orderly.network/hooks@1.0.8
+  - @orderly.network/types@0.1.7
+
+## 0.1.46
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.10
+  - @orderly.network/hooks@1.0.7
+  - @orderly.network/types@0.1.6
+
 ## 0.1.45
 
 ### Patch Changes

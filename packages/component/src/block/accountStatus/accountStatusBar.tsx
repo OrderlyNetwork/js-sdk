@@ -10,7 +10,6 @@ import { ChevronDown } from "lucide-react";
 import { AccountTotal } from "./sections/accountTotal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
-import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { Chains } from "./sections/chains";
 import { OrderlyAppContext } from "@/provider";
 

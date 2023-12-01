@@ -1,5 +1,82 @@
 # @orderly.network/react
 
+## 0.1.16
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.13
+  - @orderly.network/types@0.1.12
+  - @orderly.network/core@0.1.12
+  - @orderly.network/net@1.0.99
+
+## 0.1.15
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.12
+  - @orderly.network/types@0.1.11
+  - @orderly.network/core@0.1.11
+  - @orderly.network/net@1.0.98
+
+## 0.1.14
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.11
+  - @orderly.network/types@0.1.10
+  - @orderly.network/core@0.1.10
+  - @orderly.network/net@1.0.97
+
+## 0.1.13
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.10
+  - @orderly.network/types@0.1.9
+  - @orderly.network/core@0.1.9
+  - @orderly.network/net@1.0.96
+
+## 0.1.12
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.9
+  - @orderly.network/types@0.1.8
+  - @orderly.network/core@0.1.8
+  - @orderly.network/net@1.0.95
+
+## 0.1.11
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.0.8
+  - @orderly.network/types@0.1.7
+  - @orderly.network/core@0.1.7
+  - @orderly.network/net@1.0.94
+
+## 0.1.10
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.7
+  - @orderly.network/types@0.1.6
+  - @orderly.network/core@0.1.6
+  - @orderly.network/net@1.0.93
+
 ## 0.1.9
 
 ### Patch Changes

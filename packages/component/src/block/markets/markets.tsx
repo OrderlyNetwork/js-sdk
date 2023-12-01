@@ -25,10 +25,10 @@ export const Markets: FC<MarketsProps> = (props) => {
   }, [props.dataSource, searchKey]);
 
   return (
-    <>
+    <div className="orderly-flex orderly-flex-col orderly-h-screen">
       <h3 className="orderly-text-lg orderly-text-base-contrast orderly-py-3">Markets</h3>
       <SearchForm onChange={setSearchKey} value={searchKey} />
       <MarketListView dataSource={dataSource} onItemClick={props.onItemClick} />
-    </>
+    </div>
   );
 };

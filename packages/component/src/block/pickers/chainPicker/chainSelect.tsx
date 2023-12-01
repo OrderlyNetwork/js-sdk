@@ -6,7 +6,7 @@ import {
   useEffect,
   useMemo,
 } from "react";
-import { useChains } from "@orderly.network/hooks";
+import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
 import { ChainConfig, CurrentChain } from "@orderly.network/types";
@@ -38,14 +38,21 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
   });
 
+   const { connectedChain } = useWalletConnector();
+
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
+    if (allChains === undefined) return [];    
+
+    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) { 
+      return allChains.testnet ?? [];
+    }
 
     if (onlyTestnet) {
       return allChains.testnet ?? [];
     }
     return allChains.mainnet;
-  }, [allChains, onlyTestnet]);
+  }, [allChains, onlyTestnet, connectedChain]);
 
   const { value } = props;
 

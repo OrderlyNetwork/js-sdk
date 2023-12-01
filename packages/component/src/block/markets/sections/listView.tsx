@@ -71,7 +71,7 @@ export const MarketListView: FC<MarketListViewProps> = (props) => {
     <>
       <SortGroup onChange={setSortCondition} />
       <Divider />
-      <div className="orderly-overflow-y-scroll orderly-h-full orderly-my-2">
+      <div className="orderly-overflow-y-auto orderly-scrollbar-hidden orderly-hide-scrollbar orderly-flex-grow orderly-my-2">
         <ListView.separated<API.MarketInfoExt>
           dataSource={dataSource}
           renderItem={renderItem}

@@ -1,5 +1,69 @@
 # examples
 
+## 0.1.82
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.16
+  - @orderly.network/hooks@1.0.13
+  - @orderly.network/core@0.1.12
+
+## 0.1.81
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.15
+  - @orderly.network/hooks@1.0.12
+  - @orderly.network/core@0.1.11
+
+## 0.1.80
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.14
+  - @orderly.network/hooks@1.0.11
+  - @orderly.network/core@0.1.10
+
+## 0.1.79
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.13
+  - @orderly.network/hooks@1.0.10
+  - @orderly.network/core@0.1.9
+
+## 0.1.78
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.12
+  - @orderly.network/hooks@1.0.9
+  - @orderly.network/core@0.1.8
+
+## 0.1.77
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.11
+  - @orderly.network/hooks@1.0.8
+  - @orderly.network/core@0.1.7
+
+## 0.1.76
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.10
+  - @orderly.network/hooks@1.0.7
+  - @orderly.network/core@0.1.6
+
 ## 0.1.75
 
 ### Patch Changes

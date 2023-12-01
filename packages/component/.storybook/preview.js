@@ -83,6 +83,9 @@ const preview = {
             onlyTestnet={false}
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"
+            onChainChanged={(networkId, isTestnet) => {
+              console.log("network changed", networkId, isTestnet);
+            }}
           >
             <Story />
           </OrderlyAppProvider>
