@@ -12,5 +12,10 @@
     "title": "API",
     "type": "page",
     "href": "/apis/modules/__orderly_network___hooks"
+  },
+  "theme": {
+    "title": "Theme",
+    "type": "page",
+    "href": "/theme"
   }
 }

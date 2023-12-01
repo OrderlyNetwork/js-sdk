@@ -42,6 +42,8 @@ export {
   ClosePositionPane,
   AccountStatusBar,
   AssetAndMarginSheet,
+  ChainListView,
+  ChainSelect,
 } from "./block";
 export type {
   OrderEntryProps,

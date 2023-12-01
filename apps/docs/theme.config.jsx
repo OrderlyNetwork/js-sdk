@@ -2,7 +2,7 @@ import {NavbarExtra} from '@/components/navbarExtra'
 
 export default {
     logo: <div className="flex">
-      <img src="/images/orderly.log.png" width={40}/>
+      <img src="https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png" style={{height:'27px'}} />
     </div>,
     logoLink:"/docs/hooks/overview",
     // project: {
@@ -16,9 +16,16 @@ export default {
     //     </svg>
     //   )
     // },
+    darkMode: false,
+    nextThemes:{
+      defaultTheme:'dark'
+    },
     primaryHue:{
       light: 263,
-      dark: 262
+      dark: 270
+    },
+    primarySaturation:{
+dark:50,
     },
     navbar:{
       extraContent: NavbarExtra,

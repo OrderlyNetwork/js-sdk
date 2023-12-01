@@ -10,15 +10,15 @@ const Components = dynamic(() => import("@/components/theming/components"), {
 
 export default function Page() {
   return (
-    <>
-      <NavBar></NavBar>
-      <DemoContextProvider>
-        <div className="bg-base-500 min-h-screen py-7">
+    <DemoContextProvider>
+      <div className="bg-base-600 min-h-screen components-page">
+        <NavBar></NavBar>
+        <div className="py-7">
           <div className="container mx-auto">
             <Components />
           </div>
         </div>
-      </DemoContextProvider>
-    </>
+      </div>
+    </DemoContextProvider>
   );
 }

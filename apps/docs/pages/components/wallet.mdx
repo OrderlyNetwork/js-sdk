@@ -1,16 +1,12 @@
 # Wallet connect
 
-`@orderly.network/react` 的定位是Orderly API 应用层，主要负责渲染 UI，处理用户交互事件，完成交易业务等，所以没有内置与交易无关的钱包连接功能。
+`@orderly.network/react` 的定位是 Orderly API 应用层，主要负责渲染 UI，处理用户交互事件，完成交易业务等，所以没有内置与交易无关的钱包连接功能。
 
-在需要处理钱包连接的地方，`@orderly.network/react`利用React的context机制，从最近的context获取当前已连接钱包的信息或者调用context提供的钱包连接函数。为此，`@orderly.network/hoos`定义了名为`WalletConnectorContext`的context, 任何实现了[`WalletConnectorContextState`](/)定义的。
-
-综合上
-
-
+在需要处理钱包连接的地方，`@orderly.network/react`利用 React 的 context 机制，从最近的 context 获取当前已连接钱包的信息或者调用 context 提供的钱包连接函数。为此，`@orderly.network/hoos`定义了名为`WalletConnectorContext`的 context, 任何实现了[`WalletConnectorContextState`](/)定义的`WalletConnectorContext.Provider`组件都可以做为 app 的钱包连接组件, 请参考[这里](#custom-wallet-connection-provider)。
 
 ## 使用 Orderly 提供的 SDK
 
-为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 会对市面上比较流行的库进行封装并提供下载。
+为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 会对市面上比较流行的库进行封装并提供安装。
 
 ### `@orderly.network/web3-onboard`
 
@@ -44,12 +40,106 @@ export const App = () => {
 };
 ```
 
-Orderly 还会推出更多的钱包连接库，敬请期待。
+Orderly 还会发布更多的钱包连接库，敬请期待。
 
-## 自定义钱包连接
+## Custom wallet connection provider
 
-你也可以自定义钱包连接，只需要实现`WalletConnector`接口即可。
+你也可以自定义钱包连接，只需要实现`WalletConnectorContextState`定义的所有属性即可。
+
+### Interface & Context
 
 ```typescript copy
+export type ConnectedChain = {
+  id: string;
+};
+export interface WalletConnectorContextState {
+  connect: () => Promise<any[]>;
+  disconnect: (options: any) => Promise<any[]>;
+  connecting: boolean;
+  setChain: (options: any) => Promise<any>;
+  chains: any[];
+  switchChain: (options: { chainId: string }) => Promise<any>;
+  wallet: any;
+  connectedChain: ConnectedChain | null;
 
+  settingChain: boolean;
+}
+
+export const WalletConnectorContext =
+  createContext<WalletConnectorContextState>({} as WalletConnectorContextState);
+
+export const useWalletConnector = () => {
+  return useContext(WalletConnectorContext);
+};
+```
+
+### 实现
+
+```typescript copy
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
+import { useAccount, WalletConnectorContext } from "@orderly.network/hooks";
+
+import {
+  createWeb3Modal,
+  defaultWagmiConfig,
+  useWeb3Modal,
+} from "@web3modal/wagmi/react";
+
+import {
+  WagmiConfig,
+  useAccount as useWagmiAccount,
+  useProvider,
+  usePublicClient,
+} from "wagmi";
+import { arbitrum, mainnet } from "viem/chains";
+
+// 1. Get projectId at https://cloud.walletconnect.com
+const projectId = "YOUR_PROJECT_ID";
+
+// 2. Create wagmiConfig
+const metadata = {
+  name: "Web3Modal",
+  description: "Web3Modal Example",
+  url: "https://web3modal.com",
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
+
+const chains = [mainnet, arbitrum];
+export const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+
+// 3. Create modal
+createWeb3Modal({ wagmiConfig, projectId, chains });
+
+export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {
+  const { account } = useAccount();
+
+  const publicClient = usePublicClient();
+  const { address, isConnecting, isDisconnected } = useWagmiAccount();
+
+  const { open } = useWeb3Modal();
+
+  useEffect(() => {
+    // call account's setAdress method to update account status;
+  }, []);
+
+  const connect = useCallback(() => {
+    return open().then((res) => {
+      console.log(res);
+      return [];
+    });
+  }, []);
+
+  return (
+    <WalletConnectorContext.Provider value={{ connect }}>
+      {props.children}
+    </WalletConnectorContext.Provider>
+  );
+};
 ```

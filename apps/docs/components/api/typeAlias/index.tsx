@@ -15,7 +15,7 @@ export const TypeAliasPage: FC<Props> = (props) => {
     <div className="space-y-5">
       <PageHeader title={doc.name} type="Type alias" />
 
-      <div className={"p-5 rounded-xl bg-primary-light"}>
+      <div className={"p-5 rounded-xl bg-base-500"}>
         <span className={"text-rose-500"}>{doc.name}</span>
         <span className={"mr-2"}>:</span>
         <Type type={doc.type} />

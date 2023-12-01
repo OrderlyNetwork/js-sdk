@@ -12,6 +12,7 @@ import { AccountStatusBarComponent } from "./accountStateBar";
 import { AssetsComponent } from "./assets";
 import { ClosePositionPaneComponent } from "./closePositionPane";
 import { ThemeEditor } from "../editor";
+import { ChainListComponent } from "./chainlist";
 
 const Components = () => {
   return (
@@ -54,6 +55,9 @@ const Components = () => {
           </Card>
           <Card>
             <AccountStatusBarComponent />
+          </Card>
+          <Card>
+            <ChainListComponent />
           </Card>
         </div>
         <div>

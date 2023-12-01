@@ -90,7 +90,10 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       return <Spinner size={"small"} className="orderly-text-primary-light" />;
     }
     if (chains?.length > 1) {
-      return <ArrowLeftRight size={16} className="orderly-text-primary-light" />;
+      return (
+        // @ts-ignore
+        <ArrowLeftRight size={16} className="orderly-text-primary-light" />
+      );
     }
     return null;
   }, [chains?.length, props.settingChain]);

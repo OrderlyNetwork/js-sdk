@@ -11,7 +11,7 @@ export const Constructor: FC<Props> = ({ data, name }) => {
     <div className="space-y-4">
       <div className="text-2xl">Constructors</div>
 
-      <div className="space-x-1 border-t border-b border-gray-300 py-4 text-xl">
+      <div className="space-x-1 border-t border-b border-base-500 py-4 text-xl">
         <span className="text-sky-600">new</span>
         <span>
           <span className="text-sky-600">{name}</span>

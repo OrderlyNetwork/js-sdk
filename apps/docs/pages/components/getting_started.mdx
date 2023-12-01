@@ -61,11 +61,11 @@ import "@orderly.network/react/dist/styles.css";
 
 ### Create route
 
-在你的项目中添加新的路由，引入 Page 类型的组件，并按要求提供配置参数, 下面以交易页举例。
+在你的项目中添加新的路由，引入 Page 类型的组件，并按要求提供配置参数, 下面以交易页为例。
 
 ```typescript copy
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
-// 添加钱包连接provider, 为应用提供钱包连接功能
+// Add a wallet connection provider to provide the wallet connection function for the app
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 export default function Trading() {
@@ -99,3 +99,7 @@ export default function Trading() {
 现在你可以启动你的项目并访问 `/trading` 路由，你将会看到一个完整的交易所页面。
 
 </Steps>
+
+
+## 配置
+

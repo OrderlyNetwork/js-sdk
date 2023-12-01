@@ -25,7 +25,7 @@ export const FunctionPage: FC<Props> = (props) => {
       {doc.signatures.map((signature, index) => {
         return (
           <div className="space-y-7" key={signature.id}>
-            <div className="space-x-1 border-t border-b border-gray-300 py-4">
+            <div className="space-x-1 border-t border-b border-base-400 py-4">
               <span className="text-sky-600">{doc.name}</span>
               {Array.isArray(signature.typeParameters) &&
               signature.typeParameters.length > 0 ? (
