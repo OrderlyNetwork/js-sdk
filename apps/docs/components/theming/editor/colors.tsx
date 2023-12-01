@@ -187,6 +187,26 @@ export const Colors = () => {
         </div>
       </div>
       <div>
+        <div>Warning</div>
+        <div className="flex gap-2 py-1">
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-warning-darken"
+            selector=".orderly-bg-warning-darken,.orderly-text-warning-darken"
+          />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-warning"
+            selector=".orderly-bg-warning,.orderly-text-warning"
+          />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-warning-light"
+            selector=".orderly-bg-warning-light,.orderly-text-warning-light"
+          />
+        </div>
+      </div>
+      <div>
         <div>Trade</div>
         <div className="flex gap-2 py-1">
           <ColorInput

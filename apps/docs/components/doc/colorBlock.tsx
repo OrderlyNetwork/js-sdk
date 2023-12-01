@@ -80,6 +80,14 @@ export const Colors = () => {
           ]}
         />
         <ColorList
+          groupName="warning"
+          colors={[
+            { color: "bg-warning-darken", name: "warning-darken" },
+            { color: "bg-warning", name: "warning" },
+            { color: "bg-warning-light", name: "warning-light" },
+          ]}
+        />
+        <ColorList
           groupName="success"
           colors={[
             { color: "bg-success-darken", name: "success darken" },
@@ -96,10 +104,7 @@ export const Colors = () => {
             { color: "bg-trade-profit", name: "trade profit" },
           ]}
         />
-        <ColorList
-          groupName="warning"
-          colors={[{ color: "bg-warning", name: "warning" }]}
-        />
+
         <ColorList
           groupName="link"
           colors={[{ color: "bg-link", name: "link" }]}

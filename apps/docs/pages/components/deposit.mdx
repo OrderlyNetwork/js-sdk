@@ -22,7 +22,7 @@ import {Deposit,AssetsProvider,Page,Button,useModal,modal} from '@orderly.networ
 <LiveProvider code={`<Page>
     <Deposit/>
 </Page>`} scope={{AssetsProvider,Deposit,Page}}>
-<div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700">
+<div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700 color-item">
 
 <LivePreview />
 
@@ -57,7 +57,7 @@ export const App = () => {
 </Page>
     )
 }`} scope={{AssetsProvider,Deposit,Page,Button,dialog:modal.dialog}}>
-<div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700">
+<div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700 color-item">
 
 <LivePreview />
 
