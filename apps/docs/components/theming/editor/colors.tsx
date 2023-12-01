@@ -3,13 +3,13 @@ import { hexToRgb, rgbToHex } from "@/utils/color";
 import { useState } from "react";
 import { defaultStyles } from "../mergeStyles";
 
-type colorMode = "free" | "range";
-
 const ColorInput = ({
   name,
   onChange,
+  selector,
 }: {
   name: string;
+  selector?: string;
   onChange: (name: string, color: string) => void;
 }) => {
   const [color, setColor] = useState(rgbToHex(defaultStyles[name]));
@@ -25,7 +25,33 @@ const ColorInput = ({
         onChange(name, rgb.join(" "));
       }}
       onBlur={(event) => {
-        console.log("blur", event.target.value);
+        const el = document.querySelectorAll(`.outline-offset-2`);
+        if (el) {
+          // el.classList.add("outline");
+          el.forEach((e) => {
+            e.classList.remove(
+              "outline",
+              "outline-offset-2",
+              "outline-white/30"
+            );
+          });
+        }
+      }}
+      onFocus={(event) => {
+        if (selector) {
+          const el = document.querySelectorAll(selector);
+
+          if (el) {
+            // el.classList.add("outline");
+            el.forEach((e) => {
+              e.classList.add(
+                "outline",
+                "outline-offset-2",
+                "outline-white/30"
+              );
+            });
+          }
+        }
       }}
     />
   );
@@ -42,39 +68,48 @@ export const Colors = () => {
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-100"
+            selector=".orderly-bg-base-100,.orderly-text-base-100,.orderly-border-base-100"
           />
 
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-200"
+            selector=".orderly-bg-base-200,.orderly-text-base-200,.orderly-border-base-200"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-300"
+            selector=".orderly-bg-base-300,.orderly-text-base-300,.orderly-border-base-300"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-400"
+            selector=".orderly-bg-base-400,.orderly-text-base-400,.orderly-border-base-400"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-500"
+            selector=".orderly-bg-base-500,.orderly-text-base-500,.orderly-border-base-500"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-600"
+            selector=".orderly-bg-base-600,.orderly-text-base-600,.orderly-border-base-600"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-700"
+            selector=".orderly-bg-base-700,.orderly-text-base-700,.orderly-border-base-700"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-800"
+            selector=".orderly-bg-base-800,.orderly-text-base-800,.orderly-border-base-800"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-base-900"
+            selector=".orderly-bg-base-900,.orderly-text-base-900,.orderly-border-base-900"
           />
         </div>
       </div>
@@ -93,12 +128,18 @@ export const Colors = () => {
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-primary-darken"
+            selector=".orderly-bg-primary-darken,.orderly-text-primary-darken,.orderly-border-primary-darken"
           />
 
-          <ColorInput onChange={onThemeChange} name="--orderly-color-primary" />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-primary"
+            selector=".orderly-bg-primary,.orderly-text-primary,.orderly-border-primary"
+          />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-primary-light"
+            selector=".orderly-bg-primary-light,.orderly-text-primary-light,.orderly-border-primary-light"
           />
         </div>
       </div>
@@ -108,12 +149,18 @@ export const Colors = () => {
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-success-darken"
+            selector=".orderly-bg-success-darken,.orderly-text-success-darken"
           />
 
-          <ColorInput onChange={onThemeChange} name="--orderly-color-success" />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-success"
+            selector=".orderly-bg-success,.orderly-text-success"
+          />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-success-light"
+            selector=".orderly-bg-success-light,.orderly-text-success-light"
           />
         </div>
       </div>
@@ -124,12 +171,18 @@ export const Colors = () => {
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-danger-darken"
+            selector=".orderly-bg-danger-darken,.orderly-text-danger-darken"
           />
 
-          <ColorInput onChange={onThemeChange} name="--orderly-color-danger" />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-danger"
+            selector="orderly-bg-danger,orderly-text-danger"
+          />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-danger-light"
+            selector=".orderly-bg-danger-light,.orderly-text-danger-light"
           />
         </div>
       </div>
@@ -139,26 +192,44 @@ export const Colors = () => {
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-trading-profit"
+            selector=".orderly-bg-trade-profit,.orderly-text-trade-profit"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-trading-profit-contrast"
+            selector=".orderly-bg-trade-profit-contrast,.orderly-text-trade-profit-contrast"
           />
 
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-trading-loss"
+            selector=".orderly-bg-trade-loss,.orderly-text-trade-loss"
           />
           <ColorInput
             onChange={onThemeChange}
             name="--orderly-color-trading-loss-contrast"
+            selector=".orderly-bg-trade-loss-contrast,.orderly-text-trade-loss-contrast"
           />
         </div>
       </div>
       <div>
         <div>Divider</div>
         <div className="flex gap-2 py-1">
-          <ColorInput onChange={onThemeChange} name="--orderly-color-divider" />
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-divider"
+            selector=".orderly-bg-divider,.orderly-text-divider,.orderly-border-divider"
+          />
+        </div>
+      </div>
+      <div>
+        <div>Link</div>
+        <div className="flex gap-2 py-1">
+          <ColorInput
+            onChange={onThemeChange}
+            name="--orderly-color-link"
+            selector=".orderly-bg-link,.orderly-text-link,.orderly-border-link"
+          />
         </div>
       </div>
 

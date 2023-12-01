@@ -4,6 +4,7 @@
   "configuration": "Configuration",
   "theming": "Theming",
   "wallet": "Wallet connect",
+  "frameworks": "Framework Guides",
   "Install": {
     "type": "separator"
   },

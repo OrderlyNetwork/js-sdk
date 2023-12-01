@@ -8,6 +8,7 @@ export const NavBar = () => {
   const router = useRouter();
 
   const isActive = (path) => {
+    console.log(router.pathname, path);
     return router.pathname.startsWith(path);
   };
   return (
