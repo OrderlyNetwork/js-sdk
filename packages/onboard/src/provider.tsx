@@ -15,7 +15,7 @@ export const ConnectorProvider = (
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    document.body.style.setProperty("--onboard-modal-z-index", "100");
+    document.body.style.setProperty("--onboard-modal-z-index", "88");
   }, []);
 
   useEffect(() => {

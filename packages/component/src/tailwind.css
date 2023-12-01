@@ -12,7 +12,7 @@
     -moz-appearance: textfield;
   }
   :root {
-    --onboard-modal-z-index: 100;
+    --onboard-modal-z-index: 88;
 
     /* colors */
     --orderly-color-primary: 51 95 252;
