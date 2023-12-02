@@ -76,7 +76,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       network: chain.network_infos.shortName,
       // chainId: 42161,
     };
-  }, [networkId]);
+  }, [networkId, findByChainId]);
 
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),

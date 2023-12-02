@@ -12,7 +12,6 @@ export const useLeverage = () => {
 
   const updateLeverage = useCallback((data: any) => {
     return update(data).then((res: any) => {
-      console.log(res);
       if (res.success) {
         return mutate();
       } else {

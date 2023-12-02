@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <DemoContextProvider>
       <div className="bg-base-600 min-h-screen components-page">
-        <NavBar></NavBar>
+        <NavBar />
         <div className="py-7">
           <div className="container mx-auto">
             <Components />

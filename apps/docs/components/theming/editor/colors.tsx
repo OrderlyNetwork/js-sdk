@@ -122,46 +122,49 @@ export const Colors = () => {
           />
         </div>
       </div>
-      <div>
-        <div>Primary</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-primary-darken"
-            selector=".orderly-bg-primary-darken,.orderly-text-primary-darken,.orderly-border-primary-darken"
-          />
+      <div className="flex gap-5">
+        <div>
+          <div>Primary</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-primary-darken"
+              selector=".orderly-bg-primary-darken,.orderly-text-primary-darken,.orderly-border-primary-darken"
+            />
 
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-primary"
-            selector=".orderly-bg-primary,.orderly-text-primary,.orderly-border-primary"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-primary-light"
-            selector=".orderly-bg-primary-light,.orderly-text-primary-light,.orderly-border-primary-light"
-          />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-primary"
+              selector=".orderly-bg-primary,.orderly-text-primary,.orderly-border-primary"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-primary-light"
+              selector=".orderly-bg-primary-light,.orderly-text-primary-light,.orderly-border-primary-light"
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <div>Success</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-success-darken"
-            selector=".orderly-bg-success-darken,.orderly-text-success-darken"
-          />
 
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-success"
-            selector=".orderly-bg-success,.orderly-text-success"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-success-light"
-            selector=".orderly-bg-success-light,.orderly-text-success-light"
-          />
+        <div>
+          <div>Success</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-success-darken"
+              selector=".orderly-bg-success-darken,.orderly-text-success-darken"
+            />
+
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-success"
+              selector=".orderly-bg-success,.orderly-text-success"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-success-light"
+              selector=".orderly-bg-success-light,.orderly-text-success-light"
+            />
+          </div>
         </div>
       </div>
 

@@ -17,7 +17,13 @@ export interface OrderlyConfigContextState {
 
   networkId: NetworkId;
 
+  /**
+   * @hidden
+   */
   onlyTestnet?: boolean;
+  /**
+   * @hidden
+   */
   enableSwapDeposit?: boolean;
   // extraApis:ExtraAPIs
 }
