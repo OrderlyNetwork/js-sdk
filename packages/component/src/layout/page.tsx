@@ -6,7 +6,7 @@ export interface PageProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const Page: FC<PropsWithChildren<PageProps>> = (props) => {
-  const { error, done } = usePreLoadData();
+  // const { error, done } = usePreLoadData();
   // const loadingMask = useMemo(() => {
   //   if (props.systemState === SystemStateEnum.Loading) {
   //     return (
@@ -18,11 +18,11 @@ export const Page: FC<PropsWithChildren<PageProps>> = (props) => {
   //   return null;
   // }, [props.systemState]);
 
-  if (error) {
-    return <div className="orderly-text-danger">Data load failed:</div>;
-  }
+  // if (error) {
+  //   return <div className="orderly-text-danger">Data load failed:</div>;
+  // }
 
-  if (!done) return null;
+  // if (!done) return null;
 
   return (
     <>

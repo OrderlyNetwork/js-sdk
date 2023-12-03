@@ -39,6 +39,10 @@ export const useWS = () => {
         }
       });
 
+      if (typeof window !== "undefined") {
+        (window as any)["__Orderly_WS"] = websocketClient;
+      }
+
       SimpleDI.registerByName(WS_NAME, websocketClient);
     }
 

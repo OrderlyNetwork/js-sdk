@@ -14,7 +14,11 @@ interface Props {
 export const MyLeverageView: FC<Props> = (props) => {
   const data = useFundingRate(props.symbol);
   const { data: info } = useAccountInfo();
-  const res = useQuery<any>(`/v1/public/info/${props.symbol}`);
+  const res = useQuery<any>(`/v1/public/info/${props.symbol}`, {
+    focusThrottleInterval: 1000 * 60 * 60 * 24,
+    dedupingInterval: 1000 * 60 * 60 * 24,
+    revalidateOnFocus: false,
+  });
 
   const leverage = useMemo(() => {
     const base = res?.data?.base_imr;

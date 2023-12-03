@@ -21,11 +21,16 @@ export const usePrivateInfiniteQuery = (
     : [];
 
   const result = useSWRInfinite(
-    (pageIndex: number, previousPageData) =>
-      account.state.status >= AccountStatusEnum.EnableTrading
-        ? getKey(pageIndex, previousPageData)
-        : null,
-    (url: string, init: RequestInit) => get(url, init, formatter),
+    (pageIndex: number, previousPageData) => {
+      const queryKey = getKey(pageIndex, previousPageData);
+      if (account.state.status < AccountStatusEnum.EnableTrading || !queryKey) {
+        return null;
+      }
+      return [queryKey, account.state.accountId];
+    },
+    (url: string, init: RequestInit) => {
+      return get(url, init, formatter);
+    },
     {
       ...restOptions,
       use: [signatureMiddleware, ...middleware],

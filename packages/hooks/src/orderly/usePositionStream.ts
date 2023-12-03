@@ -45,7 +45,7 @@ export const usePositionStream = (
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
-    // dedupingInterval: 100,
+    // dedupingInterval: 200,
     // keepPreviousData: false,
     // revalidateIfStale: true,
     ...options,

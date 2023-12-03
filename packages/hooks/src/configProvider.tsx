@@ -92,7 +92,7 @@ export const OrderlyConfigProvider = (
         networkId: networkId,
       }}
     >
-      {props.children}
+      <DataCenterProvider>{props.children}</DataCenterProvider>
     </OrderlyProvider>
   );
 };
