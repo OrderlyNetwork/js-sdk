@@ -12,18 +12,18 @@ import Image from "next/image";
 
 在`@orderly.network/react`中用到的颜色如下:
 
-除了`base`之外每个色系包含3个颜色:
+- 除了`base`之外每个色系包含3个颜色:
+  - `defalut`: The defalut shade of the color
+  - `light`: A lighter shade of defalut
+  - `darken`: A darker shade of defalut
 
-- `defalut`: The main shade of the color
-- `light`: A lighter shade of defalut
-- `dark`: A darker shade of defalut
-
+- `base-contrast` 定义的是文本的颜色，是以透明度来区分文字的强弱。
 
 <Colors />
 
 ### Typography
 
-`@orderly.network/react`中用到的字体如下:
+`@orderly.network/react`中用到的字体: Manrope
 
 ### Rounded
 
@@ -122,6 +122,8 @@ warning color
 --orderly-font-size-base: 16px;
 
 --orderly-color-divider: 42 46 52;
+
+--orderly-font-family: 'Manrope', sans-serif;
 }
 ```
 

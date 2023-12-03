@@ -4,13 +4,13 @@
 
 在需要处理钱包连接的地方，`@orderly.network/react`利用 React 的 context 机制，从最近的 context 获取当前已连接钱包的信息或者调用 context 提供的钱包连接函数。为此，`@orderly.network/hoos`定义了名为`WalletConnectorContext`的 context, 任何实现了[`WalletConnectorContextState`](/)定义的`WalletConnectorContext.Provider`组件都可以做为 app 的钱包连接组件, 请参考[这里](#custom-wallet-connection-provider)。
 
-## 使用 Orderly 提供的 SDK
+## 使用 Orderly 提供的钱包连接组件
 
-为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 会对社区里比较流行的库进行封装并提供安装。
+为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 针对社区里比较流行的库进行了封装并提供安装。
 
 ### `@orderly.network/web3-onboard`
 
-从库的名字你可以看出来 ，这是一个封装了[`web3-onboard`](https://onboard.blocknative.com/docs/modules/react)的库。
+从库的名字你可以看出来 ，这是一个封装了[`web3-onboard`](https://onboard.blocknative.com/docs/modules/react)的库, 可以帮助你快速集成钱包功能。
 
 #### 安装
 
@@ -20,7 +20,7 @@ npm install @orderly.network/web3-onboard
 
 #### 使用
 
-使用`ConnectorProvider`组件包裹你的组件，通常是最顶层的根组件，`ConnectorProvider`组件接受两个参数：
+使用`ConnectorProvider`组件包裹你的组件，该组件通常应该是最顶层的组件树，如果不是也必须要放在[`OrderlyAppProvider`](/components/configuration#orderlyappprovider)的上一级，`ConnectorProvider`组件接受两个参数：
 
 - `apiKey`：你在`web3-onboard`创建的 [api key](https://explorer.blocknative.com/account)
 - `options`：`web3-onboard`的配置项，具体可以参考[web3-onboard](https://onboard.blocknative.com/docs/modules/core#initialization), 这是一个可选项，如果没有传入的时候，会使用默认的配置项。
@@ -44,7 +44,28 @@ Orderly 还会发布更多的钱包连接库，敬请期待。
 
 ## Custom wallet connection provider
 
-你也可以自定义钱包连接，只需要实现`WalletConnectorContextState`定义的所有属性即可。
+你也可以自定义钱包连接，只需要实现`WalletConnectorContextState`定义的所有属性, 并按以下格式定义组件即可。
+
+```typescript copy
+import {PropsWithChildren} from "react";
+import { WalletConnectorContext } from "@orderly.network/hooks";
+
+export const WalletConnector = ({children}:PropsWithChildren)=>{
+  return (
+    <WalletConnectorContext.Provider value={{
+      /* 
+      * implement all properties defined in WalletConnectorContextState
+      */
+    }}>
+      {children}
+    </WalletConnectorContext.Provider>
+  )
+}
+```
+
+定义好组件后，你还需要将该组件添加到[`OrderlyAppProvider`](/components/configuration#orderlyappprovider)的上级。
+
+
 
 ### Interface & Context
 
@@ -73,7 +94,9 @@ export const useWalletConnector = () => {
 };
 ```
 
-### 实现 (web3modal)
+### 实现 
+
+以下例子是使用`web3modal`实现的钱包连接组件，你可以参考这个例子实现自己的钱包连接组件。
 
 ```typescript copy
 import {
