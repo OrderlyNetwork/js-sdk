@@ -102,7 +102,7 @@ export const OrderlyConfigProvider = (
         // apiBaseUrl,
       }}
     >
-      {props.children}
+      <DataCenterProvider>{props.children}</DataCenterProvider>
     </OrderlyProvider>
   );
 };

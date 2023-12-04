@@ -4,6 +4,8 @@ import injectedModule from "@web3-onboard/injected-wallets";
 
 import { OrderlyAppProvider } from "../src";
 
+import { MemoryConfigStore } from "@orderly.network/core";
+
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 import "../src/tailwind.css"; // tailwind css
