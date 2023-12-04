@@ -66,6 +66,8 @@
     --orderly-font-size-base: 16px;
 
     --orderly-color-divider: 42 46 52;
+
+    --orderly-font-family: "Manrope", sans-serif;
   }
 
   input[type="color"] {
@@ -158,6 +160,8 @@
     background-color: #6f98f7;
   }
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
 
 @layer components {
   .code-live pre {

@@ -19,9 +19,7 @@ import {Withdraw,AssetsProvider,Page,Button,useModal,modal} from '@orderly.netwo
 你可以在你的项目中直接展示`Withdraw`组件：
 
 
-<LiveProvider code={`<Page>
-    <Withdraw/>
-</Page>`} scope={{Withdraw,Page}}>
+<LiveProvider code={`<Withdraw/>`} scope={{Withdraw,Page}}>
 <div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700">
 
 <LivePreview />
@@ -46,16 +44,12 @@ export const App = () => {
 通过对话框的模式展示`Withdraw`组件：
 
 <LiveProvider code={`()=>{
-    return (
-        <Page>
-        <Button onClick={()=>{
+    return (<Button onClick={()=>{
             dialog({
                 title:'Withdraw',
                 content:<Withdraw/>
             });
-        }}>Open withdraw dialog</Button>
-</Page>
-    )
+        }}>Open withdraw dialog</Button>)
 }`} scope={{Withdraw,Page,Button,dialog:modal.dialog}}>
 <div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700 color-item">
 

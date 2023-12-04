@@ -19,9 +19,7 @@ import {Deposit,AssetsProvider,Page,Button,useModal,modal} from '@orderly.networ
 你可以在你的项目中直接展示`Deposit`组件：
 
 
-<LiveProvider code={`<Page>
-    <Deposit/>
-</Page>`} scope={{AssetsProvider,Deposit,Page}}>
+<LiveProvider code={`<Deposit/>`} scope={{AssetsProvider,Deposit,Page}}>
 <div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700">
 
 
@@ -47,16 +45,12 @@ export const App = () => {
 通过对话框的模式展示`Deposit`组件：
 
 <LiveProvider code={`()=>{
-    return (
-        <Page>
-        <Button onClick={()=>{
+    return (<Button onClick={()=>{
             dialog({
                 title:'Deposit',
                 content:<Deposit/>
             });
-        }}>Open deposit dialog</Button>
-</Page>
-    )
+        }}>Open deposit dialog</Button>)
 }`} scope={{AssetsProvider,Deposit,Page,Button,dialog:modal.dialog}}>
 <div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700 color-item">
 
