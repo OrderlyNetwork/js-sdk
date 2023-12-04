@@ -1,5 +1,16 @@
 # @orderly.network/hooks
 
+## 1.0.15
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.14
+  - @orderly.network/core@0.1.14
+  - @orderly.network/perp@1.0.14
+  - @orderly.network/net@1.0.101
+
 ## 1.0.14
 
 ### Patch Changes

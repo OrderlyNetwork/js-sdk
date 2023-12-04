@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { type API, OrderSide } from "@orderly.network/types";
+import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
 
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
@@ -33,7 +33,7 @@ export const useMaxQty = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const [orders] = useOrderStream({ status: "NEW" });
+  const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
   // const {
   //   data: orders,
