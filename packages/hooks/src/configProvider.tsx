@@ -16,6 +16,8 @@ import {
 
 import useConstant from "use-constant";
 import { NetworkId } from "@orderly.network/types";
+import { usePreLoadData } from "./usePreloadData";
+import { DataCenterProvider } from "./dataProvider";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
   {
@@ -42,8 +44,14 @@ export const OrderlyConfigProvider = (
   >
 ) => {
   const [account, setAccount] = React.useState<Account | null>(null);
-  const { configStore, keyStore, getWalletAdapter, brokerId, networkId, enableSwapDeposit } =
-    props;
+  const {
+    configStore,
+    keyStore,
+    getWalletAdapter,
+    brokerId,
+    networkId,
+    enableSwapDeposit,
+  } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
     console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -95,7 +103,11 @@ export const OrderlyConfigProvider = (
         // apiBaseUrl,
       }}
     >
-      {props.children}
+      <DataCenterProvider>{props.children}</DataCenterProvider>
     </OrderlyProvider>
   );
 };
+
+// const DataPreload = () => {
+//   const { error, done } = usePreLoadData();
+// };

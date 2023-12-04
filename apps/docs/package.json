@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "0.1.52",
+  "version": "0.1.54",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
@@ -54,6 +54,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/chroma-js": "^2.4.2",
     "@types/ramda": "^0.29.3",
     "@types/react": "18.2.16",
     "@types/react-color": "^3.0.6",

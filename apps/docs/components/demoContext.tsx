@@ -32,6 +32,7 @@ export const DemoContextProvider = ({ children }) => {
 
   const onThemeChange = (key: string, value: string) => {
     // setStyleVars((prev) => ({ ...prev, [key]: value }));
+    console.log("setStyleVars", key, value);
     cssVarWrap.current?.style.setProperty(key, value);
   };
 
@@ -41,7 +42,7 @@ export const DemoContextProvider = ({ children }) => {
     <DemoContext.Provider
       value={{ symbol: currentSymbol, onSymbolChange, onThemeChange }}
     >
-      <div ref={cssVarWrap} style={styleVars}>
+      <div ref={cssVarWrap} style={styleVars} id="theme-root-el">
         {children}
       </div>
     </DemoContext.Provider>

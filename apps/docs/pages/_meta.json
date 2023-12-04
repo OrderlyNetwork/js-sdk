@@ -8,8 +8,13 @@
     "type": "page"
   
   },
+  "theme": {
+    "title": "Theme",
+    "type": "page",
+    "href": "/theme"
+  },
   "apis": {
-    "title": "API",
+    "title": "APIs",
     "type": "page",
     "href": "/apis/modules/__orderly_network___hooks"
   }

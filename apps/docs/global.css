@@ -66,6 +66,8 @@
     --orderly-font-size-base: 16px;
 
     --orderly-color-divider: 42 46 52;
+
+    --orderly-font-family: "Manrope", sans-serif;
   }
 
   input[type="color"] {
@@ -159,6 +161,8 @@
   }
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+
 @layer components {
   .code-live pre {
     contain: unset;
@@ -173,5 +177,26 @@
       )
       0 0 / 1.5em 1.5em content-box border-box;
     background-color: rgba(0, 0, 0, 0.05);
+  }
+  .topnav {
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    backdrop-filter: blur(12px);
+    background-color: var(rgba(--orderly-color-base-700, 1)) !important;
+    /* box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset; */
+  }
+  /* .components-page button {
+    all: revert;
+  } */
+  .nx-text-primary-600 {
+    color: hsl(
+      var(--nextra-primary-hue) var(--nextra-primary-saturation) 65% /
+        var(--tw-text-opacity)
+    ) !important;
   }
 }

@@ -1,7 +1,7 @@
 // import * as hookRaw from "./hook?raw";
 import type { FC, CSSProperties } from "react";
 import { Sandpack, SandpackInternal } from "@codesandbox/sandpack-react";
-import { githubLight } from "@codesandbox/sandpack-themes";
+import { dracula } from "@codesandbox/sandpack-themes";
 // import { atomDark } from "@codesandbox/sandpack-themes";
 
 export interface Props {
@@ -16,7 +16,7 @@ export const CodePreview: FC<Props> = (props) => {
   return (
     <div className="my-7">
       <Sandpack
-        theme={githubLight}
+        theme={dracula}
         options={{
           // editorHeight: 600,
           ...props.options,

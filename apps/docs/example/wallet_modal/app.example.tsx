@@ -8,9 +8,9 @@ export default function App() {
   return (
     <OrderlyConfigProvider brokerId="orderly" networkId="testnet">
       <WalletConnectProvider>
-        <div className="App">
-          <WalletButton />
+        <div className="container">
           <Account />
+          <WalletButton />
         </div>
       </WalletConnectProvider>
     </OrderlyConfigProvider>

@@ -39,7 +39,7 @@ export const PropertyItem: FC<Props> = (props) => {
           <LinkIcon size={14} className="stroke-gray-400 ml-2" />
         </a> */}
       </div>
-      <div className="flex space-x-1 bg-primary-light p-3 rounded-lg">
+      <div className="flex space-x-1 bg-base-800 p-3 rounded-lg">
         <span>
           {isGetter ? <span className="mr-1 text-gray-500">get</span> : null}
           <span className="text-blue-500">{`${name}${isGetter ? "()" : ""}${

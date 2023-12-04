@@ -1,26 +1,49 @@
-import { Callout } from 'nextra/components'
-import {Colors} from '@/components/doc/colorBlock'
+import { Callout, Steps } from "nextra/components";
+import { Colors } from "@/components/doc/colorBlock";
+import Image from "next/image";
 
 # Theming
 
-`@orderly.network/react` 提供了一套默认的主题。
+`@orderly.network/react` 提供了一套默认的主题, 同时也支持自定义主题，你可以参考下边的内容进行自定义。
 
-`@orderly.network/react`组件支持自定义主题，一般情况下推荐使用CSS变量的方式来自定义主题，如需要对个别组件进行定制，也可以使用样式覆盖的方式来处理。
+## Deafult theme
 
-## Colors
+### Colors
 
 在`@orderly.network/react`中用到的颜色如下:
 
-<Colors/>
+- 除了`base`之外每个色系包含3个颜色:
+  - `defalut`: The defalut shade of the color
+  - `light`: A lighter shade of defalut
+  - `darken`: A darker shade of defalut
 
-## CSS Variables
+- `base-contrast` 定义的是文本的颜色，是以透明度来区分文字的强弱。
 
-你可以通过定义css变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件, 在文件中添加以下内容
+<Colors />
 
+### Typography
+
+`@orderly.network/react`中用到的字体: Manrope
+
+### Rounded
+
+| name    |   size |
+| :------ | -----: |
+| default |    6px |
+| sm      |    4px |
+| lg      |    8px |
+| full    | 9999px |
+
+## 自定义主题
+
+### CSS Variables
+
+你可以通过定义 css 变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件, 在文件中添加以下内容, 然后在项目中引入该文件即可:
 
 ```css filename="theme.css" copy
+:root{
 /**
-常用于背景色等大块元素的颜色
+It is often used for the color of main elements, such as background color
  */
 --orderly-color-base-100: 93 83 123;
 --orderly-color-base-200: 81 72 107;
@@ -99,16 +122,19 @@ warning color
 --orderly-font-size-base: 16px;
 
 --orderly-color-divider: 42 46 52;
+
+--orderly-font-family: 'Manrope', sans-serif;
+}
 ```
 
-
 <Callout>
-  CSS variables must be defined without color space function. See the [Tailwind CSS documentation](https://tailwindcss.com/docs/text-color#changing-the-opacity) for more information.
+  CSS variables must be defined without color space function. See the [Tailwind
+  CSS
+  documentation](https://tailwindcss.com/docs/text-color#changing-the-opacity)
+  for more information.
 </Callout>
 
-
 ❌ Don’t include the color space function or opacity modifiers won’t work
-
 
 ```css
 /* Using modern `rgb` */
@@ -116,7 +142,6 @@ warning color
 --orderly-color-primary-light: rgb(208 140 255);
 --orderly-color-primary-darken: rgb(152 62 214);
 ```
-
 
 ✅ Define your CSS variables as channels with no color space function
 
@@ -126,16 +151,17 @@ warning color
 --orderly-color-primary-darken: 152 62 214;
 ```
 
+<Callout type="info">
+  **你可以使用我们提供的[Theme 工具](/theme)来快速生成你的主题。**
+</Callout>
 
+### 样式覆盖
 
-## 样式覆盖
+如果在开发中碰到通过自定义 CSS 变量不能修改样式的情况可以使用样式覆盖的方式来解决，`@orderly.network/react`组件提供以下两种方式来覆盖组件的默认样式
 
-如果在开发中碰到通过自定义CSS 变量不能修改样式的情况可以使用样式覆盖的方式来解决，`@orderly.network/react`组件提供以下两种方式来覆盖样式
+#### class
 
-
-### class
-
-通过重写某个class的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 例如:
+通过重写某个 class 的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 例如:
 
 修改所有`button`组件的样式:
 
@@ -160,35 +186,59 @@ primary buttons
 
 ```css
 .orderly-button-disabled {
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   color: #999;
 }
-
 ```
 
-### id
+#### id
 
-如果想要修改某个特定组件的样式，可以通过id选择器来定义组件的样式，如比想要修改创建订单按钮的样式:
+如果想要修改某个特定组件的样式，可以通过 id 选择器来定义组件的样式，如比想要修改创建订单按钮的样式:
 
 ```css
-#orderly-order-entry-confirm-button{
-    background-color: #000;
-    color: #fff;
+#orderly-order-entry-confirm-button {
+  background-color: #000;
+  color: #fff;
 }
 ```
 
-**支持的id如下:**
+**支持的 id 如下:**
 
-| id |module  | description  |
-| :----- | :----:| ----: |
-| orderly-deposit-confirm-button |  deposit   |  确定入金按钮   |
-| orderly-withdraw-confirm-button |  withdraw   |  确定出金按钮   |
-| orderly-assets-margin-deposit-button |  assets   |  入金按钮   |
-| orderly-assets-margin-withdraw-button |  assets   |  出金按钮   |
-| orderly-order-entry-confirm-button |  order   |  确定下单按钮   |
-| orderly-position-cell-limit-close-button |  positions   |  限价平仓按钮   |
-| orderly-position-cell-mark-close-button |  positions   |  市价平仓按钮   |
-| orderly-pending-cell-edit-button |  peding orders   |  修改进行中的订单按钮  |
-| orderly-pending-cell-cancel-button |  peding orders   |  取消进行中的订单按钮   |
-| orderly-bottom-nav-bar-connect-button |  bottom-nav-bar   |  bottombar 连接钱包按钮   |
+| id                                       |     module     |            description |
+| :--------------------------------------- | :------------: | ---------------------: |
+| orderly-deposit-confirm-button           |    deposit     |           确定入金按钮 |
+| orderly-withdraw-confirm-button          |    withdraw    |           确定出金按钮 |
+| orderly-assets-margin-deposit-button     |     assets     |               入金按钮 |
+| orderly-assets-margin-withdraw-button    |     assets     |               出金按钮 |
+| orderly-order-entry-confirm-button       |     order      |           确定下单按钮 |
+| orderly-position-cell-limit-close-button |   positions    |           限价平仓按钮 |
+| orderly-position-cell-mark-close-button  |   positions    |           市价平仓按钮 |
+| orderly-pending-cell-edit-button         | peding orders  |   修改进行中的订单按钮 |
+| orderly-pending-cell-cancel-button       | peding orders  |   取消进行中的订单按钮 |
+| orderly-bottom-nav-bar-connect-button    | bottom-nav-bar | bottombar 连接钱包按钮 |
 
+## Logo
+
+<div className="mt-7 flex justify-center items-center bg-base-300 p-3 rounded-lg h-[300px] space-x-5 color-item">
+  <Image src="/images/logo_example_1.png" width="300" height="100" />
+  <Image src="/images/logo_example_2.png" width="300" height="100" />
+</div>
+
+你可以通过以下方式将你的 logo 添加到上图示意的位置:
+
+```typescript {8}
+import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
+
+export default function Trading() {
+  return (
+     <OrderlyAppProvider
+        networkId="testnet"
+        brokerId="<Your broker id>"
+        logoUrl="<Your brand logo url>"
+      >
+        {/* Page Component */}
+      </OrderlyAppProvider>
+    </ConnectorProvider>
+  );
+}
+```

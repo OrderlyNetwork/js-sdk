@@ -18,7 +18,7 @@ export const ApiLayout = ({
       <div className="max-w-[90rem] mx-auto pb-10">
         <div className="grid grid-cols-[280px_minmax(900px,_1fr)] gap-7">
           <aside
-            className="overflow-y-auto overflow-x-hidden sticky top-[65px]"
+            className="overflow-y-auto overflow-x-hidden sticky top-[65px] text-base-contrast-54"
             style={{ maxHeight: "calc(100vh - 65px)" }}
           >
             <TreeView data={data || []} />

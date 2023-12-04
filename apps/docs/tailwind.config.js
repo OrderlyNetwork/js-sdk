@@ -114,6 +114,9 @@ module.exports = {
       },
     },
   },
+  // corePlugins:{
+  //   preflight: false,
+  // },
   plugins: [
     plugin(function ({ addBase }) {
       addBase({

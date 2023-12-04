@@ -1,0 +1,106 @@
+# Configuration
+
+在使用`@orderly.network/react`时需要进行以下配置：
+
+
+
+## `OrderlyAppProvider`
+
+**`@orderly.network/react`中的所有的组件都需要在`OrderlyAppProvider`中使用**, 该组件为App提供全局化配置，并且通过包装[`@orderly.network/hooks`](/docs/hooks/overview)的方式来实现状态管理、数据处理和对[`Account`](/apis/modules/__orderly_network___core/Account)等对象的持有。
+
+```typescript copy
+import { Desposit, OrderlyAppProvider } from "@orderly.network/react";
+
+export default function Trading() {
+  return (
+    <OrderlyAppProvider
+      networkId="testnet"
+      brokerId="<Your broker id>"
+      logoUrl="<Your brand logo url>"
+    >
+      <Desposit />
+    </OrderlyAppProvider>
+  );
+}
+```
+
+ `OrderlyAppProvider`具有以下参数:
+
+### logoUrl
+
+- Type: `string`
+- Required: false
+
+应用logo的url
+
+### toastLimitCount
+
+- Type: `number`
+- Required: false
+
+toast同时显示的最大数量
+
+### includeTestnet
+
+- Type: `boolean`
+- Required: false
+
+是否包含测试网络
+
+### onChainChanged
+
+- Type: `(chainId: string) => void`
+- Required: false
+
+当用户切换mainnet/testnet后的回调函数，该函数会在用户成功切换网络后被调用，参数为切换后的网络id。
+
+<hr className="mt-5 border-base-500"/>
+
+以下属性将会透传给内部的`OrderlyConfigProvider`组件, 更多关于`OrderlyConfigProvider`的配置请查看[这里](apis/modules/__orderly_network___hooks/ConfigProviderProps)。
+
+### brokerId
+
+- Type: `string`
+- Required: true
+
+broker id
+
+### networkId
+
+- Type: `string`
+- Required: false
+- Default: `mainnet`
+
+网络id，可选值为`mainnet`和`testnet`。
+
+### configStore
+
+- Type: `ConfigStore` - [API](/apis/modules/__orderly_network___core/ConfigStore)
+- Required: false
+- Default: `new DefaultConfigStore()` - [API](/apis/modules/__orderly_network___core/DefaultConfigStore)
+
+### keyStore
+
+- Type: `OrderlyKeyStore` - [API](/apis/modules/__orderly_network___core/OrderlyKeyStore)
+- Required: false
+- Default: `new BaseOrderlyKeyPair()` - [API](/apis/modules/__orderly_network___core/BaseKeyStore)
+
+
+## WalletConnectorContext
+
+`WalletConnectorContext`是一个React Context，用于在App中提供钱包连接的方法或者当前已连接钱包的数据等，使用方式如下：
+
+```typescript copy
+import { WalletConnectorContext } from "@orderly.network/hooks";
+
+export const App: FC<PropsWithChildren<{}>> = (props) => {
+  return (
+    <WalletConnectorContext.Provider value={{ connect,wallet,connectedChain,disconnect }}>
+      {/* children component */}
+    </WalletConnectorContext.Provider>
+  );
+};
+```
+
+上面示例代码里面中`value`对象的各个属性或者方法必须实现，否则整个App将无法连接钱包，如果你觉得这样太繁琐或者是一个全新的项目，推荐使用Orderly提供的`@orderly.network/web3-onboard`库，请参考[这里](/components/wallet)。
+

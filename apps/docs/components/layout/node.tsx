@@ -22,7 +22,7 @@ export const TreeNode = ({
         <Accordion.Trigger asChild>
           <Link
             href={`/apis/modules/${slug}`}
-            className="font-semibold text-lg py-3 hover:text-gray-700 flex items-center justify-between group"
+            className="font-semibold text-lg py-3 hover:text-base-contrast-80 flex items-center justify-between group"
           >
             <span>{name}</span>
             <ChevronDown
@@ -47,7 +47,7 @@ export const TreeNode = ({
                     setApiName?.(item.name);
                   }}
                   className={clsx("flex items-center rounded pl-5 py-1", {
-                    "bg-[rgba(0,0,0,.09)]": apiName === item.name,
+                    "bg-base-400 text-base-contrast": apiName === item.name,
                   })}
                 >
                   <TypeIcon type={item.type.substring(0, 1).toUpperCase()} />

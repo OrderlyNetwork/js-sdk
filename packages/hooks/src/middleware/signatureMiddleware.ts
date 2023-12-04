@@ -21,8 +21,6 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
 
         const signature = await signer.sign(payload);
 
-        console.log("signature:", fullUrl);
-
         // @ts-ignore
         return fetcher(fullUrl, {
           headers: {

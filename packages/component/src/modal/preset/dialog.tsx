@@ -4,27 +4,29 @@ import { useModal } from "@/modal";
 import { create } from "@/modal/modalHelper";
 import { modalActions } from "@/modal/modalContext";
 import { DialogBody } from "@/dialog";
-export interface ConfirmProps {
+
+export interface DialogProps {
   title: string;
   content: React.ReactNode;
 }
 
-const Dialog = create<ConfirmProps>((props) => {
-  const { visible, hide, resolve, reject } = useModal();
+const Dialog = create<DialogProps>((props) => {
+  const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
     <SimpleDialog
       open={visible}
       title={props.title}
-      closable={false}
-      // @ts-ignore
-      onOk={() => {
-        resolve(true);
-        hide();
-      }}
-      onCancel={() => {
-        reject(false);
-        hide();
-      }}
+      closable
+      onOpenChange={onOpenChange}
+      // // @ts-ignore
+      // onOk={() => {
+      //   resolve(true);
+      //   hide();
+      // }}
+      // onCancel={() => {
+      //   reject(false);
+      //   hide();
+      // }}
     >
       <DialogBody>
         <div className="orderly-py-5 orderly-text-[12px]">{props.content}</div>
@@ -33,6 +35,6 @@ const Dialog = create<ConfirmProps>((props) => {
   );
 });
 
-export const confirm = (props: ConfirmProps) => {
+export const dialog = (props: DialogProps) => {
   return modalActions.show(Dialog, props);
 };

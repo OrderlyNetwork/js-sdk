@@ -4,6 +4,8 @@ export {
   OrderlyAppContext,
   SymbolProvider,
   SymbolContext,
+  AssetsProvider,
+  AssetsContext,
 } from "./provider";
 
 // ==================== base component ====================
@@ -11,7 +13,7 @@ export { default as Button } from "./button";
 export {
   Dialog,
   DialogContent,
-  DialogContainer,
+  // DialogContainer,
   DialogBody,
   DialogHeader,
   DialogTitle,
@@ -22,6 +24,9 @@ export {
 } from "./dialog";
 export * from "./input";
 export * from "./tab";
+
+export { toast } from "./toast";
+export { modal, useModal } from "./modal";
 
 // ==================== page component ====================
 export * from "./page";
@@ -42,6 +47,8 @@ export {
   ClosePositionPane,
   AccountStatusBar,
   AssetAndMarginSheet,
+  ChainListView,
+  ChainSelect,
 } from "./block";
 export type {
   OrderEntryProps,

@@ -11,6 +11,7 @@ import {
   parseBrokerHash,
   parseTokenHash,
 } from "./utils";
+import { ApiError } from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -71,6 +72,10 @@ export class Assets {
         ...signature,
       },
     });
+
+    if (!res.success) {
+      throw new ApiError(res.message, res.code);
+    }
 
     return res;
   }

@@ -239,18 +239,18 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     }
 
     console.log("currentWallet", currentWallet, account, currentChainId);
-    
+
     if (
       !!currentWallet &&
       Array.isArray(currentWallet.accounts) &&
       currentWallet.accounts.length > 0 &&
       account
+    ) {
+      if (
+        account.address === currentAddress &&
+        currentChainId === account.chainId
       ) {
-        if (
-          account.address === currentAddress &&
-          currentChainId === account.chainId
-          ) {
-        console.log("currentWallet 22 ", currentAddress, currentChainId);
+        // console.log("currentWallet 22 ", currentAddress, currentChainId);
         return;
       }
       // 需要确定已经拿到chains list

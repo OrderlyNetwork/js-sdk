@@ -28,3 +28,5 @@ export type { OrdersViewProps } from "./orders";
 
 export { AccountStatusBar, AssetAndMarginSheet } from "./accountStatus";
 export type { AccountStatusProps } from "./accountStatus";
+
+export { ChainListView, ChainSelect } from "./pickers/chainPicker";

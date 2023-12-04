@@ -37,7 +37,7 @@ export const MethodItem: FC<MethodProps> = (props) => {
         {name}
         <Anchor name={name} />
       </div>
-      <div className="border-t border-b border-gray-300 py-3">
+      <div className="border-t border-b border-base-500 py-3">
         {signatures?.map((signature: any) => {
           return (
             <div key={signature.id}>
