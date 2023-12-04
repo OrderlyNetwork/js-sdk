@@ -72,6 +72,10 @@ export class Assets {
       },
     });
 
+    if(!res.success){
+
+    }
+
     return res;
   }
 
