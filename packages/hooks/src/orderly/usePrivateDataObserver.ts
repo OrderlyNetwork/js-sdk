@@ -18,32 +18,13 @@ export const usePrivateDataObserver = () => {
   //       //   state.accountId,
   //       // ];
 
-  //       mutate(key, (orders: any) => {
-  //         console.log("privateSubscribe", data, orders);
-
-  //         //
-  //         return Promise.resolve()
-  //           .then(() => {
-  //             if (!orders) {
-  //               return orders;
-  //             }
-  //             if (data.status === OrderStatus.NEW) {
-  //               return [
-  //                 {
-  //                   ...data,
-  //                   // average_executed_price:data.ava
-  //                   created_time: data.timestamp,
-  //                   order_id: data.orderId,
-  //                   // reduce_only
-  //                 },
-  //                 ...orders,
-  //               ];
-  //             }
-  //             if (data.status === OrderStatus.CANCELLED) {
-  //               return orders.filter(
-  //                 (order: any) => order.order_id !== data.orderId
-  //               );
-  //             }
+  // const updateOrders = useDebouncedCallback(() => {
+  //   mutate(
+  //     unstable_serialize(() => [
+  //       `/v1/orders?size=100&page=1&status=${OrderStatus.INCOMPLETE}`,
+  //       state.accountId,
+  //     ])
+  //   );
 
   //             return orders;
   //           })
