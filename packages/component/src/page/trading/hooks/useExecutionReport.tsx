@@ -4,14 +4,10 @@ import { getOrderExecutionReportMsg } from "@/block/orders/getOrderExecutionRepo
 import { useSymbolsInfo, useWS, useEventEmitter } from "@orderly.network/hooks";
 
 export function useExecutionReport() {
-  const ws = useWS();
   const ee = useEventEmitter();
 
   const symbolsInfo = useSymbolsInfo();
   const symbolsInfoRef = useRef({});
-
-  const timer = useRef<any>({});
-  const timestamp = useRef<any>({});
 
   useEffect(() => {
     symbolsInfoRef.current = symbolsInfo;
@@ -35,8 +31,9 @@ export function useExecutionReport() {
       }
     };
 
-    const handler = (data) => {
-      console.log("orders:changed", data);
+    const handler = (data: any) => {
+      // console.log("orders:changed", data);
+      showToast(data);
     };
 
     ee.on("orders:changed", handler);

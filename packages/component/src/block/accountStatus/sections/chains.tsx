@@ -25,7 +25,8 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { onlyTestnet, configStore, enableSwapDeposit } =
+    useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
     ARBITRUM_MAINNET_CHAINID_HEX
@@ -68,7 +69,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     // const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
     // window.location.href = url;
     // window.open(url); // test in storybook
-    console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
+    // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
     if (onChainChanged) {
       console.log("onChainChanged", chainId, chainId === 421613);
       onChainChanged(chainId, chainId === 421613);
@@ -89,11 +90,11 @@ export const Chains: FC<ChainsProps> = (props) => {
           }
         >
           {chainName}
-          <ArrowIcon size={8} className="orderly-text-base-contrast-54"/>
+          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
       </DialogTrigger>
       <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader  className="orderly-text-xs">Switch network</DialogHeader>
+        <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
         <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
             // @ts-ignore

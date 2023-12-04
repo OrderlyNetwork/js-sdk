@@ -11,6 +11,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
 import { useWS } from "../useWS";
+import { useOrderStream } from "./useOrderStream";
 
 const positionsPath = pathOr([], [0, "rows"]);
 
@@ -32,36 +33,35 @@ export const useMaxQty = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  
+  const [orders] = useOrderStream({ status: "NEW" });
 
-  const {
-    data: orders,
-    error,
-    mutate: updateOrder,
-  } = usePrivateQuery<API.Order[]>(`/v1/orders?status=NEW&size=99`, {
-    formatter: (data) => data.rows,
-    onError: (err) => { },
-  });
+  // const {
+  //   data: orders,
+  //   error,
+  //   mutate: updateOrder,
+  // } = usePrivateQuery<API.Order[]>(`/v1/orders?status=NEW&size=99`, {
+  //   formatter: (data) => data.rows,
+  //   onError: (err) => { },
+  // });
 
-  const ws = useWS();
-  useEffect(() => {
-    const unsubscribe = ws.privateSubscribe(
-      {
-        id: "executionreport_orders",
-        event: "subscribe",
-        topic: "executionreport",
-        ts: Date.now(),
-      },
-      {
-        onMessage: (data: any) => {
-          console.log("refresh orders", data);
-          updateOrder();
-        },
-      }
-    );
-    return () => unsubscribe();
-  }, []);
-
+  // const ws = useWS();
+  // useEffect(() => {
+  //   const unsubscribe = ws.privateSubscribe(
+  //     {
+  //       id: "executionreport_orders",
+  //       event: "subscribe",
+  //       topic: "executionreport",
+  //       ts: Date.now(),
+  //     },
+  //     {
+  //       onMessage: (data: any) => {
+  //         console.log("refresh orders", data);
+  //         updateOrder();
+  //       },
+  //     }
+  //   );
+  //   return () => unsubscribe();
+  // }, []);
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;

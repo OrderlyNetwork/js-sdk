@@ -110,7 +110,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
           onOk?.(res);
         },
         (error) => {
-          console.log("????", error);
           toast.error(error.message);
         }
       )

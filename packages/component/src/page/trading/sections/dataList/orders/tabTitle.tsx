@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useRef } from "react";
-import { usePrivateQuery, useEventEmitter } from "@orderly.network/hooks";
 import { OrderStatus } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 

@@ -93,7 +93,6 @@ function request(url, options) {
     } else {
       try {
         const errorMsg = yield response.json();
-        console.log(errorMsg);
         if (response.status === 400) {
           throw new ApiError(
             errorMsg.message || errorMsg.code || response.statusText,
