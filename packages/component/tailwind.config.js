@@ -41,7 +41,7 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
-          // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
+          contrast:"rgb(var(--orderly-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--orderly-color-secondary) / <alpha-value>)",
@@ -55,7 +55,7 @@ module.exports = {
         link: {
           DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
         },
-
+        
         // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
@@ -76,19 +76,22 @@ module.exports = {
             20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
           },
         },
-
+        
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
           light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
+          contrast:"rgb(var(--orderly-color-danger-contrast) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
+          contrast:"rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
           light: "rgb(var(--orderly-color-success-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
+          contrast:"rgb(var(--orderly-color-success-contrast) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",

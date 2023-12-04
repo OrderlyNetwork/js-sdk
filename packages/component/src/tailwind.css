@@ -119,6 +119,7 @@
     --orderly-color-primary: 182 79 255;
     --orderly-color-primary-light: 208 140 255;
     --orderly-color-primary-darken: 152 62 214;
+    --orderly-color-primary-contrast: 255 255 255;
 
     --orderly-color-link: 182 79 255;
 
@@ -132,14 +133,17 @@
     --orderly-color-danger: 232 88 175;
     --orderly-color-danger-light: 255 103 191;
     --orderly-color-danger-darken: 199 68 146;
+    --orderly-color-danger-contrast: 199 68 146;
 
     --orderly-color-success: 3 152 134;
     --orderly-color-success-light: 0 181 159;
     --orderly-color-success-darken: 0 119 105;
+    --orderly-color-success-contrast: 199 68 146;
 
     --orderly-color-warning: 255 207 115;
     --orderly-color-warning-light: 229 199 0;
     --orderly-color-warning-darken: 229 199 0;
+    --orderly-color-warning-contrast: 199 68 146;
 
     --orderly-color-background: 27 32 40;
     --orderly-color-background-contrast: 255 255 255;
