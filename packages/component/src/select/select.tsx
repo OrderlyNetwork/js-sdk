@@ -26,30 +26,33 @@ export type SelectOption = {
   label: string;
 };
 
-const selectVariants = cva(["orderly-rounded orderly-transition-colors orderly-bg-fill"], {
-  variants: {
-    size: {
-      small: "orderly-px-2 orderly-h-[28px]",
-      default: "orderly-px-2 orderly-py-1 orderly-h-[40px]",
-      large: "orderly-px-6 orderly-py-3",
+const selectVariants = cva(
+  ["orderly-rounded orderly-transition-colors orderly-bg-base-600"],
+  {
+    variants: {
+      size: {
+        small: "orderly-px-2 orderly-h-[28px]",
+        default: "orderly-px-2 orderly-py-1 orderly-h-[40px]",
+        large: "orderly-px-6 orderly-py-3",
+      },
+      fullWidth: {
+        true: "orderly-w-full",
+      },
+      color: {
+        // primary: "text-primary",
+        default: "orderly-text-base-contract",
+        buy: "orderly-text-trade-profit",
+        sell: "orderly-text-trade-loss",
+      },
+      disabled: {
+        true: "orderly-opacity-50 orderly-cursor-not-allowed",
+      },
     },
-    fullWidth: {
-      true: "orderly-w-full",
+    defaultVariants: {
+      size: "default",
     },
-    color: {
-      // primary: "text-primary",
-      default: "orderly-text-base-contract",
-      buy: "orderly-text-trade-profit",
-      sell: "orderly-text-trade-loss",
-    },
-    disabled: {
-      true: "orderly-opacity-50 orderly-cursor-not-allowed",
-    },
-  },
-  defaultVariants: {
-    size: "default",
-  },
-});
+  }
+);
 
 export interface SelectProps
   extends Omit<
@@ -73,6 +76,7 @@ const Select: FC<SelectProps> = ({
   size,
   disabled,
   color,
+  fullWidth,
   ...props
 }) => {
   const [open, setOpen] = useState(false);
@@ -109,19 +113,16 @@ const Select: FC<SelectProps> = ({
         <div
           ref={triggerRef}
           className={cn(
-            "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-1",
+            "orderly-inline-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-2",
             selectVariants({
               size,
               disabled: disabled || options.length === 0,
               className,
               color,
+              fullWidth,
             }),
             open && "orderly-bg-popover"
           )}
-          // onClick={() => {
-          //   if (options.length === 0) return;
-          //   setOpen(!open);
-          // }}
         >
           <div className="orderly-flex-1 orderly-text-3xs orderly-text-inherit">
             {typeof label !== "undefined" && <>{label}</>}
@@ -129,15 +130,18 @@ const Select: FC<SelectProps> = ({
 
           <ArrowIcon
             size={12}
-            className={cx("orderly-transition-transform", open && "orderly-rotate-180")}
+            className={cx(
+              "orderly-transition-transform",
+              open && "orderly-rotate-180"
+            )}
           />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         // @ts-ignore
-        container={containerRef.current}
+        // container={containerRef.current}
         align="start"
-        style={{ width: `${width}px` }}
+        style={{ minWidth: `${width}px` }}
         // onPointerDownOutside={(event) => {
         //
         // }}
@@ -150,9 +154,11 @@ const Select: FC<SelectProps> = ({
               textValue={option.value}
               key={index}
               className={cn(
-                "orderly-text-base-contrast/60",
+                "orderly-text-base-contrast/60 hover:orderly-bg-base-700",
                 option.value === props.value &&
-                  (color === "buy" ? "orderly-text-trade-profit" : "orderly-text-trade-loss")
+                  (color === "buy"
+                    ? "orderly-text-trade-profit"
+                    : "orderly-text-trade-loss")
               )}
               onSelect={(evnet) => {
                 // @ts-ignore
