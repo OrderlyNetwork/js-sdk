@@ -13,12 +13,6 @@ export const usePrivateDataObserver = () => {
   const ee = useEventEmitter();
   const { state } = useAccount();
 
-  // const updatePositions = useDebouncedCallback(() => {
-  //   const key = ["/v1/positions", state.accountId];
-  //   console.log("------------->>>>>>>>>> deboundced");
-  //   mutate(key);
-  // }, 2000);
-
   const updateOrders = useDebouncedCallback(() => {
     mutate(
       unstable_serialize(() => [
