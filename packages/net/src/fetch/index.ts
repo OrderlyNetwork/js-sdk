@@ -1,3 +1,5 @@
+import { ApiError } from "@/errors/apiError";
+
 async function request(url: string, options: RequestInit) {
   //
   if (!url.startsWith("http")) {
@@ -19,9 +21,23 @@ async function request(url: string, options: RequestInit) {
     // } else {
     //   throw new Error(res.message);
     // }
+  } else {
+    // console.log(response.status);
+    try {
+      const errorMsg = await response.json();
+      if (response.status === 400) {
+        throw new ApiError(
+          errorMsg.message || errorMsg.code || response.statusText,
+          errorMsg.code
+        );
+      }
+      throw new Error(errorMsg.message || errorMsg.code || response.statusText);
+    } catch (e) {
+      throw e;
+    }
   }
 
-  throw new Error(response.statusText);
+  // throw new Error(response.statusText);
 }
 
 function _createHeaders(

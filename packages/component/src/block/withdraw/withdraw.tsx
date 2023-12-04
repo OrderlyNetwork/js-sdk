@@ -6,8 +6,8 @@ import {
   useChains,
   usePositionStream,
   OrderlyContext,
+  useWalletConnector,
 } from "@orderly.network/hooks";
-import { WalletConnectorContext } from "@/provider";
 import { CurrentChain } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
 
@@ -18,9 +18,7 @@ export interface WithdrawProps {
 
 export const Withdraw: FC<WithdrawProps> = (props) => {
   //   const { state } = useAccount();
-  const { connectedChain, wallet, setChain } = useContext(
-    WalletConnectorContext
-  );
+  const { connectedChain, wallet, setChain } = useWalletConnector();
 
   const { networkId } = useContext(OrderlyContext);
 
@@ -48,6 +46,8 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);
   const hasPositions = data?.rows?.length! > 0;
+
+  
 
   return (
     <WithdrawForm
