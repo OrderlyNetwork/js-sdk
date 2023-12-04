@@ -48,3 +48,5 @@ create-orderly-app
 apps/docs/dist
 
 apps/docs/_doc_meta_
+
+hooks-example/

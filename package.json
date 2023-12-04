@@ -21,5 +21,9 @@
     "typedoc-plugin-markdown": "^3.17.1"
   },
   "packageManager": "pnpm@7.15.0",
-  "name": "orderly-web"
+  "name": "orderly-web",
+  "dependencies": {
+    "@orderly.network/hooks": "workspace:^",
+    "@orderly.network/web3-onboard": "workspace:^"
+  }
 }

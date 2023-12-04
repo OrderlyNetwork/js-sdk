@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -9,7 +9,7 @@
     "build": "tsup",
     "docs:generate": "typedoc",
     "docs:parse": "typedoc-json-parser",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "files": [
@@ -20,6 +20,7 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.3",

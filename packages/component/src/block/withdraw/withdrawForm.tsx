@@ -91,12 +91,16 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       return;
     }
 
+    if (!chain || !chain.id) {
+      throw new Error("chain is not set");
+    }
+
     setSubmitting(true);
 
     return onWithdraw({
       amount: Number(quantity),
       token: "USDC",
-      chainId: chain?.id!,
+      chainId: chain?.id,
     })
       .then(
         (res) => {
@@ -189,10 +193,15 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         }}
         decimals={decimals}
         status={inputStatus}
-        className={cn(status !== WithdrawStatus.Normal && "orderly-outline orderly-outline-1", {
-          "orderly-outline-trade-loss": status === WithdrawStatus.InsufficientBalance,
-          "orderly-outline-yellow-500": status === WithdrawStatus.Unsettle,
-        })}
+        className={cn(
+          status !== WithdrawStatus.Normal &&
+            "orderly-outline orderly-outline-1",
+          {
+            "orderly-outline-trade-loss":
+              status === WithdrawStatus.InsufficientBalance,
+            "orderly-outline-yellow-500": status === WithdrawStatus.Unsettle,
+          }
+        )}
         quantity={quantity}
         onValueChange={onValueChange}
         maxAmount={maxAmount}

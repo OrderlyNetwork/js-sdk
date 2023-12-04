@@ -47,23 +47,21 @@ export const usePositionStream = (
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
-    // dedupingInterval: 100,
+    // dedupingInterval: 200,
     // keepPreviousData: false,
     // revalidateIfStale: true,
     ...options,
 
     formatter: (data) => data,
-    onError: (err) => { },
+    onError: (err) => {},
   });
 
   //
 
-  const positionsStream = usePositionUpdateStream((positions) => {
-    console.log("position message", positions);
-      updatePositions();
-  });
-
-
+  // const positionsStream = usePositionUpdateStream((positions) => {
+  //   console.log("position message", positions);
+  //     updatePositions();
+  // });
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -74,8 +72,8 @@ export const usePositionStream = (
       typeof symbol === "undefined" || symbol === ""
         ? data.rows
         : data.rows.filter((item) => {
-          return item.symbol === symbol;
-        });
+            return item.symbol === symbol;
+          });
 
     let unrealPnL_total = zero,
       notional_total = zero,
@@ -245,8 +243,8 @@ export const usePositionStream = (
       loading: false,
       // showSymbol,
       error,
-      loadMore: () => { },
-      refresh: () => { },
+      loadMore: () => {},
+      refresh: () => {},
     },
   ] as const;
 };
@@ -256,46 +254,3 @@ export const pathOr_unsettledPnLPathOr = pathOr(0, [
   "aggregated",
   "unsettledPnL",
 ]);
-
-
-const usePositionUpdateStream = (callback: ({ }) => void) => {
-  const ws = useWS();
-  /// params { 'symbol': positionQty, ...}
-  const positionList = useRef<any>({});
-  return useSWRSubscription("positionUpdate", (key, { next }) => {
-    const unsubscribe = ws.privateSubscribe(
-      // { event: "subscribe", topic: "markprices" },
-      "position",
-      {
-        onMessage: (message: any) => {
-
-          const { positions } = message;
-
-          let update = false;
-          for (const p in positions) {
-            const { symbol, positionQty } = positions[p];
-
-            if (positionList.current[symbol] !== positionQty) {
-              update = true;
-              positionList.current[symbol] = positionQty;
-            }
-          }
-
-          if (update) {
-            callback(positions.current);
-          }
-
-          next(null, positionList);
-        },
-        // onUnsubscribe: () => {
-        //   return "markprices";
-        // },
-        onError: (error: any) => { },
-      }
-    );
-
-    return () => {
-      unsubscribe?.();
-    };
-  });
-};

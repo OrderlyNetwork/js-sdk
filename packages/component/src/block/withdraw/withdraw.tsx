@@ -8,7 +8,6 @@ import {
   OrderlyContext,
   useWalletConnector,
 } from "@orderly.network/hooks";
-
 import { CurrentChain, NetworkId } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
 import { useConfig } from "@orderly.network/hooks";
