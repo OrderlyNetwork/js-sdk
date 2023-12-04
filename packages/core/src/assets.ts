@@ -27,6 +27,8 @@ export class Assets {
     if (!this.account.stateValue.address)
       throw new Error("account address is rqeuired");
 
+    console.log("----withdraw inputs", inputs);
+
     const { chainId, token, amount } = inputs;
     const url = "/v1/withdraw_request";
     // get withdrawl nonce

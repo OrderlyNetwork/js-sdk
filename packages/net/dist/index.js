@@ -67,6 +67,15 @@ __export(src_exports, {
 });
 module.exports = __toCommonJS(src_exports);
 
+// src/errors/apiError.ts
+var ApiError = class extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+    this.name = "ApiError";
+  }
+};
+
 // src/fetch/index.ts
 function request(url, options) {
   return __async(this, null, function* () {
@@ -81,8 +90,21 @@ function request(url, options) {
     if (response.ok) {
       const res = yield response.json();
       return res;
+    } else {
+      try {
+        const errorMsg = yield response.json();
+        console.log(errorMsg);
+        if (response.status === 400) {
+          throw new ApiError(
+            errorMsg.message || errorMsg.code || response.statusText,
+            errorMsg.code
+          );
+        }
+        throw new Error(errorMsg.message || errorMsg.code || response.statusText);
+      } catch (e) {
+        throw e;
+      }
     }
-    throw new Error(response.statusText);
   });
 }
 function _createHeaders(headers = {}, method) {
