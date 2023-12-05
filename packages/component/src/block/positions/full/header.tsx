@@ -63,6 +63,7 @@ export const Header: FC<Props> = (props) => {
         <Button
           variant={"outlined"}
           size={"small"}
+          color={"tertiary"}
           className={"orderly-w-[240px]"}
         >
           Market close all

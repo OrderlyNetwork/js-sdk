@@ -79,7 +79,12 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         className: "orderly-w-[80px] orderly-h-[48px]",
         render: (value: string) => {
           return (
-            <Button size={"small"} variant={"outlined"} fullWidth>
+            <Button
+              size={"small"}
+              variant={"outlined"}
+              color={"tertiary"}
+              fullWidth
+            >
               Close
             </Button>
           );

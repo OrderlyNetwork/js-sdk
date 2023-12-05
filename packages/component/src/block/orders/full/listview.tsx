@@ -91,6 +91,7 @@ export const Listview: FC<Props> = (props) => {
             <Button
               size="small"
               variant={"outlined"}
+              color={"tertiary"}
               onClick={() => {
                 console.log("cancel", record);
               }}

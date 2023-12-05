@@ -24,6 +24,7 @@ export {
 } from "./dialog";
 export * from "./input";
 export * from "./tab";
+export { Progress } from "./progress";
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
@@ -50,6 +51,7 @@ export {
   ChainListView,
   ChainSelect,
 } from "./block";
+
 export type {
   OrderEntryProps,
   OrderBookProps,

@@ -32,7 +32,12 @@ export const Header: FC<Props> = (props) => {
           setSide(value as OrderSide);
         }}
       />
-      <Button size={"small"} variant={"outlined"} disabled={props.count <= 0}>
+      <Button
+        size={"small"}
+        variant={"outlined"}
+        disabled={props.count <= 0}
+        color={"tertiary"}
+      >
         Cancel all
       </Button>
     </div>

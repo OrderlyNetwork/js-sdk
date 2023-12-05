@@ -33,11 +33,7 @@ type Story = StoryObj<typeof TradingPage>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    return (
-      <Page>
-        <TradingPage {...args} symbol={symbol} />
-      </Page>
-    );
+    return <TradingPage {...args} symbol={symbol} />;
   },
   args: {
     tradingViewConfig: {
