@@ -50,7 +50,6 @@ export interface OrderlyAppProviderProps {
   logoUrl: string;
   theme?: any;
   toastLimitCount?: number;
-  onlyTestnet?: boolean;
   /**
    * are include testnet chains
    */
@@ -72,7 +71,6 @@ export const OrderlyAppProvider: FC<
     brokerId,
     brokerName,
     networkId,
-    onlyTestnet,
     includeTestnet,
     toastLimitCount,
     enableSwapDeposit,
@@ -91,7 +89,6 @@ export const OrderlyAppProvider: FC<
       <InnerProvider
         logoUrl={logoUrl}
         theme={theme}
-        onlyTestnet={onlyTestnet}
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
@@ -108,7 +105,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     logoUrl,
     theme,
     brokerName,
-    onlyTestnet,
     toastLimitCount = 1,
     enableSwapDeposit,
     onChainChanged,
@@ -148,9 +144,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
-      if (onlyTestnet && chainId !== "0x66eed") {
-        return false;
-      }
+      
 
       const isSupport = chains.some((item: { id: string }) => {
         return item.id === chainId;
@@ -158,7 +152,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       return isSupport;
     },
-    [chains, onlyTestnet]
+    [chains]
   );
 
   const _onWalletConnect = useCallback(async (): Promise<any> => {

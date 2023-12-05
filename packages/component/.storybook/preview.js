@@ -83,7 +83,6 @@ const preview = {
             networkId="testnet"
             brokerId="orderly"
             brokerName="Orderly"
-            onlyTestnet={false}
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"
             onChainChanged={(networkId, isTestnet) => {
