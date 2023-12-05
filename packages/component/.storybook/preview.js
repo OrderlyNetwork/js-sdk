@@ -81,7 +81,8 @@ const preview = {
         <ConnectorProvider>
           <OrderlyAppProvider
             networkId="testnet"
-            brokerId="woofi_pro"
+            brokerId="orderly"
+            brokerName="Orderly"
             onlyTestnet={false}
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"

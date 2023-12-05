@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Divider } from "@/divider";
 import { Coin, MoveDownIcon } from "@/icon";
 import { QuantityInput } from "@/block/quantityInput";
@@ -15,6 +15,7 @@ import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
 import { ChainDialog } from "../pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
+import { OrderlyAppContext } from "@/provider";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
@@ -58,6 +59,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   onOk,
   switchChain,
 }) => {
+  const { brokerName } = useContext(OrderlyAppContext);
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
@@ -181,7 +183,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   return (
     <>
       <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast">
-        <div className="orderly-flex-1">Your WOOFi Pro account</div>
+        <div className="orderly-flex-1">{"Your "+ brokerName + " account"}</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <QuantityInput

@@ -9,7 +9,7 @@ const tagVariants = cva(["orderly-rounded-[4px]", "orderly-px-2", "orderly-text-
       default: "orderly-h-[18px]",
     },
     color: {
-      primary: "orderly-bg-primary/25 orderly-text-primary-light",
+      primary: "orderly-bg-primary/[.15] orderly-text-primary",
       //   secondary: "bg-secondary text-white",
       // success: "bg-success text-white",
       // danger: "bg-danger text-white",

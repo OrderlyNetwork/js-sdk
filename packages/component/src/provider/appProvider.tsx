@@ -39,6 +39,7 @@ export type OrderlyAppContextState = {
   enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  brokerName?: string;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -56,6 +57,7 @@ export interface OrderlyAppProviderProps {
   includeTestnet?: boolean;
   enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  brokerName?: string;
 }
 
 export const OrderlyAppProvider: FC<
@@ -68,6 +70,7 @@ export const OrderlyAppProvider: FC<
     keyStore,
     getWalletAdapter,
     brokerId,
+    brokerName,
     networkId,
     onlyTestnet,
     includeTestnet,
@@ -92,6 +95,7 @@ export const OrderlyAppProvider: FC<
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
+        brokerName={brokerName}
       >
         {props.children}
       </InnerProvider>
@@ -103,7 +107,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   const {
     logoUrl,
     theme,
-
+    brokerName,
     onlyTestnet,
     toastLimitCount = 1,
     enableSwapDeposit,
@@ -302,6 +306,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onSetChain: _onSetChain,
         enableSwapDeposit,
         onChainChanged,
+        brokerName,
       }}
     >
       <TooltipProvider>

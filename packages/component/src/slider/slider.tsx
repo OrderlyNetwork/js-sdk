@@ -125,6 +125,7 @@ const Slider = React.forwardRef<
               min={min}
               max={max}
               markLabelVisible={markLabelVisible}
+              disabled={props.disabled}
             />
           )}
           <SliderPrimitive.Thumb

@@ -102,7 +102,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors,enableSwapDeposit } = useContext(OrderlyAppContext);
+  const { errors,enableSwapDeposit,brokerName } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -554,7 +554,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
       <div className="orderly-flex orderly-py-2">
-        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast">Your WOOFi Pro account</div>
+        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast">{"Your "+ brokerName + " account"}</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <div className="orderly-py-2">

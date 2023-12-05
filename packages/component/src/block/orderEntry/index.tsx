@@ -352,7 +352,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
-                className="orderly-text-primary orderly-text-4xs"
+                className="orderly-text-link orderly-text-4xs"
               >
                 Deposit
               </Button>
@@ -366,7 +366,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <MSelect
                     label={"Order Type"}
                     value={field.value}
-                    className="orderly-bg-base-600"
+                    className="orderly-bg-base-600 orderly-font-semibold"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
@@ -415,7 +415,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
                     value={isMarketOrder ? "Market" : field.value}
-                    className="orderly-text-right"
+                    className="orderly-text-right orderly-font-semibold"
                     containerClassName={
                       isMarketOrder
                         ? "orderly-bg-base-700"
