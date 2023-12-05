@@ -25,7 +25,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore, enableSwapDeposit } =
+  const { configStore, enableSwapDeposit } =
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(

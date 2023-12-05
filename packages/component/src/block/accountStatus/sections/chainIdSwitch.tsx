@@ -19,7 +19,7 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId, onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
@@ -69,7 +69,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
           <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto orderly-text-3xs">
             <ChainListView
               // @ts-ignore
-              mainChains={onlyTestnet ? [] : mainChains}
+              mainChains={mainChains}
               // @ts-ignore
               testChains={testChains}
               onItemClick={onChainChange}

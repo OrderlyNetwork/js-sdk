@@ -22,13 +22,12 @@ export interface ChainSelectProps {
   // onChainIdChange?: (chainId: number) => void;
   value: CurrentChain | null;
   settingChain?: boolean;
-  onlyTestnet?: boolean;
   wooSwapEnabled?: boolean;
   filter?: (chain: API.Chain) => boolean;
 }
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
-  const { onlyTestnet, wooSwapEnabled = true, disabled } = props;
+  const { wooSwapEnabled = true, disabled } = props;
   // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
     wooSwapEnabled,
@@ -48,11 +47,8 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       return allChains.testnet ?? [];
     }
 
-    if (onlyTestnet) {
-      return allChains.testnet ?? [];
-    }
     return allChains.mainnet;
-  }, [allChains, onlyTestnet, connectedChain]);
+  }, [allChains, connectedChain]);
 
   const { value } = props;
 

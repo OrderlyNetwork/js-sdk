@@ -38,7 +38,7 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  const { onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
