@@ -79,7 +79,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
-        let msg = `${capitalizeString(side)} success`;
+        let msg = `${capitalizeString(side)} completed`;
         toast.success(msg);
       } else if (transStatus === "FAILED") {
         let msg = `${capitalizeString(side)} failed`;
@@ -94,7 +94,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     onMessage: (data: any) => {
       const { status } = data;
 
-      console.log("settle ws: ", data);
+      // console.log("settle ws: ", data);
 
       switch (status) {
         case "COMPLETED":

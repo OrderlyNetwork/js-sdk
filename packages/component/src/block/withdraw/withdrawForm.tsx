@@ -106,7 +106,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     })
       .then(
         (res) => {
-          toast.success("Withdraw request sent successfully");
+          toast.success("Withdrawal requested");
           setQuantity("");
 
           onOk?.(res);
