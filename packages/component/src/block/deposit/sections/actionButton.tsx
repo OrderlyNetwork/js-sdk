@@ -63,7 +63,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     warningMessage,
   } = props;
   const [chainNotSupport, setChainNotSupport] = useState(false);
-  const { onlyTestnet } = useContext(OrderlyContext);
   const t = useTranslation();
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
 
@@ -71,11 +70,11 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
 
-    if (onlyTestnet) {
+    if (props.chain.id === 421613) {
       return props.chains.testnet ?? [];
     }
     return props.chains.mainnet;
-  }, [props.chains, onlyTestnet]);
+  }, [props.chains, props.chain]);
 
   const checkSupoort = (
     chain: CurrentChain | null,
