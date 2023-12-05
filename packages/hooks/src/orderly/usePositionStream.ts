@@ -232,7 +232,10 @@ export const usePositionStream = (
   return [
     {
       rows: positionsRows,
-      aggregated: formatedPositions?.[1] ?? {},
+      aggregated: {
+        ...(formatedPositions?.[1] ?? {}),
+        unrealPnlROI: totalUnrealizedROI,
+      },
       totalCollateral,
       totalValue,
       totalUnrealizedROI,

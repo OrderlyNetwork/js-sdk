@@ -1,9 +1,11 @@
 import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
 import { OrderSide } from "@/block/orderEntry/types";
+import Button from "@/button";
 
 export interface Props {
   onSearch?: () => void;
+  count: number;
 }
 
 export const Header: FC<Props> = (props) => {
@@ -16,8 +18,13 @@ export const Header: FC<Props> = (props) => {
     ];
   }, []);
   return (
-    <div>
+    <div
+      className={
+        "orderly-flex orderly-justify-between orderly-items-center orderly-py-1"
+      }
+    >
       <Select
+        size={"small"}
         options={options}
         value={side}
         onChange={(value) => {
@@ -25,6 +32,9 @@ export const Header: FC<Props> = (props) => {
           setSide(value as OrderSide);
         }}
       />
+      <Button size={"small"} variant={"outlined"} disabled={props.count <= 0}>
+        Cancel all
+      </Button>
     </div>
   );
 };

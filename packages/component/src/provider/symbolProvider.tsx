@@ -1,4 +1,10 @@
-import React, { FC, PropsWithChildren, createContext, useMemo } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useMemo,
+  useContext,
+} from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 
 interface SymbolContextState {
@@ -9,6 +15,10 @@ interface SymbolContextState {
 }
 
 export const SymbolContext = createContext({} as SymbolContextState);
+
+export const useSymbolContext = () => {
+  return useContext(SymbolContext);
+};
 
 interface FormatterProviderProps {
   symbol: string;

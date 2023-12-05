@@ -7,7 +7,7 @@ import { PositionsViewProps } from "@/block";
 export const PositionsViewFull: FC<PositionsViewProps> = (props) => {
   return (
     <div>
-      <Header />
+      <Header aggregated={props.aggregated} />
       <Divider />
       <Listview {...props} />
     </div>

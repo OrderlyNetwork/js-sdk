@@ -1,8 +1,16 @@
-import { FC, HTMLAttributes, PropsWithChildren, useMemo } from "react";
+import {
+  FC,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+} from "react";
 import { usePreLoadData } from "@orderly.network/hooks";
 
 export interface PageProps extends HTMLAttributes<HTMLDivElement> {
   // systemState: SystemStateEnum;
+  full: ReactNode;
+  mobile: ReactNode;
 }
 
 export const Page: FC<PropsWithChildren<PageProps>> = (props) => {

@@ -76,7 +76,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       loading={props.loading}
       className="orderly-text-3xs"
       headerClassName="orderly-text-base-contrast-36 orderly-bg-base-800"
-      gerenatedRowKey={(record, index) =>
+      generatedRowKey={(record, index) =>
         // @ts-ignore
         `record.ts_${record.price}_${record.size}_${index}`
       }
