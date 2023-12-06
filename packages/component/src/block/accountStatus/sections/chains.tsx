@@ -109,7 +109,9 @@ export const Chains: FC<ChainsProps> = (props) => {
                   if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
                     setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
                   }
-                  switchDomain(item.id);
+                  if (success) {
+                    switchDomain(item.id);
+                  }
                 });
               } else {
                 setDefaultChain(item.id);
