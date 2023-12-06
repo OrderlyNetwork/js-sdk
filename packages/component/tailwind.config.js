@@ -109,12 +109,15 @@ module.exports = {
         divider: "rgb(var(--orderly-color-divider) / <alpha-value>)",
         // disable:'',
         trade: {
-          loss: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
-          "loss-contrast":
-            "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
-          profit: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
-          "profit-contrast":
-            "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
+          loss: {
+            DEFAULT: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
+            contrast: "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
+          },
+          
+          profit: {
+            DEFAULT: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
+            contrast: "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
+          },
         },
       },
       borderRadius: {

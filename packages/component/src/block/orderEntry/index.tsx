@@ -316,7 +316,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "orderly-bg-success-light orderly-text-base-contrast after:orderly-bg-success-light",
+                    "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit",
                   disabledClassName:
                     "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
@@ -325,7 +325,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "orderly-bg-danger-light orderly-text-base-contrast after:orderly-bg-danger-light",
+                    "orderly-bg-trade-loss orderly-text-base-contrast after:orderly-bg-trade-loss",
                   disabledClassName:
                     "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },

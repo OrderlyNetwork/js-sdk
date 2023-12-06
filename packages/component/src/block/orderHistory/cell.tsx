@@ -55,6 +55,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           label="Qty."
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           value={item.quantity ?? "-"}
           rule="price"
           precision={base_dp}

@@ -3,14 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+
   input[type="number"] {
     -moz-appearance: textfield;
   }
+
   :root {
     --onboard-modal-z-index: 88;
 
@@ -113,6 +116,7 @@
     --orderly-color-base-300: 226 232 240;
     --orderly-color-base-foreground: 15 23 42;
   }
+
   [data-o-theme="orderly"] {
     /* colors */
 
@@ -168,9 +172,9 @@
     --orderly-color-base-foreground: 255 255 255;
 
     --orderly-color-trading-loss: 255 103 194;
-    --orderly-color-trading-loss-contrast: 40 46 58;
+    --orderly-color-trading-loss-contrast: 255 103 194;
     --orderly-color-trading-profit: 0 181 159;
-    --orderly-color-trading-profit-contrast: 40 46 58;
+    --orderly-color-trading-profit-contrast: 0 181 159;
 
     /* rounded */
     --orderly-rounded: 6px;
