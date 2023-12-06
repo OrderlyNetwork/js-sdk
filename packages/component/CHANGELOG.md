@@ -1,5 +1,16 @@
 # @orderly.network/react
 
+## 0.1.22
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.19
+  - @orderly.network/types@0.1.18
+  - @orderly.network/core@0.1.18
+  - @orderly.network/net@1.0.105
+
 ## 0.1.21
 
 ### Patch Changes
