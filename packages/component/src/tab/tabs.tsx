@@ -51,6 +51,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
       const childElement = child as React.FunctionComponentElement<
         PropsWithChildren<TabPaneProps>
       >;
+
       const { displayName } = childElement.type;
       //
       if (displayName === "TabPane") {
@@ -60,10 +61,11 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
 
         tabList.push({ title, value, disabled });
 
-        children.push(
-          <Fragment key={index}>{childElement.props.children}</Fragment>
-        );
+        // children.push(
+        //   <Fragment key={index}>{childElement.props.children}</Fragment>
+        // );
 
+        children.push(childElement);
         // set active index
         if (active) {
           setActiveIndex(index);

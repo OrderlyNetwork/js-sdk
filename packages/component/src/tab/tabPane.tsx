@@ -9,7 +9,7 @@ export interface TabPaneProps {
 }
 
 export const TabPane: FC<PropsWithChildren<TabPaneProps>> = (props) => {
-  return <div>{props.children}</div>;
+  return <div className={props.className}>{props.children}</div>;
 };
 
 TabPane.displayName = "TabPane";

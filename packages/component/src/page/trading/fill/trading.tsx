@@ -8,6 +8,7 @@ import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
+import { DataListView } from "./sections/datalist";
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
   useEffect(() => {
@@ -27,12 +28,15 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
               </div>
               <div>Left Pane</div>
             </div>
-            <div style={{ minWidth: "280px", width: "280px" }}>
+            <div
+              style={{ minWidth: "280px", width: "280px" }}
+              className="orderly-overflow-hidden"
+            >
               <MyOrderBookAndTrade symbol={props.symbol} />
             </div>
           </Split>
           <div style={{ height: "30%" }}>
-            <PositionsViewFull
+            {/* <PositionsViewFull
               dataSource={null}
               aggregated={{
                 unsettledPnL: 0,
@@ -40,10 +44,12 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
                 unrealPnlROI: 0,
                 notional: 0,
               }}
-            />
+            /> */}
+            <DataListView />
           </div>
         </Split>
       </div>
+      {/* order entry start */}
       <div style={{ minWidth: "300px" }}>
         <div className="orderly-px-3">
           <AccountInfo />
@@ -53,6 +59,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           <MyOrderEntry symbol={props.symbol} />
         </div>
       </div>
+      {/* order entry end */}
     </Split>
   );
 };
