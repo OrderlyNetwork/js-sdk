@@ -5,7 +5,7 @@ import {
   useAccountInfo,
   useQuery,
 } from "@orderly.network/hooks";
-import React, { FC, useCallback, useEffect, useMemo } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo } from "react";
 
 interface Props {
   symbol: string;
@@ -51,3 +51,5 @@ export const MyLeverageView: FC<Props> = (props) => {
     </div>
   );
 };
+
+export const MemoizedCompnent = memo(MyLeverageView);

@@ -5,7 +5,7 @@ import { ChartView } from "./sections/chartView";
 import { MyOrderBook } from "./sections/orderbook";
 import { MyOrderEntry } from "./sections/orderEntry";
 import { Divider } from "@/divider";
-import { MyLeverageView } from "./sections/leverage";
+import { MemoizedCompnent } from "./sections/leverage";
 import { TradingPageProvider } from "../context/tradingPageContext";
 import { TradingViewChartConfig } from "@/block/tradingView";
 import { BottomNavBar } from "./sections/bottombar";
@@ -31,7 +31,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         symbol={props.symbol}
         tradingViewConfig={props.tradingViewConfig}
       />
-      <MyLeverageView symbol={props.symbol} />
+      <MemoizedCompnent symbol={props.symbol} />
       <div className="orderly-grid orderly-grid-cols-[3fr_4fr] orderly-box-border orderly-p-2 orderly-items-start">
         <div className="orderly-w-full">
           <MyOrderBook symbol={props.symbol} />

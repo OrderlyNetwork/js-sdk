@@ -1,10 +1,11 @@
-import React, { Fragment, ReactNode, useEffect, useState } from "react";
+import React, { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { Tab, TabProps } from "./tab";
 import { TabPaneProps } from "./tabPane";
 import { TabBarExtraRender, TabItem, TabList } from "./tabList";
 import { TabContextProvider } from "./tabContext";
 import { TabContent } from "./tabContent";
+import { TabGroup } from "@/tab/tabGroup";
 
 export interface TabsProps {
   value?: string;
@@ -19,6 +20,17 @@ export interface TabsProps {
   onToggleCollapsed?: () => void;
 
   tabBarClassName?: string;
+
+  allowUngroup?: boolean;
+  /**
+   *
+   */
+  minWidth?: number;
+}
+
+enum TabViewMode {
+  Tab,
+  Group,
 }
 
 // it's controlled component;
@@ -29,6 +41,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
   ...props
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [viewMode, setViewMode] = useState(TabViewMode.Tab);
 
   const [tabList, children] = useMemo(() => {
     const tabList: TabItem[] = [],
@@ -79,14 +92,42 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
     return children[activeIndex];
   }, [children, activeIndex]);
 
-  //   const extraNode
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <TabContextProvider
-      data={props.extraData}
-      collapsed={collapsed}
-      onToggleCollapsed={onToggleCollapsed}
-    >
+  useEffect(() => {
+    if (
+      typeof props.minWidth !== "number" ||
+      !props.allowUngroup ||
+      children?.length === 0
+    ) {
+      return;
+    }
+    const observer = new ResizeObserver(function (entries) {
+      if (Array.isArray(entries) && entries[0]) {
+        const target = entries[0];
+
+        if (
+          target.contentRect.width >
+          props.minWidth! * children.length! * 0.8
+        ) {
+          setViewMode(TabViewMode.Group);
+        } else {
+          setViewMode(TabViewMode.Tab);
+        }
+      }
+    });
+
+    observer.observe(containerRef.current!);
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current!);
+      }
+    };
+  }, [props.allowUngroup, props.minWidth, children.length]);
+
+  const body =
+    viewMode === TabViewMode.Tab ? (
       <>
         <TabList
           tabs={tabList}
@@ -98,6 +139,21 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
         />
         <TabContent>{child}</TabContent>
       </>
+    ) : (
+      <TabGroup
+        children={children}
+        tabList={tabList}
+        tabBarClassName={props.tabBarClassName}
+      />
+    );
+
+  return (
+    <TabContextProvider
+      data={props.extraData}
+      collapsed={collapsed}
+      onToggleCollapsed={onToggleCollapsed}
+    >
+      <div ref={containerRef}>{body}</div>
     </TabContextProvider>
   );
 };

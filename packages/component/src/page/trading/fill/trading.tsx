@@ -6,6 +6,8 @@ import { MyOrderBook } from "../xs/sections/orderbook";
 import { TradingPageProps } from "../types";
 import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
+import { TopNav } from "./sections/nav/topNav";
+import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
   useEffect(() => {
@@ -19,11 +21,14 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       <div style={{ flex: 1 }}>
         <Split mode="vertical" lineBar>
           <Split style={{ flex: 1 }} lineBar>
-            <div style={{ flex: 1 }}>Left Pane</div>
-            <div style={{ minWidth: "280px" }}>
-              <div className="orderly-px-3">
-                <MyOrderBook symbol={props.symbol} />
+            <div style={{ flex: 1 }}>
+              <div className="orderly-h-[48px] orderly-border-b orderly-border-b-divider">
+                <TopNav symbol={props.symbol} />
               </div>
+              <div>Left Pane</div>
+            </div>
+            <div style={{ minWidth: "280px", width: "280px" }}>
+              <MyOrderBookAndTrade symbol={props.symbol} />
             </div>
           </Split>
           <div style={{ height: "30%" }}>
@@ -39,7 +44,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           </div>
         </Split>
       </div>
-      <div style={{ minWidth: "320px" }}>
+      <div style={{ minWidth: "300px" }}>
         <div className="orderly-px-3">
           <AccountInfo />
         </div>
