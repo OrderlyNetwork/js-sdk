@@ -25,7 +25,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const config = useConfig<ConfigStore>();
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `${config.get("operatorUrl")}/v1/faucet/usdc`
+    `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
   );
 
   const chainName = useGetChains();

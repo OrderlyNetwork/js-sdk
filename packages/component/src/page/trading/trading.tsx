@@ -1,4 +1,4 @@
-import React, { type FC } from "react";
+import React, { useEffect, type FC } from "react";
 import { NavBar } from "./sections/navbar";
 import { DataListView } from "./sections/dataList";
 import { ChartView } from "./sections/chartView";
