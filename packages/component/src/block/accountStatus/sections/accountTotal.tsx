@@ -48,16 +48,16 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
 
   if (props.status < AccountStatusEnum.EnableTrading) {
     return (
-      <div className="orderly-flex orderly-items-center orderly-text-base-contrast-54">
+      <div className="orderly-flex orderly-items-center orderly-text-base-contrast-54 orderly-text-4xs">
         <div className="orderly-flex orderly-flex-col">
-          <div className="orderly-flex orderly-items-center orderly-text-4xs orderly-gap-2">
+          <div className="orderly-flex orderly-items-center orderly-gap-2">
             <span>Total value</span>
 
-            <span className="orderly-text-base">≈</span>
+            <span>≈</span>
           </div>
           <div className="orderly-flex orderly-gap-2">
             --
-            <span className="orderly-text-base-contrast/20">{currency}</span>
+            <span className="orderly-text-base-contrast-20">{currency}</span>
           </div>
         </div>
       </div>
