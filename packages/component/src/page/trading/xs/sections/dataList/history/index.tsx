@@ -1,5 +1,5 @@
 import { HistoryListView } from "@/block/orderHistory";
-import { TradingPageContext } from "@/page/trading";
+import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { SymbolProvider } from "@/provider";
 import { useOrderStream, useAccount } from "@orderly.network/hooks";
 import {

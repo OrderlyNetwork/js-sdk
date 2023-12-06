@@ -23,7 +23,11 @@ export const Header: FC<Props> = (props) => {
       labelClassName="orderly-text-3xs orderly-text-base-contrast-54"
       valueClassName="orderly-text-base-contrast/80"
     >
-      <div className={"orderly-flex orderly-justify-between orderly-py-1"}>
+      <div
+        className={
+          "orderly-flex orderly-justify-between orderly-py-1 orderly-items-center"
+        }
+      >
         <div className={"orderly-flex orderly-space-x-5"}>
           <Statistic
             label={"Unreal.PnL"}

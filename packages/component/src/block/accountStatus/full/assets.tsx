@@ -14,10 +14,16 @@ export const Assets: FC<AssetsProps> = (props) => {
           Total balance
         </div>
         <div>
-          <div className={"orderly-text-xl"}>
+          <div>
             <Numeral
               surfix={
-                <span className={"orderly-text-base-contrast-36"}>USDC</span>
+                <span
+                  className={
+                    "orderly-text-base-contrast-36 orderly-font-medium"
+                  }
+                >
+                  USDC
+                </span>
               }
             >
               {props.totalBalance}
