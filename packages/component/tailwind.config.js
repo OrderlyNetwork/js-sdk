@@ -110,10 +110,10 @@ module.exports = {
         // disable:'',
         trade: {
           loss: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
-          "loss-foreground":
+          "loss-contrast":
             "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
           profit: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
-          "profit-foreground":
+          "profit-contrast":
             "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
         },
       },
