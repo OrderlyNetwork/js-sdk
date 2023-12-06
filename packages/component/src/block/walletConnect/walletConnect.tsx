@@ -130,7 +130,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
-      <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center orderly-">
+      <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <div className="orderly-text-base-contrast-54 orderly-text-xs" onClick={showRememberHint}>
           <span>Remember me</span>
           <InfoIcon className="orderly-inline-block orderly-ml-2" size={14} />

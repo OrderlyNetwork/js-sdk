@@ -39,7 +39,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
   return (
     <div
-      className="orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-"
+      className="orderly-overflow-hidden orderly-relative orderly-cursor-pointer"
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;

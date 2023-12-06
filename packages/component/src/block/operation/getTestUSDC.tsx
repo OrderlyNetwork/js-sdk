@@ -81,7 +81,7 @@ export const GetTestUSDC = () => {
   }
 
   return (
-    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-bg-base-700 orderly-z-20 orderly-px-2 orderly-animate-in orderly-fade-in orderly-">
+    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-bg-base-700 orderly-z-20 orderly-px-2 orderly-animate-in orderly-fade-in">
       <div className="orderly-text-3xs orderly-text-base-contrast/50 orderly-cursor-pointer">
         <span className="orderly-text-primary-light" onClick={onGetClick}>
           Get test USDC
