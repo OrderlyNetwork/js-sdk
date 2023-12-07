@@ -25,7 +25,7 @@ export const Header: FC<Props> = (props) => {
     >
       <div
         className={
-          "orderly-flex orderly-justify-between orderly-py-1 orderly-items-center"
+          "orderly-flex orderly-justify-between orderly-py-2 orderly-items-center"
         }
       >
         <div className={"orderly-flex orderly-space-x-5"}>
@@ -52,26 +52,21 @@ export const Header: FC<Props> = (props) => {
             rule="price"
             coloring
           />
-          <Statistic
-            label={"Daily Real."}
-            value={2789312}
-            rule="price"
-            coloring
-          />
+          <Statistic label={"Daily Real."} value={0} rule="price" coloring />
           <Statistic
             label={"Notional"}
             value={props.aggregated?.notional}
             rule="price"
           />
         </div>
-        <Button
+        {/* <Button
           variant={"outlined"}
           size={"small"}
           color={"tertiary"}
           className={"orderly-w-[240px]"}
         >
           Market close all
-        </Button>
+        </Button> */}
       </div>
     </StatisticStyleProvider>
   );

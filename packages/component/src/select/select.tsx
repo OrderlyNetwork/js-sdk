@@ -124,7 +124,7 @@ const Select: FC<SelectProps> = ({
             open && "orderly-bg-popover"
           )}
         >
-          <div className="orderly-flex-1 orderly-text-3xs orderly-text-inherit">
+          <div className="orderly-flex-1 orderly-text-3xs md:orderly-text-2xs orderly-text-inherit">
             {typeof label !== "undefined" && <>{label}</>}
           </div>
 
@@ -154,7 +154,7 @@ const Select: FC<SelectProps> = ({
               textValue={option.value}
               key={index}
               className={cn(
-                "orderly-text-base-contrast/60 hover:orderly-bg-base-700",
+                "orderly-text-base-contrast/60 hover:orderly-bg-base-700 orderly-text-3xs md:orderly-text-2xs",
                 option.value === props.value &&
                   (color === "buy"
                     ? "orderly-text-trade-profit"

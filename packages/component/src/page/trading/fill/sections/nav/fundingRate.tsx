@@ -15,7 +15,12 @@ const FundingRate: FC<Props> = (props) => {
       label={"Pred.funding rate"}
       value={
         <div className="orderly-flex flex-nowrap">
-          <Numeral rule="percentages" className="orderly-text-warning">
+          <Numeral
+            className="orderly-text-warning"
+            unit="%"
+            precision={4}
+            padding
+          >
             {data.est_funding_rate}
           </Numeral>
           <span className="orderly-ml-1 orderly-break-normal orderly-whitespace-nowrap">{`in ${data.countDown}`}</span>

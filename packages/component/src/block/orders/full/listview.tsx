@@ -76,7 +76,14 @@ export const Listview: FC<Props> = (props) => {
         title: "Update",
         dataIndex: "updated_time",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"date"}>{value}</Text>,
+        render: (value: string) => (
+          <Text
+            rule={"date"}
+            className="orderly-break-normal orderly-whitespace-nowrap"
+          >
+            {value}
+          </Text>
+        ),
       },
     ];
 

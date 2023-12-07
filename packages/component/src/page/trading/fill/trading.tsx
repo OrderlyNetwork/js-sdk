@@ -8,7 +8,8 @@ import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
-import { DataListView } from "./sections/datalist";
+import { DataListView, MemoizedDataListView } from "./sections/datalist";
+import { MyTradingView } from "./myTradingview";
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
   useEffect(() => {
@@ -22,11 +23,16 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       <div style={{ flex: 1 }}>
         <Split mode="vertical" lineBar>
           <Split style={{ flex: 1 }} lineBar>
-            <div style={{ flex: 1 }}>
-              <div className="orderly-h-[48px] orderly-border-b orderly-border-b-divider">
+            <div
+              style={{ flex: 1 }}
+              className="orderly-grid orderly-grid-rows-[48px_1fr]"
+            >
+              <div className="orderly-border-b orderly-border-b-divider">
                 <TopNav symbol={props.symbol} />
               </div>
-              <div>Left Pane</div>
+              <div className="orderly-flex-1">
+                <MyTradingView />
+              </div>
             </div>
             <div
               style={{ minWidth: "280px", width: "280px" }}
@@ -36,16 +42,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
             </div>
           </Split>
           <div style={{ height: "30%" }}>
-            {/* <PositionsViewFull
-              dataSource={null}
-              aggregated={{
-                unsettledPnL: 0,
-                unrealPnL: 0,
-                unrealPnlROI: 0,
-                notional: 0,
-              }}
-            /> */}
-            <DataListView />
+            <MemoizedDataListView />
           </div>
         </Split>
       </div>
