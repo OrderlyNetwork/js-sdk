@@ -165,18 +165,41 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   }, [chain, chains]);
 
   useEffect(() => {
-    const num = Number(quantity);
-    if (num > maxAmount) {
-      if (num <= availableBalance) {
+    // const num = Number(quantity);
+    // if (num > maxAmount) {
+    //   if (num <= availableBalance) {
+    //     setInputStatus("warning");
+    //     setHintMessage("Please settle your balance");
+    //   } else {
+    //     setInputStatus("error");
+    //     setHintMessage("Insufficient balance");
+    //   }
+    // } else {
+    //   setInputStatus("default");
+    //   setHintMessage(undefined);
+    // }
+
+    const input = Number(quantity);
+    const freeCollateral = maxAmount;
+    if (unsettledPnL < 0) {
+      if(input > freeCollateral) {
+        setInputStatus("error");
+        setHintMessage("Insufficient balance");
+      } else {
+        setInputStatus("default");
+        setHintMessage(undefined);
+      }
+    } else {
+      if (input > freeCollateral) {
+        setInputStatus("error");
+        setHintMessage("Insufficient balance");
+      } else if (input > freeCollateral - unsettledPnL && input <= freeCollateral) {
         setInputStatus("warning");
         setHintMessage("Please settle your balance");
       } else {
-        setInputStatus("error");
-        setHintMessage("Insufficient balance");
+        setInputStatus("default");
+        setHintMessage(undefined);
       }
-    } else {
-      setInputStatus("default");
-      setHintMessage(undefined);
     }
   }, [quantity, maxAmount, availableBalance]);
 
