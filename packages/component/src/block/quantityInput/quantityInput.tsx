@@ -53,7 +53,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           props.className,
           {
             "orderly-outline orderly-outline-1 orderly-outline-danger-light": props.status === "error",
-            "orderly-outline orderly-outline-1 orderly-outline-warning-light": props.status === "warning",
+            "orderly-outline orderly-outline-1 orderly-outline-warning": props.status === "warning",
           }
         )}
         onClick={() => inputRef.current?.focus()}
@@ -133,7 +133,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             {
               "orderly-text-danger-light": props.status === "error",
               "orderly-before:bg-danger-light": props.status === "error",
-              "orderly-text-warning-light": props.status === "warning",
+              "orderly-text-warning": props.status === "warning",
             }
           )}
         >
