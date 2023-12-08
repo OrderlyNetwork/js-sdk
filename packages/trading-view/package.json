@@ -25,6 +25,7 @@
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/core": "workspace:*",
+    "@orderly.network/net": "workspace:*",
 
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

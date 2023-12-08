@@ -2,6 +2,9 @@ import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { LibrarySymbolInfo, QuoteData, QuotesCallback, ResolutionString, SubscribeBarsCallback } from '../type';
 import { AbstractDatafeed } from './abstract-datafeed';
+import { WebsocketService } from './websocket.service';
+import getTickers$ from './ticker';
+import { WS } from '../../../../../hooks/node_modules/@orderly.network/net/dist';
 
 // We can't trust the listenerGuid provided by tradingview. It might be the same.
 const getAutoIncrementId = (() => {
@@ -13,24 +16,26 @@ export class Datafeed extends AbstractDatafeed {
     private _subscribeQuoteMap: Map<string, Subscription>;
 
     private _prefixId: number;
-    private _publicWs: any;
+    private _publicWs: WebsocketService;
 
 
-    constructor(publicWs: any) {
+
+    constructor(ws: any) {
         const datafeedURL = `https://testnet-api-evm.orderly.org/tv`;
         super(datafeedURL);
 
         this._subscribeQuoteMap = new Map();
         this._prefixId = getAutoIncrementId();
-        this._publicWs = publicWs;
+        this._publicWs = new WebsocketService(ws);
+       // ws.on('')
     }
 
     public subscribeBars(symbolInfo: LibrarySymbolInfo, resolution: ResolutionString, onTick: SubscribeBarsCallback, listenerGuid: string) {
-        // new PublicWebsocketService().subscribeKline(`${this._prefixId}${listenerGuid}`, symbolInfo.ticker, resolution, onTick);
+        this._publicWs.subscribeKline(`${this._prefixId}${listenerGuid}`, symbolInfo.ticker, resolution, onTick);
     }
 
     public unsubscribeBars(listenerGuid: string): void {
-        // new PublicWebsocketService().unsubscribeKline(`${this._prefixId}${listenerGuid}`);
+        this._publicWs.unsubscribeKline(`${this._prefixId}${listenerGuid}`);
     }
 
     public getQuotes(symbols: string[], onDataCallback: QuotesCallback): void {
@@ -38,14 +43,14 @@ export class Datafeed extends AbstractDatafeed {
 
         this.unsubscribeQuotes(subscriptionId);
 
-        // this._subscribeQuoteMap.set(
-        //     subscriptionId,
-        //     getTickers$(symbols[0])
-        //         .pipe(first())
-        //         .subscribe((t) => {
-        //             onDataCallback([this._toUDFTicker(t)]);
-        //         }),
-        // );
+        this._subscribeQuoteMap.set(
+            subscriptionId,
+            getTickers$(symbols[0])
+                .pipe(first())
+                .subscribe((t) => {
+                    onDataCallback([this._toUDFTicker(t)]);
+                }),
+        );
     }
 
     public subscribeQuotes(symbols: string[], fastSymbols: string[], onRealtimeCallback: QuotesCallback, listenerGuid: string): void {
@@ -53,12 +58,12 @@ export class Datafeed extends AbstractDatafeed {
         if (symbols.length > 0) {
             this.unsubscribeQuotes(subscriptionId);
 
-            // this._subscribeQuoteMap.set(
-            //     subscriptionId,
-            //     getTickers$(symbols[0]).subscribe((t) => {
-            //         onRealtimeCallback([this._toUDFTicker(t)]);
-            //     }),
-            // );
+            this._subscribeQuoteMap.set(
+                subscriptionId,
+                getTickers$(symbols[0]).subscribe((t) => {
+                    onRealtimeCallback([this._toUDFTicker(t)]);
+                }),
+            );
         }
     }
 

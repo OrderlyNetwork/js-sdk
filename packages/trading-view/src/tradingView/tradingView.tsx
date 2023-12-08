@@ -1,16 +1,41 @@
-import React, {useRef, useEffect} from "react";
-import { Datafeed } from "./tradingViewAdapter/datafeed/datafeed";
-import { ChartMode } from "./tradingViewAdapter/type";
-import {Widget, WidgetProps } from "./tradingViewAdapter/widget";
+import React, {useRef, useEffect, useState} from "react";
+import {Datafeed} from "./tradingViewAdapter/datafeed/datafeed";
+import {ChartMode} from "./tradingViewAdapter/type";
+import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
+import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
 
-import { useWS } from "@orderly.network/hooks";
+import {useWS} from "@orderly.network/hooks";
+import {WS} from "@orderly.network/net";
 
 
-export default function TradingView(){
+interface TradingViewPorps {
+    symbol: string;
+}
+
+export default function TradingView({symbol}: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
-    const symbol = 'NEAR_PERP_USDC';
+
     const ws = useWS();
+    const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (chartRef.current) {
+
+            const script = document.createElement("script");
+            script.setAttribute("data-nscript", "afterInteractive");
+            script.src = '/charting_library/charting_library.js';
+            script.async = true;
+            script.type = "text/javascript";
+            script.onload = () => {
+                console.log('--33');
+
+                setChartingLibrarySciprtReady(true);
+            };
+            chartRef.current.appendChild(script);
+
+        }
+    }, [chartRef]);
 
     const onChartClick = () => {
         console.log('-- chart click');
@@ -18,6 +43,9 @@ export default function TradingView(){
     const layoutId = 'TradingViewSDK';
 
     useEffect(() => {
+        if (!chartingLibrarySciprtReady) {
+            return;
+        }
         if (chartRef.current) {
             const options: any = {
                 fullscreen: false,
@@ -32,7 +60,7 @@ export default function TradingView(){
                 datafeed: new Datafeed(ws),
                 getBroker: undefined,
             };
-            const mode = ChartMode.BASIC;
+            const mode = ChartMode.UNLIMITED;
 
             const chartProps: WidgetProps = {
                 options,
@@ -42,17 +70,26 @@ export default function TradingView(){
                 onClick: onChartClick,
             };
 
+            console.log('ws', ws);
             chart.current = new Widget(chartProps);
         }
 
         return () => {
             chart.current?.remove();
         };
-    }, []);
-    return (
-        <>
+    }, [chartingLibrarySciprtReady]);
 
-            <div style={{height: '100%'}} ref={chartRef}></div>
-        </>
-    )
+    useEffect(() => {
+        console.log('symbol', symbol);
+       chart.current?.setSymbol(symbol);
+       const service = new WebsocketService(ws as WS);
+       service.subscribeSymbol(symbol);
+       return () =>{
+           service.unsubscribeKline(symbol);
+       }
+    }, [symbol]);
+    return (
+            <div style={{height: '600px',width: '900px', margin: '0 auto'}} ref={chartRef}></div>
+
+    );
 }
