@@ -12,6 +12,7 @@ import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
 import { useTranslation } from "@/i18n";
+import { OrderlyAppContext } from "@/provider";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -20,6 +21,8 @@ export interface Props {
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
   const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
+
+  const { onChainChanged } = useContext(OrderlyAppContext);
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
@@ -44,6 +47,9 @@ export const ChainIdSwtich: FC<Props> = (props) => {
           (isSuccess) => {
             if (isSuccess) {
               toast.success(t("toast.networkSwitched"));
+              if (onChainChanged) {
+                onChainChanged(id, id === 421613);
+              }
             } else {
               toast.error(t("common.cancel"));
             }

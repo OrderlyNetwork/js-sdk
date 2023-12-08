@@ -71,7 +71,6 @@ export const Chains: FC<ChainsProps> = (props) => {
     // window.open(url); // test in storybook
     // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
     if (onChainChanged) {
-      console.log("onChainChanged", chainId, chainId === 421613);
       onChainChanged(chainId, chainId === 421613);
     }
   };
@@ -115,6 +114,7 @@ export const Chains: FC<ChainsProps> = (props) => {
                 });
               } else {
                 setDefaultChain(item.id);
+                switchDomain(item.id);
               }
             }}
             currentChainId={parseInt(connectedChain?.id || defaultChain)}
