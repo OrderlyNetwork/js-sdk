@@ -4,6 +4,7 @@
 */
 
 const defaultSettings = {
+    'chart.lastUsedTimeBasedResolution': '1',
     'trading.chart.proterty': JSON.stringify({
         showSellBuyButtons: 0,
         noConfirmEnabled: 1,

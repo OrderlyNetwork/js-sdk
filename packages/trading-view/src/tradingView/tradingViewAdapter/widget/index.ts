@@ -175,12 +175,13 @@ export class Widget {
         // Get data from remote first. fallback to localstorage if no data on the server yet
         const {savedData, adapterSetting} = await getChartData(this._chartKey, this._isLoggedIn);
 
+        console.log('-- adaptersetting', adapterSetting, savedData);
         // @ts-ignore
         this._adapterSetting = adapterSetting;
         this._savedData = savedData;
         this._instance = new TradingView.widget({
             ...getOptions(widgetOptions, mode),
-            interval: null as any,
+            interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? 1,
             saved_data: savedData,
             settings_adapter: {
                 initialSettings: adapterSetting,
