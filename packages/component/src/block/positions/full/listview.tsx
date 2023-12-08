@@ -18,6 +18,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "position_qty",
+        render: (value: string) => <Numeral coloring>{value}</Numeral>,
       },
       {
         title: "Avg.open",
@@ -36,6 +37,9 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Liq.price",
         className: "orderly-h-[48px]",
         dataIndex: "est_liq_price",
+        render: (value: string) => {
+          return <Numeral className="orderly-text-warning">{value}</Numeral>;
+        },
       },
       {
         title: "Margin",

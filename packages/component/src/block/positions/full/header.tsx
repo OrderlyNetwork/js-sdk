@@ -5,6 +5,9 @@ import { FC } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
 import { cn } from "@/utils/css";
+import { RefreshCcw } from "lucide-react";
+import { Checkbox } from "@/checkbox";
+import { Label } from "@/label";
 
 interface Props {
   onMarketCloseAll?: () => void;
@@ -25,10 +28,10 @@ export const Header: FC<Props> = (props) => {
     >
       <div
         className={
-          "orderly-flex orderly-justify-between orderly-py-2 orderly-items-center"
+          "orderly-flex orderly-justify-between orderly-py-3 orderly-items-center"
         }
       >
-        <div className={"orderly-flex orderly-space-x-5"}>
+        <div className={"orderly-flex orderly-space-x-6"}>
           <Statistic
             label={"Unreal.PnL"}
             value={
@@ -58,15 +61,38 @@ export const Header: FC<Props> = (props) => {
             value={props.aggregated?.notional}
             rule="price"
           />
+          <Statistic
+            label={"Unsettled Pnl"}
+            // value={props.aggregated?.unsettledPnL}
+            coloring
+            value={
+              <div
+                className={"orderly-flex orderly-items-center orderly-gap-1"}
+              >
+                <Numeral showIcon coloring>
+                  {props.aggregated?.unsettledPnL ?? 0}
+                </Numeral>
+                <button className={"orderly-text-primary-light"}>
+                  <RefreshCcw size={14} />
+                </button>
+              </div>
+            }
+            rule="price"
+          />
         </div>
-        {/* <Button
-          variant={"outlined"}
-          size={"small"}
-          color={"tertiary"}
-          className={"orderly-w-[240px]"}
-        >
-          Market close all
-        </Button> */}
+        <div className={"orderly-flex orderly-items-center orderly-gap-2"}>
+          <Checkbox
+            id={"showCloseTrades"}
+            // checked={props.showAllSymbol}
+            // onCheckedChange={props.onShowAllSymbolChange}
+          />
+          <Label
+            htmlFor={"showCloseTrades"}
+            className="orderly-text-base-contrast-54 orderly-text-3xs"
+          >
+            Show close trades
+          </Label>
+        </div>
       </div>
     </StatisticStyleProvider>
   );

@@ -16,19 +16,21 @@ export interface TabProps {
   active?: boolean;
   value: string | number;
   disabled?: boolean;
+  fullWidth?: boolean;
   icon?: React.ReactNode;
   onClick: (value: any, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Tab: FC<TabProps> = (props) => {
-  const { active, disabled, title } = props;
+  const { active, disabled, title, fullWidth } = props;
 
   return (
     <button
       className={cn(
-        "orderly-text-base-contrast-36 orderly-h-[32px]",
+        "orderly-text-base-contrast-36 orderly-h-full",
         active && "orderly-text-base-contrast orderly-active",
-        disabled && "orderly-cursor-not-allowed orderly-text-slate-300"
+        disabled && "orderly-cursor-not-allowed orderly-text-slate-300",
+        fullWidth && "orderly-flex-1"
       )}
       disabled={props.disabled}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {

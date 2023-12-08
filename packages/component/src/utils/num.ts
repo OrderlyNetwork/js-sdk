@@ -14,9 +14,11 @@ export const parseNumber = (
     tick?: number;
     truncate?: "ceil" | "floor" | "round";
     padding?: boolean;
+
+    abs?: boolean;
   } = {}
 ): string => {
-  let { rule, precision, tick, truncate, padding } = options;
+  let { rule, precision, tick, truncate, padding, abs } = options;
 
   if (Number.isNaN(value)) {
     return "--";
@@ -36,7 +38,10 @@ export const parseNumber = (
     );
   }
 
-  const d = new Decimal(value);
+  let d = new Decimal(value);
+  if (abs) {
+    d = d.abs();
+  }
   if (rule === "percentages") {
     return `${d.mul(100).toFixed(2)}%`;
   }

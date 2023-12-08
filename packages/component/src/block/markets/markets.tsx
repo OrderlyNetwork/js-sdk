@@ -1,34 +1,34 @@
-import { FC, useMemo, useState } from "react";
+import { FC } from "react";
 import { SearchForm } from "@/block/markets/sections/search";
 import { MarketListView } from "@/block/markets/sections/listView";
-import { SortDirection } from "@/block/markets/sections/sortItem";
 import { type API } from "@orderly.network/types";
+import { useDataSource } from "./useDataSource";
+import { SortDirection } from "./types";
 
 export interface MarketsProps {
-  dataSource?: API.MarketInfo[];
+  dataSource?: API.MarketInfoExt[];
   onSortBy?: (key: string, direction: SortDirection) => void;
-  onItemClick?: (item: API.MarketInfo) => void;
+  onItemClick?: (item: API.MarketInfoExt) => void;
 
   className?: string;
 }
 
 export const Markets: FC<MarketsProps> = (props) => {
-  const [searchKey, setSearchKey] = useState<string>("");
-
-  const dataSource = useMemo(() => {
-    if (searchKey) {
-      return props.dataSource?.filter((item) =>
-        new RegExp(searchKey, "i").test(item.symbol)
-      );
-    }
-    return props.dataSource;
-  }, [props.dataSource, searchKey]);
+  const [dataSource, { searchKey, onSearch, onSort }] = useDataSource(
+    props.dataSource
+  );
 
   return (
     <div className="orderly-flex orderly-flex-col orderly-h-screen">
-      <h3 className="orderly-text-lg orderly-text-base-contrast orderly-py-3">Markets</h3>
-      <SearchForm onChange={setSearchKey} value={searchKey} />
-      <MarketListView dataSource={dataSource} onItemClick={props.onItemClick} />
+      <h3 className="orderly-text-lg orderly-text-base-contrast orderly-py-3">
+        Markets
+      </h3>
+      <SearchForm onChange={onSearch} value={searchKey} />
+      <MarketListView
+        dataSource={dataSource}
+        onItemClick={props.onItemClick}
+        onSort={onSort}
+      />
     </div>
   );
 };

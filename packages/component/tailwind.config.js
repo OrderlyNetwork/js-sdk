@@ -168,13 +168,13 @@ module.exports = {
       addBase({
         html: {
           fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          backgroundColor: "rgb(var(--orderly-color-base-900))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },
         body: {
           fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          backgroundColor: "rgb(var(--orderly-color-base-900))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },

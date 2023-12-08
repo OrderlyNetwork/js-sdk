@@ -34,25 +34,31 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80">
+    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80 md:orderly-h-[70px] md:orderly-text-[20px] md:orderly-justify-center md:orderly-gap-5">
       <div
-        className={cn("orderly-font-semibold orderly-flex orderly-items-center", {
-          "orderly-text-trade-profit": middlePrice > prevLastPrice,
-          "orderly-text-trade-loss": middlePrice < prevLastPrice,
-        })}
+        className={cn(
+          "orderly-font-semibold orderly-flex orderly-items-center md:orderly-font-normal md:orderly-relative md:orderly-pr-4",
+          {
+            "orderly-text-trade-profit": middlePrice > prevLastPrice,
+            "orderly-text-trade-loss": middlePrice < prevLastPrice,
+          }
+        )}
       >
         <Numeral precision={quote_dp}>{middlePrice}</Numeral>
         {prevLastPrice !== middlePrice && (
           <MoveUpIcon
             size={14}
             color="currentcolor"
-            className={cn({
+            className={cn("md:orderly-absolute md:orderly-right-0", {
               "orderly-rotate-180": middlePrice < prevLastPrice,
             })}
           />
         )}
       </div>
-      <div className="orderly-flex orderly-items-center orderly-gap-1" onClick={onMarkPrice}>
+      <div
+        className="orderly-flex orderly-items-center orderly-gap-1 md:orderly-text-base"
+        onClick={onMarkPrice}
+      >
         <Flag size={14} className="orderly-text-yellow-400" />
         <Numeral precision={quote_dp}>{markPrice}</Numeral>
       </div>

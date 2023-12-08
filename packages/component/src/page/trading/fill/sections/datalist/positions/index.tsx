@@ -15,26 +15,20 @@ import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
 import { TabContext } from "@/tab";
+import { useTabContext } from "@/tab/tabContext";
 
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
-  const tabContext = useContext(TabContext);
-
-  //
-
-  const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
-    "showAllSymbol_position",
-    true
-  );
+  const { data: tabExtraData } = useTabContext();
 
   const [symbol, setSymbol] = React.useState(() =>
-    showAllSymbol ? "" : context.symbol
+    tabExtraData.showAllSymbol ? "" : context.symbol
   );
 
-  const onShowAllSymbolChange = (isAll: boolean) => {
-    setSymbol(isAll ? "" : context.symbol);
-    setShowAllSymbol(isAll);
-  };
+  // const onShowAllSymbolChange = (isAll: boolean) => {
+  //   setSymbol(isAll ? "" : context.symbol);
+  //   setShowAllSymbol(isAll);
+  // };
 
   const [data, info, { loading }] = usePositionStream(symbol);
   const { state } = useAccount();
@@ -93,8 +87,7 @@ export const PositionPane = () => {
       isLoading={loading}
       onLimitClose={onLimitClose}
       onMarketClose={onMarketClose}
-      showAllSymbol={showAllSymbol}
-      onShowAllSymbolChange={onShowAllSymbolChange}
+      showAllSymbol={tabExtraData.showAllSymbol}
       onSymbolChange={context.onSymbolChange}
     />
   );

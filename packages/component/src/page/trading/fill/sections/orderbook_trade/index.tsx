@@ -2,6 +2,8 @@ import { MyOrderBook } from "@/page/trading/xs/sections/orderbook";
 import { TabPane, Tabs } from "@/tab";
 import { FC, useState } from "react";
 import { TradeHistoryFull } from "./tradingHistory";
+import { ScrollArea } from "@/scrollArea";
+import { MemorizedScrollPane } from "@/scrollArea/pane";
 
 interface Props {
   symbol: string;
@@ -9,11 +11,13 @@ interface Props {
 
 export const MyOrderBookAndTrade: FC<Props> = (props) => {
   const [value, setValue] = useState("orderbook");
+
   return (
     <Tabs
       value={value}
       onTabChange={(value) => setValue(value)}
       allowUngroup
+      fullWidth
       minWidth={280}
       tabBarClassName="orderly-h-[48px] orderly-text-sm"
     >
@@ -23,7 +27,9 @@ export const MyOrderBookAndTrade: FC<Props> = (props) => {
         </div>
       </TabPane>
       <TabPane title="Last trades" value="tradeHistory">
-        <TradeHistoryFull symbol={props.symbol} />
+        <MemorizedScrollPane>
+          <TradeHistoryFull symbol={props.symbol} />
+        </MemorizedScrollPane>
       </TabPane>
     </Tabs>
   );

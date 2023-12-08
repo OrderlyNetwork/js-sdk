@@ -1,6 +1,5 @@
 import { FC, useContext, useMemo } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
-import { EyeOff } from "lucide-react";
 import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";

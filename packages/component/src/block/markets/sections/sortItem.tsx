@@ -1,16 +1,8 @@
 import { FC, ReactNode, useCallback } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/utils/css";
 import { ArrowIcon } from "@/icon";
 import { cx } from "class-variance-authority";
-
-export enum SortDirection {
-  NONE,
-  ASC,
-  DESC,
-}
-
-export type SortKey = "vol" | "price" | "change";
+import { SortDirection, type SortKey } from "../types";
 
 export type currentValue = {
   key?: SortKey;
@@ -32,11 +24,14 @@ export const SortItem: FC<SortItemProps> = (props) => {
 
   return (
     <div
-      className={cn("orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer", {
-        "orderly-text-base-contrast":
-          props.currentValue?.key === props.value &&
-          props.currentValue.direction !== SortDirection.NONE,
-      })}
+      className={cn(
+        "orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer",
+        {
+          "orderly-text-base-contrast":
+            props.currentValue?.key === props.value &&
+            props.currentValue.direction !== SortDirection.NONE,
+        }
+      )}
       onClick={onClick}
     >
       <span>{props.label}</span>
@@ -55,9 +50,3 @@ export const SortItem: FC<SortItemProps> = (props) => {
     </div>
   );
 };
-
-// (props.currentValue?.direction === SortDirection.ASC ? (
-//   <ChevronDown size={14} />
-// ) : (
-//   <ChevronUp size={14} />
-// ))

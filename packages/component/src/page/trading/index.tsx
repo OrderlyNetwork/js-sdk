@@ -12,7 +12,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
-      <Page xs={<XSTradingPage {...props} />}>
+      <Page md={<XSTradingPage {...props} />}>
         <FullTradingPage {...props} />
       </Page>
     </TradingPageProvider>

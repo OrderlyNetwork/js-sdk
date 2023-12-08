@@ -14,13 +14,15 @@ export const SeparatedListView = <T,>(props: SeparatedListViewProps<T>) => {
     [props.dataSource]
   );
 
-  return ListView({
-    ...rest,
-    renderItem: (item: T, index) => (
-      <React.Fragment key={index}>
-        {renderItem(item, index)}
-        {index + 1 < length ? renderSeparator?.(item, index) : null}
-      </React.Fragment>
-    ),
-  });
+  return (
+    <ListView
+      renderItem={(item: T, index) => (
+        <React.Fragment key={index}>
+          {renderItem(item, index)}
+          {index + 1 < length ? renderSeparator?.(item, index) : null}
+        </React.Fragment>
+      )}
+      {...rest}
+    />
+  );
 };

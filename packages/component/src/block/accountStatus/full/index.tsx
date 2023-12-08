@@ -1,8 +1,18 @@
 import Button from "@/button";
 import { Assets } from "./assets";
 import { Divider } from "@/divider";
+import { FC, useContext } from "react";
+import { AssetsContext } from "@/provider";
 
-export const AccountInfo = () => {
+interface Props {
+  // onWithdraw?: () => void;
+  // onDeposit?: () => void;
+}
+
+export const AccountInfo: FC<Props> = (props) => {
+  const { visible, toggleVisible, onDeposit, onWithdraw } =
+    useContext(AssetsContext);
+
   return (
     <>
       <div className="orderly-flex orderly-items-center orderly-py-4">
@@ -14,10 +24,20 @@ export const AccountInfo = () => {
           Account
         </div>
         <div className="orderly-flex orderly-gap-2">
-          <Button size={"small"} variant={"outlined"} color={"tertiary"}>
+          <Button
+            size={"small"}
+            variant={"outlined"}
+            color={"tertiary"}
+            onClick={() => onWithdraw?.()}
+          >
             Withdraw
           </Button>
-          <Button size={"small"} variant={"outlined"} color={"tertiary"}>
+          <Button
+            size={"small"}
+            variant={"outlined"}
+            color={"tertiary"}
+            onClick={() => onDeposit?.()}
+          >
             Deposit
           </Button>
         </div>

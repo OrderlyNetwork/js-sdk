@@ -18,7 +18,6 @@ import { TabContext } from "@/tab";
 
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
-  const tabContext = useContext(TabContext);
 
   //
 
@@ -83,7 +82,6 @@ export const PositionPane = () => {
       })
       .catch(() => {});
   }, []);
-
 
   return (
     <PositionsView

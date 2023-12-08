@@ -16,8 +16,11 @@ const Checkbox = React.forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn("orderly-flex orderly-items-center orderly-justify-center orderly-text-base-100")}
+      className={cn(
+        "orderly-flex orderly-items-center orderly-justify-center orderly-text-base-100"
+      )}
     >
+      {/*@ts-ingor*/}
       <Check size={15} />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>

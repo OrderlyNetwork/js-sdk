@@ -6,20 +6,7 @@ import { ListView } from "@/listView";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { SymbolProvider } from "@/provider";
 import { API } from "@orderly.network/types";
-
-export interface PositionsViewProps {
-  dataSource: any[] | null;
-  aggregated: AggregatedData;
-  // actions
-  onLimitClose?: (position: any) => void;
-  onMarketClose?: (position: any) => void;
-  onShowAllSymbolChange?: (isAll: boolean) => void;
-  showAllSymbol?: boolean;
-  onMarketCloseAll?: () => void;
-  loadMore?: () => void;
-  isLoading?: boolean;
-  onSymbolChange?: (symbol: API.Symbol) => void;
-}
+import { PositionsViewProps } from "./types";
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (

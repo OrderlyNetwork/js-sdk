@@ -23,3 +23,5 @@ export type NetworkId = "testnet" | "mainnet";
 export const ARBITRUM_TESTNET_CHAINID = 421613;
 export const ARBITRUM_MAINNET_CHAINID = 42161;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
+
+export const MEDIA_TABLE = "(max-width: 768px)";

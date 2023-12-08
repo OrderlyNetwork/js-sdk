@@ -238,7 +238,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       return;
     }
 
-    console.log("currentWallet", currentWallet, account, currentChainId);
+    // console.log("currentWallet", currentWallet, account, currentChainId);
 
     if (
       !!currentWallet &&

@@ -1,5 +1,11 @@
 import { useLocalStorage } from "@orderly.network/hooks";
-import React, { FC, PropsWithChildren, useCallback, useState } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 export interface TabContextState {
   contentVisible: boolean;
@@ -9,6 +15,8 @@ export interface TabContextState {
 }
 
 const TabContext = React.createContext<TabContextState>({} as TabContextState);
+
+const useTabContext = () => useContext(TabContext);
 
 const TabContextProvider: FC<
   PropsWithChildren<{
@@ -46,4 +54,4 @@ const TabContextProvider: FC<
   );
 };
 
-export { TabContext, TabContextProvider };
+export { TabContext, useTabContext, TabContextProvider };

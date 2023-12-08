@@ -32,6 +32,7 @@ interface TabListProps {
   tabBarExtra?: ReactNode | TabBarExtraRender;
   className?: string;
   showIdentifier?: boolean;
+  fullWidth?: boolean;
 }
 
 type IndicatorBounding = {
@@ -55,10 +56,6 @@ export const TabList: FC<TabListProps> = (props) => {
     const { left, width } = target.getBoundingClientRect();
 
     const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
-
-    //
-
-    // setLeft(left - parentLeft + (width - 40) / 2);
 
     setBounding(() => ({
       // left: left - parentLeft + (width - 40) / 2,
@@ -111,7 +108,12 @@ export const TabList: FC<TabListProps> = (props) => {
       )}
     >
       <div className="orderly-pb-1 orderly-relative orderly-flex-1  orderly-h-full orderly-flex orderly-items-center">
-        <div className="orderly-flex orderly-space-x-5" ref={boxRef}>
+        <div
+          className={cn("orderly-flex orderly-space-x-5 orderly-h-full", {
+            "orderly-w-full": props.fullWidth,
+          })}
+          ref={boxRef}
+        >
           {props.tabs.map((item, index) => {
             return (
               <Tab
@@ -119,6 +121,7 @@ export const TabList: FC<TabListProps> = (props) => {
                 title={item.title}
                 value={item.value ?? index}
                 disabled={item.disabled}
+                fullWidth={props.fullWidth}
                 active={
                   !!item.value &&
                   !!props.value &&

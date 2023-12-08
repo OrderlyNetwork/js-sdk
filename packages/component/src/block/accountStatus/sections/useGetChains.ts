@@ -1,8 +1,6 @@
 import { useContext, useMemo } from "react";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
-import { useChains,useWalletConnector } from "@orderly.network/hooks";
-
-import { API } from "@orderly.network/types";
+import { useChains, useWalletConnector } from "@orderly.network/hooks";
 
 export function useGetChains() {
   const { enableSwapDeposit } = useContext(OrderlyAppContext);

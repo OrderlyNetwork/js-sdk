@@ -16,7 +16,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const [cellHeight, setCellHeight] = useState(20);
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
-      level: 7,
+      level: 10,
     });
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];

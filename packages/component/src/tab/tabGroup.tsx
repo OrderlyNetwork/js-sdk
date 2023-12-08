@@ -19,17 +19,17 @@ export const TabGroup: FC<Props> = (props) => {
         return (
           <div
             key={index}
-            className="orderly-relative orderly-flex orderly-flex-col"
+            className="orderly-relative orderly-flex orderly-flex-col orderly-border-l orderly-border-divider first:orderly-border-l-0"
           >
             <div
               className={cn(
-                "orderly-border-b orderly-border-divider orderly-flex orderly-items-center",
+                "orderly-border-b orderly-border-divider orderly-flex orderly-items-center orderly-px-3",
                 props.tabBarClassName
               )}
             >
               {header.title}
             </div>
-            <div className="orderly-flex-1">{child}</div>
+            <div className="orderly-flex-1 ">{child}</div>
           </div>
         );
       })}

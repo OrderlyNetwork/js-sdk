@@ -3,12 +3,14 @@ import { Numeral } from "@/text";
 import { Progress } from "@/progress";
 
 import { ChevronDown } from "lucide-react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, useCollateral } from "@orderly.network/hooks";
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/collapsible/collapsible";
+import { MemorizedLeverage } from "@/block/accountStatus/full/leverage";
+import { MemorizedAssetsDetail } from "@/block/accountStatus/full/assetsDetail";
 
 interface AssetsProps {
   totalBalance: number;
@@ -20,6 +22,10 @@ export const Assets: FC<AssetsProps> = (props) => {
   // const [expand, { toggle }] = useBoolean(false);
 
   const [collapsed, setCollapsed] = useLocalStorage(KEY, 1);
+  const { totalCollateral, freeCollateral, totalValue, availableBalance } =
+    useCollateral({
+      dp: 2,
+    });
 
   return (
     <Collapsible
@@ -49,7 +55,7 @@ export const Assets: FC<AssetsProps> = (props) => {
                 </span>
               }
             >
-              {props.totalBalance}
+              {availableBalance}
             </Numeral>
           </div>
         </div>
@@ -65,57 +71,13 @@ export const Assets: FC<AssetsProps> = (props) => {
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent>
-        <div
-          className={
-            "orderly-text-xs orderly-py-4 orderly-mb-4 orderly-border-b orderly-border-t orderly-border-divider orderly-space-y-2"
-          }
-        >
-          <div className={"orderly-flex orderly-justify-between"}>
-            <span className={"orderly-text-base-contrast-54"}>
-              Free collateral
-            </span>
-            <Numeral
-              surfix={
-                <span className={"orderly-text-base-contrast-36"}>USDC</span>
-              }
-            >
-              213131
-            </Numeral>
-          </div>
-          <div className={"orderly-flex orderly-justify-between"}>
-            <span className={"orderly-text-base-contrast-54"}>
-              Unsettled PnL
-            </span>
-            <Numeral
-              surfix={
-                <span className={"orderly-text-base-contrast-36"}>USDC</span>
-              }
-            >
-              213131
-            </Numeral>
-          </div>
-        </div>
+        <MemorizedAssetsDetail />
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
         <Progress value={40} />
       </div>
-      <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
-        <div className={"orderly-flex orderly-flex-col"}>
-          <Numeral rule={"percentages"} coloring>
-            0.72
-          </Numeral>
-          <span className={"orderly-text-base-contrast-54 orderly-text-2xs"}>
-            Margin ratio
-          </span>
-        </div>
-        <div className={"orderly-flex orderly-flex-col orderly-items-end"}>
-          <span>727%</span>
-          <span className={"orderly-text-base-contrast-54 orderly-text-2xs"}>
-            Account leverage
-          </span>
-        </div>
-      </div>
+      <MemorizedLeverage />
     </Collapsible>
   );
 };

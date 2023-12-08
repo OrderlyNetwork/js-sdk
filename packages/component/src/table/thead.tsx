@@ -11,7 +11,7 @@ export interface THeadProps {
 
 export const THead: FC<THeadProps> = (props) => {
   return (
-    <thead className={cn("sticky top-0", props.className)}>
+    <thead className={cn("orderly-sticky orderly-top-0", props.className)}>
       <tr>
         {props.columns.map((column, index) => {
           return (

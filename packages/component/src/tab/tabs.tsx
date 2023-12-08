@@ -1,4 +1,13 @@
-import React, { Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  ForwardedRef,
+  forwardRef,
+  Fragment,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { Tab, TabProps } from "./tab";
 import { TabPaneProps } from "./tabPane";
@@ -13,6 +22,7 @@ export interface TabsProps {
   tabBarExtra?: ReactNode | TabBarExtraRender;
   extraData?: any;
   keepAlive?: boolean;
+  fullWidth?: boolean;
   // 是否显示tab指示器，default: true
   showIdentifier?: boolean;
 
@@ -34,12 +44,17 @@ enum TabViewMode {
 }
 
 // it's controlled component;
-export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
-  showIdentifier = true,
-  collapsed = false,
-  onToggleCollapsed,
-  ...props
-}) => {
+const TabsInner = (
+  {
+    showIdentifier = true,
+    collapsed = false,
+    onToggleCollapsed,
+    ...props
+  }: PropsWithChildren<TabsProps>,
+  ref: ForwardedRef<{
+    getContainer: () => HTMLDivElement;
+  }>
+) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewMode, setViewMode] = useState(TabViewMode.Tab);
 
@@ -128,6 +143,12 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
     };
   }, [props.allowUngroup, props.minWidth, children.length]);
 
+  useImperativeHandle(ref, () => {
+    return {
+      getContainer: () => containerRef.current!,
+    };
+  });
+
   const body =
     viewMode === TabViewMode.Tab ? (
       <>
@@ -138,6 +159,7 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
           tabBarExtra={props.tabBarExtra}
           showIdentifier={showIdentifier}
           className={props.tabBarClassName}
+          fullWidth={props.fullWidth}
         />
         <TabContent>{child}</TabContent>
       </>
@@ -159,3 +181,5 @@ export const Tabs: FC<PropsWithChildren<TabsProps>> = ({
     </TabContextProvider>
   );
 };
+
+export const Tabs = forwardRef(TabsInner);

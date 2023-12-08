@@ -4,7 +4,7 @@ import { PositionPane } from "./position";
 import { OrdersPane } from "@/page/trading/xs/sections/dataList/orders";
 import { HistoryPane } from "./history";
 import { PositionTabTitle } from "./position/tabTitle";
-import { OrdersTabTitle } from "./orders/tabTitle";
+import { MemoizedOrdersTabTitle } from "./orders/tabTitle";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -18,7 +18,7 @@ export const DataListView = () => {
       <TabPane title={<PositionTabTitle />} value="positions">
         <PositionPane />
       </TabPane>
-      <TabPane title={<OrdersTabTitle />} value="orders">
+      <TabPane title={<MemoizedOrdersTabTitle />} value="orders">
         <OrdersPane />
       </TabPane>
       <TabPane title="History" value="history">

@@ -7,11 +7,13 @@ import { create } from "@/modal/modalHelper";
 import { useModal } from "@/modal";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
+import { Dialog, DialogContent } from "@/dialog";
 
 type activeName = "deposit" | "withdraw";
 
 interface DepositAndWithdrawProps {
   activeTab: activeName;
+  // mode?: "sheet" | "dialog";
   onCancel?: () => void;
   onOk?: () => void;
 }
@@ -28,7 +30,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       >
         <TabPane
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs md:orderly-text-xl">
+              {/* @ts-ignore */}
               <ArrowDownToLine size={15} /> <span>Deposit</span>
             </div>
           }
@@ -50,7 +53,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         </TabPane>
         <TabPane
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs md:orderly-text-xl">
+              {/* @ts-ignore */}
               <ArrowUpToLine size={15} /> <span>Withdraw</span>
             </div>
           }
@@ -80,6 +84,25 @@ export const DepositAndWithdrawWithSheet = create<DepositAndWithdrawProps>(
           <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
         </SheetContent>
       </Sheet>
+    );
+  }
+);
+
+export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
+  (props) => {
+    const { visible, hide, resolve, reject, onOpenChange } = useModal();
+
+    const onOk = (data?: any) => {
+      resolve(data);
+      hide();
+    };
+
+    return (
+      <Dialog open={visible} onOpenChange={onOpenChange}>
+        <DialogContent className="orderly-p-5">
+          <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
+        </DialogContent>
+      </Dialog>
     );
   }
 );

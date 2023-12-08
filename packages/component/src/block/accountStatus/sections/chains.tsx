@@ -16,9 +16,11 @@ import {
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
+import { cn } from "@/utils/css";
 
 interface ChainsProps {
   disabled?: boolean;
+  className?: string;
 }
 
 export const Chains: FC<ChainsProps> = (props) => {
@@ -85,9 +87,10 @@ export const Chains: FC<ChainsProps> = (props) => {
           color={"buy"}
           loading={settingChain}
           disabled={disabled}
-          className={
-            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent"
-          }
+          className={cn(
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+            props.className
+          )}
         >
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />

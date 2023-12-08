@@ -24,8 +24,8 @@ export const Header: FC<Props> = (props) => {
   }, [mode]);
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs orderly-pb-2">
-      <div className="orderly-flex orderly-flex-col">
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs md:orderly-text-3xs orderly-pb-2 md:orderly-pt-2">
+      <div className="orderly-flex orderly-flex-col md:orderly-flex-row md:orderly-items-center">
         <span>Price</span>
         <span>{`(${props.quote})`}</span>
       </div>
@@ -35,7 +35,7 @@ export const Header: FC<Props> = (props) => {
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
         }
       >
-        <div className="orderly-flex orderly-flex-col orderly-text-base-contrast-36 orderly-text-4xs orderly-items-end orderly-mr-1">
+        <div className="orderly-flex orderly-flex-col md:orderly-flex-row md:orderly-items-center orderly-text-base-contrast-36 orderly-text-4xs orderly-items-end orderly-mr-1">
           <span>{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>

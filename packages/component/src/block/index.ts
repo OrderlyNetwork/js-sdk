@@ -1,7 +1,7 @@
 import { TradeHistory } from "./tradeHistory";
 
 export { PositionsView, ClosePositionPane } from "./positions";
-export type { PositionsViewProps } from "./positions";
+export type { PositionsViewProps } from "./positions/types";
 
 export { OrderEntry } from "./orderEntry";
 export type { OrderEntryProps } from "./orderEntry";

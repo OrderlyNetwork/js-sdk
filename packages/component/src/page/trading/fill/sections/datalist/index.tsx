@@ -3,6 +3,10 @@ import { memo, useState } from "react";
 import { PositionPane } from "./positions";
 import { MyOrders } from "./orders";
 import { OrderStatus } from "@orderly.network/types";
+import { MemoizedOrdersTabTitle } from "@/page/trading/xs/sections/dataList/orders/tabTitle";
+import { Checkbox } from "@/checkbox";
+import { Label } from "@/label";
+import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -12,12 +16,20 @@ export const DataListView = () => {
       value={activeTab}
       onTabChange={setActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm"
+      tabBarExtra={<TabBarExtraNode />}
+      extraData={{
+        showAllSymbol: false,
+      }}
     >
       <TabPane title={"Portfolio"} value="positions" className="orderly-px-3">
         <PositionPane />
         {/* <div>Positions</div> */}
       </TabPane>
-      <TabPane title={"pending"} value="orders" className="orderly-px-3">
+      <TabPane
+        title={<MemoizedOrdersTabTitle />}
+        value="orders"
+        className="orderly-px-3"
+      >
         {/* <OrdersPane /> */}
         <MyOrders status={OrderStatus.INCOMPLETE} />
       </TabPane>
