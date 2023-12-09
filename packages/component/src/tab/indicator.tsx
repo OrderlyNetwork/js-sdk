@@ -20,7 +20,7 @@ export const TabIndicator: FC<TabIndicatorProps> = ({
   return (
     <div
       className={cn(
-        "orderly-absolute orderly-bottom-0 orderly-left-0 orderly-h-[3px] orderly-bg-base-contrast orderly-transition-all",
+        "orderly-absolute orderly-bottom-0 orderly-left-0 orderly-h-[3px] md:orderly-h-[2px] orderly-bg-base-contrast orderly-transition-transform",
         className
       )}
       style={cssTransform}

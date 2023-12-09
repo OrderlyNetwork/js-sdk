@@ -26,9 +26,9 @@ export const TickerMask: FC<Props> = (props) => {
       className={cn(
         "orderly-absolute orderly-top-0 orderly-bottom-0 orderly-w-[70px] orderly-flex orderly-items-center",
         {
-          "orderly-left-0 orderly-bg-gradient-to-r orderly-from-[10%] orderly-from-base-800 orderly-to-base-800/10  orderly-pl-1":
+          "orderly-left-0 orderly-bg-gradient-to-r orderly-from-[10%] orderly-from-base-900 orderly-to-base-900/10  orderly-pl-1":
             props.leading,
-          "orderly-right-0 orderly-bg-gradient-to-r orderly-from-base-800/10 orderly-to-[70%] orderly-to-base-800 orderly-justify-end orderly-pr-1":
+          "orderly-right-0 orderly-bg-gradient-to-r orderly-from-base-900/10 orderly-to-[70%] orderly-to-base-900 orderly-justify-end orderly-pr-1":
             props.tailing,
         }
       )}

@@ -21,8 +21,10 @@ import { toast } from "@/toast";
 import { Logo } from "@/logo";
 import { modal } from "@/modal";
 import { InfoIcon } from "@/icon";
+import { Dialog, DialogHeader } from "@/dialog";
+import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 
-interface WalletConnectProps {
+export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
   onEnableTrading?: (remember: boolean) => Promise<any>;
   onComplete?: () => void;
@@ -114,7 +116,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           subtitle="Confirm you own this wallet"
         />
         <ListTile
-        className="orderly-text-xs"
+          className="orderly-text-xs"
           disabled={status < AccountStatusEnum.SignedIn}
           avatar={
             <StepItem
@@ -131,7 +133,10 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center orderly-">
-        <div className="orderly-text-base-contrast-54 orderly-text-xs" onClick={showRememberHint}>
+        <div
+          className="orderly-text-base-contrast-54 orderly-text-xs"
+          onClick={showRememberHint}
+        >
           <span>Remember me</span>
           <InfoIcon className="orderly-inline-block orderly-ml-2" size={14} />
         </div>
@@ -141,7 +146,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
-        className="orderly-text-xs orderly-text-base-contrast"
+          className="orderly-text-xs orderly-text-base-contrast"
           fullWidth
           disabled={handleStep > 0}
           onClick={onClick}
@@ -153,43 +158,3 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     </div>
   );
 };
-
-export const WalletConnectSheet = create<WalletConnectProps>((props) => {
-  const { visible, hide, resolve, reject, onOpenChange } = useModal();
-  // get account status and handle sign in and enable trading
-  const { account, createOrderlyKey, createAccount } = useAccount();
-  // @ts-ignore
-  const { logoUrl } = useContext(OrderlyContext);
-
-  const onSignIn = useCallback(() => {
-    return createAccount().catch((err: Error) => {
-      reject();
-      toast.error(err.message);
-      hide();
-    });
-  }, [account]);
-
-  const onComplete = useCallback(() => {
-    toast.success("Wallet connected");
-    resolve();
-    hide();
-  }, []);
-
-  return (
-    <Sheet open={visible} onOpenChange={onOpenChange}>
-      <SheetContent>
-        <SheetHeader leading={<Logo image={logoUrl} />}>
-          <SheetTitle>Connect wallet</SheetTitle>
-        </SheetHeader>
-        <WalletConnect
-          onEnableTrading={createOrderlyKey}
-          onSignIn={onSignIn}
-          onComplete={onComplete}
-          {...props}
-        />
-      </SheetContent>
-    </Sheet>
-  );
-});
-
-// register("walletConnect", WalletConnectSheet);

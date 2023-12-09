@@ -1,12 +1,6 @@
-import React, {
-  FC,
-  ReactNode,
-  useContext,
-  useMemo,
-  isValidElement,
-} from "react";
+import React, { FC, ReactNode, useRef } from "react";
 import { cn } from "@/utils/css";
-import { TabContext, type TabContextState } from "./tabContext";
+import { type TabContextState } from "./tabContext";
 
 export type getTitleFunction = (context: TabContextState) => string;
 export type TabTitle = ReactNode | getTitleFunction;
@@ -23,11 +17,12 @@ export interface TabProps {
 
 export const Tab: FC<TabProps> = (props) => {
   const { active, disabled, title, fullWidth } = props;
+  const ref = useRef<HTMLButtonElement>(null);
 
   return (
     <button
       className={cn(
-        "orderly-text-base-contrast-36 orderly-h-full",
+        "orderly-text-base-contrast-36 orderly-h-full orderly-tab-item",
         active && "orderly-text-base-contrast orderly-active",
         disabled && "orderly-cursor-not-allowed orderly-text-slate-300",
         fullWidth && "orderly-flex-1"

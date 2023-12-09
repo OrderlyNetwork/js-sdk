@@ -113,7 +113,7 @@ const Select: FC<SelectProps> = ({
         <div
           ref={triggerRef}
           className={cn(
-            "orderly-inline-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-2",
+            "orderly-inline-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline orderly-space-x-2 orderly-cursor-pointer",
             selectVariants({
               size,
               disabled: disabled || options.length === 0,

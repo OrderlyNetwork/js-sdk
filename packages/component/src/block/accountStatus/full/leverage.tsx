@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/hooks";
 import { Numeral } from "@/text";
 import { Pencil } from "lucide-react";
+import { LeverageDialog } from "./leverageDialog";
 
 const LeverageAndMarginRatio = () => {
   const { marginRatio, currentLeverage } = useMarginRatio();
@@ -22,11 +23,15 @@ const LeverageAndMarginRatio = () => {
           <Numeral surfix={"x"}>{currentLeverage}</Numeral>
 
           <span className={"orderly-text-base-contrast-54"}>/</span>
-          <button className="orderly-flex orderly-items-center orderly-gap-1">
-            <span>{`${maxLeverage ?? "-"}x`}</span>
-            {/* @ts-ignore */}
-            <Pencil size={14} className="orderly-text-base-contrast-54" />
-          </button>
+          <LeverageDialog>
+            <button className="orderly-flex orderly-items-center orderly-gap-1">
+              <span>{`${maxLeverage ?? "-"}x`}</span>
+              {typeof maxLeverage !== "undefined" && (
+                // @ts-ignore
+                <Pencil size={14} className="orderly-text-base-contrast-54" />
+              )}
+            </button>
+          </LeverageDialog>
         </div>
         <div className={"orderly-text-base-contrast-54 orderly-text-3xs"}>
           Account leverage

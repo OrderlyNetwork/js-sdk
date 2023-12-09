@@ -23,6 +23,7 @@ import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
 import { cn } from "@/utils/css";
 import { cx } from "class-variance-authority";
+import { LeverageEditor } from "./leverageEditor";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -50,13 +51,13 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
 
   // console.log("leverageLevers", leverageLevers);
 
-  const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
+  // const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
 
-  const leverageValue = useMemo(() => {
-    const index = leverageLevers.findIndex((item) => item === leverage);
+  // const leverageValue = useMemo(() => {
+  //   const index = leverageLevers.findIndex((item) => item === leverage);
 
-    return index;
-  }, [leverage, leverageLevers]);
+  //   return index;
+  // }, [leverage, leverageLevers]);
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
@@ -104,11 +105,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   toggleVisible();
                 }}
               >
-                {visible ? (
-                  <EyeOffIcon size={16} />
-                ) : (
-                  <EyeIcon size={16} />
-                )}
+                {visible ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
               </button>
             </div>
           }
@@ -223,7 +220,25 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           }
           value={
             <div className="orderly-h-[50px] orderly-mt-2 orderly-mx-2 orderly-text-2xs">
-              <Slider
+              <LeverageEditor
+                leverageLevers={leverageLevers}
+                onSave={(value) => {
+                  return update(value).then(
+                    (res: any) => {
+                      toast.success("Leverage updated");
+                      return res;
+                    },
+                    (err: Error) => {
+                      //
+                      toast.error(err.message);
+                      // setLeverage(maxLeverage ?? 1);
+                      throw err;
+                    }
+                  );
+                }}
+                maxLeverage={maxLeverage}
+              />
+              {/* <Slider
                 min={0}
                 max={leverageLevers.length - 1}
                 color={"primary"}
@@ -256,7 +271,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                     }
                   );
                 }}
-              />
+              /> */}
             </div>
           }
         />

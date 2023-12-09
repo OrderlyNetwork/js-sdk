@@ -30,30 +30,6 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-// const DialogContainer = React.forwardRef<
-//   React.ElementRef<typeof DialogPrimitive.Content>,
-//   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-//     closable?: boolean;
-//   }
-// >(({ className, children, closable = true, ...props }, ref) => (
-//   <DialogPrimitive.Content
-//     ref={ref}
-//     className={cn(
-//       "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] sm:orderly-max-w-lg orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded md:orderly-w-full",
-//       className
-//     )}
-//     {...props}
-//   >
-//     {children}
-//     {closable && (
-//       <DialogPrimitive.Close className="orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
-//         <CloseIcon size={20} />
-//         <span className="orderly-sr-only">Close</span>
-//       </DialogPrimitive.Close>
-//     )}
-//   </DialogPrimitive.Content>
-// ));
-
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {

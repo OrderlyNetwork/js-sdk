@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   PropsWithChildren,
   ReactNode,
@@ -9,9 +9,8 @@ import React, {
 import { Button } from "@/button/button";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@/modal";
-import { WalletConnectSheet } from "@/block/walletConnect";
 import { OrderlyAppContext } from "@/provider";
+import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 
 export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
@@ -31,7 +30,7 @@ export const StatusGuardButton: FC<
         const result = await onWalletConnect();
 
         if (result && result.status < AccountStatusEnum.EnableTrading) {
-          return await modal.show(WalletConnectSheet, {
+          return await showAccountConnectorModal({
             status: result.status,
           });
         } else {
@@ -42,7 +41,7 @@ export const StatusGuardButton: FC<
 
     if (state.status < AccountStatusEnum.EnableTrading) {
       try {
-        return await modal.show(WalletConnectSheet, {
+        return await showAccountConnectorModal({
           status: state.status,
         });
       } catch (err) {}

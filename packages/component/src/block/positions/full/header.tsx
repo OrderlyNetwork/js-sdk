@@ -73,6 +73,7 @@ export const Header: FC<Props> = (props) => {
                   {props.aggregated?.unsettledPnL ?? 0}
                 </Numeral>
                 <button className={"orderly-text-primary-light"}>
+                  {/*@ts-ignore*/}
                   <RefreshCcw size={14} />
                 </button>
               </div>
