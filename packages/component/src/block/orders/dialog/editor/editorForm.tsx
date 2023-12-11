@@ -75,7 +75,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     if (dirtyFields["order_price"] && dirtyFields["order_quantity"]) {
       alertText = (
         <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-          You agree changing the price of ETH-PERP order to{" "}
+          You agree changing the price of {base}-PERP order to{" "}
           <span className="orderly-text-warning">
             {commify(data.order_price!)}
           </span>{" "}
@@ -90,7 +90,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       if (dirtyFields["order_price"]) {
         alertText = (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-            You agree changing the price of ETH-PERP order to{" "}
+            You agree changing the price of {base}-PERP order to{" "}
             <span className="orderly-text-warning">
               {commify(data.order_price!)}
             </span>
@@ -102,7 +102,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       if (dirtyFields["order_quantity"]) {
         alertText = (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-            You agree changing the quantity of ETH-PERP order to{" "}
+            You agree changing the quantity of {base}-PERP order to{" "}
             <span className="orderly-text-warning">
               {commify(data.order_quantity!)}
             </span>
