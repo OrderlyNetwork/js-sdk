@@ -18,6 +18,7 @@ export interface BaseDialogProps {
   onCancel?: () => void;
   footer?: ReactNode;
   onOpenChange?(open: boolean): void;
+  contentClassName?: string;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -60,7 +61,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
             props.onOk?.().finally(() => setLoading(false));
           }}
         >
-          Ok
+          OK
         </Button>
       );
     }
@@ -81,6 +82,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
       <DialogContent
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
+        className={props.contentClassName}
       >
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
