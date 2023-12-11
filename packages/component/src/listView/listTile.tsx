@@ -52,7 +52,7 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
             </div>
           )}
           {props.subtitle && (
-            <div key={"subtitle"} className="orderly-text-3xs orderly-text-base-contrast-54">
+            <div key={"subtitle"} className="orderly-text-3xs desktop:orderly-text-2xs orderly-text-base-contrast-54">
               {props.subtitle}
             </div>
           )}
