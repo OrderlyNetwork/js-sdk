@@ -115,6 +115,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     return modal.confirm({
       title: "Edit Order",
       content: alertText,
+      contentClassName: "desktop:orderly-w-[340px]",
       onOk: () => Promise.resolve(data),
       onCancel: () => {
         return Promise.reject();
