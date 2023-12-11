@@ -87,7 +87,7 @@ export const MSelect: FC<SelectProps> = ({
         disabled={Boolean(disabled)}
         onClick={() => setOpen((open) => !open)}
         className={cn(
-          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs md:orderly-text-xs",
+          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs desktop:orderly-text-xs",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,
@@ -166,7 +166,7 @@ export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
       <button
         type="button"
         className={cn(
-          "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs  md:orderly-text-xs",
+          "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs  desktop:orderly-text-xs",
           className
         )}
         onClick={() => {

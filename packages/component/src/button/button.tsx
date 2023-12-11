@@ -32,9 +32,9 @@ const buttonVariants = cva(
        */
       size: {
         small:
-          "orderly-px-3 orderly-h-[26px] orderly-text-3xs md:orderly-text-2xs",
+          "orderly-px-3 orderly-h-[26px] orderly-text-3xs desktop:orderly-text-2xs",
         default:
-          "orderly-px-4 orderly-py-1 orderly-h-[40px] md:orderly-text-sm",
+          "orderly-px-4 orderly-py-1 orderly-h-[40px] desktop:orderly-text-sm",
         large: "orderly-px-6 orderly-py-3",
       },
       color: {

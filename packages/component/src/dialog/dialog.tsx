@@ -11,7 +11,7 @@ const dialogVariants = cva(
       maxWidth: {
         xs: "orderly-max-w-[340px]",
         sm: "orderly-max-w-[440px]",
-        md: "orderly-max-w-[540px]",
+        desktop: "orderly-max-w-[540px]",
       },
     },
     defaultVariants: {

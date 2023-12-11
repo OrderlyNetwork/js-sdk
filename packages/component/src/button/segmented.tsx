@@ -69,7 +69,7 @@ const _Button = ({
       onClick={(event) => onChange(value)}
       disabled={disabled}
       className={cn(
-        "orderly-min-w-0 orderly-flex-1 orderly-py-1 orderly-bg-fill orderly-text-base-contrast/20 md:orderly-text-xs orderly-relative after:orderly-block after:orderly-bg-fill after:orderly-absolute after:orderly-w-[30px] after:orderly-h-full after:orderly-top-0 after:orderly-z-10 orderly-h-[32px] md:orderly-h-[40px]",
+        "orderly-min-w-0 orderly-flex-1 orderly-py-1 orderly-bg-fill orderly-text-base-contrast/20 desktop:orderly-text-xs orderly-relative after:orderly-block after:orderly-bg-fill after:orderly-absolute after:orderly-w-[30px] after:orderly-h-full after:orderly-top-0 after:orderly-z-10 orderly-h-[32px] desktop:orderly-h-[40px]",
         isActive && "orderly-bg-primary after:orderly-bg-primary",
         isFirstChild &&
           "orderly-rounded-l after:orderly-right-[-15px] after:orderly-skew-x-[-25deg] orderly-pl-[15px]",

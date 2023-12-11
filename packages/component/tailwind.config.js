@@ -14,6 +14,9 @@ module.exports = {
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
   prefix: 'orderly-',
   theme: {
+    screens: {
+      'desktop': '1024px'
+    },
     fontSize: {
       "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
       "3xs": "calc(var(--orderly-font-size-base) - 4px)", // if base is 16px, it will be 12px
