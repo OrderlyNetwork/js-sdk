@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { SymbolProvider } from "@/provider/symbolProvider";
 import { useMarketTradeStream } from "@orderly.network/hooks";
 import { TradeHistory } from "@/block/tradeHistory";
@@ -18,3 +18,5 @@ export const TradeHistoryFull: FC<TradeHistoryProps> = (props) => {
     </SymbolProvider>
   );
 };
+
+export const MemorizedTradeHistoryFull = memo(TradeHistoryFull);

@@ -22,7 +22,7 @@ export const TabBarExtraNode = () => {
     setShowAllSymbol(isAll);
   };
 
-  useEffect(() => updateData("showAllSymbol", showAllSymbol));
+  useEffect(() => updateData("showAllSymbol", showAllSymbol), []);
 
   // const onChecked = (checked: boolean) => {
   //   console.log(checked);

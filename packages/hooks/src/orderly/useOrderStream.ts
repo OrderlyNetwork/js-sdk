@@ -1,6 +1,11 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo } from "react";
-import { OrderSide, OrderEntity, OrderStatus } from "@orderly.network/types";
+import {
+  OrderSide,
+  OrderEntity,
+  OrderStatus,
+  API,
+} from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 
@@ -112,6 +117,9 @@ export const useOrderStream = (params: Params) => {
         // return ordersResponse.mutate().then(() => {
         //   return res;
         // });
+        //Optimistic Updates
+        // ordersResponse.mutate();
+        return res;
       } else {
         throw new Error(res.message);
       }

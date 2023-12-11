@@ -5,7 +5,7 @@ import {
   useSymbolsInfo,
   useEventEmitter,
 } from "@orderly.network/hooks";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, memo, useEffect, useRef, useState } from "react";
 
 interface MyOrderBookProps {
   symbol: string;
@@ -60,3 +60,5 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     </div>
   );
 };
+
+export const MemorizedOrderBook = memo(MyOrderBook);

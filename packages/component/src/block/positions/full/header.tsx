@@ -24,7 +24,7 @@ export const Header: FC<Props> = (props) => {
   return (
     <StatisticStyleProvider
       labelClassName="orderly-text-3xs orderly-text-base-contrast-54"
-      valueClassName="orderly-text-base-contrast/80"
+      valueClassName="orderly-text-base-contrast/80 orderly-tabular-nums"
     >
       <div
         className={

@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { Row } from "./row";
 import type { Column } from "./col";
 import { THead } from "./thead";
@@ -21,6 +21,12 @@ export interface TableProps<RecordType> {
 
   justified?: boolean;
 
+  renderRowContainer?: (
+    record: RecordType,
+    index: number,
+    children: ReactNode
+  ) => React.ReactNode;
+
   generatedRowKey?: (record: RecordType, index: number) => string;
 }
 
@@ -33,7 +39,8 @@ export const Table = <RecordType extends unknown>(
         typeof props.generatedRowKey === "function"
           ? props.generatedRowKey(record, index)
           : index; /// `record.ts_${record.price}_${record.size}_${index}`;
-      return (
+
+      const row = (
         <Row
           key={key}
           columns={props.columns}
@@ -42,6 +49,12 @@ export const Table = <RecordType extends unknown>(
           bordered={props.bordered}
         />
       );
+
+      if (typeof props.renderRowContainer === "function") {
+        return props.renderRowContainer(record, index, row);
+      }
+
+      return row;
     });
   }, [props.dataSource, props.columns, props.generatedRowKey]);
 

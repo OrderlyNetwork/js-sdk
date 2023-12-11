@@ -5,10 +5,14 @@ import { OrderStatus, OrderSide } from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
+import { SymbolProvider } from "@/provider";
+import { NumeralWithCtx } from "@/text/numeralWithCtx";
+import { CancelButton } from "./cancelButton";
 
 interface Props {
   dataSource: any[];
   status: OrderStatus;
+  onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
@@ -50,6 +54,7 @@ export const Listview: FC<Props> = (props) => {
         title: "Price",
         className: "orderly-h-[48px]",
         dataIndex: "price",
+        render: (value: string) => <NumeralWithCtx>{value}</NumeralWithCtx>,
       },
       {
         title: "Est.total",
@@ -93,19 +98,8 @@ export const Listview: FC<Props> = (props) => {
         dataIndex: "action",
         className: "orderly-h-[48px]",
         align: "right",
-        render: (value: string, record) => {
-          return (
-            <Button
-              size="small"
-              variant={"outlined"}
-              color={"tertiary"}
-              onClick={() => {
-                console.log("cancel", record);
-              }}
-            >
-              Cancel
-            </Button>
-          );
+        render: (_: string, record) => {
+          return <CancelButton order={record} onCancel={props.onCancelOrder} />;
         },
       });
     }
@@ -121,6 +115,15 @@ export const Listview: FC<Props> = (props) => {
       headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
       className={"orderly-text-2xs orderly-text-base-contrast-80"}
       generatedRowKey={(record) => record.order_id}
+      renderRowContainer={(record, index, children) => {
+        return (
+          <SymbolProvider
+            key={index}
+            symbol={record.symbol}
+            children={children}
+          />
+        );
+      }}
     />
   );
 };

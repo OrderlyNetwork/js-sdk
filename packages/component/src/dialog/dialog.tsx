@@ -2,6 +2,23 @@ import React, { FC, PropsWithChildren } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/utils/css";
 import { CloseIcon } from "@/icon";
+import { VariantProps, cva } from "class-variance-authority";
+
+const dialogVariants = cva(
+  "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded",
+  {
+    variants: {
+      maxWidth: {
+        xs: "orderly-max-w-[340px]",
+        sm: "orderly-max-w-[440px]",
+        md: "orderly-max-w-[540px]",
+      },
+    },
+    defaultVariants: {
+      maxWidth: "sm",
+    },
+  }
+);
 
 const Dialog = DialogPrimitive.Root;
 
@@ -32,22 +49,17 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    closable?: boolean;
-  }
->(({ children, closable, className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
+    VariantProps<typeof dialogVariants> & {
+      closable?: boolean;
+    }
+>(({ children, closable, className, maxWidth, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    {/* <DialogContainer {...props}>
-      {children}
-    </DialogContainer> */}
-    {/* <DialogContainer ref={ref} {...props} /> */}
+
     <DialogPrimitive.Content
       ref={ref}
-      className={cn(
-        "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] sm:orderly-max-w-lg orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded md:orderly-w-full",
-        className
-      )}
+      className={cn(dialogVariants({ maxWidth }), className)}
       {...props}
     >
       {children}

@@ -27,8 +27,10 @@ const TabContextProvider: FC<
 > = (props) => {
   // const [visible, setVisible] = useState<boolean>(() => props.collapsed);
   const [data, setData] = useState<any>(props.data || {});
+  // const data = {};
 
   const updateData = useCallback((key: string, value: any) => {
+    // console.log("update data", key, value);
     setData((data: any) => {
       return {
         ...data,
@@ -36,6 +38,8 @@ const TabContextProvider: FC<
       };
     });
   }, []);
+
+  console.log("----- tab context ----------", props.data);
 
   return (
     <TabContext.Provider

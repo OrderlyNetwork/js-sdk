@@ -59,7 +59,9 @@ export const Ticker: FC<Props> = (props) => {
   return (
     <StatisticStyleProvider
       labelClassName="orderly-text-4xs orderly-text-base-contrast-54 orderly-break-normal orderly-whitespace-nowrap"
-      valueClassName={"orderly-text-2xs orderly-text-base-contrast-80"}
+      valueClassName={
+        "orderly-text-2xs orderly-text-base-contrast-80 orderly-tabular-nums"
+      }
     >
       <div className="orderly-relative orderly-overflow-hidden">
         <div

@@ -34,7 +34,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80 md:orderly-h-[70px] md:orderly-text-[20px] md:orderly-justify-center md:orderly-gap-5">
+    <div className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80 md:orderly-h-[70px] md:orderly-text-[20px] md:orderly-justify-center md:orderly-gap-5 orderly-tabular-nums">
       <div
         className={cn(
           "orderly-font-semibold orderly-flex orderly-items-center md:orderly-font-normal md:orderly-relative md:orderly-pr-4",

@@ -13,11 +13,14 @@ import { Tab, TabProps } from "./tab";
 import { TabPaneProps } from "./tabPane";
 import { TabBarExtraRender, TabItem, TabList } from "./tabList";
 import { TabContextProvider } from "./tabContext";
-import { TabContent } from "./tabContent";
+import { MemorizedTabContent, TabContent } from "./tabContent";
 import { TabGroup } from "@/tab/tabGroup";
+import { TabViewMode } from "./constants";
+import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
 
 export interface TabsProps {
   value?: string;
+  // d?: string;
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
   extraData?: any;
@@ -36,11 +39,6 @@ export interface TabsProps {
    *
    */
   minWidth?: number;
-}
-
-enum TabViewMode {
-  Tab,
-  Group,
 }
 
 // it's controlled component;
@@ -72,7 +70,7 @@ const TabsInner = (
       if (displayName === "TabPane") {
         //   return childElement;
         const { title, value, disabled } = childElement.props;
-        const active = value === props.value;
+        // const active = value === props.value;
 
         tabList.push({ title, value, disabled });
 
@@ -82,9 +80,9 @@ const TabsInner = (
 
         children.push(childElement);
         // set active index
-        if (active) {
-          setActiveIndex(index);
-        }
+        // if (active) {
+        //   setActiveIndex(index);
+        // }
       } else {
         console.error(
           "Warning: Tabs has a child which is not a TabPane component"
@@ -105,9 +103,9 @@ const TabsInner = (
     }
   }, [props.value, tabList]);
 
-  const child = useMemo(() => {
-    return children[activeIndex];
-  }, [children, activeIndex]);
+  // const child = useMemo(() => {
+  //   return children[activeIndex];
+  // }, [children, activeIndex]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -149,26 +147,22 @@ const TabsInner = (
     };
   });
 
-  const body =
+  console.log("-----tabs render-----");
+
+  const tabHeader =
     viewMode === TabViewMode.Tab ? (
-      <>
-        <TabList
-          tabs={tabList}
-          onTabChange={props.onTabChange}
-          value={props.value}
-          tabBarExtra={props.tabBarExtra}
-          showIdentifier={showIdentifier}
-          className={props.tabBarClassName}
-          fullWidth={props.fullWidth}
-        />
-        <TabContent>{child}</TabContent>
-      </>
-    ) : (
-      <TabGroup
-        children={children}
-        tabList={tabList}
-        tabBarClassName={props.tabBarClassName}
+      <TabList
+        mode={viewMode}
+        tabs={tabList}
+        onTabChange={props.onTabChange}
+        value={props.value}
+        tabBarExtra={props.tabBarExtra}
+        showIdentifier={showIdentifier}
+        className={props.tabBarClassName}
+        fullWidth={props.fullWidth}
       />
+    ) : (
+      <TabGroup tabList={tabList} className={props.tabBarClassName} />
     );
 
   return (
@@ -177,7 +171,25 @@ const TabsInner = (
       collapsed={collapsed}
       onToggleCollapsed={onToggleCollapsed}
     >
-      <div ref={containerRef}>{body}</div>
+      <div ref={containerRef} className="orderly-min-h-0">
+        {tabHeader}
+        {/* <TabList
+          mode={viewMode}
+          tabs={tabList}
+          onTabChange={props.onTabChange}
+          value={props.value}
+          tabBarExtra={props.tabBarExtra}
+          showIdentifier={showIdentifier}
+          className={props.tabBarClassName}
+          fullWidth={props.fullWidth}
+        /> */}
+        <MemorizedTabContent
+          mode={viewMode}
+          activeIndex={activeIndex}
+          tabs={children}
+          keepAlive={props.keepAlive}
+        />
+      </div>
     </TabContextProvider>
   );
 };

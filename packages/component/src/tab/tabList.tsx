@@ -13,6 +13,7 @@ import { TabIndicator } from "./indicator";
 import { Tab } from "./tab";
 import { TabContext, TabContextState } from "./tabContext";
 import { cn } from "@/utils/css";
+import { TabViewMode } from "./constants";
 
 export type TabItem = {
   title: ReactNode;
@@ -31,6 +32,7 @@ interface TabListProps {
   className?: string;
   showIdentifier?: boolean;
   fullWidth?: boolean;
+  mode: TabViewMode;
 }
 
 type IndicatorBounding = {
@@ -81,7 +83,12 @@ export const TabList: FC<TabListProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!props.showIdentifier || !boxRef.current) return;
+    if (
+      !props.showIdentifier ||
+      !boxRef.current ||
+      props.mode === TabViewMode.Group
+    )
+      return;
 
     const callback = (entries: ResizeObserverEntry[]) => {
       // console.log("entries", entries);
@@ -122,9 +129,16 @@ export const TabList: FC<TabListProps> = (props) => {
         props.className
       )}
     >
-      <div className="orderly-pb-1 orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center">
+      <div
+        className={cn(
+          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center",
+          {
+            "orderly-pb-1": props.mode === TabViewMode.Tab,
+          }
+        )}
+      >
         <div
-          className={cn("orderly-flex orderly-space-x-5 orderly-h-full", {
+          className={cn("orderly-flex orderly-h-full orderly-gap-5", {
             "orderly-w-full": props.fullWidth,
           })}
           ref={boxRef}
@@ -137,6 +151,7 @@ export const TabList: FC<TabListProps> = (props) => {
                 value={item.value ?? index}
                 disabled={item.disabled}
                 fullWidth={props.fullWidth}
+                mode={props.mode}
                 active={
                   !!item.value &&
                   !!props.value &&
@@ -148,7 +163,7 @@ export const TabList: FC<TabListProps> = (props) => {
             );
           })}
         </div>
-        {props.showIdentifier && (
+        {props.showIdentifier && props.mode === TabViewMode.Tab && (
           <TabIndicator left={bounding.left} width={bounding.width} />
         )}
       </div>
