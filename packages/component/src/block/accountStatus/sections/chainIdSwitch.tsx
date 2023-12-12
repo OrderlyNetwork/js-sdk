@@ -64,7 +64,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   );
 
   return (
-    <div className="orderly-bg-[#5A480C] orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-[#E5C700] orderly-z-10 orderly-text-3xs orderly-gap-2">
+    <div className="orderly-bg-[#5A480C] orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-warning orderly-z-10 orderly-text-3xs orderly-gap-2">
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
