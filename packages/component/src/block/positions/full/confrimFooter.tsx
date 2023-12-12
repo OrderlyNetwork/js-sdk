@@ -4,7 +4,8 @@ import { FC } from "react";
 export const ConfirmFooter: FC<{
   onConfirm: () => Promise<any>;
   onCancel: () => void;
-}> = ({ onCancel, onConfirm }) => {
+  submitting: boolean;
+}> = ({ onCancel, onConfirm, submitting }) => {
   return (
     <div className="orderly-grid orderly-grid-cols-[1fr_2fr] orderly-mt-5">
       <div />
@@ -12,7 +13,7 @@ export const ConfirmFooter: FC<{
         <Button color={"tertiary"} fullWidth onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} fullWidth>
+        <Button onClick={onConfirm} fullWidth loading={submitting}>
           Confirm
         </Button>
       </div>

@@ -10,7 +10,7 @@ const View = (props: Props) => {
   return (
     <ConnectorProvider>
       <OrderlyAppProvider
-        networkId="mainnet"
+        networkId="testnet"
         brokerId="orderly"
         onlyTestnet={false}
         logoUrl="/woo_fi_logo.svg"

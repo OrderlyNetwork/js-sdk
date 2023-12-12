@@ -14,7 +14,7 @@ export const OrderDetail = (props: {
   return (
     <div
       className={cn(
-        "orderly-grid orderly-grid-cols-[1fr_2fr] orderly-text-xs",
+        "orderly-grid orderly-grid-cols-[1fr_2fr]",
         props.className
       )}
     >

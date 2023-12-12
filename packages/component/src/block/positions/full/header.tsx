@@ -81,11 +81,9 @@ export const Header: FC<Props> = (props) => {
             rule="price"
           />
         </div>
-        <div className={"orderly-flex orderly-items-center orderly-gap-2"}>
+        {/* <div className={"orderly-flex orderly-items-center orderly-gap-2"}>
           <Checkbox
             id={"showCloseTrades"}
-            // checked={props.showAllSymbol}
-            // onCheckedChange={props.onShowAllSymbolChange}
           />
           <Label
             htmlFor={"showCloseTrades"}
@@ -93,7 +91,7 @@ export const Header: FC<Props> = (props) => {
           >
             Show close trades
           </Label>
-        </div>
+        </div> */}
       </div>
     </StatisticStyleProvider>
   );

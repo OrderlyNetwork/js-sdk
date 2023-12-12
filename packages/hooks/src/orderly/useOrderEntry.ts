@@ -32,7 +32,10 @@ export const useOrderEntry = (
   reduceOnly: boolean = false,
   options?: UseOrderEntryOptions
 ) => {
-  const [doCreateOrder] = useMutation<OrderEntity, any>("/v1/order");
+  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
+    OrderEntity,
+    any
+  >("/v1/order");
 
   const { freeCollateral } = useCollateral();
 
@@ -137,6 +140,7 @@ export const useOrderEntry = (
     freeCollateral,
     markPrice,
     onSubmit,
+    submitting: isMutating,
     helper: {
       calculate,
       validator,

@@ -209,7 +209,7 @@ export const useOrderbookStream = (
     throw new Error("useOrderbookStream requires a symbol");
   }
 
-  const { level } = options ?? { level: 10 };
+  const level = options?.level ?? 10;
 
   const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);

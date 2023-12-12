@@ -27,7 +27,8 @@ export interface PositionsRowContextState {
 
   closeOrderData: any;
 
-  onSubmit: () => void;
+  onSubmit: () => Promise<any>;
+  submitting: boolean;
 }
 
 export const PositionsRowContext = createContext(
@@ -50,7 +51,7 @@ export const PositionsRowProvider: FC<
 
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
 
-  const { helper, onSubmit } = useOrderEntry(
+  const { helper, onSubmit, submitting } = useOrderEntry(
     props.position?.symbol!,
     side,
     true
@@ -99,6 +100,10 @@ export const PositionsRowProvider: FC<
     setPrice(newValues["order_price"]);
   };
 
+  const postOrder = () => {
+    return onSubmit(closeOrderData);
+  };
+
   return (
     <PositionsRowContext.Provider
       value={{
@@ -110,7 +115,8 @@ export const PositionsRowProvider: FC<
         updatePriceChange: onUpdatePrice,
         updateQuantity: onUpdateQuantity,
         updateOrderType,
-        onSubmit,
+        onSubmit: postOrder,
+        submitting,
         closeOrderData,
       }}
     >

@@ -59,11 +59,11 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         dataIndex: "unrealized_pnl",
         render: (value: string) => <Numeral coloring>{value}</Numeral>,
       },
-      {
-        title: "Daily real.",
-        className: "orderly-h-[48px]",
-        dataIndex: "open_price",
-      },
+      // {
+      //   title: "Daily real.",
+      //   className: "orderly-h-[48px]",
+      //   dataIndex: "open_price",
+      // },
       {
         title: "Notional",
         dataIndex: "notional",

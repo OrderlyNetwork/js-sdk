@@ -6,6 +6,7 @@ import { NumeralTotal } from "@/text/numeralTotal";
 import { Text } from "@/text";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
+import { OrderDetail } from "../shared/orderDetail";
 
 export const LimitConfirmDialog: FC<{
   base: string;
@@ -14,6 +15,7 @@ export const LimitConfirmDialog: FC<{
   onConfirm: () => Promise<any>;
   quote: string;
   order: any;
+  submitting: boolean;
 }> = (props) => {
   const { order, quote } = props;
 
@@ -36,43 +38,17 @@ export const LimitConfirmDialog: FC<{
         <NetworkImage type="symbol" symbol={order.symbol} />
         <Text rule="symbol">{order.symbol}</Text>
       </div>
-      <div className="orderly-grid orderly-grid-cols-[1fr_2fr] orderly-text-sm">
-        <div className="orderly-flex orderly-flex-col">
-          <Text type={side === OrderSide.SELL ? "sell" : "buy"}>
-            {side === OrderSide.SELL ? "Limit Sell" : "Limit Buy"}
-          </Text>
-        </div>
-        <div className="orderly-space-y-2">
-          <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Qty.</span>
-            <Text type={side === OrderSide.SELL ? "sell" : "buy"}>
-              {order.order_quantity}
-            </Text>
-          </div>
-          <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Price</span>
-            {/* <span>131311</span> */}
-            <Text
-              surfix={
-                <span className="orderly-text-base-contrast-36">{quote}</span>
-              }
-            >
-              {order.order_price}
-            </Text>
-          </div>
-          <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Total</span>
-            <NumeralTotal
-              quantity={order.order_quantity ?? 0}
-              price={order.order_price ?? 0}
-              surfix={
-                <span className="orderly-text-base-contrast-36">{quote}</span>
-              }
-            />
-          </div>
-        </div>
-      </div>
-      <ConfirmFooter onCancel={onCancel} onConfirm={props.onConfirm} />
+
+      <OrderDetail
+        className="orderly-text-sm"
+        order={props.order}
+        quote={props.quote}
+      />
+      <ConfirmFooter
+        onCancel={onCancel}
+        onConfirm={props.onConfirm}
+        submitting={props.submitting}
+      />
     </>
   );
 };

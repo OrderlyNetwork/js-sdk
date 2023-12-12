@@ -7,6 +7,7 @@ export const CloseBaseConfirm: FC<{
   quantity: string;
   onClose: () => void;
   onConfirm: () => Promise<any>;
+  submitting: boolean;
 }> = (props) => {
   const onCancel = () => {
     props.onClose();
@@ -20,7 +21,11 @@ export const CloseBaseConfirm: FC<{
       <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
         Pending reduce-only orders will be cancelled or adjusted.
       </div>
-      <ConfirmFooter onCancel={onCancel} onConfirm={props.onConfirm} />
+      <ConfirmFooter
+        onCancel={onCancel}
+        onConfirm={props.onConfirm}
+        submitting={props.submitting}
+      />
     </>
   );
 };
