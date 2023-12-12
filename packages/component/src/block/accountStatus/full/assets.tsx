@@ -1,9 +1,9 @@
-import { FC, useCallback, useContext } from "react";
+import { FC, useCallback, useContext, useMemo } from "react";
 import { Numeral } from "@/text";
 import { Progress } from "@/progress";
 
 import { ChevronDown, RefreshCcw } from "lucide-react";
-import { useLocalStorage, useCollateral } from "@orderly.network/hooks";
+import { useLocalStorage, useCollateral, usePositionStream, useMarginRatio } from "@orderly.network/hooks";
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -26,6 +26,21 @@ export const Assets: FC<AssetsProps> = (props) => {
     useCollateral({
       dp: 2,
     });
+
+    const [{ aggregated }, positionsInfo] =
+    usePositionStream();
+    const { marginRatio } = useMarginRatio();
+
+    const marginRatioVal = useMemo(() => {
+      return Math.min(
+        10,
+        aggregated.notional === 0
+          ? positionsInfo["margin_ratio"](10)
+          : marginRatio
+      );
+    }, [marginRatio, aggregated]);
+
+    
 
   return (
     <Collapsible
@@ -75,7 +90,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
-        <Progress value={40} />
+        <Progress value={marginRatioVal} variant={"gradient"}/>
       </div>
       <MemorizedLeverage />
     </Collapsible>
