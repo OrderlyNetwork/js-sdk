@@ -12,14 +12,14 @@ export interface Props {
 export const Header: FC<Props> = (props) => {
   const [side, setSide] = useState<OrderSide>("all");
 
-
+  
   function cancelAllOrder() {
     modal.confirm({
       title: "Cancel all orders",
       content: (<div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
         Are you sure you want to cancel all of your pending orders?
       </div>),
-      contentClassName: "desktop:orderly-w-[364px]",
+      maxWidth: "xs",
       onOk: async () => {
         // do cancel all orders
         Promise.resolve();

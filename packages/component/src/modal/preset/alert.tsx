@@ -28,7 +28,7 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
   }, [props.onOk]);
   return (
     <Dialog open={visible} onOpenChange={onOpenChange}>
-      <DialogContent closable={false}>
+      <DialogContent closable={false} maxWidth={"xs"}>
         <DialogHeader className="after:orderly-hidden orderly-items-center orderly-pt-3 orderly-pb-0">
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
