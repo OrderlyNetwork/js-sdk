@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { SortDirection } from "./types";
+import { SortDirection } from "./shared/types";
 
 export const sortFunc = {
   vol:

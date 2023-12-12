@@ -1,4 +1,4 @@
-import { SortCondition, SortDirection, type SortKey } from "../types";
+import { SortCondition, SortDirection, type SortKey } from "../shared/types";
 import { useSort } from "../useSort";
 import { SortItem } from "./sortItem";
 import { FC, useEffect, useMemo, useState } from "react";

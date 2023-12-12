@@ -14,3 +14,11 @@ export enum SortDirection {
   ASC,
   DESC,
 }
+
+export interface MarketsProps {
+  dataSource?: API.MarketInfoExt[];
+  // onSortBy?: (key: string, direction: SortDirection) => void;
+  onItemClick?: (item: API.MarketInfoExt) => void;
+
+  className?: string;
+}

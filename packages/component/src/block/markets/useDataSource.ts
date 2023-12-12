@@ -1,6 +1,6 @@
 import { API } from "@orderly.network/types";
 import { useMemo, useState } from "react";
-import { SortDirection, type SortCondition } from "./types";
+import { SortDirection, type SortCondition } from "./shared/types";
 import { sortFunc } from "./utils";
 
 export const useDataSource = (

@@ -1,6 +1,11 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useCallback, useContext } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/accountStatus";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { WalletConnectSheet } from "@/block/walletConnect";
+import { modal } from "@/modal";
+import { OrderlyAppContext } from "@/provider/appProvider";
+import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 
 interface Props {
   logo?: ReactNode;
@@ -8,6 +13,19 @@ interface Props {
 
 export const Header: FC<Props> = (props) => {
   const { state } = useAccount();
+  const { onWalletConnect, onSetChain, onWalletDisconnect } =
+    useContext(OrderlyAppContext);
+  const onConnect = useCallback(() => {
+    onWalletConnect().then(
+      (result: { wallet: any; status: AccountStatusEnum }) => {
+        if (result && result.status < AccountStatusEnum.EnableTrading) {
+          showAccountConnectorModal({
+            status: result.status,
+          });
+        }
+      }
+    );
+  }, []);
   return (
     <div className="orderly-h-[48px] orderly-flex">
       <div className="orderly-flex-1"></div>
@@ -18,6 +36,7 @@ export const Header: FC<Props> = (props) => {
         chains={[]}
         accountInfo={undefined}
         className="orderly-mr-3"
+        onConnect={onConnect}
       />
     </div>
   );

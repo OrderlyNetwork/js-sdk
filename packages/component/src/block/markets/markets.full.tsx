@@ -1,10 +1,10 @@
 import { FC, useMemo, useRef, useState } from "react";
 import { Header } from "./full/header";
-import { MarketsProps } from "./markets";
 import { ListViewFull } from "./full/listview";
 import { useDataSource } from "./useDataSource";
 import { MoveDirection } from "./full/search";
 import { ListViewRef } from "@/listView/listView";
+import { MarketsProps } from "./shared/types";
 
 interface Props {
   maxHeight?: number;

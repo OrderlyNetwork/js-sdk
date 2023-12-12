@@ -8,7 +8,7 @@ import { NumeralWithSymbol } from "@/text/numeralWithSymbol";
 import { Cell } from "./cell";
 import { SymbolProvider } from "@/provider";
 import { API } from "@orderly.network/types";
-import { MarketListViewProps, SortDirection, SortKey } from "../types";
+import { MarketListViewProps, SortDirection, SortKey } from "../shared/types";
 import { sortFunc } from "../utils";
 
 interface Props {
@@ -35,22 +35,23 @@ export const MarketListView: FC<MarketListViewProps & Props> = (props) => {
       setInnerHeight(window.innerHeight - 180);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
   return (
     <>
       <SortGroup onChange={props.onSort} />
       <Divider />
-      <div className="orderly-overflow-y-auto orderly-overflow-hidden orderly-scrollbar-hidden orderly-hide-scrollbar orderly-h-[calc(100vh-180px)] orderly-my-2"
-      style={{
-        height: innerHeight
-      }}>
+      <div
+        className="orderly-overflow-y-auto orderly-overflow-hidden orderly-scrollbar-hidden orderly-hide-scrollbar orderly-h-[calc(100vh-180px)] orderly-my-2"
+        style={{
+          height: innerHeight,
+        }}
+      >
         <ListView.separated<API.MarketInfoExt>
           dataSource={props.dataSource}
           renderItem={renderItem}

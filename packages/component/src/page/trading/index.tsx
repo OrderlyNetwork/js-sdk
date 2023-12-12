@@ -5,8 +5,10 @@ import { Page } from "@/layout/page";
 
 import { TradingPage as XSTradingPage } from "./xs/trading";
 import { TradingPage as FullTradingPage } from "./fill/trading";
+import { useExecutionReport } from "./hooks/useExecutionReport";
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
+  useExecutionReport();
   return (
     <TradingPageProvider
       symbol={props.symbol}

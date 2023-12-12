@@ -24,6 +24,7 @@ export const AccountStatus: FC<AccountStatusProps & { className?: string }> = (
         status={status}
         address={props.address}
         className="orderly-rounded-full"
+        onConnect={props.onConnect}
       />
     </div>
   );

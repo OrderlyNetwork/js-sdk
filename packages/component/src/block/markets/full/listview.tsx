@@ -1,5 +1,5 @@
 import { FC, forwardRef, useRef } from "react";
-import { MarketListViewProps, SortDirection, SortKey } from "../types";
+import { MarketListViewProps, SortDirection, SortKey } from "../shared/types";
 import { API } from "@orderly.network/types";
 import { ListView } from "@/listView";
 import { Numeral, Text } from "@/text";
@@ -12,7 +12,7 @@ interface Props {
   onSort: (value: Partial<{ key: SortKey; direction: SortDirection }>) => void;
 
   maxHeight?: number;
-
+  onItemClick?: (item: API.MarketInfoExt) => void;
   updateActiveIndex?: (index: number) => void;
 }
 
@@ -36,6 +36,7 @@ export const ListViewFull = forwardRef<
             "orderly-bg-base-contrast/5": activeIndex === index,
           }
         )}
+        onClick={() => props.onItemClick?.(item)}
       >
         <div className="orderly-col-span-1">
           <Text rule="symbol">{item.symbol}</Text>

@@ -1,10 +1,10 @@
 import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
-import Button from "@/button";
 import { modal } from "@/modal";
 import { OrderSide } from "@orderly.network/types";
 
 export interface Props {
+  side: OrderSide;
   onSideChange: (side: OrderSide) => void;
   count: number;
 }
@@ -47,10 +47,10 @@ export const Header: FC<Props> = (props) => {
       <Select
         size={"small"}
         options={options}
-        value={side}
+        value={props.side}
         onChange={(value) => {
-          console.log(value);
-          setSide(value as OrderSide);
+          // console.log(value);
+          // setSide(value as OrderSide);
           props.onSideChange(value as OrderSide);
           // props.onSearch?.({ side: value as OrderSide });
         }}

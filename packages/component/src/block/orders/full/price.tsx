@@ -7,7 +7,9 @@ import { cn } from "@/utils/css";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
 import { Check, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { OrderListContext } from "../shared/orderListContext";
+import { toast } from "@/toast";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -16,11 +18,16 @@ export const Price = (props: { order: API.OrderExt }) => {
     order.price?.toString() ?? "Market"
   );
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { editOrder } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
+  const closePopover = () => setOpen(0);
+  const cancelPopover = () => setOpen(-1);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -44,15 +51,40 @@ export const Price = (props: { order: API.OrderExt }) => {
     // event.stopPropagation();
     // event.preventDefault();
     setEditting(false);
-    setOpen(true);
+    setOpen(1);
   };
 
-  const closePopover = () => setOpen(false);
+  const onConfirm = () => {
+    setIsSubmitting(true);
+    editOrder(order.order_id, {
+      order_price: price,
+      order_quantity: order.quantity,
+      symbol: order.symbol,
+      order_type: order.type,
+      side: order.side,
+      reduce_only: Boolean(order.reduce_only),
+    })
+      .then(
+        (result) => {
+          closePopover();
+          // setTimeout(() => inputRef.current?.blur(), 300);
+        },
+        (err) => {
+          toast.error(err.message);
+          setPrice(order.price?.toString());
+          cancelPopover();
+        }
+      )
+      .finally(() => setIsSubmitting(false));
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open > 0}
+      onOpenChange={(open: boolean) => setOpen(open ? 1 : 0)}
+    >
       <div
         className={
           "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative"
@@ -92,7 +124,7 @@ export const Price = (props: { order: API.OrderExt }) => {
             side="top"
             className="orderly-w-[340px]"
             onCloseAutoFocus={(e) => {
-              if (inputRef.current) {
+              if (inputRef.current && open === -1) {
                 inputRef.current.focus();
               }
             }}
@@ -103,14 +135,20 @@ export const Price = (props: { order: API.OrderExt }) => {
                 <span className="orderly-text-warning">{commify(price)}</span>.
               </div>
               <div className="orderly-grid orderly-grid-cols-2 orderly-gap-2 orderly-mt-5">
-                <Button color="tertiary" onClick={closePopover}>
+                <Button
+                  color="tertiary"
+                  onClick={cancelPopover}
+                  disabled={isSubmitting}
+                >
                   Cancel
                 </Button>
-                <Button>Confirm</Button>
+                <Button loading={isSubmitting} onClick={onConfirm}>
+                  Confirm
+                </Button>
               </div>
               <button
                 className="orderly-absolute orderly-right-0 orderly-top-0 orderly-text-base-contrast-54"
-                onClick={closePopover}
+                onClick={cancelPopover}
               >
                 <X size={18} />
               </button>

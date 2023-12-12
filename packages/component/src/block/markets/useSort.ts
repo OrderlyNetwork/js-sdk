@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { SortKey } from "./sections/sortItem";
-import { SortDirection } from "./types";
+import { SortDirection } from "./shared/types";
 
 export const useSort = (value?: SortKey) => {
   const [sortKey, setSortKey] = useState<SortKey | undefined>(value);

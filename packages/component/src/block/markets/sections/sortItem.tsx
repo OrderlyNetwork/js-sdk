@@ -2,7 +2,7 @@ import { FC, ReactNode, useCallback } from "react";
 import { cn } from "@/utils/css";
 import { ArrowIcon } from "@/icon";
 import { cx } from "class-variance-authority";
-import { SortDirection, type SortKey } from "../types";
+import { SortDirection, type SortKey } from "../shared/types";
 
 export type currentValue = {
   key?: SortKey;

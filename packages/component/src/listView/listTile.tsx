@@ -37,7 +37,12 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
     }
 
     if (typeof props.avatar === "string") {
-      return <img src={props.avatar} className="orderly-w-10 orderly-h-10 orderly-rounded-full" />;
+      return (
+        <img
+          src={props.avatar}
+          className="orderly-w-10 orderly-h-10 orderly-rounded-full"
+        />
+      );
     }
     return props.avatar as React.ReactNode;
   }, [[props.avatar]]);
@@ -52,7 +57,10 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
             </div>
           )}
           {props.subtitle && (
-            <div key={"subtitle"} className="orderly-text-3xs desktop:orderly-text-2xs orderly-text-base-contrast-54">
+            <div
+              key={"subtitle"}
+              className="orderly-text-3xs desktop:orderly-text-2xs orderly-text-base-contrast-54"
+            >
               {props.subtitle}
             </div>
           )}
@@ -66,7 +74,7 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
   return (
     <div
       className={cn(
-        "orderly-py-3 orderly-flex orderly-gap-3 hover:orderly-bg-base-200 active:orderly-bg-base-100",
+        "orderly-py-3 orderly-flex orderly-gap-3 active:orderly-bg-base-100",
         props.className,
         props.disabled && "orderly-opacity-60 orderly-cursor-not-allowed"
       )}

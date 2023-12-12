@@ -14,6 +14,7 @@ export const DataListView = () => {
 
   return (
     <Tabs
+      autoFit
       value={activeTab}
       onTabChange={setActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm"

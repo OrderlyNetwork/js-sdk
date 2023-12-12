@@ -30,7 +30,7 @@ export const MyOrders: FC<Props> = (props) => {
     showAllSymbol ? "" : context.symbol
   );
 
-  const [side, setSide] = useState<OrderSide>();
+  const [side, setSide] = useState<OrderSide | "">("");
 
   const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
     useOrderStream({
@@ -61,6 +61,7 @@ export const MyOrders: FC<Props> = (props) => {
       isLoading={isLoading}
       symbol={context.symbol}
       onSideChange={setSide}
+      side={side}
       showAllSymbol={showAllSymbol}
       cancelOrder={onCancelOrder}
       onShowAllSymbolChange={onShowAllSymbolChange}

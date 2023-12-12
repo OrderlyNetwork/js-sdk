@@ -11,7 +11,6 @@ import { useExecutionReport } from "../hooks/useExecutionReport";
 import { TradingPageProps } from "../types";
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
-  useExecutionReport();
   return (
     <div className="orderly-pb-[70px]">
       <NavBar symbol={props.symbol} />
