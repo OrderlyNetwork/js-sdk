@@ -125,7 +125,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   }
 
 
-  if (!isDesktop) {
+  if (!isDesktop || ((chains?.length ?? 0) < 2 || props.settingChain)) {
    return <button
       className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
       disabled={(chains?.length ?? 0) < 2 || props.settingChain}
