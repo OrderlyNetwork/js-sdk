@@ -16,8 +16,8 @@ export const Toaster: FC<ToastProps> = (props) => {
         duration: 2500,
         success: {
           iconTheme: {
-            primary: "rgba(39, 222, 200, 1)",
-            secondary: "rgba(0, 0, 0, 1)",
+            primary: "rgba(0, 181, 159, 1)",
+            secondary: "rgba(57, 52, 74, 1)",
           },
           style: {
             fontSize: "14px",
@@ -26,9 +26,8 @@ export const Toaster: FC<ToastProps> = (props) => {
         },
         error: {
           iconTheme: {
-            primary: "rgba(255, 68, 124, 1)",
-
-            secondary: "rgba(0, 0, 0, 1)",
+            primary: "rgba(255, 103, 194, 1)",
+            secondary: "rgba(57, 52, 74, 1)",
           },
           style: {
             fontSize: "14px",
@@ -43,10 +42,10 @@ export const Toaster: FC<ToastProps> = (props) => {
           toast={t}
           style={{
             ...t.style,
-            background: "rgba(51, 57, 72, 1)",
-            color: "rgba(255, 255, 255, 1)",
+            background: "rgba(57, 52, 74, 1)",
+            color: "rgba(255, 255, 255, 0.98)",
             // alignItems: "start",
-            borderRadius: "4px",
+            borderRadius: "6px",
             // animation: t.visible
             //   ? "animate-in fade-in"
             //   : "animate-out fade-out",
