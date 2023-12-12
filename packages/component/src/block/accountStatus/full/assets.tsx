@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, useCallback, useContext } from "react";
 import { Numeral } from "@/text";
 import { Progress } from "@/progress";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RefreshCcw } from "lucide-react";
 import { useLocalStorage, useCollateral } from "@orderly.network/hooks";
 import {
   Collapsible,

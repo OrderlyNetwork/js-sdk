@@ -1,6 +1,10 @@
-import { memo } from "react";
+import { memo, useCallback, useContext } from "react";
 import { Numeral } from "@/text";
 import { useCollateral, usePositionStream } from "@orderly.network/hooks";
+import { AssetsContext } from "@/provider";
+import { modal } from "@/modal";
+import { SettlePnlContent } from "@/block/withdraw";
+import { RefreshCcw } from "lucide-react";
 
 const AssetsDetail = () => {
   const { freeCollateral } = useCollateral({
@@ -8,6 +12,27 @@ const AssetsDetail = () => {
   });
 
   const [{ aggregated }] = usePositionStream();
+
+  const { onSettle } = useContext(AssetsContext);
+  
+    const onSettleClick = useCallback(() => {
+      modal
+        .confirm({
+          title: "Settle PnL",
+          content: (<SettlePnlContent />),
+          maxWidth: "xs",
+          onCancel() {
+            return Promise.reject("cancel");
+          },
+          onOk() {
+            return onSettle();
+          },
+        })
+        .then(
+          () => { },
+          (error) => { }
+        );
+    }, []);
 
   return (
     <div
@@ -27,6 +52,10 @@ const AssetsDetail = () => {
         <span className={"orderly-text-base-contrast-54"}>Unsettled PnL</span>
         <Numeral
           coloring
+          prefix={<button className={"orderly-text-primary-light"} onClick={onSettleClick}>
+          {/*@ts-ignore*/}
+          <RefreshCcw size={14} />
+        </button>}
           surfix={<span className={"orderly-text-base-contrast-36"}>USDC</span>}
         >
           {aggregated?.unsettledPnL ?? 0}

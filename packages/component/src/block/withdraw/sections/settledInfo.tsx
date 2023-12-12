@@ -4,6 +4,7 @@ import { AssetsContext } from "@/provider/assetsProvider";
 import { Numeral } from "@/text";
 import { RotateCw } from "lucide-react";
 import { FC, useCallback, useContext } from "react";
+import { SettlePnlContent } from "../settlePnlContent";
 
 interface UnsettledInfoProps {
   unsettledPnL: number;
@@ -16,12 +17,8 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
     modal
       .confirm({
         title: "Settle PnL",
-        content: (
-          <span className="orderly-text-base-contrast-54 orderly-text-2xs">
-            Are you sure you want to settle your PnL? It may take one minute
-            before you can withdraw it.
-          </span>
-        ),
+        content: ( <SettlePnlContent/>),
+        maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
         },
