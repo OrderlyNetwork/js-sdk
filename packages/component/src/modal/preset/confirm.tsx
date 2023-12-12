@@ -9,6 +9,7 @@ export interface ConfirmProps {
   content: React.ReactNode;
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
+  contentClassName?: string;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
@@ -17,6 +18,7 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
     <SimpleDialog
       open={visible}
       title={props.title}
+      contentClassName={props.contentClassName}
       onOpenChange={(open) => {
         if (!open) {
           reject();

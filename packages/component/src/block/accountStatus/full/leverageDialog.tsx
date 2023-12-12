@@ -54,7 +54,7 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
           <DialogTitle>Account Leverage</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <div className="orderly-flex orderly-text-base-contrast-54 orderly-py-5">
+          <div className="orderly-flex orderly-text-base-contrast-54 orderly-py-5 desktop:orderly-text-xs">
             <div className="orderly-flex-1">Max account leverage</div>
             <div className="orderly-flex orderly-gap-1">
               <span>Current:</span>

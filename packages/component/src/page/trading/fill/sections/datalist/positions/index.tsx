@@ -74,6 +74,7 @@ export const PositionPane = () => {
               toast.error(err.message);
             });
         },
+        contentClassName: "desktop:orderly-w-[364px]",
       })
       .catch(() => {});
   }, []);

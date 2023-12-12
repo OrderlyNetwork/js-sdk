@@ -74,8 +74,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
     if (dirtyFields["order_price"] && dirtyFields["order_quantity"]) {
       alertText = (
-        <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-          You agree changing the price of ETH-PERP order to{" "}
+        <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
+          You agree changing the price of {base}-PERP order to{" "}
           <span className="orderly-text-warning">
             {commify(data.order_price!)}
           </span>{" "}
@@ -89,8 +89,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     } else {
       if (dirtyFields["order_price"]) {
         alertText = (
-          <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-            You agree changing the price of ETH-PERP order to{" "}
+          <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
+            You agree changing the price of {base}-PERP order to{" "}
             <span className="orderly-text-warning">
               {commify(data.order_price!)}
             </span>
@@ -101,8 +101,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
       if (dirtyFields["order_quantity"]) {
         alertText = (
-          <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-            You agree changing the quantity of ETH-PERP order to{" "}
+          <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
+            You agree changing the quantity of {base}-PERP order to{" "}
             <span className="orderly-text-warning">
               {commify(data.order_quantity!)}
             </span>
@@ -115,6 +115,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     return modal.confirm({
       title: "Edit Order",
       content: alertText,
+      contentClassName: "desktop:orderly-w-[340px]",
       onOk: () => Promise.resolve(data),
       onCancel: () => {
         return Promise.reject();

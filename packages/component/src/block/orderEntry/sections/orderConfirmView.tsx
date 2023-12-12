@@ -22,7 +22,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   }, [order.side, order.order_type]);
 
   return (
-    <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs">
+    <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
       <div>
         <div>{type}</div>
         <div className="orderly-flex orderly-gap-1 orderly-items-end">
