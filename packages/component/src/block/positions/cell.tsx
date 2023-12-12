@@ -121,7 +121,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly- orderly-text-3xs"
+          valueClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Mark price</span>

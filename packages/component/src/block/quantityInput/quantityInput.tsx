@@ -54,7 +54,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           {
             "orderly-outline orderly-outline-1 orderly-outline-danger-light":
               props.status === "error",
-            "orderly-outline orderly-outline-1 orderly-outline-warning-light":
+            "orderly-outline orderly-outline-1 orderly-outline-warning":
               props.status === "warning",
           }
         )}
@@ -135,7 +135,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
             {
               "orderly-text-danger-light": props.status === "error",
               "orderly-before:bg-danger-light": props.status === "error",
-              "orderly-text-warning-light": props.status === "warning",
+              "orderly-text-warning": props.status === "warning",
             }
           )}
         >

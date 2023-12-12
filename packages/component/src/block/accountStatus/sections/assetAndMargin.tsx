@@ -154,7 +154,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="orderly-text-primary orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
+                className="orderly-text-link orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
@@ -307,6 +307,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           variant={"outlined"}
           onClick={onWithdraw}
           id="orderly-assets-margin-withdraw-button"
+          className="orderly-border-primary-darken hover:orderly-bg-transport orderly-text-primary"
         >
           Withdraw
         </Button>

@@ -47,6 +47,8 @@ const Arbitrum = {
 //   },
 // ];
 
+var networkId = "testnet";
+
 const preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -80,13 +82,15 @@ const preview = {
       return (
         <ConnectorProvider>
           <OrderlyAppProvider
-            networkId="testnet"
-            brokerId="woofi_pro"
-            onlyTestnet={false}
+            networkId={networkId}
+            brokerId="orderly"
+            brokerName="Orderly"
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
+              networkId = isTestnet ? 'testnet' : 'mainnet';
+              window.location.reload();
             }}
           >
             <Story />

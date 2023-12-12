@@ -27,7 +27,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore, enableSwapDeposit } =
+  const { configStore, enableSwapDeposit } =
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
@@ -73,7 +73,6 @@ export const Chains: FC<ChainsProps> = (props) => {
     // window.open(url); // test in storybook
     // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
     if (onChainChanged) {
-      console.log("onChainChanged", chainId, chainId === 421613);
       onChainChanged(chainId, chainId === 421613);
     }
   };
@@ -112,10 +111,13 @@ export const Chains: FC<ChainsProps> = (props) => {
                   if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
                     setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
                   }
-                  switchDomain(item.id);
+                  if (success) {
+                    switchDomain(item.id);
+                  }
                 });
               } else {
                 setDefaultChain(item.id);
+                switchDomain(item.id);
               }
             }}
             currentChainId={parseInt(connectedChain?.id || defaultChain)}

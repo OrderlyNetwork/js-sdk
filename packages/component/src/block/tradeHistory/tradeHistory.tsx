@@ -41,8 +41,8 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               precision={quote_dp}
               className={
                 record.side === OrderSide.BUY
-                  ? "orderly-text-success-light"
-                  : "orderly-text-danger-light"
+                  ? "orderly-text-trade-profit-contrast"
+                  : "orderly-text-trade-loss-contrast"
               }
             >
               {value}
@@ -60,8 +60,8 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               precision={base_dp}
               className={
                 record.side === OrderSide.BUY
-                  ? "orderly-text-success-light"
-                  : "orderly-text-danger-light"
+                  ? "orderly-text-trade-profit-contrast"
+                  : "orderly-text-trade-loss-contrast"
               }
             >
               {value}

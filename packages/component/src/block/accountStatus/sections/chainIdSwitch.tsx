@@ -11,6 +11,8 @@ import {
 import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
+import { useTranslation } from "@/i18n";
+import { OrderlyAppContext } from "@/provider";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -18,7 +20,9 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId, onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
+
+  const { onChainChanged } = useContext(OrderlyAppContext);
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
@@ -33,6 +37,8 @@ export const ChainIdSwtich: FC<Props> = (props) => {
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
+  const t = useTranslation();
+
   const onChainChange = useCallback(
     ({ id, name }: { id: number; name: string }) => {
       props
@@ -40,9 +46,12 @@ export const ChainIdSwtich: FC<Props> = (props) => {
         .then(
           (isSuccess) => {
             if (isSuccess) {
-              toast.success("Network switched");
+              toast.success(t("toast.networkSwitched"));
+              if (onChainChanged) {
+                onChainChanged(id, id === 421613);
+              }
             } else {
-              toast.error("Cancel");
+              toast.error(t("common.cancel"));
             }
           },
           (error) => {
@@ -66,7 +75,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
           <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto orderly-text-3xs">
             <ChainListView
               // @ts-ignore
-              mainChains={onlyTestnet ? [] : mainChains}
+              mainChains={mainChains}
               // @ts-ignore
               testChains={testChains}
               onItemClick={onChainChange}

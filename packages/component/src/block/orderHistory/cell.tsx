@@ -43,7 +43,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       <div className="orderly-flex orderly-justify-between orderly-items-center">
         <div className="orderly-flex-1 orderly-flex orderly-items-center">
           {typeTag}
-          <div className="orderly-px-2 orderly- orderly-text-2xs" onClick={onSymbol}>
+          <div className="orderly-px-2 orderly-text-2xs" onClick={onSymbol}>
             <Text rule="symbol">{item.symbol}</Text>
           </div>
         </div>
@@ -55,6 +55,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           label="Qty."
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs"
           value={item.quantity ?? "-"}
           rule="price"
           precision={base_dp}

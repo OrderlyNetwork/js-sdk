@@ -50,8 +50,8 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         <div
           className={
             props.type === OrderBookCellType.ASK
-              ? "orderly-text-danger-light"
-              : "orderly-text-success-light"
+              ? "orderly-text-trade-loss-contrast"
+              : "orderly-text-trade-profit-contrast"
           }
         >
           <Numeral precision={dp}>{props.price}</Numeral>
@@ -67,8 +67,8 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
           width={width}
           className={
             props.type === OrderBookCellType.ASK
-              ? "orderly-bg-danger-light/20"
-              : "orderly-bg-success-light/20"
+              ? "orderly-bg-trade-loss/20"
+              : "orderly-bg-trade-profit/20"
           }
         />
       )}

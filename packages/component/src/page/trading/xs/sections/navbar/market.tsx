@@ -30,13 +30,13 @@ export const Market: FC<Props> = (props) => {
       <SheetTrigger asChild>
         <button className="orderly-flex orderly-items-center orderly-gap-1">
           <span>{symbolConfig[symbol]("name")}</span>
-          <ArrowIcon size={8} className="orderly-fill-base-contrast-54 orderly-" />
+          <ArrowIcon size={8} className="orderly-fill-base-contrast-54" />
         </button>
       </SheetTrigger>
       <SheetContent
         side={"left"}
         closeable={false}
-        className="orderly-w-84%"
+        className="orderly-w-84% orderly-h-100vh"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <Markets
