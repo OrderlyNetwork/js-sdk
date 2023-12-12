@@ -5,8 +5,9 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from "react";
-import { useChains, useWalletConnector } from "@orderly.network/hooks";
+import { useChains, useWalletConnector, useMediaQuery } from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
 import { ChainConfig, CurrentChain } from "@orderly.network/types";
@@ -14,6 +15,8 @@ import { modal } from "@/modal";
 import { ChainDialog } from "./chainDialog";
 import { API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { ChainCell } from "./chainCell";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -28,6 +31,9 @@ export interface ChainSelectProps {
 }
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
+  const [open, setOpen] = useState(false);
+
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const { onlyTestnet, wooSwapEnabled = true, disabled } = props;
   // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
@@ -38,13 +44,13 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
   });
 
-   const { connectedChain } = useWalletConnector();
+  const { connectedChain } = useWalletConnector();
 
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
-    if (allChains === undefined) return [];    
+    if (allChains === undefined) return [];
 
-    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) { 
+    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
       return allChains.testnet ?? [];
     }
 
@@ -105,8 +111,26 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     return null;
   }, [chains?.length, props.settingChain]);
 
-  return (
-    <button
+
+  
+
+  function parseChainId(id?: string | number) {
+    if (typeof id === 'number') {
+      return id;
+    }
+
+    if (typeof id === 'string') {
+      if (id.startsWith('0x')) {
+        return parseInt(id, 16);
+      }
+      return parseInt(id, 10);
+    }
+
+  }
+  
+  
+  if (!isDesktop) {
+   return <button
       className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
       disabled={(chains?.length ?? 0) < 2 || props.settingChain}
       onClick={onClick}
@@ -122,5 +146,51 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       </span>
       {icon}
     </button>
+  }
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
+          disabled={(chains?.length ?? 0) < 2 || props.settingChain}
+        >
+          <NetworkImage
+            id={currentChain?.chain_id}
+            type={currentChain ? "chain" : "unknown"}
+            size={"small"}
+            rounded
+          />
+          <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
+            {currentChain?.name ?? "Unknown"}
+          </span>
+          {icon}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        style={{ width: "241px" }}
+        className="orderly-borderRadius-sm orderly-bg-base-700 orderly-max-h-[250px] orderly-overflow-y-auto orderly-overflow-hidden orderly-hide-scrollbar orderly-mt-2 orderly-shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]"
+      >
+        {chains.map((chain: any, index: number) => {
+          return (
+            <DropdownMenuItem
+              onClick={() => {
+                const chainInfo = findByChainId(chain.chain_id);                
+                if(chainInfo) {
+                  props?.onValueChange?.(chainInfo);
+                }
+              }}>
+              <ChainCell
+                key={chain.chain_id}
+                name={chain.name}
+                id={chain.chain_id}
+                bridgeless={chain.bridgeless}
+                selected={parseChainId(connectedChain?.id) === chain.chain_id}
+              />
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
