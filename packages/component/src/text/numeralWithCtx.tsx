@@ -9,5 +9,5 @@ export const NumeralWithCtx: FC<Omit<NumeralProps, "precision">> = (props) => {
     throw new Error("NumeralWithCtx must be used inside SymbolProvider");
   }
 
-  return <Numeral {...props} precision={symbolInfo.quote_dp} />;
+  return <Numeral {...props} precision={symbolInfo.base_dp} />;
 };

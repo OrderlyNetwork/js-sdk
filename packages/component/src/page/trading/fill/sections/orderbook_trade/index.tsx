@@ -1,12 +1,8 @@
-import {
-  MemorizedOrderBook,
-  MyOrderBook,
-} from "@/page/trading/xs/sections/orderbook";
 import { TabPane, Tabs } from "@/tab";
 import { FC, useState } from "react";
-import { MemorizedTradeHistoryFull, TradeHistoryFull } from "./tradingHistory";
-import { ScrollArea } from "@/scrollArea";
-import { MemorizedScrollPane } from "@/scrollArea/pane";
+import { MemorizedTradeHistoryFull } from "./tradingHistory";
+import { MemorizedOrderBook } from "./orderbook";
+import { SymbolProvider } from "@/provider/symbolProvider";
 
 interface Props {
   symbol: string;
@@ -22,16 +18,22 @@ export const MyOrderBookAndTrade: FC<Props> = (props) => {
       allowUngroup
       fullWidth
       keepAlive
+      autoFit
       minWidth={280}
       tabBarClassName="orderly-h-[48px] orderly-text-sm"
     >
       <TabPane title="Orderbook" value="orderbook">
-        <div className="orderly-px-3">
-          <MemorizedOrderBook symbol={props.symbol} />
-        </div>
+        <SymbolProvider symbol={props.symbol}>
+          <MemorizedOrderBook
+            symbol={props.symbol}
+            className={"orderly-px-3"}
+          />
+        </SymbolProvider>
       </TabPane>
       <TabPane title="Last trades" value="tradeHistory">
-        <MemorizedTradeHistoryFull symbol={props.symbol} />
+        <SymbolProvider symbol={props.symbol}>
+          <MemorizedTradeHistoryFull symbol={props.symbol} />
+        </SymbolProvider>
       </TabPane>
     </Tabs>
   );

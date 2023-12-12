@@ -55,7 +55,7 @@ export const Header: FC<Props> = (props) => {
             rule="price"
             coloring
           />
-          <Statistic label={"Daily Real."} value={0} rule="price" coloring />
+          {/* <Statistic label={"Daily Real."} value={0} rule="price" coloring /> */}
           <Statistic
             label={"Notional"}
             value={props.aggregated?.notional}

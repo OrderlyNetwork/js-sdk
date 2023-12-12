@@ -11,11 +11,5 @@ export const TradeHistoryPane: FC<TradeHistoryProps> = (props) => {
 
   const { data, isLoading } = useMarketTradeStream(symbol);
 
-  return (
-    <div className="orderly-h-[240px] orderly-overflow-y-auto">
-      <SymbolProvider symbol={symbol}>
-        <TradeHistory dataSource={data} loading={isLoading} />
-      </SymbolProvider>
-    </div>
-  );
+  return <TradeHistory dataSource={data} loading={isLoading} />;
 };

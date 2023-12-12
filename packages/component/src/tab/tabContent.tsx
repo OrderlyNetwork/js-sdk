@@ -41,7 +41,7 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
   }, [activeIndex, keepAlive, tabs, mode]);
 
   const layout = useMemo<any>(() => {
-    return { height: "200px" };
+    return {};
   }, []);
 
   return (

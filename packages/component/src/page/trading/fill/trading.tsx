@@ -1,14 +1,12 @@
 import { FC, useEffect } from "react";
 import Split from "@uiw/react-split";
 import { AccountInfo } from "@/block/accountStatus/full";
-import { PositionsViewFull } from "@/block/positions";
-import { MyOrderBook } from "../xs/sections/orderbook";
 import { TradingPageProps } from "../types";
 import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
-import { DataListView, MemoizedDataListView } from "./sections/datalist";
+import { MemoizedDataListView } from "./sections/datalist";
 import { MyTradingView } from "./myTradingview";
 import { Header } from "./sections/tradingHeader";
 import { AssetsProvider } from "@/provider/assetsProvider";
@@ -22,12 +20,14 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
   useEffect(() => {
     console.log("tradingPage: render");
   });
+
   useEffect(() => {
     document.body.style.setProperty(
       "--w-split-line-bar-background",
       "rgb(42, 46, 52)"
     );
   }, []);
+
   return (
     <>
       <div className="orderly-app-trading-header orderly-border-b orderly-border-divider">
@@ -60,7 +60,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "30%" }}>
+            <div style={{ height: "40%" }}>
               <MemoizedDataListView />
             </div>
           </Split>

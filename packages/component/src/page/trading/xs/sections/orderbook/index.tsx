@@ -1,5 +1,6 @@
 import { OrderBook } from "@/block/orderbook";
 import { SymbolProvider } from "@/provider";
+import { cn } from "@/utils/css";
 import {
   useOrderbookStream,
   useSymbolsInfo,
@@ -9,6 +10,7 @@ import { FC, memo, useEffect, useRef, useState } from "react";
 
 interface MyOrderBookProps {
   symbol: string;
+  className?: string;
 }
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
@@ -16,7 +18,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const [cellHeight, setCellHeight] = useState(20);
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
-      level: 10,
+      level: 7,
     });
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];
@@ -39,7 +41,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, []);
 
   return (
-    <div className="orderly-pr-1">
+    <div className={cn("orderly-pr-1", props.className)}>
       <SymbolProvider symbol={symbol}>
         <OrderBook
           level={7}

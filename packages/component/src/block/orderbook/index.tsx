@@ -7,6 +7,7 @@ import { DepthSelect } from "@/block/orderbook/depthSelect";
 import { OrderBookProvider } from "@/block/orderbook/orderContext";
 import { QtyMode } from "./types";
 import { Spinner } from "@/spinner";
+import { cn } from "@/utils/css";
 
 export interface OrderBookProps {
   asks: any[];
@@ -26,6 +27,8 @@ export interface OrderBookProps {
   isLoading?: boolean;
 
   cellHeight?: number;
+
+  className?: string;
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
@@ -40,7 +43,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
     >
-      <div className="orderly-h-full orderly-relative">
+      <div className={cn("orderly-h-full orderly-relative", props.className)}>
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />

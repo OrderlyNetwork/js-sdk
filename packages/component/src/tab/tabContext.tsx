@@ -4,6 +4,7 @@ import React, {
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -12,16 +13,21 @@ export interface TabContextState {
   toggleContentVisible: () => void;
   data: any;
   updateData: (key: string, value: any) => void;
+
+  height?: TabRect;
 }
 
 const TabContext = React.createContext<TabContextState>({} as TabContextState);
 
 const useTabContext = () => useContext(TabContext);
 
+export type TabRect = { box: number; header: number; content: number };
+
 const TabContextProvider: FC<
   PropsWithChildren<{
     data?: any;
     collapsed: boolean;
+    height?: TabRect;
     onToggleCollapsed?: () => void;
   }>
 > = (props) => {
@@ -39,12 +45,13 @@ const TabContextProvider: FC<
     });
   }, []);
 
-  console.log("----- tab context ----------", props.data);
+  // console.log("----- tab context ----------", props.data, props.height);
 
   return (
     <TabContext.Provider
       value={{
         contentVisible: !props.collapsed,
+        height: props.height,
         toggleContentVisible: () => {
           // setVisible((visible: boolean) => !visible);
           props.onToggleCollapsed?.();

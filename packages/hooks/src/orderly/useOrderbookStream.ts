@@ -56,11 +56,12 @@ const reduceItems = (
         const decimal = priceStr.slice(index + 1);
         const decimalDepth = depth.toString().slice(2).length;
         const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
-        priceKey = new Decimal(priceStr.slice(0, index) + "." + decimalStr).toNumber();
+        priceKey = new Decimal(
+          priceStr.slice(0, index) + "." + decimalStr
+        ).toNumber();
       }
 
       // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
-
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
@@ -110,23 +111,21 @@ export const reduceOrderbook = (
 
   let bids = reduceItems(depth, level, data.bids);
 
-  
   /// not empty and asks.price <= bids.price
-  if(asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
-
-    if(asks.length === 1) {
-      const [ price, qty, newQuantity ] = asks[0];
+  if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
+    if (asks.length === 1) {
+      const [price, qty, newQuantity] = asks[0];
       asks.shift();
-      asks.push([ price + (depth === undefined ? 0 : depth), qty, newQuantity ]);
+      asks.push([price + (depth === undefined ? 0 : depth), qty, newQuantity]);
     } else {
-      const[ bidPrice ] = bids[0];
-      while(asks.length > 0) {
-        const [ askPrice, askQty, newQuantity ] = asks[0];
-        
-        if(askPrice <= bidPrice) {
+      const [bidPrice] = bids[0];
+      while (asks.length > 0) {
+        const [askPrice, askQty, newQuantity] = asks[0];
+
+        if (askPrice <= bidPrice) {
           asks.shift();
-          for(let index = 0; index < asks.length; index++) {
-            if (index === 0 ){
+          for (let index = 0; index < asks.length; index++) {
+            if (index === 0) {
               asks[index][1] += askQty;
             }
             asks[index][2] += newQuantity;
@@ -139,10 +138,12 @@ export const reduceOrderbook = (
   }
 
   asks = asks.reverse();
-  
+
   return {
-    asks: asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
-    bids: bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
+    asks:
+      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
+    bids:
+      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
   };
 };
 
@@ -208,10 +209,13 @@ export const useOrderbookStream = (
     throw new Error("useOrderbookStream requires a symbol");
   }
 
+  const { level } = options ?? { level: 10 };
+
   const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
-  const [level, setLevel] = useState(() => options?.level ?? 10);
+  // const [level, setLevel] = useState(() => options?.level ?? 10);
+
   const config = useSymbolsInfo()[symbol];
 
   const [depth, setDepth] = useState<number | undefined>();
@@ -253,9 +257,13 @@ export const useOrderbookStream = (
           if (!!message) {
             // sort and filter qty > 0
             let bids = [...message.bids.sort(bidsSortFn)];
-            bids = bids.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
+            bids = bids.filter(
+              (item: number[]) => !isNaN(item[0]) && item[1] > 0
+            );
             let asks = [...message.asks.sort(asksSortFn)];
-            asks = asks.filter((item: number[]) => !isNaN(item[0]) && item[1] > 0);
+            asks = asks.filter(
+              (item: number[]) => !isNaN(item[0]) && item[1] > 0
+            );
 
             // const reduceOrderbookData = reduceOrderbook(depth, level, {
             //   bids: bids,
@@ -345,7 +353,6 @@ export const useOrderbookStream = (
   useEffect(() => {
     prevMiddlePrice.current = middlePrice;
   }, [middlePrice]);
-
 
   const reducedData = reduceOrderbook(depth, level, {
     asks: [...data.asks],

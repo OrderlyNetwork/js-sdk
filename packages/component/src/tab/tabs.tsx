@@ -12,7 +12,7 @@ import { FC, PropsWithChildren, useMemo } from "react";
 import { Tab, TabProps } from "./tab";
 import { TabPaneProps } from "./tabPane";
 import { TabBarExtraRender, TabItem, TabList } from "./tabList";
-import { TabContextProvider } from "./tabContext";
+import { TabContextProvider, TabRect } from "./tabContext";
 import { MemorizedTabContent, TabContent } from "./tabContent";
 import { TabGroup } from "@/tab/tabGroup";
 import { TabViewMode } from "./constants";
@@ -39,6 +39,8 @@ export interface TabsProps {
    *
    */
   minWidth?: number;
+
+  autoFit?: boolean;
 }
 
 // it's controlled component;
@@ -55,6 +57,12 @@ const TabsInner = (
 ) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewMode, setViewMode] = useState(TabViewMode.Tab);
+
+  const [height, setHeight] = useState<TabRect>({
+    box: 0,
+    header: 0,
+    content: 0,
+  });
 
   const [tabList, children] = useMemo(() => {
     const tabList: TabItem[] = [],
@@ -108,6 +116,7 @@ const TabsInner = (
   // }, [children, activeIndex]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const tabHeaderRef = useRef<WeakMap<HTMLDivElement, number>>(new WeakMap());
 
   useEffect(() => {
     if (
@@ -141,6 +150,68 @@ const TabsInner = (
     };
   }, [props.allowUngroup, props.minWidth, children.length]);
 
+  useEffect(() => {
+    if (!props.autoFit) {
+      return;
+    }
+
+    if (!containerRef.current) {
+      return;
+    }
+
+    const parent = containerRef.current.parentElement;
+
+    if (parent === null) {
+      return;
+    }
+
+    const observer = new ResizeObserver(function (entries) {
+      if (Array.isArray(entries) && entries[0]) {
+        // const parentBounding = parent.getBoundingClientRect();
+
+        const target = entries[0];
+
+        const height = target.contentRect.height;
+
+        const header = containerRef.current!.querySelector<HTMLDivElement>(
+          ".orderly-tab-header"
+        );
+
+        if (!header) return;
+
+        let headerHeight = tabHeaderRef.current.get(header);
+
+        if (!headerHeight) {
+          const height = header.getBoundingClientRect().height;
+          tabHeaderRef.current.set(header, height);
+          headerHeight = height;
+        }
+
+        // if (header === null) {
+        //   return;
+        // }
+
+        if (!tabHeaderRef.current) {
+          return;
+        }
+
+        // console.log("bounding", bounding);
+
+        setHeight((rect) => ({
+          box: height,
+          header: headerHeight!,
+          content: height - headerHeight!,
+        }));
+      }
+    });
+
+    observer.observe(parent);
+
+    return () => {
+      observer.unobserve(parent);
+    };
+  }, []);
+
   useImperativeHandle(ref, () => {
     return {
       getContainer: () => containerRef.current!,
@@ -170,19 +241,11 @@ const TabsInner = (
       data={props.extraData}
       collapsed={collapsed}
       onToggleCollapsed={onToggleCollapsed}
+      height={height}
     >
-      <div ref={containerRef} className="orderly-min-h-0">
+      <div ref={containerRef} className="orderly-min-h-0 orderly-max-h-full">
         {tabHeader}
-        {/* <TabList
-          mode={viewMode}
-          tabs={tabList}
-          onTabChange={props.onTabChange}
-          value={props.value}
-          tabBarExtra={props.tabBarExtra}
-          showIdentifier={showIdentifier}
-          className={props.tabBarClassName}
-          fullWidth={props.fullWidth}
-        /> */}
+
         <MemorizedTabContent
           mode={viewMode}
           activeIndex={activeIndex}

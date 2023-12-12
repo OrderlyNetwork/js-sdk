@@ -12,7 +12,7 @@ export const TabGroup: FC<Props> = (props) => {
   return (
     <div
       className={cn(
-        "orderly-grid orderly-border-b orderly-border-divider",
+        "orderly-grid orderly-border-b orderly-border-divider orderly-tab-header",
         props.className
       )}
       style={{ gridTemplateColumns: `repeat(${props.tabList.length}, 1fr)` }}

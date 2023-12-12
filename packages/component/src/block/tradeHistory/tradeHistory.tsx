@@ -3,10 +3,13 @@ import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
 import { API, OrderSide } from "@orderly.network/types";
 import { SymbolContext } from "@/provider";
+import { cn } from "@/utils/css";
 
 export interface TradeHistoryProps {
   dataSource?: API.Trade[];
   loading?: boolean;
+  headerClassName?: string;
+  className?: string;
 }
 
 export const TradeHistory: FC<TradeHistoryProps> = (props) => {
@@ -75,7 +78,10 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       columns={columns}
       loading={props.loading}
       className="orderly-text-3xs"
-      headerClassName="orderly-text-base-contrast-36 orderly-bg-base-800"
+      headerClassName={cn(
+        "orderly-text-base-contrast-36 orderly-bg-base-800",
+        props.headerClassName
+      )}
       generatedRowKey={(record, index) =>
         // @ts-ignore
         `record.ts_${record.price}_${record.size}_${index}`

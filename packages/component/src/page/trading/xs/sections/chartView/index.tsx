@@ -51,7 +51,9 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   size={18}
                   className={cn(
                     "orderly-transition-transform orderly-text-base-contrast/50",
-                    context.contentVisible ? "orderly-rotate-180" : "orderly-rotate-0"
+                    context.contentVisible
+                      ? "orderly-rotate-180"
+                      : "orderly-rotate-0"
                   )}
                 />
               </button>
@@ -71,7 +73,11 @@ export const ChartView: FC<ChartViewProps> = (props) => {
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">
-          <TradeHistoryPane symbol={symbol} />
+          <div className="orderly-h-[240px] orderly-overflow-y-auto">
+            <SymbolProvider symbol={symbol}>
+              <TradeHistoryPane symbol={symbol} />
+            </SymbolProvider>
+          </div>
         </TabPane>
         <TabPane title="Data" value="tradeData">
           <SymbolProvider symbol={symbol}>
