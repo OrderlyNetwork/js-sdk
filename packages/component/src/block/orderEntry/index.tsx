@@ -32,6 +32,7 @@ import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
+import { convertValueToPercentage } from "@/slider/utils";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -478,13 +479,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                         }
                       )}
                     >
-                      <Numeral rule="percentages">
-                        {Math.min(
-                          1,
-                          Math.ceil((Number(field.value ?? 0) / maxQty) * 100) /
-                            100
-                        )}
-                      </Numeral>
+                      <span>
+                        {Number(convertValueToPercentage(Number(field.value), 0 , maxQty === 0 ? 1 : maxQty).toFixed())}%
+                      </span>
                       <span className="orderly-flex orderly-items-center orderly-gap-1">
                         <span className="orderly-text-base-contrast-54">
                           Max buy
