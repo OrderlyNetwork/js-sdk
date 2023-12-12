@@ -1,16 +1,7 @@
-import { CHART_BG, CHART_GREEN, CHART_RED } from '../color';
 
 export const SETTING_CHAR_LIMIT = 300_000;
 export const getChartSettingAdapterKey = (chartKey: string) => `${chartKey}_adapter`;
 
-// TODO: it's been a while since the revamped version released, consider removing the transformation.
-export const transformCompatibility = (chartPropsString: string) => {
-    const oldGreenRegex = /#9DCB60|#49B06C|#26a69a/g;
-    const oldRedRegex = /#E95D5D|#D9444D|#ef5350/g;
-    const oldBackground = /#20252F|#131722/g;
-
-    return chartPropsString.replace(oldGreenRegex, CHART_GREEN).replace(oldRedRegex, CHART_RED).replace(oldBackground, CHART_BG);
-};
 
 export const defaultSettings = {
     'trading.chart.proterty': JSON.stringify({
@@ -33,14 +24,10 @@ export const clearChartCache = () => chartCacheMap.clear();
 const parseAndCacheChartData = (chartKey: string, savedDataString: string, adapterSettingString: string) => {
     const settingAdapterKey = getChartSettingAdapterKey(chartKey);
     try {
-        const transformedSavedDataString = transformCompatibility(savedDataString);
 
-        const savedData = transformedSavedDataString ? JSON.parse(transformedSavedDataString) : undefined;
+        const savedData =  undefined;
         const adapterSetting = adapterSettingString ? JSON.parse(adapterSettingString) : defaultSettings;
 
-        if (transformedSavedDataString) {
-            chartCacheMap.set(chartKey, transformedSavedDataString);
-        }
         if (adapterSettingString) {
             chartCacheMap.set(settingAdapterKey, adapterSettingString);
         }

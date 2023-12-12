@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce';
 import isEqual from 'lodash/isEqual';
+import { Overrides, ThemeName } from '../charting_library';
 import type {AbstractDatafeed} from '../datafeed/abstract-datafeed';
 import type {
     ChartMode,
@@ -24,6 +25,9 @@ export interface WidgetOptions {
     fullscreen?: TradingTerminalWidgetOptions['fullscreen'];
     autosize?: TradingTerminalWidgetOptions['autosize'];
     symbol: TradingTerminalWidgetOptions['symbol'];
+    overrides?: Overrides;
+    theme?: ThemeName;
+    interval: ResolutionString,
     locale: string;
     timezone?: string;
     container: TradingTerminalWidgetOptions['container'];
@@ -140,16 +144,19 @@ export class Widget {
                           }: WidgetProps) {
         const getBroker = options.getBroker;
 
-        const widgetOptions: Omit<TradingTerminalWidgetOptions, 'interval'> = {
+        const widgetOptions: TradingTerminalWidgetOptions = {
             fullscreen: options.fullscreen ?? true,
             autosize: options.autosize ?? false,
             timezone: options.timezone as TradingTerminalWidgetOptions['timezone'],
             symbol: options.symbol,
             library_path: options.libraryPath,
+            interval: options.interval ?? '1',
             custom_css_url: options.customCssUrl,
             custom_font_family: options.customFontFamily,
             datafeed: options.datafeed,
             locale: options.locale as LanguageCode,
+            overrides: options.overrides,
+            theme: options.theme ?? 'Dark',
             container: options.container,
             favorites: {
                 intervals: ['1', '3', '5', '15', '30', '60', '240', '1D', '1W', '1M'] as ResolutionString[],
@@ -175,13 +182,28 @@ export class Widget {
         // Get data from remote first. fallback to localstorage if no data on the server yet
         const {savedData, adapterSetting} = await getChartData(this._chartKey, this._isLoggedIn);
 
-        console.log('-- adaptersetting', adapterSetting, savedData);
         // @ts-ignore
         this._adapterSetting = adapterSetting;
+        console.log('--_adapterSetting ',adapterSetting, adapterSetting['chart.lastUsedTimeBasedResolution']);
         this._savedData = savedData;
+        console.log('-- savedData', savedData);
+        console.log('-- trading view props', {
+            ...getOptions(widgetOptions, mode),
+            interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? widgetOptions.interval,
+            saved_data: savedData,
+            settings_adapter: {
+                initialSettings: adapterSetting,
+                setValue: (key: string, value: any) => {
+                    this._adapterSetting = {...this._adapterSetting, [key]: value};
+                    this.debounceSaveChartAdapterSetting();
+                },
+                removeValue: () => {
+                },
+            },
+        })
         this._instance = new TradingView.widget({
             ...getOptions(widgetOptions, mode),
-            interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? 1,
+            interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? widgetOptions.interval,
             saved_data: savedData,
             settings_adapter: {
                 initialSettings: adapterSetting,

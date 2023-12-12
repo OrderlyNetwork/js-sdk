@@ -6,6 +6,7 @@ import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service'
 
 import {useWS} from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
+import {ResolutionString} from "./tradingViewAdapter/charting_library";
 
 
 interface TradingViewPorps {
@@ -55,8 +56,23 @@ export default function TradingView({symbol}: TradingViewPorps) {
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 container: chartRef.current,
                 libraryPath: '/charting_library/',
-                // customCssUrl: '/assets/woo-chart/chart.v2.1.css',
-                customFontFamily: '"DIN2014", "Trebuchet MS", roboto, ubuntu, sans-serif',
+                interval: '1',
+
+                // theme: 'Dark',
+                overrides: {
+                    "paneProperties.background": "#ffffff",
+                    // "mainSeriesProperties.style": 1,
+                    "paneProperties.backgroundType": "solid",
+                    // "paneProperties.background": "#151822",
+
+                    "mainSeriesProperties.candleStyle.upColor": "#439687",
+                    "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
+                    "mainSeriesProperties.candleStyle.borderColor": "#378658",
+                    "mainSeriesProperties.candleStyle.borderUpColor": "#439687",
+                    "mainSeriesProperties.candleStyle.borderDownColor": "#DE5E57",
+                    "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
+                    "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
+                },
                 datafeed: new Datafeed(ws),
                 getBroker: undefined,
             };
