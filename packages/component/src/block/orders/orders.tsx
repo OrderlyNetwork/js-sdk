@@ -5,7 +5,7 @@ import { OrderCell } from "@/block/orders/cell";
 import { Toolbar } from "./toolbar";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { API, OrderEntity } from "@orderly.network/types";
-import { OrderListContext, OrderListProvider } from "./orderListContext";
+import { OrderListContext, OrderListProvider } from "./shared/orderListContext";
 import { SymbolProvider } from "@/provider";
 import { OrdersViewProps } from "./types";
 

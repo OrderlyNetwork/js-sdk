@@ -1,4 +1,4 @@
-import { OrderStatus } from "@orderly.network/types";
+import { OrderStatus, OrderSide } from "@orderly.network/types";
 import { FC } from "react";
 import { Listview } from "./listview";
 import { Header } from "./header";
@@ -7,18 +7,22 @@ import { OrdersViewProps } from "../types";
 
 interface Props extends OrdersViewProps {
   status: OrderStatus;
+  onSideChange: (side: OrderSide) => void;
 }
 
 export const OrdersViewFull: FC<Props> = (props) => {
   return (
-    <div>
-      <Header count={props.dataSource?.length ?? 0} />
+    <>
+      <Header
+        count={props.dataSource?.length ?? 0}
+        onSideChange={props.onSideChange}
+      />
       <Divider />
       <Listview
         dataSource={props.dataSource}
         status={props.status}
         onCancelOrder={props.cancelOrder}
       />
-    </div>
+    </>
   );
 };

@@ -44,7 +44,11 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         className: "orderly-h-[48px]",
         dataIndex: "est_liq_price",
         render: (value: string) => {
-          return <Numeral className="orderly-text-warning">{value}</Numeral>;
+          return Number(value) === 0 ? (
+            "--"
+          ) : (
+            <Numeral className="orderly-text-warning">{value}</Numeral>
+          );
         },
       },
       {

@@ -1,20 +1,21 @@
 import { FC, useMemo } from "react";
 import { Table } from "@/table";
 import { Text } from "@/text";
-import { OrderStatus, OrderSide } from "@orderly.network/types";
+import { OrderStatus, OrderSide, API } from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
 import { SymbolProvider } from "@/provider";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
-import { CancelButton } from "./cancelButton";
-import { OrderQuantity } from "./quantity";
-import { Price } from "./price";
+// import { CancelButton } from "./cancelButton";
+// import { OrderQuantity } from "./quantity";
+// import { Price } from "./price";
 
 interface Props {
-  dataSource: any[];
-  status: OrderStatus;
-  onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
+  dataSource: API.OrderExt[];
+  loading?: boolean;
+  //   status: OrderStatus;
+  //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
@@ -51,18 +52,39 @@ export const Listview: FC<Props> = (props) => {
         title: "Filled / Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "quantity",
-        render: (value: string, record) => <OrderQuantity order={record} />,
+        render: (value: string, record) => {
+          return (
+            <span
+              className={cx(
+                record.side === OrderSide.BUY
+                  ? "orderly-text-trade-profit"
+                  : "orderly-text-trade-loss"
+              )}
+            >{`${record.executed} / ${record.quantity}`}</span>
+          );
+        },
       },
       {
-        title: "Price",
+        title: "Order Price",
         className: "orderly-h-[48px]",
         dataIndex: "price",
-        render: (value: string, record) => <Price order={record} />,
+        // render: (value: string, record) => <Price order={record} />,
       },
       {
-        title: "Est.total",
+        title: "Avg.price",
         className: "orderly-h-[48px]",
-        dataIndex: "total",
+        dataIndex: "average_executed_price",
+      },
+      {
+        title: "Fee",
+        className: "orderly-h-[48px]",
+        dataIndex: "total_fee",
+      },
+      {
+        title: "Status",
+        className: "orderly-h-[48px]",
+        dataIndex: "status",
+        formatter: upperCaseFirstLetter,
       },
       {
         title: "Reduce",
@@ -81,39 +103,57 @@ export const Listview: FC<Props> = (props) => {
         },
       },
       {
-        title: "Update",
-        dataIndex: "updated_time",
-        className: "orderly-h-[48px]",
-        render: (value: string) => (
-          <Text
-            rule={"date"}
-            className="orderly-break-normal orderly-whitespace-nowrap"
-          >
-            {value}
-          </Text>
-        ),
-      },
-    ];
-
-    if (props.status === OrderStatus.INCOMPLETE) {
-      columns.push({
         title: "",
         dataIndex: "action",
         className: "orderly-h-[48px]",
         align: "right",
-        render: (_: string, record) => {
-          return <CancelButton order={record} onCancel={props.onCancelOrder} />;
+        render: (value: string, record) => {
+          if (record.status === OrderStatus.CANCELLED) {
+            return (
+              <Button size={"small"} variant={"outlined"} color={"tertiary"}>
+                Renew
+              </Button>
+            );
+          }
+
+          return null;
         },
-      });
-    }
+      },
+      //   {
+      //     title: "Update",
+      //     dataIndex: "updated_time",
+      //     className: "orderly-h-[48px]",
+      //     render: (value: string) => (
+      //       <Text
+      //         rule={"date"}
+      //         className="orderly-break-normal orderly-whitespace-nowrap"
+      //       >
+      //         {value}
+      //       </Text>
+      //     ),
+      //   },
+    ];
+
+    // if (props.status === OrderStatus.INCOMPLETE) {
+    //   columns.push({
+    //     title: "",
+    //     dataIndex: "action",
+    //     className: "orderly-h-[48px]",
+    //     align: "right",
+    //     render: (_: string, record) => {
+    //       return <CancelButton order={record} onCancel={props.onCancelOrder} />;
+    //     },
+    //   });
+    // }
 
     return columns;
-  }, [props.status]);
+  }, []);
   return (
     <Table
       bordered
       justified
       columns={columns}
+      loading={props.loading}
       dataSource={props.dataSource}
       headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
       className={"orderly-text-2xs orderly-text-base-contrast-80"}

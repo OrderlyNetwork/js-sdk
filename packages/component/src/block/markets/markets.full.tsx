@@ -1,13 +1,15 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { Header } from "./full/header";
 import { MarketsProps } from "./markets";
 import { ListViewFull } from "./full/listview";
 import { useDataSource } from "./useDataSource";
 import { MoveDirection } from "./full/search";
+import { ListViewRef } from "@/listView/listView";
 
 interface Props {
   maxHeight?: number;
   onClose?: () => void;
+  // ref: ListViewRef;
 }
 
 export const MarketsFull: FC<MarketsProps & Props> = (props) => {
@@ -18,6 +20,10 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
     props.dataSource
   );
 
+  const listviewRef = useRef<{
+    scroll: (direction: { x: number; y: number }) => void;
+  }>();
+
   const onKeywordChange = (key: string) => {
     onSearch(key);
     setActiveIndex(-1);
@@ -25,11 +31,21 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
 
   const onMoving = (direction: MoveDirection) => {
     if (dataSource?.length === 0) return;
+    let nextIndex = activeIndex;
     if (direction === MoveDirection.Up) {
-      setActiveIndex((prev) => prev - 1);
+      nextIndex = activeIndex < 0 ? dataSource!.length - 1 : activeIndex - 1;
     } else if (direction === MoveDirection.Down) {
-      setActiveIndex((prev) => (prev + 1) % dataSource!.length);
+      nextIndex = (activeIndex + 1) % dataSource!.length;
     }
+
+    setActiveIndex(nextIndex);
+
+    setTimeout(() => {
+      listviewRef.current?.scroll({
+        x: 0,
+        y: Math.max(40 * nextIndex, 0),
+      });
+    }, 0);
   };
 
   const onSymbolSelect = () => {
@@ -50,6 +66,7 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
         onSymbolSelect={onSymbolSelect}
       />
       <ListViewFull
+        ref={listviewRef}
         activeIndex={activeIndex}
         dataSource={dataSource}
         onSort={onSort}
@@ -59,3 +76,6 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
     </div>
   );
 };
+function ForwardedRef<T>(arg0: null) {
+  throw new Error("Function not implemented.");
+}

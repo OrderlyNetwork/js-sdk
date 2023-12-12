@@ -91,7 +91,7 @@ const buttonVariants = cva(
         variant: "contained",
         color: "tertiary",
         class:
-          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast",
+          "orderly-bg-base-400 hover:orderly-bg-base-500 orderly-text-base-contrast",
       },
       {
         variant: "contained",

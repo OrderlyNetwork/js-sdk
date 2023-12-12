@@ -10,6 +10,7 @@ import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
 import { TabContext } from "@/tab";
 import { OrderStatus } from "@orderly.network/types";
 import { OrdersViewFull } from "@/block/orders/full";
+import { OrderSide } from "@orderly.network/types";
 
 interface Props {
   // symbol: string;
@@ -29,10 +30,13 @@ export const MyOrders: FC<Props> = (props) => {
     showAllSymbol ? "" : context.symbol
   );
 
+  const [side, setSide] = useState<OrderSide>();
+
   const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
     useOrderStream({
       status: props.status,
       symbol: symbol,
+      side,
     });
 
   const onShowAllSymbolChange = (isAll: boolean) => {
@@ -56,6 +60,7 @@ export const MyOrders: FC<Props> = (props) => {
       dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
       isLoading={isLoading}
       symbol={context.symbol}
+      onSideChange={setSide}
       showAllSymbol={showAllSymbol}
       cancelOrder={onCancelOrder}
       onShowAllSymbolChange={onShowAllSymbolChange}

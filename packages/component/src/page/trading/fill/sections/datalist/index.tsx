@@ -7,6 +7,7 @@ import { MemoizedOrdersTabTitle } from "@/page/trading/xs/sections/dataList/orde
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
+import { HistoryView } from "./history";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -42,12 +43,10 @@ export const DataListView = () => {
         <MyOrders status={OrderStatus.CANCELLED} />
       </TabPane>
       <TabPane title="Rejected" value="rejected" className="orderly-px-3">
-        {/* <HistoryPane /> */}
-        <div>History</div>
+        <MyOrders status={OrderStatus.REJECTED} />
       </TabPane>
       <TabPane title="Order History" value="history" className="orderly-px-3">
-        {/* <HistoryPane /> */}
-        <div>History</div>
+        <HistoryView />
       </TabPane>
     </Tabs>
   );

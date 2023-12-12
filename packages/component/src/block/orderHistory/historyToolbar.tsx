@@ -5,6 +5,7 @@ import { SidePicker } from "@/block/pickers";
 import { OrderSide, OrderStatus, OrderType } from "@orderly.network/types";
 
 import { FC, useMemo, useState } from "react";
+import { SIDE_OPTIONS, STATUS_OPTIONS } from "./shared/constants";
 
 interface HistoryToolbarProps {
   side?: OrderSide | "";
@@ -15,48 +16,10 @@ interface HistoryToolbarProps {
 
 export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
   const sideOptions = useMemo(() => {
-    return [
-      {
-        label: "All sides",
-        value: "",
-      },
-      {
-        label: "Buy",
-        value: OrderSide.BUY,
-      },
-      {
-        label: "Sell",
-        value: OrderSide.SELL,
-      },
-    ];
+    return SIDE_OPTIONS;
   }, []);
   const statusOptions = useMemo(() => {
-    return [
-      {
-        label: "All status",
-        value: "",
-      },
-      {
-        label: "Pending",
-        value: OrderStatus.NEW,
-      },
-      {
-        label: "Filled",
-        value: OrderStatus.FILLED,
-      },
-      {
-        label: "Partially filled",
-        value: OrderStatus.PARTIAL_FILLED,
-      },
-      {
-        label: "Cancelled",
-        value: OrderStatus.CANCELLED,
-      },
-      {
-        label: "Rejected",
-        value: OrderStatus.REJECTED,
-      },
-    ];
+    return STATUS_OPTIONS;
   }, []);
 
   return (

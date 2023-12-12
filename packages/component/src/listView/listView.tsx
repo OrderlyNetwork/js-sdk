@@ -5,7 +5,7 @@ import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
 import { useEndReached } from "./useEndReached";
 
-export interface ListViewProps<T, D = unknown> {
+export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;
   renderItem: (item: T, index: number, extraData?: D) => React.ReactNode;
   className?: string;
@@ -18,11 +18,13 @@ export interface ListViewProps<T, D = unknown> {
   extraData?: D;
 }
 
+export type ListViewRef = ForwardedRef<{
+  scroll: (direction: { x: number; y: number }) => void;
+}>;
+
 const ListViewInner = <T extends unknown, D extends unknown>(
   props: ListViewProps<T, D>,
-  ref: ForwardedRef<{
-    scroll: (direction: { x: number; y: number }) => void;
-  }>
+  ref: ListViewRef
 ) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -77,10 +79,10 @@ const ListViewInner = <T extends unknown, D extends unknown>(
   return (
     <div
       style={props.style}
+      ref={containerRef}
       className={cn("orderly-relative orderly-min-h-[180px]", props.className)}
     >
       <div
-        ref={containerRef}
         className={cn(
           "orderly-list-view-inner orderly-space-y-3",
           props.contentClassName

@@ -1,10 +1,11 @@
-import { FC } from "react";
+import { FC, forwardRef, useRef } from "react";
 import { MarketListViewProps, SortDirection, SortKey } from "../types";
 import { API } from "@orderly.network/types";
 import { ListView } from "@/listView";
 import { Numeral, Text } from "@/text";
 import { SortGroup } from "./sortGroup";
 import { cn } from "@/utils/css";
+import { ListViewRef } from "@/listView/listView";
 
 interface Props {
   activeIndex: number;
@@ -15,7 +16,10 @@ interface Props {
   updateActiveIndex?: (index: number) => void;
 }
 
-export const ListViewFull: FC<MarketListViewProps & Props> = (props) => {
+export const ListViewFull = forwardRef<
+  ListViewRef,
+  MarketListViewProps & Props
+>((props, ref) => {
   const renderItem = (
     item: API.MarketInfoExt,
     index: number,
@@ -55,6 +59,7 @@ export const ListViewFull: FC<MarketListViewProps & Props> = (props) => {
     <div>
       <SortGroup onChange={props.onSort} />
       <ListView<API.MarketInfoExt, number>
+        ref={ref}
         dataSource={props.dataSource}
         renderItem={renderItem}
         className="orderly-text-xs orderly-overflow-y-auto"
@@ -64,4 +69,4 @@ export const ListViewFull: FC<MarketListViewProps & Props> = (props) => {
       />
     </div>
   );
-};
+});

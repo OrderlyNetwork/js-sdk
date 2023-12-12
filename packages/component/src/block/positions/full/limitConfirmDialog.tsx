@@ -7,6 +7,7 @@ import { Text } from "@/text";
 import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
 import { OrderDetail } from "../shared/orderDetail";
+import { OrderEntity } from "@orderly.network/types";
 
 export const LimitConfirmDialog: FC<{
   base: string;
@@ -14,7 +15,7 @@ export const LimitConfirmDialog: FC<{
   onClose: () => void;
   onConfirm: () => Promise<any>;
   quote: string;
-  order: any;
+  order: OrderEntity;
   submitting: boolean;
 }> = (props) => {
   const { order, quote } = props;
