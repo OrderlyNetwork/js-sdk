@@ -20,7 +20,6 @@ export const BottomNavBar = () => {
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
   const { errors } = useContext(OrderlyAppContext);
-  const { onlyTestnet } = useContext<any>(OrderlyContext);
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
 
@@ -42,8 +41,6 @@ export const BottomNavBar = () => {
   }, []);
 
   const showGetTestUSDC = useMemo(() => {
-    // 在localstrange里面加ENABLE_MAINNET=true值就可以让onlyTestnet为true
-
     const chainId = connectedChain?.id;
     if (chainId === undefined) {
       return false;

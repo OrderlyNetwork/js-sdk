@@ -18,9 +18,9 @@ export const CloseBaseConfirm: FC<{
       <div className="orderly-text-base-contrast orderly-text-sm orderly-mt-5">
         {`You agree closing ${props.quantity} ${props.base} position at market price.`}
       </div>
-      <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
+      {/* <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
         Pending reduce-only orders will be cancelled or adjusted.
-      </div>
+      </div> */}
       <ConfirmFooter
         onCancel={onCancel}
         onConfirm={props.onConfirm}

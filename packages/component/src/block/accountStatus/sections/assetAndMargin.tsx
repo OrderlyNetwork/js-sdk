@@ -62,7 +62,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
       title: "Settle PnL",
-      contentClassName: "desktop:orderly-w-[364px]",
+      maxWidth: "xs",
       content: (
         <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
           Are you sure you want to settle your PnL? Settlement will take up to 1
@@ -154,7 +154,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="orderly-text-primary orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
+                className="orderly-text-link orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
@@ -307,6 +307,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           variant={"outlined"}
           onClick={onWithdraw}
           id="orderly-assets-margin-withdraw-button"
+          className="orderly-border-primary-darken hover:orderly-bg-transport orderly-text-primary"
         >
           Withdraw
         </Button>

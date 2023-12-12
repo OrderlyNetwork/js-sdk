@@ -1,13 +1,16 @@
 import Button from "@/button";
 import { Statistic } from "@/statistic";
 import { AggregatedData } from "@/block/positions/overview";
-import { FC } from "react";
+import { FC, useCallback, useContext } from "react";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { Numeral } from "@/text";
 import { cn } from "@/utils/css";
 import { RefreshCcw } from "lucide-react";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
+import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
+import { modal } from "@/modal";
+import { SettlePnlContent } from "@/block/withdraw";
 
 interface Props {
   onMarketCloseAll?: () => void;
@@ -21,6 +24,27 @@ interface Props {
 
 export const Header: FC<Props> = (props) => {
   const unrealPnL = props.aggregated?.unrealPnL ?? 0;
+  const { onSettle } = useContext(AssetsContext);
+
+  const onSettleClick = useCallback(() => {
+    modal
+      .confirm({
+        title: "Settle PnL",
+        content: (<SettlePnlContent />),
+        maxWidth: "xs",
+        onCancel() {
+          return Promise.reject("cancel");
+        },
+        onOk() {
+          return onSettle();
+        },
+      })
+      .then(
+        () => { },
+        (error) => { }
+      );
+  }, []);
+
   return (
     <StatisticStyleProvider
       labelClassName="orderly-text-3xs orderly-text-base-contrast-54"
@@ -72,7 +96,7 @@ export const Header: FC<Props> = (props) => {
                 <Numeral showIcon coloring>
                   {props.aggregated?.unsettledPnL ?? 0}
                 </Numeral>
-                <button className={"orderly-text-primary-light"}>
+                <button className={"orderly-text-primary-light"} onClick={onSettleClick}>
                   {/*@ts-ignore*/}
                   <RefreshCcw size={14} />
                 </button>

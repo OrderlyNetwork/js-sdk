@@ -25,7 +25,6 @@ export interface ChainSelectProps {
   // onChainIdChange?: (chainId: number) => void;
   value: CurrentChain | null;
   settingChain?: boolean;
-  onlyTestnet?: boolean;
   wooSwapEnabled?: boolean;
   filter?: (chain: API.Chain) => boolean;
 }
@@ -34,7 +33,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const [open, setOpen] = useState(false);
 
   const isDesktop = useMediaQuery('(min-width: 1024px)');
-  const { onlyTestnet, wooSwapEnabled = true, disabled } = props;
+  const { wooSwapEnabled = true, disabled } = props;
   // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
     wooSwapEnabled,
@@ -54,11 +53,8 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       return allChains.testnet ?? [];
     }
 
-    if (onlyTestnet) {
-      return allChains.testnet ?? [];
-    }
     return allChains.mainnet;
-  }, [allChains, onlyTestnet, connectedChain]);
+  }, [allChains, connectedChain]);
 
   const { value } = props;
 
@@ -112,7 +108,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   }, [chains?.length, props.settingChain]);
 
 
-  
+
 
   function parseChainId(id?: string | number) {
     if (typeof id === 'number') {
@@ -127,9 +123,9 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     }
 
   }
-  
-  
-  if (!isDesktop) {
+
+
+  if (!isDesktop || ((chains?.length ?? 0) < 2 || props.settingChain)) {
    return <button
       className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
       disabled={(chains?.length ?? 0) < 2 || props.settingChain}
@@ -175,7 +171,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
           return (
             <DropdownMenuItem
               onClick={() => {
-                const chainInfo = findByChainId(chain.chain_id);                
+                const chainInfo = findByChainId(chain.chain_id);
                 if(chainInfo) {
                   props?.onValueChange?.(chainInfo);
                 }

@@ -32,6 +32,7 @@ import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
+import { convertValueToPercentage } from "@/slider/utils";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -304,7 +305,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "orderly-bg-success-light orderly-text-base-contrast after:orderly-bg-success-light",
+                    "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit",
                   disabledClassName:
                     "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
@@ -313,7 +314,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "orderly-bg-danger-light orderly-text-base-contrast after:orderly-bg-danger-light",
+                    "orderly-bg-trade-loss orderly-text-base-contrast after:orderly-bg-trade-loss",
                   disabledClassName:
                     "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
                 },
@@ -340,7 +341,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 size={"small"}
                 type="button"
                 onClick={onDeposit}
-                className="orderly-text-primary orderly-text-4xs"
+                className="orderly-text-link orderly-text-4xs"
               >
                 Deposit
               </Button>
@@ -354,7 +355,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <MSelect
                     label={"Order Type"}
                     value={field.value}
-                    className="orderly-bg-base-600"
+                    className="orderly-bg-base-600 orderly-font-semibold"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
                     options={[
@@ -403,7 +404,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
                     value={isMarketOrder ? "Market" : field.value}
-                    className="orderly-text-right"
+                    className="orderly-text-right orderly-font-semibold"
                     containerClassName={
                       isMarketOrder
                         ? "orderly-bg-base-700"
@@ -478,13 +479,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                         }
                       )}
                     >
-                      <Numeral rule="percentages">
-                        {Math.min(
-                          1,
-                          Math.ceil((Number(field.value ?? 0) / maxQty) * 100) /
-                            100
-                        )}
-                      </Numeral>
+                      <span>
+                        {Number(convertValueToPercentage(Number(field.value), 0 , maxQty === 0 ? 1 : maxQty).toFixed())}%
+                      </span>
                       <span className="orderly-flex orderly-items-center orderly-gap-1">
                         <span className="orderly-text-base-contrast-54">
                           Max buy

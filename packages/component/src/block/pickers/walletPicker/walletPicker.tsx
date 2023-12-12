@@ -32,8 +32,6 @@ export interface WalletPickerProps {
 export const WalletPicker: FC<WalletPickerProps> = (props) => {
   const { chain } = props;
 
-  const { onlyTestnet } = useContext<any>(OrderlyContext);
-
   const address = useMemo(() => {
     if (!props.address) return "--";
     return props.address.replace(/^(.{6})(.*)(.{4})$/, "$1......$3");
@@ -49,7 +47,6 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
         onValueChange={props.onChainChange}
         onChainInited={props.onChainInited}
         settingChain={props.settingChain}
-        onlyTestnet={onlyTestnet}
         wooSwapEnabled={props.wooSwapEnabled}
       />
     </div>

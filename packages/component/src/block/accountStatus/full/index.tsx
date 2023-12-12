@@ -2,7 +2,7 @@ import Button from "@/button";
 import { Assets } from "./assets";
 import { Divider } from "@/divider";
 import { FC, useContext } from "react";
-import { AssetsContext } from "@/provider";
+import { AssetsContext, AssetsProvider } from "@/provider";
 
 interface Props {
   // onWithdraw?: () => void;
@@ -43,7 +43,9 @@ export const AccountInfo: FC<Props> = (props) => {
         </div>
       </div>
       <Divider />
-      <Assets totalBalance={1013130} />
+      <AssetsProvider>
+        <Assets totalBalance={1013130} />
+      </AssetsProvider>
     </>
   );
 };

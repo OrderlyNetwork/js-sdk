@@ -77,16 +77,22 @@ const preview = {
   },
   decorators: [
     (Story) => {
+      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'testnet';
       return (
         <ConnectorProvider>
           <OrderlyAppProvider
-            networkId="testnet"
-            brokerId="woofi_pro"
-            onlyTestnet={false}
+            networkId={networkId}
+            brokerId="orderly"
+            brokerName="Orderly"
             // showTestnet={true}
             logoUrl="/woo_fi_logo.svg"
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
+              localStorage.setItem('preview-orderly-networkId', isTestnet ? 'testnet' : 'mainnet');
+              // realod page
+              setTimeout(() => {
+                window.location.reload();
+              }, 100);
             }}
           >
             <Story />

@@ -31,11 +31,11 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
         </div>
       </div>
       <div className="orderly-flex orderly-flex-col orderly-gap-2">
-        <div className="orderly-flex orderly-justify-between orderly-">
+        <div className="orderly-flex orderly-justify-between">
           <span className="orderly-text-base-contrast-54">Qty.</span>
           <span>{order.order_quantity}</span>
         </div>
-        <div className="orderly-flex orderly-justify-between orderly-">
+        <div className="orderly-flex orderly-justify-between">
           <span className="orderly-text-base-contrast-54">Price</span>
           <span>
             {order.order_type === OrderType.MARKET
@@ -43,7 +43,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
               : order.order_price}
           </span>
         </div>
-        <div className="orderly-flex orderly-justify-between orderly-">
+        <div className="orderly-flex orderly-justify-between">
           <span className="orderly-text-base-contrast-54">Total</span>
           <span>{order.total}</span>
         </div>

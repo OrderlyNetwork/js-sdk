@@ -60,7 +60,7 @@ export const CloseButton = () => {
           Close
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" side="top" className="orderly-w-[364px]">
+      <PopoverContent align="end" side="top" className="orderly-w-[340px]">
         {type === OrderType.MARKET ? (
           <CloseBaseConfirm
             base={base}

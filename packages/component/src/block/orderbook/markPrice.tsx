@@ -56,7 +56,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
         )}
       </div>
       <div
-        className="orderly-flex orderly-items-center orderly-gap-1 desktop:orderly-text-base"
+        className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs desktop:orderly-text-base"
         onClick={onMarkPrice}
       >
         <Flag size={14} className="orderly-text-yellow-400" />

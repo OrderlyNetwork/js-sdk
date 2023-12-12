@@ -30,9 +30,9 @@ export const LimitConfirmDialog: FC<{
       <div className="orderly-text-base-contrast orderly-text-sm orderly-mt-5">
         {`You agree closing ${props.quantity} ${props.base} position at limit price.`}
       </div>
-      <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
+      {/* <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
         Pending reduce-only orders might be cancelled or adjusted.
-      </div>
+      </div> */}
       <Divider className="orderly-my-4" />
 
       <div className="orderly-flex orderly-mb-4 orderly-gap-2">

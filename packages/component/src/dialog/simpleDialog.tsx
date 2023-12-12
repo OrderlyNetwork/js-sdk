@@ -9,6 +9,7 @@ import {
 } from "@/dialog/dialog";
 import { useMemo, useState } from "react";
 import Button from "@/button";
+import { VariantProps } from "class-variance-authority";
 
 export interface BaseDialogProps {
   open: boolean;
@@ -19,6 +20,7 @@ export interface BaseDialogProps {
   footer?: ReactNode;
   onOpenChange?(open: boolean): void;
   contentClassName?: string;
+  maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -83,6 +85,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
         className={props.contentClassName}
+        maxWidth={props.maxWidth}
       >
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
