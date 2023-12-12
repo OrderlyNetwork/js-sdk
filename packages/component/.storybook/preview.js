@@ -47,8 +47,6 @@ const Arbitrum = {
 //   },
 // ];
 
-var networkId = "testnet";
-
 const preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -79,6 +77,7 @@ const preview = {
   },
   decorators: [
     (Story) => {
+      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'testnet';
       return (
         <ConnectorProvider>
           <OrderlyAppProvider
@@ -89,8 +88,11 @@ const preview = {
             logoUrl="/woo_fi_logo.svg"
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
-              networkId = isTestnet ? 'testnet' : 'mainnet';
-              window.location.reload();
+              localStorage.setItem('preview-orderly-networkId', isTestnet ? 'testnet' : 'mainnet');
+              // realod page
+              setTimeout(() => {
+                window.location.reload();
+              }, 100);
             }}
           >
             <Story />
