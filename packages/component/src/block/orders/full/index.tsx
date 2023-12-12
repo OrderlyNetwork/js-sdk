@@ -1,10 +1,11 @@
 import { OrderStatus, OrderSide } from "@orderly.network/types";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Listview } from "./listview";
 import { Header } from "./header";
 import { Divider } from "@/divider";
 import { OrdersViewProps } from "../types";
 import { OrderListProvider } from "../shared/orderListContext";
+import { TabContext } from "@/tab";
 
 interface Props extends OrdersViewProps {
   status: OrderStatus;
@@ -13,6 +14,7 @@ interface Props extends OrdersViewProps {
 }
 
 export const OrdersViewFull: FC<Props> = (props) => {
+  const { height } = useContext(TabContext);
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -24,11 +26,16 @@ export const OrdersViewFull: FC<Props> = (props) => {
         side={props.side}
       />
       <Divider />
-      <Listview
-        dataSource={props.dataSource}
-        status={props.status}
-        onCancelOrder={props.cancelOrder}
-      />
+      <div
+        className="orderly-overflow-y-auto"
+        style={{ height: `${(height?.content ?? 100) - 55}px` }}
+      >
+        <Listview
+          dataSource={props.dataSource}
+          status={props.status}
+          onCancelOrder={props.cancelOrder}
+        />
+      </div>
     </OrderListProvider>
   );
 };

@@ -1,6 +1,6 @@
 import { Divider } from "@/divider";
 import { ListView } from "@/listView";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { HistoryToolbar } from "./historyToolbar";
 import { Cell } from "./cell";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
@@ -10,8 +10,10 @@ import { API } from "@orderly.network/types";
 import { OrderHistoryListViewProps } from "../shared/types";
 import { Header } from "./header";
 import { Listview } from "./listview";
+import { TabContext } from "@/tab";
 
 export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
+  const { height } = useContext(TabContext);
   return (
     <>
       <Header
@@ -21,7 +23,12 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
         onStatusChange={props.onStatusChange}
       />
       <Divider />
-      <Listview dataSource={props.dataSource} loading={props.isLoading} />
+      <div
+        className="orderly-overflow-y-auto"
+        style={{ height: `${(height?.content ?? 100) - 55}px` }}
+      >
+        <Listview dataSource={props.dataSource} loading={props.isLoading} />
+      </div>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { Table } from "@/table";
-import { FC, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
 import { PositionsRowProvider } from "./positionRowContext";
@@ -8,8 +8,10 @@ import { CloseButton } from "./closeButton";
 import { SymbolProvider } from "@/provider";
 import { QuantityInput } from "./quantityInput";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
+import { TabContext } from "@/tab";
 
 export const Listview: FC<PositionsViewProps> = (props) => {
+  const { height } = useContext(TabContext);
   const columns = useMemo(() => {
     return [
       {
@@ -101,23 +103,28 @@ export const Listview: FC<PositionsViewProps> = (props) => {
   }, []);
 
   return (
-    <Table
-      bordered
-      columns={columns}
-      dataSource={props.dataSource}
-      headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
-      className={"orderly-text-2xs orderly-text-base-contrast-80"}
-      generatedRowKey={(record) => record.symbol}
-      justified
-      renderRowContainer={(record, index, children) => {
-        return (
-          <SymbolProvider symbol={record.symbol}>
-            <PositionsRowProvider position={record}>
-              {children}
-            </PositionsRowProvider>
-          </SymbolProvider>
-        );
-      }}
-    />
+    <div
+      className="orderly-overflow-y-auto"
+      style={{ height: `${(height?.content ?? 100) - 68}px` }}
+    >
+      <Table
+        bordered
+        columns={columns}
+        dataSource={props.dataSource}
+        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
+        className={"orderly-text-2xs orderly-text-base-contrast-80"}
+        generatedRowKey={(record) => record.symbol}
+        justified
+        renderRowContainer={(record, index, children) => {
+          return (
+            <SymbolProvider symbol={record.symbol}>
+              <PositionsRowProvider position={record}>
+                {children}
+              </PositionsRowProvider>
+            </SymbolProvider>
+          );
+        }}
+      />
+    </div>
   );
 };

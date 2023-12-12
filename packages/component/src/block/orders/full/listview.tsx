@@ -115,7 +115,7 @@ export const Listview: FC<Props> = (props) => {
       justified
       columns={columns}
       dataSource={props.dataSource}
-      headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
+      headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
       className={"orderly-text-2xs orderly-text-base-contrast-80"}
       generatedRowKey={(record) => record.order_id}
       renderRowContainer={(record, index, children) => {

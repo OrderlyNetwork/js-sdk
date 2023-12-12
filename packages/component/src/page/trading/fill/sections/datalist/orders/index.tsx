@@ -19,7 +19,6 @@ interface Props {
 
 export const MyOrders: FC<Props> = (props) => {
   const context = useContext(TradingPageContext);
-  const tabContext = useContext(TabContext);
 
   const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
     "showAllSymbol_orders",
