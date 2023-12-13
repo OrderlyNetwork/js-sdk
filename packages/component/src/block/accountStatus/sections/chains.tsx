@@ -13,10 +13,17 @@ import {
   useChains,
   OrderlyContext,
   useWalletConnector,
+  useMediaQuery,
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
 import { cn } from "@/utils/css";
+
+import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/dropdown/dropdown";
+import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
+
 
 interface ChainsProps {
   disabled?: boolean;
@@ -25,6 +32,7 @@ interface ChainsProps {
 
 export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const [open, setOpen] = useState(false);
   const { configStore, enableSwapDeposit } =
@@ -77,9 +85,96 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
   };
 
+  // @ts-ignore
+  const [allChains,] = useChains("", {
+    enableSwapDeposit,
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
+  });
+  const chains = useMemo(() => {
+    if (Array.isArray(allChains)) return allChains;
+    if (allChains === undefined) return [];
+
+    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
+      return allChains.testnet ?? [];
+    }
+
+    return allChains.mainnet;
+  }, [allChains, connectedChain]);
+
+  function parseChainId(id?: string | number) {
+    if (typeof id === 'number') {
+      return id;
+    }
+
+    if (typeof id === 'string') {
+      if (id.startsWith('0x')) {
+        return parseInt(id, 16);
+      }
+      return parseInt(id, 10);
+    }
+
+  }
+
+  if (!isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
+          <Button
+            variant={"outlined"}
+            size={"small"}
+            color={"buy"}
+            loading={settingChain}
+            disabled={disabled}
+            className={cn(
+              "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+              props.className
+            )}
+          >
+            {chainName}
+            <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
+          <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
+          <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
+            <ChainListView
+              // @ts-ignore
+              mainChains={mainChains}
+              // @ts-ignore
+              testChains={testChains}
+              onItemClick={(item: any) => {
+                setOpen(false);
+                if (connectedChain) {
+                  setChain({ chainId: item.id }).then((success: boolean) => {
+                    // reset default chain when switch to connected chain
+                    if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+                      setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+                    }
+                    if (success) {
+                      switchDomain(item.id);
+                    }
+                  });
+                } else {
+                  setDefaultChain(item.id);
+                  switchDomain(item.id);
+                }
+              }}
+              currentChainId={parseInt(connectedChain?.id || defaultChain)}
+            />
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  console.log("is desktop display");
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger>
         <Button
           variant={"outlined"}
           size={"small"}
@@ -90,40 +185,43 @@ export const Chains: FC<ChainsProps> = (props) => {
             "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
             props.className
           )}
+          onClick={() => {
+            setOpen((value) => !value);
+          }}
         >
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
-      </DialogTrigger>
-      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
-        <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
-          <ChainListView
-            // @ts-ignore
-            mainChains={mainChains}
-            // @ts-ignore
-            testChains={testChains}
-            onItemClick={(item: any) => {
-              setOpen(false);
-              if (connectedChain) {
-                setChain({ chainId: item.id }).then((success: boolean) => {
-                  // reset default chain when switch to connected chain
-                  if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
-                    setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
-                  }
-                  if (success) {
-                    switchDomain(item.id);
-                  }
-                });
-              } else {
-                setDefaultChain(item.id);
-                switchDomain(item.id);
-              }
-            }}
-            currentChainId={parseInt(connectedChain?.id || defaultChain)}
-          />
-        </DialogBody>
-      </DialogContent>
-    </Dialog>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="orderly-max-h-[327.5px] orderly-max-w-[241px] orderly-overflow-y-auto orderly-bg-base-700 orderly-p-2 orderly-hide-scrollbar"
+      >
+        <ChainListView
+          // @ts-ignore
+          mainChains={mainChains}
+          // @ts-ignore
+          testChains={testChains}
+          onItemClick={(item: any) => {
+            setOpen(false);
+            if (connectedChain) {
+              setChain({ chainId: item.id }).then((success: boolean) => {
+                // reset default chain when switch to connected chain
+                if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+                  setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+                }
+                if (success) {
+                  switchDomain(item.id);
+                }
+              });
+            } else {
+              setDefaultChain(item.id);
+              switchDomain(item.id);
+            }
+          }}
+          currentChainId={parseInt(connectedChain?.id || defaultChain)}
+        />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

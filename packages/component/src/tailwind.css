@@ -147,8 +147,8 @@
     --orderly-color-success-contrast: 199 68 146;
 
     --orderly-color-warning: 255 207 115;
-    --orderly-color-warning-light: 229 199 0;
-    --orderly-color-warning-darken: 229 199 0;
+    --orderly-color-warning-light: 255 207 115;
+    --orderly-color-warning-darken: 117 88 33;
     --orderly-color-warning-contrast: 199 68 146;
 
     --orderly-color-background: 27 32 40;

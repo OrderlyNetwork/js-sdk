@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useContext, useEffect } from "react";
 import Split from "@uiw/react-split";
 import { AccountInfo } from "@/block/accountStatus/full";
 import { TradingPageProps } from "../types";
