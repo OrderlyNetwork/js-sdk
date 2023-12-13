@@ -2,15 +2,31 @@
 
 import "@orderly.network/react/dist/styles.css";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 // export function
 
 const MainView = dynamic(() => import("./view"), { ssr: false });
 
+const _orderlySymbolKey = "orderly-sdk-demo-symbol";
+
 export default function PerpPage({ params }: { params: { symbol: string } }) {
-  // const router = useRouter()
+  const router = useRouter();
   console.log("params", params);
 
-  return <MainView symbol={params.symbol} onSymbolChange={(symbol) => {}} />;
+  let symbol = params.symbol;
+  if (symbol === undefined) {
+    symbol = localStorage.getItem(_orderlySymbolKey) ?? "PERP_ETH_USDC";
+  }
+
+  return (
+    <MainView
+      symbol={symbol}
+      onSymbolChange={(symbol) => {
+        console.log("onSymbolChange", symbol);
+        localStorage.setItem(_orderlySymbolKey, symbol.symbol);
+        router.push(`/perp/${symbol.symbol}`);
+      }}
+    />
+  );
 }
