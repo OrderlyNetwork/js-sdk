@@ -3,7 +3,12 @@ import { Numeral } from "@/text";
 import { Progress } from "@/progress";
 
 import { ChevronDown, RefreshCcw } from "lucide-react";
-import { useLocalStorage, useCollateral, usePositionStream, useMarginRatio } from "@orderly.network/hooks";
+import {
+  useLocalStorage,
+  useCollateral,
+  usePositionStream,
+  useMarginRatio,
+} from "@orderly.network/hooks";
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -27,20 +32,17 @@ export const Assets: FC<AssetsProps> = (props) => {
       dp: 2,
     });
 
-    const [{ aggregated }, positionsInfo] =
-    usePositionStream();
-    const { marginRatio } = useMarginRatio();
+  const [{ aggregated }, positionsInfo] = usePositionStream();
+  const { marginRatio } = useMarginRatio();
 
-    const marginRatioVal = useMemo(() => {
-      return Math.min(
-        10,
-        aggregated.notional === 0
-          ? positionsInfo["margin_ratio"](10)
-          : marginRatio
-      );
-    }, [marginRatio, aggregated]);
-
-    
+  const marginRatioVal = useMemo(() => {
+    return Math.min(
+      10,
+      aggregated.notional === 0
+        ? positionsInfo["margin_ratio"](10)
+        : marginRatio
+    );
+  }, [marginRatio, aggregated]);
 
   return (
     <Collapsible
@@ -51,7 +53,7 @@ export const Assets: FC<AssetsProps> = (props) => {
     >
       <div
         className={
-          "orderly-py-3 orderly-flex orderly-justify-between orderly-items-center"
+          "orderly-py-3 orderly-flex orderly-justify-between orderly-items-center orderly-tabular-nums"
         }
       >
         <div className={"orderly-flex-1"}>
@@ -90,7 +92,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
-        <Progress value={marginRatioVal} variant={"gradient"}/>
+        <Progress value={marginRatioVal} variant={"gradient"} />
       </div>
       <MemorizedLeverage />
     </Collapsible>

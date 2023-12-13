@@ -37,7 +37,11 @@ const LeverageAndMarginRatio = () => {
           Account leverage
         </div>
       </div>
-      <div className={"orderly-flex orderly-flex-col"}>
+      <div
+        className={
+          "orderly-flex orderly-flex-col orderly-tabular-nums orderly-items-end"
+        }
+      >
         <Numeral rule={"percentages"} coloring>
           {marginRatio === 0 ? 10 : Math.min(marginRatio, 10)}
         </Numeral>
