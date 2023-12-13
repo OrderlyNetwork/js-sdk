@@ -1,5 +1,3 @@
-import debounce from 'lodash/debounce';
-import isEqual from 'lodash/isEqual';
 import { Overrides, ThemeName } from '../charting_library';
 import type {AbstractDatafeed} from '../datafeed/abstract-datafeed';
 import type {
@@ -16,6 +14,21 @@ import {ChartHack} from './chart_hack';
 import getOptions from './option';
 import {defaultSettings, getChartData, saveChartAdapterSetting, saveChartData} from './persistUtils';
 
+const debounce = (func: any, delay: any) => {
+    let timer: number | null = null;
+    const debounced = (...args: any[]) => {
+        timer && window.clearTimeout(timer);
+        timer = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+    debounced.cancel = () => {
+        timer && window.clearTimeout(timer);
+        timer = null;
+    };
+    return debounced;
+};
+
 declare let TradingView: any;
 
 const DEFAULT_SETTINGS_KEY = 'chartProp_default';
@@ -26,6 +39,7 @@ export interface WidgetOptions {
     autosize?: TradingTerminalWidgetOptions['autosize'];
     symbol: TradingTerminalWidgetOptions['symbol'];
     overrides?: Overrides;
+    studiesOverrides?: Overrides,
     theme?: ThemeName;
     interval: ResolutionString,
     locale: string;
@@ -108,7 +122,7 @@ export class Widget {
 
     private debounceSaveChart = debounce(() => {
         this._instance?.save((chartProps) => {
-            if (!isEqual(this._savedData, chartProps)) {
+            if (!Object.is(this._savedData, chartProps)) {
                 this._savedData = chartProps;
                 saveChartData(this._chartKey, JSON.stringify(chartProps), this._isLoggedIn);
             }
@@ -154,12 +168,13 @@ export class Widget {
             custom_css_url: options.customCssUrl,
             custom_font_family: options.customFontFamily,
             datafeed: options.datafeed,
+            studies_overrides: options.studiesOverrides,
             locale: options.locale as LanguageCode,
+            theme: options.theme,
             overrides: options.overrides,
-            theme: options.theme ?? 'Dark',
             container: options.container,
             favorites: {
-                intervals: ['1', '3', '5', '15', '30', '60', '240', '1D', '1W', '1M'] as ResolutionString[],
+                intervals: ['1', '5', '15', '30', '60', '240', '1D', '1W', '1M'] as ResolutionString[],
                 chartTypes: ['Area', 'Line'],
             },
             broker_factory: getBroker
@@ -184,23 +199,7 @@ export class Widget {
 
         // @ts-ignore
         this._adapterSetting = adapterSetting;
-        console.log('--_adapterSetting ',adapterSetting, adapterSetting['chart.lastUsedTimeBasedResolution']);
         this._savedData = savedData;
-        console.log('-- savedData', savedData);
-        console.log('-- trading view props', {
-            ...getOptions(widgetOptions, mode),
-            interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? widgetOptions.interval,
-            saved_data: savedData,
-            settings_adapter: {
-                initialSettings: adapterSetting,
-                setValue: (key: string, value: any) => {
-                    this._adapterSetting = {...this._adapterSetting, [key]: value};
-                    this.debounceSaveChartAdapterSetting();
-                },
-                removeValue: () => {
-                },
-            },
-        })
         this._instance = new TradingView.widget({
             ...getOptions(widgetOptions, mode),
             interval: adapterSetting['chart.lastUsedTimeBasedResolution'] ?? widgetOptions.interval,

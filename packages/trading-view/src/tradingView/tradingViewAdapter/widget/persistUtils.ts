@@ -24,10 +24,14 @@ export const clearChartCache = () => chartCacheMap.clear();
 const parseAndCacheChartData = (chartKey: string, savedDataString: string, adapterSettingString: string) => {
     const settingAdapterKey = getChartSettingAdapterKey(chartKey);
     try {
+        const transformedSavedDataString = savedDataString
 
-        const savedData =  undefined;
+        const savedData = transformedSavedDataString ? JSON.parse(transformedSavedDataString) : undefined;
         const adapterSetting = adapterSettingString ? JSON.parse(adapterSettingString) : defaultSettings;
 
+        if (transformedSavedDataString) {
+            chartCacheMap.set(chartKey, transformedSavedDataString);
+        }
         if (adapterSettingString) {
             chartCacheMap.set(settingAdapterKey, adapterSettingString);
         }

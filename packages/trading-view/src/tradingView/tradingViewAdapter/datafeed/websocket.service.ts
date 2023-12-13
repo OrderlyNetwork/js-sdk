@@ -94,7 +94,6 @@ export class WebsocketService {
 
 
     subscribeSymbol(symbol: string) {
-        console.log(`[WS SUBSCRIBE SYMBOL]${symbol}`);
         const symbolTopics = getSymbolTopics(symbol);
         symbolTopics.forEach((topic) => {
             // check if subscribed
@@ -110,7 +109,6 @@ export class WebsocketService {
                     {
                         onMessage: (data) => {
                             this.updateKlineByLastPrice(data.symbol, data.price);
-                            console.log('-- subscribe symbol', data);
                         }
                     }
                 );
@@ -120,7 +118,6 @@ export class WebsocketService {
     }
 
     updateKlineByLastPrice(symbol: string, lastPrice: number) {
-        console.log('-- update klinke', this.klineOnTickCallback, this.klineData);
         this.klineOnTickCallback.forEach((_, key) => {
             if (key.startsWith(symbol)) {
                 const klineData = this.klineData.get(key);
@@ -136,7 +133,8 @@ export class WebsocketService {
         if (onTickCbs && cbParams) {
             this.klineData.set(key, cbParams);
 
-            Object.values(onTickCbs).forEach((onTickCb) => {
+            Object.keys(onTickCbs).forEach((key: any) => {
+                const onTickCb = onTickCbs[key];
                 if (onTickCb && typeof onTickCb === 'function') {
                     onTickCb(cbParams);
                 }

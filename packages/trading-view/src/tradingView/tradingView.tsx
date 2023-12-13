@@ -11,9 +11,22 @@ import {ResolutionString} from "./tradingViewAdapter/charting_library";
 
 interface TradingViewPorps {
     symbol: string;
+    libraryPath: string;
+    tradingViewScriptSrc: string;
+    tradingViewCustomCssUrl?: string;
+    interval?: string;
+    overrides: any;
+    theme?: string;
+    studiesOverrides?: any;
+    fullscreen?: boolean;
 }
 
-export default function TradingView({symbol}: TradingViewPorps) {
+export function TradingView({
+                                symbol, libraryPath, tradingViewScriptSrc, tradingViewCustomCssUrl, interval, overrides,
+                                theme,
+                                studiesOverrides,
+    fullscreen,
+                            }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
 
@@ -25,21 +38,21 @@ export default function TradingView({symbol}: TradingViewPorps) {
 
             const script = document.createElement("script");
             script.setAttribute("data-nscript", "afterInteractive");
-            script.src = '/charting_library/charting_library.js';
+            script.src = tradingViewScriptSrc;
             script.async = true;
             script.type = "text/javascript";
             script.onload = () => {
-                console.log('--33');
-
                 setChartingLibrarySciprtReady(true);
             };
+            script.onerror = () => {
+                console.log('trading view path error');
+            }
             chartRef.current.appendChild(script);
 
         }
     }, [chartRef]);
 
     const onChartClick = () => {
-        console.log('-- chart click');
     }
     const layoutId = 'TradingViewSDK';
 
@@ -49,32 +62,22 @@ export default function TradingView({symbol}: TradingViewPorps) {
         }
         if (chartRef.current) {
             const options: any = {
-                fullscreen: false,
+                fullscreen:fullscreen ?? false,
                 autosize: true,
                 symbol,
                 // locale: getLocale(),
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 container: chartRef.current,
-                libraryPath: '/charting_library/',
-                interval: '1',
+                libraryPath: libraryPath,
+                customCssUrl: tradingViewCustomCssUrl,
+                interval: interval ?? '1',
+                theme: theme ?? 'dark',
 
-                // theme: 'Dark',
-                overrides: {
-                    "paneProperties.background": "#ffffff",
-                    // "mainSeriesProperties.style": 1,
-                    "paneProperties.backgroundType": "solid",
-                    // "paneProperties.background": "#151822",
-
-                    "mainSeriesProperties.candleStyle.upColor": "#439687",
-                    "mainSeriesProperties.candleStyle.downColor": "#DE5E57",
-                    "mainSeriesProperties.candleStyle.borderColor": "#378658",
-                    "mainSeriesProperties.candleStyle.borderUpColor": "#439687",
-                    "mainSeriesProperties.candleStyle.borderDownColor": "#DE5E57",
-                    "mainSeriesProperties.candleStyle.wickUpColor": "#439687",
-                    "mainSeriesProperties.candleStyle.wickDownColor": "#DE5E57",
-                },
+                overrides: overrides,
+                studiesOverrides,
                 datafeed: new Datafeed(ws),
                 getBroker: undefined,
+
             };
             const mode = ChartMode.UNLIMITED;
 
@@ -86,7 +89,6 @@ export default function TradingView({symbol}: TradingViewPorps) {
                 onClick: onChartClick,
             };
 
-            console.log('ws', ws);
             chart.current = new Widget(chartProps);
         }
 
@@ -97,15 +99,17 @@ export default function TradingView({symbol}: TradingViewPorps) {
 
     useEffect(() => {
         console.log('symbol', symbol);
-       chart.current?.setSymbol(symbol);
-       const service = new WebsocketService(ws as WS);
-       service.subscribeSymbol(symbol);
-       return () =>{
-           service.unsubscribeKline(symbol);
-       }
+        chart.current?.setSymbol(symbol);
+        const service = new WebsocketService(ws as WS);
+        service.subscribeSymbol(symbol);
+        return () => {
+            service.unsubscribeKline(symbol);
+        }
     }, [symbol]);
     return (
-            <div style={{height: '600px',width: '900px', margin: '0 auto'}} ref={chartRef}></div>
+        <div style={{
+            height: '100%', width: '100%', margin: '0 auto'
+        }} ref={chartRef}></div>
 
     );
 }

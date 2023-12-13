@@ -1,10 +1,6 @@
-import { Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { LibrarySymbolInfo, QuoteData, QuotesCallback, ResolutionString, SubscribeBarsCallback } from '../type';
 import { AbstractDatafeed } from './abstract-datafeed';
 import { WebsocketService } from './websocket.service';
-import getTickers$ from './ticker';
-import { WS } from '../../../../../hooks/node_modules/@orderly.network/net/dist';
 
 // We can't trust the listenerGuid provided by tradingview. It might be the same.
 const getAutoIncrementId = (() => {
@@ -13,7 +9,7 @@ const getAutoIncrementId = (() => {
 })();
 
 export class Datafeed extends AbstractDatafeed {
-    private _subscribeQuoteMap: Map<string, Subscription>;
+    private _subscribeQuoteMap: Map<string, any>;
 
     private _prefixId: number;
     private _publicWs: WebsocketService;
@@ -43,27 +39,12 @@ export class Datafeed extends AbstractDatafeed {
 
         this.unsubscribeQuotes(subscriptionId);
 
-        this._subscribeQuoteMap.set(
-            subscriptionId,
-            getTickers$(symbols[0])
-                .pipe(first())
-                .subscribe((t) => {
-                    onDataCallback([this._toUDFTicker(t)]);
-                }),
-        );
     }
 
     public subscribeQuotes(symbols: string[], fastSymbols: string[], onRealtimeCallback: QuotesCallback, listenerGuid: string): void {
         const subscriptionId = `${this._prefixId}${listenerGuid}`;
         if (symbols.length > 0) {
             this.unsubscribeQuotes(subscriptionId);
-
-            this._subscribeQuoteMap.set(
-                subscriptionId,
-                getTickers$(symbols[0]).subscribe((t) => {
-                    onRealtimeCallback([this._toUDFTicker(t)]);
-                }),
-            );
         }
     }
 
