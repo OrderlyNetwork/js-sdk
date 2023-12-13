@@ -48,6 +48,9 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     // event.stopPropagation();
     // event.preventDefault();
     setEditting(false);
+    if (Number(quantity) === Number(order.quantity)) {
+      return;
+    }
     setOpen(true);
   };
 

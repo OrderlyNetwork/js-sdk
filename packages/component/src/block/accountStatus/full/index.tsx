@@ -15,7 +15,7 @@ export const AccountInfo: FC<Props> = (props) => {
 
   return (
     <>
-      <div className="orderly-flex orderly-items-center orderly-py-4 orderly-tabular-nums">
+      <div className="orderly-flex orderly-items-center orderly-py-4">
         <div
           className={
             "orderly-flex-1 orderly-text-base-contrast-80 orderly-text-sm"

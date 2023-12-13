@@ -50,7 +50,13 @@ export const Price = (props: { order: API.OrderExt }) => {
   const onClick = (event: MouseEvent) => {
     // event.stopPropagation();
     // event.preventDefault();
+
     setEditting(false);
+
+    if (Number(price) === Number(order.price)) {
+      return;
+    }
+
     setOpen(1);
   };
 

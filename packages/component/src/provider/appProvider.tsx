@@ -49,6 +49,12 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 
 export interface OrderlyAppProviderProps {
   logoUrl: string;
+  logos: {
+    // logo for top navigation bar
+    appBar: string;
+    // logo for popover/dialog header
+    popover: string;
+  };
   theme?: any;
   toastLimitCount?: number;
   /**
@@ -147,14 +153,14 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
-
       // check whether chain id and network id match
       const chainIdNum = parseInt(chainId, 16);
-      if ((networkId === 'mainnet' && chainIdNum === 421613) ||
-        (networkId === 'testnet' && chainIdNum !== 421613)) {
+      if (
+        (networkId === "mainnet" && chainIdNum === 421613) ||
+        (networkId === "testnet" && chainIdNum !== 421613)
+      ) {
         return false;
       }
-
 
       const isSupport = chains.some((item: { id: string }) => {
         return item.id === chainId;
