@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext, useMemo } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { Numeral } from "@/text";
 import { Progress } from "@/progress";
 
@@ -8,14 +8,25 @@ import {
   useCollateral,
   usePositionStream,
   useMarginRatio,
+  useAccount,
+  useConfig,
+  useWalletConnector,
+  useMutation,
 } from "@orderly.network/hooks";
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/collapsible/collapsible";
+import { toast } from "@/toast";
 import { MemorizedLeverage } from "@/block/accountStatus/full/leverage";
 import { MemorizedAssetsDetail } from "@/block/accountStatus/full/assetsDetail";
+import Button from "@/button";
+import { NetworkImage } from "@/icon";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { WalletConnectSheet } from "@/block/walletConnect";
+import { modal } from "@/modal";
+import { ConfigStore } from "@orderly.network/core";
 
 interface AssetsProps {
   totalBalance: number;
@@ -31,6 +42,61 @@ export const Assets: FC<AssetsProps> = (props) => {
     useCollateral({
       dp: 2,
     });
+
+  const [disableGetTestUSDC, setDisableGetTestUSDC] = useState(false);
+  const {
+    connectedChain,
+  } = useWalletConnector();
+
+  const { account, state } = useAccount();
+  const showGetTestUSDC = useMemo(() => {
+    const chainId = connectedChain?.id;
+    if (chainId === undefined) {
+      return false;
+    }
+
+    const isTestnetChain = parseInt(chainId, 16) === 421613;
+
+    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+  }, [state.status, connectedChain]);
+
+
+  const [getTestUSDC, { isMutating }] = useMutation(
+    `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
+  );
+  const config = useConfig<ConfigStore>();
+  const onGetClick = useCallback(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return modal.show(WalletConnectSheet, {
+        status: state.status,
+      });
+    }
+    setDisableGetTestUSDC(true);
+    return getTestUSDC({
+      chain_id: account.wallet?.chainId.toString(),
+      user_address: state.address,
+      broker_id: config.get("brokerId"),
+    }).then(
+      (res: any) => {
+        setDisableGetTestUSDC(false);
+        if (res.success) {
+          return modal.confirm({
+            title: "Get test USDC",
+            content:
+              "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+            onOk: () => {
+              return Promise.resolve();
+            },
+          });
+        }
+        res.message && toast.error(res.message);
+        // return Promise.reject(res);
+      },
+      (error: Error) => {
+        toast.error(error.message);
+      }
+    );
+  }, [state]);
 
   const [{ aggregated }, positionsInfo] = usePositionStream();
   const { marginRatio } = useMarginRatio();
@@ -87,6 +153,25 @@ export const Assets: FC<AssetsProps> = (props) => {
           </button>
         </CollapsibleTrigger>
       </div>
+      {showGetTestUSDC && (<div className="orderly-mb-3 orderly-w-full">
+        <Button
+          variant={"outlined"}
+          fullWidth
+          size={"small"}
+          className="orderly-border-base-contrast-54 hover:orderly-bg-base-700 orderly-h-[28px] orderly-rounded-borderRadius-lg"
+          onClick={onGetClick}
+          disabled={disableGetTestUSDC}
+        >
+          <NetworkImage
+            type={"token"}
+            name={"USDC"}
+            size={16}
+            rounded
+          />
+          <span className="orderly-text-base-contrast orderly-text-3xs">Get 1,000 test USDC</span>
+        </Button>
+      </div>)}
+
       <CollapsibleContent>
         <MemorizedAssetsDetail />
       </CollapsibleContent>
