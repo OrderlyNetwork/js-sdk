@@ -2,10 +2,9 @@ import { Steps, Tabs } from "nextra/components";
 
 # Getting started
 
-
 ## Automatic Installation
 
-对于全新的项目，我们推荐使用 `create-orderly-app` 来自动创建，`create-orderly-app`会提供一个可视化的界面来让你配置项目的参数，然后根据你提供的配置自动生成一个完整的支持所有 Orderly 服务的去中心化交易所应用。
+For a brand new project, we recommend running the `create-orderly-app` command to create a new trading app automatically. `create-orderly-app` provides a config page that allows you to set the project's config, and will then build an app supporting all of Orderly's services accordingly.
 
 <Tabs items={["npm", "pnpm", "yarn"]} defaultIndex="1">
   <Tabs.Tab>
@@ -31,19 +30,19 @@ import { Steps, Tabs } from "nextra/components";
   </Tabs.Tab>
 </Tabs>
 
-你可以在配置页面进行以下配置：
+You can change the following settings on the config page:
 
-- 选择基础框架(Next.js, CRA, Vite, Gatsby...)
-- 配置主题（颜色，字体，圆角等）
-- SEO 信息
-- 配置路由
-- 配置国际化
+- Selecting a basic framework (Next.js, CRA, Vite, Gatsby...)
+- Setting a theme（colours, fonts, components）
+- SEO information
+- Routing
+- i18n
 
-在确定以上配置后，`create-orderly-app`将会创建一个以你的项目名命名的文件夹，并且安装所有依赖、创建路由、创建组件，生成App所有需要的文件。
+Once the above settings are completed, `create-orderly-app` will create a folder that is named after your project name, then install all dependencies, and creates all routes and components required for creating the app automatically.
 
 ## Manual Installation
 
-如果你已经有一个项目了，或者你想要手动配置，那么你可以按照以下步骤来集成`@orderly.network/react`。
+If you already created your own project, or would like to manually set the SDK up, then you can follow the steps below to install `@orderly.network/react`.
 
 <Steps>
 ### Installation
@@ -56,17 +55,17 @@ npm install @orderly.network/react
 
 ### Add styles
 
-引用样式文件, 在你的项目中添加以下代码。
+Reference the style file by adding the following code to your project:
 
 ```typescript copy
 import "@orderly.network/react/dist/styles.css";
 ```
 
-如果你需要自定义主题，请参考[这里](/docs/theming)。
+If you would like to customize the theme, please refer to this [link](/doc/theming).
 
-### Create route
+### Pages
 
-在你的项目中添加新的路由，引入 Page 类型的组件，并按要求提供配置参数, 下面以交易页为例。
+To add a new page to your project, introduce a component of the Page type, and provide the required configuration parameters as specified. Below is an example using the trading page:
 
 ```typescript filename="trading.tsx" copy
 import { TradingPage } from "@orderly.network/react";
@@ -82,12 +81,16 @@ export default function Trading() {
 }
 ```
 
-- 不同的框架通常有不同的路由配置方式，可以在[这里](/components/frameworks/next)查看示例。
-- Trading Page 组件的配置参数请参考[这里](/docs/trading-page)。
+- Different frameworks often have different ways of configuring routes. You can view examples [here](/components/frameworks/next).
+- For configuration parameters of the Trading Page component, please refer to [this link](/docs/trading-page).
 
-### 添加钱包连接组件
+### Adding a wallet connection component
 
-**必须要添加钱包连接 provider**，否则将无法使用 Orderly private apis, 你可以使用 Orderly SDK 提供的钱包连接库或者自行实现该组件，详情请参考[Wallet connect](/)。
+**You must add a web3 wallet provider**, otherwise the Orderly private apis cannot be used. You can use the wallet connection library provided by the Orderly SDK or implement the component yourself. For more details, please refer to [Wallet Connect](/).
+
+```sh npm2yarn copy
+npm install @orderly.network/web3-onboard
+```
 
 ```typescript filename="trading.tsx" {7-10,16} copy
 import { TradingPage } from "@orderly.network/react";
@@ -110,10 +113,10 @@ export default function Trading() {
 }
 ```
 
-### 添加全局配置 Provider
+### Adding a global configuration Provider
 
-- `OrderlyAppProvider`组件封装了`@orderly.network/hooks`内的`OrderlyConfigProvider`,你配置在`OrderlyAppProvider`组件上的参数将会被传递给`OrderlyConfigProvider`。
-- `brokerId`参数是必须，你可以在[这里](mailto:product@orderly.network)获取。
+- The `OrderlyAppProvider` component encapsulates the `OrderlyConfigProvider` from `@orderly.network/hooks`. The parameters you configure on the `OrderlyAppProvider` component will be passed to the `OrderlyConfigProvider`.
+- The `brokerId` parameter is mandatory, and you can obtain it by [contacting us](mailto:product@orderly.network).
 
 ```typescript filename="trading.tsx" {11-15,21} copy
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
@@ -144,7 +147,6 @@ export default function Trading() {
 
 ### Done
 
-现在你可以启动你的项目并访问上面定义的路由，你将会看到一个完整的交易所页面。
+Now you can start your project and access the routes defined above. You will see a complete exchange page.
 
 </Steps>
-

@@ -3,39 +3,24 @@ import Image from "next/image";
 
 # Trading
 
-<div className="mt-7 flex justify-center items-end bg-base-300 p-3 rounded-lg h-[680px] space-x-5 color-item">
-  <Image
-    src="/images/trading_page_screenshot.png"
-    alt="trading page"
-    height={500}
-    width={300}
-    className="shadow-lg"
-  />
-  <Image
-    src="/images/deposit_screenshot.png"
-    alt="deposit modal"
-    height={400}
-    width={300}
-    className="shadow-lg"
-  />
-</div>
+![](/images/trading-page.png)
 
-`TradingPage`是包含完整交易功能的页面组件，其中包含了以下业务组件：
+`TradingPage` is a App page containing full trading functionalities, and includes the following components:
 
 - Orderbook
-- K 线图表
-- 创建订单、订单列表、订单管理
-- 仓位列表、管理
-- 资产管理，出入金
+- K-line chart
+- Order form, list and management
+- Position list and management
+- Asset management, deposit and withdrawals
 
 ## Usage
 
-### 依赖的组件
+### Dependencies
 
-使用`TradingPage`组件的时候必须包含在以下组件中，否则会出现错误：
+The following components must be used when using `TradingPage`:
 
-- `OrderlyAppProvider`- 用于提供全局配置参数，全局状态管理，`Account`实例等;
-- 钱包连接组件 - 用于连接钱包、管理已经连接的钱包，可以使用`@orderly.network/web3-onboard`提供的`ConnectorProvider`组件，也可以使用你自己的钱包连接组件，详细信息请参考[这里](/components/wallet)。
+- `OrderlyAppProvider`- for global settings, state managements, `Account` instance etc.
+- Wallet connection components - for connecting and managing wallet conenctions. You can use your own wallet connection components, or use the `ConenctorProvider` compoenent within `@orderly.network/web3-onboard`. For more details, please see [this page](/components/wallet).
 
 ```typescript
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
@@ -66,10 +51,10 @@ export default function Trading() {
 }
 ```
 
-### 设置交易对
+### Setting active symbol
 
-- 通过 `symbol` 属性设置当前交易对
-- 通过 `onSymbolChange` 属性监听用户切换交易, 该属性为可选属性，如果不设置，则用户无法切换交易,详情见[API](#onsymbolchange)
+- Set the active symbol through the `symbol` property
+- Monitor user's action to change active symbol through the `onSymbolChange` event. This is an optional property, but user will not be able to change the active symbol if this is not set. Please see the [API](#onsymbolchange) for more details.
 
 ```typescript {6} copy
 import { TradingPage } from "@orderly.network/react";
@@ -92,14 +77,14 @@ export default function Trading() {
 - Type: `string`
 - Required: true
 
-设置当前交易对，例如 `PERP_ETH_USDC`。
+Sets the active symbol, e.g. `PERP_ETH_USDC`.
 
 ### onSymbolChange
 
 - Type: (symbol: API.Symbol) => void
 - Required: false
 
-当用户选择了一个新的交易对时，会触发该事件，参数为新的交易对。
+This event will be triggered when user selects a new active symbol. The parameter will be the new symbol chosen.
 
 ```typescript {4,9-11}
 import { TradingPage } from "@orderly.network/react";
@@ -123,9 +108,9 @@ export default function Trading() {
 - Type: `TradingViewConfig`
 - Required: false
 
-TradingView 图表配置选项, 由于`@orderly.network/react`没有包含`tradingView`库，需要你通过配置来设置`tradingView` js 库的路径，`@orderly.network/react`通过你的配置来加载`tradingView`js 脚本并创建 K-line 图表。
+TradingView charting config. Since `@orderly.network/react` does not include the `tradingView` library, you would have to configure the path for the `tradingView` js library. After that, the `@orderly.network/react` package will use the configured library to load the `tradingView` scripts and create a k-line chart.
 
-- 使用你自己的`tradingView`库，按如下方式设置
+- Use your own `tradingview` library, and configure as below
 
 ```typescript {8-9}
 import { TradingPage } from "@orderly.network/react";
@@ -144,8 +129,8 @@ export default function Trading() {
 }
 ```
 
-- 下载 Orderly 提供的[资源包](/)并放到你项目的静态资源的目录下，然后正确配置路径。
+- Download the [resource pack](/) provided by Orderly, and put it under your project's static folder, then set up the routing accordingly.
 
 <Callout type="warning">
-  **注意:** 如果没有配置该项，则不会显示K线图表。
+  **Warning:** If this is not configured, then the k-line chart will not be displayed.
 </Callout>

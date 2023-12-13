@@ -1,27 +1,26 @@
 import { LiveProvider, LiveEditor, LivePreview, LiveError } from "react-live";
 import {Deposit,AssetsProvider,Page,Button,useModal,modal} from '@orderly.network/react'
 
+# Deposit component
 
-# Deposit block component
+Block component allowing users to deposit.
 
-入金组件，用于用户入金操作。
+## Features
 
-## 特点
-
-- 组件内部已经集成了`@orderly.network/hoooks`, 无需任何参数即可使用；
-- 组件内置钱包连接，用户状态检查等；
-- 必须包含在`OrderlyAppProvider`,`ConnectorProvider`组件内使用;
+- The component is already integrated with `@orderly.network/hooks` and can be used without any configuration.
+- The component handles checks on the user's status, as well as connection to the wallet.
+- The component must be used within the `ConnectionProvider` component within `OrderlyAppProvider`.
 
 ## Usage
 
 ### Static mode
 
-你可以在你的项目中直接展示`Deposit`组件：
+You can display the `Deposit` component directly in your project:
 
-
-<LiveProvider code={`<Deposit/>`} scope={{AssetsProvider,Deposit,Page}}>
+<LiveProvider code={`<Page>
+    <Deposit/>
+</Page>`} scope={{AssetsProvider,Deposit,Page}}>
 <div className="flex justify-center py-3 mt-5 rounded shadow-lg bg-base-700">
-
 
 <LivePreview />
 
@@ -40,17 +39,21 @@ export const App = () => {
 };
 ```
 
-### Modal模式
+### Modal mode
 
-通过对话框的模式展示`Deposit`组件：
+You can also choose to displays the `deposit` component through a modal:
 
 <LiveProvider code={`()=>{
-    return (<Button onClick={()=>{
+    return (
+        <Page>
+        <Button onClick={()=>{
             dialog({
                 title:'Deposit',
                 content:<Deposit/>
             });
-        }}>Open deposit dialog</Button>)
+        }}>Open deposit dialog</Button>
+</Page>
+    )
 }`} scope={{AssetsProvider,Deposit,Page,Button,dialog:modal.dialog}}>
 <div className="flex justify-center py-10 mt-5 rounded shadow-lg bg-base-700 color-item">
 
@@ -60,7 +63,6 @@ export const App = () => {
   
   <LiveError />
 </LiveProvider>
-
 
 ```typescript copy
 import { AssetsProvider, Deposit, modal } from "@orderly.network/react";
@@ -85,14 +87,13 @@ export const App = () => {
 
 {/* ## AssetsProvider
 
-`AssetsProvider` 组件提供了跟资产相关的数据和操作，你可以在需要的地方用它包裹组件 */}
+The `AssetsProvider` component provides data and management around user assets. You can pacakge this component as needed.*/}
 
 ## APIs
-
 
 ### onOk
 
 - Type: (result)=>void
 - Required: false
 
-入金完成后的回调函数，返回入金结果。
+Callback function after the deposit is complete, providing the status of the deposit transaction.

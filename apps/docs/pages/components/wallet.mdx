@@ -1,29 +1,29 @@
 # Wallet connect
 
-`@orderly.network/react` 的定位是 Orderly API 应用层，主要负责渲染 UI，处理用户交互事件，完成交易业务等，所以没有内置与交易无关的钱包连接功能。
+`@orderly.network/react` is an application layer of the Orderly API. It is mainly responsible for rendering the UI, handling user interaction events, and completing trading actions. Therefore, it does not include built-in wallet connection functionality.
 
-在需要处理钱包连接的地方，`@orderly.network/react`利用 React 的 context 机制，从最近的 context 获取当前已连接钱包的信息或者调用 context 提供的钱包连接函数。为此，`@orderly.network/hoos`定义了名为`WalletConnectorContext`的 context, 任何实现了[`WalletConnectorContextState`](/)定义的`WalletConnectorContext.Provider`组件都可以做为 app 的钱包连接组件, 请参考[这里](#custom-wallet-connection-provider)。
+In places where wallet connection needs to be handled, `@orderly.network/react` utilizes React's context mechanism to obtain information about the currently connected wallet or call wallet connection functions provided by the context. To facilitate this, `@orderly.network/hooks` defines a context named `WalletConnectorContext`. Any component that implements the `WalletConnectorContext.Provider` defined in [`WalletConnectorContextState`](/) can serve as the wallet connection component for the app. Please refer to [this link](#custom-wallet-connection-provider) for more details.
 
-## 使用 Orderly 提供的钱包连接组件
+## Using the wallet connection component provided by Orderly
 
-为了方便开发者快速接入第三方提供的 wallet connector, Orderly SDK 针对社区里比较流行的库进行了封装并提供安装。
+For the convenience of developers to quickly integrate with third-party wallet connectors, the Orderly SDK has encapsulated and provided installations for popular libraries in the community.
 
 ### `@orderly.network/web3-onboard`
 
-从库的名字你可以看出来 ，这是一个封装了[`web3-onboard`](https://onboard.blocknative.com/docs/modules/react)的库, 可以帮助你快速集成钱包功能。
+This is a wrapper for [`web3-onboard`](https://onboard.blocknative.com/docs/modules/react), which can assist you in quickly integrating wallet functionality.
 
-#### 安装
+#### Installation
 
 ```bash npm2yarn copy
 npm install @orderly.network/web3-onboard
 ```
 
-#### 使用
+#### Usage
 
-使用`ConnectorProvider`组件包裹你的组件，该组件通常应该是最顶层的组件树，如果不是也必须要放在[`OrderlyAppProvider`](/components/configuration#orderlyappprovider)的上一级，`ConnectorProvider`组件接受两个参数：
+Wrap your component with the `ConnectorProvider` component, which should typically be the top-level component in your component tree. If it's not, it must be placed at a level above [`OrderlyAppProvider`](/components/configuration#orderlyappprovider). The `ConnectorProvider` component accepts two parameters:
 
-- `apiKey`：你在`web3-onboard`创建的 [api key](https://explorer.blocknative.com/account)
-- `options`：`web3-onboard`的配置项，具体可以参考[web3-onboard](https://onboard.blocknative.com/docs/modules/core#initialization), 这是一个可选项，如果没有传入的时候，会使用默认的配置项。
+- `apiKey`: Your [API key](https://explorer.blocknative.com/account) created in `web3-onboard`.
+- `options`: Configuration options for `web3-onboard`. For details, refer to [web3-onboard](https://onboard.blocknative.com/docs/modules/core#initialization). This parameter is optional; if not provided, default configuration options will be used.
 
 ```typescript copy
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
@@ -40,11 +40,11 @@ export const App = () => {
 };
 ```
 
-Orderly 还会发布更多的钱包连接库，敬请期待。
+Orderly will continue to release support for more wallet connection libraries. Stay tuned for updates!
 
 ## Custom wallet connection provider
 
-你也可以自定义钱包连接，只需要实现`WalletConnectorContextState`定义的所有属性, 并按以下格式定义组件即可。
+You can also customize wallet connections by implementing all the properties defined in `WalletConnectorContextState`. Define the component in the following format:
 
 ```typescript copy
 import {PropsWithChildren} from "react";
@@ -63,9 +63,7 @@ export const WalletConnector = ({children}:PropsWithChildren)=>{
 }
 ```
 
-定义好组件后，你还需要将该组件添加到[`OrderlyAppProvider`](/components/configuration#orderlyappprovider)的上级。
-
-
+After defining the component, you also need to add this component to the parent of [`OrderlyAppProvider`](/components/configuration#orderlyappprovider).
 
 ### Interface & Context
 
@@ -94,9 +92,9 @@ export const useWalletConnector = () => {
 };
 ```
 
-### 实现 
+### Implementation
 
-以下例子是使用`web3modal`实现的钱包连接组件，你可以参考这个例子实现自己的钱包连接组件。
+The following example demonstrates a wallet connection component implemented using `web3modal`. You can use this example as a reference to implement your own wallet connection component.
 
 ```typescript copy
 import {

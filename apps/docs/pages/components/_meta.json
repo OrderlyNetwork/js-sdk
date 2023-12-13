@@ -14,7 +14,7 @@
   },
   "deposit": "Deposit",
   "withdraw": "Withdraw",
-  "order_entry": "Order Entry",
+  "order_entry": {"title":"Order Entry","display": "hidden"},
   "Base Component": {
     "type": "separator"
   }

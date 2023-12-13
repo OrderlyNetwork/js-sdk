@@ -4,26 +4,26 @@ import Image from "next/image";
 
 # Theming
 
-`@orderly.network/react` 提供了一套默认的主题, 同时也支持自定义主题，你可以参考下边的内容进行自定义。
+`@orderly.network/react` has a default theme, but you can also customize the theme yourself.
 
-## Deafult theme
+## Default theme
 
 ### Colors
 
-在`@orderly.network/react`中用到的颜色如下:
+`@orderly.network/react` uses the following colors:
 
-- 除了`base`之外每个色系包含3个颜色:
-  - `defalut`: The defalut shade of the color
-  - `light`: A lighter shade of defalut
-  - `darken`: A darker shade of defalut
+- Besides `base`, each color theme contains 3 colors:
+  - `default`: The default shade of the color
+  - `light`: A lighter shade than default
+  - `darken`: A darker shade than default
 
-- `base-contrast` 定义的是文本的颜色，是以透明度来区分文字的强弱。
+- `base-contrast` defines color of texts. The library uses transparency to differentiate the importance of texts.
 
 <Colors />
 
 ### Typography
 
-`@orderly.network/react`中用到的字体: Manrope
+`@orderly.network/react` uses Manrope as the default font.
 
 ### Rounded
 
@@ -34,11 +34,11 @@ import Image from "next/image";
 | lg      |    8px |
 | full    | 9999px |
 
-## 自定义主题
+## Customized theme
 
 ### CSS Variables
 
-你可以通过定义 css 变量的方式对组件的样式进行修改，在项目下创建`theme.css`文件, 在文件中添加以下内容, 然后在项目中引入该文件即可:
+You can change the color of elements through creating a `theme.css` under the project. Simply add the following into the file, and import it for it to take effect:
 
 ```css filename="theme.css" copy
 :root{
@@ -152,18 +152,18 @@ warning color
 ```
 
 <Callout type="info">
-  **你可以使用我们提供的[Theme 工具](/theme)来快速生成你的主题。**
+  **You can use the [Theme tool](/theme) that we provide to quickly create your own theme!**
 </Callout>
 
-### 样式覆盖
+### Style override
 
-如果在开发中碰到通过自定义 CSS 变量不能修改样式的情况可以使用样式覆盖的方式来解决，`@orderly.network/react`组件提供以下两种方式来覆盖组件的默认样式
+`@orderly.network/react` provides the following two ways to override the style of components:
 
 #### class
 
-通过重写某个 class 的定义来覆盖某一类组件的样式，例如我们想要修改`button`组件的样式，可以通过以`class`选择器选择元素, 例如:
+To override the style of a certain class. For example, if we want to modify the style of a `button` component, we can achieve this by selecting the element using the `class` selector.
 
-修改所有`button`组件的样式:
+For instance, to change the color of `button` the component:
 
 ```css
 /* 
@@ -182,7 +182,7 @@ primary buttons
 }
 ```
 
-修改`button`组件`disabled`状态的样式:
+If you want to change the `disabled` status of the `button` component:
 
 ```css
 .orderly-button-disabled {
@@ -193,7 +193,7 @@ primary buttons
 
 #### id
 
-如果想要修改某个特定组件的样式，可以通过 id 选择器来定义组件的样式，如比想要修改创建订单按钮的样式:
+If you want to modify the style of a specific component, you can use the id selector to define the component's style. For example, if you want to modify the style of the "Create Order" button:
 
 ```css
 #orderly-order-entry-confirm-button {
@@ -202,29 +202,30 @@ primary buttons
 }
 ```
 
-**支持的 id 如下:**
+**Supported `id` are as below:**
 
-| id                                       |     module     |            description |
-| :--------------------------------------- | :------------: | ---------------------: |
-| orderly-deposit-confirm-button           |    deposit     |           确定入金按钮 |
-| orderly-withdraw-confirm-button          |    withdraw    |           确定出金按钮 |
-| orderly-assets-margin-deposit-button     |     assets     |               入金按钮 |
-| orderly-assets-margin-withdraw-button    |     assets     |               出金按钮 |
-| orderly-order-entry-confirm-button       |     order      |           确定下单按钮 |
-| orderly-position-cell-limit-close-button |   positions    |           限价平仓按钮 |
-| orderly-position-cell-mark-close-button  |   positions    |           市价平仓按钮 |
-| orderly-pending-cell-edit-button         | peding orders  |   修改进行中的订单按钮 |
-| orderly-pending-cell-cancel-button       | peding orders  |   取消进行中的订单按钮 |
-| orderly-bottom-nav-bar-connect-button    | bottom-nav-bar | bottombar 连接钱包按钮 |
+| id                                       |     module     |                      description |
+|:-----------------------------------------|:--------------:|---------------------------------:|
+| orderly-deposit-confirm-button           |    deposit     |           Deposit confirm button |
+| orderly-withdraw-confirm-button          |    withdraw    |          Withdraw confirm button |
+| orderly-assets-margin-deposit-button     |     assets     |                   Deposit button |
+| orderly-assets-margin-withdraw-button    |     assets     |                  Withdraw button |
+| orderly-order-entry-confirm-button       |     order      |     Order entry - confirm button |
+| orderly-position-cell-limit-close-button |   positions    |    Position - limit close button |
+| orderly-position-cell-mark-close-button  |   positions    |   Position - market close button |
+| orderly-pending-cell-edit-button         | peding orders  |        Edit pending order button |
+| orderly-pending-cell-cancel-button       | peding orders  |      Cancel pending order button |
+| orderly-bottom-nav-bar-connect-button    | bottom-nav-bar | bottom bar connect wallet button |
 
 ## Logo
 
-<div className="mt-7 flex justify-center items-center bg-base-300 p-3 rounded-lg h-[300px] space-x-5 color-item">
-  <Image src="/images/logo_example_1.png" width="300" height="100" />
-  <Image src="/images/logo_example_2.png" width="300" height="100" />
-</div>
+{/* <div className="mt-7 flex justify-center items-center bg-base-300 p-3 rounded-lg h-[300px] space-x-5 color-item"> */}
+  {/* <Image src="/images/replace-logo.png" width="500" height="300" /> */}
+{/* </div> */}
 
-你可以通过以下方式将你的 logo 添加到上图示意的位置:
+![](/images/replace-logo.png)
+
+You can add your logo to the indicated position in the diagram above using the following method:
 
 ```typescript {8}
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
