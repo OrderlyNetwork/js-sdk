@@ -59,7 +59,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   onOk,
   switchChain,
 }) => {
-  const { brokerName } = useContext(OrderlyAppContext);
+  const { brokerName,logoUrl } = useContext(OrderlyAppContext);
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
@@ -205,9 +205,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   return (
     <>
-      <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast">
+      <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
         <div className="orderly-flex-1">{"Your "+ brokerName + " account"}</div>
-        <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
+        <NetworkImage type={"path"} rounded path={logoUrl} />
       </div>
       <QuantityInput
         tokens={[]}
@@ -237,7 +237,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <Divider className="orderly-py-3">
         <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
-      <div className="orderly-flex orderly-items-center orderly-text-2xs">
+      <div className="orderly-flex orderly-items-center orderly-text-2xs desktop:orderly-text-base">
         <div className="orderly-flex-1">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}

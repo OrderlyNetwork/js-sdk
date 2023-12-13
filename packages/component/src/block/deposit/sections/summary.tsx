@@ -169,7 +169,7 @@ export const Summary: FC<SummaryProps> = (props) => {
     modal.alert({
       title: "Fee",
       message: (
-        <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs">{message}</div>
+        <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">{message}</div>
       ),
     });
   }, [
@@ -181,7 +181,7 @@ export const Summary: FC<SummaryProps> = (props) => {
   ]);
 
   return (
-    <div className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast-36">
+    <div className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast-36 desktop:orderly-text-3xs">
       <div className="orderly-flex orderly-items-center orderly-justify-between">
         <div>
           {`1 ${props.src?.symbol} = ${

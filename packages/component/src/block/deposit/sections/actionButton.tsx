@@ -157,6 +157,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <Button
           id="orderly-deposit-confirm-button"
+          className="desktop:orderly-text-xs"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -181,6 +182,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         fullWidth
         onClick={onOpenPicker}
         id="orderly-deposit-confirm-button"
+        className="desktop:orderly-text-xs"
       >
         {t("block.withdraw.switchNetwork")}
       </Button>
@@ -220,7 +222,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="orderly-flex orderly-justify-center">
-        <div className="orderly-py-3 orderly-w-full orderly-text-xs">
+        <div className="orderly-py-3 orderly-w-full orderly-text-xs orderly-font-bold">
           {actionButton}
         </div>
       </div>
