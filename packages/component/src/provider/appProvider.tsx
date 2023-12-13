@@ -49,12 +49,12 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 
 export interface OrderlyAppProviderProps {
   logoUrl: string;
-  logos: {
+  logos?: Partial<{
     // logo for top navigation bar
     appBar: string;
     // logo for popover/dialog header
     popover: string;
-  };
+  }>;
   theme?: any;
   toastLimitCount?: number;
   /**

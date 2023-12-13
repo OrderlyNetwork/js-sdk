@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/tradingView",
+  "name": "@orderly.network/trading-view",
   "version": "0.1.0",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

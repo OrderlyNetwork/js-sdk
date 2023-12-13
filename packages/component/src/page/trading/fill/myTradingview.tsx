@@ -1,4 +1,4 @@
-import { TradingView } from "@orderly.network/tradingView";
+import { TradingView } from "@orderly.network/trading-view";
 
 export const MyTradingView = () => {
   const upColor = "#00B59F";
