@@ -15,13 +15,13 @@ export interface SystemStatusBarProps {
 
 export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
     const { commutitylist = [CommunityType.facebook, CommunityType.discord, CommunityType.telegram], onClickComutity, powerBy = <OrderlyLogo /> } = props;
-    
+
     const [wsStatus, setWsStatus] = useState<"connected" | "unstable" | "disconnected">("disconnected");
     const ws = useWS();
 
     useEffect(() => {
         ws.on("websocket:status", (status: any) => {
-            setWsStatus(status);
+            setWsStatus(status === "connecting" ? "disconnected" : status);
         });
         return () => ws.off("websocket:status");
     }, []);
