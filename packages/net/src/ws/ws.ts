@@ -269,14 +269,9 @@ export class WS {
               cb.onMessage(data);
             }
           });
-
-          // 延时删除，在重连时还需要用到
-          // if (eventhandler.isOnce) {
-          //   handlerMap.delete(topicKey);
-          // }
         }
 
-        // 触发事件
+        // emit event
         this._eventContainer.forEach((_, key) => {
           const reg = new RegExp(key);
           if (reg.test(topicKey)) {
@@ -293,13 +288,13 @@ export class WS {
 
   private onPublicMessage(event: MessageEvent) {
     this.onMessage(event, this._publicSocket, this._eventHandlers);
-    // 更新最后收到消息的时间
+    // update last message time for public
     this._publicHeartbeatTime = Date.now();
   }
 
   private onPrivateMessage(event: MessageEvent) {
     this.onMessage(event, this.privateSocket!, this._eventPrivateHandlers);
-    // 更新最后收到消息的时间
+    // update last message time for private
     this._privateHeartbeatTime = Date.now();
   }
 
@@ -653,6 +648,7 @@ export class WS {
 
     window.setTimeout(() => {
       this.createPublicSC(this.options);
+      this.emit("reconnect:public", { count: this._publicRetryCount });
     }, this.reconnectInterval);
   }
 
