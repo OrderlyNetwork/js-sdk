@@ -1,6 +1,13 @@
 {
   "hooks": "Hooks",
   "components": {
-    "title": "Components"
+    "title": "Components",
+    "display": "hidden"
+  },
+  "core":{
+    "display": "hidden"
+  },
+  "perp": {
+    "display": "hidden"
   }
 }

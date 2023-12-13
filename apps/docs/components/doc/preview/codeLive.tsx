@@ -40,13 +40,8 @@ export interface Props {
 export const CodeLive: FC<Props> = (props) => {
   const { height = 380, isPrivate = false, noInline = true } = props;
   const { state } = useAccount();
-  const [
-    {
-      wallet, // the wallet that has been connected or null if not yet connected
-      connecting, // boolean indicating if connection is in progress
-    },
-    connect, // function to call to initiate user to connect wallet
-  ] = useWalletConnector();
+
+  const { connect } = useWalletConnector();
 
   const previewView = useMemo(() => {
     if (!isPrivate || state.status > AccountStatusEnum.NotConnected) {

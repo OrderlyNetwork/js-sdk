@@ -1,8 +1,8 @@
 () => {
-  const { data, loading, error } = usePrivateQuery("/v1/client/info");
+  const { data, isLoading, error } = usePrivateQuery("/v1/client/info");
   const { state } = useAccount();
 
-  if (loading) return <div>loading...</div>;
+  if (isLoading) return <div>loading...</div>;
 
   return (
     <div>
