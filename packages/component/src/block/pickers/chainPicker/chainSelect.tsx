@@ -137,7 +137,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
         size={"small"}
         rounded
       />
-      <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
+      <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left desktop:orderly-text-xs">
         {currentChain?.name ?? "Unknown"}
       </span>
       {icon}

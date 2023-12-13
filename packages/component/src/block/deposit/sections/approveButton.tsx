@@ -58,6 +58,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
         loading={approveLoading}
         onClick={onClick}
         disabled={approveLoading}
+        className=" desktop:orderly-text-2xs"
       >
         {`Approve ${token}`}
       </Button>
@@ -72,6 +73,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
         loading={approveLoading}
         onClick={onClick}
         disabled={approveLoading}
+        className=" desktop:orderly-text-2xs"
       >
         {`increase ${token} authorized amount`}
       </Button>
@@ -85,6 +87,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       onClick={onDeposit}
       disabled={disabled || submitting}
       loading={submitting}
+      className=" desktop:orderly-text-2xs"
     >
       {label}
     </Button>
