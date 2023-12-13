@@ -9,9 +9,7 @@ export const useWithdraw = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { unsettledPnL, availableBalance } = useCollateral();
-
-  const { freeCollateral } = useCollateral();
+  const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
 
   // const withdrawQueue = useRef<number[]>([]);
 

@@ -66,7 +66,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           </Split>
         </div>
         {/* order entry start */}
-        <div style={{ minWidth: "300px" }}>
+        <div style={{ minWidth: "300px", maxWidth: "500px" }}>
           <AssetsProvider>
             <div className="orderly-px-3">
               <AccountInfo />
