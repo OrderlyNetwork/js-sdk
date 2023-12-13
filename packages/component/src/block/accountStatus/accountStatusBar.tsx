@@ -14,7 +14,7 @@ import { OrderlyAppContext } from "@/provider";
 export type AccountStatus =
   | "NotConnected"
   | "Connected"
-  | "NotSignedIn"
+  | "NotSignedIn" 
   | "EnabledTrading"
   | "SignedIn";
 
