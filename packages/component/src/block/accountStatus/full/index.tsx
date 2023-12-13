@@ -43,9 +43,9 @@ export const AccountInfo: FC<Props> = (props) => {
         </div>
       </div>
       <Divider />
-      <AssetsProvider>
+      {/* <AssetsProvider> */}
         <Assets totalBalance={1013130} />
-      </AssetsProvider>
+      {/* </AssetsProvider> */}
     </>
   );
 };
