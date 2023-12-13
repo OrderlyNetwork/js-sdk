@@ -181,7 +181,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   return (
     <>
       <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast">
-        <div className="orderly-flex-1">Your WOOFi Pro account</div>
+        <div className="orderly-flex-1">Your Orderly account</div>
         <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
       </div>
       <QuantityInput

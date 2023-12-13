@@ -58,7 +58,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}
-            description={"Deposit to WOOFi Pro"}
+            description={"Deposit to Orderly"}
             index={2}
           />
           <Divider />
@@ -82,7 +82,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
         </div>
       )}
       <Button
-      className="orderly-text-xs"
+        className="orderly-text-xs"
         fullWidth
         disabled={
           status === SwapProcessStatusStatus.Bridging ||

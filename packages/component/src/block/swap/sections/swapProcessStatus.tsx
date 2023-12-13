@@ -41,7 +41,7 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}
-            description={"Deposit to WOOFi Pro"}
+            description={"Deposit to Orderly"}
             index={1}
           />
           <Divider />
