@@ -10,6 +10,7 @@ import { MemoizedDataListView } from "./sections/datalist";
 import { MyTradingView } from "./myTradingview";
 import { Header } from "./sections/tradingHeader";
 import { AssetsProvider } from "@/provider/assetsProvider";
+import { SystemStatusBar } from "@/block/systemStatusBar";
 
 interface PageProps {
   header?: React.ReactNode;
@@ -79,6 +80,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         </div>
         {/* order entry end */}
       </Split>
+      <SystemStatusBar />
     </>
   );
 };
