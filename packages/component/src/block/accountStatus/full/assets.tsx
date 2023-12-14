@@ -148,7 +148,7 @@ export const Assets: FC<AssetsProps> = (props) => {
 
             <ChevronDown
               size={18}
-              className={"orderly-text-base-contrast-54"}
+              className={"orderly-text-base-contrast-54 orderly-z-0"}
             />
           </button>
         </CollapsibleTrigger>

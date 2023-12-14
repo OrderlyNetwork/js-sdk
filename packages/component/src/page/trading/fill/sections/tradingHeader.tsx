@@ -54,6 +54,12 @@ export const Header: FC<Props> = (props) => {
           accountInfo={undefined}
           className="orderly-mr-3"
           onConnect={onConnect}
+          // dropMenuItem={(<div className="orderly-h-[200px] orderly-bg-primary"></div>)}
+          // dropMenuItem={[{title: "haha", key: "bb"}, {title: "haha1", key: "bb1"},]}
+          // onClickDropMenuItem={(item) => {
+          //   console.log("click item", item);
+            
+          // }}
         />
       </div>
       {errors.ChainNetworkNotSupport && (
