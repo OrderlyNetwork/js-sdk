@@ -34,6 +34,8 @@ import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 import { NumberReg } from "@/utils/num";
 import { OrderlyAppContext } from "@/provider";
+import { PopoverLogo } from "@/logo/popoverLogo";
+import { Logo } from "@/logo";
 
 export interface DepositFormProps {
   // decimals: number;
@@ -102,7 +104,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors, enableSwapDeposit, brokerName, logoUrl } = useContext(OrderlyAppContext);
+  const { errors, enableSwapDeposit, brokerName, logoUrl } =
+    useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -556,8 +559,11 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
       <div className="orderly-flex orderly-py-2">
-        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">{"Your "+ brokerName + " account"}</div>
-        <NetworkImage type={"path"} rounded path={logoUrl} />
+        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
+          {"Your " + brokerName + " account"}
+        </div>
+        {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
+        <PopoverLogo size={24} />
       </div>
       <div className="orderly-py-2">
         <TokenQtyInput

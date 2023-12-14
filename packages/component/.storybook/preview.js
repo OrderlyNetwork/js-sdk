@@ -85,7 +85,16 @@ const preview = {
             brokerId="orderly"
             brokerName="Orderly"
             // showTestnet={true}
-            logoUrl="/woo_fi_logo.svg"
+            // logoUrl="/woo_fi_logo.svg"
+            appIcons={{
+              appBar:{
+                img: "/orderly-logo.svg",
+              },
+              popover:{
+                img: "/woo_fi_logo.svg",
+
+              }
+            }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
               localStorage.setItem('preview-orderly-networkId', isTestnet ? 'testnet' : 'mainnet');

@@ -1,6 +1,7 @@
 import React, {
   FC,
   PropsWithChildren,
+  ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -29,8 +30,24 @@ export type AppStateErrors = {
   NetworkError: boolean;
 };
 
+type Logo = {
+  // the logo image url
+  img?: string;
+  // also can use react component
+  component?: ReactNode;
+  className?: string;
+};
+
+type AppLogos = Partial<{
+  // logo for top navigation bar
+  appBar: Logo;
+  // logo for popover/dialog header
+  popover: Logo;
+}>;
+
 export type OrderlyAppContextState = {
   logoUrl: string;
+  appIcons?: AppLogos;
   theme: any;
   onWalletConnect: () => Promise<any>;
   onWalletDisconnect: () => Promise<any>;
@@ -49,12 +66,7 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 
 export interface OrderlyAppProviderProps {
   logoUrl: string;
-  logos?: Partial<{
-    // logo for top navigation bar
-    appBar: string;
-    // logo for popover/dialog header
-    popover: string;
-  }>;
+  appIcons?: AppLogos;
   theme?: any;
   toastLimitCount?: number;
   /**
@@ -71,6 +83,7 @@ export const OrderlyAppProvider: FC<
 > = (props) => {
   const {
     logoUrl,
+    appIcons: logos,
     theme,
     configStore,
     keyStore,
@@ -95,6 +108,7 @@ export const OrderlyAppProvider: FC<
     >
       <InnerProvider
         logoUrl={logoUrl}
+        appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
@@ -111,6 +125,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   const {
     logoUrl,
     theme,
+    appIcons: logos,
     brokerName,
     toastLimitCount = 1,
     enableSwapDeposit,
@@ -309,6 +324,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     <OrderlyAppContext.Provider
       value={{
         logoUrl,
+        appIcons: logos,
         theme,
         errors,
         onWalletConnect: _onWalletConnect,

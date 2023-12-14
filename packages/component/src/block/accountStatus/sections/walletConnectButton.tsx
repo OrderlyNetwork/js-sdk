@@ -18,7 +18,7 @@ interface Props {
 
 export const WalletConnectButton: FC<Props> = (props) => {
   const { status = AccountStatusEnum.NotConnected, address } = props;
-  const { logoUrl, errors } = useContext(OrderlyAppContext);
+  const { errors } = useContext(OrderlyAppContext);
 
   const buttonLabel = useMemo(() => {
     switch (status) {

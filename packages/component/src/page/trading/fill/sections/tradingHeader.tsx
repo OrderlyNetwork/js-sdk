@@ -1,4 +1,4 @@
-import { FC, ReactNode, useCallback, useContext } from "react";
+import { FC, ReactNode, useCallback, useContext, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/accountStatus";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -7,6 +7,7 @@ import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider/appProvider";
 import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
+import { Logo } from "@/logo";
 
 interface Props {
   logo?: ReactNode;
@@ -14,7 +15,7 @@ interface Props {
 
 export const Header: FC<Props> = (props) => {
   const { state } = useAccount();
-  const { errors } = useContext(OrderlyAppContext);
+  const { errors, appIcons: logos } = useContext(OrderlyAppContext);
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
   const onConnect = useCallback(() => {
@@ -28,10 +29,23 @@ export const Header: FC<Props> = (props) => {
       }
     );
   }, []);
+
+  const logoElement = useMemo(() => {
+    if (logos?.appBar?.component) {
+      return logos?.appBar?.component;
+    }
+    if (logos?.appBar?.img) {
+      return <img src={logos?.appBar?.img} />;
+    }
+    return null;
+  }, [logos?.appBar]);
+
   return (
     <div>
       <div className="orderly-h-[48px] orderly-flex">
-        <div className="orderly-flex-1"></div>
+        <div className="orderly-flex-1">
+          <Logo />
+        </div>
 
         <AccountStatus
           status={state.status}
@@ -46,6 +60,5 @@ export const Header: FC<Props> = (props) => {
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
     </div>
-
   );
 };

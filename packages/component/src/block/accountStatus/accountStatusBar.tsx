@@ -100,9 +100,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               </Button>
             </SheetTrigger>
             <SheetContent forceMount>
-              <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
-                My account
-              </SheetHeader>
+              <SheetHeader leading={<Logo size={30} />}>My account</SheetHeader>
               <AccountInfo
                 onDisconnect={props.onDisconnect}
                 close={() => setInfoOpen(false)}

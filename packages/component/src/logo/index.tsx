@@ -1,48 +1,64 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import { OrderlyAppContext } from "@/provider/appProvider";
+import { cn } from "@/utils/css";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { MEDIA_TABLE } from "@orderly.network/types";
+import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 
 export interface LogoProps {
   link?: string;
-  image: string;
+  // image: string;
   title?: string;
   size?: number;
 }
 
 export const Logo: FC<LogoProps> = ({
   link = "/",
-  image,
+  // image,
   title,
-  size = 50,
+  size,
 }) => {
-  const [url, setUrl] = React.useState<string>();
+  const matches = useMediaQuery(MEDIA_TABLE);
 
-  useEffect(() => {
-    const img = new Image();
+  const { appIcons } = useContext(OrderlyAppContext);
 
-    img.onload = function () {
-      setUrl(img.src);
-    };
+  if (!appIcons?.appBar?.img && !appIcons?.appBar?.component) return null;
 
-    img.onerror = function () {};
+  // const [url, setUrl] = React.useState<string>();
 
-    // crypto logos
-    // https://cryptologos.cc/logos/
-    // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-    img.src = image;
-  }, [image]);
-
-  const logo = useMemo(() => {
-    if (!url) {
-      return null;
+  const _size = useMemo(() => {
+    if (typeof size === "number") {
+      return size;
     }
-    return <img src={url} alt={title} />;
-  }, [url]);
 
+    if (matches) {
+      return 50;
+    }
+
+    return 48;
+  }, [size]);
+
+  const logoElement = useMemo(() => {
+    if (appIcons?.appBar?.img) {
+      return <img src={appIcons?.appBar?.img} />;
+    }
+    return null;
+  }, [appIcons?.appBar]);
+
+  if (appIcons?.appBar?.component) {
+    return <>{appIcons.appBar.component}</>;
+  }
+
+  // if(matches){
   return (
     <div
-      className="orderly-flex orderly-flex-row orderly-justify-center orderly-items-center"
-      style={{ width: `${size}px`, height: `${size}px` }}
+      className={cn(
+        "orderly-inline-flex orderly-flex-row orderly-justify-center orderly-items-center orderly-px-3",
+        appIcons.appBar?.className
+      )}
+      style={{ height: `${_size}px` }}
     >
-      <a href={link}>{logo}</a>
+      <a href={link}>{logoElement}</a>
     </div>
   );
+  // }
 };

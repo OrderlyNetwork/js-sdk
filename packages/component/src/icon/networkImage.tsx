@@ -107,7 +107,11 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   const icon = useMemo(() => {
     // if (failed) {
     if (props.type === "unknown") {
-      return <span className="orderly-text-base-contrast/50 orderly-text-[10px]">U</span>;
+      return (
+        <span className="orderly-text-base-contrast/50 orderly-text-[10px]">
+          U
+        </span>
+      );
     }
     // }
     if (!url) {
@@ -128,7 +132,7 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   return (
     <div
       className={cn(
-        "orderly-inline-block orderly-overflow-hidden orderly-leading-none orderly-text-center",
+        "orderly-inline-flex orderly-overflow-hidden orderly-leading-none orderly-text-center orderly-items-center orderly-justify-center",
         (isPlaceholder || loading) && "orderly-bg-slate-200",
         rounded && "orderly-rounded-full",
         loading && "orderly-animate-pulse",
