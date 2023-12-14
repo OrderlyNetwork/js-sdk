@@ -20,10 +20,11 @@ export const MyLeverageView: FC<Props> = (props) => {
     revalidateOnFocus: false,
   });
 
-  const leverage = useMemo(() => {
+  const maxAccountLeverage = info?.max_leverage;
+
+  const maxSymbolLeverage = useMemo(() => {
     const base = res?.data?.base_imr;
     if (base) return 1 / base;
-    return 50;
   }, [res]);
 
   const showLeverageInfo = useCallback(() => {
@@ -31,19 +32,25 @@ export const MyLeverageView: FC<Props> = (props) => {
       title: "Max leverage",
       message: (
         <span className="orderly-text-3xs orderly-text-base-contrast-54">
-          This instrument supports up to {leverage}x leverage. The actual amount
-          cannot exceed the max account leverage.
+          This instrument supports up to {maxSymbolLeverage}x leverage. The
+          actual amount cannot exceed the max account leverage.
         </span>
       ),
     });
-  }, [leverage]);
+  }, [maxSymbolLeverage]);
+
+  const maxLeverage = useMemo(() => {
+    if (!maxAccountLeverage || !maxSymbolLeverage) {
+      return "-";
+    }
+
+    return Math.min(maxAccountLeverage, maxSymbolLeverage);
+  }, [maxAccountLeverage, maxSymbolLeverage]);
 
   return (
     <div className="orderly-px-3 orderly-py-2">
       <LeverageView
-        // @ts-ignore
-        maxLeverage={info?.max_leverage ?? "-"}
-        // @ts-ignore
+        maxLeverage={maxLeverage as any}
         predFundingRate={data.est_funding_rate}
         countdown={data.countDown}
         onShowLeverageInfo={showLeverageInfo}
