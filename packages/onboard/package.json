@@ -18,7 +18,7 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@web3-onboard/core": "^2.21.2",
-    "@web3-onboard/injected-wallets": "2.10.9",
+    "@web3-onboard/injected-wallets": "^2.10.10",
     "@web3-onboard/react": "2.8.13"
   },
   "devDependencies": {

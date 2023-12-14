@@ -85,11 +85,11 @@ importers:
         specifier: ^17.0.12
         version: 17.0.12
       '@web3-onboard/injected-wallets':
-        specifier: ^2.10.4
-        version: 2.10.4
+        specifier: ^2.10.10
+        version: 2.10.10
       '@web3-onboard/react':
-        specifier: ^2.8.11
-        version: 2.8.11(react@18.2.0)
+        specifier: ^2.8.13
+        version: 2.8.13(react@18.2.0)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.26)
@@ -752,8 +752,8 @@ importers:
         specifier: ^2.21.2
         version: 2.21.2
       '@web3-onboard/injected-wallets':
-        specifier: 2.10.9
-        version: 2.10.9
+        specifier: ^2.10.10
+        version: 2.10.10
       '@web3-onboard/react':
         specifier: 2.8.13
         version: 2.8.13(react@18.2.0)
@@ -10282,28 +10282,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3-onboard/injected-wallets@2.10.4:
-    resolution: {integrity: sha512-A0Uawe4X7o2mZD8S2UMqAWXjC33fIepB6SKKrH1XswEUWlg+hxs9vKjB/eIa3Fhly9lYVs5XyFUAx2mv4sZ/Xw==}
-    dependencies:
-      '@web3-onboard/common': 2.3.3
-      joi: 17.9.1
-      lodash.uniqby: 4.7.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
-  /@web3-onboard/injected-wallets@2.10.9:
-    resolution: {integrity: sha512-Eo2BAHOaEnhufSCiqgVYT1FeNLKKmEfAEcHcxBVeANar7th8zUBhC5QyorQNwTvsFr9MOxgJe/CELcAFQJalVA==}
-    dependencies:
-      '@web3-onboard/common': 2.3.3
-      joi: 17.9.1
-      lodash.uniqby: 4.7.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
   /@web3-onboard/ledger@2.5.2(react@18.2.0):
     resolution: {integrity: sha512-Hnq4HvhtUrRlr3rcM70uDxqsky9riV676tNUElTyi1baqi58dm2IPgctzMqEamlJqYIRLXlhcf+FaMaf4vZMHg==}
     dependencies:
@@ -10331,20 +10309,6 @@ packages:
       - encoding
       - react
       - supports-color
-      - utf-8-validate
-    dev: false
-
-  /@web3-onboard/react@2.8.11(react@18.2.0):
-    resolution: {integrity: sha512-wTvDQaIXKxe0xE++iykEzJ2Y9bY4XeJzptE23cgkZBQhlWbJZmVUKDBQrCbkdIM0+5Qq2AZYN6UMNgdoB3myxg==}
-    peerDependencies:
-      react: '>=16.8'
-    dependencies:
-      '@web3-onboard/common': 2.3.3
-      '@web3-onboard/core': 2.21.2
-      react: 18.2.0
-      use-sync-external-store: 1.0.0(react@18.2.0)
-    transitivePeerDependencies:
-      - bufferutil
       - utf-8-validate
     dev: false
 
@@ -13564,7 +13528,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@7.32.0)(typescript@5.2.2)
+      '@typescript-eslint/parser': 5.62.0(eslint@7.32.0)(typescript@5.1.6)
       debug: 3.2.7
       eslint: 7.32.0
       eslint-import-resolver-node: 0.3.9
@@ -13583,7 +13547,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@7.32.0)(typescript@5.2.2)
+      '@typescript-eslint/parser': 5.62.0(eslint@7.32.0)(typescript@5.1.6)
       array-includes: 3.1.6
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.1
