@@ -58,6 +58,7 @@ var __async = (__this, __arguments, generator) => {
 var src_exports = {};
 __export(src_exports, {
   WS: () => WS,
+  WebSocketEvent: () => WebSocketEvent,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   del: () => del,
   get: () => get,
@@ -190,6 +191,15 @@ var messageHandlers = /* @__PURE__ */ new Map([
 ]);
 
 // src/ws/ws.ts
+var WebSocketEvent = /* @__PURE__ */ ((WebSocketEvent2) => {
+  WebSocketEvent2["OPEN"] = "open";
+  WebSocketEvent2["CLOSE"] = "close";
+  WebSocketEvent2["ERROR"] = "error";
+  WebSocketEvent2["MESSAGE"] = "message";
+  WebSocketEvent2["CONNECTING"] = "connecting";
+  WebSocketEvent2["RECONNECTING"] = "reconnecting";
+  return WebSocketEvent2;
+})(WebSocketEvent || {});
 var defaultMessageFormatter = (message) => message.data;
 var COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 var TIME_OUT = 1e3 * 60 * 2;
@@ -249,10 +259,10 @@ var WS = class {
     }
   }
   /**
-   * 判断当前连接状态，
-   * 1、如果已断开则重连
-   * 2、如果太久没有收到消息，则主动断开，并重连
-   * 3、从后台返回、网络状态变化时，都走以下流程
+   * Determine the current connection status,
+   * 1. If it is disconnected, reconnect
+   * 2. If no message is received for too long, disconnect and reconnect actively
+   * 3. When returning from the background and the network status changes, the following process is followed
    */
   checkSocketStatus() {
     var _a, _b;
@@ -664,6 +674,7 @@ var WS = class {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   WS,
+  WebSocketEvent,
   __ORDERLY_API_URL_KEY__,
   del,
   get,
