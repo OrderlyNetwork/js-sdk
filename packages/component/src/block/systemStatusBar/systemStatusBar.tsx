@@ -1,5 +1,5 @@
 import { Divider } from "@/divider";
-import { FC, ReactElement, useEffect, useState } from "react";
+import { FC, ReactElement, useEffect, useRef, useState } from "react";
 import { NetworkStatus } from "./networkStatus";
 import { CommunityDiscord, CommunityFB, CommunityTG, CommunityType } from "./communityIcon";
 import { OrderlyLogo } from "./orderlyLogo";
@@ -18,10 +18,32 @@ export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
 
     const [wsStatus, setWsStatus] = useState<"connected" | "unstable" | "disconnected">("disconnected");
     const ws = useWS();
+    const connectCount = useRef(0);
 
     useEffect(() => {
-        ws.on("websocket:status", (status: any) => {
-            setWsStatus(status === "connecting" ? "disconnected" : status);
+        ws.on("status:change", (status: any) => {
+            // setWsStatus(status === "connecting" ? "disconnected" : status);
+            console.log("ws status", status);
+
+            const { type } = status;
+            switch (type) {
+                case "open":
+                    connectCount.current = 0;
+                    setWsStatus("connected");
+                    break;
+                case "close":
+                    connectCount.current = 0;
+                    setWsStatus("disconnected");
+                    break;
+                case "reconnecting":
+                    connectCount.current++;
+                    if (connectCount.current >= 3) {
+                        setWsStatus("unstable");
+                    }
+                    break;
+
+            }
+
         });
         return () => ws.off("websocket:status");
     }, []);
