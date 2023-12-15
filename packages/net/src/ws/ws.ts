@@ -235,6 +235,8 @@ export class WS {
 
     this.publicIsReconnecting = false;
     this._publicRetryCount = 0;
+
+    this.emit("status:change", { type: WebSocketEvent.OPEN, isPrivate: false });
   }
 
   private onPrivateOpen(event: Event) {
@@ -242,6 +244,8 @@ export class WS {
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
+
+    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
   }
 
   private onMessage(
@@ -326,6 +330,11 @@ export class WS {
       this._eventHandlers.delete(key);
     });
 
+    this.emit("status:change", {
+      type: WebSocketEvent.CLOSE,
+      isPrivate: false,
+    });
+
     setTimeout(() => this.checkSocketStatus(), 0);
   }
 
@@ -339,6 +348,8 @@ export class WS {
       this._eventPrivateHandlers.delete(key);
     });
     this.authenticated = false;
+
+    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
 
     setTimeout(() => this.checkSocketStatus(), 0);
   }
@@ -360,6 +371,10 @@ export class WS {
     }
 
     this.errorBoardscast(event, this._eventHandlers);
+    this.emit("status:change", {
+      type: WebSocketEvent.ERROR,
+      isPrivate: false,
+    });
   }
 
   private onPrivateError(event: Event) {
@@ -379,6 +394,7 @@ export class WS {
     }
 
     this.errorBoardscast(event, this._eventPrivateHandlers);
+    this.emit("status:change", { type: WebSocketEvent.ERROR, isPrivate: true });
   }
 
   private errorBoardscast(error: any, eventHandlers: Map<string, Topics>) {
@@ -657,7 +673,12 @@ export class WS {
 
     window.setTimeout(() => {
       this.createPublicSC(this.options);
-      this.emit("reconnect:public", { count: this._publicRetryCount });
+      // this.emit("reconnect:public", { count: this._publicRetryCount });
+      this.emit("status:change", {
+        type: WebSocketEvent.RECONNECTING,
+        isPrivate: false,
+        count: this._publicRetryCount,
+      });
     }, this.reconnectInterval);
   }
 
@@ -668,6 +689,12 @@ export class WS {
 
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
+
+      this.emit("status:change", {
+        type: WebSocketEvent.RECONNECTING,
+        isPrivate: true,
+        count: this._privateRetryCount,
+      });
     }, this.reconnectInterval);
   }
 
