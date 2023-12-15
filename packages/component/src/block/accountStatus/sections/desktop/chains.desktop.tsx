@@ -1,4 +1,4 @@
-import { FC, useContext, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { ChainListView } from "@/block/pickers/chainPicker";
 import Button from "@/button";
 import {
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/dialog";
-import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
+import { ARBITRUM_MAINNET_CHAINID_HEX, ARBITRUM_TESTNET_CHAINID_HEX, type API } from "@orderly.network/types";
 import {
   useChains,
   OrderlyContext,
@@ -16,7 +16,7 @@ import {
   useMediaQuery,
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
-import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
+import { OrderlyAppContext } from "@/provider";
 import { cn } from "@/utils/css";
 
 import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
@@ -38,7 +38,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
-    ARBITRUM_MAINNET_CHAINID_HEX
+    networkId === "mainnet" ? ARBITRUM_MAINNET_CHAINID_HEX : ARBITRUM_TESTNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
@@ -55,6 +55,16 @@ export const Chains: FC<ChainsProps> = (props) => {
   });
 
   const { connectedChain, setChain, settingChain } = useWalletConnector();
+
+  const resetDefaultChain = useCallback(() => {
+
+    if (networkId === "mainnet" && defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+      setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+    }
+    else if (networkId === "testnet" && defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX) {
+      setDefaultChain(ARBITRUM_TESTNET_CHAINID_HEX);
+    }
+  }, [defaultChain]);
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
@@ -83,40 +93,6 @@ export const Chains: FC<ChainsProps> = (props) => {
       onChainChanged(chainId, chainId === 421613);
     }
   };
-
-  // @ts-ignore
-  const [allChains,] = useChains("", {
-    enableSwapDeposit,
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
-  });
-  const chains = useMemo(() => {
-    if (Array.isArray(allChains)) return allChains;
-    if (allChains === undefined) return [];
-
-    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
-      return allChains.testnet ?? [];
-    }
-
-    return allChains.mainnet;
-  }, [allChains, connectedChain]);
-
-  function parseChainId(id?: string | number) {
-    if (typeof id === 'number') {
-      return id;
-    }
-
-    if (typeof id === 'string') {
-      if (id.startsWith('0x')) {
-        return parseInt(id, 16);
-      }
-      return parseInt(id, 10);
-    }
-
-  }
-
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -155,9 +131,7 @@ export const Chains: FC<ChainsProps> = (props) => {
             if (connectedChain) {
               setChain({ chainId: item.id }).then((success: boolean) => {
                 // reset default chain when switch to connected chain
-                if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
-                  setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
-                }
+                resetDefaultChain();
                 if (success) {
                   switchDomain(item.id);
                 }
