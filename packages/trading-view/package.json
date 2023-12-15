@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-view",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "files": [
@@ -26,11 +26,7 @@
   "dependencies": {
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/net": "workspace:*",
-    "tsconfig": "workspace:*",
-    "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "tslib": "^2.6.0",
-    "typescript": "^4.5.2"
+    "@orderly.network/net": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0"

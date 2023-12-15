@@ -407,7 +407,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     value={
                       isMarketOrder ? "Market" : commify(field.value || "")
                     }
-                    className="orderly-text-right"
                     containerClassName={
                       isMarketOrder
                         ? "orderly-bg-base-700"
@@ -483,7 +482,14 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                       )}
                     >
                       <span>
-                        {Number(convertValueToPercentage(Number(field.value), 0 , maxQty === 0 ? 1 : maxQty).toFixed())}%
+                        {Number(
+                          convertValueToPercentage(
+                            Number(field.value),
+                            0,
+                            maxQty === 0 ? 1 : maxQty
+                          ).toFixed()
+                        )}
+                        %
                       </span>
                       <span className="orderly-flex orderly-items-center orderly-gap-1">
                         <span className="orderly-text-base-contrast-54">
