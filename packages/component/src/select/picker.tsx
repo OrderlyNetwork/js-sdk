@@ -165,7 +165,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="center"
-        className="orderly-bg-base-800 orderly-w-[218px] orderly-py-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20 orderly-mt-2"
+        className="orderly-bg-base-800 orderly-w-[218px] orderly-py-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20 orderly-mt-1"
         style={{ width: dropdownWidth }}
       >
 
