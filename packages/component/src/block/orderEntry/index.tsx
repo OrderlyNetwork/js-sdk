@@ -25,7 +25,7 @@ import { modal } from "@/modal";
 import { OrderConfirmView } from "./sections/orderConfirmView";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, commify } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 
 export interface OrderEntryProps {
@@ -414,7 +414,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     error={!!methods.formState.errors?.order_price}
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
-                    value={isMarketOrder ? "Market" : field.value}
+                    value={isMarketOrder ? "Market" : commify(field.value)}
                     className="orderly-text-right"
                     containerClassName={
                       isMarketOrder
