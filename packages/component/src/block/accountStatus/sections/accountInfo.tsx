@@ -25,7 +25,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const config = useConfig<ConfigStore>();
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `${config.get("operatorUrl")}/v1/faucet/usdc`
+    `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
   );
 
   const chainName = useGetChains();
@@ -95,15 +95,16 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             onClick={onGetClick}
             disabled={isMutating}
             loading={isMutating}
+            className="orderly-text-xs orderly-text-primary orderly-font-bold orderly-border-primary hover:orderly-bg-transparent hover:orderly-text-primary-light"
           >
             Get test USDC
           </Button>
 
           <Button
-            className="orderly-text-xs"
             variant={"outlined"}
             color={"danger"}
             fullWidth
+            className="orderly-text-xs orderly-font-bold orderly-text-danger-light orderly-border-danger-light hover:orderly-bg-transparent hover:orderly-text-danger-light"
             onClick={() => {
               onDisconnect?.();
             }}
@@ -114,10 +115,10 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
       ) : (
         <div className="orderly-flex orderly-justify-center">
           <Button
-            className="orderly-text-xs orderly-border-danger-light hover:orderly-border-danger hover:orderly-bg-transparent"
             variant={"outlined"}
             color={"danger"}
             fullWidth
+            className="orderly-text-xs orderly-font-bold orderly-text-danger-light orderly-border-danger-light hover:orderly-bg-transparent hover:orderly-text-danger-light"
             onClick={() => {
               onDisconnect?.();
             }}

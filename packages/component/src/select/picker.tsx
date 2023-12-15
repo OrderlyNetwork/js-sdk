@@ -1,10 +1,12 @@
-import { forwardRef, SelectHTMLAttributes, useMemo, useState } from "react";
+import { forwardRef, SelectHTMLAttributes, useEffect, useMemo, useRef, useState } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
 import { SelectOption } from "@/select/select";
 import { cn } from "@/utils/css";
 import { ActionSheet, ActionSheetItem } from "@/sheet";
 import { ArrowIcon } from "@/icon";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 const pickerVariants = cva(
   "orderly-flex orderly-flex-row orderly-items-stretch orderly-rounded focus-within:orderly-outline orderly-outline-primary orderly-bg-fill orderly-text-base-contrast/50",
@@ -37,10 +39,10 @@ const pickerVariants = cva(
 
 export interface PickerProps
   extends Omit<
-      SelectHTMLAttributes<HTMLSelectElement>,
-      "disabled" | "size" | "color" | "value"
-    >,
-    VariantProps<typeof pickerVariants> {
+    SelectHTMLAttributes<HTMLSelectElement>,
+    "disabled" | "size" | "color" | "value"
+  >,
+  VariantProps<typeof pickerVariants> {
   loading?: boolean;
   label?: string;
   options: SelectOption[];
@@ -91,6 +93,16 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
     const actions: ActionSheetItem[] = useMemo(() => {
       return [...options, "---", "Cancel"];
     }, [options]);
+
+    const triggerRef = useRef(null);
+    const [dropdownWidth, setDropdownWidth] = useState(218);
+
+    useEffect(() => {
+      if (triggerRef.current) {
+        const width = triggerRef.current.offsetWidth;
+        setDropdownWidth(width);
+      }
+    }, []);
 
     return (
       <ActionSheet

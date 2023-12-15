@@ -6,7 +6,7 @@ import { useQuery } from "../useQuery";
 
 export const useLeverage = () => {
   const { data, mutate } = usePrivateQuery("/v1/client/info");
-  const [update] = useMutation("/v1/client/leverage");
+  const [update, { isMutating }] = useMutation("/v1/client/leverage");
 
   const { data: config } = useQuery("/v1/public/config");
 
@@ -25,6 +25,7 @@ export const useLeverage = () => {
     prop("max_leverage", data),
     {
       update: updateLeverage,
+      isMutating,
       // config: [1, 2, 3, 4, 5, 10, 15, 20],
       config: config
         ? (config as any)?.available_futures_leverage
@@ -34,6 +35,6 @@ export const useLeverage = () => {
     },
   ] as [
     number | undefined,
-    { update: typeof updateLeverage; config: number[] }
+    { update: typeof updateLeverage; config: number[]; isMutating: boolean }
   ];
 };

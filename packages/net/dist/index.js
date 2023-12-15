@@ -58,6 +58,7 @@ var __async = (__this, __arguments, generator) => {
 var src_exports = {};
 __export(src_exports, {
   WS: () => WS,
+  WebSocketEvent: () => WebSocketEvent,
   __ORDERLY_API_URL_KEY__: () => __ORDERLY_API_URL_KEY__,
   del: () => del,
   get: () => get,
@@ -190,6 +191,15 @@ var messageHandlers = /* @__PURE__ */ new Map([
 ]);
 
 // src/ws/ws.ts
+var WebSocketEvent = /* @__PURE__ */ ((WebSocketEvent2) => {
+  WebSocketEvent2["OPEN"] = "open";
+  WebSocketEvent2["CLOSE"] = "close";
+  WebSocketEvent2["ERROR"] = "error";
+  WebSocketEvent2["MESSAGE"] = "message";
+  WebSocketEvent2["CONNECTING"] = "connecting";
+  WebSocketEvent2["RECONNECTING"] = "reconnecting";
+  return WebSocketEvent2;
+})(WebSocketEvent || {});
 var defaultMessageFormatter = (message) => message.data;
 var COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 var TIME_OUT = 1e3 * 60 * 2;
@@ -249,10 +259,10 @@ var WS = class {
     }
   }
   /**
-   * 判断当前连接状态，
-   * 1、如果已断开则重连
-   * 2、如果太久没有收到消息，则主动断开，并重连
-   * 3、从后台返回、网络状态变化时，都走以下流程
+   * Determine the current connection status,
+   * 1. If it is disconnected, reconnect
+   * 2. If no message is received for too long, disconnect and reconnect actively
+   * 3. When returning from the background and the network status changes, the following process is followed
    */
   checkSocketStatus() {
     var _a, _b;
@@ -331,11 +341,13 @@ var WS = class {
     }
     this.publicIsReconnecting = false;
     this._publicRetryCount = 0;
+    this.emit("status:change", { type: "open" /* OPEN */, isPrivate: false });
   }
   onPrivateOpen(event) {
     this.authenticate(this.options.accountId);
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
+    this.emit("status:change", { type: "close" /* CLOSE */, isPrivate: true });
   }
   onMessage(event, socket, handlerMap) {
     try {
@@ -392,6 +404,10 @@ var WS = class {
       });
       this._eventHandlers.delete(key);
     });
+    this.emit("status:change", {
+      type: "close" /* CLOSE */,
+      isPrivate: false
+    });
     setTimeout(() => this.checkSocketStatus(), 0);
   }
   onPrivateClose(event) {
@@ -404,6 +420,7 @@ var WS = class {
       this._eventPrivateHandlers.delete(key);
     });
     this.authenticated = false;
+    this.emit("status:change", { type: "close" /* CLOSE */, isPrivate: true });
     setTimeout(() => this.checkSocketStatus(), 0);
   }
   onPublicError(event) {
@@ -420,6 +437,10 @@ var WS = class {
       }, this._publicRetryCount * 1e3);
     }
     this.errorBoardscast(event, this._eventHandlers);
+    this.emit("status:change", {
+      type: "error" /* ERROR */,
+      isPrivate: false
+    });
   }
   onPrivateError(event) {
     var _a;
@@ -436,6 +457,7 @@ var WS = class {
       }, this._privateRetryCount * 1e3);
     }
     this.errorBoardscast(event, this._eventPrivateHandlers);
+    this.emit("status:change", { type: "error" /* ERROR */, isPrivate: true });
   }
   errorBoardscast(error, eventHandlers) {
     eventHandlers.forEach((value) => {
@@ -625,6 +647,11 @@ var WS = class {
     this.publicIsReconnecting = true;
     window.setTimeout(() => {
       this.createPublicSC(this.options);
+      this.emit("status:change", {
+        type: "reconnecting" /* RECONNECTING */,
+        isPrivate: false,
+        count: this._publicRetryCount
+      });
     }, this.reconnectInterval);
   }
   reconnectPrivate() {
@@ -635,6 +662,11 @@ var WS = class {
     this.privateIsReconnecting = true;
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
+      this.emit("status:change", {
+        type: "reconnecting" /* RECONNECTING */,
+        isPrivate: true,
+        count: this._privateRetryCount
+      });
     }, this.reconnectInterval);
   }
   get publicSocket() {
@@ -663,6 +695,7 @@ var WS = class {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   WS,
+  WebSocketEvent,
   __ORDERLY_API_URL_KEY__,
   del,
   get,

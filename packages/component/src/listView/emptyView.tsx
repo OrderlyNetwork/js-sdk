@@ -16,6 +16,10 @@ export const EmptyView: FC<EmptyViewProps> = (props) => {
     return <div className="orderly-text-3xs">No results found.</div>;
   }, [props.text]);
 
+  if (!props.visible) {
+    return null;
+  }
+
   return (
     <div className="orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-py-[50px]">
       <div>{icon}</div>

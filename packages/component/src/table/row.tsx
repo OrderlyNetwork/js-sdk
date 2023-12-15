@@ -6,6 +6,7 @@ interface RowProps {
   columns: Column[];
   record: any;
   bordered?: boolean;
+  justified?: boolean;
 }
 
 export const Row: FC<RowProps> = (props) => {
@@ -19,10 +20,19 @@ export const Row: FC<RowProps> = (props) => {
           col={column}
           index={index}
           record={record}
+          justified={props.justified}
         />
       );
     });
   }, [columns, record]);
 
-  return <tr>{cols}</tr>;
+  return (
+    <tr
+      className={cn(
+        props.bordered && "orderly-border-b orderly-border-divider"
+      )}
+    >
+      {cols}
+    </tr>
+  );
 };

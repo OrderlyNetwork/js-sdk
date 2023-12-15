@@ -1,4 +1,4 @@
-import { FC, useContext, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { ChainListView } from "@/block/pickers/chainPicker";
 import Button from "@/button";
 import {
@@ -8,28 +8,37 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/dialog";
-import { ARBITRUM_MAINNET_CHAINID_HEX, type API } from "@orderly.network/types";
+import { ARBITRUM_MAINNET_CHAINID_HEX, ARBITRUM_TESTNET_CHAINID_HEX, type API } from "@orderly.network/types";
 import {
   useChains,
   OrderlyContext,
   useWalletConnector,
+  useMediaQuery,
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
-import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
+import { OrderlyAppContext } from "@/provider";
+import { cn } from "@/utils/css";
+
+import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/dropdown/dropdown";
+import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
+
 
 interface ChainsProps {
   disabled?: boolean;
+  className?: string;
 }
 
 export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { onlyTestnet, configStore, enableSwapDeposit } =
+  const { configStore, enableSwapDeposit, networkId } =
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
-    ARBITRUM_MAINNET_CHAINID_HEX
+    networkId === "mainnet" ? ARBITRUM_MAINNET_CHAINID_HEX : ARBITRUM_TESTNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
@@ -46,6 +55,16 @@ export const Chains: FC<ChainsProps> = (props) => {
   });
 
   const { connectedChain, setChain, settingChain } = useWalletConnector();
+
+  const resetDefaultChain = useCallback(() => {
+
+    if (networkId === "mainnet" && defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+      setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+    }
+    else if (networkId === "testnet" && defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX) {
+      setDefaultChain(ARBITRUM_TESTNET_CHAINID_HEX);
+    }
+  }, [defaultChain]);
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
@@ -71,10 +90,10 @@ export const Chains: FC<ChainsProps> = (props) => {
     // window.open(url); // test in storybook
     // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
     if (onChainChanged) {
-      console.log("onChainChanged", chainId, chainId === 421613);
       onChainChanged(chainId, chainId === 421613);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -85,9 +104,10 @@ export const Chains: FC<ChainsProps> = (props) => {
           color={"buy"}
           loading={settingChain}
           disabled={disabled}
-          className={
-            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent"
-          }
+          className={cn(
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+            props.className
+          )}
         >
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
@@ -106,13 +126,14 @@ export const Chains: FC<ChainsProps> = (props) => {
               if (connectedChain) {
                 setChain({ chainId: item.id }).then((success: boolean) => {
                   // reset default chain when switch to connected chain
-                  if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
-                    setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+                  resetDefaultChain();
+                  if (success) {
+                    switchDomain(item.id);
                   }
-                  switchDomain(item.id);
                 });
               } else {
                 setDefaultChain(item.id);
+                switchDomain(item.id);
               }
             }}
             currentChainId={parseInt(connectedChain?.id || defaultChain)}

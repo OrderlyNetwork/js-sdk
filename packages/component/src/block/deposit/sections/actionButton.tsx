@@ -21,8 +21,8 @@ import { OrderlyAppContext } from "@/provider";
 
 export interface ActionButtonProps {
   chains:
-  | API.NetworkInfos[]
-  | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
+    | API.NetworkInfos[]
+    | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
   chain: CurrentChain | null;
   token?: API.TokenInfo;
   onDeposit: () => Promise<any>;
@@ -63,19 +63,17 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     warningMessage,
   } = props;
   const [chainNotSupport, setChainNotSupport] = useState(false);
-  const { onlyTestnet } = useContext(OrderlyContext);
   const t = useTranslation();
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
-
 
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
 
-    if (onlyTestnet) {
+    if (props.chain?.id === 421613) {
       return props.chains.testnet ?? [];
     }
     return props.chains.mainnet;
-  }, [props.chains, onlyTestnet]);
+  }, [props.chains, props.chain]);
 
   const checkSupoort = (
     chain: CurrentChain | null,
@@ -159,6 +157,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <Button
           id="orderly-deposit-confirm-button"
+          className="desktop:orderly-text-xs"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -179,7 +178,12 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
     return (
-      <Button fullWidth onClick={onOpenPicker} id="orderly-deposit-confirm-button">
+      <Button
+        fullWidth
+        onClick={onOpenPicker}
+        id="orderly-deposit-confirm-button"
+        className="desktop:orderly-text-xs"
+      >
         {t("block.withdraw.switchNetwork")}
       </Button>
     );
@@ -203,7 +207,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport ? (
-        <div className="orderly-text-warning-light orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-py-3">
+        <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs ">
           {chainWarningMessage}
         </div>
       ) : (
@@ -218,7 +222,9 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="orderly-flex orderly-justify-center">
-        <div className="orderly-py-3 orderly-w-full orderly-text-xs">{actionButton}</div>
+        <div className="orderly-py-3 orderly-w-full orderly-text-xs orderly-font-bold">
+          {actionButton}
+        </div>
       </div>
     </>
   );

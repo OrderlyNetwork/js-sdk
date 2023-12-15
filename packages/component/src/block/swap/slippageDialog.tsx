@@ -20,7 +20,7 @@ export const SlippageDialog: FC<PropsWithChildren<SlippageDialogProps>> = (
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent maxWidth={"xs"}>
         <DialogHeader>
           <DialogTitle className="orderly-text-xs">Slippage tolerance</DialogTitle>
         </DialogHeader>

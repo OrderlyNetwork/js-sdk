@@ -23,6 +23,7 @@ import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
 import { cn } from "@/utils/css";
 import { cx } from "class-variance-authority";
+import { LeverageEditor } from "./leverageEditor";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -50,19 +51,20 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
 
   // console.log("leverageLevers", leverageLevers);
 
-  const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
+  // const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
 
-  const leverageValue = useMemo(() => {
-    const index = leverageLevers.findIndex((item) => item === leverage);
+  // const leverageValue = useMemo(() => {
+  //   const index = leverageLevers.findIndex((item) => item === leverage);
 
-    return index;
-  }, [leverage, leverageLevers]);
+  //   return index;
+  // }, [leverage, leverageLevers]);
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
       title: "Settle PnL",
+      maxWidth: "xs",
       content: (
-        <div className="orderly-text-base-contrast-54 orderly-text-2xs">
+        <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
           Are you sure you want to settle your PnL? Settlement will take up to 1
           minute before you can withdraw your available balance.
         </div>
@@ -104,11 +106,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                   toggleVisible();
                 }}
               >
-                {visible ? (
-                  <EyeOffIcon size={16} />
-                ) : (
-                  <EyeIcon size={16} />
-                )}
+                {visible ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
               </button>
             </div>
           }
@@ -156,7 +154,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 {aggregated.unsettledPnL}
               </Numeral>
               <button
-                className="orderly-text-primary orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
+                className="orderly-text-link orderly-text-3xs orderly-flex orderly-items-center orderly-gap-1 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed"
                 onClick={onUnsettleClick}
                 disabled={aggregated.unsettledPnL === 0}
               >
@@ -223,7 +221,25 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           }
           value={
             <div className="orderly-h-[50px] orderly-mt-2 orderly-mx-2 orderly-text-2xs">
-              <Slider
+              <LeverageEditor
+                leverageLevers={leverageLevers}
+                onSave={(value) => {
+                  return update(value).then(
+                    (res: any) => {
+                      toast.success("Leverage updated");
+                      return res;
+                    },
+                    (err: Error) => {
+                      //
+                      toast.error(err.message);
+                      // setLeverage(maxLeverage ?? 1);
+                      throw err;
+                    }
+                  );
+                }}
+                maxLeverage={maxLeverage}
+              />
+              {/* <Slider
                 min={0}
                 max={leverageLevers.length - 1}
                 color={"primary"}
@@ -256,7 +272,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                     }
                   );
                 }}
-              />
+              /> */}
             </div>
           }
         />
@@ -291,6 +307,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           variant={"outlined"}
           onClick={onWithdraw}
           id="orderly-assets-margin-withdraw-button"
+          className="orderly-border-primary-darken hover:orderly-bg-transport orderly-text-primary"
         >
           Withdraw
         </Button>

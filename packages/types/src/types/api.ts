@@ -37,6 +37,7 @@ export declare namespace API {
 
   export interface MarketInfoExt extends MarketInfo {
     change: number;
+    '24h_volume': number;
   }
 
   /**

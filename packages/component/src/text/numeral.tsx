@@ -9,6 +9,7 @@ import { NumeralWithSymbol } from "./numeralWithSymbol";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { Decimal } from "@orderly.network/utils";
 import { parseNumber } from "@/utils/num";
+import { Minus, Plus } from "lucide-react";
 
 export type NumeralRule = "percentages" | "price" | "human";
 
@@ -54,11 +55,21 @@ export interface NumeralProps {
    * @default true
    */
   padding?: boolean;
+
+  /**
+   *
+   */
+  showIcon?: boolean;
+
+  icons?: {
+    loss?: React.ReactNode;
+    profit?: React.ReactNode;
+  };
 }
 
 const coloringClasses: Record<string, string> = {
-  lose: "orderly-text-danger-light",
-  profit: "orderly-text-success-light",
+  lose: "orderly-text-trade-loss-contrast",
+  profit: "orderly-text-trade-profit-contrast",
   neutral: "orderly-text-base-contrast-54",
 };
 
@@ -75,6 +86,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     cureency,
     truncate = "floor",
     padding = true,
+    showIcon = false,
   } = props;
   // TODO: check precision
 
@@ -89,16 +101,15 @@ export const Numeral: FC<NumeralProps> = (props) => {
       tick,
       truncate,
       padding,
+      abs: showIcon,
     });
-  }, [num, precision, visible]);
+  }, [num, precision, visible, showIcon]);
 
   const colorClassName = useMemo(() => {
     if (!coloring) return "";
     if (typeof visible !== "undefined" && !visible) return "";
 
     // if (props.value === 0) return coloringClasses.neutral;
-
-    const num = Number(props.children);
 
     if (Number.isNaN(num)) {
       // console.warn(`if coloring, value is need number: ${props.value}`);
@@ -109,14 +120,28 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (num < 0) return coloringClasses.lose;
 
     return coloringClasses.profit;
-  }, [coloring, props.children, props.visible]);
+  }, [coloring, num, props.visible]);
+
+  const icon = useMemo(() => {
+    if (!showIcon || Number.isNaN(num) || num === 0) return null;
+    if (typeof visible !== "undefined" && !visible) return null;
+
+    if (num < 0) {
+      if (props.icons?.loss) return props.icons?.loss;
+      return <Minus size={12} />;
+    }
+
+    if (props.icons?.profit) return props.icons?.profit;
+    return <Plus size={12} />;
+  }, [num, props.visible, showIcon]);
 
   const childWithUnit = useMemo(() => {
     if (
       typeof surfix === "undefined" &&
       typeof prefix === "undefined" &&
       typeof unit === "undefined" &&
-      typeof cureency === "undefined"
+      typeof cureency === "undefined" &&
+      !showIcon
     ) {
       return child;
     }
@@ -129,7 +154,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     return (
-      <span className="orderly-flex orderly-gap-1">
+      <span className="orderly-inline-flex orderly-items-center orderly-gap-1">
         {prefixEle}
         {child}
         {surfixEle}
@@ -142,6 +167,15 @@ export const Numeral: FC<NumeralProps> = (props) => {
   }
 
   return (
-    <span className={cn(colorClassName, props.className)}>{childWithUnit}</span>
+    <span
+      className={cn(
+        "orderly-inline-flex orderly-items-center",
+        colorClassName,
+        props.className
+      )}
+    >
+      {icon}
+      {childWithUnit}
+    </span>
   );
 };

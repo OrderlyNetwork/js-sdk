@@ -1,25 +1,11 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Divider } from "@/divider";
 import { PositionCell } from "./cell";
-import { AggregatedData, PositionOverview } from "./overview";
+import { PositionOverview } from "./overview";
 import { ListView } from "@/listView";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { SymbolProvider } from "@/provider";
-import { API } from "@orderly.network/types";
-
-export interface PositionsViewProps {
-  dataSource: any[] | null;
-  aggregated: AggregatedData;
-  // actions
-  onLimitClose?: (position: any) => void;
-  onMarketClose?: (position: any) => void;
-  onShowAllSymbolChange?: (isAll: boolean) => void;
-  showAllSymbol?: boolean;
-  onMarketCloseAll?: () => void;
-  loadMore?: () => void;
-  isLoading?: boolean;
-  onSymbolChange?: (symbol: API.Symbol) => void;
-}
+import { PositionsViewProps } from "./shared/types";
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
@@ -36,7 +22,7 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
         />
         <Divider />
         <>
-          <ListView.separated<any>
+          <ListView.separated<any, undefined>
             dataSource={props.dataSource}
             renderItem={(item, index) => {
               return (

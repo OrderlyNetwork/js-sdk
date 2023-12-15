@@ -9,17 +9,21 @@ import {
 import {
   useAccountInstance,
   useLocalStorage,
-  OrderlyContext,
   useWalletSubscription,
   useSettleSubscription,
   useWooCrossSwapQuery,
   useWooSwapQuery,
   useEventEmitter,
   useWS,
+  useMediaQuery,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
-import { DepositAndWithdrawWithSheet } from "@/block/depositAndwithdraw/depositAndwithdraw";
+import {
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
+} from "@/block/depositAndwithdraw/depositAndwithdraw";
 import { capitalizeString } from "@orderly.network/utils";
+import { MEDIA_TABLE } from "@orderly.network/types";
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
@@ -39,23 +43,36 @@ export const AssetsContext = createContext<AssetsContextState>(
 );
 
 export const AssetsProvider: FC<PropsWithChildren> = (props) => {
-  const { configStore } = useContext<any>(OrderlyContext);
   const account = useAccountInstance();
+  const matches = useMediaQuery(MEDIA_TABLE);
+
+  const openDepositAndWithdraw = useCallback(
+    async (viewName: "deposit" | "withdraw") => {
+      let result;
+      if (matches) {
+        result = await modal.show(DepositAndWithdrawWithSheet, {
+          activeTab: viewName,
+        });
+      } else {
+        result = await modal.show(DepositAndWithdrawWithDialog, {
+          activeTab: viewName,
+        });
+      }
+
+      return result;
+    },
+    [matches]
+  );
 
   const onDeposit = useCallback(async () => {
-    const result = await modal.show(DepositAndWithdrawWithSheet, {
-      activeTab: "deposit",
-    });
-  }, []);
+    return openDepositAndWithdraw("deposit");
+  }, [matches]);
 
   const ee = useEventEmitter();
 
   const onWithdraw = useCallback(async () => {
-    // 显示提现弹窗
-    const result = await modal.show(DepositAndWithdrawWithSheet, {
-      activeTab: "withdraw",
-    });
-  }, []);
+    return openDepositAndWithdraw("withdraw");
+  }, [matches]);
 
   const onSettle = useCallback(async () => {
     return account.settle();
@@ -79,7 +96,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
-        let msg = `${capitalizeString(side)} success`;
+        let msg = `${capitalizeString(side)} completed`;
         toast.success(msg);
       } else if (transStatus === "FAILED") {
         let msg = `${capitalizeString(side)} failed`;
@@ -94,7 +111,7 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     onMessage: (data: any) => {
       const { status } = data;
 
-      console.log("settle ws: ", data);
+      // console.log("settle ws: ", data);
 
       switch (status) {
         case "COMPLETED":

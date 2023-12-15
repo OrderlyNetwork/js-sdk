@@ -1,7 +1,7 @@
-import { SortDirection, SortItem, type SortKey } from "./sortItem";
+import { SortCondition, SortDirection, type SortKey } from "../shared/types";
+import { useSort } from "../useSort";
+import { SortItem } from "./sortItem";
 import { FC, useEffect, useMemo, useState } from "react";
-
-export type SortCondition = Partial<{ key: SortKey; direction: SortDirection }>;
 
 interface Props {
   value?: SortKey;
@@ -9,33 +9,12 @@ interface Props {
 }
 
 export const SortGroup: FC<Props> = (props) => {
-  const [sortKey, setSortKey] = useState<SortKey | undefined>(props.value);
-  const [direction, setDirection] = useState<SortDirection>(SortDirection.NONE);
-
-  const onClick = (value: SortKey) => {
-    if (value === sortKey) {
-      setDirection((d) => {
-        if (d === SortDirection.NONE) {
-          return SortDirection.DESC;
-        } else if (d === SortDirection.DESC) {
-          return SortDirection.ASC;
-        } else {
-          return SortDirection.NONE;
-        }
-      });
-    } else {
-      setSortKey(value);
-      setDirection(SortDirection.DESC);
-    }
-  };
-
-  const currentValue = useMemo(
-    () => ({
-      key: sortKey,
-      direction: direction,
-    }),
-    [sortKey, direction]
-  );
+  const {
+    sortKey,
+    onSort,
+    direction,
+    value: currentValue,
+  } = useSort(props.value);
 
   useEffect(() => {
     props.onChange?.({ key: sortKey, direction });
@@ -49,7 +28,7 @@ export const SortGroup: FC<Props> = (props) => {
         <SortItem
           label={"Vol."}
           value={"vol"}
-          onClick={onClick}
+          onClick={onSort}
           currentValue={currentValue}
         />
       </div>
@@ -57,14 +36,14 @@ export const SortGroup: FC<Props> = (props) => {
         <SortItem
           label={"Price"}
           value={"price"}
-          onClick={onClick}
+          onClick={onSort}
           currentValue={currentValue}
         />
         <div>/</div>
         <SortItem
           label={"Change%"}
           value={"change"}
-          onClick={onClick}
+          onClick={onSort}
           currentValue={currentValue}
         />
       </div>

@@ -13,6 +13,15 @@ export type WSOptions = {
 
 export type unsubscribe = () => void;
 
+export enum WebSocketEvent {
+  OPEN = "open",
+  CLOSE = "close",
+  ERROR = "error",
+  MESSAGE = "message",
+  CONNECTING = "connecting",
+  RECONNECTING = "reconnecting",
+}
+
 export type MessageParams = {
   event: string;
   topic: string;
@@ -111,10 +120,10 @@ export class WS {
   }
 
   /**
-   * 判断当前连接状态，
-   * 1、如果已断开则重连
-   * 2、如果太久没有收到消息，则主动断开，并重连
-   * 3、从后台返回、网络状态变化时，都走以下流程
+   * Determine the current connection status,
+   * 1. If it is disconnected, reconnect
+   * 2. If no message is received for too long, disconnect and reconnect actively
+   * 3. When returning from the background and the network status changes, the following process is followed
    */
   private checkSocketStatus() {
     const now = Date.now();
@@ -129,9 +138,9 @@ export class WS {
     // );
 
     // check the last time
-    // 如果容器不可见，则不做处理
+    // If the view is not visible, do not process it
     if (document.visibilityState !== "visible") return;
-    // 如果网络不可用，则不做处理
+    // If the network is not available, do not process it
     if (!navigator.onLine) return;
 
     // 如果已断开，则重连
@@ -226,6 +235,8 @@ export class WS {
 
     this.publicIsReconnecting = false;
     this._publicRetryCount = 0;
+
+    this.emit("status:change", { type: WebSocketEvent.OPEN, isPrivate: false });
   }
 
   private onPrivateOpen(event: Event) {
@@ -233,6 +244,8 @@ export class WS {
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
+
+    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
   }
 
   private onMessage(
@@ -269,14 +282,9 @@ export class WS {
               cb.onMessage(data);
             }
           });
-
-          // 延时删除，在重连时还需要用到
-          // if (eventhandler.isOnce) {
-          //   handlerMap.delete(topicKey);
-          // }
         }
 
-        // 触发事件
+        // emit event
         this._eventContainer.forEach((_, key) => {
           const reg = new RegExp(key);
           if (reg.test(topicKey)) {
@@ -293,13 +301,13 @@ export class WS {
 
   private onPublicMessage(event: MessageEvent) {
     this.onMessage(event, this._publicSocket, this._eventHandlers);
-    // 更新最后收到消息的时间
+    // update last message time for public
     this._publicHeartbeatTime = Date.now();
   }
 
   private onPrivateMessage(event: MessageEvent) {
     this.onMessage(event, this.privateSocket!, this._eventPrivateHandlers);
-    // 更新最后收到消息的时间
+    // update last message time for private
     this._privateHeartbeatTime = Date.now();
   }
 
@@ -322,6 +330,11 @@ export class WS {
       this._eventHandlers.delete(key);
     });
 
+    this.emit("status:change", {
+      type: WebSocketEvent.CLOSE,
+      isPrivate: false,
+    });
+
     setTimeout(() => this.checkSocketStatus(), 0);
   }
 
@@ -335,6 +348,8 @@ export class WS {
       this._eventPrivateHandlers.delete(key);
     });
     this.authenticated = false;
+
+    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
 
     setTimeout(() => this.checkSocketStatus(), 0);
   }
@@ -356,6 +371,10 @@ export class WS {
     }
 
     this.errorBoardscast(event, this._eventHandlers);
+    this.emit("status:change", {
+      type: WebSocketEvent.ERROR,
+      isPrivate: false,
+    });
   }
 
   private onPrivateError(event: Event) {
@@ -375,6 +394,7 @@ export class WS {
     }
 
     this.errorBoardscast(event, this._eventPrivateHandlers);
+    this.emit("status:change", { type: WebSocketEvent.ERROR, isPrivate: true });
   }
 
   private errorBoardscast(error: any, eventHandlers: Map<string, Topics>) {
@@ -653,6 +673,12 @@ export class WS {
 
     window.setTimeout(() => {
       this.createPublicSC(this.options);
+      // this.emit("reconnect:public", { count: this._publicRetryCount });
+      this.emit("status:change", {
+        type: WebSocketEvent.RECONNECTING,
+        isPrivate: false,
+        count: this._publicRetryCount,
+      });
     }, this.reconnectInterval);
   }
 
@@ -663,6 +689,12 @@ export class WS {
 
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
+
+      this.emit("status:change", {
+        type: WebSocketEvent.RECONNECTING,
+        isPrivate: true,
+        count: this._privateRetryCount,
+      });
     }, this.reconnectInterval);
   }
 

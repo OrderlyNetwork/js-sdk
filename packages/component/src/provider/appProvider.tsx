@@ -1,6 +1,7 @@
 import React, {
   FC,
   PropsWithChildren,
+  ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -18,6 +19,7 @@ import {
   OrderlyConfigProvider,
   ConfigProviderProps,
   useAccountInstance,
+  OrderlyContext,
 } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
@@ -28,8 +30,24 @@ export type AppStateErrors = {
   NetworkError: boolean;
 };
 
+type Logo = {
+  // the logo image url
+  img?: string;
+  // also can use react component
+  component?: ReactNode;
+  className?: string;
+};
+
+type AppLogos = Partial<{
+  // logo for top navigation bar
+  main: Logo;
+  // logo for popover/dialog header
+  secondary: Logo;
+}>;
+
 export type OrderlyAppContextState = {
   logoUrl: string;
+  appIcons?: AppLogos;
   theme: any;
   onWalletConnect: () => Promise<any>;
   onWalletDisconnect: () => Promise<any>;
@@ -39,6 +57,7 @@ export type OrderlyAppContextState = {
   enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  brokerName?: string;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -47,15 +66,16 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 
 export interface OrderlyAppProviderProps {
   logoUrl: string;
+  appIcons?: AppLogos;
   theme?: any;
   toastLimitCount?: number;
-  onlyTestnet?: boolean;
   /**
    * are include testnet chains
    */
   includeTestnet?: boolean;
   enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  brokerName?: string;
 }
 
 export const OrderlyAppProvider: FC<
@@ -63,13 +83,14 @@ export const OrderlyAppProvider: FC<
 > = (props) => {
   const {
     logoUrl,
+    appIcons: logos,
     theme,
     configStore,
     keyStore,
     getWalletAdapter,
     brokerId,
+    brokerName,
     networkId,
-    onlyTestnet,
     includeTestnet,
     toastLimitCount,
     enableSwapDeposit,
@@ -87,11 +108,12 @@ export const OrderlyAppProvider: FC<
     >
       <InnerProvider
         logoUrl={logoUrl}
+        appIcons={logos}
         theme={theme}
-        onlyTestnet={onlyTestnet}
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
+        brokerName={brokerName}
       >
         {props.children}
       </InnerProvider>
@@ -103,8 +125,8 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   const {
     logoUrl,
     theme,
-
-    onlyTestnet,
+    appIcons: logos,
+    brokerName,
     toastLimitCount = 1,
     enableSwapDeposit,
     onChainChanged,
@@ -126,6 +148,8 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   //
 
+  const { networkId } = useContext<any>(OrderlyContext);
+
   const [errors, setErrors] = useSessionStorage<AppStateErrors>("APP_ERRORS", {
     ChainNetworkNotSupport: false,
     IpNotSupport: false,
@@ -144,9 +168,15 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
-      if (onlyTestnet && chainId !== "0x66eed") {
+      // check whether chain id and network id match
+      const chainIdNum = parseInt(chainId, 16);
+      if (
+        (networkId === "mainnet" && chainIdNum === 421613) ||
+        (networkId === "testnet" && chainIdNum !== 421613)
+      ) { 
         return false;
       }
+
 
       const isSupport = chains.some((item: { id: string }) => {
         return item.id === chainId;
@@ -154,7 +184,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       return isSupport;
     },
-    [chains, onlyTestnet]
+    [chains, networkId]
   );
 
   const _onWalletConnect = useCallback(async (): Promise<any> => {
@@ -194,7 +224,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     } else {
       throw new Error("walletProvider is required");
     }
-  }, [connect, account]);
+  }, [connect, account, networkId]);
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
@@ -238,7 +268,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       return;
     }
 
-    console.log("currentWallet", currentWallet, account, currentChainId);
+    // console.log("currentWallet", currentWallet, account, currentChainId);
 
     if (
       !!currentWallet &&
@@ -281,7 +311,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     }
     // }
     // }, [ready, currentWallet]);
-  }, [currentAddress, currentChainId, chains, account]);
+  }, [currentAddress, currentChainId, chains, account, networkId]);
 
   // limit toast count
   useEffect(() => {
@@ -295,6 +325,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     <OrderlyAppContext.Provider
       value={{
         logoUrl,
+        appIcons: logos,
         theme,
         errors,
         onWalletConnect: _onWalletConnect,
@@ -302,6 +333,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onSetChain: _onSetChain,
         enableSwapDeposit,
         onChainChanged,
+        brokerName,
       }}
     >
       <TooltipProvider>

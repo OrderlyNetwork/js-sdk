@@ -46,7 +46,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
           <Fragment key={index}>
             <span
               className={cn(
-                "orderly-absolute orderly-top-[7px] orderly-w-[6px] orderly-h-[6px] orderly-rounded-[6px] orderly-border orderly-border-fill-light orderly-bg-fill orderly-pointer-events-none orderly-translate-x-[-50%]",
+                "orderly-absolute orderly-top-[7px] orderly-w-[6px] orderly-h-[6px] orderly-rounded-[6px] orderly-border orderly-border-base-200 orderly-bg-base-800 orderly-pointer-events-none orderly-translate-x-[-50%]",
                 {
                   "orderly-border-primary orderly-bg-primary":
                     props.color === "primary" &&
@@ -71,7 +71,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
               <span
                 key={index}
                 className={cn(
-                  "orderly-absolute orderly-top-[20px] orderly-text-2xs orderly-text-base-contrast/50 orderly-pointer-events-none orderly-translate-x-[-50%]"
+                  "orderly-absolute orderly-top-[20px] orderly-text-2xs orderly-text-base-contrast/50 orderly-pointer-events-none orderly-translate-x-[-50%] desktop:orderly-text-xs"
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,

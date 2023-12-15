@@ -38,7 +38,7 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  const { onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
@@ -105,19 +105,17 @@ export const useDeposit = (options?: useDepositOptions) => {
       if (!address) return;
 
       try {
-        if (balanceRevalidating) return;
-        setBalanceRevalidating(true);
+        // if (balanceRevalidating) return;
         const balance = await fetchBalanceHandler(address, decimals);
 
         setBalance(() => balance);
-        setBalanceRevalidating(false);
       } catch (e) {
         console.warn("----- refresh balance error -----", e);
-        setBalanceRevalidating(false);
+
         setBalance(() => "0");
       }
     },
-    [state, balanceRevalidating]
+    [state]
   );
 
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
@@ -184,8 +182,10 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
-
-    fetchBalance(options?.address, options?.decimals);
+    setBalanceRevalidating(true);
+    fetchBalance(options?.address, options?.decimals).finally(() => {
+      setBalanceRevalidating(false);
+    });
 
     if (dst.chainId !== options?.srcChainId) {
       getAllowance(options?.address, options?.crossChainRouteAddress);
@@ -204,7 +204,8 @@ export const useDeposit = (options?: useDepositOptions) => {
     options?.srcChainId,
     options?.srcToken,
     account.address,
-    dst,
+    dst.chainId,
+    dst.symbol,
   ]);
 
   const approve = useCallback(

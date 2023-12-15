@@ -2,6 +2,24 @@ import React, { FC, PropsWithChildren } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/utils/css";
 import { CloseIcon } from "@/icon";
+import { VariantProps, cva } from "class-variance-authority";
+
+const dialogVariants = cva(
+  "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded",
+  {
+    variants: {
+      maxWidth: {
+        xs: "orderly-max-w-[340px] desktop:orderly-max-w-[340px]",
+        sm: "orderly-max-w-[440px] desktop:orderly-max-w-[440px]",
+        lg: "desktop:orderly-max-w-[480px]",
+        xl: "desktop:orderly-max-w-[540px]",
+      },
+    },
+    defaultVariants: {
+      maxWidth: "sm",
+    },
+  }
+);
 
 const Dialog = DialogPrimitive.Root;
 
@@ -30,48 +48,19 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-// const DialogContainer = React.forwardRef<
-//   React.ElementRef<typeof DialogPrimitive.Content>,
-//   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-//     closable?: boolean;
-//   }
-// >(({ className, children, closable = true, ...props }, ref) => (
-//   <DialogPrimitive.Content
-//     ref={ref}
-//     className={cn(
-//       "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] sm:orderly-max-w-lg orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded md:orderly-w-full",
-//       className
-//     )}
-//     {...props}
-//   >
-//     {children}
-//     {closable && (
-//       <DialogPrimitive.Close className="orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
-//         <CloseIcon size={20} />
-//         <span className="orderly-sr-only">Close</span>
-//       </DialogPrimitive.Close>
-//     )}
-//   </DialogPrimitive.Content>
-// ));
-
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    closable?: boolean;
-  }
->(({ children, closable, className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
+    VariantProps<typeof dialogVariants> & {
+      closable?: boolean;
+    }
+>(({ children, closable, className, maxWidth, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    {/* <DialogContainer {...props}>
-      {children}
-    </DialogContainer> */}
-    {/* <DialogContainer ref={ref} {...props} /> */}
+
     <DialogPrimitive.Content
       ref={ref}
-      className={cn(
-        "orderly-fixed orderly-py-5 orderly-left-[50%] orderly-top-[50%] orderly-z-50 orderly-grid orderly-w-full orderly-max-w-[90%] sm:orderly-max-w-lg orderly-translate-x-[-50%] orderly-translate-y-[-50%] orderly-bg-base-700 orderly-text-base-contrast orderly-shadow-lg orderly-duration-200 data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[state=closed]:orderly-slide-out-to-left-1/2 data-[state=closed]:orderly-slide-out-to-top-[48%] data-[state=open]:orderly-slide-in-from-left-1/2 data-[state=open]:orderly-slide-in-from-top-[48%] orderly-rounded md:orderly-w-full",
-        className
-      )}
+      className={cn(dialogVariants({ maxWidth }), className)}
       {...props}
     >
       {children}
@@ -121,7 +110,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("orderly-text-xs orderly-leading-none", className)}
+    className={cn("orderly-text-xs orderly-leading-none desktop:orderly-text-xl", className)}
     {...props}
   />
 ));

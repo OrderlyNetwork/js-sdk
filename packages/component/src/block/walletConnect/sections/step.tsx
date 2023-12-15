@@ -15,7 +15,7 @@ export const StepItem: FC<PropsWithChildren<StepItemProps>> = (props) => {
       return <Spinner size="small" />;
     }
     if (props.isCompleted) {
-      return <Check />;
+      return <Check size={20} />;
     }
     return props.children;
   }, [props.isLoading, props.isCompleted]);

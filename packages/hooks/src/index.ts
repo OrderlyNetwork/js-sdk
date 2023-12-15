@@ -36,6 +36,8 @@ export { useSWR, SWRConfig, type SWRConfiguration };
 
 export * from "use-debounce";
 
+export { useMediaQuery } from "./useMediaQuery";
+
 export * from "./orderly/orderlyHooks";
 
 //---- woo only -----

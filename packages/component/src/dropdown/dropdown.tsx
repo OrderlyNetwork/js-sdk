@@ -84,7 +84,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "orderly-relative orderly-flex orderly-cursor-default orderly-select-none orderly-items-center orderly-rounded-sm orderly-px-2 orderly-py-2 orderly-text-3xs orderly-outline-none orderly-transition-colors focus:orderly-bg-accent focus:orderly-text-accent-foreground data-[disabled]:orderly-pointer-events-none data-[disabled]:orderly-opacity-50",
+      "orderly-relative orderly-flex orderly-cursor-pointer orderly-select-none orderly-items-center orderly-rounded-sm orderly-px-2 orderly-py-2 orderly-text-3xs orderly-outline-none orderly-transition-colors focus:orderly-bg-base-700 data-[disabled]:orderly-pointer-events-none data-[disabled]:orderly-opacity-50 [data-highlighted]:orderly-bg-base-700",
       inset && "orderly-pl-8",
       className
     )}
@@ -165,7 +165,10 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-orderly-mx-1 orderly-my-1 orderly-h-px orderly-bg-muted", className)}
+    className={cn(
+      "-orderly-mx-1 orderly-my-1 orderly-h-px orderly-bg-muted",
+      className
+    )}
     {...props}
   />
 ));
@@ -177,7 +180,10 @@ const DropdownMenuShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn("orderly-ml-auto orderly-text-4xs orderly-tracking-widest orderly-opacity-60", className)}
+      className={cn(
+        "orderly-ml-auto orderly-text-4xs orderly-tracking-widest orderly-opacity-60",
+        className
+      )}
       {...props}
     />
   );

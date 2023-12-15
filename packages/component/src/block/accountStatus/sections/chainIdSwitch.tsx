@@ -12,6 +12,8 @@ import { useChains, OrderlyContext } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
 import { useTranslation } from "@/i18n";
+import { OrderlyAppContext } from "@/provider";
+import Button from "@/button";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -19,7 +21,9 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId, onlyTestnet, enableSwapDeposit } = useContext<any>(OrderlyContext);
+  const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
+
+  const { onChainChanged } = useContext(OrderlyAppContext);
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
@@ -44,6 +48,9 @@ export const ChainIdSwtich: FC<Props> = (props) => {
           (isSuccess) => {
             if (isSuccess) {
               toast.success(t("toast.networkSwitched"));
+              if (onChainChanged) {
+                onChainChanged(id, id === 421613);
+              }
             } else {
               toast.error(t("common.cancel"));
             }
@@ -58,18 +65,18 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   );
 
   return (
-    <div className="orderly-bg-[#5A480C] orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-[#E5C700] orderly-z-10 orderly-text-3xs orderly-gap-2">
+    <div className="orderly-bg-warning-darken orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-warning orderly-z-10 orderly-text-3xs orderly-gap-2 desktop:orderly-flex desktop:orderly-items-center desktop:orderly-justify-center desktop:orderly-static">
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <button className="orderly-text-primary-light orderly-text-xs">Switch network</button>
+          <Button  variant={"outlined"} size={"small"} className="orderly-text-warning orderly-border-warning hover:orderly-text-warning orderly-text-xs">Switch network</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
           <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto orderly-text-3xs">
             <ChainListView
               // @ts-ignore
-              mainChains={onlyTestnet ? [] : mainChains}
+              mainChains={mainChains}
               // @ts-ignore
               testChains={testChains}
               onItemClick={onChainChange}

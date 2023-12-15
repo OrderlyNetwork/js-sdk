@@ -34,6 +34,7 @@ import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 import { NumberReg } from "@/utils/num";
 import { OrderlyAppContext } from "@/provider";
+import { Logo } from "@/logo";
 
 export interface DepositFormProps {
   // decimals: number;
@@ -102,7 +103,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors, enableSwapDeposit } = useContext(OrderlyAppContext);
+  const { errors, enableSwapDeposit, brokerName, logoUrl } =
+    useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -511,7 +513,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   return (
     <div>
       <div className="orderly-flex orderly-items-center orderly-py-2">
-        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-con">
+        <div className="orderly-flex-1 orderly-text-2xs desktop:orderly-text-base orderly-text-base-con">
           Your web3 wallet
         </div>
         <NetworkImage
@@ -556,10 +558,11 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
       <div className="orderly-flex orderly-py-2">
-        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast">
-          Your Orderly account
+        <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
+          {"Your " + brokerName + " account"}
         </div>
-        <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
+        {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
+        <Logo.secondary size={24} />
       </div>
       <div className="orderly-py-2">
         <TokenQtyInput

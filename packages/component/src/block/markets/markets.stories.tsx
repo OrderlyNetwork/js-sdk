@@ -11,7 +11,7 @@ import Button from "../../button";
 // import {SheetStorie} from "../../sheet/sheet.stories";
 
 const meta: Meta = {
-  title: "Block/Markets",
+  title: "Block/Markets/Mweb",
   component: Markets,
   argTypes: {
     onItemClick: { action: "onItemClick" },

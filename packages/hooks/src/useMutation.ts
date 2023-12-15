@@ -1,4 +1,8 @@
-import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
+import useSWRMutation, {
+  TriggerWithOptionsArgs,
+  type SWRMutationConfiguration,
+  TriggerWithoutArgs,
+} from "swr/mutation";
 import { mutate } from "@orderly.network/net";
 import {
   type MessageFactor,
@@ -63,7 +67,11 @@ export const useMutation = <T, E>(
     options
   );
 
-  const mutation = async (data: any, params?: any): Promise<any> => {
+  const mutation = async (
+    data: any,
+    params?: any,
+    options?: any
+  ): Promise<any> => {
     let newUrl = url;
     if (typeof params === "object" && Object.keys(params).length) {
       let search = new URLSearchParams(params);
@@ -78,15 +86,18 @@ export const useMutation = <T, E>(
 
     const signature = await signer.sign(payload);
 
-    return trigger({
-      data,
-      params,
-      method,
-      signature: {
-        ...signature,
-        "orderly-account-id": account.accountId,
+    return trigger(
+      {
+        data,
+        params,
+        method,
+        signature: {
+          ...signature,
+          "orderly-account-id": account.accountId,
+        },
       },
-    });
+      options
+    );
   };
 
   return [

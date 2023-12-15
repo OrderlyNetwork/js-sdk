@@ -9,7 +9,7 @@ export const useWithdraw = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { unsettledPnL, availableBalance } = useCollateral();
+  const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
 
   // const withdrawQueue = useRef<number[]>([]);
 
@@ -58,12 +58,14 @@ export const useWithdraw = () => {
   // }, []);
 
   const maxAmount = useMemo(() => {
-    if (!usdc || !usdc.holding) return 0;
+    // if (!usdc || !usdc.holding) return 0;
 
-    if (unsettledPnL >= 0) return usdc?.holding ?? 0;
+    // if (unsettledPnL >= 0) return usdc?.holding ?? 0;
 
-    return new Decimal(usdc.holding).add(unsettledPnL).toNumber();
-  }, [usdc, unsettledPnL]);
+    // return new Decimal(usdc.holding).add(unsettledPnL).toNumber();
+
+    return freeCollateral;
+  }, [freeCollateral]);
 
   return { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL };
 };

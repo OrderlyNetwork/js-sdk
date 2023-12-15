@@ -3,6 +3,7 @@ import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
 import { WSMessage } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info
@@ -42,13 +43,22 @@ export const useMarketsStream = () => {
         (t: WSMessage.Ticker) => t.symbol === item.symbol
       );
       if (ticker) {
-        return {
+        const data = {
           ...item,
           ["24h_close"]: ticker.close,
           ["24h_open"]: ticker.open,
           ["24h_volumn"]: ticker.volume,
           change: 0,
         };
+
+        if (ticker.close !== undefined && ticker.open !== undefined) {
+          data["change"] = new Decimal(ticker.close)
+            .minus(ticker.open)
+            .div(ticker.open)
+            .toNumber();
+        }
+
+        return data;
       }
       return item;
     });

@@ -15,7 +15,7 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
   const { id, bridgeless, onClick, name, selected } = props;
   return (
     <div
-      className="orderly-flex orderly-items-center orderly-p-4 hover:orderly-bg-base-contrast/5 orderly-cursor-pointer orderly-rounded"
+      className="orderly-flex orderly-items-center orderly-p-4 hover:orderly-bg-base-contrast/5 orderly-cursor-pointer orderly-rounded orderly-font-semibold"
       onClick={() => {
         onClick?.({
           id,

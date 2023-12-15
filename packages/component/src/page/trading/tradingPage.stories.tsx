@@ -2,16 +2,8 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { TradingPage } from ".";
-import { OrderlyProvider } from "../../provider";
-import {
-  MemoryConfigStore,
-  LocalStorageStore,
-  EtherAdapter,
-} from "@orderly.network/core";
-import { Page } from "../../layout";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
-import { OnboardConnectorProvider } from "../../provider/walletConnectorProvider";
 
+import { Page } from "../../layout";
 const meta: Meta = {
   title: "Page/Trading",
   component: TradingPage,
@@ -41,11 +33,7 @@ type Story = StoryObj<typeof TradingPage>;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    return (
-      <Page>
-        <TradingPage {...args} symbol={symbol} />
-      </Page>
-    );
+    return <TradingPage {...args} symbol={symbol} />;
   },
   args: {
     tradingViewConfig: {

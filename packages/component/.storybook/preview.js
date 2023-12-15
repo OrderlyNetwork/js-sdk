@@ -57,9 +57,9 @@ const preview = {
       },
     },
 
-    viewport: {
-      defaultViewport: "mobile2",
-    },
+    // viewport: {
+    //   defaultViewport: "mobile2",
+    // },
   },
   globalTypes: {
     symbol: {
@@ -77,16 +77,32 @@ const preview = {
   },
   decorators: [
     (Story) => {
+      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'testnet';
       return (
         <ConnectorProvider>
           <OrderlyAppProvider
-            networkId="testnet"
-            brokerId="woofi_pro"
-            onlyTestnet={false}
+            networkId={networkId}
+            brokerId="orderly"
+            enableSwapDeposit={true}
+            brokerName="Orderly"
             // showTestnet={true}
-            logoUrl="/woo_fi_logo.svg"
+            // logoUrl="/woo_fi_logo.svg"
+            appIcons={{
+              main:{
+                img: "/orderly-logo.svg",
+              },
+              secondary:{
+                img: "/woo_fi_logo.svg",
+
+              }
+            }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
+              localStorage.setItem('preview-orderly-networkId', isTestnet ? 'testnet' : 'mainnet');
+              // realod page
+              setTimeout(() => {
+                window.location.reload();
+              }, 100);
             }}
           >
             <Story />
@@ -109,3 +125,4 @@ const preview = {
 };
 
 export default preview;
+

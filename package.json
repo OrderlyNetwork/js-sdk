@@ -24,6 +24,7 @@
   "name": "orderly-web",
   "dependencies": {
     "@orderly.network/hooks": "workspace:^",
+    "@orderly.network/react": "workspace:^",
     "@orderly.network/web3-onboard": "workspace:^"
   }
 }

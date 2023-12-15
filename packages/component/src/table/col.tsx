@@ -16,10 +16,11 @@ interface ColProps {
   col: Column;
   record: any;
   index: number;
+  justified?: boolean;
 }
 
 export const Col: FC<ColProps> = (props) => {
-  const { col } = props;
+  const { col, record } = props;
   const { align } = col;
 
   const content = useMemo(() => {
@@ -33,12 +34,13 @@ export const Col: FC<ColProps> = (props) => {
       return render(value, props.record, props.index);
     }
     return value;
-  }, [col]);
+  }, [col, record]);
 
   return (
     <td
       className={cn(
-        "orderly-py-[2px] orderly-px-3",
+        "orderly-py-[2px] orderly-px-1 whitespace-nowrap",
+        props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right"
       )}

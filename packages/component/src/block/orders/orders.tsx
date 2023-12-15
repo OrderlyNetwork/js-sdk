@@ -5,21 +5,9 @@ import { OrderCell } from "@/block/orders/cell";
 import { Toolbar } from "./toolbar";
 import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { API, OrderEntity } from "@orderly.network/types";
-import { OrderListContext, OrderListProvider } from "./orderListContext";
+import { OrderListContext, OrderListProvider } from "./shared/orderListContext";
 import { SymbolProvider } from "@/provider";
-
-export interface OrdersViewProps {
-  dataSource: any[];
-  onCancelAll?: () => void;
-  isLoading: boolean;
-  cancelOrder: (orderId: number, symbol: string) => Promise<any>;
-  editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
-  showAllSymbol?: boolean;
-  onShowAllSymbolChange?: (value: boolean) => void;
-  symbol: string;
-  onSymbolChange?: (symbol: API.Symbol) => void;
-  loadMore: () => void;
-}
+import { OrdersViewProps } from "./types";
 
 export const OrdersView: FC<OrdersViewProps> = (props) => {
   return (
