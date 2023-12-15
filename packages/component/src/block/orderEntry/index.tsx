@@ -18,7 +18,11 @@ import { Numeral, Text } from "@/text";
 
 import { Divider } from "@/divider";
 import { OrderOptions } from "./sections/orderOptions";
-import { useEventEmitter, useLocalStorage } from "@orderly.network/hooks";
+import {
+  useEventEmitter,
+  useLocalStorage,
+  useDebounce,
+} from "@orderly.network/hooks";
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
@@ -27,6 +31,8 @@ import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
+import { cn } from "@/utils/css";
+import { convertValueToPercentage } from "@/slider/utils";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -186,25 +192,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           .catch((error) => {
             toast.error(error.message || "Failed");
           });
-
-        // return modal
-        //   .confirm({
-        //     title: "Confirm Order",
-        //     onCancel: () => {
-        //       return Promise.reject("cancel");
-        //     },
-        //     content: (
-        //       <OrderConfirmView
-        //         order={{ ...data, side: props.side, symbol: props.symbol }}
-        //         symbol={symbol}
-        //         base={symbolConfig["base"]}
-        //         quote={symbolConfig.quote}
-        //       />
-        //     ),
-        //   })
-        //   .then(
-
-        //   );
       },
       [side, props.onSubmit, symbol, needConfirm]
     );
@@ -298,6 +285,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         document.body.removeEventListener("click", handleClick);
       };
     }, []);
+
+    // const [ratio] = useDebounce(field,200);
 
     return (
       // @ts-ignore
@@ -464,23 +453,43 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               control={methods.control}
               render={({ field }) => {
                 return (
-                  <Slider
-                    color={side === OrderSide.BUY ? "buy" : "sell"}
-                    markLabelVisible={false}
-                    min={0}
-                    max={maxQty === 0 ? 1 : maxQty}
-                    markCount={4}
-                    disabled={maxQty === 0}
-                    step={symbolConfig?.["base_tick"]}
-                    value={[Number(field.value ?? 0)]}
-                    onValueChange={(value) => {
-                      //
-                      if (typeof value[0] !== "undefined") {
-                        // field.onChange(value[0]);
-                        onFieldChange("order_quantity", value[0]);
-                      }
-                    }}
-                  />
+                  <>
+                    <Slider
+                      color={side === OrderSide.BUY ? "buy" : "sell"}
+                      markLabelVisible={false}
+                      min={0}
+                      max={maxQty === 0 ? 1 : maxQty}
+                      markCount={4}
+                      disabled={maxQty === 0}
+                      step={symbolConfig?.["base_tick"]}
+                      value={[Number(field.value ?? 0)]}
+                      onValueChange={(value) => {
+                        //
+                        if (typeof value[0] !== "undefined") {
+                          onFieldChange("order_quantity", value[0]);
+                        }
+                      }}
+                    />
+                    <div
+                      className={cn(
+                        "orderly-hidden desktop:orderly-flex orderly-justify-between -orderly-mt-2",
+                        {
+                          "orderly-text-trade-profit": side === OrderSide.BUY,
+                          "orderly-text-trade-loss": side === OrderSide.SELL,
+                        }
+                      )}
+                    >
+                      <span>
+                        {Number(convertValueToPercentage(Number(field.value), 0 , maxQty === 0 ? 1 : maxQty).toFixed())}%
+                      </span>
+                      <span className="orderly-flex orderly-items-center orderly-gap-1">
+                        <span className="orderly-text-base-contrast-54">
+                          Max buy
+                        </span>
+                        <Numeral precision={4}>{maxQty}</Numeral>
+                      </span>
+                    </div>
+                  </>
                 );
               }}
             />

@@ -9,8 +9,9 @@ import { useRouter } from "next/router";
 const MainView = dynamic(() => import("./view"), { ssr: false });
 
 export default function PerpPage({ params }: { params: { symbol: string } }) {
-  // const router = useRouter()
-  console.log("params", params);
+  const symbol = params.symbol.startsWith("PERP_")
+    ? params.symbol
+    : `PERP_${params.symbol}`;
 
-  return <MainView symbol={params.symbol} onSymbolChange={(symbol) => {}} />;
+  return <MainView symbol={symbol} onSymbolChange={(symbol) => {}} />;
 }

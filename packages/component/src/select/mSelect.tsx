@@ -87,7 +87,7 @@ export const MSelect: FC<SelectProps> = ({
         disabled={Boolean(disabled)}
         onClick={() => setOpen((open) => !open)}
         className={cn(
-          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs",
+          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs desktop:orderly-text-xs",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,
@@ -104,7 +104,10 @@ export const MSelect: FC<SelectProps> = ({
 
         <ArrowIcon
           size={12}
-          className={cx("orderly-transition-transform", open && "orderly-rotate-180")}
+          className={cx(
+            "orderly-transition-transform",
+            open && "orderly-rotate-180"
+          )}
         />
       </button>
       {open && (
@@ -123,7 +126,9 @@ export const MSelect: FC<SelectProps> = ({
                 className={cn(
                   "orderly-text-base-contrast-54",
                   option.value === props.value &&
-                    (color === "buy" ? "orderly-text-trade-profit" : "orderly-text-trade-loss")
+                    (color === "buy"
+                      ? "orderly-text-trade-profit"
+                      : "orderly-text-trade-loss")
                 )}
                 onValueChange={(value) => {
                   setOpen(false);
@@ -161,7 +166,7 @@ export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
       <button
         type="button"
         className={cn(
-          "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs",
+          "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs  desktop:orderly-text-xs",
           className
         )}
         onClick={() => {

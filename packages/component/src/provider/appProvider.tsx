@@ -1,6 +1,7 @@
 import React, {
   FC,
   PropsWithChildren,
+  ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -29,8 +30,24 @@ export type AppStateErrors = {
   NetworkError: boolean;
 };
 
+type Logo = {
+  // the logo image url
+  img?: string;
+  // also can use react component
+  component?: ReactNode;
+  className?: string;
+};
+
+type AppLogos = Partial<{
+  // logo for top navigation bar
+  main: Logo;
+  // logo for popover/dialog header
+  secondary: Logo;
+}>;
+
 export type OrderlyAppContextState = {
   logoUrl: string;
+  appIcons?: AppLogos;
   theme: any;
   onWalletConnect: () => Promise<any>;
   onWalletDisconnect: () => Promise<any>;
@@ -49,6 +66,7 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 
 export interface OrderlyAppProviderProps {
   logoUrl: string;
+  appIcons?: AppLogos;
   theme?: any;
   toastLimitCount?: number;
   /**
@@ -65,6 +83,7 @@ export const OrderlyAppProvider: FC<
 > = (props) => {
   const {
     logoUrl,
+    appIcons: logos,
     theme,
     configStore,
     keyStore,
@@ -89,6 +108,7 @@ export const OrderlyAppProvider: FC<
     >
       <InnerProvider
         logoUrl={logoUrl}
+        appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
         enableSwapDeposit={enableSwapDeposit}
@@ -105,6 +125,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   const {
     logoUrl,
     theme,
+    appIcons: logos,
     brokerName,
     toastLimitCount = 1,
     enableSwapDeposit,
@@ -147,11 +168,12 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
-
       // check whether chain id and network id match
       const chainIdNum = parseInt(chainId, 16);
-      if ((networkId === 'mainnet' && chainIdNum === 421613) ||
-        (networkId === 'testnet' && chainIdNum !== 421613)) {
+      if (
+        (networkId === "mainnet" && chainIdNum === 421613) ||
+        (networkId === "testnet" && chainIdNum !== 421613)
+      ) { 
         return false;
       }
 
@@ -246,7 +268,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       return;
     }
 
-    console.log("currentWallet", currentWallet, account, currentChainId);
+    // console.log("currentWallet", currentWallet, account, currentChainId);
 
     if (
       !!currentWallet &&
@@ -303,6 +325,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     <OrderlyAppContext.Provider
       value={{
         logoUrl,
+        appIcons: logos,
         theme,
         errors,
         onWalletConnect: _onWalletConnect,

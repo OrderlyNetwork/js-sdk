@@ -13,12 +13,21 @@ import {
   useChains,
   OrderlyContext,
   useWalletConnector,
+  useMediaQuery,
 } from "@orderly.network/hooks";
 import { ArrowIcon, NetworkImage } from "@/icon";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
+import { cn } from "@/utils/css";
+
+import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/dropdown/dropdown";
+import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
+
 
 interface ChainsProps {
   disabled?: boolean;
+  className?: string;
 }
 
 export const Chains: FC<ChainsProps> = (props) => {
@@ -75,6 +84,39 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
   };
 
+  // @ts-ignore
+  const [allChains,] = useChains("", {
+    enableSwapDeposit,
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
+  });
+  const chains = useMemo(() => {
+    if (Array.isArray(allChains)) return allChains;
+    if (allChains === undefined) return [];
+
+    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
+      return allChains.testnet ?? [];
+    }
+
+    return allChains.mainnet;
+  }, [allChains, connectedChain]);
+
+  function parseChainId(id?: string | number) {
+    if (typeof id === 'number') {
+      return id;
+    }
+
+    if (typeof id === 'string') {
+      if (id.startsWith('0x')) {
+        return parseInt(id, 16);
+      }
+      return parseInt(id, 10);
+    }
+
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -84,9 +126,10 @@ export const Chains: FC<ChainsProps> = (props) => {
           color={"buy"}
           loading={settingChain}
           disabled={disabled}
-          className={
-            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent"
-          }
+          className={cn(
+            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+            props.className
+          )}
         >
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />

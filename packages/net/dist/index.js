@@ -625,6 +625,7 @@ var WS = class {
     this.publicIsReconnecting = true;
     window.setTimeout(() => {
       this.createPublicSC(this.options);
+      this.emit("reconnect:public", { count: this._publicRetryCount });
     }, this.reconnectInterval);
   }
   reconnectPrivate() {

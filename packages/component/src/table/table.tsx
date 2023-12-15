@@ -1,9 +1,10 @@
-import { FC, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { Row } from "./row";
 import type { Column } from "./col";
 import { THead } from "./thead";
 import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
+import { EmptyView } from "@/listView/emptyView";
 
 export interface TableProps<RecordType> {
   columns: Column[];
@@ -18,7 +19,15 @@ export interface TableProps<RecordType> {
 
   bordered?: boolean;
 
-  gerenatedRowKey?: (record: RecordType, index: number) => string;
+  justified?: boolean;
+
+  renderRowContainer?: (
+    record: RecordType,
+    index: number,
+    children: ReactNode
+  ) => React.ReactNode;
+
+  generatedRowKey?: (record: RecordType, index: number) => string;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -27,12 +36,27 @@ export const Table = <RecordType extends unknown>(
   const rows = useMemo(() => {
     return props.dataSource?.map((record: any, index) => {
       const key =
-        typeof props.gerenatedRowKey === "function"
-          ? props.gerenatedRowKey(record, index)
+        typeof props.generatedRowKey === "function"
+          ? props.generatedRowKey(record, index)
           : index; /// `record.ts_${record.price}_${record.size}_${index}`;
-      return <Row key={key} columns={props.columns} record={record} />;
+
+      const row = (
+        <Row
+          key={key}
+          columns={props.columns}
+          record={record}
+          justified={props.justified}
+          bordered={props.bordered}
+        />
+      );
+
+      if (typeof props.renderRowContainer === "function") {
+        return props.renderRowContainer(record, index, row);
+      }
+
+      return row;
     });
-  }, [props.dataSource, props.columns, props.gerenatedRowKey]);
+  }, [props.dataSource, props.columns, props.generatedRowKey]);
 
   const maskElement = useMemo(() => {
     if (props.loading) {
@@ -43,21 +67,30 @@ export const Table = <RecordType extends unknown>(
       );
     }
 
-    if (!!props.dataSource?.length) return null;
-    return (
-      <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-flex orderly-items-center orderly-justify-center orderly-z-10">
-        <div className="orderly-text-center orderly-text-base-contrast/50">No Data</div>
-      </div>
-    );
+    // if (!!props.dataSource?.length) return null;
+    return <EmptyView visible={props.dataSource?.length === 0} />;
   }, [props.dataSource]);
 
   return (
     <div className="orderly-relative orderly-min-h-[180px] orderly-h-full">
-      <table className={cn("orderly-border-collapse orderly-w-full", props.className)}>
+      <table
+        className={cn(
+          "orderly-border-collapse orderly-w-full orderly-table-fixed",
+          props.className
+        )}
+      >
+        <colgroup>
+          {props.columns.map((col, index) => {
+            return (
+              <col key={index} className={col.className} align={col.align} />
+            );
+          })}
+        </colgroup>
         <THead
           columns={props.columns}
           className={props.headerClassName}
           bordered={props.bordered}
+          justified={props.justified}
         />
 
         <tbody>{rows}</tbody>

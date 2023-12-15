@@ -111,3 +111,24 @@ export const ExtraNode: Story = {
     );
   },
 };
+
+export const GroupTabs: Story = {
+  render: () => {
+    const [value, setValue] = useState("1");
+    return (
+      <Tabs
+        value={value}
+        onTabChange={(value) => setValue(value)}
+        allowUngroup
+        minWidth={400}
+      >
+        <TabPane title="Tab 1" value="1">
+          Tab 1
+        </TabPane>
+        <TabPane title="Tab 2" value="2">
+          Tab 2
+        </TabPane>
+      </Tabs>
+    );
+  },
+};

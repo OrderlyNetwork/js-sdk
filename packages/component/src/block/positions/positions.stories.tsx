@@ -5,11 +5,10 @@ import { PositionsView } from ".";
 import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "./sections/closeForm";
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
 import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
-  title: "Block/PositionsView",
+  title: "Block/Positions/mweb",
   component: PositionsView,
   argTypes: {
     onLimitClose: { action: "onLimitClose" },

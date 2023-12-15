@@ -33,7 +33,8 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       }}
       prefix={
         <InputMask>
-          <Search size={16} className="orderly-text-base-contrast-20"/>
+          {/* @ts-ignore */}
+          <Search size={16} className="orderly-text-base-contrast-20" />
         </InputMask>
       }
     />

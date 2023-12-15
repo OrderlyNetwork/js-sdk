@@ -1,7 +1,7 @@
 import { TradeHistory } from "./tradeHistory";
 
 export { PositionsView, ClosePositionPane } from "./positions";
-export type { PositionsViewProps } from "./positions";
+export type { PositionsViewProps } from "./positions/shared/types";
 
 export { OrderEntry } from "./orderEntry";
 export type { OrderEntryProps } from "./orderEntry";
@@ -18,7 +18,11 @@ export type { WithdrawProps } from "./withdraw";
 export { Markets } from "./markets";
 export type { MarketsProps } from "./markets";
 
-export { WalletConnect, WalletConnectSheet } from "./walletConnect";
+export { WalletConnect } from "./walletConnect";
+export {
+  WalletConnectSheet,
+  WalletConnectDialog,
+} from "./walletConnect/walletModal";
 
 export { TradeHistory } from "./tradeHistory";
 export type { TradeHistoryProps } from "./tradeHistory";

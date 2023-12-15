@@ -87,8 +87,10 @@ const Slider = React.forwardRef<
       return cn(
         {
           "orderly-bg-primary orderly-border-primary": color === "primary",
-          "orderly-bg-primary-light orderly-border-primary-light": color === "primary-light",
-          "orderly-bg-trade-profit orderly-border-trade-profit": color === "buy",
+          "orderly-bg-primary-light orderly-border-primary-light":
+            color === "primary-light",
+          "orderly-bg-trade-profit orderly-border-trade-profit":
+            color === "buy",
           "orderly-bg-trade-loss orderly-border-trade-loss": color === "sell",
         },
         props.disabled && "orderly-bg-base-200",

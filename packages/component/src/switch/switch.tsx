@@ -37,7 +37,7 @@ const Switch = React.forwardRef<
 >(({ className, color, thumbClassName, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "orderly-peer orderly-inline-flex orderly-h-[14px] orderly-w-[32px] orderly-shrink-0 orderly-cursor-pointer orderly-items-center orderly-rounded-full orderly-border-2 orderly-border-transparent orderly-transition-colors focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2 focus-visible:orderly-ring-offset-background disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50",
+      "orderly-peer orderly-inline-flex orderly-h-[14px] desktop:orderly-h-[20px] orderly-w-[32px] desktop:orderly-w-[40px] orderly-shrink-0 orderly-cursor-pointer orderly-items-center orderly-rounded-full orderly-border-2 desktop:orderly-border-4 orderly-border-transparent orderly-transition-colors focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2 focus-visible:orderly-ring-offset-background disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50",
       switchVariants({ color, className })
     )}
     {...props}
@@ -45,7 +45,7 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "orderly-pointer-events-none orderly-block orderly-h-[10px] orderly-w-[10px] orderly-rounded-full orderly-bg-white orderly-shadow-lg orderly-ring-0 orderly-transition-transform data-[state=checked]:orderly-translate-x-[18px] data-[state=unchecked]:orderly-translate-x-[1]",
+        "orderly-pointer-events-none orderly-block orderly-h-[10px] orderly-w-[10px] orderly-rounded-full orderly-bg-white orderly-shadow-lg orderly-ring-0 orderly-transition-transform data-[state=checked]:orderly-translate-x-[18px] data-[state=unchecked]:orderly-translate-x-[1] desktop:orderly-h-[13px] desktop:orderly-w-[13px]",
         thumbClassName,
       )}
     />

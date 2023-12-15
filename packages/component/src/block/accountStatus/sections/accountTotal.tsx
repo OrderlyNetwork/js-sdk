@@ -1,6 +1,5 @@
 import { FC, useContext, useMemo } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
-import { EyeOff } from "lucide-react";
 import { Divider } from "@/divider";
 import { AssetAndMarginSheet } from "./assetAndMargin";
 import { Numeral } from "@/text";
@@ -103,7 +102,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         </div>
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <SheetHeader leading={<Logo image={logoUrl} size={30} />}>
+        <SheetHeader leading={<Logo.secondary size={30} />}>
           Assets & Margin
         </SheetHeader>
         <AssetAndMarginSheet

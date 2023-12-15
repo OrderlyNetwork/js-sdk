@@ -1,21 +1,34 @@
-import React from "react";
+import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { useMemo, useRef } from "react";
 import { EmptyView } from "./emptyView";
 import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
 import { useEndReached } from "./useEndReached";
 
-export interface ListViewProps<T> {
+export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number, extraData?: D) => React.ReactNode;
   className?: string;
   contentClassName?: string;
   isLoading?: boolean;
   loadMore?: () => void;
+
+  style?: React.CSSProperties;
+
+  extraData?: D;
 }
 
-export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
+export type ListViewRef = ForwardedRef<{
+  scroll: (direction: { x: number; y: number }) => void;
+}>;
+
+const ListViewInner = <T extends unknown, D extends unknown>(
+  props: ListViewProps<T, D>,
+  ref: ListViewRef
+) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEndReached(sentinelRef, () => {
     if (!props.isLoading) {
@@ -29,15 +42,15 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     }
 
     if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
-      return <EmptyView />;
+      return <EmptyView visible />;
     }
 
     return props.dataSource.map((item, index) => (
       <React.Fragment key={index}>
-        {props.renderItem(item, index)}
+        {props.renderItem(item, index, props.extraData)}
       </React.Fragment>
     ));
-  }, [props.dataSource]);
+  }, [props.dataSource, props.extraData]);
 
   const loadingViewElement = useMemo(() => {
     if (!props.isLoading && !!props.dataSource) {
@@ -51,9 +64,30 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     );
   }, [props.isLoading, props.dataSource]);
 
+  useImperativeHandle(ref, () => {
+    return {
+      scroll: (direction) => {
+        containerRef.current?.scroll({
+          left: direction.x,
+          top: direction.y,
+          behavior: "smooth",
+        });
+      },
+    };
+  });
+
   return (
-    <div className={cn("orderly-relative orderly-min-h-[180px]", props.className)}>
-      <div className={cn("orderly-list-view-inner orderly-space-y-3", props.contentClassName)}>
+    <div
+      style={props.style}
+      ref={containerRef}
+      className={cn("orderly-relative orderly-min-h-[180px]", props.className)}
+    >
+      <div
+        className={cn(
+          "orderly-list-view-inner orderly-space-y-3",
+          props.contentClassName
+        )}
+      >
         {listViewElement}
       </div>
       <div
@@ -64,3 +98,11 @@ export const ListView = <T extends unknown>(props: ListViewProps<T>) => {
     </div>
   );
 };
+
+export const ListView = forwardRef(ListViewInner) as <T, D>(
+  props: ListViewProps<T, D> & {
+    ref?: ForwardedRef<{
+      scroll: (direction: { x: number; y: number }) => void;
+    }>;
+  }
+) => JSX.Element;

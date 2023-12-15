@@ -138,7 +138,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof prefix === "string") {
-        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold">{prefix}</InputMask>;
+        return (
+          <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs">
+            {prefix}
+          </InputMask>
+        );
       }
 
       return prefix;
@@ -150,7 +154,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
 
       if (typeof suffix === "string") {
-        return <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold">{suffix}</InputMask>;
+        return (
+          <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs">
+            {suffix}
+          </InputMask>
+        );
       }
 
       return suffix;

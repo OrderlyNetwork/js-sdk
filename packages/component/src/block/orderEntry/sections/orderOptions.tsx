@@ -1,11 +1,9 @@
 import { Checkbox } from "@/checkbox";
 import { Collapsible, CollapsibleContent } from "@/collapsible";
 import { Label } from "@/label";
-import { Radio, RadioGroup } from "@/radioGroup";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
 import { OrderType } from "@orderly.network/types";
-import { OrderEntity } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
@@ -70,7 +68,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 />
                 {/* 移除htmlFor="reduceOnly", 点击标签文字不触发Switch开关的变化 */}
                 <Label
-                className="orderly-text-base-contrast-54"
+                  className="orderly-text-base-contrast-54"
                   onClick={() => {
                     showReduceOnlyHint();
                   }}
@@ -140,7 +138,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                     props.onConfirmChange?.(!!checked);
                   }}
                 />
-                <Label htmlFor="orderConfirm" className="orderly-text-base-contrast-54">
+                <Label
+                  htmlFor="orderConfirm"
+                  className="orderly-text-base-contrast-54"
+                >
                   Order confirm
                 </Label>
               </div>

@@ -6,7 +6,7 @@ import { Numeral } from "@/text/numeral";
 import { API, OrderSide } from "@orderly.network/types";
 import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
-import { OrderListContext } from "./orderListContext";
+import { OrderListContext } from "./shared/orderListContext";
 import { SymbolContext } from "@/provider";
 
 interface OrderCellProps {

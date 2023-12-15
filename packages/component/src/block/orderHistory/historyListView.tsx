@@ -7,17 +7,7 @@ import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { SymbolProvider } from "@/provider";
 import { API } from "@orderly.network/types";
-
-export interface OrderHistoryListViewProps {
-  isLoading: boolean;
-  dataSource: any[];
-  side: OrderSide | "";
-  status: OrderStatus | "";
-  onSideChange?: (side: OrderSide) => void;
-  onStatusChange?: (status: OrderStatus) => void;
-  onSymbolChange?: (symbol: API.Symbol) => void;
-  loadMore: () => void;
-}
+import { OrderHistoryListViewProps } from "./shared/types";
 
 export const HistoryListView: FC<OrderHistoryListViewProps> = (props) => {
   return (

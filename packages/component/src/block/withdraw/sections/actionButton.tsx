@@ -74,7 +74,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <StatusGuardButton>
           <Button
-
+            id="orderly-withdraw-confirm-button"
+            className="desktop:orderly-text-xs"
             fullWidth
             onClick={onWithdraw}
             disabled={props.disabled || props.loading}
@@ -90,6 +91,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       return (
         <Button
           id="orderly-withdraw-confirm-button"
+          className="desktop:orderly-text-xs"
           fullWidth
           onClick={() => {
             const chain = chains[0];
@@ -114,6 +116,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     return (
       <Button
         id="orderly-withdraw-confirm-button"
+        className="desktop:orderly-text-xs"
         fullWidth
         onClick={() =>
           openChainPicker?.().then(({ id }) => {
@@ -137,12 +140,12 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport && (
-        <div className="orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3">
+        <div className="orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs">
           {chainWarningMessage}
         </div>
       )}
 
-      <div className="orderly-flex orderly-justify-center orderly-text-xs">
+      <div className="orderly-flex orderly-justify-center orderly-text-xs desktop:orderly-text-xs orderly-font-bold">
         <div className="orderly-py-3 orderly-w-full">{actionButton}</div>
       </div>
     </>

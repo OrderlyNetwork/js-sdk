@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Divider } from "@/divider";
 import { Coin, MoveDownIcon } from "@/icon";
 import { QuantityInput } from "@/block/quantityInput";
@@ -16,6 +23,7 @@ import { UnsettledInfo } from "./sections/settledInfo";
 import { ChainDialog } from "../pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
+import { Logo } from "@/logo";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
@@ -59,7 +67,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   onOk,
   switchChain,
 }) => {
-  const { brokerName } = useContext(OrderlyAppContext);
+  const { brokerName, logoUrl } = useContext(OrderlyAppContext);
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
@@ -182,7 +190,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     const input = Number(quantity);
     const freeCollateral = maxAmount;
     if (unsettledPnL < 0) {
-      if(input > freeCollateral) {
+      if (input > freeCollateral) {
         setInputStatus("error");
         setHintMessage("Insufficient balance");
       } else {
@@ -193,7 +201,10 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       if (input > freeCollateral) {
         setInputStatus("error");
         setHintMessage("Insufficient balance");
-      } else if (input > freeCollateral - unsettledPnL && input <= freeCollateral) {
+      } else if (
+        input > freeCollateral - unsettledPnL &&
+        input <= freeCollateral
+      ) {
         setInputStatus("warning");
         setHintMessage("Please settle your balance");
       } else {
@@ -205,9 +216,12 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   return (
     <>
-      <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast">
-        <div className="orderly-flex-1">{"Your "+ brokerName + " account"}</div>
-        <NetworkImage type={"path"} rounded path={"/images/woofi-little.svg"} />
+      <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
+        <div className="orderly-flex-1">
+          {"Your " + brokerName + " account"}
+        </div>
+        {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
+        <Logo.secondary size={24} />
       </div>
       <QuantityInput
         tokens={[]}
@@ -237,7 +251,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       <Divider className="orderly-py-3">
         <MoveDownIcon className="orderly-text-primary-light" />
       </Divider>
-      <div className="orderly-flex orderly-items-center orderly-text-2xs">
+      <div className="orderly-flex orderly-items-center orderly-text-2xs desktop:orderly-text-base">
         <div className="orderly-flex-1">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}

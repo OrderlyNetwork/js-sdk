@@ -1,6 +1,11 @@
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo } from "react";
-import { OrderSide, OrderEntity, OrderStatus } from "@orderly.network/types";
+import {
+  OrderSide,
+  OrderEntity,
+  OrderStatus,
+  API,
+} from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 
@@ -24,14 +29,14 @@ export const useOrderStream = (params: Params) => {
   const { status, symbol, side, size = 100 } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
-  const [doCancelOrder, { error: cancelOrderError }] = useMutation(
-    "/v1/order",
-    "DELETE"
-  );
-  const [doUpdateOrder, { error: updateOrderError }] = useMutation(
-    "/v1/order",
-    "PUT"
-  );
+  const [
+    doCancelOrder,
+    { error: cancelOrderError, isMutating: cancelMutating },
+  ] = useMutation("/v1/order", "DELETE");
+  const [
+    doUpdateOrder,
+    { error: updateOrderError, isMutating: updateMutating },
+  ] = useMutation("/v1/order", "PUT");
 
   const ordersResponse = usePrivateInfiniteQuery(
     (pageIndex: number, previousPageData) => {
@@ -112,6 +117,9 @@ export const useOrderStream = (params: Params) => {
         // return ordersResponse.mutate().then(() => {
         //   return res;
         // });
+        //Optimistic Updates
+        // ordersResponse.mutate();
+        return res;
       } else {
         throw new Error(res.message);
       }
@@ -134,6 +142,10 @@ export const useOrderStream = (params: Params) => {
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,
+      },
+      submitting: {
+        cancelOrder: cancelMutating,
+        updateOrder: updateMutating,
       },
     },
   ] as const;

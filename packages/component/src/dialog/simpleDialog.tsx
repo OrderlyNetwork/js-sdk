@@ -9,6 +9,7 @@ import {
 } from "@/dialog/dialog";
 import { useMemo, useState } from "react";
 import Button from "@/button";
+import { VariantProps } from "class-variance-authority";
 
 export interface BaseDialogProps {
   open: boolean;
@@ -18,6 +19,8 @@ export interface BaseDialogProps {
   onCancel?: () => void;
   footer?: ReactNode;
   onOpenChange?(open: boolean): void;
+  contentClassName?: string;
+  maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -32,7 +35,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
-          className="orderly-text-xs"
+          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
           variant="contained"
@@ -49,7 +52,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
-          className="orderly-text-xs"
+          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="ok"
           type="button"
           disabled={loading}
@@ -60,7 +63,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
             props.onOk?.().finally(() => setLoading(false));
           }}
         >
-          Ok
+          OK
         </Button>
       );
     }
@@ -81,6 +84,8 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
       <DialogContent
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
+        className={props.contentClassName}
+        maxWidth={props.maxWidth}
       >
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>

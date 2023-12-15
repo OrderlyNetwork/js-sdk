@@ -14,6 +14,9 @@ module.exports = {
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
   prefix: 'orderly-',
   theme: {
+    screens: {
+      'desktop': '1024px'
+    },
     fontSize: {
       "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
       "3xs": "calc(var(--orderly-font-size-base) - 4px)", // if base is 16px, it will be 12px
@@ -55,7 +58,7 @@ module.exports = {
         link: {
           DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
         },
-        
+
         // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
@@ -76,7 +79,7 @@ module.exports = {
             20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
           },
         },
-        
+
         danger: {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
           light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
@@ -85,6 +88,7 @@ module.exports = {
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-warning-darken) / <alpha-value>)",
           contrast:"rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
         },
         success: {
@@ -113,7 +117,7 @@ module.exports = {
             DEFAULT: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
             contrast: "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
           },
-          
+
           profit: {
             DEFAULT: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
             contrast: "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
@@ -141,10 +145,20 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "collapsible-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-collapsible-content-height)" },
+        },
+        "collapsible-up": {
+          from: { height: "var(--radix-collapsible-content-height)" },
+          to: { height: 0 },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "collapsible-down": "collapsible-down 0.2s ease-out",
+        "collapsible-up": "collapsible-up 0.2s ease-out",
       },
       // linearBorderGradients: ({theme})=>({
       //   colors:{
@@ -164,13 +178,13 @@ module.exports = {
       addBase({
         html: {
           fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          backgroundColor: "rgb(var(--orderly-color-base-900))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },
         body: {
           fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-800))",
+          backgroundColor: "rgb(var(--orderly-color-base-900))",
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },

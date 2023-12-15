@@ -31,8 +31,10 @@ const buttonVariants = cva(
        * @default default
        */
       size: {
-        small: "orderly-px-3 orderly-h-[26px] orderly-text-3xs",
-        default: "orderly-px-4 orderly-py-1 orderly-h-[40px]",
+        small:
+          "orderly-px-3 orderly-h-[26px] orderly-text-3xs desktop:orderly-text-2xs",
+        default:
+          "orderly-px-4 orderly-py-1 orderly-h-[40px] desktop:orderly-text-sm",
         large: "orderly-px-6 orderly-py-3",
       },
       color: {
@@ -59,12 +61,12 @@ const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      {
-        variant: "text",
-        color: "primary",
-        class:
-          "orderly-text-primary orderly-bg-transparent hover:orderly-bg-slate-100 hover:orderly-text-primary",
-      },
+      // {
+      //   variant: "text",
+      //   color: "primary",
+      //   class:
+      //     "orderly-text-primary orderly-bg-transparent hover:orderly-bg-slate-100 hover:orderly-text-primary",
+      // },
 
       {
         variant: "contained",
@@ -89,13 +91,12 @@ const buttonVariants = cva(
         variant: "contained",
         color: "tertiary",
         class:
-          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast",
+          "orderly-bg-base-400 hover:orderly-bg-base-500 orderly-text-base-contrast",
       },
       {
         variant: "contained",
         color: "danger",
-        class:
-          "orderly-bg-danger orderly-text-danger-contrast",
+        class: "orderly-bg-danger orderly-text-base-contrast",
       },
       {
         variant: "outlined",
@@ -128,6 +129,12 @@ const buttonVariants = cva(
         class:
           "orderly-text-primary orderly-bg-transparent hover:orderly-text-primary hover:orderly-bg-primary/10",
       },
+      {
+        variant: "text",
+        color: "tertiary",
+        class:
+          "orderly-text-tertiary/80 orderly-bg-transparent hover:orderly-text-tertiary hover:orderly-bg-tertiary/10",
+      },
     ],
     defaultVariants: {
       variant: "contained",
@@ -139,7 +146,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "disabled" | "color">,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   /**
    * If `true`, the button will show a loading indicator.
    * @default false
@@ -183,7 +190,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           fullWidth,
         }),
         className,
-        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`,
+        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`
       )}
       disabled={Boolean(disabled)}
       {...props}
