@@ -87,10 +87,10 @@ const preview = {
             // showTestnet={true}
             // logoUrl="/woo_fi_logo.svg"
             appIcons={{
-              appBar:{
+              main:{
                 img: "/orderly-logo.svg",
               },
-              popover:{
+              secondary:{
                 img: "/woo_fi_logo.svg",
 
               }
@@ -124,3 +124,4 @@ const preview = {
 };
 
 export default preview;
+

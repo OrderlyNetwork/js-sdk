@@ -14,7 +14,7 @@ import { OrderlyAppContext } from "@/provider";
 export type AccountStatus =
   | "NotConnected"
   | "Connected"
-  | "NotSignedIn" 
+  | "NotSignedIn"
   | "EnabledTrading"
   | "SignedIn";
 
@@ -100,7 +100,9 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
               </Button>
             </SheetTrigger>
             <SheetContent forceMount>
-              <SheetHeader leading={<Logo size={30} />}>My account</SheetHeader>
+              <SheetHeader leading={<Logo.secondary size={30} />}>
+                My account
+              </SheetHeader>
               <AccountInfo
                 onDisconnect={props.onDisconnect}
                 close={() => setInfoOpen(false)}

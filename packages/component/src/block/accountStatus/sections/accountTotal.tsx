@@ -102,7 +102,9 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         </div>
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <SheetHeader leading={<Logo size={30} />}>Assets & Margin</SheetHeader>
+        <SheetHeader leading={<Logo.secondary size={30} />}>
+          Assets & Margin
+        </SheetHeader>
         <AssetAndMarginSheet
           onDeposit={onDeposit}
           onWithdraw={onWithdraw}

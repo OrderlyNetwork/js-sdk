@@ -34,7 +34,6 @@ import { SwapMode } from "../swap/sections/misc";
 import { MarkPrices } from "./sections/misc";
 import { NumberReg } from "@/utils/num";
 import { OrderlyAppContext } from "@/provider";
-import { PopoverLogo } from "@/logo/popoverLogo";
 import { Logo } from "@/logo";
 
 export interface DepositFormProps {
@@ -563,7 +562,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           {"Your " + brokerName + " account"}
         </div>
         {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
-        <PopoverLogo size={24} />
+        <Logo.secondary size={24} />
       </div>
       <div className="orderly-py-2">
         <TokenQtyInput

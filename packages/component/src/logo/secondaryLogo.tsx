@@ -7,24 +7,24 @@ interface Props {
   size?: Size | number;
 }
 
-export const PopoverLogo: FC<Props> = (props) => {
+export const SecondaryLogo: FC<Props> = (props) => {
   const { appIcons } = useContext(OrderlyAppContext);
 
   if (!appIcons) return null;
 
-  const { popover } = appIcons;
+  const { secondary } = appIcons;
 
-  if (popover?.component) {
-    return popover.component;
+  if (secondary?.component) {
+    return secondary.component;
   }
 
-  if (popover?.img) {
+  if (secondary?.img) {
     return (
       <NetworkImage
         size={props.size}
         type={"path"}
         rounded
-        path={popover.img}
+        path={secondary.img}
       />
     );
   }

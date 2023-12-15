@@ -31,14 +31,14 @@ export const Header: FC<Props> = (props) => {
   }, []);
 
   const logoElement = useMemo(() => {
-    if (logos?.appBar?.component) {
-      return logos?.appBar?.component;
+    if (logos?.main?.component) {
+      return logos?.main?.component;
     }
-    if (logos?.appBar?.img) {
-      return <img src={logos?.appBar?.img} />;
+    if (logos?.main?.img) {
+      return <img src={logos?.main?.img} />;
     }
     return null;
-  }, [logos?.appBar]);
+  }, [logos?.main]);
 
   return (
     <div>
@@ -58,7 +58,7 @@ export const Header: FC<Props> = (props) => {
           // dropMenuItem={[{title: "haha", key: "bb"}, {title: "haha1", key: "bb1"},]}
           // onClickDropMenuItem={(item) => {
           //   console.log("click item", item);
-            
+
           // }}
         />
       </div>

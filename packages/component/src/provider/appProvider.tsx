@@ -40,9 +40,9 @@ type Logo = {
 
 type AppLogos = Partial<{
   // logo for top navigation bar
-  appBar: Logo;
+  main: Logo;
   // logo for popover/dialog header
-  popover: Logo;
+  secondary: Logo;
 }>;
 
 export type OrderlyAppContextState = {

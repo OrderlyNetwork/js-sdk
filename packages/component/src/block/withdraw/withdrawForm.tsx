@@ -23,7 +23,7 @@ import { UnsettledInfo } from "./sections/settledInfo";
 import { ChainDialog } from "../pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
-import { PopoverLogo } from "@/logo/popoverLogo";
+import { Logo } from "@/logo";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
@@ -221,7 +221,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
           {"Your " + brokerName + " account"}
         </div>
         {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
-        <PopoverLogo size={24} />
+        <Logo.secondary size={24} />
       </div>
       <QuantityInput
         tokens={[]}
