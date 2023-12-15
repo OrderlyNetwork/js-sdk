@@ -110,7 +110,6 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
-  console.log("marginRatioVal", marginRatioVal);
   
 
   return (
