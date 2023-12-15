@@ -13,6 +13,15 @@ export type WSOptions = {
 
 export type unsubscribe = () => void;
 
+export enum WebSocketEvent {
+  OPEN = "open",
+  CLOSE = "close",
+  ERROR = "error",
+  MESSAGE = "message",
+  CONNECTING = "connecting",
+  RECONNECTING = "reconnecting",
+}
+
 export type MessageParams = {
   event: string;
   topic: string;
@@ -111,10 +120,10 @@ export class WS {
   }
 
   /**
-   * 判断当前连接状态，
-   * 1、如果已断开则重连
-   * 2、如果太久没有收到消息，则主动断开，并重连
-   * 3、从后台返回、网络状态变化时，都走以下流程
+   * Determine the current connection status,
+   * 1. If it is disconnected, reconnect
+   * 2. If no message is received for too long, disconnect and reconnect actively
+   * 3. When returning from the background and the network status changes, the following process is followed
    */
   private checkSocketStatus() {
     const now = Date.now();
@@ -129,9 +138,9 @@ export class WS {
     // );
 
     // check the last time
-    // 如果容器不可见，则不做处理
+    // If the view is not visible, do not process it
     if (document.visibilityState !== "visible") return;
-    // 如果网络不可用，则不做处理
+    // If the network is not available, do not process it
     if (!navigator.onLine) return;
 
     // 如果已断开，则重连
