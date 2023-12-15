@@ -1,6 +1,6 @@
 import { FC, ReactNode, useCallback, useContext, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { AccountStatus } from "@/block/accountStatus/accountStatus";
+import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
