@@ -414,7 +414,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     error={!!methods.formState.errors?.order_price}
                     // placeholder={"Market"}
                     helpText={methods.formState.errors?.order_price?.message}
-                    value={isMarketOrder ? "Market" : commify(field.value)}
+                    value={
+                      isMarketOrder ? "Market" : commify(field.value || "")
+                    }
                     className="orderly-text-right"
                     containerClassName={
                       isMarketOrder
