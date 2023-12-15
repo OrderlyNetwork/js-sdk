@@ -110,6 +110,8 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
+  
+
   return (
     <Collapsible
       open={collapsed > 0}
@@ -177,7 +179,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
-        <Progress value={marginRatioVal} variant={"gradient"} />
+        <Progress value={marginRatioVal * 10} variant={"gradient"} />
       </div>
       <MemorizedLeverage />
     </Collapsible>

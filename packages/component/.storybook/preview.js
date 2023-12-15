@@ -83,6 +83,7 @@ const preview = {
           <OrderlyAppProvider
             networkId={networkId}
             brokerId="orderly"
+            enableSwapDeposit={true}
             brokerName="Orderly"
             // showTestnet={true}
             // logoUrl="/woo_fi_logo.svg"
