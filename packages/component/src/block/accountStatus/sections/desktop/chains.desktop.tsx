@@ -117,9 +117,10 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   }
 
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger>
         <Button
           variant={"outlined"}
           size={"small"}
@@ -130,40 +131,43 @@ export const Chains: FC<ChainsProps> = (props) => {
             "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
             props.className
           )}
+          onClick={() => {
+            setOpen((value) => !value);
+          }}
         >
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
-      </DialogTrigger>
-      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
-        <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
-          <ChainListView
-            // @ts-ignore
-            mainChains={mainChains}
-            // @ts-ignore
-            testChains={testChains}
-            onItemClick={(item: any) => {
-              setOpen(false);
-              if (connectedChain) {
-                setChain({ chainId: item.id }).then((success: boolean) => {
-                  // reset default chain when switch to connected chain
-                  if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
-                    setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
-                  }
-                  if (success) {
-                    switchDomain(item.id);
-                  }
-                });
-              } else {
-                setDefaultChain(item.id);
-                switchDomain(item.id);
-              }
-            }}
-            currentChainId={parseInt(connectedChain?.id || defaultChain)}
-          />
-        </DialogBody>
-      </DialogContent>
-    </Dialog>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-px-2 orderly-hide-scrollbar  orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
+      >
+        <ChainListView
+          // @ts-ignore
+          mainChains={mainChains}
+          // @ts-ignore
+          testChains={testChains}
+          onItemClick={(item: any) => {
+            setOpen(false);
+            if (connectedChain) {
+              setChain({ chainId: item.id }).then((success: boolean) => {
+                // reset default chain when switch to connected chain
+                if (defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+                  setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
+                }
+                if (success) {
+                  switchDomain(item.id);
+                }
+              });
+            } else {
+              setDefaultChain(item.id);
+              switchDomain(item.id);
+            }
+          }}
+          currentChainId={parseInt(connectedChain?.id || defaultChain)}
+        />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

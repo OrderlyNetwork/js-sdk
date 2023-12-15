@@ -107,6 +107,24 @@ const Select: FC<SelectProps> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (triggerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        if (triggerRef.current) {
+          setWidth(triggerRef.current.offsetWidth);
+        }
+      });
+
+      resizeObserver.observe(triggerRef.current);
+      
+      return () => {
+        if (triggerRef.current) {
+          resizeObserver.unobserve(triggerRef.current);
+        }
+      };
+    }
+  }, []);
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenuTrigger asChild>

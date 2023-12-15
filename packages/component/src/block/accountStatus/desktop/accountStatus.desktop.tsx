@@ -2,7 +2,7 @@ import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { WalletConnectButton } from "../sections/walletConnectButton";
 import { AccountStatusProps } from "../accountStatusBar";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Chains } from "../sections/chains";
+import { Chains } from "../sections/desktop/chains.desktop";
 import { cn } from "@/utils/css";
 import {
   useMediaQuery,
