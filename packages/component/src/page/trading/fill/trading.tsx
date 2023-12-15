@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect } from "react";
 import Split from "@uiw/react-split";
-import { AccountInfo } from "@/block/accountStatus/full";
+import { AccountInfo } from "@/block/accountStatus/desktop";
 import { TradingPageProps } from "../types";
 import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
@@ -11,6 +11,7 @@ import { MyTradingView } from "./myTradingview";
 import { Header } from "./sections/tradingHeader";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { SystemStatusBar } from "@/block/systemStatusBar";
+import { useLayoutMeasure } from "./useLayoutMeasure";
 
 interface PageProps {
   header?: React.ReactNode;
@@ -18,14 +19,16 @@ interface PageProps {
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
-  useEffect(() => {
-    console.log("tradingPage: render");
-  });
+  const {} = useLayoutMeasure();
 
   useEffect(() => {
     document.body.style.setProperty(
       "--w-split-line-bar-background",
       "rgb(42, 46, 52)"
+    );
+    document.body.style.setProperty(
+      "--w-split-line-bar-active-background",
+      "#B64FFF"
     );
   }, []);
 

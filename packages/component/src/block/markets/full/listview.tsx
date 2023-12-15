@@ -31,7 +31,7 @@ export const ListViewFull = forwardRef<
           props.updateActiveIndex?.(index);
         }}
         className={cn(
-          "orderly-grid orderly-grid-cols-4 orderly-py-3 orderly-px-5 orderly-cursor-pointer",
+          "orderly-grid orderly-grid-cols-4 orderly-py-3 orderly-px-5 orderly-cursor-pointer orderly-h-[46px]",
           {
             "orderly-bg-base-contrast/5": activeIndex === index,
           }
