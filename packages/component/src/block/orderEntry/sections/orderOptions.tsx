@@ -58,7 +58,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
             return (
               <div className="orderly-flex orderly-gap-2 orderly-items-center">
                 <Switch
-                  id="reduceOnly"
+                  id="orderly-reduce-only-switch"
                   color={"primary"}
                   checked={field.value}
                   onCheckedChange={(checked) =>
