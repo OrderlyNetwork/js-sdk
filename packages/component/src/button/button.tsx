@@ -190,7 +190,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           fullWidth,
         }),
         className,
-        `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth} orderly-button-disabled-${disabled}`
+        `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth}`
       )}
       disabled={Boolean(disabled)}
       {...props}

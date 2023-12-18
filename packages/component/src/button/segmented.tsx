@@ -75,6 +75,7 @@ const _Button = ({
           "orderly-rounded-l after:orderly-right-[-15px] after:orderly-skew-x-[-25deg] orderly-pl-[15px]",
         !isFirstChild &&
           "orderly-rounded-r after:orderly-left-[-15px] after:orderly-skew-x-[-25deg] orderly-pr-[15px]",
+        `orderly-segmented-button orderly-segmented-button-${value?.toLowerCase()}`,
         className,
         isActive && activeClassName,
         disabled && disabledClassName

@@ -8,7 +8,11 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/dialog";
-import { ARBITRUM_MAINNET_CHAINID_HEX, ARBITRUM_TESTNET_CHAINID_HEX, type API } from "@orderly.network/types";
+import {
+  ARBITRUM_MAINNET_CHAINID_HEX,
+  ARBITRUM_TESTNET_CHAINID_HEX,
+  type API,
+} from "@orderly.network/types";
 import {
   useChains,
   OrderlyContext,
@@ -20,10 +24,14 @@ import { OrderlyAppContext } from "@/provider";
 import { cn } from "@/utils/css";
 
 import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/dropdown/dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/dropdown/dropdown";
 import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
-
 
 interface ChainsProps {
   disabled?: boolean;
@@ -38,7 +46,9 @@ export const Chains: FC<ChainsProps> = (props) => {
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
-    networkId === "mainnet" ? ARBITRUM_MAINNET_CHAINID_HEX : ARBITRUM_TESTNET_CHAINID_HEX
+    networkId === "mainnet"
+      ? ARBITRUM_MAINNET_CHAINID_HEX
+      : ARBITRUM_TESTNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
@@ -57,11 +67,15 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { connectedChain, setChain, settingChain } = useWalletConnector();
 
   const resetDefaultChain = useCallback(() => {
-
-    if (networkId === "mainnet" && defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+    if (
+      networkId === "mainnet" &&
+      defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX
+    ) {
       setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
-    }
-    else if (networkId === "testnet" && defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX) {
+    } else if (
+      networkId === "testnet" &&
+      defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX
+    ) {
       setDefaultChain(ARBITRUM_TESTNET_CHAINID_HEX);
     }
   }, [defaultChain]);
@@ -94,11 +108,11 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
   };
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button
+          id="orderly-account-status-bar-switch-chain-button"
           variant={"outlined"}
           size={"small"}
           color={"buy"}
