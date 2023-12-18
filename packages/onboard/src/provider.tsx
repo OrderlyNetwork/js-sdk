@@ -8,14 +8,14 @@ export interface WalletConnectorProviderProps {
   apiKey?: string;
   options?: InitOptions;
   // skip board configuration if already initialized
-  skipIfAlreadyInit?: boolean;
+  skipInit?: boolean;
 }
 
 export const ConnectorProvider = (
   props: PropsWithChildren<WalletConnectorProviderProps>
 ) => {
   const [initialized, setInitialized] = useState(
-    !!props.skipIfAlreadyInit
+    !!props.skipInit
   );
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const ConnectorProvider = (
   }, []);
 
   useEffect(() => {
-    if (props.skipIfAlreadyInit) {
+    if (props.skipInit) {
       return;
     }
     initConfig(props.apiKey, props.options).then(() => {
