@@ -7,6 +7,8 @@ import { Main } from "./main";
 export interface WalletConnectorProviderProps {
   apiKey?: string;
   options?: InitOptions;
+  // skip board configuration if already initialized
+  skipIfAlreadyInit?: boolean;
 }
 
 export const ConnectorProvider = (
@@ -19,6 +21,9 @@ export const ConnectorProvider = (
   }, []);
 
   useEffect(() => {
+    if (props.skipIfAlreadyInit){
+      return;
+    }
     initConfig(props.apiKey, props.options).then(() => {
       setInitialized(true);
     });
