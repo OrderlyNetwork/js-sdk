@@ -158,11 +158,11 @@ export interface ButtonProps
 
 const Button: FC<PropsWithChildren<ButtonProps>> = ({
   className,
-  size,
-  color,
-  variant,
+  size = "default",
+  color = "primary",
+  variant = "contained",
   fullWidth,
-  disabled,
+  disabled = false,
   loading,
   leftIcon,
   rightIcon,
@@ -190,7 +190,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
           fullWidth,
         }),
         className,
-        `button button-${variant} button-${color} button-${size} button-${fullWidth} button-${disabled}`
+        `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth} orderly-button-disabled-${disabled}`
       )}
       disabled={Boolean(disabled)}
       {...props}
