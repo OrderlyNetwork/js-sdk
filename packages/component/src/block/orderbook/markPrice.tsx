@@ -60,7 +60,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
         onClick={onMarkPrice}
       >
         <Flag size={14} className="orderly-text-yellow-400" />
-        <Numeral precision={quote_dp}>{markPrice}</Numeral>
+        <Numeral precision={quote_dp} className="desktop:orderly-text-base-contrast-54">{markPrice}</Numeral>
       </div>
     </div>
   );

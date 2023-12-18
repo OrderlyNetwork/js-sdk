@@ -139,6 +139,7 @@ export const Assets: FC<AssetsProps> = (props) => {
                   USDC
                 </span>
               }
+              className="desktop:orderly-font-semibold"
             >
               {availableBalance}
             </Numeral>

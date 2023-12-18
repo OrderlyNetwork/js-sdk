@@ -828,18 +828,6 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsconfig-paths-webpack-plugin:
-        specifier: ^4.1.0
-        version: 4.1.0
-      tslib:
-        specifier: ^2.6.0
-        version: 2.6.2
-      typescript:
-        specifier: ^4.5.2
-        version: 4.5.2
     devDependencies:
       '@types/react':
         specifier: ^18.2.25
@@ -868,9 +856,21 @@ importers:
       tailwindcss-border-gradient-radius:
         specifier: ^3.0.1
         version: 3.0.1
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsconfig-paths-webpack-plugin:
+        specifier: ^4.1.0
+        version: 4.1.0
+      tslib:
+        specifier: ^2.6.0
+        version: 2.6.2
       tsup:
         specifier: ^7.1.0
         version: 7.1.0(postcss@8.4.31)(typescript@4.5.2)
+      typescript:
+        specifier: ^4.5.2
+        version: 4.5.2
 
   packages/tsconfig: {}
 
@@ -20930,6 +20930,7 @@ packages:
       chalk: 4.1.2
       enhanced-resolve: 5.15.0
       tsconfig-paths: 4.2.0
+    dev: true
 
   /tsconfig-paths@3.14.2:
     resolution: {integrity: sha512-o/9iXgCYc5L/JxCHPe3Hvh8Q/2xm5Z+p18PESBU6Ff33695QnCHBEjcytY2q19ua7Mbl/DavtBOLq+oG0RCL+g==}
@@ -20947,6 +20948,7 @@ packages:
       json5: 2.2.3
       minimist: 1.2.8
       strip-bom: 3.0.0
+    dev: true
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}

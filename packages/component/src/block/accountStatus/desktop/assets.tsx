@@ -128,12 +128,13 @@ export const Assets: FC<AssetsProps> = (props) => {
               surfix={
                 <span
                   className={
-                    "orderly-text-base-contrast-36 orderly-font-medium"
+                    "orderly-text-base-contrast-36 orderly-font-semibold"
                   }
                 >
                   USDC
                 </span>
               }
+              className="desktop:orderly-font-semibold"
             >
               {availableBalance}
             </Numeral>

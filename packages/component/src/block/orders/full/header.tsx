@@ -41,7 +41,7 @@ export const Header: FC<Props> = (props) => {
   return (
     <div
       className={
-        "orderly-flex orderly-justify-between orderly-items-center orderly-py-3"
+        "orderly-flex orderly-justify-between orderly-items-center orderly-py-3 orderly-font-semibold"
       }
     >
       <Select

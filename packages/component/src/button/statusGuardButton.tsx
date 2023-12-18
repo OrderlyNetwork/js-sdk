@@ -36,7 +36,7 @@ export const StatusGuardButton: FC<
         } else {
           return result;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (state.status < AccountStatusEnum.EnableTrading) {
@@ -44,7 +44,7 @@ export const StatusGuardButton: FC<
         return await showAccountConnectorModal({
           status: state.status,
         });
-      } catch (err) {}
+      } catch (err) { }
     }
   }, [state]);
 
@@ -67,7 +67,11 @@ export const StatusGuardButton: FC<
   if (state.status < AccountStatusEnum.EnableTrading) {
     if (typeof props.placeholder === "undefined") {
       return (
-        <Button type="button" fullWidth onClick={() => onClick()}>
+        <Button
+          type="button"
+          fullWidth
+          onClick={() => onClick()}
+          className="desktop:orderly-font-bold desktop:orderly-text-sm">
           {buttonLabel}
         </Button>
       );
