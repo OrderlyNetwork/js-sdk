@@ -27,7 +27,7 @@ export const QuantityInput = () => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Input value={quantity} size={"small"} onChange={onChange} />
+        <Input value={quantity} size={"small"} onChange={onChange}  className="orderly-font-semibold"/>
       </PopoverTrigger>
       <PopoverContent
         align="start"

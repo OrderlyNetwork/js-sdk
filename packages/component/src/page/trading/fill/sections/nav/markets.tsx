@@ -19,7 +19,7 @@ export const Markets: FC<{ symbol: string }> = ({ symbol }) => {
 
           <Text
             rule="symbol"
-            className="orderly-text-xs orderly-break-normal orderly-whitespace-nowrap"
+            className="orderly-text-xs orderly-break-normal orderly-whitespace-nowrap orderly-font-semibold"
           >
             {symbol}
           </Text>

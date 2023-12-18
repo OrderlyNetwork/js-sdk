@@ -23,9 +23,9 @@ export const Tab: FC<TabProps> = (props) => {
   return (
     <button
       className={cn(
-        "orderly-text-base-contrast-36 orderly-h-full orderly-tab-item orderly-min-h-[32px]",
-        active && "orderly-text-base-contrast orderly-active",
-        disabled && "orderly-cursor-not-allowed orderly-text-base-contrast-36",
+        "orderly-text-base-contrast-36 desktop:orderly-text-base-contrast-54 orderly-h-full orderly-tab-item orderly-min-h-[32px]",
+        active && "orderly-text-base-contrast desktop:orderly-text-base-contrast orderly-active",
+        disabled && "orderly-cursor-not-allowed orderly-text-base-contrast-36 desktop:orderly-text-base-contrast-54",
         fullWidth && "orderly-flex-1"
       )}
       disabled={props.disabled}

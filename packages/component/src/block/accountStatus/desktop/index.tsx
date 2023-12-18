@@ -28,14 +28,16 @@ export const AccountInfo: FC<Props> = (props) => {
             size={"small"}
             variant={"outlined"}
             color={"tertiary"}
+            className="desktop:orderly-text-3xs desktop:orderly-text-base-contrast"
             onClick={() => onWithdraw?.()}
-          >
+            >
             Withdraw
           </Button>
           <Button
             size={"small"}
             variant={"outlined"}
             color={"tertiary"}
+            className="desktop:orderly-text-3xs desktop:orderly-text-base-contrast"
             onClick={() => onDeposit?.()}
           >
             Deposit

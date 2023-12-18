@@ -25,7 +25,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
             <Text
               rule="date"
               formatString="HH:mm:ss"
-              className="orderly-text-base-contrast-80"
+              className="orderly-text-base-contrast-80 orderly-text-3xs"
             >
               {value}
             </Text>
@@ -40,9 +40,11 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
             <Numeral
               precision={quote_dp}
               className={
+                
                 record.side === OrderSide.BUY
-                  ? "orderly-text-trade-profit-contrast"
-                  : "orderly-text-trade-loss-contrast"
+                  ? "orderly-text-trade-profit-contrast orderly-text-3xs"
+                  : "orderly-text-trade-loss-contrast orderly-text-3xs"
+                  
               }
             >
               {value}
@@ -60,8 +62,8 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
               precision={base_dp}
               className={
                 record.side === OrderSide.BUY
-                  ? "orderly-text-trade-profit-contrast"
-                  : "orderly-text-trade-loss-contrast"
+                  ? "orderly-text-trade-profit-contrast orderly-text-3xs"
+                  : "orderly-text-trade-loss-contrast orderly-text-3xs"
               }
             >
               {value}
@@ -77,7 +79,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       dataSource={props.dataSource}
       columns={columns}
       loading={props.loading}
-      className="orderly-text-3xs"
+      className="orderly-text-3xs desktop:orderly-text-2xs"
       headerClassName={cn(
         "orderly-text-base-contrast-36 orderly-bg-base-800",
         props.headerClassName

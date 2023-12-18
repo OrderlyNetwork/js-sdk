@@ -33,7 +33,7 @@ export const PriceInput = () => {
       onFocus={onFocus}
       value={type === OrderType.LIMIT ? price : "Market"}
       onChange={(e) => updatePriceChange(e.target.value)}
-      className={cn("orderly-pr-0", {
+      className={cn("orderly-pr-0 orderly-font-semibold", {
         "orderly-text-base-contrast-54": type === OrderType.MARKET,
       })}
       suffix={

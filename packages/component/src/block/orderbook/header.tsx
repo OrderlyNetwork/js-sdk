@@ -26,7 +26,7 @@ export const Header: FC<Props> = (props) => {
   return (
     <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs desktop:orderly-text-3xs orderly-pb-2 desktop:orderly-pt-2">
       <div className="orderly-flex orderly-flex-col desktop:orderly-flex-row desktop:orderly-items-center">
-        <span>Price</span>
+        <span className="desktop:orderly-text-2xs">Price</span>
         <span>{`(${props.quote})`}</span>
       </div>
       <div
@@ -36,7 +36,7 @@ export const Header: FC<Props> = (props) => {
         }
       >
         <div className="orderly-flex orderly-flex-col desktop:orderly-flex-row desktop:orderly-items-center orderly-text-base-contrast-36 orderly-text-4xs orderly-items-end orderly-mr-1">
-          <span>{qtyLabel}</span>
+          <span className="desktop:orderly-text-2xs">{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>
         <SwitchIcon size={8} />

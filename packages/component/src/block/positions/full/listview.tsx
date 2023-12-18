@@ -15,17 +15,17 @@ export const Listview: FC<PositionsViewProps> = (props) => {
   const columns = useMemo(() => {
     return [
       {
-        title: "instrument",
+        title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
+        render: (value: string) => <Text rule={"symbol"} className="orderly-font-semibold">{value}</Text>,
       },
       {
         title: "Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "position_qty",
         render: (value: string) => (
-          <NumeralWithCtx coloring>{value}</NumeralWithCtx>
+          <NumeralWithCtx coloring className="orderly-font-semibold">{value}</NumeralWithCtx>
         ),
       },
       {
@@ -38,7 +38,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         dataIndex: "mark_price",
         className: "orderly-h-[48px]",
         render: (value: string) => {
-          return <Numeral>{value}</Numeral>;
+          return <Numeral className="orderly-font-semibold">{value}</Numeral>;
         },
       },
       {
@@ -49,7 +49,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Numeral className="orderly-text-warning">{value}</Numeral>
+            <Numeral className="orderly-text-warning orderly-font-semibold">{value}</Numeral>
           );
         },
       },
@@ -57,13 +57,13 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Margin",
         className: "orderly-h-[48px]",
         dataIndex: "mm",
-        render: (value: string) => <Numeral>{value}</Numeral>,
+        render: (value: string) => <Numeral className="orderly-font-semibold">{value}</Numeral>,
       },
       {
         title: "Unreal.PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
-        render: (value: string) => <Numeral coloring>{value}</Numeral>,
+        render: (value: string) => <Numeral coloring className="orderly-font-semibold">{value}</Numeral>,
       },
       // {
       //   title: "Daily real.",
@@ -74,7 +74,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Notional",
         dataIndex: "notional",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Numeral>{value}</Numeral>,
+        render: (value: string) => <Numeral className="orderly-font-semibold">{value}</Numeral>,
       },
       {
         title: "Qty.",

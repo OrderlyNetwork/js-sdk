@@ -20,14 +20,14 @@ export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
     const columns = [
       {
-        title: "instrument",
+        title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
+        render: (value: string) => <Text rule={"symbol"} className="orderly-font-semibold">{value}</Text>,
       },
       {
         title: "Type",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "type",
         formatter: upperCaseFirstLetter,
       },
@@ -38,6 +38,7 @@ export const Listview: FC<Props> = (props) => {
         render: (value: string) => (
           <span
             className={cx(
+              "orderly-font-semibold",
               value === OrderSide.BUY
                 ? "orderly-text-trade-profit"
                 : "orderly-text-trade-loss"
@@ -67,7 +68,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Reduce",
         dataIndex: "reduce_only",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: boolean) => {
           return <span>{value ? "Yes" : "No"}</span>;
         },
@@ -75,7 +76,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Hidden",
         dataIndex: "visible",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: number, record) => {
           return <span>{value === record.quantity ? "No" : "Yes"}</span>;
         },
@@ -87,7 +88,7 @@ export const Listview: FC<Props> = (props) => {
         render: (value: string) => (
           <Text
             rule={"date"}
-            className="orderly-break-normal orderly-whitespace-nowrap"
+            className="orderly-break-normal orderly-whitespace-nowrap orderly-font-semibold"
           >
             {value}
           </Text>

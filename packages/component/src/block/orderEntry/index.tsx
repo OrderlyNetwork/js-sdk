@@ -305,18 +305,18 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   value: OrderSide.BUY,
                   disabled,
                   activeClassName:
-                    "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit",
+                    "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit orderly-font-bold desktop:orderly-font-bold",
                   disabledClassName:
-                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
                 },
                 {
                   label: "Sell",
                   value: OrderSide.SELL,
                   disabled,
                   activeClassName:
-                    "orderly-bg-trade-loss orderly-text-base-contrast after:orderly-bg-trade-loss",
+                    "orderly-bg-trade-loss orderly-text-base-contrast after:orderly-bg-trade-loss orderly-font-bold desktop:orderly-font-bold",
                   disabledClassName:
-                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed",
+                    "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
                 },
               ]}
               onChange={(value) => {
@@ -326,7 +326,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             />
 
             <div className="orderly-flex orderly-justify-between orderly-items-center">
-              <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs">
+              <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs desktop:orderly-text-3xs">
                 <span>Free Collat.</span>
                 <Numeral
                   rule="price"
@@ -539,7 +539,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <StatusGuardButton>
               <Button
                 id="orderly-order-entry-confirm-button"
-                className="orderly-text-xs"
+                className="orderly-text-xs desktop:orderly-font-bold desktop:orderly-text-sm"
                 type="submit"
                 loading={methods.formState.isSubmitting}
                 color={side === OrderSide.BUY ? "buy" : "sell"}

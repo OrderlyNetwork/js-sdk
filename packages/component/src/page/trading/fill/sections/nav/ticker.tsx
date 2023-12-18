@@ -60,7 +60,7 @@ export const Ticker: FC<Props> = (props) => {
     <StatisticStyleProvider
       labelClassName="orderly-text-4xs orderly-text-base-contrast-54 orderly-break-normal orderly-whitespace-nowrap"
       valueClassName={
-        "orderly-text-2xs orderly-text-base-contrast-80 orderly-tabular-nums"
+        "orderly-text-2xs orderly-text-base-contrast-80 orderly-tabular-nums orderly-font-semibold"
       }
     >
       <div className="orderly-relative orderly-overflow-hidden">
@@ -69,7 +69,7 @@ export const Ticker: FC<Props> = (props) => {
           ref={containerRef}
         >
           <div ref={leadingElementRef}>
-            <Numeral coloring>{data?.["24h_close"]}</Numeral>
+            <Numeral coloring className="orderly-font-semibold">{data?.["24h_close"]}</Numeral>
           </div>
           <Statistic
             label={"24h change"}

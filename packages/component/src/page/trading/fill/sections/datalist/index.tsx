@@ -17,7 +17,7 @@ export const DataListView = () => {
       autoFit
       value={activeTab}
       onTabChange={setActiveTab}
-      tabBarClassName="orderly-h-[48px] orderly-text-sm"
+      tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold"
       tabBarExtra={<TabBarExtraNode />}
       extraData={{
         showAllSymbol: false,

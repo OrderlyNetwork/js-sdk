@@ -21,9 +21,9 @@ export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
     const columns = [
       {
-        title: "instrument",
+        title: "Instrument",
         dataIndex: "symbol",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
       },
       {
@@ -39,6 +39,7 @@ export const Listview: FC<Props> = (props) => {
         render: (value: string) => (
           <span
             className={cx(
+              "orderly-font-semibold",
               value === OrderSide.BUY
                 ? "orderly-text-trade-profit"
                 : "orderly-text-trade-loss"
@@ -50,12 +51,13 @@ export const Listview: FC<Props> = (props) => {
       },
       {
         title: "Filled / Quantity",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "quantity",
         render: (value: string, record) => {
           return (
             <span
               className={cx(
+                "orderly-font-semibold",
                 record.side === OrderSide.BUY
                   ? "orderly-text-trade-profit"
                   : "orderly-text-trade-loss"
@@ -66,30 +68,30 @@ export const Listview: FC<Props> = (props) => {
       },
       {
         title: "Order Price",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "price",
         // render: (value: string, record) => <Price order={record} />,
       },
       {
         title: "Avg.price",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "average_executed_price",
       },
       {
         title: "Fee",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "total_fee",
       },
       {
         title: "Status",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "status",
         formatter: upperCaseFirstLetter,
       },
       {
         title: "Reduce",
         dataIndex: "reduce_only",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: boolean) => {
           return <span>{value ? "Yes" : "No"}</span>;
         },
@@ -97,7 +99,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Hidden",
         dataIndex: "visible",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: number, record) => {
           return <span>{value === record.quantity ? "No" : "Yes"}</span>;
         },
@@ -105,7 +107,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "",
         dataIndex: "action",
-        className: "orderly-h-[48px]",
+        className: "orderly-h-[48px] orderly-font-semibold",
         align: "right",
         render: (value: string, record) => {
           if (record.status === OrderStatus.CANCELLED) {
