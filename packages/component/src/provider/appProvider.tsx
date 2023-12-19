@@ -23,6 +23,7 @@ import {
 } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
+import { IContract } from "@orderly.network/core";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -69,6 +70,7 @@ export interface OrderlyAppProviderProps {
   appIcons?: AppLogos;
   theme?: any;
   toastLimitCount?: number;
+  contracts?: IContract;
   /**
    * are include testnet chains
    */
@@ -92,6 +94,7 @@ export const OrderlyAppProvider: FC<
     brokerName,
     networkId,
     includeTestnet,
+    contracts,
     toastLimitCount,
     enableSwapDeposit,
     onChainChanged,
@@ -105,6 +108,7 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       enableSwapDeposit={enableSwapDeposit}
+      contracts={contracts}
     >
       <InnerProvider
         logoUrl={logoUrl}
@@ -173,10 +177,9 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       if (
         (networkId === "mainnet" && chainIdNum === 421613) ||
         (networkId === "testnet" && chainIdNum !== 421613)
-      ) { 
+      ) {
         return false;
       }
-
 
       const isSupport = chains.some((item: { id: string }) => {
         return item.id === chainId;

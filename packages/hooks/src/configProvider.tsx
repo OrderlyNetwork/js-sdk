@@ -12,6 +12,7 @@ import {
   EtherAdapter,
   SimpleDI,
   Account,
+  IContract,
 } from "@orderly.network/core";
 
 import useConstant from "use-constant";
@@ -32,6 +33,7 @@ type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
 export interface ConfigProviderProps {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
+  contracts?: IContract;
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
@@ -51,6 +53,7 @@ export const OrderlyConfigProvider = (
     brokerId,
     networkId,
     enableSwapDeposit,
+    contracts,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -79,7 +82,10 @@ export const OrderlyConfigProvider = (
       account = new Account(
         innerConfigStore,
         innerKeyStore,
-        innerGetWalletAdapter
+        innerGetWalletAdapter,
+        {
+          contracts,
+        }
       );
 
       SimpleDI.registerByName(Account.instanceName, account);

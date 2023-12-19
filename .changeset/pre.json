@@ -1,0 +1,23 @@
+{
+  "mode": "exit",
+  "tag": "demo",
+  "initialVersions": {
+    "@orderly/docs": "0.1.63",
+    "examples": "0.1.88",
+    "@orderly.network/storybook": "1.0.92",
+    "@orderly.network/cli": "0.0.32",
+    "@orderly.network/react": "0.1.27",
+    "@orderly.network/core": "0.1.23",
+    "create-orderly-app": "0.1.0",
+    "eslint-config-custom": "0.0.28",
+    "@orderly.network/hooks": "1.0.24",
+    "@orderly.network/net": "1.0.110",
+    "@orderly.network/web3-onboard": "0.0.24",
+    "@orderly.network/perp": "1.0.23",
+    "@orderly.network/trading-view": "0.1.4",
+    "tsconfig": "0.0.82",
+    "@orderly.network/types": "0.1.23",
+    "@orderly.network/utils": "0.0.75"
+  },
+  "changesets": []
+}

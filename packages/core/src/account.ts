@@ -74,9 +74,20 @@ export class Account {
   constructor(
     private readonly configStore: ConfigStore,
     private readonly keyStore: OrderlyKeyStore,
-    private readonly getWalletAdapter: getWalletAdapterFunc // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
+    private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
+    options?: Partial<{
+      /**
+       * smart contract configuration class
+       * provide contract address and abi
+       */
+      contracts: IContract;
+    }>
   ) {
-    this.contractManger = new BaseContract(configStore);
+    if (options?.contracts) {
+      this.contractManger = options.contracts;
+    } else {
+      this.contractManger = new BaseContract(configStore);
+    }
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
 
@@ -86,13 +97,6 @@ export class Account {
   logout() {
     // ...
   }
-
-  /**
-   * 连接钱包先用第三方的React版本，不用自己实现
-   */
-  // connectWallet() {
-  //   // this.wallet.connect();
-  // }
 
   async setAddress(
     address: string,
