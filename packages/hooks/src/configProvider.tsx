@@ -17,8 +17,9 @@ import {
 
 import useConstant from "use-constant";
 import { NetworkId } from "@orderly.network/types";
-import { usePreLoadData } from "./usePreloadData";
+// import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
+// import { useParamsCheck } from "./useParamsCheck";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
   {
@@ -74,6 +75,9 @@ export const OrderlyConfigProvider = (
       ((options: WalletAdapterOptions) => new EtherAdapter(options))
     );
   });
+
+  // check params, if has mismatch, throw warning message to console
+  // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
   useEffect(() => {
     let account = SimpleDI.get<Account>(Account.instanceName);
