@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.1.63
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+- Updated dependencies
+  - @orderly.network/react@0.1.27
+  - @orderly.network/web3-onboard@0.0.24
+  - @orderly.network/hooks@1.0.24
+  - @orderly.network/types@0.1.23
+
 ## 0.1.62
 
 ### Patch Changes

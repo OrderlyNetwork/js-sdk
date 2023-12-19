@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.92
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+
 ## 1.0.91
 
 ### Patch Changes

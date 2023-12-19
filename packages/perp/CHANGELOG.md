@@ -1,5 +1,13 @@
 # @orderly.network/futures
 
+## 1.0.23
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+- Updated dependencies
+  - @orderly.network/types@0.1.23
+
 ## 1.0.22
 
 ### Patch Changes

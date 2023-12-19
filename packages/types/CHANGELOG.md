@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.23
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+
 ## 0.1.22
 
 ### Patch Changes

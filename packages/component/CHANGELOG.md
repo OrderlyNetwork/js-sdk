@@ -1,5 +1,17 @@
 # @orderly.network/react
 
+## 0.1.27
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.4
+  - @orderly.network/hooks@1.0.24
+  - @orderly.network/types@0.1.23
+  - @orderly.network/core@0.1.23
+  - @orderly.network/net@1.0.110
+
 ## 0.1.26
 
 ### Patch Changes

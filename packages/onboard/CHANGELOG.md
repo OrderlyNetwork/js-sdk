@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.0.24
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+- Updated dependencies
+  - @orderly.network/hooks@1.0.24
+  - @orderly.network/types@0.1.23
+
 ## 0.0.23
 
 ### Patch Changes

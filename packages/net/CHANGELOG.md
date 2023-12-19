@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.110
+
+### Patch Changes
+
+- export PATH="$PATH:`pwd`/flutter/bin"
+
 ## 1.0.109
 
 ### Patch Changes
