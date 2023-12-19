@@ -42,12 +42,12 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
             <Split
-              style={{ flex: 1 }}
+              style={{ flex: 1, minHeight: "350px" }}
               className={"orderly-min-h-0 orderly-overflow-y-visible"}
               lineBar
             >
               <div
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: "468px", }}
                 className="orderly-grid orderly-grid-rows-[48px_1fr]"
               >
                 <div className="orderly-border-b orderly-border-b-divider orderly-min-w-0">
