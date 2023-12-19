@@ -113,7 +113,7 @@ export const AccountStatus: FC<AccountStatusProps & { className?: string, dropMe
         disabled={status < AccountStatusEnum.NotConnected}
         className="orderly-rounded-full"
       />
-      <DropdownMenu open={connectedChain ? open : false} onOpenChange={connectedChain ? setOpen : undefined}>
+      <DropdownMenu open={state.address ? open : false} onOpenChange={state.address ? setOpen : undefined}>
         <DropdownMenuTrigger>
           <WalletConnectButton
             status={status}
@@ -131,7 +131,7 @@ export const AccountStatus: FC<AccountStatusProps & { className?: string, dropMe
           <DropdownMenuItem>
             <div className="orderly-flex orderly-py-2">
               <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-gap-2">
-                <Blockie address={state.address!} />
+                <Blockie address={state.address} />
                 <Text className="orderly-text-xs" rule={"address"}>{account.address}</Text>
               </div>
               <div className="orderly-flex orderly-items-center orderly-gap-2">
