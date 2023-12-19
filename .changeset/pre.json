@@ -1,6 +1,6 @@
 {
-  "mode": "exit",
-  "tag": "demo",
+  "mode": "pre",
+  "tag": "alpha",
   "initialVersions": {
     "@orderly/docs": "0.1.63",
     "examples": "0.1.88",
@@ -19,5 +19,7 @@
     "@orderly.network/types": "0.1.23",
     "@orderly.network/utils": "0.0.75"
   },
-  "changesets": []
+  "changesets": [
+    "chilly-pots-shop"
+  ]
 }

@@ -1,5 +1,15 @@
 # @orderly/docs
 
+## 0.1.64-alpha.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.28-alpha.0
+  - @orderly.network/web3-onboard@0.0.25-alpha.0
+  - @orderly.network/hooks@1.0.25-alpha.0
+  - @orderly.network/types@0.1.24-alpha.0
+
 ## 0.1.63
 
 ### Patch Changes
