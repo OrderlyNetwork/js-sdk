@@ -1,10 +1,11 @@
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { Header } from "./full/header";
 import { ListViewFull } from "./full/listview";
 import { useDataSource } from "./useDataSource";
 import { MoveDirection } from "./full/search";
 import { ListViewRef } from "@/listView/listView";
 import { MarketsProps } from "./shared/types";
+import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 interface Props {
   maxHeight?: number;
@@ -18,6 +19,16 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
 
   const [dataSource, { searchKey, onSearch, onSort }] = useDataSource(
     props.dataSource
+  );
+
+  const { onSymbolChange } = useContext(TradingPageContext);
+
+  const onSymbolClick = useCallback(
+    (symbol: any) => {
+      props.onClose?.();
+      onSymbolChange?.(symbol);
+    },
+    [onSymbolChange]
   );
 
   const listviewRef = useRef<{
@@ -72,6 +83,7 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
         onSort={onSort}
         maxHeight={props.maxHeight}
         updateActiveIndex={(index: number) => setActiveIndex(index)}
+        onItemClick={onSymbolClick}
       />
     </div>
   );
