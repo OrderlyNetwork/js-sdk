@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --concurrency=16",
+    "dev": "turbo run dev --concurrency=17",
     "lint": "turbo run lint",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",

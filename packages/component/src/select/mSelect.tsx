@@ -95,7 +95,7 @@ export const MSelect: FC<SelectProps> = ({
             color,
             fullWidth,
           }),
-          open && "orderly-bg-popover"
+          open && "orderly-bg-base-600"
         )}
       >
         <span className="orderly-flex orderly-flex-1 orderly-text-inherit">
@@ -114,7 +114,7 @@ export const MSelect: FC<SelectProps> = ({
         <div
           data-state={open ? "open" : "closed"}
           className={cn(
-            "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-bg-popover orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2 orderly-absolute orderly-left-0 orderly-top-full orderly-mt-1 orderly-w-full orderly-space-y-1",
+            "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-bg-base-600 orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2 orderly-absolute orderly-left-0 orderly-top-full orderly-mt-1 orderly-w-full orderly-space-y-1",
             "data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2"
           )}
         >
