@@ -141,7 +141,7 @@ const Select: FC<SelectProps> = ({
               color,
               fullWidth,
             }),
-            open && "orderly-bg-popover"
+            open && "orderly-bg-base-600"
           )}
         >
           <div className="orderly-flex-1 orderly-text-3xs desktop:orderly-text-2xs orderly-text-inherit">

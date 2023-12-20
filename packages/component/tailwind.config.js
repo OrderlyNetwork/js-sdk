@@ -107,11 +107,6 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-fill) / <alpha-value>)",
           light: "rgb(var(--orderly-color-fill-light) / <alpha-value>)",
         },
-        popover: {
-          DEFAULT: "rgb(var(--orderly-color-popover) / <alpha-value>)",
-          foreground:
-            "rgb(var(--orderly-color-popover-foreground) / <alpha-value>)",
-        },
         divider: "rgb(var(--orderly-color-divider) / <alpha-value>)",
         // disable:'',
         trade: {
