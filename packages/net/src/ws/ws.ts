@@ -606,11 +606,8 @@ export class WS {
     // console.log("unsubscribe", topic);
 
     if (!!handler && Array.isArray(handler?.callback)) {
-      // console.log("是否需要退订", handler.callback.length);
       if (handler!.callback.length === 1) {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
-
-        // console.log("退订参数 unsubscribeMessage", unsubscribeMessage);
 
         //
         webSocket.send(JSON.stringify(unsubscribeMessage));
@@ -698,8 +695,18 @@ export class WS {
     }, this.reconnectInterval);
   }
 
-  get publicSocket(): WebSocket {
-    return this._publicSocket;
+  // get publicSocket(): WebSocket {
+  //   return this._publicSocket;
+  // }
+
+  get client(): {
+    public: WebSocket;
+    private?: WebSocket;
+  } {
+    return {
+      public: this._publicSocket,
+      private: this.privateSocket,
+    };
   }
 
   on(eventName: string, callback: (message: any) => any) {
