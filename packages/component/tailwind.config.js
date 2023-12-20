@@ -2,7 +2,7 @@
 
 const plugin = require("tailwindcss/plugin");
 const path = require("path");
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 import colors from "tailwindcss/colors";
 
@@ -14,10 +14,10 @@ module.exports = {
   // // "./node_modules/rc-slider/**/*.{ts,js,tsx,jsx}",
   // ],
   // content: ["./src/**/*.{ts,js,tsx,jsx}",path.join(path.dirname(require.resolve("rc-slider")).replace('lib/'), "**/*.{js,jsx}")],
-  prefix: 'orderly-',
+  prefix: "orderly-",
   theme: {
     screens: {
-      'desktop': '1024px'
+      desktop: "1024px",
     },
     fontSize: {
       "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
@@ -34,14 +34,19 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        manrope: ['var(--orderly-font-family)', 'sans-serif', ...defaultTheme.fontFamily.mono]
+        manrope: [
+          "var(--orderly-font-family)",
+          "sans-serif",
+          ...defaultTheme.fontFamily.mono,
+        ],
       },
       colors: {
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
-          contrast:"rgb(var(--orderly-color-primary-contrast) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--orderly-color-secondary) / <alpha-value>)",
@@ -81,18 +86,20 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
           light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
-          contrast:"rgb(var(--orderly-color-danger-contrast) / <alpha-value>)",
+          contrast: "rgb(var(--orderly-color-danger-contrast) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-warning-darken) / <alpha-value>)",
-          contrast:"rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
           light: "rgb(var(--orderly-color-success-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
-          contrast:"rgb(var(--orderly-color-success-contrast) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-success-contrast) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
@@ -107,12 +114,14 @@ module.exports = {
         trade: {
           loss: {
             DEFAULT: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
-            contrast: "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
+            contrast:
+              "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
           },
 
           profit: {
             DEFAULT: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
-            contrast: "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
+            contrast:
+              "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
           },
         },
       },
@@ -180,20 +189,19 @@ module.exports = {
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },
+        // ':root':{}
       });
     }),
     plugin(function ({ addUtilities }) {
       const scrollBarUtilities = {
-        
-        '.hide-scrollbar::-webkit-scrollbar': {
-          display: 'none'
+        ".hide-scrollbar::-webkit-scrollbar": {
+          display: "none",
         },
-        '.hide-scrollbar::-webkit-scrollbar-thum': {
-          display: 'none'
+        ".hide-scrollbar::-webkit-scrollbar-thum": {
+          display: "none",
         },
-       
       };
-    
+
       addUtilities(scrollBarUtilities);
     }),
   ],
