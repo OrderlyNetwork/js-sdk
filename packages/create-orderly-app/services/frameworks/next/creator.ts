@@ -4,6 +4,7 @@ import { BaseBuilder } from "../../baseBuilder";
 import kleur from "kleur";
 
 class NextCreator extends BaseBuilder {
+
   showWelcomeMessage(): string {
     return "Start to create Next.js project";
   }
@@ -16,6 +17,10 @@ class NextCreator extends BaseBuilder {
 
   get startCommand(): string {
     return `dev`;
+  }
+
+  async createCustomWalletConnector(): Promise<any> {
+    console.log('custom wallet connector');
   }
 }
 

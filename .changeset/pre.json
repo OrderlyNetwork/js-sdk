@@ -20,6 +20,7 @@
     "@orderly.network/utils": "0.0.75"
   },
   "changesets": [
-    "chilly-pots-shop"
+    "chilly-pots-shop",
+    "quiet-carrots-exist"
   ]
 }

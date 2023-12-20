@@ -47,9 +47,9 @@ export abstract class BaseBuilder implements IBuilder {
     if (this.options.walletConnector === WalletConnector.blockNative) {
       pkg.dependencies["@orderly.network/web3-onboard"] = "latest";
     } else if (this.options.walletConnector === WalletConnector.custom) {
-      pkg.dependencies["@orderly.network/web3-walletconnect"] = "latest";
-
-      // return pkg;
+      // pkg.dependencies["@orderly.network/web3-walletconnect"] = "latest";
+// create custom wallet connector
+      this.createCustomWalletConnector();
     }
   }
 
@@ -72,7 +72,13 @@ export abstract class BaseBuilder implements IBuilder {
     let msg = "";
 
     if (this.options.brokerId?.toLowerCase() === "orderly") {
-      items.push("Add brokerId");
+      items.push("Add your brokerId");
+    }
+
+    if(this.options.walletConnector === WalletConnector.custom) {
+        items.push("Implementing custom wallet connector");
+    }else if(this.options.walletConnector === WalletConnector.blockNative) {
+        items.push("Setup your blockNative API key");
     }
 
     if (items.length) {
@@ -81,7 +87,7 @@ export abstract class BaseBuilder implements IBuilder {
         "\n\n" +
         items
           .map((item: string, index: number) =>
-            kleur.cyan(`    ${index + 1}: ${item}`)
+            kleur.yellow(`    ${index + 1}: ${item}`)
           )
           .join("\n") +
         "\n\n" +
@@ -115,4 +121,5 @@ export abstract class BaseBuilder implements IBuilder {
   }
 
   abstract get startCommand(): string;
+  abstract createCustomWalletConnector(): Promise<any>;
 }
