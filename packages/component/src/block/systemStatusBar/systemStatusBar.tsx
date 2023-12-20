@@ -25,27 +25,28 @@ export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
             // setWsStatus(status === "connecting" ? "disconnected" : status);
             console.log("ws status", status);
 
-            const { type } = status;
-            switch (type) {
-                case "open":
-                    connectCount.current = 0;
-                    setWsStatus("connected");
-                    break;
-                case "close":
-                    connectCount.current = 0;
-                    setWsStatus("disconnected");
-                    break;
-                case "reconnecting":
-                    connectCount.current++;
-                    if (connectCount.current >= 3) {
-                        setWsStatus("unstable");
-                    }
-                    break;
+            const { type, isPrivate } = status;
+            if (!isPrivate) {
+                switch (type) {
+                    case "open":
+                        connectCount.current = 0;
+                        setWsStatus("connected");
+                        break;
+                    case "close":
+                        connectCount.current = 0;
+                        setWsStatus("disconnected");
+                        break;
+                    case "reconnecting":
+                        connectCount.current++;
+                        if (connectCount.current >= 3) {
+                            setWsStatus("unstable");
+                        }
+                        break;
 
+                }
             }
-
         });
-        return () => ws.off("websocket:status");
+        return () => ws.off("websocket:status", () => { });
     }, []);
 
     function clickCommunity(item: any) {

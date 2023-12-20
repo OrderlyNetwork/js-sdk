@@ -195,6 +195,7 @@ module.exports = {
           color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
           fontFamily: "var(--orderly-font-family)",
         },
+        // ':root':{}
       });
     }),
     plugin(function ({ addUtilities }) {
