@@ -33,12 +33,12 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
   }, []);
 
   return (
-    <>
+    <div className="orderly-tabular-nums">
       <div className="orderly-app-trading-header orderly-border-b orderly-border-divider">
         {/** header component solt  */}
         <Header />
       </div>
-      <Split lineBar style={{ height: "calc(100vh - 50px)", width: "100vw" }}>
+      <Split lineBar style={{ height: "calc(100vh - 50px - 42px)", width: "100vw" }}>
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
             <Split
@@ -84,6 +84,6 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         {/* order entry end */}
       </Split>
       <SystemStatusBar />
-    </>
+    </div>
   );
 };

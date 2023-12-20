@@ -20,6 +20,7 @@ export const TabBarExtraNode = () => {
   const onShowAllSymbolChange = (isAll: boolean) => {
     // setSymbol(isAll ? "" : context.symbol);
     setShowAllSymbol(isAll);
+    updateData("showAllSymbol", isAll);
   };
 
   useEffect(() => updateData("showAllSymbol", showAllSymbol), []);

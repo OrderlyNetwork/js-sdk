@@ -20,17 +20,23 @@ module.exports = {
       desktop: "1024px",
     },
     fontSize: {
-      "4xs": "calc(var(--orderly-font-size-base) - 5px)", // if base is 16px, it will be 11px
-      "3xs": "calc(var(--orderly-font-size-base) - 4px)", // if base is 16px, it will be 12px
-      "2xs": "calc(var(--orderly-font-size-base) - 3px)", // if base is 16px, it will be 13px
-      xs: "calc(var(--orderly-font-size-base) - 2px)", // if base is 16px, it will be 14px
-      sm: "calc(var(--orderly-font-size-base) - 1px)", // if base is 16px, it will be 15px
-      base: "calc(var(--orderly-font-size-base))", // if base is 16px, it will be 16px
-      lg: "calc(var(--orderly-font-size-base) + 2px)", // if base is 16px, it will be 18px
-      xl: "calc(var(--orderly-font-size-base) + 4px)", // if base is 16px, it will be 20px
-      "2xl": "calc(var(--orderly-font-size-base) + 8px)", // if base is 16px, it will be 24px
-      "3xl": "calc(var(--orderly-font-size-base) + 14px)", // if base is 16px, it will be 30px
-      "4xl": "calc(var(--orderly-font-size-base) + 20px)", // if base is 16px, it will be 36px
+      "4xs":
+        "var(--orderly-font-size-4xs, calc(var(--orderly-font-size-base) - 5px))", // if base is 16px, it will be 11px
+      "3xs":
+        "var(--orderly-font-size-3xs, calc(var(--orderly-font-size-base) - 4px))", // if base is 16px, it will be 12px
+      "2xs":
+        "var(--orderly-font-size-2xs, calc(var(--orderly-font-size-base) - 3px))", // if base is 16px, it will be 13px
+      xs: "var(--orderly-font-size-xs, calc(var(--orderly-font-size-base) - 2px))", // if base is 16px, it will be 14px
+      sm: "var(--orderly-font-size-sm, calc(var(--orderly-font-size-base) - 1px))", // if base is 16px, it will be 15px
+      base: "var(--orderly-font-size-base)", // if base is 16px, it will be 16px
+      lg: "var(--orderly-font-size-lg, calc(var(--orderly-font-size-base) + 2px))", // if base is 16px, it will be 18px
+      xl: "var(--orderly-font-size-xl, calc(var(--orderly-font-size-base) + 4px))", // if base is 16px, it will be 20px
+      "2xl":
+        "var(--orderly-font-size-2xl, calc(var(--orderly-font-size-base) + 8px))", // if base is 16px, it will be 24px
+      "3xl":
+        "var(--orderly-font-size-3xl, calc(var(--orderly-font-size-base) + 14px))", // if base is 16px, it will be 30px
+      "4xl":
+        "var(--orderly-font-size-4xl, calc(var(--orderly-font-size-base) + 20px))", // if base is 16px, it will be 36px
     },
     extend: {
       fontFamily: {
