@@ -37,11 +37,6 @@ module.exports = {
         manrope: ['var(--orderly-font-family)', 'sans-serif', ...defaultTheme.fontFamily.mono]
       },
       colors: {
-        background: {
-          DEFAULT: "rgb(var(--orderly-color-background) / <alpha-value>)",
-          contrast:
-            "rgb(var(--orderly-color-background-contrast) / <alpha-value>)",
-        },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",

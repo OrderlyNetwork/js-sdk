@@ -76,7 +76,7 @@ const SheetContent = React.forwardRef<
       >
         {children}
         {closeable && (
-          <SheetPrimitive.Close className="orderly-absolute orderly-right-[24px] orderly-top-[24px] orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-background orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-secondary">
+          <SheetPrimitive.Close className="orderly-absolute orderly-right-[24px] orderly-top-[24px] orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-secondary">
             <CloseIcon size={20} />
             <span className="orderly-sr-only">Close</span>
           </SheetPrimitive.Close>

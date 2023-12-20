@@ -37,7 +37,7 @@ const Switch = React.forwardRef<
 >(({ className, color, thumbClassName, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "orderly-peer orderly-inline-flex orderly-h-[14px] desktop:orderly-h-[20px] orderly-w-[32px] desktop:orderly-w-[40px] orderly-shrink-0 orderly-cursor-pointer orderly-items-center orderly-rounded-full orderly-border-2 desktop:orderly-border-4 orderly-border-transparent orderly-transition-colors focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2 focus-visible:orderly-ring-offset-background disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50",
+      "orderly-peer orderly-inline-flex orderly-h-[14px] desktop:orderly-h-[20px] orderly-w-[32px] desktop:orderly-w-[40px] orderly-shrink-0 orderly-cursor-pointer orderly-items-center orderly-rounded-full orderly-border-2 desktop:orderly-border-4 orderly-border-transparent orderly-transition-colors focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2 focus-visible:orderly-ring-offset-base-700 disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50",
       `orderly-switch orderly-switch-color-${color}`,
       switchVariants({ color, className })
     )}
