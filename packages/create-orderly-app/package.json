@@ -1,0 +1,49 @@
+{
+  "name": "create-orderly-app",
+  "version": "0.1.0",
+  "bin": {
+    "create-orderly-app": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "pnpm watch",
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "script": "ts-node ./scripts/index.ts"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "ejs": "^3.1.9",
+    "execa": "npm:@esm2cjs/execa@6.1.1-cjs.1",
+    "figlet": "^1.7.0",
+    "fs-extra": "^11.2.0",
+    "kleur": "^4.1.5",
+    "lucide-react": "^0.265.0",
+    "ora": "^5.4.1",
+    "prompts": "^2.4.2",
+    "sort-package-json": "^2.6.0",
+    "validate-npm-package-name": "^5.0.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20",
+    "@types/prompts": "^2.4.9",
+
+    "@types/validate-npm-package-name": "^4.0.2",
+    "@types/yargs": "^17.0.32",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+
+    "ts-node": "^10.9.2",
+    "tsup": "^7.1.0",
+    "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
