@@ -192,3 +192,45 @@
     --orderly-font-family: "Manrope", sans-serif;
   }
 }
+
+@media screen and (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    border-style: dashed;
+    border-color: transparent;
+    border-width: 1px;
+    background: rgba(255, 255, 255, 0.04);
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border-style: dashed;
+    border-color: transparent;
+    border-width: 1px;
+    background: rgba(255, 255, 255, 0.04);
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+  }
+}

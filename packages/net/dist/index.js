@@ -669,8 +669,14 @@ var WS = class {
       });
     }, this.reconnectInterval);
   }
-  get publicSocket() {
-    return this._publicSocket;
+  // get publicSocket(): WebSocket {
+  //   return this._publicSocket;
+  // }
+  get client() {
+    return {
+      public: this._publicSocket,
+      private: this.privateSocket
+    };
   }
   on(eventName, callback) {
     var _a;
