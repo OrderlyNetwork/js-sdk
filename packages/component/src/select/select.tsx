@@ -68,11 +68,13 @@ export interface SelectProps
   label?: string;
   options: SelectOption[];
   onChange?: (value: string) => void;
+  contentClassName?: string;
   //   className?: string;
 }
 
 const Select: FC<SelectProps> = ({
   className,
+  contentClassName,
   size,
   disabled,
   color,
@@ -160,6 +162,7 @@ const Select: FC<SelectProps> = ({
         // container={containerRef.current}
         align="start"
         style={{ minWidth: `${width}px` }}
+        className={contentClassName}
         // onPointerDownOutside={(event) => {
         //
         // }}

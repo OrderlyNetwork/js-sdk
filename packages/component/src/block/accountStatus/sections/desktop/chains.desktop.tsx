@@ -117,7 +117,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-px-2 orderly-hide-scrollbar  orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
+        className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-hide-scrollbar  orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
       >
         <ChainListView
           // @ts-ignore

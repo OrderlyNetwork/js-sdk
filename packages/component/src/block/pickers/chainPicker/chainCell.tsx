@@ -15,7 +15,7 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
   const { id, bridgeless, onClick, name, selected } = props;
   return (
     <div
-      className="orderly-flex orderly-items-center orderly-p-4 hover:orderly-bg-base-contrast/5 orderly-cursor-pointer orderly-rounded orderly-font-semibold"
+      className="orderly-flex orderly-items-center orderly-p-4 hover:orderly-bg-base-contrast/5 orderly-cursor-pointer orderly-rounded orderly-font-semibold desktop:orderly-p-3"
       onClick={() => {
         onClick?.({
           id,
@@ -23,13 +23,13 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
         });
       }}
     >
-      <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-space-x-3 orderly-text-3xs orderly-text-base-contrast-80">
+      <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-space-x-3 orderly-text-3xs orderly-text-base-contrast-80 desktop:orderly-space-x-2">
         <NetworkImage type="chain" id={id} rounded />
         <span>{name}</span>
         {bridgeless && <Tag color="primary">Bridgeless</Tag>}
       </div>
       {selected && (
-        <Circle className="orderly-fill-primary-light orderly-stroke-none orderly-w-[8px] orderly-h-[8px]" />
+        <Circle className="orderly-fill-primary-light orderly-stroke-none orderly-w-[8px] orderly-h-[8px] desktop:orderly-ml-1" />
       )}
     </div>
   );

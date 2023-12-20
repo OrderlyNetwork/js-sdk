@@ -2,6 +2,8 @@
 
 const plugin = require("tailwindcss/plugin");
 const path = require("path");
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 import colors from "tailwindcss/colors";
 
 module.exports = {
@@ -32,7 +34,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        manrope: ['Manrope', 'sans-serif']
+        manrope: ['var(--orderly-font-family)', 'sans-serif', ...defaultTheme.fontFamily.mono]
       },
       colors: {
         background: {
