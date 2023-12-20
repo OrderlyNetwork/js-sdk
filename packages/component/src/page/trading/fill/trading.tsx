@@ -38,7 +38,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         {/** header component solt  */}
         <Header />
       </div>
-      <Split lineBar style={{ height: "calc(100vh - 50px)", width: "100vw" }}>
+      <Split lineBar style={{ height: "calc(100vh - 50px - 42px)", width: "100vw" }}>
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
             <Split
