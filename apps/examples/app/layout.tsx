@@ -1,5 +1,5 @@
-import "./orderly.theme.css";
-// import "./woo.theme.css";
+import "./theme/orderly.theme.css";
+// import "./theme/woo.theme.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 

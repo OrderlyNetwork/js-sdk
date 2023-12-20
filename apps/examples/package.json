@@ -7,7 +7,7 @@
     "build:project": "next build",
     "start": "next start",
     "lint": "next lint",
-    "less2css": "lessc ./app/woo.theme.less ./app/woo.theme.css"
+    "less2css": "lessc ./app/theme/woo.theme.less ./app/theme/woo.theme.css"
   },
   "dependencies": {
     "@orderly.network/react": "workspace:*",
