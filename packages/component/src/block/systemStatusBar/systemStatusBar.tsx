@@ -16,8 +16,12 @@ export interface SystemStatusBarProps {
 export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
     const { commutitylist = [CommunityType.facebook, CommunityType.discord, CommunityType.telegram], onClickComutity, powerBy = <OrderlyLogo /> } = props;
 
-    const [wsStatus, setWsStatus] = useState<"connected" | "unstable" | "disconnected">("disconnected");
     const ws = useWS();
+
+    console.log("ws", ws.client);
+
+    // 
+    const [wsStatus, setWsStatus] = useState<"connected" | "unstable" | "disconnected">(ws.client.public.readyState ? "connected" : "disconnected");
     const connectCount = useRef(0);
 
     useEffect(() => {
