@@ -78,8 +78,20 @@ const View = (props: Props) => {
       explore: "https://blocknative.com",
     },
     connect: {
-      // autoConnectLastWallet: true,
+      autoConnectLastWallet: true,
     },
+  };
+
+  const onChainChanged = (chainId: number, isTestnet: boolean) => {
+    // console.log('chain changed', chainId, isTestnet);
+    localStorage.setItem(
+      "orderly-networkId",
+      isTestnet ? "testnet" : "mainnet"
+    );
+    // realod page
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   return (
@@ -88,18 +100,9 @@ const View = (props: Props) => {
         networkId={networkId}
         brokerId="orderly"
         onlyTestnet={false}
-        logoUrl="/orderly_logo.svg"
-        onChainChanged={(chainId, isTestnet) => {
-          // console.log('chain changed', chainId, isTestnet);
-          localStorage.setItem(
-            "orderly-networkId",
-            isTestnet ? "testnet" : "mainnet"
-          );
-          // realod page
-          setTimeout(() => {
-            window.location.reload();
-          }, 100);
-        }}
+        // logoUrl="/orderly_logo.svg"
+        appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
+        onChainChanged={onChainChanged}
       >
         <TradingPage
           symbol={props.symbol}
