@@ -33,7 +33,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
   }, []);
 
   return (
-    <>
+    <div className="orderly-tabular-nums">
       <div className="orderly-app-trading-header orderly-border-b orderly-border-divider">
         {/** header component solt  */}
         <Header />
@@ -84,6 +84,6 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         {/* order entry end */}
       </Split>
       <SystemStatusBar />
-    </>
+    </div>
   );
 };
