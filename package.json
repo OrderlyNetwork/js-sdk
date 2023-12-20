@@ -3,6 +3,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --concurrency=17",
+    "react": "pnpm --filter @orderly.network/react dev",
     "lint": "turbo run lint",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
