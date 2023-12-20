@@ -21,63 +21,67 @@ export const PositionPane = () => {
   const context = useContext(TradingPageContext);
   const { data: tabExtraData } = useTabContext();
 
-  const [symbol, setSymbol] = React.useState(() =>
-    tabExtraData.showAllSymbol ? "" : context.symbol
-  );
+  
+
+  // const [symbol, setSymbol] = React.useState(() =>
+  //   tabExtraData.showAllSymbol ? "" : context.symbol
+  // );
 
   // const onShowAllSymbolChange = (isAll: boolean) => {
   //   setSymbol(isAll ? "" : context.symbol);
   //   setShowAllSymbol(isAll);
   // };
 
-  const [data, info, { loading }] = usePositionStream(symbol);
+  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol);
   const { state } = useAccount();
 
-  const [postOrder] = useMutation<OrderEntity, any>("/v1/order");
+  // const [postOrder] = useMutation<OrderEntity, any>("/v1/order");
 
-  const onLimitClose = useCallback(async (position: API.Position) => {
-    return modal
-      .sheet({
-        title: "Limit Close",
-        content: (
-          <PositionLimitCloseDialog
-            positions={position}
-            side={position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY}
-          />
-        ),
-      })
-      .then(() => {})
-      .catch((e) => {});
-  }, []);
+  // const onLimitClose = useCallback(async (position: API.Position) => {
+  //   return modal
+  //     .sheet({
+  //       title: "Limit Close",
+  //       content: (
+  //         <PositionLimitCloseDialog
+  //           positions={position}
+  //           side={position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY}
+  //         />
+  //       ),
+  //     })
+  //     .then(() => {})
+  //     .catch((e) => {});
+  // }, []);
 
-  const onMarketClose = useCallback(async (position: API.Position) => {
-    return modal
-      .confirm({
-        title: "Market Close",
-        content: <MarkPriceConfirm position={position} />,
-        onCancel: () => {
-          return Promise.reject();
-        },
-        onOk: () => {
-          return postOrder({
-            symbol: position.symbol,
-            side: position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY,
-            order_type: OrderType.MARKET,
-            order_quantity: Math.abs(position.position_qty),
-            reduce_only: true,
-          })
-            .then((res: any) => {
-              // toast.success("success");
-            })
-            .catch((err: Error) => {
-              //
-              toast.error(err.message);
-            });
-        },
-        maxWidth: "xs",
-      })
-      .catch(() => {});
-  }, []);
+  // const onMarketClose = useCallback(async (position: API.Position) => {
+  //   return modal
+  //     .confirm({
+  //       title: "Market Close",
+  //       content: <MarkPriceConfirm position={position} />,
+  //       onCancel: () => {
+  //         return Promise.reject();
+  //       },
+  //       onOk: () => {
+  //         return postOrder({
+  //           symbol: position.symbol,
+  //           side: position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY,
+  //           order_type: OrderType.MARKET,
+  //           order_quantity: Math.abs(position.position_qty),
+  //           reduce_only: true,
+  //         })
+  //           .then((res: any) => {
+  //             // toast.success("success");
+  //           })
+  //           .catch((err: Error) => {
+  //             //
+  //             toast.error(err.message);
+  //           });
+  //       },
+  //       maxWidth: "xs",
+  //     })
+  //     .catch(() => {});
+  // }, []);
+
+  
 
   return (
     <PositionsViewFull
@@ -86,8 +90,8 @@ export const PositionPane = () => {
       }
       aggregated={data.aggregated}
       isLoading={loading}
-      onLimitClose={onLimitClose}
-      onMarketClose={onMarketClose}
+      // onLimitClose={onLimitClose}
+      // onMarketClose={onMarketClose}
       showAllSymbol={tabExtraData.showAllSymbol}
       onSymbolChange={context.onSymbolChange}
     />
