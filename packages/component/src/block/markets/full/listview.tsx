@@ -5,7 +5,7 @@ import { ListView } from "@/listView";
 import { Numeral, Text } from "@/text";
 import { SortGroup } from "./sortGroup";
 import { cn } from "@/utils/css";
-import { ListViewRef } from "@/listView/listView";
+import type { ListViewRef } from "@/listView/listView";
 
 interface Props {
   activeIndex: number;
@@ -60,8 +60,10 @@ export const ListViewFull = forwardRef<
     <div>
       <SortGroup onChange={props.onSort} />
       <ListView<API.MarketInfoExt, number>
+        // @ts-ignore
         ref={ref}
         dataSource={props.dataSource}
+        // @ts-ignore
         renderItem={renderItem}
         className="orderly-text-xs orderly-overflow-y-auto"
         contentClassName="orderly-space-y-0"

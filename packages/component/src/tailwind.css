@@ -5,7 +5,6 @@
 @tailwind utilities;
 
 @layer base {
-
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -134,17 +133,17 @@
     --orderly-color-danger: 232 88 175;
     --orderly-color-danger-light: 255 103 191;
     --orderly-color-danger-darken: 199 68 146;
-    --orderly-color-danger-contrast: 199 68 146;
+    --orderly-color-danger-contrast: 255 255 255;
 
     --orderly-color-success: 3 152 134;
     --orderly-color-success-light: 0 181 159;
     --orderly-color-success-darken: 0 119 105;
-    --orderly-color-success-contrast: 199 68 146;
+    --orderly-color-success-contrast: 255 255 255;
 
     --orderly-color-warning: 255 207 115;
     --orderly-color-warning-light: 255 207 115;
     --orderly-color-warning-darken: 117 88 33;
-    --orderly-color-warning-contrast: 199 68 146;
+    --orderly-color-warning-contrast: 255 255 255;
 
     --orderly-color-fill: 36 32 47;
     --orderly-color-fill-active: 40 46 58;

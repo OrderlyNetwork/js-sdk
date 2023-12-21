@@ -31,9 +31,12 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
     [onSymbolChange]
   );
 
-  const listviewRef = useRef<{
-    scroll: (direction: { x: number; y: number }) => void;
-  }>();
+  const listviewRef = useRef<
+    | {
+        scroll: (direction: { x: number; y: number }) => void;
+      }
+    | undefined
+  >();
 
   const onKeywordChange = (key: string) => {
     onSearch(key);
@@ -77,6 +80,7 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
         onSymbolSelect={onSymbolSelect}
       />
       <ListViewFull
+        // @ts-ignore
         ref={listviewRef}
         activeIndex={activeIndex}
         dataSource={dataSource}
@@ -88,6 +92,3 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
     </div>
   );
 };
-function ForwardedRef<T>(arg0: null) {
-  throw new Error("Function not implemented.");
-}

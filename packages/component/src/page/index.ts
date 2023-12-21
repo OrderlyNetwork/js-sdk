@@ -1,4 +1,4 @@
-export { TradingPage } from "./trading";
+export { TradingPage, DataListView } from "./trading";
 export {
   TradingPageContext,
   type TradingPageContextValue,

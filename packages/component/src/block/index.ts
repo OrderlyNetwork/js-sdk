@@ -1,6 +1,10 @@
 import { TradeHistory } from "./tradeHistory";
 
-export { PositionsView, ClosePositionPane } from "./positions";
+export {
+  PositionsView,
+  ClosePositionPane,
+  PositionsViewFull,
+} from "./positions";
 export type { PositionsViewProps } from "./positions/shared/types";
 
 export { OrderEntry } from "./orderEntry";
@@ -15,7 +19,7 @@ export type { DepositProps } from "./deposit";
 export { Withdraw } from "./withdraw";
 export type { WithdrawProps } from "./withdraw";
 
-export { Markets } from "./markets";
+export { Markets, MarketsFull } from "./markets";
 export type { MarketsProps } from "./markets";
 
 export { WalletConnect } from "./walletConnect";

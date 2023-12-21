@@ -25,6 +25,7 @@ export {
 export * from "./input";
 export * from "./tab";
 export { Progress } from "./progress";
+export { Spinner } from "./spinner";
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
@@ -41,10 +42,12 @@ export {
   Deposit,
   Withdraw,
   Markets,
+  MarketsFull,
   WalletConnect,
   TradeHistory,
   OrdersView,
   PositionsView,
+  PositionsViewFull,
   ClosePositionPane,
   AccountStatusBar,
   AssetAndMarginSheet,

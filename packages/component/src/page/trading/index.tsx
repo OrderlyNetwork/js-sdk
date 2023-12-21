@@ -7,6 +7,8 @@ import { TradingPage as XSTradingPage } from "./xs/trading";
 import { TradingPage as FullTradingPage } from "./fill/trading";
 import { useExecutionReport } from "./hooks/useExecutionReport";
 
+export { DataListView } from "./fill";
+
 export const TradingPage: FC<TradingPageProps> = (props) => {
   useExecutionReport();
   return (

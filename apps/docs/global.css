@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +12,6 @@
 
     --orderly-color-link: 182 79 255;
 
-    --orderly-color-quaternary: 203 66 218;
 
     --orderly-color-secondary: 255 255 255;
     --orderly-color-tertiary: 218 218 218;
@@ -161,7 +162,7 @@
   }
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+
 
 @layer components {
   .code-live pre {

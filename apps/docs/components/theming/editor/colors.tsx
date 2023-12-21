@@ -142,6 +142,11 @@ export const Colors = () => {
               name="--orderly-color-primary-light"
               selector=".orderly-bg-primary-light,.orderly-text-primary-light,.orderly-border-primary-light"
             />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-primary-contrast"
+              selector=".orderly-bg-primary-light,.orderly-bg-primary-darken,.orderly-border-primary"
+            />
           </div>
         </div>
 
@@ -164,51 +169,69 @@ export const Colors = () => {
               name="--orderly-color-success-light"
               selector=".orderly-bg-success-light,.orderly-text-success-light"
             />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-success-contrast"
+              selector=".orderly-bg-success-light,.orderly-bg-success-darken,.orderly-border-success"
+            />
           </div>
         </div>
       </div>
 
-      <div>
-        <div>Danger</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-danger-darken"
-            selector=".orderly-bg-danger-darken,.orderly-text-danger-darken"
-          />
+      <div className="flex gap-5">
+        <div>
+          <div>Danger</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-danger-darken"
+              selector=".orderly-bg-danger-darken,.orderly-text-danger-darken"
+            />
 
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-danger"
-            selector="orderly-bg-danger,orderly-text-danger"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-danger-light"
-            selector=".orderly-bg-danger-light,.orderly-text-danger-light"
-          />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-danger"
+              selector="orderly-bg-danger,orderly-text-danger"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-danger-light"
+              selector=".orderly-bg-danger-light,.orderly-text-danger-light"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-danger-contrast"
+              selector=".orderly-bg-danger-light,.orderly-bg-danger-darken,.orderly-border-danger"
+            />
+          </div>
+        </div>
+        <div>
+          <div>Warning</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-warning-darken"
+              selector=".orderly-bg-warning-darken,.orderly-text-warning-darken"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-warning"
+              selector=".orderly-bg-warning,.orderly-text-warning"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-warning-light"
+              selector=".orderly-bg-warning-light,.orderly-text-warning-light"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-warning-contrast"
+              selector=".orderly-bg-warning-light,.orderly-bg-warning-darken,.orderly-border-warning"
+            />
+          </div>
         </div>
       </div>
-      <div>
-        <div>Warning</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-warning-darken"
-            selector=".orderly-bg-warning-darken,.orderly-text-warning-darken"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-warning"
-            selector=".orderly-bg-warning,.orderly-text-warning"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-warning-light"
-            selector=".orderly-bg-warning-light,.orderly-text-warning-light"
-          />
-        </div>
-      </div>
+
       <div>
         <div>Trade</div>
         <div className="flex gap-2 py-1">
