@@ -5,7 +5,7 @@ import { type API } from "@orderly.network/types";
 import { useDataSource } from "./useDataSource";
 import { MarketsProps, SortDirection } from "./shared/types";
 
-export const Markets: FC<MarketsProps> = (props) => {
+export const Markets: FC<MarketsProps & {listHeight?: number}> = (props) => {
   const [dataSource, { searchKey, onSearch, onSort }] = useDataSource(
     props.dataSource
   );
@@ -20,6 +20,7 @@ export const Markets: FC<MarketsProps> = (props) => {
         dataSource={dataSource}
         onItemClick={props.onItemClick}
         onSort={onSort}
+        listHeight={props.listHeight}
       />
     </>
   );
