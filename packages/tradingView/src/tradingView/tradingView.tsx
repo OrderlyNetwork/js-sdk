@@ -9,7 +9,7 @@ import {WS} from "@orderly.network/net";
 import {ResolutionString} from "./tradingViewAdapter/charting_library";
 
 
-interface TradingViewPorps {
+export interface TradingViewPorps {
     symbol: string;
     libraryPath: string;
     tradingViewScriptSrc: string;
