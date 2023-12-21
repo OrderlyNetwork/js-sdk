@@ -130,7 +130,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
               />
             )}
             <div className="orderly-flex orderly-gap-5">
-              <div className="orderly-flex orderly-gap-2 orderly-items-center">
+              <div className="orderly-flex orderly-gap-1 first-letter:orderly-items-center">
                 <Checkbox
                   id="orderConfirm"
                   checked={props.showConfirm}
@@ -150,7 +150,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 control={control}
                 render={({ field }) => {
                   return (
-                    <div className="orderly-flex orderly-gap-2 orderly-items-center">
+                    <div className="orderly-flex orderly-gap-1 orderly-items-center">
                       <Checkbox
                         id="hidden"
                         checked={field.value === 0}
