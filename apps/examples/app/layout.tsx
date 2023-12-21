@@ -1,9 +1,7 @@
-import "./theme/orderly.theme.css";
-// import "./theme/woo.theme.css";
+import "./theme/index.css";
+// import "./theme/orderly.theme.css";
+import "./theme/woo.theme.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Orderly SDK Example",
@@ -17,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

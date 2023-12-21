@@ -1,6 +1,7 @@
 "use client";
 
 import "@orderly.network/react/dist/styles.css";
+import "../../theme/styles.css";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
