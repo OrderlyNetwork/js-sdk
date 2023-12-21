@@ -1,7 +1,11 @@
+"use client";
+
 import { useDemoContext } from "@/components/demoContext";
 import { hexToRgb, rgbToHex } from "@/utils/color";
-import { useState } from "react";
-import { defaultStyles } from "../mergeStyles";
+import { useEffect, useState } from "react";
+import { defaultStyles, getDefaultColors } from "../mergeStyles";
+
+// const colors = getDefaultColors();
 
 const ColorInput = ({
   name,
@@ -12,7 +16,13 @@ const ColorInput = ({
   selector?: string;
   onChange: (name: string, color: string) => void;
 }) => {
-  const [color, setColor] = useState(rgbToHex(defaultStyles[name]));
+  const { colors } = useDemoContext();
+
+  const [color, setColor] = useState(rgbToHex(colors[name]));
+
+  useEffect(() => {
+    setColor(rgbToHex(colors[name]));
+  }, [colors[name]]);
 
   return (
     <input

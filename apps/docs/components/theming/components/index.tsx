@@ -14,18 +14,23 @@ import { ClosePositionPaneComponent } from "./closePositionPane";
 import { ThemeEditor } from "../editor";
 import { ChainListComponent } from "./chainlist";
 import { useThemeUpdate } from "../useThemeUpdate";
-import { useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { PositionsComponent } from "./positions";
+import { DemoContext } from "@/components/demoContext";
 
 const Components = () => {
-  const rootRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLElement>(null);
+  const [root, setRoot] = useState<HTMLElement>();
+  // const {cssVars} = useContext(DemoContext);
 
-  useThemeUpdate(rootRef.current);
+  useThemeUpdate(root);
+
+  // useEffect(() => {}, [cssVars]);
 
   return (
     <div
       className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5"
-      ref={rootRef}
+      ref={(ref) => setRoot(ref as HTMLElement)}
     >
       <Card maxHeight={500} className="bg-base-700">
         <MarketsComponent />

@@ -13,15 +13,17 @@ export const OrderEntryComponent = () => {
   const formState = useOrderEntry(symbol, side, reduceOnly);
 
   return (
-    <OrderEntry
-      {...formState}
-      showConfirm
-      side={side}
-      onSideChange={setSide}
-      symbol={symbol}
-      onReduceOnlyChange={setReduceOnly}
-      disabled={state.status < AccountStatusEnum.EnableTrading}
-      onDeposit={() => {}}
-    />
+    <div className="py-5">
+      <OrderEntry
+        {...formState}
+        showConfirm
+        side={side}
+        onSideChange={setSide}
+        symbol={symbol}
+        onReduceOnlyChange={setReduceOnly}
+        disabled={state.status < AccountStatusEnum.EnableTrading}
+        onDeposit={() => {}}
+      />
+    </div>
   );
 };

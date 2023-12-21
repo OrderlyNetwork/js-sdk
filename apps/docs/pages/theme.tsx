@@ -15,7 +15,7 @@ export default function Page() {
   // const previewElement= useMemo(() => {
   return (
     <DemoContextProvider>
-      <div className="bg-base-900 min-h-screen components-page">
+      <div className="bg-neutral-950 min-h-screen components-page">
         <NavBar />
 
         <Toolbar />

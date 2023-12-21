@@ -1,3 +1,5 @@
+import { getStorage } from "@/helper/storage";
+
 export const defaultStyles = {
   "--orderly-color-primary": "182 79 255",
   "--orderly-color-primary-light": "208 140 255",
@@ -63,6 +65,14 @@ export const defaultStyles = {
   "--orderly-font-size-base": "16px",
 
   "--orderly-color-divider": "42 46 52",
+};
+
+export const getDefaultColors = () => {
+  const data = getStorage("THEME_DOCUMENT");
+  return {
+    ...defaultStyles,
+    ...data,
+  };
 };
 
 export const mergeStyles = (key: string, value: string) => {

@@ -6,7 +6,7 @@ import { Typography } from "./typography";
 
 export const ThemeEditor = () => {
   return (
-    <div className="z-30 w-[380px] rounded-xl bg-base-800 sticky top-[80px]">
+    <div className="z-30 w-[380px] rounded-xl bg-neutral-900 sticky top-[80px]">
       <EditorHeader />
       <div>
         <SectionPane title="Colors">

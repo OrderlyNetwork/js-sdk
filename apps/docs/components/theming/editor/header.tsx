@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { SimpleDialog, toast, Dialog } from "@orderly.network/react";
 import { CSSCodeHighline } from "@/components/cssHighline";
-import { Copy } from "lucide-react";
+import { Code, Copy, ListRestart } from "lucide-react";
+import { useDemoContext } from "@/components/demoContext";
 
 export const EditorHeader = () => {
   const [open, setOpen] = useState(false);
+  const { resetTheme } = useDemoContext();
 
   const [code, setCode] = useState("");
 
@@ -29,14 +31,23 @@ export const EditorHeader = () => {
           <span>🎨</span>
           <span>Theme builder</span>
         </div>
-        <div className="text-base-contrast-54">
+        <div className="text-base-contrast-54 flex items-center gap-3">
           <button
+            className="rounded hover:bg-white/10 active:bg-base-300 p-1"
+            onClick={() => {
+              resetTheme();
+            }}
+          >
+            <ListRestart size={20} />
+          </button>
+          <button
+            className="rounded hover:bg-white/10 active:bg-base-300 p-1"
             onClick={() => {
               getThemeCode();
               setOpen(true);
             }}
           >
-            code
+            <Code size={20} />
           </button>
         </div>
       </div>

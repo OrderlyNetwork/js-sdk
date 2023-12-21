@@ -5,7 +5,8 @@ import {
   useLocalStorage,
   useSessionStorage,
 } from "@orderly.network/hooks";
-import { defaultStyles } from "./theming/mergeStyles";
+import { defaultStyles, getDefaultColors } from "./theming/mergeStyles";
+// import { setStorage, removeStorage } from "@/helper/storage";
 
 export enum EditorViewMode {
   Component,
@@ -16,6 +17,10 @@ export enum EditorViewMode {
 export interface DemoContextState {
   symbol: string;
   viewMode: EditorViewMode;
+  colors: any;
+  // cssVars: any;
+  clearStorageTheme: () => void;
+  resetTheme: () => void;
   onViewModeChange: (mode: EditorViewMode) => void;
   onSymbolChange: (symbol: API.Symbol) => void;
   onThemeChange: (key: string, value: string) => void;
@@ -26,17 +31,29 @@ export const DemoContext = createContext({} as DemoContextState);
 export const DemoContextProvider = ({ children }) => {
   const [currentSymbol, setCurrentSymbol] = useState<string>();
   const [viewMode, setViewMode] = useState(EditorViewMode.Component);
+  // const [colors, setColors] = useState<any>(defaultStyles);
+  const [colors, setColors] = useSessionStorage<any>(
+    "THEME_DOCUMENT",
+    defaultStyles
+  );
+
+  console.log("----", colors);
 
   const { data: symbols } = useQuery<API.MarketInfo[]>(`/v1/public/futures`, {
     revalidateOnFocus: false,
   });
 
-  const [styleVars, setStyleVars] = useSessionStorage<any>(
-    "THEME_DOCUMENT",
-    defaultStyles
-  );
+  // const [styleVars, setStyleVars] = useSessionStorage<any>(
+  //   "THEME_DOCUMENT",
+  //   defaultStyles
+  // );
 
   const cssVarWrap = useRef<HTMLDivElement | null>(null);
+  // const colors = getDefaultColors();
+
+  // useEffect(() => {
+  //   setColors(getDefaultColors());
+  // }, []);
 
   useEffect(() => {
     if (Array.isArray(symbols)) {
@@ -56,7 +73,28 @@ export const DemoContextProvider = ({ children }) => {
     // setStyleVars((prev) => ({ ...prev, [key]: value }));
     // console.log("setStyleVars", key, value);
     // cssVarWrap.current?.style.setProperty(key, value);
-    setStyleVars((prev) => ({ ...prev, [key]: value }));
+    // setStyleVars((prev) => ({ ...prev, [key]: value }));
+    // sessionStorage.setItem("THEME_DOCUMENT", JSON.stringify({ [key]: value }));
+    // setStorage("THEME_DOCUMENT", { [key]: value });
+
+    setColors((prev) => ({ ...prev, [key]: value }));
+
+    const event = new CustomEvent("theme-changed", {
+      detail: { key, value },
+    });
+
+    // window.document.body.dispatchEvent(event);
+    cssVarWrap.current?.dispatchEvent(event);
+  };
+
+  const clearStorageTheme = () => {
+    // removeStorage("THEME_DOCUMENT");
+    setColors(defaultStyles);
+  };
+
+  const resetTheme = () => {
+    // removeStorage("THEME_DOCUMENT");
+    setColors(defaultStyles);
   };
 
   if (!currentSymbol) return null;
@@ -65,13 +103,17 @@ export const DemoContextProvider = ({ children }) => {
     <DemoContext.Provider
       value={{
         symbol: currentSymbol,
+        colors,
         onSymbolChange,
         onThemeChange,
         viewMode,
+        clearStorageTheme,
+        resetTheme,
+        // cssVars:styleVars,
         onViewModeChange: onPreviewModeChange,
       }}
     >
-      <div ref={cssVarWrap} style={styleVars} id="theme-root-el">
+      <div ref={cssVarWrap} id="theme-root-el">
         {children}
       </div>
     </DemoContext.Provider>

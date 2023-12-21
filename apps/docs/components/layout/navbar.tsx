@@ -11,9 +11,9 @@ export const NavBar = () => {
     return router.pathname.startsWith(path);
   };
   return (
-    <div className="h-[65px] sticky top-0 z-50 border-b border-base-400 relative">
+    <div className="h-[65px] sticky top-0 z-50 border-b border-base-400">
       <div className="topnav"></div>
-      <div className="flex flex-row items-center justify-between h-full max-w-[90rem] m-auto px-[24px]">
+      <div className="flex flex-row items-center justify-between h-full m-auto px-[20px]">
         <Link href="/docs/hooks/overview">
           <img
             src="https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png"
