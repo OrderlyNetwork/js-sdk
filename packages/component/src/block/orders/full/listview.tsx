@@ -10,11 +10,14 @@ import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { CancelButton } from "./cancelButton";
 import { OrderQuantity } from "./quantity";
 import { Price } from "./price";
+import { EndReachedBox } from "@/listView/endReachedBox";
 
 interface Props {
   dataSource: any[];
   status: OrderStatus;
   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
+  loading?: boolean;
+  loadMore?: () => void;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
@@ -111,23 +114,29 @@ export const Listview: FC<Props> = (props) => {
     return columns;
   }, [props.status]);
   return (
-    <Table
-      bordered
-      justified
-      columns={columns}
-      dataSource={props.dataSource}
-      headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-      className={"orderly-text-2xs orderly-text-base-contrast-80"}
-      generatedRowKey={(record) => record.order_id}
-      renderRowContainer={(record, index, children) => {
-        return (
-          <SymbolProvider
-            key={index}
-            symbol={record.symbol}
-            children={children}
-          />
-        );
-      }}
-    />
+    <EndReachedBox onEndReached={() => {
+      if (!props.loading) {
+        props.loadMore?.();
+      }
+    }}>
+      <Table
+        bordered
+        justified
+        columns={columns}
+        dataSource={props.dataSource}
+        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
+        className={"orderly-text-2xs orderly-text-base-contrast-80"}
+        generatedRowKey={(record) => record.order_id}
+        renderRowContainer={(record, index, children) => {
+          return (
+            <SymbolProvider
+              key={index}
+              symbol={record.symbol}
+              children={children}
+            />
+          );
+        }}
+      />
+    </EndReachedBox>
   );
 };

@@ -34,6 +34,8 @@ export const OrdersViewFull: FC<Props> = (props) => {
           dataSource={props.dataSource}
           status={props.status}
           onCancelOrder={props.cancelOrder}
+          loading={props.isLoading}
+          loadMore={props.loadMore}
         />
       </div>
     </OrderListProvider>

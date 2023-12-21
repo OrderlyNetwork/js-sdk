@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { Markets } from "@/block/markets";
 import { ArrowIcon } from "@/icon";
 import { Sheet, SheetContent, SheetTrigger } from "@/sheet";
@@ -25,6 +25,20 @@ export const Market: FC<Props> = (props) => {
     [onSymbolChange]
   );
 
+  const [innerHeight, setInnerHeight] = useState(window.innerHeight - 180);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerHeight(window.innerHeight - 180);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -43,6 +57,7 @@ export const Market: FC<Props> = (props) => {
           // @ts-ignore
           dataSource={data}
           onItemClick={onSymbolClick}
+          listHeight={innerHeight}
         />
       </SheetContent>
     </Sheet>
