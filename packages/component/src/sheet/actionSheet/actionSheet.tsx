@@ -67,7 +67,7 @@ export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
 
       <SheetContent
         closeable={false}
-        className="orderly-p-0"
+        className="orderly-action-sheet-content orderly-p-0"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <ActionSheetContent

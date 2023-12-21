@@ -38,7 +38,8 @@ const OrderTypeItem: FC<{
   value: OrderType;
   onClick: (value: OrderType | "") => void;
 }> = (props) => {
-  let clsName = "orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer";
+  let clsName =
+    "orderly-flex orderly-items-center orderly-gap-1 orderly-cursor-pointer";
   if (props.active) {
     clsName += " orderly-text-base-contrast";
   } else {
@@ -53,10 +54,10 @@ const OrderTypeItem: FC<{
     >
       <button
         type="button"
-        className="orderly-w-[14px] orderly-h-[14px] orderly-rounded-full orderly-border-2 orderly-border-base-contrast-20"
+        className="orderly-order-entry-radio-button orderly-w-[14px] orderly-h-[14px] orderly-rounded-full orderly-border-2 orderly-border-base-contrast-20"
       >
         {props.active && (
-          <Circle className="orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
+          <Circle className="orderly-order-entry-radio-circle orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
         )}
       </button>
       <span className="orderly-text-3xs">{props.label}</span>

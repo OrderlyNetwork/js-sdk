@@ -66,7 +66,10 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
           align="right"
         />
       </div>
-      <div className="orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center">
+      <div
+        id="orderly-data-list-positions-filter"
+        className="orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center"
+      >
         <div className="orderly-flex orderly-items-center orderly-gap-2">
           <Checkbox
             id={"showAll"}

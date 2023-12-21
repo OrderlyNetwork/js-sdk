@@ -19,6 +19,7 @@ import { TabViewMode } from "./constants";
 import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
 
 export interface TabsProps {
+  id?: string;
   value?: string;
   // d?: string;
   onTabChange?: (value: string) => void;
@@ -243,7 +244,7 @@ const TabsInner = (
       onToggleCollapsed={onToggleCollapsed}
       height={height}
     >
-      <div ref={containerRef} className="orderly-min-h-0 orderly-max-h-full">
+      <div id={props.id} ref={containerRef} className="orderly-min-h-0 orderly-max-h-full">
         {tabHeader}
 
         <MemorizedTabContent

@@ -13,7 +13,10 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
   const { mode } = useContext(OrderBookContext);
 
   return (
-    <div className="orderly-flex orderly-flex-col orderly-gap-[1px]">
+    <div
+      id="orderly-order-book-list"
+      className="orderly-flex orderly-flex-col orderly-gap-[1px]"
+    >
       {data.map((item, index) => {
         return (
           <OrderBookCell

@@ -20,33 +20,37 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
   const isTable = useMediaQuery(MEDIA_TABLE);
 
   if (isTable) {
-    return (<div className="orderly-pt-2">
+    return (
+      <div id="orderly-order-book-depth" className="orderly-pt-2">
+        {/* <Select size={"small"} value={"0.001"} /> */}
+        <Picker
+          options={options}
+          fullWidth
+          size={"small"}
+          value={props.value}
+          className="orderly-text-4xs orderly-text-base-contrast-54"
+          onValueChange={(value) => {
+            //
+            props.onChange?.(value.value);
+          }}
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="orderly-pt-2">
       {/* <Select size={"small"} value={"0.001"} /> */}
-      <Picker
+      <Select
         options={options}
         fullWidth
         size={"small"}
         value={props.value}
-        className="orderly-text-4xs orderly-text-base-contrast-54"
-        onValueChange={(value) => {
-          //
-          props.onChange?.(value.value);
+        className="orderly-text-4xs orderly-text-base-contrast-54 orderly-bg-base-700 desktop:orderly-text-base-contrast"
+        contentClassName="orderly-bg-base-800"
+        onChange={(value: any) => {
+          props.onChange?.(value);
         }}
       />
-    </div>);
-  }
-  return (<div className="orderly-pt-2">
-    {/* <Select size={"small"} value={"0.001"} /> */}
-    <Select
-      options={options}
-      fullWidth
-      size={"small"}
-      value={props.value}
-      className="orderly-text-4xs orderly-text-base-contrast-54 orderly-bg-base-700 desktop:orderly-text-base-contrast"
-      contentClassName="orderly-bg-base-800"
-      onChange={(value: any) => {
-        props.onChange?.(value);
-      }}
-    />
-  </div>);
+    </div>
+  );
 };

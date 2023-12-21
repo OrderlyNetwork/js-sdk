@@ -45,7 +45,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   const formState = useOrderEntry(symbol, side, reduceOnly);
 
   return (
-    <div className="orderly-pl-1" id="my-order-entry" ref={containerRef}>
+    <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
       <OrderEntry
         {...formState}
         showConfirm

@@ -215,7 +215,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   }, [quantity, maxAmount, availableBalance]);
 
   return (
-    <>
+    <div id="orderly-withdraw">
       <div className="orderly-flex orderly-items-center orderly-py-2 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
         <div className="orderly-flex-1">
           {"Your " + brokerName + " account"}
@@ -284,6 +284,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         loading={submitting}
         openChainPicker={openChainPicker}
       />
-    </>
+    </div>
   );
 };

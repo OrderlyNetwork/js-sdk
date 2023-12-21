@@ -112,7 +112,7 @@ export const Chains: FC<ChainsProps> = (props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button
-          id="orderly-account-status-bar-switch-chain-button"
+          id="orderly-botom-bar-switch-chain-button"
           variant={"outlined"}
           size={"small"}
           color={"buy"}

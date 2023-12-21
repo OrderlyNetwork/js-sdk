@@ -337,6 +337,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 <span className="orderly-text-base-contrast-36">USDC</span>
               </div>
               <Button
+                id="orderly-order-entry-deposit-button"
                 variant={"text"}
                 size={"small"}
                 type="button"

@@ -11,17 +11,26 @@ export const DataListView = () => {
 
   return (
     <Tabs
+      id="orderly-data-list"
       value={activeTab}
       onTabChange={setActiveTab}
       tabBarClassName="orderly-bg-base-700 orderly-text-3xs"
     >
-      <TabPane title={<PositionTabTitle />} value="positions">
+      <TabPane
+        title={<PositionTabTitle />}
+        value="positions"
+        id="orderly-data-list-positions"
+      >
         <PositionPane />
       </TabPane>
-      <TabPane title={<MemoizedOrdersTabTitle />} value="orders">
+      <TabPane
+        title={<MemoizedOrdersTabTitle />}
+        value="orders"
+        id="orderly-data-list-pending"
+      >
         <OrdersPane />
       </TabPane>
-      <TabPane title="History" value="history">
+      <TabPane title="History" value="history" id="orderly-data-list-history">
         <HistoryPane />
       </TabPane>
     </Tabs>

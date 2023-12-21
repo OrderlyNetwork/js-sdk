@@ -41,7 +41,10 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, []);
 
   return (
-    <div className={cn("orderly-pr-1", props.className)}>
+    <div
+      id="orderly-order-book"
+      className={cn("orderly-pr-1", props.className)}
+    >
       <SymbolProvider symbol={symbol}>
         <OrderBook
           level={7}
