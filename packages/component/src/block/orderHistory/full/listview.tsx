@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef } from "react";
 import { Table } from "@/table";
 import { Text } from "@/text";
 import { OrderStatus, OrderSide, API } from "@orderly.network/types";
@@ -6,14 +6,12 @@ import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
 import { SymbolProvider } from "@/provider";
-import { NumeralWithCtx } from "@/text/numeralWithCtx";
-// import { CancelButton } from "./cancelButton";
-// import { OrderQuantity } from "./quantity";
-// import { Price } from "./price";
+import { EndReachedBox } from "@/listView/endReachedBox";
 
 interface Props {
   dataSource: API.OrderExt[];
   loading?: boolean;
+  loadMore?: () => void;
   //   status: OrderStatus;
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
 }
@@ -151,7 +149,12 @@ export const Listview: FC<Props> = (props) => {
     return columns;
   }, []);
   return (
-    <Table
+    <EndReachedBox onEndReached={() => {
+      if (!props.loading) {
+        props.loadMore?.();
+      }
+    }}>
+      <Table
       bordered
       justified
       columns={columns}
@@ -170,5 +173,6 @@ export const Listview: FC<Props> = (props) => {
         );
       }}
     />
+    </EndReachedBox>
   );
 };

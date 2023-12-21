@@ -27,7 +27,11 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
         className="orderly-overflow-y-auto"
         style={{ height: `${(height?.content ?? 100) - 55}px` }}
       >
-        <Listview dataSource={props.dataSource} loading={props.isLoading} />
+        <Listview
+          dataSource={props.dataSource}
+          loading={props.isLoading}
+          loadMore={props.loadMore}
+        />
       </div>
     </>
   );

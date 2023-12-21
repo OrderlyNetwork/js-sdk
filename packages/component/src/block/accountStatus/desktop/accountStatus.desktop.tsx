@@ -124,7 +124,7 @@ export const AccountStatus: FC<AccountStatusProps & { className?: string, dropMe
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className=" orderly-bg-base-800 orderly-w-[220px] orderly-px-4 orderly-pb-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20"
+          className="orderly-bg-base-800 orderly-w-[220px] orderly-px-4 orderly-pb-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20"
           alignOffset={10}
         >
 
