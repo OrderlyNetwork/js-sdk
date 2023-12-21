@@ -45,7 +45,7 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-border orderly-bg-base-600 orderly-p-1 orderly-text-popover-foreground orderly-shadow-lg data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
+      "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded orderly-border orderly-bg-base-600 orderly-p-1 orderly-text-popover-foreground orderly-shadow-lg data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -65,7 +65,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded-md orderly-bg-base-600 orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2",
+        "orderly-z-50 orderly-min-w-[8rem] orderly-overflow-hidden orderly-rounded orderly-bg-base-600 orderly-p-1 orderly-text-popover-foreground orderly-shadow-md orderly-py-2",
         "data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0 data-[state=closed]:orderly-zoom-out-95 data-[state=open]:orderly-zoom-in-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
         className
       )}

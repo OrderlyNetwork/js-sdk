@@ -192,7 +192,7 @@ const DesktopChainSelect: FC<{ chains: any, settingChain: any, currentChain: any
     <DropdownMenuContent
       align="start"
       style={{ width: "241px" }}
-      className="orderly-borderRadius-sm orderly-bg-base-700 orderly-max-h-[250px] orderly-overflow-y-auto orderly-overflow-hidden orderly-hide-scrollbar orderly-mt-2 orderly-shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]"
+      className="orderly-rounded-sm orderly-bg-base-700 orderly-max-h-[250px] orderly-overflow-y-auto orderly-overflow-hidden orderly-hide-scrollbar orderly-mt-2 orderly-shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]"
     >
       {chains.map((chain: any, index: number) => {
         return (

@@ -6,7 +6,10 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("orderly-animate-pulse orderly-rounded-md orderly-bg-base-contrast/10", className)}
+      className={cn(
+        "orderly-animate-pulse orderly-rounded orderly-bg-base-contrast/10",
+        className
+      )}
       {...props}
     />
   );

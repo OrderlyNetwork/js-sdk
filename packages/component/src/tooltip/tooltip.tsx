@@ -16,7 +16,7 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "orderly-z-50 orderly-overflow-hidden orderly-rounded-md orderly-border orderly-bg-base-600 orderly-px-3 orderly-py-1.5 orderly-text-3xs orderly-text-popover-foreground orderly-shadow-md orderly-animate-in orderly-fade-in-0 orderly-zoom-in-95 data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=closed]:orderly-zoom-out-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
+      "orderly-z-50 orderly-overflow-hidden orderly-rounded orderly-border orderly-bg-base-600 orderly-px-3 orderly-py-1.5 orderly-text-3xs orderly-text-popover-foreground orderly-shadow-md orderly-animate-in orderly-fade-in-0 orderly-zoom-in-95 data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=closed]:orderly-zoom-out-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -52,7 +52,7 @@ const Tooltip: React.FC<
         side="top"
         align="center"
         className={cn(
-          "orderly-z-50 orderly-overflow-hidden orderly-rounded-md orderly-bg-base-400 orderly-px-3 orderly-py-1.5 orderly-text-3xs orderly-text-base-contrast orderly-shadow-md orderly-animate-in orderly-fade-in-0 orderly-zoom-in-95 data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=closed]:orderly-zoom-out-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
+          "orderly-z-50 orderly-overflow-hidden orderly-rounded orderly-bg-base-400 orderly-px-3 orderly-py-1.5 orderly-text-3xs orderly-text-base-contrast orderly-shadow-md orderly-animate-in orderly-fade-in-0 orderly-zoom-in-95 data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=closed]:orderly-zoom-out-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
           className
         )}
         {...props}

@@ -2,7 +2,7 @@ import { cn } from "@/utils/css";
 import { VariantProps, cva } from "class-variance-authority";
 import { FC, PropsWithChildren } from "react";
 
-const tagVariants = cva(["orderly-rounded-[4px]", "orderly-px-2", "orderly-text-4xs", "orderly-inline-block"], {
+const tagVariants = cva(["orderly-rounded-sm", "orderly-px-2", "orderly-text-4xs", "orderly-inline-block"], {
   variants: {
     size: {
       small: "orderly-h-[16px]",

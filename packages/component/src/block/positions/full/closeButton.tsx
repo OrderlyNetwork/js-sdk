@@ -50,7 +50,7 @@ export const CloseButton = () => {
         <button
           disabled={disabled}
           className={cn(
-            "orderly-border orderly-border-base-contrast-36 orderly-text-base-contrast-54 orderly-rounded-md orderly-w-full orderly-h-[28px] hover:orderly-bg-base-contrast/10 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed",
+            "orderly-border orderly-border-base-contrast-36 orderly-text-base-contrast-54 orderly-rounded orderly-w-full orderly-h-[28px] hover:orderly-bg-base-contrast/10 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed",
             {
               "orderly-text-base-contrast-80 orderly-border-base-contrast-80":
                 open,

@@ -23,7 +23,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "orderly-group orderly-pointer-events-auto orderly-relative orderly-flex orderly-w-full orderly-items-center orderly-justify-between orderly-space-x-2 orderly-overflow-hidden orderly-rounded-md orderly-border orderly-p-4 orderly-pr-6 orderly-shadow-lg orderly-transition-all data-[swipe=cancel]:orderly-translate-x-0 data-[swipe=end]:orderly-translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:orderly-translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:orderly-transition-none data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[swipe=end]:orderly-animate-out data-[state=closed]:orderly-fade-out-80 data-[state=closed]:orderly-slide-out-to-right-full data-[state=open]:orderly-slide-in-from-top-full data-[state=open]:sm:orderly-slide-in-from-bottom-full",
+  "orderly-group orderly-pointer-events-auto orderly-relative orderly-flex orderly-w-full orderly-items-center orderly-justify-between orderly-space-x-2 orderly-overflow-hidden orderly-rounded orderly-border orderly-p-4 orderly-pr-6 orderly-shadow-lg orderly-transition-all data-[swipe=cancel]:orderly-translate-x-0 data-[swipe=end]:orderly-translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:orderly-translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:orderly-transition-none data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[swipe=end]:orderly-animate-out data-[state=closed]:orderly-fade-out-80 data-[state=closed]:orderly-slide-out-to-right-full data-[state=open]:orderly-slide-in-from-top-full data-[state=open]:sm:orderly-slide-in-from-bottom-full",
   {
     variants: {
       variant: {
@@ -60,7 +60,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "orderly-inline-flex orderly-h-8 orderly-shrink-0 orderly-items-center orderly-justify-center orderly-rounded-md orderly-border orderly-bg-transparent orderly-px-3 orderly-text-3xs orderly-font-medium orderly-transition-colors hover:orderly-bg-secondary focus:orderly-outline-none focus:orderly-ring-1 focus:orderly-ring-ring disabled:orderly-pointer-events-none disabled:orderly-opacity-50 group-[.destructive]:orderly-border-muted/40 group-[.destructive]:hover:orderly-border-destructive/30 group-[.destructive]:hover:orderly-bg-destructive group-[.destructive]:hover:orderly-text-destructive-foreground group-[.destructive]:focus:orderly-ring-destructive",
+      "orderly-inline-flex orderly-h-8 orderly-shrink-0 orderly-items-center orderly-justify-center orderly-rounded orderly-border orderly-bg-transparent orderly-px-3 orderly-text-3xs orderly-font-medium orderly-transition-colors hover:orderly-bg-secondary focus:orderly-outline-none focus:orderly-ring-1 focus:orderly-ring-ring disabled:orderly-pointer-events-none disabled:orderly-opacity-50 group-[.destructive]:orderly-border-muted/40 group-[.destructive]:hover:orderly-border-destructive/30 group-[.destructive]:hover:orderly-bg-destructive group-[.destructive]:hover:orderly-text-destructive-foreground group-[.destructive]:focus:orderly-ring-destructive",
       className
     )}
     {...props}
@@ -75,7 +75,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "orderly-absolute orderly-right-1 orderly-top-1 orderly-rounded-md orderly-p-1 orderly-text-foreground/50 orderly-opacity-0 orderly-transition-opacity hover:orderly-text-foreground focus:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-1 group-hover:orderly-opacity-100 group-[.destructive]:orderly-text-red-300 group-[.destructive]:hover:orderly-text-red-50 group-[.destructive]:focus:orderly-ring-red-400 group-[.destructive]:focus:orderly-ring-offset-red-600",
+      "orderly-absolute orderly-right-1 orderly-top-1 orderly-rounded orderly-p-1 orderly-text-foreground/50 orderly-opacity-0 orderly-transition-opacity hover:orderly-text-foreground focus:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-1 group-hover:orderly-opacity-100 group-[.destructive]:orderly-text-red-300 group-[.destructive]:hover:orderly-text-red-50 group-[.destructive]:focus:orderly-ring-red-400 group-[.destructive]:focus:orderly-ring-offset-red-600",
       className
     )}
     toast-close=""
@@ -92,7 +92,10 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
-    className={cn("orderly-text-3xs orderly-font-semibold [&+div]:orderly-text-4xs", className)}
+    className={cn(
+      "orderly-text-3xs orderly-font-semibold [&+div]:orderly-text-4xs",
+      className
+    )}
     {...props}
   />
 ));
