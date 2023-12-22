@@ -126,7 +126,6 @@ export const Chains: FC<ChainsProps> = (props) => {
           testChains={testChains}
           onItemClick={(item: any) => {
             setOpen(false);
-            console.log("click chain ", item);
             
             if (connectedChain) {
               setChain({ chainId: item.id }).then((success: boolean) => {

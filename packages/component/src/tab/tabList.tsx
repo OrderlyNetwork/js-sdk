@@ -57,7 +57,7 @@ export const TabList: FC<TabListProps> = (props) => {
       const { left, width } = target.getBoundingClientRect();
       const { left: parentLeft } = boxRef.current?.getBoundingClientRect();
 
-      console.log("left", left, width, parentLeft);
+      // console.log("left", left, width, parentLeft);
 
       // const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
 
