@@ -173,6 +173,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       >
         <div
           className={cn(
+            "orderly-input-container",
+            props.readOnly && "orderly-input-container-readonly",
             "orderly-flex orderly-flex-row orderly-items-center orderly-rounded focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
             inputVariants({
               size,
@@ -193,6 +195,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...(props as any)}
             disabled={!!disabled}
             className={cn(
+              "orderly-input",
               "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20",
               typeof prefix !== "undefined" && "orderly-px-0",
               className

@@ -40,7 +40,7 @@
     --orderly-color-base-300: 57 65 85;
     --orderly-color-base-400: 51 57 72;
     --orderly-color-base-500: 40 46 58;
-    --orderly-color-base-600: 32 37 57;
+    --orderly-color-base-600: 32 37 47;
     --orderly-color-base-700: 27 32 40;
     --orderly-color-base-800: 24 28 35;
     --orderly-color-base-900: 24 28 35;
@@ -108,20 +108,13 @@
     background-color: #4B5369;
   }
 
-  .orderly-confirm-dialog-cancal-button {
-    background-color: #D92D6B;
-  }
-
-
   // 字体大小覆盖
   #orderly-top-nav-bar, #orderly-chart-view-tabs {
     font-size: 14px;
   }
 
-  #orderly-leverage {
-    div, span {
-      font-size: 12px;
-    }
+  #orderly-leverage .orderly-text-4xs{
+    font-size: 12px;
   }
 
   .orderly-order-book-list-item div {
@@ -136,12 +129,66 @@
     .orderly-text-4xs {
       font-size: 12px;
     }
-    .orderly-button, .orderly-segmented-button {
+    .orderly-button-variant-contained, .orderly-segmented-button, .orderly-input {
       font-size: 14px;
     }
 
+    .orderly-input {
+      color: rgba(255, 255, 255, 0.9)
+    }
+
+    .orderly-select, .orderly-select-menu, .orderly-input-container {
+      background-color:rgb(var(--orderly-color-base-500));
+    }
+
+    .orderly-input-container-readonly {
+      background-color:rgb(var(--orderly-color-base-600));
+    }
+
+    .orderly-order-entry-radio-button .orderly-order-entry-radio-circle {
+      color:rgba(255, 255, 255, 0.8);
+      background-color:rgba(255, 255, 255, 0.8);
+    }
   }
 
-  .orderly-action-sheet-content {
-    
+
+  #orderly-order-book-depth div {
+    font-size: 12px;
+    color:#fff;
+  }
+  
+  .orderly-action-sheet-content div{
+    font-size: 16px;
+  }
+
+  #orderly-data-list {
+    #tab-positions, #tab-orders, #tab-history {
+      font-size: 14px;
+    }
+
+    #orderly-data-list-positions, #orderly-data-list-pending, #orderly-data-list-history {
+      .orderly-text-4xs {
+        font-size: 12px;
+      }
+
+      .orderly-text-3xs, .orderly-text-2xs {
+        font-size: 14px;
+      }
+
+      .orderly-data-list-filter .orderly-text-4xs {
+        font-size: 12px;
+        color:#fff;
+      }
+    }
+  }
+
+  .orderly-confirm-dialog-content {
+    .orderly-dialog-title, .orderly-dialog-body .orderly-text-2xs {
+      font-size: 16px;
+      color:#fff;
+    }
+
+    .orderly-dialog-footer button {
+      background-color: #FF447C;
+    }
   }

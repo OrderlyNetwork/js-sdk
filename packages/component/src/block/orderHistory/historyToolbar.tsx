@@ -23,7 +23,7 @@ export const HistoryToolbar: FC<HistoryToolbarProps> = (props) => {
   }, []);
 
   return (
-    <div className="orderly-flex orderly-gap-3 orderly-py-3 orderly-px-4 orderly-items-center">
+    <div className="orderly-data-list-filter orderly-flex orderly-gap-3 orderly-py-3 orderly-px-4 orderly-items-center">
       {/* <SidePicker /> */}
       <Picker
         options={sideOptions}

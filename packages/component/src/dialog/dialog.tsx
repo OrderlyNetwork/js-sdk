@@ -40,6 +40,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
+      "orderly-dialog-overlay",
       "orderly-fixed orderly-inset-0 orderly-z-50 orderly-bg-black/70 orderly-backdrop-blur-sm data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0",
       className
     )}
@@ -60,12 +61,21 @@ const DialogContent = React.forwardRef<
 
     <DialogPrimitive.Content
       ref={ref}
-      className={cn(dialogVariants({ maxWidth }), className)}
+      className={cn(
+        "orderly-dialog-content",
+        dialogVariants({ maxWidth }),
+        className
+      )}
       {...props}
     >
       {children}
       {closable && (
-        <DialogPrimitive.Close className="orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
+        <DialogPrimitive.Close
+          className={cn(
+            "orderly-dialog-close",
+            "orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground"
+          )}
+        >
           <CloseIcon size={20} />
           <span className="orderly-sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -82,6 +92,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
+      "orderly-dialog-header",
       "orderly-px-5 orderly-pb-5 orderly-flex orderly-flex-col orderly-text-[16px] orderly-relative after:orderly-content after:orderly-block after:orderly-absolute after:orderly-bottom-0 after:orderly-left-5 after:orderly-right-5 after:orderly-h-[1px] after:orderly-bg-base-contrast/10 after:orderly-mt-5",
       className
     )}
@@ -96,6 +107,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
+      "orderly-dialog-footer",
       "orderly-px-5 orderly-grid orderly-grid-cols-2 sm:orderly-flex sm:orderly-flex-row sm:orderly-justify-end orderly-gap-3",
       className
     )}
@@ -110,7 +122,11 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("orderly-text-xs orderly-leading-none desktop:orderly-text-xl", className)}
+    className={cn(
+      "orderly-dialog-title",
+      "orderly-text-xs orderly-leading-none desktop:orderly-text-xl",
+      className
+    )}
     {...props}
   />
 ));
@@ -123,6 +139,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
+      "orderly-dialog-description",
       "orderly-text-3xs orderly-text-muted-foreground orderly-text-left",
       className
     )}
@@ -137,7 +154,11 @@ export interface DialogBodyProps {
 
 const DialogBody: FC<PropsWithChildren<DialogBodyProps>> = (props) => {
   const { children, className } = props;
-  return <div className={cn("orderly-px-5", className)}>{children}</div>;
+  return (
+    <div className={cn("orderly-dialog-body", "orderly-px-5", className)}>
+      {children}
+    </div>
+  );
 };
 
 DialogBody.displayName = "DialogBody";
