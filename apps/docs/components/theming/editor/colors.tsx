@@ -3,7 +3,7 @@
 import { useDemoContext } from "@/components/demoContext";
 import { hexToRgb, rgbToHex } from "@/utils/color";
 import { useEffect, useState } from "react";
-import { defaultStyles, getDefaultColors } from "../mergeStyles";
+// import { defaultStyles, getDefaultColors } from "../mergeStyles";
 
 // const colors = getDefaultColors();
 
@@ -16,13 +16,13 @@ const ColorInput = ({
   selector?: string;
   onChange: (name: string, color: string) => void;
 }) => {
-  const { colors } = useDemoContext();
+  const { theme } = useDemoContext();
 
-  const [color, setColor] = useState(rgbToHex(colors[name]));
+  const [color, setColor] = useState(rgbToHex(theme[name]));
 
   useEffect(() => {
-    setColor(rgbToHex(colors[name]));
-  }, [colors[name]]);
+    setColor(rgbToHex(theme[name]));
+  }, [theme[name]]);
 
   return (
     <input

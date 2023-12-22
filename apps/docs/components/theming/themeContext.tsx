@@ -2,7 +2,7 @@
 
 import { createContext, FC, PropsWithChildren } from "react";
 import { useParams } from "next/navigation";
-import { trpc } from "@/utils/trpc";
+// import { trpc } from "@/utils/trpc";
 
 interface ThemeContextState {
   theme: any;

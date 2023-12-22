@@ -2,26 +2,35 @@ import { useState } from "react";
 import { SimpleDialog, toast, Dialog } from "@orderly.network/react";
 import { CSSCodeHighline } from "@/components/cssHighline";
 import { Code, Copy, ListRestart } from "lucide-react";
-import { useDemoContext } from "@/components/demoContext";
+import { EditorViewMode, useDemoContext } from "@/components/demoContext";
+import { default as defaultStyles } from "../../../constants/theme";
 
 export const EditorHeader = () => {
   const [open, setOpen] = useState(false);
-  const { resetTheme } = useDemoContext();
+  const { resetTheme, viewMode, theme } = useDemoContext();
 
   const [code, setCode] = useState("");
+  // const [theme] = useSessionStorage<any>("THEME_DOCUMENT", defaultStyles);
 
   const getThemeCode = () => {
-    const rootEl = document.getElementById("theme-root-el");
-    if (!rootEl) return "";
+    // const rootEl = document.getElementById("theme-root-el");
+    // if (!rootEl) return "";
 
-    const style = rootEl.style;
+    // setCode(
+    //   `:root {\r\n${!!style.cssText
+    //     .replaceAll("; ", ";\r\n")
+    //     .replaceAll("--", "    --")
+    //     .trimEnd()}\r\n}`
+    // );
+    const cssText: string[] = [];
 
-    setCode(
-      `:root {\r\n${style.cssText
-        .replaceAll("; ", ";\r\n")
-        .replaceAll("--", "    --")
-        .trimEnd()}\r\n}`
-    );
+    for (const key in theme) {
+      cssText.push(`  ${key}: ${theme[key]};`);
+    }
+
+    // console.log("cssText", cssText.join("\r\n"));
+
+    setCode(`:root {\r\n${cssText.join("\r\n").trimEnd()}\r\n}`);
   };
 
   return (
@@ -54,6 +63,7 @@ export const EditorHeader = () => {
       <SimpleDialog
         open={open}
         title={"Theme"}
+        contentClassName="!max-w-[800px]"
         onOpenChange={(open) => {
           setOpen(open);
         }}

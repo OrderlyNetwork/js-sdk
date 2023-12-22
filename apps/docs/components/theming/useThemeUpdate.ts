@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDemoContext } from "../demoContext";
 
 export const useThemeUpdate = (root?: HTMLElement) => {
-  const { colors } = useDemoContext();
+  const { theme: colors } = useDemoContext();
   useEffect(() => {
     // const data = sessionStorage.getItem("THEME_DOCUMENT");
     // console.log("*******", data, root);

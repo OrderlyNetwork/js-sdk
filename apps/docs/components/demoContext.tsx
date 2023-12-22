@@ -5,7 +5,7 @@ import {
   useLocalStorage,
   useSessionStorage,
 } from "@orderly.network/hooks";
-import { defaultStyles, getDefaultColors } from "./theming/mergeStyles";
+import defaultStyles, { getDefaultColors } from "./theming/mergeStyles";
 // import { setStorage, removeStorage } from "@/helper/storage";
 
 export enum EditorViewMode {
@@ -17,7 +17,7 @@ export enum EditorViewMode {
 export interface DemoContextState {
   symbol: string;
   viewMode: EditorViewMode;
-  colors: any;
+  theme: any;
   // cssVars: any;
   clearStorageTheme: () => void;
   resetTheme: () => void;
@@ -32,12 +32,10 @@ export const DemoContextProvider = ({ children }) => {
   const [currentSymbol, setCurrentSymbol] = useState<string>();
   const [viewMode, setViewMode] = useState(EditorViewMode.Component);
   // const [colors, setColors] = useState<any>(defaultStyles);
-  const [colors, setColors] = useSessionStorage<any>(
+  const [theme, setTheme] = useSessionStorage<any>(
     "THEME_DOCUMENT",
     defaultStyles
   );
-
-  console.log("----", colors);
 
   const { data: symbols } = useQuery<API.MarketInfo[]>(`/v1/public/futures`, {
     revalidateOnFocus: false,
@@ -77,7 +75,7 @@ export const DemoContextProvider = ({ children }) => {
     // sessionStorage.setItem("THEME_DOCUMENT", JSON.stringify({ [key]: value }));
     // setStorage("THEME_DOCUMENT", { [key]: value });
 
-    setColors((prev) => ({ ...prev, [key]: value }));
+    setTheme((prev) => ({ ...prev, [key]: value }));
 
     const event = new CustomEvent("theme-changed", {
       detail: { key, value },
@@ -89,12 +87,12 @@ export const DemoContextProvider = ({ children }) => {
 
   const clearStorageTheme = () => {
     // removeStorage("THEME_DOCUMENT");
-    setColors(defaultStyles);
+    setTheme(defaultStyles);
   };
 
   const resetTheme = () => {
     // removeStorage("THEME_DOCUMENT");
-    setColors(defaultStyles);
+    setTheme(defaultStyles);
   };
 
   if (!currentSymbol) return null;
@@ -103,7 +101,7 @@ export const DemoContextProvider = ({ children }) => {
     <DemoContext.Provider
       value={{
         symbol: currentSymbol,
-        colors,
+        theme,
         onSymbolChange,
         onThemeChange,
         viewMode,

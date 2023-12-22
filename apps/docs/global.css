@@ -9,9 +9,9 @@
     --orderly-color-primary: 182 79 255;
     --orderly-color-primary-light: 208 140 255;
     --orderly-color-primary-darken: 152 62 214;
+    --orderly-color-primary-contrast: 255 255 255;
 
     --orderly-color-link: 182 79 255;
-
 
     --orderly-color-secondary: 255 255 255;
     --orderly-color-tertiary: 218 218 218;
@@ -21,17 +21,17 @@
     --orderly-color-danger: 232 88 175;
     --orderly-color-danger-light: 255 103 191;
     --orderly-color-danger-darken: 199 68 146;
+    --orderly-color-danger-contrast: 255 255 255;
 
     --orderly-color-success: 3 152 134;
     --orderly-color-success-light: 0 181 159;
     --orderly-color-success-darken: 0 119 105;
+    --orderly-color-success-contrast: 255 255 255;
 
     --orderly-color-warning: 255 207 115;
-    --orderly-color-warning-light: 229 199 0;
-    --orderly-color-warning-darken: 229 199 0;
-
-    --orderly-color-background: 27 32 40;
-    --orderly-color-background-contrast: 255 255 255;
+    --orderly-color-warning-light: 255 207 115;
+    --orderly-color-warning-darken: 117 88 33;
+    --orderly-color-warning-contrast: 255 255 255;
 
     --orderly-color-fill: 36 32 47;
     --orderly-color-fill-active: 40 46 58;
@@ -46,15 +46,12 @@
     --orderly-color-base-800: 29 26 38;
     --orderly-color-base-900: 22 20 28;
 
-    --orderly-color-popover: 43 38 56;
-    --orderly-color-popover-foreground: 255 255 255;
-
     --orderly-color-base-foreground: 255 255 255;
 
     --orderly-color-trading-loss: 255 103 194;
-    --orderly-color-trading-loss-contrast: 40 46 58;
+    --orderly-color-trading-loss-contrast: 255 103 194;
     --orderly-color-trading-profit: 0 181 159;
-    --orderly-color-trading-profit-contrast: 40 46 58;
+    --orderly-color-trading-profit-contrast: 0 181 159;
 
     /* rounded */
     --orderly-rounded: 6px;
@@ -64,7 +61,18 @@
 
     --orderly-button-shadow: none;
 
+    /** custom font sizes, if only provide --orderly-font-size-base var, other font sizes will auto calc */
+    --orderly-font-size-4xs: 11px;
+    --orderly-font-size-3xs: 12px;
+    --orderly-font-size-2xs: 13px;
+    --orderly-font-size-xs: 14px;
+    --orderly-font-size-sm: 15px;
     --orderly-font-size-base: 16px;
+    --orderly-font-size-lg: 18px;
+    --orderly-font-size-xl: 20px;
+    --orderly-font-size-2xl: 24px;
+    --orderly-font-size-3xl: 30px;
+    --orderly-font-size-4xl: 36px;
 
     --orderly-color-divider: 42 46 52;
 
@@ -161,8 +169,6 @@
     background-color: #6f98f7;
   }
 }
-
-
 
 @layer components {
   .code-live pre {

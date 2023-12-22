@@ -19,9 +19,8 @@ import { PositionsComponent } from "./positions";
 import { DemoContext } from "@/components/demoContext";
 
 const Components = () => {
-  const rootRef = useRef<HTMLElement>(null);
   const [root, setRoot] = useState<HTMLElement>();
-  // const {cssVars} = useContext(DemoContext);
+  // const { theme } = useContext(DemoContext);
 
   useThemeUpdate(root);
 
@@ -30,6 +29,7 @@ const Components = () => {
   return (
     <div
       className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5"
+      id="theme-root-el"
       ref={(ref) => setRoot(ref as HTMLElement)}
     >
       <Card maxHeight={500} className="bg-base-700">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { defaultStyles } from "../mergeStyles";
+// import { defaultStyles } from "../mergeStyles";
 import { useDemoContext } from "@/components/demoContext";
 import { Input } from "@orderly.network/react";
 
@@ -12,7 +12,8 @@ const RoundedInput = ({
   label: string;
   onChange: (name: string, value: string) => void;
 }) => {
-  const [value, setValue] = useState(defaultStyles[name].replace("px", ""));
+  const { theme } = useDemoContext();
+  const [value, setValue] = useState(theme[name].replace("px", ""));
   return (
     <div className="flex flex-col items-center gap-1">
       <Input

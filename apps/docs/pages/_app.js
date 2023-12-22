@@ -8,7 +8,7 @@ import "@orderly.network/react/dist/styles.css";
 export default function MyApp({ Component, pageProps }) {
   return (
     <ConnectorProvider>
-      <OrderlyAppProvider brokerId="orderly" networkId="testnet">
+      <OrderlyAppProvider brokerId="orderly" brokerName="Orderly" networkId="testnet">
         <Component {...pageProps} />
       </OrderlyAppProvider>
     </ConnectorProvider>

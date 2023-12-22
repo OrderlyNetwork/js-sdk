@@ -31,7 +31,7 @@ export const IframeView: FC<Props> = (props) => {
     >
       <iframe
         ref={(ref) => setIframeRef(ref?.contentDocument?.body as HTMLElement)}
-        id="theme-iframe-el"
+        id="theme-root-el"
         src="/preview"
         className={"w-full border-none shadow-xl "}
         style={{ width, height }}
