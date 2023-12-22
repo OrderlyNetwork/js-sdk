@@ -26,6 +26,6 @@
     "@orderly.network/hooks": "workspace:^",
     "@orderly.network/react": "workspace:^",
     "@orderly.network/web3-onboard": "workspace:^",
-    "@orderly.network/tradingView": "workspace:^"
+    "@orderly.network/trading-view": "workspace:^"
   }
 }
