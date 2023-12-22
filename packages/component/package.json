@@ -8,6 +8,7 @@
     "dist"
   ],
   "scripts": {
+    "watch": "tsup --watch --clean=false",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup && pnpm run build-tailwind",
     "build:tsup": "tsup",
