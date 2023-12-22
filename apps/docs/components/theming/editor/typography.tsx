@@ -74,6 +74,36 @@ export const Typography = () => {
           label="sm"
           onChange={onThemeChange}
         />
+        <FontSizeInput
+          name="--orderly-font-size-base"
+          label="base"
+          onChange={onThemeChange}
+        />
+        <FontSizeInput
+          name="--orderly-font-size-lg"
+          label="lg"
+          onChange={onThemeChange}
+        />
+        <FontSizeInput
+          name="--orderly-font-size-xl"
+          label="xl"
+          onChange={onThemeChange}
+        />
+        <FontSizeInput
+          name="--orderly-font-size-2xl"
+          label="2xl"
+          onChange={onThemeChange}
+        />
+        <FontSizeInput
+          name="--orderly-font-size-3xl"
+          label="3xl"
+          onChange={onThemeChange}
+        />
+        <FontSizeInput
+          name="--orderly-font-size-4xl"
+          label="4xl"
+          onChange={onThemeChange}
+        />
       </div>
       <Input type="text" placeholder="font-family" />
     </div>

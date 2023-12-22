@@ -14,7 +14,7 @@ const CollapsibleContent: FC<CollapsiblePrimitive.CollapsibleContentProps> = (
       {...props}
       className={cn(
         props.className,
-        "data-[state=open]:orderly-collapsible-down data-[state=closed]:orderly-collapsible-up"
+        "data-[state=open]:orderly-animate-collapsible-down data-[state=closed]:orderly-animate-collapsible-up orderly-overflow-hidden"
       )}
     ></CollapsiblePrimitive.CollapsibleContent>
   );

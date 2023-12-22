@@ -86,9 +86,9 @@
     background: none;
     border: 0;
     cursor: pointer;
-    height: 2.5em;
+    height: 2em;
     padding: 0;
-    width: 2.5em;
+    width: 2em;
   }
   ::-webkit-color-swatch-wrapper {
     padding: 0;

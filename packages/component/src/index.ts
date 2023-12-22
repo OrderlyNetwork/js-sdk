@@ -26,6 +26,12 @@ export * from "./input";
 export * from "./tab";
 export { Progress } from "./progress";
 export { Spinner } from "./spinner";
+export {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Collapse,
+} from "./collapsible";
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";

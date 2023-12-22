@@ -14,20 +14,22 @@ export const OrderBookComponent = () => {
     });
 
   return (
-    <OrderBook
-      level={7}
-      asks={data.asks!}
-      bids={data.bids!}
-      markPrice={data.markPrice}
-      lastPrice={data.middlePrice!}
-      depth={allDepths!}
-      activeDepth={depth!}
-      base={symbolInfo("base")}
-      quote={symbolInfo("quote")}
-      isLoading={isLoading}
-      onItemClick={onItemClick}
-      onDepthChange={onDepthChange}
-      cellHeight={22}
-    />
+    <div className="py-5">
+      <OrderBook
+        level={7}
+        asks={data.asks!}
+        bids={data.bids!}
+        markPrice={data.markPrice}
+        lastPrice={data.middlePrice!}
+        depth={allDepths!}
+        activeDepth={depth!}
+        base={symbolInfo("base")}
+        quote={symbolInfo("quote")}
+        isLoading={isLoading}
+        onItemClick={onItemClick}
+        onDepthChange={onDepthChange}
+        cellHeight={22}
+      />
+    </div>
   );
 };

@@ -19,7 +19,7 @@ export default function Page() {
         <NavBar />
 
         <Toolbar />
-        <div className="mr-[420px] ml-3">
+        <div className="mr-[380px] ml-3">
           <ThemePreview />
         </div>
 

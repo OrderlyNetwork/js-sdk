@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import {CollapsibleContent,CollapsibleTrigger} from '@orderly.network/react'
 
 interface Props {
   title: string;

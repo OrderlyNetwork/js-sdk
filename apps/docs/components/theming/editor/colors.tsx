@@ -241,51 +241,52 @@ export const Colors = () => {
           </div>
         </div>
       </div>
+      <div className="flex gap-5">
+        <div>
+          <div>Trade</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-trading-profit"
+              selector=".orderly-bg-trade-profit,.orderly-text-trade-profit"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-trading-profit-contrast"
+              selector=".orderly-bg-trade-profit-contrast,.orderly-text-trade-profit-contrast"
+            />
 
-      <div>
-        <div>Trade</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-trading-profit"
-            selector=".orderly-bg-trade-profit,.orderly-text-trade-profit"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-trading-profit-contrast"
-            selector=".orderly-bg-trade-profit-contrast,.orderly-text-trade-profit-contrast"
-          />
-
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-trading-loss"
-            selector=".orderly-bg-trade-loss,.orderly-text-trade-loss"
-          />
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-trading-loss-contrast"
-            selector=".orderly-bg-trade-loss-contrast,.orderly-text-trade-loss-contrast"
-          />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-trading-loss"
+              selector=".orderly-bg-trade-loss,.orderly-text-trade-loss"
+            />
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-trading-loss-contrast"
+              selector=".orderly-bg-trade-loss-contrast,.orderly-text-trade-loss-contrast"
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <div>Divider</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-divider"
-            selector=".orderly-bg-divider,.orderly-text-divider,.orderly-border-divider"
-          />
+        <div>
+          <div>Divider</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-divider"
+              selector=".orderly-bg-divider,.orderly-text-divider,.orderly-border-divider"
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <div>Link</div>
-        <div className="flex gap-2 py-1">
-          <ColorInput
-            onChange={onThemeChange}
-            name="--orderly-color-link"
-            selector=".orderly-bg-link,.orderly-text-link,.orderly-border-link"
-          />
+        <div>
+          <div>Link</div>
+          <div className="flex gap-2 py-1">
+            <ColorInput
+              onChange={onThemeChange}
+              name="--orderly-color-link"
+              selector=".orderly-bg-link,.orderly-text-link,.orderly-border-link"
+            />
+          </div>
         </div>
       </div>
 
