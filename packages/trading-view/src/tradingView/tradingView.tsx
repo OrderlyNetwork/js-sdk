@@ -6,11 +6,9 @@ import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service'
 
 import { useWS } from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
-import {ResolutionString} from "./tradingViewAdapter/charting_library";
 
 
-interface TradingViewPorps {
-    symbol: string;
+export interface TradingViewOptions {
     libraryPath: string;
     tradingViewScriptSrc: string;
     tradingViewCustomCssUrl?: string;
@@ -21,24 +19,79 @@ interface TradingViewPorps {
     fullscreen?: boolean;
 }
 
+export interface TradingViewPorps {
+    symbol?: string;
+    tradingViewOptions? : TradingViewOptions;
+}
+
+function Link(props: {
+    url: string;
+    children?:any;
+}) {
+    return (
+        <span onClick={() => window.open(props.url)} style={{
+            color: 'rgba(var(--orderly-color-primary, 1))',
+
+        }}>
+            {props.children}
+        </span>
+    )
+}
+
+
+const getOveriides = () => {
+    const upColor = "#00B59F";
+    const downColor = "#FF67C2";
+    const  overrides =  {
+        "paneProperties.background": "#16141c",
+        // "paneProperties.background": "#ffff00",
+        // "mainSeriesProperties.style": 1,
+        "paneProperties.backgroundType": "solid",
+        // "paneProperties.background": "#151822",
+
+        "mainSeriesProperties.candleStyle.upColor": upColor,
+        "mainSeriesProperties.candleStyle.downColor": downColor,
+        "mainSeriesProperties.candleStyle.borderColor": upColor,
+        "mainSeriesProperties.candleStyle.borderUpColor": upColor,
+        "mainSeriesProperties.candleStyle.borderDownColor": downColor,
+        "mainSeriesProperties.candleStyle.wickUpColor": upColor,
+        "mainSeriesProperties.candleStyle.wickDownColor": downColor,
+        "paneProperties.separatorColor": "#2B2833",
+        "paneProperties.vertGridProperties.color": "#26232F",
+        "paneProperties.horzGridProperties.color": "#26232F",
+        "scalesProperties.textColor": "#97969B",
+    };
+    const     studiesOverrides = {
+        "volume.volume.color.0": "#613155",
+        "volume.volume.color.1": "#14494A",
+    };
+
+    return  {
+        overrides,
+        studiesOverrides,
+    }
+}
+
 export function TradingView({
-                                symbol, libraryPath, tradingViewScriptSrc, tradingViewCustomCssUrl, interval, overrides,
-                                theme,
-                                studiesOverrides,
-    fullscreen,
+                                symbol,
+                                tradingViewOptions,
                             }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
+
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
     useEffect(() => {
+        if (!tradingViewOptions || !tradingViewOptions.tradingViewScriptSrc) {
+            return;
+        }
         if (chartRef.current) {
 
             const script = document.createElement("script");
             script.setAttribute("data-nscript", "afterInteractive");
-            script.src = tradingViewScriptSrc;
+            script.src =tradingViewOptions.tradingViewScriptSrc;
             script.async = true;
             script.type = "text/javascript";
             script.onload = () => {
@@ -50,19 +103,31 @@ export function TradingView({
             chartRef.current.appendChild(script);
 
         }
-    }, [chartRef]);
+    }, [chartRef, tradingViewOptions]);
 
     const onChartClick = () => {
     }
     const layoutId = 'TradingViewSDK';
 
     useEffect(() => {
-        if (!chartingLibrarySciprtReady) {
+        if (!chartingLibrarySciprtReady || !tradingViewOptions) {
             return;
         }
+
+        const {
+            libraryPath, tradingViewScriptSrc, tradingViewCustomCssUrl, interval,
+            overrides: customOverrides,
+            theme,
+            studiesOverrides: customeStudiesOverrides,
+            fullscreen,
+        } = tradingViewOptions;
+
+        const defaultOverrides = getOveriides();
+        const overrides = customOverrides ? Object.assign({}, defaultOverrides.overrides, customOverrides) : defaultOverrides.overrides;
+        const studiesOverrides = customeStudiesOverrides ? Object.assign({}, defaultOverrides.studiesOverrides, customeStudiesOverrides) : defaultOverrides.studiesOverrides;
         if (chartRef.current) {
             const options: any = {
-                fullscreen:fullscreen ?? false,
+                fullscreen: fullscreen ?? false,
                 autosize: true,
                 symbol,
                 // locale: getLocale(),
@@ -98,7 +163,9 @@ export function TradingView({
     }, [chartingLibrarySciprtReady]);
 
     useEffect(() => {
-        console.log('symbol', symbol);
+        if (!symbol) {
+            return;
+        }
         chart.current?.setSymbol(symbol);
         const service = new WebsocketService(ws as WS);
         service.subscribeSymbol(symbol);
@@ -109,7 +176,40 @@ export function TradingView({
     return (
         <div style={{
             height: '100%', width: '100%', margin: '0 auto'
-        }} ref={chartRef}></div>
+        }} ref={chartRef}>
+            {(!tradingViewOptions || !tradingViewOptions.tradingViewScriptSrc) &&
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                }}>
+
+                <div style={{
+                    color: 'rgb(var(--orderly-color-base-foreground) / 0.98)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'left',
+                    height: '100%',
+                    padding: '20px',
+                    fontSize: '14px',
+                    lineHeight:'1.3rem',
+                    margin: '0 auto',
+                }}>
+                    <p style={{
+                        marginBottom: '24px',
+                    }}>Due to TradingView's policy, you will need to apply for your own license.</p>
+
+                    <p style={{
+                        marginBottom:'12px',
+                    }}>1.&nbsp;Please apply for your TradingView license <Link url=''>here</Link>.</p>
+                    <p>2.&nbsp;Follow the instructions on <Link url=''>sdk.orderly.network</Link> to set up.</p>
+            </div>
+                </div>
+            }
+        </div>
 
     );
 }
