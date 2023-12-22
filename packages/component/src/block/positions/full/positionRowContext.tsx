@@ -42,7 +42,8 @@ export const usePositionsRowContext = () => {
 export const PositionsRowProvider: FC<
   PropsWithChildren<{ position: API.PositionExt }>
 > = (props) => {
-  const [quantity, setQuantity] = useState<string>(props.position.position_qty);
+  
+  const [quantity, setQuantity] = useState<string>(Math.abs(props.position.position_qty).toString());
 
   const [price, setPrice] = useState<string>("");
   const [side, setSide] = useState<OrderSide>(
