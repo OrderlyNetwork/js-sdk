@@ -8,8 +8,8 @@
 
     --orderly-color-link: 96 140 255;
  
-    --orderly-color-secondary: 255 255 255;
-    --orderly-color-tertiary: 218 218 218;
+    --orderly-color-secondary: 51 57 72;
+    --orderly-color-tertiary: 97 100 104;
     --orderly-color-quaternary: 218 218 218;
 
     /** Danger / Sell / Short */
@@ -43,7 +43,7 @@
     --orderly-color-base-600: 32 37 47;
     --orderly-color-base-700: 27 32 40;
     --orderly-color-base-800: 24 28 35;
-    --orderly-color-base-900: 24 28 35;
+    --orderly-color-base-900: 19 21 25;
  
     --orderly-color-base-foreground: 255 255 255;
 
@@ -175,20 +175,111 @@
         font-size: 14px;
       }
 
-      .orderly-data-list-filter .orderly-text-4xs {
-        font-size: 12px;
-        color:#fff;
+      .orderly-text-base-contrast-20 {
+        color:rgba(255, 255, 255, 0.36)
+      }
+
+      .orderly-data-list-filter {
+        .orderly-text-4xs {
+          font-size: 12px;
+          color:#fff;
+        }
+        label {
+          font-size: 12px;
+        }
+      }
+
+      .orderly-button.orderly-button-variant-outlined {
+        color:rgb(var(--orderly-color-tertiary))
       }
     }
   }
 
-  .orderly-confirm-dialog-content {
-    .orderly-dialog-title, .orderly-dialog-body .orderly-text-2xs {
+  .orderly-dialog-content .orderly-dialog-title {
+    font-size: 16px;
+    color:#fff;
+  }  
+
+  .orderly-confirm-dialog {
+    .orderly-dialog-body .orderly-text-2xs {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.54);
+    }
+
+    .orderly-dialog-footer .orderly-confirm-dialog-cancal-button {
+      background-color: #FF447C;
+    }
+
+    #orderly-market-close-dialog-content {
       font-size: 16px;
       color:#fff;
     }
+  }
 
-    .orderly-dialog-footer button {
-      background-color: #FF447C;
+  .orderly-modal-alert {
+    .orderly-button-variant-contained.orderly-button-color-primary {
+      width: 200px;
     }
+  }
+
+  #orderly-deposit-and-withdraw {
+    .orderly-text-4xs {
+      font-size: 12px;
+    }
+
+    .orderly-text-2xs, .orderly-text-3xs, .orderly-text-sm {
+      font-size: 14px;
+    }
+
+    .orderly-wallet-picker {
+      color: rgba(255, 255, 255, 0.98);
+    }
+
+    .orderly-deposit-action-button-container, .orderly-withdraw-action-button-container {
+      width: 200px;
+    }
+
+    .orderly-quantity-input-max, .orderly-token-select {
+      font-size: 12px;
+    }
+  }
+
+  #orderly-asset-and-margin-sheet {
+    #orderly-asset-and-margin-sheet-title {
+      font-size: 20px;
+    }
+
+    #orderly-asset-and-margin-sheet-content {
+      font-size: 14px;
+      .orderly-text-4xs {
+        font-size: 12px;
+      }
+
+      .orderly-text-2xs {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.36);
+      }
+    }
+  }
+
+  #my-account-sheet-title {
+    font-size: 20px;
+  }
+
+  #orderly-markets-sheet-content {
+    #orderly-markets-sheet-title {
+      font-size: 20px;
+    }
+
+    .orderly-text-4xs {
+      font-size: 12px;
+    }
+
+    .orderly-text-2xs {
+      font-size: 14px;
+    }    
+
+    .orderly-markets-search-icon {
+      color: rgba(255, 255, 255, 0.98);
+    }  
   }
