@@ -72,7 +72,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
         },
       },
     ];
-  }, []);
+  }, [base, quote]);
 
   return (
     <Table

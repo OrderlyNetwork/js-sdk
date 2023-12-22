@@ -12,29 +12,28 @@ export const MyOrderBookAndTrade: FC<Props> = (props) => {
   const [value, setValue] = useState("orderbook");
 
   return (
-    <Tabs
-      value={value}
-      onTabChange={(value) => setValue(value)}
-      allowUngroup
-      fullWidth
-      keepAlive
-      autoFit
-      minWidth={280}
-      tabBarClassName="orderly-h-[48px] orderly-text-sm"
-    >
-      <TabPane title="Orderbook" value="orderbook">
-        <SymbolProvider symbol={props.symbol}>
+    <SymbolProvider symbol={props.symbol}>
+      <Tabs
+        value={value}
+        onTabChange={(value) => setValue(value)}
+        allowUngroup
+        fullWidth
+        keepAlive
+        autoFit
+        minWidth={280}
+        tabBarClassName="orderly-h-[48px] orderly-text-sm"
+      >
+        <TabPane title="Orderbook" value="orderbook">
           <MemorizedOrderBook
             symbol={props.symbol}
             className={"orderly-px-3"}
           />
-        </SymbolProvider>
-      </TabPane>
-      <TabPane title="Last trades" value="tradeHistory">
-        <SymbolProvider symbol={props.symbol}>
+        </TabPane>
+        <TabPane title="Last trades" value="tradeHistory">
           <MemorizedTradeHistoryFull symbol={props.symbol} />
-        </SymbolProvider>
-      </TabPane>
-    </Tabs>
+        </TabPane>
+      </Tabs>
+    </SymbolProvider>
+
   );
 };
