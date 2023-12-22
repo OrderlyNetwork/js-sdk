@@ -26,15 +26,18 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       placeholder={"Search instrument"}
       onClean={onClean}
       value={props.value}
-      containerClassName="orderly-bg-base-900"
-      className="orderly-text-2xs"
+      containerClassName="orderly-markets-search orderly-bg-base-900"
+      className="orderly-markets-search-input orderly-text-2xs"
       onChange={(event) => {
         props.onChange?.(event.target.value);
       }}
       prefix={
         <InputMask>
           {/* @ts-ignore */}
-          <Search size={16} className="orderly-text-base-contrast-20" />
+          <Search
+            size={16}
+            className="orderly-markets-search-icon orderly-text-base-contrast-20"
+          />
         </InputMask>
       }
     />

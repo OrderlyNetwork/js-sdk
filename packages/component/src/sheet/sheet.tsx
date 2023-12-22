@@ -24,7 +24,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "orderly-fixed orderly-inset-0 orderly-z-50 orderly-bg-black/60 orderly-backdrop-blur-sm data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0",
+      "orderly-sheet-overlay orderly-fixed orderly-inset-0 orderly-z-50 orderly-bg-black/60 orderly-backdrop-blur-sm data-[state=open]:orderly-animate-in data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=open]:orderly-fade-in-0",
       className
     )}
     {...props}
@@ -71,7 +71,11 @@ const SheetContent = React.forwardRef<
       <SheetOverlay />
       <SheetPrimitive.Content
         ref={ref}
-        className={cn(sheetVariants({ side }), className)}
+        className={cn(
+          "orderly-sheet-content",
+          sheetVariants({ side }),
+          className
+        )}
         {...props}
       >
         {children}
@@ -94,7 +98,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement> & {
   leading?: React.ReactNode;
 }) => (
-  <div className="orderly-grid orderly-grid-cols-[40px_1fr_40px] orderly-items-center">
+  <div className="orderly-sheet-header orderly-grid orderly-grid-cols-[40px_1fr_40px] orderly-items-center">
     <div>{leading}</div>
     <div
       className={cn(
@@ -113,7 +117,7 @@ const SheetFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "orderly-flex orderly-flex-col-reverse sm:orderly-flex-row sm:orderly-justify-end sm:orderly-space-x-2",
+      "orderly-sheet-footer orderly-flex orderly-flex-col-reverse sm:orderly-flex-row sm:orderly-justify-end sm:orderly-space-x-2",
       className
     )}
     {...props}
@@ -127,7 +131,10 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Title
     ref={ref}
-    className={cn("orderly-text-lg orderly-text-base-contrast", className)}
+    className={cn(
+      "orderly-sheet-title orderly-text-lg orderly-text-base-contrast",
+      className
+    )}
     {...props}
   />
 ));
@@ -139,7 +146,10 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
-    className={cn("orderly-text-2xs orderly-text-base-contrast-54", className)}
+    className={cn(
+      "orderly-sheet-description orderly-text-2xs orderly-text-base-contrast-54",
+      className
+    )}
     {...props}
   />
 ));

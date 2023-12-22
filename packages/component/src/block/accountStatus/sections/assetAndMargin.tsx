@@ -90,10 +90,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
-  //
-
   return (
-    <div id="orderly-asset-and-margin">
+    <div id="orderly-asset-and-margin-sheet-content">
       <StatisticStyleProvider labelClassName="orderly-text-4xs orderly-text-base-contrast/30">
         <div className="orderly-pt-5">
           <Statistic

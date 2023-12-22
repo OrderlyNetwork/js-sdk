@@ -35,7 +35,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
-          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
+          className="orderly-confirm-dialog-cancal-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
           variant="contained"
@@ -52,7 +52,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
-          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
+          className="orderly-confirm-dialog-ok-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="ok"
           type="button"
           disabled={loading}
@@ -84,7 +84,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
       <DialogContent
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
-        className={cn("orderly-confirm-dialog-content", props.contentClassName)}
+        className={cn("orderly-confirm-dialog", props.contentClassName)}
         maxWidth={props.maxWidth}
       >
         <DialogHeader>

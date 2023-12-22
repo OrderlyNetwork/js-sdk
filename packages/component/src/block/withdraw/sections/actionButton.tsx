@@ -146,7 +146,9 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="orderly-flex orderly-justify-center orderly-text-xs desktop:orderly-text-xs orderly-font-bold">
-        <div className="orderly-py-3 orderly-w-full">{actionButton}</div>
+        <div className="orderly-withdraw-action-button-container orderly-py-3 orderly-w-full">
+          {actionButton}
+        </div>
       </div>
     </>
   );

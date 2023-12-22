@@ -103,8 +103,11 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
                 {buttonLabel}
               </Button>
             </SheetTrigger>
-            <SheetContent forceMount>
-              <SheetHeader leading={<Logo.secondary size={30} />}>
+            <SheetContent id="my-account" forceMount>
+              <SheetHeader
+                id="my-account-sheet-title"
+                leading={<Logo.secondary size={30} />}
+              >
                 My account
               </SheetHeader>
               <AccountInfo

@@ -511,7 +511,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   ]);
 
   return (
-    <div id="orderly-deposit">
+    <div id="orderly-deposit-form">
       <div className="orderly-flex orderly-items-center orderly-py-2">
         <div className="orderly-flex-1 orderly-text-2xs desktop:orderly-text-base orderly-text-base-con">
           Your web3 wallet

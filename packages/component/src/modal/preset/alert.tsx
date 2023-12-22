@@ -28,13 +28,20 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
   }, [props.onOk]);
   return (
     <Dialog open={visible} onOpenChange={onOpenChange}>
-      <DialogContent closable={false} maxWidth={"xs"}>
+      <DialogContent
+        className="orderly-modal-alert"
+        closable={false}
+        maxWidth={"xs"}
+      >
         <DialogHeader className="after:orderly-hidden orderly-items-center orderly-pt-3 orderly-pb-0">
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <DialogBody className="orderly-py-[20px]">{message}</DialogBody>
         <DialogFooter className="orderly-flex orderly-justify-center">
-          <Button onClick={onOk} className="orderly-w-full orderly-text-xs orderly-text-base-contrast orderly-font-bold desktop:orderly-text-xs">
+          <Button
+            onClick={onOk}
+            className="orderly-w-full orderly-text-xs orderly-text-base-contrast orderly-font-bold desktop:orderly-text-xs"
+          >
             OK
           </Button>
         </DialogFooter>

@@ -48,6 +48,7 @@ export const Market: FC<Props> = (props) => {
         </button>
       </SheetTrigger>
       <SheetContent
+        id="orderly-markets-sheet-content"
         side={"left"}
         closeable={false}
         className="orderly-w-84% orderly-h-100vh"

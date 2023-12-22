@@ -13,7 +13,10 @@ export const MarkPriceConfirm: FC<Props> = (props) => {
 
   return (
     <div>
-      <div className="orderly-text-2xs orderly-text-base-contrast-54 desktop:orderly-text-sm">
+      <div
+        id="orderly-market-close-dialog-content"
+        className="orderly-text-2xs orderly-text-base-contrast-54 desktop:orderly-text-sm"
+      >
         You will close{" "}
         <span className="orderly-text-warning">{`${position.position_qty} ${base}`}</span>{" "}
         position at market price.

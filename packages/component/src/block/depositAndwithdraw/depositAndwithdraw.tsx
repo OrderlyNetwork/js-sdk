@@ -24,6 +24,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
   return (
     <AssetsProvider>
       <Tabs
+        id="orderly-deposit-and-withdraw"
         value={value}
         onTabChange={setValue}
         tabBarClassName="orderly-border-b-0 orderly-px-0"

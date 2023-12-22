@@ -43,7 +43,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
         <button
           disabled={(tokens?.length ?? 0) < 2 || disabled}
           className={
-            "orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs orderly-text-base-contrast-80 orderly-mr-2 desktop:orderly-text-xs"
+            "orderly-token-select orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs orderly-text-base-contrast-80 orderly-mr-2 desktop:orderly-text-xs"
           }
         >
           <NetworkImage
@@ -58,12 +58,15 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
       </DialogTrigger>
 
       <DialogContent
+        className="orderly-token-select-dialog"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
           props.onClosed?.();
         }}
       >
-        <DialogHeader className="after:orderly-hidden">Select token</DialogHeader>
+        <DialogHeader className="after:orderly-hidden">
+          Select token
+        </DialogHeader>
         <DialogBody>
           <TokenListView
             tokens={props.tokens}
