@@ -109,12 +109,12 @@ export const Listview: FC<PositionsViewProps> = (props) => {
     >
       <Table
         bordered
+        justified
         columns={columns}
         dataSource={props.dataSource}
-        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3"
+        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
         className={"orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px] orderly-overflow-x-auto"}
         generatedRowKey={(record) => record.symbol}
-        justified
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider symbol={record.symbol}>
