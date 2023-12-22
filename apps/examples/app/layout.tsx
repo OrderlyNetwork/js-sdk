@@ -1,4 +1,5 @@
 import "./theme/index.css";
+import "@orderly.network/react/dist/styles.css";
 // import "./theme/orderly.theme.css";
 import "./theme/woo.theme.css";
 import type { Metadata } from "next";
