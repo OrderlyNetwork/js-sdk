@@ -1,12 +1,13 @@
-import { FC, useMemo, useRef } from "react";
+import { FC, useContext, useMemo, useRef } from "react";
 import { Table } from "@/table";
 import { Text } from "@/text";
-import { OrderStatus, OrderSide, API } from "@orderly.network/types";
+import { OrderStatus, OrderSide, API, OrderEntity } from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
-import { SymbolProvider } from "@/provider";
+import { OrderlyAppContext, SymbolContext, SymbolProvider } from "@/provider";
 import { EndReachedBox } from "@/listView/endReachedBox";
+import { Renew } from "./renew";
 
 interface Props {
   dataSource: API.OrderExt[];
@@ -110,9 +111,7 @@ export const Listview: FC<Props> = (props) => {
         render: (value: string, record) => {
           if (record.status === OrderStatus.CANCELLED) {
             return (
-              <Button size={"small"} variant={"outlined"} color={"tertiary"}>
-                Renew
-              </Button>
+              <Renew record={record}/>
             );
           }
 

@@ -24,10 +24,10 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   return (
     <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
       <div>
-        <div>{type}</div>
+        <div className="desktop:orderly-flex desktop:orderly-justify-start">{type}</div>
         <div className="orderly-flex orderly-gap-1 orderly-items-end">
           <span>{base}</span>
-          <span className="orderly-text-3xs orderly-text-base-contrast-54">/USDT</span>
+          <span className="orderly-text-3xs orderly-text-base-contrast-54">/{quote}</span>
         </div>
       </div>
       <div className="orderly-flex orderly-flex-col orderly-gap-2">

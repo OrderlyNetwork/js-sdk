@@ -219,7 +219,7 @@ const TabsInner = (
     };
   });
 
-  console.log("-----tabs render-----");
+  // console.log("-----tabs render-----");
 
   const tabHeader =
     viewMode === TabViewMode.Tab ? (

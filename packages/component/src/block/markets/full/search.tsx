@@ -44,7 +44,7 @@ export const SearchForm: FC<Props> = (props) => {
 
   const onChange = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(e.target.value);
+      // console.log(e.target.value);
 
       props.onSearch(e.target.value);
     },

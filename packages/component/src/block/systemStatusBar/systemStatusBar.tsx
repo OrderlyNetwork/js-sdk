@@ -23,7 +23,7 @@ export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
     useEffect(() => {
         ws.on("status:change", (status: any) => {
             // setWsStatus(status === "connecting" ? "disconnected" : status);
-            console.log("ws status", status);
+            // console.log("ws status", status);
 
             const { type, isPrivate } = status;
             if (!isPrivate) {
