@@ -4,6 +4,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --concurrency=17",
     "react": "pnpm --filter @orderly.network/react dev",
+    "react:watch": "pnpm --filter @orderly.network/react watch",
     "example": "pnpm --filter @orderly.network/examples dev",
     "lint": "turbo run lint",
     "docs": "typedoc",
