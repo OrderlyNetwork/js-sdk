@@ -13,14 +13,14 @@ import { modal } from "@/modal";
 interface OrderOptionsProps {
   // values?: OrderEntity;
   // setValue?: (name: keyof OrderEntity, value: any) => void;
-  // reduceOnly?: boolean;
-  // onReduceOnlyChange?: (value: boolean) => void;
+  reduceOnly?: boolean;
+  onReduceOnlyChange?: (value: boolean) => void;
   showConfirm?: boolean;
   onConfirmChange?: (value: boolean) => void;
 }
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
-  // const {reduceOnly,onReduceOnlyChange} = props
+  const {reduceOnly,onReduceOnlyChange} = props
   const [open, setOpen] = useState<boolean>(false);
   const { control, getValues, setValue } = useFormContext();
 
@@ -60,11 +60,11 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 <Switch
                   id="orderly-reduce-only-switch"
                   color={"primary"}
-                  checked={field.value}
-                  onCheckedChange={(checked) =>
-                    // props.setValue?.("reduce_only", checked)
+                  checked={field.value ?? reduceOnly}
+                  onCheckedChange={(checked) => {                    
+                    onReduceOnlyChange?.(checked);
                     field.onChange(checked)
-                  }
+                  }}
                 />
                 {/* 移除htmlFor="reduceOnly", 点击标签文字不触发Switch开关的变化 */}
                 <Label

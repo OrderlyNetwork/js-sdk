@@ -78,6 +78,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       symbol,
       side,
       onSideChange,
+      onReduceOnlyChange,
       helper,
       disabled,
       markPrice,
@@ -536,6 +537,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <OrderOptions
               showConfirm={needConfirm}
               onConfirmChange={setNeedConfirm}
+              onReduceOnlyChange={onReduceOnlyChange}
+              reduceOnly={props.reduceOnly}
             />
             <StatusGuardButton>
               <Button
