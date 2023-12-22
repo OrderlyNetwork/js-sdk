@@ -67,10 +67,9 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
         />
       </div>
       <div
-        id="orderly-data-list-positions-filter"
-        className="orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center"
+        className="orderly-data-list-filter orderly-flex orderly-justify-between orderly-py-3 orderly-px-4 orderly-items-center"
       >
-        <div className="orderly-flex orderly-items-center orderly-gap-2">
+        <div className="orderly-flex orderly-items-center orderly-gap-1">
           <Checkbox
             id={"showAll"}
             checked={props.showAllSymbol}

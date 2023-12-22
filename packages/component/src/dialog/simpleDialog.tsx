@@ -9,7 +9,7 @@ import {
 } from "@/dialog/dialog";
 import { useMemo, useState } from "react";
 import Button from "@/button";
-import { VariantProps } from "class-variance-authority";
+import { cn } from "@/utils/css";
 
 export interface BaseDialogProps {
   open: boolean;
@@ -35,7 +35,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
-          className="orderly-confirm-dialog-cancal-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
+          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
           variant="contained"
@@ -52,7 +52,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
-          className="orderly-confirm-dialog-ok-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
+          className="orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="ok"
           type="button"
           disabled={loading}
@@ -70,9 +70,9 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
 
     return (
       <DialogFooter
-        className={
+        className={cn(
           buttons.length > 1 ? "orderly-grid-cols-2" : "orderly-grid-cols-1"
-        }
+        )}
       >
         {buttons}
       </DialogFooter>
@@ -84,7 +84,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
       <DialogContent
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
-        className={props.contentClassName}
+        className={cn("orderly-confirm-dialog-content", props.contentClassName)}
         maxWidth={props.maxWidth}
       >
         <DialogHeader>

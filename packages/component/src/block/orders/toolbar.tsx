@@ -12,8 +12,8 @@ interface Props {
 
 export const Toolbar: FC<Props> = (props) => {
   return (
-    <div className="orderly-flex orderly-justify-between orderly-items-center orderly-py-3 orderly-px-4">
-      <div className="orderly-flex orderly-items-center orderly-gap-2">
+    <div className="orderly-data-list-filter orderly-flex orderly-justify-between orderly-items-center orderly-py-3 orderly-px-4">
+      <div className="orderly-flex orderly-items-center orderly-gap-1">
         <Checkbox
           id={"showAll"}
           checked={props.showAllSymbol}
