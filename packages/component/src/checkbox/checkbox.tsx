@@ -13,9 +13,9 @@ const Checkbox = React.forwardRef<
       ref={ref}
       className={cn(
         "orderly-checkbox",
-        "orderly-peer orderly-h-[20px] orderly-w-[20px] orderly-shrink-0 disabled:orderly-cursor-not-allowed disabled:orderly-opacity-50 data-[state=checked]:desktop:orderly-bg-base-contrast data-[state=checked]:orderly-text-primary-foreground",
+        "orderly-peer orderly-h-[20px] orderly-w-[20px] orderly-shrink-0 disabled:orderly-cursor-not-allowed",
         "orderly-rounded-[2px] orderly-ring-offset-base-700 focus-visible:orderly-outline-none focus-visible:orderly-ring-2 focus-visible:orderly-ring-ring focus-visible:orderly-ring-offset-2",
-        // 'orderly-border-2 orderly-border-base-contrast-54'
+        // 'orderly-border-2 orderly-border-base-contrast-54 disabled:orderly-opacity-50 data-[state=checked]:desktop:orderly-bg-base-contrast data-[state=checked]:orderly-text-primary-foreground'
         className
       )}
       {...props}
