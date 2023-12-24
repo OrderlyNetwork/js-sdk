@@ -40,7 +40,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
   };
   return (
     <>
-      <div className="orderly-flex orderly-justify-between orderly-bg-base-700 orderly-px-4 orderly-py-3">
+      <div className="orderly-flex orderly-justify-between orderly-bg-base-900 orderly-px-4 orderly-py-3">
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs"
