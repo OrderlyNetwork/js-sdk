@@ -12,15 +12,18 @@ import {
   DialogTitle,
 } from "@/dialog";
 import Button from "@/button";
+import { cn } from "@/utils/css";
+import { Divider } from "@/divider";
 
 export interface AlertDialogProps {
   title?: string;
   message?: ReactNode;
   onOk?: () => Promise<any>;
+  closeable?: boolean;
 }
 
 export const AlertDialog = create<AlertDialogProps>((props) => {
-  const { title, message } = props;
+  const { title, message, closeable = true } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const onOk = useCallback(() => {
@@ -30,12 +33,14 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
     <Dialog open={visible} onOpenChange={onOpenChange}>
       <DialogContent
         className="orderly-modal-alert"
-        closable={false}
+        closable={closeable}
         maxWidth={"xs"}
       >
-        <DialogHeader className="after:orderly-hidden orderly-items-center orderly-pt-3 orderly-pb-0">
+        <DialogHeader className={cn("after:orderly-hidden orderly-items-center",
+          closeable && "orderly-items-start")}>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
+        <Divider className="orderly-mx-5 orderly-bg-white/[0.12]" />
         <DialogBody className="orderly-py-[20px]">{message}</DialogBody>
         <DialogFooter className="orderly-flex orderly-justify-center">
           <Button
