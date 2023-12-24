@@ -81,7 +81,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       loading={props.loading}
       className="orderly-text-3xs desktop:orderly-text-2xs"
       headerClassName={cn(
-        "orderly-text-base-contrast-36 orderly-bg-base-800",
+        "orderly-text-base-contrast-36 orderly-bg-base-900",
         props.headerClassName
       )}
       generatedRowKey={(record, index) =>
