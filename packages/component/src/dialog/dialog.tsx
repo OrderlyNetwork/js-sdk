@@ -9,10 +9,10 @@ const dialogVariants = cva(
   {
     variants: {
       maxWidth: {
-        xs: "orderly-max-w-[95%] desktop:orderly-max-w-[340px]",
-        sm: "orderly-max-w-[95%] desktop:orderly-max-w-[440px]",
-        lg: "orderly-max-w-[95%] desktop:orderly-max-w-[480px]",
-        xl: "orderly-max-w-[95%] desktop:orderly-max-w-[540px]",
+        xs: "orderly-max-w-[85%] desktop:orderly-max-w-[340px]",
+        sm: "orderly-max-w-[85%] desktop:orderly-max-w-[440px]",
+        lg: "orderly-max-w-[85%] desktop:orderly-max-w-[480px]",
+        xl: "orderly-max-w-[85%] desktop:orderly-max-w-[540px]",
       },
     },
     defaultVariants: {
