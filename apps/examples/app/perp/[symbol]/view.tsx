@@ -99,8 +99,8 @@ const View = (props: Props) => {
       <OrderlyAppProvider
         networkId={networkId}
         brokerId="orderly"
+        brokerName="WOOFi Pro"
         onlyTestnet={false}
-        // logoUrl="/orderly_logo.svg"
         appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
         onChainChanged={onChainChanged}
       >
