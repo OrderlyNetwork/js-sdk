@@ -69,10 +69,18 @@ export const ChainIdSwtich: FC<Props> = (props) => {
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <Button  variant={"outlined"} size={"small"} className="orderly-text-warning orderly-border-warning hover:orderly-text-warning orderly-text-xs">Switch network</Button>
+          <Button
+            variant={"outlined"}
+            size={"small"}
+            className="orderly-text-warning orderly-border-warning hover:orderly-text-warning orderly-text-xs"
+          >
+            Switch network
+          </Button>
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
+        <DialogContent closable>
+          <DialogHeader className="orderly-switch-network-dialog-title orderly-text-xs">
+            Switch network
+          </DialogHeader>
           <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto orderly-text-3xs">
             <ChainListView
               // @ts-ignore

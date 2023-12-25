@@ -20,9 +20,14 @@ export const ChainDialog = create<Omit<ChainListViewProps, "onItemClick">>(
 
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
+        <DialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
+          closable
+        >
           <DialogHeader>
-            <DialogTitle>Switch network</DialogTitle>
+            <DialogTitle className="orderly-switch-network-dialog-title">
+              Switch network
+            </DialogTitle>
           </DialogHeader>
           <DialogBody className="orderly-max-h-[335.5px] orderly-overflow-y-auto">
             <ChainListView {...props} onItemClick={onItemClick} />

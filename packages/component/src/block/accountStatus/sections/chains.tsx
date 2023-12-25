@@ -127,8 +127,10 @@ export const Chains: FC<ChainsProps> = (props) => {
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
       </DialogTrigger>
-      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
-        <DialogHeader className="orderly-text-xs">Switch network</DialogHeader>
+      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()} closable>
+        <DialogHeader className="orderly-switch-network-dialog-title orderly-text-xs">
+          Switch network
+        </DialogHeader>
         <DialogBody className="orderly-max-h-[327.5px] orderly-overflow-y-auto">
           <ChainListView
             // @ts-ignore

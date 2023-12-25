@@ -79,7 +79,7 @@ export const ChainListView: FC<ChainListViewProps> = (props) => {
   }, [props.testChains, props.mainChains, props.currentChainId]);
 
   return (
-    <div className="orderly-pt-5 desktop:orderly-pt-2">
+    <div className="orderly-chain-list orderly-pt-5 desktop:orderly-pt-2">
       {mainnet}
       {testnet}
     </div>
