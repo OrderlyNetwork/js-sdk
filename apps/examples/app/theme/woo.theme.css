@@ -251,3 +251,9 @@ body {
 .orderly-edit-order-sheet-content input {
   font-size: 14px;
 }
+.orderly-switch-network-dialog-title {
+  font-size: 16px;
+}
+.orderly-chain-list .orderly-chain-symbol-name {
+  font-size: 14px;
+}
