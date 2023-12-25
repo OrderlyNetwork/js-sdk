@@ -347,7 +347,7 @@ var WS = class {
     this.authenticate(this.options.accountId);
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
-    this.emit("status:change", { type: "close" /* CLOSE */, isPrivate: true });
+    this.emit("status:change", { type: "open" /* OPEN */, isPrivate: true });
   }
   onMessage(event, socket, handlerMap) {
     try {
@@ -481,6 +481,9 @@ var WS = class {
         return;
       if (!this.privateSocket) {
         console.error("private ws not connected");
+        return;
+      }
+      if (this.privateSocket.readyState !== WebSocket.OPEN) {
         return;
       }
       const message = yield (_b = (_a = this.options).onSigntureRequest) == null ? void 0 : _b.call(_a, accountId);

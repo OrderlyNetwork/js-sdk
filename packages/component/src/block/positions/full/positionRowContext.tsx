@@ -1,5 +1,5 @@
 import { modal } from "@/modal";
-import { API, OrderType } from "@orderly.network/types";
+import { API, OrderEntity, OrderType } from "@orderly.network/types";
 import {
   FC,
   PropsWithChildren,
@@ -42,8 +42,9 @@ export const usePositionsRowContext = () => {
 export const PositionsRowProvider: FC<
   PropsWithChildren<{ position: API.PositionExt }>
 > = (props) => {
-  
-  const [quantity, setQuantity] = useState<string>(Math.abs(props.position.position_qty).toString());
+  const [quantity, setQuantity] = useState<string>(
+    Math.abs(props.position.position_qty).toString()
+  );
 
   const [price, setPrice] = useState<string>("");
   const [side, setSide] = useState<OrderSide>(
@@ -92,13 +93,17 @@ export const PositionsRowProvider: FC<
   }, [props.position, price, type, quantity]);
 
   const onUpdateQuantity = (value: string) => {
-    const newValues = helper.calculate({}, "order_quantity", value);
-    setQuantity(newValues["order_quantity"]);
+    const newValues = helper.calculate(
+      {},
+      "order_quantity",
+      value
+    ) as OrderEntity;
+    setQuantity(newValues["order_quantity"] as string);
   };
 
   const onUpdatePrice = (value: string) => {
-    const newValues = helper.calculate({}, "order_price", value);
-    setPrice(newValues["order_price"]);
+    const newValues = helper.calculate({}, "order_price", value) as OrderEntity;
+    setPrice(newValues["order_price"] as string);
   };
 
   const postOrder = () => {

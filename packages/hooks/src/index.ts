@@ -1,3 +1,4 @@
+export { default as version } from "./version";
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";

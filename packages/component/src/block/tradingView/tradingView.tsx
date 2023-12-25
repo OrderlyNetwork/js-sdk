@@ -39,6 +39,10 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
     setTimeInterval(interval);
   }, []);
 
+  if (!props.scriptSRC) {
+    return null;
+  }
+
   return (
     <>
       <TimeIntervalToolbar

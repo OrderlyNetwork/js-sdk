@@ -1,3 +1,4 @@
+export { default as version } from "./version";
 export * from "./constants";
 export * from "./types/api";
 // export * from "./order";

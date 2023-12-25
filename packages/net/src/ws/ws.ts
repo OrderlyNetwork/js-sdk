@@ -245,7 +245,7 @@ export class WS {
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
 
-    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
+    this.emit("status:change", { type: WebSocketEvent.OPEN, isPrivate: true });
   }
 
   private onMessage(
@@ -429,6 +429,10 @@ export class WS {
     if (this.authenticated) return;
     if (!this.privateSocket) {
       console.error("private ws not connected");
+      return;
+    }
+
+    if (this.privateSocket.readyState !== WebSocket.OPEN) {
       return;
     }
 

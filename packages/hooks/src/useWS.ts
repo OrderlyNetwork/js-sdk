@@ -28,6 +28,14 @@ export const useWS = () => {
         },
       });
 
+      // if user login, open the private websocket
+      if (
+        account.stateValue.status === AccountStatusEnum.EnableTrading &&
+        account.stateValue.accountId
+      ) {
+        websocketClient.openPrivate(account.stateValue.accountId);
+      }
+
       // open the pirvate websocket when user login
       account.on("change:status", (nextState: AccountState) => {
         //
