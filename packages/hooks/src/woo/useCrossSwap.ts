@@ -27,7 +27,7 @@ export enum MessageStatus {
 }
 
 /** @hidden */
-export const useCrossSwap = () => {
+export const useCrossSwap = (): any => {
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
 
   const [layerStatus, setLayerStatus] = useState<MessageStatus>(

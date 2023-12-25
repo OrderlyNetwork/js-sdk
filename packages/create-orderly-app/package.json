@@ -8,7 +8,8 @@
     "dev": "pnpm watch",
     "build": "tsup",
     "watch": "tsup --watch",
-    "script": "ts-node ./scripts/index.ts"
+    "script": "ts-node ./scripts/index.ts",
+    "test": "jest"
   },
   "files": [
     "dist",
@@ -17,6 +18,7 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "execa": "npm:@esm2cjs/execa@6.1.1-cjs.1",
+    "fast-glob": "^3.3.2",
     "figlet": "^1.7.0",
     "fs-extra": "^11.2.0",
     "handlebars": "^4.7.8",
@@ -29,19 +31,30 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
     "@types/figlet": "^1.5.8",
     "@types/fs-extra": "^11.0.4",
+    "@types/jest": "^29.5.3",
     "@types/node": "^20",
     "@types/prompts": "^2.4.9",
     "@types/validate-npm-package-name": "^4.0.2",
     "@types/yargs": "^17.0.32",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
+    "jest": "^29.6.1",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "tsup": "^7.1.0",
     "typescript": "^5"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "orderly": {
+    "version": {
+      "@orderly.network/react":"0.1.28-alpha.1",
+      "@orderly.network/web3-onboard":"0.0.25-alpha.1"
+    }
   }
 }

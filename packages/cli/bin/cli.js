@@ -8,11 +8,15 @@
 const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
 
+console.clear();
+
 const create = require("../commands/create");
+
+
 
 const argv = yargs(hideBin(process.argv))
 //   .command(create)
   .commandDir("../commands")
   .demandCommand(1,'You need at least one command before moving on')
-  .example('$0 create -n my-project -t react', 'create a new project')
+  // .example('$0 create -n my-project -t react', 'create a new project')
   .help().argv;

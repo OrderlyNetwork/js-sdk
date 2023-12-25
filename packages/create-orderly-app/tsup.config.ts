@@ -8,5 +8,6 @@ export default defineConfig((options) => ({
   target: "es6",
   // sourcemap: true,
   clean: true,
+  // publicDir:'templates'
   // dts: true,
 }));

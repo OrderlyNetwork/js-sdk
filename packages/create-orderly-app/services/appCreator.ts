@@ -31,8 +31,11 @@ export class AppCreator {
     // usually, use the third-party cli tool to create the project
     await this.creator.createBaseProject();
 
-    // 2. configure the project, like: install dependencies, create files, etc.
+    // 2. configure the project, like: dependencies, create files, etc.
     await this.creator.configure();
+
+    // 3. create project files, like: trading page, profile page, etc.
+    await this.creator.createProjectFiles();
   }
 
   private async validateOptions() {

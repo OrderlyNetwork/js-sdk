@@ -1,0 +1,37 @@
+"use client";
+{{#if blockNative}}
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+{{/if}}
+import { OrderlyAppProvider, TradingPage } from "@orderly.network/react";
+import Config from "@/orderly.config";
+
+export default function Trading({ params }: { params: { symbol: string } }) {
+  const symbol = params.symbol.startsWith("PERP_")
+    ? params.symbol
+    : `PERP_${params.symbol}`;
+
+  const {app, pages, wallet} = Config({});
+
+  return (
+    {{#if blockNative}}
+    <ConnectorProvider {...wallet}>
+    {{/if}}
+      <OrderlyAppProvider
+        networkId="testnet"
+        brokerId={app.brokerId}
+        brokerName={app.brokerName}
+        logoUrl="<Your brand logo url>"
+        onChainChanged={() => {
+          // TODO: handle on chain changed
+        }}
+      >
+        <TradingPage
+          symbol={symbol}
+          tradingViewConfig={pages.trading.tradingView}
+        />
+      </OrderlyAppProvider>
+    {{#if blockNative}}
+    </ConnectorProvider>
+    {{/if}}
+  );
+}

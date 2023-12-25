@@ -5,14 +5,26 @@ import path from "node:path";
 import fs from "fs-extra";
 import kleur from "kleur";
 import { whichPm } from "./npm";
+import pkg from "../package.json";
 import { WalletConnector } from "./wallets";
+// import { configCompiled } from "./templates";
+import Handlebars from "handlebars";
 
 export abstract class BaseBuilder implements IBuilder {
-  protected constructor(protected readonly options: CreateAppOptions) {}
+  constructor(protected readonly options: CreateAppOptions) {}
+
+  protected get orderlyVersion(): {
+    "@orderly.network/react": string;
+    "@orderly.network/web3-onboard": string;
+  } {
+    return pkg.orderly.version;
+  }
 
   async configure(): Promise<any> {
-    await this.updatePkg();
+    await this.createConfigFile();
   }
+
+  abstract createProjectFiles(): Promise<any>;
 
   createBaseProject(): Promise<any> {
     return Promise.resolve(undefined);
@@ -22,44 +34,7 @@ export abstract class BaseBuilder implements IBuilder {
     return "";
   }
 
-  private async updatePkg() {
-    const pkgPath = path.resolve(this.options.fullPath, "package.json");
-    let pkg = fs.readJsonSync(pkgPath);
-
-    await this.updatePackageName(pkg);
-    await this.updateDependencies(pkg);
-
-    // const sortPackageJson = await import('sort-package-json')
-
-    // console.log("sortPackageJson", sortPackageJson);
-
-    // pkg = sortPackageJson(pkg)
-
-    await fs.writeJson(pkgPath, pkg, { spaces: 2 });
-  }
-
-  private updatePackageName(pkg: any): any {
-    pkg.name = this.options.name;
-    return pkg;
-  }
-
-  async configureWalletConnector(pkg: any): Promise<void> {
-    if (this.options.walletConnector === WalletConnector.blockNative) {
-      pkg.dependencies["@orderly.network/web3-onboard"] = "latest";
-    } else if (this.options.walletConnector === WalletConnector.custom) {
-      // pkg.dependencies["@orderly.network/web3-walletconnect"] = "latest";
-// create custom wallet connector
-      this.createCustomWalletConnector();
-    }
-  }
-
-  async updateDependencies(pkg: any): Promise<void> {
-    pkg = await this.configureWalletConnector(pkg);
-  }
-
   protected async copyTemplateFiles(templateDir: string) {
-    // const templateDir = path.resolve(__dirname, "../templates/next");
-
     await fs.copy(templateDir, this.options.fullPath);
   }
 
@@ -75,10 +50,10 @@ export abstract class BaseBuilder implements IBuilder {
       items.push("Add your brokerId");
     }
 
-    if(this.options.walletConnector === WalletConnector.custom) {
-        items.push("Implementing custom wallet connector");
-    }else if(this.options.walletConnector === WalletConnector.blockNative) {
-        items.push("Setup your blockNative API key");
+    if (this.options.walletConnector === WalletConnector.custom) {
+      items.push("Implementing custom wallet connector");
+    } else if (this.options.walletConnector === WalletConnector.blockNative) {
+      items.push("Setup your blockNative API key");
     }
 
     if (items.length) {
@@ -100,7 +75,7 @@ export abstract class BaseBuilder implements IBuilder {
 
     return (
       msg +
-      +`\n\n` +
+      `\n\n` +
       `Begin development with the following command:\n\n` +
       `    ${kleur.cyan("cd")} ${this.options.name}\n` +
       `    ${kleur.cyan(this.runCommandString)} ${this.startCommand}\n`
@@ -120,6 +95,45 @@ export abstract class BaseBuilder implements IBuilder {
     }
   }
 
+  private async createConfigFile() {
+    const file = await fs.readFile(
+      path.resolve(__dirname, "../templates/shared/config.handlebars"),
+      // path.resolve(process.cwd(), "templates/shared/config.handlebars"),
+      "utf8"
+    );
+
+    const template = Handlebars.compile(file);
+
+    const configFile = template(this.parsedConfig);
+
+    await this.saveConfigFile(configFile);
+  }
+
+  protected get parsedConfig() {
+    const dependencies: { name: string; version: string }[] = [
+      {
+        name: "@orderly.network/react",
+        version: this.orderlyVersion["@orderly.network/react"],
+      },
+    ];
+
+    if (this.options.walletConnector === WalletConnector.blockNative) {
+      dependencies.push({
+        name: "@orderly.network/web3-onboard",
+        version: this.orderlyVersion["@orderly.network/web3-onboard"],
+      });
+    }
+
+    return {
+      // walletConnector: this.options.walletConnector,
+      ...this.options,
+      blockNative: this.options.walletConnector === WalletConnector.blockNative,
+      tradingPage: this.options.pages?.includes("trading"),
+      dependencies,
+    };
+  }
+
   abstract get startCommand(): string;
   abstract createCustomWalletConnector(): Promise<any>;
+  abstract saveConfigFile(file: string): Promise<any>;
 }

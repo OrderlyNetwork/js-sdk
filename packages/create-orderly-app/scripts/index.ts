@@ -50,7 +50,7 @@ yargs.showVersion();
 
 async function run() {
   console.log(kleur.cyan("🚀 Let's create a new Orderly app!"));
-  const projectPath = path.resolve(process.cwd(), (argv as any)._[0]??'.');
+  const projectPath = path.resolve(process.cwd(), (argv as any)._[0] ?? ".");
 
   const enableTerminalCursor = () => {
     process.stdout.write("\x1B[?25h");
@@ -58,7 +58,7 @@ async function run() {
 
   const onState = (state: { aborted: boolean }) => {
     if (state.aborted) {
-      console.log(`\n${kleur.green('success')} Cancelled... 👋`)
+      console.log(`\n${kleur.green("success")} Cancelled... 👋`);
 
       // If we don't re-enable the terminal cursor before exiting
       // the program, the cursor will remain hidden

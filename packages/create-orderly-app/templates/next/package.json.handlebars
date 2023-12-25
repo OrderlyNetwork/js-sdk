@@ -1,16 +1,19 @@
 {
-  "name": "next-template",
+  "name": "{{name}}",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
-    "@orderly.network/react": "^0.1.18",
-    "@orderly.network/web3-onboard": "^0.0.15",
+    {{#each dependencies}}
+    {{!-- "@orderly.network/web3-onboard": "^0.0.15", --}}
+    "{{this.name}}": "{{this.version}}",
+    {{/each}}
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"

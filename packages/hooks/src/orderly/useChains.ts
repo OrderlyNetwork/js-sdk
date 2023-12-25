@@ -317,7 +317,7 @@ export const useChains = (
       }
 
       if (typeof field === "string") {
-        return prop(field, chain);
+        return prop(field as never, chain);
       }
 
       return chain;

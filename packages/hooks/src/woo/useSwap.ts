@@ -294,7 +294,7 @@ const woofiDexDepositorAbi = [
 ];
 
 /** @hidden */
-export const useSwap = () => {
+export const useSwap = (): any => {
   // exec swap contract;
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
   const account = useAccountInstance();

@@ -1,4 +1,3 @@
-// export { Button } from "./button";
 export {
   OrderlyAppProvider,
   OrderlyAppContext,
@@ -10,6 +9,7 @@ export {
 
 // ==================== base component ====================
 export { default as Button } from "./button";
+
 export {
   Dialog,
   DialogContent,
@@ -72,3 +72,5 @@ export type {
   PositionsViewProps,
   AccountStatusProps,
 } from "./block";
+
+export type { OrderlyConfig, OrderlyConfigCtx } from "./types/orderly.config";

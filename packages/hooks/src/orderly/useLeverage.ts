@@ -4,7 +4,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import { prop } from "ramda";
 import { useQuery } from "../useQuery";
 
-export const useLeverage = () => {
+export const useLeverage = (): any => {
   const { data, mutate } = usePrivateQuery("/v1/client/info");
   const [update, { isMutating }] = useMutation("/v1/client/leverage");
 
@@ -22,7 +22,7 @@ export const useLeverage = () => {
   }, []);
 
   return [
-    prop("max_leverage", data),
+    prop("max_leverage", data as any),
     {
       update: updateLeverage,
       isMutating,
@@ -33,8 +33,5 @@ export const useLeverage = () => {
             .map((item: string) => parseInt(item))
         : [],
     },
-  ] as [
-    number | undefined,
-    { update: typeof updateLeverage; config: number[]; isMutating: boolean }
   ];
 };

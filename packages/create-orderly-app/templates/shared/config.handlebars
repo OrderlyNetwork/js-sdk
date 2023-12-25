@@ -1,0 +1,51 @@
+/// <reference types="@orderly.network/react" />
+
+const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
+  return {
+  {{#if blockNative}}
+    wallet: {
+      /**
+        * @description
+        * 1. Create a wallet at https://onboard.money
+        * 2. Copy the API key and paste it below
+        * @see https://docs.blocknative.com/onboard
+        */
+      apiKey: "orderly",
+      options: {},
+    },
+  {{/if}}
+    app: {
+      brokerId: "{{brokerId}}",
+      brokerName: "{{brokerName}}",
+      /**
+        * 1. Create a wallet at https://onboard.money
+        * 2. Copy the API key and paste it below
+        * @see https://docs.blocknative.com/onboard
+        */
+      appIcons: {
+        //
+        main: "",
+        //
+        secondary: "",
+      },
+    },
+    pages:{
+      {{#if tradingPage}}
+      trading: {
+        /**
+          * 1. Create a wallet at https://onboard.money
+          * 2. Copy the API key and paste it below
+          * @see https://docs.blocknative.com/onboard
+          */
+        tradingView: {
+          // TradingView charting library
+          scriptSRC: "",
+          library_path: "",
+        },
+      },
+      {{/if}}
+    }
+  };
+};
+
+export default config;

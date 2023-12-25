@@ -17,6 +17,7 @@ export async function create(options: CreateAppOptions) {
     await creator.create();
     spinner.succeed("project created");
     spinner.start("installing dependencies, this might take a while...");
+
     await creator.installDependencies();
     spinner.succeed("dependencies installed");
     spinner.succeed(kleur.green("create project successfully"));
@@ -27,12 +28,13 @@ export async function create(options: CreateAppOptions) {
       console.log(successMessage);
     }
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     spinner.fail(kleur.red("create project failed"));
     if (e instanceof Error) {
       // spinner.fail(e.message);
 
-      console.log(kleur.red(`Error: ${e.message}`));
+      // console.log(kleur.red(`Error: ${e.message}`));
+      console.log(kleur.gray(e.stack ?? ""));
     } else if (typeof e === "string") {
       // spinner.fail(e);
       console.log(kleur.red(`Error: ${e}`));

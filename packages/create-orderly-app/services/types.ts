@@ -6,8 +6,10 @@ export type CreateAppOptions = {
   path: string;
   fullPath: string;
   framework: string;
-  walletConnector:string;
+  walletConnector: string;
   brokerId: string;
+  brokerName: string;
+  pages: string[];
   // baseOn: string;
   // themes: [],
 };

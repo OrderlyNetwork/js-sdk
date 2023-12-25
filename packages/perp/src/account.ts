@@ -573,7 +573,7 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       .div(markPrice)
       .add(
         new Decimal(positionQty)
-          .add(buyOrdersQty)
+          .add(sellOrdersQty)
           .abs()
           .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )

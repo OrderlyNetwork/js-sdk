@@ -57,10 +57,10 @@ export const useDeposit = (options?: useDepositOptions) => {
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
   const dst = useMemo(() => {
-    const chain: API.Chain =
+    const chain: API.Chain | undefined =
       networkId === "testnet"
-        ? findByChainId(ARBITRUM_TESTNET_CHAINID)!
-        : findByChainId(ARBITRUM_MAINNET_CHAINID)!;
+        ? (findByChainId(ARBITRUM_TESTNET_CHAINID) as API.Chain | undefined)
+        : (findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain | undefined);
 
     const USDC = chain?.token_infos.find(
       (token: API.TokenInfo) => token.symbol === "USDC"
