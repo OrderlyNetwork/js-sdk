@@ -80,6 +80,11 @@
     
   }
 
+  html,body {
+    background-color: rgb(var(--orderly-color-base-800));
+  }
+  
+
   .orderly-button-variant-contained.orderly-button-color-primary:not([disabled]) {
     background-color: #335FFC;
   }
@@ -87,6 +92,10 @@
   // .orderly-button-variant-contained.orderly-button-color-sell {
   //   background-color: #FF447C;
   // }
+
+  #orderly-botom-bar-container {
+    background-color: rgb(var(--orderly-color-base-700));
+  }
 
   #orderly-botom-bar-switch-chain-button {
     border: 1px solid #26FEFE;
@@ -109,8 +118,13 @@
   }
 
   // 字体大小覆盖
-  #orderly-top-nav-bar, #orderly-chart-view-tabs {
+  #orderly-top-nav-bar {
     font-size: 14px;
+  }
+
+  #orderly-chart-view-tabs {
+    font-size: 14px;
+    // background-color: rgb(var(--orderly-color-base-800));
   }
 
   #orderly-leverage .orderly-text-4xs{
@@ -192,6 +206,10 @@
       .orderly-button.orderly-button-variant-outlined {
         color:rgb(var(--orderly-color-tertiary))
       }
+    }
+
+    .orderly-data-list-tab-bar, #orderly-data-list-positions-header {
+      background-color: rgb(var(--orderly-color-base-700));
     }
   }
 
@@ -282,4 +300,19 @@
     .orderly-markets-search-icon {
       color: rgba(255, 255, 255, 0.98);
     }  
+  }
+
+  .orderly-edit-order-sheet-content {
+    .orderly-sheet-title {
+      font-size: 20px;
+    }
+
+    .orderly-text-4xs {
+      font-size: 12px;
+    }
+
+    .orderly-text-2xs, input {
+      font-size: 14px;
+    }    
+
   }
