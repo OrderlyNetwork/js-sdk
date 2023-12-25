@@ -22,6 +22,20 @@ const getDisabledFeatures = (mode: ChartMode) => {
         'header_fullscreen_button',
     ];
 
+    if (mode === ChartMode.MOBILE) {
+        disabledFeatures = [
+            ...disabledFeatures,
+            "header_widget",
+            "control_bar",
+            "left_toolbar",
+            "timeframes_toolbar",
+            "go_to_date",
+            "timezone_menu",
+            "create_volume_indicator_by_default",
+            "buy_sell_buttons",
+        ]
+
+    }
     if (mode === ChartMode.BASIC) {
         disabledFeatures = [...disabledFeatures, 'header_widget', 'left_toolbar', 'timeframes_toolbar', 'buy_sell_buttons'];
     } else if (mode === ChartMode.ADVANCED) {

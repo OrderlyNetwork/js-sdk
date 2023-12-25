@@ -1,7 +1,7 @@
-import { TradingView, TradingViewOptions } from "@orderly.network/trading-view";
+import { TradingView } from "@orderly.network/trading-view";
 
 export const MyTradingView = () => {
-  const tradingViewOptions: TradingViewOptions = {
+  const tradingViewOptions = {
     tradingViewScriptSrc: "/tradingview/charting_library/charting_library.js",
     libraryPath: "/tradingview/charting_library/",
     tradingViewCustomCssUrl: "/tradingview/chart.css",
@@ -10,7 +10,8 @@ export const MyTradingView = () => {
   return (
     <TradingView
       symbol={"PERP_ETH_USDC"}
-      tradingViewOptions={tradingViewOptions}
+      libraryPath={tradingViewOptions.libraryPath}
+      tradingViewScriptSrc={tradingViewOptions.tradingViewScriptSrc}
     />
   );
 };

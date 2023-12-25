@@ -86,4 +86,5 @@ export enum ChartMode {
     BASIC = 0,
     ADVANCED = 1,
     UNLIMITED = 2,
+    MOBILE = 3,
 }

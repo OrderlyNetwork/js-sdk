@@ -9,19 +9,20 @@ import {WS} from "@orderly.network/net";
 
 
 export interface TradingViewOptions {
-    libraryPath: string;
-    tradingViewScriptSrc: string;
-    tradingViewCustomCssUrl?: string;
-    interval?: string;
-    overrides: any;
-    theme?: string;
-    studiesOverrides?: any;
-    fullscreen?: boolean;
+  
 }
 
 export interface TradingViewPorps {
     symbol?: string;
-    tradingViewOptions? : TradingViewOptions;
+    mode?:ChartMode;
+    libraryPath: string;
+    tradingViewScriptSrc: string;
+    tradingViewCustomCssUrl?: string;
+    interval?: string;
+    overrides?: any;
+    theme?: string;
+    studiesOverrides?: any;
+    fullscreen?: boolean;
 }
 
 function Link(props: {
@@ -74,7 +75,15 @@ const getOveriides = () => {
 
 export function TradingView({
                                 symbol,
-                                tradingViewOptions,
+    mode = ChartMode.UNLIMITED,
+                                libraryPath,
+                                tradingViewScriptSrc,
+                                tradingViewCustomCssUrl,
+interval,
+overrides: customerOverrides,
+theme,
+studiesOverrides: customerStudiesOverrides,
+fullscreen,
                             }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -84,14 +93,14 @@ export function TradingView({
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!tradingViewOptions || !tradingViewOptions.tradingViewScriptSrc) {
+        if (!tradingViewScriptSrc) {
             return;
         }
         if (chartRef.current) {
 
             const script = document.createElement("script");
             script.setAttribute("data-nscript", "afterInteractive");
-            script.src =tradingViewOptions.tradingViewScriptSrc;
+            script.src =tradingViewScriptSrc;
             script.async = true;
             script.type = "text/javascript";
             script.onload = () => {
@@ -103,28 +112,20 @@ export function TradingView({
             chartRef.current.appendChild(script);
 
         }
-    }, [chartRef, tradingViewOptions]);
+    }, [chartRef,tradingViewScriptSrc]);
 
     const onChartClick = () => {
     }
     const layoutId = 'TradingViewSDK';
 
     useEffect(() => {
-        if (!chartingLibrarySciprtReady || !tradingViewOptions) {
+        if (!chartingLibrarySciprtReady || !tradingViewScriptSrc) {
             return;
         }
 
-        const {
-            libraryPath, tradingViewScriptSrc, tradingViewCustomCssUrl, interval,
-            overrides: customOverrides,
-            theme,
-            studiesOverrides: customeStudiesOverrides,
-            fullscreen,
-        } = tradingViewOptions;
-
         const defaultOverrides = getOveriides();
-        const overrides = customOverrides ? Object.assign({}, defaultOverrides.overrides, customOverrides) : defaultOverrides.overrides;
-        const studiesOverrides = customeStudiesOverrides ? Object.assign({}, defaultOverrides.studiesOverrides, customeStudiesOverrides) : defaultOverrides.studiesOverrides;
+        const overrides = customerOverrides? Object.assign({}, defaultOverrides.overrides, customerOverrides) : defaultOverrides.overrides;
+        const studiesOverrides = customerStudiesOverrides? Object.assign({}, defaultOverrides.studiesOverrides, customerStudiesOverrides) : defaultOverrides.studiesOverrides;
         if (chartRef.current) {
             const options: any = {
                 fullscreen: fullscreen ?? false,
@@ -144,7 +145,6 @@ export function TradingView({
                 getBroker: undefined,
 
             };
-            const mode = ChartMode.UNLIMITED;
 
             const chartProps: WidgetProps = {
                 options,
@@ -163,7 +163,7 @@ export function TradingView({
     }, [chartingLibrarySciprtReady]);
 
     useEffect(() => {
-        if (!symbol) {
+        if (!symbol || !chart.current) {
             return;
         }
         chart.current?.setSymbol(symbol);
@@ -173,11 +173,21 @@ export function TradingView({
             service.unsubscribeKline(symbol);
         }
     }, [symbol]);
+
+    useEffect(() => {
+       if (!chart.current) {
+           return;
+       }
+       chart.current.updateOverrides({
+           interval,
+       });
+
+    }, [interval]);
     return (
         <div style={{
             height: '100%', width: '100%', margin: '0 auto'
         }} ref={chartRef}>
-            {(!tradingViewOptions || !tradingViewOptions.tradingViewScriptSrc) &&
+            {(!tradingViewScriptSrc) &&
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
