@@ -9,6 +9,7 @@
     "lint": "turbo run lint",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
+    "version:g":"node ./scripts/version.js",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build"

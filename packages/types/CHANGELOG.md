@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.24-alpha.3
+
+### Patch Changes
+
+- fix some bugs
+
 ## 0.1.24-alpha.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "1.0.25-alpha.2",
+  "version": "1.0.25-alpha.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -16,7 +16,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@orderly.network/types": "workspace:*",
+    
     "react": "^18.2.0"
   },
   "devDependencies": {
@@ -40,6 +40,7 @@
     "@orderly.network/net": "workspace:*",
     "@orderly.network/perp": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "ramda": "^0.29.0",
     "swr": "^2.2.4",
     "use-constant": "^1.1.1",

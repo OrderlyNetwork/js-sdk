@@ -1,5 +1,3 @@
-#!/bin/env node
-
 import { textSync } from "figlet";
 import yargs from "yargs";
 import kleur from "kleur";
