@@ -9,3 +9,4 @@ export { CopyIcon } from "./copy";
 export { WalletIcon } from "./wallet";
 export { CheckIcon } from "./check";
 export { UncheckIcon } from "./uncheck";
+export { CircleCloseIcon } from "./circleClose";

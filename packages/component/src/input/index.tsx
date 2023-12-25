@@ -8,9 +8,9 @@ import React, {
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/css";
-import { X } from "lucide-react";
 import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
+import { CircleCloseIcon } from "@/icon";
 
 const inputVariants = cva(["orderly-rounded"], {
   variants: {
@@ -114,11 +114,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           <span
             className={
-              "orderly-inline-flex orderly-rounded-full orderly-bg-base-contrast/20 orderly-w-[20px] orderly-h-[20px] orderly-items-center orderly-justify-center orderly-text-base-100"
+              "orderly-inline-flex orderly-rounded-full orderly-w-[20px] orderly-h-[20px] orderly-items-center orderly-justify-center"
             }
           >
-            {/* @ts-ignore */}
-            <X size={16} className="orderly-text-base-contrast-54" />
+            <CircleCloseIcon size={16} />
           </span>
         </button>
       );
