@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.111-alpha.2
+
+### Patch Changes
+
+- fix bug
+
 ## 1.0.111-alpha.1
 
 ### Patch Changes
