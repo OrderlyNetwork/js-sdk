@@ -503,7 +503,7 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       )
       .div(markPrice)
       .mul(0.995)
-      .sub(new Decimal(positionQty).add(buyOrdersQty).abs())
+      .sub(new Decimal(positionQty).add(buyOrdersQty))
       .toNumber();
 
     if (positionQty === 0 && buyOrdersQty === 0) {
@@ -518,7 +518,7 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
       .sub(
         new Decimal(positionQty)
           .add(buyOrdersQty)
-          .abs()
+          // .abs()
           .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )
       .mul(0.995)
@@ -558,7 +558,7 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       )
       .div(markPrice)
       .mul(0.995)
-      .add(new Decimal(positionQty).add(sellOrdersQty).abs())
+      .add(new Decimal(positionQty).add(sellOrdersQty))
 
       .toNumber();
 
@@ -574,7 +574,7 @@ export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
       .add(
         new Decimal(positionQty)
           .add(sellOrdersQty)
-          .abs()
+          // .abs()
           .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )
       .mul(0.995)
