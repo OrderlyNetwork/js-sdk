@@ -38,7 +38,10 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         {/** header component solt  */}
         <Header />
       </div>
-      <Split lineBar style={{ height: "calc(100vh - 50px - 42px)", width: "100vw" }}>
+      <Split
+        lineBar
+        style={{ height: "calc(100vh - 50px - 42px)", width: "100vw" }}
+      >
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
             <Split
@@ -47,14 +50,17 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
               lineBar
             >
               <div
-                style={{ flex: 1, minWidth: "468px", }}
+                style={{ flex: 1, minWidth: "468px" }}
                 className="orderly-grid orderly-grid-rows-[48px_1fr]"
               >
                 <div className="orderly-border-b orderly-border-b-divider orderly-min-w-0">
                   <TopNav symbol={props.symbol} />
                 </div>
                 <div className="orderly-flex-1">
-                  <MyTradingView />
+                  <MyTradingView
+                    symbol={props.symbol}
+                    tradingViewConfig={props.tradingViewConfig}
+                  />
                 </div>
               </div>
               <div
