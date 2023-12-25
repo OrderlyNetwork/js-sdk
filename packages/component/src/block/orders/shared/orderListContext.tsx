@@ -33,6 +33,7 @@ export const OrderListProvider: FC<
   const onEditOrder = useCallback(async (order: API.Order) => {
     const orderEntry = await modal.sheet({
       title: "Edit Order",
+      contentClassName: "orderly-edit-order-sheet-content",
       content: (
         <OrderEditFormSheet
           order={order}

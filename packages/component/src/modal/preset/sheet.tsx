@@ -6,6 +6,7 @@ import { useModal } from "../useModal";
 export interface SheetProps {
   title: string;
   content?: React.ReactNode;
+  contentClassName?: string;
 }
 
 const SimpleSheet = create<SheetProps>((props) => {
@@ -13,6 +14,7 @@ const SimpleSheet = create<SheetProps>((props) => {
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent
+        className={props.contentClassName}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
         }}

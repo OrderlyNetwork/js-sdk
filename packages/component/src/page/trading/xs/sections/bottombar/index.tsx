@@ -23,10 +23,7 @@ export const BottomNavBar = () => {
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
 
-  
-    const {
-      connectedChain,
-    } = useWalletConnector();
+  const { connectedChain } = useWalletConnector();
 
   const onConnect = useCallback(() => {
     onWalletConnect().then(
@@ -57,7 +54,10 @@ export const BottomNavBar = () => {
       {errors.ChainNetworkNotSupport && (
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
-      <div className="orderly-fixed orderly-left-0 orderly-bottom-0 orderly-w-screen orderly-bg-base-800 orderly-p-[14px] orderly-pb-[20px] orderly-border-t orderly-border-base-contrast/10 orderly-z-30 orderly-h-[64px] orderly-flex orderly-justify-between orderly-items-center">
+      <div
+        id="orderly-botom-bar-container"
+        className="orderly-fixed orderly-left-0 orderly-bottom-0 orderly-w-screen orderly-bg-base-800 orderly-p-[14px] orderly-pb-[20px] orderly-border-t orderly-border-base-contrast/10 orderly-z-30 orderly-h-[64px] orderly-flex orderly-justify-between orderly-items-center"
+      >
         <AccountStatusBar
           chains={[]}
           status={state.status}

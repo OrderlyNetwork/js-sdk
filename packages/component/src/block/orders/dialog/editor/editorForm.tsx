@@ -115,22 +115,23 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   if (!order) return null;
 
   return (
-    <>
+    <div>
       <div className="orderly-pb-3 orderly-pt-5 orderly-text-xs">
         <Text rule="symbol">{order.symbol}</Text>
       </div>
       <div className="orderly-grid orderly-grid-cols-2">
+        {/* orderly-text-4xs orderly-text-base-contrast-36 */}
         <Statistic
           label="Order type"
           value={typeText}
           valueClassName="orderly-text-2xs"
-          labelClassName="orderly-text-4xs-contrast-36"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
         />
         <Statistic
           label="Last price"
           value={markPrice}
           rule="price"
-          labelClassName="orderly-text-4xs-contrast-36"
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
         />
       </div>
@@ -230,6 +231,6 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
