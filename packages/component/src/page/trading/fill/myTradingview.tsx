@@ -1,16 +1,19 @@
-import { TradingView, TradingViewOptions } from "@orderly.network/trading-view";
+import { TradingView } from "@orderly.network/trading-view";
 
-export const MyTradingView = () => {
-  const tradingViewOptions: TradingViewOptions = {
-    tradingViewScriptSrc: "/tradingview/charting_library/charting_library.js",
-    libraryPath: "/tradingview/charting_library/",
-    tradingViewCustomCssUrl: "/tradingview/chart.css",
-    theme: "dark",
+interface Props {
+  symbol: string;
+  tradingViewConfig?: {
+    scriptSRC?: string;
+    library_path: string;
+    customCssUrl?: string;
   };
+}
+export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
   return (
     <TradingView
-      symbol={"PERP_ETH_USDC"}
-      tradingViewOptions={tradingViewOptions}
+      symbol={symbol}
+      libraryPath={tradingViewConfig?.library_path}
+      tradingViewScriptSrc={tradingViewConfig?.scriptSRC}
     />
   );
 };

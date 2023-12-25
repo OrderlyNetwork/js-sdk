@@ -91,6 +91,13 @@ export class Widget {
         this.debounceSaveChartAdapterSetting.cancel();
     }
 
+    public updateOverrides (overrides: Overrides) {
+        if (!this.instance) {
+            return;
+        }
+        this.instance.applyOverrides(overrides);
+    }
+
     public setSymbol(symbol: string, callback?: any) {
         this._instance?.onChartReady(() => {
             const interval = this._instance?.symbolInterval()?.interval;
