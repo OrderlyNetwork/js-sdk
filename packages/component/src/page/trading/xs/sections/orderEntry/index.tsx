@@ -43,7 +43,6 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   }, []);
 
   const formState = useOrderEntry(symbol, side, reduceOnly);
-  console.log(reduceOnly);
 
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
