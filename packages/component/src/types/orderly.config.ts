@@ -4,13 +4,19 @@ export type OrderlyConfig = {
     options?: any;
   };
   app: {
+    brokerId: string;
+    brokerName: string;
     appIcons: {
       main?: string;
       secondary?: string;
     };
-    tradingView: {
-      scriptSRC: string;
-      library_path: string;
+  };
+  pages: {
+    trading?: {
+      tradingView?: {
+        scriptSRC: string;
+        library_path: string;
+      };
     };
   };
 };
