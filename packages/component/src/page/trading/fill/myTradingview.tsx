@@ -14,6 +14,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
       symbol={symbol}
       libraryPath={tradingViewConfig?.library_path}
       tradingViewScriptSrc={tradingViewConfig?.scriptSRC}
+      tradingViewCustomCssUrl={tradingViewConfig?.customCssUrl}
     />
   );
 };
