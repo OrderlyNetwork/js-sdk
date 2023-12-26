@@ -57,7 +57,8 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         mode={ChartMode.MOBILE}
         interval={timeInterval}
         libraryPath={props.library_path}
-        tradingViewScriptSrc={props.scriptSRC}
+        tradingViewScriptSrc={props?.scriptSRC}
+        tradingViewCustomCssUrl={props?.customCssUrl}
       />
     </>
   );
