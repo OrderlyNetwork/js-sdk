@@ -12,6 +12,7 @@ import { Header } from "./sections/tradingHeader";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { SystemStatusBar } from "@/block/systemStatusBar";
 import { useLayoutMeasure } from "./useLayoutMeasure";
+import { useCSSVariable } from "@/hooks/useCSSVariable";
 
 interface PageProps {
   header?: React.ReactNode;
@@ -19,18 +20,24 @@ interface PageProps {
 }
 
 export const TradingPage: FC<TradingPageProps> = (props) => {
-  const {} = useLayoutMeasure();
+  // const {} = useLayoutMeasure();
+
+  const cssVariable = useCSSVariable([
+    "--orderly-color-primary",
+    "--orderly-color-divider",
+  ]);
 
   useEffect(() => {
     document.body.style.setProperty(
       "--w-split-line-bar-background",
-      "rgb(42, 46, 52)"
+      // "rgb(42, 46, 52)"
+      `rgb(${cssVariable["--orderly-color-divider"]})`
     );
     document.body.style.setProperty(
       "--w-split-line-bar-active-background",
-      "#B64FFF"
+      `rgb(${cssVariable["--orderly-color-primary"]})`
     );
-  }, []);
+  }, [cssVariable]);
 
   return (
     <div className="orderly-tabular-nums">
