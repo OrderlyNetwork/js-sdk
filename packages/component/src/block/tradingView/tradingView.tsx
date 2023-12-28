@@ -16,6 +16,7 @@ export type TradingViewChartConfig = TradingViewChartProps &
   TimeIntervalToolbarProps & {
     scriptSRC?: string;
     library_path: string;
+    overrides?: Record<string, string>;
     customCssUrl?: string;
     // apiBaseUrl: string;
   };
@@ -59,6 +60,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         libraryPath={props.library_path}
         tradingViewScriptSrc={props?.scriptSRC}
         tradingViewCustomCssUrl={props?.customCssUrl}
+        overrides={props.overrides}
       />
     </>
   );

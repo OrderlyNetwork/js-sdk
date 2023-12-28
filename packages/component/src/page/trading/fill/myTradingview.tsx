@@ -5,6 +5,7 @@ interface Props {
   tradingViewConfig?: {
     scriptSRC?: string;
     library_path: string;
+    overrides?: Record<string, string>;
     customCssUrl?: string;
   };
 }
@@ -15,6 +16,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
       libraryPath={tradingViewConfig?.library_path}
       tradingViewScriptSrc={tradingViewConfig?.scriptSRC}
       tradingViewCustomCssUrl={tradingViewConfig?.customCssUrl}
+      overrides={tradingViewConfig?.overrides}
     />
   );
 };
