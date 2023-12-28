@@ -207,7 +207,8 @@ body {
 }
 #orderly-deposit-and-withdraw .orderly-deposit-action-button-container,
 #orderly-deposit-and-withdraw .orderly-withdraw-action-button-container {
-  width: 200px;
+  width: auto;
+  min-width: 200px;
 }
 #orderly-deposit-and-withdraw .orderly-quantity-input-max,
 #orderly-deposit-and-withdraw .orderly-token-select {
