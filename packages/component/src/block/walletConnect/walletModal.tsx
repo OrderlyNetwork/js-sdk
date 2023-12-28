@@ -21,8 +21,6 @@ const useWalletConnect = () => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   // get account status and handle sign in and enable trading
   const { account, createOrderlyKey, createAccount } = useAccount();
-  // @ts-ignore
-  const { logoUrl } = useContext(OrderlyAppContext);
 
   const onSignIn = useCallback(() => {
     return createAccount().catch((err: Error) => {
@@ -47,7 +45,6 @@ const useWalletConnect = () => {
     onSignIn,
     onComplete,
     createOrderlyKey,
-    logoUrl,
   };
 };
 
@@ -81,13 +78,12 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
     onSignIn,
     onComplete,
     createOrderlyKey,
-    logoUrl,
   } = useWalletConnect();
 
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent>
-        <SheetHeader leading={<Logo/>}>
+        <SheetHeader leading={<Logo />}>
           <SheetTitle>Connect wallet</SheetTitle>
         </SheetHeader>
         <WalletConnect
@@ -111,7 +107,6 @@ export const WalletConnectDialog = create<WalletConnectProps>((props) => {
     onSignIn,
     onComplete,
     createOrderlyKey,
-    logoUrl,
   } = useWalletConnect();
 
   return (

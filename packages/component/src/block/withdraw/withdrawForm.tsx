@@ -67,7 +67,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   onOk,
   switchChain,
 }) => {
-  const { brokerName, logoUrl } = useContext(OrderlyAppContext);
+  const { brokerName } = useContext(OrderlyAppContext);
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
 
@@ -220,7 +220,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         <div className="orderly-flex-1">
           {"Your " + brokerName + " account"}
         </div>
-        {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
+
         <Logo.secondary size={24} />
       </div>
       <QuantityInput

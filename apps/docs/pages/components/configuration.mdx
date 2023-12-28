@@ -14,7 +14,7 @@ export default function Trading() {
     <OrderlyAppProvider
       networkId="testnet"
       brokerId="<Your broker id>"
-      logoUrl="<Your brand logo url>"
+      logoUrl={}
     >
       <Desposit />
     </OrderlyAppProvider>
@@ -24,12 +24,32 @@ export default function Trading() {
 
 `OrderlyAppProvider` has the following parameters:
 
-### logoUrl
+### appIcons
 
-- Type: `string`
+- Type: AppLogos
 - Required: false
 
-Url of the App logo.
+Customize your app's icons, [refer](/components/theming#logo) . The `AppLogos` type is defined as follows:
+
+```typescript
+// AppLogos type
+
+type Logo = {
+  // the logo image url
+  img?: string;
+  // also can use react component
+  component?: ReactNode;
+  className?: string;
+};
+
+type AppLogos = Partial<{
+  // logo for top navigation bar
+  main: Logo;
+  // logo for popover/dialog header
+  secondary: Logo;
+}>;
+```
+
 
 ### toastLimitCount
 

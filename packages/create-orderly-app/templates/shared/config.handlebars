@@ -5,12 +5,15 @@ const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
   {{#if blockNative}}
     wallet: {
       /**
-        * @description
-        * 1. Create a wallet at https://onboard.money
+        * 1. Create an Api key at https://explorer.blocknative.com/account
         * 2. Copy the API key and paste it below
-        * @see https://docs.blocknative.com/onboard
+        * @see https://onboard.blocknative.com/docs/overview/introduction
         */
       apiKey: "orderly",
+      /**
+      * web3-onboard options
+      * @see https://onboard.blocknative.com/docs/modules/core#initialization
+      */
       options: {},
     },
   {{/if}}
@@ -20,7 +23,7 @@ const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
       /**
         * 1. Create a wallet at https://onboard.money
         * 2. Copy the API key and paste it below
-        * @see https://docs.blocknative.com/onboard
+        * @see https://sdk.orderly.network/components/theming#logo
         */
       appIcons: {
         //
@@ -33,9 +36,8 @@ const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
       {{#if tradingPage}}
       trading: {
         /**
-          * 1. Create a wallet at https://onboard.money
-          * 2. Copy the API key and paste it below
-          * @see https://docs.blocknative.com/onboard
+          * TradingView charting config
+          * @see https://sdk.orderly.network/components/trading#tradingviewconfig
           */
         tradingView: {
           // TradingView charting library

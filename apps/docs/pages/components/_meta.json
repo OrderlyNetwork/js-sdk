@@ -1,20 +1,39 @@
 {
+  "theme": {
+    "title": "Theme builder",
+    "href": "/theme"
+  },
+  "apis": {
+    "title": "APIs",
+    "href": "/apis/modules/__orderly_network___hooks"
+  },
+  "line":{
+    "type": "separator"
+  },
+  
   "introduction": "Introduction",
   "getting_started": "Getting Started",
   "configuration": "Configuration",
   "theming": "Theming",
   "wallet": "Wallet connect",
-  "frameworks": "Framework Guides",
-  "Install": {
-    "type": "separator"
+  "Frameworks": {
+    "type": "separator",
+    "title": "Framework Guides"
+  },
+  "next": "Next.js",
+  "cra": "Create React App",
+  "Page Components": {
+    "type": "separator",
+    "title":"Page Components"
   },
   "trading": "Trading Page",
   "Block": {
-    "type": "separator"
+    "type": "separator",
+    "title": "Block Components"
   },
   "deposit": "Deposit",
   "withdraw": "Withdraw",
-  "order_entry": {"title":"Order Entry","display": "hidden"},
+  "order_entry": { "title": "Order Entry", "display": "hidden" },
   "Base Component": {
     "type": "separator"
   }

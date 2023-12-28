@@ -38,7 +38,7 @@ export interface AccountStatusProps {
 
 export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
   const { status = AccountStatusEnum.NotConnected } = props;
-  const { logoUrl, errors } = useContext(OrderlyAppContext);
+  const { errors } = useContext(OrderlyAppContext);
 
   const [infoOpen, setInfoOpen] = useState(false);
 

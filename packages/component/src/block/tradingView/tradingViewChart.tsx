@@ -41,5 +41,5 @@ export type TradingViewChartProps = {
   container_id?: string;
   children?: never;
   // =========== special props ===========
-  apiBaseUrl: string;
+  // apiBaseUrl: string;
 };

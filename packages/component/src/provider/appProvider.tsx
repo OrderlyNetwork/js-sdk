@@ -47,7 +47,6 @@ type AppLogos = Partial<{
 }>;
 
 export type OrderlyAppContextState = {
-  logoUrl: string;
   appIcons?: AppLogos;
   theme: any;
   onWalletConnect: () => Promise<any>;
@@ -66,7 +65,6 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
 );
 
 export interface OrderlyAppProviderProps {
-  logoUrl: string;
   appIcons?: AppLogos;
   theme?: any;
   toastLimitCount?: number;
@@ -84,7 +82,6 @@ export const OrderlyAppProvider: FC<
   PropsWithChildren<OrderlyAppProviderProps & ConfigProviderProps>
 > = (props) => {
   const {
-    logoUrl,
     appIcons: logos,
     theme,
     configStore,
@@ -111,7 +108,6 @@ export const OrderlyAppProvider: FC<
       contracts={contracts}
     >
       <InnerProvider
-        logoUrl={logoUrl}
         appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
@@ -127,7 +123,6 @@ export const OrderlyAppProvider: FC<
 
 const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   const {
-    logoUrl,
     theme,
     appIcons: logos,
     brokerName,
@@ -327,7 +322,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   return (
     <OrderlyAppContext.Provider
       value={{
-        logoUrl,
         appIcons: logos,
         theme,
         errors,

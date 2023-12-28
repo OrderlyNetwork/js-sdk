@@ -24,45 +24,6 @@ export const Main = (props: PropsWithChildren) => {
     setChain, // function to call to initiate user to switch chains in their wallet
   ] = useSetChain();
 
-  const switchChain = async (options: any) => {
-    if (connectedChain?.id === options.chainId) return;
-    // await setChain(options);
-
-    if (typeof (window as any).ethereum !== "undefined") {
-      try {
-        await (window as any).ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: options.chainId }],
-        });
-      } catch (switchError: any) {
-        //
-        if (switchError.code === 4902) {
-          try {
-            await (window as any).ethereum.request({
-              method: "wallet_addEthereumChain",
-              params: [
-                {
-                  chainId: options.chainId,
-                  chainName: options.name,
-                  rpcUrls: [options.rpcUrl],
-                  blockExplorerUrls: [options.blockExplorerUrls],
-                  // token: options.token,
-                  nativeCurrency: {
-                    name: options.token,
-                    symbol: options.token,
-                    decimals: 18,
-                  },
-                },
-              ],
-            });
-          } catch (addError) {
-            // handle "add" error
-          }
-        }
-      }
-    }
-  };
-
   return (
     <WalletConnectorContext.Provider
       value={{
@@ -72,7 +33,7 @@ export const Main = (props: PropsWithChildren) => {
         wallet,
         setChain,
         chains,
-        switchChain,
+        // switchChain,
         connectedChain,
         settingChain,
       }}

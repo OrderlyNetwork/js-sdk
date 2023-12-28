@@ -21,7 +21,7 @@ interface AccountTotalProps {
 export const AccountTotal: FC<AccountTotalProps> = (props) => {
   const { currency = "USDC", accountInfo } = props;
   // @ts-ignore
-  const { logoUrl, errors } = useContext(OrderlyAppContext);
+  const { errors } = useContext(OrderlyAppContext);
   const { onDeposit, onWithdraw, onSettle, visible, toggleVisible } =
     useContext(AssetsContext);
 

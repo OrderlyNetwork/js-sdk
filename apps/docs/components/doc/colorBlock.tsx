@@ -68,6 +68,7 @@ export const Colors = () => {
             { color: "bg-primary-darken", name: "primary darken" },
             { color: "bg-primary", name: "primary" },
             { color: "bg-primary-light", name: "primary light" },
+            { color: "bg-primary-contrast", name: "primary contrast" },
           ]}
         />
 
@@ -77,6 +78,7 @@ export const Colors = () => {
             { color: "bg-danger-darken", name: "danger darken" },
             { color: "bg-danger", name: "danger" },
             { color: "bg-danger-light", name: "danger light" },
+            { color: "bg-danger-contrast", name: "danger light" },
           ]}
         />
         <ColorList

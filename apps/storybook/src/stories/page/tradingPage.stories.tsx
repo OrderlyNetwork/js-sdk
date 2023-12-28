@@ -23,7 +23,7 @@ export default {
         configStore={new MemoryConfigStore()}
         keyStore={new WooKeyStore()}
         walletAdapter={new Web3WalletAdapter()}
-        logoUrl="/woo/woo_fi_logo.svg"
+       
       >
         <Story />
       </OrderlyProvider>

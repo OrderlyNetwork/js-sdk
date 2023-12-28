@@ -11,11 +11,7 @@ function Trading() {
 
   return (
     <ConnectorProvider>
-      <OrderlyAppProvider
-        networkId="testnet"
-        brokerId="orderly"
-        logoUrl="<Your brand logo url>"
-      >
+      <OrderlyAppProvider networkId="testnet" brokerId="orderly">
         <TradingPage
           symbol={symbol}
           //   @ts-ignore

@@ -1,10 +1,10 @@
 import { Steps, Tabs } from "nextra/components";
 
 # Getting started
-{/* 
+
 ## Automatic Installation
 
-For a brand new project, we recommend running the `create-orderly-app` command to create a new trading app automatically. `create-orderly-app` provides a config page that allows you to set the project's config, and will then build an app supporting all of Orderly's services accordingly.
+For a brand new project, we recommend running the `create-orderly-app` command to create a new trading app automatically.  This will set up a new Orderly app and install the required dependencies.
 
 <Tabs items={["npm", "pnpm", "yarn"]} defaultIndex="1">
   <Tabs.Tab>
@@ -30,15 +30,13 @@ For a brand new project, we recommend running the `create-orderly-app` command t
   </Tabs.Tab>
 </Tabs>
 
-You can change the following settings on the config page:
+You will then be asked the following prompts:
 
-- Selecting a basic framework (Next.js, CRA, Vite, Gatsby...)
-- Setting a theme（colours, fonts, components）
-- SEO information
-- Routing
-- i18n
+- **Project name**: The name of your project. This will be used as the name of the folder that will be created.
+- **Broker ID**: The ID of your broker. 
 
-Once the above settings are completed, `create-orderly-app` will create a folder that is named after your project name, then install all dependencies, and creates all routes and components required for creating the app automatically. */}
+
+Once you've answered the prompts, `create-orderly-app` will create a folder that is named after your project name, then install all dependencies, and creates all routes and components required for creating the app automatically.
 
 ## Manual Installation
 
@@ -63,26 +61,28 @@ import "@orderly.network/react/dist/styles.css";
 
 If you would like to customize the theme, please refer to this [link](/doc/theming).
 
-### Pages
 
-To add a new page to your project, introduce a component of the Page type, and provide the required configuration parameters as specified. Below is an example using the trading page:
+### Adding a global configuration Provider
 
-```typescript filename="trading.tsx" copy
-import { TradingPage } from "@orderly.network/react";
+- The `OrderlyAppProvider` component encapsulates the `OrderlyConfigProvider` from `@orderly.network/hooks`. The parameters you configure on the `OrderlyAppProvider` component will be passed to the `OrderlyConfigProvider`.
+- The `brokerId` parameter is mandatory, and you can obtain it by [contacting us](mailto:product@orderly.network).
+
+```typescript filename="trading.tsx" {11-15,21} copy
+import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
+// Add a wallet connection provider to provide the wallet connection function for the app
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 export default function Trading() {
   return (
-    <TradingPage
-      symbol={"PERP_ETH_USDC"}
-      tradingViewConfig={`tradingView config`}
-      onSymbolChange={`onSymbolChange handler`}
-    />
+    <ConnectorProvider
+      apiKey="<Your web3-onboard's api key>"
+      options={`metadata`}
+    >
+      // children components
+    </ConnectorProvider>
   );
 }
 ```
-
-- Different frameworks often have different ways of configuring routes. You can view examples [here](/components/frameworks/next).
-- For configuration parameters of the Trading Page component, please refer to [this link](/docs/trading-page).
 
 ### Adding a wallet connection component
 
@@ -103,25 +103,25 @@ export default function Trading() {
       apiKey="<Your web3-onboard's api key>"
       options={`metadata`}
     >
-      <TradingPage
-        symbol={"PERP_ETH_USDC"}
-        tradingViewConfig={`tradingView config`}
-        onSymbolChange={`onSymbolChange handler`}
-      />
+      <OrderlyAppProvider
+        networkId="testnet"
+        brokerId="<Your broker id>"
+        logoUrl="<Your brand logo url>"
+      >
+        // page
+      </OrderlyAppProvider>
     </ConnectorProvider>
   );
 }
 ```
 
-### Adding a global configuration Provider
 
-- The `OrderlyAppProvider` component encapsulates the `OrderlyConfigProvider` from `@orderly.network/hooks`. The parameters you configure on the `OrderlyAppProvider` component will be passed to the `OrderlyConfigProvider`.
-- The `brokerId` parameter is mandatory, and you can obtain it by [contacting us](mailto:product@orderly.network).
+### Pages
 
-```typescript filename="trading.tsx" {11-15,21} copy
-import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
-// Add a wallet connection provider to provide the wallet connection function for the app
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+To add a new page to your project, introduce a component of the Page type, and provide the required configuration parameters as specified. Below is an example using the trading page:
+
+```typescript filename="trading.tsx" copy
+import { TradingPage } from "@orderly.network/react";
 
 export default function Trading() {
   return (
@@ -144,6 +144,12 @@ export default function Trading() {
   );
 }
 ```
+
+- Different frameworks often have different ways of configuring routes. You can view examples [here](/components/frameworks/next).
+- For configuration parameters of the Trading Page component, please refer to [this link](/docs/trading-page).
+
+
+
 
 ### Done
 

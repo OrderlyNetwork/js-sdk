@@ -16,6 +16,7 @@ import Image from "next/image";
   - `default`: The default shade of the color
   - `light`: A lighter shade than default
   - `darken`: A darker shade than default
+  - `contrastText`: Text color, intended to contrast with default
 
 - `base-contrast` defines color of texts. The library uses transparency to differentiate the importance of texts.
 
@@ -217,7 +218,7 @@ If you want to modify the style of a specific component, you can use the id sele
 | orderly-pending-cell-cancel-button       | peding orders  |      Cancel pending order button |
 | orderly-bottom-nav-bar-connect-button    | bottom-nav-bar | bottom bar connect wallet button |
 
-## Logo
+## appIcons
 
 {/* <div className="mt-7 flex justify-center items-center bg-base-300 p-3 rounded-lg h-[300px] space-x-5 color-item"> */}
   {/* <Image src="/images/replace-logo.png" width="500" height="300" /> */}
@@ -227,7 +228,7 @@ If you want to modify the style of a specific component, you can use the id sele
 
 You can add your logo to the indicated position in the diagram above using the following method:
 
-```typescript {8}
+```typescript {8-15}
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
 
 export default function Trading() {
@@ -235,7 +236,14 @@ export default function Trading() {
      <OrderlyAppProvider
         networkId="testnet"
         brokerId="<Your broker id>"
-        logoUrl="<Your brand logo url>"
+        appIcons={{
+          main:{
+            img:"<main logo src>",
+          },
+          secondary:{
+            img:"<secondary log src>",
+          }
+        }}
       >
         {/* Page Component */}
       </OrderlyAppProvider>
@@ -243,3 +251,36 @@ export default function Trading() {
   );
 }
 ```
+### main
+
+#### img
+
+- Type: `string`
+- Required: false
+
+#### component
+
+- Type: `ReactNode`
+- Required: false
+
+#### className
+
+- Type: `string`
+- Required: false
+
+### secondary
+
+#### img
+
+- Type: `string`
+- Required: false
+
+#### component
+
+- Type: `ReactNode`
+- Required: false
+
+#### className
+
+- Type: `string`
+- Required: false

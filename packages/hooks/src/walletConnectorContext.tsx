@@ -9,7 +9,7 @@ export interface WalletConnectorContextState {
   connecting: boolean;
   setChain: (options: any) => Promise<any>;
   chains: any[];
-  switchChain: (options: { chainId: string }) => Promise<any>;
+  // switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: any;
   connectedChain: ConnectedChain | null;
 

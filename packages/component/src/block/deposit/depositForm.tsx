@@ -103,7 +103,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // onEnquiry,
   } = props;
 
-  const { errors, enableSwapDeposit, brokerName, logoUrl } =
+  const { errors, enableSwapDeposit, brokerName } =
     useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
@@ -561,7 +561,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <div className="orderly-flex-1 orderly-text-2xs orderly-text-base-contrast desktop:orderly-text-base">
           {"Your " + brokerName + " account"}
         </div>
-        {/* <NetworkImage type={"path"} rounded path={logoUrl} /> */}
+
         <Logo.secondary size={24} />
       </div>
       <div className="orderly-py-2">
