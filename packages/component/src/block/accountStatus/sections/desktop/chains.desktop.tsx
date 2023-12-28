@@ -116,6 +116,7 @@ export const Chains: FC<ChainsProps> = (props) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
+        onCloseAutoFocus={(e) => e.preventDefault()}
         align="end"
         className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-hide-scrollbar  orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
       >
@@ -126,7 +127,7 @@ export const Chains: FC<ChainsProps> = (props) => {
           testChains={testChains}
           onItemClick={(item: any) => {
             setOpen(false);
-            
+
             if (connectedChain) {
               setChain({ chainId: item.id }).then((success: boolean) => {
                 // reset default chain when switch to connected chain
