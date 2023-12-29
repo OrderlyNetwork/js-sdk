@@ -7,7 +7,7 @@ export default defineConfig((options) => ({
   format: ["cjs"],
   target: "es6",
   // sourcemap: true,
-  clean: true,
+  clean: !options.watch,
   // publicDir:'templates'
   // dts: true,
 }));

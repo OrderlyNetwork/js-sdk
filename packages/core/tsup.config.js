@@ -10,9 +10,9 @@ export default defineConfig((options) => ({
   splitting: false,
   minify: !options.watch,
   format: ["cjs", "esm"],
-  target: "ES2020",
+  target: "es2020",
   sourcemap: true,
-  clean: true,
+  clean: !options.watch,
   dts: true,
   noExternal: ["bs58", "@noble/ed25519"],
   esbuildPlugins: [

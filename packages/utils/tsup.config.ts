@@ -7,6 +7,6 @@ export default defineConfig((options) => ({
   format: ["cjs", "esm"],
   target: "es6",
   sourcemap: true,
-  clean: true,
+  clean: !options.watch,
   dts: true,
 }));
