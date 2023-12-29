@@ -1,5 +1,13 @@
 # @orderly.network/futures
 
+## 1.0.24-alpha.7
+
+### Patch Changes
+
+- update docs
+- Updated dependencies
+  - @orderly.network/types@0.1.24-alpha.7
+
 ## 1.0.24-alpha.6
 
 ### Patch Changes
