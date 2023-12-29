@@ -23,8 +23,6 @@ npm install @orderly.network/react
 
 ### Add new route
 
-
-
 Next.js has two routing modes: Page Router and App Router. Here we take App mode as an example. For more information about App Router, please refer to [Next.js documentation](https://nextjs.org/docs/app/building-your-application/routing/defining-routes).
 
 Create a new `trade/[symbol]` directory under the `/app` directory, create a `page.tsx` file, and add the following code:
@@ -43,7 +41,8 @@ export default function Trading({ params }: { params: { symbol: string } }) {
       <OrderlyAppProvider
         networkId="testnet"
         brokerId="<Your broker id>"
-        logoUrl="<Your brand logo url>"
+        brokerName="<Your name>"
+        appIcons={...}
       >
         <TradingPage
           symbol={params.symbol}

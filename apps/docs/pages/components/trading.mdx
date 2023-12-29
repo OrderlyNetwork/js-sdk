@@ -12,6 +12,9 @@ import Image from "next/image";
 - Order form, list and management
 - Position list and management
 - Asset management, deposit and withdrawals
+- Responsive, automatically adapting to both desktop and mobile
+
+**For more features, please visit the [demo page](https://sdk-demo.orderly.network/perp/PERP_ETH_USDC).**
 
 ## Usage
 
@@ -122,6 +125,7 @@ export default function Trading() {
       tradingViewConfig={{
         scriptSRC: "/assets/chart/charting_library/charting_library.js",
         library_path: "/assets/chart/charting_library/",
+        customCssUrl: "/assets/chart/custom.css", // optional
       }}
       {/** other config  */}
     />

@@ -3,19 +3,19 @@ import { Decimal } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
 /**
- * 单个仓位价值
- * @param qty 数量
- * @param mark_price 价格
+ * Calculates the notional value of a single position.
+ * @param qty The quantity of the position.
+ * @param mark_price The price of the position.
+ * @returns The notional value of the position.
  */
 export function notional(qty: number, mark_price: number): number {
   return new Decimal(qty).mul(mark_price).abs().toNumber();
 }
 
 /**
- * 所有仓位价值
- * @param positions
- * @returns
- *
+ * Calculates the total notional value of all positions.
+ * @param positions The array of positions.
+ * @returns The total notional value of all positions.
  * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Notional
  */
 export function totalNotional(positions: API.Position[]): number {
@@ -31,9 +31,9 @@ export type UnrealPnLInputs = {
 };
 
 /**
- * 单个仓位未实现盈亏
- * @param qty 数量
- * @param price 价格
+ * Calculates the unrealized profit or loss of a single position.
+ * @param inputs The inputs for calculating the unrealized profit or loss.
+ * @returns The unrealized profit or loss of the position.
  */
 export function unrealizedPnL(inputs: UnrealPnLInputs): number {
   return new Decimal(inputs.qty)
@@ -47,6 +47,12 @@ export type UnrealPnLROIInputs = {
   IMR: number;
   unrealizedPnL: number;
 };
+
+/**
+ * Calculates the return on investment (ROI) of a single position's unrealized profit or loss.
+ * @param inputs The inputs for calculating the ROI.
+ * @returns The ROI of the position's unrealized profit or loss.
+ */
 export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
   const { openPrice, IMR } = inputs;
 
@@ -64,8 +70,9 @@ export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
 }
 
 /**
- * 所有仓位未实现盈亏
- * @param inputs
+ * Calculates the total unrealized profit or loss of all positions.
+ * @param positions The array of positions.
+ * @returns The total unrealized profit or loss of all positions.
  */
 export function totalUnrealizedPnL(positions: API.Position[]): number {
   return positions.reduce((acc, cur) => {
@@ -88,8 +95,9 @@ export type LiqPriceInputs = {
 };
 
 /**
- * 单个仓位强平价格
- *
+ * Calculates the liquidation price of a single position.
+ * @param inputs The inputs for calculating the liquidation price.
+ * @returns The liquidation price of the position.
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(inputs: LiqPriceInputs): number {
@@ -107,7 +115,6 @@ export function liqPrice(inputs: LiqPriceInputs): number {
           .sub(new Decimal(totalNotional).mul(MMR))
           .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
       )
-      // .todp(4, Decimal.ROUND_DOWN)
       .toNumber(),
     0
   );
@@ -119,6 +126,11 @@ export type MMInputs = {
   MMR: number;
 };
 
+/**
+ * Calculates the maintenance margin of a position.
+ * @param inputs The inputs for calculating the maintenance margin.
+ * @returns The maintenance margin of the position.
+ */
 export function maintenanceMargin(inputs: MMInputs) {
   const { positionQty, markPrice, MMR } = inputs;
 
@@ -132,8 +144,11 @@ export type UnsettlementPnLInputs = {
   sumUnitaryFunding: number;
   lastSumUnitaryFunding: number;
 };
+
 /**
- * 计算每个仓位未结算 PnL
+ * Calculates the unrealized profit or loss of each position.
+ * @param inputs The inputs for calculating the unrealized profit or loss.
+ * @returns The unrealized profit or loss of each position.
  * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unsettlement-PNL-%5BinlineExtension%5D
  */
 export function unsettlementPnL(inputs: UnsettlementPnLInputs): number {
@@ -160,10 +175,11 @@ export type TotalUnsettlementPnLInputs = {
   })[];
   sumUnitaryFunding: number;
 };
+
 /**
- * 计算所有仓位未结算 PnL
- * @param inputs
- * @returns
+ * Calculates the total unrealized profit or loss of all positions.
+ * @param positions The array of positions.
+ * @returns The total unrealized profit or loss of all positions.
  * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unsettlement-PNL-%5BinlineExtension%5D
  */
 export function totalUnsettlementPnL(
@@ -190,8 +206,9 @@ export function totalUnsettlementPnL(
 }
 
 /**
- * 计算仓位强平价格
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
+ * Calculates the maintenance margin requirement (MMR) of a position.
+ * @param inputs The inputs for calculating the MMR.
+ * @returns The MMR of the position.
  */
 export function MMR(inputs: {
   baseMMR: number;

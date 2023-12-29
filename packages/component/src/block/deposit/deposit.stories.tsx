@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Deposit } from ".";
 import { usePreLoadData } from "@orderly.network/hooks";
 import { AssetsProvider } from "@/provider/assetsProvider";
+import { modal } from "@/modal";
+import { DepositWithDialog } from "./dialog";
+// import { Button } from "@/button";
 
 import React from "react";
 
@@ -35,5 +38,14 @@ export const WithHooks: Story = {
         <Deposit {...args} />
       </AssetsProvider>
     );
+  },
+};
+
+export const WithDialog: Story = {
+  render: (args) => {
+    const onClick = () => {
+      modal.show(DepositWithDialog);
+    };
+    return <button onClick={onClick}>Deposit</button>;
   },
 };

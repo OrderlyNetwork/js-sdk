@@ -107,6 +107,21 @@ export abstract class BaseBuilder implements IBuilder {
     const configFile = template(this.parsedConfig);
 
     await this.saveConfigFile(configFile);
+
+    // if use web3-onboard, create options file;
+
+    if (this.parsedConfig.blockNative) {
+      const file = await fs.readFile(
+        path.resolve(__dirname, "../templates/shared/boardOptions.handlebars"),
+        "utf8"
+      );
+
+      const template = Handlebars.compile(file);
+
+      const configFile = template(this.parsedConfig);
+
+      await this.saveOnboardFile(configFile);
+    }
   }
 
   protected get parsedConfig() {
@@ -136,4 +151,5 @@ export abstract class BaseBuilder implements IBuilder {
   abstract get startCommand(): string;
   abstract createCustomWalletConnector(): Promise<any>;
   abstract saveConfigFile(file: string): Promise<any>;
+  abstract saveOnboardFile(file: string): Promise<any>;
 }

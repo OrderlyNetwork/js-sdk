@@ -32,9 +32,11 @@ For a brand new project, we recommend running the `create-orderly-app` command t
 
 You will then be asked the following prompts:
 
-- **Project name**: The name of your project. This will be used as the name of the folder that will be created.
-- **Broker ID**: The ID of your broker. 
-
+- **Project name?**: The name of your project. 
+- **What is your BrokerId?** 
+- **Would you like to add which pages?**: You can add some pages to your project.
+- **would you like to use which wallet connector?**: choose a wallet connect compoenent.
+- **Would you like to use which framework?**: choose a React framework.
 
 Once you've answered the prompts, `create-orderly-app` will create a folder that is named after your project name, then install all dependencies, and creates all routes and components required for creating the app automatically.
 
@@ -67,19 +69,21 @@ If you would like to customize the theme, please refer to this [link](/doc/themi
 - The `OrderlyAppProvider` component encapsulates the `OrderlyConfigProvider` from `@orderly.network/hooks`. The parameters you configure on the `OrderlyAppProvider` component will be passed to the `OrderlyConfigProvider`.
 - The `brokerId` parameter is mandatory, and you can obtain it by [contacting us](mailto:product@orderly.network).
 
-```typescript filename="trading.tsx" {11-15,21} copy
+```typescript filename="trading.tsx" copy
 import { TradingPage, OrderlyAppProvider } from "@orderly.network/react";
 // Add a wallet connection provider to provide the wallet connection function for the app
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 export default function Trading() {
   return (
-    <ConnectorProvider
-      apiKey="<Your web3-onboard's api key>"
-      options={`metadata`}
-    >
-      // children components
-    </ConnectorProvider>
+    <OrderlyAppProvider
+        networkId="testnet"
+        brokerId="<Your brokerId>"
+        brokerName="<Your name>"
+        appIcons={...}
+      >
+        // page
+    </OrderlyAppProvider>
   );
 }
 ```
@@ -92,7 +96,7 @@ export default function Trading() {
 npm install @orderly.network/web3-onboard
 ```
 
-```typescript filename="trading.tsx" {7-10,16} copy
+```typescript filename="trading.tsx" {7-10,19} copy
 import { TradingPage } from "@orderly.network/react";
 // Add a wallet connection provider to provide the wallet connection function for the app
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
@@ -105,8 +109,9 @@ export default function Trading() {
     >
       <OrderlyAppProvider
         networkId="testnet"
-        brokerId="<Your broker id>"
-        logoUrl="<Your brand logo url>"
+        brokerId="<Your brokerId>"
+        brokerName="<Your name>"
+        appIcons={...}
       >
         // page
       </OrderlyAppProvider>
@@ -120,7 +125,7 @@ export default function Trading() {
 
 To add a new page to your project, introduce a component of the Page type, and provide the required configuration parameters as specified. Below is an example using the trading page:
 
-```typescript filename="trading.tsx" copy
+```typescript filename="trading.tsx" {15-19} copy
 import { TradingPage } from "@orderly.network/react";
 
 export default function Trading() {
@@ -131,8 +136,9 @@ export default function Trading() {
     >
       <OrderlyAppProvider
         networkId="testnet"
-        brokerId="<Your broker id>"
-        logoUrl="<Your brand logo url>"
+        brokerId="<Your brokerId>"
+        brokerName="<Your name>"
+        appIcons={...}
       >
         <TradingPage
           symbol={"PERP_ETH_USDC"}

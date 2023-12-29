@@ -111,12 +111,12 @@ const { account, state } = useAccount();
  * setAddress will return Promise<AccountStatusEnum>, and state will be updated
  */
 const nextState = await account.setAddress("<address>", {
-  provider: provider, // EIP1193Provider
+  provider: provider, // EIP1193Provider, usually window.ethereum
   chain: {
-    id: 1,
+    id: '0x1', // chain id, e.g. 0x1 for Ethereum Mainnet, it's a hex string
   },
   wallet: {
-    name: "", // Wallet app name
+    name: "", // Wallet app name, e.g. MetaMask
   },
 });
 ```

@@ -33,7 +33,8 @@
   },
   "deposit": "Deposit",
   "withdraw": "Withdraw",
-  "order_entry": { "title": "Order Entry", "display": "hidden" },
+  "order_book": { "title": "Order Book" },
+  "order_entry": { "title": "Order Entry" },
   "Base Component": {
     "type": "separator"
   }

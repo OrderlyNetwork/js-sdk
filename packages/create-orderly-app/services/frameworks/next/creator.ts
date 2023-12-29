@@ -17,6 +17,15 @@ class NextCreator extends BaseBuilder {
     );
   }
 
+  async saveOnboardFile(file: string): Promise<any> {
+    const orderlyConfigDir = path.resolve(this.options.fullPath, "orderly");
+    await fs.ensureDir(orderlyConfigDir);
+    await fs.writeFile(
+      path.resolve(orderlyConfigDir, "blockNative.config.ts"),
+      file
+    );
+  }
+
   showWelcomeMessage(): string {
     return "Start to create Next.js project";
   }

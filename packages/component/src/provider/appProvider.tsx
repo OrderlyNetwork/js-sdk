@@ -39,7 +39,7 @@ type Logo = {
   className?: string;
 };
 
-type AppLogos = Partial<{
+export type AppLogos = Partial<{
   // logo for top navigation bar
   main: Logo;
   // logo for popover/dialog header

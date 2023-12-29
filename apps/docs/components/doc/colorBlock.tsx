@@ -87,6 +87,7 @@ export const Colors = () => {
             { color: "bg-warning-darken", name: "warning-darken" },
             { color: "bg-warning", name: "warning" },
             { color: "bg-warning-light", name: "warning-light" },
+            { color: "bg-warning-contrast", name: "warning-contrast" },
           ]}
         />
         <ColorList
@@ -95,6 +96,7 @@ export const Colors = () => {
             { color: "bg-success-darken", name: "success darken" },
             { color: "bg-success", name: "success" },
             { color: "bg-success-light", name: "success light" },
+            { color: "bg-success-contrast", name: "success contrast" },
           ]}
         />
       </div>
@@ -103,7 +105,9 @@ export const Colors = () => {
           groupName="trade"
           colors={[
             { color: "bg-trade-loss", name: "trade loss" },
+            { color: "bg-trade-loss-contrast", name: "trade contrast" },
             { color: "bg-trade-profit", name: "trade profit" },
+            { color: "bg-trade-profit-contrast", name: "trade contrast" },
           ]}
         />
 

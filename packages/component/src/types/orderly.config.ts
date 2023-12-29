@@ -1,3 +1,5 @@
+import { AppLogos } from "@/provider/appProvider";
+
 export type OrderlyConfig = {
   wallet: {
     apiKey?: string;
@@ -6,10 +8,7 @@ export type OrderlyConfig = {
   app: {
     brokerId: string;
     brokerName: string;
-    appIcons: {
-      main?: string;
-      secondary?: string;
-    };
+    appIcons: AppLogos;
   };
   pages: {
     trading?: {

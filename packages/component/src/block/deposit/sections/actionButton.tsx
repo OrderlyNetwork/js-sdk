@@ -72,7 +72,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (props.chain?.id === 421613) {
       return props.chains.testnet ?? [];
     }
-    return props.chains.mainnet;
+
+    return props.chains?.mainnet;
   }, [props.chains, props.chain]);
 
   const checkSupoort = (

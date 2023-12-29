@@ -11,16 +11,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: {
-          DEFAULT: "rgb(var(--orderly-color-background) / <alpha-value>)",
-          contrast:
-            "rgb(var(--orderly-color-background-contrast) / <alpha-value>)",
-        },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-primary-darken) / <alpha-value>)",
-          // contrast:"rgb(var(--orderly-color-primary) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--orderly-color-secondary) / <alpha-value>)",
@@ -60,14 +56,20 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-danger) / <alpha-value>)",
           light: "rgb(var(--orderly-color-danger-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-danger-darken) / <alpha-value>)",
+          contrast: "rgb(var(--orderly-color-danger-contrast) / <alpha-value>)",
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
+          darken: "rgb(var(--orderly-color-warning-darken) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--orderly-color-success) / <alpha-value>)",
           light: "rgb(var(--orderly-color-success-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-success-darken) / <alpha-value>)",
+          contrast:
+            "rgb(var(--orderly-color-success-contrast) / <alpha-value>)",
         },
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
@@ -77,20 +79,20 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-fill) / <alpha-value>)",
           light: "rgb(var(--orderly-color-fill-light) / <alpha-value>)",
         },
-        popover: {
-          DEFAULT: "rgb(var(--orderly-color-popover) / <alpha-value>)",
-          foreground:
-            "rgb(var(--orderly-color-popover-foreground) / <alpha-value>)",
-        },
         divider: "rgb(var(--orderly-color-divider) / <alpha-value>)",
         // disable:'',
         trade: {
-          loss: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
-          "loss-foreground":
-            "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
-          profit: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
-          "profit-foreground":
-            "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
+          loss: {
+            DEFAULT: "rgb(var(--orderly-color-trading-loss) / <alpha-value>)",
+            contrast:
+              "rgb(var(--orderly-color-trading-loss-contrast) / <alpha-value>)",
+          },
+
+          profit: {
+            DEFAULT: "rgb(var(--orderly-color-trading-profit) / <alpha-value>)",
+            contrast:
+              "rgb(var(--orderly-color-trading-profit-contrast) / <alpha-value>)",
+          },
         },
       },
 

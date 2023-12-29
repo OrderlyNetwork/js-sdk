@@ -14,7 +14,8 @@ export default function Trading() {
     <OrderlyAppProvider
       networkId="testnet"
       brokerId="<Your broker id>"
-      logoUrl={}
+      brokerName="<Your name>"
+      appIcons={...}
     >
       <Desposit />
     </OrderlyAppProvider>
@@ -29,7 +30,7 @@ export default function Trading() {
 - Type: AppLogos
 - Required: false
 
-Customize your app's icons, [refer](/components/theming#logo) . The `AppLogos` type is defined as follows:
+Customize your app's icons, The `AppLogos` type is defined as follows:
 
 ```typescript
 // AppLogos type

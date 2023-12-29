@@ -23,7 +23,7 @@ export default function Trading({ params }: { params: { symbol: string } }) {
         networkId="testnet"
         brokerId={app.brokerId}
         brokerName={app.brokerName}
-        appIcons={{main:{img:app.appIcons.main}, secondary: { img: app.appIcons.secondary} }}
+        appIcons={app.appIcons}
         onChainChanged={(chain) => {
           // TODO: handle chain change
         }}

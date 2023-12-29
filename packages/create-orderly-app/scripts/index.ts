@@ -40,6 +40,14 @@ const argv = yargs(hideBin(process.argv))
       describe: "wallet connector",
       type: "string",
     },
+    brokerId: {
+      describe: "broker id",
+      type: "string",
+    },
+    skipInstall: {
+      describe: "skip install",
+      type: "boolean",
+    },
   })
   // .fail(function (msg, err, yargs) {
   //   console.log(msg, err, yargs);

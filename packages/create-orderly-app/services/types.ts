@@ -12,4 +12,5 @@ export type CreateAppOptions = {
   pages: string[];
   // baseOn: string;
   // themes: [],
+  skipInstall: boolean;
 };

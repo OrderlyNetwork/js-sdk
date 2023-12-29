@@ -184,7 +184,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     order_quantity: "",
                     total: "",
                   });
-                  // 成功后改为通过ws的状态toast
                   // toast.success("Successfully!");
                 }
                 // resetForm?.();

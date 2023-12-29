@@ -1,4 +1,7 @@
 {
+  "perp": {
+    "title":"Perpetual formula"
+  },
   "hooks": "Hooks",
   "components": {
     "title": "Components",
@@ -6,8 +9,6 @@
   },
   "core":{
     "display": "hidden"
-  },
-  "perp": {
-    "display": "hidden"
   }
+  
 }

@@ -18,9 +18,12 @@ export async function create(options: CreateAppOptions) {
     spinner.succeed("project created");
     spinner.start("installing dependencies, this might take a while...");
 
-    await creator.installDependencies();
-    spinner.succeed("dependencies installed");
-    spinner.succeed(kleur.green("create project successfully"));
+    if (!options.skipInstall) {
+      await creator.installDependencies();
+      spinner.succeed("dependencies installed");
+      spinner.succeed(kleur.green("create project successfully"));
+    }
+
     spinner.stop();
 
     const successMessage = creator.showSuccessMessage();

@@ -1,4 +1,7 @@
 import {OrderlyConfig, OrderlyConfigCtx} from '@orderly.network/react'
+{{#if blockNative}}
+import boardOptions from './orderly/blockNative.config'
+{{/if}}
 
 const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
   return {
@@ -14,22 +17,26 @@ const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
       * web3-onboard options
       * @see https://onboard.blocknative.com/docs/modules/core#initialization
       */
-      options: {},
+      options: boardOptions,
     },
   {{/if}}
     app: {
       brokerId: "{{brokerId}}",
       brokerName: "{{brokerName}}",
       /**
-        * 1. Create a wallet at https://onboard.money
-        * 2. Copy the API key and paste it below
-        * @see https://sdk.orderly.network/components/theming#logo
+        * customize the app's icons
+        * Can use image resources directly or customize React components
+        * @see https://sdk.orderly.network/components/theming#appicons
         */
       appIcons: {
         //
-        main: "/orderly-logo.svg",
+        main: {
+          img:"/orderly-logo.svg"
+        },
         //
-        secondary: "/orderly-logo-secondary.svg",
+        secondary: {
+          img:"/orderly-logo-secondary.svg"
+        },
       },
     },
     pages:{
@@ -43,6 +50,8 @@ const config = (ctx: OrderlyConfigCtx): OrderlyConfig => {
           // TradingView charting library
           scriptSRC: "",
           library_path: "",
+          // optional theme css
+          // customCssUrl: "/tradingview/chart.css",
         },
       },
       {{/if}}
