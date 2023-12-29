@@ -67,7 +67,7 @@ const Components = () => {
         <Card>
           <ClosePositionPaneComponent />
         </Card>
-        <Card>
+        <Card className="py-5">
           <AccountStatusBarComponent />
         </Card>
       </div>
