@@ -1,5 +1,17 @@
 # storybook
 
+## 1.0.93-alpha.7
+
+### Patch Changes
+
+- update
+
+## 1.0.93-alpha.6
+
+### Patch Changes
+
+- update create-orderly-app template
+
 ## 1.0.93-alpha.5
 
 ### Patch Changes

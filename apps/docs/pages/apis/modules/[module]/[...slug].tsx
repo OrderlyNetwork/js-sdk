@@ -112,7 +112,7 @@ export async function getStaticPaths() {
 export default function Page(props) {
   const router = useRouter();
 
-  console.log("---api detail page---", props);
+  // console.log("---api detail page---", props);
 
   const type = useMemo(() => {
     return props.type?.replace("Parser", "");

@@ -42,7 +42,7 @@ export const MainLogo: FC<LogoProps> = ({
       return <img src={appIcons?.main?.img} height={_size} />;
     }
     return null;
-  }, [appIcons?.main]);
+  }, [appIcons?.main, _size]);
 
   if (appIcons?.main?.component) {
     return <>{appIcons.main.component}</>;

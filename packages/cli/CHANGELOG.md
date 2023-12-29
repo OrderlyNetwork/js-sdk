@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.0.33-alpha.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@0.1.24-alpha.9
+
+## 0.0.33-alpha.6
+
+### Patch Changes
+
+- update create-orderly-app template
+- Updated dependencies
+  - @orderly.network/core@0.1.24-alpha.8
+
 ## 0.0.33-alpha.5
 
 ### Patch Changes

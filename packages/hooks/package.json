@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "1.0.25-alpha.7",
+  "version": "1.0.25-alpha.9",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

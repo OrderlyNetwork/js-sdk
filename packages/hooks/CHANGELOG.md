@@ -1,5 +1,27 @@
 # @orderly.network/hooks
 
+## 1.0.25-alpha.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.24-alpha.9
+  - @orderly.network/core@0.1.24-alpha.9
+  - @orderly.network/perp@1.0.24-alpha.9
+  - @orderly.network/net@1.0.111-alpha.9
+
+## 1.0.25-alpha.8
+
+### Patch Changes
+
+- update create-orderly-app template
+- Updated dependencies
+  - @orderly.network/types@0.1.24-alpha.8
+  - @orderly.network/core@0.1.24-alpha.8
+  - @orderly.network/perp@1.0.24-alpha.8
+  - @orderly.network/net@1.0.111-alpha.8
+
 ## 1.0.25-alpha.7
 
 ### Patch Changes

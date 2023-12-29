@@ -1,5 +1,21 @@
 # @orderly.network/futures
 
+## 1.0.24-alpha.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.1.24-alpha.9
+
+## 1.0.24-alpha.8
+
+### Patch Changes
+
+- update create-orderly-app template
+- Updated dependencies
+  - @orderly.network/types@0.1.24-alpha.8
+
 ## 1.0.24-alpha.7
 
 ### Patch Changes

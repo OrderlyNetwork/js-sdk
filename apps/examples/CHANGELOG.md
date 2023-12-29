@@ -1,5 +1,23 @@
 # examples
 
+## 0.1.89-alpha.9
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.28-alpha.9
+  - @orderly.network/web3-onboard@0.0.25-alpha.9
+  - @orderly.network/hooks@1.0.25-alpha.9
+
+## 0.1.89-alpha.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@0.1.28-alpha.8
+  - @orderly.network/web3-onboard@0.0.25-alpha.8
+  - @orderly.network/hooks@1.0.25-alpha.8
+
 ## 0.1.89-alpha.7
 
 ### Patch Changes

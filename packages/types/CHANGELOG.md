@@ -1,5 +1,17 @@
 # @orderly.network/types
 
+## 0.1.24-alpha.9
+
+### Patch Changes
+
+- update
+
+## 0.1.24-alpha.8
+
+### Patch Changes
+
+- update create-orderly-app template
+
 ## 0.1.24-alpha.7
 
 ### Patch Changes
