@@ -21,7 +21,10 @@
     "title": "Framework Guides"
   },
   "next": "Next.js",
-  "cra": "Create React App",
+  "cra": {
+    "title":"Create React App",
+    "display": "hidden"
+  },
   "Page Components": {
     "type": "separator",
     "title":"Page Components"
