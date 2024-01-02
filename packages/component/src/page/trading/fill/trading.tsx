@@ -77,13 +77,13 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "40%" }}>
+            <div style={{ flex: 1, }}>
               <MemoizedDataListView />
             </div>
           </Split>
         </div>
         {/* order entry start */}
-        <div style={{ minWidth: "300px", maxWidth: "500px" }}>
+        <div style={{ minWidth: "300px", maxWidth: "500px", minHeight: "850px"}}>
           <AssetsProvider>
             <div className="orderly-px-3">
               <AccountInfo />

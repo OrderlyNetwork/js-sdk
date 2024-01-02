@@ -75,7 +75,7 @@ export const Ticker: FC<Props> = (props) => {
             label={"24h change"}
             value={
               <div className={"orderly-flex orderly-space-x-1"}>
-                <Numeral coloring>{data?.["24h_close"]}</Numeral>
+                <Numeral coloring>{data?.["24h_change"]}</Numeral>
                 <span className={"orderly-text-base-contrast-54"}>/</span>
                 <Numeral coloring rule={"percentages"}>
                   {data?.change || 0}
