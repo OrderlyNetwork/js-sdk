@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Header } from "./header";
 import { Bids } from "./bids";
 import { Asks } from "./asks";
@@ -36,14 +36,38 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
   // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
   //
+  const divRef = useRef(null);
+  const [showTotal, setShowTotal] = useState(false);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const { width } = entry.contentRect;
+        setShowTotal(() => width >= 360 && width < 468);
+      }
+    });
+
+    const targetDiv = divRef.current;
+
+    if (targetDiv) {
+      resizeObserver.observe(targetDiv);
+    }
+
+    return () => {
+      if (targetDiv) {
+        resizeObserver.unobserve(targetDiv);
+      }
+    };
+  }, []);
 
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
+      showTotal={showTotal}
     >
-      <div className={cn("orderly-h-full orderly-relative", props.className)}>
+      <div className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
