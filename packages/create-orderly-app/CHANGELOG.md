@@ -1,5 +1,21 @@
 # create-orderly-app
 
+## 0.1.1
+
+### Patch Changes
+
+- a1c2aba: fix bug
+- 25525af: update docs
+- 3c6a6fe: fix bug
+- cd07817: fix bug
+- 3c6a6fe: fix some bugs
+- 25525af: update
+- cd07817: fix bug
+- b5e7b22: update create-orderly-app
+- 3c6a6fe: fix bug
+- 25525af: update create-orderly-app template
+- fix bugs
+
 ## 0.1.1-alpha.9
 
 ### Patch Changes

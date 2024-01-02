@@ -1,5 +1,19 @@
 # storybook
 
+## 1.0.93
+
+### Patch Changes
+
+- a1c2aba: fix bug
+- c08e320: fix bug
+- 3c6a6fe: fix some bugs
+- 25525af: update
+- cd07817: fix bug
+- b5e7b22: update create-orderly-app
+- 3c6a6fe: fix bug
+- 25525af: update create-orderly-app template
+- fix bugs
+
 ## 1.0.93-alpha.7
 
 ### Patch Changes

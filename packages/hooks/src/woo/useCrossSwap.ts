@@ -225,6 +225,7 @@ export const useCrossSwap = (): any => {
 
       checkLayerStatus(result.hash);
 
+      // @ts-ignore
       return pick(["from", "to", "hash", "value"], result);
     } catch (e: any) {
       stop();
