@@ -1,6 +1,10 @@
 import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "viem/chains";
-import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
+import {
+  createWeb3Modal,
+  defaultWagmiConfig,
+  Web3ModalOptions,
+} from "@web3modal/wagmi/react";
 
 export interface ConfigOptions {
   projectId: string;
@@ -21,7 +25,7 @@ export interface ConfigOptions {
 
 export const initConfig = (
   projectId?: string,
-  config?: ConfigOptions
+  config?: Web3ModalOptions
 ): Promise<any> => {
   if (!projectId) {
     return Promise.reject("projectId is required");
@@ -35,6 +39,12 @@ export const initConfig = (
       icons: ["https://avatars.githubusercontent.com/u/37784886"],
     };
     const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
-    createWeb3Modal({ wagmiConfig, projectId, chains });
+    createWeb3Modal({
+      wagmiConfig,
+      projectId,
+      chains,
+      themeMode: "dark",
+      ...config,
+    });
   });
 };
