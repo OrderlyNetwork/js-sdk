@@ -388,6 +388,7 @@ export const useSwap = (): any => {
 
         txHash.current = result.hash;
 
+        // @ts-ignore
         return pick(["from", "to", "hash", "value"], result);
       } catch (e: any) {
         throw new Error(e.errorCode);

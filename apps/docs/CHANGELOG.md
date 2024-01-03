@@ -1,5 +1,29 @@
 # @orderly/docs
 
+## 0.1.64
+
+### Patch Changes
+
+- 25525af: update docs
+- 25525af: update
+- b5e7b22: update create-orderly-app
+- 25525af: update create-orderly-app template
+- Updated dependencies [a1c2aba]
+- Updated dependencies [c08e320]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [b5e7b22]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies
+  - @orderly.network/react@0.1.28
+  - @orderly.network/web3-onboard@0.0.25
+  - @orderly.network/hooks@1.0.25
+  - @orderly.network/types@0.1.24
+
 ## 0.1.64-alpha.9
 
 ### Patch Changes

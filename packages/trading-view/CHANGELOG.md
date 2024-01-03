@@ -1,5 +1,35 @@
 # @orderly.network/trading-view
 
+## 0.1.5
+
+### Patch Changes
+
+- a1c2aba: fix bug
+- c08e320: fix bug
+- 25525af: update docs
+- cd07817: fix bug
+- 3c6a6fe: fix some bugs
+- 25525af: update
+- cd07817: fix bug
+- b5e7b22: update create-orderly-app
+- 3c6a6fe: fix bug
+- 25525af: update create-orderly-app template
+- fix bugs
+- Updated dependencies [a1c2aba]
+- Updated dependencies [c08e320]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [b5e7b22]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies
+  - @orderly.network/hooks@1.0.25
+  - @orderly.network/core@0.1.24
+  - @orderly.network/net@1.0.111
+
 ## 0.1.5-alpha.9
 
 ### Patch Changes
