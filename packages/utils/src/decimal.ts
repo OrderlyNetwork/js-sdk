@@ -16,9 +16,9 @@ export const commify = (num: number | string): string => {
   const decimalPart = parts[1];
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
 
-  const endsWithPoint = num.toString().endsWith('.');
+  const endsWithPoint = num.toString().endsWith(".") && num.toString().length > 1;
   return (
-    numberPart.replace(thousands, ",") + endsWithPoint ? "." : (decimalPart ? "." + decimalPart : "")
+    numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : (endsWithPoint ? "." : ""))
   );
 };
 
