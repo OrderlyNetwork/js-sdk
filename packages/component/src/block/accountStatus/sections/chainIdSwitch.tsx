@@ -28,7 +28,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
-    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
+    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613 || item.network_infos?.chain_id === 420,
   });
 
   const [mainChains] = useChains("mainnet", {

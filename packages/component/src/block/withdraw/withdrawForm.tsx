@@ -24,6 +24,7 @@ import { ChainDialog } from "../pickers/chainPicker/chainDialog";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
 import { Logo } from "@/logo";
+import { useQuery } from "@orderly.network/hooks";
 
 export interface WithdrawProps {
   status?: WithdrawStatus;
@@ -44,6 +45,7 @@ export interface WithdrawProps {
     // receiver: string;
     token: string;
     amount: number;
+    allowCrossChainWithdraw: boolean;
   }) => Promise<any>;
 
   onOk?: (data: any) => void;
@@ -75,6 +77,22 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   const [quantity, setQuantity] = useState("");
 
+  const { data: balanceList } = useQuery<API.VaultBalance[]>(`/v1/public/vault_balance`, {
+    revalidateOnMount: true,
+  });
+
+  const chainVaultBalance = useMemo(() => {
+    if (!balanceList) return null;
+    // chain.id
+    const vaultBalance = balanceList.find((item: any) => parseInt(item.chain_id) === chain.id);
+    if (vaultBalance) {
+      return vaultBalance.balance;
+    }
+    return null;
+  }, [chains, chain, balanceList]);
+
+  // console.log("vault_balance data", balanceList, chain, chains, chainVaultBalance);
+
   const openChainPicker = useCallback(async () => {
     const result = await modal.show<{ id: number; name: string }, any>(
       ChainDialog,
@@ -86,7 +104,16 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     return result;
   }, [chains, chain]);
 
-  // const switchChain = useCallback((chainId: string) => {}, []);
+  const crossChainWithdraw = useMemo(() => {
+    if (chainVaultBalance !== null) {
+      const qtyNum = parseFloat(quantity);
+      const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
+      return value;
+    }
+     return false;
+  }, [
+    quantity, maxAmount, chainVaultBalance
+  ]);
 
   const doWithdraw = useCallback(() => {
     if (submitting) return;
@@ -111,6 +138,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       amount: Number(quantity),
       token: "USDC",
       chainId: chain?.id,
+      allowCrossChainWithdraw: crossChainWithdraw,
     })
       .then(
         (res) => {
@@ -126,7 +154,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       .finally(() => {
         setSubmitting(false);
       });
-  }, [quantity, minAmount, inputStatus, chain?.id, submitting, onOk]);
+  }, [quantity, minAmount, inputStatus, chain?.id, submitting, onOk, crossChainWithdraw]);
 
   const onValueChange = useCallback(
     (value: any) => {
@@ -163,14 +191,16 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
     const item = chains?.find((c) => c.chain_id === chain!.id);
 
-    //
-
     if (!item) {
       return 0;
     }
 
+    if (crossChainWithdraw) {
+      return item.withdrawal_fee || 0 + (item.cross_chain_withdrawal_fee || 0);
+    }
+
     return item.withdrawal_fee || 0;
-  }, [chain, chains]);
+  }, [chain, chains, crossChainWithdraw]);
 
   useEffect(() => {
     // const num = Number(quantity);
@@ -283,6 +313,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         quantity={quantity}
         loading={submitting}
         openChainPicker={openChainPicker}
+        chainVaultBalance={chainVaultBalance}
+        maxAmount={maxAmount}
+        crossChainWithdraw={crossChainWithdraw}
+        address={address}
+        fee={fee}
       />
     </div>
   );

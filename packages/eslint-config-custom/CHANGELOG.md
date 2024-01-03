@@ -1,5 +1,23 @@
 # eslint-config-custom
 
+## 0.0.31
+
+### Patch Changes
+
+- update
+
+## 0.0.30
+
+### Patch Changes
+
+- fix bug
+
+## 0.0.29
+
+### Patch Changes
+
+- fix bug
+
 ## 0.0.28
 
 ### Patch Changes
