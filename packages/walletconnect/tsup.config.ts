@@ -9,5 +9,5 @@ export default defineConfig((options) => ({
   treeshake: true,
   clean: !options.watch,
   dts: true,
-  external: ["react", "react-dom"],
+  external: ["react", "react-dom", "@orderly.network/hooks"],
 }));

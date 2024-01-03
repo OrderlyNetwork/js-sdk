@@ -56,13 +56,6 @@ export const usePositionStream = (
     onError: (err) => {},
   });
 
-  //
-
-  // const positionsStream = usePositionUpdateStream((positions) => {
-  //   console.log("position message", positions);
-  //     updatePositions();
-  // });
-
   const { data: markPrices } = useMarkPricesStream();
 
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {

@@ -103,7 +103,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "readme": "ERROR: No README data found!",
-  "_id": "@orderly.network/react@0.0.1"
+  }
 }

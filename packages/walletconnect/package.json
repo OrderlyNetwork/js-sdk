@@ -24,5 +24,8 @@
     "wagmi": "^1.4.12"
   },
   "author": "maogege",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@web3modal/wagmi": "^3.5.3"
+  }
 }

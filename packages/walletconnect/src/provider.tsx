@@ -1,30 +1,32 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 
-import type { InitOptions } from "@web3-onboard/core";
-import { initConfig } from "./config";
+import { ConfigOptions, initConfig } from "./config";
 import { Main } from "./main";
 
 export interface WalletConnectorProviderProps {
-  apiKey?: string;
-  options?: InitOptions;
+  projectId?: string;
+  config?: ConfigOptions;
   // skip board configuration if already initialized
-  skipInit?: boolean;
+  // skipWagmiInit?: boolean;
 }
 
 export const ConnectorProvider = (
   props: PropsWithChildren<WalletConnectorProviderProps>
 ) => {
-  const [initialized, setInitialized] = useState(!!props.skipInit);
-
-  useEffect(() => {
-    document.body.style.setProperty("--onboard-modal-z-index", "88");
-  }, []);
-
-  useEffect(() => {
-    if (props.skipInit) {
-      return;
+  const [initialized, setInitialized] = useState(false);
+  const [wagmiConfig, setWagmiConfig] = useState<any>(() => {
+    if (props.config) {
+      return props.config;
     }
-    initConfig(props.apiKey, props.options).then(() => {
+  });
+
+  if (!props.projectId) {
+    console.error("WalletConnect: projectId is required");
+  }
+
+  useEffect(() => {
+    // configuration web3modal
+    initConfig(props.projectId, props.config).then((config) => {
       setInitialized(true);
     });
   }, []);
