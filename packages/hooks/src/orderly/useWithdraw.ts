@@ -18,6 +18,7 @@ export const useWithdraw = () => {
       chainId: number;
       token: string;
       amount: number;
+      allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
       return account.assetsManager.withdraw(inputs).then((res: any) => {
         // if (res.success) {
