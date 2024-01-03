@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.85-alpha.0
+
+### Patch Changes
+
+- fix style issues
+
 ## 0.0.84
 
 ### Patch Changes

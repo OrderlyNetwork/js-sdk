@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.0.26-alpha.1
+
+### Patch Changes
+
+- fix style issues
+- Updated dependencies
+  - @orderly.network/types@0.1.25-alpha.1
+  - @orderly.network/utils@0.0.77-alpha.1
+  - @orderly.network/core@0.1.25-alpha.1
+  - @orderly.network/perp@1.0.25-alpha.1
+  - @orderly.network/net@1.0.112-alpha.1
+
 ## 1.0.26-alpha.0
 
 ### Patch Changes
