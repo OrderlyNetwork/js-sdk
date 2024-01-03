@@ -440,7 +440,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     containerClassName="orderly-bg-base-600"
                     error={!!methods.formState.errors?.order_quantity}
                     helpText={methods.formState.errors?.order_quantity?.message}
-                    value={field.value}
+                    value={commify(field.value || "")}
                     onChange={(event) => {
                       onFieldChange("order_quantity", event.target.value);
                     }}
@@ -519,7 +519,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     inputMode="decimal"
                     // value={field.value}
                     value={
-                      totalInputFocused.current ? field.value : totalAmount
+                      commify(totalInputFocused.current ? field.value : totalAmount)
                     }
                     onFocus={() => (totalInputFocused.current = true)}
                     onBlur={() => (totalInputFocused.current = false)}
