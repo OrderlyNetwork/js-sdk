@@ -91,7 +91,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const warningMessage = useMemo(() => {
     // check has cross chain withdraw
     if (crossChainTrans) {
-      return `Your cross-chain withdrawal of ${crossChainTrans.amount} USDC is currently in progress...`;
+      return `Withdrawal in progress...`;
     }
     // check cur chain is support no not
     if (chainNotSupport) {

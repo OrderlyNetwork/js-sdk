@@ -82,9 +82,9 @@ export const WithdrawForm: FC<WithdrawProps> = ({
   });
 
   const chainVaultBalance = useMemo(() => {
-    if (!balanceList) return null;
+    if (!balanceList || !chain) return null;
     // chain.id
-    const vaultBalance = balanceList.find((item: any) => parseInt(item.chain_id) === chain.id);
+    const vaultBalance = balanceList.find((item: any) => parseInt(item.chain_id) === chain?.id);
     if (vaultBalance) {
       return vaultBalance.balance;
     }
