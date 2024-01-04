@@ -56,7 +56,7 @@ export type WalletAdapterOptions = {
   //   name:string
   // },
   // getAddresses?: (address: string) => string;
-  chain: { id: string };
+  chain: { id: number };
 };
 
 export type getWalletAdapterFunc = (

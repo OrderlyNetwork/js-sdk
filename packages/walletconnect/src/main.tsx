@@ -14,7 +14,7 @@ import {
 export const Main: FC<PropsWithChildren> = (props) => {
   const { open } = useWeb3Modal();
   const { address, isConnecting, isDisconnected, connector } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { disconnect: __disconnect, disconnectAsync } = useDisconnect();
   const { chain, chains } = useNetwork();
   const { error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
@@ -22,17 +22,6 @@ export const Main: FC<PropsWithChildren> = (props) => {
   const publicClient = usePublicClient();
 
   const { data: walletClient, isError } = useWalletClient();
-
-  console.log({
-    address,
-    isConnecting,
-    isDisconnected,
-    connector,
-    chain,
-    chains,
-    walletClient,
-    publicClient,
-  });
 
   const connect = () => {
     return new Promise((resolve, reject) => {
@@ -48,9 +37,16 @@ export const Main: FC<PropsWithChildren> = (props) => {
     });
   };
 
+  const disconnect = (wallet: { chains: { id: number }[] }) => {
+    return Promise.resolve().then(() => {
+      return disconnectAsync();
+    });
+  };
+
   const connectedChain = useMemo(() => {
+    if (!chain || !chain?.id) return null;
     return {
-      id: chain?.id,
+      id: chain.id,
     };
   }, [chain]);
 
@@ -61,12 +57,13 @@ export const Main: FC<PropsWithChildren> = (props) => {
   };
 
   const wallet = useMemo(() => {
-    if (!address) return null;
+    if (!address || !connectedChain) return null;
 
     return {
       label: "string",
       icon: "string",
-      provider: publicClient,
+      // provider: publicClient,
+      provider: walletClient?.transport,
       // provider: EIP1193Provider,
       accounts: [
         {
@@ -77,7 +74,7 @@ export const Main: FC<PropsWithChildren> = (props) => {
       chains: [connectedChain],
       // instance?: unknown,
     };
-  }, [address, connectedChain, publicClient]);
+  }, [address, connectedChain, publicClient, walletClient]);
 
   return (
     <WalletConnectorContext.Provider

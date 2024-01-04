@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -376,9 +380,6 @@ importers:
       enquirer:
         specifier: ^2.4.1
         version: 2.4.1
-      qrcode-terminal:
-        specifier: ^0.12.0
-        version: 0.12.0
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -24016,11 +24017,6 @@ packages:
     hasBin: true
     dev: false
 
-  /qrcode-terminal@0.12.0:
-    resolution: {integrity: sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==}
-    hasBin: true
-    dev: false
-
   /qrcode@1.5.3:
     resolution: {integrity: sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg==}
     engines: {node: '>=10.13.0'}
@@ -28442,7 +28438,3 @@ packages:
       typedoc: 0.25.4(typescript@5.2.2)
       typescript: 5.2.2
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
