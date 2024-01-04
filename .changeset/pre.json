@@ -21,6 +21,7 @@
   },
   "changesets": [
     "angry-mugs-provide",
-    "eight-cheetahs-fetch"
+    "eight-cheetahs-fetch",
+    "great-students-hide"
   ]
 }
