@@ -5,7 +5,7 @@ export default defineConfig((options) => ({
   splitting: false,
   minify: !options.watch,
   format: ["cjs"],
-  target: "es6",
+  target: "es5",
   // sourcemap: true,
   clean: !options.watch,
   // publicDir:'templates'
