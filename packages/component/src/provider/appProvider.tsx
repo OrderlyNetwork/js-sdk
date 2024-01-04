@@ -176,7 +176,10 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         return false;
       }
 
-      const isSupport = chains.some((item: { id: string }) => {
+      const isSupport = chains.some((item: { id: string | number }) => {
+        if (typeof item.id === "number") {
+          return `0x${Number(item.id).toString(16)}` === chainId;
+        }
         return item.id === chainId;
       });
 
@@ -207,6 +210,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         if (!account) {
           throw new Error("account is not initialized");
         }
+        console.info("🤝 connect wallet", wallet);
         // account.address = wallet.accounts[0].address;
         const status = await account.setAddress(wallet.accounts[0].address, {
           provider: wallet.provider,
@@ -261,6 +265,8 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   useEffect(() => {
     // currentWallet?.provider.detectNetwork().then((x) =>
+
+    console.log("chains", chains);
 
     if (!chains || chains.length === 0) {
       return;

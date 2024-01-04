@@ -39,6 +39,7 @@ export const Default: Story = {
     return (
       <div>
         <button
+          style={{ all: "unset" }}
           onClick={() => {
             connect();
           }}
