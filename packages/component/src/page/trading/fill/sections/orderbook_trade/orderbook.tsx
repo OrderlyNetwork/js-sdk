@@ -18,7 +18,7 @@ interface MyOrderBookProps {
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;
 
-const SPACE = 135;
+const SPACE = 122;
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const { symbol } = props;
