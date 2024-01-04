@@ -89,22 +89,23 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
 
   const warningMessage = useMemo(() => {
+    const networkName = chain?.info?.network_infos?.name;
     // check has cross chain withdraw
     if (crossChainTrans) {
-      return `Withdrawal in progress...`;
+      return `Your cross-chain withdrawal is being processed...`;
     }
     // check cur chain is support no not
     if (chainNotSupport) {
       if (chains?.length && chains.length > 1) {
-        return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to any of the bridgeless networks.`;
+        return `Withdrawals are not supported on ${networkName}. Please switch to any of the bridgeless networks.`;
       }
 
-      return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to Arbitrum.`;
+      return `Withdrawals are not supported on ${networkName}. Please switch to Arbitrum.`;
     }
     // check quantity and vaultBalance
     if (crossChainWithdraw) {
       needCrossChain.current = true;
-      return `Currently, there is only ${chainVaultBalance} USDC in the Arbitrum Vault. Your withdrawal request exceeds this amount, necessitating a cross-chain rebalance and it will incur additional cross-chain gas fees.`
+      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`
     }
 
     return undefined;
