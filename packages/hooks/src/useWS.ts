@@ -15,8 +15,7 @@ export const useWS = () => {
 
     if (!websocketClient) {
       websocketClient = new WS({
-        // accountId: "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY",
-        networkId: "testnet",
+        networkId: configStore.get("networkId"),
         publicUrl: configStore.get("publicWsUrl"),
         privateUrl: configStore.get("privateWsUrl"),
         onSigntureRequest: async (accountId: string) => {
