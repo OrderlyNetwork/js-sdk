@@ -293,4 +293,10 @@ export declare namespace WSMessage {
     mmrwithOrders: number;
     mmr: number;
   }
+
+  export interface VaultBalance {
+    chain_id: string;
+    token: string;
+    balance: number;
+  }
 }

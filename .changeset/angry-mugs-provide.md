@@ -6,6 +6,8 @@
 "@orderly.network/storybook": patch
 "@orderly.network/hooks": patch
 "@orderly.network/types": patch
+"@orderly.network/utils": patch
+"@orderly.network/examples": patch
 "@orderly.network/core": patch
 "@orderly.network/perp": patch
 "@orderly.network/cli": patch
@@ -13,4 +15,4 @@
 "@orderly/docs": patch
 ---
 
-update create-orderly-app template
+fix bug

@@ -6,7 +6,7 @@ Decimal.set({
 
 export default Decimal;
 
-export const cutNumber = (num: number | string, lenght: number) => {};
+export const cutNumber = (num: number | string, lenght: number) => { };
 
 export const zero = new Decimal(0);
 
@@ -15,8 +15,10 @@ export const commify = (num: number | string): string => {
   const numberPart = parts[0];
   const decimalPart = parts[1];
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
+
+  const endsWithPoint = num.toString().endsWith(".") && num.toString().length > 1;
   return (
-    numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+    numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : (endsWithPoint ? "." : ""))
   );
 };
 

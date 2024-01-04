@@ -1,5 +1,61 @@
 # @orderly.network/futures
 
+## 1.0.25-alpha.2
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.25-alpha.2
+  - @orderly.network/utils@0.0.77-alpha.2
+
+## 1.0.25-alpha.1
+
+### Patch Changes
+
+- fix style issues
+- Updated dependencies
+  - @orderly.network/types@0.1.25-alpha.1
+  - @orderly.network/utils@0.0.77-alpha.1
+
+## 1.0.25-alpha.0
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.25-alpha.0
+  - @orderly.network/utils@0.0.77-alpha.0
+
+## 1.0.24
+
+### Patch Changes
+
+- a1c2aba: fix bug
+- c08e320: fix bug
+- 25525af: update docs
+- cd07817: fix bug
+- 3c6a6fe: fix some bugs
+- 25525af: update
+- cd07817: fix bug
+- b5e7b22: update create-orderly-app
+- 3c6a6fe: fix bug
+- 25525af: update create-orderly-app template
+- fix bugs
+- Updated dependencies [a1c2aba]
+- Updated dependencies [c08e320]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [b5e7b22]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies
+  - @orderly.network/types@0.1.24
+  - @orderly.network/utils@0.0.76
+
 ## 1.0.24-alpha.9
 
 ### Patch Changes

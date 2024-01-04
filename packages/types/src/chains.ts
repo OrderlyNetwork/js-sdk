@@ -372,4 +372,30 @@ export const chainsInfoMap: Map<number, ChainConfig> = new Map([
       chainLogo: "",
     },
   ],
+  [
+    420,
+    {
+      id: 420,
+      chainInfo: {
+        chainId: `0x${(420).toString(16)}`,
+        chainName: "Optimism Goerli",
+        nativeCurrency: {
+          name: "ETH",
+          symbol: "ETH",
+          decimals: 18,
+          fix: 4,
+        },
+        rpcUrls: ["https://optimism-goerli.gateway.tenderly.co"],
+        blockExplorerUrls: ["https://goerli-optimism.etherscan.io"],
+      },
+      minGasBalance: 0.0002,
+      minCrossGasBalance: 0.002,
+      maxPrepayCrossGas: 0.03,
+      blockExplorerName: "Base",
+      chainName: "Optimism Goerli",
+      chainNameShort: "Optimism Goerli",
+      requestRpc: "https://optimism-goerli.gateway.tenderly.co",
+      chainLogo: "",
+    },
+  ],
 ]);

@@ -7,7 +7,7 @@ export default create({
   brandTitle: "Oderly Network",
   brandUrl: "https://orderly.network/",
   brandImage:
-    "https://orderly.network/static/media/Logo.ce9709fec4adc70c4406d9f7b023c851.svg",
+    "/orderly-logo.svg",
   brandTarget: "_self",
 
   // colorPrimary: '#4F316D',

@@ -95,7 +95,7 @@ async function run() {
     {
       type: "text",
       name: "brokerId",
-      message: "What is your border id?",
+      message: "What is your broker id?",
       initial: "orderly",
       onState,
       // validate: (value) => validateNpmPackageName(value),

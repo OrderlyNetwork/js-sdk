@@ -19,7 +19,7 @@ export const useChains = (
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { filter, pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore } = useContext(OrderlyContext);
+  const { configStore, networkId: networkEnv } = useContext(OrderlyContext);
 
   // const envNetworkId = useConfig("networkId");
 
@@ -76,235 +76,269 @@ export const useChains = (
     }
   );
 
-  //
+  const apiBaseUrl = configStore.get("apiBaseUrl");
+
 
   const chains:
     | API.Chain[]
     | {
-        testnet: API.Chain[];
-        mainnet: API.Chain[];
-      } = useMemo(() => {
-    // if (!orderlyChains) return undefined;
+      testnet: API.Chain[];
+      mainnet: API.Chain[];
+    } = useMemo(() => {
+      // if (!orderlyChains) return undefined;
 
-    let orderlyChainsArr: API.Chain[] = [];
-    const orderlyChainIds = new Set<number>();
+      let orderlyChainsArr: API.Chain[] = [];
+      const orderlyChainIds = new Set<number>();
 
-    orderlyChains?.forEach((item) => {
-      item.chain_details.forEach((chain: any) => {
-        const chainId = Number(chain.chain_id);
-        orderlyChainIds.add(chainId);
-        const chainInfo = chainsInfoMap.get(chainId);
+      orderlyChains?.forEach((item) => {
+        item.chain_details.forEach((chain: any) => {
+          const chainId = Number(chain.chain_id);
+          orderlyChainIds.add(chainId);
+          const chainInfo = chainsInfoMap.get(chainId);
 
-        const _chain: any = {
+          const _chain: any = {
+            network_infos: {
+              name: chain.chain_name ?? chainInfo?.chainName ?? "--",
+              // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
+              chain_id: chainId,
+              withdrawal_fee: chain.withdrawal_fee,
+
+              bridgeless: true,
+            },
+            token_infos: [
+              {
+                symbol: item.token,
+                address: chain.contract_address,
+                decimals: chain.decimals,
+              },
+            ],
+          };
+
+          if (typeof options?.filter === "function") {
+            if (!options.filter(_chain)) return;
+          }
+
+          /// if chain is testnet, update network_infos
+          if (_chain.chain_id === 421613) {
+            const index = testnetArr.findIndex(
+              (item) => item.network_infos.chain_id === 421613
+            );
+            if (index > -1) {
+              testnetArr[index] = _chain;
+            }
+          }
+
+          map.current.set(chainId, _chain);
+
+          // orderlyChainsArr.push(field ? _chain[field] : _chain);
+          orderlyChainsArr.push(_chain);
+        });
+      });
+
+      // if (!wooSwapEnabled) {
+      //   //
+      //   let arr: any[] = orderlyChainsArr;
+      //   if (typeof options?.filter === "function") {
+      //     arr = orderlyChainsArr.filter(options.filter);
+      //   }
+
+      //   if (!!field) {
+      //     arr = arr.map((item) => item[field]);
+      //   }
+
+      //   return arr;
+      // } else {
+      //
+
+      let testnetArr: API.Chain[] = [
+        //@ts-ignore
+        {
           network_infos: {
-            name: chain.chain_name ?? chainInfo?.chainName ?? "--",
-            // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
-            chain_id: chainId,
-            withdrawal_fee: chain.withdrawal_fee,
+            name: "Arbitrum Goerli",
+            shortName: "Arbitrum Goerli",
+            public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
+            chain_id: 421613,
+            currency_symbol: "ETH",
+            bridge_enable: true,
+            mainnet: false,
+            explorer_base_url: "https://goerli.arbiscan.io/",
+            est_txn_mins: null,
 
-            bridgeless: true,
+            woofi_dex_cross_chain_router: "",
+            woofi_dex_depositor: "",
           },
           token_infos: [
             {
-              symbol: item.token,
-              address: chain.contract_address,
-              decimals: chain.decimals,
+              symbol: "USDC",
+              address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
+              decimals: 6,
+              swap_enable: false,
+              woofi_dex_precision: 2,
             },
           ],
-        };
-
-        if (typeof options?.filter === "function") {
-          if (!options.filter(_chain)) return;
-        }
-
-        /// if chain is testnet, update network_infos
-        if (_chain.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
-
-        map.current.set(chainId, _chain);
-
-        // orderlyChainsArr.push(field ? _chain[field] : _chain);
-        orderlyChainsArr.push(_chain);
-      });
-    });
-
-    // if (!wooSwapEnabled) {
-    //   //
-    //   let arr: any[] = orderlyChainsArr;
-    //   if (typeof options?.filter === "function") {
-    //     arr = orderlyChainsArr.filter(options.filter);
-    //   }
-
-    //   if (!!field) {
-    //     arr = arr.map((item) => item[field]);
-    //   }
-
-    //   return arr;
-    // } else {
-    //
-
-    let testnetArr: API.Chain[] = [
-      //@ts-ignore
-      {
-        network_infos: {
-          name: "Arbitrum Goerli",
-          shortName: "Arbitrum Goerli",
-          public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
-          chain_id: 421613,
-          currency_symbol: "ETH",
-          bridge_enable: true,
-          mainnet: false,
-          explorer_base_url: "https://goerli.arbiscan.io/",
-          est_txn_mins: null,
-
-          woofi_dex_cross_chain_router: "",
-          woofi_dex_depositor: "",
         },
-        token_infos: [
-          {
-            symbol: "USDC",
-            address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
-            decimals: 6,
-            swap_enable: false,
-            woofi_dex_precision: 2,
-          },
-        ],
-      },
-    ];
-    let mainnetArr: API.Chain[] = [];
+      ];
 
-    map.current.set(421613, testnetArr[0]);
-
-    if (wooSwapEnabled) {
-      if (!data || !data.data) return data;
-
-      Object.keys(data.data).forEach((key) => {
-        // if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
-
-        const chain = data.data[key];
-
-        const item: any = mergeDeepRight(chain, {
-          name: key,
+      if (networkEnv === "testnet") {
+        const opGoerli = {
           network_infos: {
-            bridgeless: orderlyChainIds.has(chain.network_infos.chain_id),
-            shortName: key,
-          },
-          token_infos: chain.token_infos.filter(
-            (token: API.TokenInfo) => !!token.swap_enable
-          ),
-        });
-
-        if (item.token_infos?.length === 0) return;
-
-        map.current.set(item.network_infos.chain_id, item);
-
-        if (typeof options?.filter === "function") {
-          if (!options.filter(item)) return;
-        }
-
-        if (item.network_infos.mainnet) {
-          mainnetArr.push(item);
-        } else {
-          testnetArr.push(item);
-        }
-      });
-    } else {
-      // if (!chainInfos) return undefined;
-
-      // orderly chains array form (/v1/public/token) api
-      orderlyChainsArr.forEach((chain) => {
-        let _chain = chain;
-
-        const networkInfo = chainInfos?.find((item: { chain_id: any }) => {
-          return item.chain_id == chain.network_infos.chain_id;
-        });
-
-        // update network_infos by chain_info api(v1/public/chain_info)
-        if (networkInfo) {
-          const {
-            name,
-            public_rpc_url,
-            chain_id,
-            currency_symbol,
-            explorer_base_url,
-          } = networkInfo;
-          _chain.network_infos = {
-            ..._chain.network_infos,
-            name: name,
-            shortName: name,
-            public_rpc_url: public_rpc_url,
-
-            currency_symbol: currency_symbol,
+            name: "Optimism Goerli",
+            shortName: "Optimism Goerli",
+            public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
+            chain_id: 420,
+            currency_symbol: "ETH",
             bridge_enable: true,
-            mainnet: true,
-            explorer_base_url: explorer_base_url,
+            mainnet: false,
+            explorer_base_url: "https://goerli-optimism.etherscan.io",
             est_txn_mins: null,
+            
             woofi_dex_cross_chain_router: "",
             woofi_dex_depositor: "",
-          };
-        }
+          },
+        };
+        // @ts-ignore
+        testnetArr.push(opGoerli);
+        // @ts-ignore
+        map.current.set(420, opGoerli);
+      }
 
-        map.current.set(_chain.network_infos.chain_id, _chain);
-        if (_chain.network_infos.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
+      let mainnetArr: API.Chain[] = [];
+
+      map.current.set(421613, testnetArr[0]);
+
+      if (wooSwapEnabled) {
+        if (!data || !data.data) return data;
+
+        Object.keys(data.data).forEach((key) => {
+          // if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
+
+          const chain = data.data[key];
+
+          const item: any = mergeDeepRight(chain, {
+            name: key,
+            network_infos: {
+              bridgeless: orderlyChainIds.has(chain.network_infos.chain_id),
+              shortName: key,
+            },
+            token_infos: chain.token_infos.filter(
+              (token: API.TokenInfo) => !!token.swap_enable
+            ),
+          });
+
+          if (item.token_infos?.length === 0) return;
+
+          map.current.set(item.network_infos.chain_id, item);
+
+          if (typeof options?.filter === "function") {
+            if (!options.filter(item)) return;
           }
-        }
 
-        if (typeof options?.filter === "function") {
-          if (!options.filter(_chain)) return;
-        }
+          if (item.network_infos.mainnet) {
+            mainnetArr.push(item);
+          } else {
+            testnetArr.push(item);
+          }
+        });
+      } else {
+        // if (!chainInfos) return undefined;
 
-        mainnetArr.push(_chain);
+        // orderly chains array form (/v1/public/token) api
+        orderlyChainsArr.forEach((chain) => {
+          let _chain = chain;
+
+          const networkInfo = chainInfos?.find((item: { chain_id: any }) => {
+            return item.chain_id == chain.network_infos.chain_id;
+          });
+
+          // update network_infos by chain_info api(v1/public/chain_info)
+          if (networkInfo) {
+            const {
+              name,
+              public_rpc_url,
+              chain_id,
+              currency_symbol,
+              explorer_base_url,
+            } = networkInfo;
+            _chain.network_infos = {
+              ..._chain.network_infos,
+              name: name,
+              shortName: name,
+              public_rpc_url: public_rpc_url,
+
+              currency_symbol: currency_symbol,
+              bridge_enable: true,
+              mainnet: true,
+              explorer_base_url: explorer_base_url,
+              est_txn_mins: null,
+              woofi_dex_cross_chain_router: "",
+              woofi_dex_depositor: "",
+            };
+          }
+
+          map.current.set(_chain.network_infos.chain_id, _chain);
+          if (_chain.network_infos.chain_id === 421613) {
+            const index = testnetArr.findIndex(
+              (item) => item.network_infos.chain_id === 421613
+            );
+            if (index > -1) {
+              testnetArr[index] = _chain;
+            }
+          }
+
+          if (_chain.network_infos.chain_id === 420) {
+            const index = testnetArr.findIndex(
+              (item) => item.network_infos.chain_id === 420
+            );
+            if (index > -1) {
+              testnetArr[index] = _chain;
+            }
+          }
+
+          if (typeof options?.filter === "function") {
+            if (!options.filter(_chain)) return;
+          }
+
+          mainnetArr.push(_chain);
+        });
+      }
+
+      mainnetArr.sort((a, b) => {
+        return a.network_infos.bridgeless ? -1 : 1;
       });
-    }
 
-    mainnetArr.sort((a, b) => {
-      return a.network_infos.bridgeless ? -1 : 1;
-    });
+      testnetArr.sort((a, b) => {
+        return a.network_infos.bridgeless ? -1 : 1;
+      });
 
-    testnetArr.sort((a, b) => {
-      return a.network_infos.bridgeless ? -1 : 1;
-    });
+      if (!!field) {
+        //@ts-ignore
+        testnetArr = testnetArr.map((item) => item[field]);
+        //@ts-ignore
+        mainnetArr = mainnetArr.map((item) => item[field]);
+      }
 
-    if (!!field) {
-      //@ts-ignore
-      testnetArr = testnetArr.map((item) => item[field]);
-      //@ts-ignore
-      mainnetArr = mainnetArr.map((item) => item[field]);
-    }
+      if (networkId === "mainnet") {
+        return mainnetArr;
+      }
 
-    if (networkId === "mainnet") {
-      return mainnetArr;
-    }
+      if (networkId === "testnet") {
+        return testnetArr;
+      }
 
-    if (networkId === "testnet") {
-      return testnetArr;
-    }
-
-    return {
-      testnet: testnetArr,
-      mainnet: mainnetArr,
-    };
-    // }
-  }, [
-    data,
-    networkId,
-    field,
-    options,
-    orderlyChains,
-    wooSwapEnabled,
-    chainInfos,
-  ]);
+      return {
+        testnet: testnetArr,
+        mainnet: mainnetArr,
+      };
+      // }
+    }, [
+      data,
+      networkId,
+      field,
+      options,
+      orderlyChains,
+      wooSwapEnabled,
+      chainInfos,
+    ]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {

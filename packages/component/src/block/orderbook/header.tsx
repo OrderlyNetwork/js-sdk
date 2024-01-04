@@ -11,7 +11,41 @@ interface Props {
 }
 
 export const Header: FC<Props> = (props) => {
-  const { mode, onModeChange } = useContext(OrderBookContext);
+  const { totalMode, onTotalModeChange, showTotal } = useContext(OrderBookContext);
+
+  if (showTotal == false) {
+    return (<MobileHeader base={props.base} quote={props.quote} />);
+  }
+
+  const currency = useMemo(() => {
+    if (totalMode === "amount") {
+      return props.quote;
+    }
+    return props.base;
+  }, [totalMode, props.quote, props.base]);
+
+  return (
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-gap-2 orderly-text-4xs desktop:orderly-text-3xs">
+      <MobileHeader base={props.base} quote={props.quote} />
+      {showTotal && (<div
+        id="orderly-order-book-header-price"
+        className="orderly-flex orderly-flex-[0.7] orderly-pl-2 orderly-flex-col orderly-cursor-pointer desktop:orderly-flex-row desktop:orderly-items-center"
+        onClick={() => {
+          onTotalModeChange?.(totalMode === "amount" ? "quantity" : "amount")
+        }}
+      >
+        <span className="desktop:orderly-text-2xs">Total</span>
+        <span className="orderly-pr-1">{`(${currency})`}</span>
+        <SwitchIcon size={8} />
+      </div>)}
+    </div>
+  );
+};
+
+
+const MobileHeader: FC<Props> = (props) => {
+
+  const { mode, onModeChange, showTotal } = useContext(OrderBookContext);
   const currency = useMemo(() => {
     if (mode === "amount") {
       return props.quote;
@@ -24,7 +58,7 @@ export const Header: FC<Props> = (props) => {
   }, [mode]);
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs desktop:orderly-text-3xs orderly-pb-2 desktop:orderly-pt-2">
+    <div className="orderly-flex orderly-flex-1 orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-text-4xs desktop:orderly-text-3xs orderly-pb-2 desktop:orderly-pt-2">
       <div
         id="orderly-order-book-header-price"
         className="orderly-flex orderly-flex-col desktop:orderly-flex-row desktop:orderly-items-center"
@@ -34,8 +68,9 @@ export const Header: FC<Props> = (props) => {
       </div>
       <div
         className="orderly-flex orderly-items-center orderly-cursor-pointer"
-        onClick={() =>
+        onClick={!showTotal ? () =>
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
+          : undefined
         }
       >
         <div
@@ -45,8 +80,8 @@ export const Header: FC<Props> = (props) => {
           <span className="desktop:orderly-text-2xs">{qtyLabel}</span>
           <span>{`(${currency})`}</span>
         </div>
-        <SwitchIcon size={8} />
+        {!showTotal && (<SwitchIcon size={8} />)}
       </div>
     </div>
   );
-};
+}

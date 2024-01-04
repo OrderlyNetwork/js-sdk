@@ -54,4 +54,11 @@ module.exports = [
         rpcUrl: "https://mainnet.infura.io/v3/9155d40884554acdb17699a18a1fe348",
       },
 
+      {
+        id: 420,
+        // chainId: '421613',
+        label: "Optimism Goerli",
+        token: "ETH",
+        rpcUrl: "https://goerli.optimism.io",
+      },
 ];

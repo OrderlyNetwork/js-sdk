@@ -1,5 +1,54 @@
 # examples
 
+## 0.1.90-alpha.2
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.29-alpha.2
+  - @orderly.network/web3-onboard@0.0.26-alpha.2
+  - @orderly.network/hooks@1.0.26-alpha.2
+
+## 0.1.90-alpha.1
+
+### Patch Changes
+
+- fix style issues
+- Updated dependencies
+  - @orderly.network/react@0.1.29-alpha.1
+  - @orderly.network/web3-onboard@0.0.26-alpha.1
+  - @orderly.network/hooks@1.0.26-alpha.1
+
+## 0.1.90-alpha.0
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.1.29-alpha.0
+  - @orderly.network/web3-onboard@0.0.26-alpha.0
+  - @orderly.network/hooks@1.0.26-alpha.0
+
+## 0.1.89
+
+### Patch Changes
+
+- Updated dependencies [a1c2aba]
+- Updated dependencies [c08e320]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies [cd07817]
+- Updated dependencies [b5e7b22]
+- Updated dependencies [3c6a6fe]
+- Updated dependencies [25525af]
+- Updated dependencies
+  - @orderly.network/react@0.1.28
+  - @orderly.network/web3-onboard@0.0.25
+  - @orderly.network/hooks@1.0.25
+
 ## 0.1.89-alpha.9
 
 ### Patch Changes

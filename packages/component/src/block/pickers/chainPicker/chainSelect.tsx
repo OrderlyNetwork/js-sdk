@@ -59,7 +59,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
-    if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
+    if (connectedChain && (parseInt(connectedChain.id, 16) === 421613 || parseInt(connectedChain.id, 16) === 420) ) {
       return allChains.testnet ?? [];
     }
 
@@ -227,7 +227,7 @@ const DesktopChainSelect: FC<{
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        style={{ width: "241px" }}
+        style={{ width: "241px", zIndex: 100 }}
         className="orderly-rounded-sm orderly-bg-base-700 orderly-max-h-[250px] orderly-overflow-y-auto orderly-overflow-hidden orderly-hide-scrollbar orderly-mt-2 orderly-shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]"
       >
         {chains.map((chain: any, index: number) => {

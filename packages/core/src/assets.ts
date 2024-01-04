@@ -18,16 +18,16 @@ export class Assets {
     private readonly configStore: ConfigStore,
     private readonly contractManger: IContract,
     private readonly account: Account
-  ) {}
+  ) { }
 
-  async withdraw(inputs: { chainId: number; token: string; amount: number }) {
+  async withdraw(inputs: { chainId: number; token: string; amount: number; allowCrossChainWithdraw: boolean; }) {
     if (!this.account.walletClient) {
       throw new Error("walletClient is undefined");
     }
     if (!this.account.stateValue.address)
       throw new Error("account address is rqeuired");
 
-    const { chainId, token, amount } = inputs;
+    const { chainId, token, amount, allowCrossChainWithdraw } = inputs;
     const url = "/v1/withdraw_request";
     // get withdrawl nonce
     const nonce = await this.getWithdrawalNonce();
@@ -58,10 +58,20 @@ export class Assets {
       data,
     };
 
+    if (allowCrossChainWithdraw) {
+      // @ts-ignore
+      data.message = {
+        ...data.message,
+        // @ts-ignore
+        allowCrossChainWithdraw: allowCrossChainWithdraw
+      };
+    }
+
     const signature = await this.account.signer.sign(payload);
 
     //
 
+    
     const res = await this._simpleFetch(url, {
       method: "POST",
       body: JSON.stringify(data),

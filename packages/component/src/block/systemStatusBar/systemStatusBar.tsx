@@ -57,7 +57,7 @@ export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
     }
 
     return (<>
-        <div className="orderly-fixed orderly-bottom-0 orderly-left-0 orderly-right-0 orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500">
+        <div className="orderly-fixed orderly-bottom-0 orderly-left-0 orderly-right-0 orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500 orderly-z-20">
             <div className="orderly-flex orderly-items-center">
                 <NetworkStatus state={wsStatus} />
                 <div className="orderly-pl-2"><Divider vertical /></div>
