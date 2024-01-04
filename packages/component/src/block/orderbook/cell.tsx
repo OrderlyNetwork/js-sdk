@@ -62,10 +62,10 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         type={props.type}
         mode={props.mode} />
       {showTotal && (<div
-        className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-[0.7]"
+        className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-[0.7] desktop:orderly-text-2xs"
         style={{ height: `${cellHeight}px` }}
       >
-        <Numeral precision={props.mode === "amount" ? 2 : base_dp} className="orderly-z-10">
+        <Numeral precision={props.mode === "amount" ? 2 : base_dp} className="orderly-z-10 orderly-pl-1">
           {qty}
         </Numeral>
 
@@ -101,10 +101,15 @@ const MobileOrderBookCell: FC<OrderBookCellProps> = (props) => {
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
   }, [depth, quote_dp]);
+  console.log("cell height", cellHeight);
+  
 
   return (
     <div
-      className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-1"
+      className={cn(
+        "orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums",
+        showTotal && "orderly-flex-1",
+      )}
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;

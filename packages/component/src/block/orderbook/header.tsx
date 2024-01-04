@@ -25,7 +25,7 @@ export const Header: FC<Props> = (props) => {
   }, [totalMode, props.quote, props.base]);
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-gap-2 orderly-text-4xs desktop:orderly-text-3xs orderly-pb-2 desktop:orderly-pt-2">
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-36 orderly-gap-2 orderly-text-4xs desktop:orderly-text-3xs">
       <MobileHeader base={props.base} quote={props.quote} />
       {showTotal && (<div
         id="orderly-order-book-header-price"
