@@ -9,6 +9,9 @@
     "build": "tsup",
     "test": "jest"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
