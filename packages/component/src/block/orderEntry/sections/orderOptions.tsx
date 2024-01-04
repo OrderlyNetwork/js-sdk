@@ -3,12 +3,14 @@ import { Collapsible, CollapsibleContent } from "@/collapsible";
 import { Label } from "@/label";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
-import { OrderType } from "@orderly.network/types";
+import { OrderType, MEDIA_TABLE } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { OrderTypesCheckbox } from "./orderTypes";
-import { modal } from "@/modal";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { MobileHideenLabel, DesktopHiddenLabel } from "./hiddenLabel";
+import { MobileReduceOnlyLabel, DesktopReduceOnlyLabel } from "./reduceOnly";
 
 interface OrderOptionsProps {
   // values?: OrderEntity;
@@ -20,33 +22,11 @@ interface OrderOptionsProps {
 }
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
-  const {reduceOnly,onReduceOnlyChange} = props
+  const { reduceOnly, onReduceOnlyChange } = props
   const [open, setOpen] = useState<boolean>(false);
   const { control, getValues, setValue } = useFormContext();
 
-  const showReduceOnlyHint = () => {
-    modal.alert({
-      title: "Reduce only",
-      message: (
-        <span className="orderly-text-2xs orderly-text-base-contrast-54">
-          Reduce only ensures that you can only reduce or close a current
-          position so that your position size will not be increased
-          unintentionally.
-        </span>
-      ),
-    });
-  };
-
-  const showHiddenHint = () => {
-    modal.alert({
-      title: "Hidden",
-      message: (
-        <span className="orderly-text-3xs orderly-text-base-contrast/60">
-          Hidden order is a limit order that does not appear in the orderbook.
-        </span>
-      ),
-    });
-  };
+  const isTable = useMediaQuery(MEDIA_TABLE);
 
   return (
     <>
@@ -61,20 +41,12 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                   id="orderly-reduce-only-switch"
                   color={"primary"}
                   checked={field.value ?? reduceOnly}
-                  onCheckedChange={(checked) => {                    
+                  onCheckedChange={(checked) => {
                     onReduceOnlyChange?.(checked);
                     field.onChange(checked)
                   }}
                 />
-                {/* 移除htmlFor="reduceOnly", 点击标签文字不触发Switch开关的变化 */}
-                <Label
-                  className="orderly-text-base-contrast-54"
-                  onClick={() => {
-                    showReduceOnlyHint();
-                  }}
-                >
-                  Reduce only
-                </Label>
+                {isTable ? (<MobileReduceOnlyLabel />) : (<DesktopReduceOnlyLabel />)}
               </div>
             );
           }}
@@ -159,12 +131,8 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                           field.onChange(checked ? 0 : 1);
                         }}
                       />
-                      <Label
-                        onClick={showHiddenHint}
-                        className="orderly-text-base-contrast-54"
-                      >
-                        Hidden
-                      </Label>
+
+                      {isTable ? (<MobileHideenLabel />) : (<DesktopHiddenLabel />)}
                     </div>
                   );
                 }}
