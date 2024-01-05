@@ -2,18 +2,29 @@
 
 import { ReactNode } from "react";
 import { PluginProvider } from "./pluginContext";
+import { PluginPosition } from "./types";
+import { OrderlyPluginRegistry } from "./registry";
 
 export type PluginOptions = {
   name: string;
-  position: string;
+  positions: PluginPosition[];
 };
 
-type PluginRenderComponent = (component: ReactNode) => React.ReactNode;
+type PluginRenderComponent = (component: ReactNode) => void;
 
 export const installOrderlyPlugin = (
   options: PluginOptions
 ): PluginRenderComponent => {
   return (component: ReactNode) => {
-    return <PluginProvider>{component}</PluginProvider>;
+    const registry = OrderlyPluginRegistry.getInstance();
+
+    registry.register({
+      name: options.name,
+      positions: options.positions,
+
+      render: () => {
+        return <PluginProvider>{component}</PluginProvider>;
+      },
+    });
   };
 };

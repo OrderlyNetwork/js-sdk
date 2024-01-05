@@ -2,9 +2,11 @@ import { ReactNode } from "react";
 
 export interface Plugin {
   get name(): string;
-  get endpoint(): string;
+  get positions(): PluginPosition[];
 
-  initialize(): void;
+  initialize?: () => void;
 
   render(): ReactNode;
 }
+
+export enum PluginPosition {}

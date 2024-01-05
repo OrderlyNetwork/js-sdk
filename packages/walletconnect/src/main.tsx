@@ -23,16 +23,16 @@ export const Main: FC<PropsWithChildren> = (props) => {
 
   const { data: walletClient, isError } = useWalletClient();
 
-  console.log({
-    address,
-    isConnecting,
-    isDisconnected,
-    connector,
-    chain,
-    chains,
-    walletClient,
-    publicClient,
-  });
+  // console.log({
+  //   address,
+  //   isConnecting,
+  //   isDisconnected,
+  //   connector,
+  //   chain,
+  //   chains,
+  //   walletClient,
+  //   publicClient,
+  // });
 
   const connect = () => {
     return new Promise((resolve, reject) => {

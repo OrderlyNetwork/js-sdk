@@ -1,4 +1,3 @@
-// The plugin manager
-class OrderlyPluginRegistry {
-  private pluginMap: Map<string, any> = new Map();
-}
+export { installOrderlyPlugin } from "./install";
+
+export * from "./types";
