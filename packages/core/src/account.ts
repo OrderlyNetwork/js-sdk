@@ -2,7 +2,11 @@ import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore/configStore";
 import { OrderlyKeyStore } from "./keyStore";
-import { IWalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
+import {
+  IWalletAdapter,
+  WalletAdapterOptions,
+  getWalletAdapterFunc,
+} from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
@@ -139,7 +143,10 @@ export class Account {
 
     if (wallet) {
       // this.walletClient = new this.walletAdapterClass(wallet);
-      this.walletClient = this.getWalletAdapter({ ...wallet, address });
+      this.walletClient = this.getWalletAdapter({
+        ...wallet,
+        address,
+      } as WalletAdapterOptions);
     }
 
     return await this._checkAccount(address);
