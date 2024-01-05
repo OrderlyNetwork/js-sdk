@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/examples",
-  "version": "0.1.90-alpha.2",
+  "version": "0.1.91",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3330",
@@ -13,6 +13,7 @@
     "@orderly.network/react": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",
+    
     "@types/node": "^17.0.12",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",

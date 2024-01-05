@@ -156,27 +156,31 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   });
 
   const checkChainId = useCallback(
-    (chainId: string): boolean => {
+    (chainId: number): boolean => {
       if (!chainId || !chains) {
         return false;
       }
 
-      if (typeof chainId === "number") {
-        chainId = `0x${Number(chainId).toString(16)}`;
-      }
+      // if (typeof chainId === "number") {
+      //   chainId = `0x${Number(chainId).toString(16)}`;
+      // }
 
       //
 
       // check whether chain id and network id match
-      const chainIdNum = parseInt(chainId, 16);
+      // const chainIdNum = parseInt(chainId, 16);
       if (
-        (networkId === "mainnet" && chainIdNum === 421613) ||
-        (networkId === "testnet" && chainIdNum !== 421613)
+        (networkId === "mainnet" && chainId === 421613) ||
+        (networkId === "testnet" && chainId !== 421613)
       ) {
         return false;
       }
 
-      const isSupport = chains.some((item: { id: string }) => {
+      const isSupport = chains.some((item: { id: string | number }) => {
+        if (typeof item.id === "string") {
+          // return `0x${Number(item.id).toString(16)}` === chainId;
+          return parseInt(item.id, 16) === chainId;
+        }
         return item.id === chainId;
       });
 
@@ -207,6 +211,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         if (!account) {
           throw new Error("account is not initialized");
         }
+        console.info("🤝 connect wallet", wallet);
         // account.address = wallet.accounts[0].address;
         const status = await account.setAddress(wallet.accounts[0].address, {
           provider: wallet.provider,
@@ -226,7 +231,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
-      console.warn("🤜 disconnect wallet");
+      console.log("🤜 disconnect wallet");
 
       return disconnect(currentWallet).then(() => {
         return account.disconnect();
@@ -252,17 +257,27 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     return currentWallet.accounts[0].address;
   }, [currentWallet]);
 
-  const currentChainId = useMemo(() => {
+  // current connected chain id
+  const currentChainId = useMemo<number | null>(() => {
     if (!currentWallet) {
       return null;
     }
-    return currentWallet.chains[0].id;
+    const id = currentWallet.chains[0].id;
+
+    if (
+      typeof id === "string" &&
+      id.startsWith("0x") &&
+      /^[a-f0-9]+$/iu.test(id.slice(2))
+    ) {
+      return parseInt(id, 16);
+    }
+    return id;
   }, [currentWallet]);
 
   useEffect(() => {
     // currentWallet?.provider.detectNetwork().then((x) =>
 
-    if (!chains || chains.length === 0) {
+    if (!chains || chains.length === 0 || !currentChainId) {
       return;
     }
 
@@ -281,10 +296,10 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         // console.log("currentWallet 22 ", currentAddress, currentChainId);
         return;
       }
-      // 需要确定已经拿到chains list
+
       if (!checkChainId(currentChainId)) {
         // console.warn("!!!! not support this chian -> disconnect wallet");
-        // TODO: 确定是否需要断开连接
+
         // account.disconnect();
         // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));

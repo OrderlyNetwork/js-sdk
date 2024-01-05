@@ -5,13 +5,12 @@
       "@babel/preset-env",
       {
         "targets": {
-          "chrome": 100,
-          "safari": 15,
-          "firefox": 91
+          "chrome": 100
         }
       }
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": []
 }

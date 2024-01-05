@@ -1,5 +1,35 @@
 # storybook
 
+## 1.0.95
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+
+## 1.0.95-alpha.1
+
+### Patch Changes
+
+- fix bug
+
+## 1.0.95-alpha.0
+
+### Patch Changes
+
+- fix bugs
+
+## 1.0.94
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 1.0.94-alpha.2
 
 ### Patch Changes

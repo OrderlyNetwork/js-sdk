@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { textSync } from "figlet";
 import yargs from "yargs";
 import kleur from "kleur";
@@ -146,5 +148,5 @@ async function run() {
 }
 
 run().catch((err) => {
-  console.error(err);
+  console.error("!!!!!", err);
 });

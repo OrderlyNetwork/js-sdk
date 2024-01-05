@@ -1,9 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyProvider, TradingPage } from "@orderly.network/react";
-
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
-import { WooKeyStore } from "./woo.keystore";
+import { OrderlyAppProvider, TradingPage } from "@orderly.network/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -19,14 +16,9 @@ export default {
   argTypes: {},
   decorators: [
     (Story) => (
-      <OrderlyProvider
-        configStore={new MemoryConfigStore()}
-        keyStore={new WooKeyStore()}
-        walletAdapter={new Web3WalletAdapter()}
-       
-      >
+      <OrderlyAppProvider brokerId="orderly" networkId="testnet">
         <Story />
-      </OrderlyProvider>
+      </OrderlyAppProvider>
     ),
   ],
 };

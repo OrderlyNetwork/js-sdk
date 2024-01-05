@@ -24,7 +24,6 @@ export interface OrderBookCellProps {
 }
 
 export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
-
   const { cellHeight, showTotal, totalMode } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
@@ -37,9 +36,9 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         accumulated={props.accumulated}
         count={props.count}
         type={props.type}
-        mode={props.mode} />
+        mode={props.mode}
+      />
     );
-
   }
 
   const width = (props.accumulated / props.count) * 100;
@@ -47,9 +46,8 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   let qty = Number.isNaN(props.quantity)
     ? "-"
     : totalMode === "amount"
-      ? new Decimal(props.quantity).mul(props.price).toString()
-      : props.accumulated;
-
+    ? new Decimal(props.quantity).mul(props.price).toString()
+    : props.accumulated;
 
   return (
     <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-gap-2">
@@ -60,39 +58,46 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         accumulated={props.accumulated}
         count={props.count}
         type={props.type}
-        mode={props.mode} />
-      {showTotal && (<div
-        className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-[0.7] desktop:orderly-text-2xs"
-        style={{ height: `${cellHeight}px` }}
-      >
-        <Numeral precision={props.mode === "amount" ? 2 : base_dp} className="orderly-z-10 orderly-pl-1">
-          {qty}
-        </Numeral>
+        mode={props.mode}
+      />
+      {showTotal && (
+        <div
+          className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-[0.7] desktop:orderly-text-2xs"
+          style={{ height: `${cellHeight}px` }}
+        >
+          <Numeral
+            precision={props.mode === "amount" ? 2 : base_dp}
+            className="orderly-z-10 orderly-pl-1"
+          >
+            {qty}
+          </Numeral>
 
-        <CellBar
-          width={width}
-          direction={CellBarDirection.LEFT_TO_RIGHT}
-          className={
-            props.type === OrderBookCellType.ASK
-              ? "orderly-bg-trade-loss/20"
-              : "orderly-bg-trade-profit/20"
-          }
-        />
-      </div>)}
+          <CellBar
+            width={width}
+            direction={CellBarDirection.LEFT_TO_RIGHT}
+            className={
+              props.type === OrderBookCellType.ASK
+                ? "orderly-bg-trade-loss/20"
+                : "orderly-bg-trade-profit/20"
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 const MobileOrderBookCell: FC<OrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
-  const { cellHeight, onItemClick, depth, showTotal } = useContext(OrderBookContext);
+  const { cellHeight, onItemClick, depth, showTotal } =
+    useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
   let qty = Number.isNaN(props.quantity)
     ? "-"
     : props.mode === "amount"
-      ? new Decimal(props.quantity).mul(props.price).toString()
-      : props.quantity;
+    ? new Decimal(props.quantity).mul(props.price).toString()
+    : props.quantity;
 
   if (showTotal) {
     qty = props.quantity;
@@ -101,14 +106,12 @@ const MobileOrderBookCell: FC<OrderBookCellProps> = (props) => {
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
   }, [depth, quote_dp]);
-  console.log("cell height", cellHeight);
-  
 
   return (
     <div
       className={cn(
         "orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums",
-        showTotal && "orderly-flex-1",
+        showTotal && "orderly-flex-1"
       )}
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
