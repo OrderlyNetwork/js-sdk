@@ -1,8 +1,9 @@
-import { installOrderlyPlugin } from "../../install";
+import { ExtensionPosition } from "@/plugin/types";
+import { installExtension } from "../../install";
 
-installOrderlyPlugin({
-  name: "wooFI-swap-deposit",
-  positions: ["deposit"],
+installExtension({
+  name: "wooFi-pro-swap-deposit",
+  positions: [ExtensionPosition.DepositForm],
 })(() => {
   return <div>swap deposit</div>;
 });

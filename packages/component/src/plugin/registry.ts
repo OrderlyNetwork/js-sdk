@@ -1,17 +1,17 @@
-import { Plugin, PluginPosition } from "./types";
+import { Extension, ExtensionPosition } from "./types";
 
 // The plugin manager
-export class OrderlyPluginRegistry {
-  private static _instance: OrderlyPluginRegistry;
-  static getInstance(): OrderlyPluginRegistry {
-    if (!OrderlyPluginRegistry._instance) {
-      OrderlyPluginRegistry._instance = new OrderlyPluginRegistry();
+export class OrderlyExtensionRegistry {
+  private static _instance: OrderlyExtensionRegistry;
+  static getInstance(): OrderlyExtensionRegistry {
+    if (!OrderlyExtensionRegistry._instance) {
+      OrderlyExtensionRegistry._instance = new OrderlyExtensionRegistry();
     }
-    return OrderlyPluginRegistry._instance;
+    return OrderlyExtensionRegistry._instance;
   }
-  private pluginMap: Map<PluginPosition, Plugin> = new Map();
+  private pluginMap: Map<ExtensionPosition, Extension> = new Map();
 
-  register(plugin: Plugin) {
+  register(plugin: Extension) {
     // this.pluginMap.set(plugin.name, plugin);
     for (let index = 0; index < plugin.positions.length; index++) {
       const pos = plugin.positions[index];
@@ -19,15 +19,15 @@ export class OrderlyPluginRegistry {
     }
   }
 
-  private registerToPosition(position: PluginPosition, plugin: Plugin) {
+  private registerToPosition(position: ExtensionPosition, plugin: Extension) {
     if (this.pluginMap.has(position)) {
-      throw new Error(`Plugin already registered at position ${position}`);
+      throw new Error(`Plugin already registered at position [${position}]`);
     }
 
     this.pluginMap.set(position, plugin);
   }
 
-  unregister(plugin: Plugin) {
+  unregister(plugin: Extension) {
     for (let index = 0; index < plugin.positions.length; index++) {
       const pos = plugin.positions[index];
 
@@ -35,7 +35,11 @@ export class OrderlyPluginRegistry {
     }
   }
 
-  private unregisterFromPosition(position: PluginPosition) {
+  private unregisterFromPosition(position: ExtensionPosition) {
     this.pluginMap.delete(position);
+  }
+
+  getPluginsByPosition(position: ExtensionPosition) {
+    return this.pluginMap.get(position);
   }
 }

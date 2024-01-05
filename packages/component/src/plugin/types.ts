@@ -1,12 +1,15 @@
 import { ReactNode } from "react";
 
-export interface Plugin {
+export interface Extension {
   get name(): string;
-  get positions(): PluginPosition[];
+  get positions(): ExtensionPosition[];
 
   initialize?: () => void;
 
   render(): ReactNode;
 }
 
-export enum PluginPosition {}
+export enum ExtensionPosition {
+  DepositForm = "depositForm",
+  WithdrawForm = "withdrawForm",
+}

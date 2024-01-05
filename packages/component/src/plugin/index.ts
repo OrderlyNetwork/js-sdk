@@ -1,3 +1,3 @@
-export { installOrderlyPlugin } from "./install";
+export { installExtension as installOrderlyPlugin } from "./install";
 
 export * from "./types";

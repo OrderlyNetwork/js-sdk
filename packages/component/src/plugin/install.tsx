@@ -2,28 +2,35 @@
 
 import { ReactNode } from "react";
 import { PluginProvider } from "./pluginContext";
-import { PluginPosition } from "./types";
-import { OrderlyPluginRegistry } from "./registry";
+import { ExtensionPosition } from "./types";
+import { OrderlyExtensionRegistry } from "./registry";
 
-export type PluginOptions = {
+export type ExtensionOptions = {
   name: string;
-  positions: PluginPosition[];
+  positions: ExtensionPosition[];
 };
 
-type PluginRenderComponent = (component: ReactNode) => void;
+type ExtensionRenderComponentType = ReactNode | (() => ReactNode);
 
-export const installOrderlyPlugin = (
-  options: PluginOptions
-): PluginRenderComponent => {
-  return (component: ReactNode) => {
-    const registry = OrderlyPluginRegistry.getInstance();
+type ExtensionRenderComponent = (
+  component: ExtensionRenderComponentType
+) => void;
+
+export const installExtension = (
+  options: ExtensionOptions
+): ExtensionRenderComponent => {
+  return (component: ExtensionRenderComponentType) => {
+    const registry = OrderlyExtensionRegistry.getInstance();
 
     registry.register({
       name: options.name,
       positions: options.positions,
 
       render: () => {
-        return <PluginProvider>{component}</PluginProvider>;
+        const children =
+          typeof component === "function" ? component() : component;
+
+        return <PluginProvider>{children}</PluginProvider>;
       },
     });
   };
