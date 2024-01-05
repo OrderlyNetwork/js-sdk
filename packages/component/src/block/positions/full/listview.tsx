@@ -29,7 +29,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         ),
       },
       {
-        title: "Avg.open",
+        title: "Avg. open",
         className: "orderly-h-[48px]",
         dataIndex: "average_open_price",
       },
@@ -60,7 +60,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         render: (value: string) => <Numeral className="orderly-font-semibold">{value}</Numeral>,
       },
       {
-        title: "Unreal.PnL",
+        title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
         render: (value: string) => <Numeral coloring className="orderly-font-semibold">{value}</Numeral>,

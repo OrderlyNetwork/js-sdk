@@ -57,7 +57,7 @@ export const Header: FC<Props> = (props) => {
       >
         <div className={"orderly-flex orderly-space-x-6"}>
           <Statistic
-            label={"Unreal.PnL"}
+            label={"Unreal. PnL"}
             value={
               <div
                 className={cn("orderly-flex orderly-gap-1", {

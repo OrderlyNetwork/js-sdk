@@ -116,7 +116,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         </div>
         <div className="orderly-grid orderly-grid-cols-2 orderly-py-4">
           <Statistic
-            label="Unreal.PnL(USDC)"
+            label="Unreal. PnL(USDC)"
             labelClassName="orderly-text-base-contrast-36"
             value={
               <div className="orderly-flex orderly-gap-1 orderly-items-center orderly-text-2xs">
