@@ -87,9 +87,9 @@ export const Ticker: FC<Props> = (props) => {
           <Statistic label={"Index"} value={data?.index_price} rule={"price"} />
           <Statistic
             label={"24h volume"}
-            value={data?.["24h_volume"]}
-            rule={"human"}
+            value={(<Numeral rule="human">{data?.["24h_amount"]}</Numeral>)}
           />
+          
           <MemoizedCompnent symbol={props.symbol} />
           <Statistic
             label={"Open interest"}

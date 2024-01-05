@@ -87,7 +87,7 @@ export const usePositionStream = (
 
       const unrealPnl = positions.unrealizedPnL({
         qty: item.position_qty,
-        openPrice: item.average_open_price,
+        openPrice: item?.average_open_price,
         markPrice: price,
       });
 

@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Statistic>;
 
 export const Default: Story = {
   args: {
-    label: "Unreal.PnL",
+    label: "Unreal. PnL",
     value: "123456",
     coloring: true,
   },

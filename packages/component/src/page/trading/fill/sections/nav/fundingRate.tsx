@@ -12,7 +12,7 @@ const FundingRate: FC<Props> = (props) => {
 
   return (
     <Statistic
-      label={"Pred.funding rate"}
+      label={"Pred. funding rate"}
       value={
         <div className="orderly-flex flex-nowrap">
           <Numeral
