@@ -24,6 +24,7 @@ import {
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
+import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -215,7 +216,9 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         // account.address = wallet.accounts[0].address;
         const status = await account.setAddress(wallet.accounts[0].address, {
           provider: wallet.provider,
-          chain: wallet.chains[0],
+          chain: {
+            id: praseChainIdToNumber(wallet.chains[0].id),
+          },
           wallet: {
             name: wallet.label,
           },
@@ -264,14 +267,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     }
     const id = currentWallet.chains[0].id;
 
-    if (
-      typeof id === "string" &&
-      id.startsWith("0x") &&
-      /^[a-f0-9]+$/iu.test(id.slice(2))
-    ) {
-      return parseInt(id, 16);
-    }
-    return id;
+    return praseChainIdToNumber(id);
   }, [currentWallet]);
 
   useEffect(() => {
@@ -315,7 +311,10 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       account.setAddress(currentWallet.accounts[0].address, {
         provider: currentWallet.provider,
-        chain: currentWallet.chains[0],
+        chain: {
+          id: currentChainId,
+          // name: currentWallet.chains[0].name,
+        },
         wallet: {
           name: currentWallet.label,
         },
