@@ -226,11 +226,18 @@ export const useDeposit = (options?: useDepositOptions) => {
     [account, getAllowance, options?.address]
   );
 
+  const getDepositFee = useCallback(
+    async (amount: string) => {
+      return account.assetsManager.getDepositFee(amount);
+    },
+    [account]
+  );
+
   const deposit = useCallback(
-    (amount: string) => {
+    (amount: string, fee?: bigint) => {
       // only support orderly deposit
 
-      return account.assetsManager.deposit(amount).then((res: any) => {
+      return account.assetsManager.deposit(amount, fee).then((res: any) => {
         setAllowance((value) => new Decimal(value).sub(amount).toString());
         setBalance((value) => new Decimal(value).sub(amount).toString());
         return res;
@@ -283,6 +290,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     allowanceRevalidating,
     approve,
     deposit,
+    getDepositFee,
     fetchBalances,
     fetchBalance: fetchBalanceHandler,
   };

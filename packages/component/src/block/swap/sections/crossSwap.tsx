@@ -20,6 +20,7 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
+  orderlyDepositFee?: bigint;
 
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
@@ -35,6 +36,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
     src,
     chain: chainInfo,
     nativeToken,
+    orderlyDepositFee,
   } = props;
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
@@ -104,7 +106,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         toToken: transaction.dst_infos.to_token,
         minToAmount: BigInt(transaction.dst_infos.min_to_amount),
         // @ts-ignore
-        orderlyNativeFees: 0n,
+        orderlyNativeFees: orderlyDepositFee,
       },
     }).then(
       (res: any) => {

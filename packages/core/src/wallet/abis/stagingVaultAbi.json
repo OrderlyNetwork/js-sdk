@@ -10,6 +10,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "AddressZero",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -32,12 +37,22 @@
   },
   {
     "inputs": [],
+    "name": "EnumerableSetError",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyCrossChainManagerCanCall",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "TokenNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroDepositFee",
     "type": "error"
   },
   {
@@ -164,15 +179,28 @@
         "internalType": "uint128",
         "name": "fee",
         "type": "uint128"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "blocktime",
-        "type": "uint256"
       }
     ],
     "name": "AccountWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oldAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ChangeCrossChainManager",
     "type": "event"
   },
   {
@@ -372,7 +400,20 @@
     ],
     "name": "deposit",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "depositFeeEnabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -425,7 +466,7 @@
     ],
     "name": "depositTo",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -438,6 +479,19 @@
   {
     "inputs": [],
     "name": "emergencyUnpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_enabled",
+        "type": "bool"
+      }
+    ],
+    "name": "enableDepositFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -507,10 +561,69 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "accountId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "brokerHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "tokenHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint128",
+            "name": "tokenAmount",
+            "type": "uint128"
+          }
+        ],
+        "internalType": "struct VaultTypes.VaultDepositFE",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "name": "getDepositFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "messageTransmitterContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -537,6 +650,106 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "dstDomain",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "rebalanceId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint128",
+            "name": "amount",
+            "type": "uint128"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "tokenHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "burnChainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "mintChainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "dstVaultAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct RebalanceTypes.RebalanceBurnCCData",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "name": "rebalanceBurn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "rebalanceId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint128",
+            "name": "amount",
+            "type": "uint128"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "tokenHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "burnChainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "mintChainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "messageBytes",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "messageSignature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct RebalanceTypes.RebalanceMintCCData",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "name": "rebalanceMint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -593,6 +806,45 @@
     "name": "setCrossChainManager",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_rebalanceMessengerContract",
+        "type": "address"
+      }
+    ],
+    "name": "setRebalanceMessengerContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tokenMessengerContract",
+        "type": "address"
+      }
+    ],
+    "name": "setTokenMessengerContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokenMessengerContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

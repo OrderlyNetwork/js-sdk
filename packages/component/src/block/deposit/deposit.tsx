@@ -6,6 +6,7 @@ import {
   useDeposit,
   useChains,
   useWalletConnector,
+  useWS,
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
@@ -36,9 +37,12 @@ export const Deposit: FC<DepositProps> = (props) => {
     pick: "network_infos",
   });
 
-  const { connectedChain, wallet, setChain, settingChain } = useWalletConnector();
+  const { connectedChain, wallet, setChain, settingChain } =
+    useWalletConnector();
 
   const { onEnquiry } = useContext(AssetsContext);
+
+  const [symbolPrice, setSymbolPrice] = useState({});
 
   // const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
@@ -62,6 +66,7 @@ export const Deposit: FC<DepositProps> = (props) => {
     allowance,
     approve,
     deposit,
+    getDepositFee,
     isNativeToken,
     balanceRevalidating,
     fetchBalance,
@@ -93,6 +98,25 @@ export const Deposit: FC<DepositProps> = (props) => {
     }
   }, [token?.symbol, currentChain?.id, dst?.chainId]);
 
+  const ws = useWS();
+
+  useEffect(() => {
+    const unsubscribe = ws.subscribe("indexprices", {
+      onMessage: (data: any[]) => {
+        const obj: Record<string, number> = {};
+        data.forEach((item) => {
+          const split = item.symbol.split("_");
+          obj[split[1]] = item.price;
+        });
+        setSymbolPrice(obj);
+      },
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, []);
+
   return (
     <DepositForm
       // @ts-ignore
@@ -114,6 +138,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       maxAmount={balance}
       approve={approve}
       deposit={deposit}
+      getDepositFee={getDepositFee}
       fetchBalance={fetchBalance}
       onOk={props.onOk}
       balanceRevalidating={balanceRevalidating}
@@ -121,6 +146,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       onEnquiry={onEnquiry}
       needCrossChain={needCrossChain}
       needSwap={needSwap}
+      symbolPrice={symbolPrice}
     />
   );
 };
