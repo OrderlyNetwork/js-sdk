@@ -23,10 +23,14 @@ import {
 import { MoveDownIcon } from "@/icon";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
-import { Decimal, int2hex } from "@orderly.network/utils";
+import { Decimal, int2hex, zero } from "@orderly.network/utils";
 
 import { toast } from "@/toast";
-import { CurrentChain, type API } from "@orderly.network/types";
+import {
+  CurrentChain,
+  type API,
+  DEPOSIT_FEE_RATE,
+} from "@orderly.network/types";
 import { Notice } from "./sections/notice";
 import { modal } from "@/modal";
 import { SwapDialog } from "../swap/swapDialog";
@@ -78,12 +82,14 @@ export interface DepositFormProps {
   onEnquiry?: (inputs: any) => Promise<any>;
 
   approve: (amount: string | undefined) => Promise<any>;
-  deposit: (amount: string) => Promise<any>;
+  deposit: (amount: string, fee?: bigint) => Promise<any>;
+  getDepositFee: (amount: string) => Promise<any>;
 
   onOk?: (data: any) => void;
 
   needSwap: boolean;
   needCrossChain: boolean;
+  symbolPrice: Record<string, number>;
 }
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
@@ -125,6 +131,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
   const [slippage, setSlippage] = useLocalStorage("ORDERLY_SLIPPAGE", 1);
+  const [orderlyDepositFee, setOrderlyDepositFee] = useState<bigint>(0n);
 
   const [transactionInfo, setTransactionInfo] = useState<{
     price: number;
@@ -172,7 +179,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         }
 
         return props
-          .deposit?.(quantity)
+          .deposit?.(quantity, orderlyDepositFee)
           .then(
             (res: any) => {
               setQuantity("");
@@ -223,6 +230,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           transactionData: transaction,
           chain: chain?.info?.network_infos,
           nativeToken: chain?.info.nativeToken,
+          orderlyDepositFee,
         });
       })
       .then(
@@ -248,6 +256,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     needSwap,
     chain?.info,
     slippage,
+    orderlyDepositFee,
   ]);
 
   const onApprove = useCallback(() => {
@@ -374,7 +383,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const enquirySuccessHandle = (res: any) => {
     if (res.mark_prices) {
-      // setMarkPrice(res.mark_price);
       const fee = needCrossChain ? res.fees_from.total : res.fees_from;
       const swapFee = needCrossChain ? res.fees_from.woofi : res.fees_from;
       const bridgeFee = needCrossChain ? res.fees_from.stargate : undefined;
@@ -474,15 +482,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   }, 300);
 
   useEffect(() => {
-    //
-    //   token: props.token,
-    //   chain,
-    //   needCrossChain,
-    //   needSwap,
-    //   slippage,
-    //   quantity,
-    // });
-
     // 如果不需要跨链，也不需要swap，不需要询价
     if (!needCrossChain && !needSwap) {
       cleanData({
@@ -509,6 +508,34 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     slippage,
     // querying,
   ]);
+
+  const enquiryOrderlyDepositFee = useDebouncedCallback(() => {
+    if (isNaN(Number(quantity)) || !quantity) {
+      setOrderlyDepositFee(0n);
+      return;
+    }
+    props
+      .getDepositFee(quantity)
+      .then((res: bigint) => {
+        // const depositFee = new Decimal(res.toString())
+        //   ?.mul(DEPOSIT_FEE_RATE)
+        //   ?.div(new Decimal(10).pow(18))
+        //   ?.toString();
+        const depositFee = new Decimal(res.toString())
+          .mul(DEPOSIT_FEE_RATE)
+          .toFixed(0, Decimal.ROUND_UP)
+          .toString();
+        setOrderlyDepositFee(BigInt(depositFee));
+        console.log("getDepositFee", res, depositFee);
+      })
+      .catch((err) => {
+        console.log("getDepositFee error", err);
+      });
+  }, 300);
+
+  useEffect(() => {
+    enquiryOrderlyDepositFee();
+  }, [quantity]);
 
   return (
     <div id="orderly-deposit-form">
@@ -589,6 +616,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           destinationGasFee={transactionInfo.dstGasFee}
           slippage={slippage}
           onSlippageChange={setSlippage}
+          symbolPrice={props.symbolPrice}
+          orderlyDepositFee={orderlyDepositFee}
         />
       </div>
 

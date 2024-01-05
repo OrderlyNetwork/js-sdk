@@ -16,6 +16,7 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
+  orderlyDepositFee?: bigint;
 
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;

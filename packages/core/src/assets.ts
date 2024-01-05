@@ -18,9 +18,14 @@ export class Assets {
     private readonly configStore: ConfigStore,
     private readonly contractManger: IContract,
     private readonly account: Account
-  ) { }
+  ) {}
 
-  async withdraw(inputs: { chainId: number; token: string; amount: number; allowCrossChainWithdraw: boolean; }) {
+  async withdraw(inputs: {
+    chainId: number;
+    token: string;
+    amount: number;
+    allowCrossChainWithdraw: boolean;
+  }) {
     if (!this.account.walletClient) {
       throw new Error("walletClient is undefined");
     }
@@ -63,7 +68,7 @@ export class Assets {
       data.message = {
         ...data.message,
         // @ts-ignore
-        allowCrossChainWithdraw: allowCrossChainWithdraw
+        allowCrossChainWithdraw: allowCrossChainWithdraw,
       };
     }
 
@@ -71,7 +76,6 @@ export class Assets {
 
     //
 
-    
     const res = await this._simpleFetch(url, {
       method: "POST",
       body: JSON.stringify(data),
@@ -279,7 +283,41 @@ export class Assets {
     return result;
   }
 
-  async deposit(amount: string) {
+  getDepositData(amount: string) {
+    if (!this.account.walletClient)
+      throw new Error("walletClient is undefined");
+
+    const brokerId = this.configStore.get<string>("brokerId");
+
+    if (!brokerId) throw new Error("[Assets]:brokerId is required");
+
+    return {
+      accountId: this.account.accountIdHashStr,
+      brokerHash: parseBrokerHash(brokerId!),
+      tokenHash: parseTokenHash("USDC"),
+      tokenAmount: this.account.walletClient?.parseUnits(amount),
+    };
+  }
+
+  async getDepositFee(amount: string) {
+    if (!this.account.walletClient)
+      throw new Error("walletClient is undefined");
+
+    const depositData = this.getDepositData(amount);
+
+    const contractAddress = this.contractManger.getContractInfoByEnv();
+
+    return await this.account.walletClient.call(
+      contractAddress.vaultAddress,
+      "getDepositFee",
+      [this.account.stateValue.address, depositData],
+      {
+        abi: contractAddress.vaultAbi,
+      }
+    );
+  }
+
+  async deposit(amount: string, fee: bigint = 0n) {
     if (!this.account.walletClient)
       throw new Error("walletClient is undefined");
 
@@ -313,15 +351,12 @@ export class Assets {
         from: this.account.stateValue.address!,
         to: contractAddress.vaultAddress,
         data: [depositData],
-        value: 0n,
+        value: fee,
       },
       {
         abi: contractAddress.vaultAbi,
       }
     );
-
-    //
-
     return result;
   }
 

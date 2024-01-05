@@ -26,3 +26,5 @@ export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EED";
 
 export const MEDIA_TABLE = "(max-width: 768px)";
+
+export const DEPOSIT_FEE_RATE = 1.05;

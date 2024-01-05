@@ -10,6 +10,7 @@ import { toast } from "@/toast";
 import { SwapMode, SwapProcessStatusStatus } from "../sections/misc";
 import { API, WS_WalletStatusEnum } from "@orderly.network/types";
 import { SwapProcessStatus } from "./swapProcessStatus";
+import { Decimal } from "@orderly.network/utils";
 
 export interface SwapProps {
   src: SymbolInfo;
@@ -21,7 +22,7 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
-
+  orderlyDepositFee?: bigint;
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
@@ -36,6 +37,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     src,
     chain,
     nativeToken,
+    orderlyDepositFee,
   } = props;
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
@@ -53,12 +55,14 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       slippage,
       time: chain?.est_txn_mins,
       received: dst.amount,
-      dstGasFee: "0",
+      dstGasFee: new Decimal(orderlyDepositFee!.toString())
+        ?.div(new Decimal(10).pow(18))
+        ?.toString(),
       swapFee: transaction.fees_from,
     };
 
     return info;
-  }, [transaction, chain?.est_txn_mins, mode, dst]);
+  }, [transaction, chain?.est_txn_mins, mode, dst, orderlyDepositFee]);
 
   useEffect(() => {
     if (swapStatus === WS_WalletStatusEnum.COMPLETED) {
@@ -86,7 +90,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         fromAmount: transaction.infos.from_amount,
         toToken: transaction.infos.to_token,
         minToAmount: transaction.infos.min_to_amount,
-        orderlyNativeFees: 0n,
+        orderlyNativeFees: orderlyDepositFee,
       },
       { dst, src }
     ).then(

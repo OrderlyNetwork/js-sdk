@@ -324,7 +324,10 @@ export const useChains = (
       if (chain) {
         chain.nativeToken = chain.token_infos?.find(
           (item) => item.address === nativeTokenAddress
-        );
+        ) || 
+        ({
+          symbol: chain.network_infos?.currency_symbol,
+        } as any);
       }
 
       if (typeof field === "string") {
