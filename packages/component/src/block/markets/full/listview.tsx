@@ -50,7 +50,12 @@ export const ListViewFull = forwardRef<
           </Numeral>
         </div>
         <div className="orderly-col-span-1 orderly-text-right orderly-text-base-contrast-54">
-          <Numeral rule="human">{item["24h_volume"]}</Numeral>
+        <Numeral.total
+            rule="human"
+            className="orderly-text-base-contrast-54"
+            price={item["24h_close"]}
+            quantity={item["24h_volumn"]}
+          />
         </div>
       </div>
     );
