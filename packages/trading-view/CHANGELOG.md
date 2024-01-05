@@ -1,5 +1,21 @@
 # @orderly.network/trading-view
 
+## 0.1.7
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/hooks@1.0.27
+  - @orderly.network/core@0.1.26
+  - @orderly.network/net@1.0.113
+
 ## 0.1.7-alpha.1
 
 ### Patch Changes

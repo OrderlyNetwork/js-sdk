@@ -1,5 +1,20 @@
 # @orderly.network/futures
 
+## 1.0.26
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.26
+  - @orderly.network/utils@0.0.78
+
 ## 1.0.26-alpha.1
 
 ### Patch Changes

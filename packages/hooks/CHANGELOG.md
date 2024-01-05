@@ -1,5 +1,23 @@
 # @orderly.network/hooks
 
+## 1.0.27
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.26
+  - @orderly.network/utils@0.0.78
+  - @orderly.network/core@0.1.26
+  - @orderly.network/perp@1.0.26
+  - @orderly.network/net@1.0.113
+
 ## 1.0.27-alpha.1
 
 ### Patch Changes

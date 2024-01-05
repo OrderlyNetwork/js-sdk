@@ -1,5 +1,19 @@
 # @orderly.network/cli
 
+## 0.0.35
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/core@0.1.26
+
 ## 0.0.35-alpha.1
 
 ### Patch Changes
