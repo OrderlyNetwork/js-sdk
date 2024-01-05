@@ -1,5 +1,14 @@
 # @orderly.network/utils
 
+## 0.0.77
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 0.0.77-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @orderly/docs
 
+## 0.1.65
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/react@0.1.29
+  - @orderly.network/web3-onboard@0.0.26
+  - @orderly.network/hooks@1.0.26
+  - @orderly.network/types@0.1.25
+
 ## 0.1.65-alpha.2
 
 ### Patch Changes

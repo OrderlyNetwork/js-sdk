@@ -1,5 +1,14 @@
 # @orderly.network/net
 
+## 1.0.112
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 1.0.112-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/types
 
+## 0.1.25
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 0.1.25-alpha.2
 
 ### Patch Changes

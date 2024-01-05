@@ -1,5 +1,14 @@
 # create-orderly-app
 
+## 0.1.2
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 0.1.2-alpha.2
 
 ### Patch Changes

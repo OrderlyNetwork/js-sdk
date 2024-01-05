@@ -1,5 +1,24 @@
 # @orderly.network/react
 
+## 0.1.29
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.6
+  - @orderly.network/hooks@1.0.26
+  - @orderly.network/types@0.1.25
+  - @orderly.network/utils@0.0.77
+  - @orderly.network/core@0.1.25
+  - @orderly.network/net@1.0.112
+
 ## 0.1.29-alpha.2
 
 ### Patch Changes
