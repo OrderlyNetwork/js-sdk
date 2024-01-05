@@ -1013,3 +1013,8 @@ export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 export const isNativeTokenChecker = (address: string) =>
   address === nativeTokenAddress;
+
+export const woofiDexDepositor = "0x7347383c4D258f3c64987acaf0E7c3C2bF5bE0bA";
+
+export const woofiDexCrossChainRouter =
+  "0x82Fde5086784e348aEd03eB7b19ded97652DB7A8";

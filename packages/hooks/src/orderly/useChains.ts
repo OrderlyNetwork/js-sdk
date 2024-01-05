@@ -4,7 +4,7 @@ import useSWR, { SWRConfiguration } from "swr";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { mergeDeepRight, prop } from "ramda";
-import { nativeTokenAddress } from "../woo/constants";
+import { nativeTokenAddress, woofiDexCrossChainRouter, woofiDexDepositor } from "../woo/constants";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -295,7 +295,7 @@ export const useChains = (
       }
 
       if (networkId === "mainnet") {
-        return mainnetArr;
+        return wrapTestData(mainnetArr);
       }
 
       if (networkId === "testnet") {
@@ -304,7 +304,7 @@ export const useChains = (
 
       return {
         testnet: testnetArr,
-        mainnet: mainnetArr,
+        mainnet: wrapTestData(mainnetArr),
       };
       // }
     }, [
@@ -358,3 +358,29 @@ export const useChains = (
     },
   ] as const;
 };
+
+function wrapTestData(chains: any) {
+  const mapData = (list: any[]) => {
+    return list.map((item) => {
+      if (item.name === "Arbitrum") {
+        return {
+          ...item,
+          woofi_dex_depositor: woofiDexDepositor,
+        };
+      }
+      if (item.name === "Base") {
+        return {
+          ...item,
+          woofi_dex_cross_chain_router: woofiDexCrossChainRouter,
+        };
+      }
+      return item;
+    });
+  };
+
+  if (Array.isArray(chains)) {
+    return mapData(chains);
+  }
+
+  return chains;
+}
