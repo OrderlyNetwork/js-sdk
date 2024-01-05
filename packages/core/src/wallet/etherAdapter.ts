@@ -11,7 +11,7 @@ export interface EtherAdapterOptions {
     name?: string;
   };
   // getAddresses?: (address: string) => string;
-  chain: { id: string };
+  chain: { id: number };
 }
 
 export class EtherAdapter implements IWalletAdapter {
@@ -21,7 +21,8 @@ export class EtherAdapter implements IWalletAdapter {
   constructor(options: WalletAdapterOptions) {
     // super();
 
-    this._chainId = parseInt(options.chain.id, 16);
+    // this._chainId = parseInt(options.chain.id, 16);
+    this._chainId = options.chain.id;
     this.provider = new BrowserProvider(options.provider, "any");
     this._address = options.address;
   }
