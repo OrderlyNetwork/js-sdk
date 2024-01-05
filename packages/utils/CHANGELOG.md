@@ -1,5 +1,35 @@
 # @orderly.network/utils
 
+## 0.0.78
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+
+## 0.0.78-alpha.1
+
+### Patch Changes
+
+- fix bug
+
+## 0.0.78-alpha.0
+
+### Patch Changes
+
+- fix bugs
+
+## 0.0.77
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+
 ## 0.0.77-alpha.2
 
 ### Patch Changes

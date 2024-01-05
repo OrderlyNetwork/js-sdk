@@ -1,5 +1,53 @@
 # @orderly.network/futures
 
+## 1.0.26
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- fix bugs
+- fix bug
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.26
+  - @orderly.network/utils@0.0.78
+
+## 1.0.26-alpha.1
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.26-alpha.1
+  - @orderly.network/utils@0.0.78-alpha.1
+
+## 1.0.26-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.1.26-alpha.0
+  - @orderly.network/utils@0.0.78-alpha.0
+
+## 1.0.25
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix style issues
+- fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.25
+  - @orderly.network/utils@0.0.77
+
 ## 1.0.25-alpha.2
 
 ### Patch Changes

@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useEffect, useState, useRef } from "react";
 import { Web3ModalOptions, defaultWagmiConfig } from "@web3modal/wagmi/react";
 
 import { Config, WagmiConfig } from "wagmi";
-import { arbitrum, mainnet } from "viem/chains";
+import { arbitrum, mainnet, arbitrumGoerli } from "viem/chains";
 
 import { ConfigOptions, initConfig } from "./config";
 import { Main } from "./main";
@@ -24,7 +24,8 @@ export const ConnectorProvider = (
   // const [configurated, setConfigurated] = useState<number>(-1);
 
   const [initialized, setInitialized] = useState(false);
-  const chains = useRef([mainnet, arbitrum]).current;
+
+  const chains = useRef([mainnet, arbitrum, arbitrumGoerli]).current;
 
   const [wagmiConfig, setWagmiConfig] = useState<Config>(() => {
     if (props.config) {

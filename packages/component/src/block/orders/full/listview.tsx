@@ -64,7 +64,7 @@ export const Listview: FC<Props> = (props) => {
         render: (value: string, record) => <Price order={record} />,
       },
       {
-        title: "Est.total",
+        title: "Est. total",
         className: "orderly-h-[48px]",
         dataIndex: "total",
       },

@@ -72,7 +72,7 @@ export const Listview: FC<Props> = (props) => {
         // render: (value: string, record) => <Price order={record} />,
       },
       {
-        title: "Avg.price",
+        title: "Avg. price",
         className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "average_executed_price",
       },

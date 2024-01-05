@@ -179,29 +179,6 @@ export const useChains = (
         },
       ];
 
-      if (networkEnv === "testnet") {
-        const opGoerli = {
-          network_infos: {
-            name: "Optimism Goerli",
-            shortName: "Optimism Goerli",
-            public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
-            chain_id: 420,
-            currency_symbol: "ETH",
-            bridge_enable: true,
-            mainnet: false,
-            explorer_base_url: "https://goerli-optimism.etherscan.io",
-            est_txn_mins: null,
-            
-            woofi_dex_cross_chain_router: "",
-            woofi_dex_depositor: "",
-          },
-        };
-        // @ts-ignore
-        testnetArr.push(opGoerli);
-        // @ts-ignore
-        map.current.set(420, opGoerli);
-      }
-
       let mainnetArr: API.Chain[] = [];
 
       map.current.set(421613, testnetArr[0]);
@@ -347,7 +324,10 @@ export const useChains = (
       if (chain) {
         chain.nativeToken = chain.token_infos?.find(
           (item) => item.address === nativeTokenAddress
-        );
+        ) || 
+        ({
+          symbol: chain.network_infos?.currency_symbol,
+        } as any);
       }
 
       if (typeof field === "string") {

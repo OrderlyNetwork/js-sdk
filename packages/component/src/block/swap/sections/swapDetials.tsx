@@ -12,7 +12,7 @@ import { API } from "@orderly.network/types";
 export interface SwapInfo {
   // gasFee: string;
   // tradingFee: string;
-  dstGasFee: string;
+  dstGasFee: bigint;
   swapFee: string;
   bridgeFee: string;
   price: number;
@@ -49,10 +49,10 @@ export const SwapDetails: FC<Props> = (props) => {
                 truncate="round"
                 padding={false}
               >
-                {info.dstGasFee}
+                {info.dstGasFee?.toString()}
               </Numeral>
               <span className="orderly-text-primary-light/60">{`($${new Decimal(
-                info.dstGasFee
+                info.dstGasFee?.toString()
               )
                 .mul(props.nativePrice)
                 .toFixed(2)
@@ -60,7 +60,9 @@ export const SwapDetails: FC<Props> = (props) => {
             </div>
           }
         >
-          <span className="orderly-text-base-contrast-36">Destination gas fee</span>
+          <span className="orderly-text-base-contrast-36">
+            Destination gas fee
+          </span>
         </ListTile>
 
         <ListTile
@@ -123,7 +125,9 @@ export const SwapDetails: FC<Props> = (props) => {
             </Numeral>
           }
         >
-          <span className="orderly-text-base-contrast-36">Minimum received</span>
+          <span className="orderly-text-base-contrast-36">
+            Minimum received
+          </span>
         </ListTile>
         <ListTile
           className="orderly-py-0 orderly-text-4xs hover:orderly-bg-transparent"
@@ -134,13 +138,21 @@ export const SwapDetails: FC<Props> = (props) => {
         >
           <span className="orderly-text-base-contrast-36">Price</span>
         </ListTile>
-        <ListTile className="orderly-py-0 hover:orderly-bg-transparent" tailing={
-          <span className="orderly-text-4xs">1%</span>
-        }>
-          <span className="orderly-text-base-contrast-36">Slippage tolerance</span>
+        <ListTile
+          className="orderly-py-0 hover:orderly-bg-transparent"
+          tailing={<span className="orderly-text-4xs">1%</span>}
+        >
+          <span className="orderly-text-base-contrast-36">
+            Slippage tolerance
+          </span>
         </ListTile>
       </div>
-      <Button id="orderly-swap-config-button" className="orderly-text-xs" fullWidth onClick={() => props.onConfirm()}>
+      <Button
+        id="orderly-swap-config-button"
+        className="orderly-text-xs"
+        fullWidth
+        onClick={() => props.onConfirm()}
+      >
         Confirm swap
       </Button>
     </>

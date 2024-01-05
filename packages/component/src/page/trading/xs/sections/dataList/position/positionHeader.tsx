@@ -4,7 +4,7 @@ export const PositionHeader = () => {
   return (
     <div>
       <div className="orderly-grid orderly-grid-cols-3">
-        <div>Unreal.PnL</div>
+        <div>Unreal. PnL</div>
         <div>Notional</div>
         <div>Unsettled PnL</div>
       </div>

@@ -16,7 +16,7 @@ import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
 import { API, CurrentChain, WithdrawStatus } from "@orderly.network/types";
 import { toast } from "@/toast";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, int2hex } from "@orderly.network/utils";
 import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
@@ -103,6 +103,29 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     );
     return result;
   }, [chains, chain]);
+
+  const onChainChange = useCallback(
+    (value: API.Chain) => {
+      if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
+       
+        switchChain?.({
+          chainId: int2hex(Number(value.network_infos?.chain_id)),
+        })
+        .then(
+          () => {
+       
+            toast.success("Network switched");
+            // 清理数据
+            setQuantity("");
+          },
+          (error) => {
+            //
+            toast.error(`Switch chain failed: ${error.message}`);
+          }
+        );
+    },
+    [switchChain, chain]
+  );
 
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
@@ -290,7 +313,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         />
       </div>
       <div className="orderly-py-2">
-        <WalletPicker address={address} chain={chain} wooSwapEnabled={false} />
+        <WalletPicker address={address} chain={chain} wooSwapEnabled={false} onChainChange={onChainChange} />
       </div>
       <TokenQtyInput
         amount={quantity}
