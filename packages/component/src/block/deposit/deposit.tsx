@@ -124,11 +124,11 @@ export const Deposit: FC<DepositProps> = (props) => {
     };
   }, []);
 
-  function getDepositFeeChainNetworkInfo(): API.NetworkInfos {
+  function getDepositFeeChainNetworkInfo() {
     const currentChainNewtorkInfo = currentChain?.info?.network_infos!;
     if (networkId === "testnet") {
       return (
-        findByChainId(ARBITRUM_TESTNET_CHAINID)?.network_infos ||
+        findByChainId(ARBITRUM_TESTNET_CHAINID, "network_infos") ||
         currentChainNewtorkInfo
       );
     }
@@ -140,7 +140,7 @@ export const Deposit: FC<DepositProps> = (props) => {
 
     // Orderly un-supported chain - get Arbitrum deposit fee
     return (
-      findByChainId(ARBITRUM_MAINNET_CHAINID)?.network_infos ||
+      findByChainId(ARBITRUM_MAINNET_CHAINID, "network_infos") ||
       currentChainNewtorkInfo
     );
   }
