@@ -1,3 +1,4 @@
+import { API } from "@orderly.network/types";
 import { TransactionRequest, TransactionResponse } from "ethers";
 
 export interface IWalletAdapter {
@@ -36,6 +37,16 @@ export interface IWalletAdapter {
   ) => Promise<any>;
 
   call(
+    address: string,
+    method: string,
+    params: any,
+    options: {
+      abi: any;
+    }
+  ): Promise<any>;
+
+  callOnChain(
+    chain: API.NetworkInfos,
     address: string,
     method: string,
     params: any,
