@@ -227,8 +227,8 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const getDepositFee = useCallback(
-    async (amount: string) => {
-      return account.assetsManager.getDepositFee(amount);
+    async (amount: string, chain: any) => {
+      return account.assetsManager.getDepositFee(amount, chain);
     },
     [account]
   );
