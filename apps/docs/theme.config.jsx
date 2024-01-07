@@ -72,7 +72,9 @@ export default {
   },
   useNextSeoProps() {
     return {
-      titleTemplate: "%s",
+      // titleTemplate: "%s",
+      titleTemplate: "Orderly Network | SDK",    
+      description:'Simplify Web3 applications development and enhance integration experience with the Orderly Omnichain SDK.'
     };
   },
   // ...
