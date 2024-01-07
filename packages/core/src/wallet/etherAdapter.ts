@@ -4,6 +4,7 @@ import {
   EthersError,
   getParsedEthersError,
 } from "@enzoferey/ethers-error-parser";
+import { API } from "@orderly.network/types";
 
 export interface EtherAdapterOptions {
   provider: any;
@@ -59,6 +60,29 @@ export class EtherAdapter implements IWalletAdapter {
 
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
+
+    return contract[method].apply(null, params).catch((error) => {
+      const parsedEthersError = getParsedEthersError(error);
+
+      throw parsedEthersError;
+    });
+  }
+
+  async callOnChain(
+    chain: API.NetworkInfos,
+    address: string,
+    method: string,
+    params: any[],
+    options: {
+      abi: any;
+    }
+  ): Promise<any> {
+    // const singer = await this.provider?.getSigner();
+    // const contract = new ethers.Contract(address, options.abi, singer);
+
+    const provider = new ethers.JsonRpcProvider(chain.public_rpc_url);
+
+    const contract = new ethers.Contract(address, options.abi, provider);
 
     return contract[method].apply(null, params).catch((error) => {
       const parsedEthersError = getParsedEthersError(error);

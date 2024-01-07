@@ -514,22 +514,20 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       setOrderlyDepositFee(0n);
       return;
     }
+
     props
       .getDepositFee(quantity)
       .then((res: bigint) => {
-        // const depositFee = new Decimal(res.toString())
-        //   ?.mul(DEPOSIT_FEE_RATE)
-        //   ?.div(new Decimal(10).pow(18))
-        //   ?.toString();
         const depositFee = new Decimal(res.toString())
           .mul(DEPOSIT_FEE_RATE)
           .toFixed(0, Decimal.ROUND_UP)
           .toString();
         setOrderlyDepositFee(BigInt(depositFee));
-        console.log("getDepositFee", res, depositFee);
+        // console.log("getDepositFee", res, depositFee);
       })
-      .catch((err) => {
-        console.log("getDepositFee error", err);
+      .catch((error) => {
+        toast.error(error?.errorCode);
+        console.log("getDepositFee error", error);
       });
   }, 300);
 
