@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.1.27-alpha.3
+
+### Patch Changes
+
+- update deposit fee
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.3
+
 ## 0.1.27-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @orderly.network/trading-view
 
+## 0.1.8-alpha.3
+
+### Patch Changes
+
+- update deposit fee
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.3
+  - @orderly.network/core@0.1.27-alpha.3
+  - @orderly.network/net@1.0.114-alpha.3
+
 ## 0.1.8-alpha.2
 
 ### Patch Changes

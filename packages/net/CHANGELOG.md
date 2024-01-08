@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.114-alpha.3
+
+### Patch Changes
+
+- update deposit fee
+
 ## 1.0.114-alpha.2
 
 ### Patch Changes
