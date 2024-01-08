@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.0.79-alpha.3
+
+### Patch Changes
+
+- update deposit fee
+
 ## 0.0.79-alpha.2
 
 ### Patch Changes
