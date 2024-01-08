@@ -1,10 +1,28 @@
 # @orderly.network/futures
 
+## 1.0.27-alpha.2
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.2
+  - @orderly.network/utils@0.0.79-alpha.2
+
+## 1.0.27-alpha.1
+
+### Patch Changes
+
+- update version
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.1
+  - @orderly.network/utils@0.0.79-alpha.1
+
 ## 1.0.27-alpha.0
 
 ### Patch Changes
 
-- add deposit fee
+- fix bugs
 - Updated dependencies
   - @orderly.network/types@0.1.27-alpha.0
   - @orderly.network/utils@0.0.79-alpha.0
