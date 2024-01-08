@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.0.79-alpha.1
+
+### Patch Changes
+
+- update version
+
 ## 0.0.79-alpha.0
 
 ### Patch Changes
