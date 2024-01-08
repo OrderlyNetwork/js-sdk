@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.0.34-alpha.0
+
+### Patch Changes
+
+- add deposit fee
+
 ## 0.0.33
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.1.4-alpha.0
+
+### Patch Changes
+
+- add deposit fee
+
 ## 0.1.3
 
 ### Patch Changes

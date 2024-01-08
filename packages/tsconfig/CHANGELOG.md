@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.0
+
+### Patch Changes
+
+- add deposit fee
+
 ## 0.0.86
 
 ### Patch Changes

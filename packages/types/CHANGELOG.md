@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.27-alpha.0
+
+### Patch Changes
+
+- add deposit fee
+
 ## 0.1.26
 
 ### Patch Changes
