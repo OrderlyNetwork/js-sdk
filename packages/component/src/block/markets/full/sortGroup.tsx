@@ -2,11 +2,13 @@ import { FC, useEffect } from "react";
 import { SortItem, SortKey } from "../sections/sortItem";
 import { useSort } from "../useSort";
 import { SortCondition } from "../sections/sortGroup";
+import { cn } from "@/utils";
 
 interface Props {
   value?: SortKey;
   onChange: (values: SortCondition) => void;
-}
+  hasSuffix: boolean;
+} 
 
 export const SortGroup: FC<Props> = (props) => {
   //   const onClick = (value: SortKey) => {
@@ -25,7 +27,11 @@ export const SortGroup: FC<Props> = (props) => {
   }, [sortKey, direction]);
 
   return (
-    <div className="orderly-grid orderly-grid-cols-4 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2">
+    <div className={
+      cn("orderly-grid orderly-grid-cols-4 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2",
+      props.hasSuffix && "orderly-grid-cols-5"
+      )
+    }>
       <div>Instrument</div>
       <div className="orderly-flex orderly-justify-end">
         <SortItem
