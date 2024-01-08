@@ -16,8 +16,8 @@ export class Datafeed extends AbstractDatafeed {
 
 
 
-    constructor(ws: any) {
-        const datafeedURL = `https://testnet-api-evm.orderly.org/tv`;
+    constructor(apiUrl: string, ws: any) {
+        const datafeedURL = `${apiUrl}/tv`;
         super(datafeedURL);
 
         this._subscribeQuoteMap = new Map();

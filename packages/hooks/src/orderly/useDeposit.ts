@@ -57,10 +57,17 @@ export const useDeposit = (options?: useDepositOptions) => {
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
   const dst = useMemo(() => {
-    const chain: API.Chain | undefined =
-      networkId === "testnet"
-        ? (findByChainId(ARBITRUM_TESTNET_CHAINID) as API.Chain | undefined)
-        : (findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain | undefined);
+    let chain: API.Chain | undefined;
+
+    if (networkId === "testnet") {
+      chain = findByChainId(ARBITRUM_TESTNET_CHAINID) as API.Chain;
+    } else {
+      chain = findByChainId(options?.srcChainId!) as API.Chain;
+      // Orderly un-supported chain
+      if (!chain?.network_infos?.bridgeless) {
+        chain = findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain;
+      }
+    }
 
     const USDC = chain?.token_infos.find(
       (token: API.TokenInfo) => token.symbol === "USDC"
@@ -76,7 +83,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       network: chain.network_infos.shortName,
       // chainId: 42161,
     };
-  }, [networkId, findByChainId]);
+  }, [networkId, findByChainId, options?.srcChainId]);
 
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),
