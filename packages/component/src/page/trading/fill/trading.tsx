@@ -77,7 +77,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "40%", minHeight: "35%" }}>
+            <div style={{ height: "40%", minHeight: "346px" }}>
               <MemoizedDataListView />
             </div>
           </Split>
