@@ -9,9 +9,9 @@ export class OrderlyExtensionRegistry {
     }
     return OrderlyExtensionRegistry._instance;
   }
-  private pluginMap: Map<ExtensionPosition, Extension> = new Map();
+  private extensionMap: Map<ExtensionPosition, Extension<unknown>> = new Map();
 
-  register(plugin: Extension) {
+  register<Props>(plugin: Extension<Props>) {
     // this.pluginMap.set(plugin.name, plugin);
     for (let index = 0; index < plugin.positions.length; index++) {
       const pos = plugin.positions[index];
@@ -19,15 +19,21 @@ export class OrderlyExtensionRegistry {
     }
   }
 
-  private registerToPosition(position: ExtensionPosition, plugin: Extension) {
-    if (this.pluginMap.has(position)) {
-      throw new Error(`Plugin already registered at position [${position}]`);
+  private registerToPosition(
+    position: ExtensionPosition,
+    plugin: Extension<unknown>
+  ) {
+    if (this.extensionMap.has(position)) {
+      const existingPlugin = this.extensionMap.get(position);
+      if (!existingPlugin?.__isInternal) {
+        throw new Error(`Plugin already registered at position [${position}]`);
+      }
     }
 
-    this.pluginMap.set(position, plugin);
+    this.extensionMap.set(position, plugin);
   }
 
-  unregister(plugin: Extension) {
+  unregister(plugin: Extension<unknown>) {
     for (let index = 0; index < plugin.positions.length; index++) {
       const pos = plugin.positions[index];
 
@@ -36,10 +42,10 @@ export class OrderlyExtensionRegistry {
   }
 
   private unregisterFromPosition(position: ExtensionPosition) {
-    this.pluginMap.delete(position);
+    this.extensionMap.delete(position);
   }
 
   getPluginsByPosition(position: ExtensionPosition) {
-    return this.pluginMap.get(position);
+    return this.extensionMap.get(position);
   }
 }

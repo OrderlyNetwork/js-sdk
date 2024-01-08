@@ -8,7 +8,10 @@ import "./plugins/deposit";
 const PluginDemo = () => {
   return (
     <div>
-      <ExtensionSlot position={ExtensionPosition.DepositForm} />
+      <ExtensionSlot
+        position={ExtensionPosition.DepositForm}
+        symbol={"PERP_ETH_USDC"}
+      />
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { useModal } from "@/modal";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";
+import { DepositSlot } from "./slot";
 
 type activeName = "deposit" | "withdraw";
 
@@ -40,7 +41,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            <Deposit
+            {/* <Deposit
               onOk={props.onOk}
               // @ts-ignore
               dst={{
@@ -50,7 +51,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
                 symbol: "",
                 network: "",
               }}
-            />
+            /> */}
+            <DepositSlot />
           </div>
         </TabPane>
         <TabPane

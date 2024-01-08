@@ -150,3 +150,5 @@ export const Deposit: FC<DepositProps> = (props) => {
     />
   );
 };
+
+export default Deposit;
