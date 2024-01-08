@@ -8,7 +8,7 @@ export interface Extension<Props> {
 
   initialize?: () => void;
 
-  render(props: Props): ReactNode;
+  render(ctx: any): ReactNode;
 }
 
 export enum ExtensionPosition {

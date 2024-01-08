@@ -1,10 +1,7 @@
 import { ExtensionPosition } from "@/plugin";
 import { installExtension } from "@/plugin/install";
 import { ExtensionSlot } from "@/plugin/slot";
-// import { lazy, Suspense } from "react";
 import { Deposit } from "../deposit/deposit";
-
-// const Deposit = lazy(() => import("../deposit/deposit"));
 
 installExtension<{ onOk: () => void }>({
   name: "default-deposit",
@@ -13,7 +10,6 @@ installExtension<{ onOk: () => void }>({
   __isInternal: true,
 })((props) => {
   return (
-    // <Suspense fallback={"loading..."}>
     <Deposit
       onOk={props.onOk}
       // @ts-ignore
@@ -25,7 +21,6 @@ installExtension<{ onOk: () => void }>({
         network: "",
       }}
     />
-    // </Suspense>
   );
 });
 

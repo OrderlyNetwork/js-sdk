@@ -1,7 +1,7 @@
 // interface PluginRegistry {}
 
 import { ReactNode } from "react";
-import { PluginProvider } from "./pluginContext";
+import { ExtensionProvider } from "./pluginContext";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
 
@@ -48,7 +48,7 @@ export const installExtension = <Props extends unknown = {}>(
         const children =
           typeof component === "function" ? component(props) : component;
 
-        return <PluginProvider>{children}</PluginProvider>;
+        return <ExtensionProvider>{children}</ExtensionProvider>;
       },
     });
   };

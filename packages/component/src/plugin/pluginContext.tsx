@@ -1,24 +1,18 @@
-import {
-  FC,
-  PropsWithChildren,
-  Suspense,
-  createContext,
-  useContext,
-} from "react";
+import { FC, PropsWithChildren, createContext, useContext } from "react";
 
-export type PluginContextState = {};
+export type ExtensionContextState = {};
 
-export const ExtensionContext = createContext({} as PluginContextState);
+export const ExtensionContext = createContext({} as ExtensionContextState);
 
 export const useExtensionContext = () => {
   return useContext(ExtensionContext);
 };
 
-interface PluginProviderProps {}
+interface ExtensionProviderProps {}
 
-export const PluginProvider: FC<PropsWithChildren<PluginProviderProps>> = (
-  props
-) => {
+export const ExtensionProvider: FC<
+  PropsWithChildren<ExtensionProviderProps>
+> = (props) => {
   return (
     <ExtensionContext.Provider value={{}}>
       {props.children}

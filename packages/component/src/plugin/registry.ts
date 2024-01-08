@@ -15,13 +15,13 @@ export class OrderlyExtensionRegistry {
     // this.pluginMap.set(plugin.name, plugin);
     for (let index = 0; index < plugin.positions.length; index++) {
       const pos = plugin.positions[index];
-      this.registerToPosition(pos, plugin);
+      this.registerToPosition<Props>(pos, plugin);
     }
   }
 
-  private registerToPosition(
+  private registerToPosition<Props>(
     position: ExtensionPosition,
-    plugin: Extension<unknown>
+    plugin: Extension<Props>
   ) {
     if (this.extensionMap.has(position)) {
       const existingPlugin = this.extensionMap.get(position);

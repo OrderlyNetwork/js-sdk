@@ -1,8 +1,8 @@
-import { Suspense, lazy } from "react";
 import { ExtensionPosition } from "@/plugin/types";
 import { installExtension } from "../../install";
+import Comp from "./comp";
 
-const Comp = lazy(() => import("./comp"));
+// const Comp = lazy(() => import("./comp"));
 
 installExtension<{
   onOk: () => void;
@@ -12,9 +12,5 @@ installExtension<{
   positions: [ExtensionPosition.DepositForm],
 })((props) => {
   console.log(props);
-  return (
-    <Suspense fallback={"loading..."}>
-      <Comp />
-    </Suspense>
-  );
+  return <Comp />;
 });
