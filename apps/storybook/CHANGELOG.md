@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-alpha.5
+
+### Patch Changes
+
+- fix bugs
+
 ## 1.0.96-alpha.4
 
 ### Patch Changes
