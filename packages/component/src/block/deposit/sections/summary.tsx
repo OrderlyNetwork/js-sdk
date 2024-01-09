@@ -140,7 +140,9 @@ export const Summary: FC<SummaryProps> = (props) => {
 
   const onShowFee = useCallback(() => {
     const message = [];
-    let dstGasFee = orderlyDepositFee;
+    let dstGasFee = new Decimal(orderlyDepositFee.toString())
+      ?.div(new Decimal(10).pow(18))
+      .toString();
     if (needSwap && needCrossChain) {
       dstGasFee = destinationGasFee;
     }
