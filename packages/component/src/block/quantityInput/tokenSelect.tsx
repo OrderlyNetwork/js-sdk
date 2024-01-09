@@ -63,6 +63,8 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
           event.preventDefault();
           props.onClosed?.();
         }}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        closable
       >
         <DialogHeader className="after:orderly-hidden">
           Select token
