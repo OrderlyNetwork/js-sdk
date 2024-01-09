@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { useMarketsStream } from "./useMarketsStream";
 import { useConfig } from "../useConfig";
 import { OrderlyContext } from "../orderlyContext";
@@ -14,22 +14,35 @@ export enum MarketsType {
 /*
 {
     markets: {
-        ORDERLY_MARKETS_RECENT_KEY: {
-            `${symbol_name}`: {
-                "symbol": symbol,
-                "time": time,
-            }
-        },
-        ORDERLY_MARKETS_FAVORITES_KEY: {
-            `${symbol_name}`: {
-                "symbol": symbol,
-                "time": time,
-            }
-        }
+        recent: [
+            { "name": `${symbol.name}` },
+            { "name": `${symbol.name}` },
+        ],
+        favorites: [
+            { "name": `${symbol.name}`, "tabs": ["a", "b"] },
+        ],
+        favoriteTabs: [
+            { "name": "Popular", "id": 1 },
+        ]
         
     }
 }
 */
+
+
+export interface FavoriteTab {
+    name: string;
+    id: number;
+}
+
+export interface Favorite {
+    name: string;
+    tabs: FavoriteTab[];
+}
+
+export interface Recent {
+    name: string;
+}
 
 export const useMarkets = (type: MarketsType) => {
 
@@ -38,65 +51,149 @@ export const useMarkets = (type: MarketsType) => {
     const { data } = useMarketsStream();
     const { configStore } = useContext(OrderlyContext);
 
-    const getRecentMap = () => {
-        let oldData = configStore.getOr(marketsKey, { "ORDERLY_MARKETS_RECENT_KEY": {} })["ORDERLY_MARKETS_RECENT_KEY"];
-        return { ...oldData };
-    };
+    if (!configStore.get(marketsKey)) {
+        configStore.set(marketsKey, {
+            recent: [],
+            favorites: [],
+            favoriteTabs: [{ name: "Popular", id: 1 }]
+        });
+    }
 
-    const setRecentData = (symbol: API.MarketInfoExt) => {
-        let oldData = getRecentMap();
-        oldData[symbol.symbol] = {
-            symbol,
-            time: Date.now() // timestamp
+    const getFavoriteTabs = useCallback(() => {
+        const tabs = configStore.get(marketsKey)["favoriteTabs"];
+        return (tabs || [{ name: "Popular", id: 1 }]) as FavoriteTab[];
+    }, [configStore]);
+
+    const getFavorites = useCallback(() => {
+        const curData = configStore.get(marketsKey,)["favorites"];
+        return (curData || {}) as Favorite[];
+    }, [configStore]);
+
+    const getRecent = useCallback(() => {
+        const curData = configStore.get(marketsKey)["recent"];
+        return (curData || {}) as Recent[];
+    }, [configStore]);
+
+    const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs());
+    const [favorites, setFavorites] = useState(getFavorites());
+    const [recent, setRecent] = useState(getRecent());
+
+    const updateFavoriteTabs = useCallback((tab: FavoriteTab, operator: {
+        add?: boolean,
+        update?: boolean,
+        delete?: boolean,
+    }) => {
+        var tabs = favoriteTabs;
+        const index = tabs.findIndex((item) => item.id === tab.id);
+        if (operator.add) {
+            tabs.push(tab);
+        } else if (operator.update) {
+            if (index !== -1) {
+                tabs[index] = tab;
+            }
+        } else if (operator.delete) {
+            if (index !== -1) {
+                tabs.splice(index, 1);
+            }
         }
-        configStore.set(marketsKey, {"ORDERLY_MARKETS_RECENT_KEY": oldData});
-    };
+        setFavoriteTabs(tabs);
+        configStore.set(marketsKey, {
+            ...configStore.getOr(marketsKey, {}),
+            "favoriteTabs": tabs
+        })
+    }, [configStore]);
 
-    const getFavoritesMap = () => {
-        let oldData = configStore.getOr(marketsKey, { "ORDERLY_MARKETS_FAVORITES_KEY": {} })["ORDERLY_MARKETS_FAVORITES_KEY"];
-        return { ...oldData };
-    };
-
-    const setFavoritesData = (symbol: API.MarketInfoExt) => {
-        let oldData = getRecentMap();
-        oldData[symbol.symbol] = {
-            symbol,
-            time: Date.now() // timestamp
+    const setRecentData = useCallback((symbol: API.MarketInfoExt) => {
+        const curData = getRecent();
+        const index = curData.findIndex((item) => item.name == symbol.symbol);
+        if (index !== -1) {
+            curData.splice(index, 1);
         }
-        configStore.set(marketsKey, {"ORDERLY_MARKETS_FAVORITES_KEY": oldData});
-    };
+        curData.unshift({ name: symbol.symbol });
+        configStore.set(marketsKey, {
+            ...configStore.getOr(marketsKey, {}),
+            "recent": curData
+        });
+        setRecent(curData);
+    }, [configStore]);
+
+    
+
+    const setFavoritesData = useCallback((symbol: API.MarketInfoExt, tab: FavoriteTab, remove: boolean = false) => {
+        console.log("set fav data");
+        
+        const curData = getFavorites();
+        const index = curData.findIndex((item) => item.name == symbol.symbol);
+
+        if (index === -1) { // can not find
+            if (!remove) {
+                // insert
+                curData.unshift({ name: symbol.symbol, tabs: [tab] });
+            }
+        } else {
+            const favorite = curData[index];
+            if (remove) {
+                const tabs = favorite.tabs.filter((tab) => tab.id != tab.id);
+                if (tabs.length === 0) { // del favorite
+                    curData.splice(index, 1);
+                } else {
+                    curData[index] = { ...favorite, tabs };
+                }
+            } else { // insert
+                const tabs = favorite.tabs;
+                tabs.push(tab);
+                curData[index] = { ...favorite, tabs };
+            }
+        }
+
+        configStore.set(marketsKey, {
+            ...configStore.getOr(marketsKey, {}),
+            "favorites": curData
+        });
+        console.log("set fav data update state", curData, configStore.get(marketsKey));
+        setFavorites(curData);
+    }, [configStore]);
 
     const getData = useCallback((type: MarketsType) => {
-        const localData = type === MarketsType.FAVORITES ? getFavoritesMap() : getRecentMap();
+        // get data
+        const localData = type === MarketsType.FAVORITES ? getFavorites() : getRecent();
+        // filter
+        const keys = localData.map((item) =>item.name);
+        const filter = type == MarketsType.ALL ?
+            data :
+            data?.filter((item) => keys.includes(item.symbol));
 
-        console.log("type", type, localData);
-        
-        const keys = Object.keys(localData);
+        const favoritesData = favorites;
+        const favoriteKeys = favoritesData.map((item) => item.name);
+        if (filter) {
+            for (let index = 0; index < filter.length; index++) {
+                const element = filter[index];
+                const isFavorite = type == MarketsType.FAVORITES ?
+                    true :
+                    (favoriteKeys.includes(element.symbol));
 
-        const filter = data?.filter((item) => keys.includes(item.symbol))
+                const fIndex = favoritesData.findIndex((item) => item.name === element.symbol);
+                const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
+                filter[index] = {
+                    ...filter[index],
+                    // @ts-ignore
+                    isFavorite,
+                    tabs,
+                };
+            }
+        }
 
-        console.log("filter begin", filter);
-        
-        filter?.sort((a,b) => {
-            var aTime = localData[a.symbol].time;
-            var bTime = localData[b.symbol].time;
-            console.log("filtering", aTime, bTime);
-            
-            return bTime - aTime;
-        })
-        
-        console.log("filter filter", filter);
         return filter;
 
-    }, [configStore, data]);
+    }, [configStore, data, favoriteTabs, favorites, recent]);
 
-    const addHistory = useCallback((symbol: API.MarketInfoExt) => {
+    const addToHistory = useCallback((symbol: API.MarketInfoExt) => {
         setRecentData(symbol);
     }, []);
 
-
-    console.log("config store", configStore);
-
+    const updateSymbolFavoriteState = (symbol: API.MarketInfoExt, tab: FavoriteTab, del: boolean = false) => {
+        setFavoritesData(symbol, tab, del);
+    };
 
     const markets = useMemo(() => {
 
@@ -106,15 +203,25 @@ export const useMarkets = (type: MarketsType) => {
             case MarketsType.RECENT:
                 return getData(MarketsType.RECENT);
             case MarketsType.ALL:
+                const data = getData(MarketsType.ALL);
+                console.log("all type", data);
+                
                 return data;
+
         }
 
-    }, [data, type]);
+    }, [data, type, favoriteTabs, favorites, recent]);
+
+    // console.log("config store", configStore, favoriteTabs, markets);
 
     return [
         markets,
         {
-            addHistory,
+            favoriteTabs,
+            addToHistory,
+            // updateFavoriteTabs("tab", operator: {add/update/delete})
+            updateFavoriteTabs,
+            updateSymbolFavoriteState,
         },
     ] as const;
 }

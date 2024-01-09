@@ -6,6 +6,7 @@ import { Numeral, Text } from "@/text";
 import { SortGroup } from "./sortGroup";
 import { cn } from "@/utils/css";
 import type { ListViewRef } from "@/listView/listView";
+import { NetworkImage } from "@/icon";
 
 interface Props {
   activeIndex: number;
@@ -18,7 +19,7 @@ interface Props {
 
 export const ListViewFull = forwardRef<
   ListViewRef,
-  MarketListViewProps & Props & { prefix?: React.ReactNode, suffix?: React.ReactNode }
+  MarketListViewProps & Props & { prefixRender?: (item: API.MarketInfoExt, index: number) => React.ReactNode, suffix?: React.ReactNode }
 >((props, ref) => {
   const renderItem = (
     item: API.MarketInfoExt,
@@ -39,8 +40,9 @@ export const ListViewFull = forwardRef<
         )}
         onClick={() => props.onItemClick?.(item)}
       >
-        <div className="orderly-col-span-1 orderly-flex">
-          {props.prefix && (props.prefix)}
+        <div className="orderly-col-span-1 orderly-flex orderly-items-center">
+          {props.prefixRender && (props.prefixRender(item,index))}
+          <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
           <Text rule="symbol">{item.symbol}</Text>
         </div>
         <div className="orderly-col-span-1 orderly-text-right">

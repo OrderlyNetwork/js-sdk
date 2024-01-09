@@ -14,7 +14,7 @@ export const FavoritesTabPane: FC<{
 }> = (props) => {
     const { activeIndex, setActiveIndex, onItemClick, fitlerKey } = props;
 
-    const [data, { addHistory }] = useMarkets(MarketsType.FAVORITES);
+    const [data, { addToHistory, addToFavorites, removeFromFavorites }] = useMarkets(MarketsType.FAVORITES);
     const [dataSource, { onSearch, onSort }] = useDataSource(
         data
     );
@@ -34,7 +34,7 @@ export const FavoritesTabPane: FC<{
         // @ts-ignore
         onItemClick={(item) => {
             onItemClick?.(item);
-            addHistory(item);
+            addToHistory(item);
         }}
     />);
 }

@@ -3,6 +3,7 @@ import { ListViewFull } from "./listview";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
+import { FavoriteButton } from "./favoriteButton";
 
 export const AllTabPane: FC<{
     onClose?: () => void,
@@ -14,7 +15,7 @@ export const AllTabPane: FC<{
 }> = (props) => {
     const { activeIndex, setActiveIndex, onItemClick, fitlerKey } = props;
 
-    const [data, { addHistory }] = useMarkets(MarketsType.ALL);
+    const [data, { addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState }] = useMarkets(MarketsType.ALL);
     const [dataSource, { onSearch, onSort }] = useDataSource(
         data
     );
@@ -34,7 +35,15 @@ export const AllTabPane: FC<{
         // @ts-ignore
         onItemClick={(item) => {
             onItemClick?.(item);
-            addHistory(item);
+            addToHistory(item);
+        }}
+        prefixRender={(item, index) => {
+            return (<FavoriteButton
+                symbol={item}
+                tabs={favoriteTabs}
+                updateFavoriteTabs={updateFavoriteTabs}
+                updateSymbolFavoriteState={updateSymbolFavoriteState}
+            />);
         }}
     />);
 }
