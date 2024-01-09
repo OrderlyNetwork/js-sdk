@@ -96,7 +96,7 @@ export const Ticker: FC<Props> = (props) => {
             value={<Numeral unit={base}>{data?.open_interest}</Numeral>}
             rule={"price"}
           />
-          <div ref={tailingElementRef} />
+          <div ref={tailingElementRef} className="orderly-pr-[20px]"/>
         </div>
         <TickerMask
           leading

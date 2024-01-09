@@ -45,7 +45,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
   }
 
   return (
-    <>
+    <div className="orderly-h-[240px]">
       <TimeIntervalToolbar
         intervals={intervals}
         timeInterval={timeInterval}
@@ -62,6 +62,6 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         tradingViewCustomCssUrl={props?.customCssUrl}
         overrides={props.overrides}
       />
-    </>
+    </div>
   );
 };
