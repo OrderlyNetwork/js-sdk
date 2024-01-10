@@ -85,7 +85,7 @@ export const ListViewFull = forwardRef<
         className="orderly-text-xs orderly-overflow-y-auto orderly-bg-base-900"
         contentClassName="orderly-space-y-0"
         extraData={props.activeIndex}
-        style={props.maxHeight ? { maxHeight: `${props.maxHeight}px` } : {}}
+        style={props.maxHeight ? { height: `${props.maxHeight}px` } : {}}
       />
     </div>
   );
