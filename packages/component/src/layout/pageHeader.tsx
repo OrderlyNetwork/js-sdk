@@ -19,3 +19,5 @@ export const PageHeader: FC<PropsWithChildren<PageHeaderProps>> = (props) => {
 
   return <BaseLayout {...props} onMeasure={onMeasure} />;
 };
+
+PageHeader.displayName = "PageHeader";

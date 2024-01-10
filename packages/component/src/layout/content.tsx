@@ -11,3 +11,5 @@ export const Content: FC<PropsWithChildren<ContentProps>> = (props) => {
   const { className, ...rest } = props;
   return <div {...rest} className={cn("orderly-flex-1", className)} />;
 };
+
+Content.displayName = "Content";

@@ -26,9 +26,9 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
       disableFeatures={props.disableFeatures}
     >
       <Layout mobile={<MobileTradingPage {...props} />}>
-        {/* <Header className="orderly-app-trading-header orderly-border-b orderly-border-divider">
+        <Header className="orderly-app-trading-header orderly-border-b orderly-border-divider">
           <TopNavbar />
-        </Header> */}
+        </Header>
         <Layout>
           {/* <Sider style={{ minWidth: "44px", backgroundColor: "red" }}>
             

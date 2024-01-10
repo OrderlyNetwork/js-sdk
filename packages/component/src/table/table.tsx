@@ -59,25 +59,23 @@ export const Table = <RecordType extends unknown>(
   }, [props.dataSource, props.columns, props.generatedRowKey]);
 
   const maskElement = useMemo(() => {
-    let children = <EmptyView visible={props.dataSource?.length === 0} />;
     if (props.loading) {
-      children = <Spinner />;
+      return (
+        <div className="orderly-absolute orderly-w-full orderly-h-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center">
+          <Spinner />
+        </div>
+      );
     }
 
-    return (
-      <div className="orderly-absolute orderly-w-full orderly-h-full orderly-z-20 orderly-left-0 orderly-top-[40px] orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center">
-        {children}
-      </div>
-    );
     // if (!!props.dataSource?.length) return null;
-    // return <EmptyView visible={props.dataSource?.length === 0} />;
+    return <EmptyView visible={props.dataSource?.length === 0} />;
   }, [props.dataSource]);
 
   return (
     <div className="orderly-relative orderly-min-h-[180px] orderly-h-full">
       <table
         className={cn(
-          "orderly-border-collapse orderly-w-full orderly-table-fixed orderly-min-h-[180px]",
+          "orderly-border-collapse orderly-w-full orderly-table-fixed",
           props.className
         )}
       >

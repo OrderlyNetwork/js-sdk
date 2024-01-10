@@ -1,4 +1,11 @@
-import { FC, PropsWithChildren, memo, useContext, useEffect } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  memo,
+  useContext,
+  useEffect,
+  Children,
+} from "react";
 import { LayoutContext, LayoutProvider } from "./layoutContext";
 import { cn } from "..";
 import { LayoutBaseProps } from "./types";
@@ -15,6 +22,9 @@ const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
 
   useEffect(() => {
     console.log(props.children);
+    Children.forEach(props.children, (child) => {
+      console.log(child);
+    });
   }, []);
 
   if (matches) {

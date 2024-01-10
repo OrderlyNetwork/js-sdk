@@ -1,5 +1,76 @@
 # @orderly.network/react
 
+## 0.1.31-alpha.7
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.7
+  - @orderly.network/hooks@1.0.28-alpha.7
+  - @orderly.network/types@0.1.27-alpha.7
+  - @orderly.network/utils@0.0.79-alpha.7
+  - @orderly.network/core@0.1.27-alpha.7
+  - @orderly.network/net@1.0.114-alpha.7
+
+## 0.1.31-alpha.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.6
+  - @orderly.network/hooks@1.0.28-alpha.6
+  - @orderly.network/types@0.1.27-alpha.6
+  - @orderly.network/utils@0.0.79-alpha.6
+  - @orderly.network/core@0.1.27-alpha.6
+  - @orderly.network/net@1.0.114-alpha.6
+
+## 0.1.31-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.5
+  - @orderly.network/hooks@1.0.28-alpha.5
+  - @orderly.network/types@0.1.27-alpha.5
+  - @orderly.network/utils@0.0.79-alpha.5
+  - @orderly.network/core@0.1.27-alpha.5
+  - @orderly.network/net@1.0.114-alpha.5
+
+## 0.1.31-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.4
+  - @orderly.network/hooks@1.0.28-alpha.4
+  - @orderly.network/types@0.1.27-alpha.4
+  - @orderly.network/utils@0.0.79-alpha.4
+  - @orderly.network/core@0.1.27-alpha.4
+  - @orderly.network/net@1.0.114-alpha.4
+
+## 0.1.31-alpha.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.3
+  - @orderly.network/hooks@1.0.28-alpha.3
+  - @orderly.network/types@0.1.27-alpha.3
+  - @orderly.network/utils@0.0.79-alpha.3
+  - @orderly.network/core@0.1.27-alpha.3
+  - @orderly.network/net@1.0.114-alpha.3
+
 ## 0.1.31-alpha.2
 
 ### Patch Changes

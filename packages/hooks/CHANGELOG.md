@@ -1,5 +1,71 @@
 # @orderly.network/hooks
 
+## 1.0.28-alpha.7
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.7
+  - @orderly.network/utils@0.0.79-alpha.7
+  - @orderly.network/core@0.1.27-alpha.7
+  - @orderly.network/perp@1.0.27-alpha.7
+  - @orderly.network/net@1.0.114-alpha.7
+
+## 1.0.28-alpha.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.6
+  - @orderly.network/utils@0.0.79-alpha.6
+  - @orderly.network/core@0.1.27-alpha.6
+  - @orderly.network/perp@1.0.27-alpha.6
+  - @orderly.network/net@1.0.114-alpha.6
+
+## 1.0.28-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.5
+  - @orderly.network/utils@0.0.79-alpha.5
+  - @orderly.network/core@0.1.27-alpha.5
+  - @orderly.network/perp@1.0.27-alpha.5
+  - @orderly.network/net@1.0.114-alpha.5
+
+## 1.0.28-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.4
+  - @orderly.network/utils@0.0.79-alpha.4
+  - @orderly.network/core@0.1.27-alpha.4
+  - @orderly.network/perp@1.0.27-alpha.4
+  - @orderly.network/net@1.0.114-alpha.4
+
+## 1.0.28-alpha.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.3
+  - @orderly.network/utils@0.0.79-alpha.3
+  - @orderly.network/core@0.1.27-alpha.3
+  - @orderly.network/perp@1.0.27-alpha.3
+  - @orderly.network/net@1.0.114-alpha.3
+
 ## 1.0.28-alpha.2
 
 ### Patch Changes
