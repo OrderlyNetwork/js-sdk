@@ -48,7 +48,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       .finally(() => {
         setApproveLoading(false);
       });
-  }, [approveLoading, allowance, quantity]);
+  }, [approveLoading, allowance, quantity, props.onApprove]);
 
   if (allowance <= 0) {
     return (
