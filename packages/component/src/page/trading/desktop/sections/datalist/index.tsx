@@ -6,14 +6,14 @@ import { OrderStatus } from "@orderly.network/types";
 import { MemoizedOrdersTabTitle } from "@/page/trading/xs/sections/dataList/orders/tabTitle";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
-import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
+import { TabBarExtraNode } from "@/page/trading/desktop/sections/datalist/tabbarExtraNode";
 import { HistoryView } from "./history";
 import { usePositionStream } from "@orderly.network/hooks";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
-  const [data]  = usePositionStream();
-  const hasPositions = ((data.rows?.length || 0) > 0);
+  const [data] = usePositionStream();
+  const hasPositions = (data.rows?.length || 0) > 0;
 
   return (
     <Tabs
@@ -26,7 +26,11 @@ export const DataListView = () => {
         showAllSymbol: false,
       }}
     >
-      <TabPane title={hasPositions ? `Positions(${data.rows?.length})` :"Positions"} value="positions" className="orderly-px-3">
+      <TabPane
+        title={hasPositions ? `Positions(${data.rows?.length})` : "Positions"}
+        value="positions"
+        className="orderly-px-3"
+      >
         <PositionPane />
         {/* <div>Positions</div> */}
       </TabPane>

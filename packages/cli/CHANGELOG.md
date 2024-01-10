@@ -1,5 +1,51 @@
 # @orderly.network/cli
 
+## 0.0.36-alpha.7
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.7
+
+## 0.0.36-alpha.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.6
+
+## 0.0.36-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.5
+
+## 0.0.36-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.4
+
+## 0.0.36-alpha.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.3
+
 ## 0.0.36-alpha.2
 
 ### Patch Changes

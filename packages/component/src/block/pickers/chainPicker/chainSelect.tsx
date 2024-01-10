@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -42,7 +42,7 @@ export interface ChainSelectProps {
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const [open, setOpen] = useState(false);
 
-  const isTable = useMediaQuery(MEDIA_TABLE);
+  const isTable = useMediaQuery(MEDIA_TABLET);
   const { wooSwapEnabled = true, disabled } = props;
   // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {

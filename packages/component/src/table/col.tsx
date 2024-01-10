@@ -3,6 +3,7 @@ import { cn } from "@/utils/css";
 
 export type Column = {
   title: string;
+  hint?: string;
   width?: number;
   dataIndex: string;
   className?: string;
