@@ -3,7 +3,7 @@ import { ListViewFull } from "./listview";
 import { MarketsType, useMarkets, FavoriteTab, Favorite } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
-import { CircleAdd, CircleCloseIcon, ArrowTopIcon } from "@/icon";
+import { CircleAdd, CircleCloseIcon, ArrowTopIcon, AddIcon } from "@/icon";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/utils";
 import { modal } from "@/modal";
@@ -210,7 +210,7 @@ const FavoritesTabList: FC<{
                 }, 100);
             }}
         >
-            <CircleAdd size={24} fill="current" />
+            <AddIcon size={14} fill="current" />
         </button>
         <div className="orderly-relative orderly-overflow-hidden orderly-h-full orderly-w-full orderly-bg-base-800" >
 

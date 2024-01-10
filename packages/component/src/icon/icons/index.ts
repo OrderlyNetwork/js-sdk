@@ -11,4 +11,5 @@ export { CheckIcon } from "./check";
 export { UncheckIcon } from "./uncheck";
 export { CircleCloseIcon } from "./circleClose";
 export { CircleAdd } from "./circleAdd";
+export { AddIcon } from "./add";
 export { ArrowTopIcon } from "./arrowTop";
