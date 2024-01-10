@@ -78,7 +78,7 @@ const preview = {
   },
   decorators: [
     (Story) => {
-      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'mainnet';
+      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'testnet';
       return (
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider

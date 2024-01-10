@@ -168,11 +168,14 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
+    console.log("xxxxxxxxxx ", networkId, chainId, chains);
+    
+
       // check whether chain id and network id match
       // const chainIdNum = parseInt(chainId, 16);
       if (
         (networkId === "mainnet" && chainId === 421613) ||
-        (networkId === "testnet" && chainId !== 421613)
+        (networkId === "testnet" && chainId !== 421613 && chainId !== 420)
       ) {
         return false;
       }
