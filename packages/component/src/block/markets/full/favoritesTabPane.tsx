@@ -41,8 +41,12 @@ export const FavoritesTabPane: FC<{
         });
 
 
+        console.log("tab", currTab.name, filterData);
+        
+
     const [dataSource, { onSearch, onSort }] = useDataSource(
-        filterData
+        // @ts-ignore
+        filterData || []
     );
 
 
@@ -68,6 +72,7 @@ export const FavoritesTabPane: FC<{
             updateActiveIndex={(index: number) => setActiveIndex(index)}
             // @ts-ignore
             onItemClick={(item) => {
+                // @ts-ignore
                 onItemClick?.(item);
                 addToHistory(item);
             }}
@@ -101,7 +106,8 @@ const FavoritesTabList: FC<{
         add?: boolean;
         update?: boolean;
         delete?: boolean;
-    }) => void
+    }) => void,
+    moveToEnd: () => void,
 }> = (props) => {
     const [leadingVisible, setLeadingVisible] = useState(false);
     const [tailingVisible, setTailingVisible] = useState(false);
@@ -142,10 +148,10 @@ const FavoritesTabList: FC<{
         };
     }, []);
 
-    const onScollButtonClick = (direction: string) => {
+    const onScollButtonClick = (direction: string, offset: number = 100) => {
         if (direction === "left")
-            containerRef.current?.scrollBy({ left: -100, behavior: "smooth" });
-        else containerRef.current?.scrollBy({ left: 100, behavior: "smooth" });
+            containerRef.current?.scrollBy({ left: -offset, behavior: "smooth" });
+        else containerRef.current?.scrollBy({ left: offset, behavior: "smooth" });
     };
 
     const onClickDeleteTab = (tab: FavoriteTab) => {
@@ -187,6 +193,9 @@ const FavoritesTabList: FC<{
                 const newTab = { name: `WatchList_${props.tabs.length}`, id: Date.now() };
                 props.updateFavoriteTabs(newTab, { add: true });
                 props.setCurrTab(newTab);
+                setTimeout(() => {
+                    onScollButtonClick("right", 9999);
+                }, 100);
             }}
         >
             <CircleAdd size={24} fill="current" />
@@ -282,6 +291,7 @@ const FavoriteTabItem: FC<{
 
     useEffect(() => {
         if (elementRef.current) {
+            // @ts-ignore
             const width = elementRef.current.getBoundingClientRect().width;
             console.log('Element width:', width);
             setItemW(width + (item.id !== 1 ? 14 : 0));

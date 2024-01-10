@@ -92,7 +92,7 @@ export const useMarkets = (type: MarketsType) => {
         update?: boolean,
         delete?: boolean,
     }) => {
-        var tabs = favoriteTabs;
+        var tabs = [...favoriteTabs];
         const index = tabs.findIndex((item) => item.id === tab.id);
         console.log("find new tabs", tabs, index, tab);
         if (operator.add) {
@@ -119,7 +119,7 @@ export const useMarkets = (type: MarketsType) => {
     };
 
     const setRecentData = (symbol: API.MarketInfoExt) => {
-        const curData = getRecent();
+        const curData = [...recent];
         const index = curData.findIndex((item) => item.name == symbol.symbol);
         if (index !== -1) {
             curData.splice(index, 1);
@@ -139,7 +139,7 @@ export const useMarkets = (type: MarketsType) => {
     const setFavoritesData = (symbol: API.MarketInfoExt, tab: FavoriteTab, remove: boolean = false) => {
         console.log("set fav data");
 
-        const curData = getFavorites();
+        const curData = [...favorites];
         const index = curData.findIndex((item) => item.name == symbol.symbol);
 
         if (index === -1) { // can not find
@@ -169,20 +169,22 @@ export const useMarkets = (type: MarketsType) => {
         });
         // WARNING: remember remove
         localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-        console.log("set fav data update state", curData, configStore.get(marketsKey));
-        setFavorites(curData);
+        console.log("set fav data update state", favorites, curData, configStore.get(marketsKey));
+        setFavorites(() => curData);
     };
 
     const getData = (type: MarketsType) => {
+
+        
         // get data
-        const localData = type === MarketsType.FAVORITES ? getFavorites() : getRecent();
+        const localData = type === MarketsType.FAVORITES ? [...favorites] : [...recent];
         // filter
         const keys = localData.map((item) => item.name);
         const filter = type == MarketsType.ALL ?
             data :
             data?.filter((item) => keys.includes(item.symbol));
 
-        const favoritesData = favorites;
+        const favoritesData = [...favorites];
         const favoriteKeys = favoritesData.map((item) => item.name);
         if (filter) {
             for (let index = 0; index < filter.length; index++) {
