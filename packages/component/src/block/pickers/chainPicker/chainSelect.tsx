@@ -59,7 +59,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
-    if (connectedChain && (parseInt(connectedChain.id, 16) === 421613 || parseInt(connectedChain.id, 16) === 420) ) {
+    if (connectedChain && (parseInt(connectedChain.id) === 421613 || parseInt(connectedChain.id) === 420) ) {
       return allChains.testnet ?? [];
     }
 
