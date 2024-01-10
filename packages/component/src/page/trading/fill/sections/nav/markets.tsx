@@ -32,7 +32,7 @@ export const Markets: FC<{ symbol: string }> = ({ symbol }) => {
       <DropdownMenuContent
         onCloseAutoFocus={(e) => e.preventDefault()}
         align={"start"}
-        className={"orderly-w-[580px] orderly-py-5 orderly-bg-base-900"}
+        className={"orderly-w-[580px] orderly-p-0 orderly-bg-base-900"}
       >
         <MemoizedMarkets onClose={() => setOpen(false)} />
       </DropdownMenuContent>

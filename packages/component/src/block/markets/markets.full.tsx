@@ -128,7 +128,7 @@ const MarketsBody: FC<{
     setActiveIndex,
     fitlerKey,
   } = props;
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("favorites");
 
 
   const { onSymbolChange } = useContext(TradingPageContext);
@@ -147,9 +147,9 @@ const MarketsBody: FC<{
       autoFit
       value={activeTab}
       onTabChange={setActiveTab}
-      tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold"
+      tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold orderly-bg-base-800"
     >
-      <TabPane title="Favorites" value="favorites" className="orderly-px-3">
+      <TabPane title="Favorites" value="favorites" className="orderly-px-0">
         <FavoritesTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -159,7 +159,7 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane title="Recent" value="recent" className="orderly-px-3">
+      <TabPane title="Recent" value="recent" className="orderly-px-0">
         <RecentTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -169,7 +169,7 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane title="All" value="all" className="orderly-px-3">
+      <TabPane title="All" value="all" className="orderly-px-0">
         <AllTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
