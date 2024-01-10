@@ -50,13 +50,14 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           height: `calc(100vh - ${
             headerHeight + footerHeight + (pageHeaderHeight ?? 0)
           }px)`,
+          minHeight: "900px",
           width: `calc(100vw - ${siderWidth}px)`,
         }}
       >
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
             <Split
-              style={{ flex: 1, minHeight: "350px" }}
+              style={{ flex: 1, minHeight: "450px" }}
               className={"orderly-min-h-0 orderly-overflow-y-visible"}
               lineBar
             >
@@ -82,14 +83,14 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "40%", minHeight: "346px" }}>
+            <div style={{ height: "350px", minHeight: "300px" }}>
               <MemoizedDataListView />
             </div>
           </Split>
         </div>
         {/* order entry start */}
         <div
-          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "850px" }}
+          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "900px" }}
         >
           <AssetsProvider>
             <AccountInfoElement />
