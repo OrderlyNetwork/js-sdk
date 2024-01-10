@@ -6,8 +6,8 @@ import { OrderlyAppProvider } from "../src";
 
 import { MemoryConfigStore } from "@orderly.network/core";
 
-// import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { ConnectorProvider } from "@orderly.network/web3-modal";
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
+// import { ConnectorProvider } from "@orderly.network/web3-modal";
 
 import "../src/tailwind.css"; // tailwind css
 import chains from "./chains";

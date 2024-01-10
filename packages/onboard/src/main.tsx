@@ -34,7 +34,9 @@ export const Main = (props: PropsWithChildren) => {
         setChain,
         chains,
         // switchChain,
-        connectedChain,
+        connectedChain: connectedChain
+          ? { ...connectedChain, id: parseInt(connectedChain.id) }
+          : null,
         settingChain,
       }}
     >
