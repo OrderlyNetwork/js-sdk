@@ -10,10 +10,10 @@ import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
 
 interface Props {
-  logo?: ReactNode;
+  // logo?: ReactNode;
 }
 
-export const Header: FC<Props> = (props) => {
+export const TopNavbar: FC<Props> = (props) => {
   const { state } = useAccount();
   const { errors, appIcons: logos } = useContext(OrderlyAppContext);
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
@@ -41,7 +41,7 @@ export const Header: FC<Props> = (props) => {
   }, [logos?.main]);
 
   return (
-    <div>
+    <>
       <div className="orderly-h-[48px] orderly-flex">
         <div className="orderly-flex-1">
           <Logo />
@@ -65,6 +65,6 @@ export const Header: FC<Props> = (props) => {
       {errors.ChainNetworkNotSupport && (
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
-    </div>
+    </>
   );
 };

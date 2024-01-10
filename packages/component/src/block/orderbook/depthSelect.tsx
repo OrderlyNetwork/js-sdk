@@ -1,7 +1,7 @@
 import { Picker, Select } from "@/select";
 import { FC, useMemo } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
 
 interface DepthSelectProps {
   depth: number[];
@@ -17,7 +17,7 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
     }));
   }, [props.depth]);
 
-  const isTable = useMediaQuery(MEDIA_TABLE);
+  const isTable = useMediaQuery(MEDIA_TABLET);
 
   if (isTable) {
     return (

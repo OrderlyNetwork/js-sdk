@@ -10,7 +10,7 @@ import { AssetsProvider } from "@/provider/assetsProvider";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { TradingPageProps } from "../types";
 
-export const TradingPage: FC<TradingPageProps> = (props) => {
+export const MobileTradingPage: FC<TradingPageProps> = (props) => {
   return (
     <div className="orderly-pb-[70px]">
       <NavBar symbol={props.symbol} />

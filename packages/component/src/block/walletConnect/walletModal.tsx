@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { modal, useModal } from "@/modal";
 import { create } from "@/modal/modalHelper";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/sheet";
 import { toast } from "@/toast";
 import { useAccount } from "@orderly.network/hooks";
@@ -129,7 +129,7 @@ export const WalletConnectDialog = create<WalletConnectProps>((props) => {
 });
 
 export const showAccountConnectorModal = async (props: WalletConnectProps) => {
-  const matches = window.matchMedia(MEDIA_TABLE).matches;
+  const matches = window.matchMedia(MEDIA_TABLET).matches;
   if (matches) {
     return await modal.show(WalletConnectSheet, props);
   } else {

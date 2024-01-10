@@ -23,7 +23,7 @@ import {
   DepositAndWithdrawWithSheet,
 } from "@/block/depositAndwithdraw/depositAndwithdraw";
 import { capitalizeString } from "@orderly.network/utils";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
 
 export interface AssetsContextState {
   onDeposit: () => Promise<any>;
@@ -44,7 +44,7 @@ export const AssetsContext = createContext<AssetsContextState>(
 
 export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   const account = useAccountInstance();
-  const matches = useMediaQuery(MEDIA_TABLE);
+  const matches = useMediaQuery(MEDIA_TABLET);
 
   const openDepositAndWithdraw = useCallback(
     async (viewName: "deposit" | "withdraw") => {

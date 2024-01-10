@@ -16,7 +16,7 @@ import { TabContextProvider, TabRect } from "./tabContext";
 import { MemorizedTabContent, TabContent } from "./tabContent";
 import { TabGroup } from "@/tab/tabGroup";
 import { TabViewMode } from "./constants";
-import { TabBarExtraNode } from "@/page/trading/fill/sections/datalist/tabbarExtraNode";
+import { TabBarExtraNode } from "@/page/trading/desktop/sections/datalist/tabbarExtraNode";
 
 export interface TabsProps {
   id?: string;
@@ -244,7 +244,11 @@ const TabsInner = (
       onToggleCollapsed={onToggleCollapsed}
       height={height}
     >
-      <div id={props.id} ref={containerRef} className="orderly-min-h-0 orderly-max-h-full">
+      <div
+        id={props.id}
+        ref={containerRef}
+        className="orderly-min-h-0 orderly-max-h-full"
+      >
         {tabHeader}
 
         <MemorizedTabContent

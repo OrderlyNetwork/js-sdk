@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect } from "react";
 import Split from "@uiw/react-split";
-import { AccountInfo } from "@/block/accountStatus/desktop";
+import { AccountInfoElement } from "./elements/accountInfo";
 import { TradingPageProps } from "../types";
 import { MyOrderEntry } from "../xs/sections/orderEntry";
 import { Divider } from "@/divider";
@@ -8,19 +8,14 @@ import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
 import { MemoizedDataListView } from "./sections/datalist";
 import { MyTradingView } from "./myTradingview";
-import { Header } from "./sections/tradingHeader";
 import { AssetsProvider } from "@/provider/assetsProvider";
-import { SystemStatusBar } from "@/block/systemStatusBar";
-import { useLayoutMeasure } from "./useLayoutMeasure";
 import { useCSSVariable } from "@/hooks/useCSSVariable";
+import { LayoutContext } from "@/layout/layoutContext";
 
-interface PageProps {
-  header?: React.ReactNode;
-  logo?: React.ReactNode;
-}
-
-export const TradingPage: FC<TradingPageProps> = (props) => {
+export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
+  const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
+    useContext(LayoutContext);
 
   const cssVariable = useCSSVariable([
     "--orderly-color-primary",
@@ -39,15 +34,24 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
     );
   }, [cssVariable]);
 
+  console.log(
+    "-------------",
+    siderWidth,
+    pageHeaderHeight,
+    headerHeight,
+    footerHeight
+  );
+
   return (
     <div className="orderly-tabular-nums">
-      <div className="orderly-app-trading-header orderly-border-b orderly-border-divider">
-        {/** header component solt  */}
-        <Header />
-      </div>
       <Split
         lineBar
-        style={{ height: "calc(100vh - 50px - 42px)", width: "100vw" }}
+        style={{
+          height: `calc(100vh - ${
+            headerHeight + footerHeight + (pageHeaderHeight ?? 0)
+          }px)`,
+          width: `calc(100vw - ${siderWidth}px)`,
+        }}
       >
         <div style={{ flex: 1 }}>
           <Split mode="vertical" lineBar>
@@ -63,6 +67,7 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
                 <div className="orderly-border-b orderly-border-b-divider orderly-min-w-0">
                   <TopNav symbol={props.symbol} />
                 </div>
+
                 <div className="orderly-flex-1">
                   <MyTradingView
                     symbol={props.symbol}
@@ -83,11 +88,11 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
           </Split>
         </div>
         {/* order entry start */}
-        <div style={{ minWidth: "300px", maxWidth: "500px", minHeight: "850px"}}>
+        <div
+          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "850px" }}
+        >
           <AssetsProvider>
-            <div className="orderly-px-3">
-              <AccountInfo />
-            </div>
+            <AccountInfoElement />
             <Divider className="orderly-my-3" />
             <div className="orderly-px-3">
               <MyOrderEntry symbol={props.symbol} />
@@ -96,7 +101,6 @@ export const TradingPage: FC<TradingPageProps> = (props) => {
         </div>
         {/* order entry end */}
       </Split>
-      <SystemStatusBar />
     </div>
   );
 };

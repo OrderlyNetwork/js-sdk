@@ -1,7 +1,8 @@
-import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import { FC, PropsWithChildren } from "react";
 import { cn } from "..";
+import { LayoutBaseProps } from "./types";
 
-export interface ContentProps extends HTMLAttributes<HTMLDivElement> {
+export interface ContentProps extends LayoutBaseProps {
   // fixed?: boolean;
   // asChild?: boolean;
 }
