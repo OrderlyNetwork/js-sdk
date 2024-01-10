@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { ListViewFull } from "./listview";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
@@ -15,9 +15,18 @@ export const RecentTabPane: FC<{
 }> = (props) => {
     const { activeIndex, setActiveIndex, onItemClick, fitlerKey } = props;
 
-    const [data, { addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState }] = useMarkets(MarketsType.RECENT);
+    const [data, { recent, addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState }] = useMarkets(MarketsType.RECENT);
+    const filterData = useMemo(() => {
+        return recent?.map((item) => {
+            const index = data.findIndex((symbol: any) => item.name === symbol.symbol);
+            if (index === -1) {
+                return null;
+            }
+            return data[index];
+        }).map((item) => item);
+    }, [data, recent]);
     const [dataSource, { onSearch, onSort }] = useDataSource(
-        data
+        filterData
     );
 
     useEffect(() => {

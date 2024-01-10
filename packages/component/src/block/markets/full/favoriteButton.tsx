@@ -10,12 +10,13 @@ import { CheckIcon, UncheckIcon, CircleAdd } from "@/icon";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { Input } from "@/input";
 import { Span } from "next/dist/trace";
+import Button from "@/button";
 
 
 export interface FavoriteButtonProps {
     symbol: API.MarketInfoExt;
     tabs: FavoriteTab[];
-    updateFavoriteTabs: (tab: any, operator: {
+    updateFavoriteTabs: (tab: any, operator?: {
         add?: boolean;
         update?: boolean;
         delete?: boolean;
@@ -34,6 +35,20 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
     const isFavorite = symbol.isFavorite;
 
     const [open, setOpen] = useState(false);
+    /// [{name: string, id: number}]
+    const [innerTabs, setInnerTabs] = useState(tabs);
+    /// [{name: string, id: number}]
+    const [symbolTabs, setSymbolTabs] = useState((symbol as any).tabs as FavoriteTab[]);
+
+    const onComfirm = useCallback(() => {
+        updateFavoriteTabs(innerTabs);
+        // if tab is arrary, the del params is not work
+        // if tab is empty array, will be delete, otherwise will be override
+        updateSymbolFavoriteState(symbol, symbolTabs, false);
+        setOpen(false);
+    }, [innerTabs, symbol, symbolTabs]);
+
+
 
     return (
         <DropdownMenu
@@ -42,7 +57,7 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
         >
             <DropdownMenuTrigger>
                 <button className="orderly-flex orderly-items-center orderly-mr-1">
-                    {isFavorite ? (<FavoriteIcon />) : (<FavoriteIcon />)}
+                    {isFavorite ? (<FavoriteIcon />) : (<UnFavoriteIcon />)}
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -54,9 +69,10 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
             >
                 <FavoriteDropdownContent
                     symbol={symbol}
-                    tabs={tabs}
-                    updateFavoriteTabs={updateFavoriteTabs}
-                    updateSymbolFavoriteState={updateSymbolFavoriteState}
+                    symbolTabs={symbolTabs}
+                    setSymbolTabs={setSymbolTabs}
+                    innerTabs={innerTabs}
+                    setInnerTabs={setInnerTabs}
                 />
                 <div className="orderly-absolute orderly-right-5 orderly-top-3 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground">
                     <button onClick={(e) => {
@@ -65,6 +81,27 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
                     }}>
                         <CloseIcon size={20} />
                     </button>
+                </div>
+                <div className="orderly-mt-4 orderly-h-[32px] orderly-flex orderly-items-center orderly-gap-2">
+                    <Button
+                        color="tertiary"
+                        fullWidth
+                        onClick={(e) => {
+                            setOpen(false);
+                            e.stopPropagation();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        fullWidth
+                        onClick={(e) => {
+                            onComfirm();
+                            e.stopPropagation();
+                        }}
+                    >
+                        Confirm
+                    </Button>
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -75,41 +112,34 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
 
 const FavoriteDropdownContent: FC<{
     symbol: API.MarketInfoExt,
-    tabs: FavoriteTab[];
-    updateFavoriteTabs: (tab: any, operator: {
-        add?: boolean;
-        update?: boolean;
-        delete?: boolean;
-    }) => void;
-    updateSymbolFavoriteState: (symbol: API.MarketInfoExt, tab: any, del: boolean) => void;
+    symbolTabs: FavoriteTab[],
+    setSymbolTabs: any,
+    innerTabs: FavoriteTab[];
+    setInnerTabs: any,
 }> = (props) => {
-    const { symbol, tabs, updateFavoriteTabs, updateSymbolFavoriteState } = props;
-    // @ts-ignore
-    const symbolTabs = symbol.tabs as {
-        name: string;
-        id: number;
-    }[];
-
-    const [newTabName, setNewTabName] = useState("");
-
+    const {
+        symbol,
+        symbolTabs,
+        setSymbolTabs,
+        innerTabs,
+        setInnerTabs,
+    } = props;
 
 
-    console.log("symbolTabs", symbolTabs, tabs);
+    console.log("symbolTabs", symbolTabs, innerTabs);
 
-    const onItemClick = useCallback((tab: FavoriteTab, add: boolean) => {
-        console.log("xxxxxxx on item click", tab, add);
+    const onItemClick = useCallback((tab: FavoriteTab) => {
+        console.log("xxxxxxx on item click", tab);
 
         var index = symbolTabs.findIndex((item) => item.id === tab.id);
-        if (add) {
-            if (index === -1) {
-                updateSymbolFavoriteState(symbol, tab, false);
-            }
+        var newSymbolTabs = [...symbolTabs];
+        if (index === -1) {
+            newSymbolTabs.push(tab);
         } else {
-            if (index !== -1) {
-                updateSymbolFavoriteState(symbol, tab, true);
-            }
+            newSymbolTabs.splice(index, 1);
         }
-    }, [symbolTabs, tabs]);
+        setSymbolTabs(newSymbolTabs);
+    }, [symbolTabs, innerTabs]);
 
 
     return (
@@ -121,8 +151,17 @@ const FavoriteDropdownContent: FC<{
             </div>
             <Divider className="orderly-pt-[17px] orderly-pb-[8px]" />
 
-            <FavoriteTabsListView dataSource={tabs} symbolTabs={symbolTabs} onItemClick={onItemClick} />
-            <AddNewFavoriteTab updateFavoriteTabs={updateFavoriteTabs} newTabName={newTabName} setNewTabName={setNewTabName}/>
+            <FavoriteTabsListView dataSource={innerTabs} symbolTabs={symbolTabs} onItemClick={onItemClick} />
+            <AddNewFavoriteTab addNewTab={(tabName: string) => {
+                const newTabs = [...innerTabs];
+                const tab = { name: tabName, id: Date.now };
+                const firstTab = {...newTabs[0]};
+                newTabs.splice(0,1);
+                newTabs.unshift(tab);
+                newTabs.unshift(firstTab);
+                setInnerTabs(newTabs);
+                onItemClick(tab);
+            }} />
         </div>
     );
 }
@@ -131,7 +170,7 @@ const FavoriteDropdownContent: FC<{
 const FavoriteTabsListView: FC<{
     dataSource: FavoriteTab[],
     symbolTabs: FavoriteTab[],
-    onItemClick: (tab: string, add: boolean) => void;
+    onItemClick: (tab: string) => void;
 }> = (props) => {
 
     console.log("build FavoriteTabsListView");
@@ -147,7 +186,7 @@ const FavoriteTabsListView: FC<{
         return (
             <button
                 onClick={(e) => {
-                    props.onItemClick?.(item, !selected);
+                    props.onItemClick?.(item);
                     e.stopPropagation();
                 }}
                 className="orderly-w-full"
@@ -176,26 +215,20 @@ const FavoriteTabsListView: FC<{
 
 
 const AddNewFavoriteTab: FC<{
-    updateFavoriteTabs: (tab: any, operator: {
-        add?: boolean;
-        update?: boolean;
-        delete?: boolean;
-    }) => void,
-    newTabName: string,
-    setNewTabName: any,
+    addNewTab: (tabName: string) => void,
 }> = (props) => {
     const [enter, setEnter] = useState(false);
-    
+    const [tabName, setTabName] = useState("");
 
     if (!enter) {
         return (<button
-            className="orderly-h-[40px] orderly-w-full orderly-flex orderly-items-center orderly-py-3 orderly-px-2  orderly-text-xs orderly-text-base-contrast-36 hover:orderly-text-base-contrast orderly-fill-base-contrast-36 hover:orderly-fill-base-contrast"
+            className="orderly-mt-3 orderly-h-[40px] orderly-w-full orderly-flex orderly-items-center orderly-py-3 orderly-px-2 orderly-text-xs orderly-text-base-contrast-36 hover:orderly-text-base-contrast orderly-fill-base-contrast-36 hover:orderly-fill-base-contrast"
             onClick={(e) => {
                 setEnter(true);
                 e.stopPropagation();
             }}
         >
-            <CircleAdd size={16} fill="current"/>
+            <CircleAdd size={16} fill="current" />
             <span className="orderly-px-2">
                 Add a new watchlist
             </span>
@@ -203,43 +236,40 @@ const AddNewFavoriteTab: FC<{
     }
 
     return (<div
-        className="orderly-h-[40px] orderly-w-full orderly-flex orderly-items-center">
+        className="orderly-rounded-md orderly-mt-3 orderly-bg-base-700 orderly-h-[40px] orderly-w-full orderly-flex orderly-items-center">
 
-        <button onClick={(e) => e.stopPropagation()} className="orderly-w-full">
-        <Input
-            suffix={(
-                <span className="orderly-flex orderly-items-center"> 
-                    <button 
-                        className="orderly-text-base-contrast-20 hover:orderly-text-base-contrast-80 orderly-pr-2"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setEnter(false);
-                            props.updateFavoriteTabs({name: "abc", id: Date.now()}, {add: true});
-                        }}
-                    >
-                        Add
-                    </button>
-                    
-                    <button className="orderly-items-center orderly-pr-2" onClick={(e) => {
-                        setEnter(false);
-                        e.stopPropagation();
-                    }}>
-                        <CircleCloseIcon size={16}/>
-                    </button>
-                </span>
-            )}
-            type="text"
-            className="orderly-text-left orderly-font-semibold"
-            value={props.newTabName}
-            containerClassName={"orderly-bg-base-700"}
-            onChange={(event) => {
-                console.log("xxxxxxx onchange", event.target.name);
-                
-                // setTabName(event.target.name);
-                props.setNewTabName(event.target.name);
+        <input
+            className="orderly-outline-none orderly-h-full orderly-bg-transparent orderly-w-full orderly-px-3"
+            autoFocus
+            // value={props.newTabName}
+            value={tabName}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => {
+                // props.setNewTabName(e.target.value);
+                setTabName(e.target.value);
             }}
         />
-        </button>
+        <span className="orderly-flex orderly-items-center">
+            <button
+                className="orderly-text-base-contrast-20 hover:orderly-text-base-contrast-80 orderly-pr-2"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setEnter(false);
+                    props.addNewTab(tabName);
+                    setTabName("");
+                }}
+            >
+                Add
+            </button>
+
+            <button className="orderly-items-center orderly-pr-2" onClick={(e) => {
+                setEnter(false);
+                setTabName("");
+                e.stopPropagation();
+            }}>
+                <CircleCloseIcon size={16} fill="current" fillOpacity={1} className="orderly-fill-white/30 hover:orderly-fill-white/90" />
+            </button>
+        </span>
     </div>);
 }
 

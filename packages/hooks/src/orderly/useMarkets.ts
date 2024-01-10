@@ -19,7 +19,7 @@ export enum MarketsType {
             { "name": `${symbol.name}` },
         ],
         favorites: [
-            { "name": `${symbol.name}`, "tabs": ["a", "b"] },
+            { "name": `${symbol.name}`, "tabs": [{ "name": "Popular", "id": 1 }] },
         ],
         favoriteTabs: [
             { "name": "Popular", "id": 1 },
@@ -74,48 +74,55 @@ export const useMarkets = (type: MarketsType) => {
     const getFavorites = () => {
         // @ts-ignore
         const curData = configStore.get(marketsKey,)["favorites"];
-        return (curData || {}) as Favorite[];
+        return ((curData || []) as Favorite[]).filter((e) => e);
     };
 
     const getRecent = () => {
         // @ts-ignore
         const curData = configStore.get(marketsKey)["recent"];
-        return (curData || {}) as Recent[];
+        return ((curData || []) as Recent[]).filter((e) => e);
     };
 
     const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs());
     const [favorites, setFavorites] = useState(getFavorites());
     const [recent, setRecent] = useState(getRecent());
 
-    const updateFavoriteTabs = (tab: FavoriteTab, operator: {
+    const updateFavoriteTabs = (tab: FavoriteTab | FavoriteTab[], operator?: {
         add?: boolean,
         update?: boolean,
         delete?: boolean,
     }) => {
+
+        const saveTabs = (tabs: FavoriteTab[]) => {
+            setFavoriteTabs(tabs);
+            configStore.set(marketsKey, {
+                ...configStore.getOr(marketsKey, {}),
+                "favoriteTabs": tabs
+            });
+            // WARNING: remember remove
+            localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        };
+
+        if (Array.isArray(tab)) {
+            saveTabs(tab);
+            return;
+        }
+
         var tabs = [...favoriteTabs];
         const index = tabs.findIndex((item) => item.id === tab.id);
-        console.log("find new tabs", tabs, index, tab);
-        if (operator.add) {
+        if (operator?.add) {
             tabs.push(tab);
-        } else if (operator.update) {
+        } else if (operator?.update) {
             if (index !== -1) {
                 tabs[index] = tab;
             }
-        } else if (operator.delete) {
+        } else if (operator?.delete) {
             if (index !== -1) {
-                console.log("del begin", tabs);
                 tabs.splice(index, 1);
-                console.log("del finishied", tabs);
 
             }
         }
-        setFavoriteTabs(tabs);
-        configStore.set(marketsKey, {
-            ...configStore.getOr(marketsKey, {}),
-            "favoriteTabs": tabs
-        });
-        // WARNING: remember remove
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        saveTabs(tabs);
     };
 
     const setRecentData = (symbol: API.MarketInfoExt) => {
@@ -124,7 +131,7 @@ export const useMarkets = (type: MarketsType) => {
         if (index !== -1) {
             curData.splice(index, 1);
         }
-        curData.unshift({ name: symbol.symbol });
+        curData.unshift({ name: symbol.symbol });        
         configStore.set(marketsKey, {
             ...configStore.getOr(marketsKey, {}),
             "recent": curData
@@ -136,30 +143,46 @@ export const useMarkets = (type: MarketsType) => {
 
 
 
-    const setFavoritesData = (symbol: API.MarketInfoExt, tab: FavoriteTab, remove: boolean = false) => {
-        console.log("set fav data");
+    const setFavoritesData = (symbol: API.MarketInfoExt, tab: FavoriteTab | FavoriteTab[], remove: boolean = false) => {
 
         const curData = [...favorites];
         const index = curData.findIndex((item) => item.name == symbol.symbol);
 
         if (index === -1) { // can not find
-            if (!remove) {
-                // insert
-                curData.unshift({ name: symbol.symbol, tabs: [tab] });
+            if (Array.isArray(tab)) {
+                if ( tab.length > 0) {
+                    curData.unshift({ name: symbol.symbol, tabs: tab});
+                }
+            } else {
+                if (!remove) {
+                    // insert
+                    curData.unshift({ name: symbol.symbol, tabs: [tab] });
+                }
             }
+
         } else {
             const favorite = curData[index];
-            if (remove) {
-                const tabs = favorite.tabs.filter((tab) => tab.id != tab.id);
-                if (tabs.length === 0) { // del favorite
+            if (Array.isArray(tab)) {
+                if (tab.length === 0) {
+                    // remove
                     curData.splice(index, 1);
                 } else {
+                    // overrides
+                    curData[index] = { ...favorite, tabs: tab };
+                }
+            } else {
+                if (remove) {
+                    const tabs = favorite.tabs.filter((tab) => tab.id != tab.id);
+                    if (tabs.length === 0) { // del favorite
+                        curData.splice(index, 1);
+                    } else {
+                        curData[index] = { ...favorite, tabs };
+                    }
+                } else { // insert
+                    const tabs = favorite.tabs;
+                    tabs.push(tab);
                     curData[index] = { ...favorite, tabs };
                 }
-            } else { // insert
-                const tabs = favorite.tabs;
-                tabs.push(tab);
-                curData[index] = { ...favorite, tabs };
             }
         }
 
@@ -169,13 +192,12 @@ export const useMarkets = (type: MarketsType) => {
         });
         // WARNING: remember remove
         localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-        console.log("set fav data update state", favorites, curData, configStore.get(marketsKey));
         setFavorites(() => curData);
     };
 
     const getData = (type: MarketsType) => {
 
-        
+
         // get data
         const localData = type === MarketsType.FAVORITES ? [...favorites] : [...recent];
         // filter
@@ -212,7 +234,7 @@ export const useMarkets = (type: MarketsType) => {
         setRecentData(symbol);
     };
 
-    const updateSymbolFavoriteState = (symbol: API.MarketInfoExt, tab: FavoriteTab, del: boolean = false) => {
+    const updateSymbolFavoriteState = (symbol: API.MarketInfoExt, tab: FavoriteTab | FavoriteTab[], del: boolean = false) => {
         setFavoritesData(symbol, tab, del);
     };
 
@@ -223,9 +245,9 @@ export const useMarkets = (type: MarketsType) => {
         if (index !== -1) {
             const element = favorites[index];
             const list = [...favorites];
-            list.splice(index , 1);
+            list.splice(index, 1);
             list.unshift(element);
-            
+
 
             configStore.set(marketsKey, {
                 ...configStore.getOr(marketsKey, {}),
@@ -234,19 +256,18 @@ export const useMarkets = (type: MarketsType) => {
             // WARNING: remember remove
             localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
 
-            console.log("xxxxxxx pin to top", favorites, list);
-            
-             setFavorites(list);
+
+            setFavorites(list);
         }
     };
 
-    console.log("config store", configStore, favoriteTabs, markets);
 
     return [
         markets || [],
         {
             favoriteTabs,
             favorites,
+            recent,
             addToHistory,
             // updateFavoriteTabs("tab", operator: {add/update/delete})
             updateFavoriteTabs,

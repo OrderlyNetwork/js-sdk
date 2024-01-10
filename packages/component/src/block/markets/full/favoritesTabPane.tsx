@@ -1,6 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { ListViewFull } from "./listview";
-import { MarketsType, useMarkets, FavoriteTab } from "@orderly.network/hooks";
+import { MarketsType, useMarkets, FavoriteTab, Favorite } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
 import { CircleAdd, CircleCloseIcon, ArrowTopIcon } from "@/icon";
@@ -20,29 +20,31 @@ export const FavoritesTabPane: FC<{
 
     const [data, { favorites, addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState, pinToTop, }] = useMarkets(MarketsType.FAVORITES);
     const [currTab, setCurrTab] = useState(favoriteTabs[0]);
-    // const filterData = data.filter((symbol: any) => {
-    //     return symbol.tabs.findIndex((item: any) => item.id == currTab.id) !== -1;
-    // });
-
-    const filterData = favorites
-        ?.filter((item: any) => {
-            const unIgnore = item.tabs.findIndex((tab: any) => tab.id === currTab.id) !== -1
-            return unIgnore;
-        })
-        ?.map((item: any) => {
-            const index = data.findIndex((symbol: any) => symbol.symbol === item.name);
-            if (index !== -1) {
-                return data[index];
-            }
-            return null;
-        })
-        ?.filter((item: any) => {
-            return item !== null;
-        });
 
 
-        console.log("tab", currTab.name, filterData);
-        
+    console.log("favorites", favorites);
+    
+    const filterData = useMemo(() => {
+        return favorites
+            ?.filter((item: any) => {
+                const unIgnore = item.tabs.findIndex((tab: any) => tab.id === currTab.id) !== -1
+                return unIgnore;
+            })
+            ?.map((item: any) => {
+                const index = data.findIndex((symbol: any) => symbol.symbol === item.name);
+                if (index !== -1) {
+                    return data[index];
+                }
+                return null;
+            })
+            ?.filter((item: any) => item);
+    }, [
+        currTab, data, favorites
+    ]);
+
+
+    console.log("tab", currTab.name, filterData);
+
 
     const [dataSource, { onSearch, onSort }] = useDataSource(
         // @ts-ignore
@@ -61,6 +63,7 @@ export const FavoritesTabPane: FC<{
             tabs={favoriteTabs}
             updateFavoriteTabs={updateFavoriteTabs}
             updateSymbolFavoriteState={updateSymbolFavoriteState}
+            favorites={favorites}
         />
         <ListViewFull
             // @ts-ignore
@@ -101,13 +104,13 @@ const FavoritesTabList: FC<{
     currTab: FavoriteTab,
     setCurrTab: any,
     tabs: FavoriteTab[],
-    updateSymbolFavoriteState: (symbol: API.MarketInfoExt, tab: FavoriteTab, del?: boolean) => void
-    updateFavoriteTabs: (tab: FavoriteTab, operator: {
+    updateSymbolFavoriteState: (symbol: API.MarketInfoExt, tab: any, del?: boolean) => void
+    updateFavoriteTabs: (tab: any, operator: {
         add?: boolean;
         update?: boolean;
         delete?: boolean;
     }) => void,
-    moveToEnd: () => void,
+    favorites: Favorite[]
 }> = (props) => {
     const [leadingVisible, setLeadingVisible] = useState(false);
     const [tailingVisible, setTailingVisible] = useState(false);
@@ -174,6 +177,15 @@ const FavoritesTabList: FC<{
                         index = 0;
                     }
                     props.updateFavoriteTabs(tab, { delete: true });
+
+                    [...props.favorites].forEach((item) => {
+                        const newTabs = item.tabs.filter((value: FavoriteTab) => value.id === tab.id);
+                        
+                        if (newTabs.length !== item.tabs) {
+                            props.updateSymbolFavoriteState({symbol: item.name}, newTabs);
+                        }
+                    })
+                    
                     props.setCurrTab(props.tabs[index]);
 
 
@@ -293,7 +305,6 @@ const FavoriteTabItem: FC<{
         if (elementRef.current) {
             // @ts-ignore
             const width = elementRef.current.getBoundingClientRect().width;
-            console.log('Element width:', width);
             setItemW(width + (item.id !== 1 ? 14 : 0));
         }
     }, []);
