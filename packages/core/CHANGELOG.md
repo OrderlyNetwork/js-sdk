@@ -1,5 +1,23 @@
 # @orderly.network/core
 
+## 0.1.28
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.1.28
+
+## 0.1.27
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+  - @orderly.network/types@0.1.27
+
 ## 0.1.26
 
 ### Patch Changes

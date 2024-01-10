@@ -1,5 +1,27 @@
 # examples
 
+## 0.1.93
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.1.32
+  - @orderly.network/web3-onboard@0.0.29
+  - @orderly.network/hooks@1.0.29
+
+## 0.1.92
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+  - @orderly.network/react@0.1.31
+  - @orderly.network/web3-onboard@0.0.28
+  - @orderly.network/hooks@1.0.28
+
 ## 0.1.91
 
 ### Patch Changes

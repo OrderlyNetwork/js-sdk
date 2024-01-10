@@ -1,5 +1,33 @@
 # @orderly.network/react
 
+## 0.1.32
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.9
+  - @orderly.network/hooks@1.0.29
+  - @orderly.network/types@0.1.28
+  - @orderly.network/utils@0.0.80
+  - @orderly.network/core@0.1.28
+  - @orderly.network/net@1.0.115
+
+## 0.1.31
+
+### Patch Changes
+
+- 268abc5: fix bug
+- fix bugs
+- Updated dependencies [268abc5]
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8
+  - @orderly.network/hooks@1.0.28
+  - @orderly.network/types@0.1.27
+  - @orderly.network/utils@0.0.79
+  - @orderly.network/core@0.1.27
+  - @orderly.network/net@1.0.114
+
 ## 0.1.30
 
 ### Patch Changes
