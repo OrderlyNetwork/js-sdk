@@ -3,7 +3,7 @@ import { ListViewFull } from "./listview";
 import { MarketsType, useMarkets, FavoriteTab } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
-import { CircleAdd } from "@/icon";
+import { CircleAdd, CircleCloseIcon, ArrowTopIcon } from "@/icon";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/utils";
 import { modal } from "@/modal";
@@ -18,10 +18,31 @@ export const FavoritesTabPane: FC<{
 }> = (props) => {
     const { activeIndex, setActiveIndex, onItemClick, fitlerKey } = props;
 
-    const [data, { addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState, }] = useMarkets(MarketsType.FAVORITES);
+    const [data, { favorites, addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState, pinToTop, }] = useMarkets(MarketsType.FAVORITES);
     const [currTab, setCurrTab] = useState(favoriteTabs[0]);
+    // const filterData = data.filter((symbol: any) => {
+    //     return symbol.tabs.findIndex((item: any) => item.id == currTab.id) !== -1;
+    // });
+
+    const filterData = favorites
+        ?.filter((item: any) => {
+            const unIgnore = item.tabs.findIndex((tab: any) => tab.id === currTab.id) !== -1
+            return unIgnore;
+        })
+        ?.map((item: any) => {
+            const index = data.findIndex((symbol: any) => symbol.symbol === item.name);
+            if (index !== -1) {
+                return data[index];
+            }
+            return null;
+        })
+        ?.filter((item: any) => {
+            return item !== null;
+        });
+
+
     const [dataSource, { onSearch, onSort }] = useDataSource(
-        data
+        filterData
     );
 
 
@@ -50,6 +71,23 @@ export const FavoritesTabPane: FC<{
                 onItemClick?.(item);
                 addToHistory(item);
             }}
+            suffixRender={(item) => {
+
+                return <div className="orderly-flex orderly-items-center orderly-justify-end">
+                    <button className="orderly-p-2" onClick={(e) => {
+                        pinToTop(item);
+                        e.stopPropagation();
+                    }}>
+                        <ArrowTopIcon size={16} fill="current" fillOpacity={1} className="orderly-fill-white/20 hover:orderly-fill-white/80" />
+                    </button>
+                    <button className="orderlyp-2" onClick={(e) => {
+                        updateSymbolFavoriteState(item, currTab, true);
+                        e.stopPropagation();
+                    }}>
+                        <CircleCloseIcon size={16} fill="current" fillOpacity={1} className="orderly-fill-white/20 hover:orderly-fill-white/80" />
+                    </button>
+                </div>;
+            }}
         />
     </div>);
 }
@@ -71,8 +109,6 @@ const FavoritesTabList: FC<{
     const containerRef = useRef<HTMLDivElement>(null);
     const leadingElementRef = useRef<HTMLDivElement>(null);
     const tailingElementRef = useRef<HTMLDivElement>(null);
-
-    console.log("currTab", props.currTab, props.tabs);
 
 
 
@@ -246,11 +282,11 @@ const FavoriteTabItem: FC<{
 
     useEffect(() => {
         if (elementRef.current) {
-          const width = elementRef.current.getBoundingClientRect().width;
-          console.log('Element width:', width);
-          setItemW(width + (item.id !== 1 ? 12 : 0));
+            const width = elementRef.current.getBoundingClientRect().width;
+            console.log('Element width:', width);
+            setItemW(width + (item.id !== 1 ? 14 : 0));
         }
-      }, []);
+    }, []);
 
     return (
         <button
@@ -264,7 +300,7 @@ const FavoriteTabItem: FC<{
                 props.setCurrTab(item);
             }}
             onDoubleClick={handleDoubleClick}
-            style={itemW ? {width: `${itemW}px`} : {}}
+            style={itemW ? { width: `${itemW}px` } : {}}
         >
             {
                 editTab ?
@@ -277,7 +313,7 @@ const FavoriteTabItem: FC<{
                         autoFocus
                         disabled={!editTab}
                         className="orderly-bg-transparent orderly-outline-none"
-                        style={ itemW ? {width: `${itemW - 40}px`}: {}}
+                        style={itemW ? { width: `${itemW - 40}px` } : {}}
                     /> : item.name
             }
             {canDel ?
@@ -285,7 +321,10 @@ const FavoriteTabItem: FC<{
                     {/* @ts-ignore */}
                     <X size={14} />
                 </button> :
-                <div className="orderly-pl-1 orderly-pr-1 orderly-w-[14px] orderly-h-full"></div>}
+                <div className={cn(
+                    "orderly-pl-1 orderly-pr-1 orderly-w-[14px] orderly-h-full",
+                    item.id === 1 && "orderly-w-0"
+                )}></div>}
 
         </button>
     );

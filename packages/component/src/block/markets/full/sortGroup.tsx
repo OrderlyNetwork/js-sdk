@@ -28,12 +28,12 @@ export const SortGroup: FC<Props> = (props) => {
 
   return (
     <div className={
-      cn("orderly-grid orderly-grid-cols-4 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2",
-      props.hasSuffix && "orderly-grid-cols-5"
+      cn("orderly-grid orderly-grid-cols-5 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2",
+      props.hasSuffix && "orderly-grid-cols-6"
       )
     }>
-      <div>Instrument</div>
-      <div className="orderly-flex orderly-justify-end">
+      <div className="orderly-col-span-2">Instrument</div>
+      <div className="orderly-col-span-1 orderly-flex orderly-justify-end">
         <SortItem
           label={"Last"}
           value={"price"}
@@ -41,7 +41,7 @@ export const SortGroup: FC<Props> = (props) => {
           currentValue={currentValue}
         />
       </div>
-      <div className="orderly-flex orderly-justify-end">
+      <div className="orderly-col-span-1 orderly-flex orderly-justify-end">
         <SortItem
           label={"24h%"}
           value={"change"}
@@ -49,7 +49,7 @@ export const SortGroup: FC<Props> = (props) => {
           currentValue={currentValue}
         />
       </div>
-      <div className="orderly-flex orderly-justify-end">
+      <div className="orderly-col-span-1 orderly-flex orderly-justify-end">
         <SortItem
           label={"Volume"}
           value={"vol"}
