@@ -22,6 +22,7 @@ export interface DepositProps {
   wooSwapEnabled?: boolean;
 }
 
+// TODO: add deposit context to pass value
 export const Deposit: FC<DepositProps> = (props) => {
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
@@ -60,6 +61,7 @@ export const Deposit: FC<DepositProps> = (props) => {
     dst,
     balance,
     allowance,
+    depositFeeRevalidating,
     depositFee,
     quantity,
     setQuantity,
@@ -144,6 +146,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       quantity={quantity}
       setQuantity={setQuantity}
       depositFee={depositFee}
+      depositFeeRevalidating={depositFeeRevalidating}
     />
   );
 };

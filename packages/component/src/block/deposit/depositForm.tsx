@@ -88,6 +88,7 @@ export interface DepositFormProps {
   quantity: string;
   setQuantity: (quantity: string) => void;
   depositFee?: bigint;
+  depositFeeRevalidating?: boolean;
 }
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
@@ -619,6 +620,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         needSwap={needSwap}
         warningMessage={warningMessage}
         onChainChange={onChainChange}
+        depositFeeRevalidating={props.depositFeeRevalidating}
       />
     </div>
   );

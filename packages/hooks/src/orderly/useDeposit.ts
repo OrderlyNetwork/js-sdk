@@ -53,6 +53,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const [quantity, setQuantity] = useState<string>("");
   const [depositFee, setDepositFee] = useState<bigint>(0n);
+  const [depositFeeRevalidating, setDepositFeeRevalidating] = useState(false);
 
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
@@ -280,11 +281,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const enquiryDepositFee = useDebouncedCallback(() => {
-    if (isNaN(Number(quantity)) || !quantity) {
-      setDepositFee(0n);
-      return;
-    }
-
     getDepositFee(quantity)
       .then((res: bigint = 0n) => {
         const fee = BigInt(
@@ -299,12 +295,23 @@ export const useDeposit = (options?: useDepositOptions) => {
       })
       .catch((error) => {
         console.log("getDepositFee error", error);
+      })
+      .finally(() => {
+        setDepositFeeRevalidating(false);
       });
-  }, 300);
+  }, 0);
 
   useEffect(() => {
+    // state no need debounce
+    if (isNaN(Number(quantity)) || !quantity) {
+      setDepositFee(0n);
+      setDepositFeeRevalidating(false);
+      return;
+    }
+
+    setDepositFeeRevalidating(true);
     enquiryDepositFee();
-  }, [quantity, getDepositFee]);
+  }, [quantity]);
 
   useEffect(() => {
     if (!options?.address) {
@@ -340,6 +347,8 @@ export const useDeposit = (options?: useDepositOptions) => {
     quantity,
     /** orderly deposit fee, unit: wei */
     depositFee,
+    /** enquiring depositFee status on chain */
+    depositFeeRevalidating,
     approve,
     deposit,
     fetchBalances,
