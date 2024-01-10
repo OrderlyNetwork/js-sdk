@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-alpha.8
+
+### Patch Changes
+
+- fix bug
+
 ## 0.0.2-alpha.7
 
 ### Patch Changes
@@ -85,4 +91,8 @@
 
 ### Patch Changes
 
-- add despoit fee
+<<<<<<< Updated upstream
+
+- # add despoit fee
+- fix bugs
+  > > > > > > > Stashed changes
