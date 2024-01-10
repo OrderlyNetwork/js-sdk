@@ -43,7 +43,7 @@ export const BottomNavBar = () => {
       return false;
     }
 
-    const isTestnetChain = parseInt(chainId, 16) === 421613;
+    const isTestnetChain = parseInt(chainId) === 421613;
 
     return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
   }, [state.status, connectedChain]);

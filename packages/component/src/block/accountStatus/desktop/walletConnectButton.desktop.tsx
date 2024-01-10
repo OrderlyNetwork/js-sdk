@@ -49,7 +49,7 @@ export const DesktopWalletConnnectButton: FC<AccountStatusProps & {
             if (Array.isArray(allChains)) return allChains;
             if (allChains === undefined) return [];
 
-            if (connectedChain && parseInt(connectedChain.id, 16) === 421613) {
+            if (connectedChain && parseInt(connectedChain.id) === 421613) {
                 return allChains.testnet ?? [];
             }
 

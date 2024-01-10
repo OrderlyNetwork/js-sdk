@@ -1,5 +1,38 @@
 # storybook
 
+## 1.0.96-alpha.7
+
+### Patch Changes
+
+- fix bug
+
+## 1.0.96-alpha.6
+
+### Patch Changes
+
+- fix bug
+
+## 1.0.96-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+
+## 1.0.96-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+
+## 1.0.96-alpha.3
+
+### Patch Changes
+
+- fix bug
+
 ## 1.0.96-alpha.2
 
 ### Patch Changes
