@@ -154,11 +154,11 @@ const FavoriteDropdownContent: FC<{
             <FavoriteTabsListView dataSource={innerTabs} symbolTabs={symbolTabs} onItemClick={onItemClick} />
             <AddNewFavoriteTab addNewTab={(tabName: string) => {
                 const newTabs = [...innerTabs];
-                const tab = { name: tabName, id: Date.now };
-                const firstTab = {...newTabs[0]};
-                newTabs.splice(0,1);
-                newTabs.unshift(tab);
-                newTabs.unshift(firstTab);
+                const tab = { name: tabName, id: Date.now() };
+                console.log("new tab", tab);
+                
+                // const index = newTabs.length === 1 ? 1 : 1;
+                newTabs.splice(1, 0, tab);
                 setInnerTabs(newTabs);
                 onItemClick(tab);
             }} />

@@ -181,7 +181,7 @@ const FavoritesTabList: FC<{
                     [...props.favorites].forEach((item) => {
                         const newTabs = item.tabs.filter((value: FavoriteTab) => value.id === tab.id);
                         
-                        if (newTabs.length !== item.tabs) {
+                        if (newTabs.length !== item.tabs.length) {
                             props.updateSymbolFavoriteState({symbol: item.name}, newTabs);
                         }
                     })
@@ -285,6 +285,7 @@ const FavoriteTabItem: FC<{
         setEditTab(false);
         props.updateFavoriteTabs({ ...props.currTab, name: text }, { update: true });
         props.setCurrTab({ ...props.currTab, name: text });
+        setItemW(null);
     };
 
     const handleKeyDown = (event: any) => {
@@ -292,6 +293,7 @@ const FavoriteTabItem: FC<{
             setEditTab(false);
             props.updateFavoriteTabs({ ...props.currTab, name: text }, { update: true });
             props.setCurrTab({ ...props.currTab, name: text });
+            setItemW(null);
         }
     };
 
@@ -333,8 +335,7 @@ const FavoriteTabItem: FC<{
                         onKeyDown={handleKeyDown}
                         autoFocus
                         disabled={!editTab}
-                        className="orderly-bg-transparent orderly-outline-none"
-                        style={itemW ? { width: `${itemW - 40}px` } : {}}
+                        className="orderly-bg-transparent orderly-outline-none orderly-w-[calc(100%-30px)]"
                     /> : item.name
             }
             {canDel ?
