@@ -22,7 +22,6 @@ export const FavoritesTabPane: FC<{
     const [currTab, setCurrTab] = useState(favoriteTabs[0]);
 
 
-    console.log("favorites", favorites);
     
     const filterData = useMemo(() => {
         return favorites
@@ -42,8 +41,6 @@ export const FavoritesTabPane: FC<{
         currTab, data, favorites
     ]);
 
-
-    console.log("tab", currTab.name, filterData);
 
 
     const [dataSource, { onSearch, onSort }] = useDataSource(

@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { ListViewFull } from "./listview";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
@@ -17,6 +17,7 @@ export const AllTabPane: FC<{
 
     const [data, { addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState }] = useMarkets(MarketsType.ALL);
     const [dataSource, { onSearch, onSort }] = useDataSource(
+        // @ts-ignore
         data
     );
 
@@ -32,11 +33,12 @@ export const AllTabPane: FC<{
         onSort={onSort}
         maxHeight={props.maxHeight}
         updateActiveIndex={(index: number) => setActiveIndex(index)}
-        // @ts-ignore
         onItemClick={(item) => {
+            // @ts-ignore
             onItemClick?.(item);
             addToHistory(item);
         }}
+        favoriteTabs={favoriteTabs}
         prefixRender={(item, index) => {
             return (<FavoriteButton
                 symbol={item}

@@ -1,6 +1,6 @@
 import { API } from "@orderly.network/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { Numeral, Text } from "@/text";
 import { CircleCloseIcon, CloseIcon, NetworkImage } from "@/icon";
 import { Divider } from "@/divider";
@@ -48,7 +48,10 @@ export const FavoriteButton: FC<FavoriteButtonProps> = (props) => {
         setOpen(false);
     }, [innerTabs, symbol, symbolTabs]);
 
-
+    
+    useEffect(() => {
+        setInnerTabs(tabs);
+      }, [tabs]);
 
     return (
         <DropdownMenu

@@ -26,6 +26,7 @@ export const RecentTabPane: FC<{
         }).map((item) => item);
     }, [data, recent]);
     const [dataSource, { onSearch, onSort }] = useDataSource(
+        // @ts-ignore
         filterData
     );
 
@@ -41,11 +42,12 @@ export const RecentTabPane: FC<{
         onSort={onSort}
         maxHeight={props.maxHeight}
         updateActiveIndex={(index: number) => setActiveIndex(index)}
-        // @ts-ignore
         onItemClick={(item) => {
+            // @ts-ignore
             onItemClick?.(item);
             addToHistory(item);
         }}
+        favoriteTabs={favoriteTabs}
         prefixRender={(item, index) => {
             return (<FavoriteButton
                 symbol={item}

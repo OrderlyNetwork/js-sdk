@@ -65,27 +65,40 @@ export const useMarkets = (type: MarketsType) => {
         }
     }
 
-    const getFavoriteTabs = () => {
+    const getFavoriteTabs = useMemo(() => {
         // @ts-ignore
         const tabs = configStore.get(marketsKey)["favoriteTabs"];
         return (tabs || [{ name: "Popular", id: 1 }]) as FavoriteTab[];
-    };
+    }, []);
 
-    const getFavorites = () => {
+    const getFavorites = useMemo(() => {
         // @ts-ignore
-        const curData = configStore.get(marketsKey,)["favorites"];
-        return ((curData || []) as Favorite[]).filter((e) => e);
-    };
+        const curData = (configStore.get(marketsKey,)["favorites"] || []) as Favorite[];
+        const tabs = getFavoriteTabs;
+        const result = [];
+        for (let index = 0; index < curData.length; index++) {
+            const favData = curData[index];
+            var favTabs = favData.tabs.filter((tab) => tabs.findIndex((item) => tab.id === item.id) !== -1);
+            if (favTabs.length > 0) {
+                result.push({...favData, tabs: favTabs})
+            }
+            
+        }
+        configStore.set(marketsKey, {...configStore.getOr(marketsKey, {}), favorites: result});
+        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        
+        return result;
+    },[configStore]);
 
-    const getRecent = () => {
+    const getRecent = useMemo(() => {
         // @ts-ignore
         const curData = configStore.get(marketsKey)["recent"];
         return ((curData || []) as Recent[]).filter((e) => e);
-    };
+    }, []);
 
-    const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs());
-    const [favorites, setFavorites] = useState(getFavorites());
-    const [recent, setRecent] = useState(getRecent());
+    const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
+    const [favorites, setFavorites] = useState(getFavorites);
+    const [recent, setRecent] = useState(getRecent);
 
     const updateFavoriteTabs = (tab: FavoriteTab | FavoriteTab[], operator?: {
         add?: boolean,
@@ -262,10 +275,16 @@ export const useMarkets = (type: MarketsType) => {
     };
 
 
+    const tabs = useMemo(() => {
+        return favoriteTabs;
+    }, [favoriteTabs]);
+
+    
+
     return [
         markets || [],
         {
-            favoriteTabs,
+            favoriteTabs: tabs,
             favorites,
             recent,
             addToHistory,

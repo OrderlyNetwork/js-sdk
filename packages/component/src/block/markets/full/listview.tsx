@@ -15,6 +15,7 @@ interface Props {
   maxHeight?: number;
   onItemClick?: (item: API.MarketInfoExt) => void;
   updateActiveIndex?: (index: number) => void;
+  favoriteTabs: any;
 }
 
 export const ListViewFull = forwardRef<
@@ -27,7 +28,7 @@ export const ListViewFull = forwardRef<
   const renderItem = (
     item: API.MarketInfoExt,
     index: number,
-    activeIndex: number
+    extraData: any
   ) => {
     return (
       <div
@@ -37,14 +38,14 @@ export const ListViewFull = forwardRef<
         className={cn(
           "orderly-grid orderly-grid-cols-5 orderly-py-3 orderly-px-5 orderly-cursor-pointer orderly-h-[46px]",
           {
-            "orderly-bg-base-contrast/5": activeIndex === index,
+            "orderly-bg-base-contrast/5": extraData === index,
             "orderly-grid-cols-6": props.suffixRender,
           }
         )}
         onClick={() => props.onItemClick?.(item)}
       >
         <div className="orderly-col-span-2 orderly-flex orderly-items-center">
-          {props.prefixRender && (props.prefixRender(item,index))}
+          {props.prefixRender && (props.prefixRender(item,extraData))}
           <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
           <Text rule="symbol">{item.symbol}</Text>
         </div>
@@ -76,7 +77,7 @@ export const ListViewFull = forwardRef<
   return (
     <div>
       <SortGroup onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
-      <ListView<API.MarketInfoExt, number>
+      <ListView<API.MarketInfoExt, any>
         // @ts-ignore
         ref={ref}
         dataSource={props.dataSource}
@@ -84,7 +85,8 @@ export const ListViewFull = forwardRef<
         renderItem={renderItem}
         className="orderly-text-xs orderly-overflow-y-auto orderly-bg-base-900"
         contentClassName="orderly-space-y-0"
-        extraData={props.activeIndex}
+        // extraData={props.activeIndex}
+        extraData={props.favoriteTabs}
         style={props.maxHeight ? { height: `${props.maxHeight}px` } : {}}
       />
     </div>
