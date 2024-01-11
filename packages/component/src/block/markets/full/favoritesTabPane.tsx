@@ -7,6 +7,7 @@ import { CircleAdd, CircleCloseIcon, ArrowTopIcon, AddIcon } from "@/icon";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/utils";
 import { modal } from "@/modal";
+import { modalActions } from "@/modal/modalContext";
 
 export const FavoritesTabPane: FC<{
     onClose?: () => void,
@@ -157,12 +158,12 @@ const FavoritesTabList: FC<{
     const onClickDeleteTab = (tab: FavoriteTab) => {
         modal.confirm(
             {
-                title: "Are you sure you want to delete this watchlist?",
-                content: (
-                    <div className="orderly-text-base-contrast-54 orderly-text-2xs">
-                        {/* Are you sure you want to delete this watchlist? */}
-                    </div>
-                ),
+                maxWidth:"xs",
+                closeableSize: 12,
+                // title: "Are you sure you want to delete this watchlist?",
+                content: <div className="orderly-pt-0 orderly-text-sm">
+                    Are you sure you want to delete this watchlist?
+                </div>,
                 onCancel: () => {
                     return Promise.reject();
                 },

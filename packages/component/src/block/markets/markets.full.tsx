@@ -128,7 +128,7 @@ const MarketsBody: FC<{
     setActiveIndex,
     fitlerKey,
   } = props;
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("favorites");
 
 
   const { onSymbolChange } = useContext(TradingPageContext);

@@ -5,12 +5,13 @@ import { create } from "@/modal/modalHelper";
 import { modalActions } from "@/modal/modalContext";
 import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
-  title: string;
-  content: React.ReactNode;
+  title?: string;
+  content?: React.ReactNode;
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
   maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
+  closeableSize?: number;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
@@ -22,6 +23,7 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
       contentClassName={props.contentClassName}
       maxWidth={props.maxWidth}
       closable
+      closeableSize={props.closeableSize}
       onOpenChange={(open) => {
         if (!open) {
           reject();

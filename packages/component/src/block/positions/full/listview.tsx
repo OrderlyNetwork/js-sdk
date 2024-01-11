@@ -52,7 +52,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
       {
         title: "Liq.price",
         className: "orderly-h-[48px]",
-        hint: "Settling PnL moves the profit or loss from a perpetual market into the USDC balance",
+        hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
         dataIndex: "est_liq_price",
         render: (value: string) => {
           return Number(value) === 0 ? (
@@ -76,6 +76,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
+        hint: "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
         render: (value: string) => (
           <Numeral coloring className="orderly-font-semibold">
             {value}
