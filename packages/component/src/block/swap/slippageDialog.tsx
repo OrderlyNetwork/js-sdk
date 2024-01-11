@@ -20,9 +20,11 @@ export const SlippageDialog: FC<PropsWithChildren<SlippageDialogProps>> = (
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent maxWidth={"xs"}>
+      <DialogContent maxWidth={"xs"} closable>
         <DialogHeader>
-          <DialogTitle className="orderly-text-xs">Slippage tolerance</DialogTitle>
+          <DialogTitle className="orderly-text-xs">
+            Slippage tolerance
+          </DialogTitle>
         </DialogHeader>
         <DialogBody className="orderly-py-5">
           <Slippage
