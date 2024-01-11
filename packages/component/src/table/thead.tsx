@@ -1,40 +1,64 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { Column } from "./col";
 import { cn } from "@/utils/css";
+import { ColGroup } from "./colgroup";
+import { Tooltip } from "@/tooltip";
 
 export interface THeadProps {
   columns: Column[];
   className?: string;
+  containerClassName?: string;
   bordered?: boolean;
   justified?: boolean;
 }
 
-export const THead: FC<THeadProps> = (props) => {
+export const TableHeader: FC<THeadProps> = (props) => {
   return (
-    <thead
+    <table
       className={cn(
-        "orderly-sticky orderly-top-0 orderly-z-10",
-        props.className
+        "orderly-border-collapse orderly-min-w-full",
+        props.containerClassName
       )}
     >
-      <tr>
-        {props.columns.map((column, index) => {
-          return (
-            <td
-              className={cn(
-                "orderly-px-1 orderly-py-[3px] ",
-                column.align === "right" && "orderly-text-right",
-                props.justified && "first:orderly-pl-0 last:orderly-pr-0",
-                props.bordered && "orderly-border-b orderly-border-divider",
-                props.className
-              )}
-              key={column.dataIndex}
-            >
-              {column.title}
-            </td>
-          );
-        })}
-      </tr>
-    </thead>
+      <ColGroup columns={props.columns} />
+      <thead
+        className={cn(
+          "orderly-sticky orderly-top-0 orderly-z-10",
+          props.className
+        )}
+      >
+        <tr>
+          {props.columns.map((column, index) => {
+            let content: ReactNode = column.title;
+
+            if (typeof column.hint === "string") {
+              content = (
+                <Tooltip
+                  content={column.hint}
+                  className="orderly-max-w-[200px]"
+                >
+                  <button>{column.title}</button>
+                </Tooltip>
+              );
+            }
+
+            return (
+              <td
+                className={cn(
+                  "orderly-px-1 orderly-py-[3px] ",
+                  column.align === "right" && "orderly-text-right",
+                  props.justified && "first:orderly-pl-0 last:orderly-pr-0",
+                  props.bordered && "orderly-border-b orderly-border-divider",
+                  props.className
+                )}
+                key={column.dataIndex}
+              >
+                {content}
+              </td>
+            );
+          })}
+        </tr>
+      </thead>
+    </table>
   );
 };

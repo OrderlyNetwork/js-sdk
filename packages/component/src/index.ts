@@ -41,7 +41,7 @@ export { modal, useModal } from "./modal";
 // ==================== page component ====================
 export * from "./page";
 
-export { Page } from "./layout";
+export { Page, Layout } from "./layout";
 
 // ==================== block component ====================
 export {

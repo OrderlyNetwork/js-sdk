@@ -3,7 +3,7 @@ import { memo, useState } from "react";
 import { PositionPane } from "./positions";
 import { MyOrders } from "./orders";
 import { OrderStatus } from "@orderly.network/types";
-import { MemoizedOrdersTabTitle } from "@/page/trading/xs/sections/dataList/orders/tabTitle";
+import { MemoizedOrdersTabTitle } from "@/page/trading/mobile/sections/dataList/orders/tabTitle";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 import { TabBarExtraNode } from "@/page/trading/desktop/sections/datalist/tabbarExtraNode";

@@ -40,11 +40,9 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
             <Numeral
               precision={quote_dp}
               className={
-                
                 record.side === OrderSide.BUY
                   ? "orderly-text-trade-profit orderly-text-3xs"
                   : "orderly-text-trade-loss orderly-text-3xs"
-                  
               }
             >
               {value}

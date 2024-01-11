@@ -7,7 +7,6 @@ import { MyOrderEntry } from "./sections/orderEntry";
 import { MemoizedCompnent } from "./sections/leverage";
 import { BottomNavBar } from "./sections/bottombar";
 import { AssetsProvider } from "@/provider/assetsProvider";
-import { useExecutionReport } from "../hooks/useExecutionReport";
 import { TradingPageProps } from "../types";
 
 export const MobileTradingPage: FC<TradingPageProps> = (props) => {
