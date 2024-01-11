@@ -35,9 +35,9 @@ export const TableHeader: FC<THeadProps> = (props) => {
               content = (
                 <Tooltip
                   content={column.hint}
-                  className="orderly-max-w-[200px]"
+                  className="orderly-max-w-[270px] orderly-text-4xs"
                 >
-                  <button>{column.title}</button>
+                  <button className="hover:orderly-text-base-contrast">{column.title}</button>
                 </Tooltip>
               );
             }
