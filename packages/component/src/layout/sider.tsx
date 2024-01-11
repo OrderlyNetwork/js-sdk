@@ -16,7 +16,6 @@ export const Sider: FC<PropsWithChildren<SiderProps>> = (props) => {
     const boundingClientRect = ref.current?.getBoundingClientRect();
 
     if (boundingClientRect && boundingClientRect.height) {
-      // console.log(boundingClientRect);
       setSiderWidth(boundingClientRect.width);
     }
   }, []);

@@ -33,7 +33,8 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
-    const chainId = parseInt(connectedChain.id);
+    // const chainId = parseInt(connectedChain.id);
+    const { id: chainId } = connectedChain;
     const chain = findByChainId(chainId);
 
     return {

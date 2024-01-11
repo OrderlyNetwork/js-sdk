@@ -10,4 +10,7 @@ export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
   external: ["react", "react-dom", "@orderly.network/web3-onboard"],
+  esbuildOptions(options, context) {
+    options.drop = ["console", "debugger"];
+  },
 }));

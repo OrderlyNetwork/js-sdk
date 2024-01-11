@@ -1,16 +1,21 @@
 import { FC, useMemo } from "react";
 import { cn } from "@/utils/css";
 
-export type Column = {
+export type Column<RecordType extends unknown = any> = {
   title: string;
   hint?: string;
   width?: number;
   dataIndex: string;
   className?: string;
   align?: "left" | "center" | "right";
-  formatter?: (value: any, record: any, index: number) => any;
-  render?: (value: any, record: any, index: number) => React.ReactNode;
-  getKey?: (record: any, index: number) => string;
+  onSort?: (
+    r1: RecordType,
+    r2: RecordType,
+    sortOrder: "ascend" | "descend"
+  ) => void;
+  formatter?: (value: any, record: RecordType, index: number) => any;
+  render?: (value: any, record: RecordType, index: number) => React.ReactNode;
+  getKey?: (record: RecordType, index: number) => string;
 };
 
 interface ColProps {

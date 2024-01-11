@@ -12,6 +12,7 @@ import {
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
+  DEPOSIT_FEE_RATE,
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -19,6 +20,7 @@ import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
 import { OrderlyContext } from "../orderlyContext";
 import { useConfig } from "../useConfig";
+import { useDebouncedCallback } from "use-debounce";
 
 export type useDepositOptions = {
   // from address
@@ -30,6 +32,7 @@ export type useDepositOptions = {
   networkId?: NetworkId;
   srcChainId?: number;
   srcToken?: string;
+  quantity?: string;
 
   /**
    * @hidden
@@ -48,6 +51,10 @@ export const useDeposit = (options?: useDepositOptions) => {
     wooSwapEnabled: enableSwapDeposit,
   });
 
+  const [quantity, setQuantity] = useState<string>("");
+  const [depositFee, setDepositFee] = useState<bigint>(0n);
+  const [depositFeeRevalidating, setDepositFeeRevalidating] = useState(false);
+
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
 
@@ -56,34 +63,40 @@ export const useDeposit = (options?: useDepositOptions) => {
   const prevAddress = useRef<string | undefined>();
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
 
-  const dst = useMemo(() => {
+  const targetChain = useMemo(() => {
     let chain: API.Chain | undefined;
 
+    // Orderly testnet supported chain
     if (networkId === "testnet") {
       chain = findByChainId(ARBITRUM_TESTNET_CHAINID) as API.Chain;
     } else {
       chain = findByChainId(options?.srcChainId!) as API.Chain;
-      // Orderly un-supported chain
+      // if is orderly un-supported chain
       if (!chain?.network_infos?.bridgeless) {
+        // Orderly mainnet supported chain
         chain = findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain;
       }
     }
+    return chain;
+  }, [networkId, findByChainId, options?.srcChainId]);
 
-    const USDC = chain?.token_infos.find(
-      (token: API.TokenInfo) => token.symbol === "USDC"
-    );
-    if (!chain) {
+  const dst = useMemo(() => {
+    if (!targetChain) {
       throw new Error("dst chain not found");
     }
+
+    const USDC = targetChain?.token_infos.find(
+      (token: API.TokenInfo) => token.symbol === "USDC"
+    );
+
     return {
       symbol: "USDC",
       address: USDC?.address,
       decimals: USDC?.decimals,
-      chainId: chain.network_infos.chain_id,
-      network: chain.network_infos.shortName,
-      // chainId: 42161,
+      chainId: targetChain.network_infos.chain_id,
+      network: targetChain.network_infos.shortName,
     };
-  }, [networkId, findByChainId, options?.srcChainId]);
+  }, [targetChain]);
 
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),
@@ -108,7 +121,12 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const fetchBalance = useCallback(
-    async (address?: string, decimals?: number) => {
+    async (
+      // token contract address
+      address?: string,
+      // format decimals
+      decimals?: number
+    ) => {
       if (!address) return;
 
       try {
@@ -187,18 +205,38 @@ export const useDeposit = (options?: useDepositOptions) => {
     }
   }, [options, dst]);
 
+  const queryBalance = useDebouncedCallback(
+    (tokenAddress?: string, decimals?: number) => {
+      fetchBalance(options?.address, options?.decimals).finally(() => {
+        setBalanceRevalidating(false);
+      });
+    },
+    100
+  );
+
+  const queryAllowance = useDebouncedCallback(
+    (tokenAddress?: string, vaultAddress?: string) => {
+      getAllowance(tokenAddress, vaultAddress);
+    },
+    100
+  );
+
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
     setBalanceRevalidating(true);
-    fetchBalance(options?.address, options?.decimals).finally(() => {
-      setBalanceRevalidating(false);
-    });
+    // fetchBalance(options?.address, options?.decimals).finally(() => {
+    //   setBalanceRevalidating(false);
+    // });
+
+    queryBalance(options?.address, options?.decimals);
 
     if (dst.chainId !== options?.srcChainId) {
-      getAllowance(options?.address, options?.crossChainRouteAddress);
+      // getAllowance(options?.address, options?.crossChainRouteAddress);
+      queryAllowance(options?.address, options?.crossChainRouteAddress);
     } else {
       if (dst.symbol !== options?.srcToken) {
-        getAllowance(options?.address, options?.depositorAddress);
+        // getAllowance(options?.address, options?.depositorAddress);
+        queryAllowance(options?.address, options?.depositorAddress);
       } else {
         getAllowanceByDefaultAddress(options?.address);
       }
@@ -216,7 +254,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   ]);
 
   const approve = useCallback(
-    (amount: string | undefined) => {
+    async (amount: string = quantity) => {
       if (!options?.address) {
         throw new Error("address is required");
       }
@@ -230,28 +268,19 @@ export const useDeposit = (options?: useDepositOptions) => {
           return result;
         });
     },
-    [account, getAllowance, options?.address]
+    [account, getAllowance, options?.address, quantity]
   );
 
-  const getDepositFee = useCallback(
-    async (amount: string, chain: any) => {
-      return account.assetsManager.getDepositFee(amount, chain);
-    },
-    [account]
-  );
-
-  const deposit = useCallback(
-    (amount: string, fee?: bigint) => {
-      // only support orderly deposit
-
-      return account.assetsManager.deposit(amount, fee).then((res: any) => {
-        setAllowance((value) => new Decimal(value).sub(amount).toString());
-        setBalance((value) => new Decimal(value).sub(amount).toString());
+  const deposit = useCallback(async () => {
+    // only support orderly deposit
+    return account.assetsManager
+      .deposit(quantity, depositFee)
+      .then((res: any) => {
+        setAllowance((value) => new Decimal(value).sub(quantity).toString());
+        setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
       });
-    },
-    [account, fetchBalance, getAllowance]
-  );
+  }, [account, fetchBalance, getAllowance, quantity, depositFee]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
@@ -265,6 +294,49 @@ export const useDeposit = (options?: useDepositOptions) => {
       loopGetBalance();
     }, 3000);
   };
+
+  const getDepositFee = useCallback(
+    async (quantity: string) => {
+      return account.assetsManager.getDepositFee(
+        quantity,
+        targetChain?.network_infos
+      );
+    },
+    [account, targetChain]
+  );
+
+  const enquiryDepositFee = useDebouncedCallback(() => {
+    getDepositFee(quantity)
+      .then((res: bigint = 0n) => {
+        const fee = BigInt(
+          new Decimal(res.toString())
+            .mul(DEPOSIT_FEE_RATE)
+            .toFixed(0, Decimal.ROUND_UP)
+            .toString()
+        );
+
+        setDepositFee(fee);
+        console.log("getDepositFee", fee);
+      })
+      .catch((error) => {
+        console.log("getDepositFee error", error);
+      })
+      .finally(() => {
+        setDepositFeeRevalidating(false);
+      });
+  }, 0);
+
+  useEffect(() => {
+    // state no need debounce
+    if (isNaN(Number(quantity)) || !quantity) {
+      setDepositFee(0n);
+      setDepositFeeRevalidating(false);
+      return;
+    }
+
+    setDepositFeeRevalidating(true);
+    enquiryDepositFee();
+  }, [quantity]);
 
   useEffect(() => {
     if (!options?.address) {
@@ -289,16 +361,24 @@ export const useDeposit = (options?: useDepositOptions) => {
   }, [options?.address, options?.decimals]);
 
   return {
+    /** orderly support chain dst */
     dst,
     balance,
     allowance,
     isNativeToken,
     balanceRevalidating,
     allowanceRevalidating,
+    /** input quantiy */
+    quantity,
+    /** orderly deposit fee, unit: wei */
+    depositFee,
+    /** enquiring depositFee status on chain */
+    depositFeeRevalidating,
     approve,
     deposit,
-    getDepositFee,
     fetchBalances,
     fetchBalance: fetchBalanceHandler,
+    /** set input quantity */
+    setQuantity,
   };
 };

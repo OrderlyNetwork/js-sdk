@@ -1,22 +1,14 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
-// import { WalletConnectorContext } from "@/provider";
 import {
-  useChain,
   useDeposit,
   useChains,
   useWalletConnector,
   useWS,
 } from "@orderly.network/hooks";
-import {
-  API,
-  ARBITRUM_MAINNET_CHAINID,
-  ARBITRUM_TESTNET_CHAINID,
-  CurrentChain,
-} from "@orderly.network/types";
+import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { OrderlyAppContext } from "@/provider";
-import { useConfig } from "@orderly.network/hooks";
 
 export enum DepositStatus {
   Checking = "Checking",
@@ -30,13 +22,12 @@ export interface DepositProps {
   wooSwapEnabled?: boolean;
 }
 
+// TODO: add deposit context to pass value
 export const Deposit: FC<DepositProps> = (props) => {
-  // const { dst } = props;
-
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
-  const networkId = useConfig("networkId");
+  const ws = useWS();
 
   // @ts-ignore
   const [chains, { findByChainId }] = useChains(undefined, {
@@ -51,13 +42,13 @@ export const Deposit: FC<DepositProps> = (props) => {
 
   const [symbolPrice, setSymbolPrice] = useState({});
 
-  // const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
   // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
-    const chainId = parseInt(connectedChain.id);
+    // const chainId = parseInt(connectedChain.id);
+    const { id: chainId } = connectedChain;
     const chain = findByChainId(chainId);
 
     return {
@@ -67,13 +58,18 @@ export const Deposit: FC<DepositProps> = (props) => {
     };
   }, [connectedChain, findByChainId]);
 
+  // console.log("****** token ******", token, currentChain);
+
   const {
     dst,
     balance,
     allowance,
+    depositFeeRevalidating,
+    depositFee,
+    quantity,
+    setQuantity,
     approve,
     deposit,
-    getDepositFee,
     isNativeToken,
     balanceRevalidating,
     fetchBalance,
@@ -90,7 +86,6 @@ export const Deposit: FC<DepositProps> = (props) => {
   useEffect(() => {
     if (!token || !currentChain) return;
     /// check if need swap
-
     if (token.symbol !== "USDC") {
       setNeedSwap(true);
     } else {
@@ -104,8 +99,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       setNeedCrossChain(false);
     }
   }, [token?.symbol, currentChain?.id, dst?.chainId]);
-
-  const ws = useWS();
 
   useEffect(() => {
     const unsubscribe = ws.subscribe("indexprices", {
@@ -123,31 +116,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       unsubscribe?.();
     };
   }, []);
-
-  function getDepositFeeChainNetworkInfo() {
-    const currentChainNewtorkInfo = currentChain?.info?.network_infos!;
-    if (networkId === "testnet") {
-      return (
-        findByChainId(ARBITRUM_TESTNET_CHAINID, "network_infos") ||
-        currentChainNewtorkInfo
-      );
-    }
-
-    // Orderly supported chain : get the current chain deposit fee
-    if (currentChain?.info?.network_infos?.bridgeless) {
-      return currentChainNewtorkInfo;
-    }
-
-    // Orderly un-supported chain - get Arbitrum deposit fee
-    return (
-      findByChainId(ARBITRUM_MAINNET_CHAINID, "network_infos") ||
-      currentChainNewtorkInfo
-    );
-  }
-
-  function doGetDepositFee(amount: string) {
-    return getDepositFee(amount, getDepositFeeChainNetworkInfo());
-  }
 
   return (
     <DepositForm
@@ -170,7 +138,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       maxAmount={balance}
       approve={approve}
       deposit={deposit}
-      getDepositFee={doGetDepositFee}
       fetchBalance={fetchBalance}
       onOk={props.onOk}
       balanceRevalidating={balanceRevalidating}
@@ -179,6 +146,10 @@ export const Deposit: FC<DepositProps> = (props) => {
       needCrossChain={needCrossChain}
       needSwap={needSwap}
       symbolPrice={symbolPrice}
+      quantity={quantity}
+      setQuantity={setQuantity}
+      depositFee={depositFee}
+      depositFeeRevalidating={depositFeeRevalidating}
     />
   );
 };

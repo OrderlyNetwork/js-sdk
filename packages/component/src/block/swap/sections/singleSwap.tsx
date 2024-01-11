@@ -22,7 +22,7 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
-  orderlyDepositFee?: bigint;
+  depositFee?: bigint;
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
@@ -37,7 +37,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     src,
     chain,
     nativeToken,
-    orderlyDepositFee,
+    depositFee,
   } = props;
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
@@ -55,14 +55,14 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       slippage,
       time: chain?.est_txn_mins,
       received: dst.amount,
-      dstGasFee: new Decimal(orderlyDepositFee!.toString())
+      dstGasFee: new Decimal(depositFee!.toString())
         ?.div(new Decimal(10).pow(18))
         ?.toString(),
       swapFee: transaction.fees_from,
     };
 
     return info;
-  }, [transaction, chain?.est_txn_mins, mode, dst, orderlyDepositFee]);
+  }, [transaction, chain?.est_txn_mins, mode, dst, depositFee]);
 
   useEffect(() => {
     if (swapStatus === WS_WalletStatusEnum.COMPLETED) {
@@ -90,7 +90,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         fromAmount: transaction.infos.from_amount,
         toToken: transaction.infos.to_token,
         minToAmount: transaction.infos.min_to_amount,
-        orderlyNativeFees: orderlyDepositFee,
+        orderlyNativeFees: depositFee,
       },
       { dst, src }
     ).then(

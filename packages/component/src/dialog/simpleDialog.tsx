@@ -15,6 +15,7 @@ export interface BaseDialogProps {
   open: boolean;
   title: ReactNode;
   closable?: boolean;
+  closeableSize?: number;
   onOk?: () => Promise<any>;
   onCancel?: () => void;
   footer?: ReactNode;
@@ -83,13 +84,14 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
         closable={props.closable}
+        closeableSize={props.closeableSize}
         onOpenAutoFocus={(event) => event.preventDefault()}
         className={cn("orderly-confirm-dialog", props.contentClassName)}
         maxWidth={props.maxWidth}
       >
-        <DialogHeader>
+        {props.title && <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
-        </DialogHeader>
+        </DialogHeader>}
         {props.children}
         {actions}
       </DialogContent>

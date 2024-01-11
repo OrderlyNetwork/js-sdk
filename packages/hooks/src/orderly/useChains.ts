@@ -78,7 +78,7 @@ export const useChains = (
 
   const apiBaseUrl = configStore.get("apiBaseUrl");
 
-
+  // TODO: chains seems always change when ui update
   const chains:
     | API.Chain[]
     | {

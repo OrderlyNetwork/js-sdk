@@ -1,6 +1,7 @@
 import { API } from "@orderly.network/types";
 import React, { PropsWithChildren, ReactNode, useContext } from "react";
 import { TradingFeatures } from "../features";
+import { useExecutionReport } from "../shared/hooks/useExecutionReport";
 
 export interface TradingPageContextValue {
   onSymbolChange?: (symbol: API.Symbol) => void;
@@ -28,6 +29,7 @@ export const useTradingPageContext = () => {
 export const TradingPageProvider: React.FC<
   PropsWithChildren<TradingPageProviderProps>
 > = ({ children, onSymbolChange, symbol, disableFeatures = [], overrides }) => {
+  useExecutionReport();
   return (
     <TradingPageContext.Provider
       value={{ onSymbolChange, symbol, disableFeatures, overrides }}

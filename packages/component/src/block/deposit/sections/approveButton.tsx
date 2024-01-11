@@ -13,6 +13,7 @@ interface ApproveButtonProps {
   label: string;
   disabled?: boolean;
   buttonId: string;
+  depositFeeRevalidating?: boolean;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {
@@ -48,7 +49,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       .finally(() => {
         setApproveLoading(false);
       });
-  }, [approveLoading, allowance, quantity]);
+  }, [approveLoading, allowance, quantity, props.onApprove]);
 
   if (allowance <= 0) {
     return (
@@ -85,9 +86,9 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       id={buttonId}
       fullWidth
       onClick={onDeposit}
-      disabled={disabled || submitting}
-      loading={submitting}
-      className=" desktop:orderly-text-2xs"
+      disabled={disabled || submitting || props.depositFeeRevalidating}
+      loading={submitting || props.depositFeeRevalidating}
+      className="desktop:orderly-text-2xs"
     >
       {label}
     </Button>

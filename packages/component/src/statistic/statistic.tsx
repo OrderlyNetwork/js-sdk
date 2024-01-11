@@ -4,6 +4,7 @@ import { Numeral, Text } from "@/text";
 import { StatisticStyleContext } from "./defaultStaticStyle";
 import { type TextRule } from "@/text/text";
 import { NumeralProps, NumeralRule } from "@/text/numeral";
+import { Tooltip } from "@/tooltip";
 
 export interface StatisticProps
   extends Omit<NumeralProps, "children" | "rule"> {
@@ -18,6 +19,8 @@ export interface StatisticProps
   align?: "left" | "right" | "center";
 
   asChild?: boolean;
+
+  hint?: string;
 
   // FormattedPrice
   // as?: "price" | "date";
@@ -99,7 +102,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
     return props.value ?? "--";
   }, [props.value, rule, props.precision, props.visible]);
 
-  return (
+  const content = (
     <div className={cn(props.className, alignClasses[align])}>
       <div className={cn(labelClassName, props.labelClassName)}>
         {labelElement}
@@ -108,5 +111,15 @@ export const Statistic: FC<StatisticProps> = (props) => {
         {valueElement}
       </div>
     </div>
+  );
+
+  if (typeof props.hint === "undefined") {
+    return content;
+  }
+
+  return (
+    <Tooltip content={props.hint} className="orderly-max-w-[200px]">
+      {content}
+    </Tooltip>
   );
 };

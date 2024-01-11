@@ -1,7 +1,7 @@
 import { TabContextState, TabPane, Tabs } from "@/tab";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { PositionPane } from "./position";
-import { OrdersPane } from "@/page/trading/xs/sections/dataList/orders";
+import { OrdersPane } from "@/page/trading/mobile/sections/dataList/orders";
 import { HistoryPane } from "./history";
 import { PositionTabTitle } from "./position/tabTitle";
 import { MemoizedOrdersTabTitle } from "./orders/tabTitle";

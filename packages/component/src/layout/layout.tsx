@@ -5,6 +5,8 @@ import {
   useContext,
   useEffect,
   Children,
+  ReactElement,
+  useState,
 } from "react";
 import { LayoutContext, LayoutProvider } from "./layoutContext";
 import { cn } from "..";
@@ -15,16 +17,19 @@ import { MEDIA_TABLET } from "@orderly.network/types";
 interface LayoutProps extends LayoutBaseProps {}
 
 const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
-  const { siderWidth, headerHeight, footerHeight, isTopLevel } =
-    useContext(LayoutContext);
+  const [elements, setElements] = useState<string[]>([]);
   // console.log("Layout", headerHeight, footerHeight);
   const matches = useMediaQuery(MEDIA_TABLET);
 
   useEffect(() => {
-    console.log(props.children);
+    const elements: string[] = [];
     Children.forEach(props.children, (child) => {
-      console.log(child);
+      // console.log(child);
+      const displayName = ((child as ReactElement)?.type as any)?.displayName;
+      elements.push(displayName);
     });
+
+    setElements(elements);
   }, []);
 
   if (matches) {
@@ -34,8 +39,7 @@ const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
   return (
     <div
       className={cn("orderly-flex orderly-flex-1", {
-        "orderly-flex-col":
-          siderWidth === 0 && (headerHeight > 0 || footerHeight > 0),
+        "orderly-flex-col": elements.includes("Header"),
       })}
     >
       {props.children}

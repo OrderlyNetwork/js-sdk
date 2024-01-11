@@ -31,7 +31,7 @@ export class Datafeed extends AbstractDatafeed {
         });
 
         ws.on('.*@ticker', (message: any) => {
-            console.log('-- ticker message', message);
+            // console.log('-- ticker message', message);
             this.marketResolver?.(message.data);
         })
 

@@ -1,4 +1,4 @@
-import { Table } from "@/table";
+import { Column, Table } from "@/table";
 import { FC, useContext, useMemo } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
@@ -9,23 +9,31 @@ import { SymbolProvider } from "@/provider";
 import { QuantityInput } from "./quantityInput";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { TabContext } from "@/tab";
+import { LayoutContext } from "@/layout/layoutContext";
 
 export const Listview: FC<PositionsViewProps> = (props) => {
   const { height } = useContext(TabContext);
-  const columns = useMemo(() => {
+  // const { footerHeight } = useContext(LayoutContext);
+  const columns = useMemo<Column[]>(() => {
     return [
       {
         title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"symbol"} className="orderly-font-semibold">{value}</Text>,
+        render: (value: string) => (
+          <Text rule={"symbol"} className="orderly-font-semibold">
+            {value}
+          </Text>
+        ),
       },
       {
         title: "Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "position_qty",
         render: (value: string) => (
-          <NumeralWithCtx coloring className="orderly-font-semibold">{value}</NumeralWithCtx>
+          <NumeralWithCtx coloring className="orderly-font-semibold">
+            {value}
+          </NumeralWithCtx>
         ),
       },
       {
@@ -44,12 +52,15 @@ export const Listview: FC<PositionsViewProps> = (props) => {
       {
         title: "Liq.price",
         className: "orderly-h-[48px]",
+        hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
         dataIndex: "est_liq_price",
         render: (value: string) => {
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Numeral className="orderly-text-warning orderly-font-semibold">{value}</Numeral>
+            <Numeral className="orderly-text-warning orderly-font-semibold">
+              {value}
+            </Numeral>
           );
         },
       },
@@ -57,13 +68,20 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Margin",
         className: "orderly-h-[48px]",
         dataIndex: "mm",
-        render: (value: string) => <Numeral className="orderly-font-semibold">{value}</Numeral>,
+        render: (value: string) => (
+          <Numeral className="orderly-font-semibold">{value}</Numeral>
+        ),
       },
       {
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
-        render: (value: string) => <Numeral coloring className="orderly-font-semibold">{value}</Numeral>,
+        hint: "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
+        render: (value: string) => (
+          <Numeral coloring className="orderly-font-semibold">
+            {value}
+          </Numeral>
+        ),
       },
       // {
       //   title: "Daily real.",
@@ -74,7 +92,9 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         title: "Notional",
         dataIndex: "notional",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Numeral className="orderly-font-semibold">{value}</Numeral>,
+        render: (value: string) => (
+          <Numeral className="orderly-font-semibold">{value}</Numeral>
+        ),
       },
       {
         title: "Qty.",
@@ -113,7 +133,9 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={"orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px] orderly-overflow-x-auto"}
+        className={
+          "orderly-text-2xs orderly-text-base-contrast-80 orderly-w-[1100px] orderly-overflow-x-auto"
+        }
         generatedRowKey={(record) => record.symbol}
         renderRowContainer={(record, index, children) => {
           return (
