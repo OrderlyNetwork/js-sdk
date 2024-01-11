@@ -2,7 +2,7 @@ import { FC, useContext, useEffect } from "react";
 import Split from "@uiw/react-split";
 import { AccountInfoElement } from "./elements/accountInfo";
 import { TradingPageProps } from "../types";
-import { MyOrderEntry } from "../xs/sections/orderEntry";
+import { MyOrderEntry } from "../mobile/sections/orderEntry";
 import { Divider } from "@/divider";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
@@ -11,11 +11,18 @@ import { MyTradingView } from "./myTradingview";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
+import { useTradingPageContext } from "../context/tradingPageContext";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
   const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
     useContext(LayoutContext);
+
+  const { disableFeatures } = useTradingPageContext();
+
+  if (!disableFeatures) {
+    throw new Error("TradingPage must be use in TradingPageProvider");
+  }
 
   const cssVariable = useCSSVariable([
     "--orderly-color-primary",
@@ -34,16 +41,9 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
     );
   }, [cssVariable]);
 
-  console.log(
-    "-------------",
-    siderWidth,
-    pageHeaderHeight,
-    headerHeight,
-    footerHeight
-  );
-
   return (
     <div className="orderly-tabular-nums">
+      {/* @ts-ignore */}
       <Split
         lineBar
         style={{
@@ -55,7 +55,9 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
         }}
       >
         <div style={{ flex: 1 }}>
+          {/* @ts-ignore */}
           <Split mode="vertical" lineBar>
+            {/* @ts-ignore */}
             <Split
               style={{ flex: 1, minHeight: "450px" }}
               className={"orderly-min-h-0 orderly-overflow-y-visible"}
@@ -94,8 +96,8 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
         >
           <AssetsProvider>
             <AccountInfoElement />
-            <Divider className="orderly-my-3" />
-            <div className="orderly-px-3">
+
+            <div className="orderly-px-3 orderly-mt-3">
               <MyOrderEntry symbol={props.symbol} />
             </div>
           </AssetsProvider>

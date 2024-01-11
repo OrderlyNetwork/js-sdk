@@ -1,11 +1,4 @@
-import {
-  FC,
-  HTMLAttributes,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import { FC, PropsWithChildren, useEffect, useRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { LayoutBaseProps } from "./types";
 
