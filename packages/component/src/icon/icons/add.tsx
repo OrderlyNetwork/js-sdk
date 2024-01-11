@@ -7,7 +7,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const AddIcon: FC<IconProps> = (props) => {
-    const { size = 16, viewBox, fill = "none", ...rest } = props;
+    const { size = 16, viewBox, ...rest } = props;
     return (
         <svg
             width={`${size}px`}

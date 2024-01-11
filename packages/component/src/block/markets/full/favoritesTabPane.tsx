@@ -197,7 +197,7 @@ const FavoritesTabList: FC<{
 
     return (<div className="orderly-h-[58px] orderly-bg-base-800 orderly-w-full orderly-flex orderly-items-center">
         <button
-            className=" orderly-px-4 orderly-h-[58px] orderly-flex orderly-items-center orderly-fill-base-contrast-36 hover:orderly-fill-base-contrast"
+            className="orderly-px-6 orderly-h-[58px] orderly-flex orderly-items-center orderly-fill-base-contrast-36 hover:orderly-fill-base-contrast"
             onClick={(e) => {
                 const newTab = { name: `WatchList_${props.tabs.length}`, id: Date.now() };
                 props.updateFavoriteTabs(newTab, { add: true });
@@ -207,7 +207,7 @@ const FavoritesTabList: FC<{
                 }, 100);
             }}
         >
-            <AddIcon size={14} fill="current" />
+            <AddIcon size={14} fill="current" fillOpacity={1.0}/>
         </button>
         <div className="orderly-relative orderly-overflow-hidden orderly-h-full orderly-w-full orderly-bg-base-800" >
 
