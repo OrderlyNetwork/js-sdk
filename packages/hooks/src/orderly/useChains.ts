@@ -102,6 +102,7 @@ export const useChains = (
               // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
               chain_id: chainId,
               withdrawal_fee: chain.withdrawal_fee,
+              cross_chain_withdrawal_fee: chain.cross_chain_withdrawal_fee,
 
               bridgeless: true,
             },

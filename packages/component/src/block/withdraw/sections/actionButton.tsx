@@ -216,7 +216,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {warningMessage && (
-        <div className="orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs">
+        <div className="orderly-warning-msg orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs">
           {warningMessage}
         </div>
       )}

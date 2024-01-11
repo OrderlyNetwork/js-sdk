@@ -331,7 +331,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         chains={chains}
         chain={chain}
         onWithdraw={doWithdraw}
-        disabled={!quantity}
+        disabled={!quantity || (Number(quantity) - fee <= 0)}
         switchChain={switchChain}
         quantity={quantity}
         loading={submitting}
