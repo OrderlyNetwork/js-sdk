@@ -113,11 +113,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36 desktop:orderly-text-3xs"
+            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36 desktop:orderly-text-3xs orderly-tabular-nums"
           }
         >
           <span>{`$${amount}`}</span>
-          <div className="orderly-flex orderly-items-center orderly-space-x-2">
+          <div className="orderly-flex orderly-items-center orderly-space-x-2 ">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
                 precision: props.token?.woofi_dex_precision,

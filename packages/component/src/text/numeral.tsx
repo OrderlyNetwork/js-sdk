@@ -169,7 +169,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
   return (
     <span
       className={cn(
-        "orderly-inline-flex orderly-items-center",
+        "orderly-inline-flex orderly-items-center orderly-tabular-nums",
         colorClassName,
         props.className
       )}

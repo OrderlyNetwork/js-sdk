@@ -188,7 +188,7 @@ const DesktopChainSelect: FC<{
     connectedChain,
   } = props;
   const [open, setOpen] = useState(false);
-  const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
+  // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 
   function parseChainId(id?: string | number) {
     if (typeof id === "number") {
@@ -203,26 +203,36 @@ const DesktopChainSelect: FC<{
     }
   }
 
+  const buttonElem = useMemo(() => {
+    return (
+      <>
+        <NetworkImage
+          id={currentChain?.chain_id}
+          type={currentChain ? "chain" : "unknown"}
+          size={"small"}
+          rounded
+        />
+        <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
+          {currentChain?.name ?? "Unknown"}
+        </span>
+        {icon}
+      </>
+    );
+  }, [currentChain]);
+
+  if ((chains?.length ?? 0) < 2 || props.settingChain) {
+    return (
+      <div className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500">
+        {buttonElem}
+      </div>
+    );
+  }
+
   return (
-    <DropdownMenu
-      open={canOpen ? open : false}
-      onOpenChange={canOpen ? setOpen : undefined}
-    >
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button
-          className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
-          disabled={(chains?.length ?? 0) < 2 || props.settingChain}
-        >
-          <NetworkImage
-            id={currentChain?.chain_id}
-            type={currentChain ? "chain" : "unknown"}
-            size={"small"}
-            rounded
-          />
-          <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
-            {currentChain?.name ?? "Unknown"}
-          </span>
-          {icon}
+        <button className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500">
+          {buttonElem}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -233,6 +243,7 @@ const DesktopChainSelect: FC<{
         {chains.map((chain: any, index: number) => {
           return (
             <DropdownMenuItem
+              key={index}
               onClick={() => {
                 const chainInfo = findByChainId(chain.chain_id);
                 if (chainInfo) {
