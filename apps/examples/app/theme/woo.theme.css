@@ -185,7 +185,7 @@ body {
   color: rgba(255, 255, 255, 0.54);
 }
 .orderly-confirm-dialog .orderly-dialog-footer .orderly-confirm-dialog-cancal-button {
-  background-color: #FF447C;
+  background-color: #D92D6B;
 }
 .orderly-confirm-dialog #orderly-market-close-dialog-content {
   font-size: 16px;
@@ -202,6 +202,9 @@ body {
 #orderly-deposit-and-withdraw .orderly-text-sm {
   font-size: 14px;
 }
+#orderly-deposit-and-withdraw .orderly-warning-msg {
+  font-size: 13px;
+}
 #orderly-deposit-and-withdraw .orderly-wallet-picker {
   color: rgba(255, 255, 255, 0.98);
 }
@@ -213,6 +216,14 @@ body {
 #orderly-deposit-and-withdraw .orderly-quantity-input-max,
 #orderly-deposit-and-withdraw .orderly-token-select {
   font-size: 12px;
+}
+#orderly-deposit-and-withdraw .orderly-withdraw-rebalance-title {
+  font-size: 12px;
+  color: rgba(255, 255, 255 0.3);
+}
+#orderly-deposit-and-withdraw .orderly-withdraw-rebalance-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255 0.9);
 }
 #orderly-asset-and-margin-sheet #orderly-asset-and-margin-sheet-title {
   font-size: 20px;
