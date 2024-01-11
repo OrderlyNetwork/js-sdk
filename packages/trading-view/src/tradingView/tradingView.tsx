@@ -158,6 +158,7 @@ fullscreen,
             };
 
             chart.current = new Widget(chartProps);
+
         }
 
         return () => {
