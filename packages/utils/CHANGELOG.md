@@ -1,5 +1,17 @@
 # @orderly.network/utils
 
+## 0.0.79-alpha.9
+
+### Patch Changes
+
+- fix bug
+
+## 0.0.79-alpha.8
+
+### Patch Changes
+
+- fix bugs
+
 ## 0.0.79-alpha.7
 
 ### Patch Changes
