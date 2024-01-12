@@ -219,7 +219,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     }
 
     if (crossChainWithdraw) {
-      return item.withdrawal_fee || 0 + (item.cross_chain_withdrawal_fee || 0);
+      return (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0);
     }
 
     return item.withdrawal_fee || 0;
