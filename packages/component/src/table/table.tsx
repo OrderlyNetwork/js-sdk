@@ -88,7 +88,7 @@ export const Table = <RecordType extends unknown>(
       >
         <table
           className={cn(
-            "orderly-border-collapse orderly-min-w-full",
+            "orderly-border-collapse orderly-w-full orderly-table-fixed",
             props.className
           )}
         >
