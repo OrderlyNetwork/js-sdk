@@ -12,14 +12,14 @@ export const CrossChainConfirm: FC<CrossChainConfirmProps> = (props) => {
 
     const { address, chain, amount } = props;
 
-    return (<div>
+    return (<div id="orderly-deposit-and-withdraw">
         <Title title="Recipient address" />
         <SubTitle subtitle={address} />
 
         <Title title="Recipient network" />
-        <SubTitle subtitle={(<div className="flex items-center">
+        <SubTitle subtitle={(<div className="orderly-flex orderly-items-center">
             <NetworkImage type="chain" id={chain?.info?.network_infos?.chain_id} rounded size={11} />
-            <span className="ml-2 text-base font-simibold text-base-contrast/90">{chain?.info?.network_infos?.name}</span>
+            <span className="orderly-ml-2 orderly-text-base orderly-font-simibold orderly-text-base-contrast/90">{chain?.info?.network_infos?.name}</span>
         </div>)} />
 
         <Title title="Withdraw amount (USDC)" />
@@ -27,19 +27,19 @@ export const CrossChainConfirm: FC<CrossChainConfirmProps> = (props) => {
             <Numeral>{amount}</Numeral>
         )} />
         <div>
-            <span className="text-warning text-base ">Withdrawals that require cross-chain rebalancing can't be cancelled or followed up with more withdrawals until they've been processed.</span>
+            <span className="orderly-text-warning orderly-text-3xs">Withdrawals that require cross-chain rebalancing can't be cancelled or followed up with more withdrawals until they've been processed.</span>
         </div>
     </div>);
 }
 
 const Title: FC<{ title: string }> = ({ title }) => {
-    return (<div>
-        <span className="font-simibold text-sm text-base-contrast/30">{title}</span>
+    return (<div className="orderly-font-simibold orderly-text-sm orderly-text-base-contrast/30 orderly-withdraw-rebalance-title">
+        {title}
     </div>)
 }
 
 const SubTitle: FC<{ subtitle: string | React.ReactNode }> = ({ subtitle }) => {
-    return (<div className="mb-3">
-        <span className="font-simibold text-base text-base-contrast/90">{subtitle}</span>
+    return (<div className="orderly-mb-3 orderly-font-simibold orderly-text-base orderly-text-base-contrast/90 orderly-break-all orderly-withdraw-rebalance-subtitle">
+        {subtitle}
     </div>)
 }
