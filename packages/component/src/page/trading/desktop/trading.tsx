@@ -63,7 +63,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           height: `calc(100vh - ${
             headerHeight + footerHeight + (pageHeaderHeight ?? 0)
           }px)`,
-          minHeight: "900px",
+          minHeight: "950px",
           width: `calc(100vw - ${siderWidth}px)`,
         }}
         onDragEnd={(preSize: number, nextSize: number, paneNumber: number) => {
