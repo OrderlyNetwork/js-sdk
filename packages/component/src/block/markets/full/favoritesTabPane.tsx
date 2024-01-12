@@ -77,16 +77,17 @@ export const FavoritesTabPane: FC<{
                 onItemClick?.(item);
                 addToHistory(item);
             }}
+            favoriteTabs={favoriteTabs}
             suffixRender={(item) => {
 
-                return <div className="orderly-flex orderly-items-center orderly-justify-end">
-                    <button className="orderly-p-2" onClick={(e) => {
+                return <div className="orderly-inline-flex orderly-h-full orderly-items-start orderly-justify-end">
+                    <button className="orderly-p-1" onClick={(e) => {
                         pinToTop(item);
                         e.stopPropagation();
                     }}>
                         <ArrowTopIcon size={16} fill="current" fillOpacity={1} className="orderly-fill-white/20 hover:orderly-fill-white/80" />
                     </button>
-                    <button className="orderlyp-2" onClick={(e) => {
+                    <button className="orderly-p-1" onClick={(e) => {
                         updateSymbolFavoriteState(item, currTab, true);
                         e.stopPropagation();
                     }}>
