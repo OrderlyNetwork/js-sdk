@@ -175,7 +175,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       // const chainIdNum = parseInt(chainId, 16);
       if (
         (networkId === "mainnet" && chainId === 421613) ||
-        (networkId === "testnet" && chainId !== 421613 && chainId !== 420)
+        (networkId === "testnet" && chainId !== 421613)
       ) {
         return false;
       }

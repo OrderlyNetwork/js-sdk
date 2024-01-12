@@ -266,15 +266,6 @@ export const useChains = (
           }
         }
 
-        if (_chain.network_infos.chain_id === 420) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 420
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
-
         if (typeof filterFun.current === "function") {
           if (!filterFun.current(_chain)) return;
         }
