@@ -609,18 +609,19 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           props.isNativeToken ? Number.MAX_VALUE : Number(props.allowance)
         }
         chainNotSupport={!!errors?.ChainNetworkNotSupport}
-        disabled={!quantity || inputStatus === "error"}
+        disabled={
+          !quantity || inputStatus === "error" || props.depositFeeRevalidating!
+        }
+        loading={submitting || props.depositFeeRevalidating!}
+        submitting={submitting || props.depositFeeRevalidating!}
         switchChain={switchChain}
-        loading={submitting}
         quantity={quantity}
         onApprove={onApprove}
-        submitting={submitting}
         maxQuantity={maxAmount}
         needCrossChain={needCrossChain}
         needSwap={needSwap}
         warningMessage={warningMessage}
         onChainChange={onChainChange}
-        depositFeeRevalidating={props.depositFeeRevalidating}
       />
     </div>
   );

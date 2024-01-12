@@ -20,7 +20,6 @@ import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
 import { OrderlyContext } from "../orderlyContext";
 import { useConfig } from "../useConfig";
-import { useDebouncedCallback } from "use-debounce";
 
 export type useDepositOptions = {
   // from address
@@ -280,7 +279,15 @@ export const useDeposit = (options?: useDepositOptions) => {
     [account, targetChain]
   );
 
-  const enquiryDepositFee = useDebouncedCallback(() => {
+  const enquiryDepositFee = useCallback(() => {
+    if (isNaN(Number(quantity)) || !quantity) {
+      setDepositFee(0n);
+      setDepositFeeRevalidating(false);
+      return;
+    }
+
+    setDepositFeeRevalidating(true);
+
     getDepositFee(quantity)
       .then((res: bigint = 0n) => {
         const fee = BigInt(
@@ -299,17 +306,9 @@ export const useDeposit = (options?: useDepositOptions) => {
       .finally(() => {
         setDepositFeeRevalidating(false);
       });
-  }, 0);
+  }, [quantity]);
 
   useEffect(() => {
-    // state no need debounce
-    if (isNaN(Number(quantity)) || !quantity) {
-      setDepositFee(0n);
-      setDepositFeeRevalidating(false);
-      return;
-    }
-
-    setDepositFeeRevalidating(true);
     enquiryDepositFee();
   }, [quantity]);
 
