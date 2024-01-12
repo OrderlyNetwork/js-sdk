@@ -121,6 +121,7 @@ const View = (props: Props) => {
         onlyTestnet={false}
         appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
         onChainChanged={onChainChanged}
+        enableSwapDeposit
       >
         <TradingPage
           symbol={props.symbol}

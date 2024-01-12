@@ -40,7 +40,6 @@ export interface ActionButtonProps {
   warningMessage?: string;
   onApprove?: () => Promise<any>;
   onChainChange?: (value: any) => void;
-  depositFeeRevalidating?: boolean;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
@@ -71,7 +70,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (Array.isArray(props.chains)) return props.chains;
 
     if (props.chain?.id === 421613) {
-      return props.chains.testnet ?? [];
+      return props.chains?.testnet ?? [];
     }
 
     return props.chains?.mainnet;
@@ -150,7 +149,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             label={label}
             disabled={disabled}
             buttonId="orderly-deposit-confirm-button"
-            depositFeeRevalidating={props.depositFeeRevalidating}
           />
         </StatusGuardButton>
       );
