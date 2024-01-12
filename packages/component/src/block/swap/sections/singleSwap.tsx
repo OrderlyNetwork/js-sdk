@@ -144,7 +144,10 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast-54">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>
