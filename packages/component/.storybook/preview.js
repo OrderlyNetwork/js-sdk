@@ -82,8 +82,8 @@ const preview = {
       return (
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
-            // networkId={networkId}
-            networkId={'mainnet'}
+            networkId={networkId}
+            // networkId={'mainnet'}
             brokerId="orderly"
             enableSwapDeposit={true}
             brokerName="Orderly"
