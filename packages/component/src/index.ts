@@ -61,6 +61,7 @@ export {
   AssetAndMarginSheet,
   ChainListView,
   ChainSelect,
+  SystemStatusBar,
 } from "./block";
 
 export type {
