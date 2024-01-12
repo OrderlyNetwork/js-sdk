@@ -70,7 +70,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (Array.isArray(props.chains)) return props.chains;
 
     if (props.chain?.id === 421613) {
-      return props.chains.testnet ?? [];
+      return props.chains?.testnet ?? [];
     }
 
     return props.chains?.mainnet;
