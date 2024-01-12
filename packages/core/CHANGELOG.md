@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.1.27-alpha.12
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.12
+
 ## 0.1.27-alpha.11
 
 ### Patch Changes
