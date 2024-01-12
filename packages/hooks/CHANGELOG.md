@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.0.28-experimental.11
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-experimental.11
+  - @orderly.network/utils@0.0.79-experimental.11
+  - @orderly.network/core@0.1.27-experimental.11
+  - @orderly.network/perp@1.0.27-experimental.11
+  - @orderly.network/net@1.0.114-experimental.11
+
 ## 1.0.28-alpha.10
 
 ### Patch Changes

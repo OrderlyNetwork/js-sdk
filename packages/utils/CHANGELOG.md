@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.0.79-experimental.11
+
+### Patch Changes
+
+- fix bug
+
 ## 0.0.79-alpha.10
 
 ### Patch Changes

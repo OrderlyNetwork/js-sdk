@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-experimental.11
+
+### Patch Changes
+
+- fix bug
+
 ## 0.0.2-alpha.10
 
 ### Patch Changes

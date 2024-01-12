@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-experimental.11
+
+### Patch Changes
+
+- fix bug
+
 ## 1.0.96-alpha.10
 
 ### Patch Changes

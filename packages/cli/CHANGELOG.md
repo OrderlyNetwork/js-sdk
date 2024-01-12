@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.0.36-experimental.11
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/core@0.1.27-experimental.11
+
 ## 0.0.36-alpha.10
 
 ### Patch Changes

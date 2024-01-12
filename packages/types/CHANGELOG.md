@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.27-experimental.11
+
+### Patch Changes
+
+- fix bug
+
 ## 0.1.27-alpha.10
 
 ### Patch Changes
