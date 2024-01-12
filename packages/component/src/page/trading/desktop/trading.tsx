@@ -50,7 +50,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           height: `calc(100vh - ${
             headerHeight + footerHeight + (pageHeaderHeight ?? 0)
           }px)`,
-          minHeight: "900px",
+          minHeight: "950px",
           width: `calc(100vw - ${siderWidth}px)`,
         }}
       >
@@ -85,14 +85,14 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "350px", minHeight: "300px" }}>
+            <div style={{ height: "350px", minHeight: "350px" }}>
               <MemoizedDataListView />
             </div>
           </Split>
         </div>
         {/* order entry start */}
         <div
-          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "900px" }}
+          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "950px" }}
         >
           <AssetsProvider>
             <AccountInfoElement />
