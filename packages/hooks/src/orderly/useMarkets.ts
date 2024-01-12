@@ -57,10 +57,14 @@ export const useMarkets = (type: MarketsType) => {
         if (jsonStr) {
             configStore.set(marketsKey, JSON.parse(jsonStr));
         } else {
+            const defaultTab = { name: "Popular", id: 1 };
             configStore.set(marketsKey, {
                 recent: [],
-                favorites: [],
-                favoriteTabs: [{ name: "Popular", id: 1 }]
+                favorites: [
+                    {name: "PERP_ETH_USDC", tabs: [{...defaultTab}]},
+                    {name: "PERP_BTC_USDC", tabs: [{...defaultTab}]},
+                ],
+                favoriteTabs: [{...defaultTab}]
             });
         }
     }
@@ -85,7 +89,7 @@ export const useMarkets = (type: MarketsType) => {
             
         }
         configStore.set(marketsKey, {...configStore.getOr(marketsKey, {}), favorites: result});
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         
         return result;
     },[configStore]);
@@ -113,7 +117,7 @@ export const useMarkets = (type: MarketsType) => {
                 "favoriteTabs": tabs
             });
             // WARNING: remember remove
-            localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+            // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         };
 
         if (Array.isArray(tab)) {
@@ -150,7 +154,7 @@ export const useMarkets = (type: MarketsType) => {
             "recent": curData
         });
         // WARNING: remember remove
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setRecent(curData);
     };
 
@@ -204,7 +208,7 @@ export const useMarkets = (type: MarketsType) => {
             "favorites": curData
         });
         // WARNING: remember remove
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setFavorites(() => curData);
     };
 
@@ -267,7 +271,7 @@ export const useMarkets = (type: MarketsType) => {
                 "favorites": list
             });
             // WARNING: remember remove
-            localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+            // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
 
 
             setFavorites(list);

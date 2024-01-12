@@ -1,9 +1,8 @@
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import Split from "@uiw/react-split";
 import { AccountInfoElement } from "./elements/accountInfo";
 import { TradingPageProps } from "../types";
 import { MyOrderEntry } from "../mobile/sections/orderEntry";
-import { Divider } from "@/divider";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
 import { MemoizedDataListView } from "./sections/datalist";
@@ -12,11 +11,25 @@ import { AssetsProvider } from "@/provider/assetsProvider";
 import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
 import { useTradingPageContext } from "../context/tradingPageContext";
+import { useSplitPersistent } from "./useSplitPersistent";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
   const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
     useContext(LayoutContext);
+
+  const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
+    "mainSplitSize",
+    "300px"
+  );
+  const [dataListSplitSize, setDataListSplitSize] = useSplitPersistent(
+    "dataListSplitSize",
+    "350px"
+  );
+  const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
+    "orderBookSplitSize",
+    "280px"
+  );
 
   const { disableFeatures } = useTradingPageContext();
 
@@ -50,18 +63,30 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           height: `calc(100vh - ${
             headerHeight + footerHeight + (pageHeaderHeight ?? 0)
           }px)`,
-          minHeight: "900px",
+          minHeight: "950px",
           width: `calc(100vw - ${siderWidth}px)`,
+        }}
+        onDragEnd={(preSize: number, nextSize: number, paneNumber: number) => {
+          setMainSplitSize(`${nextSize}`);
         }}
       >
         <div style={{ flex: 1 }}>
           {/* @ts-ignore */}
-          <Split mode="vertical" lineBar>
+          <Split
+            mode="vertical"
+            lineBar
+            onDragEnd={(_, height, num) => {
+              setDataListSplitSize(`${height}`);
+            }}
+          >
             {/* @ts-ignore */}
             <Split
               style={{ flex: 1, minHeight: "450px" }}
               className={"orderly-min-h-0 orderly-overflow-y-visible"}
               lineBar
+              onDragEnd={(_, width, num) => {
+                setOrderbookSplitSize(`${width}`);
+              }}
             >
               <div
                 style={{ flex: 1, minWidth: "468px" }}
@@ -79,20 +104,25 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 </div>
               </div>
               <div
-                style={{ minWidth: "280px", width: "280px" }}
+                style={{ minWidth: "280px", width: orderBookSplitSize }}
                 className="orderly-overflow-hidden"
               >
                 <MyOrderBookAndTrade symbol={props.symbol} />
               </div>
             </Split>
-            <div style={{ height: "350px", minHeight: "300px" }}>
+            <div style={{ height: dataListSplitSize, minHeight: "300px" }}>
               <MemoizedDataListView />
             </div>
           </Split>
         </div>
-        {/* order entry start */}
+
         <div
-          style={{ minWidth: "300px", maxWidth: "500px", minHeight: "900px" }}
+          style={{
+            minWidth: "300px",
+            maxWidth: "500px",
+            minHeight: "900px",
+            width: mainSplitSize,
+          }}
         >
           <AssetsProvider>
             <AccountInfoElement />
