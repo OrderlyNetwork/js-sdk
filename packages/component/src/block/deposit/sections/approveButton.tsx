@@ -86,8 +86,8 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       id={buttonId}
       fullWidth
       onClick={onDeposit}
-      disabled={disabled || submitting || props.depositFeeRevalidating}
-      loading={submitting || props.depositFeeRevalidating}
+      disabled={disabled || submitting}
+      loading={submitting}
       className="desktop:orderly-text-2xs"
     >
       {label}

@@ -5,6 +5,7 @@ import {
   useChains,
   useWalletConnector,
   useWS,
+  useDebounce,
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
@@ -41,6 +42,10 @@ export const Deposit: FC<DepositProps> = (props) => {
   const { onEnquiry } = useContext(AssetsContext);
 
   const [symbolPrice, setSymbolPrice] = useState({});
+  const [debounceSymbolPrice] = useDebounce(symbolPrice, 5000, {
+    leading: true,
+    maxWait: 5000,
+  });
 
   const [token, setToken] = useState<API.TokenInfo>();
   // @ts-ignore
@@ -145,7 +150,7 @@ export const Deposit: FC<DepositProps> = (props) => {
       onEnquiry={onEnquiry}
       needCrossChain={needCrossChain}
       needSwap={needSwap}
-      symbolPrice={symbolPrice}
+      symbolPrice={debounceSymbolPrice}
       quantity={quantity}
       setQuantity={setQuantity}
       depositFee={depositFee}
