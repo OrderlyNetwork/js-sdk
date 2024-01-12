@@ -38,3 +38,5 @@ export { AccountStatusBar, AssetAndMarginSheet } from "./accountStatus";
 export type { AccountStatusProps } from "./accountStatus";
 
 export { ChainListView, ChainSelect } from "./pickers/chainPicker";
+
+export { SystemStatusBar } from "./systemStatusBar";
