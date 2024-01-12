@@ -121,7 +121,12 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const fetchBalance = useCallback(
-    async (address?: string, decimals?: number) => {
+    async (
+      // token contract address
+      address?: string,
+      // format decimals
+      decimals?: number
+    ) => {
       if (!address) return;
 
       try {
@@ -200,18 +205,38 @@ export const useDeposit = (options?: useDepositOptions) => {
     }
   }, [options, dst]);
 
+  const queryBalance = useDebouncedCallback(
+    (tokenAddress?: string, decimals?: number) => {
+      fetchBalance(options?.address, options?.decimals).finally(() => {
+        setBalanceRevalidating(false);
+      });
+    },
+    100
+  );
+
+  const queryAllowance = useDebouncedCallback(
+    (tokenAddress?: string, vaultAddress?: string) => {
+      getAllowance(tokenAddress, vaultAddress);
+    },
+    100
+  );
+
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
     setBalanceRevalidating(true);
-    fetchBalance(options?.address, options?.decimals).finally(() => {
-      setBalanceRevalidating(false);
-    });
+    // fetchBalance(options?.address, options?.decimals).finally(() => {
+    //   setBalanceRevalidating(false);
+    // });
+
+    queryBalance(options?.address, options?.decimals);
 
     if (dst.chainId !== options?.srcChainId) {
-      getAllowance(options?.address, options?.crossChainRouteAddress);
+      // getAllowance(options?.address, options?.crossChainRouteAddress);
+      queryAllowance(options?.address, options?.crossChainRouteAddress);
     } else {
       if (dst.symbol !== options?.srcToken) {
-        getAllowance(options?.address, options?.depositorAddress);
+        // getAllowance(options?.address, options?.depositorAddress);
+        queryAllowance(options?.address, options?.depositorAddress);
       } else {
         getAllowanceByDefaultAddress(options?.address);
       }

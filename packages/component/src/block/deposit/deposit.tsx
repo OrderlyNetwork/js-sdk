@@ -58,6 +58,8 @@ export const Deposit: FC<DepositProps> = (props) => {
     };
   }, [connectedChain, findByChainId]);
 
+  // console.log("****** token ******", token, currentChain);
+
   const {
     dst,
     balance,

@@ -308,6 +308,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const onTokenChange = (token: API.TokenInfo) => {
     cleanData();
     setQuantity("");
+
     props.switchToken?.(token);
   };
 
@@ -344,6 +345,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     [props.switchChain, chain]
   );
 
+  // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
     (chain: API.Chain) => {
       //
@@ -357,9 +359,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         );
         if (!token) token = tokens[0];
 
-        if (!token || props.token?.symbol === token.symbol) return;
+        // if (!token || props.token?.symbol === token.symbol) return;
 
         setTokens(tokens);
+
+        if (!token) return;
+
         props.switchToken?.(token);
       }
     },
