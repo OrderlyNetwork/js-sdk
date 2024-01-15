@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { Column } from "./col";
 
 export const ColGroup = <RecordType,>(props: {
@@ -6,7 +7,20 @@ export const ColGroup = <RecordType,>(props: {
   return (
     <colgroup>
       {props.columns.map((col, index) => {
-        return <col key={index} className={col.className} align={col.align} />;
+        const styles: CSSProperties = {};
+
+        if (col.width) {
+          styles["width"] = `${col.width}px`;
+        }
+
+        return (
+          <col
+            key={index}
+            className={col.className}
+            align={col.align}
+            style={styles}
+          />
+        );
       })}
     </colgroup>
   );

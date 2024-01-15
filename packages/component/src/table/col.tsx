@@ -8,11 +8,7 @@ export type Column<RecordType extends unknown = any> = {
   dataIndex: string;
   className?: string;
   align?: "left" | "center" | "right";
-  onSort?: (
-    r1: RecordType,
-    r2: RecordType,
-    sortOrder: "ascend" | "descend"
-  ) => void;
+  onSort?: (r1: RecordType, r2: RecordType, sortOrder: "asc" | "des") => void;
   formatter?: (value: any, record: RecordType, index: number) => any;
   render?: (value: any, record: RecordType, index: number) => React.ReactNode;
   getKey?: (record: RecordType, index: number) => string;

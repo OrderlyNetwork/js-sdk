@@ -44,6 +44,8 @@ export type useDepositOptions = {
 export const useDeposit = (options?: useDepositOptions) => {
   const { enableSwapDeposit } = useContext<any>(OrderlyContext);
 
+  console.log("********", options);
+
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
@@ -362,6 +364,8 @@ export const useDeposit = (options?: useDepositOptions) => {
     //   }
     // );
   }, [options?.address, options?.decimals]);
+
+  console.log(quantity, depositFee);
 
   return {
     /** orderly support chain dst */

@@ -122,8 +122,9 @@ export class Account {
 
     if (
       typeof wallet?.chain?.id === "string" &&
-      wallet?.chain?.id.startsWith("0x") &&
-      isHex(wallet?.chain?.id)
+      (isHex(wallet?.chain?.id) ||
+        (wallet?.chain?.id.startsWith("0x") &&
+          isHex(wallet?.chain?.id.slice(2))))
     ) {
       wallet.chain.id = parseInt(wallet.chain.id, 16);
     }
