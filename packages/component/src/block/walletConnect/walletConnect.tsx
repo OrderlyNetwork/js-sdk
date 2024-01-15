@@ -23,6 +23,7 @@ import { modal } from "@/modal";
 import { InfoIcon } from "@/icon";
 import { Dialog, DialogHeader } from "@/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+import { RememberMe } from "./sections/rememberMe";
 
 export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -78,16 +79,6 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     }
   }, [status, remember]);
 
-  const showRememberHint = () => {
-    modal.alert({
-      title: "Remember me",
-      message: (
-        <span className="orderly-text-3xs orderly-text-base-contrast/60">
-          Toggle this option to skip these steps next time you want to trade.
-        </span>
-      ),
-    });
-  };
 
   return (
     <div>
@@ -133,13 +124,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
-        <div
-          className="orderly-text-base-contrast-54 orderly-text-xs  desktop:orderly-text-base"
-          onClick={showRememberHint}
-        >
-          <span>Remember me</span>
-          <InfoIcon className="orderly-inline-block orderly-ml-2" size={14} />
-        </div>
+        <RememberMe/>
         <div>
           <Switch
             id="orderly-remember-me-switch"
