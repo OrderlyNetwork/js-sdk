@@ -26,7 +26,11 @@ export const Listview: FC<Props> = (props) => {
         title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"symbol"} className="orderly-font-semibold">{value}</Text>,
+        render: (value: string) => (
+          <Text rule={"symbol"} className="orderly-font-semibold">
+            {value}
+          </Text>
+        ),
       },
       {
         title: "Type",
@@ -87,6 +91,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Update",
         dataIndex: "updated_time",
+        width: 150,
         className: "orderly-h-[48px]",
         render: (value: string) => (
           <Text
@@ -114,18 +119,22 @@ export const Listview: FC<Props> = (props) => {
     return columns;
   }, [props.status]);
   return (
-    <EndReachedBox onEndReached={() => {
-      if (!props.loading) {
-        props.loadMore?.();
-      }
-    }}>
+    <EndReachedBox
+      onEndReached={() => {
+        if (!props.loading) {
+          props.loadMore?.();
+        }
+      }}
+    >
       <Table
         bordered
         justified
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={"orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px] orderly-overflow-x-auto"}
+        className={
+          "orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px]"
+        }
         generatedRowKey={(record) => record.order_id}
         renderRowContainer={(record, index, children) => {
           return (

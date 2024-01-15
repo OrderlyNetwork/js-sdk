@@ -83,9 +83,9 @@ const preview = {
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
             // networkId={networkId}
-            networkId={'mainnet'}
+            networkId={networkId}
             brokerId="orderly"
-            enableSwapDeposit={true}
+            enableSwapDeposit={false}
             brokerName="Orderly"
             // showTestnet={true}
             // logoUrl="/woo_fi_logo.svg"

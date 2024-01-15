@@ -74,36 +74,34 @@ export const Table = <RecordType extends unknown>(
   }, [props.dataSource]);
 
   return (
-    <div className="orderly-relative orderly-h-full orderly-flex-col">
-      <TableHeader
-        columns={props.columns}
-        containerClassName={props.className}
-        className={props.headerClassName}
-        bordered={props.bordered}
-        justified={props.justified}
-      />
-      <div
-        className="orderly-flex-1 orderly-relative orderly-overflow-y-auto"
-        style={{ height: `calc(100% - 45px)` }}
-      >
-        <table
-          className={cn(
-            "orderly-border-collapse orderly-w-full orderly-table-fixed",
-            props.className
-          )}
+    <div
+      className={
+        "orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto"
+      }
+    >
+      <div className={cn("orderly-h-full", props.className)}>
+        <TableHeader
+          columns={props.columns}
+          // containerClassName={props.className}
+          className={props.headerClassName}
+          bordered={props.bordered}
+          justified={props.justified}
+        />
+        <div
+          className="orderly-flex-1 orderly-relative orderly-overflow-x-hidden orderly-overflow-y-auto"
+          style={{ height: `calc(100% - 45px)` }}
         >
-          {/* <colgroup>
-          {props.columns.map((col, index) => {
-            return (
-              <col key={index} className={col.className} align={col.align} />
-            );
-          })}
-        </colgroup> */}
-          <ColGroup columns={props.columns} />
+          <table
+            className={cn(
+              "orderly-border-collapse orderly-w-full orderly-table-fixed"
+            )}
+          >
+            <ColGroup columns={props.columns} />
 
-          <tbody>{rows}</tbody>
-        </table>
-        {maskElement}
+            <tbody>{rows}</tbody>
+          </table>
+          {maskElement}
+        </div>
       </div>
     </div>
   );
