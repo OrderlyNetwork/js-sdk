@@ -5,14 +5,13 @@ import { SwapProcessStatus } from "./swapProcessStatus";
 
 interface Props {
   bridgeStatus: string;
-
   message: any;
   tx?: any;
   mode: SwapMode;
   chainInfo?: any;
   onComplete?: () => void;
-
   status: SwapProcessStatusStatus;
+  brokerName?: string;
 }
 
 export const SwapProcess = (props: Props) => {
@@ -25,6 +24,7 @@ export const SwapProcess = (props: Props) => {
         status={status}
         message={props.message}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }
@@ -35,6 +35,7 @@ export const SwapProcess = (props: Props) => {
       tx={props.tx}
       chainInfo={props.chainInfo}
       onComplete={props.onComplete}
+      brokerName={props.brokerName}
     />
   );
 };

@@ -26,6 +26,7 @@ export interface SwapProps {
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const SingleSwap: FC<SwapProps> = (props) => {
@@ -129,6 +130,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         tx={tx}
         chainInfo={props.chain}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, mode, chain, tx, props.onComplete, status]);

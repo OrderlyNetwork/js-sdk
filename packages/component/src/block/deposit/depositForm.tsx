@@ -225,6 +225,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           chain: chain?.info?.network_infos,
           nativeToken: chain?.info.nativeToken,
           depositFee,
+          brokerName,
         });
       })
       .then(

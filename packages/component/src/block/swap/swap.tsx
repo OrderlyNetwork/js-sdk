@@ -21,6 +21,7 @@ export interface SwapProps {
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const Swap: FC<SwapProps> = (props) => {

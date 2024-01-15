@@ -8,6 +8,7 @@ interface SwapProcessStatusProps {
   status: SwapProcessStatusStatus;
   message: any;
   onComplete?: (isSuccss: boolean) => void;
+  brokerName?: string;
 }
 
 export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
@@ -58,7 +59,7 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}
-            description={"Deposit to Orderly"}
+            description={`Deposit to ${props.brokerName}`}
             index={2}
           />
           <Divider className="before:orderly-border-b-base-contrast-12 after:orderly-border-b-base-contrast-12" />

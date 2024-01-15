@@ -25,6 +25,7 @@ export interface SwapProps {
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const CrossSwap: FC<SwapProps> = (props) => {
@@ -142,6 +143,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         status={status}
         message={message}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, message, status, mode, chainInfo, tx, props.onComplete]);
