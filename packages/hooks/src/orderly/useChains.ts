@@ -183,28 +183,28 @@ export const useChains = (
       },
     ];
 
-      if (networkEnv === "testnet") {
-        const opGoerli = {
-          network_infos: {
-            name: "Optimism Goerli",
-            shortName: "Optimism Goerli",
-            public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
-            chain_id: 420,
-            currency_symbol: "ETH",
-            bridge_enable: true,
-            mainnet: false,
-            explorer_base_url: "https://goerli-optimism.etherscan.io",
-            est_txn_mins: null,
+      // if (networkEnv === "testnet") {
+      //   const opGoerli = {
+      //     network_infos: {
+      //       name: "Optimism Goerli",
+      //       shortName: "Optimism Goerli",
+      //       public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
+      //       chain_id: 420,
+      //       currency_symbol: "ETH",
+      //       bridge_enable: true,
+      //       mainnet: false,
+      //       explorer_base_url: "https://goerli-optimism.etherscan.io",
+      //       est_txn_mins: null,
 
-            woofi_dex_cross_chain_router: "",
-            woofi_dex_depositor: "",
-          },
-        };
-        // @ts-ignore
-        testnetArr.push(opGoerli);
-        // @ts-ignore
-        map.current.set(420, opGoerli);
-      }
+      //       woofi_dex_cross_chain_router: "",
+      //       woofi_dex_depositor: "",
+      //     },
+      //   };
+      //   // @ts-ignore
+      //   testnetArr.push(opGoerli);
+      //   // @ts-ignore
+      //   map.current.set(420, opGoerli);
+      // }
 
       let mainnetArr: API.Chain[] = [];
 
@@ -289,14 +289,6 @@ export const useChains = (
           }
         }
 
-        if (_chain.network_infos.chain_id === 420) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 420
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
 
         if (typeof filterFun.current === "function") {
           if (!filterFun.current(_chain)) return;
