@@ -44,7 +44,7 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
   return (
     <ListTile
       title={props.title}
-      className="orderly-text-xs subtitle:orderly-text-3xs subtitle:orderly-text-base-contrast-36"
+      className="orderly-text-base desktop:orderly-text-lg subtitle:orderly-text-2xs subtitle:orderly-text-base-contrast-36"
       subtitle={props.description}
       avatar={leadingElement}
       disabled={props.state === "disabled"}

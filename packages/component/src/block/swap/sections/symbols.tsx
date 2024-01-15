@@ -48,8 +48,10 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
           }}
         />
         <div className="orderly-flex orderly-flex-col">
-          <span className="orderly-text-xs">{fromAmount}</span>
-          <span className="orderly-text-4xs orderly-text-base-contrast-54">
+          <span className="orderly-text-base desktop:orderly-text-lg">
+            {fromAmount}
+          </span>
+          <span className="orderly-text-3xs desktop:orderly-text-2xs orderly-text-base-contrast-54">
             {props.from.token}
           </span>
         </div>
@@ -57,8 +59,10 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
       <ArrowRight className="orderly-text-primary-light" size={30} />
       <div className="orderly-flex orderly-gap-3 orderly-items-center">
         <div className="orderly-flex orderly-flex-col orderly-items-end">
-          <span className="orderly-text-xs">{toAmount}</span>
-          <span className="orderly-text-4xs orderly-text-base-contrast-54">
+          <span className="orderly-text-base desktop:orderly-text-lg">
+            {toAmount}
+          </span>
+          <span className="orderly-text-3xs desktop:orderly-text-2xs orderly-text-base-contrast-54">
             {props.to.token}
           </span>
         </div>

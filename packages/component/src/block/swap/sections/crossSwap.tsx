@@ -25,6 +25,7 @@ export interface SwapProps {
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const CrossSwap: FC<SwapProps> = (props) => {
@@ -142,6 +143,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         status={status}
         message={message}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, message, status, mode, chainInfo, tx, props.onComplete]);
@@ -157,7 +159,10 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast/50">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>
