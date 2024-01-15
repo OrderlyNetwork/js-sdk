@@ -266,6 +266,7 @@ export const useChains = (
           }
         }
 
+
         if (typeof filterFun.current === "function") {
           if (!filterFun.current(_chain)) return;
         }
