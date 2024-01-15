@@ -11,7 +11,7 @@ import {
   parseBrokerHash,
   parseTokenHash,
 } from "./utils";
-import { API, ApiError } from "@orderly.network/types";
+import { API, ApiError, MaxUint256 } from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -241,7 +241,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
@@ -269,7 +269,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
     const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
     const result = await this.account.walletClient?.call(
       contractAddress,
