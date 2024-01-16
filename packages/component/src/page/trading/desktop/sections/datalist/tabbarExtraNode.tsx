@@ -108,7 +108,7 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="orderly-bg-base-800 orderly-rounded orderly-rounded-borderRadius orderly-w-[280px] orderly-px-4 orderly-pb-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20"
+        className="orderly-bg-base-800 orderly-rounded orderly-rounded-borderRadius orderly-w-[280px] orderly-px-4 orderly-pb-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-40"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <div className="orderly-flex orderly-flex-col orderly-p-4 orderly-text-3xs">
