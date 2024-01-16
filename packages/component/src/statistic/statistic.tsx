@@ -103,24 +103,32 @@ export const Statistic: FC<StatisticProps> = (props) => {
     return props.value ?? "--";
   }, [props.value, rule, props.precision, props.visible]);
 
-  const content = (
-    <div className={cn(props.className, alignClasses[align], props.hint && "orderly-cursor-pointer")}>
+
+  let label;
+
+  if (typeof props.hint === "undefined") {
+    label = (
       <div className={cn(labelClassName, props.labelClassName)}>
         {labelElement}
       </div>
+    );
+  } else {
+    label = (
+      <Tooltip content={props.hint} className="orderly-max-w-[200px]">
+        <span className={cn(labelClassName, props.labelClassName)}>
+          {labelElement}
+        </span>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <div className={cn(props.className, alignClasses[align], props.hint && "orderly-cursor-pointer hover:orderly-text-base-contrast")}>
+
+      {label}
       <div className={cn(valueClassName, props.valueClassName, colorClassName)}>
         {valueElement}
       </div>
     </div>
-  );
-
-  if (typeof props.hint === "undefined") {
-    return content;
-  }
-
-  return (
-    <Tooltip content={props.hint} className="orderly-max-w-[200px]">
-      {content}
-    </Tooltip>
   );
 };
