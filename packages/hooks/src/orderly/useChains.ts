@@ -5,6 +5,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { mergeDeepRight, prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
+import { isTestnet } from "@orderly.network/utils";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -123,9 +124,9 @@ export const useChains = (
         }
 
         /// if chain is testnet, update network_infos
-        if (_chain.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
+        if (isTestnet(_chain.chain_id)) {
+          const index = testnetArr.findIndex((item) =>
+            isTestnet(item.network_infos.chain_id)
           );
           if (index > -1) {
             testnetArr[index] = _chain;
@@ -183,30 +184,30 @@ export const useChains = (
       },
     ];
 
-      // if (networkEnv === "testnet") {
-      //   const opGoerli = {
-      //     network_infos: {
-      //       name: "Optimism Goerli",
-      //       shortName: "Optimism Goerli",
-      //       public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
-      //       chain_id: 420,
-      //       currency_symbol: "ETH",
-      //       bridge_enable: true,
-      //       mainnet: false,
-      //       explorer_base_url: "https://goerli-optimism.etherscan.io",
-      //       est_txn_mins: null,
+    // if (networkEnv === "testnet") {
+    //   const opGoerli = {
+    //     network_infos: {
+    //       name: "Optimism Goerli",
+    //       shortName: "Optimism Goerli",
+    //       public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
+    //       chain_id: 420,
+    //       currency_symbol: "ETH",
+    //       bridge_enable: true,
+    //       mainnet: false,
+    //       explorer_base_url: "https://goerli-optimism.etherscan.io",
+    //       est_txn_mins: null,
 
-      //       woofi_dex_cross_chain_router: "",
-      //       woofi_dex_depositor: "",
-      //     },
-      //   };
-      //   // @ts-ignore
-      //   testnetArr.push(opGoerli);
-      //   // @ts-ignore
-      //   map.current.set(420, opGoerli);
-      // }
+    //       woofi_dex_cross_chain_router: "",
+    //       woofi_dex_depositor: "",
+    //     },
+    //   };
+    //   // @ts-ignore
+    //   testnetArr.push(opGoerli);
+    //   // @ts-ignore
+    //   map.current.set(420, opGoerli);
+    // }
 
-      let mainnetArr: API.Chain[] = [];
+    let mainnetArr: API.Chain[] = [];
 
     map.current.set(421613, testnetArr[0]);
 
@@ -280,15 +281,14 @@ export const useChains = (
         }
 
         map.current.set(_chain.network_infos.chain_id, _chain);
-        if (_chain.network_infos.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
+        if (isTestnet(_chain.network_infos.chain_id)) {
+          const index = testnetArr.findIndex((item) =>
+            isTestnet(item.network_infos.chain_id)
           );
           if (index > -1) {
             testnetArr[index] = _chain;
           }
         }
-
 
         if (typeof filterFun.current === "function") {
           if (!filterFun.current(_chain)) return;

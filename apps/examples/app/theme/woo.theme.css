@@ -213,6 +213,11 @@ body {
   width: auto;
   min-width: 200px;
 }
+#orderly-deposit-and-withdraw .orderly-deposit-action-button-container button[disabled],
+#orderly-deposit-and-withdraw .orderly-withdraw-action-button-container button[disabled] {
+  background-color: #394155;
+  color: rgba(255, 255, 255, 0.36);
+}
 #orderly-deposit-and-withdraw .orderly-quantity-input-max,
 #orderly-deposit-and-withdraw .orderly-token-select {
   font-size: 12px;
@@ -224,6 +229,15 @@ body {
 #orderly-deposit-and-withdraw .orderly-withdraw-rebalance-subtitle {
   font-size: 14px;
   color: rgba(255, 255, 255 0.9);
+}
+.orderly-token-select-dialog .orderly-token-select-list-header .orderly-text-4xs {
+  font-size: 12px;
+}
+.orderly-token-select-dialog .orderly-token-select-list-item .orderly-token-select-list-item-left {
+  font-size: 13px;
+}
+.orderly-token-select-dialog .orderly-token-select-list-item .orderly-token-select-list-item-right {
+  font-size: 15px;
 }
 #orderly-asset-and-margin-sheet #orderly-asset-and-margin-sheet-title {
   font-size: 20px;

@@ -34,19 +34,21 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
 
   return (
     <div
-      className="orderly-flex orderly-cursor-pointer hover:orderly-bg-base-800"
+      className="orderly-token-select-list-item orderly-flex orderly-cursor-pointer hover:orderly-bg-base-800"
       onClick={() => {
         props.onItemClick(token);
       }}
     >
       <div className="orderly-flex-1 orderly-flex orderly-space-x-2 orderly-items-center">
         <NetworkImage type={"token"} name={token.symbol} rounded />
-        <div className="orderly-flex orderly-flex-col">
+        <div className="orderly-token-select-list-item-left orderly-flex orderly-flex-col">
           <span>{token.symbol}</span>
-          <span className="orderly-text-4xs orderly-text-base-contrast/50">{token.symbol}</span>
+          <span className="orderly-text-4xs orderly-text-base-contrast/50">
+            {token.symbol}
+          </span>
         </div>
       </div>
-      <div className="orderly-flex-1 orderly-flex orderly-items-center">
+      <div className="orderly-token-select-list-item-right orderly-flex-1 orderly-flex orderly-items-center">
         {loading ? (
           <Spinner size={"small"} />
         ) : (

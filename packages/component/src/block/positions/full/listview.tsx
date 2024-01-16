@@ -9,8 +9,6 @@ import { SymbolProvider } from "@/provider";
 import { QuantityInput } from "./quantityInput";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { TabContext } from "@/tab";
-import { LayoutContext } from "@/layout/layoutContext";
-import Button from "@/button";
 
 export const Listview: FC<PositionsViewProps> = (props) => {
   const { height } = useContext(TabContext);
