@@ -20,7 +20,7 @@ const TheadColItem = (
       content = (
         <Tooltip
           content={column.hint}
-          className="orderly-max-w-[270px] orderly-text-4xs"
+          className={cn("orderly-max-w-[270px] orderly-text-4xs", column.hintClassName && column.hintClassName,)}
         >
           <button className="hover:orderly-text-base-contrast">
             {column.title}
@@ -33,7 +33,7 @@ const TheadColItem = (
           content={column.hint}
           side="top"
           align="center"
-          className="orderly-max-w-[270px] orderly-text-4xs"
+          className={cn("orderly-max-w-[270px] orderly-text-4xs", column.hintClassName && column.hintClassName,)}
         >
           <button className="hover:orderly-text-base-contrast">
             {column.title}

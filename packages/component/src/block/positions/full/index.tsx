@@ -6,7 +6,10 @@ import { PositionsViewProps } from "../shared/types";
 import { AssetsProvider } from "@/provider";
 
 export const PositionsViewFull: FC<
-  Omit<PositionsViewProps, "onShowAllSymbolChange">
+  Omit<PositionsViewProps, "onShowAllSymbolChange"> & {
+    unPnlPriceBasis: any;
+    setUnPnlPriceBasic: any;
+}
 > = (props) => {
   return (
     <>

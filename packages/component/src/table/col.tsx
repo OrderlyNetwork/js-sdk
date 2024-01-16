@@ -8,6 +8,7 @@ export type ColumnFixed = "left" | "right";
 export type Column<RecordType extends unknown = any> = {
   title: string;
   hint?: ReactNode;
+  hintClassName?: string;
   width?: number;
   fixed?: ColumnFixed;
   dataIndex: string;

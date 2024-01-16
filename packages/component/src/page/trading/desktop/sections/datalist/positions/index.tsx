@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { PositionsViewFull } from "@/block/positions";
 import { usePositionStream, } from "@orderly.network/hooks";
 import {
@@ -9,7 +9,10 @@ import { useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { useTabContext } from "@/tab/tabContext";
 
-export const PositionPane = () => {
+export const PositionPane: FC<{
+  unPnlPriceBasis: any;
+  setUnPnlPriceBasic: any;
+}> = (props) => {
   const context = useContext(TradingPageContext);
   const { data: tabExtraData } = useTabContext();
 
@@ -28,6 +31,7 @@ export const PositionPane = () => {
       isLoading={loading}
       showAllSymbol={tabExtraData.showAllSymbol}
       onSymbolChange={context.onSymbolChange}
+      {...props}
     />
   );
 };
