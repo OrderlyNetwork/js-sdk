@@ -54,7 +54,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         },
       },
       {
-        title: "Liq.price",
+        title: "Liq. price",
         width: 100,
         className: "orderly-h-[48px]",
         hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",

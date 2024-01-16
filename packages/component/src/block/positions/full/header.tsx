@@ -86,7 +86,7 @@ export const Header: FC<Props> = (props) => {
             rule="price"
           />
           <Statistic
-            label={"Unsettled Pnl"}
+            label={"Unsettled PnL"}
             // value={props.aggregated?.unsettledPnL}
             coloring
             value={
