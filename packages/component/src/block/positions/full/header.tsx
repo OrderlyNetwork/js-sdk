@@ -103,6 +103,7 @@ export const Header: FC<Props> = (props) => {
               </div>
             }
             rule="price"
+            hint="Settling PnL moves the profit or loss from a perpetual market into the USDC balance."
           />
         </div>
         {/* <div className={"orderly-flex orderly-items-center orderly-gap-2"}>
