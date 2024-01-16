@@ -11,7 +11,6 @@ import { HistoryView } from "./history";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
 import { DecimalPrecisionType } from "./decimalPrecisionCheckBox";
 import { UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
-import { useUnrealizedPnLCalcMode } from "./positions/useUnrealizedPnlCalcMode";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
