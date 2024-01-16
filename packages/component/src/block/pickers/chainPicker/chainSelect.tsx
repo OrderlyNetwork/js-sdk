@@ -27,6 +27,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
+import { isTestnet } from "@orderly.network/utils";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -50,7 +51,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
+    // filter: (chain: API.Chain) => isTestnet(chain.network_infos?.chain_id),
   });
 
   const { connectedChain } = useWalletConnector();
@@ -59,7 +60,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
-    if (connectedChain && (connectedChain.id === 421613)) {
+    if (connectedChain && isTestnet(connectedChain.id)) {
       return allChains.testnet ?? [];
     }
 

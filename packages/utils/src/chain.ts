@@ -1,3 +1,5 @@
+import { ARBITRUM_TESTNET_CHAINID } from "../../types/dist";
+
 export const hex2int = (chainId: string): number => parseInt(chainId);
 export const int2hex = (chainId: number): string => `0x${chainId.toString(16)}`;
 export const praseChainId = (chainId: string | number): number => {
@@ -13,4 +15,9 @@ export const praseChainIdToNumber = (chainId: string | number): number => {
   )
     return hex2int(chainId);
   return chainId as number;
+};
+
+export const isTestnet = (chainId: number) => {
+  const testnetIds = [ARBITRUM_TESTNET_CHAINID];
+  return testnetIds.includes(chainId);
 };

@@ -24,7 +24,7 @@ import {
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
-import { praseChainIdToNumber } from "@orderly.network/utils";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -168,14 +168,13 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       //
 
-    console.log("xxxxxxxxxx ", networkId, chainId, chains);
-    
+      console.log("xxxxxxxxxx ", networkId, chainId, chains);
 
       // check whether chain id and network id match
       // const chainIdNum = parseInt(chainId, 16);
       if (
-        (networkId === "mainnet" && chainId === 421613) ||
-        (networkId === "testnet" && chainId !== 421613)
+        (networkId === "mainnet" && isTestnet(chainId)) ||
+        (networkId === "testnet" && !isTestnet(chainId))
       ) {
         return false;
       }

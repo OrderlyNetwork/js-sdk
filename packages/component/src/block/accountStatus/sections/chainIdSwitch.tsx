@@ -14,6 +14,7 @@ import { toast } from "@/toast";
 import { useTranslation } from "@/i18n";
 import { OrderlyAppContext } from "@/provider";
 import Button from "@/button";
+import { isTestnet } from "@orderly.network/utils";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -28,7 +29,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
-    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
+    filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
   });
 
   const [mainChains] = useChains("mainnet", {
@@ -49,7 +50,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
             if (isSuccess) {
               toast.success(t("toast.networkSwitched"));
               if (onChainChanged) {
-                onChainChanged(id, id === 421613);
+                onChainChanged(id, isTestnet(id));
               }
             } else {
               toast.error(t("common.cancel"));

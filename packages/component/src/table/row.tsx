@@ -29,7 +29,8 @@ export const Row: FC<RowProps> = (props) => {
   return (
     <tr
       className={cn(
-        props.bordered && "orderly-border-b orderly-border-divider"
+        props.bordered &&
+          "orderly-border-b orderly-border-divider last:orderly-border-b-0"
       )}
     >
       {cols}
