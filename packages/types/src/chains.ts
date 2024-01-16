@@ -1,3 +1,5 @@
+import { API } from "./types/api";
+
 export interface ChainConfig {
   id: number;
   chainNameShort: string;
@@ -373,6 +375,32 @@ export const chainsInfoMap: Map<number, ChainConfig> = new Map([
     },
   ],
   [
+    421614,
+    {
+      id: 421614,
+      chainInfo: {
+        chainId: `0x${(421614).toString(16)}`,
+        chainName: "Arbitrum Sepolia",
+        nativeCurrency: {
+          name: "ETH",
+          symbol: "ETH",
+          decimals: 18,
+          fix: 4,
+        },
+        rpcUrls: ["https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
+        blockExplorerUrls: ["https://sepolia-explorer.arbitrum.io"],
+      },
+      minGasBalance: 0.0002,
+      minCrossGasBalance: 0.002,
+      maxPrepayCrossGas: 0.03,
+      blockExplorerName: "Arbitrum",
+      chainName: "Arbitrum Sepolia",
+      chainNameShort: "Arbitrum Sepolia",
+      requestRpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+      chainLogo: "",
+    },
+  ],
+  [
     420,
     {
       id: 420,
@@ -399,3 +427,69 @@ export const chainsInfoMap: Map<number, ChainConfig> = new Map([
     },
   ],
 ]);
+
+export const TestnetChains = [
+  {
+    network_infos: {
+      name: "Arbitrum Sepolia",
+      shortName: "Arbitrum Sepolia",
+      public_rpc_url: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+      chain_id: 421614,
+      currency_symbol: "ETH",
+      bridge_enable: true,
+      mainnet: false,
+      explorer_base_url: "https://sepolia.arbiscan.io",
+      est_txn_mins: null,
+      woofi_dex_cross_chain_router: "",
+      woofi_dex_depositor: "",
+    },
+    token_infos: [
+      {
+        symbol: "USDC",
+        address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+        decimals: 6,
+        swap_enable: false,
+        woofi_dex_precision: 2,
+      },
+    ],
+  },
+  // {
+  //   network_infos: {
+  //     name: "Arbitrum Goerli",
+  //     shortName: "Arbitrum Goerli",
+  //     public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
+  //     chain_id: 421613,
+  //     currency_symbol: "ETH",
+  //     bridge_enable: true,
+  //     mainnet: false,
+  //     explorer_base_url: "https://goerli.arbiscan.io/",
+  //     est_txn_mins: null,
+  //     woofi_dex_cross_chain_router: "",
+  //     woofi_dex_depositor: "",
+  //   },
+  //   token_infos: [
+  //     {
+  //       symbol: "USDC",
+  //       address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
+  //       decimals: 6,
+  //       swap_enable: false,
+  //       woofi_dex_precision: 2,
+  //     },
+  //   ],
+  // },
+  // {
+  //   network_infos: {
+  //     name: "Optimism Goerli",
+  //     shortName: "Optimism Goerli",
+  //     public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
+  //     chain_id: 420,
+  //     currency_symbol: "ETH",
+  //     bridge_enable: true,
+  //     mainnet: false,
+  //     explorer_base_url: "https://goerli-optimism.etherscan.io",
+  //     est_txn_mins: null,
+  //     woofi_dex_cross_chain_router: "",
+  //     woofi_dex_depositor: "",
+  //   },
+  // },
+];
