@@ -11,6 +11,7 @@ import { Label } from "@/label";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 import { modal } from "@/modal";
 import { SettlePnlContent } from "@/block/withdraw";
+import { useTabContext } from "@/tab/tabContext";
 
 interface Props {
   onMarketCloseAll?: () => void;
@@ -25,6 +26,7 @@ interface Props {
 export const Header: FC<Props> = (props) => {
   const unrealPnL = props.aggregated?.unrealPnL ?? 0;
   const { onSettle } = useContext(AssetsContext);
+  const { data: { pnlNotionalDecimalPrecision } } = useTabContext();
 
   const onSettleClick = useCallback(() => {
     modal
@@ -71,6 +73,7 @@ export const Header: FC<Props> = (props) => {
                   prefix={"("}
                   surfix={")"}
                   className={"orderly-ml-1"}
+                  precision={pnlNotionalDecimalPrecision}
                 >
                   {props.aggregated?.unrealPnlROI ?? 0}
                 </Numeral>
@@ -93,7 +96,7 @@ export const Header: FC<Props> = (props) => {
               <div
                 className={"orderly-flex orderly-items-center orderly-gap-1"}
               >
-                <Numeral showIcon coloring>
+                <Numeral showIcon coloring precision={pnlNotionalDecimalPrecision}>
                   {props.aggregated?.unsettledPnL ?? 0}
                 </Numeral>
                 <button className={"orderly-text-primary-light"} onClick={onSettleClick}>
