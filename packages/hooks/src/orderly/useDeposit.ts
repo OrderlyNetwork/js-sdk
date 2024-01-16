@@ -13,6 +13,7 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
   DEPOSIT_FEE_RATE,
+  MaxUint256,
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -265,7 +266,9 @@ export const useDeposit = (options?: useDepositOptions) => {
         .approve(options.address, amount, vaultAddress)
         .then((result: any) => {
           if (typeof amount !== "undefined") {
-            setAllowance((value) => new Decimal(value).add(amount).toString());
+            setAllowance((value) =>
+              new Decimal(value).add(amount || MaxUint256.toString()).toString()
+            );
           }
           return result;
         });

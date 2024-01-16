@@ -28,3 +28,10 @@ export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EED";
 export const MEDIA_TABLET = "(max-width: 768px)";
 
 export const DEPOSIT_FEE_RATE = 1.05;
+
+/**
+ *  A constant for the maximum value for a ``uint256``.
+ */
+export const MaxUint256: bigint = BigInt(
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+);
