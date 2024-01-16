@@ -59,6 +59,7 @@ export const Listview: FC<Props> = (props) => {
         title: "Filled / Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "quantity",
+        width: 180,
         render: (value: string, record) => <OrderQuantity order={record} />,
       },
       {

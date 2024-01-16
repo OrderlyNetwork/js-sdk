@@ -34,7 +34,7 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
         </Layout>
         <Footer
           fixed
-          className="orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500 orderly-z-20"
+          className="orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500 orderly-z-50"
         >
           <SystemStatusBar />
         </Footer>

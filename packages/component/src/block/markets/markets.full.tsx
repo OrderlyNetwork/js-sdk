@@ -128,7 +128,8 @@ const MarketsBody: FC<{
     setActiveIndex,
     fitlerKey,
   } = props;
-  const [activeTab, setActiveTab] = useState("all");
+
+  const [activeTab, setActiveTab] = useState(localStorage.getItem("markets_sel_tab_key") || "all");
 
 
   const { onSymbolChange } = useContext(TradingPageContext);
@@ -142,11 +143,16 @@ const MarketsBody: FC<{
   );
 
 
+  const updateActiveTab = (value: string) => {
+    setActiveTab(value);
+    localStorage.setItem("markets_sel_tab_key", value);
+  };
+
   return (
     <Tabs
       autoFit
       value={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={updateActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold orderly-bg-base-800"
     >
       <TabPane title="Favorites" value="favorites" className="orderly-px-0">

@@ -28,6 +28,7 @@ import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { ConfigStore } from "@orderly.network/core";
 import { cn } from "@/utils/css";
+import { isTestnet } from "@orderly.network/utils";
 
 interface AssetsProps {
   totalBalance: number;
@@ -54,9 +55,10 @@ export const Assets: FC<AssetsProps> = (props) => {
       return false;
     }
 
-    const isTestnetChain = parseInt(chainId) === 421613;
-
-    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+    return (
+      state.status === AccountStatusEnum.EnableTrading &&
+      isTestnet(parseInt(chainId))
+    );
   }, [state.status, connectedChain]);
 
   const [getTestUSDC, { isMutating }] = useMutation(
@@ -175,11 +177,20 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
-        <Progress value={marginRatioVal * 10} variant={"gradient"} foregroundClassName={cn("",
-        marginRatioVal <= 1 && "orderly-bg-gradient-to-r orderly-from-[rgba(244,128,124,1)] orderly-to-[rgba(255,79,130,1)]",
-        marginRatioVal >= 10 && "orderly-bg-gradient-to-r orderly-from-[rgba(29,246,181,1)] orderly-to-[rgba(134,237,146,1)]",
-        (marginRatio > 1 && marginRatio < 10) && "orderly-bg-gradient-to-r orderly-from-[rgba(230,214,115,1)] orderly-to-[rgba(230,200,115,1)]",
-        )} />
+        <Progress
+          value={marginRatioVal * 10}
+          variant={"gradient"}
+          foregroundClassName={cn(
+            "",
+            marginRatioVal <= 1 &&
+              "orderly-bg-gradient-to-r orderly-from-[rgba(244,128,124,1)] orderly-to-[rgba(255,79,130,1)]",
+            marginRatioVal >= 10 &&
+              "orderly-bg-gradient-to-r orderly-from-[rgba(29,246,181,1)] orderly-to-[rgba(134,237,146,1)]",
+            marginRatio > 1 &&
+              marginRatio < 10 &&
+              "orderly-bg-gradient-to-r orderly-from-[rgba(230,214,115,1)] orderly-to-[rgba(230,200,115,1)]"
+          )}
+        />
       </div>
       <MemorizedLeverage />
     </Collapsible>

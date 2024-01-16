@@ -8,7 +8,11 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/dialog";
-import { ARBITRUM_MAINNET_CHAINID_HEX, ARBITRUM_TESTNET_CHAINID_HEX, type API } from "@orderly.network/types";
+import {
+  ARBITRUM_MAINNET_CHAINID_HEX,
+  ARBITRUM_TESTNET_CHAINID_HEX,
+  type API,
+} from "@orderly.network/types";
 import {
   useChains,
   OrderlyContext,
@@ -20,10 +24,15 @@ import { OrderlyAppContext } from "@/provider";
 import { cn } from "@/utils/css";
 
 import { ChainCell } from "@/block/pickers/chainPicker/chainCell";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/dropdown/dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/dropdown/dropdown";
 import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
-
+import { isTestnet } from "@orderly.network/utils";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -38,13 +47,15 @@ export const Chains: FC<ChainsProps> = (props) => {
     useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
-    networkId === "mainnet" ? ARBITRUM_MAINNET_CHAINID_HEX : ARBITRUM_TESTNET_CHAINID_HEX
+    networkId === "mainnet"
+      ? ARBITRUM_MAINNET_CHAINID_HEX
+      : ARBITRUM_TESTNET_CHAINID_HEX
   );
 
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
-    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
+    filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
@@ -57,11 +68,15 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { connectedChain, setChain, settingChain } = useWalletConnector();
 
   const resetDefaultChain = useCallback(() => {
-
-    if (networkId === "mainnet" && defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX) {
+    if (
+      networkId === "mainnet" &&
+      defaultChain !== ARBITRUM_MAINNET_CHAINID_HEX
+    ) {
       setDefaultChain(ARBITRUM_MAINNET_CHAINID_HEX);
-    }
-    else if (networkId === "testnet" && defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX) {
+    } else if (
+      networkId === "testnet" &&
+      defaultChain !== ARBITRUM_TESTNET_CHAINID_HEX
+    ) {
       setDefaultChain(ARBITRUM_TESTNET_CHAINID_HEX);
     }
   }, [defaultChain]);
@@ -74,8 +89,7 @@ export const Chains: FC<ChainsProps> = (props) => {
 
     if (!chain) return <span>Unknown</span>;
 
-    // @ts-ignore
-    if (chain.chain_id === 421613) {
+    if (isTestnet(chain.chain_id)) {
       return <span>Testnet</span>;
     }
 
@@ -85,12 +99,12 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const switchDomain = (chainId: number) => {
     // const domain = configStore.get("domain");
-    // const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
+    // const url = isTestnet(chainId) ? domain?.testnet : domain?.mainnet;
     // window.location.href = url;
     // window.open(url); // test in storybook
-    // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
+    // console.log("onChainChanged", chainId, isTestnet(chainId), onChainChanged);
     if (onChainChanged) {
-      onChainChanged(chainId, chainId === 421613);
+      onChainChanged(chainId, isTestnet(chainId));
     }
   };
 
