@@ -12,6 +12,7 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { isTestnet } from "@orderly.network/utils";
 
 import { useCallback, useContext, useMemo } from "react";
 
@@ -43,9 +44,10 @@ export const BottomNavBar = () => {
       return false;
     }
 
-    const isTestnetChain = parseInt(chainId) === 421613;
-
-    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+    return (
+      state.status === AccountStatusEnum.EnableTrading &&
+      isTestnet(parseInt(chainId))
+    );
   }, [state.status, connectedChain]);
 
   return (

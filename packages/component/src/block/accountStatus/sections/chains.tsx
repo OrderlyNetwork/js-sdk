@@ -32,6 +32,7 @@ import {
 } from "@/dropdown/dropdown";
 import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
+import { isTestnet } from "@orderly.network/utils";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -54,7 +55,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const [testChains] = useChains("testnet", {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
-    filter: (item: API.Chain) => item.network_infos?.chain_id === 421613,
+    filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
@@ -88,8 +89,7 @@ export const Chains: FC<ChainsProps> = (props) => {
 
     if (!chain) return <span>Unknown</span>;
 
-    // @ts-ignore
-    if (chain.chain_id === 421613) {
+    if (isTestnet(chain.chain_id)) {
       return <span>Testnet</span>;
     }
 
@@ -99,12 +99,12 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const switchDomain = (chainId: number) => {
     // const domain = configStore.get("domain");
-    // const url = chainId === 421613 ? domain?.testnet : domain?.mainnet;
+    // const url = isTestnet(chainId) ? domain?.testnet : domain?.mainnet;
     // window.location.href = url;
     // window.open(url); // test in storybook
-    // console.log("onChainChanged", chainId, chainId === 421613, onChainChanged);
+    // console.log("onChainChanged", chainId, isTestnet(chainId), onChainChanged);
     if (onChainChanged) {
-      onChainChanged(chainId, chainId === 421613);
+      onChainChanged(chainId, isTestnet(chainId));
     }
   };
 
@@ -127,7 +127,10 @@ export const Chains: FC<ChainsProps> = (props) => {
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
       </DialogTrigger>
-      <DialogContent onOpenAutoFocus={(event) => event.preventDefault()} closable>
+      <DialogContent
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        closable
+      >
         <DialogHeader className="orderly-switch-network-dialog-title orderly-text-xs">
           Switch network
         </DialogHeader>
