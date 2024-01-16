@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.0.36-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.14
+
 ## 0.0.36-alpha.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.27-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+
 ## 0.1.27-alpha.13
 
 ### Patch Changes

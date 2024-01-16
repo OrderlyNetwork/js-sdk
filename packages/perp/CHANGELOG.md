@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 1.0.27-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.14
+  - @orderly.network/utils@0.0.79-alpha.14
+
 ## 1.0.27-alpha.13
 
 ### Patch Changes

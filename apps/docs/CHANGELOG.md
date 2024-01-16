@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.1.67-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+- Updated dependencies
+  - @orderly.network/react@0.1.31-alpha.14
+  - @orderly.network/web3-onboard@0.0.28-alpha.14
+  - @orderly.network/hooks@1.0.28-alpha.14
+  - @orderly.network/types@0.1.27-alpha.14
+
 ## 0.1.67-alpha.13
 
 ### Patch Changes

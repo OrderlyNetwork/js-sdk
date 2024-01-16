@@ -1,5 +1,15 @@
 # examples
 
+## 0.1.92-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+- Updated dependencies
+  - @orderly.network/react@0.1.31-alpha.14
+  - @orderly.network/web3-onboard@0.0.28-alpha.14
+  - @orderly.network/hooks@1.0.28-alpha.14
+
 ## 0.1.92-alpha.13
 
 ### Patch Changes
