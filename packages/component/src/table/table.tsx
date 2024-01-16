@@ -80,9 +80,15 @@ export const Table = <RecordType extends unknown>(
     );
   }, [props.dataSource]);
 
+  const needFixed = useMemo(() => {
+    return props.columns.some(
+      (col) => col.fixed === "left" || col.fixed === "right"
+    );
+  }, [props.columns]);
+
   const onScroll = useDebouncedCallback((scrollLeft) => {
     // console.log(scrollLeft);
-    if (!wrapRef.current) {
+    if (!wrapRef.current || !needFixed) {
       return;
     }
 
@@ -105,7 +111,23 @@ export const Table = <RecordType extends unknown>(
   }, 50);
 
   useEffect(() => {
+    if (!wrapRef.current) {
+      return;
+    }
+
     onScroll(0);
+    // use ResizeObserver observe wrapRef
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        onScroll(entry.target.scrollLeft);
+      }
+    });
+
+    resizeObserver.observe(wrapRef.current!);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   return (
