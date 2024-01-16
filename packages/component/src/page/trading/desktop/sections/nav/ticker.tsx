@@ -83,20 +83,31 @@ export const Ticker: FC<Props> = (props) => {
               </div>
             }
           />
-          <Statistic label={"Mark"} value={data?.mark_price} rule={"price"} />
-          <Statistic label={"Index"} value={data?.index_price} rule={"price"} />
+          <Statistic
+            label={"Mark"}
+            value={data?.mark_price}
+            rule={"price"}
+            hint="Price for the computation of unrealized PnL and liquidation."
+          />
+          <Statistic
+            label={"Index"}
+            value={data?.index_price}
+            rule={"price"}
+            hint="Average of the last prices across other exchanges."
+          />
           <Statistic
             label={"24h volume"}
             value={(<Numeral rule="human">{data?.["24h_amount"]}</Numeral>)}
           />
-          
+
           <MemoizedCompnent symbol={props.symbol} />
           <Statistic
             label={"Open interest"}
             value={<Numeral unit={base}>{data?.open_interest}</Numeral>}
             rule={"price"}
+            hint="Total size of positions per side."
           />
-          <div ref={tailingElementRef} className="orderly-pr-[20px]"/>
+          <div ref={tailingElementRef} className="orderly-pr-[20px]" />
         </div>
         <TickerMask
           leading

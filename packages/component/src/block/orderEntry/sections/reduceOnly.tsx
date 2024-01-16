@@ -36,7 +36,7 @@ export const DesktopReduceOnlyLabel: FC = () => {
     <Tooltip>
       <TooltipTrigger>
         <Label
-          className="orderly-text-base-contrast-54 desktop:orderly-underline"
+          className="orderly-text-base-contrast-54"
         >
           Reduce only
         </Label>

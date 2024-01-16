@@ -25,19 +25,19 @@ export const DataListView = () => {
     "orderly_unrealized_pnl_price_basis_key",
     UnPnlPriceBasisType.MARKET_PRICE
   );
-  
+
   return (
     <Tabs
       autoFit
       value={activeTab}
       onTabChange={setActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold"
-      tabBarExtra={<TabBarExtraNode 
-        decimalPrecision={decimalPrecision} 
+      tabBarExtra={<TabBarExtraNode
+        decimalPrecision={decimalPrecision}
         setDecimalPrecision={setDecimalPrecision}
         unPnlPriceBasis={unPnlPriceBasis}
         setUnPnlPriceBasic={setUnPnlPriceBasic}
-        />}
+      />}
       extraData={{
         showAllSymbol: false,
         // value is 0 1 2
@@ -51,7 +51,10 @@ export const DataListView = () => {
         value="positions"
         className="orderly-px-3"
       >
-        <PositionPane />
+        <PositionPane
+          unPnlPriceBasis={unPnlPriceBasis}
+          setUnPnlPriceBasic={setUnPnlPriceBasic}
+        />
         {/* <div>Positions</div> */}
       </TabPane>
       <TabPane
