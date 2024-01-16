@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Row } from "./row";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
@@ -6,6 +6,9 @@ import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
 import { EmptyView } from "@/listView/emptyView";
 import { ColGroup } from "./colgroup";
+import { TableProvider } from "./tableContext";
+import { useDebouncedCallback } from "@orderly.network/hooks";
+import { FixedDivide } from "./fixedDivide";
 
 export interface TableProps<RecordType> {
   columns: Column<RecordType>[];
@@ -34,6 +37,8 @@ export interface TableProps<RecordType> {
 export const Table = <RecordType extends unknown>(
   props: TableProps<RecordType>
 ) => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
   const rows = useMemo(() => {
     return props.dataSource?.map((record: any, index) => {
       const key =
@@ -60,49 +65,79 @@ export const Table = <RecordType extends unknown>(
   }, [props.dataSource, props.columns, props.generatedRowKey]);
 
   const maskElement = useMemo(() => {
-    if (props.loading || !!props.dataSource?.length) return null;
+    if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
+      return null;
+    }
 
-    let content: ReactNode = <EmptyView />;
-    if (props.loading) {
-      content = <Spinner />;
+    let content: ReactNode = <Spinner />;
+    if (props.dataSource?.length === 0) {
+      content = <EmptyView />;
     }
     return (
-      <div className="orderly-absolute orderly-w-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center">
+      <div className="orderly-absolute orderly-w-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center orderly-bg-base-900/30 orderly-backdrop-blur-sm">
         {content}
       </div>
     );
   }, [props.dataSource]);
 
+  const onScroll = useDebouncedCallback((scrollLeft) => {
+    // console.log(scrollLeft);
+    if (!wrapRef.current) {
+      return;
+    }
+
+    if (scrollLeft > 0) {
+      // setLeftFixed(true);
+      wrapRef.current?.setAttribute("data-left", "fixed");
+    } else {
+      wrapRef.current?.setAttribute("data-left", "free");
+    }
+
+    if (
+      // wrapRef.current.scrollWidth - wrapRef.current.scrollLeft === wrapRef.current.clientWidth
+      wrapRef.current.scrollLeft + wrapRef.current.clientWidth >=
+      wrapRef.current.scrollWidth
+    ) {
+      wrapRef.current.setAttribute("data-right", "free");
+    } else {
+      wrapRef.current.setAttribute("data-right", "fixed");
+    }
+  }, 50);
+
+  useEffect(() => {
+    onScroll(0);
+  }, []);
+
   return (
-    <div
-      className={
-        "orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto"
-      }
-    >
-      <div className={cn("orderly-h-full", props.className)}>
+    <TableProvider columns={props.columns}>
+      <div
+        ref={wrapRef}
+        className={cn(
+          "orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
+          props.loading && "orderly-overflow-hidden",
+          props.className
+        )}
+        onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
+      >
         <TableHeader
           columns={props.columns}
-          // containerClassName={props.className}
           className={props.headerClassName}
           bordered={props.bordered}
           justified={props.justified}
         />
-        <div
-          className="orderly-flex-1 orderly-relative orderly-overflow-x-hidden orderly-overflow-y-auto"
-          style={{ height: `calc(100% - 45px)` }}
-        >
-          <table
-            className={cn(
-              "orderly-border-collapse orderly-w-full orderly-table-fixed"
-            )}
-          >
-            <ColGroup columns={props.columns} />
 
-            <tbody>{rows}</tbody>
-          </table>
-          {maskElement}
-        </div>
+        <table
+          className={cn(
+            "orderly-border-collapse orderly-w-full orderly-table-fixed"
+          )}
+        >
+          <ColGroup columns={props.columns} />
+
+          <tbody>{rows}</tbody>
+        </table>
+        {maskElement}
       </div>
-    </div>
+      <FixedDivide />
+    </TableProvider>
   );
 };
