@@ -2,17 +2,20 @@ import { Column, Table } from "@/table";
 import { FC, useContext, useMemo } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
-import { PositionsRowProvider } from "./positionRowContext";
+import { PositionsRowProvider, usePositionsRowContext } from "./positionRowContext";
 import { PriceInput } from "./priceInput";
 import { CloseButton } from "./closeButton";
 import { SymbolProvider } from "@/provider";
 import { QuantityInput } from "./quantityInput";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { TabContext } from "@/tab";
+import { LayoutContext } from "@/layout/layoutContext";
+import { useTabContext } from "@/tab/tabContext";
 
 export const Listview: FC<PositionsViewProps> = (props) => {
   const { height } = useContext(TabContext);
   // const { footerHeight } = useContext(LayoutContext);
+  const { data: { pnlNotionalDecimalPrecision } } = useTabContext();
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -54,7 +57,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         },
       },
       {
-        title: "Liq.price",
+        title: "Liq. price",
         width: 100,
         className: "orderly-h-[48px]",
         hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
@@ -134,7 +137,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         },
       },
     ];
-  }, []);
+  }, [pnlNotionalDecimalPrecision]);
 
   return (
     <div

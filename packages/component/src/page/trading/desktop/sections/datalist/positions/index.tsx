@@ -13,7 +13,9 @@ export const PositionPane = () => {
   const context = useContext(TradingPageContext);
   const { data: tabExtraData } = useTabContext();
 
-  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol);
+  const calcMode = tabExtraData.unPnlPriceBasis === 0 ? "markPrice" : "lastPrice";
+  
+  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol, {calcMode});
   const { state } = useAccount();
 
 
