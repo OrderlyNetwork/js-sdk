@@ -39,10 +39,10 @@ export const definedTypes: { [key: string]: any } = {
 export const nativeUSDCAddress = "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63";
 
 export const stagingUSDCAddressOnArbitrumTestnet =
-  "0x6aAd876244E7A1Ad44Ec4824Ce813729E5B6C291";
+  "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d";
 
 export const stagingVaultAddressOnArbitrumTestnet =
-  "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D";
+  "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f";
 export const stagingVerifyAddressOnArbitrumTestnet =
   "0x1826B75e2ef249173FC735149AE4B8e9ea10abff";
 

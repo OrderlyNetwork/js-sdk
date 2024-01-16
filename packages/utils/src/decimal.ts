@@ -53,3 +53,41 @@ export function numberToHumanStyle(
 
   return `${roundedNumber}${abbreviations[index]}`;
 }
+
+
+
+export function parseNumStr(str: string | number): Decimal | undefined {
+  const value = str.toString();
+  const cleanedStr = value.replace(/,/g, ''); // remove `,` char
+  const numberPart = new Decimal(cleanedStr);
+  const unitPart = cleanedStr.slice(-1);
+
+  if (isNaN(numberPart.toNumber())) {
+    return undefined; // invalid data
+  }
+
+  let result;
+
+  switch (unitPart) {
+    case 'k':
+    case 'K':
+      result = numberPart.mul(1000);
+      break;
+    case 'm':
+    case 'M':
+    result = numberPart.mul(1000000);
+    break;
+    case 'b':
+    case 'B':
+      result = numberPart.mul(1000000000);
+      break;
+    case 't':
+    case 'T':
+      result = numberPart.mul(1000000000000);
+      break;
+    default:
+      result = numberPart;
+  }
+  
+  return result;
+}

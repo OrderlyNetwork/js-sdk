@@ -1,6 +1,7 @@
 import { useContext, useMemo } from "react";
 import { OrderlyAppContext, WalletConnectorContext } from "@/provider";
 import { useChains, useWalletConnector } from "@orderly.network/hooks";
+import { isTestnet } from "@orderly.network/utils";
 
 export function useGetChains() {
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
@@ -20,9 +21,8 @@ export function useGetChains() {
     if (!chain) {
       return "Unknown";
     }
-    // @ts-ignore
 
-    if (chain.chain_id === 421613) {
+    if (isTestnet(chain.chain_id)) {
       return "Testnet";
     }
     // @ts-ignore

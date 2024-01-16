@@ -5,6 +5,8 @@ import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { mergeDeepRight, prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
+import { isTestnet } from "@orderly.network/utils";
+import { TestnetChains } from "@orderly.network/types";
 
 type inputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -19,12 +21,9 @@ export const useChains = (
   options: inputOptions & SWRConfiguration = {}
 ) => {
   const { pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore, networkId: networkEnv } = useContext(OrderlyContext);
-
-  // const envNetworkId = useConfig("networkId");
+  const { configStore } = useContext(OrderlyContext);
 
   const field = options?.pick;
-  // const wooSwapEnabled = false;
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -38,58 +37,45 @@ export const useChains = (
     >()
   );
 
-  const { data, error: swapSupportError } = useSWR<any>(
+  const commonSwrOpts = {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    // If false, undefined data gets cached against the key.
+    revalidateOnMount: true,
+    // dont duplicate a request w/ same key for 1hr
+    dedupingInterval: 3_600_000,
+    ...swrOptions,
+  };
+
+  const { data: wooSupportData, error: swapSupportError } = useSWR<any>(
     () =>
       wooSwapEnabled
         ? `${configStore.get("swapSupportApiUrl")}/swap_support`
         : null,
-    // `${configStore.get("swapSupportApiUrl")}/swap_support`,
     (url) => fetch(url).then((res) => res.json()),
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true, // If false, undefined data gets cached against the key.
-      dedupingInterval: 3_600_000, // dont duplicate a request w/ same key for 1hr
-      ...swrOptions,
-    }
+    { ...commonSwrOpts, ...swrOptions }
   );
 
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     "/v1/public/chain_info",
     {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      dedupingInterval: 3_600_000,
+      ...commonSwrOpts,
       formatter: (data) => data.rows,
     }
   );
 
   const { data: orderlyChains, error: tokenError } = useQuery<API.Chain[]>(
-    // wooSwapEnabled ? "/v1/public/token" :
     "https://api-evm.orderly.org/v1/public/token",
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      dedupingInterval: 3_600_000,
-    }
+    { ...commonSwrOpts }
   );
 
-  const apiBaseUrl = configStore.get("apiBaseUrl");
-
-  // TODO: chains seems always change when ui update
   const chains:
     | API.Chain[]
     | {
         testnet: API.Chain[];
         mainnet: API.Chain[];
       } = useMemo(() => {
-    // if (!orderlyChains) return undefined;
-
     let orderlyChainsArr: API.Chain[] = [];
     const orderlyChainIds = new Set<number>();
 
@@ -123,9 +109,9 @@ export const useChains = (
         }
 
         /// if chain is testnet, update network_infos
-        if (_chain.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
+        if (isTestnet(_chain.chain_id)) {
+          const index = testnetArr?.findIndex((item) =>
+            isTestnet(item.network_infos.chain_id)
           );
           if (index > -1) {
             testnetArr[index] = _chain;
@@ -134,66 +120,25 @@ export const useChains = (
 
         map.current.set(chainId, _chain);
 
-        // orderlyChainsArr.push(field ? _chain[field] : _chain);
         orderlyChainsArr.push(_chain);
       });
     });
 
-    // if (!wooSwapEnabled) {
-    //   //
-    //   let arr: any[] = orderlyChainsArr;
-    //   if (typeof filterFun.current === "function") {
-    //     arr = orderlyChainsArr.filter(filterFun.current);
-    //   }
+    let testnetArr = [...TestnetChains] as API.Chain[];
 
-    //   if (!!field) {
-    //     arr = arr.map((item) => item[field]);
-    //   }
-
-    //   return arr;
-    // } else {
-    //
-
-    let testnetArr: API.Chain[] = [
-      //@ts-ignore
-      {
-        network_infos: {
-          name: "Arbitrum Goerli",
-          shortName: "Arbitrum Goerli",
-          public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
-          chain_id: 421613,
-          currency_symbol: "ETH",
-          bridge_enable: true,
-          mainnet: false,
-          explorer_base_url: "https://goerli.arbiscan.io/",
-          est_txn_mins: null,
-
-          woofi_dex_cross_chain_router: "",
-          woofi_dex_depositor: "",
-        },
-        token_infos: [
-          {
-            symbol: "USDC",
-            address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
-            decimals: 6,
-            swap_enable: false,
-            woofi_dex_precision: 2,
-          },
-        ],
-      },
-    ];
+    testnetArr.forEach((chain) => {
+      map.current.set(chain.network_infos?.chain_id, chain as any);
+    });
 
     let mainnetArr: API.Chain[] = [];
 
-    map.current.set(421613, testnetArr[0]);
-
     if (wooSwapEnabled) {
-      if (!data || !data.data) return data;
+      if (!wooSupportData || !wooSupportData.data) return wooSupportData;
 
-      Object.keys(data.data).forEach((key) => {
+      Object.keys(wooSupportData.data).forEach((key) => {
         // if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
 
-        const chain = data.data[key];
+        const chain = wooSupportData.data[key];
 
         const item: any = mergeDeepRight(chain, {
           name: key,
@@ -221,8 +166,6 @@ export const useChains = (
         }
       });
     } else {
-      // if (!chainInfos) return undefined;
-
       // orderly chains array form (/v1/public/token) api
       orderlyChainsArr.forEach((chain) => {
         let _chain = chain;
@@ -257,15 +200,14 @@ export const useChains = (
         }
 
         map.current.set(_chain.network_infos.chain_id, _chain);
-        if (_chain.network_infos.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
+        if (isTestnet(_chain.network_infos.chain_id)) {
+          const index = testnetArr.findIndex((item) =>
+            isTestnet(item.network_infos.chain_id)
           );
           if (index > -1) {
             testnetArr[index] = _chain;
           }
         }
-
 
         if (typeof filterFun.current === "function") {
           if (!filterFun.current(_chain)) return;
@@ -302,8 +244,14 @@ export const useChains = (
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-    // }
-  }, [data, networkId, field, orderlyChains, wooSwapEnabled, chainInfos]);
+  }, [
+    wooSupportData,
+    networkId,
+    field,
+    orderlyChains,
+    wooSwapEnabled,
+    chainInfos,
+  ]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
