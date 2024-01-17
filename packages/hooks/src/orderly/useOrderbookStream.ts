@@ -5,7 +5,7 @@ import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
-import { min } from "ramda";
+import { max, min } from "ramda";
 
 export type OrderBookItem = number[];
 
@@ -39,7 +39,7 @@ const reduceItems = (
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < min(level, data.length); i++) {
       const [price, quantity] = data[i];
       if (isNaN(price) || isNaN(quantity)) continue;
       let priceKey;
@@ -139,11 +139,17 @@ export const reduceOrderbook = (
 
   asks = asks.reverse();
 
+  asks = asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
+  bids = bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
+  // add max qty for asks/bids
+  let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
+  let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
+  asks = asks.map((item) => [...item, maxAskQty]);
+  bids = bids.map((item) => [...item, maxBidQty]);
+
   return {
-    asks:
-      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
-    bids:
-      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
+    asks: asks,
+    bids: bids,
   };
 };
 
