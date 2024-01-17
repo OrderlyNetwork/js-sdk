@@ -1,4 +1,10 @@
-import { FC, PropsWithChildren, createContext, useState } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 import { Column } from "./col";
 
 export interface TableContextState {

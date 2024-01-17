@@ -12,7 +12,7 @@ export type Column<RecordType extends unknown = any> = {
   width?: number;
   fixed?: ColumnFixed;
   dataIndex: string;
-  className?: string;
+  className?: string | ((record: RecordType, index: number) => string);
   align?: "left" | "center" | "right";
   onSort?: (r1: RecordType, r2: RecordType, sortOrder: "asc" | "des") => void;
   formatter?: (value: any, record: RecordType, index: number) => any;
@@ -52,9 +52,12 @@ export const ColItem: FC<ColProps> = (props) => {
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right",
-        col.fixed && "orderly-sticky orderly-bg-base-900"
+        col.fixed && "orderly-sticky"
       )}
-      style={props.style}
+      style={{
+        backgroundColor: "var(--table-background-color)",
+        ...style,
+      }}
     >
       {content}
     </td>

@@ -296,14 +296,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       }
 
       if (!checkChainId(currentChainId)) {
-        // console.warn("!!!! not support this chian -> disconnect wallet");
-
-        // account.disconnect();
         // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
-        console.warn("current chain not support!  -> disconnect wallet!!!");
-        return;
+        console.warn("current chain not support!!!!");
+        // return;
       } else {
         setErrors((errors: any) => ({
           ...errors,

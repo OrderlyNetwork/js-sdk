@@ -32,6 +32,8 @@ export interface TableProps<RecordType> {
   ) => React.ReactNode;
 
   generatedRowKey?: (record: RecordType, index: number) => string;
+
+  onRow?: (record: RecordType, index: number) => any;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -49,10 +51,12 @@ export const Table = <RecordType extends unknown>(
       const row = (
         <Row
           key={key}
+          index={index}
           columns={props.columns}
           record={record}
           justified={props.justified}
           bordered={props.bordered}
+          onRow={props.onRow}
         />
       );
 
@@ -62,7 +66,7 @@ export const Table = <RecordType extends unknown>(
 
       return row;
     });
-  }, [props.dataSource, props.columns, props.generatedRowKey]);
+  }, [props.dataSource, props.columns, props.generatedRowKey, props.onRow]);
 
   const maskElement = useMemo(() => {
     if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
@@ -86,7 +90,7 @@ export const Table = <RecordType extends unknown>(
     );
   }, [props.columns]);
 
-  const onScroll = useDebouncedCallback((scrollLeft) => {
+  const onScroll = useDebouncedCallback((scrollLeft: number) => {
     // console.log(scrollLeft);
     if (!wrapRef.current || !needFixed) {
       return;
@@ -128,6 +132,14 @@ export const Table = <RecordType extends unknown>(
     return () => {
       resizeObserver.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    if (!wrapRef.current) return;
+    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor;
+
+    // body.style.setProperty("--table-header-height", "48px");
+    wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
   }, []);
 
   return (

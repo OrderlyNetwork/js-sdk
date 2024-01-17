@@ -65,6 +65,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           }px)`,
           minHeight: "950px",
           width: `calc(100vw - ${siderWidth}px)`,
+          // paddingBottom:
         }}
         onDragEnd={(preSize: number, nextSize: number, paneNumber: number) => {
           setMainSplitSize(`${nextSize}`);

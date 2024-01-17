@@ -174,6 +174,14 @@ const TabsInner = (
 
         const height = target.contentRect.height;
 
+        console.log(
+          "height",
+          height,
+          target.contentRect.bottom,
+          target,
+          target.target.getBoundingClientRect()
+        );
+
         const header = containerRef.current!.querySelector<HTMLDivElement>(
           ".orderly-tab-header"
         );
@@ -195,8 +203,6 @@ const TabsInner = (
         if (!tabHeaderRef.current) {
           return;
         }
-
-        // console.log("bounding", bounding);
 
         setHeight((rect) => ({
           box: height,
