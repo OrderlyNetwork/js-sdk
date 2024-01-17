@@ -67,7 +67,7 @@ export const Header: FC<Props> = (props) => {
                   "orderly-text-trade-profit": unrealPnL > 0,
                 })}
               >
-                <Numeral>{unrealPnL}</Numeral>
+                <Numeral precision={pnlNotionalDecimalPrecision}>{unrealPnL}</Numeral>
                 <Numeral
                   rule="percentages"
                   prefix={"("}
@@ -87,6 +87,7 @@ export const Header: FC<Props> = (props) => {
             label={"Notional"}
             value={props.aggregated?.notional}
             rule="price"
+            precision={pnlNotionalDecimalPrecision}
           />
           <Statistic
             label={"Unsettled PnL"}
