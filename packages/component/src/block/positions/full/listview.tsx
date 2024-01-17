@@ -101,7 +101,7 @@ export const Listview: FC<PositionsViewProps & {
         width: 120,
         hint: (<UnrealizedPnLPopoverCard unPnlPriceBasis={props.unPnlPriceBasis} setUnPnlPriceBasic={props.setUnPnlPriceBasic} />),
         render: (value: string) => (
-          <Numeral coloring className="orderly-font-semibold">
+          <Numeral precision={pnlNotionalDecimalPrecision} coloring className="orderly-font-semibold">
             {value}
           </Numeral>
         ),
@@ -117,7 +117,7 @@ export const Listview: FC<PositionsViewProps & {
         className: "orderly-h-[48px]",
         width: 100,
         render: (value: string) => (
-          <Numeral className="orderly-font-semibold">{value}</Numeral>
+          <Numeral precision={pnlNotionalDecimalPrecision} className="orderly-font-semibold" >{value}</Numeral>
         ),
       },
       {
