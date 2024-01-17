@@ -49,8 +49,10 @@ const preview = {
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
-            brokerId="woofi_pro"
-            brokerName="WOOFi Pro"
+            // brokerId="woofi_pro"
+            // brokerName="WOOFi Pro"
+            brokerId="orderly"
+            brokerName="Orderly"
             enableSwapDeposit={true}
             // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
