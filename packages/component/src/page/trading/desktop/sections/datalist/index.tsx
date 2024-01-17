@@ -8,12 +8,23 @@ import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 import { TabBarExtraNode } from "@/page/trading/desktop/sections/datalist/tabbarExtraNode";
 import { HistoryView } from "./history";
-import { usePositionStream } from "@orderly.network/hooks";
+import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
+import { DecimalPrecisionType } from "./decimalPrecisionCheckBox";
+import { UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
   const [data] = usePositionStream();
   const hasPositions = (data.rows?.length || 0) > 0;
+
+  const [decimalPrecision, setDecimalPrecision] = useSessionStorage(
+    "orderly_dicimal_precision_key",
+    DecimalPrecisionType.TWO
+  );
+  const [unPnlPriceBasis, setUnPnlPriceBasic] = useSessionStorage(
+    "orderly_unrealized_pnl_price_basis_key",
+    UnPnlPriceBasisType.MARKET_PRICE
+  );
 
   return (
     <Tabs
@@ -21,9 +32,18 @@ export const DataListView = () => {
       value={activeTab}
       onTabChange={setActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold"
-      tabBarExtra={<TabBarExtraNode />}
+      tabBarExtra={<TabBarExtraNode
+        decimalPrecision={decimalPrecision}
+        setDecimalPrecision={setDecimalPrecision}
+        unPnlPriceBasis={unPnlPriceBasis}
+        setUnPnlPriceBasic={setUnPnlPriceBasic}
+      />}
       extraData={{
         showAllSymbol: false,
+        // value is 0 1 2
+        pnlNotionalDecimalPrecision: decimalPrecision,
+        // 0: mark price 1: last price
+        unPnlPriceBasis: unPnlPriceBasis,
       }}
     >
       <TabPane
@@ -31,7 +51,10 @@ export const DataListView = () => {
         value="positions"
         className="orderly-px-3"
       >
-        <PositionPane />
+        <PositionPane
+          unPnlPriceBasis={unPnlPriceBasis}
+          setUnPnlPriceBasic={setUnPnlPriceBasic}
+        />
         {/* <div>Positions</div> */}
       </TabPane>
       <TabPane

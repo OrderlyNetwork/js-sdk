@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { PositionsViewFull } from "@/block/positions";
 import { usePositionStream, } from "@orderly.network/hooks";
 import {
@@ -9,11 +9,16 @@ import { useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { useTabContext } from "@/tab/tabContext";
 
-export const PositionPane = () => {
+export const PositionPane: FC<{
+  unPnlPriceBasis: any;
+  setUnPnlPriceBasic: any;
+}> = (props) => {
   const context = useContext(TradingPageContext);
   const { data: tabExtraData } = useTabContext();
 
-  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol);
+  const calcMode = tabExtraData.unPnlPriceBasis === 0 ? "markPrice" : "lastPrice";
+  
+  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol, {calcMode});
   const { state } = useAccount();
 
 
@@ -26,6 +31,7 @@ export const PositionPane = () => {
       isLoading={loading}
       showAllSymbol={tabExtraData.showAllSymbol}
       onSymbolChange={context.onSymbolChange}
+      {...props}
     />
   );
 };

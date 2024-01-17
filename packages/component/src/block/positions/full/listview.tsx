@@ -1,18 +1,26 @@
 import { Column, Table } from "@/table";
-import { FC, useContext, useMemo } from "react";
+import { FC, useCallback, useContext, useMemo } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
-import { PositionsRowProvider } from "./positionRowContext";
+import { PositionsRowProvider, usePositionsRowContext } from "./positionRowContext";
 import { PriceInput } from "./priceInput";
 import { CloseButton } from "./closeButton";
 import { SymbolProvider } from "@/provider";
 import { QuantityInput } from "./quantityInput";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { TabContext } from "@/tab";
+import { LayoutContext } from "@/layout/layoutContext";
+import { useTabContext } from "@/tab/tabContext";
+import { Divider } from "@/divider";
+import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 
-export const Listview: FC<PositionsViewProps> = (props) => {
+export const Listview: FC<PositionsViewProps & {
+    unPnlPriceBasis: any;
+    setUnPnlPriceBasic: any;
+}> = (props) => {
   const { height } = useContext(TabContext);
   // const { footerHeight } = useContext(LayoutContext);
+  const { data: { pnlNotionalDecimalPrecision } } = useTabContext();
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -54,7 +62,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         },
       },
       {
-        title: "Liq.price",
+        title: "Liq. price",
         width: 100,
         className: "orderly-h-[48px]",
         hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
@@ -77,15 +85,23 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         render: (value: string) => (
           <Numeral className="orderly-font-semibold">{value}</Numeral>
         ),
+        hint: (
+          <div>
+            <span>The minimum equity to keep your position. </span>
+            <Divider className="orderly-py-2 orderly-border-white/10" />
+            <span>Margin = Position size * Mark price * MMR</span>
+          </div>
+        ),
+        hintClassName: "orderly-p-2"
       },
       {
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
         width: 120,
-        hint: "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
+        hint: (<UnrealizedPnLPopoverCard unPnlPriceBasis={props.unPnlPriceBasis} setUnPnlPriceBasic={props.setUnPnlPriceBasic} />),
         render: (value: string) => (
-          <Numeral coloring className="orderly-font-semibold">
+          <Numeral precision={pnlNotionalDecimalPrecision} coloring className="orderly-font-semibold">
             {value}
           </Numeral>
         ),
@@ -101,7 +117,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         className: "orderly-h-[48px]",
         width: 100,
         render: (value: string) => (
-          <Numeral className="orderly-font-semibold">{value}</Numeral>
+          <Numeral precision={pnlNotionalDecimalPrecision} className="orderly-font-semibold" >{value}</Numeral>
         ),
       },
       {
@@ -134,7 +150,7 @@ export const Listview: FC<PositionsViewProps> = (props) => {
         },
       },
     ];
-  }, []);
+  }, [pnlNotionalDecimalPrecision, props.unPnlPriceBasis]);
 
   return (
     <div
