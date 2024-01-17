@@ -1,9 +1,11 @@
 import { CSSProperties, FC, ReactNode, useContext, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { TableContext } from "./tableContext";
+
 import { withFixedStyle } from "./colHOC";
 
 export type ColumnFixed = "left" | "right";
+
+export type SortOrder = "asc" | "desc";
 
 export type Column<RecordType extends unknown = any> = {
   title: string;
@@ -14,7 +16,9 @@ export type Column<RecordType extends unknown = any> = {
   dataIndex: string;
   className?: string | ((record: RecordType, index: number) => string);
   align?: "left" | "center" | "right";
-  onSort?: (r1: RecordType, r2: RecordType, sortOrder: "asc" | "des") => void;
+  onSort?:
+    | boolean
+    | ((r1: RecordType, r2: RecordType, sortOrder: SortOrder) => number);
   formatter?: (value: any, record: RecordType, index: number) => any;
   render?: (value: any, record: RecordType, index: number) => React.ReactNode;
   getKey?: (record: RecordType, index: number) => string;

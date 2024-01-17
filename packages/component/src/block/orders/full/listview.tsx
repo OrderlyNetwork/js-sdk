@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { Table } from "@/table";
+import { Column, Table } from "@/table";
 import { Text } from "@/text";
-import { OrderStatus, OrderSide } from "@orderly.network/types";
+import { OrderStatus, OrderSide, API } from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
@@ -22,7 +22,7 @@ interface Props {
   className?: string;
 }
 export const Listview: FC<Props> = (props) => {
-  const columns = useMemo(() => {
+  const columns = useMemo<Column<API.Order>[]>(() => {
     const columns = [
       {
         title: "Instrument",
@@ -68,13 +68,14 @@ export const Listview: FC<Props> = (props) => {
         title: "Price",
         className: "orderly-h-[48px]",
         dataIndex: "price",
+        onSort: props.status === OrderStatus.INCOMPLETE,
         render: (value: string, record) => <Price order={record} />,
       },
-      {
-        title: "Est. total",
-        className: "orderly-h-[48px]",
-        dataIndex: "total",
-      },
+      // {
+      //   title: "Est. total",
+      //   className: "orderly-h-[48px]",
+      //   dataIndex: "total",
+      // },
       {
         title: "Reduce",
         dataIndex: "reduce_only",
@@ -95,6 +96,7 @@ export const Listview: FC<Props> = (props) => {
         title: "Update",
         dataIndex: "updated_time",
         width: 150,
+        onSort: props.status === OrderStatus.INCOMPLETE,
         className: "orderly-h-[48px]",
         render: (value: string) => (
           <Text
@@ -130,9 +132,10 @@ export const Listview: FC<Props> = (props) => {
         }
       }}
     >
-      <Table
+      <Table<API.Order>
         bordered
         justified
+        sortable={props.status === OrderStatus.INCOMPLETE}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
@@ -140,7 +143,7 @@ export const Listview: FC<Props> = (props) => {
           "orderly-text-2xs orderly-text-base-contrast-80",
           props.className
         )}
-        generatedRowKey={(record) => record.order_id}
+        generatedRowKey={(record) => "" + record.order_id}
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider

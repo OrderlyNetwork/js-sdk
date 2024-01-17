@@ -16,6 +16,7 @@ import { LayoutContext } from "@/layout/layoutContext";
 import { useTabContext } from "@/tab/tabContext";
 import { Divider } from "@/divider";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
+import { API } from "@orderly.network/types";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -58,12 +59,19 @@ export const Listview: FC<
         className: "orderly-h-[48px]",
         width: 120,
         dataIndex: "average_open_price",
+        render: (value: string) => <Numeral>{value}</Numeral>,
       },
       {
         title: "Mark price",
         dataIndex: "mark_price",
         width: 120,
         className: "orderly-h-[48px]",
+        onSort(r1, r2, sortOrder) {
+          if (sortOrder === "asc") {
+            return Number(r2.mark_price) - Number(r1.mark_price);
+          }
+          return Number(r1.mark_price) - Number(r2.mark_price);
+        },
         render: (value: string) => {
           return <Numeral className="orderly-font-semibold">{value}</Numeral>;
         },
@@ -113,7 +121,11 @@ export const Listview: FC<
           />
         ),
         render: (value: string) => (
-          <Numeral precision={pnlNotionalDecimalPrecision} coloring className="orderly-font-semibold">
+          <Numeral
+            precision={pnlNotionalDecimalPrecision}
+            coloring
+            className="orderly-font-semibold"
+          >
             {value}
           </Numeral>
         ),
@@ -129,7 +141,12 @@ export const Listview: FC<
         className: "orderly-h-[48px]",
         width: 100,
         render: (value: string) => (
-          <Numeral precision={pnlNotionalDecimalPrecision} className="orderly-font-semibold" >{value}</Numeral>
+          <Numeral
+            precision={pnlNotionalDecimalPrecision}
+            className="orderly-font-semibold"
+          >
+            {value}
+          </Numeral>
         ),
       },
       {
@@ -170,7 +187,7 @@ export const Listview: FC<
       className="orderly-relative"
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
     >
-      <Table
+      <Table<API.PositionExt>
         bordered
         justified
         columns={columns}

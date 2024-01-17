@@ -174,14 +174,6 @@ const TabsInner = (
 
         const height = target.contentRect.height;
 
-        console.log(
-          "height",
-          height,
-          target.contentRect.bottom,
-          target,
-          target.target.getBoundingClientRect()
-        );
-
         const header = containerRef.current!.querySelector<HTMLDivElement>(
           ".orderly-tab-header"
         );
