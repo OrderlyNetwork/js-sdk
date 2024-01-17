@@ -1,13 +1,12 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ListViewFull } from "./listview";
-import { MarketsType, useMarkets, FavoriteTab, Favorite } from "@orderly.network/hooks";
+import { MarketsType, useMarkets, FavoriteTab, Favorite, OrderlyContext } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
 import { CircleAdd, CircleCloseIcon, ArrowTopIcon, AddIcon } from "@/icon";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/utils";
 import { modal } from "@/modal";
-import { modalActions } from "@/modal/modalContext";
 
 export const FavoritesTabPane: FC<{
     onClose?: () => void,
@@ -19,11 +18,24 @@ export const FavoritesTabPane: FC<{
 }> = (props) => {
     const { activeIndex, setActiveIndex, onItemClick, fitlerKey } = props;
 
-    const [data, { favorites, addToHistory, favoriteTabs, updateFavoriteTabs, updateSymbolFavoriteState, pinToTop, }] = useMarkets(MarketsType.FAVORITES);
-    const [currTab, setCurrTab] = useState(favoriteTabs[0]);
+    const [data, { favorites,
+        addToHistory,
+        favoriteTabs,
+        updateFavoriteTabs,
+        updateSymbolFavoriteState,
+        pinToTop,
+        getLastSelFavTab,
+        updateSelectedFavoriteTab,
+    }] = useMarkets(MarketsType.FAVORITES);
+    const [currTab, setCurrTab] = useState(getLastSelFavTab || favoriteTabs[0]);
 
 
-    
+    const clickTab = (tab: any) => {
+        updateSelectedFavoriteTab(tab);
+        setCurrTab(tab);
+    };
+
+
     const filterData = useMemo(() => {
         return favorites
             ?.filter((item: any) => {
@@ -57,7 +69,7 @@ export const FavoritesTabPane: FC<{
     return (<div>
         <FavoritesTabList
             currTab={currTab}
-            setCurrTab={setCurrTab}
+            setCurrTab={clickTab}
             tabs={favoriteTabs}
             updateFavoriteTabs={updateFavoriteTabs}
             updateSymbolFavoriteState={updateSymbolFavoriteState}
@@ -159,7 +171,7 @@ const FavoritesTabList: FC<{
     const onClickDeleteTab = (tab: FavoriteTab) => {
         modal.confirm(
             {
-                maxWidth:"xs",
+                maxWidth: "xs",
                 closeableSize: 12,
                 // title: "Are you sure you want to delete this watchlist?",
                 content: <div className="orderly-pt-0 orderly-text-sm">
@@ -179,12 +191,12 @@ const FavoritesTabList: FC<{
 
                     [...props.favorites].forEach((item) => {
                         const newTabs = item.tabs.filter((value: FavoriteTab) => value.id === tab.id);
-                        
+
                         if (newTabs.length !== item.tabs.length) {
-                            props.updateSymbolFavoriteState({symbol: item.name}, newTabs);
+                            props.updateSymbolFavoriteState({ symbol: item.name }, newTabs);
                         }
                     })
-                    
+
                     props.setCurrTab(props.tabs[index]);
 
 
@@ -209,7 +221,7 @@ const FavoritesTabList: FC<{
                 }, 100);
             }}
         >
-            <AddIcon size={14} fill="current" fillOpacity={1.0}/>
+            <AddIcon size={14} fill="current" fillOpacity={1.0} />
         </button>
         <div className="orderly-relative orderly-overflow-hidden orderly-h-full orderly-w-full orderly-bg-base-800" >
 
