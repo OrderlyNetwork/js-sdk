@@ -13,11 +13,14 @@ import { upperCaseFirstLetter } from "@/utils/string";
 import { OrderlyAppContext, SymbolContext, SymbolProvider } from "@/provider";
 import { EndReachedBox } from "@/listView/endReachedBox";
 import { Renew } from "./renew";
+import { CancelButton } from "@/block/orders/full/cancelButton";
+import { cn } from "@/utils";
 
 interface Props {
   dataSource: API.OrderExt[];
   loading?: boolean;
   loadMore?: () => void;
+  className?: string;
   //   status: OrderStatus;
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
 }
@@ -43,11 +46,13 @@ export const Listview: FC<Props> = (props) => {
         className: "orderly-h-[48px]",
         width: 100,
         dataIndex: "side",
-        render: (value: string) => (
+        render: (value: string, record) => (
           <span
             className={cx(
               "orderly-font-semibold",
-              value === OrderSide.BUY
+              record.status === OrderStatus.CANCELLED
+                ? ""
+                : value === OrderSide.BUY
                 ? "orderly-text-trade-profit"
                 : "orderly-text-trade-loss"
             )}
@@ -66,7 +71,9 @@ export const Listview: FC<Props> = (props) => {
             <span
               className={cx(
                 "orderly-font-semibold",
-                record.side === OrderSide.BUY
+                record.status === OrderStatus.CANCELLED
+                  ? ""
+                  : record.side === OrderSide.BUY
                   ? "orderly-text-trade-profit"
                   : "orderly-text-trade-loss"
               )}
@@ -130,6 +137,10 @@ export const Listview: FC<Props> = (props) => {
             return <Renew record={record} />;
           }
 
+          if (record.status === OrderStatus.NEW) {
+            return <CancelButton order={record} />;
+          }
+
           return null;
         },
       },
@@ -152,8 +163,21 @@ export const Listview: FC<Props> = (props) => {
         loading={props.loading}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={"orderly-text-2xs orderly-text-base-contrast-80"}
+        className={cn(
+          "orderly-text-2xs orderly-text-base-contrast-80",
+          props.className
+        )}
         generatedRowKey={(record) => record.order_id}
+        onRow={(record) => {
+          // console.log(record);
+          if (record.status === OrderStatus.CANCELLED) {
+            return {
+              className: "orderly-text-base-contrast-20",
+              "data-cancelled": "true",
+            };
+          }
+          return {};
+        }}
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider

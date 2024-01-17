@@ -2,7 +2,10 @@ import { Column, Table } from "@/table";
 import { FC, useCallback, useContext, useMemo } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
-import { PositionsRowProvider, usePositionsRowContext } from "./positionRowContext";
+import {
+  PositionsRowProvider,
+  usePositionsRowContext,
+} from "./positionRowContext";
 import { PriceInput } from "./priceInput";
 import { CloseButton } from "./closeButton";
 import { SymbolProvider } from "@/provider";
@@ -14,13 +17,17 @@ import { useTabContext } from "@/tab/tabContext";
 import { Divider } from "@/divider";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 
-export const Listview: FC<PositionsViewProps & {
+export const Listview: FC<
+  PositionsViewProps & {
     unPnlPriceBasis: any;
     setUnPnlPriceBasic: any;
-}> = (props) => {
+  }
+> = (props) => {
   const { height } = useContext(TabContext);
   // const { footerHeight } = useContext(LayoutContext);
-  const { data: { pnlNotionalDecimalPrecision } } = useTabContext();
+  const {
+    data: { pnlNotionalDecimalPrecision },
+  } = useTabContext();
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -92,14 +99,19 @@ export const Listview: FC<PositionsViewProps & {
             <span>Margin = Position size * Mark price * MMR</span>
           </div>
         ),
-        hintClassName: "orderly-p-2"
+        hintClassName: "orderly-p-2",
       },
       {
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
         width: 120,
-        hint: (<UnrealizedPnLPopoverCard unPnlPriceBasis={props.unPnlPriceBasis} setUnPnlPriceBasic={props.setUnPnlPriceBasic} />),
+        hint: (
+          <UnrealizedPnLPopoverCard
+            unPnlPriceBasis={props.unPnlPriceBasis}
+            setUnPnlPriceBasic={props.setUnPnlPriceBasic}
+          />
+        ),
         render: (value: string) => (
           <Numeral precision={pnlNotionalDecimalPrecision} coloring className="orderly-font-semibold">
             {value}
