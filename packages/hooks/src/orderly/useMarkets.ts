@@ -23,7 +23,8 @@ export enum MarketsType {
         ],
         favoriteTabs: [
             { "name": "Popular", "id": 1 },
-        ]
+        ],
+        "lastSelectFavoriteTab": { "name": "Popular", "id": 1 }
         
     }
 }
@@ -64,7 +65,8 @@ export const useMarkets = (type: MarketsType) => {
                     {name: "PERP_ETH_USDC", tabs: [{...defaultTab}]},
                     {name: "PERP_BTC_USDC", tabs: [{...defaultTab}]},
                 ],
-                favoriteTabs: [{...defaultTab}]
+                favoriteTabs: [{...defaultTab}],
+                lastSelectFavoriteTab: {...defaultTab}
             });
         }
     }
@@ -99,7 +101,7 @@ export const useMarkets = (type: MarketsType) => {
         const curData = configStore.get(marketsKey)["recent"];
         return ((curData || []) as Recent[]).filter((e) => e);
     }, []);
-
+    
     const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
     const [favorites, setFavorites] = useState(getFavorites);
     const [recent, setRecent] = useState(getRecent);
@@ -283,7 +285,19 @@ export const useMarkets = (type: MarketsType) => {
         return favoriteTabs;
     }, [favoriteTabs]);
 
-    
+
+    const getLastSelFavTab = () => {
+        // @ts-ignore
+        const curData = configStore.get(marketsKey)["lastSelectedFavoriteTab"];
+        return (curData || { name: "Popular", id: 1 }) as FavoriteTab;
+    };
+
+    const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
+        configStore.set(marketsKey, {
+            ...configStore.getOr(marketsKey, {}),
+            lastSelectedFavoriteTab: tab
+        });
+    };
 
     return [
         markets || [],
@@ -296,6 +310,8 @@ export const useMarkets = (type: MarketsType) => {
             updateFavoriteTabs,
             updateSymbolFavoriteState,
             pinToTop,
+            getLastSelFavTab,
+            updateSelectedFavoriteTab,
         },
     ] as const;
 }
