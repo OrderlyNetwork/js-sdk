@@ -121,7 +121,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           style={{
             minWidth: "300px",
             maxWidth: "500px",
-            minHeight: "900px",
+            minHeight: "950px",
             width: mainSplitSize,
           }}
         >

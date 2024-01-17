@@ -115,16 +115,15 @@ export const Statistic: FC<StatisticProps> = (props) => {
   } else {
     label = (
       <Tooltip content={props.hint} className="orderly-max-w-[200px]">
-        <span className={cn(labelClassName, props.labelClassName)}>
+        <div className={cn(labelClassName, props.labelClassName)}>
           {labelElement}
-        </span>
+        </div>
       </Tooltip>
     );
   }
 
   return (
     <div className={cn(props.className, alignClasses[align], props.hint && "orderly-cursor-pointer hover:orderly-text-base-contrast")}>
-
       {label}
       <div className={cn(valueClassName, props.valueClassName, colorClassName)}>
         {valueElement}
