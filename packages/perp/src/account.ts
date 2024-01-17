@@ -51,7 +51,9 @@ export type FreeCollateralInputs = {
  * 计算可用保证金
  */
 export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
-  return inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
+  const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
+  // free collateral cannot be less than 0
+  return value.isNegative() ? zero : value;
 }
 
 export type TotalCollateralValueInputs = {
