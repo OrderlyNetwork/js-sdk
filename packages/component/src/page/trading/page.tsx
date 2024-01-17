@@ -23,7 +23,7 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
         <Header className="orderly-app-trading-header orderly-border-b orderly-border-divider">
           <TopNavbar />
         </Header>
-        <Layout>
+        <Layout style={{ paddingBottom: "42px" }}>
           {/* <Sider style={{ minWidth: "44px", backgroundColor: "red" }}></Sider> */}
           <Content>
             {/* <PageHeader
@@ -39,9 +39,6 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
           <SystemStatusBar />
         </Footer>
       </Layout>
-      {/* <Page md={<XSTradingPage {...props} />}>
-        <FullTradingPage {...props} />
-      </Page> */}
     </TradingPageProvider>
   );
 };

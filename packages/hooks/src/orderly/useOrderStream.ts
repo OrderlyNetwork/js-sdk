@@ -8,6 +8,8 @@ import {
 } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
+import version from "../version";
+import { useDataCenterContext } from "../dataProvider";
 
 export interface UserOrdersReturn {
   data: any[];
@@ -29,6 +31,7 @@ export const useOrderStream = (params: Params) => {
   const { status, symbol, side, size = 100 } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
+  const { regesterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
@@ -38,39 +41,43 @@ export const useOrderStream = (params: Params) => {
     { error: updateOrderError, isMutating: updateMutating },
   ] = useMutation("/v1/order", "PUT");
 
-  const ordersResponse = usePrivateInfiniteQuery(
-    (pageIndex: number, previousPageData) => {
-      // reached the end
-      if (previousPageData && !previousPageData.rows?.length) return null;
+  const getKey = (pageIndex: number, previousPageData: any) => {
+    // reached the end
+    if (previousPageData && !previousPageData.rows?.length) return null;
 
-      const search = new URLSearchParams([
-        ["size", size.toString()],
-        ["page", `${pageIndex + 1}`],
-      ]);
+    const search = new URLSearchParams([
+      ["size", size.toString()],
+      ["page", `${pageIndex + 1}`],
+    ]);
 
-      if (status) {
-        search.set(`status`, status);
-      }
-
-      if (symbol) {
-        search.set(`symbol`, symbol);
-      }
-
-      if (side) {
-        search.set(`side`, side);
-      }
-
-      return `/v1/orders?${search.toString()}`;
-    },
-    {
-      initialSize: 1,
-      // revalidateFirstPage: false,
-      // onError: (err) => {
-      //   console.error("fetch failed::::", err);
-      // },
-      formatter: (data) => data,
+    if (status) {
+      search.set(`status`, status);
     }
-  );
+
+    if (symbol) {
+      search.set(`symbol`, symbol);
+    }
+
+    if (side) {
+      search.set(`side`, side);
+    }
+
+    return `/v1/orders?${search.toString()}`;
+  };
+
+  useEffect(() => {
+    const key = `orders:${status}:${symbol}:${side}`;
+    regesterKeyHandler(key, getKey);
+  }, [status, symbol, side]);
+
+  const ordersResponse = usePrivateInfiniteQuery(getKey, {
+    initialSize: 1,
+    // revalidateFirstPage: false,
+    // onError: (err) => {
+    //   console.error("fetch failed::::", err);
+    // },
+    formatter: (data) => data,
+  });
 
   const orders = useMemo(() => {
     if (!ordersResponse.data) {
@@ -108,11 +115,11 @@ export const useOrderStream = (params: Params) => {
   /**
    * calcel order
    */
-  const cancelOrder = useCallback((orderId: string, symbol?: string) => {
+  const cancelOrder = useCallback((orderId: number, symbol?: string) => {
     return doCancelOrder(null, {
       order_id: orderId,
       symbol,
-      source: "mweb",
+      source: `SDK_${version}`,
     }).then((res: any) => {
       if (res.success) {
         // return ordersResponse.mutate().then(() => {
@@ -136,6 +143,7 @@ export const useOrderStream = (params: Params) => {
     {
       total,
       isLoading: ordersResponse.isLoading,
+      refresh: ordersResponse.mutate,
       loadMore,
       cancelAllOrders,
       updateOrder,

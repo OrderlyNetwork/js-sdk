@@ -11,6 +11,7 @@ import { CancelButton } from "./cancelButton";
 import { OrderQuantity } from "./quantity";
 import { Price } from "./price";
 import { EndReachedBox } from "@/listView/endReachedBox";
+import { cn } from "@/utils/css";
 
 interface Props {
   dataSource: any[];
@@ -18,6 +19,7 @@ interface Props {
   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
   loading?: boolean;
   loadMore?: () => void;
+  className?: string;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
@@ -111,8 +113,9 @@ export const Listview: FC<Props> = (props) => {
         dataIndex: "action",
         className: "orderly-h-[48px]",
         align: "right",
+        fixed: "right",
         render: (_: string, record) => {
-          return <CancelButton order={record} onCancel={props.onCancelOrder} />;
+          return <CancelButton order={record} />;
         },
       });
     }
@@ -133,9 +136,10 @@ export const Listview: FC<Props> = (props) => {
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={
-          "orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px]"
-        }
+        className={cn(
+          "orderly-text-2xs orderly-text-base-contrast-80",
+          props.className
+        )}
         generatedRowKey={(record) => record.order_id}
         renderRowContainer={(record, index, children) => {
           return (
