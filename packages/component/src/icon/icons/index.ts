@@ -13,3 +13,4 @@ export { CircleCloseIcon } from "./circleClose";
 export { CircleAdd } from "./circleAdd";
 export { AddIcon } from "./add";
 export { ArrowTopIcon } from "./arrowTop";
+export { SettingsIcon } from "./settings";
