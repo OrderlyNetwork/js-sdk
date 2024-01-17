@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@radix-u
 import { Divider } from "@/divider";
 import { DecimalPrecisionCheckbox, DecimalPrecisionType } from "./decimalPrecisionCheckBox";
 import { UnPnlPriceBasisCheckBox, UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
+import { SettingsIcon } from "@/icon";
 
 
 export interface TabBarExtraNodeProps {
@@ -102,8 +103,9 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <button className={"orderly-text-base-contrast-80"}>
-          <Settings size={18} />
+        <button className={"orderly-pt-1 orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
+          {/* <Settings size={18} /> */}
+          <SettingsIcon fill="currnet" fillOpacity={1}/>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
