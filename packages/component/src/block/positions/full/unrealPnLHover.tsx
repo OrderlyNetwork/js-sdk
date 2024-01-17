@@ -27,7 +27,7 @@ export const UnrealizedPnLPopoverCard: FC<{
   return (<div>
     <span>Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.</span>
     <Divider className="orderly-py-2 orderly-border-white/10" />
-    <span>Unrealized PnL Price Basis</span>
+    <div className="orderly-mb-2">Unrealized PnL Price Basis</div>
     <UnPnlPriceBasisCheckBox value={unPnlPriceBasis} onValueChange={onUnPnlPriceBasisChanged} />
   </div>);
 }
