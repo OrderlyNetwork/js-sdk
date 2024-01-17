@@ -1,4 +1,4 @@
-import { OrderBook } from "@/block/orderbook";
+import { DesktopOrderBook } from "@/block/orderbook/index.desktop";
 import { SymbolProvider } from "@/provider";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { useTabContext } from "@/tab/tabContext";
@@ -65,7 +65,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, [height?.content]);
 
   return (
-    <OrderBook
+    <DesktopOrderBook
       level={level}
       asks={data.asks!}
       bids={data.bids!}
