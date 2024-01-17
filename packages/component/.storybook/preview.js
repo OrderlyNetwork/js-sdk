@@ -1,52 +1,16 @@
 /** @type { import('@storybook/react').Preview } */
 import { withThemeByDataAttribute } from "@storybook/addon-styling";
-import injectedModule from "@web3-onboard/injected-wallets";
-
 import { OrderlyAppProvider } from "../src";
-
 import { MemoryConfigStore } from "@orderly.network/core";
-
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { ConnectorProvider } from "@orderly.network/web3-modal";
-
+import { CustomContractManager } from "./CustomContract";
+import { CustomConfigStore } from "./CustomConfigStore";
 import "../src/tailwind.css"; // tailwind css
-import chains from "./chains";
 
 const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
-
-// const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`
 const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
 const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
-
-const Arbitrum = {
-  id: 421613,
-  // chainId: '421613',
-  label: "Arbitrum Goerli",
-  token: "AGOR",
-  rpcUrl: "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
-};
-
-// const chains = [
-//   Arbitrum,
-//   //   {
-//   //   id: 97,
-//   // label:'BNB Chain Testnet',
-//   // token:'BNB',
-//   // rpcUrl:'https://data-seed-prebsc-1-s1.binance.org:8545'
-//   // }
-//   {
-//     id: 43113,
-//     // label:'BNB Chain Testnet',
-//     // token:'BNB',
-//     // rpcUrl:'https://data-seed-prebsc-1-s1.binance.org:8545'
-//   },
-//   {
-//     id: 84531,
-//     label: "Base Goerli Testnet",
-//     token: "ETH",
-//     rpcUrl: "https://goerli.basescan.org",
-//   },
-// ];
 
 const preview = {
   parameters: {
@@ -57,7 +21,6 @@ const preview = {
         date: /Date$/,
       },
     },
-
     // viewport: {
     //   defaultViewport: "mobile2",
     // },
@@ -78,29 +41,33 @@ const preview = {
   },
   decorators: [
     (Story) => {
-      const networkId = localStorage.getItem('preview-orderly-networkId') ?? 'testnet';
+      const networkId = localStorage.getItem("preview-orderly-networkId");
+      // const networkId = "mainnet";
+      // const networkId = "testnet";
+      const configStore = new CustomConfigStore({ networkId, env: "qa" });
       return (
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
-            networkId={networkId}
-            // networkId={'mainnet'}
-            brokerId="orderly"
+            networkId={networkId ?? "testnet"}
+            brokerId="woofi_pro"
+            brokerName="WOOFi Pro"
             enableSwapDeposit={true}
-            brokerName="Orderly"
-            // showTestnet={true}
-            // logoUrl="/woo_fi_logo.svg"
+            // configStore={configStore}
+            // contracts={new CustomContractManager(configStore)}
             appIcons={{
-              main:{
+              main: {
                 img: "/orderly-logo.svg",
               },
-              secondary:{
+              secondary: {
                 img: "/woo_fi_logo.svg",
-
-              }
+              },
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
-              localStorage.setItem('preview-orderly-networkId', isTestnet ? 'testnet' : 'mainnet');
+              localStorage.setItem(
+                "preview-orderly-networkId",
+                isTestnet ? "testnet" : "mainnet"
+              );
               // realod page
               setTimeout(() => {
                 window.location.reload();
@@ -127,4 +94,3 @@ const preview = {
 };
 
 export default preview;
-
