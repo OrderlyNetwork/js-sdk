@@ -39,11 +39,18 @@ const AssetsDetail = () => {
   return (
     <div
       className={
-        "orderly-text-xs orderly-py-4 orderly-mb-4 orderly-border-b orderly-border-t orderly-border-divider orderly-space-y-2 orderly-tabular-nums"
+        "orderly-text-xs orderly-pb-4 orderly-mb-4 orderly-border-b orderly-border-divider orderly-space-y-2 orderly-tabular-nums"
       }
     >
-      <div className={"orderly-flex orderly-justify-between orderly-text-base-contrast-54" }>
-        <DesktopFreeCollat title="Free collateral" className="orderly-text-xs"/>
+      <div
+        className={
+          "orderly-flex orderly-justify-between orderly-text-base-contrast-54"
+        }
+      >
+        <DesktopFreeCollat
+          title="Free collateral"
+          className="orderly-text-xs"
+        />
         <Numeral
           surfix={<span className={"orderly-text-base-contrast-36"}>USDC</span>}
         >
@@ -52,10 +59,14 @@ const AssetsDetail = () => {
       </div>
       <div className={"orderly-flex orderly-justify-between"}>
         <Tooltip
-          content={"Settling PnL moves the profit or loss from a perpetual market into the USDC balance."}
+          content={
+            "Settling PnL moves the profit or loss from a perpetual market into the USDC balance."
+          }
           className="orderly-max-w-[270px]"
         >
-          <span className={"orderly-text-base-contrast-54 orderly-cursor-pointer"}>
+          <span
+            className={"orderly-text-base-contrast-54 orderly-cursor-pointer"}
+          >
             Unsettled PnL
           </span>
         </Tooltip>

@@ -14,3 +14,8 @@ export { CircleAdd } from "./circleAdd";
 export { AddIcon } from "./add";
 export { ArrowTopIcon } from "./arrowTop";
 export { SettingsIcon } from "./settings";
+export { CopyDesktopIcon } from "./copy.desktop";
+export { ShareIcon } from "./share";
+export { DisconnectIcon } from "./disconnect";
+
+

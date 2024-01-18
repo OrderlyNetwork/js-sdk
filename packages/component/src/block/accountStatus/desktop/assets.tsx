@@ -29,6 +29,7 @@ import { modal } from "@/modal";
 import { ConfigStore } from "@orderly.network/core";
 import { cn } from "@/utils/css";
 import { isTestnet } from "@orderly.network/utils";
+import { Divider } from "@/divider";
 
 interface AssetsProps {
   totalBalance: number;
@@ -119,7 +120,7 @@ export const Assets: FC<AssetsProps> = (props) => {
     >
       <div
         className={
-          "orderly-py-3 orderly-flex orderly-justify-between orderly-items-center orderly-tabular-nums"
+          "orderly-py-4 orderly-flex orderly-justify-between orderly-items-center orderly-tabular-nums"
         }
       >
         <div className={"orderly-flex-1"}>
@@ -155,7 +156,7 @@ export const Assets: FC<AssetsProps> = (props) => {
         </CollapsibleTrigger>
       </div>
       {showGetTestUSDC && (
-        <div className="orderly-mb-3 orderly-w-full">
+        <div className="orderly-w-full">
           <Button
             variant={"outlined"}
             fullWidth
@@ -171,6 +172,7 @@ export const Assets: FC<AssetsProps> = (props) => {
           </Button>
         </div>
       )}
+      <Divider className="orderly-py-4" />
 
       <CollapsibleContent>
         <MemorizedAssetsDetail />
@@ -178,16 +180,16 @@ export const Assets: FC<AssetsProps> = (props) => {
 
       <div className={"orderly-pb-4"}>
         <Progress
-          value={marginRatioVal * 10}
+          value={marginRatioVal * 100}
           variant={"gradient"}
           foregroundClassName={cn(
             "",
-            marginRatioVal <= 1 &&
+            marginRatioVal <= 0.1 &&
               "orderly-bg-gradient-to-r orderly-from-[rgba(244,128,124,1)] orderly-to-[rgba(255,79,130,1)]",
-            marginRatioVal >= 10 &&
+            marginRatioVal >= 1 &&
               "orderly-bg-gradient-to-r orderly-from-[rgba(29,246,181,1)] orderly-to-[rgba(134,237,146,1)]",
-            marginRatio > 1 &&
-              marginRatio < 10 &&
+            marginRatio > 0.1 &&
+              marginRatio < 1 &&
               "orderly-bg-gradient-to-r orderly-from-[rgba(230,214,115,1)] orderly-to-[rgba(230,200,115,1)]"
           )}
         />

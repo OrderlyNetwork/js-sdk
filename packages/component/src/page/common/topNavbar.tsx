@@ -1,13 +1,13 @@
-import { FC, ReactNode, useCallback, useContext, useMemo } from "react";
+import { FC, useCallback, useContext, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
-import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider/appProvider";
 import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
+import { CopyIcon } from "@/icon";
 
 interface Props {
   // logo?: ReactNode;
@@ -54,11 +54,17 @@ export const TopNavbar: FC<Props> = (props) => {
           accountInfo={undefined}
           className="orderly-mr-3"
           onConnect={onConnect}
-          // dropMenuItem={(<div className="orderly-h-[200px] orderly-bg-primary"></div>)}
-          // dropMenuItem={[{title: "haha", key: "bb"}, {title: "haha1", key: "bb1"},]}
+          // dropMenuItem={
+          //   <div className="orderly-flex orderly-h-[56px] orderly-items-center">
+          //     Custom Menu
+          //   </div>
+          // }
+          // dropMenuItem={[
+          //   { icon: <CopyIcon size={20} />, title: "Menu 1", key: "1" },
+          //   { icon: <CopyIcon size={20} />, title: "Menu 2", key: "2" },
+          // ]}
           // onClickDropMenuItem={(item) => {
-          //   console.log("click item", item);
-
+          //   console.log("onClickDropMenuItem", item);
           // }}
         />
       </div>
