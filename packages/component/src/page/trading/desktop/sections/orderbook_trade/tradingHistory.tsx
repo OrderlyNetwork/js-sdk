@@ -16,7 +16,7 @@ export const TradeHistoryFull: FC<TradeHistoryProps> = (props) => {
 
   return (
     <div
-      className="orderly-overflow-y-auto"
+      className="orderly-overflow-y-auto orderly-px-3"
       style={{ height: `${height?.content}px` }}
     >
       <TradeHistory

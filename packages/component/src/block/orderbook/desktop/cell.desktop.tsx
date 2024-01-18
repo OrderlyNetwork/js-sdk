@@ -22,13 +22,10 @@ export interface DesktopOrderBookCellProps {
 }
 
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
-  const { cellHeight, showTotal, totalMode, depth } = useContext(OrderBookContext);
+  const { cellHeight, showTotal, onItemClick, totalMode, depth } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
   const width = (props.accumulated / props.count) * 100;
-
-
-  console.log("cell height", cellHeight);
 
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
@@ -39,12 +36,16 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
     : new Decimal(props.quantity).mul(props.price).toString();
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-gap-2 orderly-relative"
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-relative orderly-font-bold orderly-cursor-pointer"
       style={{ height: `${cellHeight}px` }}
+      onClick={() => {
+        if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
+        onItemClick?.([props.price, props.quantity]);
+      }}
     >
       <div className={
-        cn("orderly-basis-7/12 orderly-flex orderly-felx-row orderly-items-center",
-          showTotal && "orderly-flex-1")
+        cn("orderly-basis-7/12 orderly-flex orderly-felx-row orderly-items-center orderly-mr-2",
+          showTotal && "orderly-basis-5/12")
       }>
         <div className={cn(
           "orderly-flex-1 orderly-text-left",
@@ -61,10 +62,13 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         </div>
       </div>
       <div className={cn(
-        "orderly-basis-4/12 orderly-flex orderly-fex-row orderly-overflow-hidden orderly-relative",
-        showTotal && "orderly-flex-1"
+        "orderly-basis-5/12 orderly-flex orderly-items-center orderly-fex-row orderly-overflow-hidden orderly-relative",
+        showTotal && "orderly-basis-7/12"
       )}>
-        <div className="orderly-flex-1 orderly-text-right">
+        <div className={cn(
+          "orderly-flex-1 orderly-pr-6 orderly-text-right",
+          showTotal && "orderly-pr-3",
+        )}>
 
           <Numeral
             precision={base_dp}
@@ -74,7 +78,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
           </Numeral>
         </div>
         {showTotal && (
-          <div className="orderly-flex-1 orderly-text-right">
+          <div className="orderly-flex-1 orderly-text-right orderly-pr-3">
 
             <Numeral
               precision={2}

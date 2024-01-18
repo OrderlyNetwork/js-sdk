@@ -36,7 +36,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   return (
     <div
       id="orderly-order-book-mark-price"
-      className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80 desktop:orderly-h-[42px] desktop:orderly-text-[20px] desktop:orderly-justify-center desktop:orderly-gap-5 orderly-tabular-nums"
+      className="orderly-py-1 orderly-flex orderly-justify-between orderly-text-xs orderly-text-base-contrast-80 desktop:orderly-h-[40px] desktop:orderly-text-[20px] desktop:orderly-justify-center desktop:orderly-gap-5 orderly-tabular-nums"
     >
       <div
         className={cn(

@@ -20,7 +20,7 @@ export const DesktopDepthSelect: FC<DesktopDepthSelectProps> = (props) => {
 
  
   return (
-    <div className="orderly-flex orderly-items-center orderly-justify-between orderly-pt-2">
+    <div className="orderly-flex orderly-items-center orderly-justify-between orderly-pt-2 orderly-mr-3">
       {/* <Select size={"small"} value={"0.001"} /> */}
       <Select
         options={options}
