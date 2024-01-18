@@ -26,7 +26,7 @@ export const MyOrderBookAndTrade: FC<Props> = (props) => {
         <TabPane title="Orderbook" value="orderbook">
           <MemorizedOrderBook
             symbol={props.symbol}
-            className={"orderly-px-3"}
+            className={"orderly-pl-3"}
           />
         </TabPane>
         <TabPane title="Last trades" value="tradeHistory">

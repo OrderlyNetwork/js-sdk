@@ -22,105 +22,68 @@ export interface DesktopOrderBookCellProps {
 }
 
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
-  const { cellHeight, showTotal, totalMode } = useContext(OrderBookContext);
+  const { cellHeight, showTotal, totalMode, depth } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
   const width = (props.accumulated / props.count) * 100;
 
-  let qty = Number.isNaN(props.quantity)
-    ? "-"
-    : totalMode === "amount"
-    ? new Decimal(props.quantity).mul(props.price).toString()
-    : props.accumulated;
 
-  return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-gap-2">
-      <MobileOrderBookCell {...props} />
-      <TotalInfoCell {...props} />
-    </div>
-  );
-};
-
-const MobileOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
-  const width = (props.accumulated / props.count) * 100;
-  const { cellHeight, onItemClick, depth, showTotal } =
-    useContext(OrderBookContext);
-  const { base_dp, quote_dp } = useContext(SymbolContext);
-
-  let qty = Number.isNaN(props.quantity)
-    ? "-"
-    : props.mode === "amount"
-    ? new Decimal(props.quantity).mul(props.price).toString()
-    : props.quantity;
-
-  if (showTotal) {
-    qty = props.quantity;
-  }
+  console.log("cell height", cellHeight);
 
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
   }, [depth, quote_dp]);
 
+  const qty = Number.isNaN(props.quantity)
+    ? "-"
+    : new Decimal(props.quantity).mul(props.price).toString();
+
   return (
-    <div
-      className={cn(
-        "orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums",
-        showTotal && "orderly-flex-1"
-      )}
+    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-gap-2 orderly-relative"
       style={{ height: `${cellHeight}px` }}
-      onClick={() => {
-        if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
-        onItemClick?.([props.price, props.quantity]);
-      }}
     >
-      <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-items-center orderly-z-10 orderly-relative orderly-px-1 orderly-text-4xs desktop:orderly-text-2xs orderly-h-full">
-        <div
-          className={
-            props.type === OrderBookCellType.ASK
-              ? "orderly-text-trade-loss"
-              : "orderly-text-trade-profit"
-          }
-        >
+      <div className={
+        cn("orderly-basis-7/12 orderly-flex orderly-felx-row orderly-items-center",
+          showTotal && "orderly-flex-1")
+      }>
+        <div className={cn(
+          "orderly-flex-1 orderly-text-left",
+          props.type === OrderBookCellType.ASK
+            ? "orderly-text-trade-loss"
+            : "orderly-text-trade-profit"
+        )}>
           <Numeral precision={dp}>{props.price}</Numeral>
         </div>
-        <div className="orderly-text-base-contrast-80">
-          <Numeral precision={props.mode === "amount" ? 2 : base_dp}>
-            {qty}
+        <div className="orderly-flex-1 orderly-text-right orderly-text-base-contrast-80">
+          <Numeral precision={base_dp}>
+            {props.quantity}
           </Numeral>
         </div>
       </div>
-      {Number.isNaN(width) || showTotal ? null : (
-        <CellBar
-          width={width}
-          className={
-            props.type === OrderBookCellType.ASK
-              ? "orderly-bg-trade-loss/20"
-              : "orderly-bg-trade-profit/20"
-          }
-        />
-      )}
-    </div>
-  );
-};
+      <div className={cn(
+        "orderly-basis-4/12 orderly-flex orderly-fex-row orderly-overflow-hidden orderly-relative",
+        showTotal && "orderly-flex-1"
+      )}>
+        <div className="orderly-flex-1 orderly-text-right">
 
+          <Numeral
+            precision={base_dp}
+            className="orderly-z-10 "
+          >
+            {props.accumulated}
+          </Numeral>
+        </div>
+        {showTotal && (
+          <div className="orderly-flex-1 orderly-text-right">
 
-const TotalInfoCell: FC<DesktopOrderBookCellProps> = (props) => {
-  const { base_dp, quote_dp } = useContext(SymbolContext);
-  const { cellHeight, showTotal, totalMode } = useContext(OrderBookContext);
-
-  const width = (props.accumulated / props.count) * 100;
-  return (
-    <div
-        className="orderly-order-book-list-item orderly-overflow-hidden orderly-relative orderly-cursor-pointer orderly-tabular-nums orderly-flex-[0.7] desktop:orderly-text-2xs"
-        style={{ height: `${cellHeight}px` }}
-      >
-        <Numeral
-          precision={props.mode === "amount" ? 2 : base_dp}
-          className="orderly-z-10 orderly-pl-1"
-        >
-          {props.accumulated}
-        </Numeral>
-
+            <Numeral
+              precision={2}
+              className="orderly-z-10"
+            >
+              {qty}
+            </Numeral>
+          </div>
+        )}
         <CellBar
           width={width}
           direction={CellBarDirection.LEFT_TO_RIGHT}
@@ -131,5 +94,11 @@ const TotalInfoCell: FC<DesktopOrderBookCellProps> = (props) => {
           }
         />
       </div>
+
+      <div
+        className="orderly-absolute orderly-bg-red-300 orderly-rounded-full orderly-left-[-8px] orderly-h-[4px] orderly-w-[4px] orderly-pointer-events-none"
+        style={{ top: `${cellHeight / 2 - 2}px` }}
+      />
+    </div>
   );
 };
