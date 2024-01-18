@@ -103,7 +103,7 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <button className={"orderly-h-[48px] orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
+        <button className={"orderly-pb-[1px] orderly-h-[48px] orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
           {/* <Settings size={18} /> */}
           <SettingsIcon fill="currnet" fillOpacity={1}/>
         </button>
