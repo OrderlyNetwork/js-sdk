@@ -255,13 +255,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   ]);
 
   const onApprove = useCallback(async () => {
-    return props
-      .approve(quantity)
-      .then((res: any) => {})
-      .catch((error) => {
-        console.log("approve error", error);
-        toast.error(error?.errorCode);
-      });
+    return props.approve(quantity);
   }, [quantity, props.approve]);
 
   const onValueChange = useCallback(
