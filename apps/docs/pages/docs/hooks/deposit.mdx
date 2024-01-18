@@ -94,6 +94,30 @@ const {
 approve("<quantity?>");
 ```
 
+## Deposit fee
+
+### `setQuantity`
+
+The `setQuantity` function is used to set the deposit quantity. This will trigger a recalculation of the deposit fee. **This function must be called before calling the `deposit` function, otherwise the deposit will fail.**
+
+```typescript {3-6}
+const {
+  //...
+  depositFee,
+  quantity,
+  setQuantity,
+  depositFeeRevalidating
+} = useDeposit({
+  //...
+});
+
+setQuantity("<quantity>");
+```
+
+### `depositFee`
+
+The `depositFee` field is the fee that needs to be paid when depositing. This will refresh if the `quantity` is updated.
+
 ## Initiate deposit
 
 ### `deposit()`
@@ -108,7 +132,8 @@ const {
   //...
 });
 
-const res = await deposit("<quantity>");
+// Note: No parameters need to be passed during the call
+const res = await deposit();
 ```
 
 ### Deposit status
