@@ -36,16 +36,13 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     if (approveLoading) return;
     setApproveLoading(true);
     onApprove?.()
-      .then(
-        (result) => {
-          //
-          toast.success("Approve success");
-        },
-        (error) => {
-          //
-          toast.error(error?.errorCode);
-        }
-      )
+      .then((res: any) => {
+        toast.success("Approve success");
+      })
+      .catch((error) => {
+        console.log("approve error", error);
+        toast.error(error?.errorCode || "Approve failed");
+      })
       .finally(() => {
         setApproveLoading(false);
       });

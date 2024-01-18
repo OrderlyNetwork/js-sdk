@@ -24,11 +24,16 @@ export const TableContext = createContext<TableContextState>(
   {} as TableContextState
 );
 
-export const defaultSortter = (r1: any, r2: any, sortOrder: SortOrder) => {
+export const defaultSortter = (
+  r1: any,
+  r2: any,
+  sortOrder: SortOrder,
+  key: string
+) => {
   if (sortOrder === "asc") {
-    return Number(r1.price) - Number(r2.price);
+    return Number(r1[key]) - Number(r2[key]);
   }
-  return Number(r2.price) - Number(r1.price);
+  return Number(r2[key]) - Number(r1[key]);
 };
 
 export const TableProvider: FC<
@@ -100,7 +105,7 @@ export const TableProvider: FC<
         let sorttor =
           typeof col?.onSort === "function" ? col.onSort : defaultSortter;
 
-        return sorttor(r1, r2, sortKey[1]);
+        return sorttor(r1, r2, sortKey[1], sortKey[0]);
       }
       return 0;
     });
