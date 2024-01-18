@@ -103,7 +103,7 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <button className={"orderly-pt-1 orderly-h-[48px] orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
+        <button className={"orderly-h-[48px] orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
           {/* <Settings size={18} /> */}
           <SettingsIcon fill="currnet" fillOpacity={1}/>
         </button>
@@ -113,7 +113,7 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
         className="orderly-bg-base-800 orderly-rounded orderly-rounded-borderRadius orderly-w-[280px] orderly-p-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-40"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        <div className="orderly-flex orderly-flex-col orderly-p-0 orderly-text-3xs">
+        <div className="orderly-flex orderly-flex-col orderly-text-3xs">
           <span className="orderly-text-xs orderly-pb-3">Portfolio Settings</span>
           <Divider />
           <span className="orderly-pb-3 orderly-text-base-contrast-54 orderly-mt-2">Decimal Precision for PnL & Notional</span>
