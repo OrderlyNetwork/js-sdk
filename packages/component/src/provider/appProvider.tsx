@@ -166,10 +166,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       //   chainId = `0x${Number(chainId).toString(16)}`;
       // }
 
-      //
-
-      console.log("xxxxxxxxxx ", networkId, chainId, chains);
-
       // check whether chain id and network id match
       // const chainIdNum = parseInt(chainId, 16);
       if (
