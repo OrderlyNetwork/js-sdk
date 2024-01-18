@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.27-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
 ## 0.1.27-alpha.16
 
 ### Patch Changes

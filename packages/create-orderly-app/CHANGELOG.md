@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.1.4-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
 ## 0.1.4-alpha.16
 
 ### Patch Changes

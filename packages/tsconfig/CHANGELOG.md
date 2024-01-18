@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
 ## 0.0.87-alpha.16
 
 ### Patch Changes

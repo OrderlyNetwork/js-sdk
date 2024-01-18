@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.0.36-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.17
+
 ## 0.0.36-alpha.16
 
 ### Patch Changes

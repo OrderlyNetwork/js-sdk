@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.0.79-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
 ## 0.0.79-alpha.16
 
 ### Patch Changes

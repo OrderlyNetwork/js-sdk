@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
 ## 0.0.2-alpha.16
 
 ### Patch Changes
