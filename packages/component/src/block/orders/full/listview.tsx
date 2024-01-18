@@ -23,11 +23,20 @@ interface Props {
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo<Column<API.Order>[]>(() => {
-    const columns = [
+    const columns: Column<API.Order>[] = [
       {
         title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
+        onSort:
+          props.status === OrderStatus.INCOMPLETE
+            ? (r1, r2, sortOrder) => {
+                if (sortOrder === "asc") {
+                  return r1.symbol.localeCompare(r2.symbol);
+                }
+                return r2.symbol.localeCompare(r1.symbol);
+              }
+            : undefined,
         render: (value: string) => (
           <Text rule={"symbol"} className="orderly-font-semibold">
             {value}
@@ -44,6 +53,15 @@ export const Listview: FC<Props> = (props) => {
         title: "Side",
         className: "orderly-h-[48px]",
         dataIndex: "side",
+        onSort:
+          props.status === OrderStatus.INCOMPLETE
+            ? (r1, r2, sortOrder) => {
+                if (sortOrder === "asc") {
+                  return r2.side.localeCompare(r1.side);
+                }
+                return r1.side.localeCompare(r2.side);
+              }
+            : undefined,
         render: (value: string) => (
           <span
             className={cx(
@@ -62,6 +80,7 @@ export const Listview: FC<Props> = (props) => {
         className: "orderly-h-[48px]",
         dataIndex: "quantity",
         width: 180,
+        onSort: props.status === OrderStatus.INCOMPLETE,
         render: (value: string, record) => <OrderQuantity order={record} />,
       },
       {

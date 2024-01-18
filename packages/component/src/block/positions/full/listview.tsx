@@ -37,6 +37,12 @@ export const Listview: FC<
         className: "orderly-h-[48px]",
         fixed: "left",
         width: 120,
+        onSort: (r1, r2, sortOrder) => {
+          if (sortOrder === "asc") {
+            return r1.symbol.localeCompare(r2.symbol);
+          }
+          return r2.symbol.localeCompare(r1.symbol);
+        },
         render: (value: string) => (
           <Text rule={"symbol"} className="orderly-font-semibold">
             {value}
@@ -47,6 +53,7 @@ export const Listview: FC<
         title: "Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "position_qty",
+        onSort: true,
         width: 100,
         render: (value: string) => (
           <NumeralWithCtx coloring className="orderly-font-semibold">
@@ -58,6 +65,7 @@ export const Listview: FC<
         title: "Avg. open",
         className: "orderly-h-[48px]",
         width: 120,
+        onSort: true,
         dataIndex: "average_open_price",
         render: (value: string) => <Numeral>{value}</Numeral>,
       },
@@ -65,13 +73,9 @@ export const Listview: FC<
         title: "Mark price",
         dataIndex: "mark_price",
         width: 120,
+        onSort: true,
         className: "orderly-h-[48px]",
-        onSort(r1, r2, sortOrder) {
-          if (sortOrder === "asc") {
-            return Number(r2.mark_price) - Number(r1.mark_price);
-          }
-          return Number(r1.mark_price) - Number(r2.mark_price);
-        },
+
         render: (value: string) => {
           return <Numeral className="orderly-font-semibold">{value}</Numeral>;
         },
@@ -79,6 +83,7 @@ export const Listview: FC<
       {
         title: "Liq. price",
         width: 100,
+        onSort: true,
         className: "orderly-h-[48px]",
         hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
         dataIndex: "est_liq_price",
@@ -96,6 +101,7 @@ export const Listview: FC<
         title: "Margin",
         className: "orderly-h-[48px]",
         dataIndex: "mm",
+        onSort: true,
         width: 100,
         render: (value: string) => (
           <Numeral className="orderly-font-semibold">{value}</Numeral>
@@ -114,6 +120,7 @@ export const Listview: FC<
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
         width: 120,
+        onSort: true,
         hint: (
           <UnrealizedPnLPopoverCard
             unPnlPriceBasis={props.unPnlPriceBasis}
@@ -140,6 +147,7 @@ export const Listview: FC<
         dataIndex: "notional",
         className: "orderly-h-[48px]",
         width: 100,
+        onSort: true,
         render: (value: string) => (
           <Numeral
             precision={pnlNotionalDecimalPrecision}
