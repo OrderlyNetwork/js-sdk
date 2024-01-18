@@ -9,10 +9,11 @@ import { ColGroup } from "./colgroup";
 import { TableProvider } from "./tableContext";
 import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FixedDivide } from "./fixedDivide";
+import { TBody, TBodyProps } from "./tbody";
 
-export interface TableProps<RecordType> {
+export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   columns: Column<RecordType>[];
-  dataSource?: RecordType[];
+  dataSource?: RecordType[] | null;
   /**
    * @description 加载中
    * @default false
@@ -20,53 +21,15 @@ export interface TableProps<RecordType> {
   loading?: boolean;
   className?: string;
   headerClassName?: string;
-
-  bordered?: boolean;
-
-  justified?: boolean;
-
-  renderRowContainer?: (
-    record: RecordType,
-    index: number,
-    children: ReactNode
-  ) => React.ReactNode;
-
-  generatedRowKey?: (record: RecordType, index: number) => string;
-
-  onRow?: (record: RecordType, index: number) => any;
 }
 
 export const Table = <RecordType extends unknown>(
   props: TableProps<RecordType>
 ) => {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const { dataSource, columns, ...rest } = props;
 
-  const rows = useMemo(() => {
-    return props.dataSource?.map((record: any, index) => {
-      const key =
-        typeof props.generatedRowKey === "function"
-          ? props.generatedRowKey(record, index)
-          : index; /// `record.ts_${record.price}_${record.size}_${index}`;
-
-      const row = (
-        <Row
-          key={key}
-          index={index}
-          columns={props.columns}
-          record={record}
-          justified={props.justified}
-          bordered={props.bordered}
-          onRow={props.onRow}
-        />
-      );
-
-      if (typeof props.renderRowContainer === "function") {
-        return props.renderRowContainer(record, index, row);
-      }
-
-      return row;
-    });
-  }, [props.dataSource, props.columns, props.generatedRowKey, props.onRow]);
+  // console.log("props sortable:: ", props.sortable);
 
   const maskElement = useMemo(() => {
     if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
@@ -143,7 +106,7 @@ export const Table = <RecordType extends unknown>(
   }, []);
 
   return (
-    <TableProvider columns={props.columns}>
+    <TableProvider columns={props.columns} dataSource={props.dataSource}>
       <div
         ref={wrapRef}
         className={cn(
@@ -167,7 +130,7 @@ export const Table = <RecordType extends unknown>(
         >
           <ColGroup columns={props.columns} />
 
-          <tbody>{rows}</tbody>
+          <TBody {...rest} />
         </table>
         {maskElement}
       </div>

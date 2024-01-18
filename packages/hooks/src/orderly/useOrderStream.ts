@@ -79,21 +79,30 @@ export const useOrderStream = (params: Params) => {
     formatter: (data) => data,
   });
 
-  const orders = useMemo(() => {
+  const flattenOrders = useMemo(() => {
     if (!ordersResponse.data) {
       return null;
     }
 
-    return ordersResponse.data
-      ?.map((item) => item.rows)
-      ?.flat()
-      .map((item) => {
-        return {
-          ...item,
-          mark_price: (markPrices as any)[item.symbol] ?? 0,
-        };
-      });
-  }, [ordersResponse.data, markPrices]);
+    return ordersResponse.data?.map((item) => item.rows)?.flat();
+  }, [ordersResponse.data]);
+
+  const orders = useMemo(() => {
+    if (!flattenOrders) {
+      return null;
+    }
+
+    if (status !== OrderStatus.NEW) {
+      return flattenOrders;
+    }
+
+    return flattenOrders.map((item) => {
+      return {
+        ...item,
+        mark_price: (markPrices as any)[item.symbol] ?? 0,
+      };
+    });
+  }, [flattenOrders, markPrices, status]);
 
   const total = useMemo(() => {
     return ordersResponse.data?.[0]?.meta?.total || 0;

@@ -21,7 +21,6 @@ export const usePrivateDataObserver = (options: {
     const map = options.getKeysMap("orders");
 
     map.forEach((getKey, key) => {
-      console.log("updateOrders", key);
       mutate(
         unstable_serialize((index, prevData) => [
           getKey(index, prevData),
@@ -29,23 +28,6 @@ export const usePrivateDataObserver = (options: {
         ])
       );
     });
-
-    // mutate(
-    //   unstable_serialize((index, prevData) => {
-
-    //     return [
-    //       `/v1/orders?size=100&page=1&status=${OrderStatus.INCOMPLETE}`,
-    //       state.accountId,
-    //     ];
-    //   })
-    // );
-
-    // mutate(
-    //   unstable_serialize(() => [
-    //     `/v1/orders?size=100&page=1&status=${OrderStatus.NEW}`,
-    //     state.accountId,
-    //   ])
-    // );
 
     // update the orders history list;
 
