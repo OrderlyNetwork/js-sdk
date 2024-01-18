@@ -1,9 +1,11 @@
 import { CSSProperties, FC, ReactNode, useContext, useMemo } from "react";
 import { cn } from "@/utils/css";
-import { TableContext } from "./tableContext";
+
 import { withFixedStyle } from "./colHOC";
 
 export type ColumnFixed = "left" | "right";
+
+export type SortOrder = "asc" | "desc";
 
 export type Column<RecordType extends unknown = any> = {
   title: string;
@@ -12,9 +14,11 @@ export type Column<RecordType extends unknown = any> = {
   width?: number;
   fixed?: ColumnFixed;
   dataIndex: string;
-  className?: string;
+  className?: string | ((record: RecordType, index: number) => string);
   align?: "left" | "center" | "right";
-  onSort?: (r1: RecordType, r2: RecordType, sortOrder: "asc" | "des") => void;
+  onSort?:
+    | boolean
+    | ((r1: RecordType, r2: RecordType, sortOrder: SortOrder) => number);
   formatter?: (value: any, record: RecordType, index: number) => any;
   render?: (value: any, record: RecordType, index: number) => React.ReactNode;
   getKey?: (record: RecordType, index: number) => string;
@@ -52,9 +56,12 @@ export const ColItem: FC<ColProps> = (props) => {
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right",
-        col.fixed && "orderly-sticky orderly-bg-base-900"
+        col.fixed && "orderly-sticky"
       )}
-      style={props.style}
+      style={{
+        backgroundColor: "var(--table-background-color)",
+        ...style,
+      }}
     >
       {content}
     </td>

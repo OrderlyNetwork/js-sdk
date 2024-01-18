@@ -26,7 +26,10 @@ export const OrdersViewFull: FC<Props> = (props) => {
         side={props.side}
       />
       <Divider />
-      <div style={{ height: `${(height?.content ?? 100) - 55}px` }}>
+      <div
+        className="orderly-relative"
+        style={{ height: `${(height?.content ?? 100) - 55}px` }}
+      >
         <Listview
           dataSource={props.dataSource}
           status={props.status}

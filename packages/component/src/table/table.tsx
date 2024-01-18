@@ -9,10 +9,11 @@ import { ColGroup } from "./colgroup";
 import { TableProvider } from "./tableContext";
 import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FixedDivide } from "./fixedDivide";
+import { TBody, TBodyProps } from "./tbody";
 
-export interface TableProps<RecordType> {
+export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   columns: Column<RecordType>[];
-  dataSource?: RecordType[];
+  dataSource?: RecordType[] | null;
   /**
    * @description 加载中
    * @default false
@@ -20,49 +21,15 @@ export interface TableProps<RecordType> {
   loading?: boolean;
   className?: string;
   headerClassName?: string;
-
-  bordered?: boolean;
-
-  justified?: boolean;
-
-  renderRowContainer?: (
-    record: RecordType,
-    index: number,
-    children: ReactNode
-  ) => React.ReactNode;
-
-  generatedRowKey?: (record: RecordType, index: number) => string;
 }
 
 export const Table = <RecordType extends unknown>(
   props: TableProps<RecordType>
 ) => {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const { dataSource, columns, ...rest } = props;
 
-  const rows = useMemo(() => {
-    return props.dataSource?.map((record: any, index) => {
-      const key =
-        typeof props.generatedRowKey === "function"
-          ? props.generatedRowKey(record, index)
-          : index; /// `record.ts_${record.price}_${record.size}_${index}`;
-
-      const row = (
-        <Row
-          key={key}
-          columns={props.columns}
-          record={record}
-          justified={props.justified}
-          bordered={props.bordered}
-        />
-      );
-
-      if (typeof props.renderRowContainer === "function") {
-        return props.renderRowContainer(record, index, row);
-      }
-
-      return row;
-    });
-  }, [props.dataSource, props.columns, props.generatedRowKey]);
+  // console.log("props sortable:: ", props.sortable);
 
   const maskElement = useMemo(() => {
     if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
@@ -86,7 +53,7 @@ export const Table = <RecordType extends unknown>(
     );
   }, [props.columns]);
 
-  const onScroll = useDebouncedCallback((scrollLeft) => {
+  const onScroll = useDebouncedCallback((scrollLeft: number) => {
     // console.log(scrollLeft);
     if (!wrapRef.current || !needFixed) {
       return;
@@ -130,8 +97,16 @@ export const Table = <RecordType extends unknown>(
     };
   }, []);
 
+  useEffect(() => {
+    if (!wrapRef.current) return;
+    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor;
+
+    // body.style.setProperty("--table-header-height", "48px");
+    wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
+  }, []);
+
   return (
-    <TableProvider columns={props.columns}>
+    <TableProvider columns={props.columns} dataSource={props.dataSource}>
       <div
         ref={wrapRef}
         className={cn(
@@ -155,7 +130,7 @@ export const Table = <RecordType extends unknown>(
         >
           <ColGroup columns={props.columns} />
 
-          <tbody>{rows}</tbody>
+          <TBody {...rest} />
         </table>
         {maskElement}
       </div>

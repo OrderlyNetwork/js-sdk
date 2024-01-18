@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@radix-u
 import { Divider } from "@/divider";
 import { DecimalPrecisionCheckbox, DecimalPrecisionType } from "./decimalPrecisionCheckBox";
 import { UnPnlPriceBasisCheckBox, UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
+import { SettingsIcon } from "@/icon";
 
 
 export interface TabBarExtraNodeProps {
@@ -102,16 +103,17 @@ const SettingIcon: FC<TabBarExtraNodeProps> = (props) => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <button className={"orderly-text-base-contrast-80"}>
-          <Settings size={18} />
+        <button className={"orderly-pb-[1px] orderly-h-[48px] orderly-text-base-contrast-80 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"}>
+          {/* <Settings size={18} /> */}
+          <SettingsIcon fill="currnet" fillOpacity={1}/>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="orderly-bg-base-800 orderly-rounded orderly-rounded-borderRadius orderly-w-[280px] orderly-px-4 orderly-pb-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-40"
+        className="orderly-bg-base-800 orderly-rounded orderly-rounded-borderRadius orderly-w-[280px] orderly-p-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-40"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        <div className="orderly-flex orderly-flex-col orderly-p-4 orderly-text-3xs">
+        <div className="orderly-flex orderly-flex-col orderly-text-3xs">
           <span className="orderly-text-xs orderly-pb-3">Portfolio Settings</span>
           <Divider />
           <span className="orderly-pb-3 orderly-text-base-contrast-54 orderly-mt-2">Decimal Precision for PnL & Notional</span>

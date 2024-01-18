@@ -8,5 +8,7 @@ export interface OrderHistoryListViewProps {
   onSideChange?: (side: OrderSide) => void;
   onStatusChange?: (status: OrderStatus) => void;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  onCancelOrder: (orderId: number, symbol: string) => Promise<any>;
   loadMore: () => void;
+  className?: string;
 }

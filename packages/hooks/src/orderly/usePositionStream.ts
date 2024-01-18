@@ -27,7 +27,7 @@ export interface PositionReturn {
 
 export const usePositionStream = (
   symbol?: string,
-  options?: SWRConfiguration & {calcMode?: PriceMode}
+  options?: SWRConfiguration & { calcMode?: PriceMode }
 ) => {
   const symbolInfo = useSymbolsInfo();
   const { data: accountInfo } =
@@ -47,7 +47,7 @@ export const usePositionStream = (
   const {
     data,
     error,
-    mutate: updatePositions,
+    mutate: refreshPositions,
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
@@ -57,7 +57,7 @@ export const usePositionStream = (
     ...options,
 
     formatter: (data) => data,
-    onError: (err) => { },
+    onError: (err) => {},
   });
 
   const { data: markPrices } = useMarkPricesStream();
@@ -83,7 +83,6 @@ export const usePositionStream = (
     return data;
   }, [tickers]);
 
-
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
     if (!data?.rows || !symbolInfo || !accountInfo) return null;
 
@@ -91,8 +90,8 @@ export const usePositionStream = (
       typeof symbol === "undefined" || symbol === ""
         ? data.rows
         : data.rows.filter((item) => {
-          return item.symbol === symbol;
-        });
+            return item.symbol === symbol;
+          });
 
     let unrealPnL_total = zero,
       notional_total = zero,
@@ -110,7 +109,7 @@ export const usePositionStream = (
         item.mark_price,
         item.symbol,
         markPrices
-      ) as unknown as number; 
+      ) as unknown as number;
 
       const info = symbolInfo?.[item.symbol];
       //
@@ -173,7 +172,16 @@ export const usePositionStream = (
         unsettledPnL: unsettlementPnL_total.toNumber(),
       },
     ];
-  }, [data?.rows, symbolInfo, accountInfo, markPrices, priceMode, tickerPrices, symbol, holding]);
+  }, [
+    data?.rows,
+    symbolInfo,
+    accountInfo,
+    markPrices,
+    priceMode,
+    tickerPrices,
+    symbol,
+    holding,
+  ]);
 
   // const showSymbol = useCallback((symbol: string) => {
   //   setVisibleSymbol(symbol);
@@ -271,8 +279,8 @@ export const usePositionStream = (
       loading: false,
       // showSymbol,
       error,
-      loadMore: () => { },
-      refresh: () => { },
+      // loadMore: () => {},
+      refresh: refreshPositions,
     },
   ] as const;
 };
