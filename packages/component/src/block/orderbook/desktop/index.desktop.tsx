@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { DesktopBids } from "./bids.desktop";
 import { DesktopAsks } from "./asks.desktop";
-import { MarkPrice } from "../markPrice";
+import { DesktopMarkPrice } from "./markPrice.desktop";
 import { OrderBookProvider } from "@/block/orderbook/orderContext";
 import { Spinner } from "@/spinner";
 import { cn } from "@/utils/css";
@@ -74,7 +74,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
         />
         <DesktopHeader quote={quote} base={base} />
         <DesktopAsks data={props.asks} />
-        <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
+        <DesktopMarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <DesktopBids data={props.bids} />
         {isLoading && (
           <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-z-10 orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-800/70 orderly-h-full orderly-min-h-[420px]">
