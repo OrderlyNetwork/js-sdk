@@ -1,13 +1,12 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { Header } from "../orderbook/header";
-import { Bids } from "../orderbook/bids";
-import { Asks } from "../orderbook/asks";
-import { MarkPrice } from "../orderbook/markPrice";
-import { DepthSelect } from "@/block/orderbook/depthSelect";
+import { DesktopBids } from "./bids.desktop";
+import { DesktopAsks } from "./asks.desktop";
+import { MarkPrice } from "../markPrice";
 import { OrderBookProvider } from "@/block/orderbook/orderContext";
 import { Spinner } from "@/spinner";
 import { cn } from "@/utils/css";
 import { DesktopHeader } from "./header.desktop";
+import { DesktopDepthSelect } from "./depthSelect.desktop";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -68,15 +67,15 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       showTotal={showTotal}
     >
       <div className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
-        <DepthSelect
+        <DesktopDepthSelect
           depth={props.depth}
           value={props.activeDepth}
           onChange={onDepthChange}
         />
         <DesktopHeader quote={quote} base={base} />
-        <Asks data={props.asks} />
+        <DesktopAsks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
-        <Bids data={props.bids} />
+        <DesktopBids data={props.bids} />
         {isLoading && (
           <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-z-10 orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-800/70 orderly-h-full orderly-min-h-[420px]">
             <Spinner />

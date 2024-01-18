@@ -12,8 +12,8 @@ export type { OrderEntryProps } from "./orderEntry";
 
 export { OrderBook } from "./orderbook";
 export type { OrderBookProps } from "./orderbook";
-export { DesktopOrderBook } from "./orderbook/index.desktop";
-export type { DesktopOrderBookProps } from "./orderbook/index.desktop";
+export { DesktopOrderBook } from "./orderbook/desktop/index.desktop";
+export type { DesktopOrderBookProps } from "./orderbook/desktop/index.desktop";
 
 export { Deposit } from "./deposit";
 export type { DepositProps } from "./deposit";

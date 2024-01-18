@@ -1,15 +1,16 @@
 import { FC, useContext, useMemo } from "react";
-import { CellBar, CellBarDirection } from "./cellBar";
+import { CellBar, CellBarDirection } from "../cellBar";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
-import { QtyMode } from "./types";
+import { QtyMode } from "../types";
 import { Numeral } from "@/text/numeral";
 import { SymbolContext } from "@/provider";
 import { cn } from "@/utils";
-import { OrderBookCellType } from "./types";
+import { OrderBookCellType } from "../types";
 
 
-export interface OrderBookCellProps {
+
+export interface DesktopOrderBookCellProps {
   background: string;
   price: number;
   quantity: number;
@@ -20,7 +21,7 @@ export interface OrderBookCellProps {
   mode: QtyMode;
 }
 
-export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
+export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const { cellHeight, showTotal, totalMode } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
@@ -84,7 +85,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   );
 };
 
-const MobileOrderBookCell: FC<OrderBookCellProps> = (props) => {
+const MobileOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
   const { cellHeight, onItemClick, depth, showTotal } =
     useContext(OrderBookContext);

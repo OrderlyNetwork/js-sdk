@@ -1,15 +1,15 @@
 import { FC, useContext, useMemo } from "react";
-import { OrderBookCell } from "./cell";
-import { OrderBookContext } from "./orderContext";
-import { OrderBookCellType } from "./types";
+import { DesktopOrderBookCell } from "./cell.desktop";
+import { OrderBookContext } from "../orderContext";
+import { OrderBookCellType } from "../types";
 
-interface OrderBookListProps {
+interface DesktopListBoxProps {
   type: OrderBookCellType;
   data: number[][];
   countQty: number;
 }
 
-export const ListBox: FC<OrderBookListProps> = (props) => {
+export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   const { data } = props;
   const { mode } = useContext(OrderBookContext);
 
@@ -20,7 +20,7 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
     >
       {data.map((item, index) => {
         return (
-          <OrderBookCell
+          <DesktopOrderBookCell
             key={index}
             background={""}
             price={item[0]}
@@ -32,12 +32,6 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
           />
         );
       })}
-      {/*<OrderBookCell*/}
-      {/*  background={""}*/}
-      {/*  price={"0.00"}*/}
-      {/*  quantity={"0.00"}*/}
-      {/*  size={30}*/}
-      {/*/>*/}
     </div>
   );
 };

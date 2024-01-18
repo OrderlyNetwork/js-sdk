@@ -1,4 +1,4 @@
-import { DesktopOrderBook } from "@/block/orderbook/index.desktop";
+import { DesktopOrderBook } from "@/block/orderbook/desktop/index.desktop";
 import { SymbolProvider } from "@/provider";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { useTabContext } from "@/tab/tabContext";

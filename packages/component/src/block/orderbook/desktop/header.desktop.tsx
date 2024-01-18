@@ -1,8 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 
-import { OrderBookContext } from "./orderContext";
-
-import { SwitchIcon } from "@/icon";
+import { OrderBookContext } from "../orderContext";
 
 interface Props {
     quote: string;
