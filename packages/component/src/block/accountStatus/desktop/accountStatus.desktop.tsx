@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useMemo, useState } from "react";
+import {
+  FC,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { AccountStatusProps } from "../accountStatusBar";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Chains } from "../sections/desktop/chains.desktop";
@@ -17,8 +24,10 @@ import { isTestnet } from "@orderly.network/utils";
 //
 
 export interface DesktopDropMenuItem {
+  icon: ReactNode;
   title: string;
-  key: any;
+  key?: string;
+  onClick?: () => void;
 }
 
 export const AccountStatus: FC<
@@ -28,11 +37,7 @@ export const AccountStatus: FC<
     onClickDropMenuItem?: (item: DesktopDropMenuItem) => void;
   }
 > = (props) => {
-  const {
-    status = AccountStatusEnum.NotConnected,
-    dropMenuItem,
-    onClickDropMenuItem,
-  } = props;
+  const { status = AccountStatusEnum.NotConnected } = props;
   const { account, state } = useAccount();
   const [open, setOpen] = useState(false);
   const { onWalletDisconnect } = useContext(OrderlyAppContext);
