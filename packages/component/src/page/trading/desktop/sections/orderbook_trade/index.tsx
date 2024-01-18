@@ -20,7 +20,7 @@ export const MyOrderBookAndTrade: FC<Props> = (props) => {
         fullWidth
         keepAlive
         autoFit
-        minWidth={280}
+        minWidth={300}
         tabBarClassName="orderly-h-[48px] orderly-text-sm"
       >
         <TabPane title="Orderbook" value="orderbook">
