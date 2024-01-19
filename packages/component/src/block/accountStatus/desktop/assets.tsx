@@ -156,7 +156,7 @@ export const Assets: FC<AssetsProps> = (props) => {
         </CollapsibleTrigger>
       </div>
       {showGetTestUSDC && (
-        <div className="orderly-w-full">
+        <div className="orderly-w-full orderly-pb-4">
           <Button
             variant={"outlined"}
             fullWidth
@@ -172,9 +172,7 @@ export const Assets: FC<AssetsProps> = (props) => {
           </Button>
         </div>
       )}
-      <Divider
-        className={cn("orderly-pb-4", showGetTestUSDC && "orderly-pt-4")}
-      />
+      <Divider className="orderly-pb-4" />
 
       <CollapsibleContent>
         <MemorizedAssetsDetail />
