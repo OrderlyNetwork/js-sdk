@@ -656,3 +656,28 @@ export function availableBalance(inputs: AvailableBalanceInputs) {
 
   return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
 }
+
+export type AccountMMRInputs = {
+  // Total Maintenance Margin of all positions of the user (USDC)
+  positionsMMR: number;
+  /**
+   * Notional sum of all positions,
+   * positions.totalNotional()
+   */
+  positionsNotional: number;
+};
+
+/**
+ * total maintenance margin ratio
+ * @param inputs AccountMMRInputs
+ * @returns number|null
+ */
+export function MMR(inputs: AccountMMRInputs): number | null {
+  // If the user does not have any positions, return null
+  if (inputs.positionsNotional === 0) {
+    return null;
+  }
+  return new Decimal(inputs.positionsMMR)
+    .div(inputs.positionsNotional)
+    .toNumber();
+}

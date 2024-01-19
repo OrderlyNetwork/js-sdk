@@ -82,7 +82,7 @@ export class Account {
 
   constructor(
     private readonly configStore: ConfigStore,
-    private readonly keyStore: OrderlyKeyStore,
+    readonly keyStore: OrderlyKeyStore,
     private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
     options?: Partial<{
       /**

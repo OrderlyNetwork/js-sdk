@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
 /**
@@ -91,6 +91,7 @@ export type LiqPriceInputs = {
   markPrice: number;
   totalCollateral: number;
   positionQty: number;
+  positions: Pick<API.PositionExt, "position_qty" | "mark_price" | "mmr">[];
   MMR: number;
 };
 
@@ -101,18 +102,24 @@ export type LiqPriceInputs = {
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(inputs: LiqPriceInputs): number {
-  const { markPrice, totalCollateral, positionQty, MMR } = inputs;
-  const totalNotional = notional(positionQty, markPrice);
+  const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
 
   if (positionQty === 0) {
     return 0;
   }
 
+  // totalNotional of all poisitions
+  const totalNotional: Decimal = positions.reduce((acc, cur) => {
+    return acc.add(
+      new Decimal(notional(cur.position_qty, cur.mark_price)).mul(cur.mmr)
+    );
+  }, zero);
+
   return Math.max(
     new Decimal(markPrice)
       .add(
         new Decimal(totalCollateral)
-          .sub(new Decimal(totalNotional).mul(MMR))
+          .sub(totalNotional)
           .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
       )
       .toNumber(),
@@ -205,18 +212,20 @@ export function totalUnsettlementPnL(
   }, 0);
 }
 
-/**
- * Calculates the maintenance margin requirement (MMR) of a position.
- * @param inputs The inputs for calculating the MMR.
- * @returns The MMR of the position.
- */
-export function MMR(inputs: {
+export type MMRInputs = {
   baseMMR: number;
   baseIMR: number;
   IMRFactor: number;
   positionNotional: number;
   IMR_factor_power: number;
-}): number {
+};
+
+/**
+ * Calculates the maintenance margin requirement (MMR) of a position.
+ * @param inputs The inputs for calculating the MMR.
+ * @returns The MMR of the position.
+ */
+export function MMR(inputs: MMRInputs): number {
   const {
     baseMMR,
     baseIMR,
