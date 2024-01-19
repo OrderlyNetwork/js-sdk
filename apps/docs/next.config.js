@@ -11,10 +11,10 @@ const nextConfig = {
   // Static export cannot be used when i18n is used
   // output: 'export',
   transpilePackages: [
-    "@uiw/react-split"
-  //   "@douyinfe/semi-ui",
-  //   // "@douyinfe/semi-icons",
-  //   // "@douyinfe/semi-illustration",
+    "@uiw/react-split",
+    //   "@douyinfe/semi-ui",
+    //   // "@douyinfe/semi-icons",
+    //   // "@douyinfe/semi-illustration",
   ],
   webpack: (config, { isServer }) => {
     config.module.rules.push({
@@ -32,6 +32,7 @@ const nextConfig = {
   typescript: {
     // Dangerously allow production builds to successfully complete even if your project has type errors.
     ignoreBuildErrors: true,
+    tsconfigPath: "tsconfig.build.json",
   },
   async redirects() {
     return [

@@ -1,47 +1,14 @@
 {
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@orderly.network/react": ["../../packages/component/src"],
+      "@orderly.network/hooks": ["../../packages/hooks/src"],
+      "@orderly.network/web3-onboard": ["../../packages/onboard/src"],
+      "@orderly.network/types": ["../../packages/types/src"],
+      "@orderly.network/web3-modal": ["../../packages/walletconnect/src"]
     },
-    "noImplicitAny": false
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "pages/_app.js",
-    "pages/_app.js",
-    "example/queryInfo.example.tsx",
-    "dist/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "./app/**"
-  ]
+    "strictNullChecks": true
+  }
 }

@@ -214,6 +214,9 @@ importers:
 
   apps/examples:
     dependencies:
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
