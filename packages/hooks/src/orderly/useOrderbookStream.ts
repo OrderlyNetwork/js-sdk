@@ -84,8 +84,12 @@ const reduceItems = (
     const newQuantity = new Decimal(quantity)
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
       .toNumber();
+    
+      const newAmount = new Decimal(quantity * price)
+      .add(result.length > 0 ? result[result.length - 1][3] : 0)
+      .toNumber();
 
-    result.push([price, quantity, newQuantity]);
+    result.push([price, quantity, newQuantity, newAmount]);
     // if the total is greater than the level, break
     // TODO:
     // if (i + 1 >= level) {
@@ -142,10 +146,10 @@ export const reduceOrderbook = (
   asks = asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
   bids = bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
   // add max qty for asks/bids
-  let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
-  let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
-  asks = asks.map((item) => [...item, maxAskQty]);
-  bids = bids.map((item) => [...item, maxBidQty]);
+  // let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
+  // let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
+  // asks = asks.map((item) => [...item, maxAskQty]);
+  // bids = bids.map((item) => [...item, maxBidQty]);
 
   return {
     asks: asks,
