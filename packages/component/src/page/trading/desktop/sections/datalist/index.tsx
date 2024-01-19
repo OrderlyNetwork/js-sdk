@@ -76,7 +76,7 @@ export const DataListView = () => {
       <TabPane title="Rejected" value="rejected" className="orderly-px-3">
         <MyOrders status={OrderStatus.REJECTED} />
       </TabPane>
-      <TabPane title="Order History" value="history" className="orderly-px-3">
+      <TabPane title="Order history" value="history" className="orderly-px-3">
         <HistoryView />
       </TabPane>
     </Tabs>

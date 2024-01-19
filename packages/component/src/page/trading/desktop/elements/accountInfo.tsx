@@ -9,7 +9,7 @@ export const AccountInfoElement = memo(() => {
   if (disableFeatures.includes(TradingFeatures.AssetAndMarginInfo)) return null;
   return (
     <>
-      <div className="orderly-px-3">
+      <div className="orderly-px-4">
         <AccountInfo />
       </div>
       <Divider className="orderly-my-3" />
