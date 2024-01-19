@@ -1,41 +1,13 @@
 {
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@orderly.network/core": ["../../packages/core/src"],
+      "@orderly.network/react": ["../../packages/component/src"],
+      "@orderly.network/hooks": ["../../packages/hooks/src"],
+      "@orderly.network/web3-onboard": ["../../packages/onboard/src"],
+      "@orderly.network/web3-modal": ["../../packages/walletconnect/src"],
     },
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

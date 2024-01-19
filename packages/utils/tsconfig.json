@@ -1,13 +1,9 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+      "@/*": ["./src/*"],
+      "@orderly.network/types": ["../types/src"],
+    },
+  }
 }
