@@ -7,6 +7,7 @@ import { Spinner } from "@/spinner";
 import { cn } from "@/utils/css";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
+import { usePendingOrderStream } from "./usePendingOrderStream";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -28,6 +29,7 @@ export interface DesktopOrderBookProps {
   cellHeight?: number;
 
   className?: string;
+  pendingOrders?: number[];
 }
 
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
@@ -65,12 +67,17 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
     };
   }, []);
 
+
+  /// 
+
+
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
       showTotal={showTotal}
+      pendingOrders={props.pendingOrders || []}
     >
       <div className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
         <DesktopDepthSelect

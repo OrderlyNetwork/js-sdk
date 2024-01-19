@@ -55,7 +55,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   }, [data]);
 
   return (
-    <Tooltip defaultOpen={true} open={true}>
+    <Tooltip>
       <TooltipTrigger asChild>
         <div
           id="orderly-order-book-list"

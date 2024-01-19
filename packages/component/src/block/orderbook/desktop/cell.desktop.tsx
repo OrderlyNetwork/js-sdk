@@ -24,10 +24,14 @@ export interface DesktopOrderBookCellProps {
 }
 
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
-  const { cellHeight, showTotal, onItemClick, depth } = useContext(OrderBookContext);
+  const { cellHeight, showTotal, onItemClick, depth, pendingOrders } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
-  const width = Number.isNaN(props.price) ? 0 : (props.accumulated / props.count) * 100;  
+  const width = Number.isNaN(props.price) ? 0 : (props.accumulated / props.count) * 100;
+
+  const isPendingOrder = useMemo(() => {
+    return pendingOrders?.findIndex((item) => item.toString().startsWith(props.price.toString())) !== -1;
+  }, [pendingOrders, props.price]);
 
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
@@ -101,10 +105,15 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         />
       </div>
 
-      <div
-        className="orderly-absolute orderly-bg-red-300 orderly-rounded-full orderly-left-[-8px] orderly-h-[4px] orderly-w-[4px] orderly-pointer-events-none"
+      {isPendingOrder && <div
+        className={cn(
+          "orderly-absolute orderly-rounded-full orderly-left-[-8px] orderly-h-[4px] orderly-w-[4px] orderly-pointer-events-none",
+          props.type === OrderBookCellType.ASK && "orderly-bg-trade-loss",
+          props.type === OrderBookCellType.BID && "orderly-bg-trade-profit",
+        )}
         style={{ top: `${cellHeight / 2 - 2}px` }}
-      />
+      />}
+
     </div>
   );
 };

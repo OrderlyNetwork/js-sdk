@@ -9,6 +9,7 @@ import {
   useEventEmitter,
 } from "@orderly.network/hooks";
 import { FC, memo, useEffect, useRef, useState } from "react";
+import { usePendingOrderStream } from "./usePendingOrderStream";
 
 interface MyOrderBookProps {
   symbol: string;
@@ -31,6 +32,8 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     useOrderbookStream(symbol, undefined, {
       level,
     });
+
+    const pendingOrders = usePendingOrderStream(symbol);
 
   const { height } = useTabContext();
 
@@ -80,6 +83,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       cellHeight={cellHeight}
       onDepthChange={onDepthChange}
       className={props.className}
+      pendingOrders={pendingOrders}
     />
   );
 };
