@@ -12,7 +12,6 @@ import { pathOr, propOr } from "ramda";
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useWS } from "../useWS";
-import { useTickerStream } from "../../dist";
 import { useMarketsStream } from "./useMarketsStream";
 
 type PriceMode = "markPrice" | "lastPrice";

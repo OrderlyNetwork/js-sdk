@@ -8,8 +8,8 @@ import {
   VariableParser,
   ReflectionKind,
   reflectionKindToString,
-} from "typedoc-json-parser";
-import { type SearchResult } from "typedoc-json-parser";
+} from "@orderly.network/typedoc-json-parser";
+import { type SearchResult } from "@orderly.network/typedoc-json-parser";
 // import { bold, red, yellow } from 'colorette';
 import type { JSONOutput } from "typedoc";
 import { ModuleParser } from "./moduleParser";
@@ -20,7 +20,7 @@ import { ModuleParser } from "./moduleParser";
  */
 export class ProjectParser {
   /**
-   * The version of `typedoc-json-parser` used to generate this project.
+   * The version of `@orderly.network/typedoc-json-parser` used to generate this project.
    * @since 1.0.0
    */
 

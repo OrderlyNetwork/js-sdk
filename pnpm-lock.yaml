@@ -180,9 +180,6 @@ importers:
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.3
-      typedoc-json-parser:
-        specifier: github:maoge8274/typedoc-json-parser
-        version: github.com/maoge8274/typedoc-json-parser/4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -190,6 +187,9 @@ importers:
         specifier: ^3.21.4
         version: 3.21.4
     devDependencies:
+      '@orderly.network/typedoc-json-parser':
+        specifier: ^9.0.1
+        version: 9.0.1
       '@types/chroma-js':
         specifier: ^2.4.2
         version: 2.4.2
@@ -5238,7 +5238,7 @@ packages:
     engines: {node: '>=v16'}
     dependencies:
       colorette: 2.0.20
-    dev: false
+    dev: true
 
   /@floating-ui/core@1.5.2:
     resolution: {integrity: sha512-Ii3MrfY/GAIN3OhXNzpCKaLxHQfJF9qvwq/kEJYdqDxeIHa01K8sldugal6TmeeXl+WMvhv9cnVzUTaFFJF09A==}
@@ -6477,6 +6477,21 @@ packages:
   /@open-draft/deferred-promise@2.2.0:
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
     dev: false
+
+  /@orderly.network/typedoc-json-parser@9.0.1:
+    resolution: {integrity: sha512-fpBecrNfI5mwSXy9nalfFTr1r0BjZk5Yp/cjVUgeuCGNNopRiC5gNPD4E56X1ud1MAPr/T9aZ80krOS7MUI/ZA==}
+    engines: {node: '>=18.17.0', npm: '>=6'}
+    hasBin: true
+    dependencies:
+      '@favware/colorette-spinner': 1.0.1
+      '@sapphire/node-utilities': 1.0.1
+      colorette: 2.0.20
+      commander: 11.1.0
+      js-yaml: 4.1.0
+      tslib: 2.6.2
+      typedoc: 0.25.7(typescript@5.2.2)
+      typescript: 5.2.2
+    dev: true
 
   /@parcel/watcher-android-arm64@2.3.0:
     resolution: {integrity: sha512-f4o9eA3dgk0XRT3XhB0UWpWpLnKgrh1IwNJKJ7UJek7eTYccQ8LR7XUWFKqw6aEq5KUNlCcGvSzKqSX/vtWVVA==}
@@ -8467,7 +8482,7 @@ packages:
   /@sapphire/node-utilities@1.0.1:
     resolution: {integrity: sha512-hE9L35s/j7MhcsGIAINGvnvVWUVoWPxCNQnP77npcqwEpTXIhQu8OV3qos4jDlymKcaRsZ7Jo8iNBPv8PwjL9g==}
     engines: {node: '>=v16.0.0', npm: '>=7.0.0'}
-    dev: false
+    dev: true
 
   /@scure/base@1.1.5:
     resolution: {integrity: sha512-Brj9FiG2W1MRQSTB212YVPRrcbjkv48FoZi/u4l/zds/ieRrqsh7aUf6CLwkAq61oKXr/ZlTzlY66gLIj3TFTQ==}
@@ -14967,6 +14982,7 @@ packages:
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+    dev: true
 
   /combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -14990,7 +15006,7 @@ packages:
   /commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
-    dev: false
+    dev: true
 
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -20235,7 +20251,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 20.0.0
+      '@types/node': 17.0.12
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -20936,6 +20952,7 @@ packages:
 
   /lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
+    dev: true
 
   /lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -21019,6 +21036,7 @@ packages:
     resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
     hasBin: true
+    dev: true
 
   /marky@1.2.5:
     resolution: {integrity: sha512-q9JtQJKjpsVxCRVgQ+WapguSbKC3SQ5HEzFGPAJMStgh3QjCawp00UKv3MTTAArTmGmmPUvllHZoNbZ3gs0I+Q==}
@@ -27295,8 +27313,8 @@ packages:
       typescript: 5.1.6
     dev: true
 
-  /typedoc@0.25.4(typescript@5.2.2):
-    resolution: {integrity: sha512-Du9ImmpBCw54bX275yJrxPVnjdIyJO/84co0/L9mwe0R3G4FSR6rQ09AlXVRvZEGMUg09+z/usc8mgygQ1aidA==}
+  /typedoc@0.25.7(typescript@5.2.2):
+    resolution: {integrity: sha512-m6A6JjQRg39p2ZVRIN3NKXgrN8vzlHhOS+r9ymUYtcUP/TIQPvWSq7YgE5ZjASfv5Vd5BW5xrir6Gm2XNNcOow==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -27307,7 +27325,7 @@ packages:
       minimatch: 9.0.3
       shiki: 0.14.7
       typescript: 5.2.2
-    dev: false
+    dev: true
 
   /types-ramda@0.29.6:
     resolution: {integrity: sha512-VJoOk1uYNh9ZguGd3eZvqkdhD4hTGtnjRBUx5Zc0U9ftmnCgiWcSj/lsahzKunbiwRje1MxxNkEy1UdcXRCpYw==}
@@ -28893,20 +28911,3 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-
-  github.com/maoge8274/typedoc-json-parser/4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d:
-    resolution: {commit: 4ccbb72d753dbd3b0f25c9f5b38c8b38c3879f8d, repo: git+ssh://git@github.com/maoge8274/typedoc-json-parser.git, type: git}
-    name: typedoc-json-parser
-    version: 9.0.1
-    engines: {node: '>=18.17.0', npm: '>=6'}
-    hasBin: true
-    dependencies:
-      '@favware/colorette-spinner': 1.0.1
-      '@sapphire/node-utilities': 1.0.1
-      colorette: 2.0.20
-      commander: 11.1.0
-      js-yaml: 4.1.0
-      tslib: 2.6.2
-      typedoc: 0.25.4(typescript@5.2.2)
-      typescript: 5.2.2
-    dev: false
