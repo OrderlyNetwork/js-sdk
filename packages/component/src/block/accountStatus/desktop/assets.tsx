@@ -110,7 +110,6 @@ export const Assets: FC<AssetsProps> = (props) => {
         : marginRatio
     );
   }, [marginRatio, aggregated]);
-  console.log("marginRatio", marginRatio, marginRatioVal);
 
   return (
     <Collapsible
