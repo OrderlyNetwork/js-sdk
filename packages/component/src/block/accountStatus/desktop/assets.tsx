@@ -172,7 +172,9 @@ export const Assets: FC<AssetsProps> = (props) => {
           </Button>
         </div>
       )}
-      <Divider className="orderly-py-4" />
+      <Divider
+        className={cn("orderly-pb-4", showGetTestUSDC && "orderly-pt-4")}
+      />
 
       <CollapsibleContent>
         <MemorizedAssetsDetail />
