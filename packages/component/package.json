@@ -8,10 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "watch": "tsup --watch",
+    "watch": "tsup --watch --tsconfig tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup && pnpm run build-tailwind",
-    "build:tsup": "tsup",
+    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
+    "build:tsup": "tsup --tsconfig tsconfig.build.json",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
@@ -68,7 +68,7 @@
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
     "tsup": "^7.1.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@orderly.network/core": "workspace:*",

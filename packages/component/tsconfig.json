@@ -1,31 +1,17 @@
 {
-  "extends": "tsconfig/react-library.json",
-  "include": ["src", "src/provider"],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules",
-    "**/*.test.tsx",
-    "**/*.test.ts",
-    "**/*.test.js",
-    "**/*.spec.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.js",
-    "**/*.stories.tsx",
-  ],
+  "extends": "./tsconfig.build.json",  
   "compilerOptions": {
-    "rootDir": "./src",
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "module": "esnext",
-    "outDir": "dist",
-    "declarationDir": "types",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@orderly.network/core": ["../core/src"],
+      "@orderly.network/hooks": ["../hooks/src"],
+      "@orderly.network/net": ["../net/src"],
+      "@orderly.network/web3-onboard": ["../onboard/src"],
+      "@orderly.network/perp": ["../perp/src"],
+      "@orderly.network/trading-view": ["../trading-view/src"],
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/web3-modal": ["../walletconnect/src"],
     },
-    "typeRoots": ["./node_modules/@types", "./src/@types"]
   }
 }

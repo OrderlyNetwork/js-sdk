@@ -46,7 +46,7 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "tsup": "^7.1.0",
-    "typescript": "^5"
+    "typescript": "^5.1.6"
   },
   "publishConfig": {
     "access": "public"
