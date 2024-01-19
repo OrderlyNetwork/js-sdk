@@ -1,13 +1,10 @@
 import { SymbolContext } from "@/provider";
 import { Numeral } from "@/text";
 import { cn } from "@/utils/css";
-import { Flag, MoveUpIcon } from "lucide-react";
-import { FC, useContext, useEffect, useMemo, useRef } from "react";
-import { modal } from "@/modal";
-import { Asks } from "../asks";
+import { Flag } from "lucide-react";
+import { FC, SVGProps, useContext, useEffect, useMemo, useRef } from "react";
 import { Decimal } from "@orderly.network/utils";
 import { Tooltip } from "@/tooltip";
-import { OrderBookContext } from "../orderContext";
 
 interface DesktopMarkPriceProps {
   markPrice: number;
@@ -48,7 +45,7 @@ const Price: FC<{
   return (
     <div
       className={cn(
-        "orderly-text-lg orderly-flex orderly-items-center desktop:orderly-font-normal desktop:orderly-relative desktop:orderly-pr-4",
+        "orderly-text-lg orderly-flex orderly-items-center desktop:orderly-font-normal",
         {
           "orderly-text-trade-profit": middlePrice > prevLastPrice,
           "orderly-text-trade-loss": middlePrice < prevLastPrice,
@@ -56,12 +53,13 @@ const Price: FC<{
       )}
     >
       <Numeral className="orderly-font-bold" precision={quote_dp}>{middlePrice}</Numeral>
-      {prevLastPrice !== middlePrice && (
-        <MoveUpIcon
-          size={14}
-          color="currentcolor"
-          className={cn("desktop:orderly-absolute desktop:orderly-right-0", {
+      {middlePrice !== prevLastPrice && (
+        <ArrowTopIcon
+          size={12}
+          className={cn("orderly-ml-1", {
             "orderly-rotate-180": middlePrice < prevLastPrice,
+            "orderly-fill-trade-profit": middlePrice > prevLastPrice,
+            "orderly-fill-trade-loss": middlePrice < prevLastPrice,
           })}
         />
       )}
@@ -75,23 +73,11 @@ const MarkPrice: FC<{
 
 
   const { quote_dp } = useContext(SymbolContext);
-  const onMarkPrice = () => {
-    modal.alert({
-      title: "Mark price",
-      message: (
-        <span className="orderly-text-3xs orderly-text-base-contrast-54">
-          Obtained from a third-party oracle, the mark price is calculated as
-          the median of three prices: the last price, the fair price based on
-          the funding rate basis, and the fair price based on the order books.
-        </span>
-      ),
-    });
-  };
 
   return (
-    <div
-      className="orderly-flex orderly-items-center orderly-text-3xs desktop:orderly-text-2xs"
-      onClick={onMarkPrice}
+    <Tooltip content={"Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books."} className="orderly-max-w-[270px]">
+      <div
+      className="orderly-flex orderly-items-center orderly-text-3xs desktop:orderly-text-2xs orderly-cursor-pointer"
     >
       {/* @ts-ignore */}
       <Flag size={14} className="orderly-text-yellow-400" />
@@ -102,6 +88,7 @@ const MarkPrice: FC<{
         {props.markPrice}
       </Numeral>
     </div>
+    </Tooltip>
   );
 }
 
@@ -136,5 +123,27 @@ const Spread: FC<{
         </div>
       </Tooltip>
     </div>
+  );
+};
+
+
+
+interface IconProps extends SVGProps<SVGSVGElement> {
+  size: number;
+}
+const ArrowTopIcon: FC<IconProps> = (props) => {
+  const { size = 12, viewBox, ...rest } = props;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={`${size}px`}
+      height={`${size}px`}
+      fill="current"
+      fillOpacity={1}
+      viewBox={`0 0 11.68 12.3`}
+      {...rest}
+    >
+      <path d="M12.3058 6.58699L13.1514 5.63574L7.42409 0.544834L7.00132 0.161367L6.57854 0.544834L0.851268 5.63574L1.69682 6.58699L6.36496 2.43753L6.36496 11.8386L7.63769 11.8386L7.63769 2.43755L12.3058 6.58699Z" />
+    </svg>
   );
 };
