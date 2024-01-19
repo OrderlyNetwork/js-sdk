@@ -224,7 +224,7 @@ export const usePositionStream = (
 
     const total = totalCollateral.toNumber();
 
-    return formatedPositions[0]
+    let rows = formatedPositions[0]
       .filter((item) => item.position_qty !== 0)
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
@@ -244,15 +244,32 @@ export const usePositionStream = (
             markPrice: item.mark_price,
             MMR,
           }),
-          est_liq_price: positions.liqPrice({
-            markPrice: item.mark_price,
-            totalCollateral: total,
-            positionQty: item.position_qty,
-            MMR,
-          }),
-          MMR,
+          // est_liq_price: positions.liqPrice({
+          //   markPrice: item.mark_price,
+          //   totalCollateral: total,
+          //   positionQty: item.position_qty,
+          //   MMR,
+          // }),
+          mmr: MMR,
         };
       });
+
+    // calculate est_liq_price
+    rows = rows.map((item) => {
+      const est_liq_price = positions.liqPrice({
+        markPrice: item.mark_price,
+        totalCollateral: total,
+        positionQty: item.position_qty,
+        positions: rows,
+        MMR: item.mmr,
+      });
+      return {
+        ...item,
+        est_liq_price,
+      };
+    });
+
+    return rows;
   }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
 
   // useEffect(() => {
