@@ -35,45 +35,14 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
   // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
-  //
-  const divRef = useRef(null);
-  const [showTotal, setShowTotal] = useState(false);
-
-  const rangeInfo = [
-    {left: 370, right: 600},
-    {left: 740, right: 800}
-  ];
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        const { width } = entry.contentRect;
-        const count = rangeInfo.reduce((a,b) => a + ((width >= b.left && width < b.right) ? 1 : 0), 0);
-        setShowTotal(() => count > 0);
-      }
-    });
-
-    const targetDiv = divRef.current;
-
-    if (targetDiv) {
-      resizeObserver.observe(targetDiv);
-    }
-
-    return () => {
-      if (targetDiv) {
-        resizeObserver.unobserve(targetDiv);
-      }
-    };
-  }, [rangeInfo]);
-
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
-      showTotal={showTotal}
+      showTotal={false}
     >
-      <div className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
+      <div className={cn("orderly-h-full orderly-relative", props.className)} >
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />

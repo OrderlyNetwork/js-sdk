@@ -38,11 +38,17 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
   const divRef = useRef(null);
   const [showTotal, setShowTotal] = useState(false);
 
+  const rangeInfo = [
+    {left: 370, right: 600},
+    {left: 740, right: 800}
+  ];
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
-        const { width } = entry.contentRect;
-        setShowTotal(() => width >= 360 && width < 468);
+        const { inlineSize: width } = entry.borderBoxSize[0];
+        const count = rangeInfo.reduce((a,b) => a + ((width >= b.left && width < b.right) ? 1 : 0), 0);
+        setShowTotal(() => count > 0);
       }
     });
 

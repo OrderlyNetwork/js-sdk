@@ -25,15 +25,15 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const { cellHeight, showTotal, onItemClick, totalMode, depth } = useContext(OrderBookContext);
   const { base_dp, quote_dp } = useContext(SymbolContext);
 
-  const width = (props.accumulated / props.count) * 100;
+  const width = Number.isNaN(props.price) ? 0 : (props.accumulated / props.count) * 100;  
 
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
   }, [depth, quote_dp]);
 
-  const qty = Number.isNaN(props.quantity)
+  const totalAmount = Number.isNaN(props.accumulated)
     ? "-"
-    : new Decimal(props.quantity).mul(props.price).toString();
+    : new Decimal(props.accumulated).mul(props.price).toString();
 
   return (
     <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-relative orderly-font-bold orderly-cursor-pointer"
@@ -84,7 +84,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
               precision={2}
               className="orderly-z-10"
             >
-              {qty}
+              {totalAmount}
             </Numeral>
           </div>
         )}
