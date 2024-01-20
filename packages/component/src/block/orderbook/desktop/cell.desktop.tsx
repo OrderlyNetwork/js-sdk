@@ -1,12 +1,14 @@
 import { FC, useContext, useMemo } from "react";
 import { CellBar, CellBarDirection } from "../cellBar";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
-import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
+import { getPrecisionByNumber, } from "@orderly.network/utils";
+import { parseNumber } from "@/utils/num";
 import { QtyMode } from "../types";
 import { Numeral } from "@/text/numeral";
 import { SymbolContext } from "@/provider";
 import { cn } from "@/utils";
 import { OrderBookCellType } from "../types";
+
 
 
 
@@ -29,9 +31,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   const width = Number.isNaN(props.price) ? 0 : (props.accumulated / props.count) * 100;
 
-  const isPendingOrder = useMemo(() => {
-    return pendingOrders?.findIndex((item) => item.toString().startsWith(props.price.toString())) !== -1;
-  }, [pendingOrders, props.price]);
+
 
   const dp = useMemo(() => {
     return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
@@ -40,6 +40,13 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const totalAmount = Number.isNaN(props.accumulated)
     ? "-"
     : props.accumulatedAmount.toString();
+
+  const isPendingOrder = useMemo(() => {
+    const priceStr = parseNumber(props.price, { precision: dp, padding: true, });
+    const index = pendingOrders.findIndex((item) => priceStr === parseNumber(item, { precision: dp, padding: true }));
+
+    return index !== -1;
+  }, [pendingOrders, props.price, depth]);
 
   return (
     <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-relative orderly-font-bold orderly-cursor-pointer"
