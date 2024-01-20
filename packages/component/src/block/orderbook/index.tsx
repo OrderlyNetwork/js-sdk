@@ -40,6 +40,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
+      pendingOrders={[]}
       showTotal={false}
     >
       <div className={cn("orderly-h-full orderly-relative", props.className)} >

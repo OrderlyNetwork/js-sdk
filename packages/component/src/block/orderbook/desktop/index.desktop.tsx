@@ -7,7 +7,6 @@ import { Spinner } from "@/spinner";
 import { cn } from "@/utils/css";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
-import { usePendingOrderStream } from "./usePendingOrderStream";
 
 export interface DesktopOrderBookProps {
   asks: any[];
