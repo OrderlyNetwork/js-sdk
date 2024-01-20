@@ -10,6 +10,7 @@
     "less2css": "lessc ./app/theme/woo.theme.less ./app/theme/woo.theme.css"
   },
   "dependencies": {
+    "@orderly.network/core": "workspace:*",
     "@orderly.network/react": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",
