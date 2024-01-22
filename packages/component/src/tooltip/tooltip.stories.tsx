@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Tooltip } from ".";
 import React from "react";
-import { OrderlyProvider } from "../provider";
 
 const meta: Meta<typeof Tooltip> = {
   component: Tooltip,

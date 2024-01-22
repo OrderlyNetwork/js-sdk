@@ -37,7 +37,7 @@ export declare namespace API {
 
   export interface MarketInfoExt extends MarketInfo {
     change: number;
-    '24h_volume': number;
+    "24h_volume": number;
   }
 
   /**
@@ -156,6 +156,7 @@ export declare namespace API {
     mark_price: number;
     est_liq_price: number;
     timestamp: number;
+    // Maintenance margin ratio
     mmr: number;
     imr: number;
     IMR_withdraw_orders: number;

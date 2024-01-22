@@ -7,6 +7,8 @@ import {
 import { Numeral } from "@/text";
 import { Pencil } from "lucide-react";
 import { LeverageDialog } from "./leverageDialog";
+import { Tooltip } from "@/tooltip";
+import { Divider } from "@/divider";
 
 const LeverageAndMarginRatio = () => {
   const { marginRatio, currentLeverage } = useMarginRatio();
@@ -14,10 +16,53 @@ const LeverageAndMarginRatio = () => {
 
   return (
     <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
-      <div className={"orderly-flex orderly-flex-col"}>
-        <div className={"orderly-text-base-contrast-54 orderly-text-3xs"}>
-          Account leverage
-        </div>
+      <div
+        className={
+          "orderly-flex orderly-flex-col orderly-tabular-nums orderly-items-start"
+        }
+      >
+        <Tooltip
+          content={
+            <div>
+              <span>
+                Your actual Leverage of the whole account / Your max Leverage of
+                the whole account
+              </span>
+              <Divider className="orderly-py-2 orderly-border-white/10" />
+              <span>
+                Margin ratio = Total collateral / Total position notional
+              </span>
+            </div>
+          }
+          className="orderly-max-w-[270px]"
+        >
+          <div
+            className={
+              "orderly-text-base-contrast-54 orderly-text-3xs orderly-cursor-pointer"
+            }
+          >
+            Margin ratio
+          </div>
+        </Tooltip>
+        <Numeral rule={"percentages"} coloring>
+          {marginRatio === 0 ? 10 : Math.min(marginRatio, 10)}
+        </Numeral>
+      </div>
+      <div className={"orderly-flex orderly-flex-col orderly-items-end"}>
+        <Tooltip
+          content={
+            "Your actual Leverage of the whole account / Your max Leverage of the whole account"
+          }
+          className="orderly-max-w-[270px]"
+        >
+          <div
+            className={
+              "orderly-text-base-contrast-54 orderly-text-3xs orderly-cursor-pointer"
+            }
+          >
+            Account leverage
+          </div>
+        </Tooltip>
         <div
           className={
             "orderly-flex orderly-items-center orderly-gap-1 orderly-text-2xs"
@@ -36,20 +81,6 @@ const LeverageAndMarginRatio = () => {
             </button>
           </LeverageDialog>
         </div>
-
-      </div>
-      <div
-        className={
-          "orderly-flex orderly-flex-col orderly-tabular-nums orderly-items-end"
-        }
-      >
-        <span className={"orderly-text-base-contrast-54 orderly-text-2xs"}>
-          Margin ratio
-        </span>
-        <Numeral rule={"percentages"} coloring>
-          {marginRatio === 0 ? 10 : Math.min(marginRatio, 10)}
-        </Numeral>
-
       </div>
     </div>
   );

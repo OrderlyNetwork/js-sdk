@@ -39,6 +39,7 @@ const Tooltip: React.FC<
   onOpenChange,
   children,
   content,
+  sideOffset = 4,
   ...props
 }) => {
   return (
@@ -51,6 +52,7 @@ const Tooltip: React.FC<
       <TooltipPrimitive.Content
         side="top"
         align="center"
+        sideOffset={sideOffset}
         className={cn(
           "orderly-z-50 orderly-overflow-hidden orderly-rounded orderly-bg-base-400 orderly-px-3 orderly-py-1.5 orderly-text-3xs orderly-text-base-contrast orderly-shadow-md orderly-animate-in orderly-fade-in-0 orderly-zoom-in-95 data-[state=closed]:orderly-animate-out data-[state=closed]:orderly-fade-out-0 data-[state=closed]:orderly-zoom-out-95 data-[side=bottom]:orderly-slide-in-from-top-2 data-[side=left]:orderly-slide-in-from-right-2 data-[side=right]:orderly-slide-in-from-left-2 data-[side=top]:orderly-slide-in-from-bottom-2",
           className
@@ -61,7 +63,7 @@ const Tooltip: React.FC<
         <TooltipPrimitive.Arrow
           width={11}
           height={5}
-          className="orderly-fill-popover"
+          className="orderly-fill-base-400"
         />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Root>

@@ -1,5 +1,121 @@
 # @orderly.network/trading-view
 
+## 0.1.8-alpha.10
+
+### Patch Changes
+
+- fix style bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.10
+  - @orderly.network/core@0.1.27-alpha.10
+  - @orderly.network/net@1.0.114-alpha.10
+
+## 0.1.8-alpha.9
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.9
+  - @orderly.network/core@0.1.27-alpha.9
+  - @orderly.network/net@1.0.114-alpha.9
+
+## 0.1.8-alpha.8
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.8
+  - @orderly.network/core@0.1.27-alpha.8
+  - @orderly.network/net@1.0.114-alpha.8
+
+## 0.1.8-alpha.7
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.7
+  - @orderly.network/core@0.1.27-alpha.7
+  - @orderly.network/net@1.0.114-alpha.7
+
+## 0.1.8-alpha.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.6
+  - @orderly.network/core@0.1.27-alpha.6
+  - @orderly.network/net@1.0.114-alpha.6
+
+## 0.1.8-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.5
+  - @orderly.network/core@0.1.27-alpha.5
+  - @orderly.network/net@1.0.114-alpha.5
+
+## 0.1.8-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.4
+  - @orderly.network/core@0.1.27-alpha.4
+  - @orderly.network/net@1.0.114-alpha.4
+
+## 0.1.8-alpha.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.3
+  - @orderly.network/core@0.1.27-alpha.3
+  - @orderly.network/net@1.0.114-alpha.3
+
+## 0.1.8-alpha.2
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.2
+  - @orderly.network/core@0.1.27-alpha.2
+  - @orderly.network/net@1.0.114-alpha.2
+
+## 0.1.8-alpha.1
+
+### Patch Changes
+
+- update version
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.1
+  - @orderly.network/core@0.1.27-alpha.1
+  - @orderly.network/net@1.0.114-alpha.1
+
+## 0.1.8-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.0
+  - @orderly.network/core@0.1.27-alpha.0
+  - @orderly.network/net@1.0.114-alpha.0
+
 ## 0.1.7
 
 ### Patch Changes

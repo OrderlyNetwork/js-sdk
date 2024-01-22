@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 export type ConnectedChain = {
-  id: string;
+  id: number;
 };
 export interface WalletConnectorContextState {
   connect: () => Promise<any[]>;

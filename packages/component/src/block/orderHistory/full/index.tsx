@@ -1,21 +1,22 @@
 import { Divider } from "@/divider";
-import { ListView } from "@/listView";
 import { FC, useContext } from "react";
-import { HistoryToolbar } from "./historyToolbar";
-import { Cell } from "./cell";
-import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
-import { OrderSide, OrderStatus } from "@orderly.network/types";
-import { SymbolProvider } from "@/provider";
-import { API } from "@orderly.network/types";
 import { OrderHistoryListViewProps } from "../shared/types";
 import { Header } from "./header";
 import { Listview } from "./listview";
 import { TabContext } from "@/tab";
+import { OrderListProvider } from "@/block/orders/shared/orderListContext";
+import { OrderEntity } from "@orderly.network/types";
 
 export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
   const { height } = useContext(TabContext);
+
   return (
-    <>
+    <OrderListProvider
+      cancelOrder={props.onCancelOrder}
+      editOrder={function (orderId: string, order: OrderEntity): Promise<any> {
+        throw new Error("Function not implemented.");
+      }}
+    >
       <Header
         status={props.status}
         side={props.side}
@@ -24,8 +25,10 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
       />
       <Divider />
       <div
-        className="orderly-overflow-y-auto"
-        style={{ height: `${(height?.content ?? 100) - 55}px` }}
+        className="orderly-relative"
+        style={{
+          height: `${(height?.content ?? 100) - 55}px`,
+        }}
       >
         <Listview
           dataSource={props.dataSource}
@@ -33,6 +36,6 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
           loadMore={props.loadMore}
         />
       </div>
-    </>
+    </OrderListProvider>
   );
 };

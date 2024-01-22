@@ -1,40 +1,48 @@
-import { FC } from "react";
+import { FC, ReactNode, useEffect, useRef } from "react";
 import { Column } from "./col";
 import { cn } from "@/utils/css";
+import { ColGroup } from "./colgroup";
+import { Tooltip } from "@/tooltip";
+import { TheadCol } from "./theadCol";
 
 export interface THeadProps {
   columns: Column[];
   className?: string;
+  containerClassName?: string;
   bordered?: boolean;
   justified?: boolean;
 }
 
-export const THead: FC<THeadProps> = (props) => {
+export const TableHeader: FC<THeadProps> = (props) => {
   return (
-    <thead
+    <table
       className={cn(
-        "orderly-sticky orderly-top-0 orderly-z-10",
-        props.className
+        "orderly-border-collapse orderly-w-full orderly-table-fixed orderly-z-30 orderly-sticky orderly-top-0",
+        props.containerClassName
       )}
     >
-      <tr>
-        {props.columns.map((column, index) => {
-          return (
-            <td
-              className={cn(
-                "orderly-px-1 orderly-py-[3px] ",
-                column.align === "right" && "orderly-text-right",
-                props.justified && "first:orderly-pl-0 last:orderly-pr-0",
-                props.bordered && "orderly-border-b orderly-border-divider",
-                props.className
-              )}
-              key={column.dataIndex}
-            >
-              {column.title}
-            </td>
-          );
-        })}
-      </tr>
-    </thead>
+      <ColGroup columns={props.columns} />
+      <thead
+        className={cn(
+          "orderly-sticky orderly-top-0 orderly-z-10",
+          props.className
+        )}
+      >
+        <tr>
+          {props.columns.map((column, index) => {
+            return (
+              <TheadCol
+                col={column}
+                record={undefined}
+                key={index}
+                index={index}
+                className={props.className}
+                bordered={props.bordered}
+              />
+            );
+          })}
+        </tr>
+      </thead>
+    </table>
   );
 };

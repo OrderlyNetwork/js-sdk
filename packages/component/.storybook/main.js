@@ -1,6 +1,7 @@
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
 
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+import path from "path";
 
 // import { remarkNpm2Yarn } from 'remark-npm2yarn'
 
@@ -21,7 +22,7 @@ const config = {
     },
     "@storybook/addon-mdx-gfm",
     {
-      name: '@storybook/addon-storysource',
+      name: "@storybook/addon-storysource",
       options: {
         loaderOptions: {
           injectStoryParameters: false,
@@ -31,7 +32,9 @@ const config = {
   ],
   framework: {
     name: "@storybook/react-webpack5",
-    options: {},
+    options: {
+      fastRefresh: true,
+    },
   },
   docs: {
     autodocs: "tag",
@@ -42,8 +45,14 @@ const config = {
         ...(config.resolve.plugins || []),
         new TsconfigPathsPlugin({
           extensions: config.resolve.extensions,
+          // custom tsconfig
+          configFile: path.resolve(__dirname, "../tsconfig.build.json"),
         }),
       ];
+      // custom alias
+      // config.resolve.alias = {
+      //   ...config.resolve.alias,
+      // };
     }
     return config;
   },

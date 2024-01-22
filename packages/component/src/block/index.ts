@@ -12,6 +12,8 @@ export type { OrderEntryProps } from "./orderEntry";
 
 export { OrderBook } from "./orderbook";
 export type { OrderBookProps } from "./orderbook";
+export { DesktopOrderBook } from "./orderbook/desktop/index.desktop";
+export type { DesktopOrderBookProps } from "./orderbook/desktop/index.desktop";
 
 export { Deposit } from "./deposit";
 export type { DepositProps } from "./deposit";
@@ -38,3 +40,5 @@ export { AccountStatusBar, AssetAndMarginSheet } from "./accountStatus";
 export type { AccountStatusProps } from "./accountStatus";
 
 export { ChainListView, ChainSelect } from "./pickers/chainPicker";
+
+export { SystemStatusBar } from "./systemStatusBar";

@@ -11,7 +11,7 @@ import {
   parseBrokerHash,
   parseTokenHash,
 } from "./utils";
-import { ApiError } from "@orderly.network/types";
+import { API, ApiError, MaxUint256 } from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -241,7 +241,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
@@ -269,7 +269,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
     const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
     const result = await this.account.walletClient?.call(
       contractAddress,
@@ -299,7 +299,7 @@ export class Assets {
     };
   }
 
-  async getDepositFee(amount: string) {
+  async getDepositFee(amount: string, chain: API.NetworkInfos) {
     if (!this.account.walletClient)
       throw new Error("walletClient is undefined");
 
@@ -307,7 +307,8 @@ export class Assets {
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    return await this.account.walletClient.call(
+    return await this.account.walletClient.callOnChain(
+      chain,
       contractAddress.vaultAddress,
       "getDepositFee",
       [this.account.stateValue.address, depositData],

@@ -1,6 +1,6 @@
-import { OrderBookCell, OrderBookCellType } from "./cell";
 import { ListBox } from "./listBox";
 import { FC, useMemo } from "react";
+import { OrderBookCellType } from "./types";
 export interface Props {
   data: number[][];
 }

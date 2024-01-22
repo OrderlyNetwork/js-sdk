@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { MarkPrices } from "./misc";
@@ -25,15 +25,14 @@ export interface SummaryProps {
   destinationGasFee?: string;
   bridgeFee?: string;
   symbolPrice: Record<string, number>;
-  orderlyDepositFee?: bigint;
+  depositFee?: bigint;
 }
 
-export const Summary: FC<SummaryProps> = (props) => {
+export const Summary: FC<SummaryProps> = memo((props) => {
   const {
     needCrossChain,
     needSwap,
     fee,
-    // markPrice,
     swapFee = "0",
     bridgeFee = "0",
     nativeToken,
@@ -42,13 +41,14 @@ export const Summary: FC<SummaryProps> = (props) => {
     slippage,
     onSlippageChange,
     symbolPrice,
-    orderlyDepositFee = 0n,
+    depositFee = 0n,
   } = props;
 
   const { from_token: markPrice, native_token: nativeMarkPrice } = markPrices;
 
-  const feeElement = useMemo(() => {
-    let dstGasFee = new Decimal(orderlyDepositFee.toString())
+  // Using useMemo causes a delay in data display
+  const getFeeElement = () => {
+    let dstGasFee = new Decimal(depositFee.toString())
       ?.div(new Decimal(10).pow(18))
       .toString();
     if (needSwap && needCrossChain) {
@@ -61,7 +61,7 @@ export const Summary: FC<SummaryProps> = (props) => {
         ?.mul(tokenPrice || 0)
         ?.toFixed(3, Decimal.ROUND_UP);
       return `Fee ≈ $ ${totalFee || 0} ${
-        Number(orderlyDepositFee)
+        Number(depositFee)
           ? `(${new Decimal(dstGasFee).toFixed(
               feeDecimalsOffset(nativeToken?.woofi_dex_precision ?? 2),
               Decimal.ROUND_UP
@@ -69,14 +69,6 @@ export const Summary: FC<SummaryProps> = (props) => {
           : ""
       }`;
     }
-
-    // if (needSwap && !needCrossChain) {
-    //   totalFee = new Decimal(orderlyDepositFee).plus(swapFee);
-    // }
-
-    // if (needSwap && needCrossChain) {
-    //   totalFee = new Decimal(destinationGasFee).plus(swapFee).plus(bridgeFee);
-    // }
 
     if (!fee || fee === "0") {
       return `Fee ≈ $0`;
@@ -127,20 +119,13 @@ export const Summary: FC<SummaryProps> = (props) => {
     }
 
     return `Fee ≈ $${d.toFixed(3, Decimal.ROUND_UP)} (${text})`;
-  }, [
-    needCrossChain,
-    needSwap,
-    fee,
-    props.src?.symbol,
-    markPrice,
-    nativeMarkPrice,
-    nativeToken?.symbol,
-    symbolPrice,
-  ]);
+  };
 
   const onShowFee = useCallback(() => {
     const message = [];
-    let dstGasFee = orderlyDepositFee;
+    let dstGasFee = new Decimal(depositFee.toString())
+      ?.div(new Decimal(10).pow(18))
+      .toString();
     if (needSwap && needCrossChain) {
       dstGasFee = destinationGasFee;
     }
@@ -221,7 +206,7 @@ export const Summary: FC<SummaryProps> = (props) => {
     bridgeFee,
     nativeToken?.symbol,
     props.src?.symbol,
-    orderlyDepositFee,
+    depositFee,
   ]);
 
   return (
@@ -250,8 +235,8 @@ export const Summary: FC<SummaryProps> = (props) => {
       >
         <InfoIcon size={14} className="orderly-mr-1" />
 
-        <span>{feeElement}</span>
+        <span>{getFeeElement()}</span>
       </div>
     </div>
   );
-};
+});

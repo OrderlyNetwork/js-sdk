@@ -24,7 +24,7 @@ import {
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
-import { praseChainIdToNumber } from "@orderly.network/utils";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -166,13 +166,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       //   chainId = `0x${Number(chainId).toString(16)}`;
       // }
 
-      //
-
       // check whether chain id and network id match
       // const chainIdNum = parseInt(chainId, 16);
       if (
-        (networkId === "mainnet" && chainId === 421613) ||
-        (networkId === "testnet" && chainId !== 421613)
+        (networkId === "mainnet" && isTestnet(chainId)) ||
+        (networkId === "testnet" && !isTestnet(chainId))
       ) {
         return false;
       }
@@ -294,14 +292,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       }
 
       if (!checkChainId(currentChainId)) {
-        // console.warn("!!!! not support this chian -> disconnect wallet");
-
-        // account.disconnect();
         // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
-        console.warn("current chain not support!  -> disconnect wallet!!!");
-        return;
+        console.warn("current chain not support!!!!");
+        // return;
       } else {
         setErrors((errors: any) => ({
           ...errors,

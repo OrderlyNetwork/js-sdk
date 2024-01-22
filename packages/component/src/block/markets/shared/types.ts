@@ -15,6 +15,16 @@ export enum SortDirection {
   DESC,
 }
 
+export function parseSortDirection(direction: number | string, ): SortDirection | undefined {
+  const value = parseInt(direction.toString());
+  switch(value) {
+    case 0: return SortDirection.NONE;
+    case 1: return SortDirection.ASC;
+    case 2: return SortDirection.NONE;
+    default: return undefined;
+  }
+}
+
 export interface MarketsProps {
   dataSource?: API.MarketInfoExt[];
   // onSortBy?: (key: string, direction: SortDirection) => void;

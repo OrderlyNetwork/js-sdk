@@ -6,13 +6,13 @@ import { sortFunc } from "./utils";
 export const useDataSource = (
   data?: API.MarketInfoExt[]
 ): [
-  API.MarketInfoExt[] | undefined,
-  {
-    searchKey: string;
-    onSearch: (key: string) => void;
-    onSort: (key: SortCondition) => void;
-  }
-] => {
+    API.MarketInfoExt[] | undefined,
+    {
+      searchKey: string;
+      onSearch: (key: string) => void;
+      onSort: (key: SortCondition) => void;
+    }
+  ] => {
   const [searchKey, setSearchKey] = useState<string>("");
   const [sortCondition, setSortCondition] = useState<SortCondition>({});
 
@@ -32,7 +32,8 @@ export const useDataSource = (
       );
     }
 
-    if (typeof sortCondition.key !== "undefined") {
+    if (typeof sortCondition.key !== "undefined" && sortCondition.direction !== 0) {
+
       formattedData?.sort(
         sortFunc[sortCondition.key](
           sortCondition.direction ?? SortDirection.ASC

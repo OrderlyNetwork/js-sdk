@@ -28,8 +28,10 @@ export const TokenListView: FC<TokenListViewProps> = (props) => {
 
   return (
     <>
-      <div className="orderly-flex orderly-border-b orderly-border-base-contrast/20 orderly-py-2 orderly-mb-3">
-        <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">Coin</span>
+      <div className="orderly-token-select-list-header orderly-flex orderly-border-b orderly-border-base-contrast/20 orderly-py-2 orderly-mb-3">
+        <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">
+          Coin
+        </span>
         <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">
           Wallet Balance
         </span>

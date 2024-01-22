@@ -57,7 +57,20 @@ export const Renew: FC<{ record: any }> = (props) => {
         return (record.symbol as string).split("_")[2];
     }, [record.symbol]);
 
-    console.log("renew record", record, base, quote);
+    // console.log("renew record", record, base, quote);
+
+    return (<Button
+        size={"small"}
+        variant={"outlined"}
+        color={"tertiary"}
+        onClick={() => {
+            // setOpen(true);
+            onSubmit();
+        }}
+    >
+        Renew
+    </Button>);
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger>

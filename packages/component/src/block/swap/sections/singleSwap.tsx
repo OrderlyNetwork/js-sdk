@@ -22,10 +22,11 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
-  orderlyDepositFee?: bigint;
+  depositFee?: bigint;
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const SingleSwap: FC<SwapProps> = (props) => {
@@ -37,7 +38,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     src,
     chain,
     nativeToken,
-    orderlyDepositFee,
+    depositFee,
   } = props;
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
@@ -55,14 +56,14 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       slippage,
       time: chain?.est_txn_mins,
       received: dst.amount,
-      dstGasFee: new Decimal(orderlyDepositFee!.toString())
+      dstGasFee: new Decimal(depositFee!.toString())
         ?.div(new Decimal(10).pow(18))
         ?.toString(),
       swapFee: transaction.fees_from,
     };
 
     return info;
-  }, [transaction, chain?.est_txn_mins, mode, dst, orderlyDepositFee]);
+  }, [transaction, chain?.est_txn_mins, mode, dst, depositFee]);
 
   useEffect(() => {
     if (swapStatus === WS_WalletStatusEnum.COMPLETED) {
@@ -90,7 +91,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         fromAmount: transaction.infos.from_amount,
         toToken: transaction.infos.to_token,
         minToAmount: transaction.infos.min_to_amount,
-        orderlyNativeFees: orderlyDepositFee,
+        orderlyNativeFees: depositFee,
       },
       { dst, src }
     ).then(
@@ -129,6 +130,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         tx={tx}
         chainInfo={props.chain}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, mode, chain, tx, props.onComplete, status]);
@@ -144,7 +146,10 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast-54">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>

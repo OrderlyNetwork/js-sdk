@@ -32,7 +32,7 @@ export const MobileHideenLabel: FC = () => {
       <Tooltip>
         <TooltipTrigger>
           <Label
-            className="orderly-text-base-contrast-54 desktop:orderly-underline"
+            className="orderly-text-base-contrast-54"
           >
             Hidden
           </Label>
@@ -40,7 +40,7 @@ export const MobileHideenLabel: FC = () => {
         <TooltipContent
           align="end"
           alignOffset={-80}
-          className="orderly-max-w-[240px] data-[state=delayed-open]:data-[side=top]:orderly-animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:orderly-animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:orderly-animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:orderly-animate-slideUpAndFade orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-px-[15px] orderly-py-[10px] orderly-text-3xs orderly-leading-none orderly-shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] orderly-will-change-[transform,opacity]">
+          className="orderly-max-w-[240px] orderly-z-20 orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-p-3 orderly-text-4xs">
           <div>
             <span className="orderly-text-3xs">
               Hidden order is a limit order that does not appear in the orderbook.

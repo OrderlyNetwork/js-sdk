@@ -225,7 +225,7 @@
     }
 
     .orderly-dialog-footer .orderly-confirm-dialog-cancal-button {
-      background-color: #FF447C;
+      background-color: #333948;
     }
 
     #orderly-market-close-dialog-content {
@@ -249,6 +249,10 @@
       font-size: 14px;
     }
 
+    .orderly-warning-msg {
+      font-size: 13px;
+    }
+
     .orderly-wallet-picker {
       color: rgba(255, 255, 255, 0.98);
     }
@@ -256,10 +260,42 @@
     .orderly-deposit-action-button-container, .orderly-withdraw-action-button-container {
       width: auto;
       min-width: 200px;
+      button[disabled] {
+        background-color: #394155;
+        color: rgba(255, 255, 255, 0.36);
+      }
     }
 
     .orderly-quantity-input-max, .orderly-token-select {
       font-size: 12px;
+    }
+
+    .orderly-withdraw-rebalance-title {
+      font-size: 12px;
+      color: rgba(255,255,255.0.3);
+    }
+
+    .orderly-withdraw-rebalance-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255.0.9);
+    }
+  }
+
+  .orderly-token-select-dialog {
+    .orderly-token-select-list-header {
+      .orderly-text-4xs {
+        font-size: 12px;
+      }
+    }
+
+    .orderly-token-select-list-item {
+      .orderly-token-select-list-item-left {
+        font-size: 13px;
+      }
+
+      .orderly-token-select-list-item-right {
+        font-size: 15px;
+      }
     }
   }
 

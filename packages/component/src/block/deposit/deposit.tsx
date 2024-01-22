@@ -1,12 +1,11 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
-// import { WalletConnectorContext } from "@/provider";
 import {
-  useChain,
   useDeposit,
   useChains,
   useWalletConnector,
   useWS,
+  useDebounce,
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
@@ -24,12 +23,12 @@ export interface DepositProps {
   wooSwapEnabled?: boolean;
 }
 
+// TODO: add deposit context to pass value
 export const Deposit: FC<DepositProps> = (props) => {
-  // const { dst } = props;
-
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
+  const ws = useWS();
 
   // @ts-ignore
   const [chains, { findByChainId }] = useChains(undefined, {
@@ -43,14 +42,18 @@ export const Deposit: FC<DepositProps> = (props) => {
   const { onEnquiry } = useContext(AssetsContext);
 
   const [symbolPrice, setSymbolPrice] = useState({});
+  const [debounceSymbolPrice] = useDebounce(symbolPrice, 5000, {
+    leading: true,
+    maxWait: 5000,
+  });
 
-  // const { chains } = useChain("USDC");
   const [token, setToken] = useState<API.TokenInfo>();
   // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
-    const chainId = parseInt(connectedChain.id);
+    // const chainId = parseInt(connectedChain.id);
+    const { id: chainId } = connectedChain;
     const chain = findByChainId(chainId);
 
     return {
@@ -60,13 +63,18 @@ export const Deposit: FC<DepositProps> = (props) => {
     };
   }, [connectedChain, findByChainId]);
 
+  // console.log("****** token ******", token, currentChain);
+
   const {
     dst,
     balance,
     allowance,
+    depositFeeRevalidating,
+    depositFee,
+    quantity,
+    setQuantity,
     approve,
     deposit,
-    getDepositFee,
     isNativeToken,
     balanceRevalidating,
     fetchBalance,
@@ -83,7 +91,6 @@ export const Deposit: FC<DepositProps> = (props) => {
   useEffect(() => {
     if (!token || !currentChain) return;
     /// check if need swap
-
     if (token.symbol !== "USDC") {
       setNeedSwap(true);
     } else {
@@ -97,8 +104,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       setNeedCrossChain(false);
     }
   }, [token?.symbol, currentChain?.id, dst?.chainId]);
-
-  const ws = useWS();
 
   useEffect(() => {
     const unsubscribe = ws.subscribe("indexprices", {
@@ -138,7 +143,6 @@ export const Deposit: FC<DepositProps> = (props) => {
       maxAmount={balance}
       approve={approve}
       deposit={deposit}
-      getDepositFee={getDepositFee}
       fetchBalance={fetchBalance}
       onOk={props.onOk}
       balanceRevalidating={balanceRevalidating}
@@ -146,7 +150,11 @@ export const Deposit: FC<DepositProps> = (props) => {
       onEnquiry={onEnquiry}
       needCrossChain={needCrossChain}
       needSwap={needSwap}
-      symbolPrice={symbolPrice}
+      symbolPrice={debounceSymbolPrice}
+      quantity={quantity}
+      setQuantity={setQuantity}
+      depositFee={depositFee}
+      depositFeeRevalidating={depositFeeRevalidating}
     />
   );
 };

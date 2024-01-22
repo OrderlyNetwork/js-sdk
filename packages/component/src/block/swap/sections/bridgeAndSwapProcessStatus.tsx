@@ -8,6 +8,7 @@ interface SwapProcessStatusProps {
   status: SwapProcessStatusStatus;
   message: any;
   onComplete?: (isSuccss: boolean) => void;
+  brokerName?: string;
 }
 
 export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
@@ -58,13 +59,13 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}
-            description={"Deposit to Orderly"}
+            description={`Deposit to ${props.brokerName}`}
             index={2}
           />
-          <Divider />
+          <Divider className="before:orderly-border-b-base-contrast-12 after:orderly-border-b-base-contrast-12" />
           <div className="orderly-flex orderly-justify-center orderly-mt-3">
             <button
-              className="orderly-text-2xs orderly-text-primary-light disabled:orderly-text-base-contrast/10"
+              className="orderly-text-2xs desktop:orderly-text-xs orderly-text-primary-light disabled:orderly-text-base-contrast/10"
               disabled={!statusUrl}
               onClick={() => {
                 (location as any).href = statusUrl;
@@ -77,12 +78,12 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
       </div>
       {(status === SwapProcessStatusStatus.DepositFailed ||
         status === SwapProcessStatusStatus.BridgeFialed) && (
-        <div className="orderly-pb-7 orderly-text-danger orderly-text-center orderly-text-3xs">
+        <div className="orderly-pb-7 orderly-text-danger orderly-text-center orderly-text-2xs">
           Deposit failed, please try again later.
         </div>
       )}
       <Button
-        className="orderly-text-xs"
+        className="orderly-text-base disabled:orderly-bg-base-300 disabled:orderly-text-base-contrast-36"
         fullWidth
         disabled={
           status === SwapProcessStatusStatus.Bridging ||

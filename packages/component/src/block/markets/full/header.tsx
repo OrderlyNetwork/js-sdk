@@ -16,7 +16,7 @@ export const Header: FC<Props> = (props) => {
     props.onClose?.();
   };
   return (
-    <div className="orderly-flex orderly-items-center orderly-px-5">
+    <div className="orderly-flex orderly-items-center orderly-px-5 orderly-pt-5 orderly-pb-2 orderly-bg-base-800">
       <div className="orderly-w-full orderly-mr-2">
         <SearchForm
           onSearch={props.onSearch}

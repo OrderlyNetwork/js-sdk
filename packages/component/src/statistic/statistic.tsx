@@ -4,6 +4,8 @@ import { Numeral, Text } from "@/text";
 import { StatisticStyleContext } from "./defaultStaticStyle";
 import { type TextRule } from "@/text/text";
 import { NumeralProps, NumeralRule } from "@/text/numeral";
+import { Tooltip } from "@/tooltip";
+import { TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export interface StatisticProps
   extends Omit<NumeralProps, "children" | "rule"> {
@@ -18,6 +20,8 @@ export interface StatisticProps
   align?: "left" | "right" | "center";
 
   asChild?: boolean;
+
+  hint?: string;
 
   // FormattedPrice
   // as?: "price" | "date";
@@ -99,11 +103,28 @@ export const Statistic: FC<StatisticProps> = (props) => {
     return props.value ?? "--";
   }, [props.value, rule, props.precision, props.visible]);
 
-  return (
-    <div className={cn(props.className, alignClasses[align])}>
+
+  let label;
+
+  if (typeof props.hint === "undefined") {
+    label = (
       <div className={cn(labelClassName, props.labelClassName)}>
         {labelElement}
       </div>
+    );
+  } else {
+    label = (
+      <Tooltip content={props.hint} className="orderly-max-w-[200px]">
+        <div className={cn(labelClassName, props.labelClassName)}>
+          {labelElement}
+        </div>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <div className={cn(props.className, alignClasses[align], props.hint && "orderly-cursor-pointer hover:orderly-text-base-contrast")}>
+      {label}
       <div className={cn(valueClassName, props.valueClassName, colorClassName)}>
         {valueElement}
       </div>

@@ -1,7 +1,7 @@
 import { OrderlyAppContext } from "@/provider/appProvider";
 import { cn } from "@/utils/css";
 import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
 import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 
 export interface LogoProps {
@@ -17,7 +17,7 @@ export const MainLogo: FC<LogoProps> = ({
   title,
   size,
 }) => {
-  const matches = useMediaQuery(MEDIA_TABLE);
+  const matches = useMediaQuery(MEDIA_TABLET);
 
   const { appIcons } = useContext(OrderlyAppContext);
 

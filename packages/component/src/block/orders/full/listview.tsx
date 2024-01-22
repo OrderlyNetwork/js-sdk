@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { Table } from "@/table";
+import { Column, Table } from "@/table";
 import { Text } from "@/text";
-import { OrderStatus, OrderSide } from "@orderly.network/types";
+import { OrderStatus, OrderSide, API } from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
@@ -11,6 +11,7 @@ import { CancelButton } from "./cancelButton";
 import { OrderQuantity } from "./quantity";
 import { Price } from "./price";
 import { EndReachedBox } from "@/listView/endReachedBox";
+import { cn } from "@/utils/css";
 
 interface Props {
   dataSource: any[];
@@ -18,15 +19,29 @@ interface Props {
   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
   loading?: boolean;
   loadMore?: () => void;
+  className?: string;
 }
 export const Listview: FC<Props> = (props) => {
-  const columns = useMemo(() => {
-    const columns = [
+  const columns = useMemo<Column<API.Order>[]>(() => {
+    const columns: Column<API.Order>[] = [
       {
         title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
-        render: (value: string) => <Text rule={"symbol"} className="orderly-font-semibold">{value}</Text>,
+        onSort:
+          props.status === OrderStatus.INCOMPLETE
+            ? (r1, r2, sortOrder) => {
+                if (sortOrder === "asc") {
+                  return r1.symbol.localeCompare(r2.symbol);
+                }
+                return r2.symbol.localeCompare(r1.symbol);
+              }
+            : undefined,
+        render: (value: string) => (
+          <Text rule={"symbol"} className="orderly-font-semibold">
+            {value}
+          </Text>
+        ),
       },
       {
         title: "Type",
@@ -38,6 +53,15 @@ export const Listview: FC<Props> = (props) => {
         title: "Side",
         className: "orderly-h-[48px]",
         dataIndex: "side",
+        onSort:
+          props.status === OrderStatus.INCOMPLETE
+            ? (r1, r2, sortOrder) => {
+                if (sortOrder === "asc") {
+                  return r2.side.localeCompare(r1.side);
+                }
+                return r1.side.localeCompare(r2.side);
+              }
+            : undefined,
         render: (value: string) => (
           <span
             className={cx(
@@ -55,19 +79,22 @@ export const Listview: FC<Props> = (props) => {
         title: "Filled / Quantity",
         className: "orderly-h-[48px]",
         dataIndex: "quantity",
+        width: 180,
+        onSort: props.status === OrderStatus.INCOMPLETE,
         render: (value: string, record) => <OrderQuantity order={record} />,
       },
       {
         title: "Price",
         className: "orderly-h-[48px]",
         dataIndex: "price",
+        onSort: props.status === OrderStatus.INCOMPLETE,
         render: (value: string, record) => <Price order={record} />,
       },
-      {
-        title: "Est. total",
-        className: "orderly-h-[48px]",
-        dataIndex: "total",
-      },
+      // {
+      //   title: "Est. total",
+      //   className: "orderly-h-[48px]",
+      //   dataIndex: "total",
+      // },
       {
         title: "Reduce",
         dataIndex: "reduce_only",
@@ -87,6 +114,8 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Update",
         dataIndex: "updated_time",
+        width: 150,
+        onSort: props.status === OrderStatus.INCOMPLETE,
         className: "orderly-h-[48px]",
         render: (value: string) => (
           <Text
@@ -105,8 +134,9 @@ export const Listview: FC<Props> = (props) => {
         dataIndex: "action",
         className: "orderly-h-[48px]",
         align: "right",
+        fixed: "right",
         render: (_: string, record) => {
-          return <CancelButton order={record} onCancel={props.onCancelOrder} />;
+          return <CancelButton order={record} />;
         },
       });
     }
@@ -114,19 +144,25 @@ export const Listview: FC<Props> = (props) => {
     return columns;
   }, [props.status]);
   return (
-    <EndReachedBox onEndReached={() => {
-      if (!props.loading) {
-        props.loadMore?.();
-      }
-    }}>
-      <Table
+    <EndReachedBox
+      onEndReached={() => {
+        if (!props.loading) {
+          props.loadMore?.();
+        }
+      }}
+    >
+      <Table<API.Order>
         bordered
         justified
+        sortable={props.status === OrderStatus.INCOMPLETE}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={"orderly-text-2xs orderly-text-base-contrast-80 orderly-min-w-[1100px] orderly-overflow-x-auto"}
-        generatedRowKey={(record) => record.order_id}
+        className={cn(
+          "orderly-text-2xs orderly-text-base-contrast-80",
+          props.className
+        )}
+        generatedRowKey={(record) => "" + record.order_id}
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider

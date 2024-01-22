@@ -3,7 +3,7 @@ import { Collapsible, CollapsibleContent } from "@/collapsible";
 import { Label } from "@/label";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
-import { OrderType, MEDIA_TABLE } from "@orderly.network/types";
+import { OrderType, MEDIA_TABLET } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
@@ -22,11 +22,11 @@ interface OrderOptionsProps {
 }
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
-  const { reduceOnly, onReduceOnlyChange } = props
+  const { reduceOnly, onReduceOnlyChange } = props;
   const [open, setOpen] = useState<boolean>(false);
   const { control, getValues, setValue } = useFormContext();
 
-  const isTable = useMediaQuery(MEDIA_TABLE);
+  const isTable = useMediaQuery(MEDIA_TABLET);
 
   return (
     <>
@@ -43,10 +43,14 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                   checked={field.value ?? reduceOnly}
                   onCheckedChange={(checked) => {
                     onReduceOnlyChange?.(checked);
-                    field.onChange(checked)
+                    field.onChange(checked);
                   }}
                 />
-                {isTable ? (<MobileReduceOnlyLabel />) : (<DesktopReduceOnlyLabel />)}
+                {isTable ? (
+                  <MobileReduceOnlyLabel />
+                ) : (
+                  <DesktopReduceOnlyLabel />
+                )}
               </div>
             );
           }}
@@ -132,7 +136,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                         }}
                       />
 
-                      {isTable ? (<MobileHideenLabel />) : (<DesktopHiddenLabel />)}
+                      {isTable ? <MobileHideenLabel /> : <DesktopHiddenLabel />}
                     </div>
                   );
                 }}

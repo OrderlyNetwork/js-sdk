@@ -103,7 +103,7 @@ const Slider = React.forwardRef<
         <SliderPrimitive.Root
           ref={ref}
           className={cn(
-            "orderly-relative orderly-flex orderly-items-center orderly-select-none orderly-touch-none orderly-w-full orderly-h-[20px]",
+            "orderly-relative orderly-flex orderly-items-center orderly-select-none orderly-touch-none orderly-w-full orderly-h-[20px] orderly-cursor-pointer",
             className
           )}
           onValueChange={onValueChangeInner}

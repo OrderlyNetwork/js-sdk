@@ -50,7 +50,7 @@ export const TabList: FC<TabListProps> = (props) => {
   const tabContext = useContext(TabContext);
 
   const calcLeft = useCallback(
-    (target: HTMLButtonElement) => {
+    (target?: HTMLButtonElement | null) => {
       if (!target || !boxRef.current) {
         return;
       }
@@ -61,7 +61,7 @@ export const TabList: FC<TabListProps> = (props) => {
 
       // const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
 
-      setBounding(() => ({
+      setBounding((prev) => ({
         // left: left - parentLeft + (width - 40) / 2,
         left: left - parentLeft,
         width,
@@ -96,10 +96,11 @@ export const TabList: FC<TabListProps> = (props) => {
       // console.log("entries", entries);
       entries.forEach((entry) => {
         const target = entry.target as HTMLButtonElement;
-        // console.log("target", target);
 
-        if (target.classList.contains("orderly-active")) {
+        if (target.classList.contains("active")) {
           calcLeft(target);
+        } else if (target.classList.contains("tabs-list")) {
+          calcLeft(boxRef.current?.querySelector(".active"));
         }
       });
     };
@@ -110,6 +111,10 @@ export const TabList: FC<TabListProps> = (props) => {
     tabs.forEach((tab) => {
       resizeObserver.observe(tab);
     });
+
+    // observe the tabs wrapper
+
+    resizeObserver.observe(boxRef.current);
 
     return () => {
       resizeObserver.disconnect();
@@ -140,7 +145,7 @@ export const TabList: FC<TabListProps> = (props) => {
         )}
       >
         <div
-          className={cn("orderly-flex orderly-h-full orderly-gap-5", {
+          className={cn("orderly-flex orderly-h-full orderly-gap-5 tabs-list", {
             "orderly-w-full": props.fullWidth,
           })}
           ref={boxRef}

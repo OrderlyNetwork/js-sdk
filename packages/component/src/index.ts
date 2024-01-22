@@ -41,7 +41,7 @@ export { modal, useModal } from "./modal";
 // ==================== page component ====================
 export * from "./page";
 
-export { Page } from "./layout";
+export { Page, Layout } from "./layout";
 
 // ==================== block component ====================
 export {
@@ -61,6 +61,7 @@ export {
   AssetAndMarginSheet,
   ChainListView,
   ChainSelect,
+  SystemStatusBar,
 } from "./block";
 
 export type {

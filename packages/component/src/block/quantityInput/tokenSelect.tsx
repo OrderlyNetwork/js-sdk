@@ -45,6 +45,11 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
           className={
             "orderly-token-select orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs orderly-text-base-contrast-80 orderly-mr-2 desktop:orderly-text-xs"
           }
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setOpen(!open);
+          }}
         >
           <NetworkImage
             type={token ? "token" : "placeholder"}
@@ -63,6 +68,8 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
           event.preventDefault();
           props.onClosed?.();
         }}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        closable
       >
         <DialogHeader className="after:orderly-hidden">
           Select token

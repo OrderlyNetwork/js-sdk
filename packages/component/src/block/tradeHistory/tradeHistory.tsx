@@ -40,11 +40,9 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
             <Numeral
               precision={quote_dp}
               className={
-                
                 record.side === OrderSide.BUY
                   ? "orderly-text-trade-profit orderly-text-3xs"
                   : "orderly-text-trade-loss orderly-text-3xs"
-                  
               }
             >
               {value}
@@ -79,9 +77,9 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       dataSource={props.dataSource}
       columns={columns}
       loading={props.loading}
-      className="orderly-text-3xs desktop:orderly-text-2xs"
+      className="orderly-text-3xs desktop:orderly-text-2xs desktop:orderly-font-bold"
       headerClassName={cn(
-        "orderly-text-base-contrast-36 orderly-bg-base-900",
+        "orderly-text-base-contrast-36 orderly-bg-base-900 orderly-p-0",
         props.headerClassName
       )}
       generatedRowKey={(record, index) =>

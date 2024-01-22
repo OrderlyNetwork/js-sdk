@@ -1,5 +1,110 @@
 # @orderly.network/futures
 
+## 1.0.27-alpha.10
+
+### Patch Changes
+
+- fix style bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.10
+  - @orderly.network/utils@0.0.79-alpha.10
+
+## 1.0.27-alpha.9
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.9
+  - @orderly.network/utils@0.0.79-alpha.9
+
+## 1.0.27-alpha.8
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.8
+  - @orderly.network/utils@0.0.79-alpha.8
+
+## 1.0.27-alpha.7
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.7
+  - @orderly.network/utils@0.0.79-alpha.7
+
+## 1.0.27-alpha.6
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.6
+  - @orderly.network/utils@0.0.79-alpha.6
+
+## 1.0.27-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.5
+  - @orderly.network/utils@0.0.79-alpha.5
+
+## 1.0.27-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.4
+  - @orderly.network/utils@0.0.79-alpha.4
+
+## 1.0.27-alpha.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.3
+  - @orderly.network/utils@0.0.79-alpha.3
+
+## 1.0.27-alpha.2
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.2
+  - @orderly.network/utils@0.0.79-alpha.2
+
+## 1.0.27-alpha.1
+
+### Patch Changes
+
+- update version
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.1
+  - @orderly.network/utils@0.0.79-alpha.1
+
+## 1.0.27-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.0
+  - @orderly.network/utils@0.0.79-alpha.0
+
 ## 1.0.26
 
 ### Patch Changes

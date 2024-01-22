@@ -33,6 +33,7 @@ import { Decimal, commify } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
 import { convertValueToPercentage } from "@/slider/utils";
+import { FreeCollat } from "./sections/freeCollat";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -327,7 +328,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
             <div className="orderly-flex orderly-justify-between orderly-items-center">
               <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs desktop:orderly-text-3xs">
-                <span>Free Collat.</span>
+                <FreeCollat/>
                 <Numeral
                   rule="price"
                   className="orderly-text-base-contrast-80"

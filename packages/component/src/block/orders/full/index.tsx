@@ -27,7 +27,7 @@ export const OrdersViewFull: FC<Props> = (props) => {
       />
       <Divider />
       <div
-        className="orderly-overflow-y-auto"
+        className="orderly-relative"
         style={{ height: `${(height?.content ?? 100) - 55}px` }}
       >
         <Listview

@@ -2,7 +2,7 @@ import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
 import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
-import { int2hex } from "@orderly.network/utils";
+import { int2hex, isTestnet } from "@orderly.network/utils";
 import {
   FC,
   useCallback,
@@ -69,8 +69,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
 
-    if (props.chain?.id === 421613) {
-      return props.chains.testnet ?? [];
+    if (isTestnet(props.chain?.id!)) {
+      return props.chains?.testnet ?? [];
     }
 
     return props.chains?.mainnet;

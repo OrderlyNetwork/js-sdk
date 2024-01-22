@@ -4,8 +4,10 @@ import {ChartMode} from "./tradingViewAdapter/type";
 import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
 import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
 
-import { useWS } from "@orderly.network/hooks";
+import { useWS, useConfig } from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
+
+
 
 
 export interface TradingViewOptions {
@@ -61,6 +63,7 @@ const getOveriides = () => {
         "paneProperties.vertGridProperties.color": "#26232F",
         "paneProperties.horzGridProperties.color": "#26232F",
         "scalesProperties.textColor": "#97969B",
+        'paneProperties.legendProperties.showSeriesTitle': false,
     };
     const     studiesOverrides = {
         "volume.volume.color.0": "#613155",
@@ -87,7 +90,7 @@ fullscreen,
                             }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
-
+    const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
@@ -141,7 +144,7 @@ fullscreen,
 
                 overrides: overrides,
                 studiesOverrides,
-                datafeed: new Datafeed(ws),
+                datafeed: new Datafeed(apiBaseUrl!, ws),
                 getBroker: undefined,
 
             };

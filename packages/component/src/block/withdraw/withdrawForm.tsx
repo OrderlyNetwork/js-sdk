@@ -219,7 +219,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     }
 
     if (crossChainWithdraw) {
-      return item.withdrawal_fee || 0 + (item.cross_chain_withdrawal_fee || 0);
+      return (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0);
     }
 
     return item.withdrawal_fee || 0;
@@ -331,7 +331,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         chains={chains}
         chain={chain}
         onWithdraw={doWithdraw}
-        disabled={!quantity}
+        disabled={!quantity || (Number(quantity) - fee <= 0)}
         switchChain={switchChain}
         quantity={quantity}
         loading={submitting}

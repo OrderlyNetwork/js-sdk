@@ -1,12 +1,15 @@
-import { PropsWithChildren, createContext, useContext } from "react";
+import { PropsWithChildren, createContext, useContext, useRef } from "react";
 import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
 import { usePreLoadData } from "./usePreloadData";
+
+export type getKeyFunction = (index: number, prevData: any) => string | null;
 
 interface DataCenterContextValue {
   // orders
   // positions
   // balances
   //
+  regesterKeyHandler: (key: string, handler: getKeyFunction) => void;
 }
 
 export const DataCenterContext = createContext<DataCenterContextValue>(
@@ -22,7 +25,13 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
    */
   const { error, done } = usePreLoadData();
 
-  usePrivateDataObserver();
+  const getKeyHandlerMapRef = useRef<Map<string, getKeyFunction>>(new Map());
+
+  usePrivateDataObserver({
+    getKeysMap(type) {
+      return getKeyHandlerMapRef.current;
+    },
+  });
 
   if (error) {
     return <div>Data load failed</div>;
@@ -31,7 +40,13 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
   if (!done) return null;
 
   return (
-    <DataCenterContext.Provider value={{}}>
+    <DataCenterContext.Provider
+      value={{
+        regesterKeyHandler: (key, fun) => {
+          getKeyHandlerMapRef.current.set(key, fun);
+        },
+      }}
+    >
       {children}
     </DataCenterContext.Provider>
   );
