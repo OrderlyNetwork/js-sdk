@@ -32,7 +32,9 @@ const config = {
   ],
   framework: {
     name: "@storybook/react-webpack5",
-    options: {},
+    options: {
+      fastRefresh: true,
+    },
   },
   docs: {
     autodocs: "tag",
