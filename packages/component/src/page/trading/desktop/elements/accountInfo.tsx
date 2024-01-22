@@ -6,7 +6,7 @@ import { Divider } from "@/divider";
 
 export const AccountInfoElement = memo(() => {
   const { disableFeatures } = useTradingPageContext();
-  if (disableFeatures.includes(TradingFeatures.AssetAndMarginInfo)) return null;
+  if (disableFeatures?.includes(TradingFeatures.AssetAndMarginInfo)) return null;
   return (
     <>
       <div className="orderly-px-4">
