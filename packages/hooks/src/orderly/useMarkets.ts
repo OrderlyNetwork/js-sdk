@@ -53,28 +53,14 @@ export const useMarkets = (type: MarketsType) => {
     const { data } = useMarketsStream();
     const { configStore } = useContext(OrderlyContext);
 
+    // {"PERP_ETH_USDC": {}, ...}
     const { data: publicInfo } = useQuery<any>(`/v1/public/info`, {
         focusThrottleInterval: 1000 * 60 * 60 * 24,
         dedupingInterval: 1000 * 60 * 60 * 24,
         revalidateOnFocus: false,
     });
 
-    // const leverageInfo = useMemo(() => {
-    //     const info = new Map<string, number>();
-    //     if (publicInfo) {
-    //         for (let index = 0; index < publicInfo.length; index++) {
-    //             const element = publicInfo[index];
-    //             info.set(element.symbol, 1 / element.base_imr);
-    //         }
-    //     }
-    //     return info;
-    // }, [publicInfo]);
-
-    // console.log("leverageInfo", leverageInfo, publicInfo);
-    
-
     if (!configStore.get(marketsKey)) {
-        // WARNING: remember remove
         const jsonStr = localStorage.getItem(marketsKey);
         if (jsonStr) {
             configStore.set(marketsKey, JSON.parse(jsonStr));
@@ -139,8 +125,6 @@ export const useMarkets = (type: MarketsType) => {
                 ...configStore.getOr(marketsKey, {}),
                 "favoriteTabs": tabs
             });
-            // WARNING: remember remove
-            // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         };
 
         if (Array.isArray(tab)) {
@@ -176,8 +160,6 @@ export const useMarkets = (type: MarketsType) => {
             ...configStore.getOr(marketsKey, {}),
             "recent": curData
         });
-        // WARNING: remember remove
-        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setRecent(curData);
     };
 
@@ -230,8 +212,6 @@ export const useMarkets = (type: MarketsType) => {
             ...configStore.getOr(marketsKey, {}),
             "favorites": curData
         });
-        // WARNING: remember remove
-        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setFavorites(() => curData);
     };
 
@@ -297,10 +277,6 @@ export const useMarkets = (type: MarketsType) => {
                 ...configStore.getOr(marketsKey, {}),
                 "favorites": list
             });
-            // WARNING: remember remove
-            // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-
-
             setFavorites(list);
         }
     };
