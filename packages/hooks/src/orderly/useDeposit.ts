@@ -255,7 +255,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   ]);
 
   const approve = useCallback(
-    async (amount: string = quantity) => {
+    async (amount?: string) => {
       if (!options?.address) {
         throw new Error("address is required");
       }
@@ -271,7 +271,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           return result;
         });
     },
-    [account, getAllowance, options?.address, quantity]
+    [account, getAllowance, options?.address]
   );
 
   const deposit = useCallback(async () => {

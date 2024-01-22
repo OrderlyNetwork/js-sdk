@@ -31,7 +31,7 @@ export const Header: FC<PropsWithChildren<HeaderProps>> = (props) => {
   /**
    * if disableFeatures includes TradingFeatures.Header, then return null
    */
-  if (disableFeatures.includes(TradingFeatures.Header)) {
+  if (disableFeatures?.includes(TradingFeatures.Header)) {
     return null;
   }
 

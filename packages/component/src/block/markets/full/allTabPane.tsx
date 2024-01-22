@@ -31,6 +31,7 @@ export const AllTabPane: FC<{
         activeIndex={activeIndex}
         dataSource={dataSource}
         onSort={onSort}
+        readLastSortCondition
         maxHeight={props.maxHeight}
         updateActiveIndex={(index: number) => setActiveIndex(index)}
         onItemClick={(item) => {
