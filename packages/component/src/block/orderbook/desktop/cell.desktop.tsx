@@ -22,7 +22,10 @@ export interface DesktopOrderBookCellProps {
   accumulated: number;
   accumulatedAmount: number;
   type: OrderBookCellType;
-  mode: QtyMode;
+  
+  isHover: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
@@ -55,6 +58,8 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
         onItemClick?.([props.price, props.quantity]);
       }}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
     >
       <div className={
         cn("orderly-basis-7/12 orderly-flex orderly-felx-row orderly-items-center orderly-mr-2",
@@ -121,6 +126,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         style={{ top: `${cellHeight / 2 - 2}px` }}
       />}
 
+    {props.isHover && <div className="orderly-absolute orderly-bg-white orderly-left-0 orderly-right-0 orderly-top-0 orderly-bottom-0 orderly-opacity-10"></div>}
     </div>
   );
 };
