@@ -4,6 +4,7 @@ import { useConfig } from "../useConfig";
 import { OrderlyContext } from "../orderlyContext";
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
     FAVORITES,
@@ -54,11 +55,7 @@ export const useMarkets = (type: MarketsType) => {
     const { configStore } = useContext(OrderlyContext);
 
     // {"PERP_ETH_USDC": {}, ...}
-    const { data: publicInfo } = useQuery<any>(`/v1/public/info`, {
-        focusThrottleInterval: 1000 * 60 * 60 * 24,
-        dedupingInterval: 1000 * 60 * 60 * 24,
-        revalidateOnFocus: false,
-    });
+    const publicInfo = useSymbolsInfo();
 
     if (!configStore.get(marketsKey)) {
         const jsonStr = localStorage.getItem(marketsKey);
@@ -238,7 +235,10 @@ export const useMarkets = (type: MarketsType) => {
                 const fIndex = favoritesData.findIndex((item) => item.name === element.symbol);
                 const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
 
-                const imr = publicInfo[element.symbol]?.base_imr;
+                let imr = undefined;
+                if (publicInfo) {
+                    imr= publicInfo?.[element.symbol]("base_imr");
+                }
                 
                 filter[index] = {
                     ...filter[index],
