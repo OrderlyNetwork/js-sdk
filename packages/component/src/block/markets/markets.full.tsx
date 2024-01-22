@@ -83,7 +83,7 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
   };
 
   return (
-    <div className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums">
+    <div className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums orderly-pb-2">
       <Header
         onSearch={setSearchKey}
         keyword={searchKey}
