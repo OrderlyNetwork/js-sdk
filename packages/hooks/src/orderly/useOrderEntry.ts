@@ -1,5 +1,11 @@
 import { useCallback, useMemo } from "react";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  API,
+  OrderEntity,
+  OrderSide,
+  OrderType,
+  SDKError,
+} from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
@@ -71,7 +77,7 @@ export const useOrderEntry = (
       (values.order_type !== OrderType.MARKET &&
         values.order_type !== OrderType.LIMIT)
     ) {
-      throw new Error("order_type is error");
+      throw new SDKError("order_type is error");
     }
 
     const orderCreator = OrderFactory.create(
@@ -79,7 +85,15 @@ export const useOrderEntry = (
     );
 
     if (!orderCreator) {
-      return Promise.reject(new Error("orderCreator is null"));
+      return Promise.reject(new SDKError("orderCreator is null"));
+    }
+
+    if (reduceOnly && !values.reduce_only) {
+      return Promise.reject(
+        new SDKError(
+          "The reduceOny parameter of hook does not match your order data"
+        )
+      );
     }
 
     return orderCreator
@@ -91,11 +105,11 @@ export const useOrderEntry = (
       })
       .then(() => {
         if (!orderCreator) {
-          throw new Error("orderCreator is null");
+          throw new SDKError("orderCreator is null");
         }
 
         if (!symbol) {
-          throw new Error("symbol is null");
+          throw new SDKError("symbol is null");
         }
 
         const data = orderCreator.create(values!);
@@ -121,6 +135,8 @@ export const useOrderEntry = (
     },
     [markPrice]
   );
+
+  // const estLiqPrice = useMemo(() => {}, []);
 
   const validator = (values: any) => {
     const creator = OrderFactory.create(values.order_type);

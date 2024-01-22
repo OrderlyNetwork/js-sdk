@@ -60,6 +60,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
           onItemClick={onItemClick}
           cellHeight={cellHeight}
           onDepthChange={onDepthChange}
+          pendingOrders={[]}
         />
       </SymbolProvider>
     </div>

@@ -3,11 +3,13 @@ import { SortKey } from "./sections/sortItem";
 import { SortDirection, parseSortDirection } from "./shared/types";
 import { parseNumStr } from "@orderly.network/utils";
 
-export const useSort = (value?: SortKey) => {
+export const useSort = (value?: SortKey, readLastSortCondition?: boolean) => {
   const sessionSortKey = sessionStorage.getItem("default_sort_key") || "vol";
   const sessionSortDirection = sessionStorage.getItem("default_sort_derection") || "2";
-  const [sortKey, setSortKey] = useState<SortKey | undefined>(value || sessionSortKey);
-  const [direction, setDirection] = useState<SortDirection>(parseSortDirection(sessionSortDirection) || SortDirection.DESC);
+  const initSortKey = readLastSortCondition ? value || sessionSortKey : undefined;
+  const initDirection = readLastSortCondition ? (parseSortDirection(sessionSortDirection) || SortDirection.DESC) : SortDirection.NONE;
+  const [sortKey, setSortKey] = useState<SortKey | undefined>(initSortKey);
+  const [direction, setDirection] = useState<SortDirection>(initDirection);
 
   const onSort = (value: SortKey) => {
     if (value === sortKey) {

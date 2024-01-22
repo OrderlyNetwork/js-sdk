@@ -1,18 +1,8 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "./tsconfig.build.json",  
   "compilerOptions": {
-    "skipLibCheck": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
-    
-    // "allowSyntheticDefaultImports": true,
-    "esModuleInterop":true
-  },
-  "include": ["**/*.ts", "**/*.tsx","**/*.d.ts", "tsup.config.js"],
-  "exclude": ["node_modules"],
-  "typedocOptions": {
-    "entryPoints": ["src/index.ts"],
-    "out": "docs",
-    "skipErrorChecking":true
-}
+    "paths": {
+      "@orderly.network/types": ["../types/src"],
+    },
+  }
 }

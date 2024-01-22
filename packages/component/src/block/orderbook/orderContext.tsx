@@ -9,6 +9,7 @@ export interface OrderBookContextValue {
   onItemClick?: (item: number[]) => void;
   showTotal: boolean;
   totalMode: TotalMode;
+  pendingOrders: number[];
   onTotalModeChange?: (mode: TotalMode) => void;
 }
 
@@ -20,6 +21,7 @@ interface OrderBookProviderProps {
   cellHeight: number;
   depth: number;
   showTotal: boolean;
+  pendingOrders: number[];
   onItemClick?: (item: number[]) => void;
 }
 
@@ -39,6 +41,7 @@ export const OrderBookProvider: FC<
         onModeChange: setMode,
         onTotalModeChange: setTotalMode,
         showTotal: props.showTotal || false,
+        pendingOrders: props.pendingOrders,
       }}
     >
       {props.children}

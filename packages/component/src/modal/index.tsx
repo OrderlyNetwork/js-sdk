@@ -1,10 +1,12 @@
 import { modalActions } from "./modalContext";
 import { register, unregister } from "./modalHelper";
-import { actionSheet } from "@/modal/preset/actionSheet";
-import { confirm } from "./preset/confirm";
+
 import { sheet } from "./preset/sheet";
 import { alert } from "./preset/alert";
 import { dialog } from "./preset/dialog";
+
+import { confirm } from "./preset/confirm";
+import { actionSheet } from "@/modal/preset/actionSheet";
 
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";

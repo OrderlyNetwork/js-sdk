@@ -1,5 +1,4 @@
 import { TabPane, Tabs } from "@/tab";
-import { ArrowDownToLine, ArrowUpToLine } from "lucide-react";
 import { FC, useState } from "react";
 import { Withdraw } from "../withdraw";
 import { Deposit } from "../deposit/deposit";
@@ -8,6 +7,8 @@ import { useModal } from "@/modal";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";
+import { ArrowDownToLineIcon } from "@/icon";
+import { cn } from "@/utils";
 
 type activeName = "deposit" | "withdraw";
 
@@ -32,9 +33,9 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         <TabPane
           id="orderly-deposit-pane"
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs desktop:orderly-text-xl">
-              {/* @ts-ignore */}
-              <ArrowDownToLine size={15} /> <span>Deposit</span>
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs desktop:orderly-text-lg">
+              <ArrowDownToLineIcon className="orderly-w-[10px] orderly-h-[10px] desktop:orderly-w-[16px] desktop:orderly-h-[16px]" />
+              <span>Deposit</span>
             </div>
           }
           value="deposit"
@@ -56,9 +57,9 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         <TabPane
           id="orderly-withdraw-pane"
           title={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs desktop:orderly-text-xl">
-              {/* @ts-ignore */}
-              <ArrowUpToLine size={15} /> <span>Withdraw</span>
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs desktop:orderly-text-lg">
+              <ArrowDownToLineIcon className="orderly-w-[10px] orderly-h-[10px] desktop:orderly-w-[16px] desktop:orderly-h-[16px] orderly-rotate-180" />
+              <span>Withdraw</span>
             </div>
           }
           value="withdraw"

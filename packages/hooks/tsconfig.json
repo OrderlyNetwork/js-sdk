@@ -1,14 +1,12 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "./tsconfig.build.json",  
   "compilerOptions": {
-    "plugins": [{ "name": "next" }],
-    "jsx": "react-jsx"
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "__test__", "__mocks__"],
-  "typedocOptions": {
-    "entryPoints": ["src/index.ts"],
-    "out": "docs",
-    "skipErrorChecking": true
+    "paths": {
+      "@orderly.network/core": ["../core/src"],
+      "@orderly.network/net": ["../net/src"],
+      "@orderly.network/perp": ["../perp/src"],
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/utils": ["../utils/src"],
+    },
   }
 }

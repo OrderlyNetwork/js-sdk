@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsup --watch --tsconfig tsconfig.build.json",
+    "build": "tsup --tsconfig tsconfig.build.json",
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest"

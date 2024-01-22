@@ -28,7 +28,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   );
   const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
     "orderBookSplitSize",
-    "280px"
+    "370px"
   );
 
   const { disableFeatures } = useTradingPageContext();
@@ -105,7 +105,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 </div>
               </div>
               <div
-                style={{ minWidth: "280px", width: orderBookSplitSize }}
+                style={{ minWidth: "300px", maxWidth: "800px", width: orderBookSplitSize }}
                 className="orderly-overflow-hidden"
               >
                 <MyOrderBookAndTrade symbol={props.symbol} />

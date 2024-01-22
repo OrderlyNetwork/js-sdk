@@ -98,9 +98,17 @@ export const TabList: FC<TabListProps> = (props) => {
         const target = entry.target as HTMLButtonElement;
 
         if (target.classList.contains("active")) {
-          calcLeft(target);
-        } else if (target.classList.contains("tabs-list")) {
-          calcLeft(boxRef.current?.querySelector(".active"));
+          // calcLeft(target);
+          // TODO: remove setTimeout
+          setTimeout(() => {
+            calcLeft(target);
+          }, 100);
+        } else if (target.classList.contains("orderly-tabs-list")) {
+          // calcLeft(boxRef.current?.querySelector(".active"));
+          // TODO: remove setTimeout
+          setTimeout(() => {
+            calcLeft(boxRef.current?.querySelector(".active"));
+          }, 100);
         }
       });
     };
