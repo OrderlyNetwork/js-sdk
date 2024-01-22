@@ -15,7 +15,7 @@ type ProgressProps = {
 const progressVariantsBg = cva("", {
   variants: {
     variant: {
-      solid: "orderly-bg-primary/20",
+      solid: "orderly-bg-base-contrast/[.072]",
       gradient:
         "orderly-bg-gradient-to-l \
       orderly-from-[rgba(28,246,180,0.2)] \
