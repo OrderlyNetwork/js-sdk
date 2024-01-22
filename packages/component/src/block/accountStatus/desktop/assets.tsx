@@ -100,7 +100,7 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [state]);
 
   const [{ aggregated }, positionsInfo] = usePositionStream();
-  const { marginRatio } = useMarginRatio();
+  const { marginRatio, MMR } = useMarginRatio();
 
   const marginRatioVal = useMemo(() => {
     return Math.min(
