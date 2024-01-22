@@ -39,7 +39,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   const totalAmount = Number.isNaN(props.accumulated)
     ? "-"
-    : props.accumulatedAmount.toString();
+    : props.accumulatedAmount?.toString();
 
   const isPendingOrder = useMemo(() => {
     const priceStr = parseNumber(props.price, { precision: dp, padding: true, });
