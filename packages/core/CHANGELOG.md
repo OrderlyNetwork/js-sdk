@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.1.27-alpha.20
+
+### Patch Changes
+
+- add account MMR and more;
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.20
+
 ## 0.1.27-alpha.19
 
 ### Patch Changes

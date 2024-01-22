@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-alpha.20
+
+### Patch Changes
+
+- add account MMR and more;
+
 ## 0.0.2-alpha.19
 
 ### Patch Changes

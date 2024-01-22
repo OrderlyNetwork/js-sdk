@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.0.28-alpha.20
+
+### Patch Changes
+
+- add account MMR and more;
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.20
+  - @orderly.network/types@0.1.27-alpha.20
+
 ## 0.0.28-alpha.19
 
 ### Patch Changes
