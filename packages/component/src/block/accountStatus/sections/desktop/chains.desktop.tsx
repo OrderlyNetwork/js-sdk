@@ -111,28 +111,31 @@ export const Chains: FC<ChainsProps> = (props) => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
-        <Button
-          variant={"outlined"}
-          size={"small"}
-          color={"buy"}
-          loading={settingChain}
-          disabled={disabled}
-          className={cn(
-            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
-            props.className
-          )}
-          onClick={() => {
-            setOpen((value) => !value);
-          }}
-        >
-          {chainName}
-          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
-        </Button>
+        <div className="orderly-h-[48px] orderly-flex orderly-items-center">
+          <Button
+            variant={"outlined"}
+            size={"small"}
+            color={"buy"}
+            loading={settingChain}
+            disabled={disabled}
+            className={cn(
+              "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+              props.className
+            )}
+            onClick={() => {
+              setOpen((value) => !value);
+            }}
+          >
+            {chainName}
+            <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
+          </Button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         onCloseAutoFocus={(e) => e.preventDefault()}
         align="end"
-        className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-hide-scrollbar  orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
+        sideOffset={-1}
+        className="orderly-max-h-[360px] orderly-max-w-[260px] orderly-overflow-y-auto orderly-bg-base-800 orderly-hide-scrollbar orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
       >
         <ChainListView
           // @ts-ignore
