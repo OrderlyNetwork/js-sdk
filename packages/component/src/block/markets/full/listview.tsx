@@ -11,7 +11,7 @@ import { NetworkImage } from "@/icon";
 interface Props {
   activeIndex: number;
   onSort: (value: Partial<{ key: SortKey; direction: SortDirection }>) => void;
-
+  readLastSortCondition?: boolean;
   maxHeight?: number;
   onItemClick?: (item: API.MarketInfoExt) => void;
   updateActiveIndex?: (index: number) => void;
@@ -79,7 +79,7 @@ export const ListViewFull = forwardRef<
 
   return (
     <div>
-      <SortGroup onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
+      <SortGroup readLastSortCondition={props.readLastSortCondition} onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
       <ListView<API.MarketInfoExt, any>
         // @ts-ignore
         ref={ref}
