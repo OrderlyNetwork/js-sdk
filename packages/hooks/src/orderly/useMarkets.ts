@@ -3,6 +3,7 @@ import { useMarketsStream } from "./useMarketsStream";
 import { useConfig } from "../useConfig";
 import { OrderlyContext } from "../orderlyContext";
 import { API } from "@orderly.network/types";
+import { useQuery } from "../useQuery";
 
 export enum MarketsType {
     FAVORITES,
@@ -52,6 +53,26 @@ export const useMarkets = (type: MarketsType) => {
     const { data } = useMarketsStream();
     const { configStore } = useContext(OrderlyContext);
 
+    const { data: publicInfo } = useQuery<any>(`/v1/public/info`, {
+        focusThrottleInterval: 1000 * 60 * 60 * 24,
+        dedupingInterval: 1000 * 60 * 60 * 24,
+        revalidateOnFocus: false,
+    });
+
+    // const leverageInfo = useMemo(() => {
+    //     const info = new Map<string, number>();
+    //     if (publicInfo) {
+    //         for (let index = 0; index < publicInfo.length; index++) {
+    //             const element = publicInfo[index];
+    //             info.set(element.symbol, 1 / element.base_imr);
+    //         }
+    //     }
+    //     return info;
+    // }, [publicInfo]);
+
+    // console.log("leverageInfo", leverageInfo, publicInfo);
+    
+
     if (!configStore.get(marketsKey)) {
         // WARNING: remember remove
         const jsonStr = localStorage.getItem(marketsKey);
@@ -62,11 +83,11 @@ export const useMarkets = (type: MarketsType) => {
             configStore.set(marketsKey, {
                 recent: [],
                 favorites: [
-                    {name: "PERP_ETH_USDC", tabs: [{...defaultTab}]},
-                    {name: "PERP_BTC_USDC", tabs: [{...defaultTab}]},
+                    { name: "PERP_ETH_USDC", tabs: [{ ...defaultTab }] },
+                    { name: "PERP_BTC_USDC", tabs: [{ ...defaultTab }] },
                 ],
-                favoriteTabs: [{...defaultTab}],
-                lastSelectFavoriteTab: {...defaultTab}
+                favoriteTabs: [{ ...defaultTab }],
+                lastSelectFavoriteTab: { ...defaultTab }
             });
         }
     }
@@ -86,22 +107,22 @@ export const useMarkets = (type: MarketsType) => {
             const favData = curData[index];
             var favTabs = favData.tabs.filter((tab) => tabs.findIndex((item) => tab.id === item.id) !== -1);
             if (favTabs.length > 0) {
-                result.push({...favData, tabs: favTabs})
+                result.push({ ...favData, tabs: favTabs })
             }
-            
+
         }
-        configStore.set(marketsKey, {...configStore.getOr(marketsKey, {}), favorites: result});
+        configStore.set(marketsKey, { ...configStore.getOr(marketsKey, {}), favorites: result });
         // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-        
+
         return result;
-    },[configStore]);
+    }, [configStore]);
 
     const getRecent = useMemo(() => {
         // @ts-ignore
         const curData = configStore.get(marketsKey)["recent"];
         return ((curData || []) as Recent[]).filter((e) => e);
     }, []);
-    
+
     const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
     const [favorites, setFavorites] = useState(getFavorites);
     const [recent, setRecent] = useState(getRecent);
@@ -150,7 +171,7 @@ export const useMarkets = (type: MarketsType) => {
         if (index !== -1) {
             curData.splice(index, 1);
         }
-        curData.unshift({ name: symbol.symbol });        
+        curData.unshift({ name: symbol.symbol });
         configStore.set(marketsKey, {
             ...configStore.getOr(marketsKey, {}),
             "recent": curData
@@ -169,8 +190,8 @@ export const useMarkets = (type: MarketsType) => {
 
         if (index === -1) { // can not find
             if (Array.isArray(tab)) {
-                if ( tab.length > 0) {
-                    curData.unshift({ name: symbol.symbol, tabs: tab});
+                if (tab.length > 0) {
+                    curData.unshift({ name: symbol.symbol, tabs: tab });
                 }
             } else {
                 if (!remove) {
@@ -236,11 +257,15 @@ export const useMarkets = (type: MarketsType) => {
 
                 const fIndex = favoritesData.findIndex((item) => item.name === element.symbol);
                 const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
+
+                const imr = publicInfo[element.symbol]?.base_imr;
+                
                 filter[index] = {
                     ...filter[index],
                     // @ts-ignore
                     isFavorite,
                     tabs,
+                    leverage: imr ? 1 / imr : undefined
                 };
             }
         }
