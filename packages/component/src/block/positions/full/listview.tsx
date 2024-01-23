@@ -151,7 +151,7 @@ export const Listview: FC<
       //   dataIndex: "open_price",
       // },
       {
-        title: "Notional",
+        title: "Est. total",
         dataIndex: "notional",
         className: "orderly-h-[48px]",
         width: 100,
