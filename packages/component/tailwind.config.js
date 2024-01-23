@@ -97,6 +97,7 @@ module.exports = {
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-warning-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-warning-darken) / <alpha-value>)",
           contrast:
             "rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",

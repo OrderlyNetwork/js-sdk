@@ -9,10 +9,18 @@ import { Pencil } from "lucide-react";
 import { LeverageDialog } from "./leverageDialog";
 import { Tooltip } from "@/tooltip";
 import { Divider } from "@/divider";
+import { cn } from "@/utils";
 
-const LeverageAndMarginRatio = () => {
+interface LeverageAndMarginRatioProps {
+  isConnected: boolean;
+}
+
+const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
+  const { isConnected } = props;
   const { marginRatio, currentLeverage } = useMarginRatio();
   const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
+
+  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
 
   return (
     <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
@@ -44,8 +52,23 @@ const LeverageAndMarginRatio = () => {
             Margin ratio
           </div>
         </Tooltip>
-        <Numeral rule={"percentages"} coloring>
-          {marginRatio === 0 ? 10 : Math.min(marginRatio, 10)}
+        <Numeral
+          className={cn(
+            "orderly-text-base-contrast",
+            isConnected &&
+              marginRatioVal > 0 &&
+              marginRatioVal <= 0.1 &&
+              "orderly-text-[#FF67C2]",
+            isConnected && marginRatioVal >= 1 && "orderly-text-[#1EF6B4]",
+            isConnected &&
+              marginRatioVal > 0.1 &&
+              marginRatioVal < 1 &&
+              "orderly-text-[#FFCF73]"
+          )}
+          rule={"percentages"}
+          coloring
+        >
+          {isConnected ? marginRatioVal : "-"}
         </Numeral>
       </div>
       <div className={"orderly-flex orderly-flex-col orderly-items-end"}>
@@ -68,18 +91,26 @@ const LeverageAndMarginRatio = () => {
             "orderly-flex orderly-items-center orderly-gap-1 orderly-text-2xs"
           }
         >
-          <Numeral surfix={"x"}>{currentLeverage}</Numeral>
+          {isConnected ? (
+            <Numeral surfix={"x"}>{currentLeverage}</Numeral>
+          ) : (
+            "-"
+          )}
 
           <span className={"orderly-text-base-contrast-54"}>/</span>
-          <LeverageDialog>
-            <button className="orderly-flex orderly-items-center orderly-gap-1">
-              <span>{`${maxLeverage ?? "-"}x`}</span>
-              {typeof maxLeverage !== "undefined" && (
-                // @ts-ignore
-                <Pencil size={14} className="orderly-text-base-contrast-54" />
-              )}
-            </button>
-          </LeverageDialog>
+          {isConnected ? (
+            <LeverageDialog>
+              <button className="orderly-flex orderly-items-center orderly-gap-1">
+                <span>{`${maxLeverage ?? "-"}x`}</span>
+                {typeof maxLeverage !== "undefined" && (
+                  // @ts-ignore
+                  <Pencil size={14} className="orderly-text-base-contrast-54" />
+                )}
+              </button>
+            </LeverageDialog>
+          ) : (
+            "-"
+          )}
         </div>
       </div>
     </div>

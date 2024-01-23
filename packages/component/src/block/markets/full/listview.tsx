@@ -11,7 +11,7 @@ import { NetworkImage } from "@/icon";
 interface Props {
   activeIndex: number;
   onSort: (value: Partial<{ key: SortKey; direction: SortDirection }>) => void;
-
+  readLastSortCondition?: boolean;
   maxHeight?: number;
   onItemClick?: (item: API.MarketInfoExt) => void;
   updateActiveIndex?: (index: number) => void;
@@ -48,6 +48,9 @@ export const ListViewFull = forwardRef<
           {props.prefixRender && (props.prefixRender(item,extraData))}
           <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
           <Text rule="symbol">{item.symbol}</Text>
+          {item.leverage && (<div className="orderly-ml-1 orderly-rounded-sm orderly-px-1 orderly-py-[2px] orderly-flex orderly-items-center orderly-text-3xs orderly-text-primary orderly-bg-base-600">
+            {`${item.leverage}x`}
+          </div>)}
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
           <Numeral>{item["24h_close"]}</Numeral>
@@ -76,7 +79,7 @@ export const ListViewFull = forwardRef<
 
   return (
     <div>
-      <SortGroup onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
+      <SortGroup readLastSortCondition={props.readLastSortCondition} onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
       <ListView<API.MarketInfoExt, any>
         // @ts-ignore
         ref={ref}

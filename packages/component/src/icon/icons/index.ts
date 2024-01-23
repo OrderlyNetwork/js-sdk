@@ -17,5 +17,4 @@ export { SettingsIcon } from "./settings";
 export { CopyDesktopIcon } from "./copy.desktop";
 export { ShareIcon } from "./share";
 export { DisconnectIcon } from "./disconnect";
-
-
+export { ArrowDownToLineIcon } from "./arrowDownToLine";

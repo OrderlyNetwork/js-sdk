@@ -85,11 +85,11 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         <DesktopHeader quote={quote} base={base} />
-        <DesktopAsks data={props.asks} />
+        <DesktopAsks data={[...props.asks]} />
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
-          asks={props.asks}
+          asks={[...props.asks]}
           bids={props.bids}
         />
         <DesktopBids data={props.bids} />

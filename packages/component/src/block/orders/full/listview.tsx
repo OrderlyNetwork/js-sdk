@@ -28,6 +28,7 @@ export const Listview: FC<Props> = (props) => {
         title: "Instrument",
         dataIndex: "symbol",
         className: "orderly-h-[48px]",
+        width: 120,
         onSort:
           props.status === OrderStatus.INCOMPLETE
             ? (r1, r2, sortOrder) => {
@@ -45,12 +46,14 @@ export const Listview: FC<Props> = (props) => {
       },
       {
         title: "Type",
+        width: 100,
         className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "type",
         formatter: upperCaseFirstLetter,
       },
       {
         title: "Side",
+        width: 100,
         className: "orderly-h-[48px]",
         dataIndex: "side",
         onSort:
@@ -87,6 +90,7 @@ export const Listview: FC<Props> = (props) => {
         title: "Price",
         className: "orderly-h-[48px]",
         dataIndex: "price",
+        width: 100,
         onSort: props.status === OrderStatus.INCOMPLETE,
         render: (value: string, record) => <Price order={record} />,
       },
@@ -98,6 +102,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Reduce",
         dataIndex: "reduce_only",
+        width: 100,
         className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: boolean) => {
           return <span>{value ? "Yes" : "No"}</span>;
@@ -106,6 +111,7 @@ export const Listview: FC<Props> = (props) => {
       {
         title: "Hidden",
         dataIndex: "visible",
+        width: 100,
         className: "orderly-h-[48px] orderly-font-semibold",
         render: (value: number, record) => {
           return <span>{value === record.quantity ? "No" : "Yes"}</span>;
@@ -128,18 +134,22 @@ export const Listview: FC<Props> = (props) => {
       },
     ];
 
-    if (props.status === OrderStatus.INCOMPLETE) {
-      columns.push({
-        title: "",
-        dataIndex: "action",
-        className: "orderly-h-[48px]",
-        align: "right",
-        fixed: "right",
-        render: (_: string, record) => {
+    // if (props.status === OrderStatus.INCOMPLETE) {
+    columns.push({
+      title: "",
+      dataIndex: "action",
+      className: "orderly-h-[48px]",
+      align: "right",
+      fixed: "right",
+      width: 100,
+      render: (_: string, record) => {
+        if (props.status === OrderStatus.INCOMPLETE) {
           return <CancelButton order={record} />;
-        },
-      });
-    }
+        }
+        return null;
+      },
+    });
+    // }
 
     return columns;
   }, [props.status]);
@@ -154,7 +164,6 @@ export const Listview: FC<Props> = (props) => {
       <Table<API.Order>
         bordered
         justified
-        sortable={props.status === OrderStatus.INCOMPLETE}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"

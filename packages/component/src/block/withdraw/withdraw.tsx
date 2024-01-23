@@ -44,7 +44,7 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     };
   }, [connectedChain, findByChainId]);
 
-  const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
+  const { maxAmount, availableBalance, availableWithdraw, unsettledPnL, withdraw } = useWithdraw();
   const context = useContext(TradingPageContext);
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);

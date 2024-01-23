@@ -53,16 +53,15 @@ const Price: FC<{
       )}
     >
       <Numeral className="orderly-font-bold" precision={quote_dp}>{middlePrice}</Numeral>
-      {middlePrice !== prevLastPrice && (
-        <ArrowTopIcon
+      <ArrowTopIcon
           size={12}
           className={cn("orderly-ml-1", {
             "orderly-rotate-180": middlePrice < prevLastPrice,
             "orderly-fill-trade-profit": middlePrice > prevLastPrice,
             "orderly-fill-trade-loss": middlePrice < prevLastPrice,
+            "orderly-fill-transparent": middlePrice === prevLastPrice
           })}
         />
-      )}
     </div>
   );
 }

@@ -9,4 +9,4 @@ export * from "./chains";
 export type { ChainConfig, ChainInfo, NativeCurrency } from "./chains";
 export * from "./wallet";
 
-export { ApiError } from "./errors";
+export { ApiError, SDKError } from "./errors";

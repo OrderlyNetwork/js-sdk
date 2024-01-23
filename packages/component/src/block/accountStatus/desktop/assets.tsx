@@ -39,7 +39,6 @@ const KEY = "ORDERLY_WEB_ASSETS_COLLAPSED";
 
 export const Assets: FC<AssetsProps> = (props) => {
   // const [expand, { toggle }] = useBoolean(false);
-
   const [collapsed, setCollapsed] = useLocalStorage(KEY, 1);
   const { totalCollateral, freeCollateral, totalValue, availableBalance } =
     useCollateral({
@@ -100,7 +99,7 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [state]);
 
   const [{ aggregated }, positionsInfo] = usePositionStream();
-  const { marginRatio } = useMarginRatio();
+  const { marginRatio, MMR } = useMarginRatio();
 
   const marginRatioVal = useMemo(() => {
     return Math.min(
@@ -110,6 +109,8 @@ export const Assets: FC<AssetsProps> = (props) => {
         : marginRatio
     );
   }, [marginRatio, aggregated]);
+
+  const isConnected = state.status >= AccountStatusEnum.Connected;
 
   return (
     <Collapsible
@@ -181,20 +182,19 @@ export const Assets: FC<AssetsProps> = (props) => {
       <div className={"orderly-pb-4"}>
         <Progress
           value={marginRatioVal * 100}
-          variant={"gradient"}
+          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           foregroundClassName={cn(
-            "",
             marginRatioVal <= 0.1 &&
-              "orderly-bg-gradient-to-r orderly-from-[rgba(244,128,124,1)] orderly-to-[rgba(255,79,130,1)]",
+              "orderly-bg-gradient-to-r orderly-from-[#F4807C] orderly-to-[#FF4F82]",
             marginRatioVal >= 1 &&
-              "orderly-bg-gradient-to-r orderly-from-[rgba(29,246,181,1)] orderly-to-[rgba(134,237,146,1)]",
-            marginRatio > 0.1 &&
-              marginRatio < 1 &&
-              "orderly-bg-gradient-to-r orderly-from-[rgba(230,214,115,1)] orderly-to-[rgba(230,200,115,1)]"
+              "orderly-bg-gradient-to-r orderly-from-[#1DF6B5] orderly-to-[#86ED92]",
+            marginRatioVal > 0.1 &&
+              marginRatioVal < 1 &&
+              "orderly-bg-gradient-to-r orderly-from-[#E6D673] orderly-to-[#C5A038]"
           )}
         />
       </div>
-      <MemorizedLeverage />
+      <MemorizedLeverage isConnected={isConnected} />
     </Collapsible>
   );
 };
