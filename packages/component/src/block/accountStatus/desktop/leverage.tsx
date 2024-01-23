@@ -10,6 +10,7 @@ import { LeverageDialog } from "./leverageDialog";
 import { Tooltip } from "@/tooltip";
 import { Divider } from "@/divider";
 import { cn } from "@/utils";
+import { getMarginRatioColor } from "../utils";
 
 interface LeverageAndMarginRatioProps {
   isConnected: boolean;
@@ -17,10 +18,12 @@ interface LeverageAndMarginRatioProps {
 
 const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
   const { isConnected } = props;
-  const { marginRatio, currentLeverage } = useMarginRatio();
+  const { marginRatio, currentLeverage, mmr } = useMarginRatio();
   const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
 
   const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+
+  const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
   return (
     <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
@@ -56,14 +59,11 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           className={cn(
             "orderly-text-base-contrast",
             isConnected &&
-              marginRatioVal > 0 &&
-              marginRatioVal <= 0.1 &&
-              "orderly-text-[#FF67C2]",
-            isConnected && marginRatioVal >= 1 && "orderly-text-[#1EF6B4]",
-            isConnected &&
-              marginRatioVal > 0.1 &&
-              marginRatioVal < 1 &&
-              "orderly-text-[#FFCF73]"
+              cn({
+                "orderly-text-[#FF67C2]": isRed,
+                "orderly-text-[#FFCF73]": isYellow,
+                "orderly-text-[#1EF6B4]": isGreen,
+              })
           )}
           rule={"percentages"}
           coloring
