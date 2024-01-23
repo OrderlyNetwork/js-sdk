@@ -87,7 +87,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     >
       <div
         className={cn(
-          "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-w-[120px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,

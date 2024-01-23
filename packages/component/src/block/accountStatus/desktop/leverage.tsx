@@ -20,6 +20,8 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
   const { marginRatio, currentLeverage } = useMarginRatio();
   const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
 
+  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+
   return (
     <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
       <div
@@ -54,22 +56,19 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           className={cn(
             "orderly-text-base-contrast",
             isConnected &&
-              marginRatio > 0 &&
-              marginRatio <= 0.1 &&
+              marginRatioVal > 0 &&
+              marginRatioVal <= 0.1 &&
               "orderly-text-[#FF67C2]",
-            isConnected && marginRatio >= 1 && "orderly-text-[#1EF6B4]",
-            ((isConnected && marginRatio > 0.1 && marginRatio < 1) ||
-              marginRatio === 0) &&
+            isConnected && marginRatioVal >= 1 && "orderly-text-[#1EF6B4]",
+            isConnected &&
+              marginRatioVal > 0.1 &&
+              marginRatioVal < 1 &&
               "orderly-text-[#FFCF73]"
           )}
           rule={"percentages"}
           coloring
         >
-          {isConnected
-            ? marginRatio === 0
-              ? 10
-              : Math.min(marginRatio, 10)
-            : "-"}
+          {isConnected ? marginRatioVal : "-"}
         </Numeral>
       </div>
       <div className={"orderly-flex orderly-flex-col orderly-items-end"}>

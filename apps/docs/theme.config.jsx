@@ -74,7 +74,7 @@ export default {
     return {
       // titleTemplate: "%s",
       titleTemplate: "Orderly Network | SDK",    
-      description:'Simplify Web3 applications development and enhance integration experience with the Orderly Omnichain SDK.'
+      description:'Orderly Network simplifies Web3 application development and enhances integration experience with the Orderly Network SDK.'
     };
   },
   // ...

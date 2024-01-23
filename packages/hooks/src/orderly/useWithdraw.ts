@@ -68,5 +68,22 @@ export const useWithdraw = () => {
     return freeCollateral;
   }, [freeCollateral]);
 
-  return { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL };
+  const availableWithdraw = useMemo(() => {
+
+    if (unsettledPnL < 0) {
+      return freeCollateral;
+    } else {
+      return freeCollateral - unsettledPnL;
+    }
+
+  }, [freeCollateral, unsettledPnL]);
+
+  return {
+    withdraw,
+    isLoading,
+    maxAmount,
+    availableBalance,
+    availableWithdraw,
+    unsettledPnL
+  };
 };

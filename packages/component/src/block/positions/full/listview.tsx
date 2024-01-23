@@ -56,7 +56,11 @@ export const Listview: FC<
         onSort: true,
         width: 100,
         render: (value: string) => (
-          <NumeralWithCtx coloring className="orderly-font-semibold">
+          <NumeralWithCtx
+            coloring
+            className="orderly-font-semibold"
+            tick={"base_dp"}
+          >
             {value}
           </NumeralWithCtx>
         ),
@@ -67,7 +71,7 @@ export const Listview: FC<
         width: 120,
         onSort: true,
         dataIndex: "average_open_price",
-        render: (value: string) => <Numeral>{value}</Numeral>,
+        render: (value: string) => <NumeralWithCtx>{value}</NumeralWithCtx>,
       },
       {
         title: "Mark price",
@@ -77,7 +81,11 @@ export const Listview: FC<
         className: "orderly-h-[48px]",
 
         render: (value: string) => {
-          return <Numeral className="orderly-font-semibold">{value}</Numeral>;
+          return (
+            <NumeralWithCtx className="orderly-font-semibold">
+              {value}
+            </NumeralWithCtx>
+          );
         },
       },
       {
@@ -143,7 +151,7 @@ export const Listview: FC<
       //   dataIndex: "open_price",
       // },
       {
-        title: "Notional",
+        title: "Est. total",
         dataIndex: "notional",
         className: "orderly-h-[48px]",
         width: 100,
