@@ -7,6 +7,7 @@ import { SortGroup } from "./sortGroup";
 import { cn } from "@/utils/css";
 import type { ListViewRef } from "@/listView/listView";
 import { NetworkImage } from "@/icon";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 
 interface Props {
   activeIndex: number;
@@ -25,11 +26,16 @@ export const ListViewFull = forwardRef<
     suffixRender?: (item: API.MarketInfoExt, index: number) => React.ReactNode, 
   }
 >((props, ref) => {
+
+  const config = useSymbolsInfo();
+  
   const renderItem = (
     item: API.MarketInfoExt,
     index: number,
     extraData: any
-  ) => {
+    ) => {
+    const symbolInfo = config ? config?.[item.symbol] : {};
+    const baseDp = symbolInfo?.("quote_dp") || 2;
     return (
       <div
         onMouseEnter={() => {
@@ -53,7 +59,7 @@ export const ListViewFull = forwardRef<
           </div>)}
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
-          <Numeral>{item["24h_close"]}</Numeral>
+          <Numeral precision={baseDp}>{item["24h_close"]}</Numeral>
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
           <Numeral coloring rule="percentages" showIcon>
