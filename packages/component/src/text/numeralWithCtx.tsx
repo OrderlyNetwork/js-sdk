@@ -2,12 +2,19 @@ import { FC } from "react";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { Numeral, NumeralProps } from "./numeral";
 
-export const NumeralWithCtx: FC<Omit<NumeralProps, "precision">> = (props) => {
+export type TickName = "quote_dp" | "base_dp";
+
+export const NumeralWithCtx: FC<
+  Omit<NumeralProps, "precision" | "tick"> & {
+    tick?: TickName;
+  }
+> = (props) => {
+  const { tick = "quote_dp", ...rest } = props;
   const symbolInfo = useSymbolContext();
 
   if (!symbolInfo) {
     throw new Error("NumeralWithCtx must be used inside SymbolProvider");
   }
 
-  return <Numeral {...props} precision={symbolInfo.base_dp} />;
+  return <Numeral {...rest} precision={symbolInfo[tick]} />;
 };
