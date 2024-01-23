@@ -13,35 +13,35 @@ import { FavoriteIcon, UnFavoriteIcon } from "@/block/markets/full/favoriteButto
 
 export const Markets: FC<{ symbol: string }> = ({ symbol }) => {
   const [open, setOpen] = useState(false);
-  const [allMarkets] = useMarkets(MarketsType.ALL);
+  // const [allMarkets] = useMarkets(MarketsType.ALL);
 
-  const curSymbol = useMemo(() => {
-    const index = allMarkets.findIndex((item) => item.symbol === symbol);
-    if (index === -1) {
-      return {
-        symbol: symbol,
-        favorite: false,
-      };
-    }
-    return {
-      symbol: symbol,
-      // @ ts-ignore
-      favorite: allMarkets[index].isFavorite || false,
-    }
-  }, [allMarkets, symbol]);
+  // const curSymbol = useMemo(() => {
+  //   const index = allMarkets.findIndex((item) => item.symbol === symbol);
+  //   if (index === -1) {
+  //     return {
+  //       symbol: symbol,
+  //       favorite: false,
+  //     };
+  //   }
+  //   return {
+  //     symbol: symbol,
+  //     // @ ts-ignore
+  //     favorite: allMarkets[index].isFavorite || false,
+  //   }
+  // }, [allMarkets, symbol]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button className="orderly-px-2 orderly-flex orderly-items-center orderly-gap-1 orderly-h-full">
-          {curSymbol.favorite ? <FavoriteIcon /> : <UnFavoriteIcon />}
+          {/* {curSymbol.favorite ? <FavoriteIcon /> : <UnFavoriteIcon />} */}
           <NetworkImage type="symbol" symbol={symbol} size={"small"} />
 
           <Text
             rule="symbol"
             className="orderly-text-xs orderly-break-normal orderly-whitespace-nowrap orderly-font-semibold"
           >
-            {curSymbol.symbol}
+            {symbol}
           </Text>
 
           {/*@ts-ignore*/}
