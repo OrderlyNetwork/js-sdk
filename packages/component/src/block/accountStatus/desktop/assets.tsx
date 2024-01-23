@@ -30,6 +30,7 @@ import { ConfigStore } from "@orderly.network/core";
 import { cn } from "@/utils/css";
 import { isTestnet } from "@orderly.network/utils";
 import { Divider } from "@/divider";
+import { getMarginRatioColor } from "../utils";
 
 interface AssetsProps {
   totalBalance: number;
@@ -99,7 +100,7 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [state]);
 
   const [{ aggregated }, positionsInfo] = usePositionStream();
-  const { marginRatio, MMR } = useMarginRatio();
+  const { marginRatio, mmr } = useMarginRatio();
 
   const marginRatioVal = useMemo(() => {
     return Math.min(
@@ -111,6 +112,8 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [marginRatio, aggregated]);
 
   const isConnected = state.status >= AccountStatusEnum.Connected;
+
+  const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
   return (
     <Collapsible
@@ -183,15 +186,11 @@ export const Assets: FC<AssetsProps> = (props) => {
         <Progress
           value={marginRatioVal * 100}
           variant={isConnected && marginRatioVal ? "solid" : "gradient"}
-          foregroundClassName={cn(
-            marginRatioVal <= 0.1 &&
-              "orderly-bg-gradient-to-r orderly-from-[#F4807C] orderly-to-[#FF4F82]",
-            marginRatioVal >= 1 &&
-              "orderly-bg-gradient-to-r orderly-from-[#1DF6B5] orderly-to-[#86ED92]",
-            marginRatioVal > 0.1 &&
-              marginRatioVal < 1 &&
-              "orderly-bg-gradient-to-r orderly-from-[#E6D673] orderly-to-[#C5A038]"
-          )}
+          foregroundClassName={cn("orderly-bg-gradient-to-r", {
+            "orderly-from-[#F4807C] orderly-to-[#FF4F82]": isRed,
+            "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
+            "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
+          })}
         />
       </div>
       <MemorizedLeverage isConnected={isConnected} />
