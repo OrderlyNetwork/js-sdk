@@ -106,7 +106,11 @@ export const Table = <RecordType extends unknown>(
   }, []);
 
   return (
-    <TableProvider columns={props.columns} dataSource={props.dataSource}>
+    <TableProvider
+      columns={props.columns}
+      dataSource={props.dataSource}
+      canExpand={typeof props.expandRowRender === "function"}
+    >
       <div
         ref={wrapRef}
         className={cn(
