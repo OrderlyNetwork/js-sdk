@@ -34,6 +34,7 @@ import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
 import { convertValueToPercentage } from "@/slider/utils";
 import { FreeCollat } from "./sections/freeCollat";
+import { EstInfo } from "./sections/setInfo";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -85,7 +86,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       markPrice,
     } = props;
 
-    const { calculate, validator } = helper;
+    const { calculate, validator, watch } = helper;
+
+    watch((values) => {
+      console.log("watch:::::", values);
+    });
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
@@ -219,15 +224,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       methods.clearErrors();
     }, [side]);
 
-    useEffect(() => {
-      const subscription = methods.watch((value, { name, type }) => {
-        if (type === "change") {
-          if (name === "reduce_only") {
-          }
-        }
-      });
-      return () => subscription.unsubscribe();
-    }, []);
+    // useEffect(() => {
+    //   const subscription = methods.watch((value, { name, type }) => {
+    //     if (type === "change") {
+    //       if (name === "reduce_only") {
+    //       }
+    //     }
+    //   });
+    //   return () => subscription.unsubscribe();
+    // }, []);
 
     const onFieldChange = (name: string, value: any) => {
       const newValues: OrderEntity = calculate(
@@ -328,7 +333,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
             <div className="orderly-flex orderly-justify-between orderly-items-center">
               <div className="orderly-flex orderly-gap-1 orderly-text-base-contrast-54 orderly-text-4xs desktop:orderly-text-3xs">
-                <FreeCollat/>
+                <FreeCollat />
                 <Numeral
                   rule="price"
                   className="orderly-text-base-contrast-80"
@@ -519,9 +524,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     type="text"
                     inputMode="decimal"
                     // value={field.value}
-                    value={
-                      commify(totalInputFocused.current ? field.value : totalAmount)
-                    }
+                    value={commify(
+                      totalInputFocused.current ? field.value : totalAmount
+                    )}
                     onFocus={() => (totalInputFocused.current = true)}
                     onBlur={() => (totalInputFocused.current = false)}
                     onChange={(event) => {
@@ -533,6 +538,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               }}
             />
 
+            <Divider />
+
+            <EstInfo />
             <Divider />
             <OrderOptions
               showConfirm={needConfirm}

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   API,
   OrderEntity,
@@ -19,12 +19,41 @@ import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
 import { OrderFactory } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
+import { order } from "@orderly.network/perp";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
+  // Whether to observe the orderbook,  if it is a limit order, the orderbook will automatically calculate the est. liq. price when it is updated.
+  // watchOrderbook?: boolean;
   validate?: (
     data: OrderEntity
   ) => { [P in keyof OrderEntity]?: string } | null | undefined;
+};
+
+export type UseOrderEntryReturn = {
+  // Maximum open position
+  maxQty: number;
+  freeCollateral: number;
+  markPrice: number;
+  onSubmit: (order: OrderEntity) => Promise<any>;
+  // order: data,
+  submitting: boolean;
+  helper: {
+    calculate: (
+      values: Partial<OrderEntity>,
+      field: string,
+      value: any
+    ) => Partial<OrderEntity>;
+    validator: (values: Partial<OrderEntity>) => any;
+    // watch: (
+    //   handler: (values: OrderEntity) => void,
+    //   options: {
+    //     // Whether to observe the orderbook,  if it is a limit order,it will automatically calculate the est. liq. price when orderbook is updated.
+    //     watchOrderbook?: boolean;
+    //   }
+    // ) => void;
+  };
+  symbolConfig: API.SymbolExt;
 };
 
 /**
@@ -32,21 +61,38 @@ export type UseOrderEntryOptions = {
  * @param symbol
  * @returns
  */
-export const useOrderEntry = (
+export function useOrderEntry(
   symbol: string,
   side: OrderSide,
-  reduceOnly: boolean = false,
+  order: Partial<OrderEntity>
+): UseOrderEntryReturn;
+export function useOrderEntry(
+  symbol: string,
+  side: OrderSide,
+  reduceOnly: boolean
+): UseOrderEntryReturn;
+export function useOrderEntry(
+  symbol: string,
+  side: OrderSide,
+  reduceOnlyOrOrder: boolean | Partial<OrderEntity> = false,
   options?: UseOrderEntryOptions
-) => {
+): UseOrderEntryReturn {
   const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
     OrderEntity,
     any
   >("/v1/order");
 
-  const { freeCollateral } = useCollateral();
+  const { freeCollateral, positions } = useCollateral();
+
+  const [liqPrice, setLiqPrice] = useState<number | null>(null);
 
   const symbolInfo = useSymbolsInfo();
   // const tokenInfo = useTokenInfo();
+
+  const watcher = useRef<{
+    handler: (values: OrderEntity) => void;
+    options: { watchOrderbook?: boolean };
+  } | null>(null);
 
   const baseDP = useMemo(
     () => getPrecisionByNumber(symbolInfo[symbol]("base_tick", 0)),
@@ -56,13 +102,28 @@ export const useOrderEntry = (
     return getPrecisionByNumber(symbolInfo[symbol]("quote_tick", 0));
   }, [symbolInfo]);
 
+  const baseIMR = useMemo(() => symbolInfo[symbol]("base_imr"), [symbolInfo]);
+  const baseMMR = useMemo(() => symbolInfo[symbol]("base_mmr"), [symbolInfo]);
+
   const { data: markPrice } = useMarkPrice(symbol);
+
+  const isReduceOnly = useMemo<boolean>(() => {
+    if (typeof reduceOnlyOrOrder === "boolean") {
+      return reduceOnlyOrOrder;
+    }
+
+    if (typeof reduceOnlyOrOrder === "object") {
+      return !!reduceOnlyOrOrder.reduce_only;
+    }
+
+    return false;
+  }, [reduceOnlyOrOrder]);
 
   const maxQty = useMaxQty(
     symbol,
     side,
     // orderExtraValues.reduce_only
-    reduceOnly
+    isReduceOnly
   );
 
   /**
@@ -88,7 +149,7 @@ export const useOrderEntry = (
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
-    if (reduceOnly && !values.reduce_only) {
+    if (reduceOnlyOrOrder && !values.reduce_only) {
       return Promise.reject(
         new SDKError(
           "The reduceOny parameter of hook does not match your order data"
@@ -121,8 +182,26 @@ export const useOrderEntry = (
       });
   };
 
+  // const calulateEstData = (values: OrderEntity) => {
+  //   console.log(
+  //     "calulateEstData::::",
+  //     values,
+  //     baseIMR,
+  //     baseMMR,
+  //     freeCollateral,
+  //     markPrice,
+  //     positions
+  //   );
+
+  //   console.log("calulateEstData::::", estLiqPrice);
+  // };
+
   const calculate = useCallback(
-    (values: any, field: string, value: any) => {
+    (
+      values: Partial<OrderEntity>,
+      field: string,
+      value: any
+    ): Partial<OrderEntity> => {
       const fieldHandler = getCalculateHandler(field);
       const newValues = compose(
         head,
@@ -131,7 +210,7 @@ export const useOrderEntry = (
         baseInputHandle
       )([values, field, value, markPrice, { baseDP, quoteDP }]);
 
-      return newValues;
+      return newValues as Partial<OrderEntity>;
     },
     [markPrice]
   );
@@ -149,6 +228,15 @@ export const useOrderEntry = (
     }) as any;
   };
 
+  // const watch = (handler, options) => {
+  //   if (typeof handler === "function") {
+  //     watcher.current = {
+  //       handler,
+  //       options,
+  //     };
+  //   }
+  // };
+
   // validator
   // helper: validator,formater,calculate
   return {
@@ -156,11 +244,13 @@ export const useOrderEntry = (
     freeCollateral,
     markPrice,
     onSubmit,
+    // order: data,
     submitting: isMutating,
     helper: {
       calculate,
       validator,
+      // watch,
     },
     symbolConfig: symbolInfo[symbol](),
   };
-};
+}

@@ -52,14 +52,16 @@ export const ColItem: FC<ColProps> = (props) => {
   return (
     <td
       className={cn(
-        "orderly-py-[2px] orderly-px-1 whitespace-nowrap",
+        "orderly-py-[2px] orderly-px-1 whitespace-nowrap group-hover:!orderly-bg-base-800",
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right",
         col.fixed && "orderly-sticky"
       )}
       style={{
-        backgroundColor: "var(--table-background-color)",
+        backgroundColor: col.fixed
+          ? "var(--table-background-color)"
+          : "transparent",
         ...style,
       }}
     >

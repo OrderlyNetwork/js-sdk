@@ -150,5 +150,5 @@ export const useMaxQty = (
     reduceOnly,
   ]);
 
-  return maxQty as number;
+  return Math.max(maxQty, 0) as number;
 };

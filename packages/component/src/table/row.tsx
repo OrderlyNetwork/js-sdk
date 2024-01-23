@@ -41,7 +41,7 @@ export const Row: FC<RowProps> = (props) => {
     <tr
       className={cn(
         props.bordered &&
-          "orderly-border-b orderly-border-divider last:orderly-border-b-0",
+          "orderly-border-b orderly-border-divider last:orderly-border-b-0 hover:orderly-bg-base-800 orderly-group",
         className
       )}
       {...rest}
