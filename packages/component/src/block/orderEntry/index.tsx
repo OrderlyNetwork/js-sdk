@@ -86,11 +86,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       markPrice,
     } = props;
 
-    const { calculate, validator, watch } = helper;
-
-    watch((values) => {
-      console.log("watch:::::", values);
-    });
+    const { calculate, validator } = helper;
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
