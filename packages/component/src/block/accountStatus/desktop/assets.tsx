@@ -184,13 +184,12 @@ export const Assets: FC<AssetsProps> = (props) => {
           value={marginRatioVal * 100}
           variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           foregroundClassName={cn(
-            "",
             marginRatioVal <= 0.1 &&
               "orderly-bg-gradient-to-r orderly-from-[#F4807C] orderly-to-[#FF4F82]",
             marginRatioVal >= 1 &&
               "orderly-bg-gradient-to-r orderly-from-[#1DF6B5] orderly-to-[#86ED92]",
-            marginRatio > 0.1 &&
-              marginRatio < 1 &&
+            marginRatioVal > 0.1 &&
+              marginRatioVal < 1 &&
               "orderly-bg-gradient-to-r orderly-from-[#E6D673] orderly-to-[#C5A038]"
           )}
         />
