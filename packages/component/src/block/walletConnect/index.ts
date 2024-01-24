@@ -1,2 +1,6 @@
 export { WalletConnect } from "./walletConnect";
-export { WalletConnectSheet, WalletConnectDialog } from "./walletModal";
+export {
+  WalletConnectSheet,
+  WalletConnectDialog,
+  showAccountConnectorModal,
+} from "./walletModal";

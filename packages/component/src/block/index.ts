@@ -28,6 +28,7 @@ export { WalletConnect } from "./walletConnect";
 export {
   WalletConnectSheet,
   WalletConnectDialog,
+  showAccountConnectorModal,
 } from "./walletConnect/walletModal";
 
 export { TradeHistory } from "./tradeHistory";
