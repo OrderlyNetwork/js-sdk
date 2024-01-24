@@ -105,6 +105,17 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           }
           value={item.type === OrderType.MARKET ? "Market" : item.price}
         />
+        <Statistic
+          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          label={
+            <>
+              <span className="orderly-text-base-contrast-36">Trigger price</span>
+              <span className="orderly-text-base-contrast-20">(USDC)</span>
+            </>
+          }
+          value={item.type === OrderType.MARKET ? "Market" : item.price}
+        />
       </div>
     </div>
   );
