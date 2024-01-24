@@ -15,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/dialog";
-import { OrderlyAppContext } from "@/provider";
 
 const useWalletConnect = () => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();

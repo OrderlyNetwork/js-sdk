@@ -19,6 +19,8 @@ export type CollateralOutputs = {
   totalValue: number;
   availableBalance: number;
   unsettledPnL: number;
+
+  positions: API.Position[];
 };
 
 const positionsPath = pathOr([], [0, "rows"]);
@@ -96,5 +98,8 @@ export const useCollateral = (
     totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
     availableBalance,
     unsettledPnL: pathOr_unsettledPnLPathOr(positions),
+
+    // @hidden
+    positions: positionsPath(positions),
   };
 };

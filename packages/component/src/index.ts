@@ -62,6 +62,7 @@ export {
   ChainListView,
   ChainSelect,
   SystemStatusBar,
+  showAccountConnectorModal,
 } from "./block";
 
 export type {

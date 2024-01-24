@@ -6,6 +6,7 @@ import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
 import { max, min } from "ramda";
+import { SDKError } from "@orderly.network/types";
 
 export type OrderBookItem = number[];
 
@@ -84,8 +85,8 @@ const reduceItems = (
     const newQuantity = new Decimal(quantity)
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
       .toNumber();
-    
-      const newAmount = new Decimal(quantity * price)
+
+    const newAmount = new Decimal(quantity * price)
       .add(result.length > 0 ? result[result.length - 1][3] : 0)
       .toNumber();
 
@@ -143,8 +144,10 @@ export const reduceOrderbook = (
 
   asks = asks.reverse();
 
-  asks = asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
-  bids = bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
+  asks =
+    asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
+  bids =
+    bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
   // add max qty for asks/bids
   // let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
   // let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
@@ -216,7 +219,7 @@ export const useOrderbookStream = (
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
-    throw new Error("useOrderbookStream requires a symbol");
+    throw new SDKError("useOrderbookStream requires a symbol");
   }
 
   const level = options?.level ?? 10;
@@ -368,6 +371,14 @@ export const useOrderbookStream = (
     asks: [...data.asks],
     bids: [...data.bids],
   });
+
+  // emit the asks0 and bids0
+  useEffect(() => {
+    eventEmitter.emit("orderbook:change", [
+      reducedData.asks[0],
+      reducedData.bids[0],
+    ]);
+  }, [reducedData]);
 
   return [
     {

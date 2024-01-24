@@ -2,6 +2,7 @@ import {
   FC,
   PropsWithChildren,
   createContext,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -13,6 +14,9 @@ export interface TableContextState {
   dataSource: any[];
   sortKey?: string;
   sortOrder?: SortOrder;
+  expandedRowKeys?: string[];
+  canExpand?: boolean;
+  toggleExpandRow: (key: string) => void;
   onSort: (key: string) => void;
   getLeftFixedColumnsWidth: (index: number) => number;
   getRightFixedColumnsWidth: (index: number) => number;
@@ -40,9 +44,12 @@ export const TableProvider: FC<
   PropsWithChildren<{
     columns: Column[];
     dataSource?: any[] | null;
+    canExpand?: boolean;
+    multiExpand?: boolean;
   }>
 > = (props) => {
   const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>();
+  const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
   // const [sortOrder, setSortOrder] = useState<SortOrder>();
 
   const getLeftFixedColumnsWidth = (index: number) => {
@@ -111,6 +118,20 @@ export const TableProvider: FC<
     });
   }, [props.dataSource, sortKey]);
 
+  const toggleExpandRow = useCallback((key: string) => {
+    setExpandedRowKeys((prev) => {
+      if (prev[0] === key) {
+        return [];
+      }
+      return [key];
+      // if (prev.includes(key)) {
+      //   return prev.filter((k) => k !== key);
+      // }
+
+      // return [...prev, key];
+    });
+  }, []);
+
   const onSort = (key: string) => {
     setSortKey((prev) => {
       if (prev?.[0] === key) {
@@ -132,6 +153,9 @@ export const TableProvider: FC<
         dataSource: dataSource,
         sortKey: sortKey?.[0],
         sortOrder: sortKey?.[1],
+        canExpand: props.canExpand,
+        expandedRowKeys,
+        toggleExpandRow,
         onSort: onSort,
         getLeftFixedColumnsWidth,
         getRightFixedColumnsWidth,
