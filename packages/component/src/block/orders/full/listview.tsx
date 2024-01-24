@@ -14,6 +14,7 @@ import { EndReachedBox } from "@/listView/endReachedBox";
 import { cn } from "@/utils/css";
 import { Renew } from "@/block/orderHistory/full/renew";
 import { columnsBasis } from "../columnsUtil";
+import { OrderTrades } from "@/block/orderHistory/orderTrades";
 
 interface Props {
   dataSource: any[];
@@ -186,6 +187,9 @@ export const Listview: FC<Props> = (props) => {
             />
           );
         }}
+        expandRowRender={props.status === "FILLED" ? (record: any, index: number) => {
+          return <OrderTrades record={record} index={index}/>
+        } : undefined}
       />
     </EndReachedBox>
   );
