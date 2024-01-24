@@ -1,33 +1,15 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Divider } from "@/divider";
-import { SwapSymbols, SymbolInfo } from "../sections/symbols";
-
+import { SwapSymbols } from "../sections/symbols";
 import { SwapTime } from "../sections/swapTime";
-import { SwapDetails, SwapInfo } from "../sections/swapDetials";
-import { SwapProcess } from "../sections/swapProcess";
-import { useCrossSwap, useSwap } from "@orderly.network/hooks";
+import { SwapDetails } from "../sections/swapDetials";
+import { useSwap } from "@orderly.network/hooks";
 import { toast } from "@/toast";
-import { SwapMode, SwapProcessStatusStatus } from "../sections/misc";
-import { API, WS_WalletStatusEnum } from "@orderly.network/types";
+import { SwapProcessStatusStatus } from "../sections/misc";
+import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { SwapProcessStatus } from "./swapProcessStatus";
 import { Decimal } from "@orderly.network/utils";
-
-export interface SwapProps {
-  src: SymbolInfo;
-  dst: SymbolInfo;
-  // swapInfo: SwapInfo;
-  mode: SwapMode;
-  transactionData: any;
-  slippage: number;
-
-  chain?: API.NetworkInfos;
-  nativeToken?: API.TokenInfo;
-  depositFee?: bigint;
-  onComplete?: (isSuccss: boolean) => void;
-  onCancel?: () => void;
-  onFail?: () => void;
-  brokerName?: string;
-}
+import { SwapProps } from "../swap";
 
 export const SingleSwap: FC<SwapProps> = (props) => {
   const {

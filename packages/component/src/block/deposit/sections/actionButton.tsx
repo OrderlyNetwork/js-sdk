@@ -3,21 +3,15 @@ import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
 import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { int2hex, isTestnet } from "@orderly.network/utils";
-import {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { ApproveButton } from "./approveButton";
 import { Notice } from "./notice";
 import { modal } from "@/modal";
-import { OrderlyContext, useChains } from "@orderly.network/hooks";
+import { useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { useTranslation } from "@/i18n";
 import { OrderlyAppContext } from "@/provider";
+import { DepositContext } from "../DepositProvider";
 
 export interface ActionButtonProps {
   chains:
@@ -25,18 +19,15 @@ export interface ActionButtonProps {
     | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
   chain: CurrentChain | null;
   token?: API.TokenInfo;
-  onDeposit: () => Promise<any>;
+  onDeposit: () => void;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
-  openChainPicker?: () => void;
   quantity: string;
   loading?: boolean;
   allowance: number;
   submitting: boolean;
   maxQuantity: string;
   chainNotSupport: boolean;
-  needSwap: boolean;
-  needCrossChain: boolean;
   warningMessage?: string;
   onApprove?: () => Promise<any>;
   onChainChange?: (value: any) => void;
@@ -46,25 +37,21 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const {
     chain,
     token,
-    // chains,
     onDeposit,
     switchChain,
     disabled,
-    // openChainPicker,
     quantity,
     loading,
     allowance,
     onApprove,
     submitting,
     maxQuantity,
-    // chainNotSupport,
-    needSwap,
-    needCrossChain,
     warningMessage,
   } = props;
   const [chainNotSupport, setChainNotSupport] = useState(false);
   const t = useTranslation();
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
+  const { needSwap, needCrossSwap } = useContext(DepositContext);
 
   const chains = useMemo(() => {
     if (Array.isArray(props.chains)) return props.chains;
@@ -80,7 +67,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     chain: CurrentChain | null,
     chains?: API.NetworkInfos[]
   ): boolean => {
-    //
     if (!chain || !chains || !Array.isArray(chains)) return false;
 
     const index = chains?.findIndex((c) => c.chain_id === chain.id);
@@ -92,7 +78,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     setChainNotSupport(checkSupoort(chain, chains));
   }, [chains?.length, chain?.id]);
 
-  // const { networkId } = useContext<any>(OrderlyContext);
   const [_, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
@@ -128,12 +113,12 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
       let label = "Deposit";
-      // if (needCrossChain) {
+      // if (needCrossSwap) {
       //   label = "Swap and deposit";
       // } else if (needSwap) {
       //   label = "Bridge and deposit";
       // }
-      if (needSwap || needCrossChain) {
+      if (needSwap || needCrossSwap) {
         label = "Swap and deposit";
       }
       return (
@@ -202,7 +187,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     submitting,
     maxQuantity,
     needSwap,
-    needCrossChain,
+    needCrossSwap,
   ]);
 
   return (
@@ -213,8 +198,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         </div>
       ) : (
         <Notice
-          needCrossChain={needCrossChain}
-          needSwap={needSwap}
           warningMessage={warningMessage}
           onOpenPicker={onOpenPicker}
           currentChain={chain}

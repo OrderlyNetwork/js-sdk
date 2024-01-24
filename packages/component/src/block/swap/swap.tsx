@@ -7,21 +7,18 @@ import { CrossSwap } from "./sections/crossSwap";
 import { SingleSwap } from "./sections/singleSwap";
 
 export interface SwapProps {
+  mode: SwapMode;
   src: SymbolInfo;
   dst: SymbolInfo;
-  // swapInfo: SwapInfo;
-  mode: SwapMode;
-  transactionData: any;
-  slippage: number;
-
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
   depositFee?: bigint;
-
+  transactionData: any;
+  slippage: number;
+  brokerName?: string;
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
-  brokerName?: string;
 }
 
 export const Swap: FC<SwapProps> = (props) => {

@@ -9,11 +9,11 @@ export const useWooSwapQuery = () => {
   const { configStore } = useContext<any>(OrderlyContext);
   const account = useAccountInstance();
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
-  /// swap 询价
 
+  /// swap 询价
   const query = useCallback(
     (inputs: any) => {
-      if (loading) return;
+      if (loading) return Promise.resolve();
       start();
 
       const params = {

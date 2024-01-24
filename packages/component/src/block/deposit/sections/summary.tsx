@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, memo, useCallback, useContext } from "react";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { MarkPrices } from "./misc";
@@ -8,12 +8,11 @@ import { modal } from "@/modal";
 import { Divider } from "@/divider";
 import { SlippageSetting } from "./slippageSetting";
 import { feeDecimalsOffset } from "../utils";
-
+import { DepositContext } from "../DepositProvider";
+import { useIndexPrice } from "@orderly.network/hooks";
 export interface SummaryProps {
   onSlippageChange?: (slippage: number) => void;
   slippage: number;
-  needSwap?: boolean;
-  needCrossChain?: boolean;
   isNativeToken?: boolean;
   nativeToken?: API.TokenInfo;
   src?: API.TokenInfo;
@@ -24,14 +23,11 @@ export interface SummaryProps {
   swapFee?: string;
   destinationGasFee?: string;
   bridgeFee?: string;
-  symbolPrice: Record<string, number>;
   depositFee?: bigint;
 }
 
 export const Summary: FC<SummaryProps> = memo((props) => {
   const {
-    needCrossChain,
-    needSwap,
     fee,
     swapFee = "0",
     bridgeFee = "0",
@@ -40,10 +36,12 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     destinationGasFee = "0",
     slippage,
     onSlippageChange,
-    symbolPrice,
     depositFee = 0n,
   } = props;
-
+  const { needSwap, needCrossSwap } = useContext(DepositContext);
+  const { data: symbolPrice } = useIndexPrice(
+    `SPOT_${nativeToken?.symbol}_USDC`
+  );
   const { from_token: markPrice, native_token: nativeMarkPrice } = markPrices;
 
   // Using useMemo causes a delay in data display
@@ -51,14 +49,13 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     let dstGasFee = new Decimal(depositFee.toString())
       ?.div(new Decimal(10).pow(18))
       .toString();
-    if (needSwap && needCrossChain) {
+    if (needSwap && needCrossSwap) {
       dstGasFee = destinationGasFee;
     }
 
-    if (!needSwap && !needCrossChain) {
-      const tokenPrice = symbolPrice?.[nativeToken?.symbol!];
+    if (!needSwap && !needCrossSwap) {
       const totalFee = new Decimal(dstGasFee)
-        ?.mul(tokenPrice || 0)
+        ?.mul(symbolPrice || 0)
         ?.toFixed(3, Decimal.ROUND_UP);
       return `Fee ≈ $ ${totalFee || 0} ${
         Number(depositFee)
@@ -126,7 +123,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     let dstGasFee = new Decimal(depositFee.toString())
       ?.div(new Decimal(10).pow(18))
       .toString();
-    if (needSwap && needCrossChain) {
+    if (needSwap && needCrossSwap) {
       dstGasFee = destinationGasFee;
     }
 
