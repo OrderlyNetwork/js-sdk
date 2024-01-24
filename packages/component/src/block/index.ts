@@ -43,3 +43,4 @@ export type { AccountStatusProps } from "./accountStatus";
 export { ChainListView, ChainSelect } from "./pickers/chainPicker";
 
 export { SystemStatusBar } from "./systemStatusBar";
+export type { FooterStatusBarProps } from "./systemStatusBar";
