@@ -2,12 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
 import React, { useState } from "react";
 import { OrderEntry } from ".";
-import { OrderlyProvider } from "../../provider";
 
 import { useOrderEntry } from "@orderly.network/hooks";
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
-import { OrderSide } from "@orderly.network/types";
+
+import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 
 const meta: Meta = {
   title: "Block/OrderEntry",
@@ -64,8 +62,13 @@ export const WithHook: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
     const [side, setSide] = useState(OrderSide.BUY);
-    const [reduceOnly, setReduceOnly] = useState(false);
-    const formState = useOrderEntry(symbol, side, reduceOnly);
+    const [order, setOrder] = useState<OrderEntity>({
+      reduce_only: false,
+      side: OrderSide.BUY,
+      order_type: OrderType.LIMIT,
+    });
+    // const [reduceOnly, setReduceOnly] = useState(false);
+    const formState = useOrderEntry(symbol, side, order);
 
     return (
       <OrderEntry
@@ -74,8 +77,11 @@ export const WithHook: Story = {
         side={side}
         symbol={symbol}
         onSideChange={setSide}
-        reduceOnly={reduceOnly}
-        onReduceOnlyChange={setReduceOnly}
+        // reduceOnly={reduceOnly}
+        onFieldChange={(field, value) => {
+          // console.log(field, value);
+          setOrder((order) => ({ ...order, [field]: value }));
+        }}
       />
     );
   },

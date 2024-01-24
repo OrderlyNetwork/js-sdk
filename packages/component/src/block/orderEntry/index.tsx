@@ -61,6 +61,9 @@ export interface OrderEntryProps {
   helper: any;
 
   disabled?: boolean;
+
+  formattedOrder: Partial<OrderEntity>;
+  onFieldChange: (field: keyof OrderEntity, value: any) => void;
 }
 
 interface OrderEntryRef {
@@ -78,15 +81,21 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       symbolConfig,
       maxQty,
       symbol,
-      side,
-      onSideChange,
+      // side,
+      // onSideChange,
       onReduceOnlyChange,
+
+      formattedOrder,
       helper,
       disabled,
       markPrice,
     } = props;
 
+    // console.log("formattedOrder", formattedOrder);
+
     const { calculate, validator } = helper;
+
+    const { side } = formattedOrder;
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
@@ -216,7 +225,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       } else {
         setButtonText("Sell / Short");
       }
-      methods.setValue("side", side);
+      // methods.setValue("side", side);
       methods.clearErrors();
     }, [side]);
 
@@ -322,7 +331,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 },
               ]}
               onChange={(value) => {
-                onSideChange?.(value as OrderSide);
+                // onSideChange?.(value as OrderSide);
+                props.onFieldChange("side", value);
               }}
               value={side}
             />
@@ -357,7 +367,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 return (
                   <MSelect
                     label={"Order Type"}
-                    value={field.value}
+                    value={formattedOrder.order_type}
                     className="orderly-bg-base-600 orderly-font-semibold"
                     color={side === OrderSide.BUY ? "buy" : "sell"}
                     fullWidth
@@ -369,12 +379,14 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                       },
                     ]}
                     onChange={(value) => {
-                      field.onChange(value);
-                      methods.setValue("order_price", "", {
-                        shouldValidate: false,
-                      });
+                      // field.onChange(value);
+                      // methods.setValue("order_price", "", {
+                      //   shouldValidate: false,
+                      // });
 
-                      methods.clearErrors();
+                      // methods.clearErrors();
+                      console.log("value", value);
+                      props.onFieldChange("order_type", value);
                     }}
                     // onValueChange={(value: any) => {
                     //   // setValue?.("order_type", value.value);
@@ -541,7 +553,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <OrderOptions
               showConfirm={needConfirm}
               onConfirmChange={setNeedConfirm}
-              onReduceOnlyChange={onReduceOnlyChange}
+              onReduceOnlyChange={(value) =>
+                props.onFieldChange("reduce_only", value)
+              }
               reduceOnly={props.reduceOnly}
             />
             <StatusGuardButton>

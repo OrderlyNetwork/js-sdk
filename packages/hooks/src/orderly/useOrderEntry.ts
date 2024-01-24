@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   API,
   OrderEntity,
@@ -35,9 +35,13 @@ export type UseOrderEntryReturn = {
   maxQty: number;
   freeCollateral: number;
   markPrice: number;
+  estLiqPrice?: number;
+  estLeverage?: number;
   onSubmit: (order: OrderEntity) => Promise<any>;
   // order: data,
   submitting: boolean;
+  formattedOrder: Partial<OrderEntity>;
+  errors: { [P in keyof OrderEntity]?: string } | null | undefined;
   helper: {
     calculate: (
       values: Partial<OrderEntity>,
@@ -45,13 +49,6 @@ export type UseOrderEntryReturn = {
       value: any
     ) => Partial<OrderEntity>;
     validator: (values: Partial<OrderEntity>) => any;
-    // watch: (
-    //   handler: (values: OrderEntity) => void,
-    //   options: {
-    //     // Whether to observe the orderbook,  if it is a limit order,it will automatically calculate the est. liq. price when orderbook is updated.
-    //     watchOrderbook?: boolean;
-    //   }
-    // ) => void;
   };
   symbolConfig: API.SymbolExt;
 };
@@ -82,7 +79,11 @@ export function useOrderEntry(
     any
   >("/v1/order");
 
-  const { freeCollateral, positions } = useCollateral();
+  console.log("+++++++", reduceOnlyOrOrder);
+
+  const prevOrderData = useRef<Partial<OrderEntity>>({});
+
+  // const { freeCollateral, positions } = useCollateral();
 
   const [liqPrice, setLiqPrice] = useState<number | null>(null);
 
@@ -105,7 +106,8 @@ export function useOrderEntry(
   const baseIMR = useMemo(() => symbolInfo[symbol]("base_imr"), [symbolInfo]);
   const baseMMR = useMemo(() => symbolInfo[symbol]("base_mmr"), [symbolInfo]);
 
-  const { data: markPrice } = useMarkPrice(symbol);
+  // const { data: markPrice } = useMarkPrice(symbol);
+  const markPrice = 1;
 
   const isReduceOnly = useMemo<boolean>(() => {
     if (typeof reduceOnlyOrOrder === "boolean") {
@@ -119,12 +121,40 @@ export function useOrderEntry(
     return false;
   }, [reduceOnlyOrOrder]);
 
-  const maxQty = useMaxQty(
-    symbol,
-    side,
-    // orderExtraValues.reduce_only
-    isReduceOnly
-  );
+  const newOrder =
+    typeof reduceOnlyOrOrder === "object" ? reduceOnlyOrOrder : null;
+
+  const diffOrderEntry = (
+    prev: Partial<OrderEntity>,
+    current: Partial<OrderEntity>
+  ): { key: keyof OrderEntity; value: any } | null => {
+    let key, value;
+    const keys = Object.keys(current) as (keyof OrderEntity)[];
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      console.log("?????", k, prev[k], current[k]);
+      if (prev[k] !== current[k]) {
+        key = k;
+        value = current[k];
+        break;
+      }
+    }
+
+    console.log("==============diffOrderEntry:::", key, value);
+
+    if (!key) return null;
+
+    return { key, value };
+  };
+
+  // const maxQty = useMaxQty(
+  //   symbol,
+  //   side,
+  //   // orderExtraValues.reduce_only
+  //   isReduceOnly
+  // );
+
+  const maxQty = 1;
 
   /**
    * submit form，validate values
@@ -228,6 +258,25 @@ export function useOrderEntry(
     }) as any;
   };
 
+  const formattedOrder = useMemo(() => {
+    if (typeof reduceOnlyOrOrder === "boolean") {
+      return {};
+    }
+
+    // diff order entry
+    const item = diffOrderEntry(prevOrderData.current, reduceOnlyOrOrder);
+
+    console.log("diffOrderEntry:::", item);
+
+    if (!item) return reduceOnlyOrOrder;
+
+    const values = calculate(reduceOnlyOrOrder, item.key, item.value);
+
+    prevOrderData.current = values;
+
+    return values;
+  }, [reduceOnlyOrOrder]);
+
   // const watch = (handler, options) => {
   //   if (typeof handler === "function") {
   //     watcher.current = {
@@ -241,11 +290,13 @@ export function useOrderEntry(
   // helper: validator,formater,calculate
   return {
     maxQty,
-    freeCollateral,
+    freeCollateral: 0,
     markPrice,
     onSubmit,
     // order: data,
     submitting: isMutating,
+    formattedOrder,
+    errors: {},
     helper: {
       calculate,
       validator,
