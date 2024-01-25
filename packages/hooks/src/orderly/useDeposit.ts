@@ -288,13 +288,17 @@ export const useDeposit = (options?: useDepositOptions) => {
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
     getBalanceListener.current = setTimeout(async () => {
-      const balance = await fetchBalanceHandler(
-        options?.address!,
-        options?.decimals
-      );
+      try {
+        const balance = await fetchBalanceHandler(
+          options?.address!,
+          options?.decimals
+        );
 
-      setBalance(balance);
-      loopGetBalance();
+        setBalance(balance);
+        loopGetBalance();
+      } catch (err) {
+        console.log("fetchBalanceHandler error", err);
+      }
     }, 3000);
   };
 

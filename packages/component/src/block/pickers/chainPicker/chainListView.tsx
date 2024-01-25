@@ -14,7 +14,7 @@ export interface ChainListViewProps {
   testChains?: ChainInfo[];
   currentChainId?: number;
   value?: any;
-  onItemClick?: (value: any) => void;
+  onItemClick?: (value: { id: number; name: string }) => Promise<any>;
 }
 
 export const ChainListView: FC<ChainListViewProps> = (props) => {
