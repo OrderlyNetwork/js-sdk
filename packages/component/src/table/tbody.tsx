@@ -16,10 +16,13 @@ export interface TBodyProps<RecordType> {
   generatedRowKey?: (record: RecordType, index: number) => string;
 
   onRow?: (record: RecordType, index: number) => any;
+
+  expandRowRender?: (record: RecordType, index: number) => ReactNode;
 }
 
 export const TBody = <RecordType,>(props: TBodyProps<RecordType>) => {
-  const { dataSource, columns } = useContext(TableContext);
+  const { dataSource, columns, expandedRowKeys, canExpand, toggleExpandRow } =
+    useContext(TableContext);
 
   return (
     <tbody>
@@ -27,17 +30,22 @@ export const TBody = <RecordType,>(props: TBodyProps<RecordType>) => {
         const key =
           typeof props.generatedRowKey === "function"
             ? props.generatedRowKey(record, index)
-            : index; /// `record.ts_${record.price}_${record.size}_${index}`;
+            : `${index}`; /// `record.ts_${record.price}_${record.size}_${index}`;
 
         const row = (
-          <Row
+          <Row<RecordType>
             key={key}
+            rowKey={key}
             index={index}
             columns={columns}
             record={record}
+            canExpand={canExpand}
             justified={props.justified}
             bordered={props.bordered}
             onRow={props.onRow}
+            onToggleExpand={toggleExpandRow}
+            expanded={!!expandedRowKeys?.includes(key)}
+            expandRowRender={props.expandRowRender}
           />
         );
 

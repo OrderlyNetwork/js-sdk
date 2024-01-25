@@ -24,6 +24,7 @@ import { EyeIcon, EyeOffIcon } from "@/icon";
 import { cn } from "@/utils/css";
 import { cx } from "class-variance-authority";
 import { LeverageEditor } from "./leverageEditor";
+import { getMarginRatioColor } from "../utils";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -43,7 +44,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     });
   const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
     usePositionStream();
-  const { marginRatio, currentLeverage } = useMarginRatio();
+  const { marginRatio, currentLeverage, mmr } = useMarginRatio();
   const { visible, toggleVisible, onDeposit, onWithdraw } =
     useContext(AssetsContext);
 
@@ -89,6 +90,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
         : marginRatio
     );
   }, [marginRatio, aggregated]);
+
+  const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
   return (
     <div id="orderly-asset-and-margin-sheet-content">
@@ -175,17 +178,22 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                 <Numeral
                   rule="percentages"
                   className={cx({
-                    "orderly-text-primary-light": marginRatioVal >= 10,
-                    "orderly-text-warning":
-                      marginRatioVal < 10 && marginRatioVal >= 0.5,
-                    "orderly-text-danger": marginRatioVal < 0.5,
+                    "orderly-text-primary-light": isGreen,
+                    "orderly-text-warning": isYellow,
+                    "orderly-text-danger": isRed,
                   })}
                   visible={visible}
                 >
                   {marginRatioVal}
                 </Numeral>
 
-                <RiskIndicator value={marginRatioVal} />
+                <RiskIndicator
+                  className={cn({
+                    "orderly-rotate-0": isGreen,
+                    "orderly-rotate-90": isYellow,
+                    "orderly-rotate-180": isRed,
+                  })}
+                />
               </div>
             }
           />

@@ -128,7 +128,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           <AssetsProvider>
             <AccountInfoElement />
 
-            <div className="orderly-px-3 orderly-mt-3">
+            <div className="orderly-px-3 orderly-mt-3 orderly-z-30">
               <MyOrderEntry symbol={props.symbol} />
             </div>
           </AssetsProvider>

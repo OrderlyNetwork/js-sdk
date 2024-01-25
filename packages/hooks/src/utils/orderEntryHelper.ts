@@ -5,7 +5,7 @@ export type OrderEntityKey = keyof OrderEntity & string;
 
 // index 3: markPrice
 type orderEntryInputs = [
-  OrderEntity,
+  Partial<OrderEntity>,
   // to update field
   string,
   any,

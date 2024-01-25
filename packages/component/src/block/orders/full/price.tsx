@@ -93,7 +93,7 @@ export const Price = (props: { order: API.OrderExt }) => {
     >
       <div
         className={
-          "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
+          "orderly-w-[120px] orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
         }
         ref={boxRef}
       >

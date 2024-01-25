@@ -60,6 +60,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   useEffect(() => {
     // init order_price value
     if (getValues()?.order_price === undefined) {
+      //@ts-ignore
       setValue("order_price", markPrice);
     }
   }, [markPrice]);

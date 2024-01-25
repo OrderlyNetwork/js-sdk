@@ -37,8 +37,8 @@ export const useMarginRatio = (): MarginRatioReturn => {
   }, [marginRatio]);
 
   // MMR
-  const mmr = useMemo(() => {
-    if (!rows) return 0;
+  const mmr = useMemo<number | null>(() => {
+    if (!rows || rows.length <= 0) return null;
     let positionsMM = zero;
     // const positionsNotional = positions.totalNotional(rows);
 

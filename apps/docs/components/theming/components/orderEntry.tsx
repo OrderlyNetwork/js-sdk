@@ -22,7 +22,6 @@ export const OrderEntryComponent = () => {
         symbol={symbol}
         onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
-        onDeposit={() => {}}
       />
     </div>
   );

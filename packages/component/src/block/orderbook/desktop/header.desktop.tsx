@@ -72,12 +72,12 @@ const Title: FC<{
             id="orderly-order-book-header-qty"
             className={
                 cn(
-                    "orderly-flex orderly-flex-row orderly-text-base-contrast-36 orderly-text-4xs orderly-items-end",
+                    "orderly-flex orderly-flex-row orderly-text-base-contrast-36 orderly-text-3xs orderly-items-end",
                     justifyEnd && "orderly-justify-end",
                 )
             }
         >
-            <span className="desktop:orderly-text-2xs">{name}</span>
+            <span >{name}</span>
             <span>{`(${token})`}</span>
         </div>
     );

@@ -25,6 +25,7 @@ import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
+import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -59,6 +60,7 @@ export type OrderlyAppContextState = {
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -77,6 +79,7 @@ export interface OrderlyAppProviderProps {
   enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 }
 
 export const OrderlyAppProvider: FC<
@@ -96,6 +99,7 @@ export const OrderlyAppProvider: FC<
     toastLimitCount,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   return (
@@ -115,6 +119,7 @@ export const OrderlyAppProvider: FC<
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
+        footerStatusBar={footerStatusBar}
       >
         {props.children}
       </InnerProvider>
@@ -130,6 +135,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     toastLimitCount = 1,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -340,6 +346,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         enableSwapDeposit,
         onChainChanged,
         brokerName,
+        footerStatusBar,
       }}
     >
       <TooltipProvider>

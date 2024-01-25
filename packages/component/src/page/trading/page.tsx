@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { TradingPageProps } from "./types";
 import { TradingPageProvider } from "./context/tradingPageContext";
 
@@ -9,10 +9,14 @@ import { Layout } from "@/layout";
 import { TopNavbar } from "../common/topNavbar";
 import { Footer } from "@/layout/footer";
 import { SystemStatusBar } from "@/block/systemStatusBar";
+import { OrderlyAppContext } from "@/provider";
 
 const { Header, Content, Sider, PageHeader } = Layout;
 
 export const BaseTradingPage: FC<TradingPageProps> = (props) => {
+  const { footerStatusBar } = useContext(OrderlyAppContext);
+  console.log("read value for context", footerStatusBar);
+  
   return (
     <TradingPageProvider
       symbol={props.symbol}
@@ -36,7 +40,11 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
           fixed
           className="orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500 orderly-z-50"
         >
-          <SystemStatusBar />
+          <SystemStatusBar 
+            xUrl={footerStatusBar?.xUrl}
+            telegramUrl={footerStatusBar?.telegramUrl}
+            discordUrl={footerStatusBar?.discordUrl}
+          />
         </Footer>
       </Layout>
     </TradingPageProvider>

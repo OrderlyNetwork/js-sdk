@@ -59,7 +59,7 @@ export const Listview: FC<
           <NumeralWithCtx
             coloring
             className="orderly-font-semibold"
-            tick={"base_dp"}
+            tick="base_dp"
           >
             {value}
           </NumeralWithCtx>
@@ -99,9 +99,9 @@ export const Listview: FC<
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Numeral className="orderly-text-warning orderly-font-semibold">
+            <NumeralWithCtx className="orderly-text-warning orderly-font-semibold">
               {value}
-            </Numeral>
+            </NumeralWithCtx>
           );
         },
       },
@@ -151,7 +151,7 @@ export const Listview: FC<
       //   dataIndex: "open_price",
       // },
       {
-        title: "Notional",
+        title: "Est. total",
         dataIndex: "notional",
         className: "orderly-h-[48px]",
         width: 100,
