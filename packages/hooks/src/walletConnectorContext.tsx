@@ -7,7 +7,7 @@ export interface WalletConnectorContextState {
   connect: () => Promise<any[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
-  setChain: (options: any) => Promise<any>;
+  setChain: (options: { chainId: string }) => Promise<any>;
   chains: any[];
   // switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: any;

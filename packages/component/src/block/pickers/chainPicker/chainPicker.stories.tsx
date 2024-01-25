@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // @ts-ignore
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ChainListView } from ".";
 
-import { useChains, useOrderEntry } from "@orderly.network/hooks";
+import { useAccount, useChains, useOrderEntry } from "@orderly.network/hooks";
 import { ChainSelect } from "./chainSelect";
+import { modal } from "@/modal";
+import { ChainDialog } from "./chainDialog";
+import { ChainListViewProps } from "./chainListView";
+import { useWalletConnector } from "@orderly.network/hooks";
 
 const meta: Meta = {
   title: "Block/ChainPicker",
@@ -58,5 +62,38 @@ export const ListView: Story = {
         testChains={chains?.testnet}
       />
     );
+  },
+};
+
+export const Dialog: Story = {
+  render: (args) => {
+    const { state } = useAccount();
+
+    const [chains] = useChains(undefined, {
+      pick: "network_infos",
+      wooSwapEnabled: false,
+    });
+
+    const { setChain } = useWalletConnector();
+
+    const openChainPicker = useCallback(async () => {
+      const result = await modal.show<
+        { id: number; name: string },
+        ChainListViewProps
+      >(ChainDialog, {
+        testChains: chains?.testnet,
+        mainChains: chains?.mainnet,
+        // currentChainId: chain?.id,
+        onItemClick: (value) => {
+          return setChain({
+            chainId: value.id,
+            // chainName: value.name,
+          });
+        },
+      });
+      console.log("*******", result);
+    }, [chains]);
+
+    return <button onClick={openChainPicker}>Switch chain</button>;
   },
 };
