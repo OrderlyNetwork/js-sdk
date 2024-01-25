@@ -50,8 +50,8 @@ export const GetTestUSDC = () => {
         chain_id: account.wallet.chainId.toString(),
         user_address: state.address,
         broker_id: configStore.get("brokerId"),
-      }).then(
-        (res: any) => {
+      })
+        .then((res: any) => {
           if (res.success) {
             toast.dismiss(toastId);
             return modal.confirm({
@@ -63,15 +63,13 @@ export const GetTestUSDC = () => {
               },
             });
           } else {
-            res.message && toast.error(res.message);
             return Promise.reject(res);
           }
-        },
-        (error: Error) => {
+        })
+        .catch((err) => {
           toast.dismiss(toastId);
-          toast.error(error.message);
-        }
-      );
+          err.message && toast.error(err.message);
+        });
     },
     [state]
   );
