@@ -374,11 +374,11 @@ export const useOrderbookStream = (
 
   // emit the asks0 and bids0
   useEffect(() => {
-    eventEmitter.emit("orderbook:change", [
-      reducedData.asks[0],
-      reducedData.bids[0],
+    eventEmitter.emit("orderbook:update", [
+      reducedData.asks[0][0],
+      reducedData.bids[0][0],
     ]);
-  }, [reducedData]);
+  }, [reducedData.asks[0][0], reducedData.bids[0][0]]);
 
   return [
     {

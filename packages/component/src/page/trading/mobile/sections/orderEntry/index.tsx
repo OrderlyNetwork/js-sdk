@@ -5,7 +5,12 @@ import {
   useAccount,
   useEventEmitter,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, OrderSide } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  OrderEntity,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 
 interface MyOrderEntryProps {
@@ -42,7 +47,21 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     };
   }, []);
 
-  const formState = useOrderEntry(symbol, side, reduceOnly);
+  const [order, setOrder] = useState<OrderEntity>({
+    reduce_only: false,
+    side: OrderSide.BUY,
+    order_type: OrderType.LIMIT,
+  });
+  // const [reduceOnly, setReduceOnly] = useState(false);
+  const formState = useOrderEntry(
+    {
+      ...order,
+      symbol,
+    },
+    {
+      watchOrderbook: true,
+    }
+  );
 
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
@@ -52,6 +71,9 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         side={side}
         onSideChange={setSide}
         symbol={symbol}
+        onFieldChange={(field, value) => {
+          setOrder((order) => ({ ...order, [field]: value }));
+        }}
         onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
         onDeposit={onDeposit}

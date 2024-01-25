@@ -90,6 +90,8 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
+  console.log("priceInputHandle", inputs);
+
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
   }
@@ -230,6 +232,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 export const getCalculateHandler = (
   fieldName: string
 ): orderEntryInputHandle => {
+  console.log("getCalculateHandler", fieldName);
   switch (fieldName) {
     case "order_quantity": {
       return quantityInputHandle;

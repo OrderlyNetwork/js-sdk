@@ -474,7 +474,10 @@ export function maxQty(
   return maxQtyByShort(inputs);
 }
 
-export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
+export function maxQtyByLong(
+  inputs: Omit<MaxQtyInputs, "side">,
+  options?: ResultOptions
+): number {
   try {
     const {
       baseMaxQty,
@@ -532,7 +535,10 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
   }
 }
 
-export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
+export function maxQtyByShort(
+  inputs: Omit<MaxQtyInputs, "side">,
+  options?: ResultOptions
+): number {
   try {
     const {
       baseMaxQty,
