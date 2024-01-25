@@ -58,6 +58,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     },
   });
 
+  const isAlgoOrder = true;//order.algo_order_id !== undefined;
+
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
   //
@@ -74,7 +76,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const onConfirm = (data: OrderEntity, dirtyFields: any) => {
     return modal.confirm({
       title: "Edit Order",
-      content: EditOrderConfirmContent(data, dirtyFields, base),
+      content: EditOrderConfirmContent(isAlgoOrder,data, dirtyFields, base, order.symbol),
       contentClassName: "desktop:orderly-w-[340px]",
       onOk: () => Promise.resolve(data),
       onCancel: () => {
