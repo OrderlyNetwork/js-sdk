@@ -45,8 +45,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const isTable = useMediaQuery(MEDIA_TABLET);
   const { wooSwapEnabled = true, disabled } = props;
-  // @ts-ignore
-  const [allChains, { findByChainId }] = useChains("", {
+  const [allChains, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled,
     pick: "network_infos",
     filter: (chain: any) =>

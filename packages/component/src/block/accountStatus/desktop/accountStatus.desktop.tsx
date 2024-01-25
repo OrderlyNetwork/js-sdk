@@ -44,8 +44,8 @@ export const AccountStatus: FC<
 
   const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const { connectedChain } = useWalletConnector();
-  const [allChains, { findByChainId }] = useChains("", {
-    enableSwapDeposit,
+  const [allChains, { findByChainId }] = useChains(undefined, {
+    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

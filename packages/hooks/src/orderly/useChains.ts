@@ -8,31 +8,72 @@ import { nativeTokenAddress } from "../woo/constants";
 import { isTestnet } from "@orderly.network/utils";
 import { TestnetChains } from "@orderly.network/types";
 
-type inputOptions = {
+type InputOptions = {
   filter?: (item: API.Chain) => boolean;
   pick?: "dexs" | "network_infos" | "token_infos";
   /** if true, use wooSwap api, else use orderly api only  */
   wooSwapEnabled?: boolean;
 };
 
-export const useChains = (
-  networkId?: NetworkId,
-  options: inputOptions & SWRConfiguration = {}
-) => {
+export type Chain = API.Chain & {
+  nativeToken?: API.TokenInfo;
+};
+
+export type Chains<
+  T extends NetworkId | undefined = undefined,
+  K extends keyof API.Chain | undefined = undefined
+> = T extends NetworkId
+  ? K extends keyof API.Chain
+    ? API.Chain[K][]
+    : API.Chain[]
+  : K extends keyof API.Chain
+  ? {
+      testnet: API.Chain[K][];
+      mainnet: API.Chain[K][];
+    }
+  : {
+      testnet: API.Chain[];
+      mainnet: API.Chain[];
+    };
+
+export type Options = InputOptions & SWRConfiguration;
+
+export type ReturnObject = {
+  findByChainId: (chainId: number, field?: string) => Chain | undefined;
+  error: any;
+};
+
+export function useChains(
+  networkId?: undefined,
+  options?: undefined
+): [Chains<undefined, undefined>, ReturnObject];
+
+export function useChains<
+  T extends NetworkId | undefined,
+  K extends Options | undefined
+>(
+  networkId?: T,
+  options?: K
+): [
+  Chains<
+    T,
+    K extends Options
+      ? K["pick"] extends keyof API.Chain
+        ? K["pick"]
+        : undefined
+      : undefined
+  >,
+  ReturnObject
+];
+
+export function useChains(networkId?: NetworkId, options: Options = {}) {
   const { pick: pickField, wooSwapEnabled, ...swrOptions } = options;
   const { configStore } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
 
-  const chainsMap = useRef(
-    new Map<
-      number,
-      API.Chain & {
-        nativeToken?: API.TokenInfo;
-      }
-    >()
-  );
+  const chainsMap = useRef(new Map<number, Chain>());
 
   const commonSwrOpts = {
     revalidateIfStale: false,
@@ -45,11 +86,14 @@ export const useChains = (
     ...swrOptions,
   };
 
+  // only prod env return mainnet chains info
+  // TODO: remove https://api-evm.orderly.org api base
   const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
     "https://api-evm.orderly.org/v1/public/token",
     { ...commonSwrOpts }
   );
 
+  // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     "/v1/public/chain_info",
     { ...commonSwrOpts }
@@ -64,12 +108,7 @@ export const useChains = (
     { ...commonSwrOpts, ...swrOptions }
   );
 
-  const chains:
-    | API.Chain[]
-    | {
-        testnet: API.Chain[];
-        mainnet: API.Chain[];
-      } = useMemo(() => {
+  const chains = useMemo(() => {
     const orderlyChainsArr = fillChainsInfo(tokenChains, filterFun.current);
 
     let testnetArr = [...TestnetChains] as API.Chain[];
@@ -105,6 +144,7 @@ export const useChains = (
         chainsMap.current.set(item.network_infos?.chain_id, item);
       });
     } else {
+      // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
       mainnetArr = updateOrderlyChains(
         orderlyChainsArr,
         chainInfos,
@@ -177,25 +217,14 @@ export const useChains = (
     [chains, chainsMap]
   );
 
-  // const findNativeTokenByChainId = useCallback(
-  //   (chainId: number): API.TokenInfo | undefined => {
-  //     const chain = findByChainId(chainId);
-  //     if (!chain) return;
-  //
-  //   },
-  //   [chains]
-  // );
-
   return [
     chains,
     {
       findByChainId,
-      // findNativeTokenByChainId,
       error: swapSupportError || tokenError,
-      // nativeToken,
     },
-  ] as const;
-};
+  ];
+}
 
 /** orderly chains array form (/v1/public/token) api */
 export function fillChainsInfo(

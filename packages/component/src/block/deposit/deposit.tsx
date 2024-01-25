@@ -23,7 +23,6 @@ export interface DepositProps {
 
 export const Deposit: FC<DepositProps> = (props) => {
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
-  // @ts-ignore
   const [chains, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
