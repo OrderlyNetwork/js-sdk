@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-alpha.23
+
+### Patch Changes
+
+- export ChainDialog component;
+
 ## 1.0.96-alpha.22
 
 ### Patch Changes

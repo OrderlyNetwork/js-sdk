@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.23
+
+### Patch Changes
+
+- export ChainDialog component;
+
 ## 0.0.87-alpha.22
 
 ### Patch Changes

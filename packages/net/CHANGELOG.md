@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.114-alpha.23
+
+### Patch Changes
+
+- export ChainDialog component;
+
 ## 1.0.114-alpha.22
 
 ### Patch Changes
