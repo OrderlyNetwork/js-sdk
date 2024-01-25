@@ -1,7 +1,7 @@
 import { OrderEntity } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
 
-export const editOrderConfirmContent = (
+export const EditOrderConfirmContent = (
   data: OrderEntity,
   dirtyFields: Partial<OrderEntity>,
   base: string

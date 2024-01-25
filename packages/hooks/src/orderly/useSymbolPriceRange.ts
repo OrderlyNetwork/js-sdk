@@ -3,26 +3,22 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useEffect, useMemo, useState } from "react";
 
-/**
- * will be callback can input max/min price range info
- * @param symbol
- * @returns `{min: number, max: number}` or `undefined`
- * @example ``` 
- *  useSymbolPriceRange("PERP_ETH_USDC")
- * ```;
- */
-
 export type PriceRange = {
     min: number,
     max: number,
 };
 
+
+/**
+ * will be callback can input max/min price range info
+ * 
+ * @example useSymbolPriceRange("PERP_ETH_USDC");
+ */
 export const useSymbolPriceRange = (symbol: string): PriceRange | undefined => {
     const config = useSymbolsInfo();
     const priceRange = config?.[symbol]("price_range");
     const { data: prices } = useMarkPricesStream();
     const markPrice = prices?.[symbol];
-
 
     /// max mark_price_i * (1+price_range)
     /// min mark_price_i * (1-price_range)
