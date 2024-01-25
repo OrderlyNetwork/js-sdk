@@ -16,6 +16,7 @@ import { Renew } from "./renew";
 import { CancelButton } from "@/block/orders/full/cancelButton";
 import { cn } from "@/utils";
 import { columnsBasis } from "@/block/orders/columnsUtil";
+import { OrderTrades } from "../orderTrades";
 
 interface Props {
   dataSource: API.OrderExt[];
@@ -67,6 +68,9 @@ export const Listview: FC<Props> = (props) => {
               children={children}
             />
           );
+        }}
+        expandRowRender={(record, index) => {
+          return <OrderTrades record={record} index={index} />
         }}
       />
     </EndReachedBox>

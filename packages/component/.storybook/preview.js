@@ -64,6 +64,11 @@ const preview = {
                 img: "/woo_fi_logo.svg",
               },
             }}
+            footerStatusBar={{
+              xUrl: "https://twitter.com/OrderlyNetwork",
+              // telegramUrl: "https://orderly.network",
+              discordUrl: "https://discord.com/invite/orderlynetwork",
+            }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
               localStorage.setItem(

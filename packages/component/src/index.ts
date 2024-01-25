@@ -63,6 +63,8 @@ export {
   ChainSelect,
   SystemStatusBar,
   showAccountConnectorModal,
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
 } from "./block";
 
 export type {
