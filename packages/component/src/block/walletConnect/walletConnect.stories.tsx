@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { WalletConnect } from ".";
+import { WalletConnect, showAccountConnectorModal } from ".";
 import React from "react";
 import { modal } from "@/modal";
-import { OrderlyProvider } from "../../provider/orderlyProvider";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
-import { MemoryConfigStore } from "@orderly.network/core";
 
 const meta: Meta<typeof WalletConnect> = {
   component: WalletConnect,
@@ -23,7 +20,14 @@ export const WithSheet: Story = {
     return (
       <button
         onClick={() => {
-          modal.show("walletConnect", args);
+          showAccountConnectorModal(args).then(
+            (result) => {
+              console.log(result);
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
         }}
       >
         connect wallet
