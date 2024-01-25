@@ -62,6 +62,12 @@ export {
   ChainListView,
   ChainSelect,
   SystemStatusBar,
+} from "./block";
+
+//===================== Dialog component ====================
+
+export {
+  ChainDialog,
   showAccountConnectorModal,
   DepositAndWithdrawWithDialog,
   DepositAndWithdrawWithSheet,
