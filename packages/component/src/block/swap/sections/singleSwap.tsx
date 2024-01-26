@@ -103,7 +103,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       (error: any) => {
         setStatus(SwapProcessStatusStatus.DepositFailed);
 
-        toast.error(error.message || "Error");
+        toast.error(error?.message || "Error");
       }
     );
   }, [transaction, mode, dst, src]);

@@ -192,7 +192,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               });
           })
           .catch((error) => {
-            toast.error(error.message || "Failed");
+            toast.error(error?.message || "Failed");
           });
       },
       [side, props.onSubmit, symbol, needConfirm]
