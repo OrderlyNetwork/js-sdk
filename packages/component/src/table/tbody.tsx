@@ -1,4 +1,4 @@
-import { FC, ReactNode, useContext } from "react";
+import { FC, Fragment, ReactNode, useContext } from "react";
 import { TableContext } from "./tableContext";
 import { Row } from "./row";
 
@@ -50,7 +50,11 @@ export const TBody = <RecordType,>(props: TBodyProps<RecordType>) => {
         );
 
         if (typeof props.renderRowContainer === "function") {
-          return props.renderRowContainer(record, index, row);
+          return (
+            <Fragment key={key}>
+              {props.renderRowContainer(record, index, row)}
+            </Fragment>
+          );
         }
 
         return row;

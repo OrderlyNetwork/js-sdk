@@ -1,6 +1,7 @@
 import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { order } from "@orderly.network/perp";
+import { OrderSide } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -146,18 +147,16 @@ export class LimitOrderCreator extends BaseOrderCreator {
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
 
-        console.log(`side: ${side} value:`, values);
-
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
-        if (side === "BUY" && price.gt(maxPriceNumber)) {
+        if (side === OrderSide.BUY && price.gt(maxPriceNumber)) {
           errors.order_price = {
             type: "max",
             message: `price must be less than ${new Decimal(
               maxPriceNumber
             ).todp(symbol.quote_dp)}`,
           };
-        } else if (side === "SELL" && price.lt(minPriceNumber)) {
+        } else if (side === OrderSide.SELL && price.lt(minPriceNumber)) {
           errors.order_price = {
             type: "min",
             message: `price must be greater than ${new Decimal(
@@ -210,6 +209,14 @@ export class GeneralOrderCreator extends BaseOrderCreator {
     return super.baseValidate(values, configs);
   }
 }
+
+export const availableOrderTypes = [
+  OrderType.LIMIT,
+  OrderType.MARKET,
+  OrderType.IOC,
+  OrderType.FOK,
+  OrderType.POST_ONLY,
+];
 
 export class OrderFactory {
   static create(type: OrderType): OrderCreator | null {
