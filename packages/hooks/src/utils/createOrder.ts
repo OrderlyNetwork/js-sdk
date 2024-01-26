@@ -210,6 +210,14 @@ export class GeneralOrderCreator extends BaseOrderCreator {
   }
 }
 
+export const availableOrderTypes = [
+  OrderType.LIMIT,
+  OrderType.MARKET,
+  OrderType.IOC,
+  OrderType.FOK,
+  OrderType.POST_ONLY,
+];
+
 export class OrderFactory {
   static create(type: OrderType): OrderCreator | null {
     switch (type) {

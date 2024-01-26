@@ -19,9 +19,8 @@ interface MyOrderEntryProps {
 
 export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   const { symbol } = props;
-  const [side, setSide] = useState(OrderSide.BUY);
   const { onDeposit } = useContext(AssetsContext);
-  const [reduceOnly, setReduceOnly] = useState(false);
+
   const { state } = useAccount();
   const ee = useEventEmitter();
 
@@ -68,13 +67,27 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
       <OrderEntry
         {...formState}
         showConfirm
-        side={side}
-        onSideChange={setSide}
+        // side={side}
         symbol={symbol}
         onFieldChange={(field, value) => {
+          // if (field === "side" || field === "order_type") {
+          //   setOrder((order) => ({
+          //     ...order,
+          //     order_price: undefined,
+          //     order_quantity: undefined,
+          //     [field]: value,
+          //   }));
+          // } else {
           setOrder((order) => ({ ...order, [field]: value }));
+          // }
         }}
-        onReduceOnlyChange={setReduceOnly}
+        setValues={(values) => {
+          setOrder((order) => ({
+            ...order,
+            ...values,
+          }));
+        }}
+        // onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
         onDeposit={onDeposit}
       />

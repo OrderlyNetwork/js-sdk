@@ -66,7 +66,7 @@ export const WithHook: Story = {
       reduce_only: false,
       side: OrderSide.BUY,
       order_type: OrderType.LIMIT,
-      symbol,
+      symbol: symbol,
     });
     // const [reduceOnly, setReduceOnly] = useState(false);
     const formState = useOrderEntry(order);
@@ -77,12 +77,20 @@ export const WithHook: Story = {
       <OrderEntry
         {...args}
         {...formState}
-        side={side}
         symbol={symbol}
-        onSideChange={setSide}
+        // onSideChange={setSide}
         // reduceOnly={reduceOnly}
         onFieldChange={(field, value) => {
-          setOrder((order) => ({ ...order, [field]: value }));
+          if (field === "side") {
+            setOrder((order) => ({
+              ...order,
+              [field]: value,
+              order_price: undefined,
+              order_quantity: undefined,
+            }));
+          } else {
+            setOrder((order) => ({ ...order, [field]: value }));
+          }
         }}
         setValues={(values) => {
           setOrder((order) => ({

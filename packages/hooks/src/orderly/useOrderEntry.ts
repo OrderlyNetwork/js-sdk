@@ -9,7 +9,7 @@ import {
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
-import { compose, head } from "ramda";
+import { compose, head, includes, omit } from "ramda";
 import {
   baseInputHandle,
   getCalculateHandler,
@@ -17,7 +17,7 @@ import {
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
-import { OrderFactory } from "../utils/createOrder";
+import { OrderFactory, availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
 import { order } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
@@ -47,21 +47,21 @@ export type UseOrderEntryReturn = {
   freeCollateral: number;
   markPrice: number;
   estLiqPrice?: number | null;
-  estLeverage?: number;
+  estLeverage?: number | null;
   //@Deprecated
   onSubmit: (order: OrderEntity) => Promise<any>;
-  submit: () => Promise<any>;
+  submit: () => Promise<OrderEntity>;
   // order: data,
   submitting: boolean;
   formattedOrder: Partial<OrderEntity>;
   helper: {
     calculate: (
       values: Partial<OrderEntity>,
-      field: string,
+      field: keyof OrderEntity,
       value: any
     ) => Partial<OrderEntity>;
     validator: (values: Partial<OrderEntity>) => any;
-    clearErrors: () => void;
+    // clearErrors: () => void;
     // setValues: (values: Partial<OrderEntity>) => void;
   };
   // formState: any;
@@ -116,20 +116,23 @@ export function useOrderEntry(
   }
 
   const prevOrderData = useRef<Partial<OrderEntity> | null>(null);
+  const orderDataCache = useRef<Partial<OrderEntity> | null>(null);
+  const notSupportData = useRef<Partial<OrderEntity>>({});
+
   const [errors, setErrors] = useState<any>(null);
 
   const ee = useEventEmitter();
 
   const fieldDirty = useRef<{ [K in keyof OrderEntity]?: boolean }>({});
   const submitted = useRef<boolean>(false);
-  const askAndBid = useRef<number[]>([]);
+  const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
 
   const onOrderbookUpdate = useDebouncedCallback((data: number[]) => {
-    console.log("onOrderbookUpdate", data);
     askAndBid.current = data;
   }, 200);
 
-  const { freeCollateral, totalCollateral, positions } = useCollateral();
+  const { freeCollateral, totalCollateral, positions, accountInfo } =
+    useCollateral();
 
   // const [liqPrice, setLiqPrice] = useState<number | null>(null);
   // const [leverage, setLeverage] = useState<number | null>(null);
@@ -197,9 +200,17 @@ export function useOrderEntry(
     const keys = Object.keys(current) as (keyof OrderEntity)[];
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
-      if (prev[k] !== current[k]) {
+      let preveValue = prev[k];
+      let currentValue = current[k];
+
+      if (k === "order_quantity") {
+        preveValue = Number(preveValue);
+        currentValue = Number(currentValue);
+      }
+
+      if (preveValue !== currentValue) {
         key = k;
-        value = current[k];
+        value = currentValue;
         break;
       }
     }
@@ -225,8 +236,7 @@ export function useOrderEntry(
     if (
       !values ||
       typeof values.order_type === "undefined" ||
-      (values.order_type !== OrderType.MARKET &&
-        values.order_type !== OrderType.LIMIT)
+      !includes(values.order_type, availableOrderTypes)
     ) {
       throw new SDKError("order_type is error");
     }
@@ -241,7 +251,7 @@ export function useOrderEntry(
 
     return new Promise((resolve, reject) => {
       return orderCreator
-        ?.validate(values, {
+        .validate(values, {
           symbol: symbolInfo[symbol](),
           // token: tokenInfo[symbol](),
           maxQty,
@@ -256,11 +266,21 @@ export function useOrderEntry(
           } else {
             const data = orderCreator.create(values as OrderEntity);
 
-            return doCreateOrder({
-              ...data,
-              symbol: symbolOrOrder,
-            }).then((res) => {
+            console.log("------------------", data);
+
+            return doCreateOrder(
+              omit(["order_type_ext"], {
+                ...values,
+                ...data,
+              })
+            ).then((res) => {
               console.log("res::::", res);
+              // resolve(res);
+              if (res.success) {
+                resolve(res.data);
+              } else {
+                reject(res);
+              }
             }, reject);
           }
         });
@@ -280,34 +300,23 @@ export function useOrderEntry(
         )
       );
     }
-    return createOrder(values);
+    return createOrder({
+      ...values,
+      symbol,
+    });
   };
 
   const submit = useCallback(() => {
     if (typeof symbolOrOrder === "string") {
-      return;
+      throw new SDKError("Function is not supported, please use onSubmit()");
     }
     return createOrder(symbolOrOrder);
   }, [symbolOrOrder]);
 
-  // const calulateEstData = (values: OrderEntity) => {
-  //   console.log(
-  //     "calulateEstData::::",
-  //     values,
-  //     baseIMR,
-  //     baseMMR,
-  //     freeCollateral,
-  //     markPrice,
-  //     positions
-  //   );
-
-  //   console.log("calulateEstData::::", estLiqPrice);
-  // };
-
   const calculate = useCallback(
     (
       values: Partial<OrderEntity>,
-      field: string,
+      field: keyof OrderEntity,
       value: any
     ): Partial<OrderEntity> => {
       const fieldHandler = getCalculateHandler(field);
@@ -336,62 +345,101 @@ export function useOrderEntry(
     });
   };
 
-  const formattedOrder = useMemo(() => {
+  const parsedData = useMemo<OrderParams | null>(() => {
     if (typeof symbolOrOrder === "string") {
-      return {};
+      return null;
     }
+    return symbolOrOrder;
+  }, [symbolOrOrder]);
+
+  const formattedOrder = useMemo<Partial<OrderEntity>>(() => {
+    if (!parsedData) {
+      return notSupportData.current;
+    }
+    // prevOrderData.current = symbolOrOrder;
 
     if (!prevOrderData.current) {
-      prevOrderData.current = {
-        ...symbolOrOrder,
+      // prevOrderData.current = {
+      //   ...symbolOrOrder,
+      //   total: "",
+      // };
+
+      prevOrderData.current = parsedData;
+      orderDataCache.current = {
+        ...parsedData,
         total: "",
       };
 
-      return prevOrderData.current;
+      return orderDataCache.current as Partial<OrderEntity>;
     }
 
     // diff order entry
-    const item = diffOrderEntry(prevOrderData.current, symbolOrOrder);
+    const item = diffOrderEntry(prevOrderData.current, parsedData);
 
-    if (!item) return prevOrderData.current;
+    // console.log(prevOrderData.current, symbolOrOrder, item);
+
+    if (!item) {
+      return orderDataCache.current as Partial<OrderEntity>;
+    }
+
+    // if (
+    //   item.key === "side" ||
+    //   item.key === "symbol" ||
+    //   item.key === "order_type"
+    // ) {
+    //   // side or symbol changed, reset errors and the data;
+    //   prevOrderData.current = parsedData;
+    //   orderDataCache.current = {
+    //     ...parsedData,
+    //     total: "",
+    //   };
+
+    //   return orderDataCache.current;
+    // }
 
     // set field dirty
-    if (typeof symbolOrOrder.order_price !== "undefined") {
+    if (typeof parsedData.order_price !== "undefined") {
       fieldDirty.current.order_price = true;
     }
-    if (typeof symbolOrOrder.order_quantity !== "undefined") {
+    if (typeof parsedData.order_quantity !== "undefined") {
       fieldDirty.current.order_quantity = true;
     }
 
-    const values = calculate(prevOrderData.current, item.key, item.value);
+    const values = calculate(parsedData, item.key, item.value);
 
-    // console.log("-----------", values);
+    console.log("-----------", values);
 
-    prevOrderData.current = values;
+    values.total = values.total || "";
+
+    prevOrderData.current = parsedData;
+    orderDataCache.current = values;
 
     return values;
-  }, [symbolOrOrder, markPrice]);
+  }, [
+    parsedData?.order_price,
+    parsedData?.side,
+    parsedData?.order_quantity,
+    parsedData?.visible_quantity,
+    parsedData?.order_type,
+    parsedData?.order_type_ext,
+    parsedData?.symbol,
+    parsedData?.total,
+    parsedData?.reduce_only,
+
+    markPrice,
+  ]);
 
   useEffect(() => {
     // validate order data;
     validator(formattedOrder)?.then((err) => {
       setErrors(err);
-      // let priceError = null,
-      //   quantityError = null;
-      // if (err?.order_price && fieldDirty.current.order_price) {
-      //   priceError = err?.order_price;
-      // }
-
-      // if (err?.order_quantity && fieldDirty.current.order_quantity) {
-      //   quantityError = err?.order_quantity;
-      // }
-
-      // setErrors({
-      //   order_price: priceError,
-      //   order_quantity: quantityError,
-      // });
     });
-  }, [formattedOrder, markPrice]);
+  }, [
+    formattedOrder.broker_id,
+    formattedOrder.order_quantity,
+    formattedOrder.total,
+    markPrice,
+  ]);
 
   useEffect(() => {
     if (!optionsValue?.watchOrderbook) return;
@@ -402,32 +450,118 @@ export function useOrderEntry(
     };
   }, [optionsValue?.watchOrderbook]);
 
+  const getPriceAndQty = (
+    symbolOrOrder: OrderEntity
+  ): { quantity: number; price: number } | null => {
+    let quantity = Number(symbolOrOrder.order_quantity);
+    const orderPrice = Number(symbolOrOrder.order_price);
+
+    if (isNaN(quantity) || quantity <= 0) return null;
+    if (symbolOrOrder.order_type === OrderType.LIMIT && isNaN(orderPrice))
+      return null;
+
+    /**
+     * price
+     * if order_type = market order, 
+        order side = long, then order_price_i = ask0
+        order side = short, then order_price_i = bid0
+      if order_type = limit order
+        order side = long
+          limit_price >= ask0, then order_price_i = ask0
+          limit_price < ask0, then order_price_i = limit_price
+        order side = short
+          limit_price <= bid0, then order_price_i = bid0
+          limit_price > ask0, then order_price_i = ask0
+     */
+    let price: number;
+
+    if (symbolOrOrder.order_type === OrderType.MARKET) {
+      if (symbolOrOrder.side === OrderSide.BUY) {
+        price = askAndBid.current[0];
+      } else {
+        price = askAndBid.current[1];
+      }
+    } else {
+      // LIMIT order
+      if (symbolOrOrder.side === OrderSide.BUY) {
+        if (orderPrice >= askAndBid.current[0]) {
+          price = askAndBid.current[0];
+        } else {
+          price = orderPrice;
+        }
+      } else {
+        if (orderPrice <= askAndBid.current[1]) {
+          price = askAndBid.current[1];
+        } else {
+          price = orderPrice;
+        }
+      }
+    }
+
+    if (symbolOrOrder.side === OrderSide.SELL) {
+      quantity = -quantity;
+    }
+
+    return { price, quantity };
+  };
+
   const estLiqPrice = useMemo(() => {
-    if (typeof symbolOrOrder === "string") return null;
-    // return order.estLiqPrice({
-    //   markPrice,
-    //   baseIMR,
-    //   baseMMR,
-    //   totalCollateral,
-    //   positions,
-    //   newOrder: {
-    //     qty:  symbolOrOrder.order_quantity,
-    //     price: symbolOrOrder.order_price,
-    //     symbol: formattedOrder.symbol!,
-    //   },
-    // });
-    return null;
-  }, [markPrice, baseIMR, baseMMR, totalCollateral, symbolOrOrder]);
+    if (!accountInfo || !parsedData) return null;
+    const result = getPriceAndQty(parsedData as OrderEntity);
+    if (result === null) return null;
+    const { price, quantity } = result;
+    if (!price || !quantity) return null;
+    const liqPrice = order.estLiqPrice({
+      markPrice,
+      baseIMR,
+      baseMMR,
+      totalCollateral,
+      positions,
+      IMR_Factor: accountInfo["imr_factor"][symbol],
+      newOrder: {
+        qty: quantity,
+        price,
+        symbol: parsedData.symbol!,
+      },
+    });
+
+    if (liqPrice <= 0) return null;
+
+    return liqPrice;
+  }, [
+    markPrice,
+    baseIMR,
+    baseMMR,
+    totalCollateral,
+    parsedData?.order_price,
+    parsedData?.order_quantity,
+    accountInfo,
+  ]);
 
   const estLeverage = useMemo(() => {
-    return 0;
-  }, [markPrice, baseIMR, baseMMR, freeCollateral]);
+    if (!accountInfo || !parsedData) return null;
+    const result = getPriceAndQty(parsedData as OrderEntity);
+    if (result === null || !result.price || !result.quantity) return null;
 
-  const clearErrors = useCallback(() => {
-    setErrors({});
-  }, []);
+    const leverage = order.estLeverage({
+      totalCollateral,
+      positions,
+      newOrder: {
+        symbol: parsedData.symbol,
+        qty: result.quantity,
+        price: result.price,
+      },
+    });
 
-  // console.log("++++++++", symbol);
+    return leverage;
+  }, [
+    baseIMR,
+    baseMMR,
+    totalCollateral,
+    positions,
+    parsedData?.order_price,
+    parsedData?.order_quantity,
+  ]);
 
   return {
     maxQty,
@@ -443,7 +577,7 @@ export function useOrderEntry(
     helper: {
       calculate,
       validator,
-      clearErrors,
+      // clearErrors,
     },
     metaState: {
       dirty: fieldDirty.current,

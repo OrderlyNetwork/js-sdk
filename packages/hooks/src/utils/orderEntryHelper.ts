@@ -7,7 +7,7 @@ export type OrderEntityKey = keyof OrderEntity & string;
 type orderEntryInputs = [
   Partial<OrderEntity>,
   // to update field
-  string,
+  keyof OrderEntity,
   any,
   number,
   {
@@ -18,17 +18,50 @@ type orderEntryInputs = [
 
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
 
-const needNumberOnlyFields = ["order_quantity", "order_price", "total"];
+const needNumberOnlyFields: (keyof OrderEntity)[] = [
+  "order_quantity",
+  "order_price",
+  "total",
+];
+
+const cleanStringStyle = (str: string | number): string => {
+  if (typeof str !== "string") {
+    str = str.toString();
+  }
+  str = str.replace(/,/g, "");
+  // clear extra character expect number and .
+  str = str
+    .replace(/[^\d.]/g, "")
+    .replace(".", "$#$")
+    .replace(/\./g, "")
+    .replace("$#$", ".");
+
+  return str;
+};
 
 export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   let [values, input, value, markPrice, config] = inputs;
 
+  needNumberOnlyFields.forEach((field) => {
+    if (typeof values[field] !== "undefined") {
+      // @ts-ignore
+      values[field] = cleanStringStyle(values[field] as string);
+    }
+  });
+
   if (needNumberOnlyFields.includes(input)) {
     // clean the thousandths
-    value = value.toString();
-    value = value.replace(/,/g, "");
-    // clear extra character expect number and .
-    value = value.replace(/[^\d.]/g, "");
+    // if (typeof value !== "string") {
+    //   value = value.toString();
+    // }
+    // value = value.replace(/,/g, "");
+    // // clear extra character expect number and .
+    // value = value
+    //   .replace(/[^\d.]/g, "")
+    //   .replace(".", "$#$")
+    //   .replace(/\./g, "")
+    //   .replace("$#$", ".");
+    value = cleanStringStyle(value);
   }
 
   return [
@@ -89,8 +122,6 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
  */
 function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
-
-  console.log("priceInputHandle", inputs);
 
   if (value === "") {
     return [{ ...values, total: "" }, input, value, markPrice, config];
@@ -232,7 +263,6 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 export const getCalculateHandler = (
   fieldName: string
 ): orderEntryInputHandle => {
-  console.log("getCalculateHandler", fieldName);
   switch (fieldName) {
     case "order_quantity": {
       return quantityInputHandle;

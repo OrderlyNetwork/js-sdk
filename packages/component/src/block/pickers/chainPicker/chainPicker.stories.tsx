@@ -54,8 +54,8 @@ export const ListView: Story = {
     });
     return (
       <ChainListView
-        mainChains={chains?.mainnet}
-        testChains={chains?.testnet}
+        mainChains={(chains as any)?.mainnet}
+        testChains={(chains as any)?.testnet}
       />
     );
   },

@@ -1,6 +1,3 @@
-import { Input } from "@/input";
-import { useForm, Controller, FormProvider } from "react-hook-form";
-import { Slider } from "@/slider";
 import React, {
   FC,
   FormEvent,
@@ -15,6 +12,9 @@ import React, {
 import { Picker, Select } from "@/select";
 import Button from "@/button";
 import { Numeral, Text } from "@/text";
+
+import { Input } from "@/input";
+import { Slider } from "@/slider";
 
 import { Divider } from "@/divider";
 import { OrderOptions } from "./sections/orderOptions";
@@ -49,10 +49,12 @@ export interface OrderEntryProps {
   onDeposit?: () => Promise<void>;
 
   submit: () => Promise<any>;
+  submitting: boolean;
 
   markPrice?: number;
   maxQty: number;
   estLiqPrice?: number | null;
+  estLeverage?: number | null;
 
   symbol: string;
 
@@ -63,23 +65,20 @@ export interface OrderEntryProps {
   showConfirm?: boolean;
   onConfirmChange?: (value: boolean) => void;
 
-  reduceOnly?: boolean;
-  onReduceOnlyChange?: (value: boolean) => void;
+  // reduceOnly?: boolean;
+  // onReduceOnlyChange?: (value: boolean) => void;
 
-  side: OrderSide;
-  onSideChange?: (value: OrderSide) => void;
+  // side: OrderSide;
+  // onSideChange?: (value: OrderSide) => void;
 
   helper: {
-    clearErrors: () => void;
+    // clearErrors: () => void;
   };
 
   disabled?: boolean;
 
   formattedOrder: Partial<OrderEntity>;
-  errors:
-    | { [Key in keyof OrderEntity]?: { type: string; message: string } }
-    | null
-    | undefined;
+
   onFieldChange: (field: keyof OrderEntity, value: any) => void;
   setValues: (values: Partial<OrderEntity>) => void;
   metaState: UseOrderEntryMetaState;
@@ -102,7 +101,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       symbol,
       // side,
       // onSideChange,
-      onReduceOnlyChange,
+      // onReduceOnlyChange,
       metaState,
       formattedOrder,
       helper,
@@ -110,16 +109,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       markPrice,
     } = props;
 
-    // console.log("formattedOrder", formattedOrder);
-    // console.log("formattedOrder", symbolConfig);
-
-    const { clearErrors } = helper;
-
     const { side } = formattedOrder;
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
     const quantityInputFocused = useRef<boolean>(false);
+    const [errorsVisible, setErrorsVisible] = useState<boolean>(false);
     const isClickForm = useRef(false);
 
     const isTablet = useMediaQuery(MEDIA_TABLET);
@@ -129,27 +124,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
-    const methods = useForm({
-      // mode: "onChange",
-      reValidateMode: "onChange",
-      defaultValues: {
-        side: OrderSide.BUY,
-        order_type: OrderType.LIMIT,
-        order_quantity: "",
-        total: "",
-        order_price: "",
-        reduce_only: false,
-      },
-    });
-
     const ee = useEventEmitter();
     const isMarketOrder = formattedOrder.order_type === OrderType.MARKET;
 
     const orderbookItemClickHandler = useCallback((item: number[]) => {
-      // methods.setValue("order_price", item[0].toString());
-      // methods.setValue("order_type", OrderType.LIMIT);
-      props.onFieldChange("order_price", item[0].toString());
       props.onFieldChange("order_type", OrderType.LIMIT);
+      props.onFieldChange("order_price", item[0].toString());
     }, []);
 
     useEffect(() => {
@@ -175,8 +155,14 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
         return Promise.resolve()
           .then(() => {
+            if (
+              metaState.errors?.order_price?.message ||
+              metaState.errors?.order_quantity?.message
+            ) {
+              setErrorsVisible(true);
+              return Promise.reject("cancel");
+            }
             if (needConfirm) {
-              console.log({ symbolConfig });
               return modal.confirm({
                 title: "Confirm Order",
                 onCancel: () => {
@@ -186,7 +172,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   <OrderConfirmView
                     order={{
                       ...(formattedOrder as OrderEntity),
-                      side: props.side,
+                      side: side!,
                       symbol: props.symbol,
                     }}
                     symbol={symbol}
@@ -201,15 +187,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           })
           .then((isOk) => {
             return props.submit().then((res) => {
-              if (res.success) {
-                // methods.reset({
-                //   // order_type: data.order_type,
-                //   order_price: "",
-                //   order_quantity: "",
-                //   total: "",
-                // });
-                // toast.success("Successfully!");
-              }
+              props.setValues({
+                order_price: "",
+                order_quantity: "",
+                total: "",
+              });
+
               // resetForm?.();
             });
           })
@@ -256,7 +239,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         setButtonText("Sell / Short");
       }
       // methods.setValue("side", side);
-      methods.clearErrors();
+      // methods.clearErrors();
     }, [side]);
 
     //
@@ -285,7 +268,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       function handleClick() {
         // 当用户点击表单区域外面的时候，取消error提示
         if (!isClickForm.current) {
-          methods.clearErrors();
+          setErrorsVisible(false);
         }
         isClickForm.current = false;
       }
@@ -307,6 +290,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         onClick={() => {
           isClickForm.current = true;
         }}
+        id="orderEntryForm"
       >
         <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
           <SegmentedButton
@@ -332,6 +316,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             ]}
             onChange={(value) => {
               // onSideChange?.(value as OrderSide);
+              setErrorsVisible(false);
               props.onFieldChange("side", value);
             }}
             value={side}
@@ -382,13 +367,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
               props.onFieldChange("order_type", value);
             }}
-            // onValueChange={(value: any) => {
-            //   // setValue?.("order_type", value.value);
-            //   field.onChange(value.value);
-            //   methods.setValue("order_price", "", {
-            //     shouldValidate: true,
-            //   });
-            // }}
           />
           <Input
             disabled={disabled}
@@ -397,13 +375,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.quote}
             type="text"
             inputMode="decimal"
-            error={
-              !!metaState.errors?.order_price && metaState.dirty?.order_price
-            }
+            error={!!metaState.errors?.order_price && errorsVisible}
             // placeholder={"Market"}
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
-            value={isMarketOrder ? "Market" : formattedOrder.order_price || ""}
+            value={
+              isMarketOrder
+                ? "Market"
+                : commify(formattedOrder.order_price || "")
+            }
             containerClassName={
               isMarketOrder ? "orderly-bg-base-700" : "orderly-bg-base-600"
             }
@@ -424,10 +404,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.base}
             className="orderly-text-right"
             containerClassName="orderly-bg-base-600"
-            error={
-              !!metaState.errors?.order_quantity &&
-              metaState.dirty?.order_quantity
-            }
+            error={!!metaState.errors?.order_quantity && errorsVisible}
             helpText={metaState.errors?.order_quantity?.message}
             value={commify(formattedOrder.order_quantity || "")}
             onChange={(event) => {
@@ -449,7 +426,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             onValueChange={(value) => {
               //
               if (typeof value[0] !== "undefined") {
-                props.onFieldChange("order_quantity", "" + value[0]);
+                props.onFieldChange("order_quantity", value[0]);
               }
             }}
           />
@@ -500,7 +477,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
           {!isTablet && (
             <>
-              <Divider /> <EstInfo />
+              <Divider />
+              <EstInfo
+                estLiqPrice={props.estLiqPrice}
+                estLeverage={props.estLeverage}
+              />
             </>
           )}
 
@@ -512,7 +493,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             onReduceOnlyChange={(value) =>
               props.onFieldChange("reduce_only", value)
             }
-            reduceOnly={props.reduceOnly}
+            reduceOnly={formattedOrder.reduce_only}
             onFieldChange={props.onFieldChange}
           />
           <StatusGuardButton>
@@ -520,7 +501,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               id="orderly-order-entry-confirm-button"
               className="orderly-text-xs desktop:orderly-font-bold desktop:orderly-text-sm"
               type="submit"
-              loading={methods.formState.isSubmitting}
+              loading={props.submitting}
               color={side === OrderSide.BUY ? "buy" : "sell"}
               fullWidth
             >

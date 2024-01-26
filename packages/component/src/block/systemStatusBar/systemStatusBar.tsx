@@ -81,28 +81,30 @@ export const SystemStatusBar: FC<SystemStatusBarProps> = (props) => {
         </span>
 
         {commutitylist &&
-          commutitylist.map((item) => {
+          commutitylist.map((item, index) => {
             if (item === CommunityType.facebook) {
               return (
-                <button onClick={() => clickCommunity(item)}>
+                <button onClick={() => clickCommunity(item)} key={index}>
                   <CommunityFB className="orderly-mr-2" />
                 </button>
               );
             } else if (item === CommunityType.discord) {
               return (
-                <button onClick={() => clickCommunity(item)}>
+                <button onClick={() => clickCommunity(item)} key={index}>
                   <CommunityDiscord className="orderly-mr-2" />
                 </button>
               );
             } else if (item === CommunityType.telegram) {
               return (
-                <button onClick={() => clickCommunity(item)}>
+                <button onClick={() => clickCommunity(item)} key={index}>
                   <CommunityTG className="orderly-mr-2" />
                 </button>
               );
             } else {
               return (
-                <button onClick={() => clickCommunity(item)}>{item}</button>
+                <button onClick={() => clickCommunity(item)} key={index}>
+                  {item}
+                </button>
               );
             }
           })}

@@ -1,20 +1,49 @@
 import { ArrowRightIcon } from "@/icon/icons/arrowRight";
 import { Numeral } from "@/text/numeral";
-import { useMarginRatio } from "@orderly.network/hooks";
-import { FC } from "react";
+import { useAccount, useMarginRatio } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { FC, useMemo } from "react";
 
 export const EstInfo: FC<{
-  estLiqPrice: string;
-  estLeverage: string;
+  estLiqPrice?: number | null;
+  estLeverage?: number | null;
 }> = ({ estLeverage, estLiqPrice }) => {
   const { currentLeverage } = useMarginRatio();
+  const { state } = useAccount();
+
+  const leverageElement = useMemo(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return "0.00x";
+    }
+
+    if (!estLeverage) {
+      return (
+        <Numeral className="orderly-text-base-contrast" surfix={"x"}>
+          {currentLeverage}
+        </Numeral>
+      );
+    }
+
+    return (
+      <>
+        <Numeral className="orderly-text-base-contrast" surfix={"x"}>
+          {currentLeverage}
+        </Numeral>
+        <ArrowRightIcon size={8} />
+        <Numeral className="orderly-text-base-contrast" surfix={"x"}>
+          {estLeverage}
+        </Numeral>
+      </>
+    );
+  }, [currentLeverage, estLeverage, state.status]);
+
   return (
     <>
       <div className="orderly-flex orderly-justify-between orderly-text-base-contrast-54">
         <span>Est. Liq. price</span>
         <span className="orderly-flex orderly-gap-1">
           <span className="orderly-text-base-contrast">
-            <Numeral>{estLiqPrice}</Numeral>
+            <Numeral>{estLiqPrice ?? "--"}</Numeral>
           </span>
           <span>USDC</span>
         </span>
@@ -22,11 +51,7 @@ export const EstInfo: FC<{
       <div className="orderly-flex orderly-justify-between orderly-text-base-contrast-54">
         <span>Account leverage</span>
         <span className="orderly-flex orderly-items-center orderly-gap-1">
-          <Numeral className="orderly-text-base-contrast" surfix={"x"}>
-            {currentLeverage}
-          </Numeral>
-          <ArrowRightIcon size={8} />
-          <span className="orderly-text-base-contrast">5.00</span>
+          {leverageElement}
         </span>
       </div>
     </>

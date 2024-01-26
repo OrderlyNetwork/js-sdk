@@ -21,6 +21,7 @@ export type CollateralOutputs = {
   unsettledPnL: number;
 
   positions: API.Position[];
+  accountInfo?: API.AccountInfo;
 };
 
 const positionsPath = pathOr([], [0, "rows"]);
@@ -90,7 +91,7 @@ export const useCollateral = (
       USDCHolding: usdc?.holding ?? 0,
       unsettlementPnL: pathOr_unsettledPnLPathOr(positions),
     });
-  }, [usdc, pathOr_unsettledPnLPathOr(positions)]);
+  }, [usdc?.holding, pathOr_unsettledPnLPathOr(positions)]);
 
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
@@ -98,6 +99,8 @@ export const useCollateral = (
     totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
     availableBalance,
     unsettledPnL: pathOr_unsettledPnLPathOr(positions),
+
+    accountInfo,
 
     // @hidden
     positions: positionsPath(positions),
