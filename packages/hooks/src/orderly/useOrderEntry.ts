@@ -76,8 +76,16 @@ type OrderParams = Required<
 
 /**
  * Create Order
- * @param symbol
- * @returns
+ * @example
+ * ```tsx
+ * const { formattedOrder, onSubmit, helper } = useOrderEntry({
+ *  symbol: "PERP_ETH_USDC",
+ *  side: OrderSide.BUY,
+ *  order_type: OrderType.LIMIT,
+ *  order_price: 10000,
+ *  order_quantity: 1,
+ * });
+ * ```
  */
 export function useOrderEntry(
   order: OrderParams,
@@ -349,6 +357,20 @@ export function useOrderEntry(
     if (typeof symbolOrOrder === "string") {
       return null;
     }
+    // clean comma
+    if (typeof symbolOrOrder.order_quantity === "string") {
+      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
+        /,/g,
+        ""
+      );
+    }
+
+    if (typeof symbolOrOrder.order_quantity === "string") {
+      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
+        /,/g,
+        ""
+      );
+    }
     return symbolOrOrder;
   }, [symbolOrOrder]);
 
@@ -407,7 +429,7 @@ export function useOrderEntry(
 
     const values = calculate(parsedData, item.key, item.value);
 
-    console.log("-----------", values);
+    // console.log("-----------", values);
 
     values.total = values.total || "";
 
@@ -506,7 +528,7 @@ export function useOrderEntry(
   };
 
   const estLiqPrice = useMemo(() => {
-    if (!accountInfo || !parsedData) return null;
+    if (!accountInfo || !parsedData?.order_quantity) return null;
     const result = getPriceAndQty(parsedData as OrderEntity);
     if (result === null) return null;
     const { price, quantity } = result;
@@ -539,7 +561,7 @@ export function useOrderEntry(
   ]);
 
   const estLeverage = useMemo(() => {
-    if (!accountInfo || !parsedData) return null;
+    if (!accountInfo || !parsedData?.order_quantity) return null;
     const result = getPriceAndQty(parsedData as OrderEntity);
     if (result === null || !result.price || !result.quantity) return null;
 
