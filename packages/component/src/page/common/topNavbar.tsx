@@ -68,7 +68,7 @@ export const TopNavbar: FC<Props> = (props) => {
           // }}
         />
       </div>
-      {errors.ChainNetworkNotSupport && (
+      {errors?.ChainNetworkNotSupport && (
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
     </>

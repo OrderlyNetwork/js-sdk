@@ -26,7 +26,7 @@ import {
 
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
-import { OrderConfirmView } from "./sections/orderConfirmView";
+import { OrderConfirmView } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal, commify } from "@orderly.network/utils";
