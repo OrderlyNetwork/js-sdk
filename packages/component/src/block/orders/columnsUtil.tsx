@@ -8,7 +8,7 @@ import { Column } from "@/table";
 
 /// get columns for cancel/fill/reject/history
 export const columnsBasis = (): Column<API.Order>[] => {
-    const columns = [
+    const columns: Column<API.Order>[] = [
         {
           title: "Instrument",
           dataIndex: "symbol",

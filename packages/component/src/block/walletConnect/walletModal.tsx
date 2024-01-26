@@ -15,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/dialog";
-import { OrderlyAppContext } from "@/provider";
 
 const useWalletConnect = () => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
@@ -109,8 +108,14 @@ export const WalletConnectDialog = create<WalletConnectProps>((props) => {
     createOrderlyKey,
   } = useWalletConnect();
 
+  const _onOpenChange = useCallback((open: boolean) => {
+    // console.log(open);
+    if (!open) reject("cancel");
+    onOpenChange(open);
+  }, []);
+
   return (
-    <Dialog open={visible} onOpenChange={onOpenChange}>
+    <Dialog open={visible} onOpenChange={_onOpenChange}>
       <DialogContent maxWidth={"sm"} closable>
         <DialogHeader>
           <DialogTitle>Connect wallet</DialogTitle>

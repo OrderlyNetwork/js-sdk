@@ -64,6 +64,15 @@ export {
   SystemStatusBar,
 } from "./block";
 
+//===================== Dialog component ====================
+
+export {
+  ChainDialog,
+  showAccountConnectorModal,
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
+} from "./block";
+
 export type {
   OrderEntryProps,
   OrderBookProps,

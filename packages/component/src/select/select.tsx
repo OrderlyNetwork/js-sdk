@@ -179,7 +179,7 @@ const Select: FC<SelectProps> = ({
                 option.value === props.value &&
                   (color === "buy"
                     ? "orderly-text-trade-profit"
-                    : "orderly-text-trade-loss")
+                    : (color === "sell" ? "orderly-text-trade-loss" : "orderly-text-base-contract"))
               )}
               onSelect={(evnet) => {
                 // @ts-ignore

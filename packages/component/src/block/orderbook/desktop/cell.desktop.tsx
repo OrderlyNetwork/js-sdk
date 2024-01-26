@@ -52,7 +52,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   }, [pendingOrders, props.price, depth]);
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-relative orderly-font-bold orderly-cursor-pointer"
+    <div className="orderly-flex orderly-flex-row orderly-tabular-nums orderly-justify-between orderly-text-base-contrast-80 orderly-text-3xs orderly-relative orderly-cursor-pointer"
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
@@ -111,8 +111,8 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
           direction={CellBarDirection.LEFT_TO_RIGHT}
           className={
             props.type === OrderBookCellType.ASK
-              ? "orderly-bg-trade-loss/20"
-              : "orderly-bg-trade-profit/20"
+              ? "orderly-bg-trade-loss/10"
+              : "orderly-bg-trade-profit/10"
           }
         />
       </div>

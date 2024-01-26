@@ -79,7 +79,6 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     }
   }, [status, remember]);
 
-
   return (
     <div>
       <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-py-4 desktop:orderly-text-base">
@@ -124,7 +123,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </Paper>
 
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
-        <RememberMe/>
+        <RememberMe />
         <div>
           <Switch
             id="orderly-remember-me-switch"

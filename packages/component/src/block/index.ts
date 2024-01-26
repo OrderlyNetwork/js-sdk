@@ -28,6 +28,7 @@ export { WalletConnect } from "./walletConnect";
 export {
   WalletConnectSheet,
   WalletConnectDialog,
+  showAccountConnectorModal,
 } from "./walletConnect/walletModal";
 
 export { TradeHistory } from "./tradeHistory";
@@ -39,6 +40,12 @@ export type { OrdersViewProps } from "./orders";
 export { AccountStatusBar, AssetAndMarginSheet } from "./accountStatus";
 export type { AccountStatusProps } from "./accountStatus";
 
-export { ChainListView, ChainSelect } from "./pickers/chainPicker";
+export { ChainListView, ChainSelect, ChainDialog } from "./pickers/chainPicker";
 
 export { SystemStatusBar } from "./systemStatusBar";
+export type { FooterStatusBarProps } from "./systemStatusBar";
+
+export {
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
+} from "./depositAndwithdraw";

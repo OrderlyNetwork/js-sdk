@@ -117,7 +117,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       (error: any) => {
         setStatus(SwapProcessStatusStatus.BridgeFialed);
 
-        toast.error(error.message || "Error");
+        toast.error(error?.message || "Error");
       }
     );
   }, [transaction, mode, dst, src]);
