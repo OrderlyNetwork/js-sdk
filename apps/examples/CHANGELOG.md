@@ -1,5 +1,16 @@
 # examples
 
+## 0.1.92-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+- Updated dependencies
+  - @orderly.network/react@0.1.31-alpha.24
+  - @orderly.network/web3-onboard@0.0.28-alpha.24
+  - @orderly.network/hooks@1.0.28-alpha.24
+  - @orderly.network/core@0.1.27-alpha.24
+
 ## 0.1.92-alpha.23
 
 ### Patch Changes

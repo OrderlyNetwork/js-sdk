@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+
 ## 1.0.96-alpha.23
 
 ### Patch Changes

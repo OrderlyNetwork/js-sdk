@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 0.1.31-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+- Updated dependencies
+  - @orderly.network/trading-view@0.1.8-alpha.24
+  - @orderly.network/hooks@1.0.28-alpha.24
+  - @orderly.network/types@0.1.27-alpha.24
+  - @orderly.network/utils@0.0.79-alpha.24
+  - @orderly.network/core@0.1.27-alpha.24
+  - @orderly.network/net@1.0.114-alpha.24
+
 ## 0.1.31-alpha.23
 
 ### Patch Changes

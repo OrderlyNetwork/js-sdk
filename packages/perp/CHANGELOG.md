@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 1.0.27-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.24
+  - @orderly.network/utils@0.0.79-alpha.24
+
 ## 1.0.27-alpha.23
 
 ### Patch Changes

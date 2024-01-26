@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.0.36-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+- Updated dependencies
+  - @orderly.network/core@0.1.27-alpha.24
+
 ## 0.0.36-alpha.23
 
 ### Patch Changes

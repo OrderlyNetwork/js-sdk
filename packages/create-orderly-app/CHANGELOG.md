@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.1.4-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+
 ## 0.1.4-alpha.23
 
 ### Patch Changes
