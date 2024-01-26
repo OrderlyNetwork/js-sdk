@@ -40,9 +40,7 @@ export type EstimatedLiquidationPriceInputs = {
  * @param inputs
  * @returns
  */
-export function estLiqPrice(
-  inputs: EstimatedLiquidationPriceInputs
-): number | null {
+export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
   const {
     positions,
     newOrder,
@@ -68,7 +66,6 @@ export function estLiqPrice(
       currentPosition = position;
       notional = notional.add(newOrderNotional);
     }
-    // console.log("+++++++++", notional.abs().mul(position.mmr).toNumber());
 
     newTotalMM = newTotalMM.add(notional.abs().mul(position.mmr));
   }
@@ -126,17 +123,28 @@ export type EstimatedLeverageInputs = {
  */
 export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
   const { totalCollateral, positions, newOrder } = inputs;
-  const sumPositionNotional = positions.reduce((acc, cur) => {
+  if (totalCollateral <= 0) {
+    return null;
+  }
+  let hasPosition = false;
+  let sumPositionNotional = positions.reduce((acc, cur) => {
     acc = acc.add(
       new Decimal(new Decimal(cur.position_qty).mul(cur.mark_price).abs())
     );
 
     if (cur.symbol === newOrder.symbol) {
+      hasPosition = true;
       acc = acc.add(new Decimal(newOrder.qty).mul(newOrder.price));
     }
 
     return acc;
   }, zero);
+
+  if (!hasPosition) {
+    sumPositionNotional = sumPositionNotional.add(
+      new Decimal(newOrder.qty).mul(newOrder.price).abs()
+    );
+  }
 
   const totalMarginRatio = new Decimal(totalCollateral).div(
     sumPositionNotional

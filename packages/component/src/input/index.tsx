@@ -195,7 +195,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             disabled={!!disabled}
             className={cn(
               "orderly-input",
-              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20",
+              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20 orderly-tabular-nums",
               typeof prefix !== "undefined" && "orderly-px-0",
               className
             )}

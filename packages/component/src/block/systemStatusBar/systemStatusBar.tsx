@@ -1,11 +1,7 @@
 import { Divider } from "@/divider";
 import { FC, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { NetworkStatus } from "./networkStatus";
-import {
-  CommunityDiscord,
-  CommunityX,
-  CommunityTG,
-} from "./communityIcon";
+import { CommunityDiscord, CommunityX, CommunityTG } from "./communityIcon";
 import { OrderlyLogo } from "./orderlyLogo";
 import { useWS } from "@orderly.network/hooks";
 import React from "react";
@@ -58,47 +54,51 @@ export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
         }
       }
     });
-    return () => ws.off("websocket:status", () => { });
+    return () => ws.off("websocket:status", () => {});
   }, []);
 
   const children = useMemo(() => {
-
     if (commutitylist !== undefined) {
       return commutitylist;
     }
 
     const children: React.ReactNode[] = [];
     if (telegramUrl !== undefined) {
-      children.push(<button onClick={() => {
-        window.open(telegramUrl, "_blank");
-      }}>
-        <CommunityTG/>
-      </button>);
+      children.push(
+        <button
+          onClick={() => {
+            window.open(telegramUrl, "_blank");
+          }}
+        >
+          <CommunityTG />
+        </button>
+      );
     }
     if (discordUrl !== undefined) {
-      children.push(<button onClick={() => {
-        window.open(discordUrl, "_blank");
-      }}>
-        <CommunityDiscord/>
-      </button>);
+      children.push(
+        <button
+          onClick={() => {
+            window.open(discordUrl, "_blank");
+          }}
+        >
+          <CommunityDiscord />
+        </button>
+      );
     }
     if (xUrl !== undefined) {
-      children.push(<button onClick={() => {
-        window.open(xUrl, "_blank");
-      }}>
-        <CommunityX/>
-      </button>);
+      children.push(
+        <button
+          onClick={() => {
+            window.open(xUrl, "_blank");
+          }}
+        >
+          <CommunityX />
+        </button>
+      );
     }
 
-
     return children;
-
-  }, [
-    xUrl,
-    telegramUrl,
-    discordUrl,
-    commutitylist,
-  ]);
+  }, [xUrl, telegramUrl, discordUrl, commutitylist]);
 
   return (
     <>

@@ -5,7 +5,12 @@ import {
   useAccount,
   useEventEmitter,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, OrderSide } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  OrderEntity,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 
 interface MyOrderEntryProps {
@@ -14,9 +19,8 @@ interface MyOrderEntryProps {
 
 export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   const { symbol } = props;
-  const [side, setSide] = useState(OrderSide.BUY);
   const { onDeposit } = useContext(AssetsContext);
-  const [reduceOnly, setReduceOnly] = useState(false);
+
   const { state } = useAccount();
   const ee = useEventEmitter();
 
@@ -42,17 +46,48 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     };
   }, []);
 
-  const formState = useOrderEntry(symbol, side, reduceOnly);
+  const [order, setOrder] = useState<OrderEntity>({
+    reduce_only: false,
+    side: OrderSide.BUY,
+    order_type: OrderType.LIMIT,
+  });
+  // const [reduceOnly, setReduceOnly] = useState(false);
+  const formState = useOrderEntry(
+    {
+      ...order,
+      symbol,
+    },
+    {
+      watchOrderbook: true,
+    }
+  );
 
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
       <OrderEntry
         {...formState}
         showConfirm
-        side={side}
-        onSideChange={setSide}
+        // side={side}
         symbol={symbol}
-        onReduceOnlyChange={setReduceOnly}
+        onFieldChange={(field, value) => {
+          // if (field === "side" || field === "order_type") {
+          //   setOrder((order) => ({
+          //     ...order,
+          //     order_price: undefined,
+          //     order_quantity: undefined,
+          //     [field]: value,
+          //   }));
+          // } else {
+          setOrder((order) => ({ ...order, [field]: value }));
+          // }
+        }}
+        setValues={(values) => {
+          setOrder((order) => ({
+            ...order,
+            ...values,
+          }));
+        }}
+        // onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
         onDeposit={onDeposit}
       />

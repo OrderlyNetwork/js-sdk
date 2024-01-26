@@ -1,4 +1,4 @@
-import { ARBITRUM_TESTNET_CHAINID } from "../../types/dist";
+import { ARBITRUM_TESTNET_CHAINID } from "@orderly.network/types";
 
 export const hex2int = (chainId: string): number => parseInt(chainId);
 export const int2hex = (chainId: number): string => `0x${chainId.toString(16)}`;

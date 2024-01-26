@@ -3,7 +3,7 @@ import { Collapsible, CollapsibleContent } from "@/collapsible";
 import { Label } from "@/label";
 import { Switch } from "@/switch";
 import { cn } from "@/utils/css";
-import { OrderType, MEDIA_TABLET } from "@orderly.network/types";
+import { OrderType, MEDIA_TABLET, OrderEntity } from "@orderly.network/types";
 import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
@@ -13,54 +13,47 @@ import { MobileHideenLabel, DesktopHiddenLabel } from "./hiddenLabel";
 import { MobileReduceOnlyLabel, DesktopReduceOnlyLabel } from "./reduceOnly";
 
 interface OrderOptionsProps {
-  // values?: OrderEntity;
-  // setValue?: (name: keyof OrderEntity, value: any) => void;
   reduceOnly?: boolean;
   onReduceOnlyChange?: (value: boolean) => void;
   showConfirm?: boolean;
   onConfirmChange?: (value: boolean) => void;
+  formattedOrder: Partial<OrderEntity>;
+  onFieldChange: (name: keyof OrderEntity, value: any) => void;
 }
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
-  const { reduceOnly, onReduceOnlyChange } = props;
+  const { reduceOnly, onReduceOnlyChange, formattedOrder, onFieldChange } =
+    props;
   const [open, setOpen] = useState<boolean>(false);
-  const { control, getValues, setValue } = useFormContext();
+  // const { control, getValues, setValue } = useFormContext();
+
+  const { order_type } = formattedOrder;
 
   const isTable = useMediaQuery(MEDIA_TABLET);
 
   return (
     <>
       <div className="orderly-flex orderly-items-center orderly-py-[2px] orderly-justify-between orderly-text-base-contrast-54">
-        <Controller
-          name="reduce_only"
-          control={control}
-          render={({ field }) => {
-            return (
-              <div className="orderly-flex orderly-gap-2 orderly-items-center">
-                <Switch
-                  id="orderly-reduce-only-switch"
-                  color={"primary"}
-                  checked={field.value ?? reduceOnly}
-                  onCheckedChange={(checked) => {
-                    onReduceOnlyChange?.(checked);
-                    field.onChange(checked);
-                  }}
-                />
-                {isTable ? (
-                  <MobileReduceOnlyLabel />
-                ) : (
-                  <DesktopReduceOnlyLabel />
-                )}
-              </div>
-            );
-          }}
-        />
+        <div className="orderly-flex orderly-gap-2 orderly-items-center">
+          <Switch
+            id="orderly-reduce-only-switch"
+            color={"primary"}
+            checked={formattedOrder.reduce_only ?? reduceOnly}
+            onCheckedChange={(checked) => {
+              // onReduceOnlyChange?.(checked);
+              onFieldChange("reduce_only", checked);
+              // field.onChange(checked);
+            }}
+          />
+          {isTable ? <MobileReduceOnlyLabel /> : <DesktopReduceOnlyLabel />}
+        </div>
 
         <button
           type="button"
           className="orderly-w-[18px] orderly-h-[18px] orderly-px-5 orderly-text-base-contrast/60"
           onClick={() => setOpen((open) => !open)}
         >
+          {/* @ts-ignore */}
           <ChevronDown
             size={18}
             className={cn(
@@ -73,35 +66,12 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
       <Collapsible open={open}>
         <CollapsibleContent>
           <div className="orderly-pb-2 orderly-space-y-4">
-            {getValues("order_type") === OrderType.LIMIT && (
-              <Controller
-                name="order_type_ext"
-                control={control}
-                shouldUnregister={getValues("order_type") === OrderType.MARKET}
-                render={({ field }) => {
-                  return (
-                    <div>
-                      <OrderTypesCheckbox
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                      />
-                      {/* <RadioGroup
-                        value={field.value}
-                        className="orderly-flex orderly-gap-5"
-                        onValueChange={(value) => {
-                          // 
-                          // setValue("order_type_ext", value);
-                          field.onChange(value);
-                        }}
-                      >
-                        <Radio value={OrderType.POST_ONLY}>Post only</Radio>
-                        <Radio value={OrderType.IOC}>IOC</Radio>
-                        <Radio value={OrderType.FOK}>FOK</Radio>
-                      </RadioGroup> */}
-                    </div>
-                  );
+            {order_type === OrderType.LIMIT && (
+              <OrderTypesCheckbox
+                value={formattedOrder.order_type_ext}
+                onValueChange={(value) => {
+                  // field.onChange(value);
+                  onFieldChange("order_type_ext", value);
                 }}
               />
             )}
@@ -121,26 +91,19 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                   Order confirm
                 </Label>
               </div>
-              <Controller
-                name="visible_quantity"
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <div className="orderly-flex orderly-gap-1 orderly-items-center">
-                      <Checkbox
-                        id="hidden"
-                        checked={field.value === 0}
-                        onCheckedChange={(checked) => {
-                          // props.setValue?.("visible_quantity", checked ? 0 : 1);
-                          field.onChange(checked ? 0 : 1);
-                        }}
-                      />
+              <div className="orderly-flex orderly-gap-1 orderly-items-center">
+                <Checkbox
+                  id="hidden"
+                  checked={formattedOrder.visible_quantity === 0}
+                  onCheckedChange={(checked) => {
+                    // props.setValue?.("visible_quantity", checked ? 0 : 1);
+                    // field.onChange(checked ? 0 : 1);
+                    onFieldChange("visible_quantity", checked ? 0 : 1);
+                  }}
+                />
 
-                      {isTable ? <MobileHideenLabel /> : <DesktopHiddenLabel />}
-                    </div>
-                  );
-                }}
-              />
+                {isTable ? <MobileHideenLabel /> : <DesktopHiddenLabel />}
+              </div>
             </div>
           </div>
         </CollapsibleContent>

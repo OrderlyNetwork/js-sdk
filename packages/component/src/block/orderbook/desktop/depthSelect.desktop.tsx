@@ -32,6 +32,7 @@ export const DesktopDepthSelect: FC<DesktopDepthSelectProps> = (props) => {
         onChange={(value: any) => {
           props.onChange?.(value);
         }}
+        color={"default"}
       />
 
     {/* <SettingsIcon fill="currnet" fillOpacity={1} className="orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast" onClick={() => {

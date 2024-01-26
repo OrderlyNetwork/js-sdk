@@ -77,7 +77,7 @@ export const TradeHistory: FC<TradeHistoryProps> = (props) => {
       dataSource={props.dataSource}
       columns={columns}
       loading={props.loading}
-      className="orderly-text-3xs desktop:orderly-text-2xs desktop:orderly-font-bold"
+      className="orderly-text-3xs desktop:orderly-text-2xs"
       headerClassName={cn(
         "orderly-text-base-contrast-36 orderly-bg-base-900 orderly-p-0",
         props.headerClassName
