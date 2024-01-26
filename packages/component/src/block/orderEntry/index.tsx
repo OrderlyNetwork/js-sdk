@@ -22,11 +22,12 @@ import {
   useEventEmitter,
   useLocalStorage,
   useDebounce,
+  useMediaQuery,
 } from "@orderly.network/hooks";
 
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import { API, MEDIA_TABLET, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
-import { OrderConfirmView } from "./sections/orderConfirmView.new";
+import { OrderConfirmFooter, OrderConfirmView } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal, commify } from "@orderly.network/utils";
@@ -146,6 +147,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const priceInputRef = useRef<HTMLInputElement | null>(null);
 
+    const isTable = useMediaQuery(MEDIA_TABLET);
+
     const onSubmit = useCallback(
       (data: any) => {
         //
@@ -154,16 +157,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           .then(() => {
             if (needConfirm) {
               return modal.confirm({
+                maxWidth: "sm",
                 title: "Confirm Order",
                 onCancel: () => {
                   return Promise.reject("cancel");
                 },
+                footer: !isTable ? <OrderConfirmFooter
+                  onCancel={() => {
+                    return Promise.reject("cancel");
+                  }}
+                  // onOk={() => {
+                  //   return Promise.resolve(true);
+                  // }}
+                /> : undefined,
                 content: (
                   <OrderConfirmView
                     order={{ ...data, side: props.side, symbol: props.symbol }}
                     symbol={symbol}
                     base={symbolConfig["base"]}
                     quote={symbolConfig.quote}
+                    isTable={isTable}
                   />
                 ),
               });
@@ -191,7 +204,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 // resetForm?.();
               });
           })
-          .catch((error) => {
+          .catch((error: any) => {
+            if (error === "cancel") return;
+            
             toast.error(error?.message || "Failed");
           });
       },
@@ -376,13 +391,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
                       methods.clearErrors();
                     }}
-                    // onValueChange={(value: any) => {
-                    //   // setValue?.("order_type", value.value);
-                    //   field.onChange(value.value);
-                    //   methods.setValue("order_price", "", {
-                    //     shouldValidate: true,
-                    //   });
-                    // }}
+                  // onValueChange={(value: any) => {
+                  //   // setValue?.("order_type", value.value);
+                  //   field.onChange(value.value);
+                  //   methods.setValue("order_price", "", {
+                  //     shouldValidate: true,
+                  //   });
+                  // }}
                   />
                 );
               }}

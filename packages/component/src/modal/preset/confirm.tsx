@@ -7,6 +7,7 @@ import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
   title?: string;
   content?: React.ReactNode;
+  footer?: React.ReactNode;
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
@@ -58,6 +59,7 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
             }
           : undefined
       }
+      footer={props.footer}
     >
       <DialogBody>
         <div className="orderly-py-5 orderly-text-xs">{props.content}</div>
