@@ -33,7 +33,6 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { API, MEDIA_TABLET, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { OrderConfirmFooter, OrderConfirmView } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
