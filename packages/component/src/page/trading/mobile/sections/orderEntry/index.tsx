@@ -50,6 +50,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     reduce_only: false,
     side: OrderSide.BUY,
     order_type: OrderType.LIMIT,
+    isStopOrder: false,
   });
   // const [reduceOnly, setReduceOnly] = useState(false);
   const formState = useOrderEntry(

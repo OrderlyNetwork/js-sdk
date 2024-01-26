@@ -109,7 +109,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       markPrice,
     } = props;
 
-    const { side } = formattedOrder;
+    const { side, isStopOrder } = formattedOrder;
+
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
@@ -175,9 +176,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   onCancel={() => {
                     return Promise.reject("cancel");
                   }}
-                  // onOk={() => {
-                  //   return Promise.resolve(true);
-                  // }}
+                // onOk={() => {
+                //   return Promise.resolve(true);
+                // }}
                 /> : undefined,
                 content: (
                   <OrderConfirmView
@@ -364,10 +365,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             fullWidth
             options={[
               { label: "Limit order", value: "LIMIT" },
-              {
-                label: "Market order",
-                value: "MARKET",
-              },
+              { label: "Market order", value: "MARKET" },
+              { label: "Stop limit", value: "STOP_LIMIT" },
+              { label: "Stop market", value: "STOP_MARKET" },
             ]}
             onChange={(value) => {
               // field.onChange(value);
@@ -380,6 +380,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               props.onFieldChange("order_type", value);
             }}
           />
+          {isStopOrder && <Input
+            disabled={disabled}
+            ref={priceInputRef}
+            prefix="Trigger price"
+            suffix={symbolConfig?.quote}
+            type="text"
+            inputMode="decimal"
+            error={!!metaState.errors?.trigger_price && errorsVisible}
+            // placeholder={"Market"}
+            helpText={metaState.errors?.trigger_price?.message}
+            className="orderly-text-right orderly-font-semibold"
+            value={commify(formattedOrder.trigger_price || "")}
+            containerClassName={"orderly-bg-base-600"}
+            onChange={(event) => {
+              // field.onChange(event.target.value);
+              props.onFieldChange("trigger_price", event.target.value);
+            }}
+            onFocus={() => (priceInputFocused.current = true)}
+            onBlur={() => (priceInputFocused.current = false)}
+          />}
           <Input
             disabled={disabled}
             ref={priceInputRef}

@@ -43,4 +43,6 @@ export interface OrderEntity {
   // internal fields
   total?: string | number;
   // hideInOrderbook?: boolean;
+  isStopOrder: boolean;
+  trigger_price?: string | number,
 }

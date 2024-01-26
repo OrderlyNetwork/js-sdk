@@ -407,6 +407,8 @@ export function useOrderEntry(
 
     const values = calculate(parsedData, item.key, item.value);
 
+    values.isStopOrder = values.order_type?.startsWith("STOP") || false;
+
     console.log("-----------", values);
 
     values.total = values.total || "";
@@ -425,6 +427,7 @@ export function useOrderEntry(
     parsedData?.symbol,
     parsedData?.total,
     parsedData?.reduce_only,
+    parsedData?.trigger_price,
 
     markPrice,
   ]);
