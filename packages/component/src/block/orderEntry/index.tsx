@@ -197,7 +197,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             });
           })
           .catch((error) => {
-            if (error !== "cancel") {
+            if (error !== "cancel" && !!error?.message) {
               toast.error(error.message || "Failed");
             }
           });
