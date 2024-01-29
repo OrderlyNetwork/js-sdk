@@ -260,6 +260,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
     this.fixOrderQuantity(order, config);
     delete order["order_quantity"];
     delete order["order_price"];
+    // @ts-ignore
     delete order["isStopOrder"];
 
     console.log("result is", order);
@@ -347,6 +348,7 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
     };
     delete result["order_quantity"];
     delete result["order_price"];
+    // @ts-ignore
     delete result["isStopOrder"];
 
     console.log("result is", result);
