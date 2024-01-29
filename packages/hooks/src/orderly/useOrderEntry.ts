@@ -574,7 +574,7 @@ export function useOrderEntry(
     formattedOrder?.order_price,
     formattedOrder?.order_quantity,
     formattedOrder?.total,
-    formattedOrder?.trigger_price
+    formattedOrder?.trigger_price,
     accountInfo,
   ]);
 
