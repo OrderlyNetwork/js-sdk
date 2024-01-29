@@ -21,16 +21,27 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   const { order, quote = "USDC", base } = props;
 
   const type = useMemo(() => {
-    const type = order.order_type === OrderType.MARKET ? "Market" : "Limit";
+    const type = (type: OrderType) => {
+      switch (type) {
+        case OrderType.LIMIT:
+          return 'Limit';
+        case OrderType.MARKET:
+          return "Market";
+        case OrderType.STOP_LIMIT:
+          return "Stop Limit";
+        case OrderType.STOP_MARKET:
+          return "Stop Market";
+      }
+    }
 
     if (order.side === OrderSide.BUY) {
-      return <Text type={"buy"}>{`${type} Buy`}</Text>;
+      return <Text type={"buy"}>{`${type(order.order_type)} Buy`}</Text>;
     }
-    return <Text type={"sell"}>{`${type} Sell`}</Text>;
+    return <Text type={"sell"}>{`${type(order.order_type)} Sell`}</Text>;
   }, [order.side, order.order_type]);
 
   const priceNode = useMemo(() => {
-    if (order.order_type === OrderType.MARKET) {
+    if (order.order_type === OrderType.MARKET || order.order_type === OrderType.STOP_MARKET) {
       return <span>Market</span>
     }
     return (
@@ -53,10 +64,6 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
         <div>
           <div className="desktop:orderly-flex desktop:orderly-justify-start">{type}</div>
-          <div className="orderly-flex orderly-gap-1 orderly-items-end">
-            <span>{base}</span>
-            <span className="orderly-text-3xs orderly-text-base-contrast-54">/{quote}</span>
-          </div>
         </div>
         <div className="orderly-flex orderly-flex-col orderly-gap-2">
           <div className="orderly-flex orderly-justify-between">
@@ -66,7 +73,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Trigger price</span>
             <div className="orderly-inline-block">
-              <span>{order.order_price}</span>
+              <span>{order.trigger_price}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
             </div>
           </div>

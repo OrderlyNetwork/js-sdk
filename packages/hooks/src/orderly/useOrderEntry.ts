@@ -34,9 +34,9 @@ export type UseOrderEntryOptions = {
 
 export type UseOrderEntryMetaState = {
   errors:
-    | { [P in keyof OrderEntity]?: { type: string; message: string } }
-    | null
-    | undefined;
+  | { [P in keyof OrderEntity]?: { type: string; message: string } }
+  | null
+  | undefined;
   dirty: { [P in keyof OrderEntity]?: boolean } | null | undefined;
   submitted: boolean;
 };
@@ -94,10 +94,7 @@ export function useOrderEntry(
   reduceOnly?: boolean,
   options?: UseOrderEntryOptions
 ): UseOrderEntryReturn {
-  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
-    OrderEntity,
-    any
-  >("/v1/order");
+
 
   // console.log("+++++++", symbolOrOrder);
 
@@ -118,6 +115,11 @@ export function useOrderEntry(
   const prevOrderData = useRef<Partial<OrderEntity> | null>(null);
   const orderDataCache = useRef<Partial<OrderEntity> | null>(null);
   const notSupportData = useRef<Partial<OrderEntity>>({});
+
+  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
+    OrderEntity,
+    any
+  >(orderDataCache?.current?.isStopOrder ? "/v1/algo/order" : "/v1/order");
 
   const [errors, setErrors] = useState<any>(null);
 
@@ -207,6 +209,11 @@ export function useOrderEntry(
         preveValue = Number(preveValue);
         currentValue = Number(currentValue);
       }
+      
+      if (k === "trigger_price") {
+        preveValue = Number(preveValue);
+        currentValue = Number(currentValue);
+      }
 
       if (preveValue !== currentValue) {
         key = k;
@@ -260,10 +267,11 @@ export function useOrderEntry(
         .then((errors) => {
           submitted.current = true;
 
-          if (errors.order_price || errors.order_quantity) {
+
+          if (errors.order_price || errors.order_quantity || errors.trigger_price) {
             setErrors(errors);
             reject(errors);
-          } else {
+          } else {            
             const data = orderCreator.create(values as OrderEntity);
 
             console.log("------------------", data);
@@ -352,6 +360,7 @@ export function useOrderEntry(
     return symbolOrOrder;
   }, [symbolOrOrder]);
 
+  /// update order info
   const formattedOrder = useMemo<Partial<OrderEntity>>(() => {
     if (!parsedData) {
       return notSupportData.current;
@@ -432,6 +441,7 @@ export function useOrderEntry(
     markPrice,
   ]);
 
+  /// validator order info
   useEffect(() => {
     // validate order data;
     validator(formattedOrder)?.then((err) => {
@@ -441,6 +451,7 @@ export function useOrderEntry(
     formattedOrder.broker_id,
     formattedOrder.order_quantity,
     formattedOrder.total,
+    formattedOrder.trigger_price,
     markPrice,
   ]);
 
@@ -460,7 +471,7 @@ export function useOrderEntry(
     const orderPrice = Number(symbolOrOrder.order_price);
 
     if (isNaN(quantity) || quantity <= 0) return null;
-    if (symbolOrOrder.order_type === OrderType.LIMIT && isNaN(orderPrice))
+    if ((symbolOrOrder.order_type === OrderType.LIMIT || symbolOrOrder.order_type === OrderType.STOP_LIMIT) && isNaN(orderPrice))
       return null;
 
     /**
@@ -478,7 +489,7 @@ export function useOrderEntry(
      */
     let price: number;
 
-    if (symbolOrOrder.order_type === OrderType.MARKET) {
+    if (symbolOrOrder.order_type === OrderType.MARKET || symbolOrOrder.order_type === OrderType.STOP_MARKET) {
       if (symbolOrOrder.side === OrderSide.BUY) {
         price = askAndBid.current[0];
       } else {
@@ -538,6 +549,7 @@ export function useOrderEntry(
     totalCollateral,
     parsedData?.order_price,
     parsedData?.order_quantity,
+    parsedData?.trigger_price,
     accountInfo,
   ]);
 
@@ -564,6 +576,7 @@ export function useOrderEntry(
     positions,
     parsedData?.order_price,
     parsedData?.order_quantity,
+    parsedData?.trigger_price,
   ]);
 
   return {

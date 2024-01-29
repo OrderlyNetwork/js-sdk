@@ -6,6 +6,8 @@ export enum OrderType {
   POST_ONLY = "POST_ONLY",
   ASK = "ASK",
   BID = "BID",
+  STOP_LIMIT="STOP_LIMIT",
+  STOP_MARKET="STOP_MARKET",
 }
 
 export enum OrderSide {

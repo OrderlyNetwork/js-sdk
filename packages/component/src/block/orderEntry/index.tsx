@@ -126,7 +126,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
 
     const ee = useEventEmitter();
-    const isMarketOrder = formattedOrder.order_type === OrderType.MARKET;
+    const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(formattedOrder.order_type || OrderType.LIMIT);
 
     const orderbookItemClickHandler = useCallback((item: number[]) => {
       props.onFieldChange("order_type", OrderType.LIMIT);
@@ -211,7 +211,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           })
           .catch((error) => {
             if (error !== "cancel") {
-              toast.error(error.message || "Failed");
+              toast.error(error?.message || "Failed");
             }
           });
       },
@@ -388,7 +388,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             type="text"
             inputMode="decimal"
             error={!!metaState.errors?.trigger_price && errorsVisible}
-            // placeholder={"Market"}
             helpText={metaState.errors?.trigger_price?.message}
             className="orderly-text-right orderly-font-semibold"
             value={commify(formattedOrder.trigger_price || "")}
@@ -408,7 +407,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             type="text"
             inputMode="decimal"
             error={!!metaState.errors?.order_price && errorsVisible}
-            // placeholder={"Market"}
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
             value={

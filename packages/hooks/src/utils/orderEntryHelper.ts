@@ -181,12 +181,12 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   // }
 
-  if (values.order_type === OrderType.MARKET) {
+  if (values.order_type === OrderType.MARKET || values.order_type === OrderType.STOP_MARKET) {
     const price = markPrice;
     values.total = quantity.mul(price).todp(2).toNumber();
   }
 
-  if (values.order_type === OrderType.LIMIT) {
+  if (values.order_type === OrderType.LIMIT || values.order_type === OrderType.STOP_LIMIT) {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
@@ -224,7 +224,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   let price = markPrice;
 
-  if (values.order_type === OrderType.LIMIT && !!values.order_price) {
+  if ((values.order_type === OrderType.LIMIT || values.order_type === OrderType.STOP_LIMIT) && !!values.order_price) {
     price = Number(values.order_price);
   }
   let total = new Decimal(value);

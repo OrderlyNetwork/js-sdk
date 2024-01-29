@@ -13,7 +13,8 @@ export const usePendingOrderStream = (symbol: string): number[] => {
 
     const pendingOrders = useMemo(() => {
         const info = data?.filter((item) => item.symbol === symbol).reduce((a, b) => {
-            return ([...a, b.price]);
+            const price = b.price || b.trigger_price;
+            return ([...a, price]);
         }, []);
 
         
