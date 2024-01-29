@@ -126,6 +126,7 @@ export const useOrderStream = (params: Params) => {
    * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
+    // @ts-ignore
     if (order.algo_order_id !== undefined) {
       return doUpdateAlgoOrder({
         order_id: orderId,
@@ -145,11 +146,13 @@ export const useOrderStream = (params: Params) => {
     let isAlgoOrder = false;
     if (typeof orderId === 'number') {
       isAlgoOrder = false;
+      // @ts-ignore
     } else if (orderId.algo_order_id !== undefined) {
       isAlgoOrder = true;
     }
     if (isAlgoOrder) {      
       return doCanceAlgolOrder(null, {
+        // @ts-ignore
         order_id: orderId.algo_order_id,
         symbol,
         source: `SDK${version}`

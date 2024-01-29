@@ -61,11 +61,11 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           {`${base}-PERP`}
         </span>
       </div>
-      <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
+      <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
         <div>
-          <div className="desktop:orderly-flex desktop:orderly-justify-start">{type}</div>
+          <div className="orderly-mr-3 orderly-max-w-[89px] desktop:orderly-max-w-[180px]">{type}</div>
         </div>
-        <div className="orderly-flex orderly-flex-col orderly-gap-2">
+        <div className="orderly-flex-1 orderly-gap-2">
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Qty.</span>
             <span>{order.order_quantity}</span>
