@@ -68,7 +68,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
           <div className="orderly-pb-2 orderly-space-y-4">
             {order_type === OrderType.LIMIT && (
               <OrderTypesCheckbox
-                value={formattedOrder.order_type_ext}
+                value={formattedOrder.order_type_ext!}
                 onValueChange={(value) => {
                   // field.onChange(value);
                   onFieldChange("order_type_ext", value);

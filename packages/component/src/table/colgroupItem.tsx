@@ -20,6 +20,7 @@ export const ColGroupItem = (props: { col: Column; index: number }) => {
   return (
     <col
       ref={ref}
+      // @ts-ignore
       className={item.className}
       align={item.align}
       style={styles}

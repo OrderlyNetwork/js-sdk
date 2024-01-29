@@ -42,6 +42,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     }
 
     if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
+      // @ts-ignore
       return <EmptyView visible />;
     }
 

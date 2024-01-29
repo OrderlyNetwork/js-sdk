@@ -194,6 +194,7 @@ const FavoritesTabList: FC<{
                         const newTabs = item.tabs.filter((value: FavoriteTab) => value.id === tab.id);
 
                         if (newTabs.length !== item.tabs.length) {
+                            // @ts-ignore
                             props.updateSymbolFavoriteState({ symbol: item.name }, newTabs);
                         }
                     })

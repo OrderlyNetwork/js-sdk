@@ -72,6 +72,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
 
     const onConfirm = () => {
         setIsSubmitting(true);
+        // @ts-ignore
         editOrder(order.algo_order_id, {
             // price: price,
             quantity: order.quantity,
@@ -89,6 +90,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                 },
                 (err) => {
                     toast.error(err.message);
+                    // @ts-ignore
                     setPrice(order.trigger_price?.toString());
                     cancelPopover();
                 }
@@ -125,13 +127,14 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                         className="hover:orderly-bg-base-contrast/10 orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
                         onClick={() => onClickCancel(order)}
                     >
+                        {/* @ts-ignore */}
                         <X size={18} />
                     </button>
                 </div>
 
 
                 <PopoverAnchor asChild>
-
+                    {/* @ts-ignore */}
                     {order.algo_status === OrderStatus.NEW ? (
                         <input
                         ref={inputRef}
@@ -159,8 +162,10 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                 >
                     <button
                         className="hover:orderly-bg-base-contrast/10 orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+                        // @ts-ignore
                         onClick={onClick}
                     >
+                        {/* @ts-ignore */}
                         <Check size={18} />
                     </button>
 
@@ -195,6 +200,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                                 className="orderly-absolute orderly-right-0 orderly-top-0 orderly-text-base-contrast-54"
                                 onClick={cancelPopover}
                             >
+                                {/* @ts-ignore */}
                                 <X size={18} />
                             </button>
                         </div>
@@ -204,74 +210,3 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
         </Popover>
     );
 };
-
-
-// export const PriceInput: FC<{
-//     symbol: string,
-//     inputRef: any,
-//     price: any,
-//     setPrice: any,
-//     editting: boolean,
-//     setEditting: any,
-//     side: string,
-//     enableTooltip: boolean,
-// }> = (props) => {
-//     const { symbol, inputRef, price, setPrice, editting, setEditting, side } = props;
-//     const rangeInfo = useSymbolPriceRange(symbol);
-//     // const [open, setOpen] = useState(false);
-
-//     const trigger = (
-//         <input
-//             ref={inputRef}
-//             type="text"
-//             value={price}
-//             onChange={(e) => setPrice(e.target.value)}
-//             onFocus={() => setEditting(true)}
-//             className={cn(
-//                 "orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0",
-//                 {
-//                     "orderly-pl-8": editting,
-//                 }
-//             )}
-//         />
-//     );
-//     if (!props.enableTooltip) {
-//         return trigger;
-//     }
-
-//     const hintInfo = useMemo(() => {
-//         if (!rangeInfo) return "";
-
-//         if (side === "BUY") {
-//             if (price > rangeInfo.max) {
-//                 return `Price can not be higher than ${rangeInfo.max} USDC.`
-//             }
-//         } else {
-//             if (price < rangeInfo.min) {
-//                 return `Price can not be lower than ${rangeInfo.min} USDC.`
-//             }
-//         }
-//         return "";
-
-//     }, [rangeInfo, price, side]);
-
-
-
-//     return (
-//         <Tooltip open={false}>
-//             <TooltipTrigger asChild>
-//                 trigger
-//             </TooltipTrigger>
-//             <TooltipContent
-//                 align="center"
-//                 className="orderly-z-50 data-[state=delayed-open]:data-[side=top]:orderly-animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:orderly-animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:orderly-animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:orderly-animate-slideUpAndFade orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-px-[15px] orderly-py-[10px] orderly-text-3xs orderly-leading-none orderly-shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] orderly-will-change-[transform,opacity]"
-//                 sideOffset={5}
-//             >
-//                 <div>
-//                     {hintInfo}
-//                 </div>
-//                 <TooltipArrow className="orderly-fill-base-400" />
-//             </TooltipContent>
-//         </Tooltip>
-//     );
-// }

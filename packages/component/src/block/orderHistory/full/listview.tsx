@@ -70,7 +70,7 @@ export const Listview: FC<Props> = (props) => {
           );
         }}
         expandRowRender={(record, index) => {
-          return <OrderTrades record={record} index={index} />
+          return <OrderTrades record={record} index={index} />;
         }}
       />
     </EndReachedBox>

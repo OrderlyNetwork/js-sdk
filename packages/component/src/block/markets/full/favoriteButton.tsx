@@ -13,7 +13,6 @@ import { cn } from "@/utils/css";
 import { CheckIcon, UncheckIcon, CircleAdd } from "@/icon";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { Input } from "@/input";
-import { Span } from "next/dist/trace";
 import Button from "@/button";
 
 export interface FavoriteButtonProps {

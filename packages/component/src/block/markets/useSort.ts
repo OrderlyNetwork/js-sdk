@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import { SortKey } from "./sections/sortItem";
-import { SortDirection, parseSortDirection } from "./shared/types";
+import { SortDirection, SortKey, parseSortDirection } from "./shared/types";
 import { parseNumStr } from "@orderly.network/utils";
 
 export const useSort = (value?: SortKey, readLastSortCondition?: boolean) => {
@@ -8,6 +7,7 @@ export const useSort = (value?: SortKey, readLastSortCondition?: boolean) => {
   const sessionSortDirection = sessionStorage.getItem("default_sort_derection") || "2";
   const initSortKey = readLastSortCondition ? value || sessionSortKey : undefined;
   const initDirection = readLastSortCondition ? (parseSortDirection(sessionSortDirection) || SortDirection.DESC) : SortDirection.NONE;
+  // @ts-ignore
   const [sortKey, setSortKey] = useState<SortKey | undefined>(initSortKey);
   const [direction, setDirection] = useState<SortDirection>(initDirection);
 

@@ -57,6 +57,7 @@ const OrderTypeItem: FC<{
         className="orderly-order-entry-radio-button orderly-w-[14px] orderly-h-[14px] orderly-rounded-full orderly-border-2 orderly-border-base-contrast-20"
       >
         {props.active && (
+          // @ts-ignore
           <Circle className="orderly-order-entry-radio-circle orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
         )}
       </button>

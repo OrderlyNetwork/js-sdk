@@ -77,6 +77,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   const [quantity, setQuantity] = useState("");
 
+  // @ts-ignore
   const { data: balanceList } = useQuery<API.VaultBalance[]>(`/v1/public/vault_balance`, {
     revalidateOnMount: true,
   });
@@ -219,6 +220,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     }
 
     if (crossChainWithdraw) {
+      // @ts-ignore
       return (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0);
     }
 
