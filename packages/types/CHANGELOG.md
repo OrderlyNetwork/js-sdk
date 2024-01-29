@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.1.27-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 0.1.27-alpha.24
 
 ### Patch Changes

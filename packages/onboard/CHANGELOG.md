@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.0.28-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.25
+  - @orderly.network/types@0.1.27-alpha.25
+
 ## 0.0.28-alpha.24
 
 ### Patch Changes

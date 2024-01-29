@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 1.0.96-alpha.24
 
 ### Patch Changes

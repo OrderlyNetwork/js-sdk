@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.0.34-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 0.0.34-alpha.24
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 0.0.2-alpha.24
 
 ### Patch Changes

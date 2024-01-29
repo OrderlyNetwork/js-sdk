@@ -1,5 +1,16 @@
 # examples
 
+## 0.1.92-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+- Updated dependencies
+  - @orderly.network/react@0.1.31-alpha.25
+  - @orderly.network/web3-onboard@0.0.28-alpha.25
+  - @orderly.network/hooks@1.0.28-alpha.25
+  - @orderly.network/core@0.1.27-alpha.25
+
 ## 0.1.92-alpha.24
 
 ### Patch Changes

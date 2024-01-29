@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.114-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 1.0.114-alpha.24
 
 ### Patch Changes

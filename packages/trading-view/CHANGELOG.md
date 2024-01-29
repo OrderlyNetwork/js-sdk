@@ -1,5 +1,15 @@
 # @orderly.network/trading-view
 
+## 0.1.8-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.25
+  - @orderly.network/core@0.1.27-alpha.25
+  - @orderly.network/net@1.0.114-alpha.25
+
 ## 0.1.8-alpha.24
 
 ### Patch Changes

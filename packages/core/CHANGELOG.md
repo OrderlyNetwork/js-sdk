@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.1.27-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.25
+
 ## 0.1.27-alpha.24
 
 ### Patch Changes

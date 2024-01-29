@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "0.1.4-alpha.24",
+  "version": "0.1.4-alpha.25",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -53,8 +53,8 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/react": "0.1.31-alpha.24",
-      "@orderly.network/web3-onboard": "0.0.28-alpha.24"
+      "@orderly.network/react": "0.1.31-alpha.25",
+      "@orderly.network/web3-onboard": "0.0.28-alpha.25"
     }
   }
 }

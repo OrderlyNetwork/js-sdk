@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
 ## 0.0.87-alpha.24
 
 ### Patch Changes
