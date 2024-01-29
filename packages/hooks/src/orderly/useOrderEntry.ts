@@ -76,8 +76,16 @@ type OrderParams = Required<
 
 /**
  * Create Order
- * @param symbol
- * @returns
+ * @example
+ * ```tsx
+ * const { formattedOrder, onSubmit, helper } = useOrderEntry({
+ *  symbol: "PERP_ETH_USDC",
+ *  side: OrderSide.BUY,
+ *  order_type: OrderType.LIMIT,
+ *  order_price: 10000,
+ *  order_quantity: 1,
+ * });
+ * ```
  */
 export function useOrderEntry(
   order: OrderParams,
@@ -104,7 +112,7 @@ export function useOrderEntry(
     }
 
     if (!symbolOrOrder.side) {
-      throw new SDKError("side is required");
+      throw new SDKError("Order side is required");
     }
 
     if (!symbolOrOrder.order_type) {
@@ -113,7 +121,9 @@ export function useOrderEntry(
   }
 
   const prevOrderData = useRef<Partial<OrderEntity> | null>(null);
+  // Cache data from the last calculate
   const orderDataCache = useRef<Partial<OrderEntity> | null>(null);
+  //
   const notSupportData = useRef<Partial<OrderEntity>>({});
 
   const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
@@ -135,9 +145,6 @@ export function useOrderEntry(
 
   const { freeCollateral, totalCollateral, positions, accountInfo } =
     useCollateral();
-
-  // const [liqPrice, setLiqPrice] = useState<number | null>(null);
-  // const [leverage, setLeverage] = useState<number | null>(null);
 
   const symbolInfo = useSymbolsInfo();
   // const tokenInfo = useTokenInfo();
@@ -205,15 +212,12 @@ export function useOrderEntry(
       let preveValue = prev[k];
       let currentValue = current[k];
 
-      if (k === "order_quantity") {
-        preveValue = Number(preveValue);
-        currentValue = Number(currentValue);
-      }
-      
-      if (k === "trigger_price") {
-        preveValue = Number(preveValue);
-        currentValue = Number(currentValue);
-      }
+      if (!preveValue && !currentValue) continue;
+
+      // if (k === "order_quantity") {
+      //   preveValue = Number(preveValue);
+      //   currentValue = Number(currentValue);
+      // }
 
       if (preveValue !== currentValue) {
         key = k;
@@ -228,6 +232,34 @@ export function useOrderEntry(
   };
 
   const maxQty = useMaxQty(symbol, sideValue, isReduceOnly);
+
+  const parsedData = useMemo<OrderParams | null>(() => {
+    if (typeof symbolOrOrder === "string") {
+      return null;
+    }
+    // clean comma
+
+    if (typeof symbolOrOrder.order_quantity === "string") {
+      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
+        /,/g,
+        ""
+      );
+    }
+
+    if (typeof symbolOrOrder.order_price === "string") {
+      symbolOrOrder.order_price = symbolOrOrder.order_price.replace(/,/g, "");
+    }
+
+    if (typeof symbolOrOrder.total === "string") {
+      symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
+    }
+
+    if (typeof symbolOrOrder.order_quantity === "number") {
+      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.toString();
+    }
+
+    return symbolOrOrder;
+  }, [symbolOrOrder]);
 
   // const maxQty = 3;
 
@@ -271,7 +303,7 @@ export function useOrderEntry(
           if (errors.order_price || errors.order_quantity || errors.trigger_price) {
             setErrors(errors);
             reject(errors);
-          } else {            
+          } else {
             const data = orderCreator.create(values as OrderEntity);
 
             console.log("------------------", data);
@@ -353,14 +385,6 @@ export function useOrderEntry(
     });
   };
 
-  const parsedData = useMemo<OrderParams | null>(() => {
-    if (typeof symbolOrOrder === "string") {
-      return null;
-    }
-    return symbolOrOrder;
-  }, [symbolOrOrder]);
-
-  /// update order info
   const formattedOrder = useMemo<Partial<OrderEntity>>(() => {
     if (!parsedData) {
       return notSupportData.current;
@@ -418,7 +442,7 @@ export function useOrderEntry(
 
     values.isStopOrder = values.order_type?.startsWith("STOP") || false;
 
-    console.log("-----------", values);
+    // console.log("-----------", values);
 
     values.total = values.total || "";
 
@@ -521,7 +545,7 @@ export function useOrderEntry(
 
   const estLiqPrice = useMemo(() => {
     if (!accountInfo || !parsedData) return null;
-    const result = getPriceAndQty(parsedData as OrderEntity);
+    const result = getPriceAndQty(formattedOrder as OrderEntity);
     if (result === null) return null;
     const { price, quantity } = result;
     if (!price || !quantity) return null;
@@ -547,15 +571,16 @@ export function useOrderEntry(
     baseIMR,
     baseMMR,
     totalCollateral,
-    parsedData?.order_price,
-    parsedData?.order_quantity,
-    parsedData?.trigger_price,
+    formattedOrder?.order_price,
+    formattedOrder?.order_quantity,
+    formattedOrder?.total,
+    formattedOrder?.trigger_price
     accountInfo,
   ]);
 
   const estLeverage = useMemo(() => {
     if (!accountInfo || !parsedData) return null;
-    const result = getPriceAndQty(parsedData as OrderEntity);
+    const result = getPriceAndQty(formattedOrder as OrderEntity);
     if (result === null || !result.price || !result.quantity) return null;
 
     const leverage = order.estLeverage({
@@ -574,9 +599,10 @@ export function useOrderEntry(
     baseMMR,
     totalCollateral,
     positions,
-    parsedData?.order_price,
-    parsedData?.order_quantity,
-    parsedData?.trigger_price,
+    formattedOrder?.order_price,
+    formattedOrder?.order_quantity,
+    formattedOrder?.total,
+    formattedOrder?.trigger_price,
   ]);
 
   return {
