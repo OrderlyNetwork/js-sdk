@@ -48,6 +48,7 @@ export const useOrderStream = (params: Params) => {
     const search = new URLSearchParams([
       ["size", size.toString()],
       ["page", `${pageIndex + 1}`],
+      ["source_type", 'ALL']
     ]);
 
     if (status) {

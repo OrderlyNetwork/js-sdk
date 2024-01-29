@@ -15,7 +15,6 @@ const { Header, Content, Sider, PageHeader } = Layout;
 
 export const BaseTradingPage: FC<TradingPageProps> = (props) => {
   const { footerStatusBar } = useContext(OrderlyAppContext);
-  console.log("read value for context", footerStatusBar);
   
   return (
     <TradingPageProvider

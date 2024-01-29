@@ -9,8 +9,10 @@ export const OrderEntryComponent = () => {
   const { symbol } = useDemoContext();
 
   const [side, setSide] = useState(OrderSide.BUY);
-  const [reduceOnly, setReduceOnly] = useState(false);
-  const formState = useOrderEntry(symbol, side, reduceOnly);
+  // const [reduceOnly, setReduceOnly] = useState(false);
+  const formState = useOrderEntry(symbol, side, {
+    reduce_only: false,
+  });
 
   return (
     <div className="py-5">
@@ -20,7 +22,10 @@ export const OrderEntryComponent = () => {
         side={side}
         onSideChange={setSide}
         symbol={symbol}
-        onReduceOnlyChange={setReduceOnly}
+        onFieldChange={(field, value) => {
+          console.log(field, value);
+        }}
+        // onReduceOnlyChange={setReduceOnly}
         disabled={state.status < AccountStatusEnum.EnableTrading}
       />
     </div>

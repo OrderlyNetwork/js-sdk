@@ -12,6 +12,7 @@ import { useSymbolsInfo, useOrderEntry } from "@orderly.network/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { toast } from "@/toast";
+import { OrderEntity } from "@orderly.network/types";
 
 export interface ClosePositionPaneProps {
   position?: API.Position;
@@ -113,7 +114,11 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
   );
 
   const onFieldChange = (name: string, value: any) => {
-    const newValues = helper.calculate(getValues(), name, value);
+    const newValues = helper.calculate(
+      getValues(),
+      name as keyof OrderEntity,
+      value
+    );
 
     if (name === "order_price") {
       // @ts-ignore

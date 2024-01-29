@@ -18,6 +18,17 @@ export function minPrice(markprice: number, range: number) {
   return markprice * (1 - range);
 }
 
+/**
+ * Scrope price when placing an order
+ * @returns number
+ */
+export function scropePrice(price: number, scrope: number, side: "BUY" | "SELL") : number {
+  if (side === "BUY") {
+    return price * (1 - scrope);
+  }
+  return price * (1 + scrope);
+}
+
 export type EstimatedLiquidationPriceInputs = {
   totalCollateral: number;
   markPrice: number;
@@ -40,9 +51,7 @@ export type EstimatedLiquidationPriceInputs = {
  * @param inputs
  * @returns
  */
-export function estLiqPrice(
-  inputs: EstimatedLiquidationPriceInputs
-): number | null {
+export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
   const {
     positions,
     newOrder,
@@ -68,7 +77,6 @@ export function estLiqPrice(
       currentPosition = position;
       notional = notional.add(newOrderNotional);
     }
-    // console.log("+++++++++", notional.abs().mul(position.mmr).toNumber());
 
     newTotalMM = newTotalMM.add(notional.abs().mul(position.mmr));
   }
@@ -83,8 +91,8 @@ export function estLiqPrice(
           .add(
             !!currentPosition
               ? new Decimal(currentPosition.position_qty).mul(
-                  currentPosition.mark_price
-                )
+                currentPosition.mark_price
+              )
               : zero
           )
           .abs()
@@ -126,17 +134,28 @@ export type EstimatedLeverageInputs = {
  */
 export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
   const { totalCollateral, positions, newOrder } = inputs;
-  const sumPositionNotional = positions.reduce((acc, cur) => {
+  if (totalCollateral <= 0) {
+    return null;
+  }
+  let hasPosition = false;
+  let sumPositionNotional = positions.reduce((acc, cur) => {
     acc = acc.add(
       new Decimal(new Decimal(cur.position_qty).mul(cur.mark_price).abs())
     );
 
     if (cur.symbol === newOrder.symbol) {
+      hasPosition = true;
       acc = acc.add(new Decimal(newOrder.qty).mul(newOrder.price));
     }
 
     return acc;
   }, zero);
+
+  if (!hasPosition) {
+    sumPositionNotional = sumPositionNotional.add(
+      new Decimal(newOrder.qty).mul(newOrder.price).abs()
+    );
+  }
 
   const totalMarginRatio = new Decimal(totalCollateral).div(
     sumPositionNotional

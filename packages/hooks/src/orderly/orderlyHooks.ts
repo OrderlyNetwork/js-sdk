@@ -1,5 +1,6 @@
 export { useOrderbookStream } from "./useOrderbookStream";
 export { useOrderEntry } from "./useOrderEntry";
+export type { UseOrderEntryMetaState } from "./useOrderEntry";
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
@@ -29,3 +30,5 @@ export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
 export { useSettleSubscription } from "./useSettleSubscription";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
+
+export { useSymbolPriceRange } from "./useSymbolPriceRange";

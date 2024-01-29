@@ -15,6 +15,7 @@ import { cn } from "@/utils/css";
 import { Renew } from "@/block/orderHistory/full/renew";
 import { columnsBasis } from "../columnsUtil";
 import { OrderTrades } from "@/block/orderHistory/orderTrades";
+import { TriggerPrice } from "./triggerPrice";
 
 interface Props {
   dataSource: any[];
@@ -88,15 +89,39 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "quantity",
           width: 180,
           onSort: props.status === OrderStatus.INCOMPLETE,
-          render: (value: string, record) => <OrderQuantity order={record} />,
+          render: (value: string, record: any) => <OrderQuantity order={record} />,
         },
         {
           title: "Price",
           className: "orderly-h-[48px]",
           dataIndex: "price",
-          width: 100,
+          width: 120,
           onSort: props.status === OrderStatus.INCOMPLETE,
-          render: (value: string, record) => <Price order={record} />,
+          render: (value: string, record: any) => <Price order={record} />,
+        },
+        { 
+          title: "Est. total",
+          width: 100,
+          className: "orderly-h-[48px] orderly-font-semibold",
+          dataIndex: "executed",
+          render: (value: string, record: any) => {
+            return (
+              <Numeral
+                className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
+                precision={2}
+              >
+                {record.quantity === 0 || Number.isNaN(record.price) || record.price === null ? "--" : `${record.quantity * record.price}`}
+              </Numeral>
+            );
+          },
+        },
+        {
+          title: "Trigger",
+          className: "orderly-h-[48px]",
+          dataIndex: "trigger_price",
+          width: 150,
+          // onSort: props.status === OrderStatus.INCOMPLETE,
+          render: (value: string, record: any) => <TriggerPrice order={record} />,
         },
         // {
         //   title: "Est. total",

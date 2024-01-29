@@ -1,6 +1,7 @@
 import { OrderType, type API, OrderEntity } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { order } from "@orderly.network/perp";
+import { OrderSide } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -25,7 +26,7 @@ export interface OrderCreator {
   ) => Promise<VerifyResult>;
 }
 
-const { maxPrice, minPrice } = order;
+const { maxPrice, minPrice, scropePrice } = order;
 
 export abstract class BaseOrderCreator implements OrderCreator {
   abstract create(values: OrderEntity): OrderEntity;
@@ -142,26 +143,40 @@ export class LimitOrderCreator extends BaseOrderCreator {
       } else {
         const price = new Decimal(order_price);
         const { symbol } = config;
-        const { price_range } = symbol;
+        const { price_range, price_scope } = symbol;
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
-
-        console.log(`side: ${side} value:`, values);
+        const scropePriceNumbere = scropePrice(config.markPrice, price_scope, side);
 
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
-        if (side === "BUY" && price.gt(maxPriceNumber)) {
+        if (side === OrderSide.BUY && price.gt(maxPriceNumber)) {
           errors.order_price = {
             type: "max",
             message: `price must be less than ${new Decimal(
               maxPriceNumber
             ).todp(symbol.quote_dp)}`,
           };
-        } else if (side === "SELL" && price.lt(minPriceNumber)) {
+        } else if (side === OrderSide.BUY && price.lt(scropePriceNumbere)) {
+          errors.order_price = {
+            type: "max",
+            message: `price must be more than ${new Decimal(
+              scropePriceNumbere
+            ).todp(symbol.quote_dp)}`,
+          };
+        } else if (side === OrderSide.SELL && price.lt(minPriceNumber)) {
           errors.order_price = {
             type: "min",
             message: `price must be greater than ${new Decimal(
               minPriceNumber
+            ).todp(symbol.quote_dp)}`,
+          };
+        }
+        else if (side === OrderSide.SELL && price.gt(scropePriceNumbere)) {
+          errors.order_price = {
+            type: "min",
+            message: `price must be less than ${new Decimal(
+              scropePriceNumbere
             ).todp(symbol.quote_dp)}`,
           };
         }
@@ -190,10 +205,135 @@ export class MarketOrderCreator extends BaseOrderCreator {
   }
 }
 
-export class PostOnlyOrderCreator extends LimitOrderCreator {}
+export class PostOnlyOrderCreator extends LimitOrderCreator { }
 
-export class FOKOrderCreator extends LimitOrderCreator {}
-export class IOCOrderCreator extends LimitOrderCreator {}
+export class FOKOrderCreator extends LimitOrderCreator { }
+export class IOCOrderCreator extends LimitOrderCreator { }
+
+export class StopLimitOrderCreator extends LimitOrderCreator {
+  create(values: OrderEntity): OrderEntity {
+    const result = {
+      ...this.baseOrder(values),
+      order_price: values.order_price,
+      trigger_price: values.trigger_price,
+      algo_type: "STOP",
+      type: "LIMIT",
+      quantity: values["order_quantity"],
+      price: values["order_price"],
+      trigger_price_type: "MARK_PRICE"
+    };
+    delete result["order_quantity"];
+    delete result["order_price"];
+    delete result["isStopOrder"];
+
+    console.log("result is", result);
+    return result;
+
+  }
+  validate(
+    values: OrderFormEntity,
+    config: ValuesDepConfig
+  ): Promise<VerifyResult> {
+    return this.baseValidate(values, config).then((errors) => {
+      // const errors = this.baseValidate(values, config);
+      // @ts-ignore
+      const { order_price, trigger_price, side } = values;
+
+      if (!order_price) {
+        errors.order_price = {
+          type: "required",
+          message: "price is required",
+        };
+      } else if (!trigger_price) {
+        errors.trigger_price = {
+          type: "required",
+          message: "trigger price is required",
+        };
+      } else {
+        const price = new Decimal(order_price);
+        const { symbol } = config;
+        const { price_range, price_scope } = symbol;
+        const maxPriceNumber = maxPrice(config.markPrice, price_range);
+        const minPriceNumber = minPrice(config.markPrice, price_range);
+        const scropePriceNumbere = scropePrice(config.markPrice, price_scope, side);
+
+        /// if side is 'buy', only check max price,
+        /// if side is 'sell', only check min price,
+        if (side === OrderSide.BUY && price.gt(maxPriceNumber)) {
+          errors.order_price = {
+            type: "max",
+            message: `price must be less than ${new Decimal(
+              maxPriceNumber
+            ).todp(symbol.quote_dp)}`,
+          };
+        } else if (side === OrderSide.BUY && price.lt(scropePriceNumbere)) {
+          errors.order_price = {
+            type: "max",
+            message: `price must be more than ${new Decimal(
+              scropePriceNumbere
+            ).todp(symbol.quote_dp)}`,
+          };
+        } else if (side === OrderSide.SELL && price.lt(minPriceNumber)) {
+          errors.order_price = {
+            type: "min",
+            message: `price must be greater than ${new Decimal(
+              minPriceNumber
+            ).todp(symbol.quote_dp)}`,
+          };
+        }
+        else if (side === OrderSide.SELL && price.gt(scropePriceNumbere)) {
+          errors.order_price = {
+            type: "min",
+            message: `price must be less than ${new Decimal(
+              scropePriceNumbere
+            ).todp(symbol.quote_dp)}`,
+          };
+        }
+      }
+
+      return errors;
+    });
+  }
+}
+export class StopMarketOrderCreator extends LimitOrderCreator {
+  create(values: OrderEntity): OrderEntity {
+    const result = {
+      ...this.baseOrder(values),
+      order_price: values.order_price,
+      trigger_price: values.trigger_price,
+      algo_type: "STOP",
+      type: "MARKET",
+      quantity: values["order_quantity"],
+      price: values["order_price"],
+      trigger_price_type: "MARK_PRICE"
+    };
+    delete result["order_quantity"];
+    delete result["order_price"];
+    delete result["isStopOrder"];
+
+    console.log("result is", result);
+    return result;
+  }
+  validate(
+    values: OrderFormEntity,
+    config: ValuesDepConfig
+  ): Promise<VerifyResult> {
+    return this.baseValidate(values, config).then((errors) => {
+      // const errors = this.baseValidate(values, config);
+      // @ts-ignore
+      const { order_price, trigger_price, side } = values;
+
+      if (!trigger_price) {
+        errors.trigger_price = {
+          type: "required",
+          message: "trigger price is required",
+        };
+      }
+
+      return errors;
+    });
+  }
+}
 
 export class GeneralOrderCreator extends BaseOrderCreator {
   create(data: OrderEntity): OrderEntity {
@@ -210,6 +350,17 @@ export class GeneralOrderCreator extends BaseOrderCreator {
     return super.baseValidate(values, configs);
   }
 }
+
+export const availableOrderTypes = [
+  OrderType.LIMIT,
+  OrderType.MARKET,
+  OrderType.IOC,
+  OrderType.FOK,
+  OrderType.POST_ONLY,
+  OrderType.STOP_LIMIT,
+  OrderType.STOP_MARKET,
+
+];
 
 export class OrderFactory {
   static create(type: OrderType): OrderCreator | null {
@@ -228,6 +379,12 @@ export class OrderFactory {
         return new FOKOrderCreator();
       case OrderType.POST_ONLY:
         return new PostOnlyOrderCreator();
+
+      case OrderType.STOP_LIMIT:
+        return new StopLimitOrderCreator();
+      case OrderType.STOP_MARKET:
+        return new StopMarketOrderCreator();
+
 
       default:
         return new GeneralOrderCreator();
