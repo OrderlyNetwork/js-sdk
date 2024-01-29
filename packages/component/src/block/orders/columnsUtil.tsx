@@ -59,7 +59,7 @@ export const columnsBasis = (): Column<API.Order>[] => {
                       ? "orderly-text-trade-profit"
                       : "orderly-text-trade-loss"
                 )}
-              >{`${record.executed} / ${record.quantity}`}</span>
+              >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
             );
           },
         },
@@ -115,14 +115,14 @@ export const columnsBasis = (): Column<API.Order>[] => {
           title: "Trigger",
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
-          dataIndex: "price",
+          dataIndex: "trigger_price",
           render: (value: string, record: any) => {
             return (
               <Numeral
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
                 precision={2}
               >
-                {-1}
+                {value}
               </Numeral>
             );
           },
@@ -138,7 +138,15 @@ export const columnsBasis = (): Column<API.Order>[] => {
           width: 120,
           className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "status",
-          formatter: upperCaseFirstLetter,
+          formatter: (value: string, record: any) => {
+
+            const status = value || record.algo_status;
+            
+            if (status === "NEW") {
+              return upperCaseFirstLetter("pending");
+            }
+            return upperCaseFirstLetter(status);
+          },
         },
         {
           title: "Reduce",
