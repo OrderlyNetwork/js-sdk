@@ -1,8 +1,11 @@
-import {useCallback} from 'React';
+import {useCallback} from 'react';
+import {useOrderStream} from '@orderly.network/hooks'
 
 export default function useCancelOrder() {
-    return useCallback(() => {
+    const [, { cancelOrder }] = useOrderStream({});
+    return useCallback((order: any) => {
+        cancelOrder(order.orderId, order.symbol).then();
 
-        }, [],
+        }, [cancelOrder],
     )
 }

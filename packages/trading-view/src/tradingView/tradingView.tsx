@@ -6,6 +6,9 @@ import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service'
 
 import { useWS, useConfig } from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
+import useBroker from './tradingViewAdapter/hooks/useBroker';
+import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
+import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 
 
 
@@ -95,6 +98,9 @@ fullscreen,
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
+    const broker = useBroker();
+    const [renderer, createRenderer] = useCreateRenderer(symbol!);
+
     useEffect(() => {
         if (!tradingViewScriptSrc) {
             return;
@@ -145,7 +151,12 @@ fullscreen,
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
-                getBroker: undefined,
+                getBroker: (instance: any, host: any) => {
+                    console.log('-- start create render');
+                    createRenderer(instance, host, broker);
+                    console.log('-- create render');
+                    return getBrokerAdapter(host, broker);
+                },
 
             };
 
@@ -163,6 +174,7 @@ fullscreen,
 
         return () => {
             chart.current?.remove();
+            renderer.current?.remove();
         };
     }, [chartingLibrarySciprtReady]);
 

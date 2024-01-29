@@ -108,3 +108,8 @@ export type ChartPosition = {
     positionSide?: PositionSide;
 };
 
+export enum SideType {
+    BUY = 'BUY',
+    SELL = 'SELL',
+}
+

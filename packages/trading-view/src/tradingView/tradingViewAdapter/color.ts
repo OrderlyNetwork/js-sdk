@@ -6,6 +6,7 @@ const Color = {
     Jade2: '#27DEC8',
     DNC1: '#535E7B',
     DNC2: '#4A5369',
+    DNC8: '#181C23',
     Ruby2: '#FFA5C0',
     Ruby5: '#E93E71',
     LNC1: '#FFFFFF',
@@ -20,3 +21,5 @@ export const BORDER_RED = Color.Ruby2;
 
 export const PNL_BORDER_GREEN = Color.Jade2;
 export const PNL_BORDER_RED = Color.Ruby2;
+export const CHART_BG = Color.DNC8
+export const FONT = 'regular 11px DIN2014';

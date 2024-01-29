@@ -1,4 +1,4 @@
-import {useRef} from 'React';
+import {useRef, useEffect} from 'react';
 import useCancelOrder from '../hooks/useCancelOrder';
 
 const useBroker = () => {
@@ -7,6 +7,11 @@ const useBroker = () => {
         cancelOrder,
 
     });
+
+    useEffect(() => {
+        broker.current.cancelOrder = cancelOrder;
+    }, [cancelOrder]);
+    return broker.current;
 };
 
 export default useBroker;

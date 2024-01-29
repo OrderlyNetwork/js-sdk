@@ -1,7 +1,10 @@
 import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
 import {ChartPosition} from '../type';
-import {CHART_GREEN, CHART_RED, PNL_BORDER_GREEN, PNL_BORDER_RED} from '../color';
+import {CHART_GREEN, CHART_RED, PNL_BORDER_GREEN, PNL_BORDER_RED, CHART_BG, TEXT_COLOR2, TEXT_COLOR, FONT} from '../color';
+import { Decimal, int2hex } from "@orderly.network/utils";
+
+
 export class PositionLineService{
     private instance: IChartingLibraryWidget;
     private positionLines: Record<number, IOrderLineAdapter>;
@@ -39,6 +42,29 @@ export class PositionLineService{
         this.lastPositions = positions;
     }
 
+    getBasePositionLine() {
+        return this.instance
+            .activeChart()
+            .createOrderLine()
+            .setCancelTooltip('Close Position')
+            .setQuantityBackgroundColor(CHART_BG)
+            .setCancelButtonBackgroundColor(CHART_BG)
+            .setBodyTextColor(TEXT_COLOR)
+            .setQuantityTextColor(TEXT_COLOR2)
+            // .setBodyFont(FONT)
+            .setQuantityFont(FONT)
+            .setLineLength(50)
+            .setLineStyle(1);
+    }
+
+    static getPositionQuantity(balance: number) {
+        return new Decimal(balance).todp(4, Decimal.ROUND_DOWN).toString();
+    }
+
+    static getPositionPnL(unrealPnl: number, decimal: number) {
+        return `PnL ${new Decimal(unrealPnl).todp(decimal, Decimal.ROUND_FLOOR)}`;
+    }
+
     removePositions() {
         Object.keys(this.positionLines).forEach(lineId => {
             this.positionLines[Number(lineId)].remove();
@@ -53,7 +79,7 @@ export class PositionLineService{
         const pnlColor = isPositiveUnrealPnl ? CHART_GREEN : CHART_RED;
         const borderColor = isPositiveUnrealPnl ? PNL_BORDER_GREEN : PNL_BORDER_RED;
         const sideColor = isPositiveBalance ? CHART_GREEN : CHART_RED;
-        const price = new BigNumber(position.open).dp(position.basePriceDecimal, BigNumber.ROUND_DOWN).toNumber();
+        const price = new Decimal(position.open).todp(position.basePriceDecimal, Decimal.ROUND_DOWN).toNumber();
 
         this.positionLines[idx] = this.positionLines[idx] ?? this.getBasePositionLine();
         this.positionLines[idx]
