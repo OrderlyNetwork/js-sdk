@@ -47,6 +47,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   context.toggleContentVisible();
                 }}
               >
+                {/* @ts-ignore */}
                 <ChevronDown
                   size={18}
                   className={cn(

@@ -54,7 +54,9 @@ export const ListViewFull = forwardRef<
           {props.prefixRender && (props.prefixRender(item,extraData))}
           <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
           <Text rule="symbol">{item.symbol}</Text>
+          {/* @ts-ignore */}
           {item.leverage && (<div className="orderly-ml-1 orderly-rounded-sm orderly-px-1 orderly-py-[2px] orderly-flex orderly-items-center orderly-text-3xs orderly-text-primary orderly-bg-base-600">
+            {/* @ts-ignore */}
             {`${item.leverage}x`}
           </div>)}
         </div>

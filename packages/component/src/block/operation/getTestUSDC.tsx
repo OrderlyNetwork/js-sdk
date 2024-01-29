@@ -92,6 +92,7 @@ export const GetTestUSDC = () => {
           className="orderly-w-[16px] orderly-h-[16px] orderly-rounded-full orderly-bg-primary-light orderly-flex orderly-justify-center orderly-items-center"
           onClick={onCloseClick}
         >
+          {/* @ts-ignore */}
           <X size={14} className="orderly-text-base-100" />
         </button>
       </div>

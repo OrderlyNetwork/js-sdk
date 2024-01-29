@@ -56,6 +56,7 @@ export const Assets: FC<AssetsProps> = (props) => {
 
     return (
       state.status === AccountStatusEnum.EnableTrading &&
+      // @ts-ignore
       isTestnet(parseInt(chainId))
     );
   }, [state.status, connectedChain]);

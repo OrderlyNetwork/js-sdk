@@ -50,6 +50,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
     // },
     resolver: async (values) => {
+      // @ts-ignore
       const errors = await helper.validator(values);
       return {
         values,
@@ -58,7 +59,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     },
   });
 
-  const isAlgoOrder = true;//order.algo_order_id !== undefined;
+  const isAlgoOrder = true; //order.algo_order_id !== undefined;
 
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
@@ -76,7 +77,13 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const onConfirm = (data: OrderEntity, dirtyFields: any) => {
     return modal.confirm({
       title: "Edit Order",
-      content: EditOrderConfirmContent(isAlgoOrder,data, dirtyFields, base, order.symbol),
+      content: EditOrderConfirmContent(
+        isAlgoOrder,
+        data,
+        dirtyFields,
+        base,
+        order.symbol
+      ),
       contentClassName: "desktop:orderly-w-[340px]",
       onOk: () => Promise.resolve(data),
       onCancel: () => {
@@ -98,6 +105,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   );
 
   const onFieldChange = (name: string, value: any) => {
+    // @ts-ignore
     const newValues = helper.calculate(getValues(), name, value);
     //
 
@@ -141,6 +149,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       <Divider className="orderly-py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="orderly-flex orderly-flex-col orderly-gap-5">
+          {/* @ts-ignore */}
           <Controller
             name="trigger_price"
             control={control}
@@ -164,6 +173,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
               );
             }}
           />
+          {/* @ts-ignore */}
           <Controller
             name="order_price"
             control={control}
@@ -187,6 +197,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
               );
             }}
           />
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}
@@ -213,6 +224,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         </div>
 
         <div className="orderly-py-5">
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}

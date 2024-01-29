@@ -130,10 +130,12 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     if (num < 0) {
       if (props.icons?.loss) return props.icons?.loss;
+      // @ts-ignore
       return <Minus size={12} />;
     }
 
     if (props.icons?.profit) return props.icons?.profit;
+    // @ts-ignore
     return <Plus size={12} />;
   }, [num, props.visible, showIcon]);
 

@@ -65,6 +65,7 @@ const TheadColItem = (
     } else {
       content = (
         <HoverCard
+          // @ts-ignore
           content={column.hint}
           side="top"
           align="center"

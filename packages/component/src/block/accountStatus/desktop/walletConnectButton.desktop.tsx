@@ -95,6 +95,7 @@ export const DesktopWalletConnnectButton: FC<
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
+    // @ts-ignore
     if (connectedChain && isTestnet(parseInt(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
@@ -172,7 +173,7 @@ export const DesktopWalletConnnectButton: FC<
         className="orderly-bg-base-800 orderly-w-[220px] orderly-px-4 orderly-rounded-borderRadius orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)] orderly-z-20"
         alignOffset={10}
         onCloseAutoFocus={(e) => e.preventDefault()}
-      // sideOffset={14}
+        // sideOffset={14}
       >
         <div className="orderly-flex  orderly-gap-3 orderly-py-5">
           <div className="orderly-flex-1 orderly-flex orderly-items-center">

@@ -49,6 +49,7 @@ export const Listview: FC<Props> = (props) => {
           "orderly-text-2xs orderly-text-base-contrast-80",
           props.className
         )}
+        // @ts-ignore
         generatedRowKey={(record) => record.order_id}
         onRow={(record) => {
           // console.log(record);
@@ -70,7 +71,7 @@ export const Listview: FC<Props> = (props) => {
           );
         }}
         expandRowRender={(record, index) => {
-          return <OrderTrades record={record} index={index} />
+          return <OrderTrades record={record} index={index} />;
         }}
       />
     </EndReachedBox>

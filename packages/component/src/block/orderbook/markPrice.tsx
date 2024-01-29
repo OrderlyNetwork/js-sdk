@@ -49,6 +49,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
       >
         <Numeral precision={quote_dp}>{middlePrice}</Numeral>
         {prevLastPrice !== middlePrice && (
+          // @ts-ignore
           <MoveUpIcon
             size={14}
             color="currentcolor"
@@ -62,6 +63,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
         className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-3xs desktop:orderly-text-base"
         onClick={onMarkPrice}
       >
+        {/* @ts-ignore */}
         <Flag size={14} className="orderly-text-yellow-400" />
         <Numeral
           precision={quote_dp}

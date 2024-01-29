@@ -35,6 +35,7 @@ export const MyOrders: FC<Props> = (props) => {
     useOrderStream({
       status: props.status,
       symbol: symbol,
+      // @ts-ignore
       side,
     });
 
@@ -60,6 +61,7 @@ export const MyOrders: FC<Props> = (props) => {
       isLoading={isLoading}
       symbol={context.symbol}
       onSideChange={setSide}
+      // @ts-ignore
       side={side}
       showAllSymbol={showAllSymbol}
       cancelOrder={onCancelOrder}

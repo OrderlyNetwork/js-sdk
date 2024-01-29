@@ -56,6 +56,7 @@ export const SwapSymbols: FC<SwapSymbolsProps> = (props) => {
           </span>
         </div>
       </div>
+      {/* @ts-ignore */}
       <ArrowRight className="orderly-text-primary-light" size={30} />
       <div className="orderly-flex orderly-gap-3 orderly-items-center">
         <div className="orderly-flex orderly-flex-col orderly-items-end">

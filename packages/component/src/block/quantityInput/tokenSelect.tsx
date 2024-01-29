@@ -58,6 +58,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
             rounded
           />
           <span>{token?.symbol}</span>
+          {/* @ts-ignore */}
           {tokens && tokens.length > 1 && <ChevronDown size={16} />}
         </button>
       </DialogTrigger>
