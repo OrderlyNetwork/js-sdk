@@ -8,4 +8,5 @@ export enum Subjects {
 export const useObserve = <T>(
   key: string,
   initialValue: T
+  // @ts-ignore
 ): [T, (value: T) => void] => {};
