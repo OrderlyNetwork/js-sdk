@@ -7,7 +7,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
 import { compose, head, includes, omit } from "ramda";
 import {
@@ -34,9 +34,9 @@ export type UseOrderEntryOptions = {
 
 export type UseOrderEntryMetaState = {
   errors:
-  | { [P in keyof OrderEntity]?: { type: string; message: string } }
-  | null
-  | undefined;
+    | { [P in keyof OrderEntity]?: { type: string; message: string } }
+    | null
+    | undefined;
   dirty: { [P in keyof OrderEntity]?: boolean } | null | undefined;
   submitted: boolean;
 };
@@ -102,8 +102,6 @@ export function useOrderEntry(
   reduceOnly?: boolean,
   options?: UseOrderEntryOptions
 ): UseOrderEntryReturn {
-
-
   // console.log("+++++++", symbolOrOrder);
 
   if (typeof symbolOrOrder === "object") {
@@ -255,7 +253,9 @@ export function useOrderEntry(
     }
 
     if (typeof symbolOrOrder.order_quantity === "number") {
-      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.toString();
+      symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)
+        .toDecimalPlaces(baseDP)
+        .toString();
     }
 
     return symbolOrOrder;
@@ -299,12 +299,26 @@ export function useOrderEntry(
         .then((errors) => {
           submitted.current = true;
 
-
-          if (errors.order_price || errors.order_quantity || errors.trigger_price) {
+          if (
+            errors.order_price ||
+            errors.order_quantity ||
+            errors.trigger_price
+          ) {
             setErrors(errors);
-            reject(errors);
+            reject(
+              errors.order_price?.message || errors.order_quantity?.message
+            );
+            // throw new SDKError(
+            //   errors.order_price?.message ||
+            //     errors.order_quantity?.message ||
+            //     "order validation error"
+            // );
           } else {
-            const data = orderCreator.create(values as OrderEntity);
+            const data = orderCreator.create(values as OrderEntity, {
+              symbol: symbolInfo[symbol](),
+              maxQty,
+              markPrice: markPrice,
+            });
 
             console.log("------------------", data);
 
@@ -314,7 +328,7 @@ export function useOrderEntry(
                 ...data,
               })
             ).then((res) => {
-              console.log("res::::", res);
+              // console.log("res::::", res);
               // resolve(res);
               if (res.success) {
                 resolve(res.data);
@@ -409,11 +423,15 @@ export function useOrderEntry(
     // diff order entry
     const item = diffOrderEntry(prevOrderData.current, parsedData);
 
-    // console.log(prevOrderData.current, symbolOrOrder, item);
+    console.log(prevOrderData.current, symbolOrOrder, item);
 
     if (!item) {
       return orderDataCache.current as Partial<OrderEntity>;
     }
+
+    // if(item.key === "reduce_only") {
+
+    // }
 
     // if (
     //   item.key === "side" ||
@@ -495,7 +513,11 @@ export function useOrderEntry(
     const orderPrice = Number(symbolOrOrder.order_price);
 
     if (isNaN(quantity) || quantity <= 0) return null;
-    if ((symbolOrOrder.order_type === OrderType.LIMIT || symbolOrOrder.order_type === OrderType.STOP_LIMIT) && isNaN(orderPrice))
+    if (
+      (symbolOrOrder.order_type === OrderType.LIMIT ||
+        symbolOrOrder.order_type === OrderType.STOP_LIMIT) &&
+      isNaN(orderPrice)
+    )
       return null;
 
     /**
@@ -513,7 +535,10 @@ export function useOrderEntry(
      */
     let price: number;
 
-    if (symbolOrOrder.order_type === OrderType.MARKET || symbolOrOrder.order_type === OrderType.STOP_MARKET) {
+    if (
+      symbolOrOrder.order_type === OrderType.MARKET ||
+      symbolOrOrder.order_type === OrderType.STOP_MARKET
+    ) {
       if (symbolOrOrder.side === OrderSide.BUY) {
         price = askAndBid.current[0];
       } else {
