@@ -98,6 +98,7 @@ export declare namespace API {
     status: string;
     side: string;
     order_id: number;
+    algo_order_id?: number;
     user_id: number;
     price: number | null;
     type: string;
@@ -112,6 +113,7 @@ export declare namespace API {
     created_time: number;
     updated_time: number;
     reduce_only: boolean;
+    trigger_price?: number;
   }
 
   export interface OrderExt extends Order {

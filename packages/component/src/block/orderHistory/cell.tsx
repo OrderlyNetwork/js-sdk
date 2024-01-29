@@ -114,7 +114,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               <span className="orderly-text-base-contrast-20">(USDC)</span>
             </>
           }
-          value={item.type === OrderType.MARKET ? "Market" : item.price}
+          value={(item.type === OrderType.MARKET || item.type === OrderType.STOP_MARKET) ? "Market" : item.trigger_price}
         />
       </div>
     </div>

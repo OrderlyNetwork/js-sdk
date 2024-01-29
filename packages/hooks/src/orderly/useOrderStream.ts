@@ -40,6 +40,14 @@ export const useOrderStream = (params: Params) => {
     doUpdateOrder,
     { error: updateOrderError, isMutating: updateMutating },
   ] = useMutation("/v1/order", "PUT");
+  const [
+    doCanceAlgolOrder,
+    { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
+  ] = useMutation("/v1/algo/order", "DELETE");
+  const [
+    doUpdateAlgoOrder,
+    { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
+  ] = useMutation("/v1/algo/order", "PUT");
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     // reached the end
@@ -112,12 +120,20 @@ export const useOrderStream = (params: Params) => {
   /**
    * cancel all orders
    */
-  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
+  const cancelAllOrders = useCallback(() => { }, [ordersResponse.data]);
 
   /**
    * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
+    if (order.algo_order_id !== undefined) {
+      return doUpdateAlgoOrder({
+        order_id: orderId,
+        price: order["order_price"],
+        quantity: order["order_quantity"],
+        trigger_price: order["trigger_price"],
+      });
+    }
     //
     return doUpdateOrder({ ...order, order_id: orderId });
   }, []);
@@ -125,7 +141,28 @@ export const useOrderStream = (params: Params) => {
   /**
    * calcel order
    */
-  const cancelOrder = useCallback((orderId: number, symbol?: string) => {
+  const cancelOrder = useCallback((orderId: number | OrderEntity, symbol?: string) => {
+    let isAlgoOrder = false;
+    if (typeof orderId === 'number') {
+      isAlgoOrder = false;
+    } else if (orderId.algo_order_id !== undefined) {
+      isAlgoOrder = true;
+    }
+    if (isAlgoOrder) {      
+      return doCanceAlgolOrder(null, {
+        order_id: orderId.algo_order_id,
+        symbol,
+        source: `SDK${version}`
+      })
+        .then((res: any) => {
+          if (res.success) {
+            ordersResponse.mutate();
+            return res;
+          } else {
+            throw new Error(res.message);
+          }
+        });;
+    }
     return doCancelOrder(null, {
       order_id: orderId,
       symbol,
@@ -161,10 +198,14 @@ export const useOrderStream = (params: Params) => {
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,
+        cancelAlgoOrder: cancelAlgoOrderError,
+        updateAlgoOrder: updateAlgoOrderError,
       },
       submitting: {
         cancelOrder: cancelMutating,
         updateOrder: updateMutating,
+        cancelAlgoOrder: cancelAlgoMutating,
+        updateAlglOrder: updateAlgoMutating,
       },
     },
   ] as const;

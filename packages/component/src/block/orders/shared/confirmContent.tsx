@@ -92,10 +92,10 @@ const AlgoContent: FC<{
   const quote = symbol?.split("_")[2];
 
   const qty = data.order_quantity || "-";
-  const triggerPrice = data.order_price || "-";
+  const triggerPrice = data.trigger_price || "-";
   const price = data.order_price || "-";
 
-  console.log("algo content", symbol);
+  // console.log("algo content", symbol, data);
   
 
   return (<div>

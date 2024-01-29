@@ -40,7 +40,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     defaultValues: {
       order_price: order.price?.toString(),
       order_quantity: order.quantity.toString(),
-      trigger_price: order.price?.toString(),
+      trigger_price: order.trigger_price?.toString(),
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -58,7 +58,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     },
   });
 
-  const isAlgoOrder = true;//order.algo_order_id !== undefined;
+  const isAlgoOrder = order.algo_order_id !== undefined;
+
+  // console.log("editor form ", order);
+  
 
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
@@ -141,7 +144,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       <Divider className="orderly-py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="orderly-flex orderly-flex-col orderly-gap-5">
-          <Controller
+          {isAlgoOrder && <Controller
             name="trigger_price"
             control={control}
             render={({ field }) => {
@@ -163,7 +166,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 />
               );
             }}
-          />
+          />}
           <Controller
             name="order_price"
             control={control}
