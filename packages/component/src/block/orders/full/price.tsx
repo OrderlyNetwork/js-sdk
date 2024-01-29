@@ -7,15 +7,23 @@ import { cn } from "@/utils/css";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
 import { Check, X } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
+import { useSymbolPriceRange } from "@orderly.network/hooks";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
 
+  const isAlgoOrder = order?.algo_order_id !== undefined;
+  // console.log("price node", order);
+
+  const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
+
+
   const [price, setPrice] = useState<string>(
-    order.price?.toString() ?? "Market"
+    (order.price?.toString()) ?? "Market"
   );
 
   const [open, setOpen] = useState(0);
@@ -62,15 +70,30 @@ export const Price = (props: { order: API.OrderExt }) => {
 
   const onConfirm = () => {
     setIsSubmitting(true);
-    // @ts-ignore
-    editOrder(order.order_id, {
+
+    let order_id = order.order_id;
+    let data: any = {
       order_price: price,
       order_quantity: order.quantity,
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
       reduce_only: Boolean(order.reduce_only),
-    })
+    }
+    if (isAlgoOrder) {
+      order_id = order.algo_order_id as number;
+      data = {
+        ...data,
+        order_id,
+        price: price,
+        algo_order_id: order_id,
+      }
+    }
+
+    
+
+    // @ts-ignore
+    editOrder(order_id, data)
       .then(
         (result) => {
           closePopover();
@@ -87,7 +110,24 @@ export const Price = (props: { order: API.OrderExt }) => {
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
+  // @ts-ignore
+  const rangeInfo = useSymbolPriceRange(order.symbol, order.side, isAlgoOrder ? order.trigger_price : undefined);
 
+  const hintInfo = useMemo(() => {
+    if (!rangeInfo) return "";
+    if (isStopMarket) return "";
+    if (!editting) return "";
+
+    
+      if (Number(price) > rangeInfo.max) {
+        return `Price can not be greater than ${rangeInfo.max} USDC.`
+      }
+      if (Number(price) < rangeInfo.min) {
+        return `Price can not be less than ${rangeInfo.min} USDC.`
+      }
+    return "";
+
+  }, [isStopMarket, editting, rangeInfo, price]);
   return (
     <Popover
       open={open > 0}
@@ -99,18 +139,28 @@ export const Price = (props: { order: API.OrderExt }) => {
         }
         ref={boxRef}
       >
-        <PopoverAnchor asChild>
-          {order.status === OrderStatus.NEW ? (
-            <input
-              ref={inputRef}
-              type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              onFocus={() => setEditting(true)}
-              className="orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0"
-            />
-          ) : (
-            <Numeral precision={base_dp}>{price}</Numeral>
+        <PopoverAnchor >
+          {isStopMarket && <span>Market</span>}
+          {!isStopMarket && (
+            <Tooltip open={hintInfo.length > 0}>
+              <TooltipTrigger asChild>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  onFocus={() => setEditting(true)}
+                  className="orderly-w-[98px] orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0"
+                />
+              </TooltipTrigger>
+              <TooltipContent
+                className="orderly-max-w-[270px] orderly-rounded-lg orderly-bg-base-400 orderly-p-3"
+                align="center"
+              >
+                {hintInfo}
+                <TooltipArrow width={10} height={7} className="orderly-fill-base-400" />
+              </TooltipContent>
+            </Tooltip>
           )}
         </PopoverAnchor>
         <div
