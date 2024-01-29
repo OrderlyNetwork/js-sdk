@@ -18,10 +18,16 @@ export const columnsBasis = (): Column<API.Order>[] => {
         },
         {
           title: "Type",
-          className: "orderly-h-[48px]",
           width: 100,
+          className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "type",
-          formatter: upperCaseFirstLetter,
+          formatter: (value: string, record: any,) => {
+
+          if (record.algo_order_id) {
+            return `Stop ` + `${record.type}`.toLowerCase()
+          }
+            return upperCaseFirstLetter(value);
+          },
         },
         {
           title: "Side",

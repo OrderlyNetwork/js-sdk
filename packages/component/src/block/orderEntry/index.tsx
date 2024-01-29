@@ -318,7 +318,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     // const [ratio] = useDebounce(field,200);
 
-    console.log(commify(formattedOrder.order_quantity || ""));
+    // console.log(commify(formattedOrder.order_quantity || ""));
 
     return (
       // @ts-ignore

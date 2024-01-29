@@ -17,13 +17,10 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
     const { order } = props;
 
     const [price, setPrice] = useState<string>(
-        order.price?.toString() ?? "Market"
+        order.trigger_price?.toString() ?? "0"
     );
 
-    const isAlgoOrder = true;// order?.algo_order_id !== undefined;
-
-
-
+    const isAlgoOrder = order?.algo_order_id !== undefined;
 
 
     const [open, setOpen] = useState(0);
@@ -61,7 +58,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
 
         setEditting(false);
 
-        if (Number(price) === Number(order.price)) {
+        if (Number(price) === Number(order.trigger_price)) {
             return;
         }
 
@@ -75,13 +72,15 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
 
     const onConfirm = () => {
         setIsSubmitting(true);
-        editOrder(order.order_id, {
-            order_price: price,
-            order_quantity: order.quantity,
+        editOrder(order.algo_order_id, {
+            // price: price,
+            quantity: order.quantity,
+            trigger_price: price,
             symbol: order.symbol,
-            order_type: order.type,
-            side: order.side,
-            reduce_only: Boolean(order.reduce_only),
+            // order_type: order.type,
+            // side: order.side,
+            // reduce_only: Boolean(order.reduce_only),
+            algo_order_id: order.algo_order_id,
         })
             .then(
                 (result) => {
@@ -90,7 +89,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                 },
                 (err) => {
                     toast.error(err.message);
-                    setPrice(order.price?.toString());
+                    setPrice(order.trigger_price?.toString());
                     cancelPopover();
                 }
             )
@@ -133,17 +132,20 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
 
                 <PopoverAnchor asChild>
 
-                    {order.status === OrderStatus.NEW ? (
-                        <PriceInput
-                            inputRef={inputRef}
-                            symbol={order.symbol}
-                            price={price}
-                            setPrice={setPrice}
-                            editting={editting}
-                            setEditting={setEditting}
-                            side={order.side}
-
-                        />
+                    {order.algo_status === OrderStatus.NEW ? (
+                        <input
+                        ref={inputRef}
+                        type="text"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        onFocus={() => setEditting(true)}
+                        className={cn(
+                            "orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0",
+                            {
+                                "orderly-pl-8": editting,
+                            }
+                        )}
+                    />
                     ) : (
                         <Numeral precision={base_dp}>{price}</Numeral>
                     )}
@@ -174,7 +176,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
                     >
                         <div className="orderly-pt-5 orderly-relative">
                             <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
-                                You agree changing the price of {base}-PERP order to{" "}
+                                You agree changing the trigger price of {base}-PERP order to{" "}
                                 <span className="orderly-text-warning">{commify(price)}</span>.
                             </div>
                             <div className="orderly-grid orderly-grid-cols-2 orderly-gap-2 orderly-mt-5">
@@ -204,65 +206,72 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
 };
 
 
-export const PriceInput: FC<{
-    symbol: string,
-    inputRef: any,
-    price: any,
-    setPrice: any,
-    editting: boolean,
-    setEditting: any,
-    side: string,
+// export const PriceInput: FC<{
+//     symbol: string,
+//     inputRef: any,
+//     price: any,
+//     setPrice: any,
+//     editting: boolean,
+//     setEditting: any,
+//     side: string,
+//     enableTooltip: boolean,
+// }> = (props) => {
+//     const { symbol, inputRef, price, setPrice, editting, setEditting, side } = props;
+//     const rangeInfo = useSymbolPriceRange(symbol);
+//     // const [open, setOpen] = useState(false);
 
-}> = (props) => {
-    const { symbol, inputRef, price, setPrice, editting, setEditting, side } = props;
-    const rangeInfo = useSymbolPriceRange(symbol);
-    // const [open, setOpen] = useState(false);
+//     const trigger = (
+//         <input
+//             ref={inputRef}
+//             type="text"
+//             value={price}
+//             onChange={(e) => setPrice(e.target.value)}
+//             onFocus={() => setEditting(true)}
+//             className={cn(
+//                 "orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0",
+//                 {
+//                     "orderly-pl-8": editting,
+//                 }
+//             )}
+//         />
+//     );
+//     if (!props.enableTooltip) {
+//         return trigger;
+//     }
 
-    const hintInfo = useMemo(() => {
-        if (!rangeInfo) return "";
+//     const hintInfo = useMemo(() => {
+//         if (!rangeInfo) return "";
 
-        if (side === "BUY") {
-            if (price > rangeInfo.max) {
-                return `Price can not be higher than ${rangeInfo.max} USDC.`
-            }
-        } else {
-            if (price < rangeInfo.min) {
-                return `Price can not be lower than ${rangeInfo.min} USDC.`
-            }
-        }
-        return "";
+//         if (side === "BUY") {
+//             if (price > rangeInfo.max) {
+//                 return `Price can not be higher than ${rangeInfo.max} USDC.`
+//             }
+//         } else {
+//             if (price < rangeInfo.min) {
+//                 return `Price can not be lower than ${rangeInfo.min} USDC.`
+//             }
+//         }
+//         return "";
 
-    }, [rangeInfo, price, side]);
+//     }, [rangeInfo, price, side]);
 
-    
 
-    return (
-        <Tooltip open={hintInfo.length > 0 && editting}>
-            <TooltipTrigger asChild>
-                <input
-                    ref={inputRef}
-                    type="text"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    onFocus={() => setEditting(true)}
-                    className={cn(
-                        "orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0",
-                        {
-                            "orderly-pl-8": editting,
-                        }
-                    )}
-                />
-            </TooltipTrigger>
-            <TooltipContent 
-                align="center"
-                className="orderly-z-50 data-[state=delayed-open]:data-[side=top]:orderly-animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:orderly-animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:orderly-animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:orderly-animate-slideUpAndFade orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-px-[15px] orderly-py-[10px] orderly-text-3xs orderly-leading-none orderly-shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] orderly-will-change-[transform,opacity]"
-                sideOffset={5}
-            >
-                <div>
-                    {hintInfo}
-                </div>
-                <TooltipArrow className="orderly-fill-base-400" />
-            </TooltipContent>
-        </Tooltip>
-    );
-}
+
+//     return (
+//         <Tooltip open={false}>
+//             <TooltipTrigger asChild>
+//                 trigger
+//             </TooltipTrigger>
+//             <TooltipContent
+//                 align="center"
+//                 className="orderly-z-50 data-[state=delayed-open]:data-[side=top]:orderly-animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:orderly-animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:orderly-animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:orderly-animate-slideUpAndFade orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-px-[15px] orderly-py-[10px] orderly-text-3xs orderly-leading-none orderly-shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] orderly-will-change-[transform,opacity]"
+//                 sideOffset={5}
+//             >
+//                 <div>
+//                     {hintInfo}
+//                 </div>
+//                 <TooltipArrow className="orderly-fill-base-400" />
+//             </TooltipContent>
+//         </Tooltip>
+//     );
+// }
