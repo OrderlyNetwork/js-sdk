@@ -82,7 +82,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
             {priceNode}
           </div>
           <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Total</span>
+            <span className="orderly-text-base-contrast-54">{"Est. Total"}</span>
             <div className="orderly-inline-block">
               <span>{order.total}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
