@@ -8,6 +8,7 @@ export function convertValueToPercentage(
   max: number
 ) {
   const maxSteps = max - min;
+  if (maxSteps === 0) return clamp(0, [0, 100]);
   const percentPerStep = 100 / maxSteps;
   const percentage = percentPerStep * (value - min);
   return clamp(percentage, [0, 100]);

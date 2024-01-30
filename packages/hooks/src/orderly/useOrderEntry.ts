@@ -569,7 +569,7 @@ export function useOrderEntry(
   };
 
   const estLiqPrice = useMemo(() => {
-    if (!accountInfo || !parsedData) return null;
+    if (!accountInfo || !parsedData || !markPrice) return null;
     const result = getPriceAndQty(formattedOrder as OrderEntity);
     if (result === null) return null;
     const { price, quantity } = result;

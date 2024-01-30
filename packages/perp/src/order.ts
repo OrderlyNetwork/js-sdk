@@ -22,7 +22,11 @@ export function minPrice(markprice: number, range: number) {
  * Scrope price when placing an order
  * @returns number
  */
-export function scropePrice(price: number, scrope: number, side: "BUY" | "SELL") : number {
+export function scropePrice(
+  price: number,
+  scrope: number,
+  side: "BUY" | "SELL"
+): number {
   if (side === "BUY") {
     return price * (1 - scrope);
   }
@@ -91,8 +95,8 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
           .add(
             !!currentPosition
               ? new Decimal(currentPosition.position_qty).mul(
-                currentPosition.mark_price
-              )
+                  currentPosition.mark_price
+                )
               : zero
           )
           .abs()
@@ -105,16 +109,15 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     currentPosition?.position_qty ?? 0
   );
 
-  return Math.max(
-    0,
-    new Decimal(markPrice)
-      .add(
-        new Decimal(totalCollateral)
-          .sub(newTotalMM)
-          .div(newQty.abs().mul(newMMR).sub(newQty))
-      )
-      .toNumber()
-  );
+  const price = new Decimal(markPrice)
+    .add(
+      new Decimal(totalCollateral)
+        .sub(newTotalMM)
+        .div(newQty.abs().mul(newMMR).sub(newQty))
+    )
+    .toNumber();
+
+  return Math.max(0, price);
 }
 
 export type EstimatedLeverageInputs = {
