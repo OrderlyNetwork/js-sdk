@@ -214,6 +214,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return props.submit().then(
               (res) => {
                 props.setValues({
+                  trigger_price: "",
                   order_price: "",
                   order_quantity: "",
                   total: "",
