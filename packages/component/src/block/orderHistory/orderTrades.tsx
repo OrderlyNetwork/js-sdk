@@ -9,7 +9,7 @@ export const OrderTrades: FC<{
     index: number
 }> = (props) => {
     const { record, index } = props;
-    const path = `/v1/order/${record.order_id}/trades`;
+    const path = record.algo_order_id !== undefined ? `/v1/algo/order/${record.algo_order_id}/trades` :`/v1/order/${record.order_id}/trades`;
     const { data } = usePrivateQuery<any[]>(path);
     const base = record?.symbol?.split("_")?.[1] || '';
     const config = useSymbolsInfo();

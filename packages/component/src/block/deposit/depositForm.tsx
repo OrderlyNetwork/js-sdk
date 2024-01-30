@@ -551,7 +551,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         fetchBalance={props.fetchBalance}
         onTokenChange={onTokenChange}
         balanceRevalidating={props.balanceRevalidating}
-        disabled={errors.ChainNetworkNotSupport}
+        disabled={errors?.ChainNetworkNotSupport}
       />
 
       <Divider className="orderly-py-4">

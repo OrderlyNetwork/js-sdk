@@ -128,7 +128,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
-          value={order.mark_price}
+          value={order.trigger_price}
         />
       </div>
       <div className="orderly-flex orderly-gap-3 orderly-text-4xs orderly-justify-end orderly-mt-2">

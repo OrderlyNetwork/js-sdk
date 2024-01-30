@@ -3,6 +3,8 @@ import { FC } from "react";
 import { SidePicker } from "@/block/pickers";
 import { Label } from "@/label";
 import { Checkbox } from "@/checkbox";
+import { useMutation } from "@orderly.network/hooks";
+import { modal } from "@/modal";
 
 interface Props {
   onCancelAll?: () => void;
@@ -11,6 +13,34 @@ interface Props {
 }
 
 export const Toolbar: FC<Props> = (props) => {
+  const [
+    cancelAll,
+    { error: cancelOrderError, isMutating: cancelMutating },
+  ] = useMutation("/v1/orders", "DELETE");
+
+  function cancelAllOrder() {
+    modal.confirm({
+      title: "Cancel all orders",
+      content: (
+        <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
+          Are you sure you want to cancel all of your pending orders?
+        </div>
+      ),
+      contentClassName: "desktop:orderly-w-[364px]",
+      onOk: async () => {
+        // do cancel all orders
+        // Promise.resolve();
+        await cancelAll(null,{"source_type": "ALL"});
+        // Promise.resolve();
+      },
+      onCancel: () => {
+        return Promise.reject();
+      },
+    }).catch((error) =>{
+
+    });
+  }
+
   return (
     <div className="orderly-data-list-filter orderly-flex orderly-justify-between orderly-items-center orderly-py-3 orderly-px-4">
       <div className="orderly-flex orderly-items-center orderly-gap-1">
@@ -23,16 +53,14 @@ export const Toolbar: FC<Props> = (props) => {
           Show all instruments
         </Label>
       </div>
-      {/* <Button
+      <Button
         variant={"outlined"}
         size={"small"}
         color={"tertiary"}
-        onClick={() => {
-          props.onCancelAll?.();
-        }}
-      >
+        onClick={cancelAllOrder}
+        >
         Cancel all
-      </Button> */}
+      </Button>
     </div>
   );
 };
