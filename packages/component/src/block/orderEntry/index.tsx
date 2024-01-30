@@ -501,7 +501,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 convertValueToPercentage(
                   Number(formattedOrder.order_quantity ?? 0),
                   0,
-                  maxQty === 0 ? 1 : maxQty
+                  maxQty
                 ).toFixed()
               )}
               %

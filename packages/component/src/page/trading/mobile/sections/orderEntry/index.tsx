@@ -63,6 +63,15 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     }
   );
 
+  useEffect(() => {
+    setOrder((order) => ({
+      ...order,
+      order_price: "",
+      order_quantity: "",
+      symbol,
+    }));
+  }, [symbol]);
+
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
       <OrderEntry
@@ -79,9 +88,9 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
               order_quantity: "",
               reduce_only: value,
             }));
+          } else {
+            setOrder((order) => ({ ...order, [field]: value }));
           }
-
-          setOrder((order) => ({ ...order, [field]: value }));
         }}
         setValues={(values) => {
           setOrder((order) => ({
