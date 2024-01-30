@@ -29,6 +29,7 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
         {bridgeless && <Tag color="primary">Bridgeless</Tag>}
       </div>
       {selected && (
+        // @ts-ignore
         <Circle className="orderly-fill-primary-light orderly-stroke-none orderly-w-[8px] orderly-h-[8px] desktop:orderly-ml-1" />
       )}
     </div>

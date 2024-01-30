@@ -2,17 +2,21 @@
   "name": "@orderly.network/react",
   "version": "0.1.31-alpha.10",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
   "files": [
-    "dist"
+    "dist",
+    "esm",
+    "lib"
   ],
   "scripts": {
     "watch": "tsup --watch --tsconfig tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
-    "build:tsup": "tsup --tsconfig tsconfig.build.json",
+    "build": "pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
+    "build:tsup": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
+    "build:esm": "rimraf -rf esm && tsc --project tsconfig.build.json --outDir esm && npx tailwindcss -o ./esm/styles.css --minify",
+    "build:cjs": "rimraf -rf lib && tsc --project tsconfig.build.json --module commonjs --outDir lib && npx tailwindcss -o ./lib/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build"
@@ -57,6 +61,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "rollup": "^3.26.3",
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-postcss": "^4.0.2",

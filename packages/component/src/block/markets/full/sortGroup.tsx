@@ -1,8 +1,8 @@
 import { FC, useEffect } from "react";
-import { SortItem, SortKey } from "../sections/sortItem";
+import { SortItem } from "../sections/sortItem";
 import { useSort } from "../useSort";
-import { SortCondition } from "../sections/sortGroup";
 import { cn } from "@/utils";
+import { SortCondition, SortKey } from "../shared/types";
 
 interface Props {
   value?: SortKey;

@@ -24,6 +24,7 @@ export const DesktopFreeCollat: FC<{ title?: string; className?: string }> = (
 ) => {
   return (
     <Tooltip
+      // @ts-ignore
       content={
         <div>
           <span>Free collateral for placing new orders.</span>

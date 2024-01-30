@@ -99,6 +99,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
 
     useEffect(() => {
       if (triggerRef.current) {
+        // @ts-ignore
         const width = triggerRef.current.offsetWidth;
         setDropdownWidth(width);
       }

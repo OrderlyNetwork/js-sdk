@@ -51,6 +51,7 @@ export const MyLeverageView: FC<Props> = (props) => {
     <div className="orderly-px-3 orderly-py-2">
       <LeverageView
         maxLeverage={maxLeverage as any}
+        // @ts-ignore
         predFundingRate={data.est_funding_rate}
         countdown={data.countDown}
         onShowLeverageInfo={showLeverageInfo}

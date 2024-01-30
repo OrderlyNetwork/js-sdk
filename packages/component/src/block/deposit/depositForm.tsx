@@ -275,6 +275,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const onChainChange = useCallback(
     (value: API.Chain) => {
+      if (!value) return;
       if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
       props
         .switchChain?.({

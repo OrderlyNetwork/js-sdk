@@ -33,6 +33,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
         }
       >
         <Tooltip
+          // @ts-ignore
           content={
             <div>
               <span>

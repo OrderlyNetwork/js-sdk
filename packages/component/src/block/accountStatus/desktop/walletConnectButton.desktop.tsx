@@ -94,6 +94,7 @@ export const DesktopWalletConnnectButton: FC<
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
+    // @ts-ignore
     if (connectedChain && isTestnet(parseInt(connectedChain.id))) {
       return allChains.testnet ?? [];
     }

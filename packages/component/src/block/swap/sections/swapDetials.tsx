@@ -42,6 +42,7 @@ export const SwapDetails: FC<Props> = (props) => {
           className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
             <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-primary-light orderly-text-xs">
+              {/* @ts-ignore */}
               <Fuel size={14} />
               <Numeral
                 unit={props.nativeToken?.symbol}
