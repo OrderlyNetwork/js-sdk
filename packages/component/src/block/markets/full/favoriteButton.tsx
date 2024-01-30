@@ -11,6 +11,7 @@ import { Divider } from "@/divider";
 import { ListView } from "@/listView";
 import { cn } from "@/utils/css";
 import { CheckIcon, UncheckIcon, CircleAdd } from "@/icon";
+// @ts-ignore
 import { FavoriteTab } from "@orderly.network/hooks";
 import { Input } from "@/input";
 import Button from "@/button";

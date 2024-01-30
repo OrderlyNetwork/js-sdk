@@ -44,6 +44,7 @@ export const AccountStatus: FC<
 
   const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const { connectedChain } = useWalletConnector();
+  // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
     enableSwapDeposit,
     pick: "network_infos",
