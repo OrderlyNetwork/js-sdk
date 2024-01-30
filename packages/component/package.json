@@ -12,11 +12,11 @@
   "scripts": {
     "watch": "tsup --watch --tsconfig tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
+    "build": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
     "build:tsup": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
-    "build:esm": "rimraf -rf esm && tsc --project tsconfig.build.json --outDir esm && npx tailwindcss -o ./esm/styles.css --minify",
-    "build:cjs": "rimraf -rf lib && tsc --project tsconfig.build.json --module commonjs --outDir lib && npx tailwindcss -o ./lib/styles.css --minify",
+    "build:esm": "tsc --project tsconfig.build.json --outDir esm && npx tailwindcss -o ./esm/styles.css --minify",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib && npx tailwindcss -o ./lib/styles.css --minify",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build"
