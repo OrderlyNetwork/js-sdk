@@ -4,35 +4,34 @@ import {ChartMode} from "./tradingViewAdapter/type";
 import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
 import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
 
-import { useWS, useConfig } from "@orderly.network/hooks";
+import {useWS, useConfig} from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 
 
-
-
 export interface TradingViewOptions {
-  
+
 }
 
 export interface TradingViewPorps {
     symbol?: string;
-    mode?:ChartMode;
-    libraryPath: string;
-    tradingViewScriptSrc: string;
+    mode?: ChartMode;
+    libraryPath?: string;
+    tradingViewScriptSrc?: string;
     tradingViewCustomCssUrl?: string;
     interval?: string;
     overrides?: any;
     theme?: string;
     studiesOverrides?: any;
     fullscreen?: boolean;
+    closePositionConfirmCallback?: (data: any) => void;
 }
 
 function Link(props: {
     url: string;
-    children?:any;
+    children?: any;
 }) {
     return (
         <span onClick={() => window.open(props.url)} style={{
@@ -48,7 +47,7 @@ function Link(props: {
 const getOveriides = () => {
     const upColor = "#00B59F";
     const downColor = "#FF67C2";
-    const  overrides =  {
+    const overrides = {
         "paneProperties.background": "#16141c",
         // "paneProperties.background": "#ffff00",
         // "mainSeriesProperties.style": 1,
@@ -68,12 +67,12 @@ const getOveriides = () => {
         "scalesProperties.textColor": "#97969B",
         'paneProperties.legendProperties.showSeriesTitle': false,
     };
-    const     studiesOverrides = {
+    const studiesOverrides = {
         "volume.volume.color.0": "#613155",
         "volume.volume.color.1": "#14494A",
     };
 
-    return  {
+    return {
         overrides,
         studiesOverrides,
     }
@@ -81,15 +80,16 @@ const getOveriides = () => {
 
 export function TradingView({
                                 symbol,
-    mode = ChartMode.UNLIMITED,
+                                mode = ChartMode.UNLIMITED,
                                 libraryPath,
                                 tradingViewScriptSrc,
                                 tradingViewCustomCssUrl,
-interval,
-overrides: customerOverrides,
-theme,
-studiesOverrides: customerStudiesOverrides,
-fullscreen,
+                                interval,
+                                overrides: customerOverrides,
+                                theme,
+                                studiesOverrides: customerStudiesOverrides,
+                                fullscreen,
+                                closePositionConfirmCallback
                             }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -98,7 +98,7 @@ fullscreen,
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
-    const broker = useBroker();
+    const broker = useBroker({closeConfirm: closePositionConfirmCallback});
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
 
     useEffect(() => {
@@ -109,7 +109,7 @@ fullscreen,
 
             const script = document.createElement("script");
             script.setAttribute("data-nscript", "afterInteractive");
-            script.src =tradingViewScriptSrc;
+            script.src = tradingViewScriptSrc;
             script.async = true;
             script.type = "text/javascript";
             script.onload = () => {
@@ -121,7 +121,7 @@ fullscreen,
             chartRef.current.appendChild(script);
 
         }
-    }, [chartRef,tradingViewScriptSrc]);
+    }, [chartRef, tradingViewScriptSrc]);
 
     const onChartClick = () => {
     }
@@ -133,8 +133,8 @@ fullscreen,
         }
 
         const defaultOverrides = getOveriides();
-        const overrides = customerOverrides? Object.assign({}, defaultOverrides.overrides, customerOverrides) : defaultOverrides.overrides;
-        const studiesOverrides = customerStudiesOverrides? Object.assign({}, defaultOverrides.studiesOverrides, customerStudiesOverrides) : defaultOverrides.studiesOverrides;
+        const overrides = customerOverrides ? Object.assign({}, defaultOverrides.overrides, customerOverrides) : defaultOverrides.overrides;
+        const studiesOverrides = customerStudiesOverrides ? Object.assign({}, defaultOverrides.studiesOverrides, customerStudiesOverrides) : defaultOverrides.studiesOverrides;
         if (chartRef.current) {
             const options: any = {
                 fullscreen: fullscreen ?? false,
@@ -191,12 +191,12 @@ fullscreen,
     }, [symbol]);
 
     useEffect(() => {
-       if (!chart.current) {
-           return;
-       }
-       chart.current.updateOverrides({
-           interval,
-       });
+        if (!chart.current) {
+            return;
+        }
+        chart.current.updateOverrides({
+            interval,
+        });
 
     }, [interval]);
     return (
@@ -212,27 +212,27 @@ fullscreen,
                     height: '100%',
                 }}>
 
-                <div style={{
-                    color: 'rgb(var(--orderly-color-base-foreground) / 0.98)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'left',
-                    height: '100%',
-                    padding: '20px',
-                    fontSize: '14px',
-                    lineHeight:'1.3rem',
-                    margin: '0 auto',
-                }}>
-                    <p style={{
-                        marginBottom: '24px',
-                    }}>Due to TradingView's policy, you will need to apply for your own license.</p>
+                    <div style={{
+                        color: 'rgb(var(--orderly-color-base-foreground) / 0.98)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'left',
+                        height: '100%',
+                        padding: '20px',
+                        fontSize: '14px',
+                        lineHeight: '1.3rem',
+                        margin: '0 auto',
+                    }}>
+                        <p style={{
+                            marginBottom: '24px',
+                        }}>Due to TradingView's policy, you will need to apply for your own license.</p>
 
-                    <p style={{
-                        marginBottom:'12px',
-                    }}>1.&nbsp;Please apply for your TradingView license <Link url=''>here</Link>.</p>
-                    <p>2.&nbsp;Follow the instructions on <Link url=''>sdk.orderly.network</Link> to set up.</p>
-            </div>
+                        <p style={{
+                            marginBottom: '12px',
+                        }}>1.&nbsp;Please apply for your TradingView license <Link url=''>here</Link>.</p>
+                        <p>2.&nbsp;Follow the instructions on <Link url=''>sdk.orderly.network</Link> to set up.</p>
+                    </div>
                 </div>
             }
         </div>

@@ -95,6 +95,7 @@ export class PositionLineService{
             .onMove(() => {
             })
             .onCancel(null, () => {
+                this.broker.closePosition(position);
             });
     }
 }

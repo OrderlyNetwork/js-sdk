@@ -8,17 +8,20 @@ export class OrderLineService{
     private instance: IChartingLibraryWidget;
     private pendingOrderLineMap: Map<number, IOrderLineAdapter>;
     private pendingOrders: any[];
+    private broker: ReturnType<typeof useBroker>;
 
     constructor(instance: IChartingLibraryWidget, broker: ReturnType<typeof useBroker>) {
         this.instance = instance;
         this.pendingOrderLineMap = new Map();
         this.pendingOrders = [];
+        this.broker = broker;
     }
 
     renderPendingOrders(newPendingOrders: any[]) {
         if (newPendingOrders) {
             this.pendingOrders = newPendingOrders;
         }
+        this.cleanOldPendingOrders(this.pendingOrders);
         this.pendingOrders.forEach(order => this.renderPendingOrder(order))
 
     }
@@ -98,7 +101,7 @@ export class OrderLineService{
             .setLineLength(lineLength)
             .setQuantity(quantity)
             .setPrice(price)
-            .onCancel(null, () => {});
+            .onCancel(null, () => this.broker.cancelOrder(pendingOrder));
 
 
         return orderLine;
