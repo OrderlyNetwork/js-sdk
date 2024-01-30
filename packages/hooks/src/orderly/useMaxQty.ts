@@ -94,15 +94,17 @@ export const useMaxQty = (
 
     const getSymbolInfo = symbolInfo[symbol];
 
+    const filterAlgoOrders = orders.filter((item) => item.algo_order_id === undefined);
+
     // current symbol buy order quantity
     const buyOrdersQty = account.getQtyFromOrdersBySide(
-      orders,
+      filterAlgoOrders,
       symbol,
       OrderSide.BUY
     );
     // current symbol sell order quantity
     const sellOrdersQty = account.getQtyFromOrdersBySide(
-      orders,
+      filterAlgoOrders,
       symbol,
       OrderSide.SELL
     );
@@ -111,7 +113,7 @@ export const useMaxQty = (
       (item: API.Position) => item.symbol !== symbol
     );
 
-    const otherOrders = orders.filter(
+    const otherOrders = filterAlgoOrders.filter(
       (item: API.Order) => item.symbol !== symbol
     );
 

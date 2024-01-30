@@ -214,6 +214,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return props.submit().then(
               (res) => {
                 props.setValues({
+                  trigger_price: "",
                   order_price: "",
                   order_quantity: "",
                   total: "",
@@ -318,7 +319,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     // const [ratio] = useDebounce(field,200);
 
-    console.log(commify(formattedOrder.order_quantity || ""));
+    // console.log(commify(formattedOrder.order_quantity || ""));
 
     return (
       // @ts-ignore

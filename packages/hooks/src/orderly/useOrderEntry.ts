@@ -423,7 +423,7 @@ export function useOrderEntry(
     // diff order entry
     const item = diffOrderEntry(prevOrderData.current, parsedData);
 
-    console.log(prevOrderData.current, symbolOrOrder, item);
+    // console.log(prevOrderData.current, symbolOrOrder, item);
 
     if (!item) {
       return orderDataCache.current as Partial<OrderEntity>;
