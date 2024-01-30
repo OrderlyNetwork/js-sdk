@@ -6,6 +6,7 @@ import { Numeral } from "@/text";
 import { MemoizedCompnent } from "./fundingRate";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { TickerMask } from "./tickerMask";
+import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 interface Props {
   symbol: string;
@@ -69,9 +70,9 @@ export const Ticker: FC<Props> = (props) => {
           ref={containerRef}
         >
           <div ref={leadingElementRef}>
-            <Numeral coloring className="orderly-font-semibold">
+            <NumeralWithCtx coloring className="orderly-font-semibold">
               {data?.["24h_close"]}
-            </Numeral>
+            </NumeralWithCtx>
           </div>
           <Statistic
             label={"24h change"}
@@ -89,13 +90,13 @@ export const Ticker: FC<Props> = (props) => {
           />
           <Statistic
             label={"Mark"}
-            value={data?.mark_price}
+            value={(<NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>)}
             rule={"price"}
             hint="Price for the computation of unrealized PnL and liquidation."
           />
           <Statistic
             label={"Index"}
-            value={data?.index_price}
+            value={(<NumeralWithCtx>data?.index_price</NumeralWithCtx>)}
             rule={"price"}
             hint="Average of the last prices across other exchanges."
           />
