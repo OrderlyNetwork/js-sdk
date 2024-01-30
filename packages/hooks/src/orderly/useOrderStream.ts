@@ -36,14 +36,17 @@ export const useOrderStream = (params: Params) => {
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
   ] = useMutation("/v1/order", "DELETE");
+
   const [
     doUpdateOrder,
     { error: updateOrderError, isMutating: updateMutating },
   ] = useMutation("/v1/order", "PUT");
+
   const [
     doCanceAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
+  
   const [
     doUpdateAlgoOrder,
     { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
@@ -150,7 +153,7 @@ export const useOrderStream = (params: Params) => {
     } else if (orderId.algo_order_id !== undefined) {
       isAlgoOrder = true;
     }
-    if (isAlgoOrder) {      
+    if (isAlgoOrder) {
       return doCanceAlgolOrder(null, {
         // @ts-ignore
         order_id: orderId.algo_order_id,

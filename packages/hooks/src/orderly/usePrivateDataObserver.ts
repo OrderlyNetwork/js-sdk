@@ -46,6 +46,19 @@ export const usePrivateDataObserver = (options: {
 
     return () => unsubscribe?.();
   }, [state.accountId]);
+  
+  // algo orders
+  useEffect(() => {
+    if (!state.accountId) return;
+    const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
+      onMessage: (data: any) => {
+        updateOrders(data);
+        ee.emit("orders:changed", data);
+      },
+    });
+
+    return () => unsubscribe?.();
+  }, [state.accountId]);
 
   // positions
   useEffect(() => {
