@@ -184,37 +184,33 @@ export class LimitOrderCreator extends BaseOrderCreator {
           side
         );
 
+        const priceRange = side === "BUY" ? {
+          min: scropePriceNumbere,
+          max: maxPriceNumber,
+        } : {
+          min: minPriceNumber,
+          max: scropePriceNumbere
+        };
+
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
-        if (side === OrderSide.BUY && price.gt(maxPriceNumber)) {
+        if (price.gt(priceRange.max)) {
           errors.order_price = {
             type: "max",
             message: `price must be less than ${new Decimal(
-              maxPriceNumber
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (side === OrderSide.BUY && price.lt(scropePriceNumbere)) {
-          errors.order_price = {
-            type: "max",
-            message: `price must be more than ${new Decimal(
-              scropePriceNumbere
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (side === OrderSide.SELL && price.lt(minPriceNumber)) {
-          errors.order_price = {
-            type: "min",
-            message: `price must be greater than ${new Decimal(
-              minPriceNumber
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (side === OrderSide.SELL && price.gt(scropePriceNumbere)) {
-          errors.order_price = {
-            type: "min",
-            message: `price must be less than ${new Decimal(
-              scropePriceNumbere
+              priceRange.max
             ).todp(symbol.quote_dp)}`,
           };
         }
+        if (price.lt(priceRange.min)) {
+          errors.order_price = {
+            type: "min",
+            message: `price must be more than ${new Decimal(
+              priceRange.min
+            ).todp(symbol.quote_dp)}`,
+          };
+        }
+
       }
 
       return errors;
@@ -240,10 +236,10 @@ export class MarketOrderCreator extends BaseOrderCreator {
   }
 }
 
-export class PostOnlyOrderCreator extends LimitOrderCreator {}
+export class PostOnlyOrderCreator extends LimitOrderCreator { }
 
-export class FOKOrderCreator extends LimitOrderCreator {}
-export class IOCOrderCreator extends LimitOrderCreator {}
+export class FOKOrderCreator extends LimitOrderCreator { }
+export class IOCOrderCreator extends LimitOrderCreator { }
 
 export class StopLimitOrderCreator extends LimitOrderCreator {
   create(values: OrderEntity, config: ValuesDepConfig): OrderEntity {
@@ -263,7 +259,6 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
     // @ts-ignore
     delete order["isStopOrder"];
 
-    console.log("result is", order);
     return order;
   }
   validate(
@@ -292,39 +287,34 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
         const scropePriceNumbere = scropePrice(
-          config.markPrice,
+          trigger_price,
           price_scope,
           side
         );
 
+        const priceRange = side === "BUY" ? {
+          min: scropePriceNumbere,
+          max: maxPriceNumber,
+        } : {
+          min: minPriceNumber,
+          max: scropePriceNumbere
+        };
+
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
-        if (side === OrderSide.BUY && price.gt(maxPriceNumber)) {
+        if (price.gt(priceRange.max)) {
           errors.order_price = {
             type: "max",
             message: `price must be less than ${new Decimal(
-              maxPriceNumber
+              priceRange.max
             ).todp(symbol.quote_dp)}`,
           };
-        } else if (side === OrderSide.BUY && price.lt(scropePriceNumbere)) {
+        }
+        if (price.lt(priceRange.min)) {
           errors.order_price = {
-            type: "max",
+            type: "min",
             message: `price must be more than ${new Decimal(
-              scropePriceNumbere
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (side === OrderSide.SELL && price.lt(minPriceNumber)) {
-          errors.order_price = {
-            type: "min",
-            message: `price must be greater than ${new Decimal(
-              minPriceNumber
-            ).todp(symbol.quote_dp)}`,
-          };
-        } else if (side === OrderSide.SELL && price.gt(scropePriceNumbere)) {
-          errors.order_price = {
-            type: "min",
-            message: `price must be less than ${new Decimal(
-              scropePriceNumbere
+              priceRange.min
             ).todp(symbol.quote_dp)}`,
           };
         }
