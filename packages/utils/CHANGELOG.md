@@ -1,5 +1,12 @@
 # @orderly.network/utils
 
+## 0.0.79-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+
 ## 0.0.79-alpha.25
 
 ### Patch Changes

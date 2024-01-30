@@ -1,5 +1,18 @@
 # @orderly/docs
 
+## 0.1.67-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+- Updated dependencies
+- Updated dependencies [85dd1d19]
+  - @orderly.network/react@0.1.31-alpha.26
+  - @orderly.network/web3-onboard@0.0.28-alpha.26
+  - @orderly.network/hooks@1.0.28-alpha.26
+  - @orderly.network/types@0.1.27-alpha.26
+
 ## 0.1.67-alpha.25
 
 ### Patch Changes

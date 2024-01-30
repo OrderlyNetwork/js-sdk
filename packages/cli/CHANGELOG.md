@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.0.36-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+- Updated dependencies
+- Updated dependencies [85dd1d19]
+  - @orderly.network/core@0.1.27-alpha.26
+
 ## 0.0.36-alpha.25
 
 ### Patch Changes

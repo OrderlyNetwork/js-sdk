@@ -1,5 +1,16 @@
 # @orderly.network/futures
 
+## 1.0.27-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+- Updated dependencies
+- Updated dependencies [85dd1d19]
+  - @orderly.network/types@0.1.27-alpha.26
+  - @orderly.network/utils@0.0.79-alpha.26
+
 ## 1.0.27-alpha.25
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # create-orderly-app
 
+## 0.1.4-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+
 ## 0.1.4-alpha.25
 
 ### Patch Changes
