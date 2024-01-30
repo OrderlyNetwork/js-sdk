@@ -44,6 +44,8 @@ export function useLocalStorage<T>(
 
         // Save to local storage
         window.localStorage.setItem(key, JSON.stringify(newValue));
+        // dispath event
+        window.dispatchEvent(new Event("storage"));
 
         // Save state
         setStoredValue(() => newValue);
@@ -70,6 +72,24 @@ export function useLocalStorage<T>(
   //   },
   //   [key, readValue],
   // )
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent | CustomEvent) => {
+      
+      if ((event as StorageEvent)?.key && (event as StorageEvent).key !== key) {
+        return
+      }
+      setStoredValue(readValue());
+    };
+
+    // 添加 storage 事件监听器
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      // 清除 storage 事件监听器
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [key]);
 
   return [storedValue, setValue];
 }

@@ -35,7 +35,7 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
   const onSubmit = () => {
     if (nextLeverage.current === maxLeverage) return;
     update({ leverage: nextLeverage.current }).then(
-      (res) => {
+      (res: any) => {
         setOpen(false);
         toast.success("Leverage updated");
       },

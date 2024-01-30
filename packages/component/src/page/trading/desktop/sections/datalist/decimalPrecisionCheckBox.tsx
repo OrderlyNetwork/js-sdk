@@ -61,6 +61,7 @@ export enum DecimalPrecisionType {
           className="orderly-w-[14px] orderly-h-[14px] orderly-rounded-full orderly-border-2 orderly-border-base-contrast-20"
         >
           {props.active && (
+            // @ts-ignore
             <Circle className="orderly-w-[10px] orderly-h-[10px] orderly-text-base-contrast orderly-bg-base-contrast orderly-rounded-full" />
           )}
         </button>

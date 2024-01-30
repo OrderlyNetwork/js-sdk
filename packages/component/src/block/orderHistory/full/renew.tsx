@@ -18,6 +18,7 @@ export const Renew: FC<{ record: any }> = (props) => {
     >("/v1/order");
     const [loading, setLoading] = useState(false);
 
+    // @ts-ignore
     const { brokerId } = useConfig<ConfigStore>();
     const onSubmit = useCallback(() => {
         setLoading(false);
@@ -92,6 +93,7 @@ export const Renew: FC<{ record: any }> = (props) => {
                     </div>
                     <Divider className="orderly-mb-2" />
                     <OrderConfirmView
+                        // @ts-ignore
                         order={{ ...ordetEntity, total: record.price * record.quantity }}
                         symbol={record.symbol}
                         base={base}

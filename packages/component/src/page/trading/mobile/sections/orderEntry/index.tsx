@@ -50,6 +50,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     reduce_only: false,
     side: OrderSide.BUY,
     order_type: OrderType.LIMIT,
+    isStopOrder: false,
   });
   // const [reduceOnly, setReduceOnly] = useState(false);
   const formState = useOrderEntry(
@@ -70,16 +71,17 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         // side={side}
         symbol={symbol}
         onFieldChange={(field, value) => {
-          // if (field === "side" || field === "order_type") {
-          //   setOrder((order) => ({
-          //     ...order,
-          //     order_price: undefined,
-          //     order_quantity: undefined,
-          //     [field]: value,
-          //   }));
-          // } else {
+          console.log("field", field, value);
+
+          if (field === "reduce_only") {
+            setOrder((order) => ({
+              ...order,
+              order_quantity: "",
+              reduce_only: value,
+            }));
+          }
+
           setOrder((order) => ({ ...order, [field]: value }));
-          // }
         }}
         setValues={(values) => {
           setOrder((order) => ({

@@ -11,6 +11,7 @@ interface ToastProps extends ToastOptions {}
 
 export const Toaster: FC<ToastProps> = (props) => {
   return (
+    // @ts-ignore
     <PrimitiveToaster
       toastOptions={{
         duration: 2500,
@@ -22,7 +23,7 @@ export const Toaster: FC<ToastProps> = (props) => {
           style: {
             fontSize: "14px",
             color: "rgba(255, 255, 255, 0.98)",
-          }
+          },
         },
         error: {
           iconTheme: {
@@ -32,12 +33,13 @@ export const Toaster: FC<ToastProps> = (props) => {
           style: {
             fontSize: "14px",
             color: "rgba(255, 255, 255, 0.98)",
-          }
+          },
         },
       }}
       {...props}
     >
       {(t) => (
+        // @ts-ignore
         <ToastBar
           toast={t}
           style={{
@@ -57,6 +59,7 @@ export const Toaster: FC<ToastProps> = (props) => {
               {message}
               {t.type !== "loading" && (
                 <button onClick={() => toast.dismiss(t.id)}>
+                  {/* @ts-ignore */}
                   <X size={18} color="rgba(255, 255, 255, 0.2)" />
                 </button>
               )}

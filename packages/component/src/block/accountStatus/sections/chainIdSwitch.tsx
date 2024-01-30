@@ -88,6 +88,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
               mainChains={mainChains}
               // @ts-ignore
               testChains={testChains}
+              // @ts-ignore
               onItemClick={onChainChange}
             />
           </DialogBody>

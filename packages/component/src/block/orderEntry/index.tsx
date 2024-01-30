@@ -34,7 +34,10 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { modal } from "@/modal";
-import { OrderConfirmView } from "./sections/orderConfirmView";
+import {
+  OrderConfirmFooter,
+  OrderConfirmView,
+} from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal, commify } from "@orderly.network/utils";
@@ -43,6 +46,7 @@ import { cn } from "@/utils/css";
 import { convertValueToPercentage } from "@/slider/utils";
 import { FreeCollat } from "./sections/freeCollat";
 import { EstInfo } from "./sections/setInfo";
+import { ApiError } from "@orderly.network/types";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
@@ -109,7 +113,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       markPrice,
     } = props;
 
-    const { side } = formattedOrder;
+    const { side, isStopOrder } = formattedOrder;
 
     const totalInputFocused = useRef<boolean>(false);
     const priceInputFocused = useRef<boolean>(false);
@@ -125,24 +129,33 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
 
     const ee = useEventEmitter();
-    const isMarketOrder = formattedOrder.order_type === OrderType.MARKET;
-
-    const orderbookItemClickHandler = useCallback((item: number[]) => {
-      props.onFieldChange("order_type", OrderType.LIMIT);
-      props.onFieldChange("order_price", item[0].toString());
-    }, []);
+    const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
+      formattedOrder.order_type || OrderType.LIMIT
+    );
 
     useEffect(() => {
+      const orderbookItemClickHandler = (item: number[]) => {
+        if (
+          formattedOrder.order_type !== OrderType.LIMIT &&
+          formattedOrder.order_type !== OrderType.STOP_LIMIT
+        ) {
+          props.onFieldChange("order_type", OrderType.LIMIT);
+        }
+        props.onFieldChange("order_price", item[0].toString());
+      };
+
       ee.on("orderbook:item:click", orderbookItemClickHandler);
 
       () => {
         ee.off("orderbook:item:click", orderbookItemClickHandler);
       };
-    }, []);
+    }, [formattedOrder.order_type]);
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
     const priceInputRef = useRef<HTMLInputElement | null>(null);
+
+    const isTable = useMediaQuery(MEDIA_TABLET);
 
     const onSubmit = useCallback(
       (event: FormEvent) => {
@@ -164,10 +177,21 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             }
             if (needConfirm) {
               return modal.confirm({
+                maxWidth: "sm",
                 title: "Confirm Order",
                 onCancel: () => {
                   return Promise.reject("cancel");
                 },
+                footer: !isTable ? (
+                  <OrderConfirmFooter
+                    onCancel={() => {
+                      return Promise.reject("cancel");
+                    }}
+                    // onOk={() => {
+                    //   return Promise.resolve(true);
+                    // }}
+                  />
+                ) : undefined,
                 content: (
                   <OrderConfirmView
                     order={{
@@ -178,6 +202,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     symbol={symbol}
                     base={symbolConfig?.base}
                     quote={symbolConfig?.quote}
+                    isTable={isTable}
                   />
                 ),
               });
@@ -186,15 +211,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             }
           })
           .then((isOk) => {
-            return props.submit().then((res) => {
-              props.setValues({
-                order_price: "",
-                order_quantity: "",
-                total: "",
-              });
+            return props.submit().then(
+              (res) => {
+                props.setValues({
+                  order_price: "",
+                  order_quantity: "",
+                  total: "",
+                });
 
-              // resetForm?.();
-            });
+                // resetForm?.();
+              },
+              (err) => {
+                if (typeof err === "string") {
+                  toast.error(err);
+                } else if (err.name === "ApiError") {
+                  toast.error(err.message);
+                } else {
+                  console.log("Create order failed:", err);
+                }
+              }
+            );
           })
           .catch((error) => {
             if (error !== "cancel" && !!error?.message) {
@@ -282,6 +318,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     // const [ratio] = useDebounce(field,200);
 
+    console.log(commify(formattedOrder.order_quantity || ""));
+
     return (
       // @ts-ignore
 
@@ -352,10 +390,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             fullWidth
             options={[
               { label: "Limit order", value: "LIMIT" },
-              {
-                label: "Market order",
-                value: "MARKET",
-              },
+              { label: "Market order", value: "MARKET" },
+              { label: "Stop limit", value: "STOP_LIMIT" },
+              { label: "Stop market", value: "STOP_MARKET" },
             ]}
             onChange={(value) => {
               // field.onChange(value);
@@ -368,6 +405,27 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               props.onFieldChange("order_type", value);
             }}
           />
+          {isStopOrder && (
+            <Input
+              disabled={disabled}
+              ref={priceInputRef}
+              prefix="Trigger price"
+              suffix={symbolConfig?.quote}
+              type="text"
+              inputMode="decimal"
+              error={!!metaState.errors?.trigger_price && errorsVisible}
+              helpText={metaState.errors?.trigger_price?.message}
+              className="orderly-text-right orderly-font-semibold"
+              value={commify(formattedOrder.trigger_price || "")}
+              containerClassName={"orderly-bg-base-600"}
+              onChange={(event) => {
+                // field.onChange(event.target.value);
+                props.onFieldChange("trigger_price", event.target.value);
+              }}
+              onFocus={() => (priceInputFocused.current = true)}
+              onBlur={() => (priceInputFocused.current = false)}
+            />
+          )}
           <Input
             disabled={disabled}
             ref={priceInputRef}
@@ -376,7 +434,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             type="text"
             inputMode="decimal"
             error={!!metaState.errors?.order_price && errorsVisible}
-            // placeholder={"Market"}
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
             value={

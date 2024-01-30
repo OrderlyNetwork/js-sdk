@@ -12,7 +12,7 @@ import { modal } from "@/modal";
 import { toast } from "@/toast";
 import { commify } from "@orderly.network/utils";
 import { OrderListContext } from "../../shared/orderListContext";
-import { editOrderConfirmContent } from "../../shared/confirmContent";
+import { EditOrderConfirmContent } from "../../shared/confirmContent";
 
 interface OrderEditFormProps {
   // symbol: string;
@@ -40,6 +40,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     defaultValues: {
       order_price: order.price?.toString(),
       order_quantity: order.quantity.toString(),
+      trigger_price: order.price?.toString(),
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -49,6 +50,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
     // },
     resolver: async (values) => {
+      // @ts-ignore
       const errors = await helper.validator(values);
       return {
         values,
@@ -56,6 +58,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       };
     },
   });
+
+  const isAlgoOrder = true; //order.algo_order_id !== undefined;
 
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
@@ -73,7 +77,13 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const onConfirm = (data: OrderEntity, dirtyFields: any) => {
     return modal.confirm({
       title: "Edit Order",
-      content: editOrderConfirmContent(data, dirtyFields, base),
+      content: EditOrderConfirmContent(
+        isAlgoOrder,
+        data,
+        dirtyFields,
+        base,
+        order.symbol
+      ),
       contentClassName: "desktop:orderly-w-[340px]",
       onOk: () => Promise.resolve(data),
       onCancel: () => {
@@ -95,6 +105,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   );
 
   const onFieldChange = (name: string, value: any) => {
+    // @ts-ignore
     const newValues = helper.calculate(getValues(), name, value);
     //
 
@@ -138,6 +149,31 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       <Divider className="orderly-py-5" />
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="orderly-flex orderly-flex-col orderly-gap-5">
+          {/* @ts-ignore */}
+          <Controller
+            name="trigger_price"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  prefix="Trigger price"
+                  suffix={quote}
+                  type="text"
+                  inputMode="decimal"
+                  containerClassName="orderly-bg-base-500 orderly-rounded-borderRadius"
+                  helpText={errors.trigger_price?.message}
+                  error={!!errors.trigger_price}
+                  className="orderly-text-right orderly-text-3xs"
+                  value={field.value!}
+                  onChange={(e) => {
+                    // field.onChange(e.target.value)
+                    onFieldChange("trigger_price", e.target.value);
+                  }}
+                />
+              );
+            }}
+          />
+          {/* @ts-ignore */}
           <Controller
             name="order_price"
             control={control}
@@ -161,6 +197,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
               );
             }}
           />
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}
@@ -187,6 +224,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         </div>
 
         <div className="orderly-py-5">
+          {/* @ts-ignore */}
           <Controller
             name="order_quantity"
             control={control}

@@ -7,7 +7,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
 import { compose, head, includes, omit } from "ramda";
 import {
@@ -102,11 +102,6 @@ export function useOrderEntry(
   reduceOnly?: boolean,
   options?: UseOrderEntryOptions
 ): UseOrderEntryReturn {
-  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
-    OrderEntity,
-    any
-  >("/v1/order");
-
   // console.log("+++++++", symbolOrOrder);
 
   if (typeof symbolOrOrder === "object") {
@@ -128,6 +123,11 @@ export function useOrderEntry(
   const orderDataCache = useRef<Partial<OrderEntity> | null>(null);
   //
   const notSupportData = useRef<Partial<OrderEntity>>({});
+
+  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
+    OrderEntity,
+    any
+  >(orderDataCache?.current?.isStopOrder ? "/v1/algo/order" : "/v1/order");
 
   const [errors, setErrors] = useState<any>(null);
 
@@ -253,7 +253,9 @@ export function useOrderEntry(
     }
 
     if (typeof symbolOrOrder.order_quantity === "number") {
-      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.toString();
+      symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)
+        .toDecimalPlaces(baseDP)
+        .toString();
     }
 
     return symbolOrOrder;
@@ -297,11 +299,26 @@ export function useOrderEntry(
         .then((errors) => {
           submitted.current = true;
 
-          if (errors.order_price || errors.order_quantity) {
+          if (
+            errors.order_price ||
+            errors.order_quantity ||
+            errors.trigger_price
+          ) {
             setErrors(errors);
-            reject(errors);
+            reject(
+              errors.order_price?.message || errors.order_quantity?.message
+            );
+            // throw new SDKError(
+            //   errors.order_price?.message ||
+            //     errors.order_quantity?.message ||
+            //     "order validation error"
+            // );
           } else {
-            const data = orderCreator.create(values as OrderEntity);
+            const data = orderCreator.create(values as OrderEntity, {
+              symbol: symbolInfo[symbol](),
+              maxQty,
+              markPrice: markPrice,
+            });
 
             console.log("------------------", data);
 
@@ -311,7 +328,7 @@ export function useOrderEntry(
                 ...data,
               })
             ).then((res) => {
-              console.log("res::::", res);
+              // console.log("res::::", res);
               // resolve(res);
               if (res.success) {
                 resolve(res.data);
@@ -406,11 +423,15 @@ export function useOrderEntry(
     // diff order entry
     const item = diffOrderEntry(prevOrderData.current, parsedData);
 
-    // console.log(prevOrderData.current, symbolOrOrder, item);
+    console.log(prevOrderData.current, symbolOrOrder, item);
 
     if (!item) {
       return orderDataCache.current as Partial<OrderEntity>;
     }
+
+    // if(item.key === "reduce_only") {
+
+    // }
 
     // if (
     //   item.key === "side" ||
@@ -437,6 +458,8 @@ export function useOrderEntry(
 
     const values = calculate(parsedData, item.key, item.value);
 
+    values.isStopOrder = values.order_type?.startsWith("STOP") || false;
+
     // console.log("-----------", values);
 
     values.total = values.total || "";
@@ -455,10 +478,12 @@ export function useOrderEntry(
     parsedData?.symbol,
     parsedData?.total,
     parsedData?.reduce_only,
+    parsedData?.trigger_price,
 
     markPrice,
   ]);
 
+  /// validator order info
   useEffect(() => {
     // validate order data;
     validator(formattedOrder)?.then((err) => {
@@ -468,6 +493,7 @@ export function useOrderEntry(
     formattedOrder.broker_id,
     formattedOrder.order_quantity,
     formattedOrder.total,
+    formattedOrder.trigger_price,
     markPrice,
   ]);
 
@@ -487,7 +513,11 @@ export function useOrderEntry(
     const orderPrice = Number(symbolOrOrder.order_price);
 
     if (isNaN(quantity) || quantity <= 0) return null;
-    if (symbolOrOrder.order_type === OrderType.LIMIT && isNaN(orderPrice))
+    if (
+      (symbolOrOrder.order_type === OrderType.LIMIT ||
+        symbolOrOrder.order_type === OrderType.STOP_LIMIT) &&
+      isNaN(orderPrice)
+    )
       return null;
 
     /**
@@ -505,7 +535,10 @@ export function useOrderEntry(
      */
     let price: number;
 
-    if (symbolOrOrder.order_type === OrderType.MARKET) {
+    if (
+      symbolOrOrder.order_type === OrderType.MARKET ||
+      symbolOrOrder.order_type === OrderType.STOP_MARKET
+    ) {
       if (symbolOrOrder.side === OrderSide.BUY) {
         price = askAndBid.current[0];
       } else {
@@ -566,6 +599,7 @@ export function useOrderEntry(
     formattedOrder?.order_price,
     formattedOrder?.order_quantity,
     formattedOrder?.total,
+    formattedOrder?.trigger_price,
     accountInfo,
   ]);
 
@@ -593,6 +627,7 @@ export function useOrderEntry(
     formattedOrder?.order_price,
     formattedOrder?.order_quantity,
     formattedOrder?.total,
+    formattedOrder?.trigger_price,
   ]);
 
   return {

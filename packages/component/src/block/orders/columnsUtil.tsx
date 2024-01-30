@@ -111,6 +111,22 @@ export const columnsBasis = (): Column<API.Order>[] => {
             );
           },
         },
+        { 
+          title: "Trigger",
+          width: 100,
+          className: "orderly-h-[48px] orderly-font-semibold",
+          dataIndex: "price",
+          render: (value: string, record: any) => {
+            return (
+              <Numeral
+                className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
+                precision={2}
+              >
+                {-1}
+              </Numeral>
+            );
+          },
+        },
         {
           title: "Fee",
           width: 100,

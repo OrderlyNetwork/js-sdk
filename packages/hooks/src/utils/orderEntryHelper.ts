@@ -50,17 +50,6 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   });
 
   if (needNumberOnlyFields.includes(input)) {
-    // clean the thousandths
-    // if (typeof value !== "string") {
-    //   value = value.toString();
-    // }
-    // value = value.replace(/,/g, "");
-    // // clear extra character expect number and .
-    // value = value
-    //   .replace(/[^\d.]/g, "")
-    //   .replace(".", "$#$")
-    //   .replace(/\./g, "")
-    //   .replace("$#$", ".");
     value = cleanStringStyle(value);
   }
 
@@ -137,18 +126,32 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   price.toDecimalPlaces(Math.min(priceDP, config.quoteDP));
 
-  if (!values.order_quantity) {
+  if (!values.order_quantity && !values.total) {
     return [values, input, value, markPrice, config];
   }
 
-  const total = price.mul(values.order_quantity);
+  const newValue = {
+    ...values,
+  };
+
+  if (values.order_quantity) {
+    // total = price.mul(values.order_quantity);
+    newValue.total = price.mul(values.order_quantity).todp(2).toString();
+  } else if (values.total) {
+    // total = new Decimal(values.total);
+    newValue.order_quantity = new Decimal(values.total)
+      .div(price)
+      .todp(config.baseDP)
+      .toString();
+  }
 
   // const quantityDP = total.dp();
   return [
-    {
-      ...values,
-      total: total.todp(2).toString(),
-    },
+    // {
+    //   ...values,
+    //   total: total.todp(2).toString(),
+    // },
+    newValue,
     input,
     value,
     markPrice,
@@ -181,12 +184,18 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   // }
 
-  if (values.order_type === OrderType.MARKET) {
+  if (
+    values.order_type === OrderType.MARKET ||
+    values.order_type === OrderType.STOP_MARKET
+  ) {
     const price = markPrice;
     values.total = quantity.mul(price).todp(2).toNumber();
   }
 
-  if (values.order_type === OrderType.LIMIT) {
+  if (
+    values.order_type === OrderType.LIMIT ||
+    values.order_type === OrderType.STOP_LIMIT
+  ) {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
@@ -224,7 +233,11 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   let price = markPrice;
 
-  if (values.order_type === OrderType.LIMIT && !!values.order_price) {
+  if (
+    (values.order_type === OrderType.LIMIT ||
+      values.order_type === OrderType.STOP_LIMIT) &&
+    !!values.order_price
+  ) {
     price = Number(values.order_price);
   }
   let total = new Decimal(value);

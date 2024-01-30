@@ -18,6 +18,17 @@ export function minPrice(markprice: number, range: number) {
   return markprice * (1 - range);
 }
 
+/**
+ * Scrope price when placing an order
+ * @returns number
+ */
+export function scropePrice(price: number, scrope: number, side: "BUY" | "SELL") : number {
+  if (side === "BUY") {
+    return price * (1 - scrope);
+  }
+  return price * (1 + scrope);
+}
+
 export type EstimatedLiquidationPriceInputs = {
   totalCollateral: number;
   markPrice: number;
@@ -80,8 +91,8 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
           .add(
             !!currentPosition
               ? new Decimal(currentPosition.position_qty).mul(
-                  currentPosition.mark_price
-                )
+                currentPosition.mark_price
+              )
               : zero
           )
           .abs()

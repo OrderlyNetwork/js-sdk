@@ -33,8 +33,10 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
         {props.state === "pending" ? (
           <Spinner size={"small"} background={"transparent"} />
         ) : props.state === "success" ? (
+          // @ts-ignore
           <Check size={18} className="orderly-text-primary-light" />
         ) : (
+          // @ts-ignore
           <X size={18} className="orderly-text-danger" />
         )}
       </div>

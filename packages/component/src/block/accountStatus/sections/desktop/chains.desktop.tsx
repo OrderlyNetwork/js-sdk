@@ -83,12 +83,14 @@ export const Chains: FC<ChainsProps> = (props) => {
 
   const chainName = useMemo(() => {
     const chain = findByChainId(
+      // @ts-ignore
       parseInt(connectedChain?.id || defaultChain),
       "network_infos"
     );
 
     if (!chain) return <span>Unknown</span>;
 
+    // @ts-ignore
     if (isTestnet(chain.chain_id)) {
       return <span>Testnet</span>;
     }
@@ -142,6 +144,7 @@ export const Chains: FC<ChainsProps> = (props) => {
           mainChains={mainChains}
           // @ts-ignore
           testChains={testChains}
+          // @ts-ignore
           onItemClick={(item: any) => {
             setOpen(false);
 
@@ -158,6 +161,7 @@ export const Chains: FC<ChainsProps> = (props) => {
               switchDomain(item.id);
             }
           }}
+          // @ts-ignore
           currentChainId={parseInt(connectedChain?.id || defaultChain)}
         />
       </DropdownMenuContent>

@@ -1,5 +1,6 @@
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ListViewFull } from "./listview";
+// @ts-ignore
 import { MarketsType, useMarkets, FavoriteTab, Favorite, OrderlyContext } from "@orderly.network/hooks";
 import { useDataSource } from "../useDataSource";
 import { API } from "@orderly.network/types";
@@ -194,6 +195,7 @@ const FavoritesTabList: FC<{
                         const newTabs = item.tabs.filter((value: FavoriteTab) => value.id === tab.id);
 
                         if (newTabs.length !== item.tabs.length) {
+                            // @ts-ignore
                             props.updateSymbolFavoriteState({ symbol: item.name }, newTabs);
                         }
                     })

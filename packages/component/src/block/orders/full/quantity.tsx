@@ -51,6 +51,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
+    // @ts-ignore
     setOpen(true);
   };
 
@@ -58,6 +59,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
 
   const onConfirm = () => {
     setIsSubmitting(true);
+    // @ts-ignore
     editOrder(order.order_id, {
       order_price: order.price,
       order_quantity: quantity,
@@ -87,7 +89,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     >
       <div
         className={cn(
-          "orderly-flex orderly-w-[120px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-max-w-[120px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,
@@ -120,8 +122,10 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
         >
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            // @ts-ignore
             onClick={onClick}
           >
+            {/* @ts-ignore */}
             <Check size={18} />
           </button>
 
@@ -159,6 +163,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
                 className="orderly-absolute orderly-right-0 orderly-top-0 orderly-text-base-contrast-54"
                 onClick={cancelPopover}
               >
+                {/* @ts-ignore */}
                 <X size={18} />
               </button>
             </div>

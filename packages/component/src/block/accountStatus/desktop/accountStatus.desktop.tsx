@@ -44,6 +44,7 @@ export const AccountStatus: FC<
 
   const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const { connectedChain } = useWalletConnector();
+  // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
     enableSwapDeposit,
     pick: "network_infos",
@@ -56,6 +57,7 @@ export const AccountStatus: FC<
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
 
+    // @ts-ignore
     if (connectedChain && isTestnet(parseInt(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
@@ -76,6 +78,7 @@ export const AccountStatus: FC<
       />
       <DesktopWalletConnnectButton
         status={status}
+        // @ts-ignore
         chains={chains}
         address={props.address}
         balance={props.balance}

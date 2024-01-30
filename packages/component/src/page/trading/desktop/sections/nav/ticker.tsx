@@ -69,15 +69,19 @@ export const Ticker: FC<Props> = (props) => {
           ref={containerRef}
         >
           <div ref={leadingElementRef}>
-            <Numeral coloring className="orderly-font-semibold">{data?.["24h_close"]}</Numeral>
+            <Numeral coloring className="orderly-font-semibold">
+              {data?.["24h_close"]}
+            </Numeral>
           </div>
           <Statistic
             label={"24h change"}
             value={
               <div className={"orderly-flex orderly-space-x-1"}>
+                {/* @ts-ignore */}
                 <Numeral coloring>{data?.["24h_change"]}</Numeral>
                 <span className={"orderly-text-base-contrast-54"}>/</span>
                 <Numeral coloring rule={"percentages"}>
+                  {/* @ts-ignore */}
                   {data?.change || 0}
                 </Numeral>
               </div>
@@ -97,7 +101,7 @@ export const Ticker: FC<Props> = (props) => {
           />
           <Statistic
             label={"24h volume"}
-            value={(<Numeral rule="human">{data?.["24h_amount"]}</Numeral>)}
+            value={<Numeral rule="human">{data?.["24h_amount"]}</Numeral>}
           />
 
           <MemoizedCompnent symbol={props.symbol} />
