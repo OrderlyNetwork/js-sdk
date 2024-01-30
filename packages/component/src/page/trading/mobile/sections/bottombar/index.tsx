@@ -54,7 +54,7 @@ export const BottomNavBar = () => {
   return (
     <>
       {showGetTestUSDC && <GetTestUSDC />}
-      {errors.ChainNetworkNotSupport && (
+      {errors?.ChainNetworkNotSupport && (
         <ChainIdSwtich onSetChain={onSetChain} />
       )}
       <div

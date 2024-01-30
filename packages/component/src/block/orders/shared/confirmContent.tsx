@@ -7,6 +7,7 @@ import { FC } from "react";
 
 export const EditOrderConfirmContent = (
   isAlgoOrder: boolean,
+  isMarketOrder: boolean,
   data: OrderEntity,
   dirtyFields: Partial<OrderEntity>,
   base: string,
@@ -18,6 +19,7 @@ export const EditOrderConfirmContent = (
       dirtyFields={dirtyFields}
       base={base}
       symbol={symbol}
+      isMarketOrder={isMarketOrder}
     />
   }
   return (<NormalContent
@@ -86,16 +88,17 @@ const AlgoContent: FC<{
   dirtyFields: Partial<OrderEntity>,
   base: string,
   symbol: string,
+  isMarketOrder: boolean,
 }> = (props) => {
 
-  const { data, dirtyFields, base, symbol } = props;
+  const { data, dirtyFields, base, symbol, isMarketOrder } = props;
   const quote = symbol?.split("_")[2];
 
   const qty = data.order_quantity || "-";
   const triggerPrice = data.trigger_price || "-";
   const price = data.order_price || "-";
 
-  // console.log("algo content", symbol, data);
+  console.log("algo content", symbol, data);
   
 
   return (<div>
@@ -128,8 +131,8 @@ const AlgoContent: FC<{
     <div className="orderly-flex orderly-justify-between orderly-text-sm">
       <span className="orderly-text-base-contrast-54">Price</span>
       <div className="orderly-inline-block">
-        <Numeral className="orderly-mr-1">{price}</Numeral>
-        <span className="orderly-text-base-contrast-36">{quote}</span>
+        {isMarketOrder ? <span>Market</span> :  <Numeral>{price}</Numeral>}
+        <span className="orderly-ml-1 orderly-text-base-contrast-36">{quote}</span>
       </div>
     </div>
   </div>);
