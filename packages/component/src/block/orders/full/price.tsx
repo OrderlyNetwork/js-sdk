@@ -7,20 +7,15 @@ import { cn } from "@/utils/css";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
 import { Check, X } from "lucide-react";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Divider } from "@/divider";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
-
-  const isAlgoOrder = order?.algo_order_id !== undefined;
-  // console.log("price node", order);
-
-  const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
-
 
   const [price, setPrice] = useState<string>(
     (order.price?.toString()) ?? "Market"
@@ -28,6 +23,67 @@ export const Price = (props: { order: API.OrderExt }) => {
 
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
+
+  if (!editting && open <= 0) {
+    return (<NormalState order={order} price={price} setEditing={setEditting} />);
+  }
+
+  return (<EditingState
+    order={order}
+    price={price}
+    setPrice={setPrice}
+    editting={editting}
+    setEditting={setEditting}
+    open={open}
+    setOpen={setOpen}
+  />);
+
+};
+
+
+const NormalState: FC<{
+  order: any,
+  price: string,
+  setEditing: any,
+}> = (props) => {
+
+  const { order, price } = props;
+
+  return (
+    <div
+      className={cn(
+        "orderly-flex orderly-max-w-[110px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        props.setEditing(true);
+      }}
+    >
+      <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
+        {price}
+      </div>
+    </div>
+  );
+}
+
+const EditingState: FC<{
+  order: API.OrderExt,
+  price: string,
+  setPrice: any,
+  editting: boolean,
+  setEditting: any,
+  open: number,
+  setOpen: any,
+}> = (props) => {
+
+  const { order, price, setPrice, editting, setEditting, setOpen, open } = props;
+
+  const isAlgoOrder = order?.algo_order_id !== undefined;
+  // console.log("price node", order);
+
+  const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { editOrder } = useContext(OrderListContext);
@@ -55,7 +111,7 @@ export const Price = (props: { order: API.OrderExt }) => {
     };
   }, []);
 
-  const onClick = (event: MouseEvent) => {
+  const onClick = () => {
     // event.stopPropagation();
     // event.preventDefault();
 
@@ -67,6 +123,21 @@ export const Price = (props: { order: API.OrderExt }) => {
 
     setOpen(1);
   };
+
+  const onClickCancel = (order: any) => {
+    setPrice(order.price);
+    setEditting(false);
+  };
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      event.stopPropagation();
+      event.preventDefault();
+
+      inputRef.current?.blur();
+      onClick();
+    }
+  }
 
   const onConfirm = () => {
     setIsSubmitting(true);
@@ -90,7 +161,7 @@ export const Price = (props: { order: API.OrderExt }) => {
       }
     }
 
-    
+
 
     // @ts-ignore
     editOrder(order_id, data)
@@ -118,16 +189,18 @@ export const Price = (props: { order: API.OrderExt }) => {
     if (isStopMarket) return "";
     if (!editting) return "";
 
-    
-      if (Number(price) > rangeInfo.max) {
-        return `Price can not be greater than ${rangeInfo.max} USDC.`
-      }
-      if (Number(price) < rangeInfo.min) {
-        return `Price can not be less than ${rangeInfo.min} USDC.`
-      }
+
+    if (Number(price) > rangeInfo.max) {
+      return `Price can not be greater than ${rangeInfo.max} USDC.`
+    }
+    if (Number(price) < rangeInfo.min) {
+      return `Price can not be less than ${rangeInfo.min} USDC.`
+    }
     return "";
 
   }, [isStopMarket, editting, rangeInfo, price]);
+
+
   return (
     <Popover
       open={open > 0}
@@ -139,6 +212,24 @@ export const Price = (props: { order: API.OrderExt }) => {
         }
         ref={boxRef}
       >
+
+        <div
+          className={cn("orderly-absolute orderly-left-1 orderly-flex", {
+            "orderly-animate-in orderly-fade-in orderly-zoom-in": editting,
+            "orderly-animate-out orderly-fade-out orderly-zoom-out orderly-hidden":
+              !editting,
+          })}
+        >
+          <button
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            onClick={() => onClickCancel(order)}
+          >
+            {/* @ts-ignore */}
+            <X size={14} />
+          </button>
+
+          <Divider vertical className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]" />
+        </div>
         <PopoverAnchor >
           {isStopMarket && <span>Market</span>}
           {!isStopMarket && (
@@ -150,7 +241,9 @@ export const Price = (props: { order: API.OrderExt }) => {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   onFocus={() => setEditting(true)}
-                  className="orderly-w-[98px] orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0"
+                  onKeyDown={handleKeyDown}
+                  autoFocus
+                  className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0"
                 />
               </TooltipTrigger>
               <TooltipContent
@@ -170,13 +263,14 @@ export const Price = (props: { order: API.OrderExt }) => {
               !editting,
           })}
         >
+          <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
           <button
-            className="hover:orderly-bg-base-contrast/10 orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
             onClick={onClick}
           >
             {/* @ts-ignore */}
-            <Check size={18} />
+            <Check size={14} />
           </button>
 
           <PopoverContent
@@ -188,6 +282,7 @@ export const Price = (props: { order: API.OrderExt }) => {
                 inputRef.current.focus();
               }
             }}
+            onOpenAutoFocus={(e) => e.preventDefault()}
           >
             <div className="orderly-pt-5 orderly-relative">
               <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
@@ -219,4 +314,4 @@ export const Price = (props: { order: API.OrderExt }) => {
       </div>
     </Popover>
   );
-};
+}

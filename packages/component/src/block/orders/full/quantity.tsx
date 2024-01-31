@@ -19,83 +19,8 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
-  // const closePopover = () => setOpen(0);
-  // const cancelPopover = () => setOpen(-1);
-
-  // const boxRef = useRef<HTMLDivElement>(null);
-  // const { base } = useSymbolContext();
-
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // const inputRef = useRef<HTMLInputElement>(null);
-
-  // useEffect(() => {
-  //   const clickHandler = (event: MouseEvent) => {
-  //     // close the input when click outside of boxRef
-  //     const el = boxRef?.current;
-  //     if (!el || el.contains(event.target as Node)) {
-  //       return;
-  //     }
-
-  //     setEditting(false);
-  //   };
-
-  //   document.body.addEventListener("click", clickHandler);
-
-  //   return () => {
-  //     document.body.removeEventListener("click", clickHandler);
-  //   };
-  // }, []);
-
-  // const onClick = () => {
-  //   // event.stopPropagation();
-  //   // event.preventDefault();
-  //   setEditting(false);
-  //   if (Number(quantity) === Number(order.quantity)) {
-  //     return;
-  //   }
-  //   // @ts-ignore
-  //   setOpen(true);
-  // };
-
-  // const handleKeyDown = (event: any) => {
-  //   if (event.key === "Enter") {
-  //     event.stopPropagation();
-  //     event.preventDefault();
-
-  //     inputRef.current?.blur();
-  //     onClick();
-  //   }
-  // }
-
-  // const onConfirm = () => {
-  //   setIsSubmitting(true);
-  //   // @ts-ignore
-  //   editOrder(order.algo_order_id || order.order_id, {
-  //     order_price: order.price,
-  //     order_quantity: quantity,
-  //     symbol: order.symbol,
-  //     order_type: order.type,
-  //     side: order.side,
-  //     reduce_only: Boolean(order.reduce_only),
-  //     algo_order_id: order.algo_order_id
-  //   })
-  //     .then(
-  //       (result) => {
-  //         closePopover();
-  //         // setTimeout(() => inputRef.current?.blur(), 300);
-  //       },
-  //       (err) => {
-  //         toast.error(err.message);
-  //         setQuantity(order.quantity.toString());
-  //         cancelPopover();
-  //       }
-  //     )
-  //     .finally(() => setIsSubmitting(false));
-  // };
-
   if (!editting && open <= 0) {
-    return (<NormalState order={order} quantity={quantity} setEditing={setEditting} />)
+    return (<NormalState order={order} quantity={quantity} setEditing={setEditting} />);
   }
 
   return (<EditingState
@@ -135,7 +60,7 @@ const NormalState: FC<{
     >
       <span>{order.executed}</span>
       <span>/</span>
-      <div className="orderly-px-2 orderly-flex orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
+      <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
         {quantity}
       </div>
     </div>
@@ -240,7 +165,7 @@ const EditingState: FC<{
     >
       <div
         className={cn(
-          "orderly-flex orderly-max-w-[110px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-max-w-[110px] orderly-min-w-[70px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,
@@ -257,7 +182,7 @@ const EditingState: FC<{
           })}
         >
           <button
-            className="hover:orderly-bg-base-contrast/10 orderly-h-[28px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
             onClick={(e) => {
               e.stopPropagation();
@@ -295,17 +220,17 @@ const EditingState: FC<{
           })}
         >
 
-            <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
-          
-            <button
-              className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
-              // @ts-ignore
-              onClick={onClick}
-            >
-              {/* @ts-ignore */}
-              <Check size={14} />
-            </button>
-          
+          <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
+
+          <button
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            // @ts-ignore
+            onClick={onClick}
+          >
+            {/* @ts-ignore */}
+            <Check size={14} />
+          </button>
+
 
           <PopoverContent
             align="end"
