@@ -65,6 +65,7 @@ module.exports = {
         },
         link: {
           DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-link-light) / <alpha-value>)",
         },
 
         // 用于页面背景色，大块元素背景色
