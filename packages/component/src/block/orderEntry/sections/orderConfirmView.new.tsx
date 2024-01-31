@@ -63,7 +63,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
       </div>
       <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
         <div>
-          <div className="orderly-mr-3 orderly-max-w-[89px] desktop:orderly-max-w-[180px]">{type}</div>
+          <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[180px]">{type}</div>
         </div>
         <div className="orderly-flex-1 orderly-gap-2">
           <div className="orderly-flex orderly-justify-between">
@@ -117,6 +117,9 @@ const OrderConfirmCheckBox: FC<{
       <Label
         htmlFor={"showAll"}
         className="orderly-text-base-contrast-54 orderly-text-3xs"
+        onClick={() => {
+          setNeedConfirm(!needConfirm);
+        }}
       >
         Disable order confirmation
       </Label>
