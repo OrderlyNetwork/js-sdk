@@ -8,14 +8,18 @@ import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
 import { CopyIcon } from "@/icon";
+import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
+import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 
 interface Props {
+  wsStatus: WsNetworkStatus;
   // logo?: ReactNode;
 }
 
 export const TopNavbar: FC<Props> = (props) => {
   const { state } = useAccount();
   const { errors, appIcons: logos } = useContext(OrderlyAppContext);
+
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
   const onConnect = useCallback(() => {
@@ -68,8 +72,12 @@ export const TopNavbar: FC<Props> = (props) => {
           // }}
         />
       </div>
-      {errors?.ChainNetworkNotSupport && (
-        <ChainIdSwtich onSetChain={onSetChain} />
+      {props.wsStatus !== "connected" ? (
+        <WsStatus />
+      ) : (
+        errors?.ChainNetworkNotSupport && (
+          <ChainIdSwtich onSetChain={onSetChain} />
+        )
       )}
     </>
   );

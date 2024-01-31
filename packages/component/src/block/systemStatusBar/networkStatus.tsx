@@ -1,14 +1,15 @@
 import { FC } from "react";
+import { WsNetworkStatus } from "./useWsStatus";
 
 export interface NetworkStatusProps {
   size?: number;
-  state: "connected" | "unstable" | "disconnected";
+  wsStatus: WsNetworkStatus;
 }
 
 export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
-  const { size = 20, state } = props;
+  const { size = 20 } = props;
 
-  switch (state) {
+  switch (props.wsStatus) {
     case "connected":
       return (
         <div className="orderly-flex orderly-items-center">

@@ -70,19 +70,19 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
             <span className="orderly-text-base-contrast-54">Qty.</span>
             <span>{order.order_quantity}</span>
           </div>
-          <div className="orderly-flex orderly-justify-between">
+          {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Trigger price</span>
             <div className="orderly-inline-block">
               <span>{order.trigger_price}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
             </div>
-          </div>
+          </div>)}
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Price</span>
             {priceNode}
           </div>
           <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Total</span>
+            <span className="orderly-text-base-contrast-54">{"Est. Total"}</span>
             <div className="orderly-inline-block">
               <span>{order.total}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
