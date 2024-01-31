@@ -49,8 +49,7 @@ export const Listview: FC<Props> = (props) => {
           "orderly-text-2xs orderly-text-base-contrast-80",
           props.className
         )}
-        // @ts-ignore
-        generatedRowKey={(record) => record.order_id}
+        generatedRowKey={(record, index) => `${index}${record.order_id || record.algo_order_id}`}
         onRow={(record) => {
           // console.log(record);
           if (record.status === OrderStatus.CANCELLED) {

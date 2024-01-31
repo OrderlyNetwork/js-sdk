@@ -40,7 +40,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     defaultValues: {
       order_price: order.price?.toString(),
       order_quantity: order.quantity.toString(),
-      trigger_price: order.price?.toString(),
+      trigger_price: order.trigger_price?.toString(),
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -59,7 +59,11 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     },
   });
 
-  const isAlgoOrder = true; //order.algo_order_id !== undefined;
+  const isAlgoOrder = order.algo_order_id !== undefined;
+  const isMarket = order.type === "MARKET";
+
+  // console.log("editor form ", order);
+
 
   const symbolInfo = useSymbolsInfo()[order.symbol];
 
@@ -79,6 +83,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       title: "Edit Order",
       content: EditOrderConfirmContent(
         isAlgoOrder,
+        isMarket,
         data,
         dirtyFields,
         base,
@@ -98,7 +103,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
         (data: any) => {
           return onSubmit(data);
         },
-        () => {}
+        () => { }
       );
     },
     [quote, order, dirtyFields]
@@ -109,18 +114,26 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     const newValues = helper.calculate(getValues(), name, value);
     //
 
-    if (name === "order_price") {
+    if (name === "trigger_price") {
       // @ts-ignore
-      setValue("order_price", newValues.order_price, {
+      setValue("trigger_price", newValues.trigger_price, {
+        shouldValidate: submitCount > 0,
+        shouldDirty: true,
+      });
+    } else {
+      if (name === "order_price") {
+        // @ts-ignore
+        setValue("order_price", newValues.order_price, {
+          shouldValidate: submitCount > 0,
+          shouldDirty: true,
+        });
+      }
+      // @ts-ignore
+      setValue("order_quantity", newValues.order_quantity, {
         shouldValidate: submitCount > 0,
         shouldDirty: true,
       });
     }
-    // @ts-ignore
-    setValue("order_quantity", newValues.order_quantity, {
-      shouldValidate: submitCount > 0,
-      shouldDirty: true,
-    });
   };
 
   if (!order) return null;
@@ -150,7 +163,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <div className="orderly-flex orderly-flex-col orderly-gap-5">
           {/* @ts-ignore */}
-          <Controller
+          {isAlgoOrder && <Controller
             name="trigger_price"
             control={control}
             render={({ field }) => {
@@ -172,7 +185,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                 />
               );
             }}
-          />
+          />}
           {/* @ts-ignore */}
           <Controller
             name="order_price"
@@ -188,7 +201,8 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
                   helpText={errors.order_price?.message}
                   error={!!errors.order_price}
                   className="orderly-text-right orderly-text-3xs"
-                  value={field.value!}
+                  value={isMarket ? "Market" : field.value!}
+                  disabled={isMarket}
                   onChange={(e) => {
                     // field.onChange(e.target.value)
                     onFieldChange("order_price", e.target.value);

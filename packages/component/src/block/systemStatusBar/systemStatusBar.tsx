@@ -3,8 +3,8 @@ import { FC, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { NetworkStatus } from "./networkStatus";
 import { CommunityDiscord, CommunityX, CommunityTG } from "./communityIcon";
 import { OrderlyLogo } from "./orderlyLogo";
-import { useWS } from "@orderly.network/hooks";
 import React from "react";
+import { WsNetworkStatus } from "./useWsStatus";
 
 export interface FooterStatusBarProps {
   xUrl?: string;
@@ -12,6 +12,7 @@ export interface FooterStatusBarProps {
   discordUrl?: string;
   commutitylist?: React.ReactNode[];
   powerBy?: string | React.ReactNode;
+  wsStatus: WsNetworkStatus;
 }
 
 export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
@@ -22,40 +23,6 @@ export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
     commutitylist,
     powerBy = <OrderlyLogo />,
   } = props;
-
-  const ws = useWS();
-  const [wsStatus, setWsStatus] = useState<
-    "connected" | "unstable" | "disconnected"
-  >(ws.client.public.readyState ? "connected" : "disconnected");
-  const connectCount = useRef(0);
-
-  useEffect(() => {
-    ws.on("status:change", (status: any) => {
-      // setWsStatus(status === "connecting" ? "disconnected" : status);
-      // console.log("ws status", status);
-
-      const { type, isPrivate } = status;
-      if (!isPrivate) {
-        switch (type) {
-          case "open":
-            connectCount.current = 0;
-            setWsStatus("connected");
-            break;
-          case "close":
-            connectCount.current = 0;
-            setWsStatus("disconnected");
-            break;
-          case "reconnecting":
-            connectCount.current++;
-            if (connectCount.current >= 3) {
-              setWsStatus("unstable");
-            }
-            break;
-        }
-      }
-    });
-    return () => ws.off("websocket:status", () => {});
-  }, []);
 
   const children = useMemo(() => {
     if (commutitylist !== undefined) {
@@ -103,7 +70,7 @@ export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
   return (
     <>
       <div className="orderly-flex orderly-items-center">
-        <NetworkStatus state={wsStatus} />
+        <NetworkStatus wsStatus={props.wsStatus} />
         <div className="orderly-pl-2">
           <Divider vertical />
         </div>

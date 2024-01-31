@@ -48,6 +48,8 @@ export const useCollateral = (
 
   const { usdc } = useHoldingStream();
 
+  const filterAlgoOrders = orders?.filter((item) => item.algo_order_id === undefined) ?? [];
+
   // const { data: holding } = usePrivateQuery<API.Holding[]>(
   //   "/v1/client/holding",
   //   {
@@ -71,13 +73,13 @@ export const useCollateral = (
 
     return account.totalInitialMarginWithOrders({
       positions: positionsPath(positions),
-      orders: orders ?? [],
+      orders: filterAlgoOrders,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverage: accountInfo.max_leverage,
       symbolInfo,
     });
-  }, [positions, orders, markPrices, accountInfo, symbolInfo]);
+  }, [positions, filterAlgoOrders, markPrices, accountInfo, symbolInfo]);
 
   const freeCollateral = useMemo(() => {
     return account.freeCollateral({

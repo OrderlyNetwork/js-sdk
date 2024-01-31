@@ -20,7 +20,8 @@ export const BridgeAndSwapProcessStatus: FC<SwapProcessStatusProps> = (
     if (status < SwapProcessStatusStatus.Depositing || !message) {
       return;
     }
-    return `https://layerzeroscan.com/${message.srcChainId}/address/${message.srcUaAddress}/message/${message.dstChainId}/address/${message.dstUaAddress}/nonce/${message.srcUaNonce}`;
+    return `https://layerzeroscan.com/tx/${message.srcTxHash}`;
+    // return `https://layerzeroscan.com/${message.srcChainId}/address/${message.srcUaAddress}/message/${message.dstChainId}/address/${message.dstUaAddress}/nonce/${message.srcUaNonce}`;
   }, [status, message]);
 
   const getBridgeStatus = (status: SwapProcessStatusStatus) => {

@@ -63,6 +63,15 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     }
   );
 
+  useEffect(() => {
+    setOrder((order) => ({
+      ...order,
+      order_price: "",
+      order_quantity: "",
+      symbol,
+    }));
+  }, [symbol]);
+
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
       <OrderEntry
@@ -71,17 +80,18 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         // side={side}
         symbol={symbol}
         onFieldChange={(field, value) => {
-          console.log("field", field, value);
+          console.log("=======>>>>>>>>field", field, value);
 
-          if (field === "reduce_only") {
+          if (field === "reduce_only" || field === "order_type") {
             setOrder((order) => ({
               ...order,
               order_quantity: "",
-              reduce_only: value,
+              order_price: "",
+              [field]: value,
             }));
+          } else {
+            setOrder((order) => ({ ...order, [field]: value }));
           }
-
-          setOrder((order) => ({ ...order, [field]: value }));
         }}
         setValues={(values) => {
           setOrder((order) => ({

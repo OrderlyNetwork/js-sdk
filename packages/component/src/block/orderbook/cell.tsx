@@ -8,7 +8,6 @@ import { SymbolContext } from "@/provider";
 import { cn } from "@/utils";
 import { OrderBookCellType } from "./types";
 
-
 export interface OrderBookCellProps {
   background: string;
   price: number;
@@ -47,10 +46,17 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         showTotal && "orderly-flex-1"
       )}
       style={{ height: `${cellHeight}px` }}
-      onClick={() => {
+      onClick={(e) => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
+
         onItemClick?.([props.price, props.quantity]);
       }}
+      // onMouseDown={(e) => {
+      //   if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
+      //   e.stopPropagation();
+      //   e.preventDefault();
+
+      // }}
     >
       <div className="orderly-flex orderly-flex-row orderly-justify-between orderly-items-center orderly-z-10 orderly-relative orderly-px-1 orderly-text-4xs desktop:orderly-text-2xs orderly-h-full">
         <div

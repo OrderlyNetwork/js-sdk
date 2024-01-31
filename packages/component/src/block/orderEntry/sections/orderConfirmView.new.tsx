@@ -61,28 +61,28 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           {`${base}-PERP`}
         </span>
       </div>
-      <div className="orderly-grid orderly-grid-cols-2 orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
+      <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
         <div>
-          <div className="desktop:orderly-flex desktop:orderly-justify-start">{type}</div>
+          <div className="orderly-mr-3 orderly-max-w-[89px] desktop:orderly-max-w-[180px]">{type}</div>
         </div>
-        <div className="orderly-flex orderly-flex-col orderly-gap-2">
+        <div className="orderly-flex-1 orderly-gap-2">
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Qty.</span>
             <span>{order.order_quantity}</span>
           </div>
-          <div className="orderly-flex orderly-justify-between">
+          {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Trigger price</span>
             <div className="orderly-inline-block">
               <span>{order.trigger_price}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
             </div>
-          </div>
+          </div>)}
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Price</span>
             {priceNode}
           </div>
           <div className="orderly-flex orderly-justify-between">
-            <span className="orderly-text-base-contrast-54">Total</span>
+            <span className="orderly-text-base-contrast-54">{"Est. Total"}</span>
             <div className="orderly-inline-block">
               <span>{order.total}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
