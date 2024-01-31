@@ -17,7 +17,7 @@ export const useWithdraw = () => {
     (inputs: {
       chainId: number;
       token: string;
-      amount: number;
+      amount: string;
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
       return account.assetsManager.withdraw(inputs).then((res: any) => {
@@ -69,13 +69,11 @@ export const useWithdraw = () => {
   }, [freeCollateral]);
 
   const availableWithdraw = useMemo(() => {
-
     if (unsettledPnL < 0) {
       return freeCollateral;
     } else {
       return freeCollateral - unsettledPnL;
     }
-
   }, [freeCollateral, unsettledPnL]);
 
   return {
@@ -84,6 +82,6 @@ export const useWithdraw = () => {
     maxAmount,
     availableBalance,
     availableWithdraw,
-    unsettledPnL
+    unsettledPnL,
   };
 };
