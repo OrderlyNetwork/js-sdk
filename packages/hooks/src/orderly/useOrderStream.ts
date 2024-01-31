@@ -104,10 +104,9 @@ export const useOrderStream = (params: Params) => {
       return null;
     }
 
-    if (status !== OrderStatus.NEW) {
+    if (status !== OrderStatus.NEW && status !== OrderStatus.INCOMPLETE) {
       return flattenOrders;
     }
-
     return flattenOrders.map((item) => {
       return {
         ...item,
