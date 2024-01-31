@@ -591,8 +591,6 @@ export function useOrderEntry(
     const { price, quantity } = result;
     if (!price || !quantity) return null;
 
-    console.log(markPrice, price);
-
     const liqPrice = order.estLiqPrice({
       markPrice,
       baseIMR,
