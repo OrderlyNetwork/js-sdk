@@ -22,14 +22,15 @@ interface OrderOptionsProps {
 }
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
-  const { reduceOnly, onReduceOnlyChange, formattedOrder, onFieldChange } =
-    props;
+  const { reduceOnly, formattedOrder, onFieldChange } = props;
   const [open, setOpen] = useState<boolean>(false);
   // const { control, getValues, setValue } = useFormContext();
 
   const { order_type } = formattedOrder;
 
   const isTable = useMediaQuery(MEDIA_TABLET);
+
+  // console.log("------", formattedOrder);
 
   return (
     <>
