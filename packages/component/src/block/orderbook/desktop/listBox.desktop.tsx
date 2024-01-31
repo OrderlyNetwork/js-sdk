@@ -19,6 +19,23 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
 
   const { base, quote, base_dp, quote_dp } = useContext(SymbolContext);
 
+  const findMaxItem = useCallback(() => {
+    if ((data?.length || 0) === 0) {
+      return null;
+    }
+    if (type ===  OrderBookCellType.ASK) {
+      const index = data.findIndex((item) => !Number.isNaN(item[0]));
+      if (index != -1) {
+        return data[index];
+      }
+      return null;
+    } else {
+      return data[data.length-1];
+    }
+  }, [data, type]);
+
+  
+
   const priceDp = useMemo(() => {
     if (depth?.toString().includes(".")) {
       return depth.toString().split(".")[1].length;
@@ -51,6 +68,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
           priceDp={priceDp}
           baseDp={base_dp}
           quoteDp={quote_dp}
+          findMaxItem={findMaxItem}
         />
       );
     })}
@@ -73,6 +91,7 @@ const Tip: FC<{
   priceDp: number,
   baseDp: number,
   quoteDp: number,
+  findMaxItem: () => number[] | null,
 }> = (props) => {
 
   const { index, item, setHoverIndex, type, maxQty, hoverIndex, base, quote, priceDp, baseDp, quoteDp } = props;
@@ -91,6 +110,13 @@ const Tip: FC<{
     sumQtyAmount: number;
   } => {
 
+    if (item === null) {
+      return {
+        sumQty: 0,
+        sumQtyAmount: 0,
+        avgPrice: 0,
+      };
+    }
     let totalInfo = { sumQty: 0, sumQtyAmount: 0 };
     if (!Number.isNaN(item[2])) {
       totalInfo = {
@@ -106,7 +132,10 @@ const Tip: FC<{
     };
 
   };
-  const hintInfo = calcHintInfo(item);
+  let hintInfo = calcHintInfo(item);
+  if (hintInfo.avgPrice === 0) {
+    hintInfo = calcHintInfo(props.findMaxItem());
+  }
 
   return (
     <Tooltip open={open} onOpenChange={setOpen}>
