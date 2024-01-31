@@ -39,8 +39,14 @@ export const OrderListProvider: FC<
         <OrderEditFormSheet
           order={order}
           editOrder={(value: OrderEntity) => {
-            const order_id = (order?.order_id || order?.algo_order_id)?.toString();
-            return editOrder(order_id || "", {...value, algo_order_id: order.algo_order_id});
+            const order_id = (
+              order?.order_id || order?.algo_order_id
+            )?.toString();
+            return editOrder(order_id || "", {
+              ...value,
+              // @ts-ignore
+              algo_order_id: order.algo_order_id,
+            });
           }}
         />
       ),
