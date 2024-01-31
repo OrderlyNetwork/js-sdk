@@ -275,12 +275,16 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
           type: "required",
           message: "price is required",
         };
-      } else if (!trigger_price) {
+      }
+      
+      if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
           message: "trigger price is required",
         };
-      } else {
+      } 
+      
+      if (trigger_price && order_price) {
         const price = new Decimal(order_price);
         const { symbol } = config;
         const { price_range, price_scope } = symbol;
