@@ -1,6 +1,8 @@
 import { AccountStatusBar } from "@/block/accountStatus";
+import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
+import { useWsStatus } from "@/block/systemStatusBar/useWsStatus";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
@@ -8,7 +10,6 @@ import {
   useAccount,
   useCollateral,
   useAccountInfo,
-  OrderlyContext,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -25,6 +26,8 @@ export const BottomNavBar = () => {
     useContext(OrderlyAppContext);
 
   const { connectedChain } = useWalletConnector();
+
+  const wsStatus = useWsStatus();
 
   const onConnect = useCallback(() => {
     onWalletConnect().then(
@@ -53,10 +56,15 @@ export const BottomNavBar = () => {
 
   return (
     <>
-      {showGetTestUSDC && <GetTestUSDC />}
-      {errors?.ChainNetworkNotSupport && (
-        <ChainIdSwtich onSetChain={onSetChain} />
+      {wsStatus !== "connected" ? (
+        <WsStatus />
+      ) : (
+        errors?.ChainNetworkNotSupport && (
+          <ChainIdSwtich onSetChain={onSetChain} />
+        )
       )}
+
+      {showGetTestUSDC && <GetTestUSDC />}
       <div
         id="orderly-botom-bar-container"
         className="orderly-fixed orderly-left-0 orderly-bottom-0 orderly-w-screen orderly-bg-base-800 orderly-p-[14px] orderly-pb-[20px] orderly-border-t orderly-border-base-contrast/10 orderly-z-30 orderly-h-[64px] orderly-flex orderly-justify-between orderly-items-center"
