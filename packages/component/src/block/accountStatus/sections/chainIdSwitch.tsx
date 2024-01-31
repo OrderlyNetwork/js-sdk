@@ -15,6 +15,7 @@ import { useTranslation } from "@/i18n";
 import { OrderlyAppContext } from "@/provider";
 import Button from "@/button";
 import { isTestnet } from "@orderly.network/utils";
+import { cn } from "@/utils";
 
 export interface Props {
   onSetChain: (chainId: number) => Promise<any>;
@@ -66,14 +67,23 @@ export const ChainIdSwtich: FC<Props> = (props) => {
   );
 
   return (
-    <div className="orderly-bg-warning-darken orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-flex orderly-items-center orderly-px-[12px] orderly-text-warning orderly-z-10 orderly-text-3xs orderly-gap-2 desktop:orderly-flex desktop:orderly-items-center desktop:orderly-justify-center desktop:orderly-static">
+    <div
+      className={cn(
+        "orderly-bg-warning-darken orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-text-warning orderly-z-10 orderly-text-3xs orderly-font-semibold orderly-leading-[18px] orderly-p-[10px]",
+        "desktop:orderly-h-[40px] desktop:orderly-text-sm desktop:orderly-flex desktop:orderly-items-center desktop:orderly-justify-center desktop:orderly-static"
+      )}
+    >
       <span>Please connect to a supported network.</span>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
+          <div className="desktop:orderly-hidden orderly-text-link-light orderly-ml-[2px]">
+            Switch network
+          </div>
+
           <Button
             variant={"outlined"}
             size={"small"}
-            className="orderly-text-warning orderly-border-warning hover:orderly-text-warning orderly-text-xs"
+            className="orderly-hidden desktop:orderly-block orderly-text-warning orderly-border-warning hover:orderly-text-warning orderly-px-[8px] orderly-ml-[10px] orderly-text-3xs desktop:orderly-text-3xs"
           >
             Switch network
           </Button>

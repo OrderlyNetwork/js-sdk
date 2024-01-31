@@ -5,6 +5,7 @@ import { upperCaseFirstLetter } from "@/utils/string";
 import { Numeral,Text } from "@/text";
 import { cx } from "class-variance-authority";
 import { Column } from "@/table";
+import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 /// get columns for cancel/fill/reject/history
 export const columnsBasis = (): Column<API.Order>[] => {
@@ -76,12 +77,11 @@ export const columnsBasis = (): Column<API.Order>[] => {
           width: 100,
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
               >
                 {value || "-"}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -92,12 +92,11 @@ export const columnsBasis = (): Column<API.Order>[] => {
           dataIndex: "average_executed_price",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
               >
                 {value || "-"}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -108,12 +107,12 @@ export const columnsBasis = (): Column<API.Order>[] => {
           dataIndex: "executed",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
+                // precision={2}
               >
                 {record.executed === 0 || Number.isNaN(record.price) || record.price === null ? "-" : `${record.executed * record.price}`}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -124,12 +123,12 @@ export const columnsBasis = (): Column<API.Order>[] => {
           dataIndex: "trigger_price",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
+                // precision={2}
               >
                 {value}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
