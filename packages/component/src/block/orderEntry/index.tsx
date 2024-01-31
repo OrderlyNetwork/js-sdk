@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  FocusEvent,
 } from "react";
 import { Picker, Select } from "@/select";
 import Button from "@/button";
@@ -96,6 +97,14 @@ interface OrderEntryRef {
 
 const { Segmented: SegmentedButton } = Button;
 
+enum InputType {
+  PRICE, // price input focus
+  TRIGGER_PRICE, // trigger price input focus
+  QUANTITY, // quantity input focus
+  TOTAL, // total input focus
+  NONE,
+}
+
 export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
   (props, ref) => {
     const {
@@ -115,11 +124,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const { side, isStopOrder } = formattedOrder;
 
-    const totalInputFocused = useRef<boolean>(false);
-    const priceInputFocused = useRef<boolean>(false);
+    // const totalInputFocused = useRef<boolean>(false);
+    // const priceInputFocused = useRef<boolean>(false);
     const quantityInputFocused = useRef<boolean>(false);
     const [errorsVisible, setErrorsVisible] = useState<boolean>(false);
     const isClickForm = useRef(false);
+    const currentFocusInput = useRef<InputType>(InputType.NONE);
+
+    const priceInputRef = useRef<HTMLInputElement | null>(null);
+    const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
 
     const isTablet = useMediaQuery(MEDIA_TABLET);
 
@@ -135,27 +148,59 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     useEffect(() => {
       const orderbookItemClickHandler = (item: number[]) => {
-        if (
-          formattedOrder.order_type !== OrderType.LIMIT &&
-          formattedOrder.order_type !== OrderType.STOP_LIMIT
-        ) {
-          props.onFieldChange("order_type", OrderType.LIMIT);
+        if (formattedOrder.order_type === OrderType.STOP_LIMIT) {
+          if (currentFocusInput.current === InputType.TRIGGER_PRICE) {
+            // newType = OrderType.LIMIT;
+            props.onFieldChange("trigger_price", item[0].toString());
+            focusInputElement(triggerPriceInputRef.current);
+          } else {
+            props.onFieldChange("order_price", item[0].toString());
+            focusInputElement(priceInputRef.current);
+          }
+        } else {
+          let newType;
+
+          if (formattedOrder.order_type === OrderType.STOP_MARKET) {
+            newType = OrderType.STOP_LIMIT;
+          } else if (formattedOrder.order_type === OrderType.MARKET) {
+            newType = OrderType.LIMIT;
+          }
+
+          if (typeof newType !== "undefined") {
+            props.onFieldChange("order_type", newType);
+          }
+          props.onFieldChange("order_price", item[0].toString());
+          focusInputElement(priceInputRef.current);
         }
-        props.onFieldChange("order_price", item[0].toString());
+
+        function focusInputElement(target: HTMLInputElement | null) {
+          setTimeout(() => {
+            target?.focus();
+          }, 0);
+        }
       };
 
       ee.on("orderbook:item:click", orderbookItemClickHandler);
 
-      () => {
+      return () => {
         ee.off("orderbook:item:click", orderbookItemClickHandler);
       };
     }, [formattedOrder.order_type]);
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
-    const priceInputRef = useRef<HTMLInputElement | null>(null);
-
     const isTable = useMediaQuery(MEDIA_TABLET);
+
+    const onFocus = (type: InputType) => (_: FocusEvent<HTMLInputElement>) => {
+      currentFocusInput.current = type;
+    };
+
+    const onBlur = (type: InputType) => (_: FocusEvent) => {
+      setTimeout(() => {
+        if (currentFocusInput.current !== type) return;
+        currentFocusInput.current = InputType.NONE;
+      }, 300);
+    };
 
     const onSubmit = useCallback(
       (event: FormEvent) => {
@@ -252,18 +297,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       ]
     );
 
-    // useEffect(() => {
-    //   // methods.setValue("order_price", "");
-    //   // methods.setValue("order_quantity", "");
-    //   // methods.setValue("total", "");
-    //   props.setValues({
-    //     order_price: "",
-    //     order_quantity: "",
-    //     total: "",
-    //   });
-    //   clearErrors();
-    // }, [symbol]);
-
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
       props.onDeposit?.();
@@ -287,7 +320,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       if (
         !markPrice ||
         type !== OrderType.MARKET ||
-        totalInputFocused.current ||
+        currentFocusInput.current === InputType.TOTAL ||
         !quantity
       ) {
         return formattedOrder.total;
@@ -303,7 +336,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     useEffect(() => {
       function handleClick() {
-        // 当用户点击表单区域外面的时候，取消error提示
+        // When the user clicks outside the form area, hide the error message
         if (!isClickForm.current) {
           setErrorsVisible(false);
         }
@@ -316,10 +349,6 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         document.body.removeEventListener("click", handleClick);
       };
     }, []);
-
-    // const [ratio] = useDebounce(field,200);
-
-    // console.log(commify(formattedOrder.order_quantity || ""));
 
     return (
       // @ts-ignore
@@ -409,11 +438,13 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           {isStopOrder && (
             <Input
               disabled={disabled}
-              ref={priceInputRef}
+              ref={triggerPriceInputRef}
               prefix="Trigger price"
               suffix={symbolConfig?.quote}
               type="text"
               inputMode="decimal"
+              id="order_trigger_price_input"
+              name="order_trigger_price_input"
               error={!!metaState.errors?.trigger_price && errorsVisible}
               helpText={metaState.errors?.trigger_price?.message}
               className="orderly-text-right orderly-font-semibold"
@@ -423,8 +454,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 // field.onChange(event.target.value);
                 props.onFieldChange("trigger_price", event.target.value);
               }}
-              onFocus={() => (priceInputFocused.current = true)}
-              onBlur={() => (priceInputFocused.current = false)}
+              onFocus={onFocus(InputType.TRIGGER_PRICE)}
+              onBlur={onBlur(InputType.TRIGGER_PRICE)}
             />
           )}
           <Input
@@ -434,9 +465,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.quote}
             type="text"
             inputMode="decimal"
+            id="order_price_input"
+            name="order_price_input"
             error={!!metaState.errors?.order_price && errorsVisible}
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
+            autoComplete="off"
             value={
               isMarketOrder
                 ? "Market"
@@ -450,8 +484,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               // field.onChange(event.target.value);
               props.onFieldChange("order_price", event.target.value);
             }}
-            onFocus={() => (priceInputFocused.current = true)}
-            onBlur={() => (priceInputFocused.current = false)}
+            onFocus={onFocus(InputType.PRICE)}
+            onBlur={onBlur(InputType.PRICE)}
           />
           {/* @ts-ignore */}
           <Input
@@ -460,6 +494,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             type="text"
             inputMode="decimal"
             suffix={symbolConfig?.base}
+            id="order_quantity_input"
+            name="order_quantity_input"
             className="orderly-text-right"
             containerClassName="orderly-bg-base-600"
             error={!!metaState.errors?.order_quantity && errorsVisible}
@@ -468,8 +504,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             onChange={(event) => {
               props.onFieldChange("order_quantity", event.target.value);
             }}
-            onFocus={() => (quantityInputFocused.current = true)}
-            onBlur={() => (quantityInputFocused.current = false)}
+            onFocus={onFocus(InputType.QUANTITY)}
+            onBlur={onBlur(InputType.QUANTITY)}
           />
 
           <Slider
@@ -521,12 +557,15 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             suffix={symbolConfig?.quote}
             type="text"
             inputMode="decimal"
-            // value={field.value}
+            id="order_total_input"
+            name="order_total_input"
             value={commify(
-              totalInputFocused.current ? formattedOrder.total! : totalAmount!
+              currentFocusInput.current === InputType.TOTAL
+                ? formattedOrder.total!
+                : totalAmount!
             )}
-            onFocus={() => (totalInputFocused.current = true)}
-            onBlur={() => (totalInputFocused.current = false)}
+            onFocus={onFocus(InputType.TOTAL)}
+            onBlur={onBlur(InputType.TOTAL)}
             onChange={(event) => {
               // field.onChange(event.target.value);
               props.onFieldChange("total", event.target.value);
