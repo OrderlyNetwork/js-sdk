@@ -51,15 +51,23 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
                   "orderly-border-primary orderly-bg-primary":
                     props.color === "primary" &&
                     _value >= __value &&
-                    _value > 0,
+                    _value > 0 &&
+                    !props.disabled,
                   "orderly-border-primary-light orderly-bg-primary-light":
                     props.color === "primary-light" &&
                     _value >= __value &&
-                    _value > 0,
+                    _value > 0 &&
+                    !props.disabled,
                   "orderly-border-trade-profit orderly-bg-trade-profit":
-                    props.color === "buy" && _value >= __value && _value > 0,
+                    props.color === "buy" &&
+                    _value >= __value &&
+                    _value > 0 &&
+                    !props.disabled,
                   "orderly-border-trade-loss orderly-bg-trade-loss":
-                    props.color === "sell" && _value >= __value && _value > 0,
+                    props.color === "sell" &&
+                    _value >= __value &&
+                    _value > 0 &&
+                    !props.disabled,
                 }
               )}
               style={{
@@ -67,7 +75,7 @@ export const SliderMarks: FC<SliderMarksProps> = (props) => {
                 // top: "7px",
               }}
             />
-            {markLabelVisible && (
+            {!props.disabled && markLabelVisible && (
               <span
                 key={index}
                 className={cn(

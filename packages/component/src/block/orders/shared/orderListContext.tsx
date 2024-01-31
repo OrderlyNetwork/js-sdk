@@ -15,7 +15,7 @@ export const OrderListContext = createContext<OrderListContextState>(
 );
 
 export interface OrderListProviderProps {
-  cancelOrder: (orderId: number, symbol: string) => Promise<any>;
+  cancelOrder: (orderId: number | OrderEntity, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
 }
 
@@ -25,7 +25,8 @@ export const OrderListProvider: FC<
   const { cancelOrder, editOrder } = props;
 
   const onCancelOrder = useCallback(async (order: API.Order) => {
-    return cancelOrder(order.order_id, order.symbol).then(() => {
+    // @ts-ignore
+    return cancelOrder(order, order.symbol).then(() => {
       // toast.success("Order canceled successfully");
     });
   }, []);
@@ -38,7 +39,14 @@ export const OrderListProvider: FC<
         <OrderEditFormSheet
           order={order}
           editOrder={(value: OrderEntity) => {
-            return editOrder(order.order_id.toString(), value);
+            const order_id = (
+              order?.order_id || order?.algo_order_id
+            )?.toString();
+            return editOrder(order_id || "", {
+              ...value,
+              // @ts-ignore
+              algo_order_id: order.algo_order_id,
+            });
           }}
         />
       ),

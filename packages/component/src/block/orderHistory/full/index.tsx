@@ -12,6 +12,7 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
 
   return (
     <OrderListProvider
+      // @ts-ignore
       cancelOrder={props.onCancelOrder}
       editOrder={function (orderId: string, order: OrderEntity): Promise<any> {
         throw new Error("Function not implemented.");

@@ -2,6 +2,8 @@ import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
 import { modal } from "@/modal";
 import { OrderSide } from "@orderly.network/types";
+import Button from "@/button";
+import { useMutation } from "@orderly.network/hooks";
 
 export interface Props {
   side: OrderSide;
@@ -11,6 +13,11 @@ export interface Props {
 
 export const Header: FC<Props> = (props) => {
   const [side, setSide] = useState<OrderSide | "">("");
+
+  const [
+    cancelAll,
+    { error: cancelOrderError, isMutating: cancelMutating },
+  ] = useMutation("/v1/orders", "DELETE");
 
   function cancelAllOrder() {
     modal.confirm({
@@ -23,7 +30,9 @@ export const Header: FC<Props> = (props) => {
       contentClassName: "desktop:orderly-w-[364px]",
       onOk: async () => {
         // do cancel all orders
-        Promise.resolve();
+        // Promise.resolve();
+        await cancelAll(null,{"source_type": "ALL"});
+        // Promise.resolve();
       },
       onCancel: () => {
         return Promise.reject();
@@ -55,7 +64,7 @@ export const Header: FC<Props> = (props) => {
           // props.onSearch?.({ side: value as OrderSide });
         }}
       />
-      {/* <Button
+      <Button
         size={"small"}
         variant={"outlined"}
         disabled={props.count <= 0}
@@ -63,7 +72,7 @@ export const Header: FC<Props> = (props) => {
         onClick={cancelAllOrder}
       >
         Cancel all
-      </Button> */}
+      </Button>
     </div>
   );
 };

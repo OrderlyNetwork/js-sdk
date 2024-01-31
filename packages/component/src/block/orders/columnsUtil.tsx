@@ -5,6 +5,7 @@ import { upperCaseFirstLetter } from "@/utils/string";
 import { Numeral,Text } from "@/text";
 import { cx } from "class-variance-authority";
 import { Column } from "@/table";
+import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 /// get columns for cancel/fill/reject/history
 export const columnsBasis = (): Column<API.Order>[] => {
@@ -18,10 +19,16 @@ export const columnsBasis = (): Column<API.Order>[] => {
         },
         {
           title: "Type",
-          className: "orderly-h-[48px]",
           width: 100,
+          className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "type",
-          formatter: upperCaseFirstLetter,
+          formatter: (value: string, record: any,) => {
+
+          if (record.algo_order_id) {
+            return `Stop ` + `${record.type}`.toLowerCase()
+          }
+            return upperCaseFirstLetter(value);
+          },
         },
         {
           title: "Side",
@@ -59,7 +66,7 @@ export const columnsBasis = (): Column<API.Order>[] => {
                       ? "orderly-text-trade-profit"
                       : "orderly-text-trade-loss"
                 )}
-              >{`${record.executed} / ${record.quantity}`}</span>
+              >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
             );
           },
         },
@@ -70,12 +77,11 @@ export const columnsBasis = (): Column<API.Order>[] => {
           width: 100,
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
               >
                 {value || "-"}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -86,12 +92,11 @@ export const columnsBasis = (): Column<API.Order>[] => {
           dataIndex: "average_executed_price",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
               >
                 {value || "-"}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -102,12 +107,12 @@ export const columnsBasis = (): Column<API.Order>[] => {
           dataIndex: "executed",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
+                // precision={2}
               >
                 {record.executed === 0 || Number.isNaN(record.price) || record.price === null ? "-" : `${record.executed * record.price}`}
-              </Numeral>
+              </NumeralWithCtx>
             );
           },
         },
@@ -115,15 +120,15 @@ export const columnsBasis = (): Column<API.Order>[] => {
           title: "Trigger",
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
-          dataIndex: "price",
+          dataIndex: "trigger_price",
           render: (value: string, record: any) => {
             return (
-              <Numeral
+              <NumeralWithCtx
                 className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
-                precision={2}
+                // precision={2}
               >
-                {-1}
-              </Numeral>
+                {value}
+              </NumeralWithCtx>
             );
           },
         },
@@ -138,7 +143,15 @@ export const columnsBasis = (): Column<API.Order>[] => {
           width: 120,
           className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "status",
-          formatter: upperCaseFirstLetter,
+          formatter: (value: string, record: any) => {
+
+            const status = value || record.algo_status;
+            
+            if (status === "NEW") {
+              return upperCaseFirstLetter("pending");
+            }
+            return upperCaseFirstLetter(status);
+          },
         },
         {
           title: "Reduce",

@@ -54,7 +54,13 @@ export const Listview: FC<Props> = (props) => {
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "type",
-          formatter: upperCaseFirstLetter,
+          formatter: (value: string, record: any,) => {
+
+          if (record.algo_order_id) {
+            return `Stop ` + `${record.type}`.toLowerCase()
+          }
+            return upperCaseFirstLetter(value);
+          },
         },
         {
           title: "Side",
@@ -202,7 +208,7 @@ export const Listview: FC<Props> = (props) => {
           "orderly-text-2xs orderly-text-base-contrast-80",
           props.className
         )}
-        generatedRowKey={(record) => "" + record.order_id}
+        generatedRowKey={(record, index) => `${index}${record.order_id || record.algo_order_id}`}
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider

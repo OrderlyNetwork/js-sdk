@@ -205,12 +205,17 @@ export function useOrderEntry(
     if (!prev) return null;
     let key, value;
     const keys = Object.keys(current) as (keyof OrderEntity)[];
+
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
       let preveValue = prev[k];
       let currentValue = current[k];
 
-      if (!preveValue && !currentValue) continue;
+      if (
+        typeof preveValue === "undefined" &&
+        typeof currentValue === "undefined"
+      )
+        continue;
 
       // if (k === "order_quantity") {
       //   preveValue = Number(preveValue);
@@ -320,11 +325,12 @@ export function useOrderEntry(
               markPrice: markPrice,
             });
 
-            console.log("------------------", data);
+            // console.log("------------------", values, data);
 
             return doCreateOrder(
               omit(["order_type_ext"], {
-                ...values,
+                // ...values,
+                ...omit(["order_price"], values),
                 ...data,
               })
             ).then((res) => {
@@ -423,7 +429,7 @@ export function useOrderEntry(
     // diff order entry
     const item = diffOrderEntry(prevOrderData.current, parsedData);
 
-    console.log(prevOrderData.current, symbolOrOrder, item);
+    // console.log(prevOrderData.current, symbolOrOrder, item);
 
     if (!item) {
       return orderDataCache.current as Partial<OrderEntity>;
@@ -485,6 +491,7 @@ export function useOrderEntry(
 
   /// validator order info
   useEffect(() => {
+    if (!markPrice) return;
     // validate order data;
     validator(formattedOrder)?.then((err) => {
       setErrors(err);
@@ -497,6 +504,7 @@ export function useOrderEntry(
     markPrice,
   ]);
 
+  //====== update orderbook ask0/bid0 ======
   useEffect(() => {
     if (!optionsValue?.watchOrderbook) return;
     ee.on("orderbook:update", onOrderbookUpdate);
@@ -506,13 +514,20 @@ export function useOrderEntry(
     };
   }, [optionsValue?.watchOrderbook]);
 
+  useEffect(() => {
+    askAndBid.current = [];
+  }, [parsedData?.symbol]);
+
+  //====== end ======
+
   const getPriceAndQty = (
     symbolOrOrder: OrderEntity
   ): { quantity: number; price: number } | null => {
     let quantity = Number(symbolOrOrder.order_quantity);
     const orderPrice = Number(symbolOrOrder.order_price);
 
-    if (isNaN(quantity) || quantity <= 0) return null;
+    if (isNaN(quantity) || quantity <= 0 || askAndBid.current.length === 0)
+      return null;
     if (
       (symbolOrOrder.order_type === OrderType.LIMIT ||
         symbolOrOrder.order_type === OrderType.STOP_LIMIT) &&
@@ -569,11 +584,15 @@ export function useOrderEntry(
   };
 
   const estLiqPrice = useMemo(() => {
-    if (!accountInfo || !parsedData) return null;
+    if (!accountInfo || !parsedData || !markPrice) return null;
+
     const result = getPriceAndQty(formattedOrder as OrderEntity);
     if (result === null) return null;
     const { price, quantity } = result;
     if (!price || !quantity) return null;
+
+    console.log(markPrice, price);
+
     const liqPrice = order.estLiqPrice({
       markPrice,
       baseIMR,

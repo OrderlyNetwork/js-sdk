@@ -155,6 +155,7 @@ const FavoriteDropdownContent: FC<{
       <FavoriteTabsListView
         dataSource={innerTabs}
         symbolTabs={symbolTabs}
+        // @ts-ignore
         onItemClick={onItemClick}
       />
       <AddNewFavoriteTab
@@ -185,6 +186,7 @@ const FavoriteTabsListView: FC<{
     return (
       <button
         onClick={(e) => {
+          // @ts-ignore
           props.onItemClick?.(item);
           e.stopPropagation();
         }}
