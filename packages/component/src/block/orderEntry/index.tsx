@@ -470,6 +470,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             error={!!metaState.errors?.order_price && errorsVisible}
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
+            autoComplete="off"
             value={
               isMarketOrder
                 ? "Market"
