@@ -107,7 +107,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         currentChainId: chain?.id,
       }
     );
-    return result;
+    return { id: result?.id, name: result?.name };
   }, [chains, chain]);
 
   const onChainChange = useCallback(

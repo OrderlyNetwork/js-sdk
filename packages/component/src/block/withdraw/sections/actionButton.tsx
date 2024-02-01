@@ -15,7 +15,7 @@ export interface ActionButtonProps {
   onWithdraw: () => void;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
-  openChainPicker?: () => Promise<{ id: number; name: string }>;
+  openChainPicker?: () => Promise<{ id?: number; name?: string }>;
   // chainInfo?: ChainConfig;
   quantity: string;
   address: string | undefined;
@@ -48,14 +48,15 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   const [chainNotSupport, setChainNotSupport] = useState(false);
   /// has cross chain withdraw transaction
-  const [crossChainTrans, setCrossChainTrans] = useState<any | undefined>(undefined);
+  const [crossChainTrans, setCrossChainTrans] = useState<any | undefined>(
+    undefined
+  );
 
-  const { data: assetHistory } = usePrivateQuery<any[]>('/v1/asset/history', {
+  const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
     revalidateOnMount: true,
   });
 
   const needCrossChain = useRef<Boolean>(false);
-
 
   const checkSupoort = (
     chain: CurrentChain | null,
@@ -81,12 +82,13 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   useEffect(() => {
     // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
-    const item = assetHistory?.find((e: any) => e.trans_status === "pending_rebalance".toUpperCase());
+    const item = assetHistory?.find(
+      (e: any) => e.trans_status === "pending_rebalance".toUpperCase()
+    );
     setCrossChainTrans(item);
   }, [assetHistory]);
 
   // console.log("input quantity", quantity, assetHistory);
-
 
   const warningMessage = useMemo(() => {
     const networkName = chain?.info?.network_infos?.name;
@@ -105,17 +107,23 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     // check quantity and vaultBalance
     if (crossChainWithdraw) {
       needCrossChain.current = true;
-      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`
+      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`;
     }
 
     return undefined;
-
-  }, [chainNotSupport, chains, chain, quantity, maxAmount, crossChainWithdraw, chainVaultBalance]);
+  }, [
+    chainNotSupport,
+    chains,
+    chain,
+    quantity,
+    maxAmount,
+    crossChainWithdraw,
+    chainVaultBalance,
+  ]);
 
   useEffect(() => {
     setChainNotSupport(checkSupoort(chain, chains));
   }, [chains?.length, chain?.id]);
-
 
   const onClick = useCallback(() => {
     const qty = parseFloat(quantity);
@@ -123,14 +131,16 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       modal.confirm({
         title: "Confirm to withdraw",
         content: (
-          <CrossChainConfirm address={address || ""} amount={qty-fee} chain={chain}/>
+          <CrossChainConfirm
+            address={address || ""}
+            amount={qty - fee}
+            chain={chain}
+          />
         ),
         onOk: async () => {
           onWithdraw();
         },
-        onCancel: async () => {
-
-        }
+        onCancel: async () => {},
       });
     } else {
       onWithdraw();
@@ -154,7 +164,9 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             className="desktop:orderly-text-xs"
             fullWidth
             onClick={onClick}
-            disabled={props.disabled || props.loading || crossChainTrans !== undefined}
+            disabled={
+              props.disabled || props.loading || crossChainTrans !== undefined
+            }
             loading={loading}
           >
             Withdraw
@@ -196,7 +208,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         fullWidth
         onClick={() =>
           openChainPicker?.().then(({ id }) => {
-            swtichChain(id);
+            id && swtichChain(id);
           })
         }
       >

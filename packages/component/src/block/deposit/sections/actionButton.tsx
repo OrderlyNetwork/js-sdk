@@ -109,9 +109,10 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       currentChainId: chain?.id,
     });
 
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onChainChange?.(chainInfo);
+    if (result?.id) {
+      const chainInfo = findByChainId(result.id);
+      props?.onChainChange?.(chainInfo);
+    }
   };
 
   const chainWarningMessage = useMemo(() => {
