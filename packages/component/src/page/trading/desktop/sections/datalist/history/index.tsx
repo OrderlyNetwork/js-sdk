@@ -2,6 +2,7 @@ import { HistoryListViewFull } from "@/block/orderHistory";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { useTabContext } from "@/tab/tabContext";
 import { useOrderStream, useAccount } from "@orderly.network/hooks";
+import { OrderEntity } from "@orderly.network/types";
 
 import {
   AccountStatusEnum,
@@ -25,7 +26,7 @@ export const HistoryView = () => {
   });
 
   const onCancelOrder = useCallback(
-    (orderId: number, symbol: string) => {
+    (orderId: number | OrderEntity, symbol: string) => {
       return cancelOrder(orderId, symbol).then(() => {
         // update history list
         return refresh();
