@@ -37,6 +37,17 @@ export {
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
+export { Divider } from "./divider";
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
 
 // ==================== page component ====================
 export * from "./page";

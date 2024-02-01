@@ -10,3 +10,5 @@ export type { ChainConfig, ChainInfo, NativeCurrency } from "./chains";
 export * from "./wallet";
 
 export { ApiError, SDKError } from "./errors";
+
+export { definedTypes } from "./sign";

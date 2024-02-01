@@ -1,5 +1,3 @@
-import { TradeHistory } from "./tradeHistory";
-
 export {
   PositionsView,
   ClosePositionPane,

@@ -53,7 +53,11 @@ export const usePrivateDataObserver = (options: {
     const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
       onMessage: (data: any) => {
         updateOrders(data);
-        ee.emit("orders:changed", data);
+        if (Array.isArray(data)) {
+          data.forEach((item) => ee.emit("orders:changed", {...item, status: item.algoStatus,}));
+        } else {
+          ee.emit("orders:changed", {...data, status: data.algoStatus,});
+        }
       },
     });
 

@@ -1,1 +1,1 @@
-export { QuantityInput } from "./quantityInput";
+export { QuantityInput, type InputStatus } from "./quantityInput";

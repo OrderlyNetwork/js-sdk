@@ -1,5 +1,6 @@
+import { definedTypes } from "@orderly.network/types";
 import { MemoryConfigStore } from "./configStore/configStore";
-import { definedTypes } from "./constants";
+// import { definedTypes } from "./constants";
 
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
@@ -45,6 +46,9 @@ export function getDomain(chainId: number, onChainDomain?: boolean) {
   };
 }
 
+/**
+ * generate `registerAccount` data and to be signed message structure
+ */
 export function generateRegisterAccountMessage(inputs: {
   chainId: number;
   registrationNonce: number;
@@ -65,22 +69,24 @@ export function generateRegisterAccountMessage(inputs: {
     [primaryType]: definedTypes[primaryType],
   };
 
-  return [
+  const toSignatureMessage = {
+    domain: getDomain(chainId),
     message,
-    {
-      domain: getDomain(chainId),
-      message,
-      primaryType,
-      types: typeDefinition,
-    },
-  ];
+    primaryType,
+    types: typeDefinition,
+  };
+
+  return [message, toSignatureMessage] as const;
 }
 
+/**
+ * generate `addOrderlyKey` data and to be signed message structure
+ */
 export function generateAddOrderlyKeyMessage(inputs: {
   publicKey: string;
   chainId: number;
   brokerId: string;
-  primaryType: string;
+  primaryType: keyof typeof definedTypes;
   expiration: number;
 }) {
   const {
@@ -113,9 +119,12 @@ export function generateAddOrderlyKeyMessage(inputs: {
     types: typeDefinition,
   };
 
-  return [message, toSignatureMessage];
+  return [message, toSignatureMessage] as const;
 }
 
+/**
+ * generate `settle` data and to be signed message structure
+ */
 export function generateSettleMessage(inputs: {
   chainId: number;
   brokerId: string;
@@ -145,5 +154,5 @@ export function generateSettleMessage(inputs: {
     types: typeDefinition,
   };
 
-  return [message, toSignatureMessage];
+  return [message, toSignatureMessage] as const;
 }
