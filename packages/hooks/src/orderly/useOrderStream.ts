@@ -146,16 +146,24 @@ export const useOrderStream = (params: Params) => {
    */
   const cancelOrder = useCallback((orderId: number | OrderEntity, symbol?: string) => {
     let isAlgoOrder = false;
+    let order_id;
     if (typeof orderId === 'number') {
       isAlgoOrder = false;
+      order_id = orderId;
+    } else {
       // @ts-ignore
-    } else if (orderId.algo_order_id !== undefined) {
-      isAlgoOrder = true;
+      order_id = orderId?.order_id;
+      // @ts-ignore
+      if (orderId?.algo_order_id !== undefined) {
+        isAlgoOrder = true;
+        // @ts-ignore
+        order_id = orderId?.algo_order_id;
+      }
     }
     if (isAlgoOrder) {
       return doCanceAlgolOrder(null, {
         // @ts-ignore
-        order_id: orderId.algo_order_id,
+        order_id: order_id,
         symbol,
         source: `SDK${version}`
       })
@@ -169,7 +177,7 @@ export const useOrderStream = (params: Params) => {
         });;
     }
     return doCancelOrder(null, {
-      order_id: orderId,
+      order_id: order_id,
       symbol,
       source: `SDK_${version}`,
     }).then((res: any) => {
