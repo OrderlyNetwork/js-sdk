@@ -38,7 +38,5 @@ export function useWsStatus() {
     return () => ws.off("websocket:status", () => {});
   }, []);
 
-  return "disconnected";
-
   return wsStatus;
 }
