@@ -215,7 +215,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           .then(() => {
             if (
               metaState.errors?.order_price?.message ||
-              metaState.errors?.order_quantity?.message
+              metaState.errors?.order_quantity?.message ||
+              metaState.errors?.trigger_price?.message 
             ) {
               setErrorsVisible(true);
               return Promise.reject("cancel");

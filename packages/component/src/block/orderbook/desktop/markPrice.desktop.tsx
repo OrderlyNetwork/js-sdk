@@ -109,9 +109,11 @@ const Spread: FC<{
     if (index !== -1) {
       ask1 = Number.isNaN(asks[index][0]) ? 0 : asks[index][0];
     }
-
     const dValue = new Decimal(ask1).sub(bid1).div(new Decimal(ask1).add(bid1).div(2));
-    return Math.ceil(dValue.toNumber()) / 10000;
+    // 0.00006416604461251195
+    // 0.000065
+    // 0.0065
+    return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
   }, [asks, bids]);
 
   return (

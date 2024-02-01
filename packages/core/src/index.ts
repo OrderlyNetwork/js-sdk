@@ -15,7 +15,13 @@ export { default as EventEmitter } from "eventemitter3";
 
 export { type OrderlyKeyPair, BaseOrderlyKeyPair } from "./keyPair";
 
-export { getMockSigner, getDefaultSigner } from "./helper";
+export {
+  getMockSigner,
+  getDefaultSigner,
+  generateAddOrderlyKeyMessage,
+  generateRegisterAccountMessage,
+  generateSettleMessage,
+} from "./helper";
 
 export {
   type IContract,

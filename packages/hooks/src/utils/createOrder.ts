@@ -205,7 +205,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
         if (price.lt(priceRange.min)) {
           errors.order_price = {
             type: "min",
-            message: `price must be more than ${new Decimal(
+            message: `price must be greater than ${new Decimal(
               priceRange.min
             ).todp(symbol.quote_dp)}`,
           };
@@ -275,17 +275,21 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
           type: "required",
           message: "price is required",
         };
-      } else if (!trigger_price) {
+      }
+      
+      if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
           message: "trigger price is required",
         };
-      } else {
+      } 
+      
+      if (trigger_price && order_price) {
         const price = new Decimal(order_price);
         const { symbol } = config;
         const { price_range, price_scope } = symbol;
-        const maxPriceNumber = maxPrice(config.markPrice, price_range);
-        const minPriceNumber = minPrice(config.markPrice, price_range);
+        const maxPriceNumber = maxPrice(trigger_price, price_range);
+        const minPriceNumber = minPrice(trigger_price, price_range);
         const scropePriceNumbere = scropePrice(
           trigger_price,
           price_scope,
@@ -313,7 +317,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
         if (price.lt(priceRange.min)) {
           errors.order_price = {
             type: "min",
-            message: `price must be more than ${new Decimal(
+            message: `price must be greater than ${new Decimal(
               priceRange.min
             ).todp(symbol.quote_dp)}`,
           };
