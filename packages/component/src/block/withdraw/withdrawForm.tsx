@@ -229,8 +229,8 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     }
 
     if (crossChainWithdraw) {
-      // @ts-ignore
       return (
+        // @ts-ignore
         (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
       );
     }
