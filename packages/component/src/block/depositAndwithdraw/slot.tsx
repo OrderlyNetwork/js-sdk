@@ -3,27 +3,21 @@ import { installExtension } from "@/plugin/install";
 import { ExtensionSlot } from "@/plugin/slot";
 import { Deposit } from "../deposit/deposit";
 
-installExtension<{ onOk: () => void }>({
+installExtension<DepositSlotProps>({
   name: "default-deposit",
   scope: ["*"],
   positions: [ExtensionPosition.DepositForm],
   __isInternal: true,
 })((props) => {
-  return (
-    <Deposit
-      onOk={props.onOk}
-      // @ts-ignore
-      dst={{
-        chainId: 0,
-        address: "",
-        decimals: 0,
-        symbol: "",
-        network: "",
-      }}
-    />
-  );
+  return <Deposit onOk={props.onOk} />;
 });
 
-export const DepositSlot = () => {
-  return <ExtensionSlot position={ExtensionPosition.DepositForm} />;
+export interface DepositSlotProps {
+  onOk: () => void;
+}
+
+export const DepositSlot = (props: DepositSlotProps) => {
+  return (
+    <ExtensionSlot position={ExtensionPosition.DepositForm} onOk={props.onOk} />
+  );
 };

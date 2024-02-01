@@ -52,7 +52,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
                 network: "",
               }}
             /> */}
-            <DepositSlot />
+            <DepositSlot onOk={props.onOk!} />
           </div>
         </TabPane>
         <TabPane
