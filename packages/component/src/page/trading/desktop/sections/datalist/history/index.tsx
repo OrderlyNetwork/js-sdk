@@ -1,5 +1,6 @@
 import { HistoryListViewFull } from "@/block/orderHistory";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { useTabContext } from "@/tab/tabContext";
 import { useOrderStream, useAccount } from "@orderly.network/hooks";
 
 import {
@@ -13,12 +14,14 @@ export const HistoryView = () => {
   const [side, setSide] = useState<OrderSide | "">("");
   const [status, setStauts] = useState<OrderStatus | "">("");
   const { state } = useAccount();
-  const { onSymbolChange } = useContext(TradingPageContext);
+  const { symbol, onSymbolChange } = useContext(TradingPageContext);
+  const { data: tabExtraData } = useTabContext();
   const [data, { isLoading, loadMore, cancelOrder, refresh }] = useOrderStream({
     // @ts-ignore
     side,
     // @ts-ignore
     status,
+    symbol: tabExtraData.showAllSymbol ? "" : symbol,
   });
 
   const onCancelOrder = useCallback(
