@@ -102,7 +102,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         return `Withdrawals are not supported on ${networkName}. Please switch to any of the bridgeless networks.`;
       }
 
-      return `Withdrawals are not supported on ${networkName}. Please switch to Arbitrum.`;
+      return `Withdrawals are not supported on ${networkName}.`;
     }
     // check quantity and vaultBalance
     if (crossChainWithdraw) {
@@ -197,7 +197,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             }
           }}
         >
-          Switch to Arbitrum
+          Switch network
         </Button>
       );
     }
@@ -212,7 +212,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
           })
         }
       >
-        Switch Network
+        Switch network
       </Button>
     );
   }, [
