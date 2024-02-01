@@ -1,13 +1,21 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { parseNumber } from "@/utils/num";
-import { API, Chain, ChainConfig, CurrentChain } from "@orderly.network/types";
+import { API, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import { FC, useEffect, useMemo, useState, useRef, useCallback } from "react";
+import {
+  FC,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import { usePrivateQuery, useWalletSubscription } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { CrossChainConfirm } from "./crossChainConfirm";
+import { OrderlyAppContext } from "@/provider";
 
 export interface ActionButtonProps {
   chains?: API.NetworkInfos[];
@@ -16,7 +24,6 @@ export interface ActionButtonProps {
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
   openChainPicker?: () => Promise<{ id?: number; name?: string }>;
-  // chainInfo?: ChainConfig;
   quantity: string;
   address: string | undefined;
   loading?: boolean;
@@ -24,7 +31,6 @@ export interface ActionButtonProps {
   maxAmount: number;
   fee: number;
   crossChainWithdraw: boolean;
-  // chainNotSupport: boolean;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
@@ -35,10 +41,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     switchChain,
     disabled,
     openChainPicker,
-    // chainInfo,
     quantity,
     loading,
-    // chainNotSupport,
     chainVaultBalance,
     maxAmount,
     crossChainWithdraw,
@@ -46,28 +50,20 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     fee,
   } = props;
 
-  const [chainNotSupport, setChainNotSupport] = useState(false);
   /// has cross chain withdraw transaction
   const [crossChainTrans, setCrossChainTrans] = useState<any | undefined>(
     undefined
   );
+
+  const { errors } = useContext(OrderlyAppContext);
+
+  const chainNotSupport = errors.ChainNetworkNotSupport;
 
   const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
     revalidateOnMount: true,
   });
 
   const needCrossChain = useRef<Boolean>(false);
-
-  const checkSupoort = (
-    chain: CurrentChain | null,
-    chains: API.NetworkInfos[] | undefined
-  ): boolean => {
-    if (!chain || !chains) return false;
-
-    const index = chains?.findIndex((c) => c.chain_id === chain.id);
-
-    return index < 0;
-  };
 
   useWalletSubscription({
     onMessage(data: any) {
@@ -86,9 +82,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       (e: any) => e.trans_status === "pending_rebalance".toUpperCase()
     );
     setCrossChainTrans(item);
-  }, [assetHistory]);
-
-  // console.log("input quantity", quantity, assetHistory);
+  }, [assetHistory]);  
 
   const warningMessage = useMemo(() => {
     const networkName = chain?.info?.network_infos?.name;
@@ -120,10 +114,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     crossChainWithdraw,
     chainVaultBalance,
   ]);
-
-  useEffect(() => {
-    setChainNotSupport(checkSupoort(chain, chains));
-  }, [chains?.length, chain?.id]);
 
   const onClick = useCallback(() => {
     const qty = parseFloat(quantity);
@@ -175,42 +165,16 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
 
-    if (chains?.length === 1) {
-      return (
-        <Button
-          id="orderly-withdraw-confirm-button"
-          className="desktop:orderly-text-xs"
-          fullWidth
-          onClick={() => {
-            const chain = chains[0];
-            //
-            if (chain) {
-              swtichChain(chain.chain_id);
-              // toast.promise(
-              //   switchChain({ chainId: int2hex(chain.chain_id) }),
-              //   {
-              //     loading: "Loading",
-              //     success: (data) => `Successfully`,
-              //     error: (err) => `Error: ${err.toString()}`,
-              //   }
-              // );
-            }
-          }}
-        >
-          Switch network
-        </Button>
-      );
-    }
     return (
       <Button
         id="orderly-withdraw-confirm-button"
         className="desktop:orderly-text-xs"
         fullWidth
-        onClick={() =>
+        onClick={() => {
           openChainPicker?.().then(({ id }) => {
             id && swtichChain(id);
-          })
-        }
+          });
+        }}
       >
         Switch network
       </Button>

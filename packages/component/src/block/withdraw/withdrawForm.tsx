@@ -119,7 +119,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       }).then(
         () => {
           toast.success("Network switched");
-          // 清理数据
+          // clear data
           setQuantity("");
         },
         (error) => {
