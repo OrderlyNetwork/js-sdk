@@ -13,7 +13,7 @@ export function useWsStatus() {
 
   useEffect(() => {
     ws.on("status:change", (status: any) => {
-      // console.log("status:change", status);
+      console.log("status:change", status);
 
       const { type, isPrivate } = status;
       if (!isPrivate) {

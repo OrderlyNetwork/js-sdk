@@ -35,6 +35,7 @@ const preview = {
           { value: "PERP_ETH_USDC", title: "PERP_ETH_USDC" },
           { value: "PERP_NEAR_USDC", title: "PERP_NEAR_USDC" },
           { value: "PERP_BTC_USDC", title: "PERP_BTC_USDC" },
+          { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
         ],
       },
     },
