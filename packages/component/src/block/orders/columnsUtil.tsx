@@ -39,9 +39,7 @@ export const columnsBasis = (): Column<API.Order>[] => {
             <span
               className={cx(
                 "orderly-font-semibold",
-                record.status === OrderStatus.CANCELLED
-                  ? ""
-                  : value === OrderSide.BUY
+                value === OrderSide.BUY
                     ? "orderly-text-trade-profit"
                     : "orderly-text-trade-loss"
               )}
@@ -60,9 +58,7 @@ export const columnsBasis = (): Column<API.Order>[] => {
               <span
                 className={cx(
                   "orderly-font-semibold",
-                  record.status === OrderStatus.CANCELLED
-                    ? ""
-                    : record.side === OrderSide.BUY
+                  record.side === OrderSide.BUY
                       ? "orderly-text-trade-profit"
                       : "orderly-text-trade-loss"
                 )}
