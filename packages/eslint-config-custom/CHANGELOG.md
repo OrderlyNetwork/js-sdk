@@ -1,5 +1,13 @@
 # eslint-config-custom
 
+## 0.0.34-experimental.12
+
+### Patch Changes
+
+- 85dd1d19: fix bugs;
+- 1749ac80: fix bugs;
+- fix bugs;
+
 ## 0.0.34-experimental.11
 
 ### Patch Changes

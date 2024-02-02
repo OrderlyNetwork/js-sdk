@@ -1,5 +1,20 @@
 # examples
 
+## 0.1.92-experimental.12
+
+### Patch Changes
+
+- 85dd1d19: fix bugs;
+- 1749ac80: fix bugs;
+- fix bugs;
+- Updated dependencies [85dd1d19]
+- Updated dependencies [1749ac80]
+- Updated dependencies
+  - @orderly.network/react@0.1.31-experimental.12
+  - @orderly.network/web3-onboard@0.0.28-experimental.12
+  - @orderly.network/hooks@1.0.28-experimental.12
+  - @orderly.network/core@0.1.27-experimental.12
+
 ## 0.1.92-experimental.11
 
 ### Patch Changes

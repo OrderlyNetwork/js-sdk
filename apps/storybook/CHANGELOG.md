@@ -1,5 +1,13 @@
 # storybook
 
+## 1.0.96-experimental.12
+
+### Patch Changes
+
+- 85dd1d19: fix bugs;
+- 1749ac80: fix bugs;
+- fix bugs;
+
 ## 1.0.96-experimental.11
 
 ### Patch Changes
