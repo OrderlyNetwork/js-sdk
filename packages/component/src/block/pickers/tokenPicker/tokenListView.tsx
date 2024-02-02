@@ -1,10 +1,8 @@
+import { FC } from "react";
 import { Divider } from "@/divider";
-import { NetworkImage } from "@/icon";
 import { ListView } from "@/listView";
-import { Table } from "@/table";
-import { type API } from "@orderly.network/types";
-import { FC, useMemo } from "react";
 import { TokenCell } from "./tokenCell";
+import { type API } from "@orderly.network/types";
 
 export interface TokenListViewProps {
   tokens: API.TokenInfo[];
@@ -43,6 +41,4 @@ export const TokenListView: FC<TokenListViewProps> = (props) => {
       />
     </>
   );
-
-  //   return <Table columns={columns} dataSource={props.tokens} bordered />;
 };

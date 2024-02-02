@@ -28,6 +28,8 @@ export const TopNavbar: FC<Props> = (props) => {
         if (result && result.status < AccountStatusEnum.EnableTrading) {
           showAccountConnectorModal({
             status: result.status,
+          }).catch((err: any) => {
+            console.log("cancel", err);
           });
         }
       }

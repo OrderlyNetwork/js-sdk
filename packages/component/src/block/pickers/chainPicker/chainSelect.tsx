@@ -27,7 +27,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -58,8 +58,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
-
-    if (connectedChain && isTestnet(connectedChain.id)) {
+    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
 

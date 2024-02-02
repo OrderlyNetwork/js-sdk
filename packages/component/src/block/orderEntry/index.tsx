@@ -216,7 +216,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             if (
               metaState.errors?.order_price?.message ||
               metaState.errors?.order_quantity?.message ||
-              metaState.errors?.trigger_price?.message 
+              metaState.errors?.trigger_price?.message
             ) {
               setErrorsVisible(true);
               return Promise.reject("cancel");
@@ -544,10 +544,16 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               )}
               %
             </span>
-            <span className="orderly-flex orderly-items-center orderly-gap-1 orderly-tabular-nums">
+            <button
+              type="button"
+              className="orderly-flex orderly-items-center orderly-gap-1 orderly-tabular-nums"
+              onClick={() => {
+                props.onFieldChange("order_quantity", maxQty);
+              }}
+            >
               <span className="orderly-text-base-contrast-54">Max buy</span>
               <Numeral precision={4}>{maxQty}</Numeral>
-            </span>
+            </button>
           </div>
 
           <Input

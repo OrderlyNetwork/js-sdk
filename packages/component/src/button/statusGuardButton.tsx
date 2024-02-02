@@ -36,15 +36,13 @@ export const StatusGuardButton: FC<
         } else {
           return result;
         }
-      } catch (e) { }
-    }
-
-    if (state.status < AccountStatusEnum.EnableTrading) {
+      } catch (e) {}
+    } else if (state.status < AccountStatusEnum.EnableTrading) {
       try {
         return await showAccountConnectorModal({
           status: state.status,
         });
-      } catch (err) { }
+      } catch (err) {}
     }
   }, [state]);
 
@@ -71,7 +69,8 @@ export const StatusGuardButton: FC<
           type="button"
           fullWidth
           onClick={() => onClick()}
-          className="desktop:orderly-font-bold desktop:orderly-text-sm">
+          className="desktop:orderly-font-bold desktop:orderly-text-sm"
+        >
           {buttonLabel}
         </Button>
       );

@@ -379,7 +379,7 @@ export class Account {
     );
   }
 
-  async createOrderlyKey(expiration: number): Promise<any> {
+  async createOrderlyKey(expiration?: number): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }

@@ -27,6 +27,8 @@ interface Props {
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo<Column<API.Order>[]>(() => {
+    // const columns = columnsBasis();
+
     if (props.status === OrderStatus.INCOMPLETE) {
       const columns: Column<API.Order>[] = [
         {
@@ -37,11 +39,11 @@ export const Listview: FC<Props> = (props) => {
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
-                if (sortOrder === "asc") {
-                  return r1.symbol.localeCompare(r2.symbol);
+                  if (sortOrder === "asc") {
+                    return r1.symbol.localeCompare(r2.symbol);
+                  }
+                  return r2.symbol.localeCompare(r1.symbol);
                 }
-                return r2.symbol.localeCompare(r1.symbol);
-              }
               : undefined,
           render: (value: string) => (
             <Text rule={"symbol"} className="orderly-font-semibold">
@@ -54,11 +56,10 @@ export const Listview: FC<Props> = (props) => {
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "type",
-          formatter: (value: string, record: any,) => {
-
-          if (record.algo_order_id) {
-            return `Stop ` + `${record.type}`.toLowerCase()
-          }
+          formatter: (value: string, record: any) => {
+            if (record.algo_order_id) {
+              return `Stop ` + `${record.type}`.toLowerCase();
+            }
             return upperCaseFirstLetter(value);
           },
         },
@@ -70,11 +71,11 @@ export const Listview: FC<Props> = (props) => {
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
-                if (sortOrder === "asc") {
-                  return r2.side.localeCompare(r1.side);
+                  if (sortOrder === "asc") {
+                    return r2.side.localeCompare(r1.side);
+                  }
+                  return r1.side.localeCompare(r2.side);
                 }
-                return r1.side.localeCompare(r2.side);
-              }
               : undefined,
           render: (value: string) => (
             <span
@@ -95,7 +96,9 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "quantity",
           width: 180,
           onSort: props.status === OrderStatus.INCOMPLETE,
-          render: (value: string, record: any) => <OrderQuantity order={record} />,
+          render: (value: string, record: any) => (
+            <OrderQuantity order={record} />
+          ),
         },
         {
           title: "Price",
@@ -105,7 +108,7 @@ export const Listview: FC<Props> = (props) => {
           onSort: props.status === OrderStatus.INCOMPLETE,
           render: (value: string, record: any) => <Price order={record} />,
         },
-        { 
+        {
           title: "Est. total",
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
@@ -113,10 +116,16 @@ export const Listview: FC<Props> = (props) => {
           render: (value: string, record: any) => {
             return (
               <Numeral
-                className={"orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"}
+                className={
+                  "orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"
+                }
                 precision={2}
               >
-                {record.quantity === 0 || Number.isNaN(record.price) || record.price === null ? "--" : `${record.quantity * record.price}`}
+                {record.quantity === 0 ||
+                Number.isNaN(record.price) ||
+                record.price === null
+                  ? "--"
+                  : `${record.quantity * record.price}`}
               </Numeral>
             );
           },
@@ -127,7 +136,9 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "trigger_price",
           width: 150,
           // onSort: props.status === OrderStatus.INCOMPLETE,
-          render: (value: string, record: any) => <TriggerPrice order={record} />,
+          render: (value: string, record: any) => (
+            <TriggerPrice order={record} />
+          ),
         },
         // {
         //   title: "Est. total",
@@ -167,27 +178,27 @@ export const Listview: FC<Props> = (props) => {
             </Text>
           ),
         },
+        {
+          title: "",
+          dataIndex: "action",
+          className: "orderly-h-[48px]",
+          align: "right",
+          fixed: "right",
+          width: 100,
+          render: (_: string, record) => {
+            if (props.status === OrderStatus.INCOMPLETE) {
+              return <CancelButton order={record} />;
+            }
+            return null;
+          },
+        },
       ];
 
-
-      columns.push({
-        title: "",
-        dataIndex: "action",
-        className: "orderly-h-[48px]",
-        align: "right",
-        fixed: "right",
-        width: 100,
-        render: (_: string, record) => {
-          if (props.status === OrderStatus.INCOMPLETE) {
-            return <CancelButton order={record} />;
-          }
-          return null;
-        },
-      });
+      // columns.push();
 
       return columns;
     } else {
-      return columnsBasis();
+      return columnsBasis(props.status);
     }
   }, [props.status]);
   return (
@@ -208,7 +219,9 @@ export const Listview: FC<Props> = (props) => {
           "orderly-text-2xs orderly-text-base-contrast-80",
           props.className
         )}
-        generatedRowKey={(record, index) => `${index}${record.order_id || record.algo_order_id}`}
+        generatedRowKey={(record, index) =>
+          `${index}${record.order_id || record.algo_order_id}`
+        }
         renderRowContainer={(record, index, children) => {
           return (
             <SymbolProvider
@@ -218,9 +231,13 @@ export const Listview: FC<Props> = (props) => {
             />
           );
         }}
-        expandRowRender={props.status === "FILLED" ? (record: any, index: number) => {
-          return <OrderTrades record={record} index={index}/>
-        } : undefined}
+        expandRowRender={
+          props.status === "FILLED"
+            ? (record: any, index: number) => {
+                return <OrderTrades record={record} index={index} />;
+              }
+            : undefined
+        }
       />
     </EndReachedBox>
   );

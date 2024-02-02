@@ -1,7 +1,6 @@
 import { TabPane, Tabs } from "@/tab";
 import { FC, useState } from "react";
 import { Withdraw } from "../withdraw";
-import { Deposit } from "../deposit/deposit";
 import { create } from "@/modal/modalHelper";
 import { useModal } from "@/modal";
 import { Sheet, SheetContent } from "@/sheet";
@@ -41,17 +40,6 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            {/* <Deposit
-              onOk={props.onOk}
-              // @ts-ignore
-              dst={{
-                chainId: 0,
-                address: "",
-                decimals: 0,
-                symbol: "",
-                network: "",
-              }}
-            /> */}
             <DepositSlot onOk={props.onOk!} />
           </div>
         </TabPane>
@@ -105,7 +93,7 @@ export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
         <DialogContent
-          className="orderly-p-5 orderly-top-[40%]"
+          className="orderly-p-5 orderly-top-[20%] orderly-translate-y-0"
           maxWidth={"lg"}
           closable
         >
