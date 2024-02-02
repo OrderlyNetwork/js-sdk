@@ -17,12 +17,15 @@ interface TokenSelectProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onClosed?: () => void;
+  disabled?: boolean;
 }
 
 export const MobileTokenSelect: FC<TokenSelectProps> = (props) => {
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-      <DialogTrigger asChild>{props.trigger}</DialogTrigger>
+      <DialogTrigger disabled={props.disabled} asChild>
+        {props.trigger}
+      </DialogTrigger>
 
       <DialogContent
         className="orderly-token-select-dialog"
