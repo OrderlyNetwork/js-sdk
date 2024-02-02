@@ -1,3 +1,4 @@
+import { OrderEntity } from "@orderly.network/types";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 
 export interface OrderHistoryListViewProps {
@@ -8,7 +9,7 @@ export interface OrderHistoryListViewProps {
   onSideChange?: (side: OrderSide) => void;
   onStatusChange?: (status: OrderStatus) => void;
   onSymbolChange?: (symbol: API.Symbol) => void;
-  onCancelOrder: (orderId: number, symbol: string) => Promise<any>;
+  onCancelOrder: (orderId: number | OrderEntity, symbol: string) => Promise<any>;
   loadMore: () => void;
   className?: string;
 }

@@ -14,7 +14,7 @@ export const ChainDialog = create<ChainListViewProps>((props) => {
   const { onItemClick, ...rest } = props;
 
   const _onItemClick = async (value: { id: number; name: string }) => {
-    const result = onItemClick?.(value);
+    const result = onItemClick?.(value) || value;
     resolve(result);
     hide();
   };

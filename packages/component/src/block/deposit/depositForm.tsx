@@ -430,8 +430,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         disabled={
           !quantity || inputStatus === "error" || props.depositFeeRevalidating!
         }
-        loading={submitting || props.depositFeeRevalidating!}
-        submitting={submitting || props.depositFeeRevalidating!}
+        loading={submitting || props.depositFeeRevalidating! || querying}
+        submitting={submitting || props.depositFeeRevalidating! || querying}
         switchChain={switchChain}
         quantity={quantity}
         onApprove={onApprove}

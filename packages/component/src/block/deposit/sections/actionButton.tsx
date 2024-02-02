@@ -1,15 +1,13 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
-import { toast } from "@/toast";
-import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
-import { int2hex, isTestnet } from "@orderly.network/utils";
-import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { API, CurrentChain } from "@orderly.network/types";
+import { isTestnet } from "@orderly.network/utils";
+import { FC, useContext, useMemo } from "react";
 import { ApproveButton } from "./approveButton";
 import { Notice } from "./notice";
 import { modal } from "@/modal";
 import { useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
-import { useTranslation } from "@/i18n";
 import { OrderlyAppContext } from "@/provider";
 import { DepositContext } from "../DepositProvider";
 
@@ -47,9 +45,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     submitting,
     maxQuantity,
     warningMessage,
+    chainNotSupport,
   } = props;
-  const [chainNotSupport, setChainNotSupport] = useState(false);
-  const t = useTranslation();
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
   const { needSwap, needCrossSwap } = useContext(DepositContext);
 
@@ -63,21 +60,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     return props.chains?.mainnet;
   }, [props.chains, props.chain]);
 
-  const checkSupoort = (
-    chain: CurrentChain | null,
-    chains?: API.NetworkInfos[]
-  ): boolean => {
-    if (!chain || !chains || !Array.isArray(chains)) return false;
-
-    const index = chains?.findIndex((c) => c.chain_id === chain.id);
-
-    return index < 0;
-  };
-
-  useEffect(() => {
-    setChainNotSupport(checkSupoort(chain, chains));
-  }, [chains?.length, chain?.id]);
-
   const [_, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
@@ -87,27 +69,19 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   const onOpenPicker = async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // mainChains: chains?.mainnet,
-      // testChains: chains?.testnet,
-      // mainChains: chains,
       testChains: chains,
       currentChainId: chain?.id,
     });
 
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onChainChange?.(chainInfo);
+    if (result?.id) {
+      const chainInfo = findByChainId(result.id);
+      props?.onChainChange?.(chainInfo);
+    }
   };
 
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";
     return "Please connect to a supported network.";
-
-    // if (chains?.length && chains.length > 1) {
-    //   return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to any of the bridgeless networks.`;
-    // }
-
-    // return `Withdrawals are not supported on ${chain?.info?.network_infos?.name}. Please switch to Arbitrum.`;
   }, [chainNotSupport, chains, chain?.info?.network_infos?.name]);
 
   const actionButton = useMemo(() => {
@@ -139,30 +113,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
 
-    if (chains?.length === 1) {
-      return (
-        <Button
-          id="orderly-deposit-confirm-button"
-          className="desktop:orderly-text-xs"
-          fullWidth
-          onClick={() => {
-            const chain = chains[0];
-            if (chain) {
-              toast.promise(
-                switchChain({ chainId: int2hex(Number(chain.chain_id)) }),
-                {
-                  loading: "Loading",
-                  success: (data) => `Successfully`,
-                  error: (err) => `Error: ${err.toString()}`,
-                }
-              );
-            }
-          }}
-        >
-          Switch to Arbitrum
-        </Button>
-      );
-    }
     return (
       <Button
         fullWidth
@@ -170,7 +120,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         id="orderly-deposit-confirm-button"
         className="desktop:orderly-text-xs"
       >
-        {t("block.withdraw.switchNetwork")}
+        Switch network
       </Button>
     );
   }, [

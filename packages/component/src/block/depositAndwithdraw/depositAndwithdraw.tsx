@@ -104,7 +104,11 @@ export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
 
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent className="orderly-p-5" maxWidth={"lg"}>
+        <DialogContent
+          className="orderly-p-5 orderly-top-[40%]"
+          maxWidth={"lg"}
+          closable
+        >
           <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
         </DialogContent>
       </Dialog>

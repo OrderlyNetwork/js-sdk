@@ -70,7 +70,7 @@ export const Ticker: FC<Props> = (props) => {
           ref={containerRef}
         >
           <div ref={leadingElementRef}>
-            <NumeralWithCtx coloring className="orderly-font-semibold">
+            <NumeralWithCtx className="orderly-font-semibold">
               {data?.["24h_close"]}
             </NumeralWithCtx>
           </div>

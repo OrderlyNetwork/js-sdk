@@ -30,7 +30,14 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
       }
       return null;
     } else {
-      return data[data.length-1];
+      for (let index = data.length-1; index>=0; index--) {
+        const item = data[index];
+
+        if (!Number.isNaN(item[0])) {
+          return item;
+        }
+      }
+      return null;
     }
   }, [data, type]);
 
