@@ -1,13 +1,12 @@
-import Button from "@/button";
 import { FC, useMemo, useRef } from "react";
-
 import { Divider } from "@/divider";
+import Button from "@/button";
 import { cn } from "@/utils/css";
 import { Decimal } from "@orderly.network/utils";
-import { TokenSelect } from "./tokenSelect";
 import { type API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
 import { parseNumber } from "@/utils/num";
+import { TokenSelect } from "../pickers/tokenPicker";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -117,7 +116,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           }
         >
           <span>{`$${amount}`}</span>
-          <div className="orderly-flex orderly-items-center orderly-space-x-2 ">
+          <div className="orderly-flex orderly-items-center orderly-space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
                 precision: props.token?.woofi_dex_precision,
