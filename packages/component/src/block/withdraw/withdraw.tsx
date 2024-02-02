@@ -9,6 +9,7 @@ import {
 import { CurrentChain, NetworkId } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
 import { useConfig } from "@orderly.network/hooks";
+import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface WithdrawProps {
   onCancel?: () => void;
@@ -30,7 +31,9 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     if (!connectedChain) return null;
 
     // const chainId = parseInt(connectedChain.id);
-    const { id: chainId } = connectedChain;
+    const { id } = connectedChain;
+    const chainId = praseChainIdToNumber(id);
+
     const chain = findByChainId(chainId);
 
     return {

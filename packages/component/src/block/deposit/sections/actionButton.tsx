@@ -89,8 +89,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     return "Please connect to a supported network.";
   }, [chainNotSupport, chains, chain?.info?.network_infos?.name]);
 
-  console.log("chains", chains);
-
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
       let label = "Deposit";
