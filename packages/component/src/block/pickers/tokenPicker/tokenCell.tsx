@@ -1,9 +1,9 @@
+import { FC } from "react";
 import { NetworkImage } from "@/icon";
 import { Spinner } from "@/spinner";
 import { Numeral } from "@/text";
 import { API } from "@orderly.network/types";
-import { FC, useEffect, useState } from "react";
-
+import { useGetBalance } from "./useGetBalance";
 interface TokenCellProps {
   token: API.TokenInfo;
   fetchBalance: (token: string, decimals: number) => Promise<any>;
@@ -12,25 +12,7 @@ interface TokenCellProps {
 
 export const TokenCell: FC<TokenCellProps> = (props) => {
   const { token } = props;
-
-  const [balance, setBalance] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (loading) return;
-    setLoading(true);
-    props
-      .fetchBalance(token.address, token.decimals)
-      .then(
-        (balance) => {
-          setBalance(balance);
-        },
-        (error) => {}
-      )
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [token]);
+  const { balance, loading } = useGetBalance(token, props.fetchBalance);
 
   return (
     <div
