@@ -2,6 +2,13 @@
 import dynamic from "next/dynamic";
 import { redirect, useRouter } from "next/navigation";
 
+// import { installExtension, ExtensionPosition } from "@orderly.network/react";
+
+// installExtension({
+//   name: "test",
+//   positions: [ExtensionPosition.DepositForm],
+// })(<div>test</div>);
+
 type Props = {
   params: { symbol: string };
 };

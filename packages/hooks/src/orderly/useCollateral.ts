@@ -19,6 +19,9 @@ export type CollateralOutputs = {
   totalValue: number;
   availableBalance: number;
   unsettledPnL: number;
+
+  positions: API.Position[];
+  accountInfo?: API.AccountInfo;
 };
 
 const positionsPath = pathOr([], [0, "rows"]);
@@ -45,6 +48,8 @@ export const useCollateral = (
 
   const { usdc } = useHoldingStream();
 
+  const filterAlgoOrders = orders?.filter((item) => item.algo_order_id === undefined) ?? [];
+
   // const { data: holding } = usePrivateQuery<API.Holding[]>(
   //   "/v1/client/holding",
   //   {
@@ -68,13 +73,13 @@ export const useCollateral = (
 
     return account.totalInitialMarginWithOrders({
       positions: positionsPath(positions),
-      orders: orders ?? [],
+      orders: filterAlgoOrders,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverage: accountInfo.max_leverage,
       symbolInfo,
     });
-  }, [positions, orders, markPrices, accountInfo, symbolInfo]);
+  }, [positions, filterAlgoOrders, markPrices, accountInfo, symbolInfo]);
 
   const freeCollateral = useMemo(() => {
     return account.freeCollateral({
@@ -88,7 +93,7 @@ export const useCollateral = (
       USDCHolding: usdc?.holding ?? 0,
       unsettlementPnL: pathOr_unsettledPnLPathOr(positions),
     });
-  }, [usdc, pathOr_unsettledPnLPathOr(positions)]);
+  }, [usdc?.holding, pathOr_unsettledPnLPathOr(positions)]);
 
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
@@ -96,5 +101,10 @@ export const useCollateral = (
     totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
     availableBalance,
     unsettledPnL: pathOr_unsettledPnLPathOr(positions),
+
+    accountInfo,
+
+    // @hidden
+    positions: positionsPath(positions),
   };
 };

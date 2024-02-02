@@ -1,32 +1,15 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Divider } from "@/divider";
-import { SwapSymbols, SymbolInfo } from "../sections/symbols";
-
+import { SwapSymbols } from "../sections/symbols";
 import { SwapTime } from "../sections/swapTime";
-import { SwapDetails, SwapInfo } from "../sections/swapDetials";
-import { SwapProcess } from "../sections/swapProcess";
-import { useCrossSwap, useSwap } from "@orderly.network/hooks";
+import { SwapDetails } from "../sections/swapDetials";
+import { useSwap } from "@orderly.network/hooks";
 import { toast } from "@/toast";
-import { SwapMode, SwapProcessStatusStatus } from "../sections/misc";
-import { API, WS_WalletStatusEnum } from "@orderly.network/types";
+import { SwapProcessStatusStatus } from "../sections/misc";
+import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { SwapProcessStatus } from "./swapProcessStatus";
 import { Decimal } from "@orderly.network/utils";
-
-export interface SwapProps {
-  src: SymbolInfo;
-  dst: SymbolInfo;
-  // swapInfo: SwapInfo;
-  mode: SwapMode;
-  transactionData: any;
-  slippage: number;
-
-  chain?: API.NetworkInfos;
-  nativeToken?: API.TokenInfo;
-  depositFee?: bigint;
-  onComplete?: (isSuccss: boolean) => void;
-  onCancel?: () => void;
-  onFail?: () => void;
-}
+import { SwapProps } from "../swap";
 
 export const SingleSwap: FC<SwapProps> = (props) => {
   const {
@@ -102,7 +85,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       (error: any) => {
         setStatus(SwapProcessStatusStatus.DepositFailed);
 
-        toast.error(error.message || "Error");
+        toast.error(error?.message || "Error");
       }
     );
   }, [transaction, mode, dst, src]);
@@ -129,6 +112,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         tx={tx}
         chainInfo={props.chain}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, mode, chain, tx, props.onComplete, status]);
@@ -144,7 +128,10 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast-54">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>

@@ -38,6 +38,7 @@ const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
 
   return (
     <div
+      {...props}
       className={cn("orderly-flex orderly-flex-1", {
         "orderly-flex-col": elements.includes("Header"),
       })}

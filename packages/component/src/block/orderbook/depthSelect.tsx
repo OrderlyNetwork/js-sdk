@@ -1,7 +1,5 @@
 import { Picker, Select } from "@/select";
 import { FC, useMemo } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
 
 interface DepthSelectProps {
   depth: number[];
@@ -16,10 +14,6 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
       label: `${d}`,
     }));
   }, [props.depth]);
-
-  const isTable = useMediaQuery(MEDIA_TABLET);
-
-  if (isTable) {
     return (
       <div id="orderly-order-book-depth" className="orderly-pt-2">
         {/* <Select size={"small"} value={"0.001"} /> */}
@@ -36,21 +30,4 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
         />
       </div>
     );
-  }
-  return (
-    <div className="orderly-pt-2">
-      {/* <Select size={"small"} value={"0.001"} /> */}
-      <Select
-        options={options}
-        fullWidth
-        size={"small"}
-        value={props.value}
-        className="orderly-text-4xs orderly-text-base-contrast-54 orderly-bg-base-700 desktop:orderly-text-base-contrast"
-        contentClassName="orderly-bg-base-800"
-        onChange={(value: any) => {
-          props.onChange?.(value);
-        }}
-      />
-    </div>
-  );
 };

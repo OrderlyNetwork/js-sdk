@@ -33,8 +33,10 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
         {props.state === "pending" ? (
           <Spinner size={"small"} background={"transparent"} />
         ) : props.state === "success" ? (
+          // @ts-ignore
           <Check size={18} className="orderly-text-primary-light" />
         ) : (
+          // @ts-ignore
           <X size={18} className="orderly-text-danger" />
         )}
       </div>
@@ -44,7 +46,7 @@ export const StatusTile: FC<StatusTileProps> = (props) => {
   return (
     <ListTile
       title={props.title}
-      className="orderly-text-xs subtitle:orderly-text-3xs subtitle:orderly-text-base-contrast-36"
+      className="orderly-text-base desktop:orderly-text-lg subtitle:orderly-text-2xs subtitle:orderly-text-base-contrast-36"
       subtitle={props.description}
       avatar={leadingElement}
       disabled={props.state === "disabled"}

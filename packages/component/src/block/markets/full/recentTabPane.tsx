@@ -40,6 +40,7 @@ export const RecentTabPane: FC<{
         activeIndex={activeIndex}
         dataSource={dataSource}
         onSort={onSort}
+        readLastSortCondition={false}
         maxHeight={props.maxHeight}
         updateActiveIndex={(index: number) => setActiveIndex(index)}
         onItemClick={(item) => {

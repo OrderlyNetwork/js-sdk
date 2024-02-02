@@ -47,6 +47,7 @@ export const ChartView: FC<ChartViewProps> = (props) => {
                   context.toggleContentVisible();
                 }}
               >
+                {/* @ts-ignore */}
                 <ChevronDown
                   size={18}
                   className={cn(
@@ -74,7 +75,9 @@ export const ChartView: FC<ChartViewProps> = (props) => {
         <TabPane title="Trade" value="tradeHistory">
           <div className="orderly-h-[240px] orderly-overflow-y-auto">
             <SymbolProvider symbol={symbol}>
-              <TradeHistoryPane symbol={symbol} />
+              <div className="orderly-px-[16px]">
+                <TradeHistoryPane symbol={symbol} />
+              </div>
             </SymbolProvider>
           </div>
         </TabPane>

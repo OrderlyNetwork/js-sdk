@@ -1,13 +1,14 @@
 import { FC, useEffect } from "react";
-import { SortItem, SortKey } from "../sections/sortItem";
+import { SortItem } from "../sections/sortItem";
 import { useSort } from "../useSort";
-import { SortCondition } from "../sections/sortGroup";
 import { cn } from "@/utils";
+import { SortCondition, SortKey } from "../shared/types";
 
 interface Props {
   value?: SortKey;
   onChange: (values: SortCondition) => void;
   hasSuffix: boolean;
+  readLastSortCondition?: boolean;
 } 
 
 export const SortGroup: FC<Props> = (props) => {
@@ -20,7 +21,7 @@ export const SortGroup: FC<Props> = (props) => {
     onSort,
     direction,
     value: currentValue,
-  } = useSort(props.value);
+  } = useSort(props.value, props.readLastSortCondition);
 
   useEffect(() => {
     props.onChange?.({ key: sortKey, direction });

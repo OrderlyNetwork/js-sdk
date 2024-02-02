@@ -101,9 +101,10 @@ export const useOrderStream = ({
 
 ```typescript
 import { useOrderStream } from "@orderly.network/hooks";
+import { OrderStatus } from "@orderly.network/types";
 
 export const Example() = >{
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  const [orders] = useOrderStream({ status: OrderStatus.INCOMPLETE });
 
   //...
 }
@@ -113,9 +114,10 @@ export const Example() = >{
 
 ```typescript /updateOrder/
 import { useOrderStream } from "@orderly.network/hooks";
+import { OrderStatus } from "@orderly.network/types";
 
 export const Example = () => {
-  const [_, { updateOrder }] = useOrderStream({ status: OrderStatus.NEW });
+  const [_, { updateOrder }] = useOrderStream({ status: OrderStatus.INCOMPLETE });
   //...
   const onEdit = async (id, values) => {
     const res = await updateOrder(id, values);

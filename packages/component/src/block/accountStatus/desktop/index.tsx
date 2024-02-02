@@ -30,7 +30,7 @@ export const AccountInfo: FC<Props> = (props) => {
             color={"tertiary"}
             className="desktop:orderly-text-3xs desktop:orderly-text-base-contrast"
             onClick={() => onWithdraw?.()}
-            >
+          >
             Withdraw
           </Button>
           <Button
@@ -46,7 +46,7 @@ export const AccountInfo: FC<Props> = (props) => {
       </div>
       <Divider />
       {/* <AssetsProvider> */}
-        <Assets totalBalance={1013130} />
+      <Assets totalBalance={1013130} />
       {/* </AssetsProvider> */}
     </>
   );

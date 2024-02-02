@@ -1,4 +1,4 @@
-// The plugin manager
-class OrderlyPluginRegistry {
-  private pluginMap: Map<string, any> = new Map();
-}
+export { installExtension } from "./install";
+
+export { ExtensionPosition } from "./types";
+// export * from "./types";

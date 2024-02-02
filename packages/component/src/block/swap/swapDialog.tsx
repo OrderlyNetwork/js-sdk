@@ -30,8 +30,9 @@ export const SwapDialog = create<SwapProps>((props) => {
         onPointerDownOutside={(event) => event.preventDefault()}
         closable
         onOpenAutoFocus={(event) => event.preventDefault()}
+        className="orderly-max-w-[90%]"
       >
-        <DialogHeader className="orderly-text-xs">
+        <DialogHeader className=" orderly-text-base desktop:orderly-text-xl">
           Review swap details
         </DialogHeader>
         <DialogBody>

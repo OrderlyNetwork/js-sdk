@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore/configStore";
-import { definedTypes } from "./constants";
+
 import { IContract } from "./contract";
 import { MessageFactor } from "./signer";
 import {
@@ -11,7 +11,12 @@ import {
   parseBrokerHash,
   parseTokenHash,
 } from "./utils";
-import { API, ApiError } from "@orderly.network/types";
+import {
+  API,
+  ApiError,
+  MaxUint256,
+  definedTypes,
+} from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -23,7 +28,7 @@ export class Assets {
   async withdraw(inputs: {
     chainId: number;
     token: string;
-    amount: number;
+    amount: string | number;
     allowCrossChainWithdraw: boolean;
   }) {
     if (!this.account.walletClient) {
@@ -32,7 +37,11 @@ export class Assets {
     if (!this.account.stateValue.address)
       throw new Error("account address is rqeuired");
 
-    const { chainId, token, amount, allowCrossChainWithdraw } = inputs;
+    const { chainId, token, allowCrossChainWithdraw } = inputs;
+    let { amount } = inputs;
+    if (typeof amount === "number") {
+      amount = amount.toString();
+    }
     const url = "/v1/withdraw_request";
     // get withdrawl nonce
     const nonce = await this.getWithdrawalNonce();
@@ -41,7 +50,7 @@ export class Assets {
       chainId,
       receiver: this.account.stateValue.address!,
       token,
-      amount: this.account.walletClient.parseUnits(amount.toString()),
+      amount: this.account.walletClient.parseUnits(amount),
       nonce,
       domain,
     });
@@ -241,7 +250,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
@@ -269,7 +278,7 @@ export class Assets {
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletClient.parseUnits(amount)
-        : ethers.MaxUint256.toString();
+        : MaxUint256.toString();
     const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
     const result = await this.account.walletClient?.call(
       contractAddress,

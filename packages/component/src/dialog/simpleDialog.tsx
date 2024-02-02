@@ -27,6 +27,9 @@ export interface BaseDialogProps {
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
   const [loading, setLoading] = useState(false);
   const actions = useMemo(() => {
+    if (props.footer !== undefined) {
+      return props.footer;
+    }
     if (!props.onCancel && !props.onOk) {
       return null;
     }
@@ -78,7 +81,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
         {buttons}
       </DialogFooter>
     );
-  }, [props.onCancel, props.onOk, loading]);
+  }, [props.onCancel, props.onOk, loading, props.footer]);
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>

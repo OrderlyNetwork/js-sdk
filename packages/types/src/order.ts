@@ -6,6 +6,8 @@ export enum OrderType {
   POST_ONLY = "POST_ONLY",
   ASK = "ASK",
   BID = "BID",
+  STOP_LIMIT="STOP_LIMIT",
+  STOP_MARKET="STOP_MARKET",
 }
 
 export enum OrderSide {
@@ -43,4 +45,6 @@ export interface OrderEntity {
   // internal fields
   total?: string | number;
   // hideInOrderbook?: boolean;
+  isStopOrder?: boolean;
+  trigger_price?: string | number,
 }

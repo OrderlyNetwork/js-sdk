@@ -11,6 +11,7 @@ import { TabContext } from "@/tab";
 import { OrderStatus } from "@orderly.network/types";
 import { OrdersViewFull } from "@/block/orders/full";
 import { OrderSide } from "@orderly.network/types";
+import { useTabContext } from "@/tab/tabContext";
 
 interface Props {
   // symbol: string;
@@ -20,33 +21,31 @@ interface Props {
 export const MyOrders: FC<Props> = (props) => {
   const context = useContext(TradingPageContext);
 
-  const [showAllSymbol, setShowAllSymbol] = useSessionStorage(
-    "showAllSymbol_orders",
-    true
-  );
+  const { data: tabExtraData } = useTabContext();
 
-  const [symbol, setSymbol] = useState(() =>
-    showAllSymbol ? "" : context.symbol
-  );
+  // const [symbol, setSymbol] = useState(() =>
+  //   tabExtraData.showAllSymbol ? "" : context.symbol
+  // );
 
   const [side, setSide] = useState<OrderSide | "">("");
 
   const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
     useOrderStream({
       status: props.status,
-      symbol: symbol,
+      symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
+      // @ts-ignore
       side,
     });
 
-  const onShowAllSymbolChange = (isAll: boolean) => {
-    setSymbol(isAll ? "" : context.symbol);
-    setShowAllSymbol(isAll);
-  };
+  // const onShowAllSymbolChange = (isAll: boolean) => {
+  //   setSymbol(isAll ? "" : context.symbol);
+  //   setShowAllSymbol(isAll);
+  // };
 
   const { state } = useAccount();
 
   const onCancelOrder = useCallback(
-    (orderId: number, symbol: string): Promise<any> => {
+    (orderId: number | OrderEntity, symbol: string): Promise<any> => {
       // @ts-ignore
       return cancelOrder(orderId, symbol);
     },
@@ -60,10 +59,10 @@ export const MyOrders: FC<Props> = (props) => {
       isLoading={isLoading}
       symbol={context.symbol}
       onSideChange={setSide}
+      // @ts-ignore
       side={side}
-      showAllSymbol={showAllSymbol}
+      showAllSymbol={tabExtraData.showAllSymbol}
       cancelOrder={onCancelOrder}
-      onShowAllSymbolChange={onShowAllSymbolChange}
       editOrder={updateOrder}
       onSymbolChange={context.onSymbolChange}
       loadMore={loadMore}

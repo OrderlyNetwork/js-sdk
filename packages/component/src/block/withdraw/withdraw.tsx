@@ -1,16 +1,15 @@
 import { FC, useContext, useMemo } from "react";
 import { WithdrawForm } from "./withdrawForm";
 import {
-  useChain,
   useWithdraw,
   useChains,
   usePositionStream,
-  OrderlyContext,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { CurrentChain, NetworkId } from "@orderly.network/types";
 import { TradingPageContext } from "@/page";
 import { useConfig } from "@orderly.network/hooks";
+import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface WithdrawProps {
   onCancel?: () => void;
@@ -18,23 +17,23 @@ export interface WithdrawProps {
 }
 
 export const Withdraw: FC<WithdrawProps> = (props) => {
-  //   const { state } = useAccount();
   const { connectedChain, wallet, setChain } = useWalletConnector();
 
-  // const { networkId } = useContext(OrderlyContext);
   const networkId = useConfig("networkId");
 
-  // const { chains } = useChain("USDC");
   const [chains, { findByChainId }] = useChains(networkId as NetworkId, {
     wooSwapEnabled: false,
     pick: "network_infos",
   });
+
   // @ts-ignore
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
     // const chainId = parseInt(connectedChain.id);
-    const { id: chainId } = connectedChain;
+    const { id } = connectedChain;
+    const chainId = praseChainIdToNumber(id);
+
     const chain = findByChainId(chainId);
 
     return {
@@ -44,7 +43,13 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
     };
   }, [connectedChain, findByChainId]);
 
-  const { maxAmount, availableBalance, unsettledPnL, withdraw } = useWithdraw();
+  const {
+    maxAmount,
+    availableBalance,
+    availableWithdraw,
+    unsettledPnL,
+    withdraw,
+  } = useWithdraw();
   const context = useContext(TradingPageContext);
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);

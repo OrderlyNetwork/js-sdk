@@ -66,6 +66,12 @@ export const parseNumber = (
     return commify(truncatedNum);
   }
 
+  if (truncatedNum?.includes("e")) {
+    // If dp is omitted, the return value will be unrounded and in normal notation.
+    // https://mikemcl.github.io/decimal.js/#toFixed
+    return new Decimal(truncatedNum)?.toFixed();
+  }
+
   return truncatedNum;
 };
 

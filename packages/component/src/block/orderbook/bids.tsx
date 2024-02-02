@@ -1,4 +1,4 @@
-import { OrderBookCell, OrderBookCellType } from "./cell";
+import { OrderBookCellType } from "./types";
 import { ListBox } from "./listBox";
 import { FC, useMemo } from "react";
 

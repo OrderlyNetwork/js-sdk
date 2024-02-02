@@ -73,7 +73,7 @@ async function get<R>(
     if (typeof formatter === "function") {
       return formatter(res.data);
     }
-    // 根据返回的数据结构，返回需要的数据
+    // Return the required data based on the returned data structure
     if (Array.isArray(res.data["rows"])) {
       return res.data["rows"] as unknown as R;
     }

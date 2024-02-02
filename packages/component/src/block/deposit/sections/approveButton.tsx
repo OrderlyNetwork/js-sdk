@@ -4,7 +4,7 @@ import { FC, useCallback, useState } from "react";
 
 interface ApproveButtonProps {
   onApprove?: () => Promise<any>;
-  onDeposit: () => Promise<any>;
+  onDeposit: () => void;
   allowance: number;
   maxQuantity: string;
   quantity: string;
@@ -13,7 +13,6 @@ interface ApproveButtonProps {
   label: string;
   disabled?: boolean;
   buttonId: string;
-  depositFeeRevalidating?: boolean;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {
@@ -36,16 +35,13 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     if (approveLoading) return;
     setApproveLoading(true);
     onApprove?.()
-      .then(
-        (result) => {
-          //
-          toast.success("Approve success");
-        },
-        (error) => {
-          //
-          toast.error(error?.errorCode);
-        }
-      )
+      .then((res: any) => {
+        toast.success("Approve success");
+      })
+      .catch((error) => {
+        console.log("approve error", error);
+        toast.error(error?.errorCode || "Approve failed");
+      })
       .finally(() => {
         setApproveLoading(false);
       });

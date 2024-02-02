@@ -18,7 +18,20 @@ export const Default: Story = {
       { title: "Time", dataIndex: "time" },
       { title: "Price", dataIndex: "price" },
     ];
-    const dataSource = [{ price: 100, time: "2021-01-01" }];
-    return <Table columns={columns} dataSource={dataSource} />;
+    const dataSource = [
+      { price: 100, time: "2021-01-01" },
+      { price: 100, time: "2021-01-01" },
+    ];
+    return (
+      <Table
+        bordered
+        columns={columns}
+        dataSource={dataSource}
+        // generatedRowKey={}
+        expandRowRender={(record, index) => {
+          return <div className="orderly-p-3">expandRowRender</div>;
+        }}
+      />
+    );
   },
 };

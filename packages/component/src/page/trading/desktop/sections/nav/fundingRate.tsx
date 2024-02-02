@@ -26,6 +26,7 @@ const FundingRate: FC<Props> = (props) => {
           <span className="orderly-ml-1 orderly-break-normal orderly-whitespace-nowrap">{`in ${data.countDown}`}</span>
         </div>
       }
+      hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
     />
   );
 };

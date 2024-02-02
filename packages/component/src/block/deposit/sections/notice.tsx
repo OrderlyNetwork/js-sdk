@@ -1,30 +1,27 @@
-import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
-import { modal } from "@/modal";
-// import { OrderlyContext, useChains } from "@orderly.network/hooks";
-import { ChainConfig, CurrentChain } from "@orderly.network/types";
 import { FC, useContext } from "react";
+import { DepositContext } from "../DepositProvider";
+import { CurrentChain } from "@orderly.network/types";
 
 interface NoticeProps {
-  needCrossChain: boolean;
-  needSwap: boolean;
   warningMessage?: string;
   notSupportChain?: boolean;
-  // onChainChange?: (value: any) => void;
-  // onChainIdChange?: (chainId: number) => void;
   currentChain: CurrentChain | null;
   onOpenPicker: () => Promise<any>;
 }
 
 export const Notice: FC<NoticeProps> = (props) => {
-  const { needCrossChain, needSwap, warningMessage, currentChain } = props;
+  const { warningMessage, currentChain } = props;
+  const { needSwap, needCrossSwap } = useContext(DepositContext);
 
   if (warningMessage) {
     return (
-      <div className="orderly-text-center orderly-text-warning orderly-text-3xs desktop:orderly-text-2xs">{warningMessage}</div>
+      <div className="orderly-text-center orderly-text-warning orderly-text-3xs desktop:orderly-text-2xs">
+        {warningMessage}
+      </div>
     );
   }
 
-  if (needCrossChain) {
+  if (needCrossSwap) {
     return (
       <div className="orderly-text-center orderly-text-warning orderly-text-3xs orderly-py-2 desktop:orderly-text-2xs">
         <span>

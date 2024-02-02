@@ -1,4 +1,3 @@
-import { definedTypes } from "./constants";
 import {
   keccak256,
   AbiCoder,

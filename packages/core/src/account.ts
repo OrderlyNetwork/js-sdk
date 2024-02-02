@@ -82,7 +82,7 @@ export class Account {
 
   constructor(
     private readonly configStore: ConfigStore,
-    private readonly keyStore: OrderlyKeyStore,
+    readonly keyStore: OrderlyKeyStore,
     private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
     options?: Partial<{
       /**
@@ -122,8 +122,9 @@ export class Account {
 
     if (
       typeof wallet?.chain?.id === "string" &&
-      wallet?.chain?.id.startsWith("0x") &&
-      isHex(wallet?.chain?.id)
+      (isHex(wallet?.chain?.id) ||
+        (wallet?.chain?.id.startsWith("0x") &&
+          isHex(wallet?.chain?.id.slice(2))))
     ) {
       wallet.chain.id = parseInt(wallet.chain.id, 16);
     }
@@ -378,7 +379,7 @@ export class Account {
     );
   }
 
-  async createOrderlyKey(expiration: number): Promise<any> {
+  async createOrderlyKey(expiration?: number): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }

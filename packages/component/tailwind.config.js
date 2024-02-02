@@ -65,6 +65,7 @@ module.exports = {
         },
         link: {
           DEFAULT: "rgb(var(--orderly-color-link) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-link-light) / <alpha-value>)",
         },
 
         // 用于页面背景色，大块元素背景色
@@ -85,6 +86,7 @@ module.exports = {
             54: "rgb(var(--orderly-color-base-foreground) / 0.54)",
             36: "rgb(var(--orderly-color-base-foreground) / 0.36)",
             20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
+            12: "rgb(var(--orderly-color-base-foreground) / 0.12)",
           },
         },
 
@@ -96,6 +98,7 @@ module.exports = {
         },
         warning: {
           DEFAULT: "rgb(var(--orderly-color-warning) / <alpha-value>)",
+          light: "rgb(var(--orderly-color-warning-light) / <alpha-value>)",
           darken: "rgb(var(--orderly-color-warning-darken) / <alpha-value>)",
           contrast:
             "rgb(var(--orderly-color-warning-contrast) / <alpha-value>)",
@@ -221,11 +224,11 @@ module.exports = {
           borderColor: "transparent",
           borderWidth: "1px",
           background: "rgba(255,255,255,0.04)",
-          backgroundClip: "padding-box"
+          backgroundClip: "padding-box",
         },
         ".component-scrollbar::-webkit-scrollbar-thumb:hover": {
           background: "rgba(255,255,255,0.08)",
-          borderRadius: "3px"
+          borderRadius: "3px",
         },
       };
       addUtilities(scrollBarUtilities);
@@ -241,11 +244,11 @@ module.exports = {
           borderColor: "transparent",
           borderWidth: "1px",
           background: "rgba(255,255,255,0.04)",
-          backgroundClip: "padding-box"
+          backgroundClip: "padding-box",
         },
         ".desktop-scrollbar::-webkit-scrollbar-thumb:hover": {
           background: "rgba(255,255,255,0.08)",
-          borderRadius: "4px"
+          borderRadius: "4px",
         },
       };
       addUtilities(scrollBarUtilities);

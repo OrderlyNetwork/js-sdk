@@ -9,6 +9,7 @@ interface SwapProcessStatusProps {
   tx: any;
   chainInfo: any;
   onComplete?: (isSuccss: boolean) => void;
+  brokerName?: string;
 }
 
 export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
@@ -41,10 +42,10 @@ export const SwapProcessStatus: FC<SwapProcessStatusProps> = (props) => {
           <StatusTile
             state={getDepositStatus(status)}
             title={"Deposit"}
-            description={"Deposit to Orderly"}
+            description={`Deposit to ${props.brokerName}`}
             index={1}
           />
-          <Divider />
+          <Divider className="before:orderly-border-b-base-contrast-12 after:orderly-border-b-base-contrast-12" />
           <div className="orderly-flex orderly-justify-center orderly-mt-3">
             <button
               className="orderly-text-2xs orderly-text-primary-light disabled:orderly-text-base-contrast/10"

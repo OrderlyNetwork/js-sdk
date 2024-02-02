@@ -35,6 +35,8 @@ export const AlertDialog = create<AlertDialogProps>((props) => {
         className="orderly-modal-alert"
         closable={closeable}
         maxWidth={"xs"}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader className={cn("after:orderly-hidden orderly-items-center",
           closeable && "orderly-items-start")}>

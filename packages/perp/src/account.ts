@@ -51,7 +51,9 @@ export type FreeCollateralInputs = {
  * 计算可用保证金
  */
 export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
-  return inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
+  const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
+  // free collateral cannot be less than 0
+  return value.isNegative() ? zero : value;
 }
 
 export type TotalCollateralValueInputs = {
@@ -472,7 +474,10 @@ export function maxQty(
   return maxQtyByShort(inputs);
 }
 
-export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
+export function maxQtyByLong(
+  inputs: Omit<MaxQtyInputs, "side">,
+  options?: ResultOptions
+): number {
   try {
     const {
       baseMaxQty,
@@ -530,7 +535,10 @@ export function maxQtyByLong(inputs: Omit<MaxQtyInputs, "side">): number {
   }
 }
 
-export function maxQtyByShort(inputs: Omit<MaxQtyInputs, "side">): number {
+export function maxQtyByShort(
+  inputs: Omit<MaxQtyInputs, "side">,
+  options?: ResultOptions
+): number {
   try {
     const {
       baseMaxQty,
@@ -653,4 +661,29 @@ export function availableBalance(inputs: AvailableBalanceInputs) {
   const { USDCHolding, unsettlementPnL } = inputs;
 
   return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
+}
+
+export type AccountMMRInputs = {
+  // Total Maintenance Margin of all positions of the user (USDC)
+  positionsMMR: number;
+  /**
+   * Notional sum of all positions,
+   * positions.totalNotional()
+   */
+  positionsNotional: number;
+};
+
+/**
+ * total maintenance margin ratio
+ * @param inputs AccountMMRInputs
+ * @returns number|null
+ */
+export function MMR(inputs: AccountMMRInputs): number | null {
+  // If the user does not have any positions, return null
+  if (inputs.positionsNotional === 0) {
+    return null;
+  }
+  return new Decimal(inputs.positionsMMR)
+    .div(inputs.positionsNotional)
+    .toNumber();
 }

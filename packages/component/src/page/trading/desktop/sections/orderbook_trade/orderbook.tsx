@@ -1,4 +1,4 @@
-import { OrderBook } from "@/block/orderbook";
+import { DesktopOrderBook } from "@/block/orderbook/desktop/index.desktop";
 import { SymbolProvider } from "@/provider";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { useTabContext } from "@/tab/tabContext";
@@ -9,6 +9,7 @@ import {
   useEventEmitter,
 } from "@orderly.network/hooks";
 import { FC, memo, useEffect, useRef, useState } from "react";
+import { usePendingOrderStream } from "./usePendingOrderStream";
 
 interface MyOrderBookProps {
   symbol: string;
@@ -18,7 +19,7 @@ interface MyOrderBookProps {
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;
 
-const SPACE = 122;
+const SPACE = 104;
 
 export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const { symbol } = props;
@@ -31,6 +32,8 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     useOrderbookStream(symbol, undefined, {
       level,
     });
+
+    const pendingOrders = usePendingOrderStream(symbol);
 
   const { height } = useTabContext();
 
@@ -65,7 +68,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   }, [height?.content]);
 
   return (
-    <OrderBook
+    <DesktopOrderBook
       level={level}
       asks={data.asks!}
       bids={data.bids!}
@@ -80,6 +83,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       cellHeight={cellHeight}
       onDepthChange={onDepthChange}
       className={props.className}
+      pendingOrders={pendingOrders}
     />
   );
 };

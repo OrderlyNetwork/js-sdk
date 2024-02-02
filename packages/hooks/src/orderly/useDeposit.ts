@@ -13,6 +13,7 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
   DEPOSIT_FEE_RATE,
+  MaxUint256,
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -254,7 +255,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   ]);
 
   const approve = useCallback(
-    async (amount: string = quantity) => {
+    async (amount?: string) => {
       if (!options?.address) {
         throw new Error("address is required");
       }
@@ -263,12 +264,14 @@ export const useDeposit = (options?: useDepositOptions) => {
         .approve(options.address, amount, vaultAddress)
         .then((result: any) => {
           if (typeof amount !== "undefined") {
-            setAllowance((value) => new Decimal(value).add(amount).toString());
+            setAllowance((value) =>
+              new Decimal(value).add(amount || MaxUint256.toString()).toString()
+            );
           }
           return result;
         });
     },
-    [account, getAllowance, options?.address, quantity]
+    [account, getAllowance, options?.address]
   );
 
   const deposit = useCallback(async () => {
@@ -285,13 +288,17 @@ export const useDeposit = (options?: useDepositOptions) => {
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
     getBalanceListener.current = setTimeout(async () => {
-      const balance = await fetchBalanceHandler(
-        options?.address!,
-        options?.decimals
-      );
+      try {
+        const balance = await fetchBalanceHandler(
+          options?.address!,
+          options?.decimals
+        );
 
-      setBalance(balance);
-      loopGetBalance();
+        setBalance(balance);
+        loopGetBalance();
+      } catch (err) {
+        console.log("fetchBalanceHandler error", err);
+      }
     }, 3000);
   };
 

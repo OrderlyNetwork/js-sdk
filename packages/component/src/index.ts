@@ -37,6 +37,17 @@ export {
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
+export { Divider } from "./divider";
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
 
 // ==================== page component ====================
 export * from "./page";
@@ -64,6 +75,15 @@ export {
   SystemStatusBar,
 } from "./block";
 
+//===================== Dialog component ====================
+
+export {
+  ChainDialog,
+  showAccountConnectorModal,
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
+} from "./block";
+
 export type {
   OrderEntryProps,
   OrderBookProps,
@@ -81,3 +101,5 @@ export { cn, parseNumber } from "./utils";
 export { useCSSVariable } from "./hooks/useCSSVariable";
 
 export type { OrderlyConfig, OrderlyConfigCtx } from "./types/orderly.config";
+
+export { installExtension, ExtensionPosition } from "./plugin";

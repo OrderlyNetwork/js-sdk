@@ -27,6 +27,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -44,13 +45,12 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const isTable = useMediaQuery(MEDIA_TABLET);
   const { wooSwapEnabled = true, disabled } = props;
-  // @ts-ignore
-  const [allChains, { findByChainId }] = useChains("", {
+  const [allChains, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
+    // filter: (chain: API.Chain) => isTestnet(chain.network_infos?.chain_id),
   });
 
   const { connectedChain } = useWalletConnector();
@@ -58,8 +58,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
-
-    if (connectedChain && (connectedChain.id === 421613 || connectedChain.id === 420)) {
+    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
 
@@ -89,10 +88,10 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       mainChains: chains,
       currentChainId: value?.id,
     });
-
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onValueChange?.(chainInfo);
+    if (result?.id) {
+      const chainInfo = findByChainId(result.id);
+      props?.onValueChange?.(chainInfo);
+    }
   }, [chains, props.onValueChange, value?.id]);
 
   useEffect(() => {
@@ -179,14 +178,7 @@ const DesktopChainSelect: FC<{
   onValueChange: any;
   connectedChain: any;
 }> = (props) => {
-  const {
-    chains,
-    onValueChange,
-    currentChain,
-    icon,
-    findByChainId,
-    connectedChain,
-  } = props;
+  const { chains, currentChain, icon, findByChainId, connectedChain } = props;
   const [open, setOpen] = useState(false);
   // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 

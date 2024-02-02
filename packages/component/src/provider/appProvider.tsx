@@ -24,7 +24,8 @@ import {
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
-import { praseChainIdToNumber } from "@orderly.network/utils";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
+import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -59,6 +60,7 @@ export type OrderlyAppContextState = {
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -77,6 +79,7 @@ export interface OrderlyAppProviderProps {
   enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 }
 
 export const OrderlyAppProvider: FC<
@@ -96,6 +99,7 @@ export const OrderlyAppProvider: FC<
     toastLimitCount,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   return (
@@ -115,6 +119,7 @@ export const OrderlyAppProvider: FC<
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
+        footerStatusBar={footerStatusBar}
       >
         {props.children}
       </InnerProvider>
@@ -130,6 +135,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     toastLimitCount = 1,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -166,16 +172,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       //   chainId = `0x${Number(chainId).toString(16)}`;
       // }
 
-      //
-
-    console.log("xxxxxxxxxx ", networkId, chainId, chains);
-    
-
       // check whether chain id and network id match
       // const chainIdNum = parseInt(chainId, 16);
       if (
-        (networkId === "mainnet" && chainId === 421613) ||
-        (networkId === "testnet" && chainId !== 421613 && chainId !== 420)
+        (networkId === "mainnet" && isTestnet(chainId)) ||
+        (networkId === "testnet" && !isTestnet(chainId))
       ) {
         return false;
       }
@@ -207,7 +208,9 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
         ////// check chainid ///////
 
-        if (!checkChainId(wallet.chains[0].id)) {
+        const chainId = praseChainIdToNumber(wallet.chains[0].id);
+
+        if (!checkChainId(chainId)) {
           return false;
         }
 
@@ -297,14 +300,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       }
 
       if (!checkChainId(currentChainId)) {
-        // console.warn("!!!! not support this chian -> disconnect wallet");
-
-        // account.disconnect();
         // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
-        console.warn("current chain not support!  -> disconnect wallet!!!");
-        return;
+        console.warn("current chain not support!!!!");
+        // return;
       } else {
         setErrors((errors: any) => ({
           ...errors,
@@ -348,6 +348,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         enableSwapDeposit,
         onChainChanged,
         brokerName,
+        footerStatusBar,
       }}
     >
       <TooltipProvider>

@@ -138,7 +138,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
       if (typeof prefix === "string") {
         return (
-          <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs">
+          <InputMask
+            name={props.name}
+            className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
+          >
             {prefix}
           </InputMask>
         );
@@ -154,7 +157,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
       if (typeof suffix === "string") {
         return (
-          <InputMask className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs">
+          <InputMask
+            name={props.name}
+            className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
+          >
             {suffix}
           </InputMask>
         );
@@ -195,7 +201,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             disabled={!!disabled}
             className={cn(
               "orderly-input",
-              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20",
+              "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20 orderly-tabular-nums",
               typeof prefix !== "undefined" && "orderly-px-0",
               className
             )}

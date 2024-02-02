@@ -6,27 +6,30 @@ import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../useEventEmitter";
+import { getKeyFunction } from "../dataProvider";
 
-export const usePrivateDataObserver = () => {
+export const usePrivateDataObserver = (options: {
+  // onUpdateOrders: (data: any) => void;
+  getKeysMap: (type: string) => Map<string, getKeyFunction>;
+}) => {
   const ws = useWS();
   const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state } = useAccount();
 
-  const updateOrders = useDebouncedCallback(() => {
-    mutate(
-      unstable_serialize(() => [
-        `/v1/orders?size=100&page=1&status=${OrderStatus.INCOMPLETE}`,
-        state.accountId,
-      ])
-    );
+  const updateOrders = useDebouncedCallback((data) => {
+    const map = options.getKeysMap("orders");
 
-    mutate(
-      unstable_serialize(() => [
-        `/v1/orders?size=100&page=1&status=${OrderStatus.NEW}`,
-        state.accountId,
-      ])
-    );
+    map.forEach((getKey, key) => {
+      mutate(
+        unstable_serialize((index, prevData) => [
+          getKey(index, prevData),
+          state.accountId,
+        ])
+      );
+    });
+
+    // update the orders history list;
 
     // ee.emit("orders:changed");
   }, 500);
@@ -36,8 +39,25 @@ export const usePrivateDataObserver = () => {
     if (!state.accountId) return;
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
-        updateOrders();
+        updateOrders(data);
         ee.emit("orders:changed", data);
+      },
+    });
+
+    return () => unsubscribe?.();
+  }, [state.accountId]);
+  
+  // algo orders
+  useEffect(() => {
+    if (!state.accountId) return;
+    const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
+      onMessage: (data: any) => {
+        updateOrders(data);
+        if (Array.isArray(data)) {
+          data.forEach((item) => ee.emit("orders:changed", {...item, status: item.algoStatus,}));
+        } else {
+          ee.emit("orders:changed", {...data, status: data.algoStatus,});
+        }
       },
     });
 

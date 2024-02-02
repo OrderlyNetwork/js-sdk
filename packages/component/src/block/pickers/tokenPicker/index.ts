@@ -1,2 +1,2 @@
-export { TokenPicker } from "./tokenPicker";
 export { TokenListView } from "./tokenListView";
+export { TokenSelect } from "./tokenSelect";

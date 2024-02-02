@@ -196,8 +196,6 @@ const TabsInner = (
           return;
         }
 
-        // console.log("bounding", bounding);
-
         setHeight((rect) => ({
           box: height,
           header: headerHeight!,

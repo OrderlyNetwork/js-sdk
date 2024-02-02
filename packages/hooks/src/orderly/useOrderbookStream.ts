@@ -5,7 +5,8 @@ import { useWS } from "../useWS";
 import { useEventEmitter } from "../useEventEmitter";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
-import { min } from "ramda";
+import { max, min } from "ramda";
+import { SDKError } from "@orderly.network/types";
 
 export type OrderBookItem = number[];
 
@@ -39,7 +40,7 @@ const reduceItems = (
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < min(level, data.length); i++) {
       const [price, quantity] = data[i];
       if (isNaN(price) || isNaN(quantity)) continue;
       let priceKey;
@@ -85,7 +86,11 @@ const reduceItems = (
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
       .toNumber();
 
-    result.push([price, quantity, newQuantity]);
+    const newAmount = new Decimal(quantity * price)
+      .add(result.length > 0 ? result[result.length - 1][3] : 0)
+      .toNumber();
+
+    result.push([price, quantity, newQuantity, newAmount]);
     // if the total is greater than the level, break
     // TODO:
     // if (i + 1 >= level) {
@@ -139,11 +144,19 @@ export const reduceOrderbook = (
 
   asks = asks.reverse();
 
+  asks =
+    asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
+  bids =
+    bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
+  // add max qty for asks/bids
+  // let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
+  // let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
+  // asks = asks.map((item) => [...item, maxAskQty]);
+  // bids = bids.map((item) => [...item, maxBidQty]);
+
   return {
-    asks:
-      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks,
-    bids:
-      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids,
+    asks: asks,
+    bids: bids,
   };
 };
 
@@ -206,7 +219,7 @@ export const useOrderbookStream = (
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
-    throw new Error("useOrderbookStream requires a symbol");
+    throw new SDKError("useOrderbookStream requires a symbol");
   }
 
   const level = options?.level ?? 10;
@@ -358,6 +371,14 @@ export const useOrderbookStream = (
     asks: [...data.asks],
     bids: [...data.bids],
   });
+
+  // emit the asks0 and bids0
+  useEffect(() => {
+    eventEmitter.emit("orderbook:update", [
+      reducedData.asks[0][0],
+      reducedData.bids[0][0],
+    ]);
+  }, [reducedData.asks[0][0], reducedData.bids[0][0]]);
 
   return [
     {

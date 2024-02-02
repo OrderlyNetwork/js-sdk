@@ -1,8 +1,9 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect, useRef } from "react";
 import { Column } from "./col";
 import { cn } from "@/utils/css";
 import { ColGroup } from "./colgroup";
 import { Tooltip } from "@/tooltip";
+import { TheadCol } from "./theadCol";
 
 export interface THeadProps {
   columns: Column[];
@@ -16,7 +17,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
   return (
     <table
       className={cn(
-        "orderly-border-collapse orderly-min-w-full",
+        "orderly-border-collapse orderly-w-full orderly-table-fixed orderly-sticky orderly-top-0 orderly-z-10",
         props.containerClassName
       )}
     >
@@ -29,32 +30,15 @@ export const TableHeader: FC<THeadProps> = (props) => {
       >
         <tr>
           {props.columns.map((column, index) => {
-            let content: ReactNode = column.title;
-
-            if (typeof column.hint === "string") {
-              content = (
-                <Tooltip
-                  content={column.hint}
-                  className="orderly-max-w-[270px] orderly-text-4xs"
-                >
-                  <button className="hover:orderly-text-base-contrast">{column.title}</button>
-                </Tooltip>
-              );
-            }
-
             return (
-              <td
-                className={cn(
-                  "orderly-px-1 orderly-py-[3px] ",
-                  column.align === "right" && "orderly-text-right",
-                  props.justified && "first:orderly-pl-0 last:orderly-pr-0",
-                  props.bordered && "orderly-border-b orderly-border-divider",
-                  props.className
-                )}
-                key={column.dataIndex}
-              >
-                {content}
-              </td>
+              <TheadCol
+                col={column}
+                record={undefined}
+                key={index}
+                index={index}
+                className={props.className}
+                bordered={props.bordered}
+              />
             );
           })}
         </tr>

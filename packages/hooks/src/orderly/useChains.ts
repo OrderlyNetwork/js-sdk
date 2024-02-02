@@ -5,304 +5,156 @@ import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { mergeDeepRight, prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
+import { isTestnet } from "@orderly.network/utils";
+import { TestnetChains } from "@orderly.network/types";
 
-type inputOptions = {
+type InputOptions = {
   filter?: (item: API.Chain) => boolean;
   pick?: "dexs" | "network_infos" | "token_infos";
-  crossEnabled?: boolean;
   /** if true, use wooSwap api, else use orderly api only  */
   wooSwapEnabled?: boolean;
 };
 
-export const useChains = (
-  networkId?: NetworkId,
-  options: inputOptions & SWRConfiguration = {}
-) => {
-  const { pick, crossEnabled, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore, networkId: networkEnv } = useContext(OrderlyContext);
+export type Chain = API.Chain & {
+  nativeToken?: API.TokenInfo;
+};
 
-  // const envNetworkId = useConfig("networkId");
+export type Chains<
+  T extends NetworkId | undefined = undefined,
+  K extends keyof API.Chain | undefined = undefined
+> = T extends NetworkId
+  ? K extends keyof API.Chain
+    ? API.Chain[K][]
+    : API.Chain[]
+  : K extends keyof API.Chain
+  ? {
+      testnet: API.Chain[K][];
+      mainnet: API.Chain[K][];
+    }
+  : {
+      testnet: API.Chain[];
+      mainnet: API.Chain[];
+    };
 
-  const field = options?.pick;
-  // const wooSwapEnabled = false;
+export type Options = InputOptions & SWRConfiguration;
+
+export type ReturnObject = {
+  findByChainId: (chainId: number, field?: string) => Chain | undefined;
+  error: any;
+};
+
+export function useChains(
+  networkId?: undefined,
+  options?: undefined
+): [Chains<undefined, undefined>, ReturnObject];
+
+export function useChains<
+  T extends NetworkId | undefined,
+  K extends Options | undefined
+>(
+  networkId?: T,
+  options?: K
+): [
+  Chains<
+    T,
+    K extends Options
+      ? K["pick"] extends keyof API.Chain
+        ? K["pick"]
+        : undefined
+      : undefined
+  >,
+  ReturnObject
+];
+
+export function useChains(networkId?: NetworkId, options: Options = {}) {
+  const { pick: pickField, wooSwapEnabled, ...swrOptions } = options;
+  const { configStore } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
 
-  const map = useRef(
-    new Map<
-      number,
-      API.Chain & {
-        nativeToken?: API.TokenInfo;
-      }
-    >()
+  const chainsMap = useRef(new Map<number, Chain>());
+
+  const commonSwrOpts = {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    // If false, undefined data gets cached against the key.
+    revalidateOnMount: true,
+    // dont duplicate a request w/ same key for 1hr
+    dedupingInterval: 3_600_000,
+    ...swrOptions,
+  };
+
+  // only prod env return mainnet chains info
+  // TODO: remove https://api-evm.orderly.org api base
+  const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
+    "https://api-evm.orderly.org/v1/public/token",
+    { ...commonSwrOpts }
   );
 
-  const { data, error: swapSupportError } = useSWR<any>(
+  // only prod env return mainnet chains info
+  const { data: chainInfos, error: chainInfoErr } = useQuery(
+    "/v1/public/chain_info",
+    { ...commonSwrOpts }
+  );
+
+  const { data: swapSupportRes, error: swapSupportError } = useSWR<any>(
     () =>
       wooSwapEnabled
         ? `${configStore.get("swapSupportApiUrl")}/swap_support`
         : null,
-    // `${configStore.get("swapSupportApiUrl")}/swap_support`,
     (url) => fetch(url).then((res) => res.json()),
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true, // If false, undefined data gets cached against the key.
-      dedupingInterval: 3_600_000, // dont duplicate a request w/ same key for 1hr
-      ...swrOptions,
-    }
+    { ...commonSwrOpts, ...swrOptions }
   );
 
-  const { data: chainInfos, error: chainInfoErr } = useQuery(
-    "/v1/public/chain_info",
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      dedupingInterval: 3_600_000,
-      formatter: (data) => data.rows,
-    }
-  );
+  const chains = useMemo(() => {
+    const orderlyChainsArr = fillChainsInfo(tokenChains, filterFun.current);
 
-  const { data: orderlyChains, error: tokenError } = useQuery<API.Chain[]>(
-    // wooSwapEnabled ? "/v1/public/token" :
-    "https://api-evm.orderly.org/v1/public/token",
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-      dedupingInterval: 3_600_000,
-    }
-  );
+    let testnetArr = [...TestnetChains] as API.Chain[];
 
-  const apiBaseUrl = configStore.get("apiBaseUrl");
-
-  // TODO: chains seems always change when ui update
-  const chains:
-    | API.Chain[]
-    | {
-        testnet: API.Chain[];
-        mainnet: API.Chain[];
-      } = useMemo(() => {
-    // if (!orderlyChains) return undefined;
-
-    let orderlyChainsArr: API.Chain[] = [];
-    const orderlyChainIds = new Set<number>();
-
-    orderlyChains?.forEach((item) => {
-      item.chain_details.forEach((chain: any) => {
-        const chainId = Number(chain.chain_id);
-        orderlyChainIds.add(chainId);
-        const chainInfo = chainsInfoMap.get(chainId);
-
-        const _chain: any = {
-          network_infos: {
-            name: chain.chain_name ?? chainInfo?.chainName ?? "--",
-            // "public_rpc_url": "https://arb1.arbitrum.io/rpc",
-            chain_id: chainId,
-            withdrawal_fee: chain.withdrawal_fee,
-            cross_chain_withdrawal_fee: chain.cross_chain_withdrawal_fee,
-
-            bridgeless: true,
-          },
-          token_infos: [
-            {
-              symbol: item.token,
-              address: chain.contract_address,
-              decimals: chain.decimals,
-            },
-          ],
-        };
-
-        if (typeof filterFun.current === "function") {
-          if (!filterFun.current(_chain)) return;
-        }
-
-        /// if chain is testnet, update network_infos
-        if (_chain.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
-
-        map.current.set(chainId, _chain);
-
-        // orderlyChainsArr.push(field ? _chain[field] : _chain);
-        orderlyChainsArr.push(_chain);
-      });
+    orderlyChainsArr?.forEach((item) => {
+      const chainId = item.network_infos?.chain_id;
+      chainsMap.current.set(chainId, item);
+      updateTestnetInfo(testnetArr, chainId, item);
     });
 
-    // if (!wooSwapEnabled) {
-    //   //
-    //   let arr: any[] = orderlyChainsArr;
-    //   if (typeof filterFun.current === "function") {
-    //     arr = orderlyChainsArr.filter(filterFun.current);
-    //   }
+    testnetArr.forEach((chain) => {
+      chainsMap.current.set(chain.network_infos?.chain_id, chain);
+    });
 
-    //   if (!!field) {
-    //     arr = arr.map((item) => item[field]);
-    //   }
-
-    //   return arr;
-    // } else {
-    //
-
-    let testnetArr: API.Chain[] = [
-      //@ts-ignore
-      {
-        network_infos: {
-          name: "Arbitrum Goerli",
-          shortName: "Arbitrum Goerli",
-          public_rpc_url: "https://goerli-rollup.arbitrum.io/rpc",
-          chain_id: 421613,
-          currency_symbol: "ETH",
-          bridge_enable: true,
-          mainnet: false,
-          explorer_base_url: "https://goerli.arbiscan.io/",
-          est_txn_mins: null,
-
-          woofi_dex_cross_chain_router: "",
-          woofi_dex_depositor: "",
-        },
-        token_infos: [
-          {
-            symbol: "USDC",
-            address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
-            decimals: 6,
-            swap_enable: false,
-            woofi_dex_precision: 2,
-          },
-        ],
-      },
-    ];
-
-      if (networkEnv === "testnet") {
-        const opGoerli = {
-          network_infos: {
-            name: "Optimism Goerli",
-            shortName: "Optimism Goerli",
-            public_rpc_url: "https://optimism-goerli.gateway.tenderly.co",
-            chain_id: 420,
-            currency_symbol: "ETH",
-            bridge_enable: true,
-            mainnet: false,
-            explorer_base_url: "https://goerli-optimism.etherscan.io",
-            est_txn_mins: null,
-
-            woofi_dex_cross_chain_router: "",
-            woofi_dex_depositor: "",
-          },
-        };
-        // @ts-ignore
-        testnetArr.push(opGoerli);
-        // @ts-ignore
-        map.current.set(420, opGoerli);
-      }
-
-      let mainnetArr: API.Chain[] = [];
-
-    map.current.set(421613, testnetArr[0]);
+    let mainnetArr: API.Chain[] = [];
 
     if (wooSwapEnabled) {
-      if (!data || !data.data) return data;
+      if (!swapSupportRes || !swapSupportRes.data) return swapSupportRes;
 
-      Object.keys(data.data).forEach((key) => {
-        // if (orderlyChainIds.has(data.data[key].network_infos.chain_id)) return;
-
-        const chain = data.data[key];
-
-        const item: any = mergeDeepRight(chain, {
-          name: key,
-          network_infos: {
-            bridgeless: orderlyChainIds.has(chain.network_infos.chain_id),
-            shortName: key,
-          },
-          token_infos: chain.token_infos.filter(
-            (token: API.TokenInfo) => !!token.swap_enable
+      const [mainnetChains, testnetChains] = getSwapSupportChains(
+        swapSupportRes.data,
+        (chainId) =>
+          !!orderlyChainsArr?.find(
+            (item) => item.network_infos?.chain_id === chainId
           ),
-        });
+        filterFun.current
+      );
 
-        if (item.token_infos?.length === 0) return;
+      mainnetArr = mainnetChains;
+      testnetArr = [...testnetArr, ...testnetChains];
 
-        map.current.set(item.network_infos.chain_id, item);
-
-        if (typeof filterFun.current === "function") {
-          if (!filterFun.current(item)) return;
-        }
-
-        if (item.network_infos.mainnet) {
-          mainnetArr.push(item);
-        } else {
-          testnetArr.push(item);
-        }
+      [...mainnetChains, ...testnetChains].forEach((item) => {
+        chainsMap.current.set(item.network_infos?.chain_id, item);
       });
     } else {
-      // if (!chainInfos) return undefined;
+      // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
+      mainnetArr = updateOrderlyChains(
+        orderlyChainsArr,
+        chainInfos,
+        filterFun.current
+      );
 
-      // orderly chains array form (/v1/public/token) api
-      orderlyChainsArr.forEach((chain) => {
-        let _chain = chain;
-
-        const networkInfo = chainInfos?.find((item: { chain_id: any }) => {
-          return item.chain_id == chain.network_infos.chain_id;
-        });
-
-        // update network_infos by chain_info api(v1/public/chain_info)
-        if (networkInfo) {
-          const {
-            name,
-            public_rpc_url,
-            chain_id,
-            currency_symbol,
-            explorer_base_url,
-          } = networkInfo;
-          _chain.network_infos = {
-            ..._chain.network_infos,
-            name: name,
-            shortName: name,
-            public_rpc_url: public_rpc_url,
-
-            currency_symbol: currency_symbol,
-            bridge_enable: true,
-            mainnet: true,
-            explorer_base_url: explorer_base_url,
-            est_txn_mins: null,
-            woofi_dex_cross_chain_router: "",
-            woofi_dex_depositor: "",
-          };
-        }
-
-        map.current.set(_chain.network_infos.chain_id, _chain);
-        if (_chain.network_infos.chain_id === 421613) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 421613
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
-
-        if (_chain.network_infos.chain_id === 420) {
-          const index = testnetArr.findIndex(
-            (item) => item.network_infos.chain_id === 420
-          );
-          if (index > -1) {
-            testnetArr[index] = _chain;
-          }
-        }
-
-        if (typeof filterFun.current === "function") {
-          if (!filterFun.current(_chain)) return;
-        }
-
-        mainnetArr.push(_chain);
+      mainnetArr.forEach((item) => {
+        const chainId = item.network_infos?.chain_id;
+        chainsMap.current.set(chainId, item);
+        updateTestnetInfo(testnetArr, chainId, item);
       });
     }
 
@@ -314,11 +166,11 @@ export const useChains = (
       return a.network_infos.bridgeless ? -1 : 1;
     });
 
-    if (!!field) {
+    if (!!pickField) {
       //@ts-ignore
-      testnetArr = testnetArr.map((item) => item[field]);
+      testnetArr = testnetArr.map((item) => item[pickField]);
       //@ts-ignore
-      mainnetArr = mainnetArr.map((item) => item[field]);
+      mainnetArr = mainnetArr.map((item) => item[pickField]);
     }
 
     if (networkId === "mainnet") {
@@ -333,12 +185,18 @@ export const useChains = (
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-    // }
-  }, [data, networkId, field, orderlyChains, wooSwapEnabled, chainInfos]);
+  }, [
+    networkId,
+    tokenChains,
+    chainInfos,
+    swapSupportRes,
+    pickField,
+    wooSwapEnabled,
+  ]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
-      const chain = map.current.get(chainId);
+      const chain = chainsMap.current.get(chainId);
 
       if (chain) {
         chain.nativeToken =
@@ -356,25 +214,149 @@ export const useChains = (
 
       return chain;
     },
-    [chains, map.current]
+    [chains, chainsMap]
   );
-
-  // const findNativeTokenByChainId = useCallback(
-  //   (chainId: number): API.TokenInfo | undefined => {
-  //     const chain = findByChainId(chainId);
-  //     if (!chain) return;
-  //
-  //   },
-  //   [chains]
-  // );
 
   return [
     chains,
     {
       findByChainId,
-      // findNativeTokenByChainId,
       error: swapSupportError || tokenError,
-      // nativeToken,
     },
-  ] as const;
-};
+  ];
+}
+
+/** orderly chains array form (/v1/public/token) api */
+export function fillChainsInfo(
+  chains?: API.Chain[],
+  filter?: (chain: any) => boolean
+) {
+  let _chains: API.Chain[] = [];
+
+  chains?.forEach((item) => {
+    item.chain_details.forEach((chain: any) => {
+      const chainId = Number(chain.chain_id);
+      const chainInfo = chainsInfoMap.get(chainId);
+
+      const _chain: any = {
+        network_infos: {
+          name: chain.chain_name ?? chainInfo?.chainName ?? "--",
+          chain_id: chainId,
+          withdrawal_fee: chain.withdrawal_fee,
+          cross_chain_withdrawal_fee: chain.cross_chain_withdrawal_fee,
+          bridgeless: true,
+        },
+        token_infos: [
+          {
+            symbol: item.token,
+            address: chain.contract_address,
+            decimals: chain.decimals,
+          },
+        ],
+      };
+
+      if (typeof filter === "function") {
+        if (!filter(_chain)) return;
+      }
+
+      _chains.push(_chain);
+    });
+  });
+
+  return _chains;
+}
+
+export function getSwapSupportChains(
+  data: Record<string, API.Chain>,
+  isBridgeless: (chainId: number) => boolean,
+  filter?: (chain: any) => boolean
+) {
+  const mainnet: API.Chain[] = [];
+  const testnet: API.Chain[] = [];
+
+  Object.keys(data).forEach((key) => {
+    const chain = data[key];
+
+    const item: any = mergeDeepRight(chain, {
+      name: key,
+      network_infos: {
+        bridgeless: isBridgeless(chain.network_infos.chain_id),
+        shortName: key,
+      },
+      token_infos: chain.token_infos.filter(
+        (token: API.TokenInfo) => !!token.swap_enable
+      ),
+    });
+
+    if (item.token_infos?.length === 0) return;
+
+    if (typeof filter === "function") {
+      if (!filter(item)) return;
+    }
+
+    if (item.network_infos.mainnet) {
+      mainnet.push(item);
+    } else {
+      testnet.push(item);
+    }
+  });
+  return [mainnet, testnet];
+}
+
+/** update network_infos by chain_info api(v1/public/chain_info) */
+export function updateOrderlyChains(
+  chains: API.Chain[],
+  chainInfos: any,
+  filter?: (chain: any) => boolean
+) {
+  const _chains: API.Chain[] = [];
+  chains.forEach((chain) => {
+    let _chain = { ...chain };
+
+    const networkInfo = chainInfos?.find(
+      (item: any) => item.chain_id == chain.network_infos.chain_id
+    );
+
+    if (networkInfo) {
+      const { name, public_rpc_url, currency_symbol, explorer_base_url } =
+        networkInfo;
+      _chain.network_infos = {
+        ..._chain.network_infos,
+        name,
+        shortName: name,
+        public_rpc_url,
+        currency_symbol,
+        bridge_enable: true,
+        mainnet: true,
+        explorer_base_url,
+        est_txn_mins: null,
+        woofi_dex_cross_chain_router: "",
+        woofi_dex_depositor: "",
+      };
+    }
+
+    if (typeof filter === "function") {
+      if (!filter(_chain)) return;
+    }
+
+    _chains.push(_chain);
+  });
+
+  return _chains;
+}
+
+/** if chain is testnet, update testnet network_infos */
+export function updateTestnetInfo(
+  testnetArr: API.Chain[],
+  chainId: number,
+  chain: API.Chain
+) {
+  if (isTestnet(chainId)) {
+    const index = testnetArr?.findIndex(
+      (item) => item.network_infos.chain_id === chainId
+    );
+    if (index > -1) {
+      testnetArr[index] = chain;
+    }
+  }
+}

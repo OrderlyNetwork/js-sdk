@@ -3,6 +3,8 @@ import { useMarketsStream } from "./useMarketsStream";
 import { useConfig } from "../useConfig";
 import { OrderlyContext } from "../orderlyContext";
 import { API } from "@orderly.network/types";
+import { useQuery } from "../useQuery";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
     FAVORITES,
@@ -23,7 +25,8 @@ export enum MarketsType {
         ],
         favoriteTabs: [
             { "name": "Popular", "id": 1 },
-        ]
+        ],
+        "lastSelectFavoriteTab": { "name": "Popular", "id": 1 }
         
     }
 }
@@ -51,16 +54,23 @@ export const useMarkets = (type: MarketsType) => {
     const { data } = useMarketsStream();
     const { configStore } = useContext(OrderlyContext);
 
+    // {"PERP_ETH_USDC": {}, ...}
+    const publicInfo = useSymbolsInfo();
+
     if (!configStore.get(marketsKey)) {
-        // WARNING: remember remove
         const jsonStr = localStorage.getItem(marketsKey);
         if (jsonStr) {
             configStore.set(marketsKey, JSON.parse(jsonStr));
         } else {
+            const defaultTab = { name: "Popular", id: 1 };
             configStore.set(marketsKey, {
                 recent: [],
-                favorites: [],
-                favoriteTabs: [{ name: "Popular", id: 1 }]
+                favorites: [
+                    { name: "PERP_ETH_USDC", tabs: [{ ...defaultTab }] },
+                    { name: "PERP_BTC_USDC", tabs: [{ ...defaultTab }] },
+                ],
+                favoriteTabs: [{ ...defaultTab }],
+                lastSelectFavoriteTab: { ...defaultTab }
             });
         }
     }
@@ -80,15 +90,15 @@ export const useMarkets = (type: MarketsType) => {
             const favData = curData[index];
             var favTabs = favData.tabs.filter((tab) => tabs.findIndex((item) => tab.id === item.id) !== -1);
             if (favTabs.length > 0) {
-                result.push({...favData, tabs: favTabs})
+                result.push({ ...favData, tabs: favTabs })
             }
-            
+
         }
-        configStore.set(marketsKey, {...configStore.getOr(marketsKey, {}), favorites: result});
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-        
+        configStore.set(marketsKey, { ...configStore.getOr(marketsKey, {}), favorites: result });
+        // localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
+
         return result;
-    },[configStore]);
+    }, [configStore]);
 
     const getRecent = useMemo(() => {
         // @ts-ignore
@@ -112,8 +122,6 @@ export const useMarkets = (type: MarketsType) => {
                 ...configStore.getOr(marketsKey, {}),
                 "favoriteTabs": tabs
             });
-            // WARNING: remember remove
-            localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         };
 
         if (Array.isArray(tab)) {
@@ -144,13 +152,11 @@ export const useMarkets = (type: MarketsType) => {
         if (index !== -1) {
             curData.splice(index, 1);
         }
-        curData.unshift({ name: symbol.symbol });        
+        curData.unshift({ name: symbol.symbol });
         configStore.set(marketsKey, {
             ...configStore.getOr(marketsKey, {}),
             "recent": curData
         });
-        // WARNING: remember remove
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setRecent(curData);
     };
 
@@ -163,8 +169,8 @@ export const useMarkets = (type: MarketsType) => {
 
         if (index === -1) { // can not find
             if (Array.isArray(tab)) {
-                if ( tab.length > 0) {
-                    curData.unshift({ name: symbol.symbol, tabs: tab});
+                if (tab.length > 0) {
+                    curData.unshift({ name: symbol.symbol, tabs: tab });
                 }
             } else {
                 if (!remove) {
@@ -203,8 +209,6 @@ export const useMarkets = (type: MarketsType) => {
             ...configStore.getOr(marketsKey, {}),
             "favorites": curData
         });
-        // WARNING: remember remove
-        localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
         setFavorites(() => curData);
     };
 
@@ -230,11 +234,18 @@ export const useMarkets = (type: MarketsType) => {
 
                 const fIndex = favoritesData.findIndex((item) => item.name === element.symbol);
                 const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
+
+                let imr = undefined;
+                if (publicInfo) {
+                    imr= publicInfo?.[element.symbol]("base_imr");
+                }
+                
                 filter[index] = {
                     ...filter[index],
                     // @ts-ignore
                     isFavorite,
                     tabs,
+                    leverage: imr ? 1 / imr : undefined
                 };
             }
         }
@@ -266,10 +277,6 @@ export const useMarkets = (type: MarketsType) => {
                 ...configStore.getOr(marketsKey, {}),
                 "favorites": list
             });
-            // WARNING: remember remove
-            localStorage.setItem(marketsKey, JSON.stringify(configStore.get(marketsKey)));
-
-
             setFavorites(list);
         }
     };
@@ -279,7 +286,19 @@ export const useMarkets = (type: MarketsType) => {
         return favoriteTabs;
     }, [favoriteTabs]);
 
-    
+
+    const getLastSelFavTab = () => {
+        // @ts-ignore
+        const curData = configStore.get(marketsKey)["lastSelectedFavoriteTab"];
+        return (curData || { name: "Popular", id: 1 }) as FavoriteTab;
+    };
+
+    const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
+        configStore.set(marketsKey, {
+            ...configStore.getOr(marketsKey, {}),
+            lastSelectedFavoriteTab: tab
+        });
+    };
 
     return [
         markets || [],
@@ -292,6 +311,8 @@ export const useMarkets = (type: MarketsType) => {
             updateFavoriteTabs,
             updateSymbolFavoriteState,
             pinToTop,
+            getLastSelFavTab,
+            updateSelectedFavoriteTab,
         },
     ] as const;
 }

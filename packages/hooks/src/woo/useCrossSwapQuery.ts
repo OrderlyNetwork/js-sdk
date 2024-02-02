@@ -62,8 +62,7 @@ export const useWooCrossSwapQuery = () => {
       dstToken: string;
       crossChainRouteAddress: string;
     }) => {
-      //
-      if (loading) return;
+      if (loading) return Promise.resolve();
       start();
 
       const params = {

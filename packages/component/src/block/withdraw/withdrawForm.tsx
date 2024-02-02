@@ -44,7 +44,7 @@ export interface WithdrawProps {
     chainId: number;
     // receiver: string;
     token: string;
-    amount: number;
+    amount: string;
     allowCrossChainWithdraw: boolean;
   }) => Promise<any>;
 
@@ -77,14 +77,20 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   const [quantity, setQuantity] = useState("");
 
-  const { data: balanceList } = useQuery<API.VaultBalance[]>(`/v1/public/vault_balance`, {
-    revalidateOnMount: true,
-  });
+  // @ts-ignore
+  const { data: balanceList } = useQuery<API.VaultBalance[]>(
+    `/v1/public/vault_balance`,
+    {
+      revalidateOnMount: true,
+    }
+  );
 
   const chainVaultBalance = useMemo(() => {
     if (!balanceList || !chain) return null;
     // chain.id
-    const vaultBalance = balanceList.find((item: any) => parseInt(item.chain_id) === chain?.id);
+    const vaultBalance = balanceList.find(
+      (item: any) => parseInt(item.chain_id) === chain?.id
+    );
     if (vaultBalance) {
       return vaultBalance.balance;
     }
@@ -101,28 +107,26 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         currentChainId: chain?.id,
       }
     );
-    return result;
+    return { id: result?.id, name: result?.name };
   }, [chains, chain]);
 
   const onChainChange = useCallback(
     (value: API.Chain) => {
       if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
-       
-        switchChain?.({
-          chainId: int2hex(Number(value.network_infos?.chain_id)),
-        })
-        .then(
-          () => {
-       
-            toast.success("Network switched");
-            // 清理数据
-            setQuantity("");
-          },
-          (error) => {
-            //
-            toast.error(`Switch chain failed: ${error.message}`);
-          }
-        );
+
+      switchChain?.({
+        chainId: int2hex(Number(value.network_infos?.chain_id)),
+      }).then(
+        () => {
+          toast.success("Network switched");
+          // clear data
+          setQuantity("");
+        },
+        (error) => {
+          //
+          toast.error(`Switch chain failed: ${error.message}`);
+        }
+      );
     },
     [switchChain, chain]
   );
@@ -133,10 +137,8 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
       return value;
     }
-     return false;
-  }, [
-    quantity, maxAmount, chainVaultBalance
-  ]);
+    return false;
+  }, [quantity, maxAmount, chainVaultBalance]);
 
   const doWithdraw = useCallback(() => {
     if (submitting) return;
@@ -158,7 +160,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     setSubmitting(true);
 
     return onWithdraw({
-      amount: Number(quantity),
+      amount: quantity,
       token: "USDC",
       chainId: chain?.id,
       allowCrossChainWithdraw: crossChainWithdraw,
@@ -177,7 +179,15 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       .finally(() => {
         setSubmitting(false);
       });
-  }, [quantity, minAmount, inputStatus, chain?.id, submitting, onOk, crossChainWithdraw]);
+  }, [
+    quantity,
+    minAmount,
+    inputStatus,
+    chain?.id,
+    submitting,
+    onOk,
+    crossChainWithdraw,
+  ]);
 
   const onValueChange = useCallback(
     (value: any) => {
@@ -219,7 +229,10 @@ export const WithdrawForm: FC<WithdrawProps> = ({
     }
 
     if (crossChainWithdraw) {
-      return (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0);
+      return (
+        // @ts-ignore
+        (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
+      );
     }
 
     return item.withdrawal_fee || 0;
@@ -313,7 +326,12 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         />
       </div>
       <div className="orderly-py-2">
-        <WalletPicker address={address} chain={chain} wooSwapEnabled={false} onChainChange={onChainChange} />
+        <WalletPicker
+          address={address}
+          chain={chain}
+          wooSwapEnabled={false}
+          onChainChange={onChainChange}
+        />
       </div>
       <TokenQtyInput
         amount={quantity}
@@ -331,7 +349,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         chains={chains}
         chain={chain}
         onWithdraw={doWithdraw}
-        disabled={!quantity || (Number(quantity) - fee <= 0)}
+        disabled={!quantity || Number(quantity) - fee <= 0}
         switchChain={switchChain}
         quantity={quantity}
         loading={submitting}

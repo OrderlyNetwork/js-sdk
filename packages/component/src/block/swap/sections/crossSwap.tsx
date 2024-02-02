@@ -1,31 +1,15 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Divider } from "@/divider";
-import { SwapSymbols, SymbolInfo } from "../sections/symbols";
+import { SwapSymbols } from "../sections/symbols";
 
 import { SwapTime } from "../sections/swapTime";
 import { SwapDetails } from "../sections/swapDetials";
 import { useCrossSwap } from "@orderly.network/hooks";
 import { toast } from "@/toast";
-import { SwapMode, SwapProcessStatusStatus } from "../sections/misc";
-import { API, WS_WalletStatusEnum } from "@orderly.network/types";
+import { SwapProcessStatusStatus } from "../sections/misc";
+import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { BridgeAndSwapProcessStatus } from "./bridgeAndSwapProcessStatus";
-
-export interface SwapProps {
-  src: SymbolInfo;
-  dst: SymbolInfo;
-  // swapInfo: SwapInfo;
-  mode: SwapMode;
-  transactionData: any;
-  slippage: number;
-
-  chain?: API.NetworkInfos;
-  nativeToken?: API.TokenInfo;
-  depositFee?: bigint;
-
-  onComplete?: (isSuccss: boolean) => void;
-  onCancel?: () => void;
-  onFail?: () => void;
-}
+import { SwapProps } from "../swap";
 
 export const CrossSwap: FC<SwapProps> = (props) => {
   const {
@@ -116,7 +100,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       (error: any) => {
         setStatus(SwapProcessStatusStatus.BridgeFialed);
 
-        toast.error(error.message || "Error");
+        toast.error(error?.message || "Error");
       }
     );
   }, [transaction, mode, dst, src]);
@@ -142,6 +126,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
         status={status}
         message={message}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, message, status, mode, chainInfo, tx, props.onComplete]);
@@ -157,7 +142,10 @@ export const CrossSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast/50">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>

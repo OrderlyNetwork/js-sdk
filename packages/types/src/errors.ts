@@ -4,3 +4,10 @@ export class ApiError extends Error {
     this.name = "ApiError";
   }
 }
+
+export class SDKError extends Error {
+  constructor(message: string) {
+    super(`[ORDERLY SDK ERROR]:${message}`);
+    this.name = "SDKError";
+  }
+}

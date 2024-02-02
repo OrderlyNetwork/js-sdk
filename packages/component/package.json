@@ -2,17 +2,23 @@
   "name": "@orderly.network/react",
   "version": "0.1.31-experimental.11",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "esm",
+    "lib"
   ],
   "scripts": {
-    "watch": "tsup --watch",
+    "watch": "tsup --watch --tsconfig tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup && pnpm run build-tailwind",
-    "build:tsup": "tsup",
+    "build": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
+    "build:tsup": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
+    "build:esm": "tsc --project tsconfig.build.json --outDir esm && tsc-alias --project tsconfig.build.json --outDir esm",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib && tsc-alias --project tsconfig.build.json --outDir lib",
+    "tspaths": "ts-node --project tsconfig.build.json -r tsconfig-paths/register esm/avatar/avatar.js",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build"
@@ -26,9 +32,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
-    "@orderly.network/trading-view": "workspace:*",
-    "@orderly.network/web3-onboard": "workspace:*",
     "@orderly.network/web3-modal": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -58,6 +63,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "rollup": "^3.26.3",
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-postcss": "^4.0.2",
@@ -65,11 +71,12 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "tailwindcss-border-gradient-radius": "^3.0.1",
+    "tsc-alias": "^1.8.8",
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
     "tsup": "^7.1.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@orderly.network/core": "workspace:*",
@@ -83,6 +90,7 @@
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.4",
     "@radix-ui/react-dropdown-menu": "^2.0.5",
+    "@radix-ui/react-hover-card": "^1.0.7",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-progress": "^1.0.3",

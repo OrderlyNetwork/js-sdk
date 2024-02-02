@@ -1,6 +1,7 @@
 import { FC, useContext, useMemo } from "react";
-import { OrderBookCell, OrderBookCellType } from "./cell";
+import { OrderBookCell } from "./cell";
 import { OrderBookContext } from "./orderContext";
+import { OrderBookCellType } from "./types";
 
 interface OrderBookListProps {
   type: OrderBookCellType;

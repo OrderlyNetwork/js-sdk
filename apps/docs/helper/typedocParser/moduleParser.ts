@@ -9,10 +9,10 @@ import {
   ReflectionKind,
   //   CommentParser,
   reflectionKindToString,
-} from "typedoc-json-parser";
-// import { type SearchResult } from "typedoc-json-parser";
+} from "@orderly.network/typedoc-json-parser";
+// import { type SearchResult } from "@orderly.network/typedoc-json-parser";
 // import { bold, red, yellow } from 'colorette';
-import { type SearchResult } from "typedoc-json-parser";
+import { type SearchResult } from "@orderly.network/typedoc-json-parser";
 import type { JSONOutput } from "typedoc";
 import { CommentParser } from "./commentParser";
 import { SourceParser } from "./sourceParser";

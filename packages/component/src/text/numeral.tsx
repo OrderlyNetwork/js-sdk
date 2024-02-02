@@ -93,6 +93,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
   const num = Number(props.children);
 
   const child = useMemo(() => {
+    if (isNaN(num)) return "--";
+
     if (typeof visible !== "undefined" && !visible) return "*****";
 
     return parseNumber(num, {
@@ -128,10 +130,12 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     if (num < 0) {
       if (props.icons?.loss) return props.icons?.loss;
+      // @ts-ignore
       return <Minus size={12} />;
     }
 
     if (props.icons?.profit) return props.icons?.profit;
+    // @ts-ignore
     return <Plus size={12} />;
   }, [num, props.visible, showIcon]);
 
@@ -154,7 +158,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     return (
-      <span className="orderly-inline-flex orderly-items-center orderly-gap-1">
+      <span className="orderly-inline-flex orderly-items-center orderly-gap-1 orderly-tabular-nums">
         {prefixEle}
         {child}
         {surfixEle}
@@ -169,7 +173,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
   return (
     <span
       className={cn(
-        "orderly-inline-flex orderly-items-center orderly-tabular-nums",
+        "orderly-inline-flex orderly-items-center",
         colorClassName,
         props.className
       )}

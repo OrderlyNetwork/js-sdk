@@ -1,48 +1,48 @@
-export const definedTypes: { [key: string]: any } = {
-  EIP712Domain: [
-    { name: "name", type: "string" },
-    { name: "version", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "verifyingContract", type: "address" },
-  ],
-  Registration: [
-    { name: "brokerId", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "timestamp", type: "uint64" },
-    { name: "registrationNonce", type: "uint256" },
-  ],
-  Withdraw: [
-    { name: "brokerId", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "receiver", type: "address" },
-    { name: "token", type: "string" },
-    { name: "amount", type: "uint256" },
-    { name: "withdrawNonce", type: "uint64" },
-    { name: "timestamp", type: "uint64" },
-  ],
-  AddOrderlyKey: [
-    { name: "brokerId", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "orderlyKey", type: "string" },
-    { name: "scope", type: "string" },
-    { name: "timestamp", type: "uint64" },
-    { name: "expiration", type: "uint64" },
-  ],
-  SettlePnl: [
-    { name: "brokerId", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "settleNonce", type: "uint64" },
-    { name: "timestamp", type: "uint64" },
-  ],
-};
+// export const definedTypes = {
+//   EIP712Domain: [
+//     { name: "name", type: "string" },
+//     { name: "version", type: "string" },
+//     { name: "chainId", type: "uint256" },
+//     { name: "verifyingContract", type: "address" },
+//   ],
+//   Registration: [
+//     { name: "brokerId", type: "string" },
+//     { name: "chainId", type: "uint256" },
+//     { name: "timestamp", type: "uint64" },
+//     { name: "registrationNonce", type: "uint256" },
+//   ],
+//   Withdraw: [
+//     { name: "brokerId", type: "string" },
+//     { name: "chainId", type: "uint256" },
+//     { name: "receiver", type: "address" },
+//     { name: "token", type: "string" },
+//     { name: "amount", type: "uint256" },
+//     { name: "withdrawNonce", type: "uint64" },
+//     { name: "timestamp", type: "uint64" },
+//   ],
+//   AddOrderlyKey: [
+//     { name: "brokerId", type: "string" },
+//     { name: "chainId", type: "uint256" },
+//     { name: "orderlyKey", type: "string" },
+//     { name: "scope", type: "string" },
+//     { name: "timestamp", type: "uint64" },
+//     { name: "expiration", type: "uint64" },
+//   ],
+//   SettlePnl: [
+//     { name: "brokerId", type: "string" },
+//     { name: "chainId", type: "uint256" },
+//     { name: "settleNonce", type: "uint64" },
+//     { name: "timestamp", type: "uint64" },
+//   ],
+// } as const;
 
 export const nativeUSDCAddress = "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63";
 
 export const stagingUSDCAddressOnArbitrumTestnet =
-  "0x6aAd876244E7A1Ad44Ec4824Ce813729E5B6C291";
+  "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d";
 
 export const stagingVaultAddressOnArbitrumTestnet =
-  "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D";
+  "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f";
 export const stagingVerifyAddressOnArbitrumTestnet =
   "0x1826B75e2ef249173FC735149AE4B8e9ea10abff";
 

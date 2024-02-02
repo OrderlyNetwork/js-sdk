@@ -20,11 +20,26 @@ export enum ExchangeStatusEnum {
 
 export type NetworkId = "testnet" | "mainnet";
 
-export const ARBITRUM_TESTNET_CHAINID = 421613;
+// Testnet
+// Arbitrum Goerli
+// export const ARBITRUM_TESTNET_CHAINID = 421613;
+// export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EED";
+
+// Arbitrum Sepolia
+export const ARBITRUM_TESTNET_CHAINID = 421614;
+export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EEE";
+
+// Mainnet
 export const ARBITRUM_MAINNET_CHAINID = 42161;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
-export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EED";
 
 export const MEDIA_TABLET = "(max-width: 768px)";
 
 export const DEPOSIT_FEE_RATE = 1.05;
+
+/**
+ *  A constant for the maximum value for a ``uint256``.
+ */
+export const MaxUint256: bigint = BigInt(
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+);

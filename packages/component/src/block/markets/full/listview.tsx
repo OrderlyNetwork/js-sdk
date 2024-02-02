@@ -7,11 +7,12 @@ import { SortGroup } from "./sortGroup";
 import { cn } from "@/utils/css";
 import type { ListViewRef } from "@/listView/listView";
 import { NetworkImage } from "@/icon";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 
 interface Props {
   activeIndex: number;
   onSort: (value: Partial<{ key: SortKey; direction: SortDirection }>) => void;
-
+  readLastSortCondition?: boolean;
   maxHeight?: number;
   onItemClick?: (item: API.MarketInfoExt) => void;
   updateActiveIndex?: (index: number) => void;
@@ -25,18 +26,23 @@ export const ListViewFull = forwardRef<
     suffixRender?: (item: API.MarketInfoExt, index: number) => React.ReactNode, 
   }
 >((props, ref) => {
+
+  const config = useSymbolsInfo();
+  
   const renderItem = (
     item: API.MarketInfoExt,
     index: number,
     extraData: any
-  ) => {
+    ) => {
+    const symbolInfo = config ? config?.[item.symbol] : {};
+    const baseDp = symbolInfo?.("quote_dp") || 2;
     return (
       <div
         onMouseEnter={() => {
           props.updateActiveIndex?.(index);
         }}
         className={cn(
-          "orderly-grid orderly-grid-cols-5 orderly-py-3 orderly-px-5 orderly-cursor-pointer orderly-h-[46px]",
+          "orderly-grid orderly-grid-cols-5 orderly-py-3 orderly-px-5 orderly-cursor-pointer orderly-h-[46px] hover:orderly-bg-base-800",
           {
             "orderly-bg-base-contrast/5": extraData === index,
             "orderly-grid-cols-6": props.suffixRender,
@@ -48,9 +54,14 @@ export const ListViewFull = forwardRef<
           {props.prefixRender && (props.prefixRender(item,extraData))}
           <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
           <Text rule="symbol">{item.symbol}</Text>
+          {/* @ts-ignore */}
+          {item.leverage && (<div className="orderly-ml-1 orderly-rounded-sm orderly-px-1 orderly-py-[2px] orderly-flex orderly-items-center orderly-text-3xs orderly-text-primary orderly-bg-base-600">
+            {/* @ts-ignore */}
+            {`${item.leverage}x`}
+          </div>)}
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
-          <Numeral>{item["24h_close"]}</Numeral>
+          <Numeral precision={baseDp}>{item["24h_close"]}</Numeral>
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
           <Numeral coloring rule="percentages" showIcon>
@@ -76,7 +87,7 @@ export const ListViewFull = forwardRef<
 
   return (
     <div>
-      <SortGroup onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
+      <SortGroup readLastSortCondition={props.readLastSortCondition} onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
       <ListView<API.MarketInfoExt, any>
         // @ts-ignore
         ref={ref}

@@ -43,3 +43,5 @@ export * from "./orderly/orderlyHooks";
 
 //---- woo only -----
 export * from "./woo/woo";
+
+export type { WalletAdapter } from "@orderly.network/core";
