@@ -10,6 +10,7 @@ import {
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { OrderlyAppContext } from "@/provider";
+import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export enum DepositStatus {
   Checking = "Checking",
@@ -52,8 +53,7 @@ export const Deposit: FC<DepositProps> = (props) => {
   const currentChain = useMemo<CurrentChain | null>(() => {
     if (!connectedChain) return null;
 
-    // const chainId = parseInt(connectedChain.id);
-    const { id: chainId } = connectedChain;
+    const chainId = praseChainIdToNumber(connectedChain.id);
     const chain = findByChainId(chainId);
 
     return {

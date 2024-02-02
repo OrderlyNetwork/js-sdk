@@ -208,7 +208,9 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
         ////// check chainid ///////
 
-        if (!checkChainId(wallet.chains[0].id)) {
+        const chainId = praseChainIdToNumber(wallet.chains[0].id);
+
+        if (!checkChainId(chainId)) {
           return false;
         }
 

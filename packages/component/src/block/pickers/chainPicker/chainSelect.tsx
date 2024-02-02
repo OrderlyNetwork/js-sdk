@@ -27,7 +27,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -59,8 +59,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
-
-    if (connectedChain && isTestnet(connectedChain.id)) {
+    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
 
@@ -90,10 +89,10 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       mainChains: chains,
       currentChainId: value?.id,
     });
-
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onValueChange?.(chainInfo);
+    if (result?.id) {
+      const chainInfo = findByChainId(result.id);
+      props?.onValueChange?.(chainInfo);
+    }
   }, [chains, props.onValueChange, value?.id]);
 
   useEffect(() => {
@@ -180,14 +179,7 @@ const DesktopChainSelect: FC<{
   onValueChange: any;
   connectedChain: any;
 }> = (props) => {
-  const {
-    chains,
-    onValueChange,
-    currentChain,
-    icon,
-    findByChainId,
-    connectedChain,
-  } = props;
+  const { chains, currentChain, icon, findByChainId, connectedChain } = props;
   const [open, setOpen] = useState(false);
   // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 

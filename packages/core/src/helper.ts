@@ -87,7 +87,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
   chainId: number;
   brokerId: string;
   primaryType: keyof typeof definedTypes;
-  expiration: number;
+  expiration?: number;
 }) {
   const {
     publicKey,

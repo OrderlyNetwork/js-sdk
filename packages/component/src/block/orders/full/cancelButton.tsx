@@ -20,8 +20,10 @@ export const CancelButton: FC<CancelButtonProps> = (props) => {
       variant={"outlined"}
       color={"tertiary"}
       loading={isLoading}
-      onClick={() => {
+      onClick={(event) => {
         if (!onCancelOrder) return;
+        event.preventDefault();
+        event.stopPropagation();
         setIsLoading(true);
         onCancelOrder(order)
           .then(

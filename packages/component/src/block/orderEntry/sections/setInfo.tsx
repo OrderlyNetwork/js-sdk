@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from "@/icon/icons/arrowRight";
+import { ArrowRightIcon } from "@/icon/icons";
 import { Numeral } from "@/text/numeral";
 import { useAccount, useMarginRatio } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";

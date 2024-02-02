@@ -41,17 +41,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            <Deposit
-              onOk={props.onOk}
-              // @ts-ignore
-              dst={{
-                chainId: 0,
-                address: "",
-                decimals: 0,
-                symbol: "",
-                network: "",
-              }}
-            />
+            <Deposit onOk={props.onOk} />
           </div>
         </TabPane>
         <TabPane
@@ -103,7 +93,11 @@ export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
 
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent className="orderly-p-5" maxWidth={"lg"} closable>
+        <DialogContent
+          className="orderly-p-5 orderly-top-[20%] orderly-translate-y-0"
+          maxWidth={"lg"}
+          closable
+        >
           <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
         </DialogContent>
       </Dialog>

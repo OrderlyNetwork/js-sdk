@@ -19,5 +19,6 @@ export const praseChainIdToNumber = (chainId: string | number): number => {
 
 export const isTestnet = (chainId: number) => {
   const testnetIds = [ARBITRUM_TESTNET_CHAINID];
+
   return testnetIds.includes(chainId);
 };
