@@ -1,28 +1,13 @@
 import { Paper } from "@/layout";
 import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
-import { Info } from "lucide-react";
-import { FC, useCallback, useContext, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { create, register } from "@/modal/modalHelper";
-import { useAccount, OrderlyContext } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/sheet";
-import { useModal } from "@/modal";
 import Button from "@/button";
 import { toast } from "@/toast";
-import { Logo } from "@/logo";
-import { modal } from "@/modal";
-import { InfoIcon } from "@/icon";
-import { Dialog, DialogHeader } from "@/dialog";
-import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { RememberMe } from "./sections/rememberMe";
 
 export interface WalletConnectProps {

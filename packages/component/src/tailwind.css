@@ -193,44 +193,24 @@
   }
 }
 
-@media screen and (max-width: 768px) {
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 0px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 2px;
-    border-style: dashed;
-    border-color: transparent;
-    border-width: 1px;
-    background: rgba(255, 255, 255, 0.04);
-    background-clip: padding-box;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 3px;
-  }
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
 }
 
-@media screen and (min-width: 768px) {
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 0px;
-  }
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 4px;
+}
 
-  ::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    border-style: dashed;
-    border-color: transparent;
-    border-width: 1px;
-    background: rgba(255, 255, 255, 0.04);
-    background-clip: padding-box;
-  }
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-  }
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 3px;
+  /* border: 1px solid #ffffff; */
 }
