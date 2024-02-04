@@ -3,9 +3,8 @@ import { useCallback, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
 import { useQuery } from "../useQuery";
 import { prop } from "ramda";
-import { nativeTokenAddress } from "../woo/constants";
 import { isTestnet } from "@orderly.network/utils";
-import { TestnetChains } from "@orderly.network/types";
+import { TestnetChains, nativeTokenAddress } from "@orderly.network/types";
 
 type InputOptions = {
   filter?: (item: API.Chain) => boolean;

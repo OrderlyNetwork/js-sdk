@@ -7,7 +7,6 @@ import {
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { DepositProvider } from "./DepositProvider";
-import { useNeedSwapAndCross } from "./hooks/useNeedSwapAndCross";
 import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export enum DepositStatus {
@@ -68,14 +67,8 @@ export const Deposit: FC<DepositProps> = (props) => {
     depositorAddress: currentChain?.info?.network_infos?.woofi_dex_depositor,
   });
 
-  const { needSwap, needCrossSwap } = useNeedSwapAndCross(
-    token?.symbol,
-    currentChain?.id,
-    dst?.chainId
-  );
-
   return (
-    <DepositProvider needSwap={needSwap} needCrossSwap={needCrossSwap}>
+    <DepositProvider>
       <DepositForm
         dst={dst}
         allowance={allowance}

@@ -8,9 +8,9 @@ import {
   DEPOSIT_FEE_RATE,
   MaxUint256,
   NetworkId,
+  isNativeTokenChecker,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
 import { useConfig } from "../useConfig";
 import { useDebouncedCallback } from "use-debounce";
