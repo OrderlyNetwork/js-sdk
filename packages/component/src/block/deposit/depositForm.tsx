@@ -296,7 +296,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         <TokenQtyInput
           token={dst}
           amount={quantity}
-          loading={props.depositFeeRevalidating}
+          loading={false}
           readOnly
           fee={0}
         />
