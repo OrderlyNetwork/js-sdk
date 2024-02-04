@@ -74,7 +74,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
         return (
           <NumeralWithCtx
             className={
-              "orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"
+              "orderly-font-semibold orderly-text-2xs"
             }
           >
             {value || "-"}
@@ -91,7 +91,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
         return (
           <NumeralWithCtx
             className={
-              "orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"
+              "orderly-font-semibold orderly-text-2xs"
             }
           >
             {value || "-"}
@@ -108,7 +108,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
         return (
           <NumeralWithCtx
             className={
-              "orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"
+              "orderly-font-semibold orderly-text-2xs"
             }
             // precision={2}
           >
@@ -130,7 +130,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
         return (
           <NumeralWithCtx
             className={
-              "orderly-font-semibold orderly-text-2xs orderly-text-base-contrast-80"
+              "orderly-font-semibold orderly-text-2xs"
             }
             // precision={2}
           >
