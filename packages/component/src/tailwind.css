@@ -190,6 +190,14 @@
     --orderly-color-divider: 42 46 52;
 
     --orderly-font-family: "Manrope", sans-serif;
+
+    --orderly-shadow-sm: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow-md: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow-lg: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow-lg: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow-xl: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
+    --orderly-shadow-2xl: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
   }
 }
 
