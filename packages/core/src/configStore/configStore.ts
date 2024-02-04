@@ -4,7 +4,6 @@ export type ConfigKey =
   | "privateWsUrl"
   | "publicWsUrl"
   | "operatorUrl"
-  | "swapSupportApiUrl"
   | "domain"
   | "brokerId"
   | "networkId"
@@ -45,7 +44,6 @@ export class MemoryConfigStore implements ConfigStore {
       // ["privateWsUrl", "wss://dex-iap-evm.woo.org"],
       // ["privateWsUrl", "wss://dex-iap-evm.woo.org/wsprivate"],
       ["operatorUrl", "https://testnet-operator-evm.orderly.org"],
-      ["swapSupportApiUrl", "https://fi-api.woo.org"],
       [
         "domain",
         {
