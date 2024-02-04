@@ -42,11 +42,11 @@ export class CustomConfigStore implements ConfigStore {
 
   constructor(init: Partial<Record<ConfigKey, any>>) {
     const networkId = init?.networkId || "mainnet";
-    const env = init?.env || "prod";
+    const env = (init?.env as ENV_NAME) || "prod";
     const urls = API_URLS[env];
 
     this.map = new Map<ConfigKey, any>([
-      ["brokerId", "woofi_pro"],
+      ["brokerId", "orderly"],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
