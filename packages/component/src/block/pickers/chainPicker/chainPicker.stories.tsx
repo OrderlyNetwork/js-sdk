@@ -54,7 +54,6 @@ export const ListView: Story = {
   render: (args) => {
     const [chains] = useChains(undefined, {
       pick: "network_infos",
-      wooSwapEnabled: false,
     });
     return (
       <ChainListView
@@ -71,7 +70,6 @@ export const Dialog: Story = {
 
     const [chains] = useChains(undefined, {
       pick: "network_infos",
-      wooSwapEnabled: false,
     });
 
     const { setChain } = useWalletConnector();

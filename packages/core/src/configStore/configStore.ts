@@ -26,7 +26,7 @@ export class MemoryConfigStore implements ConfigStore {
   }
 
   protected _restore(init?: Record<ConfigKey, any>) {
-    const brokerId = init?.brokerId || "woofi_pro";
+    const brokerId = init?.brokerId || "orderly";
     const networkId = init?.networkId || "mainnet";
     this.map = new Map<ConfigKey, any>([
       // PROD
@@ -35,7 +35,6 @@ export class MemoryConfigStore implements ConfigStore {
       // ["apiBaseUrl", "https://dev-api-iap-v2.orderly.org"],
       ["klineDataUrl", "https://testnet-api-evm.orderly.org"],
       // PROD
-      // ["publicWsUrl", "wss://dex-iap-evm.woo.org/ws"],
       ["publicWsUrl", "wss://testnet-ws-evm.orderly.org"],
       // ["publicWsUrl", "wss://dev-ws-v2.orderly.org"],
       // ["publicWebsocketKey", "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY"],

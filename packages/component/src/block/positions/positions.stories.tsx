@@ -2,10 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { PositionsView } from ".";
-import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { modal } from "@/modal";
 import { ClosePositionPane } from "./sections/closeForm";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta = {
   title: "Block/Positions/mweb",

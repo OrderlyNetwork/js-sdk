@@ -1,11 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-
-import { OrderlyProvider } from "../../provider/orderlyProvider";
 import { ClosePositionPane } from "./sections/closeForm";
-import { MemoryConfigStore, Web3WalletAdapter } from "@orderly.network/core";
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
 import { OrderSide } from "@orderly.network/types";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta = {
   title: "Block/ClosePositionPane",

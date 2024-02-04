@@ -7,7 +7,7 @@ import Comp from "./comp";
 installExtension<{
   onOk: () => void;
 }>({
-  name: "wooFi-pro-swap-deposit",
+  name: "swap-deposit",
   scope: ["*"],
   positions: [ExtensionPosition.DepositForm],
 })((props) => {
