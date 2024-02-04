@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { OrderlyContext, useQuery, useSWR } from ".";
 
 export const usePreLoadData = () => {
-  const { configStore, enableSwapDeposit } = useContext(OrderlyContext);
+  const { configStore } = useContext(OrderlyContext);
 
   // const { error: swapSupportError, data: swapSupportData } = useSWR(
   //   `${configStore.get("swapSupportApiUrl")}/swap_support`,

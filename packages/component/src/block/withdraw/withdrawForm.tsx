@@ -329,7 +329,6 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         <WalletPicker
           address={address}
           chain={chain}
-          wooSwapEnabled={false}
           onChainChange={onChainChange}
         />
       </div>

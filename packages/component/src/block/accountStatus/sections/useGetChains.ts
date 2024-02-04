@@ -1,15 +1,11 @@
-import { useContext, useMemo } from "react";
-import { OrderlyAppContext } from "@/provider";
+import { useMemo } from "react";
 import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { isTestnet } from "@orderly.network/utils";
 
 export function useGetChains() {
-  const { enableSwapDeposit } = useContext(OrderlyAppContext);
-
   const { connectedChain } = useWalletConnector();
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

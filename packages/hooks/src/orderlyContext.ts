@@ -21,10 +21,6 @@ export interface OrderlyConfigContextState {
    * @hidden
    */
   onlyTestnet?: boolean;
-  /**
-   * @hidden
-   */
-  enableSwapDeposit?: boolean;
   // extraApis:ExtraAPIs
 }
 

@@ -38,7 +38,6 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
-  enableSwapDeposit?: boolean;
 }
 
 export const OrderlyConfigProvider = (
@@ -53,7 +52,6 @@ export const OrderlyConfigProvider = (
     getWalletAdapter,
     brokerId,
     networkId,
-    enableSwapDeposit,
     contracts,
   } = props;
 
@@ -109,7 +107,6 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
-        enableSwapDeposit: enableSwapDeposit,
         // apiBaseUrl,
       }}
     >

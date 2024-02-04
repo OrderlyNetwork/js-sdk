@@ -25,8 +25,6 @@ export interface WalletPickerProps {
   onOpenPicker?: () => void;
   onChainChange?: (chain: any) => void;
   onChainInited?: (chain: API.Chain) => void;
-
-  wooSwapEnabled?: boolean;
 }
 
 export const WalletPicker: FC<WalletPickerProps> = (props) => {
@@ -53,7 +51,6 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
         onValueChange={props.onChainChange}
         onChainInited={props.onChainInited}
         settingChain={props.settingChain}
-        wooSwapEnabled={props.wooSwapEnabled}
       />
     </div>
   );

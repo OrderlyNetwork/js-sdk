@@ -54,7 +54,6 @@ const preview = {
             // brokerName="WOOFi Pro"
             brokerId="orderly"
             brokerName="Orderly"
-            enableSwapDeposit={true}
             // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{

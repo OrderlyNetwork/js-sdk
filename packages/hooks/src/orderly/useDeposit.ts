@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "../useAccount";
 import {
   API,
@@ -19,7 +12,6 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import { isNativeTokenChecker } from "../woo/constants";
 import { useChains } from "./useChains";
-import { OrderlyContext } from "../orderlyContext";
 import { useConfig } from "../useConfig";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -34,23 +26,14 @@ export type useDepositOptions = {
   srcChainId?: number;
   srcToken?: string;
   quantity?: string;
-
-  /**
-   * @hidden
-   */
-  wooSwapEnabled?: boolean;
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
-  const { enableSwapDeposit } = useContext<any>(OrderlyContext);
-
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
 
-  const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: enableSwapDeposit,
-  });
+  const [_, { findByChainId }] = useChains(undefined);
 
   const [quantity, setQuantity] = useState<string>("");
   const [depositFee, setDepositFee] = useState<bigint>(0n);

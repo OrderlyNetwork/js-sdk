@@ -1,9 +1,8 @@
 import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
-import { useCallback, useContext, useMemo, useRef } from "react";
-import useSWR, { SWRConfiguration } from "swr";
-import { OrderlyContext } from "../orderlyContext";
+import { useCallback, useMemo, useRef } from "react";
+import { SWRConfiguration } from "swr";
 import { useQuery } from "../useQuery";
-import { mergeDeepRight, prop } from "ramda";
+import { prop } from "ramda";
 import { nativeTokenAddress } from "../woo/constants";
 import { isTestnet } from "@orderly.network/utils";
 import { TestnetChains } from "@orderly.network/types";
@@ -11,8 +10,6 @@ import { TestnetChains } from "@orderly.network/types";
 type InputOptions = {
   filter?: (item: API.Chain) => boolean;
   pick?: "dexs" | "network_infos" | "token_infos";
-  /** if true, use wooSwap api, else use orderly api only  */
-  wooSwapEnabled?: boolean;
 };
 
 export type Chain = API.Chain & {
@@ -67,8 +64,7 @@ export function useChains<
 ];
 
 export function useChains(networkId?: NetworkId, options: Options = {}) {
-  const { pick: pickField, wooSwapEnabled, ...swrOptions } = options;
-  const { configStore } = useContext(OrderlyContext);
+  const { pick: pickField, ...swrOptions } = options;
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -99,15 +95,6 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
     { ...commonSwrOpts }
   );
 
-  const { data: swapSupportRes, error: swapSupportError } = useSWR<any>(
-    () =>
-      wooSwapEnabled
-        ? `${configStore.get("swapSupportApiUrl")}/swap_support`
-        : null,
-    (url) => fetch(url).then((res) => res.json()),
-    { ...commonSwrOpts, ...swrOptions }
-  );
-
   const chains = useMemo(() => {
     const orderlyChainsArr = fillChainsInfo(tokenChains, filterFun.current);
 
@@ -125,38 +112,18 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
 
     let mainnetArr: API.Chain[] = [];
 
-    if (wooSwapEnabled) {
-      if (!swapSupportRes || !swapSupportRes.data) return swapSupportRes;
+    // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
+    mainnetArr = updateOrderlyChains(
+      orderlyChainsArr,
+      chainInfos,
+      filterFun.current
+    );
 
-      const [mainnetChains, testnetChains] = getSwapSupportChains(
-        swapSupportRes.data,
-        (chainId) =>
-          !!orderlyChainsArr?.find(
-            (item) => item.network_infos?.chain_id === chainId
-          ),
-        filterFun.current
-      );
-
-      mainnetArr = mainnetChains;
-      testnetArr = [...testnetArr, ...testnetChains];
-
-      [...mainnetChains, ...testnetChains].forEach((item) => {
-        chainsMap.current.set(item.network_infos?.chain_id, item);
-      });
-    } else {
-      // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
-      mainnetArr = updateOrderlyChains(
-        orderlyChainsArr,
-        chainInfos,
-        filterFun.current
-      );
-
-      mainnetArr.forEach((item) => {
-        const chainId = item.network_infos?.chain_id;
-        chainsMap.current.set(chainId, item);
-        updateTestnetInfo(testnetArr, chainId, item);
-      });
-    }
+    mainnetArr.forEach((item) => {
+      const chainId = item.network_infos?.chain_id;
+      chainsMap.current.set(chainId, item);
+      updateTestnetInfo(testnetArr, chainId, item);
+    });
 
     mainnetArr.sort((a, b) => {
       return a.network_infos.bridgeless ? -1 : 1;
@@ -185,14 +152,7 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [
-    networkId,
-    tokenChains,
-    chainInfos,
-    swapSupportRes,
-    pickField,
-    wooSwapEnabled,
-  ]);
+  }, [networkId, tokenChains, chainInfos, pickField]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -221,7 +181,7 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
     chains,
     {
       findByChainId,
-      error: swapSupportError || tokenError,
+      error: tokenError,
     },
   ];
 }
@@ -264,43 +224,6 @@ export function fillChainsInfo(
   });
 
   return _chains;
-}
-
-export function getSwapSupportChains(
-  data: Record<string, API.Chain>,
-  isBridgeless: (chainId: number) => boolean,
-  filter?: (chain: any) => boolean
-) {
-  const mainnet: API.Chain[] = [];
-  const testnet: API.Chain[] = [];
-
-  Object.keys(data).forEach((key) => {
-    const chain = data[key];
-
-    const item: any = mergeDeepRight(chain, {
-      name: key,
-      network_infos: {
-        bridgeless: isBridgeless(chain.network_infos.chain_id),
-        shortName: key,
-      },
-      token_infos: chain.token_infos.filter(
-        (token: API.TokenInfo) => !!token.swap_enable
-      ),
-    });
-
-    if (item.token_infos?.length === 0) return;
-
-    if (typeof filter === "function") {
-      if (!filter(item)) return;
-    }
-
-    if (item.network_infos.mainnet) {
-      mainnet.push(item);
-    } else {
-      testnet.push(item);
-    }
-  });
-  return [mainnet, testnet];
 }
 
 /** update network_infos by chain_info api(v1/public/chain_info) */

@@ -86,7 +86,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     depositFee,
   } = props;
 
-  const { errors, enableSwapDeposit, brokerName } =
+  const { errors, brokerName } =
     useContext(OrderlyAppContext);
   const { needSwap, needCrossSwap } = useContext(DepositContext);
 
@@ -357,7 +357,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
-          wooSwapEnabled={enableSwapDeposit ?? false}
         />
       </div>
       <QuantityInput
