@@ -50,8 +50,6 @@ const preview = {
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
-            // brokerId="woofi_pro"
-            // brokerName="WOOFi Pro"
             brokerId="orderly"
             brokerName="Orderly"
             // configStore={configStore}
@@ -61,7 +59,7 @@ const preview = {
                 img: "/orderly-logo.svg",
               },
               secondary: {
-                img: "/woo_fi_logo.svg",
+                img: "/orderly-logo-secondary.svg",
               },
             }}
             footerStatusBar={{
