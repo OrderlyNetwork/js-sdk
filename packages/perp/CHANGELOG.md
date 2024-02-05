@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 1.0.27-experimental.13
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@0.1.27-experimental.13
+  - @orderly.network/utils@0.0.79-experimental.13
+
 ## 1.0.27-experimental.12
 
 ### Patch Changes
