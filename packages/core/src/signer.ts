@@ -25,11 +25,11 @@ export type SignedMessagePayload = {
  * ```ts
  * const signer = new BaseSigner(keyStore);
  * const payload = await signer.sign({
- *  url: "https://api.orderly.io/get_account?address=0x1234567890&brokerId=woofi_dex",
+ *  url: "https://api.orderly.io/get_account?address=0x1234567890&brokerId=orderly",
  *   method: "GET",
  *   data: {
  *     address: "0x1234567890",
- *     brokerId: "woofi_pro",
+ *     brokerId: "orderly",
  *    },
  *  });
  *  ```

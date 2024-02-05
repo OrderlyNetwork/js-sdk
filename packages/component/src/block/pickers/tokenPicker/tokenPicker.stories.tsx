@@ -32,11 +32,6 @@ export const Default: Story = {
         decimals: 8,
       },
       {
-        address: "0x778098Cd30D96De369aF1cD726a3079fcF437B8f",
-        symbol: "WOO",
-        decimals: 18,
-      },
-      {
         address: "0xa2101FD320D06e0A744e4FE90ef8A20ECd027001",
         symbol: "USDT",
         decimals: 6,
