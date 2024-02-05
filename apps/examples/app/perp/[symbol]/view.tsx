@@ -118,7 +118,6 @@ const View = (props: Props) => {
         networkId={networkId}
         brokerId="orderly"
         brokerName="WOOFi Pro"
-        onlyTestnet={false}
         appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
         onChainChanged={onChainChanged}
       >

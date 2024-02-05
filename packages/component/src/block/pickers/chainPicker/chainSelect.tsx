@@ -82,7 +82,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // testChains: onlyTestnet ? chains.testnet : [],
       mainChains: chains,
       currentChainId: value?.id,
     });
