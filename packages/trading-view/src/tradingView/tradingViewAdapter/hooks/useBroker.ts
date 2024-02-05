@@ -1,5 +1,6 @@
 import {useRef, useEffect, useCallback} from 'react';
 import useCancelOrder from '../hooks/useCancelOrder';
+import useEditOrder from './useEditOrder';
 
 const useBroker = ({
                        closeConfirm
@@ -8,10 +9,12 @@ const useBroker = ({
     closeConfirm: any;
 },) => {
     const cancelOrder = useCancelOrder();
+    const editOrder = useEditOrder();
     const closePosition = useCallback((position: any) => closeConfirm && closeConfirm(position), [closeConfirm]);
     const broker = useRef({
         cancelOrder,
         closePosition,
+        editOrder,
     });
 
     useEffect(() => {

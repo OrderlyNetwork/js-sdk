@@ -103,8 +103,22 @@ export class OrderLineService{
             .setPrice(price)
             .onCancel(null, () => this.broker.cancelOrder(pendingOrder));
 
+        this.applyEditOnMove(orderLine, pendingOrder);
 
         return orderLine;
+    }
+
+    applyEditOnMove(orderLine: IOrderLineAdapter, pendingOrder: any) {
+            orderLine.onMove(() => {
+                this.broker
+                    .editOrder(pendingOrder, { type:'price', value: `${orderLine.getPrice()}` })
+                    .then((res: any) => {
+                        if (!res.success) {
+                            this.renderPendingOrder(pendingOrder); // go back to the original price
+                        }
+                    })
+                    .catch(() => this.renderPendingOrder(pendingOrder));
+            });
     }
 
 }
