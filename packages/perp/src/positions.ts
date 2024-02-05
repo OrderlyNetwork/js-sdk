@@ -16,7 +16,6 @@ export function notional(qty: number, mark_price: number): number {
  * Calculates the total notional value of all positions.
  * @param positions The array of positions.
  * @returns The total notional value of all positions.
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Notional
  */
 export function totalNotional(positions: API.Position[]): number {
   return positions.reduce((acc, cur) => {
@@ -99,7 +98,6 @@ export type LiqPriceInputs = {
  * Calculates the liquidation price of a single position.
  * @param inputs The inputs for calculating the liquidation price.
  * @returns The liquidation price of the position.
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
 export function liqPrice(inputs: LiqPriceInputs): number {
   const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
@@ -156,7 +154,6 @@ export type UnsettlementPnLInputs = {
  * Calculates the unrealized profit or loss of each position.
  * @param inputs The inputs for calculating the unrealized profit or loss.
  * @returns The unrealized profit or loss of each position.
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unsettlement-PNL-%5BinlineExtension%5D
  */
 export function unsettlementPnL(inputs: UnsettlementPnLInputs): number {
   const {
@@ -187,7 +184,6 @@ export type TotalUnsettlementPnLInputs = {
  * Calculates the total unrealized profit or loss of all positions.
  * @param positions The array of positions.
  * @returns The total unrealized profit or loss of all positions.
- * @link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unsettlement-PNL-%5BinlineExtension%5D
  */
 export function totalUnsettlementPnL(
   positions: (API.Position & {

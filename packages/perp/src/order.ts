@@ -4,7 +4,6 @@ import { notional } from "./positions";
 
 /**
  * Maximum price when placing an order
- * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-price
  */
 export function maxPrice(markprice: number, range: number) {
   return markprice * (1 + range);
@@ -12,7 +11,6 @@ export function maxPrice(markprice: number, range: number) {
 
 /**
  * Minimum price when placing an order
- * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Min-price
  */
 export function minPrice(markprice: number, range: number) {
   return markprice * (1 - range);
