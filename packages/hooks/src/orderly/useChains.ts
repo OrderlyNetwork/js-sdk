@@ -252,8 +252,6 @@ export function updateOrderlyChains(
         mainnet: true,
         explorer_base_url,
         est_txn_mins: null,
-        woofi_dex_cross_chain_router: "",
-        woofi_dex_depositor: "",
       };
     }
 

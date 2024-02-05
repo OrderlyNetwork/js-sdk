@@ -440,8 +440,6 @@ export const TestnetChains = [
       mainnet: false,
       explorer_base_url: "https://sepolia.arbiscan.io",
       est_txn_mins: null,
-      woofi_dex_cross_chain_router: "",
-      woofi_dex_depositor: "",
     },
     token_infos: [
       {
@@ -463,8 +461,6 @@ export const TestnetChains = [
   //     mainnet: false,
   //     explorer_base_url: "https://goerli.arbiscan.io/",
   //     est_txn_mins: null,
-  //     woofi_dex_cross_chain_router: "",
-  //     woofi_dex_depositor: "",
   //   },
   //   token_infos: [
   //     {
@@ -486,8 +482,6 @@ export const TestnetChains = [
   //     mainnet: false,
   //     explorer_base_url: "https://goerli-optimism.etherscan.io",
   //     est_txn_mins: null,
-  //     woofi_dex_cross_chain_router: "",
-  //     woofi_dex_depositor: "",
   //   },
   // },
 ];
