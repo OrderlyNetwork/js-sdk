@@ -101,6 +101,7 @@ const EditingState: FC<{
         return;
       }
 
+      setPrice((order.price?.toString()) ?? "Market");
       setEditting(false);
     };
 
@@ -168,6 +169,7 @@ const EditingState: FC<{
       .then(
         (result) => {
           closePopover();
+          setPrice(price);
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err) => {
@@ -208,7 +210,7 @@ const EditingState: FC<{
     >
       <div
         className={
-          "orderly-max-w-[100px] orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
+          "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
         }
         ref={boxRef}
       >
@@ -247,7 +249,7 @@ const EditingState: FC<{
                 />
               </TooltipTrigger>
               <TooltipContent
-                className="orderly-max-w-[270px] orderly-rounded-lg orderly-bg-base-400 orderly-p-3"
+                className="orderly-max-w-[270px] orderly-rounded-lg orderly-bg-base-400 orderly-p-3 orderly-z-50"
                 align="center"
               >
                 {hintInfo}
