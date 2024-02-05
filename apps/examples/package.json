@@ -7,7 +7,7 @@
     "build:project": "next build",
     "start": "next start",
     "lint": "next lint",
-    "less2css": "lessc ./app/theme/woo.theme.less ./app/theme/woo.theme.css"
+    "less2css": "lessc ./app/theme/custom.theme.less ./app/theme/custom.theme.css"
   },
   "dependencies": {
     "@orderly.network/core": "workspace:*",
