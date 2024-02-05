@@ -56,7 +56,6 @@ export type OrderlyAppContextState = {
   onSetChain: (chainId: number) => Promise<any>;
 
   errors: AppStateErrors;
-  enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
@@ -76,7 +75,6 @@ export interface OrderlyAppProviderProps {
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBar?: FooterStatusBarProps;
@@ -97,7 +95,6 @@ export const OrderlyAppProvider: FC<
     includeTestnet,
     contracts,
     toastLimitCount,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBar,
   } = props;
@@ -109,14 +106,12 @@ export const OrderlyAppProvider: FC<
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
       networkId={networkId}
-      enableSwapDeposit={enableSwapDeposit}
       contracts={contracts}
     >
       <InnerProvider
         appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
-        enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBar={footerStatusBar}
@@ -133,7 +128,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     appIcons: logos,
     brokerName,
     toastLimitCount = 1,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBar,
   } = props;
@@ -149,10 +143,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   } = useWalletConnector();
 
   const account = useAccountInstance();
-
-  // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
-
-  //
 
   const { networkId } = useContext<any>(OrderlyContext);
 
@@ -345,7 +335,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
-        enableSwapDeposit,
         onChainChanged,
         brokerName,
         footerStatusBar,

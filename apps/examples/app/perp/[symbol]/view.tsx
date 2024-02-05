@@ -30,7 +30,7 @@ const orderlyOverrides = {
   "scalesProperties.lineColor": "#2B2833",
 };
 
-const wooOverrides = {
+const customOverrides = {
   // "paneProperties.background": "#ffffff",
   // "mainSeriesProperties.style": 1,
   "paneProperties.backgroundType": "solid",
@@ -48,7 +48,7 @@ const wooOverrides = {
 const tradingViewConfig: any = {
   scriptSRC: "/tradingview/charting_library/charting_library.js",
   library_path: "/tradingview/charting_library/",
-  overrides: wooOverrides,
+  overrides: customOverrides,
   // overrides: orderlyOverrides,
 };
 
@@ -117,11 +117,9 @@ const View = (props: Props) => {
       <OrderlyAppProvider
         networkId={networkId}
         brokerId="orderly"
-        brokerName="WOOFi Pro"
-        onlyTestnet={false}
+        brokerName="Orderly"
         appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
         onChainChanged={onChainChanged}
-        enableSwapDeposit
       >
         <TradingPage
           symbol={props.symbol}

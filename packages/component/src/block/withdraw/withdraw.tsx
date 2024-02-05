@@ -22,7 +22,6 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   const networkId = useConfig("networkId");
 
   const [chains, { findByChainId }] = useChains(networkId as NetworkId, {
-    wooSwapEnabled: false,
     pick: "network_infos",
   });
 

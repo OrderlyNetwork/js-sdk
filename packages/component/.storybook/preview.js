@@ -50,11 +50,8 @@ const preview = {
         <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
-            // brokerId="woofi_pro"
-            // brokerName="WOOFi Pro"
             brokerId="orderly"
             brokerName="Orderly"
-            enableSwapDeposit={true}
             // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
@@ -62,7 +59,7 @@ const preview = {
                 img: "/orderly-logo.svg",
               },
               secondary: {
-                img: "/woo_fi_logo.svg",
+                img: "/orderly-logo-secondary.svg",
               },
             }}
             footerStatusBar={{
@@ -89,13 +86,10 @@ const preview = {
     },
     withThemeByDataAttribute({
       themes: {
-        // light: "light",
-        // dark: "dark",
-        "woo/dark": "",
-        "woo/light": "woo_light",
-        orderly: "orderly",
+        orderly: "",
+        custom: "custom",
       },
-      defaultTheme: "woo/dark",
+      defaultTheme: "orderly",
       attributeName: "data-o-theme",
     }),
   ],

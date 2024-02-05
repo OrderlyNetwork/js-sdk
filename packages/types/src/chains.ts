@@ -440,16 +440,12 @@ export const TestnetChains = [
       mainnet: false,
       explorer_base_url: "https://sepolia.arbiscan.io",
       est_txn_mins: null,
-      woofi_dex_cross_chain_router: "",
-      woofi_dex_depositor: "",
     },
     token_infos: [
       {
         symbol: "USDC",
         address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
         decimals: 6,
-        swap_enable: false,
-        woofi_dex_precision: 2,
       },
     ],
   },
@@ -464,16 +460,12 @@ export const TestnetChains = [
   //     mainnet: false,
   //     explorer_base_url: "https://goerli.arbiscan.io/",
   //     est_txn_mins: null,
-  //     woofi_dex_cross_chain_router: "",
-  //     woofi_dex_depositor: "",
   //   },
   //   token_infos: [
   //     {
   //       symbol: "USDC",
   //       address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
   //       decimals: 6,
-  //       swap_enable: false,
-  //       woofi_dex_precision: 2,
   //     },
   //   ],
   // },
@@ -488,8 +480,6 @@ export const TestnetChains = [
   //     mainnet: false,
   //     explorer_base_url: "https://goerli-optimism.etherscan.io",
   //     est_txn_mins: null,
-  //     woofi_dex_cross_chain_router: "",
-  //     woofi_dex_depositor: "",
   //   },
   // },
 ];

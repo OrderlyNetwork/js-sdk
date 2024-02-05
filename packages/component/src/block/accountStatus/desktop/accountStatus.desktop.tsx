@@ -1,11 +1,4 @@
-import {
-  FC,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { FC, ReactNode, useContext, useMemo, useState } from "react";
 import { AccountStatusProps } from "../accountStatusBar";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Chains } from "../sections/desktop/chains.desktop";
@@ -14,9 +7,7 @@ import {
   useAccount,
   useChains,
   useWalletConnector,
-  OrderlyContext,
 } from "@orderly.network/hooks";
-import { toast } from "@/toast";
 import { OrderlyAppContext } from "@/provider";
 import { DesktopWalletConnnectButton } from "./walletConnectButton.desktop";
 import { isTestnet } from "@orderly.network/utils";
@@ -42,10 +33,8 @@ export const AccountStatus: FC<
   const [open, setOpen] = useState(false);
   const { onWalletDisconnect } = useContext(OrderlyAppContext);
 
-  const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
   const { connectedChain } = useWalletConnector();
   const [allChains, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

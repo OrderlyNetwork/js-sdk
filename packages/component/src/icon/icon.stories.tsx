@@ -14,7 +14,7 @@ type Story = StoryObj<typeof NetworkImage>;
 
 export const Default: Story = {
   args: {
-    name: "WOO",
+    name: "NetworkImage",
     type: "token",
   },
 };
@@ -24,19 +24,16 @@ export const Coins: Story = {
     return (
       <div className="orderly-flex orderly-flex-col orderly-gap-3">
         <div className="orderly-flex orderly-gap-3">
-          <NetworkImage name="WOO" type={"token"} size={"small"} />
           <NetworkImage name="BTC" type={"token"} size={"small"} />
           <NetworkImage name="ETH" type={"token"} size={"small"} />
           <NetworkImage name="NEAR" type={"token"} size={"small"} />
         </div>
         <div className="orderly-flex orderly-gap-3">
-          <NetworkImage name="WOO" type={"token"} />
           <NetworkImage name="BTC" type={"token"} />
           <NetworkImage name="ETH" type={"token"} />
           <NetworkImage name="NEAR" type={"token"} />
         </div>
         <div className="orderly-flex orderly-gap-3">
-          <NetworkImage name="WOO" type={"token"} size={"large"} />
           <NetworkImage name="BTC" type={"token"} size={"large"} />
           <NetworkImage name="ETH" type={"token"} size={"large"} />
           <NetworkImage name="NEAR" type={"token"} size={"large"} />

@@ -4,9 +4,6 @@ import { AccountStatusBar } from ".";
 import * as React from "react";
 import { useAccount } from "@orderly.network/hooks";
 
-import { useEffect } from "react";
-
-import { WooKeyStore } from "../../stories/mock/woo.keystore";
 
 const meta: Meta<typeof AccountStatusBar> = {
   //   tags: ["autodocs"],

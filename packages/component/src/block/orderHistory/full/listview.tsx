@@ -28,7 +28,52 @@ interface Props {
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
-    return columnsBasis();
+    const cols = columnsBasis();
+
+    //
+
+    cols[2] = {
+      title: "Side",
+      className: "orderly-h-[48px]",
+      width: 100,
+      dataIndex: "side",
+      render: (value: string, record: any) => (
+        <span
+          className={cx(
+            "orderly-font-semibold",
+            {
+              "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.BUY,
+              "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.SELL,
+            }
+          )}
+        >
+          {upperCaseFirstLetter(value)}
+        </span>
+      ),
+    };
+
+    cols[3] = {
+      title: "Filled / Quantity",
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "quantity",
+      width: 200,
+      render: (value: string, record: any) => {
+        return (
+          <span
+            className={cx(
+              "orderly-font-semibold",
+              {
+                "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.BUY,
+                "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.SELL,
+              }
+              
+            )}
+          >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
+        );
+      },
+    };
+
+    return cols;
   }, []);
   return (
     <EndReachedBox

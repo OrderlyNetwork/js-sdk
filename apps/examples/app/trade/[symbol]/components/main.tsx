@@ -23,7 +23,7 @@ export const TradingMainPage = () => {
         configStore={configStore}
         contractManager={contractManager}
         keyStore={new LocalStorageStore("testnet")}
-        logoUrl="/woo_fi_logo.svg"
+        logoUrl="/orderly_logo.svg"
         getWalletAdapter={(options) => new EtherAdapter(options)}
       >
         <TradingPage

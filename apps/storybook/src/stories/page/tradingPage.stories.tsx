@@ -32,8 +32,8 @@ export const Default: Story = {
   },
   args: {
     tradingViewConfig: {
-      scriptSRC: "/woo/tradingview/charting_library/charting_library.js",
-      library_path: "/woo/tradingview/charting_library/",
+      scriptSRC: "/tradingview/charting_library/charting_library.js",
+      library_path: "/tradingview/charting_library/",
     },
   },
 };

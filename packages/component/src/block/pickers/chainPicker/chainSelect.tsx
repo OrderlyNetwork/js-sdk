@@ -36,7 +36,6 @@ export interface ChainSelectProps {
   // onChainIdChange?: (chainId: number) => void;
   value: CurrentChain | null;
   settingChain?: boolean;
-  wooSwapEnabled?: boolean;
   filter?: (chain: API.Chain) => boolean;
 }
 
@@ -44,9 +43,8 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const [open, setOpen] = useState(false);
 
   const isTable = useMediaQuery(MEDIA_TABLET);
-  const { wooSwapEnabled = true, disabled } = props;
+  const { disabled } = props;
   const [allChains, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
@@ -84,7 +82,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // testChains: onlyTestnet ? chains.testnet : [],
       mainChains: chains,
       currentChainId: value?.id,
     });

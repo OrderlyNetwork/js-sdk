@@ -223,8 +223,6 @@ export declare namespace API {
     mainnet: boolean;
     est_txn_mins: number | null;
     explorer_base_url: string;
-    woofi_dex_cross_chain_router?: string;
-    woofi_dex_depositor?: string;
     bridgeless?: boolean;
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
@@ -234,8 +232,7 @@ export declare namespace API {
     address: string;
     symbol: string;
     decimals: number;
-    swap_enable: boolean;
-    woofi_dex_precision: number;
+    // precision: number;
   }
 
   export interface Chain {

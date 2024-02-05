@@ -1,4 +1,4 @@
-import { FC, useContext, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { DepositForm } from "./depositForm";
 import {
   useDeposit,
@@ -6,9 +6,7 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
-import { OrderlyAppContext } from "@/provider";
 import { DepositProvider } from "./DepositProvider";
-import { useNeedSwapAndCross } from "./hooks/useNeedSwapAndCross";
 import { praseChainIdToNumber } from "@orderly.network/utils";
 
 export enum DepositStatus {
@@ -23,9 +21,7 @@ export interface DepositProps {
 }
 
 export const Deposit: FC<DepositProps> = (props) => {
-  const { enableSwapDeposit } = useContext(OrderlyAppContext);
   const [chains, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
   });
 
@@ -66,19 +62,10 @@ export const Deposit: FC<DepositProps> = (props) => {
     decimals: token?.decimals,
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
-    crossChainRouteAddress:
-      currentChain?.info?.network_infos?.woofi_dex_cross_chain_router,
-    depositorAddress: currentChain?.info?.network_infos?.woofi_dex_depositor,
   });
 
-  const { needSwap, needCrossSwap } = useNeedSwapAndCross(
-    token?.symbol,
-    currentChain?.id,
-    dst?.chainId
-  );
-
   return (
-    <DepositProvider needSwap={needSwap} needCrossSwap={needCrossSwap}>
+    <DepositProvider>
       <DepositForm
         dst={dst}
         allowance={allowance}

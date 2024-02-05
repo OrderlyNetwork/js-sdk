@@ -6,7 +6,6 @@ import { Divider } from "@/divider";
 import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Summary } from "@/block/deposit/sections/summary";
 import { NetworkImage } from "@/icon/networkImage";
-import { useLocalStorage } from "@orderly.network/hooks";
 
 import { MoveDownIcon } from "@/icon";
 import { ActionButton } from "./sections/actionButton";
@@ -15,14 +14,9 @@ import { Decimal, int2hex } from "@orderly.network/utils";
 
 import { toast } from "@/toast";
 import { CurrentChain, type API } from "@orderly.network/types";
-import { modal } from "@/modal";
-import { SwapDialog } from "../swap/swapDialog";
-import { SwapMode } from "../swap/sections/misc";
 import { NumberReg } from "@/utils/num";
 import { OrderlyAppContext } from "@/provider";
 import { Logo } from "@/logo";
-import { DepositContext } from "./DepositProvider";
-import { useSwapEnquiry } from "./hooks/useSwapEnquiry";
 
 export type DST = {
   symbol: string;
@@ -86,92 +80,17 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     depositFee,
   } = props;
 
-  const { errors, enableSwapDeposit, brokerName } =
-    useContext(OrderlyAppContext);
-  const { needSwap, needCrossSwap } = useContext(DepositContext);
+  const { errors, brokerName } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
 
   const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
-  const [slippage, setSlippage] = useLocalStorage("ORDERLY_SLIPPAGE", 1);
-
-  const {
-    enquiry,
-    transactionInfo,
-    amount,
-    querying,
-    warningMessage,
-    cleanTransactionInfo,
-  } = useSwapEnquiry({
-    quantity,
-    dst,
-    queryParams: {
-      network: dst.network,
-      srcToken: props.token?.address,
-      srcNetwork: chain?.info.network_infos?.shortName,
-      dstToken: dst.address,
-      crossChainRouteAddress:
-        chain?.info?.network_infos?.woofi_dex_cross_chain_router,
-      amount: new Decimal(quantity || 0)
-        .mul(10 ** (props.token?.decimals || 0))
-        .toString(),
-      slippage,
-    },
-  });
 
   const cleanData = () => {
-    cleanTransactionInfo();
     setQuantity("");
   };
-
-  const onSwapDeposit = useCallback(() => {
-    enquiry()
-      .then((transaction) => {
-        const amountValue = needCrossSwap
-          ? transaction.route_infos?.dst.amounts[1]
-          : transaction.route_infos?.amounts[1];
-
-        // @ts-ignore
-        return modal.show(SwapDialog, {
-          mode: needCrossSwap ? SwapMode.Cross : SwapMode.Single,
-          src: {
-            chain: chain?.id,
-            token: props.token!.symbol,
-            displayDecimals: props.token!.woofi_dex_precision,
-            amount: quantity,
-            decimals: props.token!.decimals,
-          },
-          dst: {
-            chain: dst.chainId,
-            token: dst.symbol,
-            displayDecimals: 2,
-            amount: new Decimal(amountValue)
-              .div(Math.pow(10, dst.decimals!))
-              .toString(),
-            decimals: dst.decimals,
-          },
-          chain: chain?.info?.network_infos,
-          nativeToken: chain?.info.nativeToken,
-          depositFee,
-          transactionData: transaction,
-          slippage,
-          brokerName,
-        });
-      })
-      .then((isSuccss) => {
-        if (isSuccss) {
-          cleanData();
-        }
-      })
-      .catch((error) => {
-        // toast.error(error?.message || "Error");
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-  }, [quantity, needCrossSwap, dst, chain, slippage, depositFee, brokerName]);
 
   const onDirectDeposit = useCallback(() => {
     props
@@ -209,20 +128,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     if (submitting) return;
 
     setSubmitting(true);
-
-    if (needSwap || needCrossSwap) {
-      onSwapDeposit();
-    } else {
-      onDirectDeposit();
-    }
-  }, [
-    quantity,
-    submitting,
-    needSwap,
-    needCrossSwap,
-    onDirectDeposit,
-    onSwapDeposit,
-  ]);
+    onDirectDeposit();
+  }, [quantity, submitting, onDirectDeposit]);
 
   const onApprove = useCallback(async () => {
     return props.approve(quantity);
@@ -284,13 +191,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           token: value.network_infos?.currency_symbol,
           // name: chain.network_infos?.name,
           label: value.network_infos?.name,
-          // vaultAddress: chain.network_infos?.woofi_dex_cross_chain_router,
         })
         .then(() => {
           // switch success，set tokens list
-          setTokens(
-            value?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
-          );
+          setTokens(value?.token_infos ?? []);
           toast.success("Network switched");
           cleanData();
         })
@@ -357,20 +261,13 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
-          wooSwapEnabled={enableSwapDeposit ?? false}
         />
       </div>
       <QuantityInput
         tokens={tokens}
         token={props.token}
         quantity={quantity}
-        markPrice={
-          needCrossSwap || needSwap
-            ? isNativeToken
-              ? transactionInfo.markPrices.native_token
-              : transactionInfo.markPrices.from_token
-            : 1
-        }
+        markPrice={1}
         maxAmount={Number(maxAmount)}
         onValueChange={onValueChange}
         status={inputStatus}
@@ -395,26 +292,18 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       <div className="orderly-py-2">
         <TokenQtyInput
           token={dst}
-          amount={amount}
-          loading={querying}
+          amount={quantity}
+          loading={false}
           readOnly
-          fee={Number(transactionInfo.fee)}
+          fee={0}
         />
       </div>
       <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-3xs orderly-text-tertiary">
         <Summary
-          isNativeToken={isNativeToken}
           nativeToken={chain?.info?.nativeToken}
           src={props.token}
           dst={dst}
-          price={transactionInfo.price}
-          fee={transactionInfo.fee}
-          markPrices={transactionInfo.markPrices}
-          swapFee={transactionInfo.swapFee}
-          bridgeFee={transactionInfo.bridgeFee}
-          destinationGasFee={transactionInfo.dstGasFee}
-          slippage={slippage}
-          onSlippageChange={setSlippage}
+          price={1}
           depositFee={depositFee}
         />
       </div>
@@ -430,13 +319,13 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         disabled={
           !quantity || inputStatus === "error" || props.depositFeeRevalidating!
         }
-        loading={submitting || props.depositFeeRevalidating! || querying}
-        submitting={submitting || props.depositFeeRevalidating! || querying}
+        loading={submitting || props.depositFeeRevalidating!}
+        submitting={submitting || props.depositFeeRevalidating!}
         switchChain={switchChain}
         quantity={quantity}
         onApprove={onApprove}
         maxQuantity={maxAmount}
-        warningMessage={warningMessage}
+        warningMessage={""}
         onChainChange={onChainChange}
       />
     </div>

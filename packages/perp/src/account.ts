@@ -24,7 +24,6 @@ export type TotalValueInputs = {
 };
 /**
  * 用戶總資產價值 (USDC計價)，包含無法作為保證金的資產
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Value}
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
@@ -38,8 +37,6 @@ export function totalValue(inputs: TotalValueInputs): Decimal {
 
 /**
  * 用戶帳戶當前可用保證金的價值總和 (USDC計價)
- *
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Free-collateral}
  */
 export type FreeCollateralInputs = {
   // 总保证金
@@ -70,7 +67,6 @@ export type TotalCollateralValueInputs = {
 };
 /**
  * 计算总保证金
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D}
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
   const { USDCHolding, nonUSDCHolding } = inputs;
@@ -461,7 +457,6 @@ export type MaxQtyInputs = {
 
 /**
  * 最大可下单数量
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-Order-QTY}
  */
 export function maxQty(
   side: OrderSide,
@@ -600,7 +595,7 @@ export type TotalMarginRatioInputs = {
   positions: API.Position[];
 };
 /**
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Margin-Ratio}
+ * total margin ratio
  */
 export function totalMarginRatio(
   inputs: TotalMarginRatioInputs,
@@ -633,7 +628,6 @@ export type TotalUnrealizedROIInputs = {
 
 /**
  * totalUnrealizedROI
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unrealized-ROI}
  */
 export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
   const { totalUnrealizedPnL, totalValue } = inputs;
@@ -644,7 +638,7 @@ export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
 }
 
 /**
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Current-account-leverage}
+ * current account leverage
  */
 export function currentLeverage(totalMarginRatio: number) {
   if (totalMarginRatio === 0) {

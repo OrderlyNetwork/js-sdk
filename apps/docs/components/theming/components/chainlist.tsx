@@ -4,7 +4,6 @@ import { ChainListView } from "@orderly.network/react";
 export const ChainListComponent = () => {
   const [chains] = useChains(undefined, {
     pick: "network_infos",
-    wooSwapEnabled: true,
   });
   return (
     <ChainListView

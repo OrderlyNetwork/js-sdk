@@ -100,7 +100,7 @@ export class Datafeed extends AbstractDatafeed {
                 ch: t.change,
                 chp: t.perChange / 100,
                 description: '',
-                exchange: 'WOO X',
+                exchange: 'Orderly',
                 hight_price: t.high,
                 low_price: t.low,
                 lp: t.lastPrice,

@@ -1,17 +1,7 @@
-import { useContext, useMemo } from "react";
-import { OrderlyContext, useQuery, useSWR } from ".";
+import { useMemo } from "react";
+import { useQuery } from ".";
 
 export const usePreLoadData = () => {
-  const { configStore, enableSwapDeposit } = useContext(OrderlyContext);
-
-  // const { error: swapSupportError, data: swapSupportData } = useSWR(
-  //   `${configStore.get("swapSupportApiUrl")}/swap_support`,
-  //   (url) => fetch(url).then((res) => res.json()),
-  //   {
-  //     revalidateOnFocus: false,
-  //   }
-  // );
-
   const { error: tokenError, data: tokenData } = useQuery(
     "https://api-evm.orderly.org/v1/public/token",
     {
