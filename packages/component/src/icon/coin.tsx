@@ -26,7 +26,7 @@ export const Coin: FC<CoinProps> = (props) => {
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
-    img.src = `https://oss.woo.network/static/symbol_logo/${props.name.toUpperCase()}.png`;
+    img.src = `https://oss.orderly.network/static/symbol_logo/${props.name.toUpperCase()}.png`;
   }, []);
 
   const icon = useMemo(() => {
