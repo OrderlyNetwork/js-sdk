@@ -191,13 +191,10 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           token: value.network_infos?.currency_symbol,
           // name: chain.network_infos?.name,
           label: value.network_infos?.name,
-          // vaultAddress: chain.network_infos?.woofi_dex_cross_chain_router,
         })
         .then(() => {
           // switch success，set tokens list
-          setTokens(
-            value?.token_infos.filter((chain) => !!chain.swap_enable) ?? []
-          );
+          setTokens(value?.token_infos ?? []);
           toast.success("Network switched");
           cleanData();
         })

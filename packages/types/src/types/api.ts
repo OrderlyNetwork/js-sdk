@@ -234,7 +234,6 @@ export declare namespace API {
     address: string;
     symbol: string;
     decimals: number;
-    swap_enable: boolean;
     woofi_dex_precision: number;
   }
 
