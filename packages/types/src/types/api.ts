@@ -232,7 +232,7 @@ export declare namespace API {
     address: string;
     symbol: string;
     decimals: number;
-    woofi_dex_precision: number;
+    // precision: number;
   }
 
   export interface Chain {

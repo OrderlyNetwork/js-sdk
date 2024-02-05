@@ -39,10 +39,10 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       new Decimal(props.quantity || 0)
         .mul(props.markPrice)
         // .todp(props.decimals)
-        .todp(Math.abs((props.token?.woofi_dex_precision ?? 2) - 5))
+        .todp(Math.abs(2 - 5))
         .toString()
     );
-  }, [props.quantity, props.token?.woofi_dex_precision, props.markPrice]);
+  }, [props.quantity, props.markPrice]);
 
   return (
     <>
@@ -89,7 +89,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               onClick={(event) => {
                 props?.onValueChange?.({
                   value: parseNumber(props.maxAmount ?? 0, {
-                    precision: props.token?.woofi_dex_precision,
+                    precision: 2,
                   }),
                   token: props.token?.symbol ?? "",
                 });
@@ -119,7 +119,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           <div className="orderly-flex orderly-items-center orderly-space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
-                precision: props.token?.woofi_dex_precision,
+                precision: 2,
                 rule: "price",
               }) ?? "-"
             } ${props.token?.symbol ?? ""}`}</span>

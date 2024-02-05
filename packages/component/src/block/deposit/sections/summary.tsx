@@ -34,7 +34,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     return `Fee ≈ $ ${totalFee || 0} ${
       Number(depositFee)
         ? `(${new Decimal(dstGasFee).toFixed(
-            feeDecimalsOffset(nativeToken?.woofi_dex_precision ?? 2),
+            feeDecimalsOffset(2),
             Decimal.ROUND_UP
           )} ETH)`
         : ""
@@ -55,9 +55,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
             <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
               dstGasFee.toString(),
               {
-                precision: feeDecimalsOffset(
-                  nativeToken?.woofi_dex_precision ?? 2
-                ),
+                precision: feeDecimalsOffset(2),
                 truncate: "round",
               }
             )} ${nativeToken?.symbol}`}</span>
