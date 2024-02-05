@@ -19,9 +19,6 @@ export type useDepositOptions = {
   // from address
   address?: string;
   decimals?: number;
-  // vaultAddress?: string;
-  crossChainRouteAddress?: string;
-  depositorAddress?: string;
   networkId?: NetworkId;
   srcChainId?: number;
   srcToken?: string;
@@ -179,16 +176,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     setAllowance(() => allowance);
   };
 
-  const getVaultAddress = useCallback((): string | undefined => {
-    if (dst.chainId !== options?.srcChainId) {
-      return options?.crossChainRouteAddress;
-    } else {
-      if (dst.symbol !== options?.srcToken) {
-        return options?.depositorAddress;
-      }
-    }
-  }, [options, dst]);
-
   const queryBalance = useDebouncedCallback(
     (tokenAddress?: string, decimals?: number) => {
       fetchBalance(options?.address, options?.decimals).finally(() => {
@@ -215,12 +202,10 @@ export const useDeposit = (options?: useDepositOptions) => {
     queryBalance(options?.address, options?.decimals);
 
     if (dst.chainId !== options?.srcChainId) {
-      // getAllowance(options?.address, options?.crossChainRouteAddress);
-      queryAllowance(options?.address, options?.crossChainRouteAddress);
+      queryAllowance(options?.address);
     } else {
       if (dst.symbol !== options?.srcToken) {
-        // getAllowance(options?.address, options?.depositorAddress);
-        queryAllowance(options?.address, options?.depositorAddress);
+        queryAllowance(options?.address);
       } else {
         getAllowanceByDefaultAddress(options?.address);
       }
@@ -228,8 +213,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   }, [
     state.status,
     options?.address,
-    options?.crossChainRouteAddress,
-    options?.depositorAddress,
     options?.srcChainId,
     options?.srcToken,
     account.address,
@@ -242,9 +225,8 @@ export const useDeposit = (options?: useDepositOptions) => {
       if (!options?.address) {
         throw new Error("address is required");
       }
-      const vaultAddress = getVaultAddress();
       return account.assetsManager
-        .approve(options.address, amount, vaultAddress)
+        .approve(options.address, amount)
         .then((result: any) => {
           if (typeof amount !== "undefined") {
             setAllowance((value) =>

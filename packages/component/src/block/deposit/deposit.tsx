@@ -62,9 +62,6 @@ export const Deposit: FC<DepositProps> = (props) => {
     decimals: token?.decimals,
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
-    crossChainRouteAddress:
-      currentChain?.info?.network_infos?.woofi_dex_cross_chain_router,
-    depositorAddress: currentChain?.info?.network_infos?.woofi_dex_depositor,
   });
 
   return (
