@@ -16,7 +16,7 @@ interface TokenSelectProps {
 }
 
 export const TokenSelect: FC<TokenSelectProps> = (props) => {
-  const { tokens, disabled } = props;
+  const { tokens } = props;
   const [open, setOpen] = useState<boolean>(false);
 
   const isMobile = useMediaQuery(MEDIA_TABLET);
@@ -32,10 +32,12 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
     } as API.TokenInfo;
   }, [props.token]);
 
+  const disabled = (tokens?.length ?? 0) < 2 || props.disabled;
+
   const trigger = useMemo(() => {
     return (
       <button
-        disabled={(tokens?.length ?? 0) < 2 || disabled}
+        disabled={disabled}
         className={
           "orderly-token-select orderly-flex orderly-items-center orderly-gap-2 orderly-text-3xs orderly-text-base-contrast-80 orderly-mr-2 desktop:orderly-text-xs"
         }
@@ -72,6 +74,7 @@ export const TokenSelect: FC<TokenSelectProps> = (props) => {
     tokens: props.tokens,
     fetchBalance: props.fetchBalance,
     onTokenChange: props.onTokenChange,
+    disabled
   };
 
   if (isMobile) {

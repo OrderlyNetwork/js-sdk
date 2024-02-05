@@ -94,7 +94,7 @@ export const Listview: FC<Props> = (props) => {
           title: "Filled / Quantity",
           className: "orderly-h-[48px]",
           dataIndex: "quantity",
-          width: 180,
+          width: 120,
           onSort: props.status === OrderStatus.INCOMPLETE,
           render: (value: string, record: any) => (
             <OrderQuantity order={record} />
@@ -134,7 +134,7 @@ export const Listview: FC<Props> = (props) => {
           title: "Trigger",
           className: "orderly-h-[48px]",
           dataIndex: "trigger_price",
-          width: 150,
+          width: 120,
           // onSort: props.status === OrderStatus.INCOMPLETE,
           render: (value: string, record: any) => (
             <TriggerPrice order={record} />

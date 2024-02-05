@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -13,6 +14,7 @@ import { OrderSide } from "@orderly.network/types";
 import { useSymbolContext } from "@/provider/symbolProvider";
 
 import { useOrderEntry } from "@orderly.network/hooks";
+import { positions } from "@orderly.network/perp";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -45,6 +47,10 @@ export const PositionsRowProvider: FC<
   const [quantity, setQuantity] = useState<string>(
     Math.abs(props.position.position_qty).toString()
   );
+
+  useEffect(() => {
+    setQuantity(Math.abs(props.position.position_qty).toString());
+  }, [props.position.position_qty]);
 
   const [price, setPrice] = useState<string>("");
   const [side, setSide] = useState<OrderSide>(
