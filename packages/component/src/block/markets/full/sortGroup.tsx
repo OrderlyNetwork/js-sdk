@@ -3,13 +3,14 @@ import { SortItem } from "../sections/sortItem";
 import { useSort } from "../useSort";
 import { cn } from "@/utils";
 import { SortCondition, SortKey } from "../shared/types";
+import { OrderlyIcon } from "@/icon";
 
 interface Props {
   value?: SortKey;
   onChange: (values: SortCondition) => void;
   hasSuffix: boolean;
   readLastSortCondition?: boolean;
-} 
+}
 
 export const SortGroup: FC<Props> = (props) => {
   //   const onClick = (value: SortKey) => {
@@ -28,11 +29,12 @@ export const SortGroup: FC<Props> = (props) => {
   }, [sortKey, direction]);
 
   return (
-    <div className={
-      cn("orderly-grid orderly-grid-cols-5 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2",
-      props.hasSuffix && "orderly-grid-cols-6"
-      )
-    }>
+    <div
+      className={cn(
+        "orderly-grid orderly-grid-cols-5 orderly-text-3xs orderly-text-base-contrast-54 orderly-py-3 orderly-px-5 orderly-mt-2",
+        props.hasSuffix && "orderly-grid-cols-6"
+      )}
+    >
       <div className="orderly-col-span-2">Instrument</div>
       <div className="orderly-col-span-1 orderly-flex orderly-justify-end">
         <SortItem
@@ -50,7 +52,8 @@ export const SortGroup: FC<Props> = (props) => {
           currentValue={currentValue}
         />
       </div>
-      <div className="orderly-col-span-1 orderly-flex orderly-justify-end">
+      <div className="orderly-col-span-1 orderly-flex orderly-justify-end orderly-items-center">
+        <OrderlyIcon size={14} className="orderly-mr-[6px]" />
         <SortItem
           label={"Volume"}
           value={"vol"}

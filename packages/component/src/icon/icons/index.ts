@@ -20,3 +20,4 @@ export { DisconnectIcon } from "./disconnect";
 export { ArrowDownToLineIcon } from "./arrowDownToLine";
 export { ArrowRightIcon } from "./arrowRight";
 export { ArrowDownIcon } from "./arrowDown";
+export { OrderlyIcon } from "./orderly";

@@ -1,3 +1,4 @@
+import { OrderlyIcon } from "@/icon";
 import { SortCondition, SortDirection, type SortKey } from "../shared/types";
 import { useSort } from "../useSort";
 import { SortItem } from "./sortItem";
@@ -25,6 +26,7 @@ export const SortGroup: FC<Props> = (props) => {
       <div className="orderly-flex orderly-items-center orderly-gap-1">
         <div>Instrument</div>
         <div>/</div>
+        <OrderlyIcon size={14} className="orderly-mx-[2px]" />
         <SortItem
           label={"Vol."}
           value={"vol"}
