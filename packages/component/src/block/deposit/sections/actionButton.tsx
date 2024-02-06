@@ -59,11 +59,15 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (Array.isArray(props.chains)) return props.chains;
 
     if (isTestnet(props.chain?.id!)) {
-      return props.chains?.testnet ?? [];
+      return (
+        (chainNotSupport ? props.chains?.mainnet : props.chains?.testnet) ?? []
+      );
     }
 
-    return props.chains?.mainnet;
-  }, [props.chains, props.chain]);
+    return (
+      (chainNotSupport ? props.chains?.testnet : props.chains?.mainnet) ?? []
+    );
+  }, [props.chains, props.chain, chainNotSupport]);
 
   const [_, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
