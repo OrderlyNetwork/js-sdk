@@ -14,7 +14,6 @@ import { OrderSide } from "@orderly.network/types";
 import { useSymbolContext } from "@/provider/symbolProvider";
 
 import { useOrderEntry } from "@orderly.network/hooks";
-import { positions } from "@orderly.network/perp";
 
 export interface PositionsRowContextState {
   quantity: string;
