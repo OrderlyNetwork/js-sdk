@@ -42,13 +42,18 @@ function Link(props: {
         </span>
     )
 }
-
+const upColor = "#00B59F";
+const downColor = "#FF67C2";
+const chartBG = '#16141c';
+const pnlUpColor = '#27DEC8';
+const pnlDownColor = '#FFA5C0';
+const textColor = '#FFFFFF';
+const qtyTextColor = '#F4F7F9';
+const font = 'regular 11px DIN2014';
 
 const getOveriides = () => {
-    const upColor = "#00B59F";
-    const downColor = "#FF67C2";
     const overrides = {
-        "paneProperties.background": "#16141c",
+        "paneProperties.background": chartBG,
         // "paneProperties.background": "#ffff00",
         // "mainSeriesProperties.style": 1,
         "paneProperties.backgroundType": "solid",
@@ -98,7 +103,17 @@ export function TradingView({
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
-    const broker = useBroker({closeConfirm: closePositionConfirmCallback});
+    const colorConfig = {
+        upColor,
+        downColor,
+        chartBG,
+        pnlUpColor,
+        pnlDownColor,
+        textColor,
+        qtyTextColor,
+        font,
+    }
+    const broker = useBroker({closeConfirm: closePositionConfirmCallback,colorConfig});
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
 
     useEffect(() => {

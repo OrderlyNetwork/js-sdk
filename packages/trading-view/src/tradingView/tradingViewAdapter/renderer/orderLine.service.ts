@@ -1,6 +1,5 @@
 import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
-import {CHART_GREEN, CHART_RED, PNL_BORDER_GREEN, PNL_BORDER_RED, CHART_BG, TEXT_COLOR2, TEXT_COLOR, BORDER_GREEN, BORDER_RED, FONT} from '../color';
 import { Decimal} from "@orderly.network/utils";
 import { SideType } from "../type";
 
@@ -58,16 +57,17 @@ export class OrderLineService{
         }
     }
     getBaseOrderLine() {
+        const colorConfig = this.broker.colorConfig;
         return this.instance
             .activeChart()
             .createOrderLine()
             .setCancelTooltip('Cancel Order')
-            .setQuantityTextColor(TEXT_COLOR2)
-            .setQuantityBackgroundColor(CHART_BG)
-            .setCancelButtonBackgroundColor(CHART_BG)
+            .setQuantityTextColor(colorConfig.qtyTextColor)
+            .setQuantityBackgroundColor(colorConfig.chartBG)
+            .setCancelButtonBackgroundColor(colorConfig.chartBG)
             .setLineStyle(1)
-            .setBodyFont(FONT)
-            .setQuantityFont(FONT);
+            .setBodyFont(colorConfig.font)
+            .setQuantityFont(colorConfig.font);
     }
 
     static getText(pendingOrder:any) {
@@ -81,13 +81,14 @@ export class OrderLineService{
             return null;
         }
 
+        const colorConfig = this.broker.colorConfig;
         const orderLine = this.pendingOrderLineMap.get(orderId) ?? this.getBaseOrderLine();
-        const color = pendingOrder.side === SideType.BUY ? CHART_GREEN : CHART_RED;
-        const borderColor = pendingOrder.side === SideType.BUY ? BORDER_GREEN : BORDER_RED;
+        const color = pendingOrder.side === SideType.BUY ? colorConfig.upColor:colorConfig.downColor;
+        const borderColor = pendingOrder.side === SideType.BUY ?colorConfig.pnlUpColor:colorConfig.pnlDownColor;
         const price = pendingOrder.price;
         const lineLength = 100;
         const quantity = new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString();
-        const textColor = TEXT_COLOR;
+        const textColor =colorConfig.textColor;
 
         orderLine
             .setText(text)

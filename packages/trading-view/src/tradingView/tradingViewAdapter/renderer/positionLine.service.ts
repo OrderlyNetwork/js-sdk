@@ -1,8 +1,7 @@
 import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
 import {ChartPosition} from '../type';
-import {CHART_GREEN, CHART_RED, PNL_BORDER_GREEN, PNL_BORDER_RED, CHART_BG, TEXT_COLOR2, TEXT_COLOR, FONT} from '../color';
-import { Decimal, int2hex } from "@orderly.network/utils";
+import { Decimal} from "@orderly.network/utils";
 
 
 export class PositionLineService{
@@ -47,12 +46,12 @@ export class PositionLineService{
             .activeChart()
             .createOrderLine()
             .setCancelTooltip('Close Position')
-            .setQuantityBackgroundColor(CHART_BG)
-            .setCancelButtonBackgroundColor(CHART_BG)
-            .setBodyTextColor(TEXT_COLOR)
-            .setQuantityTextColor(TEXT_COLOR2)
+            .setQuantityBackgroundColor(this.broker.colorConfig.chartBG)
+            .setCancelButtonBackgroundColor(this.broker.colorConfig.chartBG)
+            .setBodyTextColor(this.broker.colorConfig.textColor)
+            .setQuantityTextColor(this.broker.colorConfig.qtyTextColor)
             // .setBodyFont(FONT)
-            .setQuantityFont(FONT)
+            .setQuantityFont(this.broker.colorConfig.font)
             .setLineLength(50)
             .setLineStyle(1);
     }
@@ -62,7 +61,7 @@ export class PositionLineService{
     }
 
     static getPositionPnL(unrealPnl: number, decimal: number) {
-        return `PnL ${new Decimal(unrealPnl).todp(decimal, Decimal.ROUND_FLOOR)}`;
+        return `PnL ${new Decimal(unrealPnl).toFixed(decimal, Decimal.ROUND_FLOOR)}`;
     }
 
     removePositions() {
@@ -73,12 +72,13 @@ export class PositionLineService{
     }
 
     drawPositionLine(position: ChartPosition, idx: number) {
+        const colorConfig = this.broker.colorConfig;
         const isPositiveUnrealPnl = position.unrealPnl >= 0;
         const isPositiveBalance = position.balance >= 0;
 
-        const pnlColor = isPositiveUnrealPnl ? CHART_GREEN : CHART_RED;
-        const borderColor = isPositiveUnrealPnl ? PNL_BORDER_GREEN : PNL_BORDER_RED;
-        const sideColor = isPositiveBalance ? CHART_GREEN : CHART_RED;
+        const pnlColor = isPositiveUnrealPnl ? colorConfig.upColor:colorConfig.downColor;
+        const borderColor = isPositiveUnrealPnl ? colorConfig.pnlUpColor:colorConfig.pnlDownColor;
+        const sideColor = isPositiveBalance ? colorConfig.upColor:colorConfig.downColor;
         const price = new Decimal(position.open).todp(position.basePriceDecimal, Decimal.ROUND_DOWN).toNumber();
 
         this.positionLines[idx] = this.positionLines[idx] ?? this.getBasePositionLine();

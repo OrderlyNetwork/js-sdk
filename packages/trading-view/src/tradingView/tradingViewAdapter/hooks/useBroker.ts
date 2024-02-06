@@ -3,10 +3,22 @@ import useCancelOrder from '../hooks/useCancelOrder';
 import useEditOrder from './useEditOrder';
 
 const useBroker = ({
-                       closeConfirm
+                       closeConfirm,
+    colorConfig,
                    }: {
 
     closeConfirm: any;
+    colorConfig: {
+        chartBG: string;
+        upColor: string;
+        downColor: string,
+        pnlUpColor: string;
+        pnlDownColor: string;
+        textColor: string;
+        qtyTextColor: string;
+        font: string;
+
+    },
 },) => {
     const cancelOrder = useCancelOrder();
     const editOrder = useEditOrder();
@@ -15,6 +27,7 @@ const useBroker = ({
         cancelOrder,
         closePosition,
         editOrder,
+        colorConfig,
     });
 
     useEffect(() => {
