@@ -1,6 +1,7 @@
 import { FC, ReactNode, useContext, useMemo } from "react";
 import { Col, Column } from "./col";
 import { cn } from "@/utils/css";
+import { ExpandRow } from "./expandRow";
 
 interface RowProps<RecordType> {
   columns: Column<RecordType>[];
@@ -63,13 +64,12 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
         {cols}
       </tr>
       {props.expanded && (
-        <tr>
-          <td colSpan={columns.length}>
-            <div className="orderly-bg-base-700 orderly-rounded-[4px] orderly-my-1">
-              {props.expandRowRender?.(record, index)}
-            </div>
-          </td>
-        </tr>
+        <ExpandRow
+          columns={columns}
+          expandRowRender={props.expandRowRender}
+          record={record}
+          index={index}
+        />
       )}
     </>
   );
