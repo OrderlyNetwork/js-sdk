@@ -1,15 +1,15 @@
-import React, {useRef, useEffect, useState, useMemo} from "react";
-import {Datafeed} from "./tradingViewAdapter/datafeed/datafeed";
-import {ChartMode} from "./tradingViewAdapter/type";
-import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
-import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
-import {useLazyEffect} from './tradingViewAdapter/hooks/useLazyEffect';
-import {useWS, useConfig, useAccount} from "@orderly.network/hooks";
-import {WS} from "@orderly.network/net";
+import React, { useRef, useEffect, useState, useMemo } from "react";
+import { Datafeed } from "./tradingViewAdapter/datafeed/datafeed";
+import { ChartMode } from "./tradingViewAdapter/type";
+import { Widget, WidgetProps } from "./tradingViewAdapter/widget";
+import { WebsocketService } from './tradingViewAdapter/datafeed/websocket.service';
+import { useLazyEffect } from './tradingViewAdapter/hooks/useLazyEffect';
+import { useWS, useConfig, useAccount } from "@orderly.network/hooks";
+import { WS } from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
-import {AccountStatusEnum} from '@orderly.network/types';
+import { AccountStatusEnum } from '@orderly.network/types';
 
 
 export interface TradingViewOptions {
@@ -86,22 +86,22 @@ const getOveriides = () => {
 }
 
 export function TradingView({
-                                symbol,
-                                mode = ChartMode.UNLIMITED,
-                                libraryPath,
-                                tradingViewScriptSrc,
-                                tradingViewCustomCssUrl,
-                                interval,
-                                overrides: customerOverrides,
-                                theme,
-                                studiesOverrides: customerStudiesOverrides,
-                                fullscreen,
-                                closePositionConfirmCallback
-                            }: TradingViewPorps) {
+    symbol,
+    mode = ChartMode.UNLIMITED,
+    libraryPath,
+    tradingViewScriptSrc,
+    tradingViewCustomCssUrl,
+    interval,
+    overrides: customerOverrides,
+    theme,
+    studiesOverrides: customerStudiesOverrides,
+    fullscreen,
+    closePositionConfirmCallback
+}: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
     const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
-    const {state: accountState} = useAccount();
+    const { state: accountState } = useAccount();
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
@@ -116,7 +116,7 @@ export function TradingView({
         qtyTextColor,
         font,
     }
-    const broker = useBroker({closeConfirm: closePositionConfirmCallback, colorConfig});
+    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig });
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
 
     useEffect(() => {
