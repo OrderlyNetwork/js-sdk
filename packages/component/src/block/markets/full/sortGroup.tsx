@@ -1,9 +1,10 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { SortItem } from "../sections/sortItem";
 import { useSort } from "../useSort";
 import { cn } from "@/utils";
 import { SortCondition, SortKey } from "../shared/types";
 import { OrderlyIcon } from "@/icon";
+import { Tooltip } from "@/tooltip";
 
 interface Props {
   value?: SortKey;
@@ -16,6 +17,7 @@ export const SortGroup: FC<Props> = (props) => {
   //   const onClick = (value: SortKey) => {
   //     console.log(value);
   //   };
+  const [open, setOpen] = useState(false);
 
   const {
     sortKey,
@@ -52,14 +54,20 @@ export const SortGroup: FC<Props> = (props) => {
           currentValue={currentValue}
         />
       </div>
-      <div className="orderly-col-span-1 orderly-flex orderly-justify-end orderly-items-center">
-        <OrderlyIcon size={14} className="orderly-mr-[6px]" />
-        <SortItem
-          label={"Volume"}
-          value={"vol"}
-          onClick={onSort}
-          currentValue={currentValue}
-        />
+      <div className="orderly-col-span-1 orderly-flex orderly-pl-2">
+        
+        <div className="orderly-flex-1"></div>
+        <Tooltip content="24 hour total trading volume on the Orderly Network.">
+          <div className="orderly-flex orderly-justify-end orderly-items-center">
+            <OrderlyIcon size={14} className="orderly-mr-[6px]" />
+            <SortItem
+              label={"Volume"}
+              value={"vol"}
+              onClick={onSort}
+              currentValue={currentValue}
+            />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );
