@@ -1,5 +1,11 @@
 # storybook
 
+## 1.0.96-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
 ## 1.0.96-alpha.31
 
 ### Patch Changes

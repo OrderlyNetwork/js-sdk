@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
 ## 0.0.87-alpha.31
 
 ### Patch Changes

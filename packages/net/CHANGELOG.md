@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.0.114-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
 ## 1.0.114-alpha.31
 
 ### Patch Changes

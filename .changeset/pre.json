@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.0.1"
   },
   "changesets": [
+    "big-lies-admire",
     "brave-toys-sniff",
     "calm-moles-turn",
     "clean-years-act",

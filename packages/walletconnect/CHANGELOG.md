@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.0.2-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
 ## 0.0.2-alpha.31
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.1.4-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
 ## 0.1.4-alpha.31
 
 ### Patch Changes

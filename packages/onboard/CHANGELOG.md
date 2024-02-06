@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.0.28-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+- Updated dependencies
+  - @orderly.network/hooks@1.0.28-alpha.32
+  - @orderly.network/types@0.1.27-alpha.32
+
 ## 0.0.28-alpha.31
 
 ### Patch Changes

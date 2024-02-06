@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.1.27-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+- Updated dependencies
+  - @orderly.network/types@0.1.27-alpha.32
+
 ## 0.1.27-alpha.31
 
 ### Patch Changes
