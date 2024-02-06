@@ -131,13 +131,15 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <>
-      {chainNotSupport ? (
-        <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs ">
-          {chainWarningMessage}
-        </div>
-      ) : (
-        <Notice warningMessage={warningMessage} />
-      )}
+      <div className="orderly-deposit-warning-message">
+        {chainNotSupport ? (
+          <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs ">
+            {chainWarningMessage}
+          </div>
+        ) : (
+          <Notice warningMessage={warningMessage} />
+        )}
+      </div>
 
       <div className="orderly-flex orderly-justify-center">
         <div className="orderly-deposit-action-button-container orderly-w-full orderly-text-xs orderly-font-bold">
