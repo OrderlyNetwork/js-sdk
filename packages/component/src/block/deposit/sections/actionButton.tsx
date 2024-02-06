@@ -1,7 +1,6 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { API, CurrentChain } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
 import { FC, useContext, useMemo } from "react";
 import { ApproveButton } from "./approveButton";
 import { Notice } from "./notice";
@@ -11,15 +10,12 @@ import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { OrderlyAppContext } from "@/provider";
 
 export interface ActionButtonProps {
-  chains:
-    | API.NetworkInfos[]
-    | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
+  chains: API.NetworkInfos[];
   chain: CurrentChain | null;
   token?: API.TokenInfo;
   onDeposit: () => Promise<any>;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
-  openChainPicker?: () => void;
   quantity: string;
   loading?: boolean;
   allowance: number;
@@ -37,11 +33,10 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const {
     chain,
     token,
-    // chains,
+    chains,
     onDeposit,
     switchChain,
     disabled,
-    // openChainPicker,
     quantity,
     loading,
     allowance,
@@ -54,24 +49,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     chainNotSupport,
   } = props;
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
-
-  const chains = useMemo(() => {
-    if (Array.isArray(props.chains)) return props.chains;
-
-    if (!props.chain?.id) {
-      return props.chains?.mainnet ?? [];
-    }
-
-    if (isTestnet(props.chain?.id!)) {
-      return (
-        (chainNotSupport ? props.chains?.mainnet : props.chains?.testnet) ?? []
-      );
-    }
-
-    return (
-      (chainNotSupport ? props.chains?.testnet : props.chains?.mainnet) ?? []
-    );
-  }, [props.chains, props.chain, chainNotSupport]);
 
   const [_, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
@@ -95,7 +72,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";
     return "Please connect to a supported network.";
-  }, [chainNotSupport, chains, chain?.info?.network_infos?.name]);
+  }, [chainNotSupport, chain?.info?.network_infos?.name]);
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
@@ -138,7 +115,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     );
   }, [
     chainNotSupport,
-    chains,
     switchChain,
     disabled,
     chain,
