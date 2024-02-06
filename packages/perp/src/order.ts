@@ -109,6 +109,10 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     currentPosition?.position_qty ?? 0
   );
 
+  if (newQty.eq(0)) {
+    return 0;
+  }
+
   const price = new Decimal(markPrice)
     .add(
       new Decimal(totalCollateral)
@@ -158,6 +162,10 @@ export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
     sumPositionNotional = sumPositionNotional.add(
       new Decimal(newOrder.qty).mul(newOrder.price).abs()
     );
+  }
+
+  if (sumPositionNotional.eq(zero)) {
+    return null;
   }
 
   const totalMarginRatio = new Decimal(totalCollateral).div(
