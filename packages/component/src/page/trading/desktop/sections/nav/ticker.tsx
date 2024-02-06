@@ -7,6 +7,7 @@ import { MemoizedCompnent } from "./fundingRate";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { TickerMask } from "./tickerMask";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
+import { OrderlyIcon } from "@/icon";
 
 interface Props {
   symbol: string;
@@ -90,18 +91,24 @@ export const Ticker: FC<Props> = (props) => {
           />
           <Statistic
             label={"Mark"}
-            value={(<NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>)}
+            value={<NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>}
             rule={"price"}
             hint="Price for the computation of unrealized PnL and liquidation."
           />
           <Statistic
             label={"Index"}
-            value={(<NumeralWithCtx>data?.index_price</NumeralWithCtx>)}
+            value={<NumeralWithCtx>data?.index_price</NumeralWithCtx>}
             rule={"price"}
             hint="Average of the last prices across other exchanges."
           />
           <Statistic
-            label={"24h volume"}
+            hint="24 hour total trading volume on the Orderly Network."
+            label={
+              <div className="orderly-flex orderly-items-center">
+                <OrderlyIcon size={14} className="orderly-mr-[6px]" />
+                <div>24h volume</div>
+              </div>
+            }
             value={<Numeral rule="human">{data?.["24h_amount"]}</Numeral>}
           />
 

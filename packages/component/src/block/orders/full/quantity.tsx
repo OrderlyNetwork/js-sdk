@@ -43,6 +43,10 @@ const NormalState: FC<{
 
   const { order, quantity } = props;
 
+
+
+  const executed = order.total_executed_quantity;
+  
   return (
     <div
       className={cn(
@@ -58,7 +62,7 @@ const NormalState: FC<{
         props.setEditing(true);
       }}
     >
-      <span>{order.executed}</span>
+      <span>{executed}</span>
       <span>/</span>
       <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
         {quantity}
@@ -101,6 +105,7 @@ const EditingState: FC<{
         return;
       }
 
+      setQuantity(order.quantity.toString());
       setEditting(false);
     };
 
@@ -147,6 +152,7 @@ const EditingState: FC<{
       .then(
         (result) => {
           closePopover();
+          setQuantity(quantity.toString());
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err) => {
@@ -165,7 +171,7 @@ const EditingState: FC<{
     >
       <div
         className={cn(
-          "orderly-flex orderly-max-w-[110px] orderly-min-w-[70px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-min-w-[70px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,

@@ -501,6 +501,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             containerClassName="orderly-bg-base-600"
             error={!!metaState.errors?.order_quantity && errorsVisible}
             helpText={metaState.errors?.order_quantity?.message}
+            autoComplete="off"
             value={commify(formattedOrder.order_quantity || "")}
             onChange={(event) => {
               props.onFieldChange("order_quantity", event.target.value);
@@ -566,6 +567,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             inputMode="decimal"
             id="order_total_input"
             name="order_total_input"
+            autoComplete="off"
             value={commify(
               currentFocusInput.current === InputType.TOTAL
                 ? formattedOrder.total!

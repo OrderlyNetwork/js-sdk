@@ -88,3 +88,28 @@ export enum ChartMode {
     UNLIMITED = 2,
     MOBILE = 3,
 }
+
+export enum PositionSide {
+    LONG = 'LONG',
+    SHORT = 'SHORT',
+    BOTH = 'BOTH',
+}
+
+
+export type ChartPosition = {
+    symbol: string;
+    open: number;
+    balance: number;
+    closablePosition: number;
+    unrealPnl: number;
+    interest: number;
+    unrealPnlDecimal: number;
+    basePriceDecimal: number;
+    positionSide?: PositionSide;
+};
+
+export enum SideType {
+    BUY = 'BUY',
+    SELL = 'SELL',
+}
+

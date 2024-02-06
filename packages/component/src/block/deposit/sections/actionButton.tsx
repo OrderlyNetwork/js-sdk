@@ -51,11 +51,15 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     if (Array.isArray(props.chains)) return props.chains;
 
     if (isTestnet(props.chain?.id!)) {
-      return props.chains?.testnet ?? [];
+      return (
+        (chainNotSupport ? props.chains?.mainnet : props.chains?.testnet) ?? []
+      );
     }
 
-    return props.chains?.mainnet;
-  }, [props.chains, props.chain]);
+    return (
+      (chainNotSupport ? props.chains?.testnet : props.chains?.mainnet) ?? []
+    );
+  }, [props.chains, props.chain, chainNotSupport]);
 
   const [_, { findByChainId }] = useChains(undefined, {
     pick: "network_infos",
@@ -128,7 +132,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   return (
     <>
       {chainNotSupport ? (
-        <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs ">
+        <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs ">
           {chainWarningMessage}
         </div>
       ) : (
@@ -136,7 +140,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       )}
 
       <div className="orderly-flex orderly-justify-center">
-        <div className="orderly-deposit-action-button-container orderly-py-3 orderly-w-full orderly-text-xs orderly-font-bold">
+        <div className="orderly-deposit-action-button-container orderly-w-full orderly-text-xs orderly-font-bold">
           {actionButton}
         </div>
       </div>
