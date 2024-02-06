@@ -16,7 +16,7 @@ export const EstInfo: FC<{
       return "0.00x";
     }
 
-    if (!estLeverage) {
+    if (typeof estLeverage === "undefined" || estLeverage === null) {
       return (
         <Numeral className="orderly-text-base-contrast" surfix={"x"}>
           {currentLeverage}
@@ -31,7 +31,7 @@ export const EstInfo: FC<{
         </Numeral>
         <ArrowRightIcon size={8} />
         <Numeral className="orderly-text-base-contrast" surfix={"x"}>
-          {estLeverage}
+          {Math.abs(estLeverage)}
         </Numeral>
       </>
     );

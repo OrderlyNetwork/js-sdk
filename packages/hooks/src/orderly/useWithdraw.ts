@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
-import { Decimal } from "@orderly.network/utils";
 import { useCollateral } from "./useCollateral";
 import { useAccount } from "../useAccount";
 
