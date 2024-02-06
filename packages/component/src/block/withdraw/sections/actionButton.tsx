@@ -191,11 +191,13 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <>
-      {warningMessage && (
-        <div className="orderly-warning-msg orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs">
-          {warningMessage}
-        </div>
-      )}
+      <div className="orderly-withdraw-warning-message">
+        {warningMessage && (
+          <div className="orderly-warning-msg orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs">
+            {warningMessage}
+          </div>
+        )}{" "}
+      </div>
 
       <div className="orderly-flex orderly-justify-center orderly-text-xs desktop:orderly-text-xs orderly-font-bold">
         <div className="orderly-withdraw-action-button-container orderly-w-full">
