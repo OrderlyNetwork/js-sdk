@@ -27,6 +27,8 @@ export const Deposit: FC<DepositProps> = (props) => {
   const [chains, { findByChainId }] = useChains(undefined, {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
   const { connectedChain, wallet, setChain, settingChain } =
