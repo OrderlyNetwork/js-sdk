@@ -1,7 +1,7 @@
 import {useRef, useEffect, useContext} from 'react';
 import {Renderer} from '../renderer/renderer';
 import {useOrderStream, usePositionStream} from '@orderly.network/hooks';
-import { OrderStatus } from "@orderly.network/types";
+import {OrderStatus} from "@orderly.network/types";
 
 export default function useCreateRenderer(symbol: string) {
     const renderer = useRef<Renderer>();
@@ -15,12 +15,9 @@ export default function useCreateRenderer(symbol: string) {
 
     const createRenderer = useRef(
         (instance: any, host: any, broker: any) => {
-            if (!renderer.current) {
-                renderer.current = new Renderer(instance, host, broker);
-            }
+            renderer.current = new Renderer(instance, host, broker);
         }
     );
-
 
 
     useEffect(() => {
@@ -42,7 +39,7 @@ export default function useCreateRenderer(symbol: string) {
     }, [renderer.current, positions, symbol]);
 
     useEffect(() => {
-       renderer.current?.renderPendingOrders(pendingOrders);
+        renderer.current?.renderPendingOrders(pendingOrders);
 
     }, [renderer.current, pendingOrders, symbol]);
 

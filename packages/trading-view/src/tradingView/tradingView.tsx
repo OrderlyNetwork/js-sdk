@@ -1,14 +1,15 @@
-import React, {useRef, useEffect, useState} from "react";
+import React, {useRef, useEffect, useState, useMemo} from "react";
 import {Datafeed} from "./tradingViewAdapter/datafeed/datafeed";
 import {ChartMode} from "./tradingViewAdapter/type";
 import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
 import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
-
-import {useWS, useConfig} from "@orderly.network/hooks";
+import {useLazyEffect} from './tradingViewAdapter/hooks/useLazyEffect';
+import {useWS, useConfig, useAccount} from "@orderly.network/hooks";
 import {WS} from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
+import {AccountStatusEnum} from '@orderly.network/types';
 
 
 export interface TradingViewOptions {
@@ -42,6 +43,7 @@ function Link(props: {
         </span>
     )
 }
+
 const upColor = "#00B59F";
 const downColor = "#FF67C2";
 const chartBG = '#16141c';
@@ -99,6 +101,7 @@ export function TradingView({
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
     const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
+    const {state: accountState} = useAccount();
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
@@ -113,7 +116,7 @@ export function TradingView({
         qtyTextColor,
         font,
     }
-    const broker = useBroker({closeConfirm: closePositionConfirmCallback,colorConfig});
+    const broker = useBroker({closeConfirm: closePositionConfirmCallback, colorConfig});
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
 
     useEffect(() => {
@@ -142,7 +145,16 @@ export function TradingView({
     }
     const layoutId = 'TradingViewSDK';
 
-    useEffect(() => {
+    const isLoggedIn = useMemo(() => {
+        if (accountState.status < AccountStatusEnum.EnableTrading) {
+            return false;
+        }
+        return true;
+
+    }, [accountState]);
+
+    useLazyEffect(() => {
+        console.log('-- isloggedin', isLoggedIn);
         if (!chartingLibrarySciprtReady || !tradingViewScriptSrc) {
             return;
         }
@@ -166,12 +178,15 @@ export function TradingView({
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
-                getBroker: (instance: any, host: any) => {
-                    console.log('-- start create render');
-                    createRenderer(instance, host, broker);
-                    console.log('-- create render');
-                    return getBrokerAdapter(host, broker);
-                },
+                getBroker: isLoggedIn ?
+                    (instance: any, host: any) => {
+                        console.log('-- start create render');
+                        console.log('-- instance', instance);
+                        createRenderer(instance, host, broker);
+                        console.log('-- create render');
+                        return getBrokerAdapter(host, broker);
+                    }
+                    : undefined,
 
             };
 
@@ -191,7 +206,7 @@ export function TradingView({
             chart.current?.remove();
             renderer.current?.remove();
         };
-    }, [chartingLibrarySciprtReady]);
+    }, [chartingLibrarySciprtReady, isLoggedIn]);
 
     useEffect(() => {
         if (!symbol || !chart.current) {
