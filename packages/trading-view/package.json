@@ -21,7 +21,6 @@
     "tailwindcss-animate": "^1.0.6",
     "tailwindcss-border-gradient-radius": "^3.0.1",
     "tsconfig": "workspace:*",
-    "@orderly.network/types": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
     "typescript": "^5.1.6",
@@ -32,6 +31,7 @@
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/net": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*"
   },
   "peerDependencies": {
