@@ -65,7 +65,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
           ? `(${new Decimal(dstGasFee).toFixed(
               feeDecimalsOffset(nativeToken?.woofi_dex_precision ?? 2),
               Decimal.ROUND_UP
-            )} ETH)`
+            )} ${nativeToken?.symbol})`
           : ""
       }`;
     }
