@@ -401,7 +401,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           fee={Number(transactionInfo.fee)}
         />
       </div>
-      <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-3xs orderly-text-tertiary">
+      <div className="orderly-flex orderly-items-start orderly-py-3 orderly-text-3xs orderly-text-tertiary">
         <Summary
           isNativeToken={isNativeToken}
           nativeToken={chain?.info?.nativeToken}

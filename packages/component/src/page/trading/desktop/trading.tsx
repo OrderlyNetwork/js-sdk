@@ -63,7 +63,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           height: `calc(100vh - ${
             headerHeight + footerHeight + (pageHeaderHeight ?? 0)
           }px)`,
-          minHeight: "1024px",
+          minHeight: "990px",
           width: `calc(100vw - ${siderWidth}px)`,
           // paddingBottom:
         }}
@@ -121,7 +121,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           style={{
             minWidth: "300px",
             maxWidth: "500px",
-            minHeight: "1024px",
+            minHeight: "990px",
             width: mainSplitSize,
           }}
         >
