@@ -37,7 +37,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
   baseOrder(data: OrderEntity): OrderEntity {
     const order: Partial<OrderEntity> = {
-      // symbol: data.symbol,
+      symbol: data.symbol,
       order_type:
         data.order_type === OrderType.LIMIT
           ? !!data.order_type_ext
@@ -156,6 +156,12 @@ export class LimitOrderCreator extends BaseOrderCreator {
 
     this.fixOrderQuantity(order, config);
 
+    delete order['total'];
+    delete order['trigger_price'];
+    delete order['isStopOrder'];
+
+    console.log("create", order);
+
     return order;
   }
   validate(
@@ -223,6 +229,9 @@ export class MarketOrderCreator extends BaseOrderCreator {
     const data = this.baseOrder(values);
 
     delete data["order_price"];
+    delete data['total'];
+    delete data['trigger_price'];
+    delete data['isStopOrder'];
 
     return {
       ...data,
@@ -258,6 +267,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
     delete order["order_price"];
     // @ts-ignore
     delete order["isStopOrder"];
+    delete order['total'];
 
     return order;
   }
@@ -344,6 +354,7 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
     delete result["order_price"];
     // @ts-ignore
     delete result["isStopOrder"];
+    delete result['total'];
 
     console.log("result is", result);
     return result;
