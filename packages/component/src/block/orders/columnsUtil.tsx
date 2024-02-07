@@ -71,6 +71,9 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       dataIndex: "price",
       width: 100,
       render: (value: string, record: any) => {
+        if (record.type === "MARKET") {
+          return <span>Market</span>
+        }
         return (
           <NumeralWithCtx
             className={
@@ -105,6 +108,8 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       className: "orderly-h-[48px] orderly-font-semibold",
       dataIndex: "executed",
       render: (value: string, record: any) => {
+        console.log("est total xxxxxxxx value", value, record);
+        
         return (
           <NumeralWithCtx
             className={
@@ -112,11 +117,11 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
             }
             // precision={2}
           >
-            {record.executed === 0 ||
-            Number.isNaN(record.price) ||
-            record.price === null
+            {record.total_executed_quantity === 0 ||
+            Number.isNaN(record.average_executed_price) ||
+            record.average_executed_price === null
               ? "-"
-              : `${record.executed * record.price}`}
+              : `${record.total_executed_quantity * record.average_executed_price}`}
           </NumeralWithCtx>
         );
       },
