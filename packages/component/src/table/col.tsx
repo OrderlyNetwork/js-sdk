@@ -1,26 +1,39 @@
-import { FC, useMemo } from "react";
+import { CSSProperties, FC, ReactNode, useContext, useMemo } from "react";
 import { cn } from "@/utils/css";
 
-export type Column = {
+import { withFixedStyle } from "./colHOC";
+
+export type ColumnFixed = "left" | "right";
+
+export type SortOrder = "asc" | "desc";
+
+export type Column<RecordType extends unknown = any> = {
   title: string;
+  hint?: ReactNode;
+  hintClassName?: string;
   width?: number;
+  fixed?: ColumnFixed;
   dataIndex: string;
-  className?: string;
+  className?: string | ((record: RecordType, index: number) => string);
   align?: "left" | "center" | "right";
-  formatter?: (value: any, record: any, index: number) => any;
-  render?: (value: any, record: any, index: number) => React.ReactNode;
-  getKey?: (record: any, index: number) => string;
+  onSort?:
+    | boolean
+    | ((r1: RecordType, r2: RecordType, sortOrder: SortOrder) => number);
+  formatter?: (value: any, record: RecordType, index: number) => any;
+  render?: (value: any, record: RecordType, index: number) => React.ReactNode;
+  getKey?: (record: RecordType, index: number) => string;
 };
 
-interface ColProps {
+export interface ColProps {
   col: Column;
   record: any;
   index: number;
   justified?: boolean;
+  style?: CSSProperties;
 }
 
-export const Col: FC<ColProps> = (props) => {
-  const { col, record } = props;
+export const ColItem: FC<ColProps> = (props) => {
+  const { col, record, index, style } = props;
   const { align } = col;
 
   const content = useMemo(() => {
@@ -39,13 +52,22 @@ export const Col: FC<ColProps> = (props) => {
   return (
     <td
       className={cn(
-        "orderly-py-[2px] orderly-px-1 whitespace-nowrap",
+        "orderly-py-[2px] orderly-px-1 whitespace-nowrap group-hover:!orderly-bg-base-800",
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
-        align === "right" && "orderly-text-right"
+        align === "right" && "orderly-text-right",
+        col.fixed && "orderly-sticky"
       )}
+      style={{
+        backgroundColor: col.fixed
+          ? "var(--table-background-color)"
+          : "transparent",
+        ...style,
+      }}
     >
       {content}
     </td>
   );
 };
+
+export const Col = withFixedStyle(ColItem);

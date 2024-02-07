@@ -37,11 +37,22 @@ export {
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
+export { Divider } from "./divider";
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
 
 // ==================== page component ====================
 export * from "./page";
 
-export { Page } from "./layout";
+export { Page, Layout } from "./layout";
 
 // ==================== block component ====================
 export {
@@ -61,6 +72,16 @@ export {
   AssetAndMarginSheet,
   ChainListView,
   ChainSelect,
+  SystemStatusBar,
+} from "./block";
+
+//===================== Dialog component ====================
+
+export {
+  ChainDialog,
+  showAccountConnectorModal,
+  DepositAndWithdrawWithDialog,
+  DepositAndWithdrawWithSheet,
 } from "./block";
 
 export type {

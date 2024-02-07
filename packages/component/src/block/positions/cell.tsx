@@ -39,7 +39,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           labelClassName="orderly-text-4xs"
           label={
             <>
-              <span className="orderly-text-base-contrast-36">Unreal.PnL</span>
+              <span className="orderly-text-base-contrast-36">Unreal. PnL</span>
               <span className="orderly-text-base-contrast-20">(USDC)</span>
             </>
           }

@@ -72,7 +72,9 @@ export default {
   },
   useNextSeoProps() {
     return {
-      titleTemplate: "%s",
+      // titleTemplate: "%s",
+      titleTemplate: "Orderly Network | SDK",    
+      description:'Orderly Network simplifies Web3 application development and enhances integration experience with the Orderly Network SDK.'
     };
   },
   // ...

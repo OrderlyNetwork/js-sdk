@@ -54,35 +54,41 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
     VariantProps<typeof dialogVariants> & {
       closable?: boolean;
+      closeableSize?: number;
     }
->(({ children, closable, className, maxWidth, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
+>(
+  (
+    { children, closable, closeableSize = 20, className, maxWidth, ...props },
+    ref
+  ) => (
+    <DialogPortal>
+      <DialogOverlay />
 
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "orderly-dialog-content",
-        dialogVariants({ maxWidth }),
-        className
-      )}
-      {...props}
-    >
-      {children}
-      {closable && (
-        <DialogPrimitive.Close
-          className={cn(
-            "orderly-dialog-close",
-            "orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground"
-          )}
-        >
-          <CloseIcon size={20} />
-          <span className="orderly-sr-only">Close</span>
-        </DialogPrimitive.Close>
-      )}
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          "orderly-dialog-content",
+          dialogVariants({ maxWidth }),
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {closable && (
+          <DialogPrimitive.Close
+            className={cn(
+              "orderly-dialog-close",
+              "orderly-absolute orderly-right-5 orderly-top-5 orderly-rounded-sm orderly-opacity-70 orderly-ring-offset-base-700 orderly-transition-opacity hover:orderly-opacity-100 focus:orderly-outline-none focus:orderly-ring-2 focus:orderly-ring-ring focus:orderly-ring-offset-2 disabled:orderly-pointer-events-none data-[state=open]:orderly-bg-accent data-[state=open]:orderly-text-muted-foreground"
+            )}
+          >
+            <CloseIcon size={closeableSize} />
+            <span className="orderly-sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  )
+);
 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
@@ -93,7 +99,7 @@ const DialogHeader = ({
   <div
     className={cn(
       "orderly-dialog-header",
-      "orderly-px-5 orderly-pb-5 orderly-flex orderly-flex-col orderly-text-[16px] orderly-relative after:orderly-content after:orderly-block after:orderly-absolute after:orderly-bottom-0 after:orderly-left-5 after:orderly-right-5 after:orderly-h-[1px] after:orderly-bg-base-contrast/10 after:orderly-mt-5",
+      "orderly-px-5 orderly-pb-5 orderly-flex orderly-flex-col orderly-text-base orderly-relative after:orderly-content after:orderly-block after:orderly-absolute after:orderly-bottom-0 after:orderly-left-5 after:orderly-right-5 after:orderly-h-[1px] after:orderly-bg-base-contrast/10 after:orderly-mt-5",
       className
     )}
     {...props}

@@ -1,177 +1,138 @@
 import { FC, useContext, useMemo, useRef } from "react";
 import { Table } from "@/table";
-import { Text } from "@/text";
-import { OrderStatus, OrderSide, API, OrderEntity } from "@orderly.network/types";
+import { Numeral, Text } from "@/text";
+import {
+  OrderStatus,
+  OrderSide,
+  API,
+  OrderEntity,
+} from "@orderly.network/types";
 import Button from "@/button";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
 import { OrderlyAppContext, SymbolContext, SymbolProvider } from "@/provider";
 import { EndReachedBox } from "@/listView/endReachedBox";
 import { Renew } from "./renew";
+import { CancelButton } from "@/block/orders/full/cancelButton";
+import { cn } from "@/utils";
+import { columnsBasis } from "@/block/orders/columnsUtil";
+import { OrderTrades } from "../orderTrades";
+import { PositionEmptyView } from "@/block/positions/full/positionEmptyView";
 
 interface Props {
   dataSource: API.OrderExt[];
   loading?: boolean;
   loadMore?: () => void;
+  className?: string;
   //   status: OrderStatus;
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
-    const columns = [
-      {
-        title: "Instrument",
-        dataIndex: "symbol",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
-      },
-      {
-        title: "Type",
-        className: "orderly-h-[48px]",
-        dataIndex: "type",
-        formatter: upperCaseFirstLetter,
-      },
-      {
-        title: "Side",
-        className: "orderly-h-[48px]",
-        dataIndex: "side",
-        render: (value: string) => (
+    const cols = columnsBasis();
+
+    //
+
+    cols[2] = {
+      title: "Side",
+      className: "orderly-h-[48px]",
+      width: 100,
+      dataIndex: "side",
+      render: (value: string, record: any) => (
+        <span
+          className={cx(
+            "orderly-font-semibold",
+            {
+              "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.BUY,
+              "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.SELL,
+            }
+          )}
+        >
+          {upperCaseFirstLetter(value)}
+        </span>
+      ),
+    };
+
+    cols[3] = {
+      title: "Filled / Quantity",
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "quantity",
+      width: 200,
+      render: (value: string, record: any) => {
+        return (
           <span
             className={cx(
               "orderly-font-semibold",
-              value === OrderSide.BUY
-                ? "orderly-text-trade-profit"
-                : "orderly-text-trade-loss"
+              {
+                "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.BUY,
+                "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.SELL,
+              }
+              
             )}
-          >
-            {upperCaseFirstLetter(value)}
-          </span>
-        ),
-      },
-      {
-        title: "Filled / Quantity",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "quantity",
-        render: (value: string, record) => {
-          return (
-            <span
-              className={cx(
-                "orderly-font-semibold",
-                record.side === OrderSide.BUY
-                  ? "orderly-text-trade-profit"
-                  : "orderly-text-trade-loss"
-              )}
-            >{`${record.executed} / ${record.quantity}`}</span>
-          );
-        },
-      },
-      {
-        title: "Order Price",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "price",
-        // render: (value: string, record) => <Price order={record} />,
-      },
-      {
-        title: "Avg.price",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "average_executed_price",
-      },
-      {
-        title: "Fee",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "total_fee",
-      },
-      {
-        title: "Status",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "status",
-        formatter: upperCaseFirstLetter,
-      },
-      {
-        title: "Reduce",
-        dataIndex: "reduce_only",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        render: (value: boolean) => {
-          return <span>{value ? "Yes" : "No"}</span>;
-        },
-      },
-      {
-        title: "Hidden",
-        dataIndex: "visible",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        render: (value: number, record) => {
-          return <span>{value === record.quantity ? "No" : "Yes"}</span>;
-        },
-      },
-      {
-        title: "",
-        dataIndex: "action",
-        className: "orderly-h-[48px] orderly-font-semibold",
-        align: "right",
-        render: (value: string, record) => {
-          if (record.status === OrderStatus.CANCELLED) {
-            return (
-              <Renew record={record}/>
-            );
-          }
-
-          return null;
-        },
-      },
-      //   {
-      //     title: "Update",
-      //     dataIndex: "updated_time",
-      //     className: "orderly-h-[48px]",
-      //     render: (value: string) => (
-      //       <Text
-      //         rule={"date"}
-      //         className="orderly-break-normal orderly-whitespace-nowrap"
-      //       >
-      //         {value}
-      //       </Text>
-      //     ),
-      //   },
-    ];
-
-    // if (props.status === OrderStatus.INCOMPLETE) {
-    //   columns.push({
-    //     title: "",
-    //     dataIndex: "action",
-    //     className: "orderly-h-[48px]",
-    //     align: "right",
-    //     render: (_: string, record) => {
-    //       return <CancelButton order={record} onCancel={props.onCancelOrder} />;
-    //     },
-    //   });
-    // }
-
-    return columns;
-  }, []);
-  return (
-    <EndReachedBox onEndReached={() => {
-      if (!props.loading) {
-        props.loadMore?.();
-      }
-    }}>
-      <Table
-      bordered
-      justified
-      columns={columns}
-      loading={props.loading}
-      dataSource={props.dataSource}
-      headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-      className={"orderly-text-2xs orderly-text-base-contrast-80"}
-      generatedRowKey={(record) => record.order_id}
-      renderRowContainer={(record, index, children) => {
-        return (
-          <SymbolProvider
-            key={index}
-            symbol={record.symbol}
-            children={children}
-          />
+          >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
         );
+      },
+    };
+
+    return cols;
+  }, []);
+
+  const divRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={divRef}>
+      <EndReachedBox
+      onEndReached={() => {
+        if (!props.loading) {
+          props.loadMore?.();
+        }
       }}
-    />
+    >
+      <Table
+        bordered
+        justified
+        showMaskElement={false}
+        columns={columns}
+        loading={props.loading}
+        dataSource={props.dataSource}
+        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
+        className={cn(
+          "orderly-text-2xs orderly-text-base-contrast-80",
+          props.className
+        )}
+        generatedRowKey={(record, index) => `${index}${record.order_id || record.algo_order_id}`}
+        onRow={(record) => {
+          // console.log(record);
+          if (record.status === OrderStatus.CANCELLED) {
+            return {
+              className: "orderly-text-base-contrast-20",
+              "data-cancelled": "true",
+            };
+          }
+          return {};
+        }}
+        renderRowContainer={(record, index, children) => {
+          return (
+            <SymbolProvider
+              key={index}
+              symbol={record.symbol}
+              children={children}
+            />
+          );
+        }}
+        expandRowRender={(record, index) => {
+          return <OrderTrades record={record} index={index} />;
+        }}
+      />
+
+      
+
+      {
+        (!props.dataSource || props.dataSource.length <= 0) &&
+        <PositionEmptyView watchRef={divRef} left={0} right={120} />
+      }
+
     </EndReachedBox>
+    </div>
   );
 };

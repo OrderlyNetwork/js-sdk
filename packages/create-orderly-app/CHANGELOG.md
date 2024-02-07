@@ -1,16 +1,223 @@
 # create-orderly-app
 
-## 0.1.5
+## 0.1.4-alpha.35
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.34
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.33
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.32
+
+### Patch Changes
+
+- update kline chart;
+
+## 0.1.4-alpha.31
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.30
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.29
 
 ### Patch Changes
 
 - fix bugs
 
-## 0.1.4
+## 0.1.4-alpha.28
 
 ### Patch Changes
 
-- 268abc5: fix bug
+- fix bugs;
+
+## 0.1.4-alpha.27
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.26
+
+### Patch Changes
+
+- fix orderEntry bugs; add stop order;
+- 85dd1d19: fix bugs;
+
+## 0.1.4-alpha.25
+
+### Patch Changes
+
+- fix orderEntry bugs;
+
+## 0.1.4-alpha.24
+
+### Patch Changes
+
+- update useOrderEntry hook and OrderEntry component;
+
+## 0.1.4-alpha.23
+
+### Patch Changes
+
+- export ChainDialog component;
+
+## 0.1.4-alpha.22
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.21
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.20
+
+### Patch Changes
+
+- add account MMR and more;
+
+## 0.1.4-alpha.19
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.18
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.17
+
+### Patch Changes
+
+- fix bugs / update table component
+
+## 0.1.4-alpha.16
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.15
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-alpha.14
+
+### Patch Changes
+
+- switch goerli to sepolia
+
+## 0.1.4-alpha.13
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.4-alpha.12
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.11
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.4-alpha.10
+
+### Patch Changes
+
+- fix style bug
+
+## 0.1.4-alpha.9
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.8
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.4-alpha.7
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.6
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.5
+
+### Patch Changes
+
+- fix bug
+- fix bug
+- fix bug
+
+## 0.1.4-alpha.4
+
+### Patch Changes
+
+- fix bugs
+- fix bugs
+
+## 0.1.4-alpha.3
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.2
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.4-alpha.1
+
+### Patch Changes
+
+- update version
+
+## 0.1.4-alpha.0
+
+### Patch Changes
+
 - fix bugs
 
 ## 0.1.3

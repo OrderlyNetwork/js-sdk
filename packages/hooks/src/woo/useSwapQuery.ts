@@ -17,8 +17,8 @@ export const useWooSwapQuery = () => {
       start();
 
       const params = {
-        // src_network: inputs.srcNetwork,
-        network: "arbitrum",
+        network: inputs.srcNetwork,
+        // network: "arbitrum",
         from_token: inputs.srcToken,
         to_token: inputs.dstToken, //account.assetsManager.usdcAddress,
         from_amount: inputs.amount, //inputs.amount,

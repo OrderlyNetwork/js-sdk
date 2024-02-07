@@ -26,7 +26,8 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
-import { MEDIA_TABLE } from "@orderly.network/types";
+import { MEDIA_TABLET } from "@orderly.network/types";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -42,7 +43,7 @@ export interface ChainSelectProps {
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const [open, setOpen] = useState(false);
 
-  const isTable = useMediaQuery(MEDIA_TABLE);
+  const isTable = useMediaQuery(MEDIA_TABLET);
   const { wooSwapEnabled = true, disabled } = props;
   // @ts-ignore
   const [allChains, { findByChainId }] = useChains("", {
@@ -50,7 +51,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    // filter: (chain: API.Chain) => chain.network_infos?.chain_id === 421613,
+    // filter: (chain: API.Chain) => isTestnet(chain.network_infos?.chain_id),
   });
 
   const { connectedChain } = useWalletConnector();
@@ -58,8 +59,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const chains = useMemo(() => {
     if (Array.isArray(allChains)) return allChains;
     if (allChains === undefined) return [];
-
-    if (connectedChain && (parseInt(connectedChain.id, 16) === 421613) ) {
+    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
       return allChains.testnet ?? [];
     }
 
@@ -89,10 +89,10 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       mainChains: chains,
       currentChainId: value?.id,
     });
-
-    const chainInfo = findByChainId(result?.id);
-
-    props?.onValueChange?.(chainInfo);
+    if (result?.id) {
+      const chainInfo = findByChainId(result.id);
+      props?.onValueChange?.(chainInfo);
+    }
   }, [chains, props.onValueChange, value?.id]);
 
   useEffect(() => {
@@ -179,16 +179,9 @@ const DesktopChainSelect: FC<{
   onValueChange: any;
   connectedChain: any;
 }> = (props) => {
-  const {
-    chains,
-    onValueChange,
-    currentChain,
-    icon,
-    findByChainId,
-    connectedChain,
-  } = props;
+  const { chains, currentChain, icon, findByChainId, connectedChain } = props;
   const [open, setOpen] = useState(false);
-  const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
+  // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 
   function parseChainId(id?: string | number) {
     if (typeof id === "number") {
@@ -203,26 +196,36 @@ const DesktopChainSelect: FC<{
     }
   }
 
+  const buttonElem = useMemo(() => {
+    return (
+      <>
+        <NetworkImage
+          id={currentChain?.chain_id}
+          type={currentChain ? "chain" : "unknown"}
+          size={"small"}
+          rounded
+        />
+        <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
+          {currentChain?.name ?? "Unknown"}
+        </span>
+        {icon}
+      </>
+    );
+  }, [currentChain]);
+
+  if ((chains?.length ?? 0) < 2 || props.settingChain) {
+    return (
+      <div className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500">
+        {buttonElem}
+      </div>
+    );
+  }
+
   return (
-    <DropdownMenu
-      open={canOpen ? open : false}
-      onOpenChange={canOpen ? setOpen : undefined}
-    >
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button
-          className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
-          disabled={(chains?.length ?? 0) < 2 || props.settingChain}
-        >
-          <NetworkImage
-            id={currentChain?.chain_id}
-            type={currentChain ? "chain" : "unknown"}
-            size={"small"}
-            rounded
-          />
-          <span className="orderly-flex-1 orderly-px-2 orderly-text-3xs orderly-text-left">
-            {currentChain?.name ?? "Unknown"}
-          </span>
-          {icon}
+        <button className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500">
+          {buttonElem}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -233,6 +236,7 @@ const DesktopChainSelect: FC<{
         {chains.map((chain: any, index: number) => {
           return (
             <DropdownMenuItem
+              key={index}
               onClick={() => {
                 const chainInfo = findByChainId(chain.chain_id);
                 if (chainInfo) {

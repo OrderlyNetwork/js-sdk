@@ -1,10 +1,8 @@
+import { FC } from "react";
 import { Divider } from "@/divider";
-import { NetworkImage } from "@/icon";
 import { ListView } from "@/listView";
-import { Table } from "@/table";
-import { type API } from "@orderly.network/types";
-import { FC, useMemo } from "react";
 import { TokenCell } from "./tokenCell";
+import { type API } from "@orderly.network/types";
 
 export interface TokenListViewProps {
   tokens: API.TokenInfo[];
@@ -28,8 +26,10 @@ export const TokenListView: FC<TokenListViewProps> = (props) => {
 
   return (
     <>
-      <div className="orderly-flex orderly-border-b orderly-border-base-contrast/20 orderly-py-2 orderly-mb-3">
-        <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">Coin</span>
+      <div className="orderly-token-select-list-header orderly-flex orderly-border-b orderly-border-base-contrast/20 orderly-py-2 orderly-mb-3">
+        <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">
+          Coin
+        </span>
         <span className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast/50">
           Wallet Balance
         </span>
@@ -41,6 +41,4 @@ export const TokenListView: FC<TokenListViewProps> = (props) => {
       />
     </>
   );
-
-  //   return <Table columns={columns} dataSource={props.tokens} bordered />;
 };

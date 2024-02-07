@@ -14,15 +14,27 @@ export class Datafeed extends AbstractDatafeed {
     private _prefixId: number;
     private _publicWs: WebsocketService;
 
+    private market?: Promise<any>;
+    private marketResolver?: Function;
+    private marketRejector?: Function;
 
-
-    constructor(ws: any) {
-        const datafeedURL = `https://testnet-api-evm.orderly.org/tv`;
+    constructor(apiUrl: string, ws: any) {
+        const datafeedURL = `${apiUrl}/tv`;
         super(datafeedURL);
 
         this._subscribeQuoteMap = new Map();
         this._prefixId = getAutoIncrementId();
         this._publicWs = new WebsocketService(ws);
+        this.market = new Promise((resolve, reject) => {
+            this.marketResolver = resolve;
+            this.marketRejector = reject;
+        });
+
+        ws.on('.*@ticker', (message: any) => {
+            // console.log('-- ticker message', message);
+            this.marketResolver?.(message.data);
+        })
+
        // ws.on('')
     }
 
@@ -35,9 +47,28 @@ export class Datafeed extends AbstractDatafeed {
     }
 
     public getQuotes(symbols: string[], onDataCallback: QuotesCallback): void {
-        const subscriptionId = `${this._prefixId}getQuotes`;
+        this.market?.then((data: any) => {
+            const symbol = symbols[0];
+            onDataCallback([
+                {
+                    s: "ok",
+                    n: symbols[0],
+                    v: {
+                        ch: data.close - data.open,
+                        chp: ((data.close - data.open) / data.open) * 100,
+                        short_name: symbol,
+                        exchange: "",
+                        description: '',
 
-        this.unsubscribeQuotes(subscriptionId);
+                        open_price: data.open,
+                        high_price: data.high,
+                        low_price: data.low,
+                        prev_close_price: data.close,
+                        volume: data.volume,
+                    },
+                },
+            ]);
+        });
 
     }
 

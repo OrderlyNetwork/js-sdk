@@ -8,6 +8,8 @@ import {
 } from "@orderly.network/types";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
+import version from "../version";
+import { useDataCenterContext } from "../dataProvider";
 
 export interface UserOrdersReturn {
   data: any[];
@@ -29,64 +31,89 @@ export const useOrderStream = (params: Params) => {
   const { status, symbol, side, size = 100 } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
+  const { regesterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
   ] = useMutation("/v1/order", "DELETE");
+
   const [
     doUpdateOrder,
     { error: updateOrderError, isMutating: updateMutating },
   ] = useMutation("/v1/order", "PUT");
 
-  const ordersResponse = usePrivateInfiniteQuery(
-    (pageIndex: number, previousPageData) => {
-      // reached the end
-      if (previousPageData && !previousPageData.rows?.length) return null;
+  const [
+    doCanceAlgolOrder,
+    { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
+  ] = useMutation("/v1/algo/order", "DELETE");
+  
+  const [
+    doUpdateAlgoOrder,
+    { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
+  ] = useMutation("/v1/algo/order", "PUT");
 
-      const search = new URLSearchParams([
-        ["size", size.toString()],
-        ["page", `${pageIndex + 1}`],
-      ]);
+  const getKey = (pageIndex: number, previousPageData: any) => {
+    // reached the end
+    if (previousPageData && !previousPageData.rows?.length) return null;
 
-      if (status) {
-        search.set(`status`, status);
-      }
+    const search = new URLSearchParams([
+      ["size", size.toString()],
+      ["page", `${pageIndex + 1}`],
+      ["source_type", 'ALL']
+    ]);
 
-      if (symbol) {
-        search.set(`symbol`, symbol);
-      }
-
-      if (side) {
-        search.set(`side`, side);
-      }
-
-      return `/v1/orders?${search.toString()}`;
-    },
-    {
-      initialSize: 1,
-      // revalidateFirstPage: false,
-      // onError: (err) => {
-      //   console.error("fetch failed::::", err);
-      // },
-      formatter: (data) => data,
+    if (status) {
+      search.set(`status`, status);
     }
-  );
 
-  const orders = useMemo(() => {
+    if (symbol) {
+      search.set(`symbol`, symbol);
+    }
+
+    if (side) {
+      search.set(`side`, side);
+    }
+
+    return `/v1/orders?${search.toString()}`;
+  };
+
+  useEffect(() => {
+    const key = `orders:${status}:${symbol}:${side}`;
+    regesterKeyHandler(key, getKey);
+  }, [status, symbol, side]);
+
+  const ordersResponse = usePrivateInfiniteQuery(getKey, {
+    initialSize: 1,
+    // revalidateFirstPage: false,
+    // onError: (err) => {
+    //   console.error("fetch failed::::", err);
+    // },
+    formatter: (data) => data,
+  });
+
+  const flattenOrders = useMemo(() => {
     if (!ordersResponse.data) {
       return null;
     }
 
-    return ordersResponse.data
-      ?.map((item) => item.rows)
-      ?.flat()
-      .map((item) => {
-        return {
-          ...item,
-          mark_price: (markPrices as any)[item.symbol] ?? 0,
-        };
-      });
-  }, [ordersResponse.data, markPrices]);
+    return ordersResponse.data?.map((item) => item.rows)?.flat();
+  }, [ordersResponse.data]);
+
+  const orders = useMemo(() => {
+    if (!flattenOrders) {
+      return null;
+    }
+
+    if (status !== OrderStatus.NEW && status !== OrderStatus.INCOMPLETE) {
+      return flattenOrders;
+    }
+    return flattenOrders.map((item) => {
+      return {
+        ...item,
+        mark_price: (markPrices as any)[item.symbol] ?? 0,
+      };
+    });
+  }, [flattenOrders, markPrices, status]);
 
   const total = useMemo(() => {
     return ordersResponse.data?.[0]?.meta?.total || 0;
@@ -95,12 +122,21 @@ export const useOrderStream = (params: Params) => {
   /**
    * cancel all orders
    */
-  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
+  const cancelAllOrders = useCallback(() => { }, [ordersResponse.data]);
 
   /**
    * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
+    // @ts-ignore
+    if (order.algo_order_id !== undefined) {
+      return doUpdateAlgoOrder({
+        order_id: orderId,
+        price: order["order_price"],
+        quantity: order["order_quantity"],
+        trigger_price: order["trigger_price"],
+      });
+    }
     //
     return doUpdateOrder({ ...order, order_id: orderId });
   }, []);
@@ -108,11 +144,42 @@ export const useOrderStream = (params: Params) => {
   /**
    * calcel order
    */
-  const cancelOrder = useCallback((orderId: string, symbol?: string) => {
+  const cancelOrder = useCallback((orderId: number | OrderEntity, symbol?: string) => {
+    let isAlgoOrder = false;
+    let order_id;
+    if (typeof orderId === 'number') {
+      isAlgoOrder = false;
+      order_id = orderId;
+    } else {
+      // @ts-ignore
+      order_id = orderId?.order_id;
+      // @ts-ignore
+      if (orderId?.algo_order_id !== undefined) {
+        isAlgoOrder = true;
+        // @ts-ignore
+        order_id = orderId?.algo_order_id;
+      }
+    }
+    if (isAlgoOrder) {
+      return doCanceAlgolOrder(null, {
+        // @ts-ignore
+        order_id: order_id,
+        symbol,
+        source: `SDK${version}`
+      })
+        .then((res: any) => {
+          if (res.success) {
+            ordersResponse.mutate();
+            return res;
+          } else {
+            throw new Error(res.message);
+          }
+        });;
+    }
     return doCancelOrder(null, {
-      order_id: orderId,
+      order_id: order_id,
       symbol,
-      source: "mweb",
+      source: `SDK_${version}`,
     }).then((res: any) => {
       if (res.success) {
         // return ordersResponse.mutate().then(() => {
@@ -136,6 +203,7 @@ export const useOrderStream = (params: Params) => {
     {
       total,
       isLoading: ordersResponse.isLoading,
+      refresh: ordersResponse.mutate,
       loadMore,
       cancelAllOrders,
       updateOrder,
@@ -143,10 +211,14 @@ export const useOrderStream = (params: Params) => {
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,
+        cancelAlgoOrder: cancelAlgoOrderError,
+        updateAlgoOrder: updateAlgoOrderError,
       },
       submitting: {
         cancelOrder: cancelMutating,
         updateOrder: updateMutating,
+        cancelAlgoOrder: cancelAlgoMutating,
+        updateAlglOrder: updateAlgoMutating,
       },
     },
   ] as const;

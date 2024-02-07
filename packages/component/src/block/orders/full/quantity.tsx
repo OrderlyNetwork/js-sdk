@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
@@ -8,23 +8,95 @@ import { useSymbolContext } from "@/provider/symbolProvider";
 import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
+import { Divider } from "@/divider";
 
 export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const { order } = props;
 
   const [quantity, setQuantity] = useState<string>(order.quantity.toString());
-  const { editOrder } = useContext(OrderListContext);
+  // const { editOrder } = useContext(OrderListContext);
 
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
+
+  if (!editting && open <= 0) {
+    return (<NormalState order={order} quantity={quantity} setEditing={setEditting} />);
+  }
+
+  return (<EditingState
+    order={order}
+    quantity={quantity}
+    setQuantity={setQuantity}
+    editting={editting}
+    setEditting={setEditting}
+    open={open}
+    setOpen={setOpen}
+  />);
+};
+
+
+const NormalState: FC<{
+  order: any,
+  quantity: string,
+  setEditing: any,
+}> = (props) => {
+
+  const { order, quantity } = props;
+
+
+
+  const executed = order.total_executed_quantity;
+  
+  return (
+    <div
+      className={cn(
+        "orderly-flex orderly-max-w-[110px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+        {
+          "orderly-text-trade-profit": order.side === OrderSide.BUY,
+          "orderly-text-trade-loss": order.side === OrderSide.SELL,
+        }
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        props.setEditing(true);
+      }}
+    >
+      <span>{executed}</span>
+      <span>/</span>
+      <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
+        {quantity}
+      </div>
+    </div>
+  );
+}
+
+const EditingState: FC<{
+  order: API.OrderExt,
+  quantity: string,
+  setQuantity: any,
+  editting: boolean,
+  setEditting: any,
+  open: number,
+  setOpen: any,
+}> = (props) => {
+
+  const { order, quantity, setQuantity, editting, setEditting, setOpen, open } = props;
+
+  const { editOrder } = useContext(OrderListContext);
+
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => setOpen(-1);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
   const { base } = useSymbolContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -33,7 +105,13 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
       if (!el || el.contains(event.target as Node)) {
         return;
       }
-
+      
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
+        return;
+      }
+      
+      setQuantity(order.quantity.toString());
       setEditting(false);
     };
 
@@ -44,31 +122,60 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     };
   }, []);
 
-  const onClick = (event: MouseEvent) => {
+  const onClick = () => {
     // event.stopPropagation();
     // event.preventDefault();
     setEditting(false);
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
-    setOpen(true);
+    setOpen(1);
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      event.stopPropagation();
+      event.preventDefault();
 
-  const onConfirm = () => {
+      inputRef.current?.blur();
+      onClick();
+    }
+  }
+
+  const onConfirm = useCallback(() => {
+    
+    
     setIsSubmitting(true);
-    editOrder(order.order_id, {
-      order_price: order.price,
-      order_quantity: quantity,
+
+    const params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
+      order_price: order.price,
+      order_quantity: quantity,
       reduce_only: Boolean(order.reduce_only),
-    })
+      algo_order_id: order.algo_order_id,
+    };
+    
+    // @ts-ignore
+    if (order.visible_quantity === 0) {
+      params["visible_quantity"] = 0;
+    }
+    
+    // @ts-ignore
+    if (order.tag !== undefined) {
+      // @ts-ignore
+      params["order_tag"] = order.tag;
+    }
+
+    console.log("current order", order, params, quantity);
+
+    // @ts-ignore
+    editOrder(order.algo_order_id || order.order_id, params)
       .then(
         (result) => {
           closePopover();
+          setQuantity(quantity.toString());
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err) => {
@@ -78,7 +185,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
         }
       )
       .finally(() => setIsSubmitting(false));
-  };
+  }, [quantity]);
 
   return (
     <Popover
@@ -87,7 +194,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
     >
       <div
         className={cn(
-          "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-min-w-[70px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,
@@ -95,21 +202,44 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
         )}
         ref={boxRef}
       >
-        <span>{order.executed}</span>
-        <span>/</span>
+
+        <div
+          className={cn("orderly-absolute orderly-left-1 orderly-flex", {
+            "orderly-animate-in orderly-fade-in orderly-zoom-in": editting,
+            "orderly-animate-out orderly-fade-out orderly-zoom-out  orderly-hidden":
+              !editting,
+          })}
+        >
+          <button
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            // @ts-ignore
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setEditting(false);
+              setQuantity(order.quantity);
+            }}
+          >
+            {/* @ts-ignore */}
+            <X size={14} />
+          </button>
+
+          <Divider vertical className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]" />
+        </div>
+
         <PopoverAnchor asChild>
-          {order.status === OrderStatus.NEW ? (
-            <input
-              ref={inputRef}
-              type="text"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              onFocus={() => setEditting(true)}
-              className="orderly-w-0 orderly-flex-1 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary-light focus-visible:orderly-outline focus-visible:orderly-ring-0"
-            />
-          ) : (
-            <span>{quantity}</span>
-          )}
+
+          <input
+            ref={inputRef}
+            type="text"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            onFocus={() => setEditting(true)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
+          />
+
         </PopoverAnchor>
         <div
           className={cn("orderly-absolute orderly-right-1 orderly-flex", {
@@ -118,12 +248,18 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
               !editting,
           })}
         >
+
+          <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
+
           <button
-            className="hover:orderly-bg-base-contrast/10 orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
+            // @ts-ignore
             onClick={onClick}
           >
-            <Check size={18} />
+            {/* @ts-ignore */}
+            <Check size={14} />
           </button>
+
 
           <PopoverContent
             align="end"
@@ -134,6 +270,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
                 inputRef.current.focus();
               }
             }}
+            onOpenAutoFocus={(e) => e.preventDefault()}
           >
             <div className="orderly-pt-5 orderly-relative">
               <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
@@ -151,7 +288,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
                 >
                   Cancel
                 </Button>
-                <Button loading={isSubmitting} onClick={onConfirm}>
+                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
                   Confirm
                 </Button>
               </div>
@@ -159,6 +296,7 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
                 className="orderly-absolute orderly-right-0 orderly-top-0 orderly-text-base-contrast-54"
                 onClick={cancelPopover}
               >
+                {/* @ts-ignore */}
                 <X size={18} />
               </button>
             </div>
@@ -167,4 +305,4 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
       </div>
     </Popover>
   );
-};
+}

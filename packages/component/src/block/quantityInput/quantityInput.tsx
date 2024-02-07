@@ -1,13 +1,12 @@
-import Button from "@/button";
 import { FC, useMemo, useRef } from "react";
-
 import { Divider } from "@/divider";
+import Button from "@/button";
 import { cn } from "@/utils/css";
 import { Decimal } from "@orderly.network/utils";
-import { TokenSelect } from "./tokenSelect";
 import { type API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";
 import { parseNumber } from "@/utils/num";
+import { TokenSelect } from "../pickers/tokenPicker";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -113,7 +112,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         </div>
         <div
           className={
-            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36 desktop:orderly-text-3xs"
+            "orderly-flex orderly-items-center orderly-text-4xs orderly-justify-between orderly-px-2 orderly-py-1 orderly-text-base-contrast-36 desktop:orderly-text-3xs orderly-tabular-nums"
           }
         >
           <span>{`$${amount}`}</span>

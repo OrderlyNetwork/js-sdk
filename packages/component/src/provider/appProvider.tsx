@@ -24,6 +24,8 @@ import {
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
+import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
+import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -58,6 +60,7 @@ export type OrderlyAppContextState = {
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -76,6 +79,7 @@ export interface OrderlyAppProviderProps {
   enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
+  footerStatusBar?: FooterStatusBarProps;
 }
 
 export const OrderlyAppProvider: FC<
@@ -95,6 +99,7 @@ export const OrderlyAppProvider: FC<
     toastLimitCount,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   return (
@@ -114,6 +119,7 @@ export const OrderlyAppProvider: FC<
         enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
+        footerStatusBar={footerStatusBar}
       >
         {props.children}
       </InnerProvider>
@@ -129,6 +135,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     toastLimitCount = 1,
     enableSwapDeposit,
     onChainChanged,
+    footerStatusBar,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -156,27 +163,29 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   });
 
   const checkChainId = useCallback(
-    (chainId: string): boolean => {
+    (chainId: number): boolean => {
       if (!chainId || !chains) {
         return false;
       }
 
-      if (typeof chainId === "number") {
-        chainId = `0x${Number(chainId).toString(16)}`;
-      }
-
-      //
+      // if (typeof chainId === "number") {
+      //   chainId = `0x${Number(chainId).toString(16)}`;
+      // }
 
       // check whether chain id and network id match
-      const chainIdNum = parseInt(chainId, 16);
+      // const chainIdNum = parseInt(chainId, 16);
       if (
-        (networkId === "mainnet" && chainIdNum === 421613) ||
-        (networkId === "testnet" && chainIdNum !== 421613)
+        (networkId === "mainnet" && isTestnet(chainId)) ||
+        (networkId === "testnet" && !isTestnet(chainId))
       ) {
         return false;
       }
 
-      const isSupport = chains.some((item: { id: string }) => {
+      const isSupport = chains.some((item: { id: string | number }) => {
+        if (typeof item.id === "string") {
+          // return `0x${Number(item.id).toString(16)}` === chainId;
+          return parseInt(item.id, 16) === chainId;
+        }
         return item.id === chainId;
       });
 
@@ -199,7 +208,9 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
         ////// check chainid ///////
 
-        if (!checkChainId(wallet.chains[0].id)) {
+        const chainId = praseChainIdToNumber(wallet.chains[0].id);
+
+        if (!checkChainId(chainId)) {
           return false;
         }
 
@@ -207,10 +218,13 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         if (!account) {
           throw new Error("account is not initialized");
         }
+        console.info("🤝 connect wallet", wallet);
         // account.address = wallet.accounts[0].address;
         const status = await account.setAddress(wallet.accounts[0].address, {
           provider: wallet.provider,
-          chain: wallet.chains[0],
+          chain: {
+            id: praseChainIdToNumber(wallet.chains[0].id),
+          },
           wallet: {
             name: wallet.label,
           },
@@ -226,7 +240,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   const _onWalletDisconnect = useCallback(async (): Promise<any> => {
     if (typeof disconnect === "function" && currentWallet) {
-      console.warn("🤜 disconnect wallet");
+      console.log("🤜 disconnect wallet");
 
       return disconnect(currentWallet).then(() => {
         return account.disconnect();
@@ -252,17 +266,20 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     return currentWallet.accounts[0].address;
   }, [currentWallet]);
 
-  const currentChainId = useMemo(() => {
+  // current connected chain id
+  const currentChainId = useMemo<number | null>(() => {
     if (!currentWallet) {
       return null;
     }
-    return currentWallet.chains[0].id;
+    const id = currentWallet.chains[0].id;
+
+    return praseChainIdToNumber(id);
   }, [currentWallet]);
 
   useEffect(() => {
     // currentWallet?.provider.detectNetwork().then((x) =>
 
-    if (!chains || chains.length === 0) {
+    if (!chains || chains.length === 0 || !currentChainId) {
       return;
     }
 
@@ -281,16 +298,13 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         // console.log("currentWallet 22 ", currentAddress, currentChainId);
         return;
       }
-      // 需要确定已经拿到chains list
+
       if (!checkChainId(currentChainId)) {
-        // console.warn("!!!! not support this chian -> disconnect wallet");
-        // TODO: 确定是否需要断开连接
-        // account.disconnect();
         // @ts-ignore
         setErrors((errors) => ({ ...errors, ChainNetworkNotSupport: true }));
 
-        console.warn("current chain not support!  -> disconnect wallet!!!");
-        return;
+        console.warn("current chain not support!!!!");
+        // return;
       } else {
         setErrors((errors: any) => ({
           ...errors,
@@ -300,7 +314,10 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
       account.setAddress(currentWallet.accounts[0].address, {
         provider: currentWallet.provider,
-        chain: currentWallet.chains[0],
+        chain: {
+          id: currentChainId,
+          // name: currentWallet.chains[0].name,
+        },
         wallet: {
           name: currentWallet.label,
         },
@@ -331,6 +348,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         enableSwapDeposit,
         onChainChanged,
         brokerName,
+        footerStatusBar,
       }}
     >
       <TooltipProvider>

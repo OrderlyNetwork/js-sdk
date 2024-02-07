@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { MarkPrices } from "./misc";
@@ -24,29 +24,56 @@ export interface SummaryProps {
   swapFee?: string;
   destinationGasFee?: string;
   bridgeFee?: string;
+  symbolPrice: Record<string, number>;
+  depositFee?: bigint;
 }
 
-export const Summary: FC<SummaryProps> = (props) => {
+export const Summary: FC<SummaryProps> = memo((props) => {
   const {
     needCrossChain,
     needSwap,
     fee,
-    // markPrice,
-    swapFee,
-    bridgeFee,
+    swapFee = "0",
+    bridgeFee = "0",
     nativeToken,
     markPrices,
-    destinationGasFee,
+    destinationGasFee = "0",
     slippage,
     onSlippageChange,
+    symbolPrice,
+    depositFee = 0n,
   } = props;
 
   const { from_token: markPrice, native_token: nativeMarkPrice } = markPrices;
 
-  const feeElement = useMemo(() => {
+  // Using useMemo causes a delay in data display
+  const getFeeElement = () => {
+    let dstGasFee = new Decimal(depositFee.toString())
+      ?.div(new Decimal(10).pow(18))
+      .toString();
+    if (needSwap && needCrossChain) {
+      dstGasFee = destinationGasFee;
+    }
+
+    if (!needSwap && !needCrossChain) {
+      const tokenPrice = symbolPrice?.[nativeToken?.symbol!];
+      const totalFee = new Decimal(dstGasFee)
+        ?.mul(tokenPrice || 0)
+        ?.toFixed(3, Decimal.ROUND_UP);
+      return `Fee ≈ $ ${totalFee || 0} ${
+        Number(depositFee)
+          ? `(${new Decimal(dstGasFee).toFixed(
+              feeDecimalsOffset(nativeToken?.woofi_dex_precision ?? 2),
+              Decimal.ROUND_UP
+            )} ${nativeToken?.symbol})`
+          : ""
+      }`;
+    }
+
     if (!fee || fee === "0") {
       return `Fee ≈ $0`;
     }
+
     if (!markPrice || !nativeMarkPrice) {
       return `Fee ≈ - ${props.src?.symbol}`;
     }
@@ -56,8 +83,8 @@ export const Summary: FC<SummaryProps> = (props) => {
     let d = zero;
 
     if (props.isNativeToken) {
-      if (!!destinationGasFee) {
-        const total = new Decimal(destinationGasFee).plus(fee ?? 0);
+      if (!!dstGasFee) {
+        const total = new Decimal(dstGasFee).plus(fee ?? 0);
         text = `${total.todp(
           (nativeToken?.woofi_dex_precision ?? 2) + 3,
           Decimal.ROUND_HALF_EVEN
@@ -66,15 +93,15 @@ export const Summary: FC<SummaryProps> = (props) => {
         d = total.mul(nativeMarkPrice ?? 1);
       }
     } else {
-      if (!!destinationGasFee && destinationGasFee !== "0") {
+      if (!!dstGasFee && dstGasFee !== "0") {
         textArr.push(
-          `${parseNumber(destinationGasFee, {
+          `${parseNumber(dstGasFee, {
             precision: (nativeToken?.woofi_dex_precision ?? 2) + 3,
             truncate: "round",
           })} ${nativeToken?.symbol}`
         );
 
-        d = d.plus(new Decimal(destinationGasFee).mul(nativeMarkPrice ?? 1));
+        d = d.plus(new Decimal(dstGasFee).mul(nativeMarkPrice ?? 1));
       }
 
       if (!!fee) {
@@ -91,26 +118,25 @@ export const Summary: FC<SummaryProps> = (props) => {
       text = textArr.join(" + ");
     }
 
-    return `Fee ≈ $${d.toFixed(2)} (${text})`;
-  }, [
-    needCrossChain,
-    needSwap,
-    fee,
-    props.src?.symbol,
-    markPrice,
-    nativeMarkPrice,
-    nativeToken?.symbol,
-  ]);
+    return `Fee ≈ $${d.toFixed(3, Decimal.ROUND_UP)} (${text})`;
+  };
 
   const onShowFee = useCallback(() => {
     const message = [];
-    if (destinationGasFee) {
+    let dstGasFee = new Decimal(depositFee.toString())
+      ?.div(new Decimal(10).pow(18))
+      .toString();
+    if (needSwap && needCrossChain) {
+      dstGasFee = destinationGasFee;
+    }
+
+    if (dstGasFee) {
       message.push(
         <>
           <div>
             Destination gas fee:
             <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
-              destinationGasFee,
+              dstGasFee.toString(),
               {
                 precision: feeDecimalsOffset(
                   nativeToken?.woofi_dex_precision ?? 2
@@ -128,7 +154,7 @@ export const Summary: FC<SummaryProps> = (props) => {
       );
     }
 
-    if (swapFee) {
+    if (swapFee && Number(swapFee) !== 0) {
       message.push(
         <>
           <div>
@@ -147,7 +173,7 @@ export const Summary: FC<SummaryProps> = (props) => {
       );
     }
 
-    if (bridgeFee) {
+    if (bridgeFee && Number(bridgeFee) !== 0) {
       message.push(
         <>
           <div>
@@ -169,7 +195,9 @@ export const Summary: FC<SummaryProps> = (props) => {
     modal.alert({
       title: "Fee",
       message: (
-        <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">{message}</div>
+        <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">
+          {message}
+        </div>
       ),
     });
   }, [
@@ -178,20 +206,21 @@ export const Summary: FC<SummaryProps> = (props) => {
     bridgeFee,
     nativeToken?.symbol,
     props.src?.symbol,
+    depositFee,
   ]);
 
   return (
     <div className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast-36 desktop:orderly-text-3xs">
       <div className="orderly-flex orderly-items-center orderly-justify-between">
         <div>
-          {`1 ${props.src?.symbol} = ${
+          {`1 ${props.src?.symbol || "USDC"} = ${
             props.price
               ? parseNumber(props.price, {
                   precision: 3,
                   rule: "price",
                 })
               : "-"
-          } ${props.dst.symbol}`}
+          } ${props.dst.symbol || "USDC"}`}
         </div>
         {needSwap ? (
           <SlippageSetting
@@ -200,11 +229,14 @@ export const Summary: FC<SummaryProps> = (props) => {
           />
         ) : null}
       </div>
-      <div className="orderly-mt-1 orderly-inline-flex orderly-items-center" onClick={onShowFee}>
+      <div
+        className="orderly-mt-1 orderly-inline-flex orderly-items-center"
+        onClick={onShowFee}
+      >
         <InfoIcon size={14} className="orderly-mr-1" />
 
-        <span>{feeElement}</span>
+        <span>{getFeeElement()}</span>
       </div>
     </div>
   );
-};
+});

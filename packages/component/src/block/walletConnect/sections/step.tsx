@@ -15,6 +15,7 @@ export const StepItem: FC<PropsWithChildren<StepItemProps>> = (props) => {
       return <Spinner size="small" />;
     }
     if (props.isCompleted) {
+      // @ts-ignore
       return <Check size={20} />;
     }
     return props.children;
@@ -24,8 +25,10 @@ export const StepItem: FC<PropsWithChildren<StepItemProps>> = (props) => {
       className={cn(
         "orderly-flex orderly-items-center orderly-justify-center orderly-w-[32px] orderly-h-[32px] orderly-bg-base-100 orderly-rounded-full",
         props.active && "orderly-bg-primary",
-        props.isLoading && "orderly-bg-white/10 orderly-border orderly-border-primary",
-        props.isCompleted && "orderly-bg-white/10 orderly-border orderly-border-primary orderly-text-primary"
+        props.isLoading &&
+          "orderly-bg-white/10 orderly-border orderly-border-primary",
+        props.isCompleted &&
+          "orderly-bg-white/10 orderly-border orderly-border-primary orderly-text-primary"
       )}
     >
       {child}

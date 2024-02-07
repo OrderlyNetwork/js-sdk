@@ -37,7 +37,7 @@ export declare namespace API {
 
   export interface MarketInfoExt extends MarketInfo {
     change: number;
-    '24h_volume': number;
+    "24h_volume": number;
   }
 
   /**
@@ -98,6 +98,7 @@ export declare namespace API {
     status: string;
     side: string;
     order_id: number;
+    algo_order_id?: number;
     user_id: number;
     price: number | null;
     type: string;
@@ -112,6 +113,7 @@ export declare namespace API {
     created_time: number;
     updated_time: number;
     reduce_only: boolean;
+    trigger_price?: number;
   }
 
   export interface OrderExt extends Order {
@@ -156,6 +158,7 @@ export declare namespace API {
     mark_price: number;
     est_liq_price: number;
     timestamp: number;
+    // Maintenance margin ratio
     mmr: number;
     imr: number;
     IMR_withdraw_orders: number;

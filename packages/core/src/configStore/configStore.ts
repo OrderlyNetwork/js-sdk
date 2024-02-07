@@ -9,7 +9,8 @@ export type ConfigKey =
   | "brokerId"
   | "networkId"
   | "env"
-  | "PROD_URL";
+  | "PROD_URL"
+  | "markets";
 
 export interface ConfigStore {
   get<T>(key: ConfigKey): T;

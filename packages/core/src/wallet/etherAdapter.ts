@@ -4,6 +4,7 @@ import {
   EthersError,
   getParsedEthersError,
 } from "@enzoferey/ethers-error-parser";
+import { API } from "@orderly.network/types";
 
 export interface EtherAdapterOptions {
   provider: any;
@@ -11,7 +12,7 @@ export interface EtherAdapterOptions {
     name?: string;
   };
   // getAddresses?: (address: string) => string;
-  chain: { id: string };
+  chain: { id: number };
 }
 
 export class EtherAdapter implements IWalletAdapter {
@@ -21,7 +22,8 @@ export class EtherAdapter implements IWalletAdapter {
   constructor(options: WalletAdapterOptions) {
     // super();
 
-    this._chainId = parseInt(options.chain.id, 16);
+    // this._chainId = parseInt(options.chain.id, 16);
+    this._chainId = options.chain.id;
     this.provider = new BrowserProvider(options.provider, "any");
     this._address = options.address;
   }
@@ -55,9 +57,31 @@ export class EtherAdapter implements IWalletAdapter {
     }
   ): Promise<any> {
     //
-
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
+
+    return contract[method].apply(null, params).catch((error) => {
+      const parsedEthersError = getParsedEthersError(error);
+
+      throw parsedEthersError;
+    });
+  }
+
+  async callOnChain(
+    chain: API.NetworkInfos,
+    address: string,
+    method: string,
+    params: any[],
+    options: {
+      abi: any;
+    }
+  ): Promise<any> {
+    // const singer = await this.provider?.getSigner();
+    // const contract = new ethers.Contract(address, options.abi, singer);
+
+    const provider = new ethers.JsonRpcProvider(chain.public_rpc_url);
+
+    const contract = new ethers.Contract(address, options.abi, provider);
 
     return contract[method].apply(null, params).catch((error) => {
       const parsedEthersError = getParsedEthersError(error);

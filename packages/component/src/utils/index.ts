@@ -1,2 +1,2 @@
 export { cn } from "./css";
-export { parseNumber } from "./num";
+export { parseNumber, NumberReg } from "./num";

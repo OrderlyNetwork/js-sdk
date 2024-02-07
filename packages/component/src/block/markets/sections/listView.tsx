@@ -2,7 +2,7 @@ import { ListTile, ListView } from "@/listView";
 import { Divider } from "@/divider";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Statistic } from "@/statistic";
-import { SortCondition, SortGroup } from "@/block/markets/sections/sortGroup";
+import { SortGroup } from "@/block/markets/sections/sortGroup";
 import { Numeral } from "@/text";
 import { NumeralWithSymbol } from "@/text/numeralWithSymbol";
 import { Cell } from "./cell";
@@ -42,6 +42,7 @@ export const MarketListView: FC<MarketListViewProps & Props> = (props) => {
           height: props.listHeight,
         }}
       >
+        {/* @ts-ignore */}
         <ListView.separated<API.MarketInfoExt>
           dataSource={props.dataSource}
           renderItem={renderItem}

@@ -28,6 +28,9 @@ import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { ConfigStore } from "@orderly.network/core";
 import { cn } from "@/utils/css";
+import { isTestnet } from "@orderly.network/utils";
+import { Divider } from "@/divider";
+import { getMarginRatioColor } from "../utils";
 
 interface AssetsProps {
   totalBalance: number;
@@ -37,7 +40,6 @@ const KEY = "ORDERLY_WEB_ASSETS_COLLAPSED";
 
 export const Assets: FC<AssetsProps> = (props) => {
   // const [expand, { toggle }] = useBoolean(false);
-
   const [collapsed, setCollapsed] = useLocalStorage(KEY, 1);
   const { totalCollateral, freeCollateral, totalValue, availableBalance } =
     useCollateral({
@@ -54,9 +56,11 @@ export const Assets: FC<AssetsProps> = (props) => {
       return false;
     }
 
-    const isTestnetChain = parseInt(chainId, 16) === 421613;
-
-    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+    return (
+      state.status === AccountStatusEnum.EnableTrading &&
+      // @ts-ignore
+      isTestnet(parseInt(chainId))
+    );
   }, [state.status, connectedChain]);
 
   const [getTestUSDC, { isMutating }] = useMutation(
@@ -97,7 +101,7 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [state]);
 
   const [{ aggregated }, positionsInfo] = usePositionStream();
-  const { marginRatio } = useMarginRatio();
+  const { marginRatio, mmr } = useMarginRatio();
 
   const marginRatioVal = useMemo(() => {
     return Math.min(
@@ -108,6 +112,10 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
+  const isConnected = state.status >= AccountStatusEnum.Connected;
+
+  const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
+
   return (
     <Collapsible
       open={collapsed > 0}
@@ -117,7 +125,7 @@ export const Assets: FC<AssetsProps> = (props) => {
     >
       <div
         className={
-          "orderly-py-3 orderly-flex orderly-justify-between orderly-items-center orderly-tabular-nums"
+          "orderly-py-4 orderly-flex orderly-justify-between orderly-items-center orderly-tabular-nums"
         }
       >
         <div className={"orderly-flex-1"}>
@@ -153,7 +161,7 @@ export const Assets: FC<AssetsProps> = (props) => {
         </CollapsibleTrigger>
       </div>
       {showGetTestUSDC && (
-        <div className="orderly-mb-3 orderly-w-full">
+        <div className="orderly-w-full orderly-pb-4">
           <Button
             variant={"outlined"}
             fullWidth
@@ -169,19 +177,24 @@ export const Assets: FC<AssetsProps> = (props) => {
           </Button>
         </div>
       )}
+      <Divider className="orderly-pb-4" />
 
       <CollapsibleContent>
         <MemorizedAssetsDetail />
       </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
-        <Progress value={marginRatioVal * 10} variant={"gradient"} foregroundClassName={cn("",
-        marginRatioVal <= 1 && "orderly-bg-gradient-to-r orderly-from-[rgba(244,128,124,1)] orderly-to-[rgba(255,79,130,1)]",
-        marginRatioVal >= 10 && "orderly-bg-gradient-to-r orderly-from-[rgba(29,246,181,1)] orderly-to-[rgba(134,237,146,1)]",
-        (marginRatio > 1 && marginRatio < 10) && "orderly-bg-gradient-to-r orderly-from-[rgba(230,214,115,1)] orderly-to-[rgba(230,200,115,1)]",
-        )} />
+        <Progress
+          value={marginRatioVal * 100}
+          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          foregroundClassName={cn("orderly-bg-gradient-to-r", {
+            "orderly-from-[#F4807C] orderly-to-[#FF4F82]": isRed,
+            "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
+            "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
+          })}
+        />
       </div>
-      <MemorizedLeverage />
+      <MemorizedLeverage isConnected={isConnected} />
     </Collapsible>
   );
 };

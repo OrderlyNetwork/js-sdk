@@ -1,13 +1,29 @@
 import { createContext, useContext } from "react";
 
 export type ConnectedChain = {
-  id: string;
+  id: number | string;
 };
+export type WalletAccount = {
+  address: string;
+  // ens: Ens | null;
+  // uns: Uns | null;
+  // balance: Balances | null;
+  // secondaryTokens?: SecondaryTokenBalances[] | null;
+};
+export interface WalletState {
+  label: string;
+  icon: string;
+  provider: any;
+  accounts: WalletAccount[];
+  chains: ConnectedChain[];
+  instance?: unknown;
+}
+
 export interface WalletConnectorContextState {
-  connect: () => Promise<any[]>;
+  connect: () => Promise<WalletState[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
-  setChain: (options: any) => Promise<any>;
+  setChain: (options: { chainId: string | number }) => Promise<any>;
   chains: any[];
   // switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: any;

@@ -1,3 +1,4 @@
+import { API } from "@orderly.network/types";
 import { TransactionRequest, TransactionResponse } from "ethers";
 
 export interface IWalletAdapter {
@@ -44,6 +45,16 @@ export interface IWalletAdapter {
     }
   ): Promise<any>;
 
+  callOnChain(
+    chain: API.NetworkInfos,
+    address: string,
+    method: string,
+    params: any,
+    options: {
+      abi: any;
+    }
+  ): Promise<any>;
+
   on(eventName: any, listener: any): void;
   off(eventName: any, listener: any): void;
 }
@@ -56,7 +67,7 @@ export type WalletAdapterOptions = {
   //   name:string
   // },
   // getAddresses?: (address: string) => string;
-  chain: { id: string };
+  chain: { id: number };
 };
 
 export type getWalletAdapterFunc = (

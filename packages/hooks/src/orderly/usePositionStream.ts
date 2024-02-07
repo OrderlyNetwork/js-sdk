@@ -12,6 +12,9 @@ import { pathOr, propOr } from "ramda";
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useWS } from "../useWS";
+import { useMarketsStream } from "./useMarketsStream";
+
+type PriceMode = "markPrice" | "lastPrice";
 
 export interface PositionReturn {
   data: any[];
@@ -23,7 +26,7 @@ export interface PositionReturn {
 
 export const usePositionStream = (
   symbol?: string,
-  options?: SWRConfiguration
+  options?: SWRConfiguration & { calcMode?: PriceMode }
 ) => {
   const symbolInfo = useSymbolsInfo();
   const { data: accountInfo } =
@@ -43,7 +46,7 @@ export const usePositionStream = (
   const {
     data,
     error,
-    mutate: updatePositions,
+    mutate: refreshPositions,
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,
@@ -56,14 +59,28 @@ export const usePositionStream = (
     onError: (err) => {},
   });
 
-  //
-
-  // const positionsStream = usePositionUpdateStream((positions) => {
-  //   console.log("position message", positions);
-  //     updatePositions();
-  // });
-
   const { data: markPrices } = useMarkPricesStream();
+
+  const [priceMode, setPriceMode] = useState(options?.calcMode || "markPrice");
+
+  useEffect(() => {
+    if (options?.calcMode && priceMode !== options?.calcMode) {
+      setPriceMode(options?.calcMode);
+    }
+  }, [options?.calcMode]);
+
+  const { data: tickers } = useMarketsStream();
+  // console.log("mark prices", markPrices);
+  // console.log("tickers", tickers);
+
+  const tickerPrices = useMemo(() => {
+    const data: Record<string, number> = Object.create(null);
+    tickers?.forEach((item) => {
+      // @ts-ignore
+      data[item.symbol] = item["24h_close"];
+    });
+    return data;
+  }, [tickers]);
 
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
     if (!data?.rows || !symbolInfo || !accountInfo) return null;
@@ -81,6 +98,12 @@ export const usePositionStream = (
 
     const formatted = filteredData.map((item: API.Position) => {
       // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+      const unRealizedPrice = propOr(
+        item.mark_price,
+        item.symbol,
+        priceMode === "markPrice" ? markPrices : tickerPrices
+      ) as unknown as number;
+
       const price = propOr(
         item.mark_price,
         item.symbol,
@@ -94,8 +117,8 @@ export const usePositionStream = (
 
       const unrealPnl = positions.unrealizedPnL({
         qty: item.position_qty,
-        openPrice: item.average_open_price,
-        markPrice: price,
+        openPrice: item?.average_open_price,
+        markPrice: unRealizedPrice,
       });
 
       const imr = account.IMR({
@@ -148,7 +171,16 @@ export const usePositionStream = (
         unsettledPnL: unsettlementPnL_total.toNumber(),
       },
     ];
-  }, [data?.rows, symbolInfo, accountInfo, markPrices, symbol, holding]);
+  }, [
+    data?.rows,
+    symbolInfo,
+    accountInfo,
+    markPrices,
+    priceMode,
+    tickerPrices,
+    symbol,
+    holding,
+  ]);
 
   // const showSymbol = useCallback((symbol: string) => {
   //   setVisibleSymbol(symbol);
@@ -192,7 +224,7 @@ export const usePositionStream = (
 
     const total = totalCollateral.toNumber();
 
-    return formatedPositions[0]
+    let rows = formatedPositions[0]
       .filter((item) => item.position_qty !== 0)
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
@@ -212,15 +244,32 @@ export const usePositionStream = (
             markPrice: item.mark_price,
             MMR,
           }),
-          est_liq_price: positions.liqPrice({
-            markPrice: item.mark_price,
-            totalCollateral: total,
-            positionQty: item.position_qty,
-            MMR,
-          }),
-          MMR,
+          // est_liq_price: positions.liqPrice({
+          //   markPrice: item.mark_price,
+          //   totalCollateral: total,
+          //   positionQty: item.position_qty,
+          //   MMR,
+          // }),
+          mmr: MMR,
         };
       });
+
+    // calculate est_liq_price
+    rows = rows.map((item) => {
+      const est_liq_price = positions.liqPrice({
+        markPrice: item.mark_price,
+        totalCollateral: total,
+        positionQty: item.position_qty,
+        positions: rows,
+        MMR: item.mmr,
+      });
+      return {
+        ...item,
+        est_liq_price,
+      };
+    });
+
+    return rows;
   }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
 
   // useEffect(() => {
@@ -246,8 +295,8 @@ export const usePositionStream = (
       loading: false,
       // showSymbol,
       error,
-      loadMore: () => {},
-      refresh: () => {},
+      // loadMore: () => {},
+      refresh: refreshPositions,
     },
   ] as const;
 };

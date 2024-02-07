@@ -126,7 +126,7 @@ export const MSelect: FC<SelectProps> = ({
                 value={option.value}
                 key={index}
                 className={cn(
-                  "orderly-text-base-contrast-54",
+                  "orderly-text-base-contrast-54 hover:orderly-bg-base-700 orderly-rounded",
                   option.value === props.value &&
                     (color === "buy"
                       ? "orderly-text-trade-profit"

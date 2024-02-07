@@ -19,7 +19,7 @@ const SlippageItem = ({
       onClick={() => onClick(value)}
       className={cn(
         "orderly-rounded orderly-h-[40px] orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-500 orderly-text-base-contrast orderly-text-2xs",
-        isActive && "orderlh-bg-primary orderly-text-base-contrast"
+        isActive && "orderly-bg-primary-light orderly-text-base-contrast"
       )}
     >
       <span>{`${value}%`}</span>
@@ -108,24 +108,24 @@ export const Slippage: FC<SlippageProps> = (props) => {
             // onChange={(e) => setCustomValue(e.target.value)}
             onChange={onValueChange}
           />
-          <span className="orderly-text-2xs orderly-text-base-contrast-36">%</span>
+          <span className="orderly-text-2xs orderly-text-base-contrast-36">
+            %
+          </span>
         </div>
       </div>
-      <div className="orderly-py-2 orderly-text-3xs orderly-text-base-contrast-36">
+      <div className="orderly-py-[8px] orderly-text-3xs orderly-text-base-contrast-36">
         Your transaction will revert if the price changes unfavorably by more
         than this percentage.
       </div>
-      <div className="orderly-grid orderly-grid-cols-6 orderly-mt-5">
-        <div className="orderly-col-start-2 orderly-col-span-4">
-          <Button
-            fullWidth
-            onClick={onConfirm}
-            disabled={!value && !customValue}
-            className="orderly-text-xs"
-          >
-            Confirm
-          </Button>
-        </div>
+      <div className="orderly-mt-[16px] orderly-flex orderly-justify-center">
+        <Button
+          fullWidth
+          onClick={onConfirm}
+          disabled={!value && !customValue}
+          className="orderly-text-xs orderly-w-[200px]"
+        >
+          Confirm
+        </Button>
       </div>
     </>
   );

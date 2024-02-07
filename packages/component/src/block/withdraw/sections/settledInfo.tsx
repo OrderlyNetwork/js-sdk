@@ -17,7 +17,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
     modal
       .confirm({
         title: "Settle PnL",
-        content: ( <SettlePnlContent/>),
+        content: <SettlePnlContent />,
         maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
@@ -46,6 +46,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
         className="orderly-text-primary-light orderly-text-4xs desktop:orderly-text-3xs"
         size="small"
         variant={"text"}
+        // @ts-ignore
         leftIcon={<RotateCw size={15} />}
         onClick={onSettleClick}
       >

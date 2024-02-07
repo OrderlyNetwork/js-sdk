@@ -2,10 +2,19 @@ import { BaseSigner, MessageFactor } from "./signer";
 
 import { ConfigStore } from "./configStore/configStore";
 import { OrderlyKeyStore } from "./keyStore";
-import { IWalletAdapter, getWalletAdapterFunc } from "./wallet/adapter";
+import {
+  IWalletAdapter,
+  WalletAdapterOptions,
+  getWalletAdapterFunc,
+} from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, calculateStringHash, parseAccountId } from "./utils";
+import {
+  SignatureDomain,
+  calculateStringHash,
+  isHex,
+  parseAccountId,
+} from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
@@ -73,7 +82,7 @@ export class Account {
 
   constructor(
     private readonly configStore: ConfigStore,
-    private readonly keyStore: OrderlyKeyStore,
+    readonly keyStore: OrderlyKeyStore,
     private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
     options?: Partial<{
       /**
@@ -102,7 +111,7 @@ export class Account {
     address: string,
     wallet?: {
       provider: any;
-      chain: { id: string };
+      chain: { id: string | number };
       wallet?: {
         name: string;
       };
@@ -110,6 +119,15 @@ export class Account {
     }
   ): Promise<AccountStatusEnum> {
     if (!address) throw new Error("address is required");
+
+    if (
+      typeof wallet?.chain?.id === "string" &&
+      (isHex(wallet?.chain?.id) ||
+        (wallet?.chain?.id.startsWith("0x") &&
+          isHex(wallet?.chain?.id.slice(2))))
+    ) {
+      wallet.chain.id = parseInt(wallet.chain.id, 16);
+    }
 
     //
 
@@ -126,7 +144,10 @@ export class Account {
 
     if (wallet) {
       // this.walletClient = new this.walletAdapterClass(wallet);
-      this.walletClient = this.getWalletAdapter({ ...wallet, address });
+      this.walletClient = this.getWalletAdapter({
+        ...wallet,
+        address,
+      } as WalletAdapterOptions);
     }
 
     return await this._checkAccount(address);
@@ -358,7 +379,7 @@ export class Account {
     );
   }
 
-  async createOrderlyKey(expiration: number): Promise<any> {
+  async createOrderlyKey(expiration?: number): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }

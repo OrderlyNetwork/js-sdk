@@ -15,6 +15,7 @@ export interface BaseDialogProps {
   open: boolean;
   title: ReactNode;
   closable?: boolean;
+  closeableSize?: number;
   onOk?: () => Promise<any>;
   onCancel?: () => void;
   footer?: ReactNode;
@@ -26,6 +27,9 @@ export interface BaseDialogProps {
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
   const [loading, setLoading] = useState(false);
   const actions = useMemo(() => {
+    if (props.footer !== undefined) {
+      return props.footer;
+    }
     if (!props.onCancel && !props.onOk) {
       return null;
     }
@@ -77,19 +81,20 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
         {buttons}
       </DialogFooter>
     );
-  }, [props.onCancel, props.onOk, loading]);
+  }, [props.onCancel, props.onOk, loading, props.footer]);
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
         closable={props.closable}
+        closeableSize={props.closeableSize}
         onOpenAutoFocus={(event) => event.preventDefault()}
         className={cn("orderly-confirm-dialog", props.contentClassName)}
         maxWidth={props.maxWidth}
       >
-        <DialogHeader>
+        {props.title && <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
-        </DialogHeader>
+        </DialogHeader>}
         {props.children}
         {actions}
       </DialogContent>

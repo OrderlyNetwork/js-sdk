@@ -15,7 +15,7 @@ interface CellBarProps {
 export const CellBar: FC<CellBarProps> = (props) => {
   const { direction = CellBarDirection.RIGHT_TO_LEFT } = props;
   const transform = useMemo(() => {
-    const x = Math.max(props.width, 1);
+    const x = Math.max(props.width, 0);
     if (direction === CellBarDirection.LEFT_TO_RIGHT) {
       return { transform: `translateX(${x}%)` };
     }

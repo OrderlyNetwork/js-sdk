@@ -12,6 +12,7 @@ export const ConfirmHeader: FC<{
         onClick={props.onClose}
         className="orderly-absolute orderly-right-0 orderly-top-0 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80 orderly-p-2"
       >
+        {/* @ts-ignore */}
         <X size={18} />
       </button>
     </div>

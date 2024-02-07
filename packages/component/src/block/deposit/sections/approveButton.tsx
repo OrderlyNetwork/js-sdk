@@ -13,6 +13,7 @@ interface ApproveButtonProps {
   label: string;
   disabled?: boolean;
   buttonId: string;
+  depositFeeRevalidating?: boolean;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {
@@ -35,20 +36,17 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
     if (approveLoading) return;
     setApproveLoading(true);
     onApprove?.()
-      .then(
-        (result) => {
-          //
-          toast.success("Approve success");
-        },
-        (error) => {
-          //
-          toast.error(error?.errorCode);
-        }
-      )
+      .then((res: any) => {
+        toast.success("Approve success");
+      })
+      .catch((error) => {
+        console.log("approve error", error);
+        toast.error(error?.errorCode || "Approve failed");
+      })
       .finally(() => {
         setApproveLoading(false);
       });
-  }, [approveLoading, allowance, quantity]);
+  }, [approveLoading, allowance, quantity, props.onApprove]);
 
   if (allowance <= 0) {
     return (
@@ -87,7 +85,7 @@ export const ApproveButton: FC<ApproveButtonProps> = (props) => {
       onClick={onDeposit}
       disabled={disabled || submitting}
       loading={submitting}
-      className=" desktop:orderly-text-2xs"
+      className="desktop:orderly-text-2xs"
     >
       {label}
     </Button>

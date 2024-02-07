@@ -1,13 +1,21 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
-import { parseNumber } from "@/utils/num";
-import { API, Chain, ChainConfig, CurrentChain } from "@orderly.network/types";
+import { API, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import { FC, useEffect, useMemo, useState, useRef, useCallback } from "react";
+import {
+  FC,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import { usePrivateQuery, useWalletSubscription } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { CrossChainConfirm } from "./crossChainConfirm";
+import { OrderlyAppContext } from "@/provider";
 
 export interface ActionButtonProps {
   chains?: API.NetworkInfos[];
@@ -15,8 +23,7 @@ export interface ActionButtonProps {
   onWithdraw: () => void;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
-  openChainPicker?: () => Promise<{ id: number; name: string }>;
-  // chainInfo?: ChainConfig;
+  openChainPicker?: () => Promise<{ id?: number; name?: string }>;
   quantity: string;
   address: string | undefined;
   loading?: boolean;
@@ -24,7 +31,6 @@ export interface ActionButtonProps {
   maxAmount: number;
   fee: number;
   crossChainWithdraw: boolean;
-  // chainNotSupport: boolean;
 }
 
 export const ActionButton: FC<ActionButtonProps> = (props) => {
@@ -35,10 +41,8 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     switchChain,
     disabled,
     openChainPicker,
-    // chainInfo,
     quantity,
     loading,
-    // chainNotSupport,
     chainVaultBalance,
     maxAmount,
     crossChainWithdraw,
@@ -46,27 +50,20 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     fee,
   } = props;
 
-  const [chainNotSupport, setChainNotSupport] = useState(false);
   /// has cross chain withdraw transaction
-  const [crossChainTrans, setCrossChainTrans] = useState<any | undefined>(undefined);
+  const [crossChainTrans, setCrossChainTrans] = useState<any | undefined>(
+    undefined
+  );
 
-  const { data: assetHistory } = usePrivateQuery<any[]>('/v1/asset/history', {
+  const { errors } = useContext(OrderlyAppContext);
+
+  const chainNotSupport = errors.ChainNetworkNotSupport;
+
+  const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
     revalidateOnMount: true,
   });
 
   const needCrossChain = useRef<Boolean>(false);
-
-
-  const checkSupoort = (
-    chain: CurrentChain | null,
-    chains: API.NetworkInfos[] | undefined
-  ): boolean => {
-    if (!chain || !chains) return false;
-
-    const index = chains?.findIndex((c) => c.chain_id === chain.id);
-
-    return index < 0;
-  };
 
   useWalletSubscription({
     onMessage(data: any) {
@@ -81,12 +78,11 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   useEffect(() => {
     // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
-    const item = assetHistory?.find((e: any) => e.trans_status === "pending_rebalance".toUpperCase());
+    const item = assetHistory?.find(
+      (e: any) => e.trans_status === "pending_rebalance".toUpperCase()
+    );
     setCrossChainTrans(item);
   }, [assetHistory]);
-
-  // console.log("input quantity", quantity, assetHistory);
-
 
   const warningMessage = useMemo(() => {
     const networkName = chain?.info?.network_infos?.name;
@@ -100,22 +96,24 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
         return `Withdrawals are not supported on ${networkName}. Please switch to any of the bridgeless networks.`;
       }
 
-      return `Withdrawals are not supported on ${networkName}. Please switch to Arbitrum.`;
+      return `Withdrawals are not supported on ${networkName}.`;
     }
     // check quantity and vaultBalance
     if (crossChainWithdraw) {
       needCrossChain.current = true;
-      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`
+      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`;
     }
 
     return undefined;
-
-  }, [chainNotSupport, chains, chain, quantity, maxAmount, crossChainWithdraw, chainVaultBalance]);
-
-  useEffect(() => {
-    setChainNotSupport(checkSupoort(chain, chains));
-  }, [chains?.length, chain?.id]);
-
+  }, [
+    chainNotSupport,
+    chains,
+    chain,
+    quantity,
+    maxAmount,
+    crossChainWithdraw,
+    chainVaultBalance,
+  ]);
 
   const onClick = useCallback(() => {
     const qty = parseFloat(quantity);
@@ -123,14 +121,16 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       modal.confirm({
         title: "Confirm to withdraw",
         content: (
-          <CrossChainConfirm address={address || ""} amount={qty-fee} chain={chain}/>
+          <CrossChainConfirm
+            address={address || ""}
+            amount={qty - fee}
+            chain={chain}
+          />
         ),
         onOk: async () => {
           onWithdraw();
         },
-        onCancel: async () => {
-
-        }
+        onCancel: async () => {},
       });
     } else {
       onWithdraw();
@@ -154,7 +154,9 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             className="desktop:orderly-text-xs"
             fullWidth
             onClick={onClick}
-            disabled={props.disabled || props.loading || crossChainTrans !== undefined}
+            disabled={
+              props.disabled || props.loading || crossChainTrans !== undefined
+            }
             loading={loading}
           >
             Withdraw
@@ -163,44 +165,18 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
       );
     }
 
-    if (chains?.length === 1) {
-      return (
-        <Button
-          id="orderly-withdraw-confirm-button"
-          className="desktop:orderly-text-xs"
-          fullWidth
-          onClick={() => {
-            const chain = chains[0];
-            //
-            if (chain) {
-              swtichChain(chain.chain_id);
-              // toast.promise(
-              //   switchChain({ chainId: int2hex(chain.chain_id) }),
-              //   {
-              //     loading: "Loading",
-              //     success: (data) => `Successfully`,
-              //     error: (err) => `Error: ${err.toString()}`,
-              //   }
-              // );
-            }
-          }}
-        >
-          Switch to Arbitrum
-        </Button>
-      );
-    }
     return (
       <Button
         id="orderly-withdraw-confirm-button"
         className="desktop:orderly-text-xs"
         fullWidth
-        onClick={() =>
+        onClick={() => {
           openChainPicker?.().then(({ id }) => {
-            swtichChain(id);
-          })
-        }
+            id && swtichChain(id);
+          });
+        }}
       >
-        Switch Network
+        Switch network
       </Button>
     );
   }, [
@@ -215,14 +191,16 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <>
-      {warningMessage && (
-        <div className="orderly-text-warning orderly-text-3xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs">
-          {warningMessage}
-        </div>
-      )}
+      <div className="orderly-withdraw-warning-message">
+        {warningMessage && (
+          <div className="orderly-warning-msg orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs">
+            {warningMessage}
+          </div>
+        )}{" "}
+      </div>
 
       <div className="orderly-flex orderly-justify-center orderly-text-xs desktop:orderly-text-xs orderly-font-bold">
-        <div className="orderly-withdraw-action-button-container orderly-py-3 orderly-w-full">
+        <div className="orderly-withdraw-action-button-container orderly-w-full">
           {actionButton}
         </div>
       </div>

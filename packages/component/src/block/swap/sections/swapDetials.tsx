@@ -12,7 +12,7 @@ import { API } from "@orderly.network/types";
 export interface SwapInfo {
   // gasFee: string;
   // tradingFee: string;
-  dstGasFee: string;
+  dstGasFee: bigint;
   swapFee: string;
   bridgeFee: string;
   price: number;
@@ -41,7 +41,8 @@ export const SwapDetails: FC<Props> = (props) => {
         <ListTile
           className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-primary-light orderly-text-4xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-primary-light orderly-text-xs">
+              {/* @ts-ignore */}
               <Fuel size={14} />
               <Numeral
                 unit={props.nativeToken?.symbol}
@@ -49,10 +50,10 @@ export const SwapDetails: FC<Props> = (props) => {
                 truncate="round"
                 padding={false}
               >
-                {info.dstGasFee}
+                {info.dstGasFee?.toString()}
               </Numeral>
-              <span className="orderly-text-primary-light/60">{`($${new Decimal(
-                info.dstGasFee
+              <span className="orderly-text-primary-light/60 orderly-text-xs">{`($${new Decimal(
+                info.dstGasFee?.toString()
               )
                 .mul(props.nativePrice)
                 .toFixed(2)
@@ -60,13 +61,15 @@ export const SwapDetails: FC<Props> = (props) => {
             </div>
           }
         >
-          <span className="orderly-text-base-contrast-36">Destination gas fee</span>
+          <span className="orderly-text-base-contrast-36 orderly-text-xs">
+            Destination gas fee
+          </span>
         </ListTile>
 
         <ListTile
           className="orderly-py-0 hover:orderly-bg-transparent"
           tailing={
-            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
+            <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
               <Numeral
                 unit={props.src.token}
                 padding={false}
@@ -74,7 +77,7 @@ export const SwapDetails: FC<Props> = (props) => {
               >
                 {info.swapFee}
               </Numeral>
-              <span className="orderly-text-base-contrast-36">{`($${new Decimal(
+              <span className="orderly-text-base-contrast-36 orderly-text-xs">{`($${new Decimal(
                 info.swapFee
               )
                 .mul(props.markPrice)
@@ -83,13 +86,13 @@ export const SwapDetails: FC<Props> = (props) => {
             </div>
           }
         >
-          <span className="orderly-text-base-contrast-36">Swap fee</span>
+          <span className="orderly-text-base-contrast-36 orderly-text-xs">Swap fee</span>
         </ListTile>
         {mode === SwapMode.Cross && (
           <ListTile
             className="orderly-py-0 hover:orderly-bg-transparent"
             tailing={
-              <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-4xs">
+              <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-text-xs">
                 <Numeral
                   unit={props.src.token}
                   precision={props.src.displayDecimals + 3}
@@ -97,7 +100,7 @@ export const SwapDetails: FC<Props> = (props) => {
                 >
                   {info.bridgeFee}
                 </Numeral>
-                <span className="orderly-text-base-contrast-36">{`($${new Decimal(
+                <span className="orderly-text-base-contrast-36 orderly-text-xs">{`($${new Decimal(
                   info.bridgeFee
                 )
                   .mul(props.markPrice)
@@ -106,7 +109,7 @@ export const SwapDetails: FC<Props> = (props) => {
               </div>
             }
           >
-            <span className="orderly-text-base-contrast-36">Bridge fee</span>
+            <span className="orderly-text-base-contrast-36 orderly-text-xs">Bridge fee</span>
           </ListTile>
         )}
 
@@ -117,30 +120,42 @@ export const SwapDetails: FC<Props> = (props) => {
               unit={props.dst.token}
               padding={false}
               precision={props.dst.displayDecimals}
-              className="orderly-text-4xs"
+              className="orderly-text-xs"
             >
               {info.received}
             </Numeral>
           }
         >
-          <span className="orderly-text-base-contrast-36">Minimum received</span>
+          <span className="orderly-text-base-contrast-36 orderly-text-xs">
+            Minimum received
+          </span>
         </ListTile>
         <ListTile
-          className="orderly-py-0 orderly-text-4xs hover:orderly-bg-transparent"
+          className="orderly-py-0 orderly-text-xs hover:orderly-bg-transparent"
           tailing={`1 ${props.src.token} = ${parseNumber(info.price, {
             rule: "price",
             precision: 3,
           })} ${props.dst.token}`}
         >
-          <span className="orderly-text-base-contrast-36">Price</span>
+          <span className="orderly-text-base-contrast-36 orderly-text-xs">
+            Price
+          </span>
         </ListTile>
-        <ListTile className="orderly-py-0 hover:orderly-bg-transparent" tailing={
-          <span className="orderly-text-4xs">1%</span>
-        }>
-          <span className="orderly-text-base-contrast-36">Slippage tolerance</span>
+        <ListTile
+          className="orderly-py-0 hover:orderly-bg-transparent"
+          tailing={<span className="orderly-text-xs">1%</span>}
+        >
+          <span className="orderly-text-base-contrast-36 orderly-text-xs">
+            Slippage tolerance
+          </span>
         </ListTile>
       </div>
-      <Button id="orderly-swap-config-button" className="orderly-text-xs" fullWidth onClick={() => props.onConfirm()}>
+      <Button
+        id="orderly-swap-config-button"
+        className="orderly-text-base"
+        fullWidth
+        onClick={() => props.onConfirm()}
+      >
         Confirm swap
       </Button>
     </>

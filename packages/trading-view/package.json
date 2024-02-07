@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-view",
-  "version": "0.1.9",
+  "version": "0.1.8-alpha.35",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "files": [
@@ -8,6 +8,9 @@
   ],
   "license": "ISC",
   "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "react": "^18.2.0",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.0",
     "rollup": "^3.26.3",
@@ -20,22 +23,25 @@
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",
+    "typescript": "^5.1.6",
     "tsup": "^7.1.0",
-    "typescript": "^4.5.2"
+    "typedoc": "^0.24.8"
   },
   "dependencies": {
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/net": "workspace:*"
+    "@orderly.network/net": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsup --watch --tsconfig tsconfig.build.json",
+    "build": "tsup --tsconfig tsconfig.build.json",
     "docs:generate": "typedoc",
-    "docs:parse": "typedoc-json-parser",
+    "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest"
   },
   "publishConfig": {

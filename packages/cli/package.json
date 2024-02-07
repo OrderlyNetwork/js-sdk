@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/cli",
-  "version": "0.0.37",
+  "version": "0.0.36-alpha.35",
   "description": "",
   "bin": {
     "orderly": "./bin/cli.js"
@@ -23,7 +23,6 @@
     "@orderly.network/core": "workspace:*",
     "configstore": "^6.0.0",
     "enquirer": "^2.4.1",
-    "qrcode-terminal": "^0.12.0",
     "yargs": "^17.7.2"
   }
 }

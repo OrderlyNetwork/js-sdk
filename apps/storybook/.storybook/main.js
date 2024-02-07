@@ -1,39 +1,56 @@
-import { join, dirname } from "path";
+import { dirname, join } from "path";
+/** @type { import('@storybook/react-webpack5').StorybookConfig } */
 
-/**
- * This function is used to resolve the absolute path of a package.
- * It is needed in projects that use Yarn PnP or are set up within a monorepo.
- */
-function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, "package.json")));
-}
+import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 
-/** @type { import('@storybook/react-vite').StorybookConfig } */
+// import { remarkNpm2Yarn } from 'remark-npm2yarn'
+
 const config = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  staticDirs: ["../public"],
   addons: [
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-interactions"),
-    getAbsolutePath("@storybook/addon-mdx-gfm"),
     {
-      name: '@storybook/addon-styling',
+      name: "@storybook/addon-styling",
       options: {
         // Check out https://github.com/storybookjs/addon-styling/blob/main/docs/api.md
         // For more details on this addon's options.
-        postCss: {
-          implementation: require.resolve('postcss'),
+        postCss: true,
+      },
+    },
+    getAbsolutePath("@storybook/addon-mdx-gfm"),
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        loaderOptions: {
+          injectStoryParameters: false,
         },
       },
     },
   ],
   framework: {
-    name: getAbsolutePath("@storybook/react-vite"),
+    name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
   },
   docs: {
     autodocs: "tag",
   },
+  webpackFinal: async (config) => {
+    if (config.resolve) {
+      config.resolve.plugins = [
+        ...(config.resolve.plugins || []),
+        new TsconfigPathsPlugin({
+          extensions: config.resolve.extensions,
+        }),
+      ];
+    }
+    return config;
+  },
 };
 export default config;
+
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, "package.json")));
+}

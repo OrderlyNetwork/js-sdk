@@ -77,13 +77,18 @@ export interface DepositFormProps {
 
   onEnquiry?: (inputs: any) => Promise<any>;
 
-  approve: (amount: string | undefined) => Promise<any>;
-  deposit: (amount: string) => Promise<any>;
+  approve: (amount?: string) => Promise<any>;
+  deposit: () => Promise<any>;
 
   onOk?: (data: any) => void;
 
   needSwap: boolean;
   needCrossChain: boolean;
+  symbolPrice: Record<string, number>;
+  quantity: string;
+  setQuantity: (quantity: string) => void;
+  depositFee?: bigint;
+  depositFeeRevalidating?: boolean;
 }
 
 export const DepositForm: FC<DepositFormProps> = (props) => {
@@ -100,7 +105,9 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     isNativeToken,
     needCrossChain,
     needSwap,
-    // onEnquiry,
+    quantity,
+    setQuantity,
+    depositFee,
   } = props;
 
   const { errors, enableSwapDeposit, brokerName } =
@@ -111,12 +118,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const [warningMessage, setWarningMessage] = useState<string>("");
 
-  // const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
-  // const [needSwap, setNeedSwap] = useState<boolean>(false);
-
   const [submitting, setSubmitting] = useState(false);
 
-  const [quantity, setQuantity] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
 
   const [querying, { setTrue: queryStart, setFalse: queryStop }] =
@@ -145,8 +148,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     // dstGasFee: "",
   });
 
-  //
-
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
 
@@ -164,7 +165,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
     setSubmitting(true);
 
-    // 如果不需要跨链，也不需要swap
+    // if not need cross chain and not need swap
     if (!needCrossChain && !needSwap) {
       return Promise.resolve().then(() => {
         if (inputStatus !== "default") {
@@ -172,7 +173,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         }
 
         return props
-          .deposit?.(quantity)
+          .deposit?.()
           .then(
             (res: any) => {
               setQuantity("");
@@ -190,7 +191,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       });
     }
 
-    // 需要swap
+    // need swap
     return Promise.resolve()
       .then(() => enquiry())
       .then((transaction) => {
@@ -223,6 +224,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           transactionData: transaction,
           chain: chain?.info?.network_infos,
           nativeToken: chain?.info.nativeToken,
+          depositFee,
+          brokerName,
         });
       })
       .then(
@@ -248,11 +251,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     needSwap,
     chain?.info,
     slippage,
+    depositFee,
   ]);
 
-  const onApprove = useCallback(() => {
-    return props.approve(quantity || undefined);
-  }, [quantity, maxAmount]);
+  const onApprove = useCallback(async () => {
+    return props.approve(quantity);
+  }, [quantity, props.approve]);
 
   const onValueChange = useCallback(
     (value: any) => {
@@ -299,11 +303,13 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   const onTokenChange = (token: API.TokenInfo) => {
     cleanData();
     setQuantity("");
+
     props.switchToken?.(token);
   };
 
   const onChainChange = useCallback(
     (value: API.Chain) => {
+      if (!value) return;
       if (value.network_infos?.chain_id === chain?.id) return Promise.resolve();
       return props
         .switchChain?.({
@@ -335,6 +341,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     [props.switchChain, chain]
   );
 
+  // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
     (chain: API.Chain) => {
       //
@@ -348,9 +355,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         );
         if (!token) token = tokens[0];
 
-        if (!token || props.token?.symbol === token.symbol) return;
+        // if (!token || props.token?.symbol === token.symbol) return;
 
         setTokens(tokens);
+
+        if (!token) return;
+
         props.switchToken?.(token);
       }
     },
@@ -374,7 +384,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
 
   const enquirySuccessHandle = (res: any) => {
     if (res.mark_prices) {
-      // setMarkPrice(res.mark_price);
       const fee = needCrossChain ? res.fees_from.total : res.fees_from;
       const swapFee = needCrossChain ? res.fees_from.woofi : res.fees_from;
       const bridgeFee = needCrossChain ? res.fees_from.stargate : undefined;
@@ -474,15 +483,6 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
   }, 300);
 
   useEffect(() => {
-    //
-    //   token: props.token,
-    //   chain,
-    //   needCrossChain,
-    //   needSwap,
-    //   slippage,
-    //   quantity,
-    // });
-
     // 如果不需要跨链，也不需要swap，不需要询价
     if (!needCrossChain && !needSwap) {
       cleanData({
@@ -551,7 +551,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         fetchBalance={props.fetchBalance}
         onTokenChange={onTokenChange}
         balanceRevalidating={props.balanceRevalidating}
-        disabled={errors.ChainNetworkNotSupport}
+        disabled={errors?.ChainNetworkNotSupport}
       />
 
       <Divider className="orderly-py-4">
@@ -573,7 +573,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           fee={Number(transactionInfo.fee)}
         />
       </div>
-      <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-3xs orderly-text-tertiary">
+      <div className="orderly-flex orderly-items-start orderly-py-3 orderly-text-3xs orderly-text-tertiary">
         <Summary
           needSwap={needSwap}
           needCrossChain={needCrossChain}
@@ -589,6 +589,8 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           destinationGasFee={transactionInfo.dstGasFee}
           slippage={slippage}
           onSlippageChange={setSlippage}
+          symbolPrice={props.symbolPrice}
+          depositFee={depositFee}
         />
       </div>
 
@@ -608,12 +610,14 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           props.isNativeToken ? Number.MAX_VALUE : Number(props.allowance)
         }
         chainNotSupport={!!errors?.ChainNetworkNotSupport}
-        disabled={!quantity || inputStatus === "error"}
+        disabled={
+          !quantity || inputStatus === "error" || props.depositFeeRevalidating!
+        }
+        loading={submitting || props.depositFeeRevalidating! || querying}
+        submitting={submitting || props.depositFeeRevalidating! || querying}
         switchChain={switchChain}
-        loading={submitting}
         quantity={quantity}
         onApprove={onApprove}
-        submitting={submitting}
         maxQuantity={maxAmount}
         needCrossChain={needCrossChain}
         needSwap={needSwap}

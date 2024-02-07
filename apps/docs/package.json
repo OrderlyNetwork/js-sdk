@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "0.1.68",
+  "version": "0.1.67-alpha.35",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
@@ -52,11 +52,11 @@
     "superjson": "^1.13.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3.3.3",
-    "typedoc-json-parser": "github:maoge8274/typedoc-json-parser",
     "typescript": "5.1.6",
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@orderly.network/typedoc-json-parser": "^9.0.1",
     "@types/chroma-js": "^2.4.2",
     "@types/ramda": "^0.29.3",
     "@types/react": "18.2.16",

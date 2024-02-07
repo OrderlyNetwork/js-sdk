@@ -10,6 +10,7 @@ import { toast } from "@/toast";
 import { SwapMode, SwapProcessStatusStatus } from "../sections/misc";
 import { API, WS_WalletStatusEnum } from "@orderly.network/types";
 import { SwapProcessStatus } from "./swapProcessStatus";
+import { Decimal } from "@orderly.network/utils";
 
 export interface SwapProps {
   src: SymbolInfo;
@@ -21,10 +22,11 @@ export interface SwapProps {
 
   chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
-
+  depositFee?: bigint;
   onComplete?: (isSuccss: boolean) => void;
   onCancel?: () => void;
   onFail?: () => void;
+  brokerName?: string;
 }
 
 export const SingleSwap: FC<SwapProps> = (props) => {
@@ -36,6 +38,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     src,
     chain,
     nativeToken,
+    depositFee,
   } = props;
 
   const [status, setStatus] = useState<SwapProcessStatusStatus>(
@@ -53,12 +56,14 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       slippage,
       time: chain?.est_txn_mins,
       received: dst.amount,
-      dstGasFee: "0",
+      dstGasFee: new Decimal(depositFee!.toString())
+        ?.div(new Decimal(10).pow(18))
+        ?.toString(),
       swapFee: transaction.fees_from,
     };
 
     return info;
-  }, [transaction, chain?.est_txn_mins, mode, dst]);
+  }, [transaction, chain?.est_txn_mins, mode, dst, depositFee]);
 
   useEffect(() => {
     if (swapStatus === WS_WalletStatusEnum.COMPLETED) {
@@ -86,7 +91,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         fromAmount: transaction.infos.from_amount,
         toToken: transaction.infos.to_token,
         minToAmount: transaction.infos.min_to_amount,
-        orderlyNativeFees: 0n,
+        orderlyNativeFees: depositFee,
       },
       { dst, src }
     ).then(
@@ -98,7 +103,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       (error: any) => {
         setStatus(SwapProcessStatusStatus.DepositFailed);
 
-        toast.error(error.message || "Error");
+        toast.error(error?.message || "Error");
       }
     );
   }, [transaction, mode, dst, src]);
@@ -125,6 +130,7 @@ export const SingleSwap: FC<SwapProps> = (props) => {
         tx={tx}
         chainInfo={props.chain}
         onComplete={props.onComplete}
+        brokerName={props.brokerName}
       />
     );
   }, [view, swapInfo, mode, chain, tx, props.onComplete, status]);
@@ -140,7 +146,10 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       {content}
       <div className="orderly-flex orderly-justify-center orderly-text-3xs orderly-gap-2 orderly-mt-5">
         <span className="orderly-text-base-contrast-54">Need help?</span>
-        <a href="" className="orderly-text-primary-light">
+        <a
+          href="https://learn.woo.org/woofi/faqs/woofi-pro"
+          className="orderly-text-primary-light"
+        >
           View FAQs
         </a>
       </div>

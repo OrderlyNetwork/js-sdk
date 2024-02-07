@@ -1,9 +1,9 @@
+import { FC } from "react";
 import { NetworkImage } from "@/icon";
 import { Spinner } from "@/spinner";
 import { Numeral } from "@/text";
 import { API } from "@orderly.network/types";
-import { FC, useEffect, useState } from "react";
-
+import { useGetBalance } from "./useGetBalance";
 interface TokenCellProps {
   token: API.TokenInfo;
   fetchBalance: (token: string, decimals: number) => Promise<any>;
@@ -12,41 +12,25 @@ interface TokenCellProps {
 
 export const TokenCell: FC<TokenCellProps> = (props) => {
   const { token } = props;
-
-  const [balance, setBalance] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (loading) return;
-    setLoading(true);
-    props
-      .fetchBalance(token.address, token.decimals)
-      .then(
-        (balance) => {
-          setBalance(balance);
-        },
-        (error) => {}
-      )
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [token]);
+  const { balance, loading } = useGetBalance(token, props.fetchBalance);
 
   return (
     <div
-      className="orderly-flex orderly-cursor-pointer hover:orderly-bg-base-800"
+      className="orderly-token-select-list-item orderly-flex orderly-cursor-pointer hover:orderly-bg-base-800"
       onClick={() => {
         props.onItemClick(token);
       }}
     >
       <div className="orderly-flex-1 orderly-flex orderly-space-x-2 orderly-items-center">
         <NetworkImage type={"token"} name={token.symbol} rounded />
-        <div className="orderly-flex orderly-flex-col">
+        <div className="orderly-token-select-list-item-left orderly-flex orderly-flex-col">
           <span>{token.symbol}</span>
-          <span className="orderly-text-4xs orderly-text-base-contrast/50">{token.symbol}</span>
+          <span className="orderly-text-4xs orderly-text-base-contrast/50">
+            {token.symbol}
+          </span>
         </div>
       </div>
-      <div className="orderly-flex-1 orderly-flex orderly-items-center">
+      <div className="orderly-token-select-list-item-right orderly-flex-1 orderly-flex orderly-items-center">
         {loading ? (
           <Spinner size={"small"} />
         ) : (

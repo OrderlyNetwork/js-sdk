@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/examples",
-  "version": "0.1.93",
+  "version": "0.1.92-alpha.35",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3330",
@@ -10,6 +10,7 @@
     "less2css": "lessc ./app/theme/woo.theme.less ./app/theme/woo.theme.css"
   },
   "dependencies": {
+    "@orderly.network/core": "workspace:*",
     "@orderly.network/react": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",

@@ -10,7 +10,7 @@ export const useLeverage = (): any => {
 
   const { data: config } = useQuery("/v1/public/config");
 
-  const updateLeverage = useCallback((data: any) => {
+  const updateLeverage = useCallback((data: { leverage: number }) => {
     return update(data).then((res: any) => {
       if (res.success) {
         return mutate();

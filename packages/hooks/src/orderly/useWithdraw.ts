@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
-import { Decimal } from "@orderly.network/utils";
 import { useCollateral } from "./useCollateral";
 import { useAccount } from "../useAccount";
 
@@ -17,7 +16,7 @@ export const useWithdraw = () => {
     (inputs: {
       chainId: number;
       token: string;
-      amount: number;
+      amount: string;
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
       return account.assetsManager.withdraw(inputs).then((res: any) => {
@@ -68,5 +67,20 @@ export const useWithdraw = () => {
     return freeCollateral;
   }, [freeCollateral]);
 
-  return { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL };
+  const availableWithdraw = useMemo(() => {
+    if (unsettledPnL < 0) {
+      return freeCollateral;
+    } else {
+      return freeCollateral - unsettledPnL;
+    }
+  }, [freeCollateral, unsettledPnL]);
+
+  return {
+    withdraw,
+    isLoading,
+    maxAmount,
+    availableBalance,
+    availableWithdraw,
+    unsettledPnL,
+  };
 };

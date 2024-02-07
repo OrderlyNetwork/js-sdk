@@ -1,15 +1,16 @@
 import Button from "@/button";
 import { toast } from "@/toast";
 import type { API } from "@orderly.network/types";
-import { useState, type FC } from "react";
+import { useState, type FC, useContext } from "react";
+import { OrderListContext } from "../shared/orderListContext";
 
 interface CancelButtonProps {
   order: API.Order;
-  onCancel?: (orderId: number, symbol: string) => Promise<any>;
 }
 
 export const CancelButton: FC<CancelButtonProps> = (props) => {
   const { order } = props;
+  const { onCancelOrder } = useContext(OrderListContext);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,11 +20,12 @@ export const CancelButton: FC<CancelButtonProps> = (props) => {
       variant={"outlined"}
       color={"tertiary"}
       loading={isLoading}
-      onClick={() => {
-        if (!props.onCancel) return;
+      onClick={(event) => {
+        if (!onCancelOrder) return;
+        event.preventDefault();
+        event.stopPropagation();
         setIsLoading(true);
-        props
-          .onCancel?.(order.order_id, order.symbol)
+        onCancelOrder(order)
           .then(
             (res) => {},
             (error) => {

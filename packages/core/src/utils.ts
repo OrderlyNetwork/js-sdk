@@ -1,4 +1,3 @@
-import { definedTypes } from "./constants";
 import {
   keccak256,
   AbiCoder,
@@ -52,4 +51,13 @@ export function formatByUnits(
   unit: number | "ether" | "gwei" = "ether"
 ) {
   return formatUnits(amount, unit);
+}
+
+export function isHex(value: string): boolean {
+  const hexRegex = /^[a-f0-9]+$/iu;
+  return hexRegex.test(value);
+}
+
+export function isHexString(value: string): boolean {
+  return typeof value === "string" && value.startsWith("0x") && isHex(value);
 }

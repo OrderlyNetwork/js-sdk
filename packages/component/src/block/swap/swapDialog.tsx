@@ -28,8 +28,13 @@ export const SwapDialog = create<SwapProps>((props) => {
       <DialogContent
         onEscapeKeyDown={(event) => event.preventDefault()}
         onPointerDownOutside={(event) => event.preventDefault()}
+        closable
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        className="orderly-max-w-[90%]"
       >
-        <DialogHeader className="orderly-text-xs">Review swap details</DialogHeader>
+        <DialogHeader className=" orderly-text-base desktop:orderly-text-xl">
+          Review swap details
+        </DialogHeader>
         <DialogBody>
           <Swap {...props} onComplete={onComplete} onCancel={onCancel} />
         </DialogBody>

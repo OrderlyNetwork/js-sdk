@@ -27,6 +27,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { ConfigStore } from "@orderly.network/core";
+import { isTestnet } from "@orderly.network/utils";
 
 interface AssetsProps {
   totalBalance: number;
@@ -44,9 +45,7 @@ export const Assets: FC<AssetsProps> = (props) => {
     });
 
   const [disableGetTestUSDC, setDisableGetTestUSDC] = useState(false);
-  const {
-    connectedChain,
-  } = useWalletConnector();
+  const { connectedChain } = useWalletConnector();
 
   const { account, state } = useAccount();
   const showGetTestUSDC = useMemo(() => {
@@ -55,11 +54,12 @@ export const Assets: FC<AssetsProps> = (props) => {
       return false;
     }
 
-    const isTestnetChain = parseInt(chainId, 16) === 421613;
-
-    return state.status === AccountStatusEnum.EnableTrading && isTestnetChain;
+    return (
+      state.status === AccountStatusEnum.EnableTrading &&
+      // @ts-ignore
+      isTestnet(parseInt(chainId))
+    );
   }, [state.status, connectedChain]);
-
 
   const [getTestUSDC, { isMutating }] = useMutation(
     `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
@@ -110,8 +110,6 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [marginRatio, aggregated]);
 
-  
-
   return (
     <Collapsible
       open={collapsed > 0}
@@ -156,24 +154,23 @@ export const Assets: FC<AssetsProps> = (props) => {
           </button>
         </CollapsibleTrigger>
       </div>
-      {showGetTestUSDC && (<div className="orderly-mb-3 orderly-w-full">
-        <Button
-          variant={"outlined"}
-          fullWidth
-          size={"small"}
-          className="orderly-border-base-contrast-54 hover:orderly-bg-base-700 orderly-h-[28px] orderly-rounded-borderRadius-lg"
-          onClick={onGetClick}
-          disabled={disableGetTestUSDC}
-        >
-          <NetworkImage
-            type={"token"}
-            name={"USDC"}
-            size={16}
-            rounded
-          />
-          <span className="orderly-text-base-contrast orderly-text-3xs">Get 1,000 test USDC</span>
-        </Button>
-      </div>)}
+      {showGetTestUSDC && (
+        <div className="orderly-mb-3 orderly-w-full">
+          <Button
+            variant={"outlined"}
+            fullWidth
+            size={"small"}
+            className="orderly-border-base-contrast-54 hover:orderly-bg-base-700 orderly-h-[28px] orderly-rounded-borderRadius-lg"
+            onClick={onGetClick}
+            disabled={disableGetTestUSDC}
+          >
+            <NetworkImage type={"token"} name={"USDC"} size={16} rounded />
+            <span className="orderly-text-base-contrast orderly-text-3xs">
+              Get 1,000 test USDC
+            </span>
+          </Button>
+        </div>
+      )}
 
       <CollapsibleContent>
         <MemorizedAssetsDetail />
