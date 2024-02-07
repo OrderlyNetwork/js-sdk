@@ -88,7 +88,7 @@ const EditingState: FC<{
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { editOrder } = useContext(OrderListContext);
+    const { editAlgoOrder } = useContext(OrderListContext);
 
     const boxRef = useRef<HTMLDivElement>(null);
     const confirmRef = useRef<HTMLDivElement>(null);
@@ -148,9 +148,8 @@ const EditingState: FC<{
     };
 
     const onConfirm = () => {
-        setIsSubmitting(true);
         // @ts-ignore
-        editOrder(order.algo_order_id, {
+        editAlgoOrder(order.algo_order_id, {
             // price: price,
             quantity: order.quantity,
             trigger_price: price,

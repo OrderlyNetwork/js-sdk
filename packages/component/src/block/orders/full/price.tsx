@@ -86,7 +86,7 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
@@ -180,9 +180,15 @@ const EditingState: FC<{
       data["order_tag"] = order.tag;
     }
 
+    let future;
+    if (order.algo_order_id !== undefined) {
+      future = editAlgoOrder(order.algo_order_id.toString(), data);
+    } else {
+      future = editOrder(order.order_id.toString(), data);
+    }
 
     // @ts-ignore
-    editOrder(order_id, data)
+    future
       .then(
         (result) => {
           closePopover();

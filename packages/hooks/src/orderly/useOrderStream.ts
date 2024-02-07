@@ -11,6 +11,8 @@ import { useMutation } from "../useMutation";
 import version from "../version";
 import { useDataCenterContext } from "../dataProvider";
 
+type OrderType = "normalOrder" | "algoOrder";
+
 export interface UserOrdersReturn {
   data: any[];
   loading: boolean;
@@ -46,7 +48,7 @@ export const useOrderStream = (params: Params) => {
     doCanceAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
-  
+
   const [
     doUpdateAlgoOrder,
     { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
@@ -124,74 +126,83 @@ export const useOrderStream = (params: Params) => {
    */
   const cancelAllOrders = useCallback(() => { }, [ordersResponse.data]);
 
+  const _updateOrder = useCallback((orderId: string, order: OrderEntity, type: OrderType) => {
+    switch (type) {
+      case "algoOrder":
+        return doUpdateAlgoOrder({
+          order_id: orderId,
+          price: order["order_price"],
+          quantity: order["order_quantity"],
+          trigger_price: order["trigger_price"],
+        });
+      default:
+        return doUpdateOrder({ ...order, order_id: orderId });
+    }
+  }, []);
+
   /**
    * update order
    */
   const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
-    // @ts-ignore
-    if (order.algo_order_id !== undefined) {
-      return doUpdateAlgoOrder({
-        order_id: orderId,
-        price: order["order_price"],
-        quantity: order["order_quantity"],
-        trigger_price: order["trigger_price"],
-      });
-    }
-    //
-    return doUpdateOrder({ ...order, order_id: orderId });
+    return _updateOrder(orderId, order, "normalOrder");
   }, []);
 
   /**
-   * calcel order
+   * update algo order
    */
-  const cancelOrder = useCallback((orderId: number | OrderEntity, symbol?: string) => {
-    let isAlgoOrder = false;
-    let order_id;
-    if (typeof orderId === 'number') {
-      isAlgoOrder = false;
-      order_id = orderId;
-    } else {
-      // @ts-ignore
-      order_id = orderId?.order_id;
-      // @ts-ignore
-      if (orderId?.algo_order_id !== undefined) {
-        isAlgoOrder = true;
-        // @ts-ignore
-        order_id = orderId?.algo_order_id;
-      }
-    }
-    if (isAlgoOrder) {
-      return doCanceAlgolOrder(null, {
-        // @ts-ignore
-        order_id: order_id,
-        symbol,
-        source: `SDK${version}`
-      })
-        .then((res: any) => {
+  const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
+    return _updateOrder(orderId, order, "algoOrder");
+  }, []);
+
+
+  const _cancelOrder = useCallback((orderId: number, type: OrderType, symbol?: string) => {
+    switch (type) {
+      case "algoOrder":
+        return doCanceAlgolOrder(null, {
+          // @ts-ignore
+          order_id: orderId,
+          symbol,
+          source: `SDK${version}`
+        })
+          .then((res: any) => {
+            if (res.success) {
+              ordersResponse.mutate();
+              return res;
+            } else {
+              throw new Error(res.message);
+            }
+          });
+      default:
+        return doCancelOrder(null, {
+          order_id: orderId,
+          symbol,
+          source: `SDK_${version}`,
+        }).then((res: any) => {
           if (res.success) {
-            ordersResponse.mutate();
+            // return ordersResponse.mutate().then(() => {
+            //   return res;
+            // });
+            //Optimistic Updates
+            // ordersResponse.mutate();
             return res;
           } else {
             throw new Error(res.message);
           }
-        });;
+        });
     }
-    return doCancelOrder(null, {
-      order_id: order_id,
-      symbol,
-      source: `SDK_${version}`,
-    }).then((res: any) => {
-      if (res.success) {
-        // return ordersResponse.mutate().then(() => {
-        //   return res;
-        // });
-        //Optimistic Updates
-        // ordersResponse.mutate();
-        return res;
-      } else {
-        throw new Error(res.message);
-      }
-    });
+  }, []);
+  /**
+   * calcel order
+   */
+  const cancelOrder = useCallback((orderId: number, symbol?: string) => {
+    return _cancelOrder(orderId, "normalOrder", symbol);
+  }, []);
+
+  /**
+   * calcel algo order
+   */
+  const cancelAlgoOrder = useCallback((orderId: number, symbol?: string) => {
+    return _cancelOrder(orderId, "algoOrder", symbol);
   }, []);
 
   const loadMore = () => {
@@ -208,6 +219,8 @@ export const useOrderStream = (params: Params) => {
       cancelAllOrders,
       updateOrder,
       cancelOrder,
+      updateAlgoOrder,
+      cancelAlgoOrder,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

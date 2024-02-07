@@ -14,6 +14,8 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
     <OrderListProvider
       cancelOrder={props.cancelOrder}
       editOrder={props.editOrder}
+      cancelAlgoOrder={props.cancelAlgoOrder}
+      editAlgoOrder={props.editAlgoOrder}
     >
       <StatisticStyleProvider labelClassName="orderly-text-3xs orderly-text-base-contrast/30">
         <Toolbar

@@ -83,7 +83,7 @@ const EditingState: FC<{
 
   const { order, quantity, setQuantity, editting, setEditting, setOpen, open } = props;
 
-  const { editOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
 
 
   const closePopover = () => setOpen(0);
@@ -170,8 +170,16 @@ const EditingState: FC<{
 
     console.log("current order", order, params, quantity);
 
+    let future;
+
+    if (order.algo_order_id !== undefined) {
+      future = editAlgoOrder(order.algo_order_id.toString(), params);
+    } else {
+      future = editOrder(order.order_id.toString(), params);
+    }
+
     // @ts-ignore
-    editOrder(order.algo_order_id || order.order_id, params)
+    future
       .then(
         (result) => {
           closePopover();
