@@ -29,7 +29,7 @@ export const MyOrders: FC<Props> = (props) => {
 
   const [side, setSide] = useState<OrderSide | "">("");
 
-  const [data, { isLoading, loadMore, cancelOrder, updateOrder }] =
+  const [data, { isLoading, loadMore, cancelOrder, updateOrder, cancelAlgoOrder, updateAlgoOrder }] =
     useOrderStream({
       status: props.status,
       symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
@@ -64,6 +64,8 @@ export const MyOrders: FC<Props> = (props) => {
       showAllSymbol={tabExtraData.showAllSymbol}
       cancelOrder={onCancelOrder}
       editOrder={updateOrder}
+      cancelAlgoOrder={cancelAlgoOrder}
+      editAlgoOrder={updateAlgoOrder}
       onSymbolChange={context.onSymbolChange}
       loadMore={loadMore}
       status={props.status}
