@@ -103,6 +103,7 @@ const EditingState: FC<{
                 return;
             }
 
+            setPrice(order.trigger_price?.toString() ?? "0");
             setEditting(false);
         };
 
@@ -157,6 +158,7 @@ const EditingState: FC<{
             .then(
                 (result) => {
                     closePopover();
+                    setPrice(price);
                     // setTimeout(() => inputRef.current?.blur(), 300);
                 },
                 (err) => {
@@ -179,7 +181,7 @@ const EditingState: FC<{
         >
             <div
                 className={
-                    "orderly-max-w-[110px] orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
+                    "orderly-flex orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
                 }
                 ref={boxRef}
             >

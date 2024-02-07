@@ -68,7 +68,9 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
         <div className="orderly-flex-1 orderly-gap-2">
           <div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Qty.</span>
-            <span>{order.order_quantity}</span>
+            <span className={cn(
+              order.side === OrderSide.BUY ? "orderly-text-trade-profit" : "orderly-text-trade-loss"
+            )}>{order.order_quantity}</span>
           </div>
           {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between">
             <span className="orderly-text-base-contrast-54">Trigger price</span>
@@ -186,7 +188,7 @@ export const OrderConfirmFooter: FC<{
               });
           }}
         >
-          OK
+          Confirm
         </Button>
       </div>
     </div>

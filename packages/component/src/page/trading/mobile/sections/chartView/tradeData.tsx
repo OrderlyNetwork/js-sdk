@@ -2,6 +2,7 @@ import { FC, useContext } from "react";
 import { useMarkPrice, useTickerStream } from "@orderly.network/hooks";
 import { Numeral, Text } from "@/text";
 import { SymbolContext } from "@/provider";
+import { OrderlyIcon } from "@/icon";
 
 interface Props {
   symbol: string;
@@ -30,7 +31,12 @@ export const TradeData: FC<Props> = (props) => {
           </td>
         </tr>
         <tr className="orderly-h-[28px]">
-          <td className="orderly-text-base-contrast-54">24h volume</td>
+          <td className="orderly-text-base-contrast-54 ">
+            <div className="orderly-flex orderly-items-center">
+              <div>24h volume</div>
+              <OrderlyIcon size={14} className="orderly-ml-[6px]" />
+            </div>
+          </td>
           <td className="orderly-text-right orderly-text-base-contrast">
             <Numeral.total
               rule="human"
@@ -60,22 +66,24 @@ export const TradeData: FC<Props> = (props) => {
           </td>
         </tr>
         <tr className="orderly-h-[28px]">
-            <td className="orderly-text-base-contrast-54">Open interest</td>
-            <td className="orderly-text-right orderly-text-base-contrast">
-              { ticker?.["open_interest"] ? (<Numeral.total
-              rule="human"
-              precision={2}
-              price={ticker?.["mark_price"]}
-              quantity={ticker?.["open_interest"]}
-            />) : "--" }
-              
-              <Text
-                className="orderly-text-base-contrast-36 orderly-ml-2"
-              >
-                USDC
-              </Text>
-            </td>
-          </tr>
+          <td className="orderly-text-base-contrast-54">Open interest</td>
+          <td className="orderly-text-right orderly-text-base-contrast">
+            {ticker?.["open_interest"] ? (
+              <Numeral.total
+                rule="human"
+                precision={2}
+                price={ticker?.["mark_price"]}
+                quantity={ticker?.["open_interest"]}
+              />
+            ) : (
+              "--"
+            )}
+
+            <Text className="orderly-text-base-contrast-36 orderly-ml-2">
+              USDC
+            </Text>
+          </td>
+        </tr>
       </table>
     </div>
   );

@@ -1,5 +1,5 @@
 import { TabPane, Tabs } from "@/tab";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Withdraw } from "../withdraw";
 import { create } from "@/modal/modalHelper";
 import { useModal } from "@/modal";
@@ -84,15 +84,21 @@ export const DepositAndWithdrawWithSheet = create<DepositAndWithdrawProps>(
 export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
   (props) => {
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
+    const [top, setTop] = useState<string | number>("20%");
 
     const onOk = (data?: any) => {
       resolve(data);
       hide();
     };
 
+    useEffect(() => {
+      setTop((window.innerHeight - 500) * 0.5);
+    }, [window.innerHeight]);
+
     return (
       <Dialog open={visible} onOpenChange={onOpenChange}>
         <DialogContent
+          style={{ top }}
           className="orderly-p-5 orderly-top-[20%] orderly-translate-y-0"
           maxWidth={"lg"}
           closable

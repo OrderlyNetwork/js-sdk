@@ -24,7 +24,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
       <ColGroup columns={props.columns} />
       <thead
         className={cn(
-          "orderly-sticky orderly-top-0 orderly-z-10",
+          "orderly-sticky orderly-top-0 orderly-z-0",
           props.className
         )}
       >
