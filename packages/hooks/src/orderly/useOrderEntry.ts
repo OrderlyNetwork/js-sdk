@@ -330,7 +330,7 @@ export function useOrderEntry(
             return doCreateOrder(
               omit(["order_type_ext"], {
                 // ...values,
-                ...omit(["order_price"], values),
+                // ...omit(["order_price"], values),
                 ...data,
               })
             ).then((res) => {

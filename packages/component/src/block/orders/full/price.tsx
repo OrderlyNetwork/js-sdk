@@ -89,6 +89,7 @@ const EditingState: FC<{
   const { editOrder } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
   const cancelPopover = () => setOpen(-1);
@@ -98,6 +99,11 @@ const EditingState: FC<{
       // close the input when click outside of boxRef
       const el = boxRef?.current;
       if (!el || el.contains(event.target as Node)) {
+        return;
+      }
+
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
 
@@ -310,7 +316,7 @@ const EditingState: FC<{
                 >
                   Cancel
                 </Button>
-                <Button loading={isSubmitting} onClick={onConfirm}>
+                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
                   Confirm
                 </Button>
               </div>

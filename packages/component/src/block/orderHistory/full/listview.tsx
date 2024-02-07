@@ -125,7 +125,12 @@ export const Listview: FC<Props> = (props) => {
         }}
       />
 
-      <PositionEmptyView watchRef={divRef} left={0} right={120} />
+      
+
+      {
+        (!props.dataSource || props.dataSource.length <= 0) &&
+        <PositionEmptyView watchRef={divRef} left={0} right={120} />
+      }
 
     </EndReachedBox>
     </div>

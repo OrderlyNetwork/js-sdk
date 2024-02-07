@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
@@ -90,6 +90,7 @@ const EditingState: FC<{
   const cancelPopover = () => setOpen(-1);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
   const { base } = useSymbolContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,7 +105,12 @@ const EditingState: FC<{
       if (!el || el.contains(event.target as Node)) {
         return;
       }
-
+      
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
+        return;
+      }
+      
       setQuantity(order.quantity.toString());
       setEditting(false);
     };
@@ -123,8 +129,7 @@ const EditingState: FC<{
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
-    // @ts-ignore
-    setOpen(true);
+    setOpen(1);
   };
 
   const handleKeyDown = (event: any) => {
@@ -137,8 +142,8 @@ const EditingState: FC<{
     }
   }
 
-  const onConfirm = () => {
-    console.log("current order", order);
+  const onConfirm = useCallback(() => {
+    
     
     setIsSubmitting(true);
 
@@ -149,8 +154,6 @@ const EditingState: FC<{
       order_price: order.price,
       order_quantity: quantity,
       reduce_only: Boolean(order.reduce_only),
-      // @ts-ignore
-      order_tag: order.tag,
       algo_order_id: order.algo_order_id,
     };
     
@@ -164,6 +167,8 @@ const EditingState: FC<{
       // @ts-ignore
       params["order_tag"] = order.tag;
     }
+
+    console.log("current order", order, params, quantity);
 
     // @ts-ignore
     editOrder(order.algo_order_id || order.order_id, params)
@@ -180,7 +185,7 @@ const EditingState: FC<{
         }
       )
       .finally(() => setIsSubmitting(false));
-  };
+  }, [quantity]);
 
   return (
     <Popover
@@ -283,7 +288,7 @@ const EditingState: FC<{
                 >
                   Cancel
                 </Button>
-                <Button loading={isSubmitting} onClick={onConfirm}>
+                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
                   Confirm
                 </Button>
               </div>

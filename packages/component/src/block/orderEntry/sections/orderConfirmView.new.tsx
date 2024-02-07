@@ -61,29 +61,29 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           {`${base}-PERP`}
         </span>
       </div>
-      <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm">
+      <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm orderly-font-semibold">
         <div>
           <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[180px]">{type}</div>
         </div>
         <div className="orderly-flex-1 orderly-gap-2">
-          <div className="orderly-flex orderly-justify-between">
+          <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Qty.</span>
             <span className={cn(
               order.side === OrderSide.BUY ? "orderly-text-trade-profit" : "orderly-text-trade-loss"
             )}>{order.order_quantity}</span>
           </div>
-          {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between">
+          {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Trigger price</span>
             <div className="orderly-inline-block">
               <span>{order.trigger_price}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
             </div>
           </div>)}
-          <div className="orderly-flex orderly-justify-between">
+          <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Price</span>
             {priceNode}
           </div>
-          <div className="orderly-flex orderly-justify-between">
+          <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">{"Est. Total"}</span>
             <div className="orderly-inline-block">
               <span>{order.total}</span>
