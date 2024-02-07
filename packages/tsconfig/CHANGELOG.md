@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.0.87-alpha.35
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.0.87-alpha.34
 
 ### Patch Changes
