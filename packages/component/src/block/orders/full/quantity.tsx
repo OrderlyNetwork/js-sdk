@@ -138,17 +138,35 @@ const EditingState: FC<{
   }
 
   const onConfirm = () => {
+    console.log("current order", order);
+    
     setIsSubmitting(true);
-    // @ts-ignore
-    editOrder(order.algo_order_id || order.order_id, {
-      order_price: order.price,
-      order_quantity: quantity,
+
+    const params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
+      order_price: order.price,
+      order_quantity: quantity,
       reduce_only: Boolean(order.reduce_only),
-      algo_order_id: order.algo_order_id
-    })
+      // @ts-ignore
+      order_tag: order.tag,
+      algo_order_id: order.algo_order_id,
+    };
+    
+    // @ts-ignore
+    if (order.visible_quantity === 0) {
+      params["visible_quantity"] = 0;
+    }
+    
+    // @ts-ignore
+    if (order.tag !== undefined) {
+      // @ts-ignore
+      params["order_tag"] = order.tag;
+    }
+
+    // @ts-ignore
+    editOrder(order.algo_order_id || order.order_id, params)
       .then(
         (result) => {
           closePopover();

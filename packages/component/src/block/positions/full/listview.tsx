@@ -1,5 +1,5 @@
 import { Column, Table } from "@/table";
-import { FC, useCallback, useContext, useMemo } from "react";
+import { FC, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
 import {
@@ -17,6 +17,8 @@ import { useTabContext } from "@/tab/tabContext";
 import { Divider } from "@/divider";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 import { API } from "@orderly.network/types";
+import { EmptyView } from "@/listView/emptyView";
+import { PositionEmptyView } from "./positionEmptyView";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -197,8 +199,11 @@ export const Listview: FC<
     ];
   }, [pnlNotionalDecimalPrecision, props.unPnlPriceBasis]);
 
+  const divRef = useRef<HTMLDivElement>(null);
+
   return (
     <div
+      ref={divRef}
       // className="orderly-overflow-y-auto"
       className="orderly-relative"
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
@@ -206,6 +211,7 @@ export const Listview: FC<
       <Table<API.PositionExt>
         bordered
         justified
+        showMaskElement={false}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
@@ -221,6 +227,11 @@ export const Listview: FC<
           );
         }}
       />
+
+      {
+        (!props.dataSource || props.dataSource.length <= 0) && 
+        <PositionEmptyView watchRef={divRef} left={120} right={280} />
+      }
     </div>
   );
 };

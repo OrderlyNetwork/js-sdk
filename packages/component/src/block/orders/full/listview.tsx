@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
 import { OrderStatus, OrderSide, API } from "@orderly.network/types";
@@ -16,6 +16,7 @@ import { Renew } from "@/block/orderHistory/full/renew";
 import { columnsBasis } from "../columnsUtil";
 import { OrderTrades } from "@/block/orderHistory/orderTrades";
 import { TriggerPrice } from "./triggerPrice";
+import { OrdersEmptyView } from "./ordersEmptyView";
 
 interface Props {
   dataSource: any[];
@@ -39,11 +40,11 @@ export const Listview: FC<Props> = (props) => {
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
-                  if (sortOrder === "asc") {
-                    return r1.symbol.localeCompare(r2.symbol);
-                  }
-                  return r2.symbol.localeCompare(r1.symbol);
+                if (sortOrder === "asc") {
+                  return r1.symbol.localeCompare(r2.symbol);
                 }
+                return r2.symbol.localeCompare(r1.symbol);
+              }
               : undefined,
           render: (value: string) => (
             <Text rule={"symbol"} className="orderly-font-semibold">
@@ -71,11 +72,11 @@ export const Listview: FC<Props> = (props) => {
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
-                  if (sortOrder === "asc") {
-                    return r2.side.localeCompare(r1.side);
-                  }
-                  return r1.side.localeCompare(r2.side);
+                if (sortOrder === "asc") {
+                  return r2.side.localeCompare(r1.side);
                 }
+                return r1.side.localeCompare(r2.side);
+              }
               : undefined,
           render: (value: string) => (
             <span
@@ -122,8 +123,8 @@ export const Listview: FC<Props> = (props) => {
                 precision={2}
               >
                 {record.quantity === 0 ||
-                Number.isNaN(record.price) ||
-                record.price === null
+                  Number.isNaN(record.price) ||
+                  record.price === null
                   ? "--"
                   : `${record.quantity * record.price}`}
               </Numeral>
@@ -160,7 +161,8 @@ export const Listview: FC<Props> = (props) => {
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
           render: (value: number, record) => {
-            return <span>{value === record.quantity ? "No" : "Yes"}</span>;
+            // @ts-ignore
+            return <span>{record.visible_quantity !== 0 ? "No" : "Yes"}</span>;
           },
         },
         {
@@ -201,8 +203,12 @@ export const Listview: FC<Props> = (props) => {
       return columnsBasis(props.status);
     }
   }, [props.status]);
+
+  const divRef = useRef<HTMLDivElement>(null);
+
   return (
-    <EndReachedBox
+   <div ref={divRef}>
+     <EndReachedBox
       onEndReached={() => {
         if (!props.loading) {
           props.loadMore?.();
@@ -212,6 +218,7 @@ export const Listview: FC<Props> = (props) => {
       <Table<API.Order>
         bordered
         justified
+        showMaskElement={false}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
@@ -234,11 +241,18 @@ export const Listview: FC<Props> = (props) => {
         expandRowRender={
           props.status === "FILLED"
             ? (record: any, index: number) => {
-                return <OrderTrades record={record} index={index} />;
-              }
+              return <OrderTrades record={record} index={index} />;
+            }
             : undefined
         }
       />
+
+      {
+        (!props.dataSource || props.dataSource.length <= 0) &&
+        <OrdersEmptyView watchRef={divRef} left={0} right={props.status === OrderStatus.INCOMPLETE ? 100 : 120} />
+      }
+
     </EndReachedBox>
+   </div>
   );
 };

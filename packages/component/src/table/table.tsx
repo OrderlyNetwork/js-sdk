@@ -21,13 +21,14 @@ export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   loading?: boolean;
   className?: string;
   headerClassName?: string;
+  showMaskElement?: boolean;
 }
 
 export const Table = <RecordType extends unknown>(
   props: TableProps<RecordType>
 ) => {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const { dataSource, columns, ...rest } = props;
+  const { dataSource, columns, showMaskElement = true, ...rest } = props;
 
   // console.log("props sortable:: ", props.sortable);
 
@@ -136,7 +137,7 @@ export const Table = <RecordType extends unknown>(
 
           <TBody {...rest} />
         </table>
-        {maskElement}
+        {showMaskElement && maskElement}
       </div>
       <FixedDivide />
     </TableProvider>

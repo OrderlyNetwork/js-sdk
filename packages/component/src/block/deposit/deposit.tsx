@@ -6,6 +6,7 @@ import {
   useWalletConnector,
   useWS,
   useDebounce,
+  useConfig,
 } from "@orderly.network/hooks";
 import { API, CurrentChain } from "@orderly.network/types";
 import { AssetsContext } from "@/provider/assetsProvider";
@@ -29,10 +30,11 @@ export const Deposit: FC<DepositProps> = (props) => {
   const [needCrossChain, setNeedCrossChain] = useState<boolean>(false);
   const [needSwap, setNeedSwap] = useState<boolean>(false);
   const { enableSwapDeposit } = useContext(OrderlyAppContext);
+  const networkId = useConfig("networkId");
   const ws = useWS();
 
   // @ts-ignore
-  const [chains, { findByChainId }] = useChains(undefined, {
+  const [chains, { findByChainId }] = useChains(networkId, {
     wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
