@@ -24,6 +24,7 @@ export const OrdersViewFull: FC<Props> = (props) => {
         count={props.dataSource?.length ?? 0}
         onSideChange={props.onSideChange}
         side={props.side}
+        status={props.status}
       />
       <Divider />
       <div
