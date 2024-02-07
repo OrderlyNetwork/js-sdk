@@ -80,7 +80,11 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     depositFee,
   } = props;
 
-  const { errors, brokerName } = useContext(OrderlyAppContext);
+  const {
+    errors,
+    brokerName,
+    chains: customChains,
+  } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -261,6 +265,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
+          chains={customChains}
         />
       </div>
       <QuantityInput
