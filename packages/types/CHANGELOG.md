@@ -1,8 +1,66 @@
 # @orderly.network/types
 
+## 0.2.0
+
+### Minor Changes
+
+- fix bugs & add stopOrder type
+
+### Patch Changes
+
+- f7b91c28: update kline chart;
+- fcffb8d6: update deposit fee
+- fcffb8d6: fix bugs
+- 972fe2d9: fix bugs;
+- 56ae894d: fix orderEntry bugs; add stop order;
+- 17edbb36: update useOrderEntry hook and OrderEntry component;
+- fcffb8d6: fix bugs
+- fcffb8d6: fix bugs
+- acaf9269: fix bugs
+- 5523faa3: fix bug
+- 0e950213: fix bugs;
+- fcffb8d6: update version
+- 22ad6134: fix bug
+- d79adc59: fix bugs
+- 0c401b60: fix style bug
+- 0bfd5b9c: fix bugs / update table component
+- f2c529af: fix bugs;
+- 22ad6134: fix bug
+- 22ad6134: fix bugs
+- 85dd1d19: fix bugs;
+- 06fffe56: fix bugs;
+- 1749ac80: fix bugs;
+- 47189933: fix bugs;
+- 22ad6134: fix bug
+- 22ad6134: fix bug
+- 22ad6134: fix bugs
+- 2f68630a: switch goerli to sepolia
+- fcffb8d6: add deposit fee
+- ef0ec24c: fix orderEntry bugs;
+- 05437813: fix bugs;
+- fcffb8d6: fix bug
+- 7f2b1627: add account MMR and more;
+- 7bc3beca: fix bugs;
+- 3313fdd2: fix bugs
+- d79adc59: fix bug
+- c096985c: fix bugs;
+- 4693affc: fix bugs;
+- fcffb8d6: fix bugs
+- 895669da: fix bug
+- 5bf9bc51: fix bugs
+- d794b2e5: fix bugs;
+- 22ad6134: fix bug
+- e788a66a: fix bugs;
+- be705c14: fix bugs;
+- a1ea426b: export ChainDialog component;
+- 22ad6134: fix bug
+
 <<<<<<< HEAD
+
 ## 0.1.28
+
 =======
+
 ## 0.1.27-alpha.35
 
 ### Patch Changes
@@ -40,19 +98,21 @@
 - fix bugs;
 
 ## 0.1.27-alpha.29
->>>>>>> alpha
+
+> > > > > > > alpha
 
 ### Patch Changes
 
 - fix bugs
 
 <<<<<<< HEAD
+
 ## 0.1.27
 
 ### Patch Changes
 
-- 268abc5: fix bug
-=======
+- # 268abc5: fix bug
+
 ## 0.1.27-alpha.28
 
 ### Patch Changes
@@ -229,7 +289,8 @@
 
 ### Patch Changes
 
->>>>>>> alpha
+> > > > > > > alpha
+
 - fix bugs
 
 ## 0.1.26
