@@ -446,6 +446,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               inputMode="decimal"
               id="order_trigger_price_input"
               name="order_trigger_price_input"
+              autoComplete="off"
               error={!!metaState.errors?.trigger_price && errorsVisible}
               helpText={metaState.errors?.trigger_price?.message}
               className="orderly-text-right orderly-font-semibold"
