@@ -163,6 +163,17 @@ const EditingState: FC<{
     }
 
 
+    // @ts-ignore
+    if (order.visible_quantity === 0) {
+      data["visible_quantity"] = 0;
+    }
+
+    // @ts-ignore
+    if (order.tag !== undefined) {
+      // @ts-ignore
+      data["order_tag"] = order.tag;
+    }
+
 
     // @ts-ignore
     editOrder(order_id, data)
