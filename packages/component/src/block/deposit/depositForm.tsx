@@ -80,7 +80,11 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
     depositFee,
   } = props;
 
-  const { errors, brokerName } = useContext(OrderlyAppContext);
+  const {
+    errors,
+    brokerName,
+    chains: customChains,
+  } = useContext(OrderlyAppContext);
 
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -261,6 +265,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           settingChain={props.settingChain}
           onChainChange={onChainChange}
           onChainInited={onChainInited}
+          chains={customChains}
         />
       </div>
       <QuantityInput
@@ -298,7 +303,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           fee={0}
         />
       </div>
-      <div className="orderly-flex orderly-items-start orderly-py-4 orderly-text-3xs orderly-text-tertiary">
+      <div className="orderly-flex orderly-items-start orderly-py-3 orderly-text-3xs orderly-text-tertiary">
         <Summary
           nativeToken={chain?.info?.nativeToken}
           src={props.token}

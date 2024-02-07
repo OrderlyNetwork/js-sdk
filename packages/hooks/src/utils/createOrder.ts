@@ -197,7 +197,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
         if (price.gt(priceRange.max)) {
           errors.order_price = {
             type: "max",
-            message: `price must be less than ${new Decimal(
+            message: `Price must be less than ${new Decimal(
               priceRange.max
             ).todp(symbol.quote_dp)}`,
           };
@@ -205,7 +205,7 @@ export class LimitOrderCreator extends BaseOrderCreator {
         if (price.lt(priceRange.min)) {
           errors.order_price = {
             type: "min",
-            message: `price must be greater than ${new Decimal(
+            message: `Price must be greater than ${new Decimal(
               priceRange.min
             ).todp(symbol.quote_dp)}`,
           };
@@ -280,7 +280,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
-          message: "trigger price is required",
+          message: "Trigger price is required",
         };
       } 
       
@@ -309,7 +309,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
         if (price.gt(priceRange.max)) {
           errors.order_price = {
             type: "max",
-            message: `price must be less than ${new Decimal(
+            message: `Price must be less than ${new Decimal(
               priceRange.max
             ).todp(symbol.quote_dp)}`,
           };
@@ -317,7 +317,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
         if (price.lt(priceRange.min)) {
           errors.order_price = {
             type: "min",
-            message: `price must be greater than ${new Decimal(
+            message: `Price must be greater than ${new Decimal(
               priceRange.min
             ).todp(symbol.quote_dp)}`,
           };
@@ -360,7 +360,7 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
-          message: "trigger price is required",
+          message: "Trigger price is required",
         };
       }
 

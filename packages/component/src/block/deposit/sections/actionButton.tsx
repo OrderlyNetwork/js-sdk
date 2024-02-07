@@ -1,7 +1,6 @@
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { API, CurrentChain } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
 import { FC, useContext, useMemo } from "react";
 import { ApproveButton } from "./approveButton";
 import { Notice } from "./notice";
@@ -11,9 +10,7 @@ import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { DepositContext } from "../DepositProvider";
 
 export interface ActionButtonProps {
-  chains:
-    | API.NetworkInfos[]
-    | { mainnet: API.NetworkInfos[]; testnet: API.NetworkInfos[] };
+  chains: API.NetworkInfos[];
   chain: CurrentChain | null;
   token?: API.TokenInfo;
   onDeposit: () => void;
@@ -34,6 +31,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const {
     chain,
     token,
+    chains,
     onDeposit,
     switchChain,
     disabled,
@@ -46,16 +44,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     warningMessage,
     chainNotSupport,
   } = props;
-
-  const chains = useMemo(() => {
-    if (Array.isArray(props.chains)) return props.chains;
-
-    if (isTestnet(props.chain?.id!)) {
-      return props.chains?.testnet ?? [];
-    }
-
-    return props.chains?.mainnet;
-  }, [props.chains, props.chain]);
 
   const [_, { findByChainId }] = useChains(undefined, {
     pick: "network_infos",
@@ -78,7 +66,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
   const chainWarningMessage = useMemo(() => {
     if (!chainNotSupport) return "";
     return "Please connect to a supported network.";
-  }, [chainNotSupport, chains, chain?.info?.network_infos?.name]);
+  }, [chainNotSupport, chain?.info?.network_infos?.name]);
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
@@ -112,7 +100,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     );
   }, [
     chainNotSupport,
-    chains,
     switchChain,
     disabled,
     chain,
@@ -127,16 +114,18 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   return (
     <>
-      {chainNotSupport ? (
-        <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-py-3 desktop:orderly-text-2xs ">
-          {chainWarningMessage}
-        </div>
-      ) : (
-        <Notice warningMessage={warningMessage} />
-      )}
+      <div className="orderly-deposit-warning-message">
+        {chainNotSupport ? (
+          <div className="orderly-text-warning orderly-text-4xs orderly-text-center orderly-px-[20px] orderly-pt-4 orderly-pb-3 desktop:orderly-text-2xs ">
+            {chainWarningMessage}
+          </div>
+        ) : (
+          <Notice warningMessage={warningMessage} />
+        )}
+      </div>
 
       <div className="orderly-flex orderly-justify-center">
-        <div className="orderly-deposit-action-button-container orderly-py-3 orderly-w-full orderly-text-xs orderly-font-bold">
+        <div className="orderly-deposit-action-button-container orderly-w-full orderly-text-xs orderly-font-bold">
           {actionButton}
         </div>
       </div>

@@ -26,6 +26,7 @@ import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
+import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -60,6 +61,8 @@ export type OrderlyAppContextState = {
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBar?: FooterStatusBarProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -78,6 +81,8 @@ export interface OrderlyAppProviderProps {
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBar?: FooterStatusBarProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 }
 
 export const OrderlyAppProvider: FC<
@@ -97,6 +102,7 @@ export const OrderlyAppProvider: FC<
     toastLimitCount,
     onChainChanged,
     footerStatusBar,
+    chains,
   } = props;
 
   return (
@@ -115,6 +121,7 @@ export const OrderlyAppProvider: FC<
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBar={footerStatusBar}
+        chains={chains}
       >
         {props.children}
       </InnerProvider>
@@ -338,6 +345,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onChainChanged,
         brokerName,
         footerStatusBar,
+        chains: props.chains,
       }}
     >
       <TooltipProvider>

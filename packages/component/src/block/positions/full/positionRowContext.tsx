@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -45,6 +46,10 @@ export const PositionsRowProvider: FC<
   const [quantity, setQuantity] = useState<string>(
     Math.abs(props.position.position_qty).toString()
   );
+
+  useEffect(() => {
+    setQuantity(Math.abs(props.position.position_qty).toString());
+  }, [props.position.position_qty]);
 
   const [price, setPrice] = useState<string>("");
   const [side, setSide] = useState<OrderSide>(
