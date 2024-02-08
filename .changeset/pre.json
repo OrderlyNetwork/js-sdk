@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.2"
   },
   "changesets": [
+    "real-candles-play",
     "sharp-suits-shout"
   ]
 }
