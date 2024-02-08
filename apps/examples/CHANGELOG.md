@@ -1,5 +1,16 @@
 # examples
 
+## 0.2.1
+
+### Patch Changes
+
+- update orderStream hook;
+- Updated dependencies
+  - @orderly.network/react@0.2.1
+  - @orderly.network/web3-onboard@0.1.1
+  - @orderly.network/hooks@1.1.1
+  - @orderly.network/core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

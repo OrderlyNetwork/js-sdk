@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.1.1
+
+### Patch Changes
+
+- update orderStream hook;
+
 ## 1.1.0
 
 ### Minor Changes

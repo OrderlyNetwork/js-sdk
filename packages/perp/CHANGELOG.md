@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.1
+
+### Patch Changes
+
+- update orderStream hook;
+- Updated dependencies
+  - @orderly.network/types@0.2.1
+  - @orderly.network/utils@0.1.1
+
 ## 2.0.0
 
 ### Minor Changes

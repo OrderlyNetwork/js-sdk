@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.2.1
+
+### Patch Changes
+
+- update orderStream hook;
+- Updated dependencies
+  - @orderly.network/types@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
