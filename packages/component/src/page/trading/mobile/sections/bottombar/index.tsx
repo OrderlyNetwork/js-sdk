@@ -1,8 +1,9 @@
+import { useCallback, useContext, useMemo } from "react";
 import { AccountStatusBar } from "@/block/accountStatus";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
-import { useWsStatus } from "@/block/systemStatusBar/useWsStatus";
+import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
@@ -15,9 +16,11 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 
-import { useCallback, useContext, useMemo } from "react";
+interface BottomNavBarProps {
+  wsStatus: WsNetworkStatus;
+}
 
-export const BottomNavBar = () => {
+export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
   const { state } = useAccount();
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
@@ -26,8 +29,6 @@ export const BottomNavBar = () => {
     useContext(OrderlyAppContext);
 
   const { connectedChain } = useWalletConnector();
-
-  const wsStatus = useWsStatus();
 
   const onConnect = useCallback(() => {
     onWalletConnect().then(
@@ -56,7 +57,7 @@ export const BottomNavBar = () => {
 
   return (
     <>
-      {wsStatus !== "connected" ? (
+      {props.wsStatus !== "connected" ? (
         <WsStatus />
       ) : (
         errors?.ChainNetworkNotSupport && (

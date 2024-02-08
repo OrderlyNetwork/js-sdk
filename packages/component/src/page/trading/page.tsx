@@ -24,7 +24,7 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
       onSymbolChange={props.onSymbolChange}
       disableFeatures={props.disableFeatures}
     >
-      <Layout mobile={<MobileTradingPage {...props} />}>
+      <Layout mobile={<MobileTradingPage {...props} wsStatus={wsStatus} />}>
         <Header className="orderly-app-trading-header orderly-border-b orderly-border-divider">
           <TopNavbar wsStatus={wsStatus} />
         </Header>
