@@ -147,6 +147,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
 
     useEffect(() => {
+      // handle orderbook item click event
       const orderbookItemClickHandler = (item: number[]) => {
         if (formattedOrder.order_type === OrderType.STOP_LIMIT) {
           if (currentFocusInput.current === InputType.TRIGGER_PRICE) {

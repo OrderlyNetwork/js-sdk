@@ -8,6 +8,7 @@ interface Props<RecordType> {
   record: RecordType;
 
   index: number;
+  bordered?: boolean;
 }
 
 export const ExpandRow = <RecordType,>(props: Props<RecordType>) => {
@@ -38,7 +39,12 @@ export const ExpandRow = <RecordType,>(props: Props<RecordType>) => {
   }, [columns]);
 
   return (
-    <tr>
+    <tr
+      className={cn(
+        props.bordered &&
+          "orderly-border-b orderly-border-divider last:orderly-border-b-0"
+      )}
+    >
       {cols.map((item, index) => {
         const pos =
           item.type === undefined

@@ -72,14 +72,10 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       width: 100,
       render: (value: string, record: any) => {
         if (record.type === "MARKET") {
-          return <span>Market</span>
+          return <span>Market</span>;
         }
         return (
-          <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
-          >
+          <NumeralWithCtx className={"orderly-font-semibold orderly-text-2xs"}>
             {value || "-"}
           </NumeralWithCtx>
         );
@@ -92,11 +88,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       dataIndex: "average_executed_price",
       render: (value: string, record: any) => {
         return (
-          <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
-          >
+          <NumeralWithCtx className={"orderly-font-semibold orderly-text-2xs"}>
             {value || "-"}
           </NumeralWithCtx>
         );
@@ -108,20 +100,18 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       className: "orderly-h-[48px] orderly-font-semibold",
       dataIndex: "executed",
       render: (value: string, record: any) => {
-        console.log("est total xxxxxxxx value", value, record);
-        
         return (
           <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
+            className={"orderly-font-semibold orderly-text-2xs"}
             // precision={2}
           >
             {record.total_executed_quantity === 0 ||
             Number.isNaN(record.average_executed_price) ||
             record.average_executed_price === null
               ? "-"
-              : `${record.total_executed_quantity * record.average_executed_price}`}
+              : `${
+                  record.total_executed_quantity * record.average_executed_price
+                }`}
           </NumeralWithCtx>
         );
       },
@@ -134,9 +124,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       render: (value: string, record: any) => {
         return (
           <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
+            className={"orderly-font-semibold orderly-text-2xs"}
             // precision={2}
           >
             {value}
