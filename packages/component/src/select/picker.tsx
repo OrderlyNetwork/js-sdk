@@ -9,7 +9,7 @@ import { useMediaQuery } from "@orderly.network/hooks";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 const pickerVariants = cva(
-  "orderly-flex orderly-flex-row orderly-items-stretch orderly-rounded focus-within:orderly-outline orderly-outline-primary orderly-bg-fill orderly-text-base-contrast/50",
+  "orderly-flex orderly-flex-row orderly-items-stretch orderly-rounded focus-within:orderly-outline orderly-outline-primary orderly-bg-base-700 orderly-text-base-contrast/50",
   {
     variants: {
       size: {

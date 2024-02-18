@@ -47,7 +47,7 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
     <>
       <tr
         className={cn(
-          "hover:orderly-bg-base-800 orderly-group",
+          "orderly-table-tr hover:orderly-bg-base-800 orderly-group",
           props.bordered &&
             "orderly-border-b orderly-border-divider last:orderly-border-b-0",
           props.canExpand && "orderly-cursor-pointer",
