@@ -1,5 +1,5 @@
 import { FC, useCallback, useContext, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
+import { StatusContext, useAccount } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
@@ -12,13 +12,13 @@ import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 
 interface Props {
-  wsStatus: WsNetworkStatus;
   // logo?: ReactNode;
 }
 
 export const TopNavbar: FC<Props> = (props) => {
   const { state } = useAccount();
   const { errors, appIcons: logos } = useContext(OrderlyAppContext);
+  const { ws: wsStatus } = useContext(StatusContext);
 
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
@@ -74,7 +74,7 @@ export const TopNavbar: FC<Props> = (props) => {
           // }}
         />
       </div>
-      {props.wsStatus !== "connected" ? (
+      {wsStatus !== "connected" ? (
         <WsStatus />
       ) : (
         errors?.ChainNetworkNotSupport && (
