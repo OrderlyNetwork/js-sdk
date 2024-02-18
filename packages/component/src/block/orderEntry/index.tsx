@@ -423,8 +423,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             options={[
               { label: "Limit order", value: "LIMIT" },
               { label: "Market order", value: "MARKET" },
-              // { label: "Stop limit", value: "STOP_LIMIT" },
-              // { label: "Stop market", value: "STOP_MARKET" },
+              { label: "Stop limit", value: "STOP_LIMIT" },
+              { label: "Stop market", value: "STOP_MARKET" },
             ]}
             onChange={(value) => {
               // field.onChange(value);
