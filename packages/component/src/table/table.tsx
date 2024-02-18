@@ -115,7 +115,7 @@ export const Table = <RecordType extends unknown>(
       <div
         ref={wrapRef}
         className={cn(
-          "orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
+          "orderly-table orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
           props.loading && "orderly-overflow-hidden",
           props.className
         )}
@@ -130,7 +130,7 @@ export const Table = <RecordType extends unknown>(
 
         <table
           className={cn(
-            "orderly-border-collapse orderly-w-full orderly-table-fixed"
+            "orderly-table-fixed orderly-border-collapse orderly-w-full"
           )}
         >
           <ColGroup columns={props.columns} />
