@@ -86,9 +86,10 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
   const cancelPopover = () => setOpen(-1);
@@ -98,6 +99,11 @@ const EditingState: FC<{
       // close the input when click outside of boxRef
       const el = boxRef?.current;
       if (!el || el.contains(event.target as Node)) {
+        return;
+      }
+
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
 
@@ -163,9 +169,26 @@ const EditingState: FC<{
     }
 
 
+    // @ts-ignore
+    if (order.visible_quantity === 0) {
+      data["visible_quantity"] = 0;
+    }
 
     // @ts-ignore
-    editOrder(order_id, data)
+    if (order.tag !== undefined) {
+      // @ts-ignore
+      data["order_tag"] = order.tag;
+    }
+
+    let future;
+    if (order.algo_order_id !== undefined) {
+      future = editAlgoOrder(order.algo_order_id.toString(), data);
+    } else {
+      future = editOrder(order.order_id.toString(), data);
+    }
+
+    // @ts-ignore
+    future
       .then(
         (result) => {
           closePopover();
@@ -299,7 +322,8 @@ const EditingState: FC<{
                 >
                   Cancel
                 </Button>
-                <Button loading={isSubmitting} onClick={onConfirm}>
+                {/* @ts-ignore */}
+                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
                   Confirm
                 </Button>
               </div>

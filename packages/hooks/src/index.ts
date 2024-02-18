@@ -21,6 +21,8 @@ export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
 
 export * from "./orderlyContext";
+export * from "./statusProvider";
+export { useWsStatus } from "./useWsStatus";
 export type { ConfigProviderProps } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
 

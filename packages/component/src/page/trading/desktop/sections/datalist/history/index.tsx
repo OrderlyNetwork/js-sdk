@@ -27,6 +27,7 @@ export const HistoryView = () => {
 
   const onCancelOrder = useCallback(
     (orderId: number | OrderEntity, symbol: string) => {
+      // @ts-ignore
       return cancelOrder(orderId, symbol).then(() => {
         // update history list
         return refresh();

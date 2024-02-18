@@ -1,8 +1,8 @@
+import { useCallback, useContext, useMemo } from "react";
 import { AccountStatusBar } from "@/block/accountStatus";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
-import { useWsStatus } from "@/block/systemStatusBar/useWsStatus";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
@@ -11,23 +11,24 @@ import {
   useCollateral,
   useAccountInfo,
   useWalletConnector,
+  StatusContext,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 
-import { useCallback, useContext, useMemo } from "react";
+interface BottomNavBarProps {}
 
-export const BottomNavBar = () => {
+export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
   const { state } = useAccount();
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
   const { errors } = useContext(OrderlyAppContext);
+  const { ws: wsStatus } = useContext(StatusContext);
+
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
 
   const { connectedChain } = useWalletConnector();
-
-  const wsStatus = useWsStatus();
 
   const onConnect = useCallback(() => {
     onWalletConnect().then(

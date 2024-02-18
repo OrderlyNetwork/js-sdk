@@ -60,7 +60,7 @@ export type OrderlyAppContextState = {
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
-  footerStatusBar?: FooterStatusBarProps;
+  footerStatusBarProps?: FooterStatusBarProps;
   /** custom chains  */
   chains?: Chains<undefined, undefined>;
 };
@@ -80,7 +80,7 @@ export interface OrderlyAppProviderProps {
   includeTestnet?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
-  footerStatusBar?: FooterStatusBarProps;
+  footerStatusBarProps?: FooterStatusBarProps;
   /** custom chains  */
   chains?: Chains<undefined, undefined>;
 }
@@ -101,7 +101,7 @@ export const OrderlyAppProvider: FC<
     contracts,
     toastLimitCount,
     onChainChanged,
-    footerStatusBar,
+    footerStatusBarProps,
     chains,
   } = props;
 
@@ -120,7 +120,7 @@ export const OrderlyAppProvider: FC<
         toastLimitCount={toastLimitCount}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
-        footerStatusBar={footerStatusBar}
+        footerStatusBarProps={footerStatusBarProps}
         chains={chains}
       >
         {props.children}
@@ -136,7 +136,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     brokerName,
     toastLimitCount = 1,
     onChainChanged,
-    footerStatusBar,
+    footerStatusBarProps,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -344,7 +344,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onSetChain: _onSetChain,
         onChainChanged,
         brokerName,
-        footerStatusBar,
+        footerStatusBarProps,
         chains: props.chains,
       }}
     >

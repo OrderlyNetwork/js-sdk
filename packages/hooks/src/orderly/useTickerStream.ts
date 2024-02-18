@@ -88,8 +88,7 @@ export const useTickerStream = (symbol: string) => {
         .div(ticker.open)
         .toNumber();
 
-      config['24h_change'] = new Decimal(ticker.close)
-      .minus(ticker.open);
+      config["24h_change"] = new Decimal(ticker.close).minus(ticker.open);
     }
     return config;
   }, [info, symbol, ticker]);
