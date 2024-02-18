@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.1.3-alpha.5
+
+### Patch Changes
+
+- fix bugs & add special className;
+- Updated dependencies
+  - @orderly.network/hooks@1.1.3-alpha.5
+  - @orderly.network/types@0.2.3-alpha.5
+
 ## 0.1.3-alpha.4
 
 ### Patch Changes

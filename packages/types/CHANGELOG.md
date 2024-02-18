@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.2.3-alpha.5
+
+### Patch Changes
+
+- fix bugs & add special className;
+
 ## 0.2.3-alpha.4
 
 ### Patch Changes

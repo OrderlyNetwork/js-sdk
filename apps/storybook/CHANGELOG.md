@@ -1,5 +1,11 @@
 # storybook
 
+## 1.1.3-alpha.5
+
+### Patch Changes
+
+- fix bugs & add special className;
+
 ## 1.1.3-alpha.4
 
 ### Patch Changes
