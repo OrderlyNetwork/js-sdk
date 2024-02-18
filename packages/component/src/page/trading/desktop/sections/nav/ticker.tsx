@@ -95,9 +95,11 @@ export const Ticker: FC<Props> = (props) => {
             rule={"price"}
             hint="Price for the computation of unrealized PnL and liquidation."
           />
+
           <Statistic
             label={"Index"}
-            value={<NumeralWithCtx>data?.index_price</NumeralWithCtx>}
+            // value={<NumeralWithCtx>data?.index_price</NumeralWithCtx>}
+            value={data?.index_price}
             rule={"price"}
             hint="Average of the last prices across other exchanges."
           />
