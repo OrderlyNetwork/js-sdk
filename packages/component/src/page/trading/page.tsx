@@ -10,13 +10,11 @@ import { TopNavbar } from "../common/topNavbar";
 import { Footer } from "@/layout/footer";
 import { SystemStatusBar } from "@/block/systemStatusBar";
 import { OrderlyAppContext } from "@/provider";
-import { useWsStatus } from "@/block/systemStatusBar/useWsStatus";
 
 const { Header, Content, Sider, PageHeader } = Layout;
 
 export const BaseTradingPage: FC<TradingPageProps> = (props) => {
   const { footerStatusBar } = useContext(OrderlyAppContext);
-  const wsStatus = useWsStatus();
 
   return (
     <TradingPageProvider
@@ -24,9 +22,9 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
       onSymbolChange={props.onSymbolChange}
       disableFeatures={props.disableFeatures}
     >
-      <Layout mobile={<MobileTradingPage {...props} wsStatus={wsStatus} />}>
+      <Layout mobile={<MobileTradingPage {...props} />}>
         <Header className="orderly-app-trading-header orderly-border-b orderly-border-divider">
-          <TopNavbar wsStatus={wsStatus} />
+          <TopNavbar />
         </Header>
         <Layout style={{ paddingBottom: "42px" }}>
           {/* <Sider style={{ minWidth: "44px", backgroundColor: "red" }}></Sider> */}
@@ -45,7 +43,6 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
             xUrl={footerStatusBar?.xUrl}
             telegramUrl={footerStatusBar?.telegramUrl}
             discordUrl={footerStatusBar?.discordUrl}
-            wsStatus={wsStatus}
           />
         </Footer>
       </Layout>

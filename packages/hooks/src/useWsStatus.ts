@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useWS } from "@orderly.network/hooks";
+import { useWS } from "./useWS";
 
 export type WsNetworkStatus = "connected" | "unstable" | "disconnected";
 

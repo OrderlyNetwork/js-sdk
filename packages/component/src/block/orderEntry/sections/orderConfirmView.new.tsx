@@ -24,7 +24,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
     const type = (type: OrderType) => {
       switch (type) {
         case OrderType.LIMIT:
-          return 'Limit';
+          return "Limit";
         case OrderType.MARKET:
           return "Market";
         case OrderType.STOP_LIMIT:
@@ -32,7 +32,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
         case OrderType.STOP_MARKET:
           return "Stop Market";
       }
-    }
+    };
 
     if (order.side === OrderSide.BUY) {
       return <Text type={"buy"}>{`${type(order.order_type)} Buy`}</Text>;
@@ -41,53 +41,71 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
   }, [order.side, order.order_type]);
 
   const priceNode = useMemo(() => {
-    if (order.order_type === OrderType.MARKET || order.order_type === OrderType.STOP_MARKET) {
-      return <span>Market</span>
+    if (
+      order.order_type === OrderType.MARKET ||
+      order.order_type === OrderType.STOP_MARKET
+    ) {
+      return <span>Market</span>;
     }
     return (
       <div className="orderly-inline-block">
         <span>{order.order_price}</span>
-        <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
+        <span className="orderly-text-base-contrast-36 orderly-ml-1">
+          {quote}
+        </span>
       </div>
     );
   }, [order]);
-
 
   return (
     <div>
       <div className="orderly-flex orderly-items-center orderly-pb-4">
         <NetworkImage symbol={props.symbol} type="symbol" size={20} />
-        <span className="orderly-text-lg orderly-pl-2">
-          {`${base}-PERP`}
-        </span>
+        <span className="orderly-text-lg orderly-pl-2">{`${base}-PERP`}</span>
       </div>
       <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm orderly-font-semibold">
         <div>
-          <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[180px]">{type}</div>
+          <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[180px]">
+            {type}
+          </div>
         </div>
         <div className="orderly-flex-1 orderly-gap-2">
           <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Qty.</span>
-            <span className={cn(
-              order.side === OrderSide.BUY ? "orderly-text-trade-profit" : "orderly-text-trade-loss"
-            )}>{order.order_quantity}</span>
+            <span
+              className={cn(
+                order.side === OrderSide.BUY
+                  ? "orderly-text-trade-profit"
+                  : "orderly-text-trade-loss"
+              )}
+            >
+              {order.order_quantity}
+            </span>
           </div>
-          {order.isStopOrder === true && (<div className="orderly-flex orderly-justify-between orderly-mb-1">
-            <span className="orderly-text-base-contrast-54">Trigger price</span>
-            <div className="orderly-inline-block">
-              <span>{order.trigger_price}</span>
-              <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
+          {order.isStopOrder === true && (
+            <div className="orderly-flex orderly-justify-between orderly-mb-1">
+              <span className="orderly-text-base-contrast-54">Trigger</span>
+              <div className="orderly-inline-block">
+                <span>{order.trigger_price}</span>
+                <span className="orderly-text-base-contrast-36 orderly-ml-1">
+                  {quote}
+                </span>
+              </div>
             </div>
-          </div>)}
+          )}
           <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Price</span>
             {priceNode}
           </div>
           <div className="orderly-flex orderly-justify-between orderly-mb-1">
-            <span className="orderly-text-base-contrast-54">{"Est. Total"}</span>
+            <span className="orderly-text-base-contrast-54">
+              {"Est. Total"}
+            </span>
             <div className="orderly-inline-block">
               <span>{order.total}</span>
-              <span className="orderly-text-base-contrast-36 orderly-ml-1">{quote}</span>
+              <span className="orderly-text-base-contrast-36 orderly-ml-1">
+                {quote}
+              </span>
             </div>
           </div>
         </div>
@@ -106,7 +124,12 @@ const OrderConfirmCheckBox: FC<{
   );
 
   return (
-    <div className={cn("orderly-flex orderly-items-center orderly-gap-2 orderly-pt-3", props.className,)}>
+    <div
+      className={cn(
+        "orderly-flex orderly-items-center orderly-gap-2 orderly-pt-3",
+        props.className
+      )}
+    >
       <Checkbox
         id="orderConfirm"
         checked={!needConfirm}
@@ -133,8 +156,6 @@ export const OrderConfirmFooter: FC<{
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
 }> = (props) => {
-
-
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [loading, setLoading] = useState(false);
@@ -193,4 +214,4 @@ export const OrderConfirmFooter: FC<{
       </div>
     </div>
   );
-}
+};

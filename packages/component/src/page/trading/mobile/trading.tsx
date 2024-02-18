@@ -8,11 +8,8 @@ import { MemoizedCompnent } from "./sections/leverage";
 import { BottomNavBar } from "./sections/bottombar";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { TradingPageProps } from "../types";
-import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 
-interface MobileTradingPageProps extends TradingPageProps {
-  wsStatus: WsNetworkStatus;
-}
+interface MobileTradingPageProps extends TradingPageProps {}
 
 export const MobileTradingPage: FC<MobileTradingPageProps> = (props) => {
   return (
@@ -34,7 +31,7 @@ export const MobileTradingPage: FC<MobileTradingPageProps> = (props) => {
       </div>
       <DataListView />
       <AssetsProvider>
-        <BottomNavBar wsStatus={props.wsStatus} />
+        <BottomNavBar />
       </AssetsProvider>
     </div>
   );
