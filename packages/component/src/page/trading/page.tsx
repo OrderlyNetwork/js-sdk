@@ -14,7 +14,8 @@ import { OrderlyAppContext } from "@/provider";
 const { Header, Content, Sider, PageHeader } = Layout;
 
 export const BaseTradingPage: FC<TradingPageProps> = (props) => {
-  const { footerStatusBar } = useContext(OrderlyAppContext);
+  const { footerStatusBarProps } =
+    useContext(OrderlyAppContext);
 
   return (
     <TradingPageProvider
@@ -40,9 +41,9 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
           className="orderly-bg-base-900 orderly-flex orderly-items-center orderly-px-4 orderly-w-full orderly-h-[42px] orderly-justify-between orderly-border-t-[1px] orderly-border-base-500 orderly-z-50"
         >
           <SystemStatusBar
-            xUrl={footerStatusBar?.xUrl}
-            telegramUrl={footerStatusBar?.telegramUrl}
-            discordUrl={footerStatusBar?.discordUrl}
+            xUrl={footerStatusBarProps?.xUrl}
+            telegramUrl={footerStatusBarProps?.telegramUrl}
+            discordUrl={footerStatusBarProps?.discordUrl}
           />
         </Footer>
       </Layout>

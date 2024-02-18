@@ -63,7 +63,7 @@ const preview = {
                 img: "/orderly-logo-secondary.svg",
               },
             }}
-            footerStatusBar={{
+            footerStatusBarProps={{
               xUrl: "https://twitter.com/OrderlyNetwork",
               // telegramUrl: "https://orderly.network",
               discordUrl: "https://discord.com/invite/orderlynetwork",
