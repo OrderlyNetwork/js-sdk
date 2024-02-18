@@ -474,7 +474,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <Input
               disabled={disabled}
               ref={triggerPriceInputRef}
-              prefix="Trigger price"
+              prefix="Trigger"
               suffix={symbolConfig?.quote}
               type="text"
               inputMode="decimal"
