@@ -322,6 +322,7 @@ const EditingState: FC<{
                 >
                   Cancel
                 </Button>
+                {/* @ts-ignore */}
                 <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
                   Confirm
                 </Button>

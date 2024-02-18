@@ -9,7 +9,6 @@ import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
 import { CopyIcon } from "@/icon";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
-import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 
 interface Props {
   // logo?: ReactNode;

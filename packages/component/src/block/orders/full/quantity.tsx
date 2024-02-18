@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
@@ -20,33 +27,33 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const [editting, setEditting] = useState(false);
 
   if (!editting && open <= 0) {
-    return (<NormalState order={order} quantity={quantity} setEditing={setEditting} />);
+    return (
+      <NormalState order={order} quantity={quantity} setEditing={setEditting} />
+    );
   }
 
-  return (<EditingState
-    order={order}
-    quantity={quantity}
-    setQuantity={setQuantity}
-    editting={editting}
-    setEditting={setEditting}
-    open={open}
-    setOpen={setOpen}
-  />);
+  return (
+    <EditingState
+      order={order}
+      quantity={quantity}
+      setQuantity={setQuantity}
+      editting={editting}
+      setEditting={setEditting}
+      open={open}
+      setOpen={setOpen}
+    />
+  );
 };
 
-
 const NormalState: FC<{
-  order: any,
-  quantity: string,
-  setEditing: any,
+  order: any;
+  quantity: string;
+  setEditing: any;
 }> = (props) => {
-
   const { order, quantity } = props;
 
-
-
   const executed = order.total_executed_quantity;
-  
+
   return (
     <div
       className={cn(
@@ -69,22 +76,21 @@ const NormalState: FC<{
       </div>
     </div>
   );
-}
+};
 
 const EditingState: FC<{
-  order: API.OrderExt,
-  quantity: string,
-  setQuantity: any,
-  editting: boolean,
-  setEditting: any,
-  open: number,
-  setOpen: any,
+  order: API.OrderExt;
+  quantity: string;
+  setQuantity: any;
+  editting: boolean;
+  setEditting: any;
+  open: number;
+  setOpen: any;
 }> = (props) => {
-
-  const { order, quantity, setQuantity, editting, setEditting, setOpen, open } = props;
+  const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
+    props;
 
   const { editOrder, editAlgoOrder } = useContext(OrderListContext);
-
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => setOpen(-1);
@@ -97,7 +103,6 @@ const EditingState: FC<{
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
       // close the input when click outside of boxRef
@@ -105,12 +110,12 @@ const EditingState: FC<{
       if (!el || el.contains(event.target as Node)) {
         return;
       }
-      
+
       const el2 = confirmRef?.current;
       if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
-      
+
       setQuantity(order.quantity.toString());
       setEditting(false);
     };
@@ -140,11 +145,9 @@ const EditingState: FC<{
       inputRef.current?.blur();
       onClick();
     }
-  }
+  };
 
   const onConfirm = useCallback(() => {
-    
-    
     setIsSubmitting(true);
 
     const params: any = {
@@ -156,12 +159,12 @@ const EditingState: FC<{
       reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
-    
+
     // @ts-ignore
     if (order.visible_quantity === 0) {
       params["visible_quantity"] = 0;
     }
-    
+
     // @ts-ignore
     if (order.tag !== undefined) {
       // @ts-ignore
@@ -210,7 +213,6 @@ const EditingState: FC<{
         )}
         ref={boxRef}
       >
-
         <div
           className={cn("orderly-absolute orderly-left-1 orderly-flex", {
             "orderly-animate-in orderly-fade-in orderly-zoom-in": editting,
@@ -232,11 +234,13 @@ const EditingState: FC<{
             <X size={14} />
           </button>
 
-          <Divider vertical className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]" />
+          <Divider
+            vertical
+            className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]"
+          />
         </div>
 
         <PopoverAnchor asChild>
-
           <input
             ref={inputRef}
             type="text"
@@ -247,7 +251,6 @@ const EditingState: FC<{
             autoFocus
             className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
           />
-
         </PopoverAnchor>
         <div
           className={cn("orderly-absolute orderly-right-1 orderly-flex", {
@@ -256,8 +259,10 @@ const EditingState: FC<{
               !editting,
           })}
         >
-
-          <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
+          <Divider
+            vertical
+            className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]"
+          />
 
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
@@ -267,7 +272,6 @@ const EditingState: FC<{
             {/* @ts-ignore */}
             <Check size={14} />
           </button>
-
 
           <PopoverContent
             align="end"
@@ -296,7 +300,12 @@ const EditingState: FC<{
                 >
                   Cancel
                 </Button>
-                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
+                <Button
+                  // @ts-ignore
+                  ref={confirmRef}
+                  loading={isSubmitting}
+                  onClick={onConfirm}
+                >
                   Confirm
                 </Button>
               </div>
@@ -313,4 +322,4 @@ const EditingState: FC<{
       </div>
     </Popover>
   );
-}
+};
