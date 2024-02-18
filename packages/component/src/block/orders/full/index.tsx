@@ -19,11 +19,14 @@ export const OrdersViewFull: FC<Props> = (props) => {
     <OrderListProvider
       cancelOrder={props.cancelOrder}
       editOrder={props.editOrder}
+      cancelAlgoOrder={props.cancelAlgoOrder}
+      editAlgoOrder={props.editAlgoOrder}
     >
       <Header
         count={props.dataSource?.length ?? 0}
         onSideChange={props.onSideChange}
         side={props.side}
+        status={props.status}
       />
       <Divider />
       <div

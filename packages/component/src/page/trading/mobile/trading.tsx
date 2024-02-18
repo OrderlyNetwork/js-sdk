@@ -9,7 +9,9 @@ import { BottomNavBar } from "./sections/bottombar";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { TradingPageProps } from "../types";
 
-export const MobileTradingPage: FC<TradingPageProps> = (props) => {
+interface MobileTradingPageProps extends TradingPageProps {}
+
+export const MobileTradingPage: FC<MobileTradingPageProps> = (props) => {
   return (
     <div className="orderly-pb-[70px]">
       <NavBar symbol={props.symbol} />

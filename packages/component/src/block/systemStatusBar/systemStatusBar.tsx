@@ -4,7 +4,6 @@ import { NetworkStatus } from "./networkStatus";
 import { CommunityDiscord, CommunityX, CommunityTG } from "./communityIcon";
 import { OrderlyLogo } from "./orderlyLogo";
 import React from "react";
-import { WsNetworkStatus } from "./useWsStatus";
 
 export interface FooterStatusBarProps {
   xUrl?: string;
@@ -12,7 +11,6 @@ export interface FooterStatusBarProps {
   discordUrl?: string;
   commutitylist?: React.ReactNode[];
   powerBy?: string | React.ReactNode;
-  wsStatus: WsNetworkStatus;
 }
 
 export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
@@ -70,7 +68,7 @@ export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
   return (
     <>
       <div className="orderly-flex orderly-items-center">
-        <NetworkStatus wsStatus={props.wsStatus} />
+        <NetworkStatus />
         <div className="orderly-pl-2">
           <Divider vertical />
         </div>

@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
 import { modal } from "@/modal";
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide, OrderStatus } from "@orderly.network/types";
 import Button from "@/button";
 import { useMutation } from "@orderly.network/hooks";
 
@@ -9,6 +9,7 @@ export interface Props {
   side: OrderSide;
   onSideChange: (side: OrderSide) => void;
   count: number;
+  status: OrderStatus;
 }
 
 export const Header: FC<Props> = (props) => {
@@ -31,7 +32,7 @@ export const Header: FC<Props> = (props) => {
       onOk: async () => {
         // do cancel all orders
         // Promise.resolve();
-        await cancelAll(null,{"source_type": "ALL"});
+        await cancelAll(null, { "source_type": "ALL" });
         // Promise.resolve();
       },
       onCancel: () => {
@@ -64,15 +65,17 @@ export const Header: FC<Props> = (props) => {
           // props.onSearch?.({ side: value as OrderSide });
         }}
       />
-      <Button
-        size={"small"}
-        variant={"outlined"}
-        disabled={props.count <= 0}
-        color={"tertiary"}
-        onClick={cancelAllOrder}
-      >
-        Cancel all
-      </Button>
+      {
+        props.status === "INCOMPLETE" && <Button
+          size={"small"}
+          variant={"outlined"}
+          disabled={props.count <= 0}
+          color={"tertiary"}
+          onClick={cancelAllOrder}
+        >
+          Cancel all
+        </Button>
+      }
     </div>
   );
 };

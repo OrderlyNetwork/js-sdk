@@ -4,8 +4,10 @@ export interface OrdersViewProps {
   dataSource: any[];
   onCancelAll?: () => void;
   isLoading: boolean;
-  cancelOrder: (orderId: number | OrderEntity, symbol: string) => Promise<any>;
+  cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
+  cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
+  editAlgoOrder: (orderId: string, order: OrderEntity) => Promise<any>;
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
   symbol: string;

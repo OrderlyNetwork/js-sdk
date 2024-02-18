@@ -1,5 +1,5 @@
 import { Column, Table } from "@/table";
-import { FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
 import {
@@ -18,6 +18,7 @@ import { Divider } from "@/divider";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 import { API } from "@orderly.network/types";
 import { EmptyView } from "@/listView/emptyView";
+import { PositionEmptyView } from "./positionEmptyView";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -198,31 +199,11 @@ export const Listview: FC<
     ];
   }, [pnlNotionalDecimalPrecision, props.unPnlPriceBasis]);
 
-  const [xPosition, setXPosition] = useState({left: 0, right: 0});
-
-  useEffect(() => {
-    const leftTargetElement = document.getElementById("table_left_fixed_divide");
-    const rightTargetElement = document.getElementById("table_left_fixed_divide");
-
-    let xLeft = 120;
-    let xRight = 280;
-    if (leftTargetElement) {
-      const { top, bottom, left, right } = leftTargetElement.getBoundingClientRect();
-      xLeft = right;
-      // setPosition({ top, bottom, left, right });
-    }
-
-    if (rightTargetElement) {
-      const { left } = rightTargetElement.getBoundingClientRect();
-      xRight = left;
-    }
-
-    setXPosition({left: xLeft, right: xRight});
-
-  }, [])
+  const divRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
+      ref={divRef}
       // className="orderly-overflow-y-auto"
       className="orderly-relative"
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
@@ -230,6 +211,7 @@ export const Listview: FC<
       <Table<API.PositionExt>
         bordered
         justified
+        showMaskElement={false}
         columns={columns}
         dataSource={props.dataSource}
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
@@ -246,15 +228,10 @@ export const Listview: FC<
         }}
       />
 
-      <div
-        className="orderly-absolute orderly-left-0 orderly-right-0 orderly-top-[54px] orderly-bottom-0 orderly-bg-base-900"
-        style={{
-          left: `${xPosition.left}px`,
-          right: `${xPosition.right}px`,
-        }}
-      >
-        <EmptyView />
-      </div>
+      {
+        (!props.dataSource || props.dataSource.length <= 0) && 
+        <PositionEmptyView watchRef={divRef} left={120} right={280} />
+      }
     </div>
   );
 };

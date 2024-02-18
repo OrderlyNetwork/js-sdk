@@ -17,6 +17,7 @@ import { CancelButton } from "@/block/orders/full/cancelButton";
 import { cn } from "@/utils";
 import { columnsBasis } from "@/block/orders/columnsUtil";
 import { OrderTrades } from "../orderTrades";
+import { PositionEmptyView } from "@/block/positions/full/positionEmptyView";
 
 interface Props {
   dataSource: API.OrderExt[];
@@ -75,8 +76,12 @@ export const Listview: FC<Props> = (props) => {
 
     return cols;
   }, []);
+
+  const divRef = useRef<HTMLDivElement>(null);
+
   return (
-    <EndReachedBox
+    <div ref={divRef}>
+      <EndReachedBox
       onEndReached={() => {
         if (!props.loading) {
           props.loadMore?.();
@@ -86,6 +91,7 @@ export const Listview: FC<Props> = (props) => {
       <Table
         bordered
         justified
+        showMaskElement={false}
         columns={columns}
         loading={props.loading}
         dataSource={props.dataSource}
@@ -118,6 +124,15 @@ export const Listview: FC<Props> = (props) => {
           return <OrderTrades record={record} index={index} />;
         }}
       />
+
+      
+
+      {
+        (!props.dataSource || props.dataSource.length <= 0) &&
+        <PositionEmptyView watchRef={divRef} left={0} right={120} />
+      }
+
     </EndReachedBox>
+    </div>
   );
 };

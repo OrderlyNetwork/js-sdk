@@ -8,6 +8,7 @@ export interface OrderListContextState {
   onCancelOrder: (order: API.Order) => Promise<any>;
   onEditOrder: (order: API.Order) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
+  editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
 }
 
 export const OrderListContext = createContext<OrderListContextState>(
@@ -15,18 +16,23 @@ export const OrderListContext = createContext<OrderListContextState>(
 );
 
 export interface OrderListProviderProps {
-  cancelOrder: (orderId: number | OrderEntity, symbol: string) => Promise<any>;
+  cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
+  cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
+  editAlgoOrder: (orderId: string, order: OrderEntity) => Promise<any>;
 }
 
 export const OrderListProvider: FC<
   PropsWithChildren<OrderListProviderProps>
 > = (props) => {
-  const { cancelOrder, editOrder } = props;
+  const { cancelOrder, editOrder, cancelAlgoOrder, editAlgoOrder } = props;
 
   const onCancelOrder = useCallback(async (order: API.Order) => {
+    if (order.algo_order_id !== undefined) {
+      return cancelAlgoOrder(order.algo_order_id, order.symbol).then(() => {});
+    }
     // @ts-ignore
-    return cancelOrder(order, order.symbol).then(() => {
+    return cancelOrder(order.order_id, order.symbol).then(() => {
       // toast.success("Order canceled successfully");
     });
   }, []);
@@ -39,14 +45,10 @@ export const OrderListProvider: FC<
         <OrderEditFormSheet
           order={order}
           editOrder={(value: OrderEntity) => {
-            const order_id = (
-              order?.order_id || order?.algo_order_id
-            )?.toString();
-            return editOrder(order_id || "", {
-              ...value,
-              // @ts-ignore
-              algo_order_id: order.algo_order_id,
-            });
+            if (order.algo_order_id !== undefined) {
+              return editAlgoOrder(order.algo_order_id.toString(), {...value});
+            }
+            return editOrder(order.order_id.toString(), {...value});
           }}
         />
       ),
@@ -55,7 +57,7 @@ export const OrderListProvider: FC<
 
   return (
     <OrderListContext.Provider
-      value={{ onCancelOrder, onEditOrder, editOrder }}
+      value={{ onCancelOrder, onEditOrder, editOrder, editAlgoOrder }}
     >
       {props.children}
     </OrderListContext.Provider>
