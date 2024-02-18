@@ -16,7 +16,7 @@ const inputVariants = cva(["orderly-rounded"], {
   variants: {
     variant: {
       outlined: "orderly-border orderly-border-slate-300",
-      filled: "orderly-bg-fill orderly-border orderly-border-transparent",
+      filled: "orderly-bg-base-700 orderly-border orderly-border-transparent",
     },
     size: {
       small: "orderly-h-[28px]",
