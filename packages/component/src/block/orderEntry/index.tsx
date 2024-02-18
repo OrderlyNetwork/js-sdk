@@ -147,31 +147,65 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
 
     useEffect(() => {
+      // handle orderbook item click event
       const orderbookItemClickHandler = (item: number[]) => {
-        if (formattedOrder.order_type === OrderType.STOP_LIMIT) {
-          if (currentFocusInput.current === InputType.TRIGGER_PRICE) {
-            // newType = OrderType.LIMIT;
+        if (currentFocusInput.current === InputType.TRIGGER_PRICE) {
+          if (
+            formattedOrder.order_type === OrderType.STOP_LIMIT ||
+            formattedOrder.order_type === OrderType.STOP_MARKET
+          ) {
             props.onFieldChange("trigger_price", item[0].toString());
             focusInputElement(triggerPriceInputRef.current);
+          }
+        } else {
+          if (
+            formattedOrder.order_type === OrderType.STOP_LIMIT ||
+            formattedOrder.order_type === OrderType.LIMIT
+          ) {
+            props.onFieldChange("order_price", item[0].toString());
+            focusInputElement(priceInputRef.current);
           } else {
+            // other order type
+            let newType;
+
+            if (formattedOrder.order_type === OrderType.STOP_MARKET) {
+              newType = OrderType.STOP_LIMIT;
+            } else if (formattedOrder.order_type === OrderType.MARKET) {
+              newType = OrderType.LIMIT;
+            }
+
+            if (typeof newType !== "undefined") {
+              props.onFieldChange("order_type", newType);
+            }
             props.onFieldChange("order_price", item[0].toString());
             focusInputElement(priceInputRef.current);
           }
-        } else {
-          let newType;
-
-          if (formattedOrder.order_type === OrderType.STOP_MARKET) {
-            newType = OrderType.STOP_LIMIT;
-          } else if (formattedOrder.order_type === OrderType.MARKET) {
-            newType = OrderType.LIMIT;
-          }
-
-          if (typeof newType !== "undefined") {
-            props.onFieldChange("order_type", newType);
-          }
-          props.onFieldChange("order_price", item[0].toString());
-          focusInputElement(priceInputRef.current);
         }
+
+        // if (formattedOrder.order_type === OrderType.STOP_LIMIT) {
+        //   if (currentFocusInput.current === InputType.TRIGGER_PRICE) {
+        //     // newType = OrderType.LIMIT;
+        //     props.onFieldChange("trigger_price", item[0].toString());
+        //     focusInputElement(triggerPriceInputRef.current);
+        //   } else {
+        //     props.onFieldChange("order_price", item[0].toString());
+        //     focusInputElement(priceInputRef.current);
+        //   }
+        // } else {
+        //   let newType;
+
+        //   // if (formattedOrder.order_type === OrderType.STOP_MARKET) {
+        //   //   newType = OrderType.STOP_LIMIT;
+        //   // } else if (formattedOrder.order_type === OrderType.MARKET) {
+        //   //   newType = OrderType.LIMIT;
+        //   // }
+
+        //   if (typeof newType !== "undefined") {
+        //     props.onFieldChange("order_type", newType);
+        //   }
+        //   props.onFieldChange("order_price", item[0].toString());
+        //   focusInputElement(priceInputRef.current);
+        // }
 
         function focusInputElement(target: HTMLInputElement | null) {
           setTimeout(() => {
@@ -422,8 +456,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             options={[
               { label: "Limit order", value: "LIMIT" },
               { label: "Market order", value: "MARKET" },
-              // { label: "Stop limit", value: "STOP_LIMIT" },
-              // { label: "Stop market", value: "STOP_MARKET" },
+              { label: "Stop limit", value: "STOP_LIMIT" },
+              { label: "Stop market", value: "STOP_MARKET" },
             ]}
             onChange={(value) => {
               // field.onChange(value);
@@ -440,7 +474,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             <Input
               disabled={disabled}
               ref={triggerPriceInputRef}
-              prefix="Trigger price"
+              prefix="Trigger"
               suffix={symbolConfig?.quote}
               type="text"
               inputMode="decimal"

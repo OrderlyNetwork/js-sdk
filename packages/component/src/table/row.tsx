@@ -69,6 +69,7 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
           expandRowRender={props.expandRowRender}
           record={record}
           index={index}
+          bordered={bordered}
         />
       )}
     </>
