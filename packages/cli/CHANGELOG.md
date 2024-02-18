@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.3-alpha.3
+
+### Patch Changes
+
+- add status context;
+- Updated dependencies
+  - @orderly.network/core@0.2.3-alpha.3
+
 ## 0.1.3-alpha.2
 
 ### Patch Changes
