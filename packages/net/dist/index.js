@@ -72,9 +72,9 @@ module.exports = __toCommonJS(src_exports);
 // src/version.ts
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.1.3-alpha.3";
+  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.1.3-alpha.4";
 }
-var version_default = "1.1.3-alpha.3";
+var version_default = "1.1.3-alpha.4";
 
 // src/errors/apiError.ts
 var ApiError = class extends Error {

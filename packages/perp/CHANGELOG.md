@@ -1,5 +1,16 @@
 # @orderly.network/futures
 
+## 2.0.3-alpha.4
+
+### Patch Changes
+
+- add special id;
+- add special id
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@0.2.3-alpha.4
+  - @orderly.network/utils@0.1.3-alpha.4
+
 ## 2.0.3-alpha.3
 
 ### Patch Changes

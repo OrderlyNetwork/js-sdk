@@ -1,5 +1,12 @@
 # @orderly.network/utils
 
+## 0.1.3-alpha.4
+
+### Patch Changes
+
+- add special id;
+- add special id
+
 ## 0.1.3-alpha.3
 
 ### Patch Changes
