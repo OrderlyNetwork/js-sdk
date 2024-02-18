@@ -81,7 +81,7 @@ export const OrdersEmptyView: FC<{
 
   return (
     <div
-      className="orderly-order-list-empty orderly-absolute orderly-left-0 orderly-right-0 orderly-top-[44px] orderly-bottom-0 orderly-bg-base-900"
+      className="orderly-table-list-empty orderly-absolute orderly-left-0 orderly-right-0 orderly-top-[44px] orderly-bottom-0 orderly-bg-base-900"
       style={{
         left: `${xPosition.left}px`,
         right: `${xPosition.right}px`,
