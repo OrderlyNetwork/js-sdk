@@ -15,6 +15,7 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       dataIndex: "symbol",
       width: 120,
       className: "orderly-h-[48px] orderly-font-semibold",
+      fixed: "left",
       render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
     },
     {

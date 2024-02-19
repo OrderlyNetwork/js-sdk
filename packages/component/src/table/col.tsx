@@ -56,7 +56,7 @@ export const ColItem: FC<ColProps> = (props) => {
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right",
-        col.fixed && "orderly-sticky"
+        col.fixed && "orderly-sticky orderly-z-10"
       )}
       style={{
         backgroundColor: col.fixed

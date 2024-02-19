@@ -37,6 +37,7 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "symbol",
           className: "orderly-h-[48px]",
           width: 120,
+          fixed: "left",
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
@@ -210,7 +211,7 @@ export const Listview: FC<Props> = (props) => {
   const divRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <EndReachedBox
         onEndReached={() => {
           if (!props.loading) {
