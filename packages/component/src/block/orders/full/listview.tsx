@@ -37,7 +37,6 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "symbol",
           className: "orderly-h-[48px]",
           width: 120,
-          fixed: "left",
           onSort:
             props.status === OrderStatus.INCOMPLETE
               ? (r1, r2, sortOrder) => {
