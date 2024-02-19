@@ -115,7 +115,7 @@ export const Table = <RecordType extends unknown>(
       <div
         ref={wrapRef}
         className={cn(
-          "orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
+          "orderly-ui-table orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
           props.loading && "orderly-overflow-hidden",
           props.className
         )}

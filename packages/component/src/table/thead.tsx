@@ -17,7 +17,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
   return (
     <table
       className={cn(
-        "orderly-table-thead orderly-border-collapse orderly-w-full orderly-table-fixed orderly-sticky orderly-top-0 orderly-z-20",
+        "orderly-ui-table-thead orderly-border-collapse orderly-w-full orderly-table-fixed orderly-sticky orderly-top-0 orderly-z-20",
         props.containerClassName
       )}
     >

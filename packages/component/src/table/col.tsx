@@ -52,7 +52,7 @@ export const ColItem: FC<ColProps> = (props) => {
   return (
     <td
       className={cn(
-        "orderly-table-td orderly-py-[2px] orderly-px-1 whitespace-nowrap group-hover:!orderly-bg-base-800",
+        "orderly-ui-table-td orderly-py-[2px] orderly-px-1 whitespace-nowrap group-hover:!orderly-bg-base-800",
         props.justified && "first:orderly-pl-0 last:orderly-pr-0",
         col.className,
         align === "right" && "orderly-text-right",
