@@ -94,7 +94,7 @@ export const Listview: FC<Props> = (props) => {
         {
           title: "Filled / Quantity",
           className:
-            "orderly-h-[48px] orderly-pending-list-quantity-input-container",
+            "orderly-h-[48px] orderly-ui-pending-list-input-container orderly-ui-pending-list-quantity-input-container",
           dataIndex: "quantity",
           width: 120,
           onSort: props.status === OrderStatus.INCOMPLETE,
@@ -105,7 +105,7 @@ export const Listview: FC<Props> = (props) => {
         {
           title: "Price",
           className:
-            "orderly-h-[48px]  orderly-pending-list-price-input-container",
+            "orderly-h-[48px] orderly-ui-pending-list-input-container rderly-ui-pending-list-price-input-container",
           dataIndex: "price",
           width: 120,
           onSort: props.status === OrderStatus.INCOMPLETE,
@@ -136,7 +136,7 @@ export const Listview: FC<Props> = (props) => {
         {
           title: "Trigger",
           className:
-            "orderly-h-[48px]  orderly-pending-list-trigger-input-container",
+            "orderly-h-[48px] orderly-ui-pending-list-input-container orderly-ui-pending-list-trigger-input-container",
           dataIndex: "trigger_price",
           width: 120,
           // onSort: props.status === OrderStatus.INCOMPLETE,
@@ -210,7 +210,7 @@ export const Listview: FC<Props> = (props) => {
   const divRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <EndReachedBox
         onEndReached={() => {
           if (!props.loading) {

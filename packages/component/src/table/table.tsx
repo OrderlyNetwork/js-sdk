@@ -38,7 +38,7 @@ export const Table = <RecordType extends unknown>(
     }
 
     let content: ReactNode = <Spinner />;
-    if (props.dataSource?.length === 0) {
+    if (props.dataSource?.length === 0 && !props.loading) {
       content = <EmptyView />;
     }
     return (
@@ -46,7 +46,7 @@ export const Table = <RecordType extends unknown>(
         {content}
       </div>
     );
-  }, [props.dataSource]);
+  }, [props.dataSource, props.loading]);
 
   const needFixed = useMemo(() => {
     return props.columns.some(
@@ -115,7 +115,7 @@ export const Table = <RecordType extends unknown>(
       <div
         ref={wrapRef}
         className={cn(
-          "orderly-table orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
+          "orderly-ui-table orderly-relative orderly-h-full orderly-flex-col orderly-overflow-x-auto orderly-peer",
           props.loading && "orderly-overflow-hidden",
           props.className
         )}
