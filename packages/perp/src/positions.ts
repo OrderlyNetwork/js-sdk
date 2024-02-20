@@ -104,7 +104,9 @@ export type LiqPriceInputs = {
 export function liqPrice(inputs: LiqPriceInputs): number {
   const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
 
-  if (positionQty === 0) {
+  // console.log("inputs", inputs);
+
+  if (positionQty === 0 || totalCollateral === 0) {
     return 0;
   }
 
