@@ -17,6 +17,7 @@ import { MEDIA_TABLET } from "@orderly.network/types";
 interface LayoutProps extends LayoutBaseProps {}
 
 const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
+  const { mobile, ...rest } = props;
   const [elements, setElements] = useState<string[]>([]);
   // console.log("Layout", headerHeight, footerHeight);
   const matches = useMediaQuery(MEDIA_TABLET);
@@ -33,12 +34,12 @@ const InnerLayout: FC<PropsWithChildren<LayoutProps>> = (props) => {
   }, []);
 
   if (matches) {
-    return <>{props.mobile}</>;
+    return <>{mobile}</>;
   }
 
   return (
     <div
-      {...props}
+      {...rest}
       className={cn("orderly-flex orderly-flex-1", {
         "orderly-flex-col": elements.includes("Header"),
       })}
