@@ -8,7 +8,11 @@ import { Column } from "@/table";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 /// get columns for cancel/fill/reject/history
-export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
+export const columnsBasis = (props: {
+  status?: OrderStatus;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}): Column<API.Order>[] => {
+  const { status, onSymbolChange } = props || {};
   const columns: Column<API.Order>[] = [
     {
       title: "Instrument",
@@ -16,7 +20,18 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       width: 120,
       className: "orderly-h-[48px] orderly-font-semibold",
 
-      render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
+      render: (value: string) => (
+        <Text
+          rule={"symbol"}
+          onClick={(e) => {
+            onSymbolChange?.({ symbol: value } as API.Symbol);
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          {value}
+        </Text>
+      ),
     },
     {
       title: "Type",

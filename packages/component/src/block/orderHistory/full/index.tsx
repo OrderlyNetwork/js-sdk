@@ -34,6 +34,7 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
           dataSource={props.dataSource}
           loading={props.isLoading}
           loadMore={props.loadMore}
+          onSymbolChange={props.onSymbolChange}
         />
       </div>
     </OrderListProvider>

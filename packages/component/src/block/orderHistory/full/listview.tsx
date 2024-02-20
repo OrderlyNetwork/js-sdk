@@ -26,10 +26,11 @@ interface Props {
   className?: string;
   //   status: OrderStatus;
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
-    const cols = columnsBasis();
+    const cols = columnsBasis({ onSymbolChange: props.onSymbolChange });
 
     //
 
