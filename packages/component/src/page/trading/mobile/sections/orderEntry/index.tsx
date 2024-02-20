@@ -68,6 +68,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
       ...order,
       order_price: "",
       order_quantity: "",
+      trigger_price: "",
       symbol,
     }));
   }, [symbol]);

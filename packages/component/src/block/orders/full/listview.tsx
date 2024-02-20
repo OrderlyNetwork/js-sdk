@@ -25,6 +25,7 @@ interface Props {
   loading?: boolean;
   loadMore?: () => void;
   className?: string;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo<Column<API.Order>[]>(() => {
@@ -47,7 +48,15 @@ export const Listview: FC<Props> = (props) => {
                 }
               : undefined,
           render: (value: string) => (
-            <Text rule={"symbol"} className="orderly-font-semibold">
+            <Text
+              rule={"symbol"}
+              className="orderly-font-semibold"
+              onClick={(e) => {
+                props.onSymbolChange?.({ symbol: value } as API.Symbol);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
               {value}
             </Text>
           ),
@@ -203,7 +212,10 @@ export const Listview: FC<Props> = (props) => {
 
       return columns;
     } else {
-      return columnsBasis(props.status);
+      return columnsBasis({
+        status: props.status,
+        onSymbolChange: props.onSymbolChange,
+      });
     }
   }, [props.status]);
 
