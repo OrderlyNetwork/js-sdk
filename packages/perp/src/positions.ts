@@ -101,13 +101,13 @@ export type LiqPriceInputs = {
  * @returns The liquidation price of the position.
  * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Position-Liq.-Price}
  */
-export function liqPrice(inputs: LiqPriceInputs): number {
+export function liqPrice(inputs: LiqPriceInputs): number | null {
   const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
 
   // console.log("inputs", inputs);
 
   if (positionQty === 0 || totalCollateral === 0) {
-    return 0;
+    return null;
   }
 
   // totalNotional of all poisitions
