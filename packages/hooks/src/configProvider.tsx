@@ -20,6 +20,7 @@ import { NetworkId } from "@orderly.network/types";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { StatusProvider } from "./statusProvider";
+import { SDKError } from "@orderly.network/types";
 // import { useParamsCheck } from "./useParamsCheck";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
@@ -60,6 +61,13 @@ export const OrderlyConfigProvider = (
 
   if (!brokerId && typeof configStore === "undefined") {
     console.error("[OrderlyConfigProvider]: brokerId is required");
+  }
+
+  if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
+    // console.error("[OrderlyConfigProvider]: brokerId is required");
+    throw new SDKError(
+      "if configStore is provided, brokerId is required in configStore"
+    );
   }
 
   const innerConfigStore = useConstant<ConfigStore>(() => {

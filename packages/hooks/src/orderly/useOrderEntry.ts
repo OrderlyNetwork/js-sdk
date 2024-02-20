@@ -236,6 +236,16 @@ export function useOrderEntry(
 
   const maxQty = useMaxQty(symbol, sideValue, isReduceOnly);
 
+  const parseString2Number = (order: OrderParams, key: keyof OrderParams) => {
+    if (typeof order[key] !== "string") return;
+
+    if (order[key] && (order[key] as string).startsWith(".")) {
+      (order[key] as string) = `0${order[key]}`;
+    }
+
+    (order[key] as string) = (order[key] as string).replace(/,/g, "");
+  };
+
   const parsedData = useMemo<OrderParams | null>(() => {
     if (typeof symbolOrOrder === "string") {
       return null;
@@ -243,18 +253,28 @@ export function useOrderEntry(
     // clean comma
 
     if (typeof symbolOrOrder.order_quantity === "string") {
-      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
-        /,/g,
-        ""
-      );
+      // symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
+      //   /,/g,
+      //   ""
+      // );
+      parseString2Number(symbolOrOrder, "order_quantity");
     }
 
     if (typeof symbolOrOrder.order_price === "string") {
-      symbolOrOrder.order_price = symbolOrOrder.order_price.replace(/,/g, "");
+      // if (symbolOrOrder.order_price.startsWith(".")) {
+      //   symbolOrOrder.order_price = `0${symbolOrOrder.order_price}`;
+      // }
+      // symbolOrOrder.order_price = symbolOrOrder.order_price.replace(/,/g, "");
+      parseString2Number(symbolOrOrder, "order_price");
     }
 
     if (typeof symbolOrOrder.total === "string") {
-      symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
+      // symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
+      parseString2Number(symbolOrOrder, "total");
+    }
+
+    if (typeof symbolOrOrder.trigger_price === "string") {
+      parseString2Number(symbolOrOrder, "trigger_price");
     }
     
     if (typeof symbolOrOrder.trigger_price === "string") {
