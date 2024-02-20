@@ -256,6 +256,10 @@ export function useOrderEntry(
     if (typeof symbolOrOrder.total === "string") {
       symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
     }
+    
+    if (typeof symbolOrOrder.trigger_price === "string") {
+      symbolOrOrder.trigger_price = symbolOrOrder.trigger_price.replace(/,/g, "");
+    }
 
     if (typeof symbolOrOrder.order_quantity === "number") {
       symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)

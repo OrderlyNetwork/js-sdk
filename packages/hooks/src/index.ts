@@ -43,6 +43,8 @@ export { useMediaQuery } from "./useMediaQuery";
 
 export * from "./orderly/orderlyHooks";
 
+export { cleanStringStyle } from "./utils/orderEntryHelper";
+
 //---- woo only -----
 export * from "./woo/woo";
 
