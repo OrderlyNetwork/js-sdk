@@ -21,10 +21,12 @@ type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
 const needNumberOnlyFields: (keyof OrderEntity)[] = [
   "order_quantity",
   "order_price",
+  "trigger_price",
   "total",
 ];
 
-const cleanStringStyle = (str: string | number): string => {
+/// only save number
+export const cleanStringStyle = (str: string | number): string => {
   if (typeof str !== "string") {
     str = str.toString();
   }

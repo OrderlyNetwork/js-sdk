@@ -49,7 +49,15 @@ const { Header, Footer, PageHeader, Sider, Content } = Layout;
 export const Default: Story = {
   render: (args, { globals }) => {
     const { symbol } = globals;
-    return <TradingPage {...args} symbol={symbol} />;
+    return (
+      <TradingPage
+        {...args}
+        symbol={symbol}
+        onSymbolChange={(symbol) => {
+          console.log("onSymbolChange", symbol);
+        }}
+      />
+    );
   },
 };
 

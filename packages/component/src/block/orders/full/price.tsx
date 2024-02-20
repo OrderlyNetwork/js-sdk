@@ -13,6 +13,7 @@ import { toast } from "@/toast";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Divider } from "@/divider";
+import { cleanStringStyle } from "@orderly.network/hooks";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -263,8 +264,8 @@ const EditingState: FC<{
                 <input
                   ref={inputRef}
                   type="text"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  value={commify(price)}
+                  onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
                   onFocus={() => setEditting(true)}
                   onKeyDown={handleKeyDown}
                   autoFocus

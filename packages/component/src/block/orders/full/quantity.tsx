@@ -9,6 +9,7 @@ import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
+import { cleanStringStyle } from "@orderly.network/hooks";
 
 export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -240,8 +241,8 @@ const EditingState: FC<{
           <input
             ref={inputRef}
             type="text"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            value={commify(quantity)}
+            onChange={(e) => setQuantity(cleanStringStyle(e.target.value))}
             onFocus={() => setEditting(true)}
             onKeyDown={handleKeyDown}
             autoFocus

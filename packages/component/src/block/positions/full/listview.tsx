@@ -1,5 +1,13 @@
 import { Column, Table } from "@/table";
-import { FC, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { PositionsViewProps } from "@/block";
 import { Numeral, Text } from "@/text";
 import {
@@ -46,7 +54,15 @@ export const Listview: FC<
           return r2.symbol.localeCompare(r1.symbol);
         },
         render: (value: string) => (
-          <Text rule={"symbol"} className="orderly-font-semibold">
+          <Text
+            rule={"symbol"}
+            className="orderly-font-semibold"
+            onClick={(e) => {
+              props.onSymbolChange?.({ symbol: value } as API.Symbol);
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+          >
             {value}
           </Text>
         ),
@@ -228,10 +244,9 @@ export const Listview: FC<
         }}
       />
 
-      {
-        (!props.dataSource || props.dataSource.length <= 0) && 
+      {(!props.dataSource || props.dataSource.length <= 0) && (
         <PositionEmptyView watchRef={divRef} left={120} right={280} />
-      }
+      )}
     </div>
   );
 };
