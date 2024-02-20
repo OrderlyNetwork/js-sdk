@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.2"
   },
   "changesets": [
+    "clever-bags-enjoy",
     "fast-beans-stare",
     "gentle-ladybugs-flash",
     "gold-guests-rescue",

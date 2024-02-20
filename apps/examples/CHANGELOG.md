@@ -1,5 +1,16 @@
 # examples
 
+## 0.2.3-alpha.9
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@0.2.3-alpha.9
+  - @orderly.network/web3-onboard@0.1.3-alpha.8
+  - @orderly.network/hooks@1.1.3-alpha.8
+  - @orderly.network/core@0.2.3-alpha.8
+
 ## 0.2.3-alpha.8
 
 ### Patch Changes

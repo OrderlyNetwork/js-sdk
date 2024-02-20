@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 0.2.3-alpha.9
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/trading-view@0.2.3-alpha.8
+  - @orderly.network/hooks@1.1.3-alpha.8
+  - @orderly.network/types@0.2.3-alpha.8
+  - @orderly.network/utils@0.1.3-alpha.8
+  - @orderly.network/core@0.2.3-alpha.8
+  - @orderly.network/net@1.1.3-alpha.8
+
 ## 0.2.3-alpha.8
 
 ### Patch Changes
