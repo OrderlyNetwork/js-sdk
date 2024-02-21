@@ -90,9 +90,9 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           lastPrice={lastPrice}
           markPrice={markPrice}
           asks={[...props.asks]}
-          bids={props.bids}
+          bids={[...props.bids]}
         />
-        <DesktopBids data={props.bids} />
+        <DesktopBids data={[...props.bids]} />
         {isLoading && (
           <div className="orderly-absolute orderly-left-0 orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-z-10 orderly-flex orderly-items-center orderly-justify-center orderly-bg-base-800/70 orderly-h-full orderly-min-h-[420px]">
             <Spinner />
