@@ -12,6 +12,7 @@ import { cn } from "@/utils/css";
 import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 import { CircleCloseIcon } from "@/icon";
+import { findLongestCommonSubString } from "@/utils/string";
 
 const inputVariants = cva(["orderly-rounded"], {
   variants: {
@@ -118,11 +119,32 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       // filter the thousands separator
       const nextValueLen = `${props.value}`.length;
       const prevValueLen = prevInputValue.current?.length || 0;
+
       const next = cursor ? cursor + (nextValueLen - prevValueLen) : 0;
       innerInputRef.current?.setSelectionRange(next, next);
     }, [props.value]);
 
     const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.value.length < (props.value as string)?.length) {
+        const currentCursor = event.target.selectionStart;
+        const diffIndex = findLongestCommonSubString(
+          `${props.value}`,
+          event.target.value
+        );
+
+        if (diffIndex > -1) {
+          const diffStr = `${props.value}`.at(diffIndex);
+          if (diffStr === ",") {
+            event.target.value = `${event.target.value.substring(
+              0,
+              diffIndex - 1
+            )}${event.target.value.substring(diffIndex)}`;
+
+            event.target.selectionStart = currentCursor ? currentCursor - 1 : 0;
+          }
+        }
+      }
+
       if (typeof onChange === "function") {
         onChange(event);
       }

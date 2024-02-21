@@ -9,7 +9,7 @@ import {
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
-import { compose, head, includes, omit } from "ramda";
+import { compose, head, includes, omit, pick } from "ramda";
 import {
   baseInputHandle,
   getCalculateHandler,
@@ -236,15 +236,33 @@ export function useOrderEntry(
 
   const maxQty = useMaxQty(symbol, sideValue, isReduceOnly);
 
-  const parseString2Number = (order: OrderParams, key: keyof OrderParams) => {
+  const parseString2Number = (
+    order: OrderParams & Record<string, any>,
+    key: keyof OrderParams
+  ) => {
     if (typeof order[key] !== "string") return;
+    // fix: delete the comma then remove the forward one of the string
+    // first find the difference between current value and previous value
 
     if (order[key] && (order[key] as string).startsWith(".")) {
       (order[key] as string) = `0${order[key]}`;
     }
 
+    order[`${key}_origin`] = order[key];
     (order[key] as string) = (order[key] as string).replace(/,/g, "");
   };
+
+  // just for performance optimization
+  const needParse = useMemo(() => {
+    if (typeof symbolOrOrder === "string") {
+      return null;
+    }
+
+    return pick(["order_quantity", "order_price", "total", "trigger_price"])(
+      //@ts-ignore
+      symbolOrOrder
+    );
+  }, [symbolOrOrder]);
 
   const parsedData = useMemo<OrderParams | null>(() => {
     if (typeof symbolOrOrder === "string") {
@@ -253,42 +271,39 @@ export function useOrderEntry(
     // clean comma
 
     if (typeof symbolOrOrder.order_quantity === "string") {
-      // symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
-      //   /,/g,
-      //   ""
-      // );
       parseString2Number(symbolOrOrder, "order_quantity");
+    } else if (typeof symbolOrOrder.order_quantity === "number") {
+      symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)
+        .toDecimalPlaces(baseDP)
+        .toString();
     }
 
     if (typeof symbolOrOrder.order_price === "string") {
-      // if (symbolOrOrder.order_price.startsWith(".")) {
-      //   symbolOrOrder.order_price = `0${symbolOrOrder.order_price}`;
-      // }
-      // symbolOrOrder.order_price = symbolOrOrder.order_price.replace(/,/g, "");
       parseString2Number(symbolOrOrder, "order_price");
     }
 
     if (typeof symbolOrOrder.total === "string") {
-      // symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
       parseString2Number(symbolOrOrder, "total");
     }
 
     if (typeof symbolOrOrder.trigger_price === "string") {
       parseString2Number(symbolOrOrder, "trigger_price");
     }
-    
-    if (typeof symbolOrOrder.trigger_price === "string") {
-      symbolOrOrder.trigger_price = symbolOrOrder.trigger_price.replace(/,/g, "");
-    }
 
-    if (typeof symbolOrOrder.order_quantity === "number") {
-      symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)
-        .toDecimalPlaces(baseDP)
-        .toString();
-    }
+    // if (typeof symbolOrOrder.trigger_price === "string") {
+    //   symbolOrOrder.trigger_price = symbolOrOrder.trigger_price.replace(
+    //     /,/g,
+    //     ""
+    //   );
+    // }
 
     return symbolOrOrder;
-  }, [symbolOrOrder]);
+  }, [
+    needParse?.order_price,
+    needParse?.order_quantity,
+    needParse?.total,
+    needParse?.trigger_price,
+  ]);
 
   // const maxQty = 3;
 
