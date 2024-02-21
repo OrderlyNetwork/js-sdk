@@ -94,6 +94,7 @@ export const useOrderStream = (params: Params) => {
     //   console.error("fetch failed::::", err);
     // },
     formatter: (data) => data,
+    revalidateOnFocus: false,
   });
 
   const flattenOrders = useMemo(() => {

@@ -29,6 +29,7 @@ export const usePrivateDataObserver = (options: {
       if (
         (orderStatus === "history" && key === "orders") ||
         (orderStatus === "positions" && key === "orders:NEW") ||
+        key.includes("INCOMPLETE") || // always update pending list
         key.includes(orderStatus)
       ) {
         mutate(
