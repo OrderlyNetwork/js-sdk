@@ -191,7 +191,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     values.order_type === OrderType.STOP_MARKET
   ) {
     const price = markPrice;
-    values.total = quantity.mul(price).todp(2).toNumber();
+    values.total = quantity.mul(price).todp(2).toString();
   }
 
   if (
@@ -201,7 +201,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
-      values.total = total.todp(2).toNumber();
+      values.total = total.todp(2).toString();
     } else {
       values.total = "";
     }
@@ -247,7 +247,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   if (totalDP > config.quoteDP) {
     total = total.toDecimalPlaces(config.quoteDP);
-    values.total = total.toNumber();
+    values.total = total.toString();
   }
 
   const quantity = total.div(price);
@@ -257,7 +257,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
       ...values,
       order_quantity: quantity
         .toDecimalPlaces(Math.min(config.baseDP, quantity.dp()))
-        .toNumber(),
+        .toString(),
     },
     input,
     value,
