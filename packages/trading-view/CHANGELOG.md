@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 0.2.3-alpha.10
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/hooks@1.1.3-alpha.10
+  - @orderly.network/types@0.2.3-alpha.10
+  - @orderly.network/utils@0.1.3-alpha.10
+  - @orderly.network/core@0.2.3-alpha.10
+  - @orderly.network/net@1.1.3-alpha.10
+
 ## 0.2.3-alpha.9
 
 ### Patch Changes

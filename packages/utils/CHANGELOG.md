@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.1.3-alpha.10
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.1.3-alpha.9
 
 ### Patch Changes
