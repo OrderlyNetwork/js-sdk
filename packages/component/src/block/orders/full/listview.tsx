@@ -121,6 +121,17 @@ export const Listview: FC<Props> = (props) => {
           render: (value: string, record: any) => <Price order={record} />,
         },
         {
+          title: "Trigger",
+          className:
+            "orderly-h-[48px] orderly-ui-pending-list-input-container orderly-ui-pending-list-trigger-input-container",
+          dataIndex: "trigger_price",
+          width: 120,
+          // onSort: props.status === OrderStatus.INCOMPLETE,
+          render: (value: string, record: any) => (
+            <TriggerPrice order={record} />
+          ),
+        },
+        {
           title: "Est. total",
           width: 100,
           className: "orderly-h-[48px] orderly-font-semibold",
@@ -141,17 +152,6 @@ export const Listview: FC<Props> = (props) => {
               </Numeral>
             );
           },
-        },
-        {
-          title: "Trigger",
-          className:
-            "orderly-h-[48px] orderly-ui-pending-list-input-container orderly-ui-pending-list-trigger-input-container",
-          dataIndex: "trigger_price",
-          width: 120,
-          // onSort: props.status === OrderStatus.INCOMPLETE,
-          render: (value: string, record: any) => (
-            <TriggerPrice order={record} />
-          ),
         },
         // {
         //   title: "Est. total",

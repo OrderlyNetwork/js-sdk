@@ -111,6 +111,22 @@ export const columnsBasis = (props: {
       },
     },
     {
+      title: "Trigger",
+      width: 100,
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "trigger_price",
+      render: (value: string, record: any) => {
+        return (
+          <NumeralWithCtx
+            className={"orderly-font-semibold orderly-text-2xs"}
+            // precision={2}
+          >
+            {value}
+          </NumeralWithCtx>
+        );
+      },
+    },
+    {
       title: "Est. total",
       width: 100,
       className: "orderly-h-[48px] orderly-font-semibold",
@@ -128,22 +144,6 @@ export const columnsBasis = (props: {
               : `${
                   record.total_executed_quantity * record.average_executed_price
                 }`}
-          </NumeralWithCtx>
-        );
-      },
-    },
-    {
-      title: "Trigger",
-      width: 100,
-      className: "orderly-h-[48px] orderly-font-semibold",
-      dataIndex: "trigger_price",
-      render: (value: string, record: any) => {
-        return (
-          <NumeralWithCtx
-            className={"orderly-font-semibold orderly-text-2xs"}
-            // precision={2}
-          >
-            {value}
           </NumeralWithCtx>
         );
       },
