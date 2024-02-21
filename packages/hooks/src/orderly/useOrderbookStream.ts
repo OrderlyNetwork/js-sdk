@@ -63,7 +63,7 @@ const reduceItems = (
       }
 
       // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
-      console.log(`ask: ${asks} reduce items price: ${priceKey}`);
+      // console.log(`ask: ${asks} reduce items price: ${priceKey}`);
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
