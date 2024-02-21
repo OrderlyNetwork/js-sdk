@@ -41,6 +41,8 @@ export type UseOrderEntryMetaState = {
   submitted: boolean;
 };
 
+const TIEMSTAMP = "timestamp";
+
 export type UseOrderEntryReturn = {
   // Maximum open position
   maxQty: number;
@@ -72,7 +74,9 @@ export type UseOrderEntryReturn = {
 export type OrderParams = Required<
   Pick<OrderEntity, "side" | "order_type" | "symbol">
 > &
-  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">>;
+  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">> & {
+    // [TIEMSTAMP]: number;
+  };
 
 /**
  * Create Order
@@ -116,6 +120,15 @@ export function useOrderEntry(
     if (!symbolOrOrder.order_type) {
       throw new SDKError("order_type is required");
     }
+
+    // if (typeof symbolOrOrder[TIEMSTAMP] === "undefined") {
+    //   console.warn(
+    //     "The timestamp is not set, the order status may be out of sync."
+    //   );
+    // }
+
+    // add timestamp to order, fix the issue of the same order
+    // symbolOrOrder[TIEMSTAMP] = Date.now();
   }
 
   // console.log("+++++++", symbolOrOrder);
