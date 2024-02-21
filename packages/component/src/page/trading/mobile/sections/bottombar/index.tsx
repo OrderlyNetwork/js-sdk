@@ -12,6 +12,7 @@ import {
   useAccountInfo,
   useWalletConnector,
   StatusContext,
+  WsNetworkStatus,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
@@ -57,7 +58,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
 
   return (
     <>
-      {wsStatus !== "connected" ? (
+      {wsStatus === WsNetworkStatus.Unstable ? (
         <WsStatus />
       ) : (
         errors?.ChainNetworkNotSupport && (

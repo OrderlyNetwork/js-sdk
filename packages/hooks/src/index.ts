@@ -22,7 +22,7 @@ export { useConfig } from "./useConfig";
 
 export * from "./orderlyContext";
 export * from "./statusProvider";
-export { useWsStatus } from "./useWsStatus";
+export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
 export type { ConfigProviderProps } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
 
