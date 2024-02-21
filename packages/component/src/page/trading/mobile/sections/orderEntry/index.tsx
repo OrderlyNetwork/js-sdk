@@ -81,7 +81,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         // side={side}
         symbol={symbol}
         onFieldChange={(field, value) => {
-          console.log("=======>>>>>>>>field", field, value);
+          // console.log("=======>>>>>>>>field", field, value);
 
           if (field === "reduce_only" || field === "order_type") {
             setOrder((order) => ({
