@@ -124,24 +124,6 @@ export const Listview: FC<
         },
       },
       {
-        title: "Margin",
-        className: "orderly-h-[48px]",
-        dataIndex: "mm",
-        onSort: true,
-        width: 100,
-        render: (value: string) => (
-          <Numeral className="orderly-font-semibold">{value}</Numeral>
-        ),
-        hint: (
-          <div>
-            <span>The minimum equity to keep your position. </span>
-            <Divider className="orderly-py-2 orderly-border-white/10" />
-            <span>Margin = Position size * Mark price * MMR</span>
-          </div>
-        ),
-        hintClassName: "orderly-p-2",
-      },
-      {
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
@@ -160,6 +142,23 @@ export const Listview: FC<
             className="orderly-font-semibold"
           >
             {value}
+          </Numeral>
+        ),
+      },
+      {
+        title: "Unreal. ROI",
+        className: "orderly-h-[48px]",
+        dataIndex: "unsettled_pnl_ROI",
+        width: 120,
+        onSort: true,
+        render: (value: string) => (
+          <Numeral
+            rule="percentages"
+            precision={pnlNotionalDecimalPrecision}
+            coloring
+            className="orderly-font-semibold"
+          >
+            {(value)}
           </Numeral>
         ),
       },
@@ -182,6 +181,24 @@ export const Listview: FC<
             {value}
           </Numeral>
         ),
+      },
+      {
+        title: "Margin",
+        className: "orderly-h-[48px]",
+        dataIndex: "mm",
+        onSort: true,
+        width: 100,
+        render: (value: string) => (
+          <Numeral className="orderly-font-semibold">{value}</Numeral>
+        ),
+        hint: (
+          <div>
+            <span>The minimum equity to keep your position. </span>
+            <Divider className="orderly-py-2 orderly-border-white/10" />
+            <span>Margin = Position size * Mark price * MMR</span>
+          </div>
+        ),
+        hintClassName: "orderly-p-2",
       },
       {
         title: "Qty.",
