@@ -104,10 +104,10 @@ const EditingState: FC<{
       if (!el || el.contains(event.target as Node)) {
         return;
       }
-      // const el2 = confirmRef?.current;
-      // if (!el2 || el2.contains(event.target as Node)) {
-      //   return;
-      // }
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
+        return;
+      }
       
 
       setPrice(order.trigger_price?.toString() ?? "0");
