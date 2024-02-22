@@ -156,7 +156,7 @@ export declare namespace API {
     unsettled_pnl: number;
     unsettled_pnl_ROI: number;
     mark_price: number;
-    est_liq_price: number;
+    est_liq_price: number | null;
     timestamp: number;
     // Maintenance margin ratio
     mmr: number;

@@ -99,11 +99,13 @@ export type LiqPriceInputs = {
  * @param inputs The inputs for calculating the liquidation price.
  * @returns The liquidation price of the position.
  */
-export function liqPrice(inputs: LiqPriceInputs): number {
+export function liqPrice(inputs: LiqPriceInputs): number | null {
   const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
 
-  if (positionQty === 0) {
-    return 0;
+  // console.log("inputs", inputs);
+
+  if (positionQty === 0 || totalCollateral === 0) {
+    return null;
   }
 
   // totalNotional of all poisitions

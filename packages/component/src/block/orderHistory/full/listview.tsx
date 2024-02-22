@@ -26,10 +26,11 @@ interface Props {
   className?: string;
   //   status: OrderStatus;
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
-    const cols = columnsBasis();
+    const cols = columnsBasis({ onSymbolChange: props.onSymbolChange });
 
     //
 
@@ -40,13 +41,16 @@ export const Listview: FC<Props> = (props) => {
       dataIndex: "side",
       render: (value: string, record: any) => (
         <span
-          className={cx(
-            "orderly-font-semibold",
-            {
-              "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.BUY,
-              "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && value === OrderSide.SELL,
-            }
-          )}
+          className={cx("orderly-font-semibold", {
+            "orderly-text-trade-profit":
+              record.status !== OrderStatus.CANCELLED &&
+              record.status !== OrderStatus.REJECTED &&
+              value === OrderSide.BUY,
+            "orderly-text-trade-loss":
+              record.status !== OrderStatus.CANCELLED &&
+              record.status !== OrderStatus.REJECTED &&
+              value === OrderSide.SELL,
+          })}
         >
           {upperCaseFirstLetter(value)}
         </span>
@@ -61,14 +65,16 @@ export const Listview: FC<Props> = (props) => {
       render: (value: string, record: any) => {
         return (
           <span
-            className={cx(
-              "orderly-font-semibold",
-              {
-                "orderly-text-trade-profit": (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.BUY,
-                "orderly-text-trade-loss":   (record.status !== OrderStatus.CANCELLED && record.status !== OrderStatus.REJECTED) && record.side === OrderSide.SELL,
-              }
-              
-            )}
+            className={cx("orderly-font-semibold", {
+              "orderly-text-trade-profit":
+                record.status !== OrderStatus.CANCELLED &&
+                record.status !== OrderStatus.REJECTED &&
+                record.side === OrderSide.BUY,
+              "orderly-text-trade-loss":
+                record.status !== OrderStatus.CANCELLED &&
+                record.status !== OrderStatus.REJECTED &&
+                record.side === OrderSide.SELL,
+            })}
           >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
         );
       },
@@ -80,59 +86,57 @@ export const Listview: FC<Props> = (props) => {
   const divRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <EndReachedBox
-      onEndReached={() => {
-        if (!props.loading) {
-          props.loadMore?.();
-        }
-      }}
-    >
-      <Table
-        bordered
-        justified
-        showMaskElement={false}
-        columns={columns}
-        loading={props.loading}
-        dataSource={props.dataSource}
-        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-        className={cn(
-          "orderly-text-2xs orderly-text-base-contrast-80",
-          props.className
-        )}
-        generatedRowKey={(record, index) => `${index}${record.order_id || record.algo_order_id}`}
-        onRow={(record) => {
-          // console.log(record);
-          if (record.status === OrderStatus.CANCELLED) {
-            return {
-              className: "orderly-text-base-contrast-20",
-              "data-cancelled": "true",
-            };
+        onEndReached={() => {
+          if (!props.loading) {
+            props.loadMore?.();
           }
-          return {};
         }}
-        renderRowContainer={(record, index, children) => {
-          return (
-            <SymbolProvider
-              key={index}
-              symbol={record.symbol}
-              children={children}
-            />
-          );
-        }}
-        expandRowRender={(record, index) => {
-          return <OrderTrades record={record} index={index} />;
-        }}
-      />
+      >
+        <Table
+          bordered
+          justified
+          showMaskElement={false}
+          columns={columns}
+          loading={props.loading}
+          dataSource={props.dataSource}
+          headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
+          className={cn(
+            "orderly-text-2xs orderly-text-base-contrast-80",
+            props.className
+          )}
+          generatedRowKey={(record, index) =>
+            `${index}${record.order_id || record.algo_order_id}`
+          }
+          onRow={(record) => {
+            // console.log(record);
+            if (record.status === OrderStatus.CANCELLED) {
+              return {
+                className: "orderly-text-base-contrast-20",
+                "data-cancelled": "true",
+              };
+            }
+            return {};
+          }}
+          renderRowContainer={(record, index, children) => {
+            return (
+              <SymbolProvider
+                key={index}
+                symbol={record.symbol}
+                children={children}
+              />
+            );
+          }}
+          expandRowRender={(record, index) => {
+            return <OrderTrades record={record} index={index} />;
+          }}
+        />
 
-      
-
-      {
-        (!props.dataSource || props.dataSource.length <= 0) &&
-        <PositionEmptyView watchRef={divRef} left={0} right={120} />
-      }
-
-    </EndReachedBox>
+        {(!props.dataSource || props.dataSource.length <= 0) && (
+          <PositionEmptyView watchRef={divRef} left={0} right={120} />
+        )}
+      </EndReachedBox>
     </div>
   );
 };
