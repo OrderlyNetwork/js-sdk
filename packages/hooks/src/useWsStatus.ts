@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { useWS } from "@orderly.network/hooks";
+import { useWS } from "./useWS";
 
-export type WsNetworkStatus = "connected" | "unstable" | "disconnected";
+export enum WsNetworkStatus {
+  Connected = "connected",
+  Unstable = "unstable",
+  Disconnected = "disconnected",
+}
 
 export function useWsStatus() {
   const ws = useWS();
   const [wsStatus, setWsStatus] = useState<WsNetworkStatus>(
-    ws.client.public.readyState ? "connected" : "disconnected"
+    ws.client.public.readyState
+      ? WsNetworkStatus.Connected
+      : WsNetworkStatus.Disconnected
   );
 
   const connectCount = useRef(0);
@@ -20,16 +26,16 @@ export function useWsStatus() {
         switch (type) {
           case "open":
             connectCount.current = 0;
-            setWsStatus("connected");
+            setWsStatus(WsNetworkStatus.Connected);
             break;
           case "close":
             connectCount.current = 0;
-            setWsStatus("disconnected");
+            setWsStatus(WsNetworkStatus.Disconnected);
             break;
           case "reconnecting":
             connectCount.current++;
-            if (connectCount.current >= 2) {
-              setWsStatus("unstable");
+            if (connectCount.current >= 3) {
+              setWsStatus(WsNetworkStatus.Unstable);
             }
             break;
         }

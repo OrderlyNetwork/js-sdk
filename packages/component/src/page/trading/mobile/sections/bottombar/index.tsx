@@ -3,7 +3,6 @@ import { AccountStatusBar } from "@/block/accountStatus";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
-import { WsNetworkStatus } from "@/block/systemStatusBar/useWsStatus";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
 import { OrderlyAppContext } from "@/provider";
@@ -12,19 +11,21 @@ import {
   useCollateral,
   useAccountInfo,
   useWalletConnector,
+  StatusContext,
+  WsNetworkStatus,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 
-interface BottomNavBarProps {
-  wsStatus: WsNetworkStatus;
-}
+interface BottomNavBarProps {}
 
 export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
   const { state } = useAccount();
   const { data } = useAccountInfo();
   const { totalValue } = useCollateral();
   const { errors } = useContext(OrderlyAppContext);
+  const { ws: wsStatus } = useContext(StatusContext);
+
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
 
@@ -57,7 +58,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
 
   return (
     <>
-      {props.wsStatus !== "connected" ? (
+      {wsStatus === WsNetworkStatus.Unstable ? (
         <WsStatus />
       ) : (
         errors?.ChainNetworkNotSupport && (

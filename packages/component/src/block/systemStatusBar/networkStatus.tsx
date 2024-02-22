@@ -1,16 +1,16 @@
-import { FC } from "react";
-import { WsNetworkStatus } from "./useWsStatus";
-
+import { StatusContext, WsNetworkStatus } from "@orderly.network/hooks";
+import { FC, useContext } from "react";
 export interface NetworkStatusProps {
   size?: number;
-  wsStatus: WsNetworkStatus;
 }
 
 export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
   const { size = 20 } = props;
 
-  switch (props.wsStatus) {
-    case "connected":
+  const { ws: wsStatus } = useContext(StatusContext);
+
+  switch (wsStatus) {
+    case WsNetworkStatus.Connected:
       return (
         <div className="orderly-flex orderly-items-center">
           <svg
@@ -43,7 +43,7 @@ export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
           </span>
         </div>
       );
-    case "unstable":
+    case WsNetworkStatus.Unstable:
       return (
         <div className="orderly-flex orderly-items-center">
           <svg
@@ -76,7 +76,7 @@ export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
           <span className="orderly-text-warning orderly-text-xs">Unstable</span>
         </div>
       );
-    case "disconnected":
+    case WsNetworkStatus.Disconnected:
       return (
         <div className="orderly-flex orderly-items-center">
           <svg

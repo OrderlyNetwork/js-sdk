@@ -36,6 +36,7 @@ const preview = {
           { value: "PERP_NEAR_USDC", title: "PERP_NEAR_USDC" },
           { value: "PERP_BTC_USDC", title: "PERP_BTC_USDC" },
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
+          { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
         ],
       },
     },
@@ -63,7 +64,7 @@ const preview = {
                 img: "/orderly-logo-secondary.svg",
               },
             }}
-            footerStatusBar={{
+            footerStatusBarProps={{
               xUrl: "https://twitter.com/OrderlyNetwork",
               // telegramUrl: "https://orderly.network",
               discordUrl: "https://discord.com/invite/orderlynetwork",

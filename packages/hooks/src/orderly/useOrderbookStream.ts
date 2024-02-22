@@ -40,7 +40,7 @@ const reduceItems = (
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
-    for (let i = 0; i < min(level, data.length); i++) {
+    for (let i = 0; i < data.length; i++) {
       const [price, quantity] = data[i];
       if (isNaN(price) || isNaN(quantity)) continue;
       let priceKey;
@@ -63,6 +63,7 @@ const reduceItems = (
       }
 
       // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
+      // console.log(`ask: ${asks} reduce items price: ${priceKey}`);
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;

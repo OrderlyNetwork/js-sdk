@@ -61,7 +61,7 @@ export const useOrderStream = (params: Params) => {
     const search = new URLSearchParams([
       ["size", size.toString()],
       ["page", `${pageIndex + 1}`],
-      ["source_type", 'ALL']
+      ["source_type", "ALL"],
     ]);
 
     if (status) {
@@ -80,7 +80,10 @@ export const useOrderStream = (params: Params) => {
   };
 
   useEffect(() => {
-    const key = `orders:${status}:${symbol}:${side}`;
+    const formatKey = (value?: string) => (value ? `:${value}` : "");
+    const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
+      side
+    )}`;
     regesterKeyHandler(key, getKey);
   }, [status, symbol, side]);
 
@@ -91,6 +94,7 @@ export const useOrderStream = (params: Params) => {
     //   console.error("fetch failed::::", err);
     // },
     formatter: (data) => data,
+    revalidateOnFocus: false,
   });
 
   const flattenOrders = useMemo(() => {
@@ -124,21 +128,24 @@ export const useOrderStream = (params: Params) => {
   /**
    * cancel all orders
    */
-  const cancelAllOrders = useCallback(() => { }, [ordersResponse.data]);
+  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
 
-  const _updateOrder = useCallback((orderId: string, order: OrderEntity, type: OrderType) => {
-    switch (type) {
-      case "algoOrder":
-        return doUpdateAlgoOrder({
-          order_id: orderId,
-          price: order["order_price"],
-          quantity: order["order_quantity"],
-          trigger_price: order["trigger_price"],
-        });
-      default:
-        return doUpdateOrder({ ...order, order_id: orderId });
-    }
-  }, []);
+  const _updateOrder = useCallback(
+    (orderId: string, order: OrderEntity, type: OrderType) => {
+      switch (type) {
+        case "algoOrder":
+          return doUpdateAlgoOrder({
+            order_id: orderId,
+            price: order["order_price"],
+            quantity: order["order_quantity"],
+            trigger_price: order["trigger_price"],
+          });
+        default:
+          return doUpdateOrder({ ...order, order_id: orderId });
+      }
+    },
+    []
+  );
 
   /**
    * update order
@@ -154,17 +161,16 @@ export const useOrderStream = (params: Params) => {
     return _updateOrder(orderId, order, "algoOrder");
   }, []);
 
-
-  const _cancelOrder = useCallback((orderId: number, type: OrderType, symbol?: string) => {
-    switch (type) {
-      case "algoOrder":
-        return doCanceAlgolOrder(null, {
-          // @ts-ignore
-          order_id: orderId,
-          symbol,
-          source: `SDK${version}`
-        })
-          .then((res: any) => {
+  const _cancelOrder = useCallback(
+    (orderId: number, type: OrderType, symbol?: string) => {
+      switch (type) {
+        case "algoOrder":
+          return doCanceAlgolOrder(null, {
+            // @ts-ignore
+            order_id: orderId,
+            symbol,
+            source: `SDK${version}`,
+          }).then((res: any) => {
             if (res.success) {
               ordersResponse.mutate();
               return res;
@@ -172,25 +178,27 @@ export const useOrderStream = (params: Params) => {
               throw new Error(res.message);
             }
           });
-      default:
-        return doCancelOrder(null, {
-          order_id: orderId,
-          symbol,
-          source: `SDK_${version}`,
-        }).then((res: any) => {
-          if (res.success) {
-            // return ordersResponse.mutate().then(() => {
-            //   return res;
-            // });
-            //Optimistic Updates
-            // ordersResponse.mutate();
-            return res;
-          } else {
-            throw new Error(res.message);
-          }
-        });
-    }
-  }, []);
+        default:
+          return doCancelOrder(null, {
+            order_id: orderId,
+            symbol,
+            source: `SDK_${version}`,
+          }).then((res: any) => {
+            if (res.success) {
+              // return ordersResponse.mutate().then(() => {
+              //   return res;
+              // });
+              //Optimistic Updates
+              // ordersResponse.mutate();
+              return res;
+            } else {
+              throw new Error(res.message);
+            }
+          });
+      }
+    },
+    []
+  );
   /**
    * calcel order
    */

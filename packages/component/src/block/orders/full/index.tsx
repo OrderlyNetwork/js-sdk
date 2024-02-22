@@ -39,6 +39,7 @@ export const OrdersViewFull: FC<Props> = (props) => {
           onCancelOrder={props.cancelOrder}
           loading={props.isLoading}
           loadMore={props.loadMore}
+          onSymbolChange={props.onSymbolChange}
         />
       </div>
     </OrderListProvider>

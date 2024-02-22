@@ -9,7 +9,7 @@ import {
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
-import { compose, head, includes, omit } from "ramda";
+import { compose, head, includes, omit, pick } from "ramda";
 import {
   baseInputHandle,
   getCalculateHandler,
@@ -41,6 +41,8 @@ export type UseOrderEntryMetaState = {
   submitted: boolean;
 };
 
+const TIEMSTAMP = "timestamp";
+
 export type UseOrderEntryReturn = {
   // Maximum open position
   maxQty: number;
@@ -69,10 +71,12 @@ export type UseOrderEntryReturn = {
   symbolConfig: API.SymbolExt;
 };
 
-type OrderParams = Required<
+export type OrderParams = Required<
   Pick<OrderEntity, "side" | "order_type" | "symbol">
 > &
-  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">>;
+  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">> & {
+    // [TIEMSTAMP]: number;
+  };
 
 /**
  * Create Order
@@ -116,7 +120,18 @@ export function useOrderEntry(
     if (!symbolOrOrder.order_type) {
       throw new SDKError("order_type is required");
     }
+
+    // if (typeof symbolOrOrder[TIEMSTAMP] === "undefined") {
+    //   console.warn(
+    //     "The timestamp is not set, the order status may be out of sync."
+    //   );
+    // }
+
+    // add timestamp to order, fix the issue of the same order
+    // symbolOrOrder[TIEMSTAMP] = Date.now();
   }
+
+  // console.log("+++++++", symbolOrOrder);
 
   const prevOrderData = useRef<Partial<OrderEntity> | null>(null);
   // Cache data from the last calculate
@@ -199,15 +214,16 @@ export function useOrderEntry(
   // const markPrice = 1;
 
   const diffOrderEntry = (
-    prev: Partial<OrderEntity>,
-    current: Partial<OrderEntity>
-  ): { key: keyof OrderEntity; value: any } | null => {
+    prev: Partial<OrderParams>,
+    current: Partial<OrderParams>
+  ): { key: keyof OrderParams; value: any; preValue: any } | null => {
     if (!prev) return null;
-    let key, value;
-    const keys = Object.keys(current) as (keyof OrderEntity)[];
+    let key, value, preValue;
+    const keys = Object.keys(current) as (keyof OrderParams)[];
 
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
+
       let preveValue = prev[k];
       let currentValue = current[k];
 
@@ -225,16 +241,55 @@ export function useOrderEntry(
       if (preveValue !== currentValue) {
         key = k;
         value = currentValue;
+        preValue = preveValue;
         break;
       }
     }
 
     if (!key) return null;
 
-    return { key, value };
+    return { key, value, preValue };
   };
 
   const maxQty = useMaxQty(symbol, sideValue, isReduceOnly);
+
+  const parseString2Number = (
+    order: OrderParams & Record<string, any>,
+    key: keyof OrderParams
+  ) => {
+    if (typeof order[key] !== "string") return;
+    // fix: delete the comma then remove the forward one of the string
+    // first find the difference between current value and previous value
+
+    if (order[key] && (order[key] as string).startsWith(".")) {
+      (order[key] as string) = `0${order[key]}`;
+    }
+
+    // order[`${key}_origin`] = order[key];
+    (order[key] as string) = (order[key] as string).replace(/,/g, "");
+  };
+
+  // just for performance optimization
+  const needParse = useMemo(() => {
+    if (typeof symbolOrOrder === "string") {
+      return null;
+    }
+    return pick([
+      "order_price",
+      "side",
+      "order_quantity",
+      "visible_quantity",
+      "order_type",
+      "order_type_ext",
+      "symbol",
+      "total",
+      "reduce_only",
+      "trigger_price",
+    ])(
+      //@ts-ignore
+      symbolOrOrder
+    );
+  }, [symbolOrOrder]);
 
   const parsedData = useMemo<OrderParams | null>(() => {
     if (typeof symbolOrOrder === "string") {
@@ -243,28 +298,44 @@ export function useOrderEntry(
     // clean comma
 
     if (typeof symbolOrOrder.order_quantity === "string") {
-      symbolOrOrder.order_quantity = symbolOrOrder.order_quantity.replace(
-        /,/g,
-        ""
-      );
-    }
-
-    if (typeof symbolOrOrder.order_price === "string") {
-      symbolOrOrder.order_price = symbolOrOrder.order_price.replace(/,/g, "");
-    }
-
-    if (typeof symbolOrOrder.total === "string") {
-      symbolOrOrder.total = symbolOrOrder.total.replace(/,/g, "");
-    }
-
-    if (typeof symbolOrOrder.order_quantity === "number") {
+      parseString2Number(symbolOrOrder, "order_quantity");
+    } else if (typeof symbolOrOrder.order_quantity === "number") {
       symbolOrOrder.order_quantity = new Decimal(symbolOrOrder.order_quantity)
         .toDecimalPlaces(baseDP)
         .toString();
     }
 
+    if (typeof symbolOrOrder.order_price === "string") {
+      parseString2Number(symbolOrOrder, "order_price");
+    }
+
+    if (typeof symbolOrOrder.total === "string") {
+      parseString2Number(symbolOrOrder, "total");
+    }
+
+    if (typeof symbolOrOrder.trigger_price === "string") {
+      parseString2Number(symbolOrOrder, "trigger_price");
+    }
+
+    // if (typeof symbolOrOrder.trigger_price === "string") {
+    //   symbolOrOrder.trigger_price = symbolOrOrder.trigger_price.replace(
+    //     /,/g,
+    //     ""
+    //   );
+    // }
+
     return symbolOrOrder;
-  }, [symbolOrOrder]);
+  }, [
+    needParse?.order_price,
+    needParse?.order_quantity,
+    needParse?.total,
+    needParse?.trigger_price,
+    needParse?.order_type,
+    needParse?.order_type_ext,
+    needParse?.symbol,
+    needParse?.reduce_only,
+    needParse?.side,
+  ]);
 
   // const maxQty = 3;
 
@@ -430,29 +501,11 @@ export function useOrderEntry(
     const item = diffOrderEntry(prevOrderData.current, parsedData);
 
     // console.log(prevOrderData.current, symbolOrOrder, item);
+    // console.log(item);
 
     if (!item) {
       return orderDataCache.current as Partial<OrderEntity>;
     }
-
-    // if(item.key === "reduce_only") {
-
-    // }
-
-    // if (
-    //   item.key === "side" ||
-    //   item.key === "symbol" ||
-    //   item.key === "order_type"
-    // ) {
-    //   // side or symbol changed, reset errors and the data;
-    //   prevOrderData.current = parsedData;
-    //   orderDataCache.current = {
-    //     ...parsedData,
-    //     total: "",
-    //   };
-
-    //   return orderDataCache.current;
-    // }
 
     // set field dirty
     if (typeof parsedData.order_price !== "undefined") {
@@ -466,28 +519,13 @@ export function useOrderEntry(
 
     values.isStopOrder = values.order_type?.startsWith("STOP") || false;
 
-    // console.log("-----------", values);
-
     values.total = values.total || "";
 
     prevOrderData.current = parsedData;
     orderDataCache.current = values;
 
     return values;
-  }, [
-    parsedData?.order_price,
-    parsedData?.side,
-    parsedData?.order_quantity,
-    parsedData?.visible_quantity,
-    parsedData?.order_type,
-    parsedData?.order_type_ext,
-    parsedData?.symbol,
-    parsedData?.total,
-    parsedData?.reduce_only,
-    parsedData?.trigger_price,
-
-    markPrice,
-  ]);
+  }, [parsedData, markPrice]);
 
   /// validator order info
   useEffect(() => {
@@ -604,6 +642,8 @@ export function useOrderEntry(
         symbol: parsedData.symbol!,
       },
     });
+
+    // console.log("********", liqPrice, markPrice, totalCollateral, result);
 
     if (liqPrice <= 0) return null;
 

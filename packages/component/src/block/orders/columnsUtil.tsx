@@ -8,14 +8,30 @@ import { Column } from "@/table";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 /// get columns for cancel/fill/reject/history
-export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
+export const columnsBasis = (props: {
+  status?: OrderStatus;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}): Column<API.Order>[] => {
+  const { status, onSymbolChange } = props || {};
   const columns: Column<API.Order>[] = [
     {
       title: "Instrument",
       dataIndex: "symbol",
       width: 120,
       className: "orderly-h-[48px] orderly-font-semibold",
-      render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
+
+      render: (value: string) => (
+        <Text
+          rule={"symbol"}
+          onClick={(e) => {
+            onSymbolChange?.({ symbol: value } as API.Symbol);
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          {value}
+        </Text>
+      ),
     },
     {
       title: "Type",
@@ -72,14 +88,10 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       width: 100,
       render: (value: string, record: any) => {
         if (record.type === "MARKET") {
-          return <span>Market</span>
+          return <span>Market</span>;
         }
         return (
-          <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
-          >
+          <NumeralWithCtx className={"orderly-font-semibold orderly-text-2xs"}>
             {value || "-"}
           </NumeralWithCtx>
         );
@@ -92,36 +104,8 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       dataIndex: "average_executed_price",
       render: (value: string, record: any) => {
         return (
-          <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
-          >
+          <NumeralWithCtx className={"orderly-font-semibold orderly-text-2xs"}>
             {value || "-"}
-          </NumeralWithCtx>
-        );
-      },
-    },
-    {
-      title: "Est. total",
-      width: 100,
-      className: "orderly-h-[48px] orderly-font-semibold",
-      dataIndex: "executed",
-      render: (value: string, record: any) => {
-        console.log("est total xxxxxxxx value", value, record);
-        
-        return (
-          <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
-            // precision={2}
-          >
-            {record.total_executed_quantity === 0 ||
-            Number.isNaN(record.average_executed_price) ||
-            record.average_executed_price === null
-              ? "-"
-              : `${record.total_executed_quantity * record.average_executed_price}`}
           </NumeralWithCtx>
         );
       },
@@ -134,12 +118,32 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       render: (value: string, record: any) => {
         return (
           <NumeralWithCtx
-            className={
-              "orderly-font-semibold orderly-text-2xs"
-            }
+            className={"orderly-font-semibold orderly-text-2xs"}
             // precision={2}
           >
             {value}
+          </NumeralWithCtx>
+        );
+      },
+    },
+    {
+      title: "Est. total",
+      width: 100,
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "executed",
+      render: (value: string, record: any) => {
+        return (
+          <NumeralWithCtx
+            className={"orderly-font-semibold orderly-text-2xs"}
+            // precision={2}
+          >
+            {record.total_executed_quantity === 0 ||
+            Number.isNaN(record.average_executed_price) ||
+            record.average_executed_price === null
+              ? "-"
+              : `${
+                  record.total_executed_quantity * record.average_executed_price
+                }`}
           </NumeralWithCtx>
         );
       },
@@ -181,6 +185,21 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       render: (value: number, record: any) => {
         return <span>{value === record.quantity ? "No" : "Yes"}</span>;
       },
+    },
+    {
+      title: "Update",
+      dataIndex: "updated_time",
+      width: 150,
+      // onSort: status === OrderStatus.INCOMPLETE,
+      className: "orderly-h-[48px]",
+      render: (value: string) => (
+        <Text
+          rule={"date"}
+          className="orderly-break-normal orderly-whitespace-nowrap orderly-font-semibold"
+        >
+          {value}
+        </Text>
+      ),
     },
   ];
 

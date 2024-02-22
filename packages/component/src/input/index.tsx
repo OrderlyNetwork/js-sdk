@@ -4,6 +4,7 @@ import React, {
   forwardRef,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -11,12 +12,13 @@ import { cn } from "@/utils/css";
 import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 import { CircleCloseIcon } from "@/icon";
+import { findLongestCommonSubString } from "@/utils/string";
 
 const inputVariants = cva(["orderly-rounded"], {
   variants: {
     variant: {
       outlined: "orderly-border orderly-border-slate-300",
-      filled: "orderly-bg-fill orderly-border orderly-border-transparent",
+      filled: "orderly-bg-base-700 orderly-border orderly-border-transparent",
     },
     size: {
       small: "orderly-h-[28px]",
@@ -86,11 +88,24 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onClean,
       helpText,
       loading,
+      onChange,
       ...props
     },
     ref
   ) => {
     const [showTooltip, setShowTooltip] = useState(false);
+    const [cursor, setCursor] = useState<number | null>(null);
+    const innerInputRef = useRef<HTMLInputElement>(null);
+    const prevInputValue = useRef<string | null>(null);
+
+    useEffect(() => {
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(innerInputRef.current);
+      } else {
+        ref.current = innerInputRef.current;
+      }
+    }, [innerInputRef, ref]);
 
     useEffect(() => {
       if (typeof error === "undefined") {
@@ -98,6 +113,44 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
       setShowTooltip(!!error);
     }, [error]);
+
+    // fix cursor pointer jump to end;
+    useEffect(() => {
+      // filter the thousands separator
+      const nextValueLen = `${props.value}`.length;
+      const prevValueLen = prevInputValue.current?.length || 0;
+
+      const next = cursor ? cursor + (nextValueLen - prevValueLen) : 0;
+      innerInputRef.current?.setSelectionRange(next, next);
+    }, [props.value]);
+
+    const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.value.length < (props.value as string)?.length) {
+        const currentCursor = event.target.selectionStart;
+        const diffIndex = findLongestCommonSubString(
+          `${props.value}`,
+          event.target.value
+        );
+
+        if (diffIndex > -1) {
+          const diffStr = `${props.value}`.at(diffIndex);
+          if (diffStr === ",") {
+            event.target.value = `${event.target.value.substring(
+              0,
+              diffIndex - 1
+            )}${event.target.value.substring(diffIndex)}`;
+
+            event.target.selectionStart = currentCursor ? currentCursor - 1 : 0;
+          }
+        }
+      }
+
+      if (typeof onChange === "function") {
+        onChange(event);
+      }
+      prevInputValue.current = event.target.value;
+      setCursor(event.target.selectionStart);
+    };
 
     const cleanButton = useMemo(() => {
       if (typeof onClean === "undefined") {
@@ -194,9 +247,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           {prefixElement}
           <input
+            ref={innerInputRef}
             type="text"
             onFocus={onInputFocus}
             onBlur={onInputBlur}
+            onChange={onInputChange}
             {...(props as any)}
             disabled={!!disabled}
             className={cn(
@@ -205,7 +260,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               typeof prefix !== "undefined" && "orderly-px-0",
               className
             )}
-            ref={ref}
           />
           {cleanButton}
           {suffixElement}

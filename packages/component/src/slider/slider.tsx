@@ -132,7 +132,7 @@ const Slider = React.forwardRef<
           )}
           <SliderPrimitive.Thumb
             className={cn(
-              "orderly-block orderly-w-[10px] orderly-h-[10px] orderly-bg-fill orderly-border-[2px] orderly-border-base-200 orderly-rounded-[10px] focus:orderly-outline-none focus:orderly-w-[16px] focus:orderly-h-[16px] focus:orderly-shadow-[0_0_0_8px] focus:orderly-shadow-base-contrast/20 orderly-z-20 disabled:orderly-pointer-events-none orderly-group data-[disabled]:orderly-hidden",
+              "orderly-block orderly-w-[10px] orderly-h-[10px] orderly-bg-base-700 orderly-border-[2px] orderly-border-base-200 orderly-rounded-[10px] focus:orderly-outline-none focus:orderly-w-[16px] focus:orderly-h-[16px] focus:orderly-shadow-[0_0_0_8px] focus:orderly-shadow-base-contrast/20 orderly-z-20 disabled:orderly-pointer-events-none orderly-group data-[disabled]:orderly-hidden",
               {
                 "orderly-border-primary": color === "primary",
                 "orderly-border-primary-light": color === "primary-light",

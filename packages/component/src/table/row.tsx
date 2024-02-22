@@ -47,7 +47,7 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
     <>
       <tr
         className={cn(
-          "hover:orderly-bg-base-800 orderly-group",
+          "orderly-ui-table-tr hover:orderly-bg-base-800 orderly-group",
           props.bordered &&
             "orderly-border-b orderly-border-divider last:orderly-border-b-0",
           props.canExpand && "orderly-cursor-pointer",
@@ -69,6 +69,7 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
           expandRowRender={props.expandRowRender}
           record={record}
           index={index}
+          bordered={bordered}
         />
       )}
     </>

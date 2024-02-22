@@ -9,6 +9,7 @@ import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
+import { cleanStringStyle } from "@orderly.network/hooks";
 
 export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -240,9 +241,10 @@ const EditingState: FC<{
           <input
             ref={inputRef}
             type="text"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            value={commify(quantity)}
+            onChange={(e) => setQuantity(cleanStringStyle(e.target.value))}
             onFocus={() => setEditting(true)}
+            onBlur={() => setEditting(false)}
             onKeyDown={handleKeyDown}
             autoFocus
             className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
@@ -262,7 +264,7 @@ const EditingState: FC<{
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
-            onClick={onClick}
+            onMouseDown={onClick}
           >
             {/* @ts-ignore */}
             <Check size={14} />
