@@ -37,6 +37,8 @@ const API_URLS: Record<ENV_NAME, URLS> = {
   },
 };
 
+const Markets_key = "markets";
+
 export class CustomConfigStore implements ConfigStore {
   protected map: Map<ConfigKey, any>;
 
@@ -57,6 +59,22 @@ export class CustomConfigStore implements ConfigStore {
     ]);
   }
   get<T>(key: ConfigKey): T {
+    if (key === Markets_key) {
+      const jsonStr = localStorage.getItem(Markets_key);
+      if (jsonStr) {
+        this.map.set(Markets_key, JSON.parse(jsonStr));
+      } else {
+        const defaultTab = { name: "Popular", id: 1 };
+        this.set(Markets_key, {
+          recent: [],
+          favorites: [
+            { name: "PERP_ETH_USDC", tabs: [{ ...defaultTab }] },
+            { name: "PERP_BTC_USDC", tabs: [{ ...defaultTab }] },
+          ],
+          favoriteTabs: [{ ...defaultTab }],
+        });
+      }
+    }
     return this.map.get(key);
   }
   getOr<T>(key: ConfigKey, defaultValue: T): T {
