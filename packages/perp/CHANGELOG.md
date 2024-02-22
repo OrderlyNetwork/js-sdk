@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.3
+
+### Patch Changes
+
+- fix bug: liqPrice calculation error
+- Updated dependencies
+  - @orderly.network/types@0.2.3
+  - @orderly.network/utils@0.1.3
+
 ## 2.0.2
 
 ### Patch Changes

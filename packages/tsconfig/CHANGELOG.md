@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.1.3
+
+### Patch Changes
+
+- fix bug: liqPrice calculation error
+
 ## 0.1.2
 
 ### Patch Changes

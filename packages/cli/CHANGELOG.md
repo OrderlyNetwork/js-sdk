@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.3
+
+### Patch Changes
+
+- fix bug: liqPrice calculation error
+- Updated dependencies
+  - @orderly.network/core@0.2.3
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.1.3
+
+### Patch Changes
+
+- fix bug: liqPrice calculation error
+- Updated dependencies
+  - @orderly.network/hooks@1.1.3
+  - @orderly.network/types@0.2.3
+
 ## 0.1.2
 
 ### Patch Changes
