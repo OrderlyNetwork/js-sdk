@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.3"
   },
   "changesets": [
+    "eighty-islands-boil",
     "neat-brooms-jump",
     "smooth-adults-compete",
     "wise-yaks-leave"
