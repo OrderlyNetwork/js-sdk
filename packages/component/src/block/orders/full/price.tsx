@@ -25,6 +25,10 @@ export const Price = (props: { order: API.OrderExt }) => {
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
+  if (price === "Market") {
+    return <span>Market</span>
+  }
+
   if (!editting && open <= 0) {
     return (<NormalState order={order} price={price} setEditing={setEditting} />);
   }
