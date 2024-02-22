@@ -62,9 +62,9 @@ export const useTickerStream = (symbol: string) => {
     let _oi = openInterest;
     if (!_oi && futureIndex !== -1 && futures) {
       // @ts-ignore
-      _oi = futures[futureIndex].openInterest;
+      _oi = futures[futureIndex].open_interest;
     }
-
+    
     const config: any = {
       ...info,
       mark_price: markPrice,
