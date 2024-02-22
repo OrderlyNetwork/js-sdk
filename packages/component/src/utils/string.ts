@@ -18,3 +18,19 @@ export const upperCaseFirstLetter = (str: string) => {
   if (str.length === 1) return str.charAt(0).toUpperCase();
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 };
+
+export const findLongestCommonSubString = (str1: string, str2: string) => {
+  // let index = 0;
+
+  for (let index = 0; index < str1.length; index++) {
+    const ele1 = str1.at(index);
+    const ele2 = str2.at(index);
+    if (ele1 === ele2) {
+      continue;
+    }
+
+    return index;
+  }
+
+  return -1;
+};
