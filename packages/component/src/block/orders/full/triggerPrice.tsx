@@ -234,7 +234,7 @@ const EditingState: FC<{
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
-            onClick={onClick}
+            onMouseDown={onClick}
           >
             {/* @ts-ignore */}
             <Check size={18} />

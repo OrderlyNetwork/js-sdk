@@ -60,10 +60,10 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
           rule="price"
         />
         <Statistic
-          label="Unsettled PnL"
+          label=""
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs"
-          value={aggregated?.unsettledPnL}
+          value={<div/>}
           rule="price"
           coloring
           align="right"

@@ -89,26 +89,6 @@ export const Header: FC<Props> = (props) => {
             rule="price"
             precision={pnlNotionalDecimalPrecision}
           />
-          <Statistic
-            label={"Unsettled PnL"}
-            // value={props.aggregated?.unsettledPnL}
-            coloring
-            value={
-              <div
-                className={"orderly-flex orderly-items-center orderly-gap-1"}
-              >
-                <Numeral showIcon coloring precision={pnlNotionalDecimalPrecision}>
-                  {props.aggregated?.unsettledPnL ?? 0}
-                </Numeral>
-                <button className={"orderly-text-primary-light"} onClick={onSettleClick}>
-                  {/*@ts-ignore*/}
-                  <RefreshCcw size={14} />
-                </button>
-              </div>
-            }
-            rule="price"
-            hint="Settling PnL moves the profit or loss from a perpetual market into the USDC balance."
-          />
         </div>
         {/* <div className={"orderly-flex orderly-items-center orderly-gap-2"}>
           <Checkbox
