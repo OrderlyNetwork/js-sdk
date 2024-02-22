@@ -25,6 +25,10 @@ export const Price = (props: { order: API.OrderExt }) => {
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
+  if (price === "Market") {
+    return <span>Market</span>
+  }
+
   if (!editting && open <= 0) {
     return (<NormalState order={order} price={price} setEditing={setEditting} />);
   }
@@ -93,7 +97,10 @@ const EditingState: FC<{
   const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
-  const cancelPopover = () => setOpen(-1);
+  const cancelPopover = () => {
+    setOpen(-1);
+    setPrice((order.price?.toString()) ?? "Market");
+  };
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -103,10 +110,10 @@ const EditingState: FC<{
         return;
       }
 
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
+      // const el2 = confirmRef?.current;
+      // if (!el2 || el2.contains(event.target as Node)) {
+      //   return;
+      // }
 
       setPrice((order.price?.toString()) ?? "Market");
       setEditting(false);
@@ -267,7 +274,14 @@ const EditingState: FC<{
                   value={commify(price)}
                   onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
                   onFocus={() => setEditting(true)}
-                  onBlur={() => setEditting(false)}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setEditting(false);
+                      if (open <= 0) {
+                        setPrice((order.price?.toString()) ?? "Market");
+                      }
+                    }, 100);
+                  }}
                   onKeyDown={handleKeyDown}
                   autoFocus
                   className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"

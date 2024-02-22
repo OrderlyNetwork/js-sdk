@@ -88,7 +88,10 @@ const EditingState: FC<{
 
 
   const closePopover = () => setOpen(0);
-  const cancelPopover = () => setOpen(-1);
+  const cancelPopover = () => {
+    setOpen(-1);
+    setQuantity(order.quantity.toString());
+  };
 
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
@@ -107,10 +110,10 @@ const EditingState: FC<{
         return;
       }
       
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
+      // const el2 = confirmRef?.current;
+      // if (!el2 || el2.contains(event.target as Node)) {
+      //   return;
+      // }
       
       setQuantity(order.quantity.toString());
       setEditting(false);
@@ -244,7 +247,14 @@ const EditingState: FC<{
             value={commify(quantity)}
             onChange={(e) => setQuantity(cleanStringStyle(e.target.value))}
             onFocus={() => setEditting(true)}
-            onBlur={() => setEditting(false)}
+            onBlur={() => {
+              setTimeout(() => {
+                setEditting(false);
+                if (open <= 0) {
+                  setQuantity(order.quantity.toString());
+                }
+              }, 100);
+            }}
             onKeyDown={handleKeyDown}
             autoFocus
             className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
