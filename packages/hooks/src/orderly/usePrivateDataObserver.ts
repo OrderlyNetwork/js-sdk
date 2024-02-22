@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useWS } from "../useWS";
 import { useSWRConfig } from "swr";
-import { OrderStatus, WSMessage } from "@orderly.network/types";
+import { WSMessage } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../useEventEmitter";
 import { getKeyFunction } from "../dataProvider";
+import { parseJSON } from "../utils/json";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -19,14 +20,25 @@ export const usePrivateDataObserver = (options: {
 
   const updateOrders = useDebouncedCallback((data) => {
     const map = options.getKeysMap("orders");
+    const orderStatus = getSessionStorage(
+      "orderly_order_status",
+      "positions"
+    ) as string;
 
     map.forEach((getKey, key) => {
-      mutate(
-        unstable_serialize((index, prevData) => [
-          getKey(index, prevData),
-          state.accountId,
-        ])
-      );
+      if (
+        (orderStatus === "history" && key === "orders") ||
+        (orderStatus === "positions" && key === "orders:NEW") ||
+        key.includes("INCOMPLETE") || // always update pending list
+        key.includes(orderStatus)
+      ) {
+        mutate(
+          unstable_serialize((index, prevData) => [
+            getKey(index, prevData),
+            state.accountId,
+          ])
+        );
+      }
     });
 
     // update the orders history list;
@@ -46,7 +58,7 @@ export const usePrivateDataObserver = (options: {
 
     return () => unsubscribe?.();
   }, [state.accountId]);
-  
+
   // algo orders
   useEffect(() => {
     if (!state.accountId) return;
@@ -54,9 +66,11 @@ export const usePrivateDataObserver = (options: {
       onMessage: (data: any) => {
         updateOrders(data);
         if (Array.isArray(data)) {
-          data.forEach((item) => ee.emit("orders:changed", {...item, status: item.algoStatus,}));
+          data.forEach((item) =>
+            ee.emit("orders:changed", { ...item, status: item.algoStatus })
+          );
         } else {
-          ee.emit("orders:changed", {...data, status: data.algoStatus,});
+          ee.emit("orders:changed", { ...data, status: data.algoStatus });
         }
       },
     });
@@ -125,4 +139,19 @@ export const usePrivateDataObserver = (options: {
       unsubscribe?.();
     };
   }, [state.accountId]);
+};
+
+const getSessionStorage = (key: string, initialValue: string) => {
+  // Prevent build error "window is undefined" but keep keep working
+  if (typeof window === "undefined") {
+    return initialValue;
+  }
+
+  try {
+    const item = window.sessionStorage.getItem(key);
+    return item ? parseJSON(item) : initialValue;
+  } catch (error) {
+    console.warn(`Error reading sessionStorage key “${key}”:`, error);
+    return initialValue;
+  }
 };

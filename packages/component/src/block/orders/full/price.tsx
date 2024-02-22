@@ -13,6 +13,7 @@ import { toast } from "@/toast";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Divider } from "@/divider";
+import { cleanStringStyle } from "@orderly.network/hooks";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -23,6 +24,10 @@ export const Price = (props: { order: API.OrderExt }) => {
 
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
+
+  if (price === "Market") {
+    return <span>Market</span>
+  }
 
   if (!editting && open <= 0) {
     return (<NormalState order={order} price={price} setEditing={setEditting} />);
@@ -92,7 +97,10 @@ const EditingState: FC<{
   const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
-  const cancelPopover = () => setOpen(-1);
+  const cancelPopover = () => {
+    setOpen(-1);
+    setPrice((order.price?.toString()) ?? "Market");
+  };
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -102,10 +110,10 @@ const EditingState: FC<{
         return;
       }
 
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
+      // const el2 = confirmRef?.current;
+      // if (!el2 || el2.contains(event.target as Node)) {
+      //   return;
+      // }
 
       setPrice((order.price?.toString()) ?? "Market");
       setEditting(false);
@@ -263,9 +271,17 @@ const EditingState: FC<{
                 <input
                   ref={inputRef}
                   type="text"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  value={commify(price)}
+                  onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
                   onFocus={() => setEditting(true)}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setEditting(false);
+                      if (open <= 0) {
+                        setPrice((order.price?.toString()) ?? "Market");
+                      }
+                    }, 100);
+                  }}
                   onKeyDown={handleKeyDown}
                   autoFocus
                   className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
@@ -292,7 +308,7 @@ const EditingState: FC<{
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
-            onClick={onClick}
+            onMouseDown={onClick}
           >
             {/* @ts-ignore */}
             <Check size={14} />

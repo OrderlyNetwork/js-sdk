@@ -8,14 +8,30 @@ import { Column } from "@/table";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 /// get columns for cancel/fill/reject/history
-export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
+export const columnsBasis = (props: {
+  status?: OrderStatus;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}): Column<API.Order>[] => {
+  const { status, onSymbolChange } = props || {};
   const columns: Column<API.Order>[] = [
     {
       title: "Instrument",
       dataIndex: "symbol",
       width: 120,
       className: "orderly-h-[48px] orderly-font-semibold",
-      render: (value: string) => <Text rule={"symbol"}>{value}</Text>,
+
+      render: (value: string) => (
+        <Text
+          rule={"symbol"}
+          onClick={(e) => {
+            onSymbolChange?.({ symbol: value } as API.Symbol);
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          {value}
+        </Text>
+      ),
     },
     {
       title: "Type",
@@ -95,6 +111,22 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       },
     },
     {
+      title: "Trigger",
+      width: 100,
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "trigger_price",
+      render: (value: string, record: any) => {
+        return (
+          <NumeralWithCtx
+            className={"orderly-font-semibold orderly-text-2xs"}
+            // precision={2}
+          >
+            {value}
+          </NumeralWithCtx>
+        );
+      },
+    },
+    {
       title: "Est. total",
       width: 100,
       className: "orderly-h-[48px] orderly-font-semibold",
@@ -112,22 +144,6 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
               : `${
                   record.total_executed_quantity * record.average_executed_price
                 }`}
-          </NumeralWithCtx>
-        );
-      },
-    },
-    {
-      title: "Trigger",
-      width: 100,
-      className: "orderly-h-[48px] orderly-font-semibold",
-      dataIndex: "trigger_price",
-      render: (value: string, record: any) => {
-        return (
-          <NumeralWithCtx
-            className={"orderly-font-semibold orderly-text-2xs"}
-            // precision={2}
-          >
-            {value}
           </NumeralWithCtx>
         );
       },
@@ -169,6 +185,21 @@ export const columnsBasis = (status?: OrderStatus): Column<API.Order>[] => {
       render: (value: number, record: any) => {
         return <span>{value === record.quantity ? "No" : "Yes"}</span>;
       },
+    },
+    {
+      title: "Update",
+      dataIndex: "updated_time",
+      width: 150,
+      // onSort: status === OrderStatus.INCOMPLETE,
+      className: "orderly-h-[48px]",
+      render: (value: string) => (
+        <Text
+          rule={"date"}
+          className="orderly-break-normal orderly-whitespace-nowrap orderly-font-semibold"
+        >
+          {value}
+        </Text>
+      ),
     },
   ];
 

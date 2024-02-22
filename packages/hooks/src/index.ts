@@ -22,7 +22,7 @@ export { useConfig } from "./useConfig";
 
 export * from "./orderlyContext";
 export * from "./statusProvider";
-export { useWsStatus } from "./useWsStatus";
+export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
 export type { ConfigProviderProps } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
 
@@ -42,6 +42,8 @@ export * from "use-debounce";
 export { useMediaQuery } from "./useMediaQuery";
 
 export * from "./orderly/orderlyHooks";
+
+export { cleanStringStyle } from "./utils/orderEntryHelper";
 
 //---- woo only -----
 export * from "./woo/woo";

@@ -25,7 +25,7 @@ export const TBody = <RecordType,>(props: TBodyProps<RecordType>) => {
     useContext(TableContext);
 
   return (
-    <tbody>
+    <tbody className="orderly-ui-table-body">
       {dataSource?.map((record: any, index) => {
         const key =
           typeof props.generatedRowKey === "function"

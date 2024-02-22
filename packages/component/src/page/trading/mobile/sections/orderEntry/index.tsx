@@ -12,6 +12,7 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
+import { OrderParams } from "@orderly.network/hooks";
 
 interface MyOrderEntryProps {
   symbol: string;
@@ -46,31 +47,38 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     };
   }, []);
 
-  const [order, setOrder] = useState<OrderEntity>({
+  const [order, setOrder] = useState<OrderParams>({
     reduce_only: false,
     side: OrderSide.BUY,
     order_type: OrderType.LIMIT,
     isStopOrder: false,
+    symbol,
+    // timestamp: Date.now(),
   });
   // const [reduceOnly, setReduceOnly] = useState(false);
-  const formState = useOrderEntry(
-    {
-      ...order,
-      symbol,
-    },
-    {
-      watchOrderbook: true,
-    }
-  );
+  const formState = useOrderEntry(order, {
+    watchOrderbook: true,
+  });
 
   useEffect(() => {
     setOrder((order) => ({
       ...order,
       order_price: "",
       order_quantity: "",
+      trigger_price: "",
       symbol,
     }));
   }, [symbol]);
+
+  useEffect(() => {
+    // console.log(
+    //   "=======>>>>>>>>formState.formattedOrder",
+    //   formState.formattedOrder.total,
+    //   formState.formattedOrder.order_quantity
+    // );
+    order.order_quantity = formState.formattedOrder.order_quantity;
+    order.total = formState.formattedOrder.total;
+  }, [formState.formattedOrder.total, formState.formattedOrder.order_quantity]);
 
   return (
     <div id="orderly-order-entry" className="orderly-pl-1" ref={containerRef}>
@@ -88,9 +96,14 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
               order_quantity: "",
               order_price: "",
               [field]: value,
+              // timestamp: Date.now(),
             }));
           } else {
-            setOrder((order) => ({ ...order, [field]: value }));
+            setOrder((order) => ({
+              ...order,
+              [field]: value,
+              // timestamp: Date.now(),
+            }));
           }
         }}
         setValues={(values) => {

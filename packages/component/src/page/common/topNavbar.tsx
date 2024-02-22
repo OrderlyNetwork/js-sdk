@@ -1,5 +1,9 @@
 import { FC, useCallback, useContext, useMemo } from "react";
-import { StatusContext, useAccount } from "@orderly.network/hooks";
+import {
+  StatusContext,
+  WsNetworkStatus,
+  useAccount,
+} from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
@@ -73,7 +77,7 @@ export const TopNavbar: FC<Props> = (props) => {
           // }}
         />
       </div>
-      {wsStatus !== "connected" ? (
+      {wsStatus === WsNetworkStatus.Unstable ? (
         <WsStatus />
       ) : (
         errors?.ChainNetworkNotSupport && (

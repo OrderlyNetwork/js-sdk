@@ -33,7 +33,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       level,
     });
 
-    const pendingOrders = usePendingOrderStream(symbol);
+  const pendingOrders = usePendingOrderStream(symbol);
 
   const { height } = useTabContext();
 
@@ -72,7 +72,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       level={level}
       asks={data.asks!}
       bids={data.bids!}
-      markPrice={data.markPrice}
+      markPrice={data.markPrice!}
       lastPrice={data.middlePrice!}
       depth={allDepths!}
       activeDepth={depth!}

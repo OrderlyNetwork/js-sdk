@@ -1,5 +1,5 @@
 import { TabPane, Tabs } from "@/tab";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { PositionPane } from "./positions";
 import { MyOrders } from "./orders";
 import { OrderStatus } from "@orderly.network/types";
@@ -26,18 +26,39 @@ export const DataListView = () => {
     UnPnlPriceBasisType.MARKET_PRICE
   );
 
+  const [orderStatus, setOrderStatus] = useSessionStorage(
+    "orderly_order_status",
+    "positions"
+  );
+
+  const onTabChange = useCallback((value: string) => {
+    setActiveTab(value);
+    setOrderStatus(
+      {
+        positions: "positions",
+        orders: OrderStatus.INCOMPLETE,
+        filled: OrderStatus.FILLED,
+        cancelled: OrderStatus.CANCELLED,
+        rejected: OrderStatus.REJECTED,
+        history: "history",
+      }[value]
+    );
+  }, []);
+
   return (
     <Tabs
       autoFit
       value={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={onTabChange}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold"
-      tabBarExtra={<TabBarExtraNode
-        decimalPrecision={decimalPrecision}
-        setDecimalPrecision={setDecimalPrecision}
-        unPnlPriceBasis={unPnlPriceBasis}
-        setUnPnlPriceBasic={setUnPnlPriceBasic}
-      />}
+      tabBarExtra={
+        <TabBarExtraNode
+          decimalPrecision={decimalPrecision}
+          setDecimalPrecision={setDecimalPrecision}
+          unPnlPriceBasis={unPnlPriceBasis}
+          setUnPnlPriceBasic={setUnPnlPriceBasic}
+        />
+      }
       extraData={{
         showAllSymbol: false,
         // value is 0 1 2

@@ -21,6 +21,11 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
   const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
 
+  const isAlgoOrder = order?.algo_order_id !== undefined;
+  // console.log("price node", order);
+
+  const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
+
   const typeTag = useMemo(() => {
     return (
       <Tag color={order.side === "BUY" ? "buy" : "sell"} size="small">
@@ -115,7 +120,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={order.price ?? "-"}
+          value={isStopMarket ? <span>Market</span>: order.price ?? "-"}
           rule="price"
           precision={quote_dp}
         />
