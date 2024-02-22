@@ -484,7 +484,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               error={!!metaState.errors?.trigger_price && errorsVisible}
               helpText={metaState.errors?.trigger_price?.message}
               className="orderly-text-right orderly-font-semibold"
-              value={commify(formattedOrder.trigger_price || "")}
+              value={formattedOrder.trigger_price || ""}
               containerClassName={"orderly-bg-base-600"}
               onChange={(event) => {
                 // field.onChange(event.target.value);
@@ -507,11 +507,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             helpText={metaState.errors?.order_price?.message}
             className="orderly-text-right orderly-font-semibold"
             autoComplete="off"
-            value={
-              isMarketOrder
-                ? "Market"
-                : commify(formattedOrder.order_price || "")
-            }
+            value={isMarketOrder ? "Market" : formattedOrder.order_price || ""}
             containerClassName={
               isMarketOrder ? "orderly-bg-base-700" : "orderly-bg-base-600"
             }
@@ -537,7 +533,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             error={!!metaState.errors?.order_quantity && errorsVisible}
             helpText={metaState.errors?.order_quantity?.message}
             autoComplete="off"
-            value={commify(formattedOrder.order_quantity || "")}
+            value={formattedOrder.order_quantity || ""}
             onChange={(event) => {
               props.onFieldChange("order_quantity", event.target.value);
             }}
@@ -603,12 +599,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             id="order_total_input"
             name="order_total_input"
             autoComplete="off"
-            autoFocus={false}
-            value={commify(
+            value={
               currentFocusInput.current === InputType.TOTAL
                 ? formattedOrder.total!
                 : totalAmount!
-            )}
+            }
             onFocus={onFocus(InputType.TOTAL)}
             onBlur={onBlur(InputType.TOTAL)}
             onChange={(event) => {

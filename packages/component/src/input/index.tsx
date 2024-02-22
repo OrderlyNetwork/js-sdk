@@ -71,6 +71,9 @@ export interface InputProps
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
   containerClassName?: string;
+
+  // autoSetSelectionRange?:boolean;
+  // disabledSetSelectionRange?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -117,11 +120,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     // fix cursor pointer jump to end;
     useEffect(() => {
       // filter the thousands separator
-      const nextValueLen = `${props.value}`.length;
-      const prevValueLen = prevInputValue.current?.length || 0;
-
-      const next = cursor ? cursor + (nextValueLen - prevValueLen) : 0;
-      innerInputRef.current?.setSelectionRange(next, next);
+      // const nextValueLen = `${props.value}`.length;
+      // const prevValueLen = prevInputValue.current?.length || 0;
+      // const next = cursor ? cursor + (nextValueLen - prevValueLen) : 0;
+      // innerInputRef.current?.setSelectionRange(next, next);
     }, [props.value]);
 
     const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,6 +256,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={onInputChange}
             {...(props as any)}
             disabled={!!disabled}
+            autoFocus={false}
             className={cn(
               "orderly-input",
               "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20 orderly-tabular-nums",
