@@ -81,6 +81,10 @@ export class CustomConfigStore implements ConfigStore {
     return this.map.get(key) ?? defaultValue;
   }
   set<T>(key: ConfigKey, value: T): void {
+    if (key === Markets_key) {
+      const jsonStr = JSON.stringify(value);
+      localStorage.setItem(Markets_key, jsonStr);
+  }
     this.map.set(key, value);
   }
   clear(): void {
