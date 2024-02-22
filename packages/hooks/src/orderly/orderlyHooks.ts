@@ -1,6 +1,6 @@
 export { useOrderbookStream } from "./useOrderbookStream";
 export { useOrderEntry } from "./useOrderEntry";
-export type { UseOrderEntryMetaState } from "./useOrderEntry";
+export type { UseOrderEntryMetaState, OrderParams } from "./useOrderEntry";
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
