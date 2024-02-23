@@ -112,7 +112,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Avg. open</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           rule="price"
@@ -125,7 +125,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Mark price</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           rule="price"
@@ -137,7 +137,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Liq. price</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           valueClassName="orderly-text-warning orderly-text-3xs"

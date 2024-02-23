@@ -119,6 +119,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     // fix cursor pointer jump to end;
     useEffect(() => {
+      if (document.activeElement !== innerInputRef.current) return;
       // filter the thousands separator
       // const nextValueLen = `${props.value}`.length;
       // const prevValueLen = prevInputValue.current?.length || 0;
