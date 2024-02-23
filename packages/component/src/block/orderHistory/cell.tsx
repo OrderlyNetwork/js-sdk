@@ -85,7 +85,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Avg. total</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
@@ -100,7 +100,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Order price</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           value={item.type === OrderType.MARKET ? "Market" : item.price}
@@ -113,7 +113,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               <span className="orderly-text-base-contrast-36">
                 Trigger price
               </span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           value={
