@@ -122,6 +122,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               ? "Market"
               : item.trigger_price
           }
+          align="right"
         />
       </div>
     </div>

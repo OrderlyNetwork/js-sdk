@@ -90,28 +90,25 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     });
   };
 
-  const onFormSubmit = useCallback(
-    (data: any) => {
-      return onConfirm(data).then(
-        () => {
-          return onSubmit({ ...data, reduce_only: true }).then(
-            (res: any) => {
-              //
-              if (res.success) {
-                // toast.success("successfully");
-              }
-              props.onClose(res);
-            },
-            (error: Error) => {
-              toast.error(error.message);
+  const onFormSubmit = (data: any) => {
+    return onConfirm(data).then(
+      () => {
+        return onSubmit({ ...data, reduce_only: true }).then(
+          (res: any) => {
+            //
+            if (res.success) {
+              // toast.success("successfully");
             }
-          );
-        },
-        () => {}
-      );
-    },
-    [side, quote]
-  );
+            props.onClose(res);
+          },
+          (error: Error) => {
+            toast.error(error.message);
+          }
+        );
+      },
+      () => {}
+    );
+  };
 
   const onFieldChange = (name: string, value: any) => {
     const newValues = helper.calculate(

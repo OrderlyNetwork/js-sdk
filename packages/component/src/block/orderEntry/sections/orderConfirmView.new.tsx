@@ -8,6 +8,7 @@ import { Label } from "@/label";
 import Button from "@/button";
 import { cn } from "@/utils";
 import { useModal } from "@/modal";
+import { commify } from "@orderly.network/utils";
 
 interface OrderConfirmViewProps {
   order: OrderEntity;
@@ -49,7 +50,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
     }
     return (
       <div className="orderly-inline-block">
-        <span>{order.order_price}</span>
+        <span>{commify(order.order_price || "")}</span>
         <span className="orderly-text-base-contrast-36 orderly-ml-1">
           {quote}
         </span>
@@ -86,7 +87,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
             <div className="orderly-flex orderly-justify-between orderly-mb-1">
               <span className="orderly-text-base-contrast-54">Trigger</span>
               <div className="orderly-inline-block">
-                <span>{order.trigger_price}</span>
+                <span>{commify(order.trigger_price || "")}</span>
                 <span className="orderly-text-base-contrast-36 orderly-ml-1">
                   {quote}
                 </span>
@@ -102,7 +103,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
               {"Est. Total"}
             </span>
             <div className="orderly-inline-block">
-              <span>{order.total}</span>
+              <span>{commify(order.total || "" )}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">
                 {quote}
               </span>

@@ -4,6 +4,8 @@ import { OrderlyAppProvider } from "../src";
 import { MemoryConfigStore } from "@orderly.network/core";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { ConnectorProvider } from "@orderly.network/web3-modal";
+import injectedModule from "@web3-onboard/injected-wallets";
+import walletConnectModule from "@web3-onboard/walletconnect";
 import { CustomContractManager } from "./CustomContract";
 import { CustomConfigStore } from "./CustomConfigStore";
 import "../src/tailwind.css"; // tailwind css
@@ -11,6 +13,45 @@ import "../src/tailwind.css"; // tailwind css
 const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
 const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
 const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
+
+const wcV2InitOptions = {
+  version: 2,
+  projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+  requiredChains: [42161],
+  optionalChains: [421613, 42161],
+  dappUrl: window.location.host,
+};
+
+const walletConnect = walletConnectModule(wcV2InitOptions);
+
+const options = {
+  wallets: [
+    injectedModule(), // metamask
+    walletConnect,
+  ],
+  appMetadata: {
+    name: "Orderly",
+    icon: "/OrderlyLogo.png",
+    description: "Orderly",
+    recommendedInjectedWallets: [
+      { name: "Coinbase", url: "https://wallet.coinbase.com/" },
+      { name: "MetaMask", url: "https://metamask.io" },
+      { name: "Trezor", url: "https://trezor.io/" },
+      { name: "Walletconnect", url: "https://walletconnect.com/" },
+      { name: "Ledger", url: "https://www.ledger.com/" },
+    ],
+    agreement: {
+      version: "1.0.0",
+      termsUrl: "https://www.blocknative.com/terms-conditions",
+      privacyUrl: "https://www.blocknative.com/privacy-policy",
+    },
+    gettingStartedGuide: "https://blocknative.com",
+    explore: "https://blocknative.com",
+  },
+  connect: {
+    autoConnectLastWallet: true,
+  },
+};
 
 const preview = {
   parameters: {
@@ -43,12 +84,12 @@ const preview = {
   },
   decorators: [
     (Story) => {
-      const networkId = localStorage.getItem("preview-orderly-networkId");
+      // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
-      // const networkId = "testnet";
+      const networkId = "testnet";
       const configStore = new CustomConfigStore({ networkId, env: "qa" });
       return (
-        <ConnectorProvider projectId="cdb3af968143d40d27ad9b0b750dedb0">
+        <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
