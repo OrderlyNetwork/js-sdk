@@ -129,7 +129,11 @@ export class Account {
       wallet.chain.id = parseInt(wallet.chain.id, 16);
     }
 
-    //
+    // Check if switch account;
+    if (this.stateValue.address !== address) {
+      // AccountSwitch event;
+      this._ee.emit("change:account", { address });
+    }
 
     this.keyStore.setAddress(address);
 
