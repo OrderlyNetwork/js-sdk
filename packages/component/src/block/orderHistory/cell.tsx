@@ -84,7 +84,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           label={
             <>
-              <span className="orderly-text-base-contrast-36">Avg. total</span>
+              <span className="orderly-text-base-contrast-36">Avg. price</span>
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
