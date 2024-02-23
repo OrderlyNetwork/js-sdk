@@ -8,7 +8,7 @@ import { ChevronDown } from "lucide-react";
 import { FC, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { OrderTypesCheckbox } from "./orderTypes";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { MobileHideenLabel, DesktopHiddenLabel } from "./hiddenLabel";
 import { MobileReduceOnlyLabel, DesktopReduceOnlyLabel } from "./reduceOnly";
 
@@ -23,7 +23,8 @@ interface OrderOptionsProps {
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
   const { reduceOnly, formattedOrder, onFieldChange } = props;
-  const [open, setOpen] = useState<boolean>(false);
+  const [optionsOpen, setOptionsOpen] = useLocalStorage("order_entry_options_open", false);
+  const [open, setOpen] = useState<boolean>(optionsOpen);
   // const { control, getValues, setValue } = useFormContext();
 
   const { order_type } = formattedOrder;
@@ -52,7 +53,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
         <button
           type="button"
           className="orderly-w-[18px] orderly-h-[18px] orderly-px-5 orderly-text-base-contrast/60"
-          onClick={() => setOpen((open) => !open)}
+          onClick={() => {
+            setOpen((open) => !open);
+            setOptionsOpen(!open);
+          }}
         >
           {/* @ts-ignore */}
           <ChevronDown
@@ -69,7 +73,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
           <div className="orderly-pb-2 orderly-space-y-4">
             {order_type === OrderType.LIMIT && (
               <OrderTypesCheckbox
-                value={formattedOrder.order_type_ext!}
+                value={formattedOrder.order_type_ext}
                 onValueChange={(value) => {
                   // field.onChange(value);
                   onFieldChange("order_type_ext", value);

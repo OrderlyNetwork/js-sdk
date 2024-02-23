@@ -335,6 +335,7 @@ export function useOrderEntry(
     needParse?.symbol,
     needParse?.reduce_only,
     needParse?.side,
+    needParse?.visible_quantity,
   ]);
 
   // const maxQty = 3;

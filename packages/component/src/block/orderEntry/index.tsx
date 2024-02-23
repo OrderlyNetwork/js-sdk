@@ -293,12 +293,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           .then((isOk) => {
             return props.submit().then(
               (res) => {
-                props.setValues({
-                  trigger_price: "",
-                  order_price: "",
-                  order_quantity: "",
-                  total: "",
-                });
+                // props.setValues({
+                //   trigger_price: "",
+                //   order_price: "",
+                //   order_quantity: "",
+                //   total: "",
+                // });
 
                 // resetForm?.();
               },
