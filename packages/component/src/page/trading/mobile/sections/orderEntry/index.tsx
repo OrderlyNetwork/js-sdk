@@ -53,7 +53,6 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     order_type: OrderType.LIMIT,
     isStopOrder: false,
     symbol,
-    // timestamp: Date.now(),
   });
   // const [reduceOnly, setReduceOnly] = useState(false);
   const formState = useOrderEntry(order, {
