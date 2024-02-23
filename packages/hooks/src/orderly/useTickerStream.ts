@@ -6,6 +6,7 @@ import { useWS } from "../useWS";
 import { useMarkPrice } from "./useMarkPrice";
 import { useIndexPrice } from "./useIndexPrice";
 import { useOpenInterest } from "./useOpenInterest";
+import { useFetures } from "../unuse/useFetures";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
@@ -50,16 +51,25 @@ export const useTickerStream = (symbol: string) => {
   const { data: markPrice } = useMarkPrice(symbol);
   const { data: indexPrice } = useIndexPrice(symbol);
   const { data: openInterest } = useOpenInterest(symbol);
+  const { data: futures } = useFetures();
 
   const value = useMemo(() => {
     //
     if (!info) return null;
     if (!ticker) return info;
+
+    const futureIndex = futures?.findIndex((item: any) => item.symbol === symbol);
+    let _oi = openInterest;
+    if (!_oi && futureIndex !== -1 && futures) {
+      // @ts-ignore
+      _oi = futures[futureIndex].open_interest;
+    }
+    
     const config: any = {
       ...info,
       mark_price: markPrice,
       index_price: indexPrice,
-      open_interest: openInterest,
+      open_interest: _oi,
     };
 
     if (ticker.open !== undefined) {
@@ -91,7 +101,7 @@ export const useTickerStream = (symbol: string) => {
       config["24h_change"] = new Decimal(ticker.close).minus(ticker.open);
     }
     return config;
-  }, [info, symbol, ticker]);
+  }, [info, symbol, ticker, futures, openInterest]);
 
   return value as API.MarketInfo;
 };

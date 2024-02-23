@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "0.1.31-alpha.10",
+  "version": "0.2.3",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -55,6 +55,8 @@
     "@theguild/remark-npm2yarn": "^0.1.1",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
+    "@web3-onboard/injected-wallets": "^2.10.10",
+    "@web3-onboard/walletconnect": "^2.5.1",
     "autoprefixer": "^10.4.14",
     "eslint-config-custom": "workspace:*",
     "ethers": "^6.7.1",

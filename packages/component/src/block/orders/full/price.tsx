@@ -110,10 +110,10 @@ const EditingState: FC<{
         return;
       }
 
-      // const el2 = confirmRef?.current;
-      // if (!el2 || el2.contains(event.target as Node)) {
-      //   return;
-      // }
+      const el2 = confirmRef?.current;
+      if (!el2 || el2.contains(event.target as Node)) {
+        return;
+      }
 
       setPrice((order.price?.toString()) ?? "Market");
       setEditting(false);

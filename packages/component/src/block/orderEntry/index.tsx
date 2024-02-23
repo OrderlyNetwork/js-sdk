@@ -603,6 +603,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             id="order_total_input"
             name="order_total_input"
             autoComplete="off"
+            autoFocus={false}
             value={commify(
               currentFocusInput.current === InputType.TOTAL
                 ? formattedOrder.total!
