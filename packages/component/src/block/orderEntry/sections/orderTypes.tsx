@@ -3,7 +3,7 @@ import { Circle } from "lucide-react";
 import { FC } from "react";
 
 interface Props {
-  value: OrderType;
+  value?: OrderType;
   onValueChange: (value: any) => void;
 }
 
