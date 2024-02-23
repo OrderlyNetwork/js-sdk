@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+- Updated dependencies
+  - @orderly.network/core@0.2.4-experimental.0
+
 ## 0.1.3
 
 ### Patch Changes

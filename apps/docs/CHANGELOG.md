@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.2.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+- Updated dependencies
+  - @orderly.network/react@0.2.4-experimental.0
+  - @orderly.network/web3-onboard@0.1.4-experimental.0
+  - @orderly.network/hooks@1.1.4-experimental.0
+  - @orderly.network/types@0.2.4-experimental.0
+
 ## 0.2.3
 
 ### Patch Changes

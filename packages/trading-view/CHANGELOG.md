@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 0.2.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+- Updated dependencies
+  - @orderly.network/hooks@1.1.4-experimental.0
+  - @orderly.network/types@0.2.4-experimental.0
+  - @orderly.network/utils@0.1.4-experimental.0
+  - @orderly.network/core@0.2.4-experimental.0
+  - @orderly.network/net@1.1.4-experimental.0
+
 ## 0.2.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.2.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+- Updated dependencies
+  - @orderly.network/types@0.2.4-experimental.0
+
 ## 0.2.3
 
 ### Patch Changes
