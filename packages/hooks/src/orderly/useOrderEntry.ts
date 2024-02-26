@@ -41,8 +41,6 @@ export type UseOrderEntryMetaState = {
   submitted: boolean;
 };
 
-const TIEMSTAMP = "timestamp";
-
 export type UseOrderEntryReturn = {
   // Maximum open position
   maxQty: number;
@@ -74,20 +72,24 @@ export type UseOrderEntryReturn = {
 export type OrderParams = Required<
   Pick<OrderEntity, "side" | "order_type" | "symbol">
 > &
-  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">> & {
-    // [TIEMSTAMP]: number;
-  };
+  Partial<Omit<OrderEntity, "side" | "symbol" | "order_type">>;
 
 /**
  * Create Order
  * @example
  * ```tsx
+ * import { useOrderEntry } from "@orderly.network/hooks";
+ * import {OrderSide, OrderType} from '@orderly.network/types';
+ *
  * const { formattedOrder, onSubmit, helper } = useOrderEntry({
  *  symbol: "PERP_ETH_USDC",
  *  side: OrderSide.BUY,
  *  order_type: OrderType.LIMIT,
  *  order_price: 10000,
  *  order_quantity: 1,
+ * },{
+ *  // **Note:** it's required
+ *  watchOrderbook: true,
  * });
  * ```
  */
@@ -95,6 +97,9 @@ export function useOrderEntry(
   order: OrderParams,
   options?: UseOrderEntryOptions
 ): UseOrderEntryReturn;
+/**
+ * @deprecated
+ */
 export function useOrderEntry(
   symbol: string,
   side: OrderSide,
@@ -106,9 +111,11 @@ export function useOrderEntry(
   reduceOnly?: boolean,
   options?: UseOrderEntryOptions
 ): UseOrderEntryReturn {
-  // console.log("+++++++", symbolOrOrder);
-
+  // if symbolOrOrder is string, then it's deprecated
+  let isNewVersion = false;
   if (typeof symbolOrOrder === "object") {
+    isNewVersion = true;
+
     if (!symbolOrOrder.symbol) {
       throw new SDKError("symbol is required");
     }
@@ -120,18 +127,7 @@ export function useOrderEntry(
     if (!symbolOrOrder.order_type) {
       throw new SDKError("order_type is required");
     }
-
-    // if (typeof symbolOrOrder[TIEMSTAMP] === "undefined") {
-    //   console.warn(
-    //     "The timestamp is not set, the order status may be out of sync."
-    //   );
-    // }
-
-    // add timestamp to order, fix the issue of the same order
-    // symbolOrOrder[TIEMSTAMP] = Date.now();
   }
-
-  // console.log("+++++++", symbolOrOrder);
 
   const prevOrderData = useRef<Partial<OrderEntity> | null>(null);
   // Cache data from the last calculate
@@ -335,6 +331,7 @@ export function useOrderEntry(
     needParse?.symbol,
     needParse?.reduce_only,
     needParse?.side,
+    needParse?.visible_quantity,
   ]);
 
   // const maxQty = 3;
@@ -544,7 +541,18 @@ export function useOrderEntry(
 
   //====== update orderbook ask0/bid0 ======
   useEffect(() => {
-    if (!optionsValue?.watchOrderbook) return;
+    if (isNewVersion) {
+      if (!optionsValue?.watchOrderbook) {
+        throw new SDKError(
+          "In order to calculate the estimated liquidation price, the `options.watchOrderbook` parameter must be set to true."
+        );
+      }
+    } else {
+      if (!optionsValue?.watchOrderbook) {
+        return;
+      }
+    }
+
     ee.on("orderbook:update", onOrderbookUpdate);
 
     return () => {
@@ -564,8 +572,16 @@ export function useOrderEntry(
     let quantity = Number(symbolOrOrder.order_quantity);
     const orderPrice = Number(symbolOrOrder.order_price);
 
-    if (isNaN(quantity) || quantity <= 0 || askAndBid.current.length === 0)
+    if (isNaN(quantity) || quantity <= 0) {
       return null;
+    }
+
+    if (!!options?.watchOrderbook && askAndBid.current.length === 0) {
+      throw new SDKError(
+        "Please check if you are using the `useOrderbookStream` hook or if the orderBook has data."
+      );
+    }
+
     if (
       (symbolOrOrder.order_type === OrderType.LIMIT ||
         symbolOrOrder.order_type === OrderType.STOP_LIMIT) &&

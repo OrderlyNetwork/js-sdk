@@ -129,8 +129,6 @@ export class Account {
       wallet.chain.id = parseInt(wallet.chain.id, 16);
     }
 
-    //
-
     this.keyStore.setAddress(address);
 
     const nextState: AccountState = {

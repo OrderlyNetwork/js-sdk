@@ -43,6 +43,8 @@ export const useWS = () => {
           nextState.accountId
         ) {
           websocketClient.openPrivate(nextState.accountId);
+        } else {
+          websocketClient.closePrivate();
         }
       });
 
