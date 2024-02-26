@@ -65,7 +65,7 @@ export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
     return 0;
 
   return new Decimal(inputs.unrealizedPnL)
-    .div(new Decimal(inputs.positionQty).mul(openPrice).mul(IMR))
+    .div(new Decimal(Math.abs(inputs.positionQty)).mul(openPrice).mul(IMR))
     .toNumber();
 }
 
