@@ -6,6 +6,10 @@ export interface IWalletAdapter {
   // new (options: WalletAdapterOptions): WalletAdapter;
   get chainId(): number;
   get addresses(): string;
+  /**
+   * Set the chain id
+   */
+  set chainId(chainId: number);
   parseUnits: (amount: string) => string;
   formatUnits: (amount: string) => string;
   // getBalance: (address: string) => Promise<any>;
@@ -62,11 +66,6 @@ export interface IWalletAdapter {
 export type WalletAdapterOptions = {
   provider: any;
   address: string;
-  // label?: string;
-  // wallet?:{
-  //   name:string
-  // },
-  // getAddresses?: (address: string) => string;
   chain: { id: number };
 };
 
