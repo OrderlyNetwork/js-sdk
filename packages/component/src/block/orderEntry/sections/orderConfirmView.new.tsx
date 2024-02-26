@@ -80,7 +80,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
                   : "orderly-text-trade-loss"
               )}
             >
-              {order.order_quantity}
+              {commify(order.order_quantity || "")}
             </span>
           </div>
           {order.isStopOrder === true && (

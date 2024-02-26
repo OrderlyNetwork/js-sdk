@@ -8,6 +8,7 @@ import { Divider } from "@/divider";
 import { NetworkImage } from "@/icon/networkImage";
 import { OrderDetail } from "../shared/orderDetail";
 import { OrderEntity } from "@orderly.network/types";
+import { commify } from "@orderly.network/utils";
 
 export const LimitConfirmDialog: FC<{
   base: string;
@@ -28,7 +29,7 @@ export const LimitConfirmDialog: FC<{
     <>
       <ConfirmHeader onClose={onCancel} title="Limit close" />
       <div className="orderly-text-base-contrast orderly-text-sm orderly-mt-5">
-        {`You agree closing ${props.quantity} ${props.base} position at limit price.`}
+        {`You agree closing ${commify(props.quantity)} ${props.base} position at limit price.`}
       </div>
       {/* <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-mt-3">
         Pending reduce-only orders might be cancelled or adjusted.
