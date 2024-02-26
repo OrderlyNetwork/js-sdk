@@ -240,8 +240,8 @@ export function MMR(inputs: MMRInputs): number {
     new Decimal(baseMMR)
       .div(baseIMR)
       .mul(IMRFactor)
-      .mul(Math.abs(positionNotional))
-      .toPower(IMR_factor_power)
+      .mul(Math.pow(Math.abs(positionNotional), IMR_factor_power))
+      // .toPower(IMR_factor_power)
       .toNumber()
   );
 }
