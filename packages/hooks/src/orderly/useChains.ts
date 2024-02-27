@@ -79,6 +79,8 @@ export const useChains = (
     let orderlyChainsArr: API.Chain[] = [];
     const orderlyChainIds = new Set<number>();
 
+    let testnetArr = [...TestnetChains] as API.Chain[];
+
     orderlyChains?.forEach((item) => {
       item.chain_details.forEach((chain: any) => {
         const chainId = Number(chain.chain_id);
@@ -123,8 +125,6 @@ export const useChains = (
         orderlyChainsArr.push(_chain);
       });
     });
-
-    let testnetArr = [...TestnetChains] as API.Chain[];
 
     testnetArr.forEach((chain) => {
       map.current.set(chain.network_infos?.chain_id, chain as any);
