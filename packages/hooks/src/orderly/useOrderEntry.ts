@@ -135,10 +135,6 @@ export function useOrderEntry(
   //
   const notSupportData = useRef<Partial<OrderEntity>>({});
 
-  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
-    OrderEntity,
-    any
-  >(orderDataCache?.current?.isStopOrder ? "/v1/algo/order" : "/v1/order");
 
   const [errors, setErrors] = useState<any>(null);
 
@@ -333,6 +329,14 @@ export function useOrderEntry(
     needParse?.side,
     needParse?.visible_quantity,
   ]);
+
+  const isStopOrder = parsedData?.order_type === OrderType.STOP_LIMIT || parsedData?.order_type === OrderType.STOP_MARKET;
+
+
+  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
+    OrderEntity,
+    any
+  >(isStopOrder ? "/v1/algo/order" : "/v1/order");
 
   // const maxQty = 3;
 

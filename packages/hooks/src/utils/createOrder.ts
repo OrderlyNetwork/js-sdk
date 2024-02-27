@@ -266,6 +266,8 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
     delete order["order_quantity"];
     delete order["order_price"];
     // @ts-ignore
+    delete order["order_type"];
+    // @ts-ignore
     delete order["isStopOrder"];
     delete order['total'];
 
@@ -342,16 +344,18 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
   create(values: OrderEntity, _: ValuesDepConfig): OrderEntity {
     const result = {
       ...this.baseOrder(values),
-      order_price: values.order_price,
+      // order_price: values.order_price,
       trigger_price: values.trigger_price,
       algo_type: "STOP",
       type: "MARKET",
       quantity: values["order_quantity"],
-      price: values["order_price"],
+      // price: values["order_price"],
       trigger_price_type: "MARK_PRICE",
     };
     delete result["order_quantity"];
     delete result["order_price"];
+    // @ts-ignore
+    delete result["order_type"];
     // @ts-ignore
     delete result["isStopOrder"];
     delete result['total'];
