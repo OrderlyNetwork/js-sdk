@@ -88,7 +88,9 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
       }
 
       if (props.type === "wallet") {
-        img.src = `https://oss.woo.network/static/wallet_icon/${props.name?.toLocaleLowerCase()}.png`;
+        const split = props.name?.split(" ");
+        const formatWalletName = split?.[0]?.toLowerCase();
+        img.src = `https://oss.woo.network/static/wallet_icon/${formatWalletName}.png`;
       }
 
       if (props.type === "path") {
