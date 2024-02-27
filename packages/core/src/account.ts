@@ -146,6 +146,7 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.Connected,
       address,
+      accountId: undefined, // if address change, accountId should be reset
       connectWallet: wallet?.wallet,
     };
 

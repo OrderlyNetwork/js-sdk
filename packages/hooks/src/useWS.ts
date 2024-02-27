@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { Account, AccountState, SimpleDI } from "@orderly.network/core";
 import { WS } from "@orderly.network/net";
 import useConstant from "use-constant";
@@ -9,6 +9,8 @@ const WS_NAME = "nativeWebsocketClient";
 
 export const useWS = () => {
   const { configStore } = useContext(OrderlyContext);
+  // const prevAccountState = useRef<AccountState | null>(null);
+
   const ws = useConstant(() => {
     let websocketClient = SimpleDI.get<WS>(WS_NAME);
     const account = SimpleDI.get<Account>(Account.instanceName);
@@ -37,15 +39,16 @@ export const useWS = () => {
 
       // open the pirvate websocket when user login
       account.on("change:status", (nextState: AccountState) => {
-        //
         if (
           nextState.status === AccountStatusEnum.EnableTrading &&
           nextState.accountId
         ) {
           websocketClient.openPrivate(nextState.accountId);
         } else {
-          websocketClient.closePrivate();
+          websocketClient.closePrivate(1000, "switch account");
         }
+
+        // prevAccountState.current = nextState;
       });
 
       if (typeof window !== "undefined") {
