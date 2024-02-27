@@ -518,7 +518,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         </div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
-          name={walletName?.toLowerCase()}
+          name={walletName}
           rounded
         />
       </div>
