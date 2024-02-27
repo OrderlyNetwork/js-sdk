@@ -69,6 +69,18 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   //   return [values, input, value, markPrice];
 }
 
+export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
+  const [values, input, value, markPrice, config] = inputs;
+
+  if (value === OrderType.LIMIT || value === OrderType.STOP_LIMIT) {
+    if (values.order_price === "") {
+      values.total = "";
+    }
+  }
+
+  return [values, input, value, markPrice, config];
+}
+
 /**
  * digital precision processing
  * @param inputs
@@ -279,6 +291,8 @@ export const getCalculateHandler = (
   fieldName: string
 ): orderEntryInputHandle => {
   switch (fieldName) {
+    case "order_type":
+      return orderTypeHandle;
     case "order_quantity": {
       return quantityInputHandle;
     }
