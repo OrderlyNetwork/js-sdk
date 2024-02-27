@@ -1,5 +1,11 @@
 # storybook
 
+## 1.1.4-alpha.7
+
+### Patch Changes
+
+- fix bugs;
+
 ## 1.1.4-alpha.6
 
 ### Patch Changes
