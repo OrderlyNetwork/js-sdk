@@ -321,7 +321,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         <div className="orderly-flex-1">Your web3 wallet</div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
-          name={walletName?.toLowerCase()}
+          name={walletName}
           rounded
         />
       </div>
