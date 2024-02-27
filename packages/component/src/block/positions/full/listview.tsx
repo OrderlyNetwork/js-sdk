@@ -56,7 +56,7 @@ export const Listview: FC<
         render: (value: string) => (
           <Text
             rule={"symbol"}
-            className="orderly-font-semibold"
+            className="orderly-font-semibold orderly-cursor-pointer"
             onClick={(e) => {
               props.onSymbolChange?.({ symbol: value } as API.Symbol);
               e.stopPropagation();
@@ -136,25 +136,29 @@ export const Listview: FC<
           />
         ),
         render: (value: string, record: any) => {
-          return (<span>
-            <Numeral
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-            >
-              {value}
-            </Numeral>
-            {<Numeral
-              rule="percentages"
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-              prefix="("
-              surfix=")"
-            >
-              {(record.unsettled_pnl_ROI)}
-            </Numeral>}
-          </span>)
+          return (
+            <span>
+              <Numeral
+                precision={pnlNotionalDecimalPrecision}
+                coloring
+                className="orderly-font-semibold"
+              >
+                {value}
+              </Numeral>
+              {
+                <Numeral
+                  rule="percentages"
+                  precision={pnlNotionalDecimalPrecision}
+                  coloring
+                  className="orderly-font-semibold"
+                  prefix="("
+                  surfix=")"
+                >
+                  {record.unsettled_pnl_ROI}
+                </Numeral>
+              }
+            </span>
+          );
         },
       },
       // {

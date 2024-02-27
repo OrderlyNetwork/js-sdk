@@ -182,13 +182,18 @@ export class WS {
     });
   }
 
-  public closePrivate() {
+  public closePrivate(code?: number, reason?: string) {
+    if (this.privateSocket?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+
     this.authenticated = false;
+
     this._pendingPrivateSubscribe = [];
 
     this._eventPrivateHandlers.clear();
 
-    this.privateSocket?.close();
+    this.privateSocket?.close(code, reason);
   }
 
   private createPublicSC(options: WSOptions) {
@@ -339,6 +344,7 @@ export class WS {
   }
 
   private onPrivateClose(event: CloseEvent) {
+    if (event.code === 1000) return;
     if (this.privateIsReconnecting) return;
     this._eventPrivateHandlers.forEach((value, key) => {
       value.callback.forEach((cb) => {
@@ -349,7 +355,11 @@ export class WS {
     });
     this.authenticated = false;
 
-    this.emit("status:change", { type: WebSocketEvent.CLOSE, isPrivate: true });
+    this.emit("status:change", {
+      type: WebSocketEvent.CLOSE,
+      isPrivate: true,
+      event,
+    });
 
     setTimeout(() => this.checkSocketStatus(), 0);
   }

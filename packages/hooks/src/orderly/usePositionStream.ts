@@ -25,6 +25,9 @@ export interface PositionReturn {
 }
 
 export const usePositionStream = (
+  /**
+   * If symbol is passed, only the position of that symbol will be returned.
+   */
   symbol?: string,
   options?: SWRConfiguration & { calcMode?: PriceMode }
 ) => {
