@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.3"
   },
   "changesets": [
+    "angry-donkeys-nail",
     "eighty-islands-boil",
     "hungry-impalas-press",
     "neat-brooms-jump",
