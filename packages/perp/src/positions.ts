@@ -65,7 +65,7 @@ export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
     return 0;
 
   return new Decimal(inputs.unrealizedPnL)
-    .div(new Decimal(inputs.positionQty).mul(openPrice).mul(IMR))
+    .div(new Decimal(Math.abs(inputs.positionQty)).mul(openPrice).mul(IMR))
     .toNumber();
 }
 
@@ -240,8 +240,8 @@ export function MMR(inputs: MMRInputs): number {
     new Decimal(baseMMR)
       .div(baseIMR)
       .mul(IMRFactor)
-      .mul(Math.abs(positionNotional))
-      .toPower(IMR_factor_power)
+      .mul(Math.pow(Math.abs(positionNotional), IMR_factor_power))
+      // .toPower(IMR_factor_power)
       .toNumber()
   );
 }

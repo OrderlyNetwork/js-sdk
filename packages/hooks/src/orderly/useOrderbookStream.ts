@@ -120,22 +120,31 @@ export const reduceOrderbook = (
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
     if (asks.length === 1) {
-      const [price, qty, newQuantity] = asks[0];
+      const [price, qty, newQuantity, newAmount] = asks[0];
       asks.shift();
-      asks.push([price + (depth === undefined ? 0 : depth), qty, newQuantity]);
+      asks.push([price + (depth === undefined ? 0 : depth), qty, newQuantity, newAmount]);
     } else {
       const [bidPrice] = bids[0];
       while (asks.length > 0) {
-        const [askPrice, askQty, newQuantity] = asks[0];
+        const [askPrice, askQty, newQuantity, newAmount] = asks[0];
+
 
         if (askPrice <= bidPrice) {
+          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
+          // let logStr = "";
           for (let index = 0; index < asks.length; index++) {
             if (index === 0) {
-              asks[index][1] += askQty;
+              const quantity = asks[index][1] + askQty;
+              asks[index][1] = quantity;
+              asks[index][2] = quantity; 
+              asks[index][3] += newAmount;
+            } else {
+              asks[index][3] += newAmount;
             }
-            asks[index][2] += newQuantity;
+            // logStr += `index: ${index} ${asks[index]}\n`;
           }
+          // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }

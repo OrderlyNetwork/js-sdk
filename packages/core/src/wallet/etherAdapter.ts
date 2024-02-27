@@ -94,6 +94,10 @@ export class EtherAdapter implements IWalletAdapter {
     return this._chainId;
   }
 
+  set chainId(chainId: number) {
+    this._chainId = chainId;
+  }
+
   get addresses(): string {
     return this._address;
   }

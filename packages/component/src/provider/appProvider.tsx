@@ -295,7 +295,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         account.address === currentAddress &&
         currentChainId === account.chainId
       ) {
-        // console.log("currentWallet 22 ", currentAddress, currentChainId);
         return;
       }
 
@@ -312,17 +311,21 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         }));
       }
 
-      account.setAddress(currentWallet.accounts[0].address, {
-        provider: currentWallet.provider,
-        chain: {
-          id: currentChainId,
-          // name: currentWallet.chains[0].name,
-        },
-        wallet: {
-          name: currentWallet.label,
-        },
-        // label: currentWallet.label,
-      });
+      if (currentAddress !== account.address) {
+        account.setAddress(currentWallet.accounts[0].address, {
+          provider: currentWallet.provider,
+          chain: {
+            id: currentChainId,
+            // name: currentWallet.chains[0].name,
+          },
+          wallet: {
+            name: currentWallet.label,
+          },
+          // label: currentWallet.label,
+        });
+      } else if (currentChainId !== account.chainId) {
+        account.switchChainId(currentChainId);
+      }
     }
     // }
     // }, [ready, currentWallet]);
