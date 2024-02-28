@@ -32,7 +32,11 @@ export interface IWalletAdapter {
       abi: any;
     }
   ): Promise<TransactionResponse>;
+
+  getTransactionRecipect: (txHash: string) => Promise<any>;
   signTypedData: (address: string, data: any) => Promise<string>;
+
+  pollTransactionReceiptWithBackoff: (txHash: string, baseInterval: number, maxInterval: number, maxRetries: number) => Promise<any>;
 
   // 查询余额
   getBalance: (
