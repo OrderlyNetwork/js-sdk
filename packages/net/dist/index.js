@@ -307,12 +307,15 @@ var WS = class {
       accountId
     }));
   }
-  closePrivate() {
-    var _a;
+  closePrivate(code, reason) {
+    var _a, _b;
+    if (((_a = this.privateSocket) == null ? void 0 : _a.readyState) !== WebSocket.OPEN) {
+      return;
+    }
     this.authenticated = false;
     this._pendingPrivateSubscribe = [];
     this._eventPrivateHandlers.clear();
-    (_a = this.privateSocket) == null ? void 0 : _a.close();
+    (_b = this.privateSocket) == null ? void 0 : _b.close(code, reason);
   }
   createPublicSC(options) {
     if (this._publicSocket && this._publicSocket.readyState === WebSocket.OPEN)
@@ -419,6 +422,8 @@ var WS = class {
     setTimeout(() => this.checkSocketStatus(), 0);
   }
   onPrivateClose(event) {
+    if (event.code === 1e3)
+      return;
     if (this.privateIsReconnecting)
       return;
     this._eventPrivateHandlers.forEach((value, key) => {
@@ -428,7 +433,11 @@ var WS = class {
       this._eventPrivateHandlers.delete(key);
     });
     this.authenticated = false;
-    this.emit("status:change", { type: "close" /* CLOSE */, isPrivate: true });
+    this.emit("status:change", {
+      type: "close" /* CLOSE */,
+      isPrivate: true,
+      event
+    });
     setTimeout(() => this.checkSocketStatus(), 0);
   }
   onPublicError(event) {

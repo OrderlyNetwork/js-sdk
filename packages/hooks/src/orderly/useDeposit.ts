@@ -262,7 +262,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       return account.assetsManager
         .approve(options.address, amount, vaultAddress)
         .then((result: any) => {
-          return account?.walletClient.pollTransactionReceiptWithBackoff(result.hash).then(receipt=> {
+          return account.walletClient?.pollTransactionReceiptWithBackoff(result.hash).then(receipt=> {
             if (receipt.status === 1) {
               account.assetsManager.getAllowance(options.address, vaultAddress).then(allowance => {
                 setAllowance(() => allowance);
@@ -280,7 +280,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        account.assetsManager.getAllowance(options.address, vaultAddress).then(allowance => {
+        account.assetsManager.getAllowance(options?.address, vaultAddress).then(allowance => {
           setAllowance(() => allowance);
         });
         setBalance((value) => new Decimal(value).sub(quantity).toString());
