@@ -312,7 +312,7 @@ export const useOrderbookStream = (
       // clean the data;
       setData(INIT_DATA);
     };
-  }, [symbol, depth]);
+  }, [symbol]);
 
   // const {data:markPrices} = useMarkPricesStream();
 
