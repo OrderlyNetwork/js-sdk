@@ -4,53 +4,63 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 import { cn } from "@/utils";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
-export const SharePnLIcon: FC<{className?: string, position: any }> = (props) => {
+export const SharePnLIcon: FC<PropsWithChildren<{
+    className?: string,
+    position: any,
+}>> = (props) => {
     const isTablet = useMediaQuery(MEDIA_TABLET);
-    return isTablet ? <MobileSharePnL className={props.className} position={props.position}/> : <DesktopSharePnL className={props.className} position={props.position}/>;
+
+    return isTablet ? <MobileSharePnL className={props.className} position={props.position} children={props.children} /> : <DesktopSharePnL className={props.className} position={props.position} children={props.children} />;
 }
 
-const MobileSharePnL: FC<{ className?: string, position: any }> = (props) => {
+const MobileSharePnL: FC<PropsWithChildren<{
+    className?: string,
+    position: any,
+}>> = (props) => {
     const onClick = () => {
         console.log("xxxxx onclick", props.position);
-        
+
     };
     return (<Sheet>
         <SheetTrigger>
-        <PositionShareIcon
-            size={12}
-            className={
-                cn("orderly-fill-white/20 hover:orderly-fill-white/80 hover:orderly-cursor-pointer", props.className)
-            }
-            fill="current"
-            fillOpacity={1}
-            onClick={onClick}
-        />
+            {props.children || <PositionShareIcon
+                size={12}
+                className={
+                    cn("orderly-fill-white/20 hover:orderly-fill-white/80 hover:orderly-cursor-pointer", props.className)
+                }
+                fill="current"
+                fillOpacity={1}
+                onClick={onClick}
+            />}
         </SheetTrigger>
         <SheetContent
         >
             <SheetHeader
-            id="orderly-asset-and-margin-sheet-title"
-            leading={<Logo.secondary size={30} />}
+                id="orderly-asset-and-margin-sheet-title"
+                leading={<Logo.secondary size={30} />}
             >
-            PnL Sharing
+                PnL Sharing
             </SheetHeader>
             <MobileSharePnLContent position={props.position} />
         </SheetContent>
     </Sheet>);
 }
 
-const DesktopSharePnL: FC<{ className?: string, position: any }> = (props) => {
+const DesktopSharePnL: FC<PropsWithChildren<{
+    className?: string,
+    position: any,
+}>> = (props) => {
     const isTablet = useMediaQuery(MEDIA_TABLET);
     const onClick = () => {
         console.log("xxxxx onclick", props.position);
-        
+
     };
     return (<>
         <PositionShareIcon
-            size={props.size}
+            size={12}
             className={
                 cn("orderly-fill-white/20 hover:orderly-fill-white/80 hover:orderly-cursor-pointer", props.className)
             }

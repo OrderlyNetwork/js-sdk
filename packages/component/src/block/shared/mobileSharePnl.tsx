@@ -3,7 +3,6 @@ import { RadioIcon, CircleCheckIcon } from "@/icon";
 import { FC, useMemo, useState } from "react"
 import { Input } from "@/input";
 import Button from "@/button";
-import { Toast } from "@/toast/toast";
 import toast from "react-hot-toast";
 
 

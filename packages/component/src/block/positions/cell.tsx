@@ -6,7 +6,7 @@ import { Numeral, Text } from "@/text";
 import { SymbolContext } from "@/provider";
 import { API } from "@orderly.network/types";
 import { cn } from "@/utils/css";
-import { SharePnLIcon } from "./sections/sharePnLIcon";
+import { SharePnLIcon } from "../shared/sharePnLIcon";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
