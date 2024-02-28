@@ -7,16 +7,39 @@ import toast from "react-hot-toast";
 
 
 type PnLDisplayFormat = "roi_pnl" | "roi" | "pnl";
-type ShareOptions = "openPrice" | "openedAt" | "markPrice" | "quantity";
+type ShareOptions = "openPrice" | "openTime" | "markPrice" | "quantity";
 
-export const MobileSharePnLContent: FC<{ position: any }> = (props) => {
+export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
 
 
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
-    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openedAt", "markPrice", "quantity"]));
+    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity"]));
     const [message, setMessage] = useState("");
 
     const onSharePnL = async () => {
+
+        var data = {...props.snapshot, message};
+        if (pnlFormat === "roi") {
+            delete data["pnl"];
+        } else if (pnlFormat === "pnl") {
+            delete data["roi"];
+        }
+
+        if (!shareOption.has("openTime")) {
+            delete data["openTime"];
+        }
+        if (!shareOption.has("openTime")) {
+            delete data["openTime"];
+        }
+        if (!shareOption.has("markPrice")) {
+            delete data["markPrice"];
+        }
+        if (!shareOption.has("quantity")) {
+            delete data["quantity"];
+        }
+
+        console.log("share data", data);
+        
         
         try {
             // 获取要分享的图片 URL
@@ -57,7 +80,7 @@ export const MobileSharePnLContent: FC<{ position: any }> = (props) => {
                     <div className="orderly-text-3xs orderly-text-base-contrast-54 orderly-h-[18px]">Optional information to share</div>
                     <div className="orderly-pt-3 orderly-flex orderly-justify-between orderly-gap-3">
                         <ShareOption setShareOption={setShareOption} type="openPrice" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="openedAt" curType={shareOption} />
+                        <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
                     </div>
                     <div className="orderly-pt-3 orderly-flex orderly-justify-between orderly-gap-3">
                         <ShareOption setShareOption={setShareOption} type="markPrice" curType={shareOption} />
@@ -137,7 +160,7 @@ const ShareOption: FC<{
     const text = useMemo(() => {
         switch (type) {
             case "openPrice": return "Open Price";
-            case "openedAt": return "Opened At";
+            case "openTime": return "Opened At";
             case "markPrice": return "Mark Price";
             case "quantity": return "Quantity";
         }

@@ -2,9 +2,9 @@ import { PositionShareIcon } from "@/icon";
 import { Logo } from "@/logo";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/sheet";
 import { cn } from "@/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useLeverage, useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useState } from "react";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePnLIcon: FC<PropsWithChildren<{
@@ -12,17 +12,48 @@ export const SharePnLIcon: FC<PropsWithChildren<{
     position: any,
 }>> = (props) => {
     const isTablet = useMediaQuery(MEDIA_TABLET);
+    const { position } = props;
+    const [maxLeverage] = useLeverage();
 
-    return isTablet ? <MobileSharePnL className={props.className} position={props.position} children={props.children} /> : <DesktopSharePnL className={props.className} position={props.position} children={props.children} />;
+    const canvasData = () => {
+        return {
+            side: position.position_qty > 0 ? "long" : "short",
+            symbol: position.symbol,
+            leverage: maxLeverage,
+            pnl: position.unsettlement_pnl,
+            roi: position.unsettled_pnl_ROI,
+            openPrice: position.average_open_price,
+            openTime: position.timestamp,
+            quantity: position.position_qty,
+            markPrice: position.mark_price,
+        };
+
+    };
+
+    return isTablet ?
+        <MobileSharePnL
+            className={props.className}
+            position={props.position}
+            children={props.children}
+            canvasData={canvasData}
+        /> :
+        <DesktopSharePnL
+            className={props.className}
+            position={props.position}
+            children={props.children}
+            canvasData={canvasData}
+        />;
 }
 
 const MobileSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
+    canvasData: any,
 }>> = (props) => {
+    const [snapshot, setSnapshot] = useState<any>();
     const onClick = () => {
-        console.log("xxxxx onclick", props.position);
-
+        console.log("xxxxx onclick", props.position, props.canvasData());
+        setSnapshot(props.canvasData());
     };
     return (<Sheet>
         <SheetTrigger>
@@ -44,7 +75,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
             >
                 PnL Sharing
             </SheetHeader>
-            <MobileSharePnLContent position={props.position} />
+            <MobileSharePnLContent position={props.position} snapshot={snapshot} />
         </SheetContent>
     </Sheet>);
 }
@@ -52,6 +83,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
 const DesktopSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
+    canvasData: any,
 }>> = (props) => {
     const isTablet = useMediaQuery(MEDIA_TABLET);
     const onClick = () => {
