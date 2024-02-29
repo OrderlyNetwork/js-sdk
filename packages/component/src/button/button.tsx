@@ -156,6 +156,15 @@ export interface ButtonProps
   rightIcon?: React.ReactNode;
 }
 
+/**
+ * The Button component is used to trigger an action or event, such as submitting a form, opening a dialog, canceling an action, or performing a delete operation.
+ *
+ * @example
+ * ```tsx
+ * <Button>Default</Button>
+ * ```
+ * @see https://orderly.network/components/button
+ */
 const Button: FC<PropsWithChildren<ButtonProps>> = ({
   className,
   size = "default",
