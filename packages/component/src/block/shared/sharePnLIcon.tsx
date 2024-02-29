@@ -6,6 +6,8 @@ import { useLeverage, useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { FC, PropsWithChildren, useState } from "react";
 import { MobileSharePnLContent } from "./mobileSharePnl";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
+import { DesktopSharePnLContent } from "./desktopSharePnl";
 
 export const SharePnLIcon: FC<PropsWithChildren<{
     className?: string,
@@ -85,20 +87,29 @@ const DesktopSharePnL: FC<PropsWithChildren<{
     position: any,
     canvasData: any,
 }>> = (props) => {
-    const isTablet = useMediaQuery(MEDIA_TABLET);
+    const [snapshot, setSnapshot] = useState<any>();
     const onClick = () => {
-        console.log("xxxxx onclick", props.position);
-
+        console.log("xxxxx onclick", props.position, props.canvasData());
+        setSnapshot(props.canvasData());
     };
-    return (<>
-        <PositionShareIcon
-            size={12}
-            className={
-                cn("orderly-fill-white/20 hover:orderly-fill-white/80 hover:orderly-cursor-pointer", props.className)
-            }
-            fill="current"
-            fillOpacity={1}
-            onClick={onClick}
-        />
-    </>);
+    return (<Dialog>
+        <DialogTrigger>
+            <PositionShareIcon
+                size={12}
+                className={
+                    cn("orderly-fill-white/20 hover:orderly-fill-white/80 hover:orderly-cursor-pointer", props.className)
+                }
+                fill="current"
+                fillOpacity={1}
+                onClick={onClick}
+            />
+        </DialogTrigger>
+        <DialogPortal>
+        <DialogOverlay className="bg-blackA6 data-[state=open]:animate-overlayShow fixed inset-0" />
+
+            <DialogContent className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 ">
+                <DesktopSharePnLContent position={props.position} snapshot={snapshot}/>
+            </DialogContent>
+        </DialogPortal>
+    </Dialog>);
 }

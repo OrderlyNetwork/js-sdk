@@ -4,10 +4,8 @@ import { FC, useMemo, useState } from "react"
 import { Input } from "@/input";
 import Button from "@/button";
 import toast from "react-hot-toast";
+import { PnLDisplayFormat, ShareOptions } from "./type";
 
-
-type PnLDisplayFormat = "roi_pnl" | "roi" | "pnl";
-type ShareOptions = "openPrice" | "openTime" | "markPrice" | "quantity";
 
 export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
 

@@ -27,6 +27,7 @@ import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 import { API } from "@orderly.network/types";
 import { EmptyView } from "@/listView/emptyView";
 import { PositionEmptyView } from "./positionEmptyView";
+import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -154,6 +155,7 @@ export const Listview: FC<
             >
               {(record.unsettled_pnl_ROI)}
             </Numeral>}
+            <SharePnLIcon className="orderly-ml-2" position={record}/>
           </span>)
         },
       },

@@ -24,3 +24,4 @@ export { ArrowDownIcon } from "./arrowDown";
 export { OrderlyIcon } from "./orderly";
 export { RadioIcon } from "./radio";
 export { CircleCheckIcon } from "./circleCheck";
+export { DownloadIcon } from "./download";
