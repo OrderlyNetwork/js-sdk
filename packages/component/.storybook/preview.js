@@ -78,6 +78,7 @@ const preview = {
           { value: "PERP_BTC_USDC", title: "PERP_BTC_USDC" },
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
+          { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
         ],
       },
     },

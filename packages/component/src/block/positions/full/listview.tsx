@@ -57,7 +57,7 @@ export const Listview: FC<
         render: (value: string) => (
           <Text
             rule={"symbol"}
-            className="orderly-font-semibold"
+            className="orderly-font-semibold orderly-cursor-pointer"
             onClick={(e) => {
               props.onSymbolChange?.({ symbol: value } as API.Symbol);
               e.stopPropagation();

@@ -1,10 +1,12 @@
-import {useRef, useEffect, useCallback} from 'react';
+import {useRef, useEffect, useCallback, useMemo} from 'react';
 import useCancelOrder from '../hooks/useCancelOrder';
 import useEditOrder from './useEditOrder';
+import useSenderOrder from './useSendOrder';
+import {useSymbolsInfo} from '@orderly.network/hooks';
 
 const useBroker = ({
                        closeConfirm,
-    colorConfig,
+                       colorConfig,
                    }: {
 
     closeConfirm: any;
@@ -22,13 +24,40 @@ const useBroker = ({
 },) => {
     const cancelOrder = useCancelOrder();
     const editOrder = useEditOrder();
+    const symbolData = useSymbolsInfo();
     const closePosition = useCallback((position: any) => closeConfirm && closeConfirm(position), [closeConfirm]);
+    const {sendLimitOrder} = useSenderOrder();
+
+    const getSymbolInfo = useCallback((symbol: string) => {
+        if (!symbolData) {
+           return;
+        }
+       return {
+           baseMin: symbolData[symbol]('base_min'),
+           baseMax: symbolData[symbol]('base_max'),
+           baseTick: symbolData[symbol]('base_tick'),
+           quoteTick: symbolData[symbol]('quote_tick'),
+       }
+
+    }, [symbolData]);
     const broker = useRef({
         cancelOrder,
         closePosition,
         editOrder,
         colorConfig,
+        sendLimitOrder,
+        getSymbolInfo,
     });
+
+
+    useEffect(() => {
+        broker.current.getSymbolInfo = getSymbolInfo;
+    }, [symbolData]);
+
+    useEffect(() => {
+        broker.current.sendLimitOrder = sendLimitOrder;
+
+    }, [sendLimitOrder]);
 
     useEffect(() => {
         broker.current.closePosition = closePosition;

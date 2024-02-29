@@ -306,6 +306,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 toast.error(err.message);
               } else {
                 console.log("Create order failed:", err);
+                toast.error(err?.message);
               }
             }
           );

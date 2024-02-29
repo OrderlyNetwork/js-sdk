@@ -1,13 +1,9 @@
-import React, {
-  useMemo,
-  type ButtonHTMLAttributes,
-  type FC,
-  type PropsWithChildren,
-} from "react";
+import React, { useMemo, type ButtonHTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/css";
 import { Spinner } from "@/spinner";
+import { Slot } from "@radix-ui/react-slot";
 
 const buttonVariants = cva(
   [
@@ -36,6 +32,7 @@ const buttonVariants = cva(
         default:
           "orderly-px-4 orderly-py-1 orderly-h-[40px] desktop:orderly-text-sm",
         large: "orderly-px-6 orderly-py-3",
+        icon: "orderly-p-0 orderly-min-w-[unset]",
       },
       color: {
         primary:
@@ -154,53 +151,71 @@ export interface ButtonProps
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  asChild?: boolean;
 }
 
-const Button: FC<PropsWithChildren<ButtonProps>> = ({
-  className,
-  size = "default",
-  color = "primary",
-  variant = "contained",
-  fullWidth,
-  disabled = false,
-  loading,
-  leftIcon,
-  rightIcon,
-  ...props
-}) => {
-  const children = useMemo(() => {
-    if (!!loading) {
-      return (
-        <>
-          <Spinner size={"small"} className="orderly-mr-[4px]" />
-          {props.children}
-        </>
-      );
-    }
-    return props.children;
-  }, [props.children, loading]);
-  return (
-    <button
-      className={cn(
-        buttonVariants({
-          size,
-          variant,
-          color,
-          disabled,
-          fullWidth,
-        }),
-        className,
-        `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth}`
-      )}
-      disabled={Boolean(disabled)}
-      {...props}
-    >
-      {leftIcon}
-      {children}
-      {rightIcon}
-    </button>
-  );
-};
+/**
+ * The Button component is used to trigger an action or event, such as submitting a form, opening a dialog, canceling an action, or performing a delete operation.
+ *
+ * @example
+ * ```tsx
+ * <Button>Default</Button>
+ * ```
+ * @see https://orderly.network/components/button
+ */
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      size = "default",
+      color = "primary",
+      variant = "contained",
+      fullWidth,
+      disabled = false,
+      loading,
+      leftIcon,
+      rightIcon,
+      asChild = false,
+      ...props
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button";
+    const children = useMemo(() => {
+      if (!!loading) {
+        return (
+          <>
+            <Spinner size={"small"} className="orderly-mr-[4px]" />
+            {props.children}
+          </>
+        );
+      }
+      return props.children;
+    }, [props.children, loading]);
+    return (
+      <Comp
+        className={cn(
+          buttonVariants({
+            size,
+            variant,
+            color,
+            disabled,
+            fullWidth,
+          }),
+          className,
+          `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth}`
+        )}
+        disabled={Boolean(disabled)}
+        {...props}
+        ref={ref}
+      >
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </Comp>
+    );
+  }
+);
 
 Button.displayName = "Button";
 
