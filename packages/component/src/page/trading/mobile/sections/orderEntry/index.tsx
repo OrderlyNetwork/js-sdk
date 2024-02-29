@@ -15,6 +15,11 @@ import {
 } from "@orderly.network/types";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 import { OrderParams } from "@orderly.network/hooks";
+import {
+  setEntrySessionStorage,
+  clearOrderEntrySessionData,
+  getEntrySessionStorageInfo,
+} from "./entrySessionStorageUtils";
 
 interface MyOrderEntryProps {
   symbol: string;
@@ -53,15 +58,12 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   const [visibleQuantity, setVisibleQuantity] = useLocalStorage("visible_quantity_key", 0);
 
   /// session storage
-  const [orderType, setOrderType] = useSessionStorage("order_type_key", OrderType.LIMIT);
-  const [reduceOnly, setReduceOnly] = useSessionStorage("reduce_only_key", false);
-  const [orderSide, setOrderSide] = useSessionStorage("order_side_key", OrderSide.BUY);
-  const [orderTypeExt, setOrderTypeExt] = useSessionStorage("order_type_ext_key", undefined);
-  const [sessionOrderEntry, setSessionOrderEntry] = useSessionStorage("order_entry_info", {
-    "order_price": "",
-    "order_quantity": "",
-    "trigger_price": "",
-  });
+  const sessionData = getEntrySessionStorageInfo();
+  const orderType = sessionData.orderType;
+  const reduceOnly = sessionData.reduceOnly;
+  const orderSide = sessionData.orderSide;
+  const orderTypeExt = sessionData.orderTypeExt;
+  const sessionOrderEntry = sessionData.sessionOrderEntry;
 
   const [order, setOrder] = useState<OrderParams>({
     reduce_only: reduceOnly,
@@ -89,11 +91,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
       symbol,
     }));
 
-    setSessionOrderEntry({
-      "order_price": "",
-      "order_quantity": "",
-      "trigger_price": "",
-    });
+    clearOrderEntrySessionData();
   }, [symbol]);
 
   useEffect(() => {
@@ -116,34 +114,14 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         onFieldChange={(field, value) => {
           console.log("=======>>>>>>>>field", field, value);
 
-          if (field === "order_type") {
-            setOrderType(value);
-          }
-
-          if (field === "reduce_only") {
-            setReduceOnly(value);
-          }
-
-          if (field === "side") {
-            setOrderSide(value);
-          }
-
+          /// save to local storage and refresh ui
           if (field === "visible_quantity") {
             setVisibleQuantity(value);
           }
 
-          if (field === "order_type_ext") {
-            setOrderTypeExt(value);
-          }
 
-          const include = ["order_price","order_quantity","trigger_price"].includes(field);
-          if (include) {
-            const newValue: any = {
-              ...sessionOrderEntry,
-            };
-            newValue[field] = value;
-            setSessionOrderEntry(newValue);
-          }
+          /// save to session storage and not refresh ui
+          setEntrySessionStorage(field, value);
 
 
           // if (field === "reduce_only") {
@@ -155,11 +133,11 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
           //     // timestamp: Date.now(),
           //   }));
           // } else {
-            setOrder((order) => ({
-              ...order,
-              [field]: value,
-              // timestamp: Date.now(),
-            }));
+          setOrder((order) => ({
+            ...order,
+            [field]: value,
+            // timestamp: Date.now(),
+          }));
           // }
         }}
         setValues={(values) => {

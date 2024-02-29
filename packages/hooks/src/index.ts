@@ -16,6 +16,8 @@ export { useEventEmitter } from "./useEventEmitter";
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 
+export { parseJSON } from "./utils/json";
+
 export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
@@ -33,6 +35,7 @@ export {
 
 export * from "./orderly/orderlyHooks";
 
+import { fromPairs } from "ramda";
 import useSWR, { type SWRConfiguration, SWRConfig } from "swr";
 
 export { useSWR, SWRConfig, type SWRConfiguration };

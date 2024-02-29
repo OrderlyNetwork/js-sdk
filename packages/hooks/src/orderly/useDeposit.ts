@@ -192,7 +192,6 @@ export const useDeposit = (options?: useDepositOptions) => {
     prevAddress.current = address;
 
     const allowance = await account.assetsManager.getAllowance(address);
-
     setAllowance(() => allowance);
   };
 
@@ -263,27 +262,31 @@ export const useDeposit = (options?: useDepositOptions) => {
       return account.assetsManager
         .approve(options.address, amount, vaultAddress)
         .then((result: any) => {
-          if (typeof amount !== "undefined") {
-            setAllowance((value) =>
-              new Decimal(value).add(amount || MaxUint256.toString()).toString()
-            );
-          }
-          return result;
+          return account.walletClient?.pollTransactionReceiptWithBackoff(result.hash).then(receipt=> {
+            if (receipt.status === 1) {
+              account.assetsManager.getAllowance(options.address, vaultAddress).then(allowance => {
+                setAllowance(() => allowance);
+              });
+            }
+          });
         });
     },
-    [account, getAllowance, options?.address]
+    [account, getAllowance, options, getVaultAddress, dst]
   );
 
   const deposit = useCallback(async () => {
     // only support orderly deposit
+    const vaultAddress = getVaultAddress();
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        setAllowance((value) => new Decimal(value).sub(quantity).toString());
+        account.assetsManager.getAllowance(options?.address, vaultAddress).then(allowance => {
+          setAllowance(() => allowance);
+        });
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
       });
-  }, [account, fetchBalance, getAllowance, quantity, depositFee]);
+  }, [account, fetchBalance,getVaultAddress, quantity, depositFee]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);

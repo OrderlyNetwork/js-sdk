@@ -24,6 +24,7 @@ import {
   generateRegisterAccountMessage,
   generateSettleMessage,
 } from "./helper";
+import { SDKError } from "@orderly.network/types";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -118,16 +119,26 @@ export class Account {
       [key: string]: any;
     }
   ): Promise<AccountStatusEnum> {
-    if (!address) throw new Error("address is required");
+    if (!address) throw new SDKError("Address is required");
+    if (!wallet?.chain?.id) throw new SDKError("Chain id is required");
 
-    if (
-      typeof wallet?.chain?.id === "string" &&
-      (isHex(wallet?.chain?.id) ||
-        (wallet?.chain?.id.startsWith("0x") &&
-          isHex(wallet?.chain?.id.slice(2))))
-    ) {
-      wallet.chain.id = parseInt(wallet.chain.id, 16);
+    if (this.stateValue.address === address) {
+      console.warn(
+        "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
+      );
+      return this.stateValue.status;
     }
+
+    // if (
+    //   typeof wallet?.chain?.id === "string" &&
+    //   (isHex(wallet?.chain?.id) ||
+    //     (wallet?.chain?.id.startsWith("0x") &&
+    //       isHex(wallet?.chain?.id.slice(2))))
+    // ) {
+    //   wallet.chain.id = parseInt(wallet.chain.id, 16);
+    // }
+
+    wallet.chain.id = this.parseChainId(wallet?.chain?.id);
 
     this.keyStore.setAddress(address);
 
@@ -135,6 +146,7 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.Connected,
       address,
+      accountId: undefined, // if address change, accountId should be reset
       connectWallet: wallet?.wallet,
     };
 
@@ -214,7 +226,6 @@ export class Account {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
       //
-      // 如果切换addrees时，需要清除之前的key
 
       if (accountInfo && accountInfo.account_id) {
         this.keyStore.setAccountId(address, accountInfo.account_id);
@@ -512,6 +523,23 @@ export class Account {
       address: undefined,
     };
     this._ee.emit("change:status", nextState);
+  }
+
+  switchChainId(chainId: number | string) {
+    chainId = this.parseChainId(chainId);
+    if (this.walletClient) {
+      this.walletClient.chainId = chainId as number;
+    }
+  }
+
+  private parseChainId(chainId: string | number): number {
+    if (
+      typeof chainId === "string" &&
+      (isHex(chainId) || (chainId.startsWith("0x") && isHex(chainId.slice(2))))
+    ) {
+      chainId = parseInt(chainId, 16);
+    }
+    return chainId as number;
   }
 
   private async _checkOrderlyKeyState(accountId: string, orderlyKey: string) {

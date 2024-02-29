@@ -30,7 +30,7 @@ export const GetTestUSDC = () => {
   }, []);
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
+    `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
 
   const onCloseClick = useCallback(() => {

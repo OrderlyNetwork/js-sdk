@@ -5,6 +5,7 @@ import { NumeralTotal } from "@/text/numeralTotal";
 import { API, OrderEntity, OrderSide } from "@orderly.network/types";
 import { FC } from "react";
 import { OrderDetail } from "../shared/orderDetail";
+import { commify } from "@orderly.network/utils";
 
 interface Props {
   order: OrderEntity;
@@ -22,7 +23,7 @@ export const LimitConfirm: FC<Props> = (props) => {
     <div>
       <div className="orderly-space-y-3">
         <div className="orderly-font-medium orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
-          {`You will close ${order.order_quantity} ${props.base} position at limit price.`}
+          {`You will close ${commify(order.order_quantity || "")} ${props.base} position at limit price.`}
         </div>
       </div>
       <Divider className="orderly-my-4" />

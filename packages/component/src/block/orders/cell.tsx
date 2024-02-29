@@ -102,7 +102,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
               <span className="orderly-text-base-contrast-36">
                 Trigger price
               </span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
@@ -115,7 +115,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Limit price</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
@@ -128,7 +128,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           label={
             <>
               <span className="orderly-text-base-contrast-36">Mark price</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"

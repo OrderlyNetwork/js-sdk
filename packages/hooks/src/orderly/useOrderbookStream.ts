@@ -16,7 +16,7 @@ export type OrderbookData = {
 };
 
 const paddingFn = (len: number) =>
-  Array(len).fill([Number.NaN, Number.NaN, Number.NaN] as OrderBookItem);
+  Array(len).fill([Number.NaN, Number.NaN, Number.NaN, Number.NaN] as OrderBookItem);
 
 const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
@@ -111,7 +111,8 @@ const reduceItems = (
 export const reduceOrderbook = (
   depth: number | undefined,
   level: number,
-  data: OrderbookData
+  padding: boolean,
+  data: OrderbookData,
 ): OrderbookData => {
   let asks = reduceItems(depth, level, data.asks, true);
 
@@ -120,22 +121,31 @@ export const reduceOrderbook = (
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
     if (asks.length === 1) {
-      const [price, qty, newQuantity] = asks[0];
+      const [price, qty, newQuantity, newAmount] = asks[0];
       asks.shift();
-      asks.push([price + (depth === undefined ? 0 : depth), qty, newQuantity]);
+      asks.push([price + (depth === undefined ? 0 : depth), qty, newQuantity, newAmount]);
     } else {
       const [bidPrice] = bids[0];
       while (asks.length > 0) {
-        const [askPrice, askQty, newQuantity] = asks[0];
+        const [askPrice, askQty, newQuantity, newAmount] = asks[0];
+
 
         if (askPrice <= bidPrice) {
+          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
+          // let logStr = "";
           for (let index = 0; index < asks.length; index++) {
             if (index === 0) {
-              asks[index][1] += askQty;
+              const quantity = asks[index][1] + askQty;
+              asks[index][1] = quantity;
+              asks[index][2] = quantity;
+              asks[index][3] += newAmount;
+            } else {
+              asks[index][3] += newAmount;
             }
-            asks[index][2] += newQuantity;
+            // logStr += `index: ${index} ${asks[index]}\n`;
           }
+          // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }
@@ -145,15 +155,12 @@ export const reduceOrderbook = (
 
   asks = asks.reverse();
 
-  asks =
-    asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
-  bids =
-    bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
-  // add max qty for asks/bids
-  // let maxAskQty = asks.reduce((a,b) => Math.max(a, b[1]),0);
-  // let maxBidQty = bids.reduce((a,b) => Math.max(a, b[1]),0);
-  // asks = asks.map((item) => [...item, maxAskQty]);
-  // bids = bids.map((item) => [...item, maxBidQty]);
+  if (padding) {
+    asks =
+      asks.length < level ? paddingFn(level - asks.length).concat(asks) : asks;
+    bids =
+      bids.length < level ? bids.concat(paddingFn(level - bids.length)) : bids;
+  }
 
   return {
     asks: asks,
@@ -204,8 +211,15 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
   };
 };
 
+/**  
+ * Configuration for the Order Book
+ * @level Indicates the number of data entries to return for ask/bid, default is 10
+ * @padding Whether to fill in when the actual data entries are less than the level. If filled, it will add [nan, nan, nan, nan]
+ *          default is true
+ */
 export type OrderbookOptions = {
   level?: number;
+  padding?: boolean;
 };
 
 const INIT_DATA = { asks: [], bids: [] };
@@ -224,6 +238,7 @@ export const useOrderbookStream = (
   }
 
   const level = options?.level ?? 10;
+  const padding = options?.padding ?? true;
 
   const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);
@@ -297,7 +312,7 @@ export const useOrderbookStream = (
       // clean the data;
       setData(INIT_DATA);
     };
-  }, [symbol, depth]);
+  }, [symbol]);
 
   // const {data:markPrices} = useMarkPricesStream();
 
@@ -368,7 +383,7 @@ export const useOrderbookStream = (
     prevMiddlePrice.current = middlePrice;
   }, [middlePrice]);
 
-  const reducedData = reduceOrderbook(depth, level, {
+  const reducedData = reduceOrderbook(depth, level, padding, {
     asks: [...data.asks],
     bids: [...data.bids],
   });
@@ -376,10 +391,10 @@ export const useOrderbookStream = (
   // emit the asks0 and bids0
   useEffect(() => {
     eventEmitter.emit("orderbook:update", [
-      reducedData.asks[0][0],
-      reducedData.bids[0][0],
+      reducedData.asks?.[0]?.[0],
+      reducedData.bids?.[0]?.[0],
     ]);
-  }, [reducedData.asks[0][0], reducedData.bids[0][0]]);
+  }, [reducedData.asks?.[0]?.[0], reducedData.bids?.[0]?.[0]]);
 
   return [
     {
