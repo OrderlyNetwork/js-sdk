@@ -40,7 +40,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@layerzerolabs/scan-client": "^0.0.6",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/perp": "workspace:*",
