@@ -14,8 +14,9 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
 
 
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
-    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity"]));
+    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
+    const [check, setCheck] = useState(false);
 
     const onSharePnL = async () => {
 
@@ -37,6 +38,13 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
         }
         if (!shareOption.has("quantity")) {
             delete data["quantity"];
+        }
+        if (!shareOption.has("leverage")) {
+            delete data["leverage"];
+        }
+
+        if (!check && data.keys.includes("message")) {
+            delete data["message"];
         }
 
         console.log("share data", data);
@@ -79,19 +87,20 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
 
                 <Divider className="orderly-pt-6 orderly-border-white/10" />
 
-                <div className="orderly-mt-3">
+                <div className="orderly-mt-4">
                     <div className="orderly-text-lg orderly-h-[26px]">Optional information to share</div>
                     <div className="orderly-mt-4 orderly-flex orderly-justify-start orderly-gap-4">
                         <ShareOption setShareOption={setShareOption} type="openPrice" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
                         <ShareOption setShareOption={setShareOption} type="markPrice" curType={shareOption} />
+                        <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
+                        <ShareOption setShareOption={setShareOption} type="leverage" curType={shareOption} />
                         <ShareOption setShareOption={setShareOption} type="quantity" curType={shareOption} />
                     </div>
                 </div>
 
 
 
-                <Message message={message} setMessage={setMessage} />
+                <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck}/>
             </div>
 
             <BottomButtons />
@@ -161,6 +170,7 @@ const ShareOption: FC<{
             case "openTime": return "Opened At";
             case "markPrice": return "Mark Price";
             case "quantity": return "Quantity";
+            case "leverage": return "Leverage";
         }
     }, [type]);
 
@@ -205,18 +215,19 @@ const ShareOption: FC<{
 const Message: FC<{
     message: string,
     setMessage: any,
+    check: boolean,
+    setCheck: any,
 }> = (props) => {
 
-    const { message, setMessage } = props;
-    const [check, setCheck] = useState(false);
+    const { message, setMessage, check, setCheck } = props;
 
     return (
-        <div className="orderly-mt-3 orderly-mb-7 orderly-flex orderly-items-center">
+        <div className="orderly-mt-4 orderly-mb-7 orderly-flex orderly-items-center">
             <Checkbox checked={check} onCheckedChange={(e: boolean) => {
                 setCheck(e);
             }} />
-            <div className="orderly-text-xs orderly-text-base-contrast-54">Your message</div>
-            <div className="orderly-mt-3 orderly-bg-base-900 orderly-mx-2 orderly-rounded-sm">
+            <div className="orderly-text-xs orderly-text-base-contrast-54 orderly-ml-2">Your message</div>
+            <div className="orderly-bg-base-900 orderly-mx-2 orderly-rounded-sm">
                 <Input
                     placeholder="Max 25 characters"
                     containerClassName="orderly-bg-transparent orderly-h-[32px] orderly-w-[295px]"
@@ -244,14 +255,14 @@ const BottomButtons: FC = (props) => {
         canvas.width = 200;
         canvas.height = 200;
         const context = canvas.getContext('2d');
-      
+
         if (context) {
-          context.fillStyle = 'red';
-          context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = 'red';
+            context.fillRect(0, 0, canvas.width, canvas.height);
         }
-      
+
         return canvas;
-      }
+    }
 
     function saveCanvasImage(canvas: HTMLCanvasElement, fileName: string) {
         const imageType = 'image/png'; // 或者 'image/jpeg'
@@ -263,32 +274,32 @@ const BottomButtons: FC = (props) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      }
+    }
 
-      function shareCanvasImageOnTwitter(canvas: HTMLCanvasElement, text: string) {
+    function shareCanvasImageOnTwitter(canvas: HTMLCanvasElement, text: string) {
         const imageType = 'image/png'; // 或者 'image/jpeg'
         const imageData = canvas.toDataURL(imageType);
         const imgUrl = encodeURIComponent("https://twitter.com/Dior/status/1762583388895293868/photo/1");
         const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${imgUrl}`;
         window.open(shareUrl, '_blank');
-      }
+    }
 
-      function shareCanvasImageOnFacebook(canvas: HTMLCanvasElement) {
+    function shareCanvasImageOnFacebook(canvas: HTMLCanvasElement) {
         const imageType = 'image/png'; // 或者 'image/jpeg'
         // const imageData = canvas.toDataURL(imageType);
         const imgUrl = encodeURIComponent("https://www.fas.scot/wp-content/uploads/2017/09/texel_shearling_tup-300x224.jpg");
         const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${imgUrl}`;
         window.open(shareUrl, '_blank');
-      }
-      
-      function shareCanvasImageOnReddit(canvas: HTMLCanvasElement) {
+    }
+
+    function shareCanvasImageOnReddit(canvas: HTMLCanvasElement) {
         const imageType = 'image/png'; // 或者 'image/jpeg'
         const imageData = canvas.toDataURL(imageType);
         const shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(imageData)}`;
         console.log("share url", shareUrl);
-        
+
         window.open(shareUrl, '_blank');
-      }
+    }
 
     return (
         <div className="orderly-h-[76px] orderly-bg-base-900 orderly-flex orderly-items-center orderly-justify-center">
@@ -301,7 +312,7 @@ const BottomButtons: FC = (props) => {
             <Divider vertical className="orderly-mx-5 before:orderly-h-[36px] orderly-min-w-[1px]" />
 
             <button onClick={() => {
-                shareCanvasImageOnTwitter(getCanvasElement(),"test share png");
+                shareCanvasImageOnTwitter(getCanvasElement(), "test share png");
             }}>
                 <ShareXIcon className="orderly-mr-5" />
             </button>

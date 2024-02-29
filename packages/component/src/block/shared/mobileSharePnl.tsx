@@ -11,12 +11,12 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
 
 
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
-    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity"]));
+    const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
 
     const onSharePnL = async () => {
 
-        var data = {...props.snapshot, message};
+        var data = { ...props.snapshot, message };
         if (pnlFormat === "roi") {
             delete data["pnl"];
         } else if (pnlFormat === "pnl") {
@@ -35,28 +35,29 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
         if (!shareOption.has("quantity")) {
             delete data["quantity"];
         }
+        if (!shareOption.has("leverage")) {
+            delete data["leverage"];
+        }
 
-        console.log("share data", data);
-        
-        
+
         try {
             // 获取要分享的图片 URL
             const imageUrl = 'https://example.com/image.jpg';
-      
+
             // 检查浏览器是否支持分享功能
             if (navigator.share) {
-              await navigator.share({
-                title: 'Share Image',
-                text: 'Check out this image!',
-                url: imageUrl,
-              });
-              console.log('Image shared successfully!');
+                await navigator.share({
+                    title: 'Share Image',
+                    text: 'Check out this image!',
+                    url: imageUrl,
+                });
+                console.log('Image shared successfully!');
             } else {
-              console.log('Share API is not supported in this browser.');
+                console.log('Share API is not supported in this browser.');
             }
-          } catch (error) {
+        } catch (error) {
             console.error('Error sharing image:', error);
-          }
+        }
     };
 
     return (
@@ -76,11 +77,10 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
 
                 <div className="orderly-mt-3">
                     <div className="orderly-text-3xs orderly-text-base-contrast-54 orderly-h-[18px]">Optional information to share</div>
-                    <div className="orderly-pt-3 orderly-flex orderly-justify-between orderly-gap-3">
+                    <div className="orderly-flex orderly-flex-wrap orderly-gap-3 orderly-mt-3">
                         <ShareOption setShareOption={setShareOption} type="openPrice" curType={shareOption} />
                         <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
-                    </div>
-                    <div className="orderly-pt-3 orderly-flex orderly-justify-between orderly-gap-3">
+                        <ShareOption setShareOption={setShareOption} type="leverage" curType={shareOption} />
                         <ShareOption setShareOption={setShareOption} type="markPrice" curType={shareOption} />
                         <ShareOption setShareOption={setShareOption} type="quantity" curType={shareOption} />
                     </div>
@@ -161,13 +161,14 @@ const ShareOption: FC<{
             case "openTime": return "Opened At";
             case "markPrice": return "Mark Price";
             case "quantity": return "Quantity";
+            case "leverage": return "Leverage";
         }
     }, [type]);
 
     const isSelected = curType.has(type);
 
     return (<div
-        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3")}
+        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-mt-0 orderly-w-[calc(50%-6px)] orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3")}
         onClick={() => {
             // setPnlFormat(type);
             setShareOption((value: Set<ShareOptions>) => {
