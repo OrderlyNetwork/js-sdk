@@ -135,7 +135,6 @@ export function useOrderEntry(
   //
   const notSupportData = useRef<Partial<OrderEntity>>({});
 
-
   const [errors, setErrors] = useState<any>(null);
 
   const ee = useEventEmitter();
@@ -330,8 +329,9 @@ export function useOrderEntry(
     needParse?.visible_quantity,
   ]);
 
-  const isStopOrder = parsedData?.order_type === OrderType.STOP_LIMIT || parsedData?.order_type === OrderType.STOP_MARKET;
-
+  const isStopOrder =
+    parsedData?.order_type === OrderType.STOP_LIMIT ||
+    parsedData?.order_type === OrderType.STOP_MARKET;
 
   const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
     OrderEntity,
@@ -439,11 +439,11 @@ export function useOrderEntry(
   };
 
   const submit = useCallback(() => {
-    if (typeof symbolOrOrder === "string") {
+    if (!parsedData) {
       throw new SDKError("Function is not supported, please use onSubmit()");
     }
-    return createOrder(symbolOrOrder);
-  }, [symbolOrOrder]);
+    return createOrder(parsedData);
+  }, [parsedData]);
 
   const calculate = useCallback(
     (
@@ -606,7 +606,7 @@ export function useOrderEntry(
           limit_price <= bid0, then order_price_i = bid0
           limit_price > ask0, then order_price_i = ask0
      */
-    let price: number;
+    let price: number | undefined;
 
     if (
       symbolOrOrder.order_type === OrderType.MARKET ||

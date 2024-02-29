@@ -44,6 +44,8 @@ export * from "use-debounce";
 
 export { useMediaQuery } from "./useMediaQuery";
 
+export { usePoster, type drawOptions } from "./usePoster";
+
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
