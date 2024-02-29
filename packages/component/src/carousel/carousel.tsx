@@ -5,7 +5,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { cn } from "@/utils/css";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/button/button";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -160,7 +160,7 @@ const CarouselContent = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "flex",
+          "orderly-flex",
           orientation === "horizontal"
             ? "orderly--ml-4"
             : "orderly--mt-4 orderly-flex-col",
@@ -198,12 +198,14 @@ CarouselItem.displayName = "CarouselItem";
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "contained", size = "icon", ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <Button
       ref={ref}
+      variant={variant}
+      size={size}
       className={cn(
         "orderly-absolute  orderly-h-8 orderly-w-8 orderly-rounded-full",
         orientation === "horizontal"
@@ -216,7 +218,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       {/* @ts-ignore */}
-      <MoveLeft className="orderly-h-4 orderly-w-4" />
+      <ChevronLeft className="orderly-h-4 orderly-w-4" />
       <span className="orderly-sr-only">Previous slide</span>
     </Button>
   );
@@ -226,12 +228,14 @@ CarouselPrevious.displayName = "CarouselPrevious";
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "contained", size = "icon", ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
     <Button
       ref={ref}
+      variant={variant}
+      size={size}
       className={cn(
         "orderly-absolute orderly-h-8 orderly-w-8 orderly-rounded-full",
         orientation === "horizontal"
@@ -244,7 +248,7 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       {/* @ts-ignore */}
-      <MoveRight className="orderly-h-4 orderly-w-4" />
+      <ChevronRight className="orderly-h-4 orderly-w-4" />
       <span className="orderly-sr-only">Next slide</span>
     </Button>
   );
