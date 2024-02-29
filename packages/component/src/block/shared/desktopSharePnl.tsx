@@ -64,7 +64,7 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
 
     return (
         <div className="orderly-p-0 orderly-align-bottom">
-            <div className="orderly-h-[422px] orderly-bg-white/50 orderly-pt-11"></div>
+            <div className="orderly-h-[422px] orderly-bg-white/50 orderly-mt-9"></div>
 
 
             <div className="orderly-px-10">

@@ -6,8 +6,10 @@ import { useLeverage, useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { FC, PropsWithChildren, useState } from "react";
 import { MobileSharePnLContent } from "./mobileSharePnl";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
+
 import { DesktopSharePnLContent } from "./desktopSharePnl";
+import { Dialog, DialogContent, DialogTrigger } from "@/dialog";
+
 
 export const SharePnLIcon: FC<PropsWithChildren<{
     className?: string,
@@ -93,7 +95,7 @@ const DesktopSharePnL: FC<PropsWithChildren<{
         setSnapshot(props.canvasData());
     };
     return (<Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
             <PositionShareIcon
                 size={12}
                 className={
@@ -104,12 +106,8 @@ const DesktopSharePnL: FC<PropsWithChildren<{
                 onClick={onClick}
             />
         </DialogTrigger>
-        <DialogPortal>
-        <DialogOverlay className="bg-blackA6 data-[state=open]:animate-overlayShow fixed inset-0" />
-
-            <DialogContent className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 ">
-                <DesktopSharePnLContent position={props.position} snapshot={snapshot}/>
-            </DialogContent>
-        </DialogPortal>
+        <DialogContent className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 desktop:orderly-max-w-[640px]">
+            <DesktopSharePnLContent position={props.position} snapshot={snapshot} />
+        </DialogContent>
     </Dialog>);
 }
