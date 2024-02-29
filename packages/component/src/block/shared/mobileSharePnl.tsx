@@ -5,6 +5,7 @@ import { Input } from "@/input";
 import Button from "@/button";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
+import { Poster } from "../poster";
 
 
 export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
@@ -62,7 +63,42 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
 
     return (
         <div className="orderly-p-0">
-            <div className="orderly-h-[192px]"></div>
+            <div className="orderly-h-[192px] orderly-mt-4">
+
+            <Poster
+                    
+                    width={343}
+                    height={192}
+                    data={{
+                        backgroundImg: "/images/poster_bg.png",
+                        color: "rgba(255, 255, 255, 0.98)",
+                        profitColor: "rgb(0,181,159)",
+                        loseColor: "rgb(255,103,194)",
+                        brandColor: "rgb(0,181,159)",
+                        data: {
+                            message: "I am the WOO KING.",
+                            domain: "dex.woo.org",
+                            updateTime: "2022-JAN-01 23:23",
+                            position: {
+                                symbol: "WOO-PERP",
+                                currency: "USDC",
+                                side: "LONG",
+                                leverage: 20,
+                                pnl: 10432.23,
+                                ROI: 20.25,
+                                informations: [
+                                    { title: "Open Price", value: "0.12313" },
+                                    { title: "Opened at", value: "Jan-01 23:23" },
+                                    { title: "Mark price", value: "0.12341" },
+                                    { title: "Quantity", value: "0.123" },
+                                ],
+                            },
+                        },
+                        layout: {}
+                    }}
+                />
+
+            </div>
 
 
             <div className="orderly-max-h-[200px] orderly-overflow-y-auto">
