@@ -59,13 +59,13 @@ export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
             <path
               d="M15.5229 10.7593C14.1521 9.26798 12.185 8.33334 9.99972 8.33334C7.81439 8.33334 5.84736 9.26798 4.47656 10.7593"
               stroke="white"
-              stroke-opacity="0.2"
+              strokeOpacity="0.2"
               strokeWidth="1.66667"
             />
             <path
               d="M18.1742 8.1036C16.1235 5.9358 13.2198 4.58334 10.0002 4.58334C6.78057 4.58334 3.87686 5.9358 1.82617 8.1036"
               stroke="white"
-              stroke-opacity="0.2"
+              strokeOpacity="0.2"
               strokeWidth="1.66667"
             />
             <path
@@ -87,19 +87,19 @@ export const NetworkStatus: FC<NetworkStatusProps> = (props) => {
             <path
               d="M13.1613 13.1186C12.3972 12.2297 11.2645 11.6667 10.0003 11.6667C8.73617 11.6667 7.6035 12.2297 6.83936 13.1186"
               stroke="white"
-              stroke-opacity="0.2"
+              strokeOpacity="0.2"
               strokeWidth="1.66667"
             />
             <path
               d="M15.5229 10.7593C14.1521 9.26798 12.185 8.33333 9.99972 8.33333C7.81439 8.33333 5.84736 9.26798 4.47656 10.7593"
               stroke="white"
-              stroke-opacity="0.2"
+              strokeOpacity="0.2"
               strokeWidth="1.66667"
             />
             <path
               d="M18.1742 8.10359C16.1235 5.9358 13.2198 4.58333 10.0002 4.58333C6.78057 4.58333 3.87686 5.9358 1.82617 8.10359"
               stroke="white"
-              stroke-opacity="0.2"
+              strokeOpacity="0.2"
               strokeWidth="1.66667"
             />
             <path

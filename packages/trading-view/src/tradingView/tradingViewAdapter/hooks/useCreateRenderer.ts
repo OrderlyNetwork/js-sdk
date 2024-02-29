@@ -16,6 +16,7 @@ export default function useCreateRenderer(symbol: string) {
     const createRenderer = useRef(
         (instance: any, host: any, broker: any) => {
             renderer.current = new Renderer(instance, host, broker);
+            renderer.current = new Renderer(instance, host, broker);
         }
     );
 
