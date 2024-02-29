@@ -247,10 +247,7 @@ export class Assets {
       throw new Error("walletClient is undefined");
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
-    const parsedAmount =
-      typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletClient.parseUnits(amount)
-        : MaxUint256.toString();
+    const parsedAmount =  MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
