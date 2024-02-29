@@ -1,6 +1,6 @@
 import { cn } from "@/utils";
 import { DownloadIcon } from "@/icon";
-import { FC, useMemo, useState } from "react"
+import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react"
 import { Input } from "@/input";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
@@ -8,6 +8,8 @@ import { Circle } from "lucide-react";
 import { Divider } from "@/divider";
 import { Checkbox } from "@/checkbox";
 import { ShareFacebookIcon, ShareRadditIcon, ShareTelegramIcon, ShareXIcon } from "./shareIcons";
+import { Poster } from "../poster";
+import useEmblaCarousel from "embla-carousel-react";
 
 
 export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
@@ -17,6 +19,7 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
     const [check, setCheck] = useState(false);
+
 
     const onSharePnL = async () => {
 
@@ -72,7 +75,41 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
 
     return (
         <div className="orderly-p-0 orderly-align-bottom">
-            <div className="orderly-h-[422px] orderly-bg-white/50 orderly-mt-9"></div>
+            <div className="orderly-h-[422px] orderly-mt-9">
+                <Poster
+                    className="orderly-mx-11"
+                    width={552}
+                    height={310}
+                    data={{
+                        backgroundImg: "/images/poster_bg.png",
+                        color: "rgba(255, 255, 255, 0.98)",
+                        profitColor: "rgb(0,181,159)",
+                        loseColor: "rgb(255,103,194)",
+                        brandColor: "rgb(0,181,159)",
+                        data: {
+                            message: "I am the WOO KING.",
+                            domain: "dex.woo.org",
+                            updateTime: "2022-JAN-01 23:23",
+                            position: {
+                                symbol: "WOO-PERP",
+                                currency: "USDC",
+                                side: "LONG",
+                                leverage: 20,
+                                pnl: 10432.23,
+                                ROI: 20.25,
+                                informations: [
+                                    { title: "Open Price", value: "0.12313" },
+                                    { title: "Opened at", value: "Jan-01 23:23" },
+                                    { title: "Mark price", value: "0.12341" },
+                                    { title: "Quantity", value: "0.123" },
+                                ],
+                            },
+                        },
+                        layout: {}
+                    }}
+                />
+                <CarouselBackgroundImage />
+            </div>
 
 
             <div className="orderly-px-10">
@@ -100,7 +137,7 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
 
 
 
-                <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck}/>
+                <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck} />
             </div>
 
             <BottomButtons />
@@ -328,5 +365,105 @@ const BottomButtons: FC = (props) => {
                 <ShareFacebookIcon className="orderly-mr-5" />
             </button>
         </div>
+    );
+}
+
+
+const CarouselBackgroundImage = () => {
+    const [prevBtnDisabled, setPrevBtnDisabled] = useState(false)
+    const [nextBtnDisabled, setNextBtnDisabled] = useState(false)
+    const [selectedSnap, setSelectedSnap] = useState(0);
+
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        loop: true,
+        dragFree: true
+    });
+
+    const onPrevButtonClick = useCallback(() => {
+        if (!emblaApi) return;
+        emblaApi.scrollPrev();
+    }, [emblaApi]);
+
+    const onNextButtonClick = useCallback(() => {
+        if (!emblaApi) return;
+        emblaApi.scrollNext();
+    }, [emblaApi]);
+
+    const onSelect = useCallback((emblaApi: any) => {
+        // setPrevBtnDisabled(!emblaApi.canScrollPrev());
+        // setNextBtnDisabled(!emblaApi.canScrollNext());
+        setSelectedSnap(emblaApi.selectedScrollSnap());
+
+        console.log("xxxxxxxxxx hahah", emblaApi.selectedScrollSnap());
+        
+    }, []);
+
+    useEffect(() => {
+        if (!emblaApi) return
+
+        console.log("on selected or re init");
+        
+        onSelect(emblaApi)
+        emblaApi.on('reInit', onSelect)
+        emblaApi.on('select', onSelect)
+    }, [emblaApi, onSelect]);
+
+
+    return (
+        <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
+            <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+            <div ref={emblaRef} className="orderly-w-[552px] orderly-h-[92px] orderly-overflow orderly-overflow-x-auto orderly-mx-2">
+                <div className="orderly-flex">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((e, index) =>
+                    (<div
+                        key={e}
+                        onClick={() => {
+                            console.log("scroll to", index);
+                            
+                            emblaApi?.scrollTo(index);
+                        }}
+                        className={cn("orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-h-[92px] orderly-bg-base-300 orderly-rounded-sm",
+                            selectedSnap === index && "orderly-border orderly-border-primary")}
+                            
+                    />)
+                    )}
+                </div>
+            </div>
+            <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+        </div>
+    );
+}
+
+
+type PropType = PropsWithChildren<
+    React.DetailedHTMLProps<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        HTMLButtonElement
+    >
+>
+
+const PrevButton: FC<PropType> = (props) => {
+    const { children, ...restProps } = props
+
+    return (
+        <button {...restProps}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="12" fill="#333948" />
+                <path d="M15.4285 6.49199L10.3425 12L15.4285 17.508L13.8627 19.2L7.19989 12L13.8627 4.79999L15.4285 6.49199Z" fill="#868F99" />
+            </svg>
+        </button>
+    );
+}
+
+const NextButton: FC<PropType> = (props) => {
+    const { children, ...restProps } = props
+
+    return (
+        <button {...restProps}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="12" fill="#333948" />
+                <path d="M8.57397 17.508L13.6599 12L8.57398 6.49198L10.1397 4.79998L16.8025 12L10.1397 19.2L8.57397 17.508Z" fill="#868F99" />
+            </svg>
+        </button>
     );
 }
