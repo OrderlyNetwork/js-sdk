@@ -56,19 +56,8 @@ export default meta;
 
 export const Default: Story = {
   render: (args) => {
-    const [init, setInit] = React.useState(false);
-    const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const { ref } = usePoster(args);
 
-    usePoster(canvasRef.current, args);
-
-    useEffect(() => {
-      setInit(true);
-    }, []);
-
-    return (
-      <div>
-        <canvas ref={canvasRef} width={550} height={300} />
-      </div>
-    );
+    return <canvas ref={ref} width={550} height={300} />;
   },
 };

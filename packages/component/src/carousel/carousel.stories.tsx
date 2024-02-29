@@ -55,3 +55,36 @@ export const Default: Story = {
     );
   },
 };
+
+export const CarouselSize: Story = {
+  render: (args) => {
+    return (
+      <div className="orderly-px-20 orderly-h-[350px]">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="orderly-max-w-sm "
+        >
+          <CarouselContent>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <CarouselItem key={index} className="orderly-basis-1/3">
+                <div className="orderly-p-1 orderly-bg-base-300">
+                  <div>
+                    <div className="orderly-flex orderly-aspect-square orderly-items-center orderly-justify-center orderly-p-6">
+                      <span className="orderly-text-3xl orderly-font-semibold">
+                        {index + 1}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    );
+  },
+};

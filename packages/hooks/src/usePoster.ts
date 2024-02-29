@@ -3,6 +3,7 @@ import { mergeDeepRight } from "ramda";
 import { PosterPainter } from "./services/painter/painter";
 import { type drawOptions } from "./services/painter/basePaint";
 import { defaultLayoutConfig } from "./services/painter/layout.config";
+import { SDKError } from "@orderly.network/types";
 
 export { type drawOptions } from "./services/painter/basePaint";
 
@@ -14,7 +15,7 @@ export const usePoster = (
   /**
    * The canvas element to draw the poster on
    */
-  trage: HTMLCanvasElement,
+  // trage: HTMLCanvasElement,
   /**
    * The options to draw the poster
    */
@@ -22,6 +23,9 @@ export const usePoster = (
 ) => {
   const [error, setError] = useState<Error | null>(null);
   const painterRef = useRef<PosterPainter | null>(null);
+
+  const [trage, setTrage] = useState<HTMLCanvasElement | null>(null);
+
   useEffect(() => {
     // Create the painter instance
     if (trage && !painterRef.current) {
@@ -54,11 +58,22 @@ export const usePoster = (
      */
     encoderOptions = 1.0
   ) => {
-    return trage.toDataURL(type, encoderOptions);
+    return trage?.toDataURL(type, encoderOptions);
+  };
+
+  const ref = (ref: HTMLCanvasElement | null) => {
+    if (!ref) return;
+    if (ref.tagName.toUpperCase() !== "CANVAS") {
+      // throw new Error("The ref must be a canvas element");
+      setError(new SDKError("The ref must be a canvas element"));
+      return;
+    }
+    setTrage(ref);
   };
 
   return {
     error,
+    ref,
     /**
      * Converts the poster to a data URL
      */

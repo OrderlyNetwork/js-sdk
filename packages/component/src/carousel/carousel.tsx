@@ -218,7 +218,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       {/* @ts-ignore */}
-      <ChevronLeft className="orderly-h-4 orderly-w-4" />
+      <ChevronLeft size={20} />
       <span className="orderly-sr-only">Previous slide</span>
     </Button>
   );
@@ -248,7 +248,7 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       {/* @ts-ignore */}
-      <ChevronRight className="orderly-h-4 orderly-w-4" />
+      <ChevronRight size={20} />
       <span className="orderly-sr-only">Next slide</span>
     </Button>
   );
