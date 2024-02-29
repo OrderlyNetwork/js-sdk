@@ -203,6 +203,7 @@ const CarouselPrevious = React.forwardRef<
 
   return (
     <Button
+      // @ts-ignore
       ref={ref}
       className={cn(
         "orderly-absolute  orderly-h-8 orderly-w-8 orderly-rounded-full",
@@ -231,6 +232,7 @@ const CarouselNext = React.forwardRef<
 
   return (
     <Button
+      // @ts-ignore
       ref={ref}
       className={cn(
         "orderly-absolute orderly-h-8 orderly-w-8 orderly-rounded-full",
