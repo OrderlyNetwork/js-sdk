@@ -187,8 +187,8 @@ export const columnsBasis = (props: {
       },
     },
     {
-      title: "Update",
-      dataIndex: "updated_time",
+      title: "Order time",
+      dataIndex: "created_time",
       width: 150,
       // onSort: status === OrderStatus.INCOMPLETE,
       className: "orderly-h-[48px]",

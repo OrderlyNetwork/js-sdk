@@ -127,7 +127,7 @@ const buttonVariants = cva(
         variant: "text",
         color: "primary",
         class:
-          "orderly-text-primary orderly-bg-transparent hover:orderly-text-primary hover:orderly-bg-primary/10",
+          "orderly-text-primary orderly-bg-transparent hover:orderly-text-primary hover:orderly-bg-primary/10 active:orderly-bg-primary/20",
       },
       {
         variant: "text",

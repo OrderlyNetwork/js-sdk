@@ -94,6 +94,10 @@ export class EtherAdapter implements IWalletAdapter {
     return this._chainId;
   }
 
+  set chainId(chainId: number) {
+    this._chainId = chainId;
+  }
+
   get addresses(): string {
     return this._address;
   }
@@ -155,6 +159,36 @@ export class EtherAdapter implements IWalletAdapter {
 
       throw parsedEthersError;
     }
+  }
+
+  async getTransactionRecipect(txHash: string) {
+
+    await this.provider!.getTransactionReceipt(txHash);
+
+  }
+
+  async pollTransactionReceiptWithBackoff(txHash: string, baseInterval = 1000, maxInterval = 6000, maxRetries= 30) {
+    let interval = baseInterval;
+    let retries = 0;
+
+    while (retries < maxRetries) {
+      try {
+        const receipt = await this.provider!.getTransactionReceipt(txHash);
+        if (receipt) {
+          // completed, get receipt
+          return receipt;
+        }
+      } catch (error) {
+        // waiting
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, interval));
+
+      interval = Math.min(interval * 2, maxInterval);
+      retries++;
+    }
+
+    throw new Error('Transaction did not complete after maximum retries.');
   }
 
   private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {

@@ -6,6 +6,10 @@ export interface IWalletAdapter {
   // new (options: WalletAdapterOptions): WalletAdapter;
   get chainId(): number;
   get addresses(): string;
+  /**
+   * Set the chain id
+   */
+  set chainId(chainId: number);
   parseUnits: (amount: string) => string;
   formatUnits: (amount: string) => string;
   // getBalance: (address: string) => Promise<any>;
@@ -28,7 +32,11 @@ export interface IWalletAdapter {
       abi: any;
     }
   ): Promise<TransactionResponse>;
+
+  getTransactionRecipect: (txHash: string) => Promise<any>;
   signTypedData: (address: string, data: any) => Promise<string>;
+
+  pollTransactionReceiptWithBackoff: (txHash: string, baseInterval?: number, maxInterval?: number, maxRetries?: number) => Promise<any>;
 
   // 查询余额
   getBalance: (
@@ -62,11 +70,6 @@ export interface IWalletAdapter {
 export type WalletAdapterOptions = {
   provider: any;
   address: string;
-  // label?: string;
-  // wallet?:{
-  //   name:string
-  // },
-  // getAddresses?: (address: string) => string;
   chain: { id: number };
 };
 

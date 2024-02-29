@@ -10,7 +10,6 @@ import React, {
   useState,
   FocusEvent,
 } from "react";
-import { Picker, Select } from "@/select";
 import Button from "@/button";
 import { Numeral, Text } from "@/text";
 
@@ -307,6 +306,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 toast.error(err.message);
               } else {
                 console.log("Create order failed:", err);
+                toast.error(err?.message);
               }
             }
           );
@@ -340,7 +340,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       const type = formattedOrder.order_type;
       if (
         !markPrice ||
-        type !== OrderType.MARKET ||
+        (type !== OrderType.MARKET && type !== OrderType.STOP_MARKET) ||
         currentFocusInput.current === InputType.TOTAL ||
         !quantity
       ) {

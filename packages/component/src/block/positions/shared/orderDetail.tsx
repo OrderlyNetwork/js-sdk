@@ -2,6 +2,7 @@ import { OrderSide } from "@orderly.network/types";
 import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { cn } from "@/utils/css";
+import { commify } from "@orderly.network/utils";
 
 export const OrderDetail = (props: {
   order: any;
@@ -27,7 +28,7 @@ export const OrderDetail = (props: {
         <div className="orderly-flex orderly-justify-between">
           <span className="orderly-text-base-contrast-54">Qty.</span>
           <Text type={side === OrderSide.SELL ? "sell" : "buy"}>
-            {order.order_quantity}
+            {commify(order.order_quantity)}
           </Text>
         </div>
         <div className="orderly-flex orderly-justify-between">
@@ -38,7 +39,7 @@ export const OrderDetail = (props: {
               <span className="orderly-text-base-contrast-36">{quote}</span>
             }
           >
-            {order.order_price}
+            {commify(order.order_price)}
           </Text>
         </div>
         <div className="orderly-flex orderly-justify-between">

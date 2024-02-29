@@ -215,11 +215,14 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       if (chain && chain.token_infos?.length > 0) {
         const tokens = chain.token_infos;
 
-        let token = tokens.find(
-          (t: API.TokenInfo) => t.symbol === "USDC" || t.symbol === "USDbC"
-        );
+        const tokenObj = tokens.reduce((acc, item) => {
+          acc[item.symbol] = item;
+          return acc;
+        }, {} as any);
 
-        if (!token) token = tokens[0];
+        const token = tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
+
+        if (!token || props.token?.symbol === token.symbol) return;
 
         setTokens(tokens);
 
@@ -254,7 +257,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         </div>
         <NetworkImage
           type={typeof walletName === "undefined" ? "placeholder" : "wallet"}
-          name={walletName?.toLowerCase()}
+          name={walletName}
           rounded
         />
       </div>

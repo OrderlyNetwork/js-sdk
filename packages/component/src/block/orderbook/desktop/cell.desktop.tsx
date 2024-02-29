@@ -90,7 +90,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
           <Numeral
             precision={base_dp}
-            className="orderly-z-10 "
+            className="orderly-z-10"
           >
             {props.accumulated}
           </Numeral>
