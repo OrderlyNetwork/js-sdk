@@ -55,7 +55,6 @@ export enum OrderType {
     BRACKET_TP = 12,
     BRACKET_SL = 13,
     BRACKET = 14,
-    AC = 15,
 }
 
 export enum Side {
@@ -113,3 +112,58 @@ export enum SideType {
     SELL = 'SELL',
 }
 
+export enum AlgoType {
+    TAKE_PROFIT = 'TAKE_PROFIT',
+    STOP_LOSS = 'STOP_LOSS',
+    OCO = 'OCO',
+    TRAILING_STOP = 'TRAILING_STOP',
+    BRACKET = 'BRACKET',
+    STOP_BRACKET = 'STOP_BRACKET',
+    STOP = 'STOP', // create only
+    POSITIONAL_TP_SL = 'POSITIONAL_TP_SL', // create only
+    TP_SL = 'TP_SL', // create only
+    BRACKET_TP_SL = 'BRACKET_TP_SL',
+    STOP_BRACKET_TP_SL = 'STOP_BRACKET_TP_SL',
+}
+
+export enum OrderType {
+    LIMIT = 'LIMIT',
+    MARKET = 'MARKET',
+    IOC = 'IOC',
+    POST_ONLY = 'POST_ONLY',
+    FOK = 'FOK',
+    LIQUIDATE = 'LIQUIDATE', // backend create only
+    ASK = 'ASK',
+    BID = 'BID',
+    CLOSE_POSITION = 'CLOSE_POSITION', // create childOrders only
+    AC = 'AC',
+    ADL_CLOSE = 'ADL_CLOSE',
+    BLP_ASSIGNEE = 'BLP_ASSIGNEE',
+}
+
+export enum OrderCombinationType {
+    LIMIT = 'LIMIT',
+    MARKET = 'MARKET',
+    STOP_LIMIT = 'STOP_LIMIT',
+    STOP_MARKET = 'STOP_MARKET',
+    OCO = 'OCO',
+    OCO_LIMIT = 'OCO_LIMIT',
+    OCO_MARKET = 'OCO_MARKET',
+    ASK = 'ASK',
+    BID = 'BID',
+    POST_ONLY = 'POST_ONLY',
+    IOC = 'IOC',
+    FOK = 'FOK',
+    LIQUIDATE = 'LIQUIDATE',
+    SETTLEMENT = 'SETTLEMENT',
+    TRAILING_STOP = 'TRAILING_STOP',
+    POSITIONAL_TP_SL = 'POSITIONAL_TP_SL',
+    TP_SL = 'TP_SL',
+    BRACKET_LIMIT = 'BRACKET_LIMIT',
+    BRACKET_MARKET = 'BRACKET_MARKET',
+    STOP_BRACKET_LIMIT = 'STOP_BRACKET_LIMIT',
+    STOP_BRACKET_MARKET = 'STOP_BRACKET_MARKET',
+    AC = 'AC',
+    ADL_CLOSE = 'ADL_CLOSE',
+    BLP_ASSIGNEE = 'BLP_ASSIGNEE',
+}
