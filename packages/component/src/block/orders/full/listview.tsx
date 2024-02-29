@@ -179,7 +179,7 @@ export const Listview: FC<Props> = (props) => {
         },
         {
           title: "Update",
-          dataIndex: "updated_time",
+          dataIndex: "created_time",
           width: 150,
           onSort: props.status === OrderStatus.INCOMPLETE,
           className: "orderly-h-[48px]",
