@@ -48,6 +48,7 @@ export const Assets: FC<AssetsProps> = (props) => {
 
   const [disableGetTestUSDC, setDisableGetTestUSDC] = useState(false);
   const { connectedChain } = useWalletConnector();
+  const config = useConfig<ConfigStore>();
 
   const { account, state } = useAccount();
   const showGetTestUSDC = useMemo(() => {
@@ -64,9 +65,8 @@ export const Assets: FC<AssetsProps> = (props) => {
   }, [state.status, connectedChain]);
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `https://testnet-operator-evm.orderly.org/v1/faucet/usdc`
+    `${config.get("operatorUrl")}/v1/faucet/usdc`
   );
-  const config = useConfig<ConfigStore>();
   const onGetClick = useCallback(() => {
     if (state.status < AccountStatusEnum.EnableTrading) {
       return modal.show(WalletConnectSheet, {

@@ -4,6 +4,8 @@ import {
   useOrderEntry,
   useAccount,
   useEventEmitter,
+  useLocalStorage,
+  useSessionStorage,
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
@@ -13,6 +15,11 @@ import {
 } from "@orderly.network/types";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
 import { OrderParams } from "@orderly.network/hooks";
+import {
+  setEntrySessionStorage,
+  clearOrderEntrySessionData,
+  getEntrySessionStorageInfo,
+} from "./entrySessionStorageUtils";
 
 interface MyOrderEntryProps {
   symbol: string;
@@ -47,14 +54,29 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     };
   }, []);
 
+  /// local storage hidden check box
+  const [visibleQuantity, setVisibleQuantity] = useLocalStorage("visible_quantity_key", 0);
+
+  /// session storage
+  const sessionData = getEntrySessionStorageInfo();
+  const orderType = sessionData.orderType;
+  const reduceOnly = sessionData.reduceOnly;
+  const orderSide = sessionData.orderSide;
+  const orderTypeExt = sessionData.orderTypeExt;
+  const sessionOrderEntry = sessionData.sessionOrderEntry;
+
   const [order, setOrder] = useState<OrderParams>({
-    reduce_only: false,
-    side: OrderSide.BUY,
-    order_type: OrderType.LIMIT,
-    isStopOrder: false,
+    reduce_only: reduceOnly,
+    side: orderSide,
+    order_type: orderType,
+    isStopOrder: orderType === OrderType.STOP_LIMIT || orderType === OrderType.STOP_MARKET,
     symbol,
+    visible_quantity: visibleQuantity,
+    order_type_ext: orderType === OrderType.LIMIT ? orderTypeExt : undefined,
     // timestamp: Date.now(),
+    ...sessionOrderEntry,
   });
+
   // const [reduceOnly, setReduceOnly] = useState(false);
   const formState = useOrderEntry(order, {
     watchOrderbook: true,
@@ -68,6 +90,8 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
       trigger_price: "",
       symbol,
     }));
+
+    clearOrderEntrySessionData();
   }, [symbol]);
 
   useEffect(() => {
@@ -90,21 +114,31 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
         onFieldChange={(field, value) => {
           console.log("=======>>>>>>>>field", field, value);
 
-          if (field === "reduce_only" || field === "order_type") {
-            setOrder((order) => ({
-              ...order,
-              order_quantity: "",
-              order_price: "",
-              [field]: value,
-              // timestamp: Date.now(),
-            }));
-          } else {
-            setOrder((order) => ({
-              ...order,
-              [field]: value,
-              // timestamp: Date.now(),
-            }));
+          /// save to local storage and refresh ui
+          if (field === "visible_quantity") {
+            setVisibleQuantity(value);
           }
+
+
+          /// save to session storage and not refresh ui
+          setEntrySessionStorage(field, value);
+
+
+          // if (field === "reduce_only") {
+          //   setOrder((order) => ({
+          //     ...order,
+          //     order_quantity: "",
+          //     order_price: "",
+          //     [field]: value,
+          //     // timestamp: Date.now(),
+          //   }));
+          // } else {
+          setOrder((order) => ({
+            ...order,
+            [field]: value,
+            // timestamp: Date.now(),
+          }));
+          // }
         }}
         setValues={(values) => {
           setOrder((order) => ({

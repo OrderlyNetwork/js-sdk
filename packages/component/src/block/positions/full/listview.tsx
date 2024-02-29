@@ -56,7 +56,7 @@ export const Listview: FC<
         render: (value: string) => (
           <Text
             rule={"symbol"}
-            className="orderly-font-semibold"
+            className="orderly-font-semibold orderly-cursor-pointer"
             onClick={(e) => {
               props.onSymbolChange?.({ symbol: value } as API.Symbol);
               e.stopPropagation();
@@ -135,33 +135,42 @@ export const Listview: FC<
             setUnPnlPriceBasic={props.setUnPnlPriceBasic}
           />
         ),
-        render: (value: string) => (
-          <Numeral
-            precision={pnlNotionalDecimalPrecision}
-            coloring
-            className="orderly-font-semibold"
-          >
-            {value}
-          </Numeral>
-        ),
+        render: (value: string, record: any) => {
+          return (
+            <span>
+              <Numeral
+                precision={pnlNotionalDecimalPrecision}
+                coloring
+                className="orderly-font-semibold"
+              >
+                {value}
+              </Numeral>
+              {
+                <Numeral
+                  rule="percentages"
+                  precision={pnlNotionalDecimalPrecision}
+                  coloring
+                  className="orderly-font-semibold"
+                  prefix="("
+                  surfix=")"
+                >
+                  {record.unsettled_pnl_ROI}
+                </Numeral>
+              }
+            </span>
+          );
+        },
       },
-      {
-        title: "Unreal. ROI",
-        className: "orderly-h-[48px]",
-        dataIndex: "unsettled_pnl_ROI",
-        width: 120,
-        onSort: true,
-        render: (value: string) => (
-          <Numeral
-            rule="percentages"
-            precision={pnlNotionalDecimalPrecision}
-            coloring
-            className="orderly-font-semibold"
-          >
-            {(value)}
-          </Numeral>
-        ),
-      },
+      // {
+      //   title: "Unreal. ROI",
+      //   className: "orderly-h-[48px]",
+      //   dataIndex: "unsettled_pnl_ROI",
+      //   width: 120,
+      //   onSort: true,
+      //   render: (value: string) => (
+
+      //   ),
+      // },
       // {
       //   title: "Daily real.",
       //   className: "orderly-h-[48px]",

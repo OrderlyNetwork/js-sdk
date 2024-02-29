@@ -10,7 +10,6 @@ import React, {
   useState,
   FocusEvent,
 } from "react";
-import { Picker, Select } from "@/select";
 import Button from "@/button";
 import { Numeral, Text } from "@/text";
 
@@ -236,101 +235,88 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       }, 300);
     };
 
-    const onSubmit = useCallback(
-      (event: FormEvent) => {
-        //
-        event.preventDefault();
+    const onSubmit = (event: FormEvent) => {
+      //
+      event.preventDefault();
 
-        if (!symbolConfig) {
-          return Promise.reject("symbolConfig is null");
-        }
+      if (!symbolConfig) {
+        return Promise.reject("symbolConfig is null");
+      }
 
-        return Promise.resolve()
-          .then(() => {
-            if (
-              metaState.errors?.order_price?.message ||
-              metaState.errors?.order_quantity?.message ||
-              metaState.errors?.trigger_price?.message
-            ) {
-              setErrorsVisible(true);
-              return Promise.reject("cancel");
-            }
-            if (needConfirm) {
-              return modal.confirm({
-                maxWidth: "sm",
-                title: "Confirm Order",
-                onCancel: () => {
-                  return Promise.reject("cancel");
-                },
-                footer: !isTable ? (
-                  <OrderConfirmFooter
-                    onCancel={() => {
-                      return Promise.reject("cancel");
-                    }}
-                    // onOk={() => {
-                    //   return Promise.resolve(true);
-                    // }}
-                  />
-                ) : undefined,
-                content: (
-                  <OrderConfirmView
-                    order={{
-                      ...(formattedOrder as OrderEntity),
-                      side: side!,
-                      symbol: props.symbol,
-                    }}
-                    symbol={symbol}
-                    base={symbolConfig?.base}
-                    quote={symbolConfig?.quote}
-                    isTable={isTable}
-                  />
-                ),
-              });
-            } else {
-              return Promise.resolve(true);
-            }
-          })
-          .then((isOk) => {
-            return props.submit().then(
-              (res) => {
-                props.setValues({
-                  trigger_price: "",
-                  order_price: "",
-                  order_quantity: "",
-                  total: "",
-                });
-
-                // resetForm?.();
+      return Promise.resolve()
+        .then(() => {
+          if (
+            metaState.errors?.order_price?.message ||
+            metaState.errors?.order_quantity?.message ||
+            metaState.errors?.trigger_price?.message
+          ) {
+            setErrorsVisible(true);
+            return Promise.reject("cancel");
+          }
+          if (needConfirm) {
+            return modal.confirm({
+              maxWidth: "sm",
+              title: "Confirm Order",
+              onCancel: () => {
+                return Promise.reject("cancel");
               },
-              (err) => {
-                if (typeof err === "string") {
-                  toast.error(err);
-                } else if (err.name === "ApiError") {
-                  toast.error(err.message);
-                } else {
-                  console.log("Create order failed:", err);
-                }
+              footer: !isTable ? (
+                <OrderConfirmFooter
+                  onCancel={() => {
+                    return Promise.reject("cancel");
+                  }}
+                  // onOk={() => {
+                  //   return Promise.resolve(true);
+                  // }}
+                />
+              ) : undefined,
+              content: (
+                <OrderConfirmView
+                  order={{
+                    ...(formattedOrder as OrderEntity),
+                    side: side!,
+                    symbol: props.symbol,
+                  }}
+                  symbol={symbol}
+                  base={symbolConfig?.base}
+                  quote={symbolConfig?.quote}
+                  isTable={isTable}
+                />
+              ),
+            });
+          } else {
+            return Promise.resolve(true);
+          }
+        })
+        .then((isOk) => {
+          return props.submit().then(
+            (res) => {
+              // props.setValues({
+              //   trigger_price: "",
+              //   order_price: "",
+              //   order_quantity: "",
+              //   total: "",
+              // });
+              // resetForm?.();
+            },
+            (err) => {
+              if (typeof err === "string") {
+                toast.error(err);
+              } else if (err.name === "ApiError") {
+                toast.error(err.message);
+              } else {
+                console.log("Create order failed:", err);
+                toast.error(err?.message);
               }
-            );
-          })
-          .catch((error) => {
-            if (error !== "cancel" && !!error?.message) {
-              toast.error(error.message || "Failed");
             }
-          });
-      },
-      [
-        side,
-        props.submit,
-        // symbol,
-        needConfirm,
-        formattedOrder,
-        symbolConfig?.base,
-        symbolConfig?.quote,
-        metaState.errors?.order_price?.message,
-        metaState.errors?.order_quantity?.message,
-      ]
-    );
+          );
+        })
+        .catch((error) => {
+          if (error !== "cancel" && !!error?.message) {
+            toast.error(error.message || "Failed");
+          }
+        });
+    };
 
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
@@ -354,7 +340,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       const type = formattedOrder.order_type;
       if (
         !markPrice ||
-        type !== OrderType.MARKET ||
+        (type !== OrderType.MARKET && type !== OrderType.STOP_MARKET) ||
         currentFocusInput.current === InputType.TOTAL ||
         !quantity
       ) {

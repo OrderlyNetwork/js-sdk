@@ -28,12 +28,15 @@ export const Cell: FC<MarketCellProps> = (props) => {
           </Numeral>
         </div>
         <div className="orderly-flex orderly-items-center orderly-justify-between orderly-text-4xs">
-          <Numeral.total
+          {/* <Numeral.total
             rule="human"
             className="orderly-text-base-contrast-54"
             price={item["24h_close"]}
             quantity={item["24h_volumn"]}
-          />
+          /> */}
+          <Numeral rule="human" className="orderly-text-base-contrast-54">
+            {item?.["24h_amount"]}
+          </Numeral>
           <Numeral rule="percentages" coloring>
             {item.change}
           </Numeral>

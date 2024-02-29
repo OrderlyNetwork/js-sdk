@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { TabIndicator } from "./indicator";
+// import { TabIndicator } from "./indicator";
 import { Tab } from "./tab";
 import { TabContext, TabContextState } from "./tabContext";
 import { cn } from "@/utils/css";
@@ -41,40 +41,14 @@ type IndicatorBounding = {
 };
 
 export const TabList: FC<TabListProps> = (props) => {
-  const [bounding, setBounding] = useState<IndicatorBounding>({
-    left: 0,
-    width: 40,
-  });
-
   const boxRef = useRef<HTMLDivElement>(null);
   const tabContext = useContext(TabContext);
-
-  const calcLeft = useCallback(
-    (target?: HTMLButtonElement | null) => {
-      if (!target || !boxRef.current) {
-        return;
-      }
-      const { left, width } = target.getBoundingClientRect();
-      const { left: parentLeft } = boxRef.current?.getBoundingClientRect();
-
-      // console.log("left", left, width, parentLeft);
-
-      // const parentLeft = boxRef.current?.getBoundingClientRect().left || 0;
-
-      setBounding((prev) => ({
-        // left: left - parentLeft + (width - 40) / 2,
-        left: left - parentLeft,
-        width,
-      }));
-    },
-    [boxRef.current]
-  );
 
   const onItemClick = useCallback(
     (value: any, event: MouseEvent<HTMLButtonElement>) => {
       if (typeof props.onTabChange === "undefined") return;
 
-      calcLeft(event.currentTarget as HTMLButtonElement);
+      // calcLeft(event.currentTarget as HTMLButtonElement);
       props.onTabChange?.(value);
 
       if (!tabContext.contentVisible) {
@@ -83,51 +57,6 @@ export const TabList: FC<TabListProps> = (props) => {
     },
     [props.onTabChange, tabContext.contentVisible]
   );
-
-  useEffect(() => {
-    if (
-      !props.showIdentifier ||
-      !boxRef.current ||
-      props.mode === TabViewMode.Group
-    )
-      return;
-
-    const callback = (entries: ResizeObserverEntry[]) => {
-      // console.log("entries", entries);
-      entries.forEach((entry) => {
-        const target = entry.target as HTMLButtonElement;
-
-        if (target.classList.contains("active")) {
-          // calcLeft(target);
-          // TODO: remove setTimeout
-          setTimeout(() => {
-            calcLeft(target);
-          }, 100);
-        } else if (target.classList.contains("orderly-tabs-list")) {
-          // calcLeft(boxRef.current?.querySelector(".active"));
-          // TODO: remove setTimeout
-          setTimeout(() => {
-            calcLeft(boxRef.current?.querySelector(".active"));
-          }, 100);
-        }
-      });
-    };
-    const resizeObserver = new ResizeObserver(callback);
-
-    const tabs = boxRef.current.querySelectorAll(".orderly-tab-item");
-
-    tabs.forEach((tab) => {
-      resizeObserver.observe(tab);
-    });
-
-    // observe the tabs wrapper
-
-    resizeObserver.observe(boxRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [props.showIdentifier]);
 
   const extraNode = useMemo(() => {
     if (typeof props.tabBarExtra === "undefined") return null;
@@ -146,10 +75,10 @@ export const TabList: FC<TabListProps> = (props) => {
     >
       <div
         className={cn(
-          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center",
-          {
-            "orderly-pb-1": props.mode === TabViewMode.Tab,
-          }
+          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center"
+          // {
+          //   "orderly-pb-1": props.mode === TabViewMode.Tab,
+          // }
         )}
       >
         <div
@@ -178,9 +107,9 @@ export const TabList: FC<TabListProps> = (props) => {
             );
           })}
         </div>
-        {props.showIdentifier && props.mode === TabViewMode.Tab && (
+        {/* {props.showIdentifier && props.mode === TabViewMode.Tab && (
           <TabIndicator left={bounding.left} width={bounding.width} />
-        )}
+        )} */}
       </div>
       {extraNode}
     </div>
