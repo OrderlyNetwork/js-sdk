@@ -26,6 +26,10 @@ export const usePoster = (
   options: drawOptions
 ) => {
   const [error, setError] = useState<Error | null>(null);
+  const [canCopy, setCanCopy] = useState<boolean>(
+    () => typeof navigator.clipboard !== "undefined"
+  );
+
   const painterRef = useRef<PosterPainter | null>(null);
 
   const [target, setTarget] = useState<HTMLCanvasElement | null>(null);
@@ -133,6 +137,10 @@ export const usePoster = (
      * Downloads the poster as an image
      */
     download,
+    /**
+     * Browser if supports copy image to clipboard
+     */
+    canCopy,
     copy,
   } as const;
 };
