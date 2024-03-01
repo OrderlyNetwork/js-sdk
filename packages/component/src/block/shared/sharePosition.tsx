@@ -11,37 +11,18 @@ import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePoisitionView = create<{ position: any }>((props) => {
 
-    console.log("xxxxxxxxxxxxx SharePoisitionView:", props.position);
-    
-    
-
     const isTablet = useMediaQuery(MEDIA_TABLET);
     const { position } = props;
-    const [maxLeverage] = useLeverage();
-
-    const canvasData = () => {
-        return {
-            side: position.position_qty > 0 ? "long" : "short",
-            symbol: position.symbol,
-            leverage: maxLeverage,
-            pnl: position.unsettlement_pnl,
-            roi: position.unsettled_pnl_ROI,
-            openPrice: position.average_open_price,
-            openTime: position.timestamp,
-            quantity: position.position_qty,
-            markPrice: position.mark_price,
-        };
-
-    };
+    const { maxLeverage } = useLeverage();
 
     return isTablet ?
         <MobileSharePnL
-            position={props.position}
-            canvasData={canvasData}
+            position={position}
+            leverage={maxLeverage}
         /> :
         <DesktopSharePnL
-            position={props.position}
-            canvasData={canvasData}
+            position={position}
+            leverage={maxLeverage}
         />;
 });
 
@@ -50,14 +31,11 @@ export const SharePoisitionView = create<{ position: any }>((props) => {
 const MobileSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
-    canvasData: any,
+    leverage: number,
 }>> = (props) => {
+    const {leverage, position} = props;
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
-    const [snapshot, setSnapshot] = useState<any>();
-    const onClick = () => {
-        console.log("xxxxx onclick", props.position, props.canvasData());
-        setSnapshot(props.canvasData());
-    };
+   
     return (<Sheet open={visible} onOpenChange={onOpenChange}>
         <SheetContent
         >
@@ -67,7 +45,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
             >
                 PnL Sharing
             </SheetHeader>
-            <MobileSharePnLContent position={props.position} snapshot={snapshot} />
+            <MobileSharePnLContent position={position} leverage={leverage}/>
         </SheetContent>
     </Sheet>);
 }
@@ -75,17 +53,14 @@ const MobileSharePnL: FC<PropsWithChildren<{
 const DesktopSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
-    canvasData: any,
+    leverage: number,
 }>> = (props) => {
+    const {leverage, position} = props;
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
-    const [snapshot, setSnapshot] = useState<any>();
-    const onClick = () => {
-        console.log("xxxxx onclick", props.position, props.canvasData());
-        setSnapshot(props.canvasData());
-    };
+   
     return (<Dialog open={visible} onOpenChange={onOpenChange}>
         <DialogContent className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 desktop:orderly-max-w-[640px]">
-            <DesktopSharePnLContent position={props.position} snapshot={snapshot} />
+            <DesktopSharePnLContent position={position} leverage={leverage} />
         </DialogContent>
     </Dialog>);
 }

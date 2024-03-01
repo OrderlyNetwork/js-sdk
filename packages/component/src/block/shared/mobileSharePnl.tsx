@@ -1,6 +1,6 @@
 import { cn } from "@/utils";
 import { RadioIcon, CircleCheckIcon } from "@/icon";
-import { FC, useContext, useMemo, useState } from "react"
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Input } from "@/input";
 import Button from "@/button";
 import toast from "react-hot-toast";
@@ -8,52 +8,73 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
 import { OrderlyContext } from "@orderly.network/hooks";
 import { OrderlyAppContext } from "@/provider";
+import { PosterRef } from "../poster/poster";
+import { getPnLPosterData } from "./sharePnLUtils";
+import { Carousel } from "@/carousel";
+import useEmblaCarousel from "embla-carousel-react";
 
 
-export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
+
+export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (props) => {
 
 
-    const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
+    const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
     const { shareOptions } = useContext(OrderlyAppContext);
 
-    const onSharePnL = async () => {
+    const [domain, setDomain] = useState("");
 
-        var data = { ...props.snapshot, message };
-        if (pnlFormat === "roi") {
-            delete data["pnl"];
-        } else if (pnlFormat === "pnl") {
-            delete data["roi"];
-        }
+    const posterRefs = shareOptions.pnl.backgroundImages.map(() => useRef<PosterRef | null>(null));
 
-        if (!shareOption.has("openTime")) {
-            delete data["openTime"];
-        }
-        if (!shareOption.has("openTime")) {
-            delete data["openTime"];
-        }
-        if (!shareOption.has("markPrice")) {
-            delete data["markPrice"];
-        }
-        if (!shareOption.has("quantity")) {
-            delete data["quantity"];
-        }
-        if (!shareOption.has("leverage")) {
-            delete data["leverage"];
-        }
+    useEffect(() => {
+        const currentDomain = window.location.hostname;
+        setDomain(currentDomain);
+    }, []);
 
 
+    const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
+
+    const carouselRef = useRef<any>();
+    const aspectRatio = 552 / 310;
+    const [scale, setScale] = useState(1);
+    const [carouselHeight, setCarouselHeight] = useState(0);
+
+    const [emblaRef, emblaApi] = useEmblaCarousel();
+
+    useEffect(() => {
+        if (carouselRef.current) {
+            const divWidth = carouselRef.current.offsetWidth;
+            const divHeight = divWidth / aspectRatio;
+            setCarouselHeight(divHeight);
+            setScale(divWidth / 552);
+        }
+    }, [carouselRef]);
+
+    useEffect(() => {
+        if (!emblaApi) return;
+
+        function onSelect() {
+            console.log("on selected",emblaApi?.selectedScrollSnap());
+            
+        }
+
+        emblaApi.on('reInit', onSelect)
+        emblaApi.on('select', onSelect)
+    }, [emblaApi]);
+
+    const onSharePnL = async (posterRef: React.MutableRefObject<PosterRef | null>) => {
+        if (!posterRef.current) return;
+        const data = posterRef.current?.toDataURL();
+        const blob = dataURItoBlob(data);
         try {
-            // 获取要分享的图片 URL
-            const imageUrl = 'https://example.com/image.jpg';
-
             // 检查浏览器是否支持分享功能
             if (navigator.share) {
                 await navigator.share({
-                    title: 'Share Image',
-                    text: 'Check out this image!',
-                    url: imageUrl,
+                    title: 'Share PnL',
+                    text: message,
+                    // url: imageUrl,
+                    files: [new File([blob], 'image.png', { type: 'image/png' })],
                 });
                 console.log('Image shared successfully!');
             } else {
@@ -64,42 +85,40 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
         }
     };
 
+    
+
     return (
         <div className="orderly-p-0">
-            <div className="orderly-h-[192px] orderly-mt-4">
+            <div
+                ref={carouselRef}
+                className="orderly-w-full orderly-mt-4 orderly-overflow-hidden"
+                style={{ height: `${carouselHeight}px` }}
+            >
 
-                <Poster
-
-                    width={343}
-                    height={192}
-                    data={{
-                        backgroundImg: "/images/poster_bg_1.png",
-                        color: "rgba(255, 255, 255, 0.98)",
-                        profitColor: "rgb(0,181,159)",
-                        loseColor: "rgb(255,103,194)",
-                        brandColor: "rgb(0,181,159)",
-                        data: {
-                            message: "I am the WOO KING.",
-                            domain: "dex.woo.org",
-                            updateTime: "2022-JAN-01 23:23",
-                            position: {
-                                symbol: "WOO-PERP",
-                                currency: "USDC",
-                                side: "LONG",
-                                leverage: 20,
-                                pnl: 10432.23,
-                                ROI: 20.25,
-                                informations: [
-                                    { title: "Open Price", value: "0.12313" },
-                                    { title: "Opened at", value: "Jan-01 23:23" },
-                                    { title: "Mark price", value: "0.12341" },
-                                    { title: "Quantity", value: "0.123" },
-                                ],
-                            },
-                        },
-                        layout: {}
-                    }}
-                />
+                <Carousel opts={{ align: "start" }} ref={emblaRef}>
+                    <Carousel.Content >
+                        {shareOptions.pnl.backgroundImages.map((item, index) => (
+                            <Carousel.Item key={index}>
+                                <Poster
+                                    className="orderly-transform orderly-origin-top-left"
+                                    style={{ scale: `${scale}` }}
+                                    width={552}
+                                    height={310}
+                                    data={{
+                                        backgroundImg: item,
+                                        color: "rgba(255, 255, 255, 0.98)",
+                                        profitColor: "rgb(0,181,159)",
+                                        loseColor: "rgb(255,103,194)",
+                                        brandColor: "rgb(0,181,159)",
+                                        data: posterData,
+                                        layout: {}
+                                    }}
+                                    ref={posterRefs[index]}
+                                />
+                            </Carousel.Item>
+                        ))}
+                    </Carousel.Content>
+                </Carousel>
 
             </div>
 
@@ -149,7 +168,15 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
             <Button
                 fullWidth
                 className="orderly-h-[40px]"
-                onClick={onSharePnL}>
+                onClick={() => {
+
+                    if (!emblaApi)return;
+                    const index = emblaApi?.selectedScrollSnap();
+                    console.log("index is", index);
+                    
+                    onSharePnL(posterRefs[index]);
+
+                }}>
                 Share
             </Button>
 
@@ -224,4 +251,14 @@ const ShareOption: FC<{
         <div className="orderly-text-sm orderly-flex-1 orderly-text-base-contrast">{text}</div>
         {isSelected && <CircleCheckIcon size={20} />}
     </div>);
+}// 将 base64 图片数据转换为 Blob 对象
+function dataURItoBlob(dataURI: string) {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
 }
