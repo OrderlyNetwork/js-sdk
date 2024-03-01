@@ -1,11 +1,13 @@
 import { cn } from "@/utils";
 import { RadioIcon, CircleCheckIcon } from "@/icon";
-import { FC, useMemo, useState } from "react"
+import { FC, useContext, useMemo, useState } from "react"
 import { Input } from "@/input";
 import Button from "@/button";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
+import { OrderlyContext } from "@orderly.network/hooks";
+import { OrderlyAppContext } from "@/provider";
 
 
 export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
@@ -14,6 +16,7 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
+    const { shareOptions } = useContext(OrderlyAppContext);
 
     const onSharePnL = async () => {
 
@@ -65,12 +68,12 @@ export const MobileSharePnLContent: FC<{ position: any, snapshot: any }> = (prop
         <div className="orderly-p-0">
             <div className="orderly-h-[192px] orderly-mt-4">
 
-            <Poster
-                    
+                <Poster
+
                     width={343}
                     height={192}
                     data={{
-                        backgroundImg: "/images/poster_bg.png",
+                        backgroundImg: "/images/poster_bg_1.png",
                         color: "rgba(255, 255, 255, 0.98)",
                         profitColor: "rgb(0,181,159)",
                         loseColor: "rgb(255,103,194)",

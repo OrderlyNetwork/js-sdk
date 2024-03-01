@@ -10,6 +10,9 @@ import { Logo } from "@/logo";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePoisitionView = create<{ position: any }>((props) => {
+
+    console.log("xxxxxxxxxxxxx SharePoisitionView:", props.position);
+    
     
 
     const isTablet = useMediaQuery(MEDIA_TABLET);

@@ -17,7 +17,10 @@ export const SharePnLIcon: FC<PropsWithChildren<{
         fill="current"
         fillOpacity={1}
         onClick={() => {
-            modal.show(SharePoisitionView, props.position);
+            
+            modal.show(SharePoisitionView, {
+                position: props.position,
+            });
         }}
     />);
 }

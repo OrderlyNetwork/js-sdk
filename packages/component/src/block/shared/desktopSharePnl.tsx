@@ -1,114 +1,69 @@
 import { cn } from "@/utils";
-import { DownloadIcon } from "@/icon";
-import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react"
+import { ArrowDownToLineIcon, CopyDesktopIcon } from "@/icon";
+import { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Input } from "@/input";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Circle } from "lucide-react";
 import { Divider } from "@/divider";
 import { Checkbox } from "@/checkbox";
-import { ShareFacebookIcon, ShareRadditIcon, ShareTelegramIcon, ShareXIcon } from "./shareIcons";
 import { Poster } from "../poster";
 import useEmblaCarousel from "embla-carousel-react";
+import { OrderlyAppContext } from "@/provider";
+import { getPnLPosterData } from "./sharePnLUtils";
+import Button from "@/button";
+import { PosterRef } from "../poster/poster";
 
 
-export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (props) => {
-
-
-    const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat | undefined>("roi_pnl");
+export const DesktopSharePnLContent: FC<{
+    position: any,
+    snapshot: any
+}> = (props) => {
+    const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
     const [message, setMessage] = useState("");
     const [check, setCheck] = useState(false);
+    const { shareOptions } = useContext(OrderlyAppContext);
+    const [selectedSnap, setSelectedSnap] = useState(0);
+    const [domain, setDomain] = useState("");
 
+    const posterRef = useRef<PosterRef | null>(null);
 
-    const onSharePnL = async () => {
+    useEffect(() => {
+        const currentDomain = window.location.hostname;
+        setDomain(currentDomain);
+    }, []);
 
-        var data = { ...props.snapshot, message };
-        if (pnlFormat === "roi") {
-            delete data["pnl"];
-        } else if (pnlFormat === "pnl") {
-            delete data["roi"];
-        }
+    const curBgImg = useMemo(() => {
+        return shareOptions.pnl.backgroundImages[selectedSnap];
+    }, [shareOptions.pnl.backgroundImages, selectedSnap]);
 
-        if (!shareOption.has("openTime")) {
-            delete data["openTime"];
-        }
-        if (!shareOption.has("openTime")) {
-            delete data["openTime"];
-        }
-        if (!shareOption.has("markPrice")) {
-            delete data["markPrice"];
-        }
-        if (!shareOption.has("quantity")) {
-            delete data["quantity"];
-        }
-        if (!shareOption.has("leverage")) {
-            delete data["leverage"];
-        }
+    const posterData = getPnLPosterData(props.position, 20, check ? message : "", domain, pnlFormat, shareOption);
 
-        if (!check && data.keys.includes("message")) {
-            delete data["message"];
-        }
-
-        console.log("share data", data);
-
-
-        try {
-            // 获取要分享的图片 URL
-            const imageUrl = 'https://example.com/image.jpg';
-
-            // 检查浏览器是否支持分享功能
-            if (navigator.share) {
-                await navigator.share({
-                    title: 'Share Image',
-                    text: 'Check out this image!',
-                    url: imageUrl,
-                });
-                console.log('Image shared successfully!');
-            } else {
-                console.log('Share API is not supported in this browser.');
-            }
-        } catch (error) {
-            console.error('Error sharing image:', error);
-        }
+    const onCopy = () => {
+        posterRef.current?.copy();
+    };
+    const onDownload = () => {
+        posterRef.current?.download("Poster.png");
     };
 
     return (
         <div className="orderly-p-0 orderly-align-bottom">
             <div className="orderly-h-[422px] orderly-mt-9">
-                <Poster
-                    className="orderly-mx-11"
-                    width={552}
-                    height={310}
-                    data={{
-                        backgroundImg: "/images/poster_bg.png",
-                        color: "rgba(255, 255, 255, 0.98)",
-                        profitColor: "rgb(0,181,159)",
-                        loseColor: "rgb(255,103,194)",
-                        brandColor: "rgb(0,181,159)",
-                        data: {
-                            message: "I am the WOO KING.",
-                            domain: "dex.woo.org",
-                            updateTime: "2022-JAN-01 23:23",
-                            position: {
-                                symbol: "WOO-PERP",
-                                currency: "USDC",
-                                side: "LONG",
-                                leverage: 20,
-                                pnl: 10432.23,
-                                ROI: 20.25,
-                                informations: [
-                                    { title: "Open Price", value: "0.12313" },
-                                    { title: "Opened at", value: "Jan-01 23:23" },
-                                    { title: "Mark price", value: "0.12341" },
-                                    { title: "Quantity", value: "0.123" },
-                                ],
-                            },
-                        },
-                        layout: {}
-                    }}
+                <Poster className="orderly-mx-11" width={552} height={310} data={{
+                    backgroundImg: curBgImg,
+                    color: "rgba(255, 255, 255, 0.98)",
+                    profitColor: "rgb(0,181,159)",
+                    loseColor: "rgb(255,103,194)",
+                    brandColor: "rgb(0,181,159)",
+                    data: posterData,
+                    layout: {}
+                }} ref={posterRef} />
+                <CarouselBackgroundImage
+                    backgroundImages={shareOptions.pnl.backgroundImages}
+                    selectedSnap={selectedSnap}
+                    setSelectedSnap={setSelectedSnap}
                 />
-                <CarouselBackgroundImage />
             </div>
 
 
@@ -140,7 +95,7 @@ export const DesktopSharePnLContent: FC<{ position: any, snapshot: any }> = (pro
                 <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck} />
             </div>
 
-            <BottomButtons />
+            <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
 
         </div>
     )
@@ -285,94 +240,51 @@ const Message: FC<{
 }
 
 
-const BottomButtons: FC = (props) => {
-
-    function getCanvasElement() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 200;
-        canvas.height = 200;
-        const context = canvas.getContext('2d');
-
-        if (context) {
-            context.fillStyle = 'red';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        return canvas;
-    }
-
-    function saveCanvasImage(canvas: HTMLCanvasElement, fileName: string) {
-        const imageType = 'image/png'; // 或者 'image/jpeg'
-        const imageData = canvas.toDataURL(imageType);
-        const link = document.createElement('a');
-        link.href = imageData;
-        link.download = fileName;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    function shareCanvasImageOnTwitter(canvas: HTMLCanvasElement, text: string) {
-        const imageType = 'image/png'; // 或者 'image/jpeg'
-        const imageData = canvas.toDataURL(imageType);
-        const imgUrl = encodeURIComponent("https://twitter.com/Dior/status/1762583388895293868/photo/1");
-        const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${imgUrl}`;
-        window.open(shareUrl, '_blank');
-    }
-
-    function shareCanvasImageOnFacebook(canvas: HTMLCanvasElement) {
-        const imageType = 'image/png'; // 或者 'image/jpeg'
-        // const imageData = canvas.toDataURL(imageType);
-        const imgUrl = encodeURIComponent("https://www.fas.scot/wp-content/uploads/2017/09/texel_shearling_tup-300x224.jpg");
-        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${imgUrl}`;
-        window.open(shareUrl, '_blank');
-    }
-
-    function shareCanvasImageOnReddit(canvas: HTMLCanvasElement) {
-        const imageType = 'image/png'; // 或者 'image/jpeg'
-        const imageData = canvas.toDataURL(imageType);
-        const shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(imageData)}`;
-        console.log("share url", shareUrl);
-
-        window.open(shareUrl, '_blank');
-    }
+const BottomButtons: FC<{
+    onClickDownload: any,
+    onClickCopy: any,
+}> = (props) => {
+    const { onClickDownload, onClickCopy } = props;
 
     return (
-        <div className="orderly-h-[76px] orderly-bg-base-900 orderly-flex orderly-items-center orderly-justify-center">
+        <div className="orderly-h-[76px] orderly-bg-base-900 orderly-flex orderly-gap-3 orderly-items-center orderly-justify-center">
 
-            <button onClick={() => {
-                saveCanvasImage(getCanvasElement(), "测试");
-            }}>
-                <DownloadIcon size={36} />
-            </button>
-            <Divider vertical className="orderly-mx-5 before:orderly-h-[36px] orderly-min-w-[1px]" />
+            <Button
+                color={"tertiary"}
+                className="orderly-w-[188px]"
+                onClick={onClickDownload}
+            >
+                <span>
+                    <ArrowDownToLineIcon size={15} />
+                </span>
+                Download
+            </Button>
 
-            <button onClick={() => {
-                shareCanvasImageOnTwitter(getCanvasElement(), "test share png");
-            }}>
-                <ShareXIcon className="orderly-mr-5" />
-            </button>
-            <button>
-                <ShareTelegramIcon className="orderly-mr-5" />
-            </button>
-            <button>
-                <ShareRadditIcon className="orderly-mr-5" />
-            </button>
-            <button onClick={() => {
-                shareCanvasImageOnFacebook(getCanvasElement());
-            }}>
-                <ShareFacebookIcon className="orderly-mr-5" />
-            </button>
+            <Button
+                className="orderly-w-[188px]"
+                onClick={onClickCopy}
+            >
+                <span>
+                    <CopyDesktopIcon size={15} />
+                </span>
+                Copy
+            </Button>
         </div>
     );
 }
 
 
-const CarouselBackgroundImage = () => {
-    const [prevBtnDisabled, setPrevBtnDisabled] = useState(false)
-    const [nextBtnDisabled, setNextBtnDisabled] = useState(false)
-    const [selectedSnap, setSelectedSnap] = useState(0);
+const CarouselBackgroundImage: FC<{
+    backgroundImages: string[],
+    selectedSnap: number,
+    setSelectedSnap: any,
+}> = (props) => {
+    const {
+        backgroundImages,
+        selectedSnap,
+        setSelectedSnap
+    } = props;
+
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
         loop: true,
@@ -393,16 +305,11 @@ const CarouselBackgroundImage = () => {
         // setPrevBtnDisabled(!emblaApi.canScrollPrev());
         // setNextBtnDisabled(!emblaApi.canScrollNext());
         setSelectedSnap(emblaApi.selectedScrollSnap());
-
-        console.log("xxxxxxxxxx hahah", emblaApi.selectedScrollSnap());
-        
     }, []);
 
     useEffect(() => {
         if (!emblaApi) return
 
-        console.log("on selected or re init");
-        
         onSelect(emblaApi)
         emblaApi.on('reInit', onSelect)
         emblaApi.on('select', onSelect)
@@ -411,25 +318,27 @@ const CarouselBackgroundImage = () => {
 
     return (
         <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
-            <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+            <PrevButton onClick={onPrevButtonClick} />
             <div ref={emblaRef} className="orderly-w-[552px] orderly-h-[92px] orderly-overflow orderly-overflow-x-auto orderly-mx-2">
                 <div className="orderly-flex">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((e, index) =>
+                    {backgroundImages.map((e, index) =>
                     (<div
                         key={e}
                         onClick={() => {
                             console.log("scroll to", index);
-                            
+
                             emblaApi?.scrollTo(index);
                         }}
                         className={cn("orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-h-[92px] orderly-bg-base-300 orderly-rounded-sm",
                             selectedSnap === index && "orderly-border orderly-border-primary")}
-                            
-                    />)
+
+                    >
+                        <img src={e} />
+                    </div>)
                     )}
                 </div>
             </div>
-            <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+            <NextButton onClick={onNextButtonClick}/>
         </div>
     );
 }
