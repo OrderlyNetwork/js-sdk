@@ -139,9 +139,13 @@ export const reduceOrderbook = (
               const quantity = asks[index][1] + askQty;
               asks[index][1] = quantity;
               asks[index][2] = quantity;
-              asks[index][3] += newAmount;
+              // asks[index][3] += newAmount;
+              // FIXME: fix this code later
+              asks[index][3] = Math.ceil(quantity) * asks[index][0];
             } else {
-              asks[index][3] += newAmount;
+              // asks[index][3] += newAmount;
+              // FIXME: fix this code later
+              asks[index][3] = asks[index][0] * asks[index][1] + asks[index-1][3];
             }
             // logStr += `index: ${index} ${asks[index]}\n`;
           }
