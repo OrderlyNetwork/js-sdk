@@ -275,6 +275,7 @@ CarouselNext.displayName = "CarouselNext";
 export type CarouselIdentifierProps = {
   className?: string;
   dotClassName?: string;
+  dotActiveClassName?: string;
   onClick?: (index: number) => void;
   // asChild?: boolean;
 };
@@ -291,6 +292,7 @@ const CarouselIdentifier: React.FC<CarouselIdentifierProps> = (props) => {
             active={index === selectedIndex}
             onClick={props.onClick}
             className={props.dotClassName}
+            activeClassName={props.dotActiveClassName}
           />
         );
       })}
@@ -305,14 +307,16 @@ const Dot: React.FC<{
   active: boolean;
   onClick?: (index: number) => void;
   className?: string;
-}> = ({ index, active, onClick, className }) => {
+  activeClassName?: string;
+}> = ({ index, active, onClick, className, activeClassName }) => {
+  const activedClassName = activeClassName || "orderly-bg-primary";
   return (
     <button
       onClick={() => onClick?.(index)}
       className={cn(
-        "orderly-w-2 orderly-h-2 orderly-rounded-full",
-        active ? "orderly-bg-primary" : "orderly-bg-white/30",
-        className
+        "orderly-w-2 orderly-h-2 orderly-rounded-full orderly-bg-white/30",
+        className,
+        active && `active ${activedClassName}`
       )}
     />
   );
