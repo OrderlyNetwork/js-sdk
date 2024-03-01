@@ -21,23 +21,23 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     `SPOT_${nativeToken?.symbol}_USDC`
   );
 
+  const dstGasFee = new Decimal(depositFee.toString())
+    ?.div(new Decimal(10).pow(18))
+    .toString();
+
+  const feeAmount = `${new Decimal(dstGasFee).toFixed(
+    feeDecimalsOffset(2),
+    Decimal.ROUND_UP
+  )} ${nativeToken?.symbol}`;
+
   // Using useMemo causes a delay in data display
   const getFeeElement = () => {
-    const dstGasFee = new Decimal(depositFee.toString())
-      ?.div(new Decimal(10).pow(18))
-      .toString();
-
     const totalFee = new Decimal(dstGasFee)
       ?.mul(symbolPrice || 0)
       ?.toFixed(3, Decimal.ROUND_UP);
 
     return `Fee ≈ $ ${totalFee || 0} ${
-      Number(depositFee)
-        ? `(${new Decimal(dstGasFee).toFixed(
-            feeDecimalsOffset(2),
-            Decimal.ROUND_UP
-          )} ${nativeToken?.symbol})`
-        : ""
+      Number(depositFee) ? `(${feeAmount})` : ""
     }`;
   };
 
@@ -52,13 +52,9 @@ export const Summary: FC<SummaryProps> = memo((props) => {
         <>
           <div>
             Destination gas fee:
-            <span className="orderly-text-base-contrast/60 orderly-mx-2">{`${parseNumber(
-              dstGasFee.toString(),
-              {
-                precision: feeDecimalsOffset(2),
-                truncate: "round",
-              }
-            )} ${nativeToken?.symbol}`}</span>
+            <span className="orderly-text-base-contrast/60 orderly-mx-2">
+              {feeAmount}
+            </span>
           </div>
           <div>
             Additional gas tokens are required to cover operations on the
