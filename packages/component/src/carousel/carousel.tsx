@@ -5,7 +5,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { cn } from "@/utils/css";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Car, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/button/button";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -27,6 +27,8 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  selectedIndex: number;
+  scrollSnaps: number[];
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -66,15 +68,28 @@ const Carousel = React.forwardRef<
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
-    const onSelect = React.useCallback((api: CarouselApi) => {
-      if (!api) {
-        return;
-      }
+    const onSelect = React.useCallback(
+      (api: CarouselApi) => {
+        if (!api) {
+          return;
+        }
 
-      setCanScrollPrev(api.canScrollPrev());
-      setCanScrollNext(api.canScrollNext());
-    }, []);
+        // console.log("selected", api.scrollSnapList());
+
+        if (scrollSnaps.length === 0) {
+          setScrollSnaps(api.scrollSnapList());
+        }
+
+        setSelectedIndex(api.selectedScrollSnap());
+
+        setCanScrollPrev(api.canScrollPrev());
+        setCanScrollNext(api.canScrollNext());
+      },
+      [scrollSnaps]
+    );
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev();
@@ -131,6 +146,8 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          selectedIndex,
+          scrollSnaps,
         }}
       >
         <div
@@ -255,6 +272,52 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
+export type CarouselIdentifierProps = {
+  className?: string;
+  dotClassName?: string;
+  onClick?: (index: number) => void;
+  // asChild?: boolean;
+};
+const CarouselIdentifier: React.FC<CarouselIdentifierProps> = (props) => {
+  const { scrollSnaps, selectedIndex } = useCarousel();
+
+  return (
+    <div className={cn("orderly-flex orderly-gap-1", props.className)}>
+      {scrollSnaps.map((_, index) => {
+        return (
+          <Dot
+            key={index}
+            index={index}
+            active={index === selectedIndex}
+            onClick={props.onClick}
+            className={props.dotClassName}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+CarouselIdentifier.displayName = "CarouselIdentifier";
+
+const Dot: React.FC<{
+  index: number;
+  active: boolean;
+  onClick?: (index: number) => void;
+  className?: string;
+}> = ({ index, active, onClick, className }) => {
+  return (
+    <button
+      onClick={() => onClick?.(index)}
+      className={cn(
+        "orderly-w-2 orderly-h-2 orderly-rounded-full",
+        active ? "orderly-bg-primary" : "orderly-bg-white/30",
+        className
+      )}
+    />
+  );
+};
+
 export {
   type CarouselApi,
   Carousel,
@@ -262,4 +325,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselIdentifier,
 };
