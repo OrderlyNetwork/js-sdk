@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import {
   Carousel,
   CarouselContent,
+  CarouselIdentifier,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -83,6 +84,83 @@ export const CarouselSize: Story = {
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
+        </Carousel>
+      </div>
+    );
+  },
+};
+
+export const Identifier: Story = {
+  render: (args) => {
+    return (
+      <div className="orderly-px-10">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="orderly-w-full orderly-max-w-sm"
+        >
+          <CarouselContent>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <CarouselItem
+                key={index}
+                className="orderly-md:basis-1/2 orderly-lg:basis-1/3"
+              >
+                <div className="orderly-p-1 orderly-bg-slate-50">
+                  <div>
+                    <div className="orderly-flex orderly-aspect-square orderly-items-center orderly-justify-center orderly-p-6">
+                      <span className="orderly-text-3xl orderly-font-semibold">
+                        {index + 1}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="orderly-mt-2">
+            <CarouselIdentifier />
+          </div>
+        </Carousel>
+      </div>
+    );
+  },
+};
+
+export const IdentifierCustomStyle: Story = {
+  render: (args) => {
+    return (
+      <div className="orderly-px-10">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="orderly-w-full orderly-max-w-sm"
+        >
+          <CarouselContent>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <CarouselItem
+                key={index}
+                className="orderly-md:basis-1/2 orderly-lg:basis-1/3"
+              >
+                <div className="orderly-p-1 orderly-bg-slate-50">
+                  <div>
+                    <div className="orderly-flex orderly-aspect-square orderly-items-center orderly-justify-center orderly-p-6">
+                      <span className="orderly-text-3xl orderly-font-semibold">
+                        {index + 1}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="orderly-mt-2 orderly-flex orderly-justify-center">
+            <CarouselIdentifier
+              dotClassName="orderly-w-[20px] orderly-h-[4px] orderly-bg-base-300"
+              dotActiveClassName="orderly-bg-red-500"
+            />
+          </div>
         </Carousel>
       </div>
     );
