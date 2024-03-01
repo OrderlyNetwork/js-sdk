@@ -26,7 +26,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     .toString();
 
   const feeAmount = `${new Decimal(dstGasFee).toFixed(
-    feeDecimalsOffset(2),
+    feeDecimalsOffset(4),
     Decimal.ROUND_UP
   )} ${nativeToken?.symbol}`;
 
