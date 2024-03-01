@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
-import { Poster } from "./poster";
+import { Poster, type PosterRef } from "./poster";
 import { Carousel } from "../../carousel";
+import { Button } from "../../button/button";
 
 // const {Content,} = Carousel;
 
@@ -170,7 +171,30 @@ export default meta;
 
 export const Default: Story = {
   render: (args) => {
-    return <Poster width={500} height={300} data={args} />;
+    const posterRef = useRef<PosterRef | null>(null);
+    return (
+      <div>
+        <Poster width={500} height={300} data={args} ref={posterRef} />
+        <div className="orderly-mt-3 orderly-flex orderly-gap-2">
+          <Button
+            size={"small"}
+            onClick={() => {
+              posterRef.current?.download("poster.png");
+            }}
+          >
+            Download image
+          </Button>
+          <Button
+            size={"small"}
+            onClick={() => {
+              posterRef.current?.copy();
+            }}
+          >
+            Copy image
+          </Button>
+        </div>
+      </div>
+    );
   },
 };
 
