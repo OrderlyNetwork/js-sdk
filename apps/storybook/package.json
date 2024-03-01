@@ -16,11 +16,7 @@
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/react": "workspace:*",
-    "@orderly.network/web3-modal": "workspace:*",
-    "@orderly.network/web3-onboard": "workspace:*",
+    
     "@storybook/addon-essentials": "^7.6.7",
     "@storybook/addon-interactions": "^7.6.7",
     "@storybook/addon-links": "^7.6.7",
@@ -43,6 +39,11 @@
   },
   "dependencies": {
     "viem": "^1.21.4",
-    "wagmi": "^1.4.12"
+    "wagmi": "^1.4.12",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/react": "workspace:*",
+    "@orderly.network/web3-modal": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
   }
 }
