@@ -29,9 +29,17 @@ export const Toolbar: FC<Props> = (props) => {
       contentClassName: "desktop:orderly-w-[364px]",
       onOk: async () => {
         // do cancel all orders
-        // Promise.resolve();
-        await cancelAll(null,{"source_type": "ALL"});
-        // Promise.resolve();
+        try {
+          await cancelAll(null, { "source_type": "ALL" })
+        } catch (error) {
+          // @ts-ignore
+          if (error?.message !== undefined) {
+            // @ts-ignore
+            toast.error(error.message);
+          }
+        } finally {
+          Promise.resolve();
+        }
       },
       onCancel: () => {
         return Promise.reject();
