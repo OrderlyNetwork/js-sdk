@@ -128,7 +128,7 @@ export const Listview: FC<
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
-        width: 120,
+        width: 150,
         onSort: true,
         hint: (
           <UnrealizedPnLPopoverCard
