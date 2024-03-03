@@ -51,9 +51,6 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
     const informations: { title: string; value: any; }[] = [];
 
     options.forEach((op) => {
-        console.log("forearch", op);
-   
-        console.log("op", op);
         
         switch (op) {
             case "leverage": {
@@ -124,18 +121,26 @@ function formatTime(input: number | Date): string {
     const formatter = new Intl.DateTimeFormat('en-US', options);
     const formattedParts = formatter.formatToParts(date);
 
-    console.log("formattedParts", formattedParts);
+    // console.log("formattedParts", formattedParts);
     
   
-    const formattedTime = formattedParts
-      .map(part => {
-        if (part.type === 'literal') {
-          return part.value;
-        } else {
-          return part.value.toUpperCase();
-        }
-      })
-      .join('');
+    
+    const year = formattedParts.find((part) => part.type === "year" ? part.value: "")?.value;
+    const month = formattedParts.find((part) => part.type === "month" ? part.value: "")?.value;
+    const day = formattedParts.find((part) => part.type === "day" ? part.value: "")?.value;
+    const hour = formattedParts.find((part) => part.type === "hour" ? part.value: "")?.value;
+    const minute = formattedParts.find((part) => part.type === "minute" ? part.value: "")?.value;
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
   
-    return formattedTime;
+    // const formattedTime = formattedParts
+    //   .map(part => {
+    //     if (part.type === 'literal') {
+    //       return part.value;
+    //     } else {
+    //       return part.value.toUpperCase();
+    //     }
+    //   })
+    //   .join('');
+    // return formattedTime;
 }

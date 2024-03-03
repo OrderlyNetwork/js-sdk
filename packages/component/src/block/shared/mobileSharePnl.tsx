@@ -6,12 +6,11 @@ import Button from "@/button";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
-import { OrderlyContext } from "@orderly.network/hooks";
 import { OrderlyAppContext } from "@/provider";
 import { PosterRef } from "../poster/poster";
 import { getPnLPosterData } from "./sharePnLUtils";
 import { Carousel } from "@/carousel";
-import useEmblaCarousel from "embla-carousel-react";
+import { Dot, useCarousel } from "@/carousel/carousel";
 
 
 
@@ -26,6 +25,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
     const [domain, setDomain] = useState("");
 
     const posterRefs = shareOptions.pnl.backgroundImages.map(() => useRef<PosterRef | null>(null));
+    const [selectIndex, setSelectIndex] = useState(0);
 
     useEffect(() => {
         const currentDomain = window.location.hostname;
@@ -34,13 +34,13 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
 
 
     const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
+    console.log("pster data", posterData);
+    
 
     const carouselRef = useRef<any>();
     const aspectRatio = 552 / 310;
     const [scale, setScale] = useState(1);
     const [carouselHeight, setCarouselHeight] = useState(0);
-
-    const [emblaRef, emblaApi] = useEmblaCarousel();
 
     useEffect(() => {
         if (carouselRef.current) {
@@ -51,17 +51,6 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
         }
     }, [carouselRef]);
 
-    useEffect(() => {
-        if (!emblaApi) return;
-
-        function onSelect() {
-            console.log("on selected",emblaApi?.selectedScrollSnap());
-            
-        }
-
-        emblaApi.on('reInit', onSelect)
-        emblaApi.on('select', onSelect)
-    }, [emblaApi]);
 
     const onSharePnL = async (posterRef: React.MutableRefObject<PosterRef | null>) => {
         if (!posterRef.current) return;
@@ -85,18 +74,18 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
         }
     };
 
-    
+
 
     return (
         <div className="orderly-p-0">
             <div
                 ref={carouselRef}
                 className="orderly-w-full orderly-mt-4 orderly-overflow-hidden"
-                style={{ height: `${carouselHeight}px` }}
+                style={{ height: `${carouselHeight + 20}px` }}
             >
 
-                <Carousel opts={{ align: "start" }} ref={emblaRef}>
-                    <Carousel.Content >
+                <Carousel opts={{ align: "start" }}>
+                    <Carousel.Content>
                         {shareOptions.pnl.backgroundImages.map((item, index) => (
                             <Carousel.Item key={index}>
                                 <Poster
@@ -117,7 +106,15 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
                                 />
                             </Carousel.Item>
                         ))}
+
                     </Carousel.Content>
+                    <div className="orderly-mt-2 orderly-flex orderly-justify-center">
+                        <MyIdentifier
+                            dotClassName="orderly-w-[20px] orderly-h-[4px] orderly-bg-base-300"
+                            dotActiveClassName="orderly-bg-red-500"
+                            setSelectIndex={setSelectIndex}
+                        />
+                    </div>
                 </Carousel>
 
             </div>
@@ -170,11 +167,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
                 className="orderly-h-[40px]"
                 onClick={() => {
 
-                    if (!emblaApi)return;
-                    const index = emblaApi?.selectedScrollSnap();
-                    console.log("index is", index);
-                    
-                    onSharePnL(posterRefs[index]);
+                    onSharePnL(posterRefs[selectIndex]);
 
                 }}>
                 Share
@@ -261,4 +254,35 @@ function dataURItoBlob(dataURI: string) {
         ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], { type: mimeString });
+}
+
+const MyIdentifier: FC<{
+    setSelectIndex: any,
+    className?: string;
+    dotClassName?: string;
+    dotActiveClassName?: string;
+    onClick?: (index: number) => void;
+}> = (props) => {
+
+    const { scrollSnaps, selectedIndex } = useCarousel();
+    useEffect(()=>{
+        props.setSelectIndex(selectedIndex);
+    }, [selectedIndex]);
+
+    return (
+        <div className={cn("orderly-flex orderly-gap-1")}>
+            {scrollSnaps.map((_, index) => {
+                return (
+                    <Dot
+                        key={index}
+                        index={index}
+                        active={index === selectedIndex}
+                        onClick={props.onClick}
+                        className={props.dotClassName}
+                        activeClassName={props.dotActiveClassName}
+                    />
+                );
+            })}
+        </div>
+    );
 }

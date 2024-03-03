@@ -33,7 +33,7 @@ type CarouselContextProps = {
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
-function useCarousel() {
+export function useCarousel() {
   const context = React.useContext(CarouselContext);
 
   if (!context) {
@@ -302,7 +302,7 @@ const CarouselIdentifier: React.FC<CarouselIdentifierProps> = (props) => {
 
 CarouselIdentifier.displayName = "CarouselIdentifier";
 
-const Dot: React.FC<{
+export const Dot: React.FC<{
   index: number;
   active: boolean;
   onClick?: (index: number) => void;
