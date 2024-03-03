@@ -9,23 +9,26 @@ import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { Logo } from "@/logo";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
-export const SharePoisitionView = create<{ position: any }>((props) => {
+export const SharePoisitionView = create<{ 
+    position: any,
+    leverage: number, 
+}>((props) => {
 
     const isTablet = useMediaQuery(MEDIA_TABLET);
-    const { position } = props;
-    const { maxLeverage } = useLeverage();
+    const { position, leverage } = props;
+    // const { maxLeverage } = useLeverage();
 
-    console.log("xxxxxx SharePoisitionView", maxLeverage);
+    // console.log("xxxxxx SharePoisitionView", maxLeverage);
     
 
     return isTablet ?
         <MobileSharePnL
             position={position}
-            leverage={maxLeverage}
+            leverage={leverage}
         /> :
         <DesktopSharePnL
             position={position}
-            leverage={maxLeverage}
+            leverage={leverage}
         />;
 });
 

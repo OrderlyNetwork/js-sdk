@@ -24,6 +24,7 @@ export const SharePnLIcon: FC<PropsWithChildren<{
             
             modal.show(SharePoisitionView, {
                 position: props.position,
+                leverage,
             });
         }}
     />);
