@@ -15,6 +15,9 @@ export const SharePoisitionView = create<{ position: any }>((props) => {
     const { position } = props;
     const { maxLeverage } = useLeverage();
 
+    console.log("xxxxxx SharePoisitionView", maxLeverage);
+    
+
     return isTablet ?
         <MobileSharePnL
             position={position}

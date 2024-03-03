@@ -9,8 +9,9 @@ import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
 import { PosterRef } from "../poster/poster";
 import { getPnLPosterData } from "./sharePnLUtils";
+import { CarouselContent, CarouselItem, Dot, useCarousel } from "@/carousel/carousel";
 import { Carousel } from "@/carousel";
-import { Dot, useCarousel } from "@/carousel/carousel";
+
 
 
 
@@ -84,10 +85,10 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
                 style={{ height: `${carouselHeight + 20}px` }}
             >
 
-                <Carousel opts={{ align: "start" }}>
-                    <Carousel.Content>
+                <Carousel className="orderly-w-full orderly-overflow-hidden" opts={{ align: "start" }} >
+                    <CarouselContent style={{ height: `${carouselHeight}px` }}>
                         {shareOptions.pnl.backgroundImages.map((item, index) => (
-                            <Carousel.Item key={index}>
+                            <CarouselItem key={index}>
                                 <Poster
                                     className="orderly-transform orderly-origin-top-left"
                                     style={{ scale: `${scale}` }}
@@ -104,14 +105,14 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
                                     }}
                                     ref={posterRefs[index]}
                                 />
-                            </Carousel.Item>
+                            </CarouselItem>
                         ))}
 
-                    </Carousel.Content>
-                    <div className="orderly-mt-2 orderly-flex orderly-justify-center">
+                    </CarouselContent>
+                    <div className="orderly-mt-2 orderly-mb-1 orderly-flex orderly-justify-center">
                         <MyIdentifier
-                            dotClassName="orderly-w-[20px] orderly-h-[4px] orderly-bg-base-300"
-                            dotActiveClassName="orderly-bg-red-500"
+                            dotClassName="orderly-w-[16px] orderly-h-[4px] orderly-bg-base-300"
+                            dotActiveClassName="orderly-bg-primary orderly-w-[20px]"
                             setSelectIndex={setSelectIndex}
                         />
                     </div>
