@@ -36,7 +36,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
 
     const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
     console.log("pster data", posterData);
-    
+
 
     const carouselRef = useRef<any>();
     const aspectRatio = 552 / 310;
@@ -163,16 +163,17 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
                 </div>
             </div>
 
-            <Button
-                fullWidth
-                className="orderly-h-[40px]"
-                onClick={() => {
+            <div className="orderly-pt-2">
+                <Button
+                    fullWidth
+                    className="orderly-h-[40px]"
+                    onClick={() => {
+                        onSharePnL(posterRefs[selectIndex]);
+                    }}>
+                    Share
+                </Button>
+            </div>
 
-                    onSharePnL(posterRefs[selectIndex]);
-
-                }}>
-                Share
-            </Button>
 
         </div>
     )
@@ -266,7 +267,7 @@ const MyIdentifier: FC<{
 }> = (props) => {
 
     const { scrollSnaps, selectedIndex } = useCarousel();
-    useEffect(()=>{
+    useEffect(() => {
         props.setSelectIndex(selectedIndex);
     }, [selectedIndex]);
 
