@@ -32,7 +32,9 @@ const config = {
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-webpack5"),
-    options: {},
+    options: {
+      fastRefresh: true,
+    },
   },
   docs: {
     autodocs: "tag",
@@ -43,11 +45,24 @@ const config = {
         ...(config.resolve.plugins || []),
         new TsconfigPathsPlugin({
           extensions: config.resolve.extensions,
+          // configFile: path.resolve(__dirname, "../tsconfig.build.json"),
         }),
       ];
+
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // "@orderly.network/hooks": path.resolve(__dirname, "../../../packages/hooks/src"),
+        // "@orderly.network/component": path.resolve(__dirname, "../../../packages/component/src"),
+        // "@orderly.network/referral": path.resolve(__dirname, "../../../packages/referral/src"),
+      }
     }
     return config;
   },
+
+  babel: async (config, option) => {
+    config.presets = [...config.presets, "@babel/preset-typescript"];
+    return config;
+  }
 };
 export default config;
 
