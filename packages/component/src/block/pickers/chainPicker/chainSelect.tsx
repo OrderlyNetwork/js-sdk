@@ -122,12 +122,21 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   useEffect(() => {
     // 获取 到chain列表之后，初始化chain及其token列表
-    if (!!chains) {
-      const chainInfo = findByChainId(value?.id!);
+    if (!!chains || !!props.chains) {
+      let chainInfo: Chain | undefined;
+
+      if (props.chains) {
+        chainInfo = [...props.chains?.mainnet, ...props.chains?.testnet].find(
+          // @ts-ignore
+          (item) => parseInt(item.network_infos?.chain_id) === parseInt(chainId)
+        );
+      } else {
+        chainInfo = findByChainId(props.value?.id!);
+      }
       if (!chainInfo) return;
       props.onChainInited?.(chainInfo as any);
     }
-  }, [props.value?.id, chains?.length]);
+  }, [props.value?.id, chains?.length, props.chains]);
 
   const icon = useMemo(() => {
     if (props.settingChain) {
