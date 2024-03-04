@@ -128,7 +128,11 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       if (props.chains) {
         chainInfo = [...props.chains?.mainnet, ...props.chains?.testnet].find(
           // @ts-ignore
-          (item) => parseInt(item.network_infos?.chain_id) === parseInt(chainId)
+          (item) =>
+            // @ts-ignore
+            parseInt(item.network_infos?.chain_id) ===
+            // @ts-ignore
+            parseInt(props.value?.id!)
         );
       } else {
         chainInfo = findByChainId(props.value?.id!);
