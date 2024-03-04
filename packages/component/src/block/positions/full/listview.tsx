@@ -27,6 +27,7 @@ import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 import { API } from "@orderly.network/types";
 import { EmptyView } from "@/listView/emptyView";
 import { PositionEmptyView } from "./positionEmptyView";
+import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -127,7 +128,7 @@ export const Listview: FC<
         title: "Unreal. PnL",
         className: "orderly-h-[48px]",
         dataIndex: "unrealized_pnl",
-        width: 120,
+        width: 150,
         onSort: true,
         hint: (
           <UnrealizedPnLPopoverCard
@@ -136,29 +137,26 @@ export const Listview: FC<
           />
         ),
         render: (value: string, record: any) => {
-          return (
-            <span>
-              <Numeral
-                precision={pnlNotionalDecimalPrecision}
-                coloring
-                className="orderly-font-semibold"
-              >
-                {value}
-              </Numeral>
-              {
-                <Numeral
-                  rule="percentages"
-                  precision={pnlNotionalDecimalPrecision}
-                  coloring
-                  className="orderly-font-semibold"
-                  prefix="("
-                  surfix=")"
-                >
-                  {record.unsettled_pnl_ROI}
-                </Numeral>
-              }
-            </span>
-          );
+          return (<span>
+            <Numeral
+              precision={pnlNotionalDecimalPrecision}
+              coloring
+              className="orderly-font-semibold"
+            >
+              {value}
+            </Numeral>
+            {<Numeral
+              rule="percentages"
+              precision={pnlNotionalDecimalPrecision}
+              coloring
+              className="orderly-font-semibold"
+              prefix="("
+              surfix=")"
+            >
+              {(record.unsettled_pnl_ROI)}
+            </Numeral>}
+            <SharePnLIcon className="orderly-ml-2" position={record}/>
+          </span>)
         },
       },
       // {

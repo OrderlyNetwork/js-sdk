@@ -111,6 +111,17 @@ const preview = {
               // telegramUrl: "https://orderly.network",
               discordUrl: "https://discord.com/invite/orderlynetwork",
             }}
+            shareOptions={{
+              pnl: {
+                backgroundImages: [
+                  "/images/poster_bg_1.png",
+                  "/images/poster_bg_2.png",
+                  "/images/poster_bg_3.png",
+                  "/images/poster_bg_4.png",
+                  "/images/poster_bg_5.png",
+                ]
+              }
+            }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
               localStorage.setItem(

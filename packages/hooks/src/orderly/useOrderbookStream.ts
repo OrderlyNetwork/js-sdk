@@ -131,9 +131,9 @@ export const reduceOrderbook = (
 
 
         if (askPrice <= bidPrice) {
-          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
+          console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
-          // let logStr = "";
+          let logStr = "";
           for (let index = 0; index < asks.length; index++) {
             if (index === 0) {
               const quantity = asks[index][1] + askQty;
@@ -147,9 +147,9 @@ export const reduceOrderbook = (
               // FIXME: fix this code later
               asks[index][3] = asks[index][0] * asks[index][1] + asks[index-1][3];
             }
-            // logStr += `index: ${index} ${asks[index]}\n`;
+            logStr += `index: ${index} ${asks[index]}\n`;
           }
-          // console.log("xxxxxxxxxxx reset ask list end", logStr);
+          console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }

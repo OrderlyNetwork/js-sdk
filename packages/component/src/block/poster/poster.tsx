@@ -6,6 +6,7 @@ export type PosterProps = {
   height: number;
   className?: string;
   data: drawOptions;
+  style?: React.CSSProperties;
 };
 
 export type PosterRef = {
@@ -16,7 +17,7 @@ export type PosterRef = {
 };
 
 export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
-  const { width, height, className, data } = props;
+  const { width, height, className, data, style } = props;
 
   const { ref, download, toDataURL, copy, toBlob } = usePoster(data);
 
@@ -28,6 +29,6 @@ export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
   }));
 
   return (
-    <canvas ref={ref} width={width} height={height} className={className} />
+    <canvas ref={ref} width={width} height={height} className={className} style={style}/>
   );
 });

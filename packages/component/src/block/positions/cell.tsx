@@ -1,11 +1,12 @@
 import Button from "@/button";
-import { Coin, NetworkImage } from "@/icon";
+import { Coin, NetworkImage, PositionShareIcon } from "@/icon";
 import { Statistic } from "@/statistic";
 import { FC, useContext } from "react";
 import { Numeral, Text } from "@/text";
 import { SymbolContext } from "@/provider";
 import { API } from "@orderly.network/types";
 import { cn } from "@/utils/css";
+import { SharePnLIcon } from "../shared/sharePnLIcon";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
@@ -46,7 +47,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={
             <div
               className={cn(
-                "orderly-flex orderly-justify-end orderly-text-3xs",
+                "orderly-flex orderly-justify-end orderly-text-3xs orderly-items-center",
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
@@ -63,6 +64,10 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               >
                 {item.unsettled_pnl_ROI}
               </Numeral>
+              <SharePnLIcon
+                className="orderly-ml-2"
+                position={item}
+              />
             </div>
           }
           rule="price"
