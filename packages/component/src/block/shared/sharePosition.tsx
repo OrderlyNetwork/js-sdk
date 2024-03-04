@@ -10,16 +10,12 @@ import { Logo } from "@/logo";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePoisitionView = create<{ 
-    position: any,
-    leverage: number, 
+    position: any
 }>((props) => {
 
     const isTablet = useMediaQuery(MEDIA_TABLET);
-    const { position, leverage } = props;
-    // const { maxLeverage } = useLeverage();
-
-    // console.log("xxxxxx SharePoisitionView", maxLeverage);
-    
+    const { position } = props;
+    const [leverage] = useLeverage();
 
     return isTablet ?
         <MobileSharePnL

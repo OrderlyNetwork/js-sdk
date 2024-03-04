@@ -3,15 +3,12 @@ import { cn } from "@/utils";
 import { FC, PropsWithChildren } from "react";
 import { modal } from "@/modal";
 import { SharePoisitionView } from "./sharePosition";
-import { useLeverage } from "@orderly.network/hooks";
 
 
 export const SharePnLIcon: FC<PropsWithChildren<{
     className?: string,
     position: any,
 }>> = (props) => {
-    const [leverage] = useLeverage();
-    console.log("share icon ", leverage);
     
     return (<PositionShareIcon
         size={12}
@@ -24,7 +21,6 @@ export const SharePnLIcon: FC<PropsWithChildren<{
             
             modal.show(SharePoisitionView, {
                 position: props.position,
-                leverage,
             });
         }}
     />);
