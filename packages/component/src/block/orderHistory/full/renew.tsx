@@ -63,6 +63,8 @@ export const Renew: FC<{ record: any }> = (props) => {
       size={"small"}
       variant={"outlined"}
       color={"tertiary"}
+      loading={isMutating}
+      disabled={isMutating}
       onClick={(event) => {
         // setOpen(true);
         event.preventDefault();

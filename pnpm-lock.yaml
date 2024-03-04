@@ -280,6 +280,21 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@orderly.network/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../../packages/component
+      '@orderly.network/web3-modal':
+        specifier: workspace:*
+        version: link:../../packages/walletconnect
+      '@orderly.network/web3-onboard':
+        specifier: workspace:*
+        version: link:../../packages/onboard
       viem:
         specifier: ^1.21.4
         version: 1.21.4(typescript@5.2.2)
@@ -296,21 +311,6 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.22.5
         version: 7.23.3(@babel/core@7.23.6)
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../../packages/hooks
-      '@orderly.network/react':
-        specifier: workspace:*
-        version: link:../../packages/component
-      '@orderly.network/web3-modal':
-        specifier: workspace:*
-        version: link:../../packages/walletconnect
-      '@orderly.network/web3-onboard':
-        specifier: workspace:*
-        version: link:../../packages/onboard
       '@storybook/addon-essentials':
         specifier: ^7.6.7
         version: 7.6.7(react-dom@18.2.0)(react@18.2.0)

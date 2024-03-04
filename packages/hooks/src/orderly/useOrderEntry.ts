@@ -333,10 +333,9 @@ export function useOrderEntry(
     parsedData?.order_type === OrderType.STOP_LIMIT ||
     parsedData?.order_type === OrderType.STOP_MARKET;
 
-  const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
-    OrderEntity,
-    any
-  >(isStopOrder ? "/v1/algo/order" : "/v1/order");
+  const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
+    isStopOrder ? "/v1/algo/order" : "/v1/order"
+  );
 
   // const maxQty = 3;
 
@@ -406,9 +405,18 @@ export function useOrderEntry(
                 ...data,
               })
             ).then((res) => {
-              // console.log("res::::", res);
+              console.log("--------------------res::::", res);
               // resolve(res);
               if (res.success) {
+                // TODO: remove when the WS service is fixed
+
+                if (Array.isArray(res.data.rows)) {
+                  ee.emit("algoOrder:cache", {
+                    ...res.data.rows[0],
+                    trigger_price: data.trigger_price,
+                  });
+                }
+
                 resolve(res.data);
               } else {
                 reject(res);

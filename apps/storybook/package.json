@@ -44,6 +44,6 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/react": "workspace:*",
     "@orderly.network/web3-modal": "workspace:*",
-    "@orderly.network/web3-onboard": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*"
   }
 }

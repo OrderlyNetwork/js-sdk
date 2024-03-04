@@ -68,7 +68,9 @@ export const Listview: FC<Props> = (props) => {
           dataIndex: "type",
           formatter: (value: string, record: any) => {
             if (record.algo_order_id) {
-              return `Stop ` + `${record.type}`.toLowerCase();
+              return (
+                `Stop ` + `${record.type.replace("_ORDER", "")}`.toLowerCase()
+              );
             }
             return upperCaseFirstLetter(value);
           },
@@ -153,11 +155,6 @@ export const Listview: FC<Props> = (props) => {
             );
           },
         },
-        // {
-        //   title: "Est. total",
-        //   className: "orderly-h-[48px]",
-        //   dataIndex: "total",
-        // },
         {
           title: "Reduce",
           dataIndex: "reduce_only",

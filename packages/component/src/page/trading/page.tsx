@@ -10,12 +10,12 @@ import { TopNavbar } from "../common/topNavbar";
 import { Footer } from "@/layout/footer";
 import { SystemStatusBar } from "@/block/systemStatusBar";
 import { OrderlyAppContext } from "@/provider";
+import { DebugPrinter } from "@/dev/dataConsole";
 
 const { Header, Content, Sider, PageHeader } = Layout;
 
 export const BaseTradingPage: FC<TradingPageProps> = (props) => {
-  const { footerStatusBarProps } =
-    useContext(OrderlyAppContext);
+  const { footerStatusBarProps } = useContext(OrderlyAppContext);
 
   return (
     <TradingPageProvider
@@ -30,9 +30,6 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
         <Layout style={{ paddingBottom: "42px" }}>
           {/* <Sider style={{ minWidth: "44px", backgroundColor: "red" }}></Sider> */}
           <Content>
-            {/* <PageHeader
-              style={{ height: "30px", backgroundColor: "blue" }}
-            ></PageHeader> */}
             <DesktopTradingPage {...props} />
           </Content>
         </Layout>
@@ -46,6 +43,7 @@ export const BaseTradingPage: FC<TradingPageProps> = (props) => {
             discordUrl={footerStatusBarProps?.discordUrl}
           />
         </Footer>
+        {/* <DebugPrinter /> */}
       </Layout>
     </TradingPageProvider>
   );
