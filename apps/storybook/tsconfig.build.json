@@ -19,12 +19,8 @@
     "sourceMap": true,
     "module": "esnext",
     "outDir": "dist",
-    "declarationDir": "types",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "paths": {
-      "@/*": ["./src/*"],
-    },
     "typeRoots": ["./node_modules/@types", "./src/@types"]
   }
 }
