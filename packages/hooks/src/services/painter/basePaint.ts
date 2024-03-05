@@ -48,6 +48,7 @@ export type layoutInfo = {
   // padding?: number;
   // margin?: number;
   fontSize?: number;
+
   color?: string;
   textAlign?: CanvasTextAlign;
   textBaseline?: CanvasTextBaseline;
@@ -75,6 +76,7 @@ export type drawOptions = {
    * Color of common text
    */
   color?: string;
+  fontFamily?: string;
   /**
    * Lose color
    */

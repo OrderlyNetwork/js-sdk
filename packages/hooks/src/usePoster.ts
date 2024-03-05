@@ -39,7 +39,10 @@ export const usePoster = (
     if (target && !painterRef.current) {
       painterRef.current = new PosterPainter(target);
       painterRef.current.draw(
-        mergeDeepRight({ layout: defaultLayoutConfig }, options)
+        mergeDeepRight<Partial<drawOptions>, drawOptions>(
+          { layout: defaultLayoutConfig, fontFamily: "Manrope" },
+          options
+        )
       );
     }
   }, [target]);

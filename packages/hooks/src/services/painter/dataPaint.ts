@@ -56,6 +56,7 @@ export class DataPaint extends BasePaint {
       top: this._ratio(position.top!),
       left: this._ratio(position.left!),
       textBaseline: "top",
+      fontFamily: options.fontFamily,
     });
   }
   private drawPosition(options: drawOptions, offsetTop: number = 0) {
@@ -79,6 +80,7 @@ export class DataPaint extends BasePaint {
         left,
         top: this._ratio(top),
         fontSize: this._ratio(14),
+        fontFamily: options.fontFamily,
       });
     }
 
@@ -91,6 +93,7 @@ export class DataPaint extends BasePaint {
           left,
           top: this._ratio(top),
           fontSize: this._ratio(12),
+          fontFamily: options.fontFamily,
         });
       }
 
@@ -100,6 +103,7 @@ export class DataPaint extends BasePaint {
         left: left,
         top: this._ratio(top),
         fontSize: this._ratio(12),
+        fontFamily: options.fontFamily,
       });
     }
 
@@ -112,6 +116,7 @@ export class DataPaint extends BasePaint {
           left,
           top: this._ratio(top),
           fontSize: this._ratio(12),
+          fontFamily: options.fontFamily,
         });
       }
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
@@ -122,6 +127,7 @@ export class DataPaint extends BasePaint {
           left,
           top: this._ratio(top),
           fontSize: this._ratio(12),
+          fontFamily: options.fontFamily,
         }
       );
     }
@@ -154,6 +160,7 @@ export class DataPaint extends BasePaint {
 
           fontSize: this._ratio(layout.fontSize as number),
           fontWeight: 700,
+          fontFamily: options.fontFamily,
         }
       );
     }
@@ -177,6 +184,7 @@ export class DataPaint extends BasePaint {
         top: this._ratio(top),
         fontSize: this._ratio((layout.fontSize as number) * 0.6),
         fontWeight: 600,
+        fontFamily: options.fontFamily,
       });
     }
   }
@@ -206,6 +214,7 @@ export class DataPaint extends BasePaint {
         top: this._ratio(top),
         fontSize: this._ratio(10),
         color: "rgba(255,255,255,0.2)",
+        fontFamily: options.fontFamily,
       });
       this._drawText(info.value, {
         left: this._ratio(left),
@@ -213,6 +222,7 @@ export class DataPaint extends BasePaint {
         fontSize: this._ratio(layout.fontSize as number),
         fontWeight: 500,
         color: layout.color as string,
+        fontFamily: options.fontFamily,
       });
     });
   }
@@ -230,6 +240,7 @@ export class DataPaint extends BasePaint {
       top: this._ratio(top),
       fontSize: this._ratio(layout.fontSize as number),
       color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
+      fontFamily: options.fontFamily,
     });
   }
 
@@ -248,6 +259,7 @@ export class DataPaint extends BasePaint {
       fontSize: this._ratio(layout.fontSize as number),
       color: layout.color as string,
       textAlign: "end",
+      fontFamily: options.fontFamily,
     });
   }
 
@@ -257,6 +269,7 @@ export class DataPaint extends BasePaint {
       left?: number;
       top?: number;
       fontSize?: number;
+      fontFamily?: string;
       fontWeight?: number;
       color?: string;
       textBaseline?: CanvasTextBaseline;
@@ -274,8 +287,11 @@ export class DataPaint extends BasePaint {
       textAlign = "start",
     } = options ?? {};
 
+    console.log("draw text", str, options);
+
     this.ctx.save();
-    this.ctx.font = `${fontWeight} ${fontSize}px "Nunito Sans",-apple-system,".SFNSText-Regular","San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif`;
+    // "Nunito Sans",-apple-system,"San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif
+    this.ctx.font = `${fontWeight} ${fontSize}px ${options?.fontFamily}`;
     this.ctx.fillStyle = color;
     this.ctx.textBaseline = textBaseline;
     this.ctx.textAlign = textAlign;

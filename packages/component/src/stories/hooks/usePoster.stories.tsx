@@ -12,6 +12,7 @@ const meta: Meta = {
   component: QueryDemo,
   args: {
     // backgroundColor: "#0b8c70",
+    fontFamily: "Manrope",
     backgroundImg: "/images/poster_bg_2.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
