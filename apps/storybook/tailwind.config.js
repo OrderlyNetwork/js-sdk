@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 
 const plugin = require("tailwindcss/plugin");
-import colors from "tailwindcss/colors";
 
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
-  // content: ["./src/**/*.{ts,js,tsx,jsx}"],
-  purge: ["./src/**/*.{ts,js,tsx,jsx}"],
+  content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  prefix: "orderly-",
   theme: {
     extend: {
       colors: {

@@ -119,8 +119,8 @@ const preview = {
                   "/images/poster_bg_3.png",
                   "/images/poster_bg_4.png",
                   "/images/poster_bg_5.png",
-                ]
-              }
+                ],
+              },
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
@@ -141,11 +141,8 @@ const preview = {
     },
     withThemeByDataAttribute({
       themes: {
-        // light: "light",
-        // dark: "dark",
-        "woo/dark": "",
-        "woo/light": "woo_light",
-        orderly: "orderly",
+        orderly: "",
+        custom: "custom",
       },
       defaultTheme: "orderly",
       attributeName: "data-o-theme",

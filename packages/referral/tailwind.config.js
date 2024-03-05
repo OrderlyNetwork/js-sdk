@@ -4,8 +4,6 @@ const plugin = require("tailwindcss/plugin");
 const path = require("path");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-import colors from "tailwindcss/colors";
-
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
@@ -39,12 +37,12 @@ module.exports = {
         "var(--orderly-font-size-4xl, calc(var(--orderly-font-size-base) + 20px))", // if base is 16px, it will be 36px
     },
     boxShadow: {
-      'sm': "var(--orderly-shadow-sm, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      sm: "var(--orderly-shadow-sm, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
       DEFAULT: "var(--orderly-shadow, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'md': "var(--orderly-shadow-md, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'lg': "var(--orderly-shadow-lg, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'xl': "var(--orderly-shadow-xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      '2xl': "var(--orderly-shadow-2xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      md: "var(--orderly-shadow-md, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      lg: "var(--orderly-shadow-lg, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      xl: "var(--orderly-shadow-xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      "2xl": "var(--orderly-shadow-2xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
     },
     extend: {
       fontFamily: {

@@ -60,7 +60,6 @@ const config: StorybookConfig = {
           __dirname,
           "../../../packages/referral/src"
         ),
-        "@/": path.resolve(__dirname, "../../../packages/referral/src/"),
       };
     }
     return config;
