@@ -1,5 +1,5 @@
 import { cn } from "@/utils";
-import { ArrowDownToLineIcon, CopyDesktopIcon } from "@/icon";
+import { ArrowDownToLineIcon, CircleCloseIcon, CopyDesktopIcon } from "@/icon";
 import { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Input } from "@/input";
 import toast from "react-hot-toast";
@@ -17,7 +17,8 @@ import { PosterRef } from "../poster/poster";
 
 export const DesktopSharePnLContent: FC<{
     position: any,
-    leverage: number
+    leverage: number,
+    hide: any,
 }> = (props) => {
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
@@ -42,9 +43,11 @@ export const DesktopSharePnLContent: FC<{
 
     const onCopy = () => {
         posterRef.current?.copy();
+        props.hide?.();
     };
     const onDownload = () => {
         posterRef.current?.download("Poster.png");
+        props.hide?.();
     };
 
     return (
@@ -143,7 +146,7 @@ const PnlFormatView: FC<{
                     <Circle className="orderly-order-entry-radio-circle orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
                 )}
             </button>
-            <span className="orderly-text-3xs">{text}</span>
+            <span className="orderly-text-3xs orderly-ml-2">{text}</span>
         </div>
     );
 }
@@ -158,9 +161,9 @@ const ShareOption: FC<{
 
     const text = useMemo(() => {
         switch (type) {
-            case "openPrice": return "Open Price";
-            case "openTime": return "Opened At";
-            case "markPrice": return "Mark Price";
+            case "openPrice": return "Open price";
+            case "openTime": return "Opened at";
+            case "markPrice": return "Mark price";
             case "quantity": return "Quantity";
             case "leverage": return "Leverage";
         }
@@ -212,19 +215,36 @@ const Message: FC<{
 }> = (props) => {
 
     const { message, setMessage, check, setCheck } = props;
-
+    const [focus, setFocus] = useState(false);
     return (
         <div className="orderly-mt-4 orderly-mb-7 orderly-flex orderly-items-center">
             <Checkbox checked={check} onCheckedChange={(e: boolean) => {
                 setCheck(e);
             }} />
-            <div className="orderly-text-xs orderly-text-base-contrast-54 orderly-ml-2">Your message</div>
+            <div
+                className="orderly-text-xs orderly-text-base-contrast-54 orderly-ml-2 hover:orderly-cursor-pointer"
+                onClick={() => {
+                    setCheck(!props.check);
+                }}
+            >
+                Your message
+            </div>
             <div className="orderly-bg-base-900 orderly-mx-2 orderly-rounded-sm">
                 <Input
                     placeholder="Max 25 characters"
                     containerClassName="orderly-bg-transparent orderly-h-[32px] orderly-w-[295px]"
                     value={message}
                     autoFocus={false}
+                    suffix={focus && (<button className="orderly-mr-3 orderly-cursor-pointer" onClick={(e) => {
+                        console.log("set message to empty");
+                        
+                        setMessage("");
+                        e.stopPropagation();
+                    }}>
+                        <CircleCloseIcon size={18} />
+                    </button>)}
+                    onFocus={() => setFocus(true)}
+                    onBlur={() => setFocus(false)}
                     onChange={(e) => {
                         if (e.target.value.length > 25) {
                             toast.error("Maximum support of 25 characters");
@@ -287,7 +307,8 @@ const CarouselBackgroundImage: FC<{
 
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
-        loop: true,
+        // loop: true,
+        containScroll: "keepSnaps",
         dragFree: true
     });
 
@@ -317,7 +338,7 @@ const CarouselBackgroundImage: FC<{
 
 
     return (
-        <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
+    <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
             <PrevButton onClick={onPrevButtonClick} />
             <div ref={emblaRef} className="orderly-w-[552px] orderly-h-[92px] orderly-overflow orderly-overflow-x-auto orderly-mx-2">
                 <div className="orderly-flex">
@@ -329,16 +350,16 @@ const CarouselBackgroundImage: FC<{
 
                             emblaApi?.scrollTo(index);
                         }}
-                        className={cn("orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-h-[92px] orderly-bg-base-300 orderly-rounded-sm",
+                        className={cn("orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-h-[92px] orderly-rounded-sm",
                             selectedSnap === index && "orderly-border orderly-border-primary")}
 
                     >
-                        <img src={e} />
+                        <img src={e} className="orderly-rounded-sm"/>
                     </div>)
                     )}
                 </div>
             </div>
-            <NextButton onClick={onNextButtonClick}/>
+            <NextButton onClick={onNextButtonClick} />
         </div>
     );
 }

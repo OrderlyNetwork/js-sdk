@@ -20,6 +20,7 @@
     }
 */
 
+import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 
 export function getPnLPosterData(position: any, leverage: number, message: string, domain: string, pnlType: PnLDisplayFormat, options: Set<ShareOptions>) {    
@@ -28,22 +29,22 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
     const positionData: any = {
         symbol,
         currency,
-        side: position.position_qty > 0 ? "long" : "short",
+        side: position.position_qty > 0 ? "Long" : "Short",
     };
 
 
     switch (pnlType) {
         case "pnl": {
-            positionData["pnl"] = position.unsettlement_pnl;
+            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi": {
-            positionData["ROI"] = position.unsettled_pnl_ROI.toFixed(4);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi_pnl": {
-            positionData["pnl"] = position.unsettlement_pnl;
-            positionData["ROI"] = position.unsettled_pnl_ROI.toFixed(4);
+            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI.toFixed(2)).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
     }
@@ -58,14 +59,14 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
                 break;
             }
             case "openPrice": {
-                informations.push({"title": "Open Price", "value": position.average_open_price});
+                informations.push({"title": "Open price", "value": position.average_open_price});
                 break;
             } case "openTime": {
-                informations.push({"title": "Opened At", "value": formatTime(position.timestamp)});
+                informations.push({"title": "Opened at", "value": formatTime(position.timestamp)});
                 break;
             }
             case "markPrice": {
-                informations.push({"title": "Mark Price", "value": position.mark_price});
+                informations.push({"title": "Mark price", "value": position.mark_price});
                 break;
             }
             case "quantity": {
