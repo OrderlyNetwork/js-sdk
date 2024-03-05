@@ -66,7 +66,7 @@ const POSTERS = [
   },
   {
     // backgroundColor: "#0b8c70",
-    backgroundImg: "/images/_5.png",
+    backgroundImg: "/images/poster_bg_5.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
     loseColor: "rgb(255,103,194)",

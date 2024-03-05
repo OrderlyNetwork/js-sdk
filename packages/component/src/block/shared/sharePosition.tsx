@@ -47,7 +47,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
             >
                 PnL Sharing
             </SheetHeader>
-            <MobileSharePnLContent position={position} leverage={leverage}/>
+            <MobileSharePnLContent position={position} leverage={leverage} hide={hide}/>
         </SheetContent>
     </Sheet>);
 }
@@ -61,8 +61,12 @@ const DesktopSharePnL: FC<PropsWithChildren<{
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
    
     return (<Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 desktop:orderly-max-w-[640px]">
-            <DesktopSharePnLContent position={position} leverage={leverage} />
+        <DialogContent 
+            className="orderly-shadow-lg orderly-h-[807px] orderly-w-[640px] orderly-bg-base-700 desktop:orderly-max-w-[640px]"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+        >
+            <DesktopSharePnLContent position={position} leverage={leverage} hide={hide}/>
         </DialogContent>
     </Dialog>);
 }

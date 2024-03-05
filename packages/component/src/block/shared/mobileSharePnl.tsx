@@ -15,7 +15,11 @@ import { Carousel } from "@/carousel";
 
 
 
-export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (props) => {
+export const MobileSharePnLContent: FC<{ 
+    position: any, 
+    leverage: any,
+    hide: any,
+ }> = (props) => {
 
 
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
@@ -35,7 +39,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
 
 
     const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
-    console.log("pster data", posterData);
+    console.log("pster data", posterData, props.position);
 
 
     const carouselRef = useRef<any>();
@@ -70,6 +74,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
             } else {
                 console.log('Share API is not supported in this browser.');
             }
+            props.hide?.();
         } catch (error) {
             console.error('Error sharing image:', error);
         }
@@ -124,7 +129,7 @@ export const MobileSharePnLContent: FC<{ position: any, leverage: any }> = (prop
             <div className="orderly-max-h-[200px] orderly-overflow-y-auto">
                 <div className="orderly-mt-4">
                     <div className="orderly-text-3xs orderly-text-base-contrast-54">PnL display format</div>
-                    <div className="orderly-pt-3 orderly-flex orderly-justify-between orderly-gap-3">
+                    <div className="orderly-pt-3 orderly-px-1 orderly-flex orderly-justify-between orderly-gap-3">
                         <PnlFormatView setPnlFormat={setPnlFormat} type="roi_pnl" curType={pnlFormat} />
                         <PnlFormatView setPnlFormat={setPnlFormat} type="roi" curType={pnlFormat} />
                         <PnlFormatView setPnlFormat={setPnlFormat} type="pnl" curType={pnlFormat} />
@@ -198,7 +203,7 @@ const PnlFormatView: FC<{
     const isSelected = type === curType;
 
     return (<div
-        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3", isSelected && "orderly-border orderly-border-primary")}
+        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3", isSelected && "orderly-outline orderly-outline-primary orderly-outline-1")}
         onClick={() => {
             setPnlFormat(type);
         }}
@@ -218,9 +223,9 @@ const ShareOption: FC<{
 
     const text = useMemo(() => {
         switch (type) {
-            case "openPrice": return "Open Price";
-            case "openTime": return "Opened At";
-            case "markPrice": return "Mark Price";
+            case "openPrice": return "Open price";
+            case "openTime": return "Opened at";
+            case "markPrice": return "Mark price";
             case "quantity": return "Quantity";
             case "leverage": return "Leverage";
         }
