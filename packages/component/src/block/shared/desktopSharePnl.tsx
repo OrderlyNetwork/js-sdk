@@ -42,8 +42,18 @@ export const DesktopSharePnLContent: FC<{
     const posterData = getPnLPosterData(props.position, props.leverage, check ? message : "", domain, pnlFormat, shareOption);
 
     const onCopy = () => {
-        posterRef.current?.copy();
-        props.hide?.();
+        posterRef.current?.copy().then(() => {
+            props.hide?.();
+            toast.success("Image copied");
+        }).catch((e) => {
+            toast.error(() => {
+                return (<div>
+                    <div>Copy failed</div>
+                    <div className="orderly-text-2xs orderly-max-w-[396px] orderly-mt-2 orderly-text-base-contrast-54">Browser version outdated, please update in order to copy image to clipboard.</div>
+                </div>);
+            });
+        });
+        
     };
     const onDownload = () => {
         posterRef.current?.download("Poster.png");
@@ -216,6 +226,7 @@ const Message: FC<{
 
     const { message, setMessage, check, setCheck } = props;
     const [focus, setFocus] = useState(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
     return (
         <div className="orderly-mt-4 orderly-mb-7 orderly-flex orderly-items-center">
             <Checkbox checked={check} onCheckedChange={(e: boolean) => {
@@ -231,14 +242,19 @@ const Message: FC<{
             </div>
             <div className="orderly-bg-base-900 orderly-mx-2 orderly-rounded-sm">
                 <Input
+                    ref={inputRef}
                     placeholder="Max 25 characters"
                     containerClassName="orderly-bg-transparent orderly-h-[32px] orderly-w-[295px]"
                     value={message}
                     autoFocus={false}
-                    suffix={focus && (<button className="orderly-mr-3 orderly-cursor-pointer" onClick={(e) => {
+                    suffix={focus && (<button className="orderly-mr-3 orderly-cursor-pointer" onMouseDown={(e) => {
                         console.log("set message to empty");
-                        
+
+
                         setMessage("");
+                        setTimeout(() => {
+                            inputRef.current?.focus();
+                        }, 50);
                         e.stopPropagation();
                     }}>
                         <CircleCloseIcon size={18} />
@@ -338,7 +354,7 @@ const CarouselBackgroundImage: FC<{
 
 
     return (
-    <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
+        <div className="orderly-flex orderly-px-[10px] orderly-mt-5">
             <PrevButton onClick={onPrevButtonClick} />
             <div ref={emblaRef} className="orderly-w-[552px] orderly-h-[92px] orderly-overflow orderly-overflow-x-auto orderly-mx-2">
                 <div className="orderly-flex">
@@ -354,7 +370,7 @@ const CarouselBackgroundImage: FC<{
                             selectedSnap === index && "orderly-border orderly-border-primary")}
 
                     >
-                        <img src={e} className="orderly-rounded-sm"/>
+                        <img src={e} className="orderly-rounded-sm" />
                     </div>)
                     )}
                 </div>

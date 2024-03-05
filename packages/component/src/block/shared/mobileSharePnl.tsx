@@ -39,7 +39,7 @@ export const MobileSharePnLContent: FC<{
 
 
     const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
-    console.log("pster data", posterData, props.position);
+    // console.log("pster data", posterData, props.position);
 
 
     const carouselRef = useRef<any>();
@@ -100,6 +100,7 @@ export const MobileSharePnLContent: FC<{
                                     width={552}
                                     height={310}
                                     data={{
+                                        fontFamily: shareOptions.pnl.fontFamily,
                                         backgroundImg: item,
                                         color: "rgba(255, 255, 255, 0.98)",
                                         profitColor: "rgb(0,181,159)",
