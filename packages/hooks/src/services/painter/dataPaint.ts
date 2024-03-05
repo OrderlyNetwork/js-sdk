@@ -9,19 +9,28 @@ export class DataPaint extends BasePaint {
   private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
 
   async draw(options: drawOptions) {
+    const isDrawDetails =
+      Array.isArray(options.data?.position?.informations) &&
+      options.data?.position?.informations.length > 0;
+
+    const offsetTop = 50;
+
     if (!!options.data?.message) {
       this.drawMessage(options);
     }
 
     if (!!options.data?.position) {
-      this.drawPosition(options);
+      this.drawPosition(options, isDrawDetails ? 0 : offsetTop);
     }
 
-    if (Array.isArray(options.data?.position?.informations)) {
+    if (
+      Array.isArray(options.data?.position?.informations) &&
+      options.data?.position?.informations.length > 0
+    ) {
       this.drawInformations(options);
     }
 
-    this.drawUnrealizedPnL(options);
+    this.drawUnrealizedPnL(options, isDrawDetails ? 0 : offsetTop);
 
     if (!!options.data?.domain) {
       this.drawDomainUrl(options);
@@ -49,13 +58,14 @@ export class DataPaint extends BasePaint {
       textBaseline: "top",
     });
   }
-  private drawPosition(options: drawOptions) {
+  private drawPosition(options: drawOptions, offsetTop: number = 0) {
     const layout = path<layoutInfo>(
       ["layout", "position"],
       options
     ) as layoutInfo;
     const { position } = layout;
     let left = this._ratio(position.left!);
+    let top = position.top! + offsetTop;
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
 
     // draw position side;
@@ -67,7 +77,7 @@ export class DataPaint extends BasePaint {
             ? this.DEFAULT_PROFIT_COLOR
             : this.DEFAULT_LOSE_COLOR,
         left,
-        top: this._ratio(70),
+        top: this._ratio(top),
         fontSize: this._ratio(14),
       });
     }
@@ -79,7 +89,7 @@ export class DataPaint extends BasePaint {
         prevElementBoundingBox = this._drawText("|", {
           color: "rgba(255,255,255,0.2)",
           left,
-          top: this._ratio(70),
+          top: this._ratio(top),
           fontSize: this._ratio(12),
         });
       }
@@ -88,7 +98,7 @@ export class DataPaint extends BasePaint {
       prevElementBoundingBox = this._drawText(options.data?.position.symbol!, {
         color: "rgba(255,255,255,0.98)",
         left: left,
-        top: this._ratio(70),
+        top: this._ratio(top),
         fontSize: this._ratio(12),
       });
     }
@@ -100,7 +110,7 @@ export class DataPaint extends BasePaint {
         prevElementBoundingBox = this._drawText("|", {
           color: "rgba(255,255,255,0.2)",
           left,
-          top: this._ratio(70),
+          top: this._ratio(top),
           fontSize: this._ratio(12),
         });
       }
@@ -110,14 +120,14 @@ export class DataPaint extends BasePaint {
         {
           color: "rgba(255,255,255,0.98)",
           left,
-          top: this._ratio(70),
+          top: this._ratio(top),
           fontSize: this._ratio(12),
         }
       );
     }
   }
 
-  private drawUnrealizedPnL(options: drawOptions) {
+  private drawUnrealizedPnL(options: drawOptions, offsetTop: number = 0) {
     // reset left value;
     const layout = path<layoutInfo>(
       ["layout", "unrealizedPnl"],
@@ -126,6 +136,8 @@ export class DataPaint extends BasePaint {
     const { position } = layout;
     let left = this._ratio(position.left!);
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
+
+    const top = (position.top ?? 0) + offsetTop;
 
     // ROI
     if (typeof options.data?.position.ROI !== "undefined") {
@@ -138,7 +150,7 @@ export class DataPaint extends BasePaint {
               ? options.profitColor || this.DEFAULT_PROFIT_COLOR
               : options.loseColor || this.DEFAULT_LOSE_COLOR,
           left,
-          top: this._ratio(position.top!),
+          top: this._ratio(top),
 
           fontSize: this._ratio(layout.fontSize as number),
           fontWeight: 700,
@@ -162,7 +174,7 @@ export class DataPaint extends BasePaint {
       prevElementBoundingBox = this._drawText(text, {
         color: "rgba(255,255,255,0.5)",
         left,
-        top: this._ratio(position.top!),
+        top: this._ratio(top),
         fontSize: this._ratio((layout.fontSize as number) * 0.6),
         fontWeight: 600,
       });
@@ -176,9 +188,18 @@ export class DataPaint extends BasePaint {
     ) as layoutInfo;
     const { position } = layout;
 
+    const isVertical = (options.data?.position.informations.length ?? 0) === 2;
+
     options.data?.position.informations.forEach((info, index) => {
-      const left = position.left! + this.positionInfoCellWidth * (index % 2);
-      const top = (position.top as number) + Math.floor(index / 2) * 40;
+      // let cellWidth = this.positionInfoCellWidth;
+      let left =
+        position.left! + this.positionInfoCellWidth * Math.floor(index / 2);
+      let top = (position.top as number) + (index % 2) * 40;
+
+      // if (isVertical && index === 1) {
+      //   left = position.left!;
+      //   top = (position.top as number) + index * 40;
+      // }
 
       this._drawText(info.title, {
         left: this._ratio(left),
@@ -187,9 +208,7 @@ export class DataPaint extends BasePaint {
         color: "rgba(255,255,255,0.2)",
       });
       this._drawText(info.value, {
-        left: this._ratio(
-          position.left! + this.positionInfoCellWidth * (index % 2)
-        ),
+        left: this._ratio(left),
         top: this._ratio(top + 17),
         fontSize: this._ratio(layout.fontSize as number),
         fontWeight: 500,
@@ -256,7 +275,7 @@ export class DataPaint extends BasePaint {
     } = options ?? {};
 
     this.ctx.save();
-    this.ctx.font = `${fontWeight} ${fontSize}px Manrope`;
+    this.ctx.font = `${fontWeight} ${fontSize}px "Nunito Sans",-apple-system,".SFNSText-Regular","San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif`;
     this.ctx.fillStyle = color;
     this.ctx.textBaseline = textBaseline;
     this.ctx.textAlign = textAlign;

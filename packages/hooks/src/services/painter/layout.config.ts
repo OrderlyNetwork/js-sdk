@@ -6,7 +6,7 @@ export const defaultLayoutConfig: posterLayoutConfig = {
     // color: undefined,
     position: {
       left: 20,
-      bottom: 37,
+      bottom: 15,
     },
   },
   message: {

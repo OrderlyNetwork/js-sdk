@@ -2,6 +2,9 @@ import { OrderSide } from "@orderly.network/types";
 import { PosterPainter } from "./painter";
 
 export type posterDataSource = {
+  /**
+   * slogan of the poster
+   */
   message?: string;
   position: {
     symbol: string;
@@ -20,7 +23,7 @@ export type posterDataSource = {
      */
     ROI: number;
     /**
-     * The informations of the position, such as open price, opened at, mark price, quantity
+     * The informations of the position, such as open price, opened at, mark price, quantity and custom message.
      */
     informations: { title: string; value: string }[];
     /**
