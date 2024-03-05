@@ -287,8 +287,6 @@ export class DataPaint extends BasePaint {
       textAlign = "start",
     } = options ?? {};
 
-    console.log("draw text", str, options);
-
     this.ctx.save();
     // "Nunito Sans",-apple-system,"San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif
     this.ctx.font = `${fontWeight} ${fontSize}px ${options?.fontFamily}`;
