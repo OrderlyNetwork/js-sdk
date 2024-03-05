@@ -4,15 +4,16 @@ import { usePreLoadData } from "./usePreloadData";
 
 export type getKeyFunction = (index: number, prevData: any) => string | null;
 
-interface DataCenterContextValue {
+interface DataCenterContextState {
   // orders
   // positions
   // balances
   //
   regesterKeyHandler: (key: string, handler: getKeyFunction) => void;
+  unregisterKeyHandler: (key: string) => void;
 }
 
-export const DataCenterContext = createContext<DataCenterContextValue>(
+export const DataCenterContext = createContext<DataCenterContextState>(
   {} as any
 );
 
@@ -43,7 +44,12 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
     <DataCenterContext.Provider
       value={{
         regesterKeyHandler: (key, fun) => {
+          console.log("regesterKeyHandler", key);
           getKeyHandlerMapRef.current.set(key, fun);
+        },
+        unregisterKeyHandler: (key) => {
+          console.log("unregisterKeyHandler", key);
+          getKeyHandlerMapRef.current.delete(key);
         },
       }}
     >

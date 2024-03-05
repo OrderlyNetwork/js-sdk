@@ -78,6 +78,7 @@ const preview = {
           { value: "PERP_BTC_USDC", title: "PERP_BTC_USDC" },
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
+          { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
         ],
       },
     },
@@ -109,6 +110,17 @@ const preview = {
               xUrl: "https://twitter.com/OrderlyNetwork",
               // telegramUrl: "https://orderly.network",
               discordUrl: "https://discord.com/invite/orderlynetwork",
+            }}
+            shareOptions={{
+              pnl: {
+                backgroundImages: [
+                  "/images/poster_bg_1.png",
+                  "/images/poster_bg_2.png",
+                  "/images/poster_bg_3.png",
+                  "/images/poster_bg_4.png",
+                  "/images/poster_bg_5.png",
+                ]
+              }
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);

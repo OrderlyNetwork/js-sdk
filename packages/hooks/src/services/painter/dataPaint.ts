@@ -9,8 +9,6 @@ export class DataPaint extends BasePaint {
   private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
 
   async draw(options: drawOptions) {
-    console.log("DataPaint draw: ", options.data);
-
     if (!!options.data?.message) {
       this.drawMessage(options);
     }

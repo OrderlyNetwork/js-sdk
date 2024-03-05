@@ -10,6 +10,7 @@ import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMutation } from "../useMutation";
 import version from "../version";
 import { useDataCenterContext } from "../dataProvider";
+import { generateKeyFun } from "../utils/swr";
 
 type OrderType = "normalOrder" | "algoOrder";
 
@@ -29,11 +30,27 @@ type Params = {
   side?: OrderSide;
 };
 
-export const useOrderStream = (params: Params) => {
+export const useOrderStream = (
+  /**
+   * Orders query params
+   */
+  params: Params,
+
+  options?: {
+    /**
+     * Keep the state update alive
+     */
+    keeplive?: boolean;
+    /**
+     * Stop the state update when the component unmount
+     */
+    stopOnUnmount?: boolean;
+  }
+) => {
   const { status, symbol, side, size = 100 } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
-  const { regesterKeyHandler } = useDataCenterContext();
+  const { regesterKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
@@ -54,48 +71,32 @@ export const useOrderStream = (params: Params) => {
     { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
   ] = useMutation("/v1/algo/order", "PUT");
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
-    // reached the end
-    if (previousPageData && !previousPageData.rows?.length) return null;
-
-    const search = new URLSearchParams([
-      ["size", size.toString()],
-      ["page", `${pageIndex + 1}`],
-      ["source_type", "ALL"],
-    ]);
-
-    if (status) {
-      search.set(`status`, status);
-    }
-
-    if (symbol) {
-      search.set(`symbol`, symbol);
-    }
-
-    if (side) {
-      search.set(`side`, side);
-    }
-
-    return `/v1/orders?${search.toString()}`;
-  };
-
   useEffect(() => {
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
     )}`;
-    regesterKeyHandler(key, getKey);
-  }, [status, symbol, side]);
+    regesterKeyHandler?.(key, generateKeyFun({ status, symbol, side, size }));
 
-  const ordersResponse = usePrivateInfiniteQuery(getKey, {
-    initialSize: 1,
-    // revalidateFirstPage: false,
-    // onError: (err) => {
-    //   console.error("fetch failed::::", err);
-    // },
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-  });
+    return () => {
+      if (!options?.stopOnUnmount) return;
+
+      unregisterKeyHandler(key);
+    };
+  }, [status, symbol, side, options?.keeplive]);
+
+  const ordersResponse = usePrivateInfiniteQuery(
+    generateKeyFun({ status, symbol, side, size }),
+    {
+      initialSize: 1,
+      // revalidateFirstPage: false,
+      // onError: (err) => {
+      //   console.error("fetch failed::::", err);
+      // },
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    }
+  );
 
   const flattenOrders = useMemo(() => {
     if (!ordersResponse.data) {
@@ -104,6 +105,8 @@ export const useOrderStream = (params: Params) => {
 
     return ordersResponse.data?.map((item) => item.rows)?.flat();
   }, [ordersResponse.data]);
+
+  // console.log(ordersResponse.data);
 
   const orders = useMemo(() => {
     if (!flattenOrders) {

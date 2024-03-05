@@ -120,6 +120,39 @@ export declare namespace API {
     mark_price: string;
   }
 
+  export interface AlgoOrder {
+    algo_order_id: number;
+    root_algo_order_id: number;
+    parent_algo_order_id: number;
+    symbol: string;
+    algo_type: string;
+    side: string;
+    quantity: number;
+    is_triggered: boolean;
+    trigger_price: number;
+    trigger_price_type: string;
+    type: string;
+    root_algo_status: string;
+    algo_status: string;
+    price?: number;
+    total_executed_quantity: number;
+    visible_quantity: number;
+    total_fee: number;
+    fee_asset: string;
+    reduce_only: boolean;
+    created_time: number;
+    updated_time: number;
+  }
+
+  export interface OrderResponse {
+    rows: (Order | AlgoOrder)[];
+    meta: {
+      total: number;
+      current_page: number;
+      records_per_page: number;
+    };
+  }
+
   export interface FundingRate {
     symbol: string;
     est_funding_rate: number;
@@ -301,5 +334,63 @@ export declare namespace WSMessage {
     chain_id: string;
     token: string;
     balance: number;
+  }
+
+  export interface Order {
+    symbol: string;
+    clientOrderId: string;
+    orderId: number;
+    type: string;
+    side: string;
+    quantity: number;
+    price: number;
+    tradeId: number;
+    executedPrice: number;
+    executedQuantity: number;
+    fee: number;
+    feeAsset: string;
+    totalExecutedQuantity: number;
+    avgPrice: number;
+    status: string;
+    reason: string;
+    totalFee: number;
+    visible: number;
+    /**
+     * update time
+     */
+    timestamp: number;
+    reduceOnly: boolean;
+    maker: boolean;
+  }
+
+  export interface AlgoOrder {
+    symbol: string;
+    rootAlgoOrderId: number;
+    parentAlgoOrderId: number;
+    algoOrderId: number;
+    status: string;
+    algoType: string;
+    side: string;
+    quantity: number;
+    triggerStatus: string;
+    price: number;
+    type: string;
+    triggerTradePrice: number;
+    triggerTime: number;
+    tradeId: number;
+    executedPrice: number;
+    executedQuantity: number;
+    fee: number;
+    feeAsset: string;
+    totalExecutedQuantity: number;
+    averageExecutedPrice: number;
+    totalFee: number;
+    timestamp: number;
+    visibleQuantity: number;
+    reduceOnly: boolean;
+    triggered: boolean;
+    maker: boolean;
+    rootAlgoStatus: string;
+    algoStatus: string;
   }
 }

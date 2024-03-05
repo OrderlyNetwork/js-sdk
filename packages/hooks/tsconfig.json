@@ -8,5 +8,6 @@
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/utils": ["../utils/src"],
     },
+  
   }
 }

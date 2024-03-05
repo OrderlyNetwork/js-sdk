@@ -35,34 +35,6 @@ export const useMaxQty = (
 
   const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
-  // const {
-  //   data: orders,
-  //   error,
-  //   mutate: updateOrder,
-  // } = usePrivateQuery<API.Order[]>(`/v1/orders?status=NEW&size=99`, {
-  //   formatter: (data) => data.rows,
-  //   onError: (err) => { },
-  // });
-
-  // const ws = useWS();
-  // useEffect(() => {
-  //   const unsubscribe = ws.privateSubscribe(
-  //     {
-  //       id: "executionreport_orders",
-  //       event: "subscribe",
-  //       topic: "executionreport",
-  //       ts: Date.now(),
-  //     },
-  //     {
-  //       onMessage: (data: any) => {
-  //         console.log("refresh orders", data);
-  //         updateOrder();
-  //       },
-  //     }
-  //   );
-  //   return () => unsubscribe();
-  // }, []);
-
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
 
@@ -94,7 +66,9 @@ export const useMaxQty = (
 
     const getSymbolInfo = symbolInfo[symbol];
 
-    const filterAlgoOrders = orders.filter((item) => item.algo_order_id === undefined);
+    const filterAlgoOrders = orders.filter(
+      (item) => item.algo_order_id === undefined
+    );
 
     // current symbol buy order quantity
     const buyOrdersQty = account.getQtyFromOrdersBySide(
@@ -151,6 +125,19 @@ export const useMaxQty = (
     totalCollateral,
     reduceOnly,
   ]);
+
+  // debugPrint({
+  //   maxQty,
+  //   totalCollateral,
+  //   side,
+  //   // reduceOnly,
+  //   orders: orders?.map((o) => o.quantity),
+  //   // positionsData,
+  //   // markPrices,
+  //   // accountInfo,
+  //   // symbolInfo,
+  //   // symbol,
+  // });
 
   return Math.max(maxQty, 0) as number;
 };

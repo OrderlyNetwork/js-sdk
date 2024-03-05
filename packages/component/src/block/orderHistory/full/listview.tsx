@@ -1,19 +1,10 @@
-import { FC, useContext, useMemo, useRef } from "react";
+import { FC, useMemo, useRef } from "react";
 import { Table } from "@/table";
-import { Numeral, Text } from "@/text";
-import {
-  OrderStatus,
-  OrderSide,
-  API,
-  OrderEntity,
-} from "@orderly.network/types";
-import Button from "@/button";
+import { OrderStatus, OrderSide, API } from "@orderly.network/types";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
-import { OrderlyAppContext, SymbolContext, SymbolProvider } from "@/provider";
+import { SymbolProvider } from "@/provider";
 import { EndReachedBox } from "@/listView/endReachedBox";
-import { Renew } from "./renew";
-import { CancelButton } from "@/block/orders/full/cancelButton";
 import { cn } from "@/utils";
 import { columnsBasis } from "@/block/orders/columnsUtil";
 import { OrderTrades } from "../orderTrades";

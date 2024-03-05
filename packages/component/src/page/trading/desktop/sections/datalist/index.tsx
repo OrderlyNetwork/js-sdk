@@ -26,23 +26,23 @@ export const DataListView = () => {
     UnPnlPriceBasisType.MARKET_PRICE
   );
 
-  const [orderStatus, setOrderStatus] = useSessionStorage(
-    "orderly_order_status",
-    "positions"
-  );
+  // const [orderStatus, setOrderStatus] = useSessionStorage(
+  //   "orderly_order_status",
+  //   "positions"
+  // );
 
   const onTabChange = useCallback((value: string) => {
     setActiveTab(value);
-    setOrderStatus(
-      {
-        positions: "positions",
-        orders: OrderStatus.INCOMPLETE,
-        filled: OrderStatus.FILLED,
-        cancelled: OrderStatus.CANCELLED,
-        rejected: OrderStatus.REJECTED,
-        history: "history",
-      }[value]
-    );
+    // setOrderStatus(
+    //   {
+    //     positions: "positions",
+    //     orders: OrderStatus.INCOMPLETE,
+    //     filled: OrderStatus.FILLED,
+    //     cancelled: OrderStatus.CANCELLED,
+    //     rejected: OrderStatus.REJECTED,
+    //     history: "history",
+    //   }[value]
+    // );
   }, []);
 
   return (
