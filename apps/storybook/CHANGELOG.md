@@ -1,5 +1,15 @@
 # storybook
 
+## 1.1.4
+
+### Patch Changes
+
+- 686fd454: fix bugs;
+- 9bac5c5c: split cross-swap code;
+- 410fe957: refactor hook;
+- fix bugs;
+- 410fe957: update
+
 ## 1.1.4-experimental.3
 
 ### Patch Changes

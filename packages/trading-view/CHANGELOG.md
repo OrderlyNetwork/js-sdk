@@ -1,5 +1,25 @@
 # @orderly.network/trading-view
 
+## 0.2.4
+
+### Patch Changes
+
+- 686fd454: fix bugs;
+- 9bac5c5c: split cross-swap code;
+- 410fe957: refactor hook;
+- fix bugs;
+- 410fe957: update
+- Updated dependencies [686fd454]
+- Updated dependencies [9bac5c5c]
+- Updated dependencies [410fe957]
+- Updated dependencies
+- Updated dependencies [410fe957]
+  - @orderly.network/hooks@1.1.4
+  - @orderly.network/types@0.2.4
+  - @orderly.network/utils@0.1.4
+  - @orderly.network/core@0.2.4
+  - @orderly.network/net@1.1.4
+
 ## 0.2.4-experimental.3
 
 ### Patch Changes
