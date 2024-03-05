@@ -50,7 +50,10 @@ export const usePoster = (
   useEffect(() => {
     if (painterRef.current) {
       painterRef.current.draw(
-        mergeDeepRight({ layout: defaultLayoutConfig }, options)
+        mergeDeepRight<Partial<drawOptions>, drawOptions>(
+          { layout: defaultLayoutConfig, fontFamily: "Manrope" },
+          options
+        )
       );
     }
   }, [options]);

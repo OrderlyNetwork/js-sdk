@@ -34,7 +34,8 @@ export class PosterPainter {
 
   async _draw(options: drawOptions) {
     if (this.ctx === null) return;
-    console.log("============ DRAW ============");
+    // console.log("============ DRAW ============");
+    // this.ctx.font = options.fontFamily!;
     // this.ctx.clearRect(0, 0, this.width * this.ratio, this.height * this.ratio);
     // start draw
     // background
