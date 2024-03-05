@@ -9,9 +9,9 @@ export class DataPaint extends BasePaint {
   private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
 
   async draw(options: drawOptions) {
-    const isDrawDetails =
+    const needDrawDetails =
       Array.isArray(options.data?.position?.informations) &&
-      options.data?.position?.informations.length > 0;
+      (options.data?.position?.informations?.length ?? 0) > 0;
 
     const offsetTop = 50;
 
@@ -20,17 +20,14 @@ export class DataPaint extends BasePaint {
     }
 
     if (!!options.data?.position) {
-      this.drawPosition(options, isDrawDetails ? 0 : offsetTop);
+      this.drawPosition(options, needDrawDetails ? 0 : offsetTop);
     }
 
-    if (
-      Array.isArray(options.data?.position?.informations) &&
-      options.data?.position?.informations.length > 0
-    ) {
+    if (needDrawDetails) {
       this.drawInformations(options);
     }
 
-    this.drawUnrealizedPnL(options, isDrawDetails ? 0 : offsetTop);
+    this.drawUnrealizedPnL(options, needDrawDetails ? 0 : offsetTop);
 
     if (!!options.data?.domain) {
       this.drawDomainUrl(options);
