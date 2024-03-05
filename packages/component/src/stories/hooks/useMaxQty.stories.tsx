@@ -1,12 +1,9 @@
-import { MemoryConfigStore } from "@orderly.network/core";
-import { OrderlyProvider } from "../../provider";
 import React, { FC } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
 import { useMaxQty } from "@orderly.network/hooks";
 
 import { OrderSide } from "@orderly.network/types";
-import { WooKeyStore } from "../mock/woo.keystore";
 
 const MaxQtyDemo: FC<{
   symbol: string;

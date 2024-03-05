@@ -108,7 +108,6 @@ const EditingState: FC<{
       if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
-      
 
       setPrice(order.trigger_price?.toString() ?? "0");
       setEditting(false);
@@ -276,6 +275,7 @@ const EditingState: FC<{
                   Cancel
                 </Button>
                 <Button
+                  // @ts-ignore
                   ref={confirmRef}
                   loading={isSubmitting}
                   onClick={onConfirm}

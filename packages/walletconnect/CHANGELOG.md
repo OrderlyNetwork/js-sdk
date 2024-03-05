@@ -1,5 +1,39 @@
 # @orderly.network/web3-modal
 
+## 0.1.4
+
+### Patch Changes
+
+- 686fd454: fix bugs;
+- 9bac5c5c: split cross-swap code;
+- 410fe957: refactor hook;
+- fix bugs;
+- 410fe957: update
+
+## 0.1.4-experimental.3
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-experimental.2
+
+### Patch Changes
+
+- refactor hook;
+
+## 0.1.4-experimental.1
+
+### Patch Changes
+
+- update
+
+## 0.1.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+
 ## 0.1.3
 
 ### Patch Changes

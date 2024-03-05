@@ -43,8 +43,7 @@ export const Chains: FC<ChainsProps> = (props) => {
   const { disabled } = props;
 
   const [open, setOpen] = useState(false);
-  const { configStore, enableSwapDeposit, networkId } =
-    useContext<any>(OrderlyContext);
+  const { networkId } = useContext<any>(OrderlyContext);
   const { onChainChanged } = useContext(OrderlyAppContext);
   const [defaultChain, setDefaultChain] = useState<string>(
     networkId === "mainnet"
@@ -53,13 +52,11 @@ export const Chains: FC<ChainsProps> = (props) => {
   );
 
   const [testChains] = useChains("testnet", {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
   });
 
   const [mainChains, { findByChainId }] = useChains("mainnet", {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

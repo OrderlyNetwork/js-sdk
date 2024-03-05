@@ -4,7 +4,7 @@ import { FC, useCallback, useState } from "react";
 
 interface ApproveButtonProps {
   onApprove?: () => Promise<any>;
-  onDeposit: () => Promise<any>;
+  onDeposit: () => void;
   allowance: number;
   maxQuantity: string;
   quantity: string;
@@ -13,7 +13,6 @@ interface ApproveButtonProps {
   label: string;
   disabled?: boolean;
   buttonId: string;
-  depositFeeRevalidating?: boolean;
 }
 
 export const ApproveButton: FC<ApproveButtonProps> = (props) => {

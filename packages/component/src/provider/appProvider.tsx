@@ -27,6 +27,7 @@ import { IContract } from "@orderly.network/core";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
 import { ShareConfigProps } from "@/block/shared/shareConfigProps";
+import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -57,12 +58,13 @@ export type OrderlyAppContextState = {
   onSetChain: (chainId: number) => Promise<any>;
 
   errors: AppStateErrors;
-  enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -78,11 +80,12 @@ export interface OrderlyAppProviderProps {
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
-  shareOptions: ShareConfigProps,
+  shareOptions: ShareConfigProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 }
 
 export const OrderlyAppProvider: FC<
@@ -100,10 +103,10 @@ export const OrderlyAppProvider: FC<
     includeTestnet,
     contracts,
     toastLimitCount,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
+    chains,
   } = props;
 
   return (
@@ -113,18 +116,17 @@ export const OrderlyAppProvider: FC<
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
       networkId={networkId}
-      enableSwapDeposit={enableSwapDeposit}
       contracts={contracts}
     >
       <InnerProvider
         appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
-        enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
         shareOptions={shareOptions}
+        chains={chains}
       >
         {props.children}
       </InnerProvider>
@@ -138,7 +140,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     appIcons: logos,
     brokerName,
     toastLimitCount = 1,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
@@ -155,10 +156,6 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   } = useWalletConnector();
 
   const account = useAccountInstance();
-
-  // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
-
-  //
 
   const { networkId } = useContext<any>(OrderlyContext);
 
@@ -354,11 +351,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
-        enableSwapDeposit,
         onChainChanged,
         brokerName,
         footerStatusBarProps,
         shareOptions,
+        chains: props.chains,
       }}
     >
       <TooltipProvider>

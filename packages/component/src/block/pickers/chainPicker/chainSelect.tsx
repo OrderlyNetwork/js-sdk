@@ -28,6 +28,7 @@ import {
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
+import { Chain, Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -36,18 +37,16 @@ export interface ChainSelectProps {
   // onChainIdChange?: (chainId: number) => void;
   value: CurrentChain | null;
   settingChain?: boolean;
-  wooSwapEnabled?: boolean;
   filter?: (chain: API.Chain) => boolean;
+  chains?: Chains<undefined, undefined>;
 }
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const [open, setOpen] = useState(false);
 
   const isTable = useMediaQuery(MEDIA_TABLET);
-  const { wooSwapEnabled = true, disabled } = props;
-  // @ts-ignore
-  const [allChains, { findByChainId }] = useChains("", {
-    wooSwapEnabled,
+  const { disabled } = props;
+  const [allChains, { findByChainId }] = useChains(undefined, {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
@@ -57,21 +56,30 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const { connectedChain } = useWalletConnector();
 
   const chains = useMemo(() => {
-    if (Array.isArray(allChains)) return allChains;
-    if (allChains === undefined) return [];
-    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
-      return allChains.testnet ?? [];
+    let targetChains = allChains;
+    if (props.chains) {
+      targetChains.mainnet = props.chains.mainnet?.map(
+        (item) => item.network_infos
+      );
+      targetChains.testnet = props.chains.testnet?.map(
+        (item) => item.network_infos
+      );
     }
 
-    return allChains.mainnet;
-  }, [allChains, connectedChain]);
+    if (Array.isArray(targetChains)) return targetChains;
+    if (targetChains === undefined) return [];
+    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
+      return targetChains.testnet ?? [];
+    }
+
+    return targetChains.mainnet;
+  }, [allChains, connectedChain, props.chains]);
 
   const { value } = props;
 
   const currentChain = useMemo(() => {
     if (!value || !chains || !Array.isArray(chains)) return undefined;
     // 如果value是不支持的chain, 显示unknown
-
     if (
       chains.findIndex(
         // @ts-ignore
@@ -83,26 +91,56 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     return value.info?.network_infos;
   }, [value, chains]);
 
+  const onChainChange = (chainId: number) => {
+    if (!chainId) return;
+    let chainInfo: Chain | undefined;
+    if (props.chains) {
+      chainInfo = [...props.chains?.mainnet, ...props.chains?.testnet].find(
+        // @ts-ignore
+        (item) => parseInt(item.network_infos?.chain_id) === parseInt(chainId)
+      );
+    } else {
+      chainInfo = findByChainId(chainId);
+    }
+    chainInfo && props?.onValueChange?.(chainInfo);
+  };
+
   const onClick = useCallback(async () => {
     const result = await modal.show<{ id: number }, any>(ChainDialog, {
-      // testChains: onlyTestnet ? chains.testnet : [],
       mainChains: chains,
       currentChainId: value?.id,
     });
-    if (result?.id) {
-      const chainInfo = findByChainId(result.id);
-      props?.onValueChange?.(chainInfo);
-    }
-  }, [chains, props.onValueChange, value?.id]);
+    onChainChange(result?.id);
+  }, [chains, value?.id, props.onValueChange, findByChainId, props.chains]);
+
+  const onDropMenuItemClick = useCallback(
+    (chain: any) => {
+      onChainChange(chain.chain_id);
+    },
+    [props?.onValueChange, findByChainId, props.chains]
+  );
 
   useEffect(() => {
     // 获取 到chain列表之后，初始化chain及其token列表
-    if (!!chains) {
-      const chainInfo = findByChainId(value?.id!);
+    if (!!chains || !!props.chains) {
+      let chainInfo: Chain | undefined;
+
+      if (props.chains) {
+        chainInfo = [...props.chains?.mainnet, ...props.chains?.testnet].find(
+          // @ts-ignore
+          (item) =>
+            // @ts-ignore
+            parseInt(item.network_infos?.chain_id) ===
+            // @ts-ignore
+            parseInt(props.value?.id!)
+        );
+      } else {
+        chainInfo = findByChainId(props.value?.id!);
+      }
       if (!chainInfo) return;
       props.onChainInited?.(chainInfo as any);
     }
-  }, [props.value?.id, chains?.length]);
+  }, [props.value?.id, chains?.length, props.chains]);
 
   const icon = useMemo(() => {
     if (props.settingChain) {
@@ -135,9 +173,8 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
       settingChain={props.settingChain}
       currentChain={currentChain}
       icon={icon}
-      findByChainId={findByChainId}
-      onValueChange={props.onValueChange}
       connectedChain={connectedChain}
+      onDropMenuItemClick={onDropMenuItemClick}
     />
   );
 };
@@ -175,11 +212,10 @@ const DesktopChainSelect: FC<{
   settingChain: any;
   currentChain: any;
   icon: any;
-  findByChainId: any;
-  onValueChange: any;
   connectedChain: any;
+  onDropMenuItemClick: (chain: any) => void;
 }> = (props) => {
-  const { chains, currentChain, icon, findByChainId, connectedChain } = props;
+  const { chains, currentChain, icon, connectedChain } = props;
   const [open, setOpen] = useState(false);
   // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 
@@ -238,10 +274,7 @@ const DesktopChainSelect: FC<{
             <DropdownMenuItem
               key={index}
               onClick={() => {
-                const chainInfo = findByChainId(chain.chain_id);
-                if (chainInfo) {
-                  props?.onValueChange?.(chainInfo);
-                }
+                props.onDropMenuItemClick?.(chain);
               }}
             >
               <ChainCell

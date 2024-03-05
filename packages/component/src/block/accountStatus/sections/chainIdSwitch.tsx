@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/dialog";
 
-import { useChains, OrderlyContext } from "@orderly.network/hooks";
+import { useChains } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { toast } from "@/toast";
 import { useTranslation } from "@/i18n";
@@ -23,18 +23,15 @@ export interface Props {
 
 export const ChainIdSwtich: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const { networkId, enableSwapDeposit } = useContext<any>(OrderlyContext);
 
   const { onChainChanged } = useContext(OrderlyAppContext);
 
   const [testChains] = useChains("testnet", {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
   });
 
   const [mainChains] = useChains("mainnet", {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

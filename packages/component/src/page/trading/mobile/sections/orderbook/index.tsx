@@ -50,7 +50,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
           level={7}
           asks={data.asks!}
           bids={data.bids!}
-          markPrice={data.markPrice}
+          markPrice={data.markPrice!}
           lastPrice={data.middlePrice!}
           depth={allDepths!}
           activeDepth={depth!}

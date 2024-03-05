@@ -7,7 +7,7 @@ export function capitalizeString(str: string): string {
   return capitalizedStr;
 }
 
-/// "PERP_WOO_USDC" => "WOO_PERP"
+/// "PERP_ETH_USDC" => "ETH_PERP"
 export function transSymbolformString(input: string): string {
   const parts = input.split("_");
   if (parts.length !== 3) {

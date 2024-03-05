@@ -1,18 +1,24 @@
 {
   "name": "@orderly.network/react",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "esm",
+    "lib"
   ],
   "scripts": {
     "watch": "tsup --watch --tsconfig tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
-    "build:tsup": "tsup --tsconfig tsconfig.build.json",
+    "build": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
+    "build:tsup": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
+    "build:esm": "tsc --project tsconfig.build.json --outDir esm && tsc-alias --project tsconfig.build.json --outDir esm",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib && tsc-alias --project tsconfig.build.json --outDir lib",
+    "tspaths": "ts-node --project tsconfig.build.json -r tsconfig-paths/register esm/avatar/avatar.js",
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build"
@@ -61,6 +67,7 @@
     "react": "^18.2.0",
     "react-docgen-typescript": "^2.2.2",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "rollup": "^3.26.3",
     "rollup-plugin-dts": "^5.3.0",
     "rollup-plugin-postcss": "^4.0.2",
@@ -68,6 +75,7 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "tailwindcss-border-gradient-radius": "^3.0.1",
+    "tsc-alias": "^1.8.8",
     "tsconfig": "workspace:*",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "tslib": "^2.6.0",

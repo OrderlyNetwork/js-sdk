@@ -1,20 +1,11 @@
 import { modal } from "@/modal";
-import {
-  FC,
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-} from "react";
+import { FC, PropsWithChildren, createContext, useCallback } from "react";
 import {
   useAccountInstance,
   useLocalStorage,
   useWalletSubscription,
   useSettleSubscription,
-  useWooCrossSwapQuery,
-  useWooSwapQuery,
   useEventEmitter,
-  useWS,
   useMediaQuery,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
@@ -29,11 +20,7 @@ export interface AssetsContextState {
   onDeposit: () => Promise<any>;
   onWithdraw: () => Promise<any>;
   onSettle: () => Promise<any>;
-
   // getBalance: (token: string) => Promise<any>;
-
-  onEnquiry?: (inputs: any) => Promise<any>;
-
   visible: boolean;
   toggleVisible: () => void;
 }
@@ -126,26 +113,6 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
     },
   });
 
-  const { query: wooCrossSwapQuery } = useWooCrossSwapQuery();
-  const { query: wooSwapQuery } = useWooSwapQuery();
-
-  const onEnquiry = useCallback(
-    (inputs: { needCrossChain: boolean; needSwap: boolean; params: any }) => {
-      const { needCrossChain, needSwap, params } = inputs;
-
-      if (needCrossChain) {
-        return wooCrossSwapQuery(params);
-      }
-
-      if (needSwap) {
-        return wooSwapQuery(params);
-      }
-
-      return Promise.reject("no need to enquiry");
-    },
-    []
-  );
-
   return (
     <AssetsContext.Provider
       value={{
@@ -154,8 +121,6 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
         onSettle,
         visible,
         toggleVisible,
-        // @ts-ignore
-        onEnquiry,
         // getBalance,
       }}
     >

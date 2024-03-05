@@ -220,6 +220,7 @@ const CarouselPrevious = React.forwardRef<
 
   return (
     <Button
+      // @ts-ignore
       ref={ref}
       variant={variant}
       size={size}
@@ -250,6 +251,7 @@ const CarouselNext = React.forwardRef<
 
   return (
     <Button
+      // @ts-ignore
       ref={ref}
       variant={variant}
       size={size}

@@ -53,7 +53,4 @@ export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
 
-//---- woo only -----
-export * from "./woo/woo";
-
 export type { WalletAdapter } from "@orderly.network/core";

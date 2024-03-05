@@ -1,13 +1,13 @@
 {
   "name": "@orderly.network/examples",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3330",
     "build:project": "next build",
     "start": "next start",
     "lint": "next lint",
-    "less2css": "lessc ./app/theme/woo.theme.less ./app/theme/woo.theme.css"
+    "less2css": "lessc ./app/theme/custom.theme.less ./app/theme/custom.theme.css"
   },
   "dependencies": {
     "@orderly.network/core": "workspace:*",

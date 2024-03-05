@@ -95,7 +95,6 @@ const preview = {
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            enableSwapDeposit={true}
             // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
@@ -141,13 +140,10 @@ const preview = {
     },
     withThemeByDataAttribute({
       themes: {
-        // light: "light",
-        // dark: "dark",
-        "woo/dark": "",
-        "woo/light": "woo_light",
-        orderly: "orderly",
+        orderly: "",
+        custom: "custom",
       },
-      defaultTheme: "woo/dark",
+      defaultTheme: "orderly",
       attributeName: "data-o-theme",
     }),
   ],

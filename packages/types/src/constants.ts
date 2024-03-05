@@ -43,3 +43,8 @@ export const DEPOSIT_FEE_RATE = 1.05;
 export const MaxUint256: bigint = BigInt(
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 );
+
+export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+
+export const isNativeTokenChecker = (address: string) =>
+  address === nativeTokenAddress;

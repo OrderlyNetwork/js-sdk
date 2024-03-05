@@ -13,7 +13,6 @@ import {
   useAccount,
   useChains,
   useWalletConnector,
-  OrderlyContext,
 } from "@orderly.network/hooks";
 import {
   DropdownMenu,
@@ -80,11 +79,8 @@ export const DesktopWalletConnnectButton: FC<
   const [open, setOpen] = useState(false);
   const { onWalletDisconnect } = useContext(OrderlyAppContext);
 
-  const { enableSwapDeposit } = useContext<any>(OrderlyContext);
   const { connectedChain } = useWalletConnector();
   const [allChains] = useChains(undefined, {
-    // @ts-ignore
-    enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
