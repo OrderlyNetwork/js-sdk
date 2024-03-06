@@ -62,7 +62,20 @@ export const AssetsProvider: FC<PropsWithChildren> = (props) => {
   }, [matches]);
 
   const onSettle = useCallback(async () => {
-    return account.settle();
+    return account
+      .settle()
+      .catch((e) => {
+        if (e.code == -1104) {
+          toast.error(
+            "Settlement is only allowed once every 10 minutes. Please try again later."
+          );
+          return Promise.reject(e);
+        }
+      })
+      .then((res) => {
+        toast.success("Settlement requested");
+        return Promise.resolve(res);
+      });
   }, []);
 
   const [visible, setVisible] = useLocalStorage<boolean>(

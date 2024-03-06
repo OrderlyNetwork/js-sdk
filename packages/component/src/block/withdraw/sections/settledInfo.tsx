@@ -23,7 +23,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
           return Promise.reject("cancel");
         },
         onOk() {
-          return onSettle();
+          return onSettle().catch((e) => {});
         },
       })
       .then(

@@ -19,9 +19,7 @@ export const useAccountStatus = () => {
         // @ts-ignore
         if (typeof props.onSettle !== "function") return Promise.resolve();
         // @ts-ignore
-        return props.onSettle().then(() => {
-          toast.success("Settlement requested");
-        });
+        return props.onSettle().catch((e) => {});
       },
     });
   }, []);

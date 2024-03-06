@@ -118,8 +118,8 @@ const preview = {
                   "/images/poster_bg_3.png",
                   "/images/poster_bg_4.png",
                   "/images/poster_bg_5.png",
-                ]
-              }
+                ],
+              },
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
