@@ -9,7 +9,10 @@ import colors from "tailwindcss/colors";
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  content: [
+    "./src/**/*.{ts,js,tsx,jsx}", 
+    "../../packages/referral/src/**/*.{ts,js,tsx,jsx}"
+  ],
   // purge: ["./src/**/*.{ts,js,tsx,jsx}",
   // // "./node_modules/rc-slider/**/*.{ts,js,tsx,jsx}",
   // ],

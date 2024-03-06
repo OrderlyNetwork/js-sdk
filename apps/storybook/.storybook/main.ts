@@ -28,6 +28,7 @@ const config: StorybookConfig = {
         },
       },
     },
+    "@storybook/addon-styling-webpack"
   ],
   framework: {
     name: "@storybook/react-webpack5",
@@ -61,6 +62,28 @@ const config: StorybookConfig = {
           "../../../packages/referral/src"
         ),
       };
+
+      // if (config.module) {
+      //   config.module.rules.push({
+      //     test: /\.css$/,
+      //     use: [
+      //       'style-loader',
+      //       'css-loader',
+      //       {
+      //         loader: 'postcss-loader',
+      //         options: {
+      //           postcssOptions: {
+      //             ident: 'postcss',
+      //             plugin: [
+      //               require('tailwindcss'),
+      //               require('autoprefixer'),
+      //             ]
+      //           }
+      //         }
+      //       }
+      //     ]
+      //   });
+      // }
     }
     return config;
   },

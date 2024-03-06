@@ -14,14 +14,14 @@ export default {
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   //   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {},
-    decorators: [
-      (Story) => (
-        <OrderlyAppProvider brokerId="orderly" networkId="testnet">
-          <Story />
-        </OrderlyAppProvider>
-      ),
-    ],
+  // argTypes: {},
+  //   decorators: [
+  //     (Story) => (
+  //       <OrderlyAppProvider brokerId="orderly" networkId="testnet">
+  //         <Story />
+  //       </OrderlyAppProvider>
+  //     ),
+  //   ],
 };
 
 type Story = StoryObj<typeof Dashboard>;
@@ -29,6 +29,7 @@ type Story = StoryObj<typeof Dashboard>;
 export const Default: Story = {
   render: (args, { globals }) => {
     return <div style={{ height: "max-content" }}>
+      <div className="orderly-text-[50px]">sdfsadf</div>
       <Dashboard />
     </div>;
   },
