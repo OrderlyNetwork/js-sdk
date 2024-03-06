@@ -5,16 +5,16 @@ import "../src/tailwind.css"; // tailwind css
 
 
 const customViewports = {
-  // "iphone5 SE": {
-  //   "name": "iPhone 5 320",
-  //   "styles": {
-  //     "height": "568px",
-  //     "width": "320px"
-  //   },
-  //   "type": "mobile"
-  // },
+  "iphone5 SE": {
+    "name": "iPhone 5 320",
+    "styles": {
+      "height": "568px",
+      "width": "320px"
+    },
+    "type": "mobile"
+  },
   "iphone6 PRO": {
-    "name": "iPhone 6 375",
+    "name": "SM 375",
     "styles": {
       "height": "667px",
       "width": "375px"
@@ -22,7 +22,7 @@ const customViewports = {
     "type": "mobile"
   },
   "iphone6p PRO MAX": {
-    "name": "width: 480px ",
+    "name": "MD 480",
     "styles": {
       "height": "853px",
       "width": "480px"
@@ -30,7 +30,7 @@ const customViewports = {
     "type": "mobile"
   },
   "ipad": {
-    "name": "width: 768",
+    "name": "LG 768",
     "styles": {
       "height": "1024px",
       "width": "768px"
@@ -38,7 +38,7 @@ const customViewports = {
     "type": "tablet"
   },
   "ipad12p 1024": {
-    "name": "width: 1024",
+    "name": "XL 1024",
     "styles": {
       "height": "1366px",
       "width": "1024px"
@@ -46,7 +46,7 @@ const customViewports = {
     "type": "tablet"
   },
   "1440": {
-    "name": "desktop: 1440",
+    "name": "2XL 1440",
     "styles": {
       "height": "1366px",
       "width": "1440px"

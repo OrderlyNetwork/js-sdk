@@ -10,7 +10,7 @@ export const EarnIcon: FC<IconProps> = (props) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width={`${size}px`}
+            width={`${49}px`}
             height={`${size}px`}
 
             viewBox={`0 0 ${size} ${size}`}

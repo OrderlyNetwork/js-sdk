@@ -1,4 +1,4 @@
-import { ShareIcon } from "../../icons/share";
+import { ShareIcon } from "../icons/share";
 import { ListTile } from "./listTile";
 
 export const Share = () => {

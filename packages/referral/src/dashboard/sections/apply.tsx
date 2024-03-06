@@ -1,4 +1,4 @@
-import { ApplyIcon } from "../../icons/apply";
+import { ApplyIcon } from "../icons/apply";
 import { ListTile } from "./listTile";
 
 export const Apply = () => {

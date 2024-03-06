@@ -16,7 +16,7 @@ module.exports = {
   theme: {
     screens: {
       // desktop: "1024px",
-      default: "375px",
+      // default: "375px",
       "sm": "375px",
       "md": "480px",
       "lg": "768px",

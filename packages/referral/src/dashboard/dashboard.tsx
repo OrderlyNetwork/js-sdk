@@ -1,43 +1,43 @@
-import { ArrorRightIcon } from "../icons/arrowRight";
+import { ArrorRightIcon } from "./icons/arrowRight";
 import { AsAnAffiliate } from "./sections/asAnAffiliate";
 import { AsAnTrader } from "./sections/asAnTrader";
 import { Apply } from "./sections/apply";
-import { ArrorDownIcon } from "../icons/arrowDown";
+import { ArrorDownIcon } from "./icons/arrowDown";
 import { Share } from "./sections/share";
 import { Earn } from "./sections/earn";
+// import "@orderly.network/react/dist/styles.css";
+import { Card } from "./sections/card";
+import { Introduce } from "./sections/introduce";
 
 export const Dashboard = () => {
   return (
-    <div className="orderly-bg-base-900 orderly-w-full orderly-h-[912px] orderly-justify-center">
-      <div className="orderly-text-base-contrast">
-        <div className="orderly-text-[50px]">
+    <div className="orderly-bg-base-900 orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4">
+      <div className="orderly-text-base-contrast orderly-text-center">
+        <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px]">
           Earn more as a WOOFi affiliate
         </div>
-        <div className=" orderly-mt-8">
+        <div className="orderly-mt-8 orderly-text-sm md:orderly-text-base lg:orderly-text-lg xl:orderly-text-lg 2xl:orderly-text-xl">
           Grow your brand | Get 40% commission | Unlock exclusive perks
         </div>
-        <button className="orderly-flex orderly-items-center orderly-mt-3">
-          <div className="orderly-flex orderly-text-3xs">
-            Learn how it works
-            <ArrorRightIcon />
-          </div>
-        </button>
+        <div className="orderly-flex orderly-justify-center">
+          <button className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary">
+            <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs">
+              Learn how it works
+              <ArrorRightIcon className="orderly-ml-2" />
+            </div>
+          </button>
+        </div>
       </div>
 
-      <div className="orderly-mt-9 desktop:orderly-flex orderly-items-center orderly-justify-center orderly-gap-2">
-        <AsAnAffiliate />
-        <AsAnTrader />
+      <div className="orderly-w-full md:orderly-w-full lg:orderly-w-[636px] xl:orderly-w-[892px] 2xl:orderly-w-[992px]">
+        <Card />
+        <Introduce />
       </div>
 
-      <div className="orderly-border orderly-border-red-300 orderly-rounded-lg orderly-p-6">
-        <div>Becoming an affiliate is easy</div>
 
-        <Apply />
-        <ArrorDownIcon />
-        <Share />
-        <ArrorDownIcon />
-        <Earn />
-      </div>
+
+      
+
     </div>
   );
 };

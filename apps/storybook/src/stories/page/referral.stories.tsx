@@ -28,10 +28,7 @@ type Story = StoryObj<typeof Dashboard>;
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Default: Story = {
   render: (args, { globals }) => {
-    return <div style={{ height: "max-content" }}>
-      <div className="orderly-text-[50px]">sdfsadf</div>
-      <Dashboard />
-    </div>;
+    return <Dashboard />;
   },
   args: {
   },
