@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Dashboard } from "@orderly.network/referral";
+import { Dashboard, Affiliate } from "@orderly.network/referral";
 import { OrderlyAppProvider } from "@orderly.network/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -32,4 +32,11 @@ export const Default: Story = {
   },
   args: {
   },
+};
+
+
+export const Affilate: Story = {
+  render: (args) => {
+    return <Affiliate />
+  }
 };
