@@ -1,19 +1,26 @@
 import { commify } from "@orderly.network/utils";
 import { BasePaint, drawOptions, layoutInfo } from "./basePaint";
-import { path } from "ramda";
+import { path, difference } from "ramda";
 
 export class DataPaint extends BasePaint {
-  private positionInfoCellWidth = 100;
+  private positionInfoCellWidth = 120;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
   private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
+
+  private transformTop = 0;
 
   async draw(options: drawOptions) {
     const needDrawDetails =
       Array.isArray(options.data?.position?.informations) &&
       (options.data?.position?.informations?.length ?? 0) > 0;
 
-    const offsetTop = 50;
+    const hasMessage = !!options.data?.message;
+
+    this.transformTop = hasMessage ? 0 : -50;
+
+    const offsetTop = hasMessage ? 50 : 100;
+    // const offsetMessage = hasMessage ? 0 : -50;
 
     if (!!options.data?.message) {
       this.drawMessage(options);
@@ -63,7 +70,8 @@ export class DataPaint extends BasePaint {
     ) as layoutInfo;
     const { position } = layout;
     let left = this._ratio(position.left!);
-    let top = position.top! + offsetTop;
+
+    let top = layout.position.top! + offsetTop + this.transformTop;
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
 
     // draw position side;
@@ -140,7 +148,7 @@ export class DataPaint extends BasePaint {
     let left = this._ratio(position.left!);
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
 
-    const top = (position.top ?? 0) + offsetTop;
+    const top = (position.top ?? 0) + offsetTop + this.transformTop;
 
     // ROI
     if (typeof options.data?.position.ROI !== "undefined") {
@@ -199,7 +207,7 @@ export class DataPaint extends BasePaint {
       // let cellWidth = this.positionInfoCellWidth;
       let left =
         position.left! + this.positionInfoCellWidth * Math.floor(index / 2);
-      let top = (position.top as number) + (index % 2) * 40;
+      let top = (position.top as number) + (index % 2) * 40 + this.transformTop;
 
       // if (isVertical && index === 1) {
       //   left = position.left!;
@@ -287,6 +295,7 @@ export class DataPaint extends BasePaint {
     this.ctx.save();
     // "Nunito Sans",-apple-system,"San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif
     this.ctx.font = `${fontWeight} ${fontSize}px ${options?.fontFamily}`;
+
     this.ctx.fillStyle = color;
     this.ctx.textBaseline = textBaseline;
     this.ctx.textAlign = textAlign;

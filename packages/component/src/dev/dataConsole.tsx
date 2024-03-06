@@ -1,6 +1,7 @@
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useEffect, useRef, useState } from "react";
-import { Divider } from "..";
+
+import diff from "deep-diff";
 
 export const DebugPrinter = () => {
   const [info, setInfo] = useState();
@@ -16,6 +17,9 @@ export const DebugPrinter = () => {
     const print = (data: any) => {
       setInfo(data);
 
+      const differences = diff.diff(prevInfo.current, data);
+
+      console.log(differences);
       //   const error = new Error();
       //   const stack = error
       //     .stack!.split("\n")
@@ -40,7 +44,7 @@ export const DebugPrinter = () => {
   }, [info]);
 
   return (
-    <div className="orderly-fixed orderly-left-3 orderly-bottom-10 orderly-min-w-[300px] orderly-bg-base-700/70 orderly-z-50 orderly-rounded !orderly-text-xs orderly-grid orderly-grid-cols-2 orderly-pointer-events-none">
+    <div className="orderly-fixed orderly-left-3 orderly-bottom-10 orderly-min-w-[300px] orderly-bg-base-700/70 orderly-z-50 orderly-rounded !orderly-text-xs orderly-grid orderly-grid-cols-2 orderly-max-h-screen orderly-overflow-y-auto  orderly-pointer-events-none">
       <div className="orderly-border-r orderly-border-base-500 orderly-p-2">
         <div>Prev</div>
         <pre>{JSON.stringify(prevInfo.current, null, 2)}</pre>
