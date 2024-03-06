@@ -7,8 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6026",
-    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
-    "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "build-storybook": "storybook build"
   },
   "keywords": [],
