@@ -1,3 +1,6 @@
+/**
+ * Supported types for placing an order
+ */
 export enum OrderType {
   LIMIT = "LIMIT",
   MARKET = "MARKET",
@@ -6,8 +9,27 @@ export enum OrderType {
   POST_ONLY = "POST_ONLY",
   ASK = "ASK",
   BID = "BID",
-  STOP_LIMIT="STOP_LIMIT",
-  STOP_MARKET="STOP_MARKET",
+  STOP_LIMIT = "STOP_LIMIT",
+  STOP_MARKET = "STOP_MARKET",
+  /**
+   * Only for POSITIONAL_TP_SL type algo order
+   */
+  CLOSE_POSITION = "CLOSE_POSITION",
+}
+
+export enum AlogRootOrderType {
+  TP_SL = "TP_SL",
+  POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
+  STOP = "STOP",
+}
+
+export enum TriggerPriceType {
+  MARK_PRICE = "MARK_PRICE",
+}
+
+export enum AlgoOrderType {
+  TAKE_PROFIT = "TAKE_PROFIT",
+  STOP_LOSS = "STOP_LOSS",
 }
 
 export enum OrderSide {
@@ -32,11 +54,12 @@ export enum OrderStatus {
 export interface OrderEntity {
   symbol?: string;
   order_type: OrderType;
+  algo_type?: AlogRootOrderType;
   order_type_ext?: OrderType;
   order_price?: string | number;
   order_quantity?: string | number;
   order_amount?: number;
-  // 是否显示在orderbook, 默认=order_quantity, =0时不显示,
+  // Whether to display in the orderbook, default=order_quantity, not displayed when =0,
   visible_quantity?: number;
   reduce_only?: boolean;
   side: OrderSide;
@@ -46,5 +69,27 @@ export interface OrderEntity {
   total?: string | number;
   // hideInOrderbook?: boolean;
   isStopOrder?: boolean;
-  trigger_price?: string | number,
+  trigger_price?: string | number;
 }
+
+export type AlgoOrderEntry = {
+  algo_type: AlogRootOrderType;
+  child_orders?: (Partial<AlgoOrderEntry> & {
+    order_type: AlgoOrderType;
+  })[];
+  client_order_id?: string;
+  order_tag?: string;
+  price: number;
+  quantity: number;
+  reduce_only: boolean;
+  side: OrderSide;
+  symbol: string;
+  trigger_price: number | string;
+  trigger_price_type: TriggerPriceType;
+  type: OrderType;
+  visible_quantity: boolean;
+};
+
+export type AlgoOrderEntryExt = AlgoOrderEntry & {
+  // internal fields
+};

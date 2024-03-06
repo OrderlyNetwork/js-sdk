@@ -329,12 +329,13 @@ export function useOrderEntry(
     needParse?.visible_quantity,
   ]);
 
-  const isStopOrder =
+  const isAlgoOrder =
     parsedData?.order_type === OrderType.STOP_LIMIT ||
-    parsedData?.order_type === OrderType.STOP_MARKET;
+    parsedData?.order_type === OrderType.STOP_MARKET ||
+    parsedData?.order_type === OrderType.CLOSE_POSITION;
 
   const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
-    isStopOrder ? "/v1/algo/order" : "/v1/order"
+    isAlgoOrder ? "/v1/algo/order" : "/v1/order"
   );
 
   // const maxQty = 3;

@@ -1,16 +1,30 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "plugins": [{
-      "name": "next"
-    }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "jsx": "react-jsx",
-    "typeRoots": ["node_modules/@types", "./typings"]
+    "typeRoots": [
+      "node_modules/@types",
+      "./typings"
+    ]
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./typings/*.d.ts"],
-  "exclude": ["node_modules", "__test__", "__mocks__"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./typings/*.d.ts",
+"./__test__/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "typedocOptions": {
-    "entryPoints": ["src/index.ts"],
+    "entryPoints": [
+      "src/index.ts"
+    ],
     "out": "docs",
     "skipErrorChecking": true
   }
