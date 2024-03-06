@@ -18,6 +18,7 @@ export const useMarketsStream = () => {
       "tickers",
       {
         onMessage: (message: any) => {
+          // window.debugPrint(message);
           next(null, message);
         },
         // onUnsubscribe: () => {
