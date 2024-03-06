@@ -6,8 +6,8 @@ export const sortFunc = {
   vol:
     (direction: SortDirection) =>
     (a: API.MarketInfoExt, b: API.MarketInfoExt) => {
-      const aValue = a["24h_volumn"] * a["24h_close"];
-      const bValue = b["24h_volumn"] * b["24h_close"];
+      const aValue = a["24h_amount"];
+      const bValue = b["24h_amount"];
       return direction === SortDirection.ASC
         ? aValue - bValue
         : bValue - aValue;
