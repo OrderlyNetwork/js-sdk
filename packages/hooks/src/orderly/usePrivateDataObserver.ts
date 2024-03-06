@@ -22,58 +22,58 @@ export const usePrivateDataObserver = (options: {
   // TODO: remove this when the WS service provides the correct data
   const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
 
-  const updateOrders = useDebouncedCallback(
-    (data: WSMessage.AlgoOrder | WSMessage.Order, isAlgoOrder: boolean) => {
-      const map = options.getKeysMap("orders");
+  const updateOrders = (
+    data: WSMessage.AlgoOrder | WSMessage.Order,
+    isAlgoOrder: boolean
+  ) => {
+    const map = options.getKeysMap("orders");
 
-      console.log("$$$$$$$$$$$$", data);
+    console.log("$$$$$$$$$$$$", data);
 
-      if (isAlgoOrder) {
-        /// TODO: remove this when the WS service provides the correct data
-        if (algoOrderCacheQuneue.current.length) {
-          const index = algoOrderCacheQuneue.current.findIndex(
-            (item: any) =>
-              item.order_id === (data as WSMessage.AlgoOrder).algoOrderId
-          );
+    if (isAlgoOrder) {
+      /// TODO: remove this when the WS service provides the correct data
+      if (algoOrderCacheQuneue.current.length) {
+        const index = algoOrderCacheQuneue.current.findIndex(
+          (item: any) =>
+            item.order_id === (data as WSMessage.AlgoOrder).algoOrderId
+        );
 
-          console.log({ ...algoOrderCacheQuneue.current[index] });
-
-          if (index > -1) {
-            data = {
-              ...data,
-              ...algoOrderCacheQuneue.current[index],
-            };
-            algoOrderCacheQuneue.current.splice(index, 1);
-          }
+        if (index > -1) {
+          data = {
+            ...data,
+            ...algoOrderCacheQuneue.current[index],
+          };
+          algoOrderCacheQuneue.current.splice(index, 1);
         }
       }
-
-      map.forEach((getKey, key) => {
-        mutate(
-          unstable_serialize((index, prevData) => [
-            getKey(index, prevData),
-            state.accountId,
-          ]),
-          (prevData?: any[]) => {
-            return updateOrdersHandler(key, data, prevData);
-          },
-          {
-            revalidate: false,
-          }
-        );
-      });
-
-      //  emit events;
-      ee.emit("orders:changed", {
-        ...data,
-        status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
-      });
-    },
-    50,
-    {
-      trailing: true,
     }
-  );
+
+    map.forEach((getKey, key) => {
+      mutate(
+        unstable_serialize((index, prevData) => [
+          getKey(index, prevData),
+          state.accountId,
+        ]),
+        (prevData?: any[]) => {
+          return updateOrdersHandler(key, data, prevData);
+        },
+        {
+          revalidate: false,
+        }
+      );
+    });
+
+    //  emit events;
+    // ee.emit("orders:changed", {
+    //   ...data,
+    //   status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
+    // });
+
+    ee.emit("orders:changed", {
+      ...data,
+      status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
+    });
+  };
 
   // orders
   useEffect(() => {
