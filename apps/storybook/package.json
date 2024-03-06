@@ -51,6 +51,7 @@
     "tsup": "^7.1.0"
   },
   "dependencies": {
+    "@storybook/addon-viewport": "^7.6.17",
     "viem": "^1.21.4",
     "wagmi": "^1.4.12"
   }
