@@ -79,6 +79,7 @@ const preview = {
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
           { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
+          { value: "PERP_JUP_USDC", title: "PERP_JUP_USDC" },
         ],
       },
     },
@@ -88,14 +89,14 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, env: "prod" });
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
               main: {
