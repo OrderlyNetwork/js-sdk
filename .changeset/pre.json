@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.4"
   },
   "changesets": [
-    "chatty-owls-lay"
+    "chatty-owls-lay",
+    "grumpy-bananas-peel"
   ]
 }
