@@ -1,0 +1,26 @@
+{
+  "mode": "pre",
+  "tag": "internal",
+  "initialVersions": {
+    "@orderly/docs": "0.2.4",
+    "@orderly.network/examples": "0.2.4",
+    "@orderly.network/storybook": "1.1.4",
+    "@orderly.network/cli": "0.1.4",
+    "@orderly.network/react": "0.2.4",
+    "@orderly.network/core": "0.2.4",
+    "create-orderly-app": "0.2.4",
+    "eslint-config-custom": "0.1.4",
+    "@orderly.network/hooks": "1.1.4",
+    "@orderly.network/net": "1.1.4",
+    "@orderly.network/web3-onboard": "0.1.4",
+    "@orderly.network/perp": "2.0.4",
+    "@orderly.network/trading-view": "0.2.4",
+    "tsconfig": "0.1.4",
+    "@orderly.network/types": "0.2.4",
+    "@orderly.network/utils": "0.1.4",
+    "@orderly.network/web3-modal": "0.1.4"
+  },
+  "changesets": [
+    "funny-birds-smoke"
+  ]
+}

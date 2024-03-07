@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.1.5-internal.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@1.1.5-internal.0
+  - @orderly.network/types@0.2.5-internal.0
+
 ## 0.1.4
 
 ### Patch Changes
