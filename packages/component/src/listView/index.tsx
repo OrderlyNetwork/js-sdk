@@ -25,4 +25,4 @@ type ListTileComponent = typeof ListTile & {
 const ListTileComponent = ListTile as ListTileComponent;
 ListTileComponent.symbol = ListTileForSymbol;
 
-export { Component as ListView, ListTileComponent as ListTile };
+export { Component as ListView, ListTileComponent as ListTile, EmptyView };

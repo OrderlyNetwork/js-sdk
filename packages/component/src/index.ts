@@ -14,6 +14,8 @@ export { default as Button } from "./button";
 
 export * from "./tooltip";
 export * from "./text";
+export * from "./listView";
+export * from "./table";
 
 export {
   Dialog,

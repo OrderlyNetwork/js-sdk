@@ -1,11 +1,4 @@
 import { ArrorRightIcon } from "./icons/arrowRight";
-import { AsAnAffiliate } from "./sections/asAnAffiliate";
-import { AsAnTrader } from "./sections/asAnTrader";
-import { Apply } from "./sections/apply";
-import { ArrorDownIcon } from "./icons/arrowDown";
-import { Share } from "./sections/share";
-import { Earn } from "./sections/earn";
-// import "@orderly.network/react/dist/styles.css";
 import { Card } from "./sections/card";
 import { Introduce } from "./sections/introduce";
 

@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { HintIcon, CopyIcon } from "../icons";
 import { Input, Numeral, cn, toast } from "@orderly.network/react";
-// import "@orderly.network/react/dist/styles.css";
 
 
 export const ReferralLink = () => {
