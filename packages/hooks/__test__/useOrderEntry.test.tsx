@@ -11,7 +11,7 @@ describe("useOrderEntry", () => {
         {children}
       </OrderlyConfigProvider>
     );
-    const { result } = renderHook(
+    const { result,waitFor } = renderHook(
       () => {
         return useOrderEntry({
           side: OrderSide.BUY,

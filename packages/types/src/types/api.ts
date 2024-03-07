@@ -205,6 +205,11 @@ export declare namespace API {
     mm: number;
   }
 
+  export interface PositionTPSLExt extends PositionExt {
+    take_profit_trigger_price?: number;
+    stop_loss_trigger_price?: number;
+  }
+
   export interface Trade {
     symbol: Symbol;
     side: OrderSide;
