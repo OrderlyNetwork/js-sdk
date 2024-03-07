@@ -1,6 +1,8 @@
 import { FC } from "react";
-import { HintIcon } from "../icons/hint";
-import { Input, Numeral } from "@orderly.network/react";
+import { HintIcon, CopyIcon } from "../icons";
+import { Input, Numeral, cn, toast } from "@orderly.network/react";
+// import "@orderly.network/react/dist/styles.css";
+
 
 export const ReferralLink = () => {
 
@@ -10,27 +12,31 @@ export const ReferralLink = () => {
                 Referral link
             </div>
 
-            <div className="orderly-flex orderly-items-center">
-                <Info title="Earn" value={"0"} />
-                <Info title="Share" value={"0"} />
+            <div className="orderly-mt-4 orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-3">
+
+            <div className="lg:orderly-w-1/6 orderly-flex orderly-items-center ">
+                <Info title="Earn" value={"0"} className="orderly-flex-1"/>
+                <Info title="Share" value={"0"} className="orderly-flex-1"/>
             </div>
 
-            <div>
-                
-                <Input />
-                <Input />
+            <div className="lg:orderly-w-5/6 orderly-flex orderly-flex-col orderly-gap-2">
+                <CopyInfo title="Referral code" value="DYOL0VRH" />
+                <CopyInfo title="Referral link" value="DYOL0VRH" />
+
+            </div>
+
             </div>
         </div>
     );
 }
 
-const Info: FC<{title: string, value: any}> = (props) => {
+const Info: FC<{ title: string, value: any, className?: string }> = (props) => {
 
-    const { title, value } = props;
+    const { title, value, className } = props;
 
     return (
-        <div>
-            <div className="orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs">
+        <div className={className}>
+            <div className={cn("orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs" )}>
                 {title}
                 <HintIcon className="orderly-ml-2" />
             </div>
@@ -39,6 +45,21 @@ const Info: FC<{title: string, value: any}> = (props) => {
                     {value}
                 </Numeral>
             </div>
+        </div>
+    );
+}
+
+const CopyInfo: FC<{ title: string, value: string }> = (props) => {
+    const { title, value } = props;
+
+    return (
+        <div className="orderly-flex orderly-p-3 orderly-items-center orderly-bg-base-500 orderly-rounded-md">
+            <div className="orderly-text-base-contrast-54 orderly-text-3xs lg:orderly-text-2xs 2xl:orderly-text-xs">{title}</div>
+            <div className="orderly-flex-1 orderly-text-right orderly-mr-3 orderly-text-xs 2xl:orderly-text-base">{value}</div>
+            <CopyIcon
+                className="orderly-mr-3 orderly-cursor-pointer"
+                onClick={() => { toast.success("will be realized") }}
+            />
         </div>
     );
 }
