@@ -20,6 +20,7 @@ import {
   ConfigProviderProps,
   useAccountInstance,
   OrderlyContext,
+  useChains,
 } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
@@ -143,6 +144,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
+    chains: customChains,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -152,12 +154,23 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     disconnect,
     wallet: currentWallet,
     setChain,
-    chains,
   } = useWalletConnector();
 
   const account = useAccountInstance();
 
   const { networkId } = useContext<any>(OrderlyContext);
+
+  const [orderlyChains] = useChains();
+
+  const chains = useMemo(() => {
+    const _chains = customChains || orderlyChains;
+
+    if (!_chains) {
+      return [];
+    }
+
+    return [..._chains?.mainnet, ..._chains.testnet];
+  }, [customChains, orderlyChains]);
 
   const [errors, setErrors] = useSessionStorage<AppStateErrors>("APP_ERRORS", {
     ChainNetworkNotSupport: false,
@@ -184,12 +197,13 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         return false;
       }
 
-      const isSupport = chains.some((item: { id: string | number }) => {
-        if (typeof item.id === "string") {
-          // return `0x${Number(item.id).toString(16)}` === chainId;
-          return parseInt(item.id, 16) === chainId;
+      const isSupport = chains.some((item) => {
+        const _chainId = item.network_infos?.chain_id;
+        if (typeof _chainId === "string") {
+          // return `0x${Number(_chainId).toString(16)}` === chainId;
+          return parseInt(_chainId, 16) === chainId;
         }
-        return item.id === chainId;
+        return _chainId === chainId;
       });
 
       return isSupport;
