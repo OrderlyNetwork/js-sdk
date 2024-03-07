@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.1.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+
 ## 0.1.5-internal.0
 
 ### Patch Changes

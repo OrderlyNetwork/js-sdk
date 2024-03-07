@@ -1,5 +1,16 @@
 # examples
 
+## 0.2.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.1
+  - @orderly.network/web3-onboard@0.1.5-internal.1
+  - @orderly.network/hooks@1.1.5-internal.1
+  - @orderly.network/core@0.2.5-internal.1
+
 ## 0.2.5-internal.0
 
 ### Patch Changes

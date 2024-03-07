@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.1.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+
 ## 1.1.5-internal.0
 
 ### Patch Changes

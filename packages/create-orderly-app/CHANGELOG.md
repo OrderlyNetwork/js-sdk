@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.2.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+
 ## 0.2.5-internal.0
 
 ### Patch Changes

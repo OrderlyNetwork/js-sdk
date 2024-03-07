@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.1
+  - @orderly.network/utils@0.1.5-internal.1
+
 ## 2.0.5-internal.0
 
 ### Patch Changes

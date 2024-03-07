@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 0.2.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+- Updated dependencies
+  - @orderly.network/trading-view@0.2.5-internal.1
+  - @orderly.network/hooks@1.1.5-internal.1
+  - @orderly.network/types@0.2.5-internal.1
+  - @orderly.network/utils@0.1.5-internal.1
+  - @orderly.network/core@0.2.5-internal.1
+  - @orderly.network/net@1.1.5-internal.1
+
 ## 0.2.5-internal.0
 
 ### Patch Changes
