@@ -7,9 +7,9 @@ import { Numeral } from "@orderly.network/react/src/text";
 export const Summary = () => {
 
     return (
-        <div className="orderly-p-6">
+        <div className="orderly-p-6 orderly-bg-base-600">
             <div className="orderly-flex orderly-justify-between">
-                <span>Summary</span>
+                <span className="orderly-text-base 2xl:orderly-text-lg">Summary</span>
                 <button className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px]">
                     <HistoryIcon />
                     <span>All</span>

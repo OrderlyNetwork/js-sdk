@@ -12,6 +12,9 @@ export {
 // ==================== base component ====================
 export { default as Button } from "./button";
 
+export * from "./tooltip";
+export * from "./text";
+
 export {
   Dialog,
   DialogContent,
