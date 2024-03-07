@@ -62,7 +62,7 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
                 informations.push({"title": "Open price", "value": position.average_open_price});
                 break;
             } case "openTime": {
-                informations.push({"title": "Opened at", "value": formatTime(position.timestamp)});
+                informations.push({"title": "Opened at", "value": formatOpenTime(position.timestamp)});
                 break;
             }
             case "markPrice": {
@@ -80,7 +80,7 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
 
     const data: any = {
         position: positionData,
-        updateTime: formatTime(new Date()),
+        updateTime: formatShareTime(new Date()),
         domain
     }
     if (message.length > 0) {
@@ -107,13 +107,13 @@ function processSymbol(symbol: symbol): SymbolResult {
     };
 }
 
-function formatTime(input: number): string;
-function formatTime(input: Date): string;
-function formatTime(input: number | Date): string {
+function formatShareTime(input: number): string;
+function formatShareTime(input: Date): string;
+function formatShareTime(input: number | Date): string {
     const date = input instanceof Date ? input : new Date(input);
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
-      month: 'short',
+      month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit'
@@ -133,15 +133,27 @@ function formatTime(input: number | Date): string {
     const minute = formattedParts.find((part) => part.type === "minute" ? part.value: "")?.value;
 
     return `${year}-${month}-${day} ${hour}:${minute}`;
+}
+
+function formatOpenTime(input: number | Date): string {
+    const date = input instanceof Date ? input : new Date(input);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
   
-    // const formattedTime = formattedParts
-    //   .map(part => {
-    //     if (part.type === 'literal') {
-    //       return part.value;
-    //     } else {
-    //       return part.value.toUpperCase();
-    //     }
-    //   })
-    //   .join('');
-    // return formattedTime;
+    const formatter = new Intl.DateTimeFormat('en-US', options);
+    const formattedParts = formatter.formatToParts(date);
+
+    // console.log("formattedParts", formattedParts);
+
+    const month = formattedParts.find((part) => part.type === "month" ? part.value: "")?.value;
+    const day = formattedParts.find((part) => part.type === "day" ? part.value: "")?.value;
+    const hour = formattedParts.find((part) => part.type === "hour" ? part.value: "")?.value;
+    const minute = formattedParts.find((part) => part.type === "minute" ? part.value: "")?.value;
+
+    return `${month}-${day} ${hour}:${minute}`;
 }
