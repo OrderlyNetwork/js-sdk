@@ -10,7 +10,6 @@ import { useCollateral } from "./useCollateral";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { useWS } from "../useWS";
 import { useOrderStream } from "./useOrderStream";
 
 const positionsPath = pathOr([], [0, "rows"]);
@@ -111,7 +110,7 @@ export const useMaxQty = (
       otherIMs,
       positionQty,
       buyOrdersQty,
-      sellOrdersQty,
+      sellOrdersQty: sellOrdersQty <= 0 ? sellOrdersQty : sellOrdersQty * -1,
       IMR_Factor: accountInfo.imr_factor[symbol],
     });
   }, [

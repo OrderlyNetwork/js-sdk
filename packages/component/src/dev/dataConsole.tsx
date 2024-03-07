@@ -17,9 +17,9 @@ export const DebugPrinter = () => {
     const print = (data: any) => {
       setInfo(data);
 
-      const differences = diff.diff(prevInfo.current, data);
+      // const differences = diff.diff(prevInfo.current, data);
 
-      console.log(differences);
+      // console.log(differences);
       //   const error = new Error();
       //   const stack = error
       //     .stack!.split("\n")
