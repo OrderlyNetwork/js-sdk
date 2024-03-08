@@ -2,11 +2,12 @@ import Container from "./container";
 
 //https://github.com/kl4n4/typescript-simple-di
 export class SimpleDI {
-  private static container: Container;
+  private static KEY = "__ORDERLY_CONTAINER__";
+  private static container: Container = (window as any)[SimpleDI.KEY] || null;
 
   private static getContainer(): Container {
     if (!SimpleDI.container) {
-      SimpleDI.container = new Container();
+      (window as any)[SimpleDI.KEY] = SimpleDI.container = new Container();
     }
     return SimpleDI.container;
   }

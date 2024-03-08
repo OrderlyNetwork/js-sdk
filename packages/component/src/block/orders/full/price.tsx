@@ -11,7 +11,12 @@ import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 import { Divider } from "@/divider";
 import { cleanStringStyle } from "@orderly.network/hooks";
 
@@ -19,45 +24,52 @@ export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
 
   const [price, setPrice] = useState<string>(
-    (order.price?.toString()) ?? "Market"
+    order.price?.toString() ?? "Market"
   );
 
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
+  useEffect(() => {
+    {
+      if (!!props.order.price) {
+        setPrice(`${props.order.price}`);
+      }
+    }
+  }, [props.order.price]);
+
   if (price === "Market") {
-    return <span>Market</span>
+    return <span>Market</span>;
   }
 
   if (!editting && open <= 0) {
-    return (<NormalState order={order} price={price} setEditing={setEditting} />);
+    return <NormalState order={order} price={price} setEditing={setEditting} />;
   }
 
-  return (<EditingState
-    order={order}
-    price={price}
-    setPrice={setPrice}
-    editting={editting}
-    setEditting={setEditting}
-    open={open}
-    setOpen={setOpen}
-  />);
-
+  return (
+    <EditingState
+      order={order}
+      price={price}
+      setPrice={setPrice}
+      editting={editting}
+      setEditting={setEditting}
+      open={open}
+      setOpen={setOpen}
+    />
+  );
 };
 
-
 const NormalState: FC<{
-  order: any,
-  price: string,
-  setEditing: any,
+  order: any;
+  price: string;
+  setEditing: any;
 }> = (props) => {
-
   const { order, price } = props;
 
   return (
     <div
       className={cn(
-        "orderly-flex orderly-max-w-[110px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold",
+        "orderly-flex orderly-max-w-[110px] orderly-justify-start orderly-items-center orderly-gap-1 orderly-relative orderly-font-semibold"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -70,19 +82,19 @@ const NormalState: FC<{
       </div>
     </div>
   );
-}
+};
 
 const EditingState: FC<{
-  order: API.OrderExt,
-  price: string,
-  setPrice: any,
-  editting: boolean,
-  setEditting: any,
-  open: number,
-  setOpen: any,
+  order: API.OrderExt;
+  price: string;
+  setPrice: any;
+  editting: boolean;
+  setEditting: any;
+  open: number;
+  setOpen: any;
 }> = (props) => {
-
-  const { order, price, setPrice, editting, setEditting, setOpen, open } = props;
+  const { order, price, setPrice, editting, setEditting, setOpen, open } =
+    props;
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   // console.log("price node", order);
@@ -99,7 +111,7 @@ const EditingState: FC<{
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
     setOpen(-1);
-    setPrice((order.price?.toString()) ?? "Market");
+    setPrice(order.price?.toString() ?? "Market");
   };
 
   useEffect(() => {
@@ -115,7 +127,7 @@ const EditingState: FC<{
         return;
       }
 
-      setPrice((order.price?.toString()) ?? "Market");
+      setPrice(order.price?.toString() ?? "Market");
       setEditting(false);
     };
 
@@ -152,7 +164,7 @@ const EditingState: FC<{
       inputRef.current?.blur();
       onClick();
     }
-  }
+  };
 
   const onConfirm = () => {
     setIsSubmitting(true);
@@ -164,8 +176,12 @@ const EditingState: FC<{
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
-      reduce_only: Boolean(order.reduce_only),
+      // reduce_only: Boolean(order.reduce_only),
+    };
+    if (typeof order.reduce_only !== "undefined") {
+      data.reduce_only = order.reduce_only;
     }
+
     if (isAlgoOrder) {
       order_id = order.algo_order_id as number;
       data = {
@@ -173,9 +189,8 @@ const EditingState: FC<{
         order_id,
         price: price,
         algo_order_id: order_id,
-      }
+      };
     }
-
 
     // @ts-ignore
     if (order.visible_quantity === 0) {
@@ -215,24 +230,25 @@ const EditingState: FC<{
 
   const inputRef = useRef<HTMLInputElement>(null);
   // @ts-ignore
-  const rangeInfo = useSymbolPriceRange(order.symbol, order.side, isAlgoOrder ? order.trigger_price : undefined);
+  const rangeInfo = useSymbolPriceRange(
+    order.symbol,
+    order.side,
+    isAlgoOrder ? order.trigger_price : undefined
+  );
 
   const hintInfo = useMemo(() => {
     if (!rangeInfo) return "";
     if (isStopMarket) return "";
     if (!editting) return "";
 
-
     if (Number(price) > rangeInfo.max) {
-      return `Price can not be greater than ${rangeInfo.max} USDC.`
+      return `Price can not be greater than ${rangeInfo.max} USDC.`;
     }
     if (Number(price) < rangeInfo.min) {
-      return `Price can not be less than ${rangeInfo.min} USDC.`
+      return `Price can not be less than ${rangeInfo.min} USDC.`;
     }
     return "";
-
   }, [isStopMarket, editting, rangeInfo, price]);
-
 
   return (
     <Popover
@@ -245,7 +261,6 @@ const EditingState: FC<{
         }
         ref={boxRef}
       >
-
         <div
           className={cn("orderly-absolute orderly-left-1 orderly-flex", {
             "orderly-animate-in orderly-fade-in orderly-zoom-in": editting,
@@ -261,9 +276,12 @@ const EditingState: FC<{
             <X size={14} />
           </button>
 
-          <Divider vertical className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]" />
+          <Divider
+            vertical
+            className="orderly-ml-[1px] before:orderly-h-[16px] orderly-min-w-[2px]"
+          />
         </div>
-        <PopoverAnchor >
+        <PopoverAnchor>
           {isStopMarket && <span>Market</span>}
           {!isStopMarket && (
             <Tooltip open={hintInfo.length > 0}>
@@ -278,7 +296,7 @@ const EditingState: FC<{
                     setTimeout(() => {
                       setEditting(false);
                       if (open <= 0) {
-                        setPrice((order.price?.toString()) ?? "Market");
+                        setPrice(order.price?.toString() ?? "Market");
                       }
                     }, 100);
                   }}
@@ -292,7 +310,11 @@ const EditingState: FC<{
                 align="center"
               >
                 {hintInfo}
-                <TooltipArrow width={10} height={7} className="orderly-fill-base-400" />
+                <TooltipArrow
+                  width={10}
+                  height={7}
+                  className="orderly-fill-base-400"
+                />
               </TooltipContent>
             </Tooltip>
           )}
@@ -304,7 +326,10 @@ const EditingState: FC<{
               !editting,
           })}
         >
-          <Divider vertical className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]" />
+          <Divider
+            vertical
+            className="before:orderly-h-[16px] orderly-min-w-[2px] orderly-mr-[1px]"
+          />
           <button
             className="hover:orderly-bg-base-contrast/10 orderly-h-[25px] orderly-rounded orderly-px-1 orderly-text-base-contrast-54 hover:orderly-text-base-contrast-80"
             // @ts-ignore
@@ -339,7 +364,11 @@ const EditingState: FC<{
                   Cancel
                 </Button>
                 {/* @ts-ignore */}
-                <Button ref={confirmRef} loading={isSubmitting} onClick={onConfirm}>
+                <Button
+                  ref={confirmRef}
+                  loading={isSubmitting}
+                  onClick={onConfirm}
+                >
                   Confirm
                 </Button>
               </div>
@@ -356,4 +385,4 @@ const EditingState: FC<{
       </div>
     </Popover>
   );
-}
+};

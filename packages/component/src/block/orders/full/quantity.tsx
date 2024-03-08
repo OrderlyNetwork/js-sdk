@@ -114,12 +114,12 @@ const EditingState: FC<{
       if (!el || el.contains(event.target as Node)) {
         return;
       }
-      
+
       const el2 = confirmRef?.current;
       if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
-      
+
       setQuantity(order.quantity.toString());
       setEditting(false);
     };
@@ -160,9 +160,13 @@ const EditingState: FC<{
       side: order.side,
       order_price: order.price,
       order_quantity: quantity,
-      reduce_only: Boolean(order.reduce_only),
+      // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
+
+    if (typeof order.reduce_only !== "undefined") {
+      params.reduce_only = order.reduce_only;
+    }
 
     // @ts-ignore
     if (order.visible_quantity === 0) {

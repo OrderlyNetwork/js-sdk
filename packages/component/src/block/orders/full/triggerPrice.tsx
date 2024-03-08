@@ -11,7 +11,7 @@ import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { cleanStringStyle } from "@orderly.network/hooks";
+import { cleanStringStyle, useEventEmitter } from "@orderly.network/hooks";
 
 export const TriggerPrice = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -88,6 +88,8 @@ const EditingState: FC<{
 
   const { editAlgoOrder } = useContext(OrderListContext);
 
+  const ee = useEventEmitter();
+
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
@@ -150,7 +152,7 @@ const EditingState: FC<{
 
   const onConfirm = () => {
     // @ts-ignore
-    editAlgoOrder(order.algo_order_id, {
+    const data = {
       // price: price,
       quantity: order.quantity,
       trigger_price: price,
@@ -159,9 +161,18 @@ const EditingState: FC<{
       // side: order.side,
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
-    })
+    };
+    // @ts-ignore
+    editAlgoOrder(`${order.algo_order_id}`, data)
       .then(
         (result) => {
+          ee.emit("algoOrder:cache", {
+            // ...res.data.rows[0],
+            ...data,
+            order_id: order.algo_order_id,
+            // trigger_price: price,
+          });
+
           closePopover();
           setPrice(price);
           // setTimeout(() => inputRef.current?.blur(), 300);

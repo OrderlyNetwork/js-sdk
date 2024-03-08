@@ -47,10 +47,10 @@ export const updateOrdersHandler = (
   let formattedOrder: API.Order & API.AlgoOrder = {
     ...object2underscore(updatedOrder),
     updated_time: updatedOrder.timestamp,
+    type: updatedOrder.type.replace("_ORDER", ""),
   };
 
   if (isAlgoOrder) {
-
     if (formattedOrder?.created_time === undefined) {
       formattedOrder["created_time"] = updatedOrder.timestamp;
     }
@@ -59,7 +59,7 @@ export const updateOrdersHandler = (
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
 
-    if (updatedOrder.type === "MARKET_ORDER") {
+    if (updatedOrder.type === "MARKET") {
       (formattedOrder as API.AlgoOrder).price = undefined;
     }
   } else {
@@ -158,12 +158,15 @@ function updateOrders(
       rows: item.rows.map((order: API.Order | API.AlgoOrder) => {
         const isAlgoOrder = "algo_order_id" in order;
 
-        if (isAlgoOrder && formattedOrder?.algo_order_id === order?.algo_order_id) {          
-          return {...order, ...formattedOrder};
+        if (
+          isAlgoOrder &&
+          formattedOrder?.algo_order_id === order?.algo_order_id
+        ) {
+          return { ...order, ...formattedOrder };
         }
 
         if (!isAlgoOrder && formattedOrder?.order_id === order?.order_id) {
-          return {...order, ...formattedOrder};
+          return { ...order, ...formattedOrder };
         }
 
         return order;
