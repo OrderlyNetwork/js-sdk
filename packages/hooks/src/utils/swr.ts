@@ -46,7 +46,7 @@ export const updateOrdersHandler = (
 
   let formattedOrder: API.Order & API.AlgoOrder = {
     ...object2underscore(updatedOrder),
-    created_time: updatedOrder.timestamp,
+    updated_time: updatedOrder.timestamp,
   };
 
   if (isAlgoOrder) {
@@ -153,15 +153,12 @@ function updateOrders(
       rows: item.rows.map((order: API.Order | API.AlgoOrder) => {
         const isAlgoOrder = "algo_order_id" in order;
 
-        const updatedOrderId = isAlgoOrder
-          ? formattedOrder.algo_order_id
-          : formattedOrder.order_id;
+        if (isAlgoOrder && formattedOrder?.algo_order_id === order?.algo_order_id) {          
+          return {...order, ...formattedOrder};
+        }
 
-        if (
-          order.algo_order_id === updatedOrderId ||
-          (order as API.Order).order_id === updatedOrderId
-        ) {
-          return { ...order, ...formattedOrder };
+        if (!isAlgoOrder && formattedOrder?.order_id === order?.order_id) {
+          return {...order, ...formattedOrder};
         }
 
         return order;
