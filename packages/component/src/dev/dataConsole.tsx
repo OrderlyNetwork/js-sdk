@@ -1,7 +1,7 @@
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useEffect, useRef, useState } from "react";
 
-import diff from "deep-diff";
+// import diff from "deep-diff";
 
 export const DebugPrinter = () => {
   const [info, setInfo] = useState();
