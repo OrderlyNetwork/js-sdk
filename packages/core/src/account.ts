@@ -503,9 +503,9 @@ export class Account {
     //
 
     if (res.success) {
-      return res;
+      return Promise.resolve(res);
     } else {
-      throw new Error(res.message);
+      return Promise.reject(res);
     }
   }
 

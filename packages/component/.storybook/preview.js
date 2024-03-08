@@ -79,6 +79,7 @@ const preview = {
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
           { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
+          { value: "PERP_JUP_USDC", title: "PERP_JUP_USDC" },
         ],
       },
     },
@@ -88,7 +89,7 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, env: "prod" });
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
@@ -118,8 +119,8 @@ const preview = {
                   "/images/poster_bg_3.png",
                   "/images/poster_bg_4.png",
                   "/images/poster_bg_5.png",
-                ]
-              }
+                ],
+              },
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);

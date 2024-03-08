@@ -131,7 +131,7 @@ export const reduceOrderbook = (
 
 
         if (askPrice <= bidPrice) {
-          console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
+          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
           let logStr = "";
           for (let index = 0; index < asks.length; index++) {
@@ -145,11 +145,11 @@ export const reduceOrderbook = (
             } else {
               // asks[index][3] += newAmount;
               // FIXME: fix this code later
-              asks[index][3] = asks[index][0] * asks[index][1] + asks[index-1][3];
+              asks[index][3] = asks[index][0] * asks[index][1] + asks[index - 1][3];
             }
             logStr += `index: ${index} ${asks[index]}\n`;
           }
-          console.log("xxxxxxxxxxx reset ask list end", logStr);
+          // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }
@@ -253,6 +253,9 @@ export const useOrderbookStream = (
 
   const [depth, setDepth] = useState<number | undefined>();
 
+  // markPrice, lastPrice
+  const prevMiddlePrice = useRef<number>(0);
+
   const depths = useMemo(() => {
     const tick = config("quote_tick");
 
@@ -315,6 +318,7 @@ export const useOrderbookStream = (
       ignore = true;
       // clean the data;
       setData(INIT_DATA);
+      prevMiddlePrice.current = 0;
     };
   }, [symbol]);
 
@@ -350,6 +354,7 @@ export const useOrderbookStream = (
 
     return () => {
       ignore = true;
+      prevMiddlePrice.current = 0;
       subscription?.(); //unsubscribe
     };
   }, [symbol, requestData]);
@@ -363,15 +368,14 @@ export const useOrderbookStream = (
     setDepth(() => depth);
   }, []);
 
-  // markPrice, lastPrice
-  const prevMiddlePrice = useRef<number>(0);
+
 
   const middlePrice = useMemo(() => {
     let asksFrist = 0,
       bidsFirst = 0;
 
     if (data.asks.length > 0) {
-      asksFrist = data.asks[data.asks.length - 1][0];
+      asksFrist = data.asks[0][0];
     }
 
     if (data.bids.length > 0) {
@@ -381,7 +385,7 @@ export const useOrderbookStream = (
     if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
 
     return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
-  }, [ticker, data]);
+  }, [ticker?.["24h_close"], data]);
 
   useEffect(() => {
     prevMiddlePrice.current = middlePrice;

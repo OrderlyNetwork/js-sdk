@@ -75,9 +75,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       },
       onOk: () => {
         if (typeof props.onSettle !== "function") return Promise.resolve();
-        return props.onSettle().then(() => {
-          toast.success("Settlement requested");
-        });
+        return props.onSettle().catch((e) => {});
       },
     });
   }, []);
