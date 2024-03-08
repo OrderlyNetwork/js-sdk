@@ -50,6 +50,11 @@ export const updateOrdersHandler = (
   };
 
   if (isAlgoOrder) {
+
+    if (formattedOrder?.created_time === undefined) {
+      formattedOrder["created_time"] = updatedOrder.timestamp;
+    }
+
     if (typeof updatedOrder.triggerTradePrice !== "undefined") {
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
