@@ -1,6 +1,7 @@
 import { TabPane, Tabs } from "@orderly.network/react";
 import { useCallback, useState } from "react";
 import { CommissionList } from "./commission";
+import { RefereesList } from "./referees";
 
 type TabType = "commission" | "referees";
 
@@ -32,6 +33,7 @@ export const CommissionAndReferees = () => {
                     title="My referees"
                     value="referees"
                 >
+                    <RefereesList date="2024-02-01 00:00 UTC" dataSource={[1, 2, 3, 4, 5]} />
 
                 </TabPane>
 
