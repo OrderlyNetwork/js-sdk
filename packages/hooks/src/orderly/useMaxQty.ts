@@ -110,7 +110,7 @@ export const useMaxQty = (
       otherIMs,
       positionQty,
       buyOrdersQty,
-      sellOrdersQty: sellOrdersQty <= 0 ? sellOrdersQty : sellOrdersQty * -1,
+      sellOrdersQty,
       IMR_Factor: accountInfo.imr_factor[symbol],
     });
   }, [

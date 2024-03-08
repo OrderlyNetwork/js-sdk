@@ -40,7 +40,7 @@ describe("account farmula", () => {
         otherIMs: 491.523,
         positionQty: 0.2,
         buyOrdersQty: 0.3,
-        sellOrdersQty: -0.5,
+        sellOrdersQty: 0.5,
         IMR_Factor: 0.0000002512,
       };
       const qty = maxQtyByLong(data);
@@ -61,13 +61,38 @@ describe("account farmula", () => {
         otherIMs: 491.523,
         positionQty: 0.2,
         buyOrdersQty: 0.3,
-        sellOrdersQty: -0.5,
+        sellOrdersQty: 0.5,
         IMR_Factor: 0.0000002512,
       };
       const qty = maxQtyByShort(data);
       /// 0.861581503
 
       expect(qty).toBe(0.26158150257159507);
+    });
+
+    test("maxQty: short position", () => {
+      const data = {
+        markPrice: 25986.2,
+        symbol: "PERP_BTC_USDC",
+        baseMaxQty: 20,
+        totalCollateral: 1981.66,
+        maxLeverage: 10,
+        takerFeeRate: 8,
+        baseIMR: 0.1,
+        otherIMs: 491.523,
+        positionQty: -0.3,
+        buyOrdersQty: 0,
+        sellOrdersQty: 0,
+        IMR_Factor: 0.0000002512,
+      };
+      const qty = maxQtyByLong(data);
+
+      // const shortQty = maxQtyByShort(data);
+      /// 0.861581503
+
+      //0.861581503
+      expect(qty).toBe(0.861581502571595);
+      // expect(shortQty).toBe(0.261581503);
     });
   });
 
