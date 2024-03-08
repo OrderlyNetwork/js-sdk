@@ -2,7 +2,13 @@ export { default as version } from "./version";
 export * from "./constants";
 export * from "./types/api";
 // export * from "./order";
-export { OrderType, OrderSide, OrderStatus, AlogRootOrderType } from "./order";
+export {
+  OrderType,
+  OrderSide,
+  OrderStatus,
+  AlogRootOrderType,
+  AlgoOrderType,
+} from "./order";
 export type { OrderEntity, AlgoOrderEntry } from "./order";
 export * from "./withdraw";
 export * from "./chains";

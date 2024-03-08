@@ -1,4 +1,10 @@
-import { OrderType, type API, OrderEntity } from "@orderly.network/types";
+import {
+  OrderType,
+  type API,
+  OrderEntity,
+  AlgoOrderType,
+  AlogRootOrderType,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { order } from "@orderly.network/perp";
 import { OrderSide } from "@orderly.network/types";
@@ -129,7 +135,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
     return Promise.resolve(errors);
   }
 
-  fixOrderQuantity(
+  totalToQuantity(
     order: Partial<OrderEntity>,
     config: ValuesDepConfig
   ): OrderEntity {
@@ -154,11 +160,11 @@ export class LimitOrderCreator extends BaseOrderCreator {
       order_price: values.order_price,
     };
 
-    this.fixOrderQuantity(order, config);
+    this.totalToQuantity(order, config);
 
-    delete order['total'];
-    delete order['trigger_price'];
-    delete order['isStopOrder'];
+    delete order["total"];
+    delete order["trigger_price"];
+    delete order["isStopOrder"];
 
     console.log("create", order);
 
@@ -190,13 +196,16 @@ export class LimitOrderCreator extends BaseOrderCreator {
           side
         );
 
-        const priceRange = side === "BUY" ? {
-          min: scropePriceNumbere,
-          max: maxPriceNumber,
-        } : {
-          min: minPriceNumber,
-          max: scropePriceNumbere
-        };
+        const priceRange =
+          side === "BUY"
+            ? {
+                min: scropePriceNumbere,
+                max: maxPriceNumber,
+              }
+            : {
+                min: minPriceNumber,
+                max: scropePriceNumbere,
+              };
 
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
@@ -216,7 +225,6 @@ export class LimitOrderCreator extends BaseOrderCreator {
             ).todp(symbol.quote_dp)}`,
           };
         }
-
       }
 
       return errors;
@@ -229,9 +237,9 @@ export class MarketOrderCreator extends BaseOrderCreator {
     const data = this.baseOrder(values);
 
     delete data["order_price"];
-    delete data['total'];
-    delete data['trigger_price'];
-    delete data['isStopOrder'];
+    delete data["total"];
+    delete data["trigger_price"];
+    delete data["isStopOrder"];
 
     return {
       ...data,
@@ -245,10 +253,10 @@ export class MarketOrderCreator extends BaseOrderCreator {
   }
 }
 
-export class PostOnlyOrderCreator extends LimitOrderCreator { }
+export class PostOnlyOrderCreator extends LimitOrderCreator {}
 
-export class FOKOrderCreator extends LimitOrderCreator { }
-export class IOCOrderCreator extends LimitOrderCreator { }
+export class FOKOrderCreator extends LimitOrderCreator {}
+export class IOCOrderCreator extends LimitOrderCreator {}
 
 export class StopLimitOrderCreator extends LimitOrderCreator {
   create(values: OrderEntity, config: ValuesDepConfig): OrderEntity {
@@ -262,14 +270,14 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
       price: values["order_price"],
       trigger_price_type: "MARK_PRICE",
     };
-    this.fixOrderQuantity(order, config);
+    this.totalToQuantity(order, config);
     delete order["order_quantity"];
     delete order["order_price"];
     // @ts-ignore
     delete order["order_type"];
     // @ts-ignore
     delete order["isStopOrder"];
-    delete order['total'];
+    delete order["total"];
 
     return order;
   }
@@ -288,14 +296,14 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
           message: "price is required",
         };
       }
-      
+
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
           message: "Trigger price is required",
         };
-      } 
-      
+      }
+
       if (trigger_price && order_price) {
         const price = new Decimal(order_price);
         const { symbol } = config;
@@ -308,13 +316,16 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
           side
         );
 
-        const priceRange = side === "BUY" ? {
-          min: scropePriceNumbere,
-          max: maxPriceNumber,
-        } : {
-          min: minPriceNumber,
-          max: scropePriceNumbere
-        };
+        const priceRange =
+          side === "BUY"
+            ? {
+                min: scropePriceNumbere,
+                max: maxPriceNumber,
+              }
+            : {
+                min: minPriceNumber,
+                max: scropePriceNumbere,
+              };
 
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
@@ -358,7 +369,7 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
     delete result["order_type"];
     // @ts-ignore
     delete result["isStopOrder"];
-    delete result['total'];
+    delete result["total"];
 
     console.log("result is", result);
     return result;
@@ -408,10 +419,11 @@ export const availableOrderTypes = [
   OrderType.POST_ONLY,
   OrderType.STOP_LIMIT,
   OrderType.STOP_MARKET,
+  OrderType.CLOSE_POSITION,
 ];
 
 export class OrderFactory {
-  static create(type: OrderType): OrderCreator | null {
+  static create(type: OrderType & AlogRootOrderType): OrderCreator | null {
     switch (type) {
       case OrderType.LIMIT:
         return new LimitOrderCreator();
@@ -432,6 +444,12 @@ export class OrderFactory {
         return new StopLimitOrderCreator();
       case OrderType.STOP_MARKET:
         return new StopMarketOrderCreator();
+
+      // algo order
+      case AlogRootOrderType.TP_SL:
+        return new GeneralOrderCreator();
+      case AlogRootOrderType.POSITIONAL_TP_SL:
+        return new GeneralOrderCreator();
 
       default:
         return new GeneralOrderCreator();

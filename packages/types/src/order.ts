@@ -74,9 +74,9 @@ export interface OrderEntity {
 
 export type AlgoOrderEntry = {
   algo_type: AlogRootOrderType;
-  child_orders?: (Partial<AlgoOrderEntry> & {
-    order_type: AlgoOrderType;
-  })[];
+  // child_orders?: (Partial<AlgoOrderEntry> & {
+  //   order_type: AlgoOrderType;
+  // })[];
   client_order_id?: string;
   order_tag?: string;
   price: number;
@@ -88,6 +88,8 @@ export type AlgoOrderEntry = {
   trigger_price_type: TriggerPriceType;
   type: OrderType;
   visible_quantity: boolean;
+  tp_trigger_price?: string | null;
+  sl_trigger_price?: string | null;
 };
 
 export type AlgoOrderEntryExt = AlgoOrderEntry & {
