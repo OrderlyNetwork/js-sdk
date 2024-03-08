@@ -2,12 +2,10 @@ import {
   OrderType,
   type API,
   OrderEntity,
-  AlgoOrderType,
   AlogRootOrderType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { order } from "@orderly.network/perp";
-import { OrderSide } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -264,7 +262,7 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
       ...this.baseOrder(values),
       order_price: values.order_price,
       trigger_price: values.trigger_price,
-      algo_type: "STOP",
+      algo_type: AlogRootOrderType.STOP,
       type: "LIMIT",
       quantity: values["order_quantity"],
       price: values["order_price"],
@@ -357,7 +355,7 @@ export class StopMarketOrderCreator extends LimitOrderCreator {
       ...this.baseOrder(values),
       // order_price: values.order_price,
       trigger_price: values.trigger_price,
-      algo_type: "STOP",
+      algo_type: AlogRootOrderType.STOP,
       type: "MARKET",
       quantity: values["order_quantity"],
       // price: values["order_price"],

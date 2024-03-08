@@ -54,25 +54,6 @@ export const useTaskProfitAndStopLoss = (
   const validate = () => {
     const newError: ValidateError = {};
 
-    // TODO: check
-    if (order.tp_trigger_price && order.sl_trigger_price) {
-      if (order.tp_trigger_price <= order.sl_trigger_price) {
-        newError.tp_tigger_price =
-          "Take profit price must be greater than stop loss price";
-      }
-    }
-
-    if (order.qty) {
-      if (order.qty <= 0) {
-        newError.qty = "Qty must be greater than 0";
-      }
-    }
-
-    if (Object.keys(newError).length > 0) {
-      setError(newError);
-      return false;
-    }
-
     return true;
   };
 
