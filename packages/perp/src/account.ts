@@ -516,11 +516,11 @@ export function maxQtyByLong(
       .toPower(1 / 1.8)
       .div(markPrice)
       .sub(
-        new Decimal(positionQty)
-          .add(buyOrdersQty)
-          // .abs()
-          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+        new Decimal(positionQty).add(buyOrdersQty)
+        // .abs()
+        // .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )
+      .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       .mul(0.995)
       .toNumber();
 
@@ -561,7 +561,9 @@ export function maxQtyByShort(
       )
       .div(markPrice)
       .mul(0.995)
-      .add(new Decimal(positionQty).add(sellOrdersQty))
+      // .add(new Decimal(positionQty).add(sellOrdersQty))
+      .add(positionQty)
+      .sub(sellOrdersQty)
 
       .toNumber();
 
@@ -574,12 +576,14 @@ export function maxQtyByShort(
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .add(
-        new Decimal(positionQty)
-          .add(sellOrdersQty)
-          // .abs()
-          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
-      )
+      // .add(
+      // new Decimal(positionQty)
+      //   .add(sellOrdersQty)
+      //   // .abs()
+      //   )
+      .add(positionQty)
+      .sub(sellOrdersQty)
+      .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       .mul(0.995)
       .toNumber();
 

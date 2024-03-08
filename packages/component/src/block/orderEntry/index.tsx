@@ -573,7 +573,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 props.onFieldChange("order_quantity", maxQty);
               }}
             >
-              <span className="orderly-text-base-contrast-54">Max buy</span>
+              <span className="orderly-text-base-contrast-54">
+                {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
+              </span>
               <Numeral precision={4}>{maxQty}</Numeral>
             </button>
           </div>

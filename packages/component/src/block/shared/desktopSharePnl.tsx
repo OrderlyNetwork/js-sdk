@@ -156,7 +156,7 @@ const PnlFormatView: FC<{
                     <Circle className="orderly-order-entry-radio-circle orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
                 )}
             </button>
-            <span className="orderly-text-3xs orderly-ml-2">{text}</span>
+            <span className={cn("orderly-text-3xs orderly-ml-2 orderly-text-base-contrast-54", isSelected && "orderly-text-base-contrast")}>{text}</span>
         </div>
     );
 }

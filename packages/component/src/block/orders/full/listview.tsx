@@ -175,7 +175,7 @@ export const Listview: FC<Props> = (props) => {
           },
         },
         {
-          title: "Update",
+          title: "Order time",
           dataIndex: "created_time",
           width: 150,
           onSort: props.status === OrderStatus.INCOMPLETE,
