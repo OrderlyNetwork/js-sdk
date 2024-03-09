@@ -1,3 +1,4 @@
+import { BarChart } from "./sections/barChart";
 import { CommissionAndReferees } from "./sections/commissionAndReferees";
 import { ReferralCode } from "./sections/referralCode";
 import { ReferralLink } from "./sections/referralLink";
@@ -10,6 +11,7 @@ export const Affiliate = () => {
             <Summary />
             <ReferralLink />
             <ReferralCode />
+            <BarChart />
             <CommissionAndReferees />
         </div>);
 }
