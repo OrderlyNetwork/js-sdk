@@ -166,13 +166,6 @@ const EditingState: FC<{
     editAlgoOrder(`${order.algo_order_id}`, data)
       .then(
         (result) => {
-          ee.emit("algoOrder:cache", {
-            // ...res.data.rows[0],
-            ...data,
-            order_id: order.algo_order_id,
-            // trigger_price: price,
-          });
-
           closePopover();
           setPrice(price);
           // setTimeout(() => inputRef.current?.blur(), 300);
