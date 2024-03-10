@@ -1,13 +1,13 @@
 import { Button, cn } from "@orderly.network/react";
 import { TriangleDownIcon } from "../icons";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
 
-export const BarChart = () => {
+export const BarChart: FC<{className?: string}> = (props) => {
 
 
     return (
-        <div className="orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600">
+        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
             <div className="orderly-flex orderly-justify-between">
                 <div className="orderly-text-xs orderly-text-base-contrast-36">USDC</div>
                 <Button color={"tertiary"} className="orderly-flex">
@@ -70,6 +70,7 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
             // console.log("列间距: ", columnSpacing);
         };
 
+        handleResize();
         window.addEventListener('resize', handleResize);
 
         return () => {
@@ -153,7 +154,7 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
             console.log("columns", column, x, y, height);
 
             children.push(
-                <rect x={`${x}`} y={`${y}`} width="12" height={`${height}`} rx="2" ry="2" fill="#FF8CFF" class="column" />
+                <rect x={`${x}`} y={`${y}`} width="12" height={`${height}`} rx="2" ry="2" fill="#608CFF" class="column" />
             );
         }
 
@@ -161,7 +162,7 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
     }, [size, minMaxInfo, yAxis, xAxis, data]);
 
     return (
-        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-[350px]", props.className)} >
+        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full", props.className)} >
             <svg height="100%" style={{ width: `${size.width}px` }}>
                 {/* yAxis */}
                 <g>{yAxisChildren}</g>

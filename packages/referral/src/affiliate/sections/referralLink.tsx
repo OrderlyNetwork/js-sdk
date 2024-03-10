@@ -3,10 +3,10 @@ import { HintIcon, CopyIcon } from "../icons";
 import { Input, Numeral, cn, toast } from "@orderly.network/react";
 
 
-export const ReferralLink = () => {
+export const ReferralLink: FC<{className?: string}> = (props) => {
 
     return (
-        <div className="orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600">
+        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
             <div className="orderly-text-base 2xl:orderly-text-lg">
                 Referral link
             </div>
