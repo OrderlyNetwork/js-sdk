@@ -106,7 +106,7 @@ const EditingState: FC<{
   const { editOrder, editAlgoOrder } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
-  const confirmRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
@@ -232,6 +232,7 @@ const EditingState: FC<{
   // @ts-ignore
   const rangeInfo = useSymbolPriceRange(
     order.symbol,
+    // @ts-ignore
     order.side,
     isAlgoOrder ? order.trigger_price : undefined
   );
