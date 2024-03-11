@@ -358,6 +358,7 @@ export function useOrderEntry(
     }
 
     const orderCreator = OrderFactory.create(
+      // @ts-ignore
       values.order_type_ext ? values.order_type_ext : values.order_type
     );
 
@@ -476,6 +477,7 @@ export function useOrderEntry(
   // const estLiqPrice = useMemo(() => {}, []);
 
   const validator = (values: any) => {
+    // @ts-ignore
     const creator = OrderFactory.create(values.order_type);
 
     return creator?.validate(values, {

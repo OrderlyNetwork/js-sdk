@@ -10,7 +10,7 @@ import { FOKOrderCreator } from "./fokCreator";
 import { IOCOrderCreator } from "./iocCreator";
 
 export class OrderFactory {
-  static create(type: OrderType & AlogRootOrderType): OrderCreator | null {
+  static create(type: OrderType | AlogRootOrderType): OrderCreator {
     switch (type) {
       case OrderType.LIMIT:
         return new LimitOrderCreator();
