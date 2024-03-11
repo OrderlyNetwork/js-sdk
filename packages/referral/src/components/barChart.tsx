@@ -1,5 +1,5 @@
 import { Button, cn } from "@orderly.network/react";
-import { TriangleDownIcon } from "../icons";
+import { TriangleDownIcon } from "../affiliate/icons";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
 

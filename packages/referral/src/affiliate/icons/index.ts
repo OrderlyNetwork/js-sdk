@@ -1,5 +1,5 @@
 export { CopyIcon } from "./copy";
 export { HintIcon } from "./hint";
-export { HistoryIcon } from "./history";
-export { TriangleDownIcon } from "./triangleDown";
-export { USDCIcon } from "./usdc";
+export { HistoryIcon } from "../../components/icons/history";
+export { TriangleDownIcon } from "../../components/icons/triangleDown";
+export { USDCIcon } from "../../components/icons/usdc";

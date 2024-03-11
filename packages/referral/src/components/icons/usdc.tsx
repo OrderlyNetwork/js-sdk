@@ -6,11 +6,11 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const USDCIcon: FC<IconProps> = (props) => {
-    const { size = 32, viewBox, ...rest } = props;
+    const { size = 28, viewBox, ...rest } = props;
     return (
         <svg 
-        width="33" 
-        height="32" 
+        width={`${size}`} 
+        height={`${size}`}  
         viewBox="0 0 33 32" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
