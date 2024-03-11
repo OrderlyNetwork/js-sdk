@@ -83,6 +83,11 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     newTotalMM = newTotalMM.add(notional.abs().mul(position.mmr));
   }
 
+  // if no position
+  if (!currentPosition) {
+    newTotalMM = newTotalMM.add(newOrderNotional.mul(baseMMR));
+  }
+
   const newMMR = Math.max(
     baseMMR,
     new Decimal(baseMMR)
