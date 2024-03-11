@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.2.5-internal.5
+
+### Patch Changes
+
+- fix bugs
+
 ## 0.2.5-internal.4
 
 ### Patch Changes
