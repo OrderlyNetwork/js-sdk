@@ -3,7 +3,7 @@ import { Numeral, NumeralProps } from "./numeral";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 
 /**
- * 根据symbol配置进行截断，需要搭配 @orderly.network/hooks 使用
+ * Truncate according to the symbol configuration, need to be used with @orderly.network/hooks
  * @param props
  * @returns
  */
