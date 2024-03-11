@@ -28,7 +28,7 @@ export const usePrivateDataObserver = (options: {
   ) => {
     const map = options.getKeysMap("orders");
 
-    console.log("$$$$$$$$$$$$", data);
+    // console.log("$$$$$$$$$$$$", data, algoOrderCacheQuneue.current);
 
     if (isAlgoOrder) {
       /// TODO: remove this when the WS service provides the correct data
@@ -92,16 +92,18 @@ export const usePrivateDataObserver = (options: {
     if (!state.accountId) return;
     const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
       onMessage: (data: any) => {
-        if (Array.isArray(data)) {
-          data.forEach((item) => {
-            updateOrders(item, true);
+        setTimeout(() => {
+          if (Array.isArray(data)) {
+            data.forEach((item) => {
+              updateOrders(item, true);
 
-            // ee.emit("orders:changed", { ...item, status: item.algoStatus });
-          });
-        } else {
-          updateOrders(data, true);
-          // ee.emit("orders:changed", { ...data, status: data.algoStatus });
-        }
+              // ee.emit("orders:changed", { ...item, status: item.algoStatus });
+            });
+          } else {
+            updateOrders(data, true);
+            // ee.emit("orders:changed", { ...data, status: data.algoStatus });
+          }
+        }, 100);
       },
     });
 

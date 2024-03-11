@@ -137,7 +137,7 @@ export const useMaxQty = (
   //   // symbolInfo,
   //   // symbol,
   // });
-  console.log("maxQty", maxQty);
+  // console.log("maxQty", maxQty);
 
   return Math.max(maxQty, 0) as number;
 };
