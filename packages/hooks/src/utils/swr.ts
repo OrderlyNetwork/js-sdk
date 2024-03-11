@@ -60,7 +60,7 @@ export const updateOrdersHandler = (
     formattedOrder.visible_quantity = updatedOrder.visible;
   }
 
-  console.log(formattedOrder, updatedOrder);
+  // console.log(formattedOrder, updatedOrder);
 
   const hasCreateTime = "created_time" in formattedOrder;
   if (!hasCreateTime) {
