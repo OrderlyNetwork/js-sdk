@@ -48,6 +48,7 @@ export const updateOrdersHandler = (
     ...object2underscore(updatedOrder),
     updated_time: updatedOrder.timestamp,
     type: updatedOrder.type.replace("_ORDER", ""),
+    visible_quantity: (updatedOrder as any).visible,
   };
 
   if (isAlgoOrder) {
