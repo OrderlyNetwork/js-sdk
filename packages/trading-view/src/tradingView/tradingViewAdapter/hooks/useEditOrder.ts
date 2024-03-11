@@ -28,16 +28,7 @@ export default function useEditOrder() {
           values.trigger_price = new Decimal(lineValue.value).toString();
         }
         // @ts-ignore
-        return updateAlgoOrder(order.algo_order_id, values).then((res) => {
-          // TODO: remove this when the backend is fixed(WS message include trigger_price)
-          ee.emit("algoOrder:cache", {
-            // ...res.data.rows[0],
-            ...values,
-            order_id: values.algo_order_id,
-            // trigger_price: price,
-          });
-          return res;
-        });
+        return updateAlgoOrder(order.algo_order_id, values);
       }
       const values: any = {
         order_price: order.price?.toString(),
