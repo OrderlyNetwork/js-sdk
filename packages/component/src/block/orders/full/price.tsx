@@ -39,7 +39,9 @@ export const Price = (props: { order: API.OrderExt }) => {
     }
   }, [props.order.price]);
 
-  if (price === "Market") {
+  const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
+
+  if (isAlgoMarketOrder) {
     return <span>Market</span>;
   }
 
