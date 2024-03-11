@@ -72,8 +72,10 @@ export const updateOrdersHandler = (
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
 
-    if (updatedOrder.type === "MARKET") {
-      (formattedOrder as API.AlgoOrder).price = undefined;
+    if (formattedOrder.type === "MARKET") {
+      const {price, ...newObj} = formattedOrder;
+      // @ts-ignore
+      formattedOrder = newObj;
     }
   } else {
     // formattedOrder.created_time = updatedOrder.timestamp;
