@@ -81,5 +81,23 @@ describe("order", () => {
       };
       expect(estLiqPrice(inputs)).toBe(21263.022807017544);
     });
+
+    test("estLiqPrice", () => {
+      const data = {
+        positions: [],
+        newOrder: {
+          symbol: "PERP_BTC_USDC",
+          qty: 0.0002909,
+          price: 68705.9,
+        },
+        totalCollateral: 5.4,
+        markPrice: 68705.9,
+        baseMMR: 0.0275,
+        baseIMR: 0.5478,
+        IMR_Factor: 0.0000002512,
+      };
+
+      expect(estLiqPrice(data)).toBe(51560.74026092236);
+    });
   });
 });

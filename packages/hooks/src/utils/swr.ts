@@ -50,23 +50,32 @@ export const updateOrdersHandler = (
     ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
     type: updatedOrder.type.replace("_ORDER", ""),
-    visible_quantity:
-      underscoreOrder.visible_quantity || underscoreOrder.visible,
+    //@ts-ignore
+    // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
   };
- 
+
+  if (typeof formattedOrder.visible_quantity === "undefined") {
+    // check visible field;
+    // @ts-ignore
+    formattedOrder.visible_quantity = updatedOrder.visible;
+  }
+
+  // console.log(formattedOrder, updatedOrder);
+
   const hasCreateTime = "created_time" in formattedOrder;
   if (!hasCreateTime) {
     formattedOrder["created_time"] = updatedOrder.timestamp;
   }
 
   if (isAlgoOrder) {
-
     if (typeof updatedOrder.triggerTradePrice !== "undefined") {
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
 
-    if (updatedOrder.type === "MARKET") {
-      (formattedOrder as API.AlgoOrder).price = undefined;
+    if (formattedOrder.type === "MARKET") {
+      const {price, ...newObj} = formattedOrder;
+      // @ts-ignore
+      formattedOrder = newObj;
     }
   } else {
     // formattedOrder.created_time = updatedOrder.timestamp;
