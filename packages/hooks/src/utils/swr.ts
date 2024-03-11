@@ -44,11 +44,14 @@ export const updateOrdersHandler = (
   // console.log(key);
   const isAlgoOrder = "algoOrderId" in updatedOrder;
 
+  const underscoreOrder = object2underscore(updatedOrder);
+
   let formattedOrder: API.Order & API.AlgoOrder = {
-    ...object2underscore(updatedOrder),
+    ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
     type: updatedOrder.type.replace("_ORDER", ""),
-    visible_quantity: (updatedOrder as any).visible,
+    visible_quantity:
+      underscoreOrder.visible_quantity || underscoreOrder.visible,
   };
 
   if (isAlgoOrder) {
