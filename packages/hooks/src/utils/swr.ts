@@ -44,16 +44,22 @@ export const updateOrdersHandler = (
   // console.log(key);
   const isAlgoOrder = "algoOrderId" in updatedOrder;
 
+  const underscoreOrder = object2underscore(updatedOrder);
+
   let formattedOrder: API.Order & API.AlgoOrder = {
-    ...object2underscore(updatedOrder),
+    ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
     type: updatedOrder.type.replace("_ORDER", ""),
+    visible_quantity:
+      underscoreOrder.visible_quantity || underscoreOrder.visible,
   };
+ 
+  const hasCreateTime = "created_time" in formattedOrder;
+  if (!hasCreateTime) {
+    formattedOrder["created_time"] = updatedOrder.timestamp;
+  }
 
   if (isAlgoOrder) {
-    if (formattedOrder?.created_time === undefined) {
-      formattedOrder["created_time"] = updatedOrder.timestamp;
-    }
 
     if (typeof updatedOrder.triggerTradePrice !== "undefined") {
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
