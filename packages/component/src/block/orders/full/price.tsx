@@ -19,6 +19,7 @@ import {
 } from "@radix-ui/react-tooltip";
 import { Divider } from "@/divider";
 import { cleanStringStyle } from "@orderly.network/hooks";
+import { Input } from "@/input";
 
 export const Price = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -287,7 +288,7 @@ const EditingState: FC<{
           {!isStopMarket && (
             <Tooltip open={hintInfo.length > 0}>
               <TooltipTrigger asChild>
-                <input
+                <Input
                   ref={inputRef}
                   type="text"
                   value={commify(price)}
@@ -303,7 +304,8 @@ const EditingState: FC<{
                   }}
                   onKeyDown={handleKeyDown}
                   autoFocus
-                  className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
+                  containerClassName="orderly-h-auto orderly-pl-7"
+                  className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
                 />
               </TooltipTrigger>
               <TooltipContent
