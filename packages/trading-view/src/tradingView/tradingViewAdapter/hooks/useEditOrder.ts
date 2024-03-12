@@ -3,7 +3,7 @@ import { useEventEmitter, useOrderStream } from "@orderly.network/hooks";
 import { OrderStatus } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
-export default function useEditOrder() {
+export default function useEditOrder(onToast: any) {
   const ee = useEventEmitter();
   const [, { updateOrder, cancelAlgoOrder, updateAlgoOrder }] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
@@ -28,7 +28,12 @@ export default function useEditOrder() {
           values.trigger_price = new Decimal(lineValue.value).toString();
         }
         // @ts-ignore
-        return updateAlgoOrder(order.algo_order_id, values);
+        return updateAlgoOrder(order.algo_order_id, values).then(res => {
+        }).catch(e => {
+            if (onToast) {
+               onToast.error(e.message);
+            }
+        });
       }
       const values: any = {
         order_price: order.price?.toString(),
@@ -39,7 +44,7 @@ export default function useEditOrder() {
         visible_quantity: 0,
         reduce_only: order.reduce_only,
       };
-      if (new Decimal(order.visible_quantity).eq(order.quantity)) {
+      if (new Decimal(order.visible_quantity ?? order.visible ?? 0).eq(order.quantity)) {
         delete values.visible_quantity;
       }
       if (!Object.keys(order).includes("reduce_only")) {
@@ -48,7 +53,10 @@ export default function useEditOrder() {
       if (lineValue.type === "price") {
         values.order_price = new Decimal(lineValue.value).toString();
       }
-      return updateOrder(order.order_id, values).then();
+      return updateOrder(order.order_id, values).then(res => {
+      }).catch(e => {
+          onToast.error(e.message);
+      });
     },
     [updateOrder]
   );

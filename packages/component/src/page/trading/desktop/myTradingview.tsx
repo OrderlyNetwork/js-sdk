@@ -67,6 +67,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
           tradingViewCustomCssUrl={tradingViewConfig?.customCssUrl}
           overrides={tradingViewConfig?.overrides}
           closePositionConfirmCallback={closePositionConfirmCallback}
+          onToast={toast}
         />
         <Popover onOpenChange={setOpen} open={open}>
           <PopoverTrigger asChild>
