@@ -96,6 +96,7 @@ const EditingState: FC<{
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
+    console.log("cancel popover");
     setOpen(-1);
     setQuantity(order.quantity.toString());
   };
@@ -146,8 +147,6 @@ const EditingState: FC<{
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-
-      inputRef.current?.blur();
       onClick();
     }
   };
