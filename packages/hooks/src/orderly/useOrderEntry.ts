@@ -568,7 +568,7 @@ export function useOrderEntry(
     ee.on("orderbook:update", onOrderbookUpdate);
 
     return () => {
-      ee.off("orderbook_update", onOrderbookUpdate);
+      ee.off("orderbook:update", onOrderbookUpdate);
     };
   }, [optionsValue?.watchOrderbook]);
 
