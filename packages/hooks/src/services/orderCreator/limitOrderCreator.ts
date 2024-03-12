@@ -3,6 +3,8 @@ import { BaseOrderCreator } from "./baseCreator";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
+import { pick } from "ramda";
+import { AlgoOrderEntry } from "@orderly.network/types";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
@@ -15,13 +17,26 @@ export class LimitOrderCreator extends BaseOrderCreator {
 
     this.totalToQuantity(order, config);
 
-    delete order["total"];
-    delete order["trigger_price"];
-    delete order["isStopOrder"];
+    // delete order["total"];
+    // delete order["trigger_price"];
+    // delete order["isStopOrder"];
 
-    console.log("create", order);
+    // console.log("create", order);
 
-    return order;
+    return pick(
+      [
+        "symbol",
+        "order_price",
+        "order_quantity",
+        "visible_quantity",
+        "reduce_only",
+        "side",
+        "order_type",
+      ],
+      order
+    );
+
+    // return order;
   }
   validate(
     values: OrderFormEntity,

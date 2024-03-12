@@ -1,4 +1,4 @@
-import { OrderEntity, OrderType } from "@orderly.network/types";
+import { AlgoOrderEntry, OrderEntity, OrderType } from "@orderly.network/types";
 import {
   OrderCreator,
   OrderFormEntity,
@@ -8,15 +8,27 @@ import {
 import { Decimal } from "@orderly.network/utils";
 
 export abstract class BaseOrderCreator implements OrderCreator {
-  abstract create(values: OrderEntity, config: ValuesDepConfig): OrderEntity;
+  abstract create(
+    values: OrderEntity,
+    config: ValuesDepConfig
+  ): OrderEntity | AlgoOrderEntry;
   abstract validate(
     values: OrderFormEntity,
     config: ValuesDepConfig
   ): Promise<VerifyResult>;
 
   baseOrder(data: OrderEntity): OrderEntity {
-    const order: Partial<OrderEntity> = {
-      symbol: data.symbol,
+    const order: Pick<
+      OrderEntity,
+      | "symbol"
+      | "order_type"
+      | "side"
+      | "reduce_only"
+      | "order_quantity"
+      | "total"
+      | "visible_quantity"
+    > = {
+      symbol: data.symbol!,
       order_type:
         data.order_type === OrderType.LIMIT
           ? !!data.order_type_ext
@@ -24,8 +36,8 @@ export abstract class BaseOrderCreator implements OrderCreator {
             : data.order_type
           : data.order_type,
       side: data.side,
-      reduce_only: data.reduce_only,
-      order_quantity: data.order_quantity,
+      reduce_only: data.reduce_only!,
+      order_quantity: data.order_quantity!,
       total: data.total,
     };
 
@@ -109,7 +121,11 @@ export abstract class BaseOrderCreator implements OrderCreator {
   }
 
   totalToQuantity(
-    order: Partial<OrderEntity>,
+    order: {
+      order_quantity?: number | string;
+      total?: string | number;
+      order_price?: string | number;
+    },
     config: ValuesDepConfig
   ): OrderEntity {
     // if order_quantity is not set but total is set, calculate order_quantity from total

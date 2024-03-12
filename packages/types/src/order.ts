@@ -51,8 +51,10 @@ export enum OrderStatus {
   REJECTED = "REJECTED",
 }
 
+// export interface OrderEntity {}
+
 export interface OrderEntity {
-  symbol?: string;
+  symbol: string;
   order_type: OrderType;
   algo_type?: AlogRootOrderType;
   order_type_ext?: OrderType;
@@ -72,25 +74,25 @@ export interface OrderEntity {
   trigger_price?: string | number;
 }
 
-export type AlgoOrderEntry = {
+export interface AlgoOrderEntry {
   algo_type: AlogRootOrderType;
   // child_orders?: (Partial<AlgoOrderEntry> & {
   //   order_type: AlgoOrderType;
   // })[];
   client_order_id?: string;
   order_tag?: string;
-  price: number;
-  quantity: number;
-  reduce_only: boolean;
+  price?: number | string;
+  quantity: number | string;
+  reduce_only?: boolean;
   side: OrderSide;
   symbol: string;
   trigger_price: number | string;
   trigger_price_type: TriggerPriceType;
   type: OrderType;
-  visible_quantity: boolean;
+  visible_quantity?: number | string;
   tp_trigger_price?: string | null;
   sl_trigger_price?: string | null;
-};
+}
 
 export type AlgoOrderEntryExt = AlgoOrderEntry & {
   // internal fields

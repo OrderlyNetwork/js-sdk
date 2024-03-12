@@ -28,7 +28,7 @@ export const usePrivateDataObserver = (options: {
   ) => {
     const map = options.getKeysMap("orders");
 
-    console.log("$$$$$$$$$$$$", data);
+    // console.log("$$$$$$$$$$$$", data, algoOrderCacheQuneue.current);
 
     if (isAlgoOrder) {
       /// TODO: remove this when the WS service provides the correct data

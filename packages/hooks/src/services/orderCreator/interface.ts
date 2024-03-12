@@ -1,4 +1,4 @@
-import { API, OrderEntity } from "@orderly.network/types";
+import { API, AlgoOrderEntry, OrderEntity } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -16,15 +16,10 @@ export type ValuesDepConfig = {
 };
 
 export interface OrderCreator {
-  create: (values: OrderEntity, configs: ValuesDepConfig) => OrderEntity;
-  validate: (
-    values: OrderFormEntity,
+  create: (
+    values: OrderEntity,
     configs: ValuesDepConfig
-  ) => Promise<VerifyResult>;
-}
-
-export interface OrderCreator {
-  create: (values: OrderEntity, configs: ValuesDepConfig) => OrderEntity;
+  ) => OrderEntity | AlgoOrderEntry;
   validate: (
     values: OrderFormEntity,
     configs: ValuesDepConfig

@@ -17,11 +17,12 @@ import {
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
-import { OrderFactory, availableOrderTypes } from "../utils/createOrder";
+// import { availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
 import { order } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
+import { OrderFactory } from "../services/orderCreator/factory";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -349,11 +350,7 @@ export function useOrderEntry(
       throw new SDKError("side is error");
     }
 
-    if (
-      !values ||
-      typeof values.order_type === "undefined" ||
-      !includes(values.order_type, availableOrderTypes)
-    ) {
+    if (!values || typeof values.order_type === "undefined") {
       throw new SDKError("order_type is error");
     }
 

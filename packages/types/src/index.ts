@@ -8,6 +8,7 @@ export {
   OrderStatus,
   AlogRootOrderType,
   AlgoOrderType,
+  TriggerPriceType,
 } from "./order";
 export type { OrderEntity, AlgoOrderEntry } from "./order";
 export * from "./withdraw";

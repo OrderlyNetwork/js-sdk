@@ -1,33 +1,48 @@
-import { AlogRootOrderType, OrderEntity } from "@orderly.network/types";
-import { LimitOrderCreator } from "./limitOrderCreator";
+import {
+  AlgoOrderEntry,
+  AlogRootOrderType,
+  OrderEntity,
+  TriggerPriceType,
+} from "@orderly.network/types";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
+import { BaseOrderCreator } from "./baseCreator";
+import { OrderType } from "@orderly.network/types";
+import { pick } from "ramda";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
-export class StopLimitOrderCreator extends LimitOrderCreator {
-  create(values: OrderEntity, config: ValuesDepConfig): OrderEntity {
-    const order = {
-      ...this.baseOrder(values),
-      order_price: values.order_price,
-      trigger_price: values.trigger_price,
-      algo_type: AlogRootOrderType.STOP,
-      type: "LIMIT",
-      quantity: values["order_quantity"],
-      price: values["order_price"],
-      trigger_price_type: "MARK_PRICE",
-    };
-    this.totalToQuantity(order, config);
-    delete order["order_quantity"];
-    delete order["order_price"];
-    // @ts-ignore
-    delete order["order_type"];
-    // @ts-ignore
-    delete order["isStopOrder"];
-    delete order["total"];
+export class StopLimitOrderCreator extends BaseOrderCreator {
+  create(values: OrderEntity, config: ValuesDepConfig): AlgoOrderEntry {
+    this.totalToQuantity(values, config);
 
-    return order;
+    const order: AlgoOrderEntry = {
+      ...this.baseOrder(values as OrderEntity),
+
+      trigger_price: values.trigger_price!,
+      algo_type: AlogRootOrderType.STOP,
+      type: OrderType.LIMIT,
+      quantity: values["order_quantity"]!,
+      price: values["order_price"],
+      trigger_price_type: TriggerPriceType.MARK_PRICE,
+    };
+
+    return pick(
+      [
+        "symbol",
+        "trigger_price",
+        "algo_type",
+        "type",
+        "quantity",
+        "price",
+        "trigger_price_type",
+        "side",
+        "reduce_only",
+        "visible_quantity",
+      ],
+      order
+    );
   }
   validate(
     values: OrderFormEntity,

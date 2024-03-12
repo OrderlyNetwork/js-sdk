@@ -1,29 +1,56 @@
-import { AlogRootOrderType, OrderEntity } from "@orderly.network/types";
-import { LimitOrderCreator } from "./limitOrderCreator";
+import {
+  AlgoOrderEntry,
+  AlogRootOrderType,
+  OrderEntity,
+  OrderType,
+  TriggerPriceType,
+} from "@orderly.network/types";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 
-export class StopMarketOrderCreator extends LimitOrderCreator {
-  create(values: OrderEntity, _: ValuesDepConfig): OrderEntity {
-    const result = {
+import { pick } from "ramda";
+import { BaseOrderCreator } from "./baseCreator";
+
+export class StopMarketOrderCreator extends BaseOrderCreator {
+  create(values: OrderEntity, config: ValuesDepConfig): AlgoOrderEntry {
+    this.totalToQuantity(values, config);
+
+    const order = {
       ...this.baseOrder(values),
       // order_price: values.order_price,
-      trigger_price: values.trigger_price,
+      trigger_price: values.trigger_price!,
       algo_type: AlogRootOrderType.STOP,
-      type: "MARKET",
-      quantity: values["order_quantity"],
+      type: OrderType.MARKET,
+      quantity: values["order_quantity"]!,
       // price: values["order_price"],
-      trigger_price_type: "MARK_PRICE",
+      trigger_price_type: TriggerPriceType.MARK_PRICE,
     };
-    delete result["order_quantity"];
-    delete result["order_price"];
-    // @ts-ignore
-    delete result["order_type"];
-    // @ts-ignore
-    delete result["isStopOrder"];
-    delete result["total"];
+    // delete order["order_quantity"];
+    // delete order["order_price"];
+    // // @ts-ignore
+    // delete order["order_type"];
+    // // @ts-ignore
+    // delete order["isStopOrder"];
+    // delete order["total"];
 
-    console.log("result is", result);
-    return result;
+    // console.log("result is", order);
+
+    return pick(
+      [
+        "symbol",
+        "trigger_price",
+        "algo_type",
+        "type",
+        "quantity",
+        // "price",
+        "trigger_price_type",
+        "side",
+        "reduce_only",
+        "visible_quantity",
+      ],
+      order
+    );
+
+    // return order;
   }
   validate(
     values: OrderFormEntity,
