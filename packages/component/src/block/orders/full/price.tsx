@@ -164,7 +164,6 @@ const EditingState: FC<{
       event.stopPropagation();
       event.preventDefault();
 
-      inputRef.current?.blur();
       onClick();
     }
   };
