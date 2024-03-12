@@ -1,21 +1,13 @@
+import { FC, useEffect, useMemo, useState, useRef, useCallback } from "react";
 import Button from "@/button";
 import { StatusGuardButton } from "@/button/statusGuardButton";
 import { toast } from "@/toast";
 import { API, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
-import {
-  FC,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  useCallback,
-  useContext,
-} from "react";
 import { usePrivateQuery, useWalletSubscription } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 import { CrossChainConfirm } from "./crossChainConfirm";
-import { OrderlyAppContext } from "@/provider";
+import { useChainNotSupport } from "../useChainNotSupport";
 
 export interface ActionButtonProps {
   chains?: API.NetworkInfos[];
@@ -55,9 +47,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     undefined
   );
 
-  const { errors } = useContext(OrderlyAppContext);
-
-  const chainNotSupport = errors.ChainNetworkNotSupport;
+  const chainNotSupport = useChainNotSupport(chain!, chains!);
 
   const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
     revalidateOnMount: true,
