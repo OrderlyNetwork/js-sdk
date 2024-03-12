@@ -28,6 +28,7 @@ export interface TradingViewPorps {
     studiesOverrides?: any;
     fullscreen?: boolean;
     closePositionConfirmCallback?: (data: any) => void;
+    onToast: any;
 }
 
 function Link(props: {
@@ -96,7 +97,8 @@ export function TradingView({
     theme,
     studiesOverrides: customerStudiesOverrides,
     fullscreen,
-    closePositionConfirmCallback
+    closePositionConfirmCallback,
+    onToast,
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -116,7 +118,7 @@ export function TradingView({
         qtyTextColor,
         font,
     }
-    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig });
+    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
 
     useEffect(() => {

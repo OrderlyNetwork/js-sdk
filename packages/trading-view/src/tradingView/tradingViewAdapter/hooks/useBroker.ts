@@ -7,6 +7,7 @@ import {useSymbolsInfo} from '@orderly.network/hooks';
 const useBroker = ({
                        closeConfirm,
                        colorConfig,
+    onToast,
                    }: {
 
     closeConfirm: any;
@@ -21,9 +22,10 @@ const useBroker = ({
         font: string;
 
     },
+    onToast?: any,
 },) => {
     const cancelOrder = useCancelOrder();
-    const editOrder = useEditOrder();
+    const editOrder = useEditOrder(onToast);
     const symbolData = useSymbolsInfo();
     const closePosition = useCallback((position: any) => closeConfirm && closeConfirm(position), [closeConfirm]);
     const {sendLimitOrder} = useSenderOrder();

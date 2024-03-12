@@ -11,6 +11,7 @@ import {
   TradingViewOptions,
   ChartMode,
 } from "@orderly.network/trading-view";
+import { toast } from "@/toast";
 
 export type TradingViewChartConfig = TradingViewChartProps &
   TimeIntervalToolbarProps & {
@@ -61,6 +62,7 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         tradingViewScriptSrc={props?.scriptSRC}
         tradingViewCustomCssUrl={props?.customCssUrl}
         overrides={props.overrides}
+        onToast={toast}
       />
     </div>
   );
