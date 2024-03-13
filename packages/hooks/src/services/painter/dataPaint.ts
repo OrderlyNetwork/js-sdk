@@ -1,9 +1,9 @@
 import { commify } from "@orderly.network/utils";
 import { BasePaint, drawOptions, layoutInfo } from "./basePaint";
-import { path, difference } from "ramda";
+import { path } from "ramda";
 
 export class DataPaint extends BasePaint {
-  private positionInfoCellWidth = 120;
+  private positionInfoCellWidth = 110;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
   private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
@@ -17,8 +17,9 @@ export class DataPaint extends BasePaint {
 
     const hasMessage = !!options.data?.message;
 
-    this.transformTop = hasMessage ? 0 : -50;
+    this.transformTop = hasMessage ? 0 : needDrawDetails ? -40 : -150;
 
+    // If position details are not displayed, the position PNL information will be margin
     const offsetTop = hasMessage ? 50 : 100;
     // const offsetMessage = hasMessage ? 0 : -50;
 
@@ -185,14 +186,17 @@ export class DataPaint extends BasePaint {
         left = this._ratio(position.left!);
       }
 
-      const color = typeof options.data.position.ROI ==='undefined'?(
-          prefix === "+" ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-          : options.loseColor || this.DEFAULT_LOSE_COLOR
-      ): layout.secondaryColor;
+      const color =
+        typeof options.data.position.ROI === "undefined"
+          ? prefix === "+"
+            ? options.profitColor || this.DEFAULT_PROFIT_COLOR
+            : options.loseColor || this.DEFAULT_LOSE_COLOR
+          : layout.secondaryColor;
 
-      const fontSize = typeof options.data.position.ROI ==='undefined'?(
-          this._ratio(layout.fontSize as number)
-      ):this._ratio((layout.fontSize as number) * 0.6)
+      const fontSize =
+        typeof options.data.position.ROI === "undefined"
+          ? this._ratio(layout.fontSize as number)
+          : this._ratio((layout.fontSize as number) * 0.6);
 
       prevElementBoundingBox = this._drawText(text, {
         color,
@@ -220,12 +224,7 @@ export class DataPaint extends BasePaint {
       // let cellWidth = this.positionInfoCellWidth;
       let left =
         position.left! + this.positionInfoCellWidth * Math.floor(index / 2);
-      let top = (position.top as number) + (index % 2) * 40 + this.transformTop;
-
-      // if (isVertical && index === 1) {
-      //   left = position.left!;
-      //   top = (position.top as number) + index * 40;
-      // }
+      let top = (position.top as number) + (index % 2) * 38 + this.transformTop;
 
       this._drawText(info.title, {
         left: this._ratio(left),
