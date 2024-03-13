@@ -96,7 +96,7 @@ export type drawOptions = {
   backgroundColor?: string;
   backgroundImg?: string;
   data?: posterDataSource;
-  layout?: posterLayoutConfig;
+  layout?: PosterLayoutConfig;
 };
 
 export abstract class BasePaint {
