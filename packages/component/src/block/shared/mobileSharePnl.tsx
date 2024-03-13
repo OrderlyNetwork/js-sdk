@@ -30,6 +30,7 @@ export const MobileSharePnLContent: FC<{
   );
   const [message, setMessage] = useState("");
   const { shareOptions } = useContext(OrderlyAppContext);
+  const { backgroundImages, ...resetOptions} = shareOptions.pnl;
 
   const [domain, setDomain] = useState("");
 
@@ -114,14 +115,9 @@ export const MobileSharePnLContent: FC<{
                   width={552}
                   height={310}
                   data={{
-                    fontFamily: shareOptions.pnl.fontFamily,
                     backgroundImg: item,
-                    color: "rgba(255, 255, 255, 0.98)",
-                    profitColor: "rgb(0,181,159)",
-                    lossColor: "rgb(255,103,194)",
-                    brandColor: "rgb(0,181,159)",
+                    ...resetOptions,
                     data: posterData,
-                    layout: {},
                   }}
                   ref={posterRefs[index]}
                 />

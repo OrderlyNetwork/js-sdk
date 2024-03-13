@@ -37,6 +37,7 @@ export const DesktopSharePnLContent: FC<{
   const [message, setMessage] = useState("");
   const [check, setCheck] = useState(false);
   const { shareOptions } = useContext(OrderlyAppContext);
+  const { backgroundImages, ...resetOptions} = shareOptions.pnl;
   const [selectedSnap, setSelectedSnap] = useState(0);
   const [domain, setDomain] = useState("");
 
@@ -98,12 +99,8 @@ export const DesktopSharePnLContent: FC<{
             height={310}
             data={{
               backgroundImg: curBgImg,
-              color: "rgba(255, 255, 255, 0.98)",
-              profitColor: "rgb(0,181,159)",
-              lossColor: "rgb(255,103,194)",
-              brandColor: "rgb(0,181,159)",
+              ...resetOptions,
               data: posterData,
-              layout: {},
             }}
             ref={posterRef}
           />

@@ -27,7 +27,7 @@ import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
-import { ShareConfigProps } from "@/block/shared/shareConfigProps";
+import { PnLDefaultProps, ShareConfigProps } from "@/block/shared/shareConfigProps";
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export type AppStateErrors = {
@@ -126,7 +126,7 @@ export const OrderlyAppProvider: FC<
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
-        shareOptions={shareOptions}
+        shareOptions={{...PnLDefaultProps, ...shareOptions}}
         chains={chains}
       >
         {props.children}
