@@ -4,12 +4,12 @@ import { ChartMode } from "./tradingViewAdapter/type";
 import { Widget, WidgetProps } from "./tradingViewAdapter/widget";
 import { WebsocketService } from './tradingViewAdapter/datafeed/websocket.service';
 import { useLazyEffect } from './tradingViewAdapter/hooks/useLazyEffect';
-import { useWS, useConfig, useAccount } from "@orderly.network/hooks";
+import { useWS, useConfig, useAccount, useMediaQuery } from "@orderly.network/hooks";
 import { WS } from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
-import { AccountStatusEnum } from '@orderly.network/types';
+import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 
 
 export interface TradingViewOptions {
@@ -104,6 +104,7 @@ export function TradingView({
     const chart = useRef<any>();
     const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
     const { state: accountState } = useAccount();
+    const isMobile = useMediaQuery(MEDIA_TABLET);
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
@@ -180,7 +181,7 @@ export function TradingView({
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
-                getBroker: isLoggedIn ?
+                getBroker: (isLoggedIn && !isMobile) ?
                     (instance: any, host: any) => {
                         console.log('-- start create render');
                         console.log('-- instance', instance);
@@ -208,7 +209,7 @@ export function TradingView({
             chart.current?.remove();
             renderer.current?.remove();
         };
-    }, [chartingLibrarySciprtReady, isLoggedIn]);
+    }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
 
     useEffect(() => {
         if (!symbol || !chart.current) {
