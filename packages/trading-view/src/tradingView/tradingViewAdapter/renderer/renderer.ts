@@ -43,7 +43,8 @@ export class Renderer{
                     if (err!.toString().includes('tradingViewApi')) {
                         // hot reload error will be silent
                     } else {
-                        throw err;
+                        console.log('-- chartReady error', err);
+                        // throw err;
                     }
                 }
             }),

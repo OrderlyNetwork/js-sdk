@@ -28,7 +28,8 @@ export interface TradingViewPorps {
     studiesOverrides?: any;
     fullscreen?: boolean;
     closePositionConfirmCallback?: (data: any) => void;
-    onToast: any;
+    onToast?: any;
+    loadingElement?: any;
 }
 
 function Link(props: {
@@ -99,6 +100,7 @@ export function TradingView({
     fullscreen,
     closePositionConfirmCallback,
     onToast,
+    loadingElement
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -121,6 +123,16 @@ export function TradingView({
     }
     const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
+    const chartMask = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (chart.current && chartMask.current) {
+            chart.current.instance.onChartReady(() => {
+                console.log('-- chart ready');
+                chartMask.current?.style.setProperty('display', 'none');
+            })
+        }
+    }, [chart.current]);
 
     useEffect(() => {
         if (!tradingViewScriptSrc) {
@@ -234,6 +246,25 @@ export function TradingView({
     }, [interval]);
     return (
         <div style={{
+            height: '100%', width: '100%', margin: '0 auto',
+            position: 'relative',
+        }}>
+            <div style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                background: '#16141c',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems:'center',
+
+            }} ref={chartMask}>
+                {loadingElement ?? <div>laoding</div>}
+            </div>
+
+        <div style={{
             height: '100%', width: '100%', margin: '0 auto'
         }} ref={chartRef}>
             {(!tradingViewScriptSrc) &&
@@ -270,5 +301,6 @@ export function TradingView({
             }
         </div>
 
+        </div>
     );
 }
