@@ -12,7 +12,6 @@ import {
 } from "@orderly.network/hooks";
 import { SymbolProvider } from "@/provider";
 import { cn } from "@/utils/css";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/tabs";
 
 interface ChartViewProps {
   symbol: string;
