@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { mergeDeepRight } from "ramda";
 import { PosterPainter } from "./services/painter/painter";
 import { type drawOptions } from "./services/painter/basePaint";
-import { defaultLayoutConfig } from "./services/painter/layout.config";
+import { DefaultLayoutConfig } from "./services/painter/layout.config";
 import { SDKError } from "@orderly.network/types";
 
 export { type drawOptions } from "./services/painter/basePaint";
@@ -40,7 +40,7 @@ export const usePoster = (
       painterRef.current = new PosterPainter(target);
       painterRef.current.draw(
         mergeDeepRight<Partial<drawOptions>, drawOptions>(
-          { layout: defaultLayoutConfig, fontFamily: "Manrope" },
+          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
           options
         )
       );
@@ -51,7 +51,7 @@ export const usePoster = (
     if (painterRef.current) {
       painterRef.current.draw(
         mergeDeepRight<Partial<drawOptions>, drawOptions>(
-          { layout: defaultLayoutConfig, fontFamily: "Manrope" },
+          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
           options
         )
       );
