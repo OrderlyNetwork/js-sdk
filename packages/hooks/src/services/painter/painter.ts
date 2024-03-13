@@ -1,5 +1,5 @@
 import { BackgroundPaint } from "./backgroundPaint";
-import { drawOptions } from "./basePaint";
+import { DrawOptions } from "./basePaint";
 import { DataPaint } from "./dataPaint";
 export class PosterPainter {
   private ctx: CanvasRenderingContext2D;
@@ -28,11 +28,11 @@ export class PosterPainter {
     //
   }
 
-  draw(options: drawOptions) {
+  draw(options: DrawOptions) {
     requestAnimationFrame(() => this._draw.bind(this)(options));
   }
 
-  async _draw(options: drawOptions) {
+  async _draw(options: DrawOptions) {
     if (this.ctx === null) return;
     // console.log("============ DRAW ============");
     // this.ctx.font = options.fontFamily!;

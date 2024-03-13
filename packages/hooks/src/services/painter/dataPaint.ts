@@ -1,5 +1,5 @@
 import { commify } from "@orderly.network/utils";
-import { BasePaint, drawOptions, layoutInfo } from "./basePaint";
+import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
 import { path } from "ramda";
 
 export class DataPaint extends BasePaint {
@@ -10,7 +10,7 @@ export class DataPaint extends BasePaint {
 
   private transformTop = 0;
 
-  async draw(options: drawOptions) {
+  async draw(options: DrawOptions) {
     const needDrawDetails =
       Array.isArray(options.data?.position?.informations) &&
       (options.data?.position?.informations?.length ?? 0) > 0;
@@ -46,7 +46,7 @@ export class DataPaint extends BasePaint {
     }
   }
 
-  private drawMessage(options: drawOptions) {
+  private drawMessage(options: DrawOptions) {
     // console.log("draw message", options);
 
     const layout = path<layoutInfo>(
@@ -64,7 +64,7 @@ export class DataPaint extends BasePaint {
       fontFamily: options.fontFamily,
     });
   }
-  private drawPosition(options: drawOptions, offsetTop: number = 0) {
+  private drawPosition(options: DrawOptions, offsetTop: number = 0) {
     const layout = path<layoutInfo>(
       ["layout", "position"],
       options
@@ -139,7 +139,7 @@ export class DataPaint extends BasePaint {
     }
   }
 
-  private drawUnrealizedPnL(options: drawOptions, offsetTop: number = 0) {
+  private drawUnrealizedPnL(options: DrawOptions, offsetTop: number = 0) {
     // reset left value;
     const layout = path<layoutInfo>(
       ["layout", "unrealizedPnl"],
@@ -209,7 +209,7 @@ export class DataPaint extends BasePaint {
     }
   }
 
-  private drawInformations(options: drawOptions) {
+  private drawInformations(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "informations"],
       options
@@ -245,7 +245,7 @@ export class DataPaint extends BasePaint {
     });
   }
 
-  private drawDomainUrl(options: drawOptions) {
+  private drawDomainUrl(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "domain"],
       options
@@ -262,7 +262,7 @@ export class DataPaint extends BasePaint {
     });
   }
 
-  private drawPositionTime(options: drawOptions) {
+  private drawPositionTime(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "updateTime"],
       options

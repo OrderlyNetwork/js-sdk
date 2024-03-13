@@ -75,7 +75,7 @@ export type PosterLayoutConfig = {
   updateTime?: layoutInfo;
 };
 
-export type drawOptions = {
+export type DrawOptions = {
   /**
    * Color of common text
    */
@@ -104,5 +104,5 @@ export abstract class BasePaint {
     protected ctx: CanvasRenderingContext2D,
     protected painter: PosterPainter
   ) {}
-  abstract draw(options: drawOptions): Promise<void>;
+  abstract draw(options: DrawOptions): Promise<void>;
 }
