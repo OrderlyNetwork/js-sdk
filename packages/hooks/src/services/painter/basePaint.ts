@@ -84,7 +84,7 @@ export type DrawOptions = {
   /**
    * Lose color
    */
-  loseColor?: string;
+  lossColor?: string;
   /**
    * Profit color
    */

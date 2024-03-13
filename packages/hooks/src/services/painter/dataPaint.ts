@@ -162,7 +162,7 @@ export class DataPaint extends BasePaint {
           color:
             prefix === "+"
               ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-              : options.loseColor || this.DEFAULT_LOSE_COLOR,
+              : options.lossColor || this.DEFAULT_LOSE_COLOR,
           left,
           top: this._ratio(top),
 
@@ -190,7 +190,7 @@ export class DataPaint extends BasePaint {
         typeof options.data.position.ROI === "undefined"
           ? prefix === "+"
             ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-            : options.loseColor || this.DEFAULT_LOSE_COLOR
+            : options.lossColor || this.DEFAULT_LOSE_COLOR
           : layout.secondaryColor;
 
       const fontSize =
