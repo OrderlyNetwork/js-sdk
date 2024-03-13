@@ -104,7 +104,7 @@ export class DataPaint extends BasePaint {
 
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
       prevElementBoundingBox = this._drawText(options.data?.position.symbol!, {
-        color: "rgba(255,255,255,0.98)",
+        color: layout.color,
         left: left,
         top: this._ratio(top),
         fontSize: this._ratio(12),
@@ -128,7 +128,7 @@ export class DataPaint extends BasePaint {
       prevElementBoundingBox = this._drawText(
         `${options.data?.position.leverage}X`,
         {
-          color: "rgba(255,255,255,0.98)",
+          color: layout.color,
           left,
           top: this._ratio(top),
           fontSize: this._ratio(12),
@@ -143,7 +143,9 @@ export class DataPaint extends BasePaint {
     const layout = path<layoutInfo>(
       ["layout", "unrealizedPnl"],
       options
-    ) as layoutInfo;
+    ) as layoutInfo & {
+      secondaryColor: string;
+    };
     const { position } = layout;
     let left = this._ratio(position.left!);
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
@@ -183,11 +185,20 @@ export class DataPaint extends BasePaint {
         left = this._ratio(position.left!);
       }
 
+      const color = typeof options.data.position.ROI ==='undefined'?(
+          prefix === "+" ? options.profitColor || this.DEFAULT_PROFIT_COLOR
+          : options.loseColor || this.DEFAULT_LOSE_COLOR
+      ): layout.secondaryColor;
+
+      const fontSize = typeof options.data.position.ROI ==='undefined'?(
+          this._ratio(layout.fontSize as number)
+      ):this._ratio((layout.fontSize as number) * 0.6)
+
       prevElementBoundingBox = this._drawText(text, {
-        color: "rgba(255,255,255,0.5)",
+        color,
         left,
         top: this._ratio(top),
-        fontSize: this._ratio((layout.fontSize as number) * 0.6),
+        fontSize,
         fontWeight: 600,
         fontFamily: options.fontFamily,
       });
@@ -198,7 +209,9 @@ export class DataPaint extends BasePaint {
     const layout = path<layoutInfo>(
       ["layout", "informations"],
       options
-    ) as layoutInfo;
+    ) as layoutInfo & {
+      labelColor?: string;
+    };
     const { position } = layout;
 
     const isVertical = (options.data?.position.informations.length ?? 0) === 2;
@@ -218,9 +231,10 @@ export class DataPaint extends BasePaint {
         left: this._ratio(left),
         top: this._ratio(top),
         fontSize: this._ratio(10),
-        color: "rgba(255,255,255,0.2)",
+        color: layout.labelColor,
         fontFamily: options.fontFamily,
       });
+
       this._drawText(info.value, {
         left: this._ratio(left),
         top: this._ratio(top + 17),

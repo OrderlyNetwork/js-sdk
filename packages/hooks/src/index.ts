@@ -38,7 +38,6 @@ export {
 
 export * from "./orderly/orderlyHooks";
 
-import { fromPairs } from "ramda";
 import useSWR, { type SWRConfiguration, SWRConfig } from "swr";
 
 export { useSWR, SWRConfig, type SWRConfiguration };
@@ -48,6 +47,8 @@ export * from "use-debounce";
 export { useMediaQuery } from "./useMediaQuery";
 
 export { usePoster, type drawOptions } from "./usePoster";
+export { DefaultLayoutConfig } from "./services/painter/layout.config";
+export { type PosterLayoutConfig } from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";
 

@@ -60,14 +60,18 @@ export type layoutInfo = {
   }>;
 };
 
-export type posterLayoutConfig = {
+export type PosterLayoutConfig = {
   message?: layoutInfo;
 
   domain?: layoutInfo;
   position?: layoutInfo;
-  unrealizedPnl?: layoutInfo;
+  unrealizedPnl?: layoutInfo & {
+    secondaryColor: string;
+  };
 
-  informations?: layoutInfo;
+  informations?: layoutInfo & {
+    labelColor?: string;
+  };
   updateTime?: layoutInfo;
 };
 
@@ -92,7 +96,7 @@ export type drawOptions = {
   backgroundColor?: string;
   backgroundImg?: string;
   data?: posterDataSource;
-  layout?: posterLayoutConfig;
+  layout?: PosterLayoutConfig;
 };
 
 export abstract class BasePaint {
