@@ -15,11 +15,13 @@ import { Carousel } from "@/carousel";
 
 
 
-export const MobileSharePnLContent: FC<{ 
-    position: any, 
+export const MobileSharePnLContent: FC<{
+    position: any,
     leverage: any,
     hide: any,
- }> = (props) => {
+    baseDp?: number,
+    quoteDp?: number,
+}> = (props) => {
 
 
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
@@ -38,7 +40,7 @@ export const MobileSharePnLContent: FC<{
     }, []);
 
 
-    const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption);
+    const posterData = getPnLPosterData(props.position, props.leverage, message, domain, pnlFormat, shareOption, props.baseDp, props.quoteDp);
     // console.log("pster data", posterData, props.position);
 
 
@@ -204,13 +206,13 @@ const PnlFormatView: FC<{
     const isSelected = type === curType;
 
     return (<div
-        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3", isSelected && "orderly-outline orderly-outline-primary orderly-outline-1")}
+        className={cn("orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-2", isSelected && "orderly-outline orderly-outline-primary orderly-outline-1")}
         onClick={() => {
             setPnlFormat(type);
         }}
     >
-        <div className="orderly-text-sm orderly-flex-1 orderly-text-base-contrast">{text}</div>
-        {isSelected && <RadioIcon size={20} />}
+        <div className="orderly-text-sm orderly-text-base-contrast">{text}</div>
+        {/* {isSelected && <RadioIcon size={20} />} */}
     </div>);
 }
 

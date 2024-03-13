@@ -19,6 +19,8 @@ export const DesktopSharePnLContent: FC<{
     position: any,
     leverage: number,
     hide: any,
+    baseDp?: number,
+    quoteDp?: number,
 }> = (props) => {
     const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
     const [shareOption, setShareOption] = useState<Set<ShareOptions>>(new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"]));
@@ -39,7 +41,7 @@ export const DesktopSharePnLContent: FC<{
         return shareOptions.pnl.backgroundImages[selectedSnap];
     }, [shareOptions.pnl.backgroundImages, selectedSnap]);
 
-    const posterData = getPnLPosterData(props.position, props.leverage, check ? message : "", domain, pnlFormat, shareOption);
+    const posterData = getPnLPosterData(props.position, props.leverage, check ? message : "", domain, pnlFormat, shareOption, props.baseDp, props.quoteDp);
 
     const onCopy = () => {
         posterRef.current?.copy().then(() => {

@@ -2,7 +2,7 @@ import { useModal } from "@/modal";
 import { create } from "@/modal/modalHelper";
 import { Sheet, SheetContent, SheetHeader } from "@/sheet/sheet";
 import { Dialog, DialogContent } from "@/dialog/dialog";
-import { useLeverage, useMediaQuery } from "@orderly.network/hooks";
+import { useLeverage, useMediaQuery, useSymbolsInfo } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
@@ -16,6 +16,18 @@ export const SharePoisitionView = create<{
     const isTablet = useMediaQuery(MEDIA_TABLET);
     const { position } = props;
     const [leverage] = useLeverage();
+    const symbolInfo = useSymbolsInfo()?.[position.symbol];
+
+    const base_dp = symbolInfo?.("base_dp");
+    const quote_dp = symbolInfo?.("quote_dp");
+    const base_tick = symbolInfo?.("base_tick");
+    const quote_tick = symbolInfo?.("quote_tick");
+
+    console.log("symbolInfo", base_dp,
+    quote_dp,
+    base_tick,
+    quote_tick,);
+    
 
     return isTablet ?
         <MobileSharePnL
@@ -34,8 +46,10 @@ const MobileSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
     leverage: number,
+    baseDp?: number,
+    quoteDp?: number,
 }>> = (props) => {
-    const { leverage, position } = props;
+    const { leverage, position, baseDp, quoteDp } = props;
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
     return (<Sheet open={visible} onOpenChange={onOpenChange}>
@@ -47,7 +61,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
             >
                 PnL Sharing
             </SheetHeader>
-            <MobileSharePnLContent position={position} leverage={leverage} hide={hide} />
+            <MobileSharePnLContent position={position} leverage={leverage} hide={hide} baseDp={baseDp} quoteDp={quoteDp} />
         </SheetContent>
     </Sheet>);
 }
@@ -56,8 +70,10 @@ const DesktopSharePnL: FC<PropsWithChildren<{
     className?: string,
     position: any,
     leverage: number,
+    baseDp?: number,
+    quoteDp?: number,
 }>> = (props) => {
-    const { leverage, position } = props;
+    const { leverage, position, baseDp, quoteDp } = props;
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
     const [viewportHeight, setViewportHeight] = useState(window.innerHeight < 900 ? 660 : 807);
@@ -87,7 +103,7 @@ const DesktopSharePnL: FC<PropsWithChildren<{
             <div 
             style={{height: `${viewportHeight}px`}}
             >
-            <DesktopSharePnLContent position={position} leverage={leverage} hide={hide} />
+            <DesktopSharePnLContent position={position} leverage={leverage} hide={hide} baseDp={baseDp} quoteDp={quoteDp}/>
             </div>
         </DialogContent>
     </Dialog>);

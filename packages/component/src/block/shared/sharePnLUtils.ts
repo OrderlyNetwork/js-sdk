@@ -23,7 +23,16 @@
 import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 
-export function getPnLPosterData(position: any, leverage: number, message: string, domain: string, pnlType: PnLDisplayFormat, options: Set<ShareOptions>) {
+export function getPnLPosterData(
+    position: any,
+    leverage: number,
+    message: string,
+    domain: string,
+    pnlType: PnLDisplayFormat,
+    options: Set<ShareOptions>,
+    baseDp?: number,
+    quoteDp?: number,
+) {
 
     const { symbol, currency } = processSymbol(position.symbol);
     const positionData: any = {
@@ -63,27 +72,24 @@ export function getPnLPosterData(position: any, leverage: number, message: strin
                     break;
                 }
                 case "openPrice": {
-                    informations.push({ "title": "Open price", "value": position.average_open_price });
+                    informations.push({ "title": "Open price", "value": formatFixed(position.average_open_price, quoteDp || 2) });
                     break;
                 } case "openTime": {
                     informations.push({ "title": "Opened at", "value": formatOpenTime(position.timestamp) });
                     break;
                 }
                 case "markPrice": {
-                    informations.push({ "title": "Mark price", "value": position.mark_price });
+                    informations.push({ "title": "Mark price", "value": formatFixed(position.mark_price, quoteDp || 2) });
                     break;
                 }
                 case "quantity": {
-                    informations.push({ "title": "Quantity", "value": position.position_qty });
+                    informations.push({ "title": "Quantity", "value": formatFixed(position.position_qty, baseDp || 2) });
                 }
                 default: break;
             }
         }
 
     });
-
-    console.log("informations", informations);
-    
 
     positionData["informations"] = informations;
 
@@ -165,4 +171,8 @@ function formatOpenTime(input: number | Date): string {
     const minute = formattedParts.find((part) => part.type === "minute" ? part.value : "")?.value;
 
     return `${month}-${day} ${hour}:${minute}`;
+}
+
+function formatFixed(value:number, dp: number) {
+    return new Decimal(value).toFixed(dp, Decimal.ROUND_DOWN);
 }
