@@ -70,7 +70,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
           // @ts-ignore
-          value={order.total_executed_quantity ?? "-"}
+          value={item.total_executed_quantity ?? "-"}
           rule="price"
           precision={base_dp}
         />
