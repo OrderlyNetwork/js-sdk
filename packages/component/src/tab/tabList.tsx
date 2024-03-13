@@ -75,7 +75,8 @@ export const TabList: FC<TabListProps> = (props) => {
     >
       <div
         className={cn(
-          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center"
+          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center",
+          props.className,
           // {
           //   "orderly-pb-1": props.mode === TabViewMode.Tab,
           // }
