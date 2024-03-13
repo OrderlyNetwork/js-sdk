@@ -61,51 +61,53 @@ export const DesktopSharePnLContent: FC<{
     };
 
     return (
-        <div className="orderly-p-0 orderly-align-bottom">
-            <div className="orderly-h-[422px] orderly-mt-9">
-                <Poster className="orderly-mx-11" width={552} height={310} data={{
-                    backgroundImg: curBgImg,
-                    color: "rgba(255, 255, 255, 0.98)",
-                    profitColor: "rgb(0,181,159)",
-                    loseColor: "rgb(255,103,194)",
-                    brandColor: "rgb(0,181,159)",
-                    data: posterData,
-                    layout: {}
-                }} ref={posterRef} />
-                <CarouselBackgroundImage
-                    backgroundImages={shareOptions.pnl.backgroundImages}
-                    selectedSnap={selectedSnap}
-                    setSelectedSnap={setSelectedSnap}
-                />
-            </div>
-
-
-            <div className="orderly-px-10">
-                <div className="orderly-mt-4">
-                    <div className="orderly-text-lg orderly-h-[26px]">PnL display format</div>
-                    <div className="orderly-pt-4 orderly-flex orderly-justify-start orderly-gap-3">
-                        <PnlFormatView setPnlFormat={setPnlFormat} type="roi_pnl" curType={pnlFormat} />
-                        <PnlFormatView setPnlFormat={setPnlFormat} type="roi" curType={pnlFormat} />
-                        <PnlFormatView setPnlFormat={setPnlFormat} type="pnl" curType={pnlFormat} />
-                    </div>
-                </div>
-
-                <Divider className="orderly-pt-6 orderly-border-white/10" />
-
-                <div className="orderly-mt-4">
-                    <div className="orderly-text-lg orderly-h-[26px]">Optional information to share</div>
-                    <div className="orderly-mt-4 orderly-flex orderly-justify-start orderly-gap-4">
-                        <ShareOption setShareOption={setShareOption} type="openPrice" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="markPrice" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="leverage" curType={shareOption} />
-                        <ShareOption setShareOption={setShareOption} type="quantity" curType={shareOption} />
-                    </div>
+        <div className="orderly-h-full orderly-flex orderly-flex-col">
+            <div className="orderly-flex-1 orderly-h-full orderly-overflow-y-auto">
+                <div className="orderly-h-[422px] orderly-mt-9">
+                    <Poster className="orderly-mx-11" width={552} height={310} data={{
+                        backgroundImg: curBgImg,
+                        color: "rgba(255, 255, 255, 0.98)",
+                        profitColor: "rgb(0,181,159)",
+                        loseColor: "rgb(255,103,194)",
+                        brandColor: "rgb(0,181,159)",
+                        data: posterData,
+                        layout: {}
+                    }} ref={posterRef} />
+                    <CarouselBackgroundImage
+                        backgroundImages={shareOptions.pnl.backgroundImages}
+                        selectedSnap={selectedSnap}
+                        setSelectedSnap={setSelectedSnap}
+                    />
                 </div>
 
 
+                <div className="orderly-px-10">
+                    <div className="orderly-mt-4">
+                        <div className="orderly-text-lg orderly-h-[26px]">PnL display format</div>
+                        <div className="orderly-pt-4 orderly-flex orderly-justify-start orderly-gap-3">
+                            <PnlFormatView setPnlFormat={setPnlFormat} type="roi_pnl" curType={pnlFormat} />
+                            <PnlFormatView setPnlFormat={setPnlFormat} type="roi" curType={pnlFormat} />
+                            <PnlFormatView setPnlFormat={setPnlFormat} type="pnl" curType={pnlFormat} />
+                        </div>
+                    </div>
 
-                <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck} />
+                    <Divider className="orderly-pt-6 orderly-border-white/10" />
+
+                    <div className="orderly-mt-4">
+                        <div className="orderly-text-lg orderly-h-[26px]">Optional information to share</div>
+                        <div className="orderly-mt-4 orderly-flex orderly-justify-start orderly-gap-4">
+                            <ShareOption setShareOption={setShareOption} type="openPrice" curType={shareOption} />
+                            <ShareOption setShareOption={setShareOption} type="markPrice" curType={shareOption} />
+                            <ShareOption setShareOption={setShareOption} type="openTime" curType={shareOption} />
+                            <ShareOption setShareOption={setShareOption} type="leverage" curType={shareOption} />
+                            <ShareOption setShareOption={setShareOption} type="quantity" curType={shareOption} />
+                        </div>
+                    </div>
+
+
+
+                    <Message message={message} setMessage={setMessage} check={check} setCheck={setCheck} />
+                </div>
             </div>
 
             <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
