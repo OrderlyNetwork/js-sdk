@@ -104,7 +104,7 @@ export class DataPaint extends BasePaint {
 
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
       prevElementBoundingBox = this._drawText(options.data?.position.symbol!, {
-        color: "rgba(255,255,255,0.98)",
+        color: layout.color,
         left: left,
         top: this._ratio(top),
         fontSize: this._ratio(12),
@@ -128,7 +128,7 @@ export class DataPaint extends BasePaint {
       prevElementBoundingBox = this._drawText(
         `${options.data?.position.leverage}X`,
         {
-          color: "rgba(255,255,255,0.98)",
+          color: layout.color,
           left,
           top: this._ratio(top),
           fontSize: this._ratio(12),

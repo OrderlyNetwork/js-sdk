@@ -20,7 +20,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   },
   position: {
     fontSize: 20,
-    color: "white",
+    color: "rgba(255,255,255,0.98)",
     position: {
       left: 20,
       top: 70,
