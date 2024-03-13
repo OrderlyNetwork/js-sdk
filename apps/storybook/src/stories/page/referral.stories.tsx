@@ -34,7 +34,10 @@ export const Default: Story = {
   render: (args, { globals }) => {
 
     return (
-      <ReferralProvider>
+      <ReferralProvider 
+        becomeAnAffiliateUrl="https://orderly.network"
+        learnAffiliateUrl="https://orderly.network"
+      >
         <Referral />
       </ReferralProvider>
     );

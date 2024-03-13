@@ -4,7 +4,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
     size?: number;
 }
 
-export const ArrorRightIcon: FC<IconProps> = (props) => {
+export const ArrowRightIcon: FC<IconProps> = (props) => {
     const { size = 16, viewBox, ...rest } = props;
     return (
         <svg

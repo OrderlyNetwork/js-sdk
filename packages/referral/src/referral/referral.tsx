@@ -6,7 +6,7 @@ import { ReferralTab } from "./referralTab";
 
 export const Referral = () => {
 
-    const { isAffilate, isTrader } = useContext(ReferralContext);
+    const { isAffiliate: isAffilate, isTrader } = useContext(ReferralContext);
 
     console.log("xxxxxxxxx ", isAffilate, isTrader);
     
@@ -17,9 +17,9 @@ export const Referral = () => {
         </div>
     }
 
-    if (!isAffilate && !isTrader) {
+    // if (!isAffilate && !isTrader) {
         return <Dashboard />
-    }
+    // }
 
     return (
         <ReferralTab />

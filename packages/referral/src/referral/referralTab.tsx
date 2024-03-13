@@ -10,7 +10,7 @@ export type ReferralTabType = "affiliateTab" | "traderTab";
 
 export const ReferralTab = () => {
 
-    const { isAffilate, isTrader } = useContext(ReferralContext);
+    const { isAffiliate: isAffilate, isTrader } = useContext(ReferralContext);
 
     const [activeTab, setActiveTab] = useState<ReferralTabType>(isAffilate ? "affiliateTab" : "traderTab")
     const onTabChange = (tab: any) => {
@@ -23,7 +23,7 @@ export const ReferralTab = () => {
                 key={"referralTab"}
                 autoFit
                 value={activeTab}
-                tabBarClassName="orderly-justify-center"
+                tabBarClassName="orderly-justify-center orderly-h-[63px]"
                 onTabChange={onTabChange}
             >
                 <TabPane

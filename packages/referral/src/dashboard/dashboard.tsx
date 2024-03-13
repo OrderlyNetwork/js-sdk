@@ -1,8 +1,17 @@
-import { ArrorRightIcon } from "./icons/arrowRight";
+import { useContext } from "react";
+import { ArrowRightIcon } from "./icons/arrowRight";
 import { Card } from "./sections/card";
 import { Introduce } from "./sections/introduce";
+import { ReferralContext } from "../hooks/referralContext";
 
 export const Dashboard = () => {
+
+
+  const { learnAffiliate, learnAffiliateUrl } = useContext(ReferralContext);
+  const handleOpenNewTab = (url: string) => {
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="orderly-bg-base-900 orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4">
       <div className="orderly-text-base-contrast orderly-text-center">
@@ -13,10 +22,19 @@ export const Dashboard = () => {
           Grow your brand | Get 40% commission | Unlock exclusive perks
         </div>
         <div className="orderly-flex orderly-justify-center">
-          <button className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary">
+          <button
+            onClick={() => {
+              if (learnAffiliate) {
+                learnAffiliate?.();
+              } else if (learnAffiliateUrl) {
+                handleOpenNewTab(learnAffiliateUrl);
+              }
+            }}
+            className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary"
+          >
             <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs">
               Learn how it works
-              <ArrorRightIcon className="orderly-ml-2" />
+              <ArrowRightIcon className="orderly-ml-2" />
             </div>
           </button>
         </div>
@@ -26,10 +44,6 @@ export const Dashboard = () => {
         <Card />
         <Introduce />
       </div>
-
-
-
-      
 
     </div>
   );
