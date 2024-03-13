@@ -140,8 +140,6 @@ const EditingState: FC<{
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-
-      inputRef.current?.blur();
       onClick();
     }
   };

@@ -7,6 +7,7 @@ import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
 import { CloseBaseConfirm } from "@/block/positions/full/marketConfirmDialog";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { Spinner } from "@/spinner";
 
 interface Props {
   symbol: string;
@@ -68,6 +69,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
           overrides={tradingViewConfig?.overrides}
           closePositionConfirmCallback={closePositionConfirmCallback}
           onToast={toast}
+          loadingElement={<Spinner />}
         />
         <Popover onOpenChange={setOpen} open={open}>
           <PopoverTrigger asChild>
