@@ -1,20 +1,13 @@
-import {
-  Children,
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   useChains,
   useWalletConnector,
   useMediaQuery,
+  useConfig,
 } from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
-import { ChainConfig, CurrentChain } from "@orderly.network/types";
+import type { CurrentChain } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { ChainDialog } from "./chainDialog";
 import { API } from "@orderly.network/types";
@@ -27,8 +20,8 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { Chain, Chains } from "@orderly.network/hooks/esm/orderly/useChains";
+import type { NetworkId } from "@orderly.network/types";
 
 export interface ChainSelectProps {
   disabled?: boolean;
@@ -42,10 +35,8 @@ export interface ChainSelectProps {
 }
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
-  const [open, setOpen] = useState(false);
-
   const isTable = useMediaQuery(MEDIA_TABLET);
-  const { disabled } = props;
+  const networkId = useConfig("networkId") as NetworkId;
   const [allChains, { findByChainId }] = useChains(undefined, {
     pick: "network_infos",
     filter: (chain: any) =>
@@ -68,12 +59,9 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
     if (Array.isArray(targetChains)) return targetChains;
     if (targetChains === undefined) return [];
-    if (connectedChain && isTestnet(praseChainIdToNumber(connectedChain.id))) {
-      return targetChains.testnet ?? [];
-    }
 
-    return targetChains.mainnet;
-  }, [allChains, connectedChain, props.chains]);
+    return targetChains[networkId];
+  }, [allChains, props.chains, networkId]);
 
   const { value } = props;
 
@@ -142,27 +130,33 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
     }
   }, [props.value?.id, chains?.length, props.chains]);
 
+  // if chains is unknown, always can select chains
+  const selectable =
+    (!currentChain || chains?.length > 1) && !props.settingChain;
+
   const icon = useMemo(() => {
     if (props.settingChain) {
       return <Spinner size={"small"} className="orderly-text-primary-light" />;
     }
-    if (chains?.length > 1) {
+
+    // if chains is unknown, always show icon
+    if (!currentChain || chains?.length > 1) {
       return (
         // @ts-ignore
         <ArrowLeftRight size={16} className="orderly-text-primary-light" />
       );
     }
     return null;
-  }, [chains?.length, props.settingChain]);
+  }, [chains?.length, props.settingChain, currentChain]);
 
   if (isTable) {
     return (
       <MobileChainSelect
         chains={chains}
-        settingChain={props.settingChain}
         onClick={onClick}
         currentChain={currentChain}
         icon={icon}
+        selectable={selectable}
       />
     );
   }
@@ -170,27 +164,27 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   return (
     <DesktopChainSelect
       chains={chains}
-      settingChain={props.settingChain}
       currentChain={currentChain}
       icon={icon}
       connectedChain={connectedChain}
       onDropMenuItemClick={onDropMenuItemClick}
+      selectable={selectable}
     />
   );
 };
 
 const MobileChainSelect: FC<{
   chains: any;
-  settingChain: any;
   onClick: any;
   currentChain: any;
   icon: any;
+  selectable: boolean;
 }> = (props) => {
-  const { chains, onClick, currentChain, icon } = props;
+  const { onClick, currentChain, icon } = props;
   return (
     <button
       className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500"
-      disabled={(chains?.length ?? 0) < 2 || props.settingChain}
+      disabled={!props.selectable}
       onClick={onClick}
     >
       <NetworkImage
@@ -209,15 +203,14 @@ const MobileChainSelect: FC<{
 
 const DesktopChainSelect: FC<{
   chains: any;
-  settingChain: any;
   currentChain: any;
   icon: any;
   connectedChain: any;
   onDropMenuItemClick: (chain: any) => void;
+  selectable: boolean;
 }> = (props) => {
   const { chains, currentChain, icon, connectedChain } = props;
   const [open, setOpen] = useState(false);
-  // const canOpen = !((chains?.length ?? 0) < 2 || props.settingChain);
 
   function parseChainId(id?: string | number) {
     if (typeof id === "number") {
@@ -249,7 +242,7 @@ const DesktopChainSelect: FC<{
     );
   }, [currentChain]);
 
-  if ((chains?.length ?? 0) < 2 || props.settingChain) {
+  if (!props.selectable) {
     return (
       <div className="orderly-flex orderly-w-full orderly-items-center orderly-px-2 orderly-rounded orderly-bg-base-500">
         {buttonElem}

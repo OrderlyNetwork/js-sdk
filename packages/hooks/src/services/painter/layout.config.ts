@@ -6,7 +6,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     // color: undefined,
     position: {
       left: 20,
-      bottom: 15,
+      bottom: 17,
     },
   },
   message: {
@@ -37,8 +37,8 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   },
   informations: {
     fontSize: 12,
-    color: "rgba(255,255,255,0.54)",
-    labelColor: "rgba(255,255,255,0.2)",
+    color: "rgba(255, 255, 255, 0.8)",
+    labelColor: "rgba(255,255,255,0.36)",
     position: {
       left: 20,
       top: 150,
@@ -51,7 +51,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     textAlign: "end",
     position: {
       right: 15,
-      bottom: 15,
+      bottom: 17,
     },
   },
 };

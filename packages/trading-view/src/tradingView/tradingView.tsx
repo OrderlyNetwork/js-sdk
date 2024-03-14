@@ -4,12 +4,12 @@ import { ChartMode } from "./tradingViewAdapter/type";
 import { Widget, WidgetProps } from "./tradingViewAdapter/widget";
 import { WebsocketService } from './tradingViewAdapter/datafeed/websocket.service';
 import { useLazyEffect } from './tradingViewAdapter/hooks/useLazyEffect';
-import { useWS, useConfig, useAccount } from "@orderly.network/hooks";
+import { useWS, useConfig, useAccount, useMediaQuery } from "@orderly.network/hooks";
 import { WS } from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
-import { AccountStatusEnum } from '@orderly.network/types';
+import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 
 
 export interface TradingViewOptions {
@@ -28,7 +28,8 @@ export interface TradingViewPorps {
     studiesOverrides?: any;
     fullscreen?: boolean;
     closePositionConfirmCallback?: (data: any) => void;
-    onToast: any;
+    onToast?: any;
+    loadingElement?: any;
 }
 
 function Link(props: {
@@ -99,11 +100,13 @@ export function TradingView({
     fullscreen,
     closePositionConfirmCallback,
     onToast,
+    loadingElement
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
     const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
     const { state: accountState } = useAccount();
+    const isMobile = useMediaQuery(MEDIA_TABLET);
 
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
@@ -120,6 +123,16 @@ export function TradingView({
     }
     const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
     const [renderer, createRenderer] = useCreateRenderer(symbol!);
+    const chartMask = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (chart.current && chartMask.current) {
+            chart.current.instance.onChartReady(() => {
+                console.log('-- chart ready');
+                chartMask.current?.style.setProperty('display', 'none');
+            })
+        }
+    }, [chart.current]);
 
     useEffect(() => {
         if (!tradingViewScriptSrc) {
@@ -180,7 +193,7 @@ export function TradingView({
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
-                getBroker: isLoggedIn ?
+                getBroker: (isLoggedIn && !isMobile) ?
                     (instance: any, host: any) => {
                         console.log('-- start create render');
                         console.log('-- instance', instance);
@@ -208,7 +221,7 @@ export function TradingView({
             chart.current?.remove();
             renderer.current?.remove();
         };
-    }, [chartingLibrarySciprtReady, isLoggedIn]);
+    }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
 
     useEffect(() => {
         if (!symbol || !chart.current) {
@@ -232,6 +245,25 @@ export function TradingView({
 
     }, [interval]);
     return (
+        <div style={{
+            height: '100%', width: '100%', margin: '0 auto',
+            position: 'relative',
+        }}>
+            <div style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                background: '#16141c',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems:'center',
+
+            }} ref={chartMask}>
+                {loadingElement ?? <div>laoding</div>}
+            </div>
+
         <div style={{
             height: '100%', width: '100%', margin: '0 auto'
         }} ref={chartRef}>
@@ -269,5 +301,6 @@ export function TradingView({
             }
         </div>
 
+        </div>
     );
 }

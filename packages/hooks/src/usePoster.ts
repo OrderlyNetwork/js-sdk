@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { mergeDeepRight } from "ramda";
 import { PosterPainter } from "./services/painter/painter";
-import { type drawOptions } from "./services/painter/basePaint";
+import { type DrawOptions } from "./services/painter/basePaint";
 import { DefaultLayoutConfig } from "./services/painter/layout.config";
 import { SDKError } from "@orderly.network/types";
-
-export { type drawOptions } from "./services/painter/basePaint";
 
 /**
  * Generates a poster image based on position information. You can set the size, background color, font color, font size, and content position of the poster.
@@ -23,7 +21,7 @@ export const usePoster = (
   /**
    * The options to draw the poster
    */
-  options: drawOptions
+  options: DrawOptions
 ) => {
   const [error, setError] = useState<Error | null>(null);
   const [canCopy, setCanCopy] = useState<boolean>(
@@ -39,7 +37,7 @@ export const usePoster = (
     if (target && !painterRef.current) {
       painterRef.current = new PosterPainter(target);
       painterRef.current.draw(
-        mergeDeepRight<Partial<drawOptions>, drawOptions>(
+        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
           options
         )
@@ -50,7 +48,7 @@ export const usePoster = (
   useEffect(() => {
     if (painterRef.current) {
       painterRef.current.draw(
-        mergeDeepRight<Partial<drawOptions>, drawOptions>(
+        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
           options
         )

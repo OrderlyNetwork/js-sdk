@@ -20,7 +20,6 @@ export interface WalletPickerProps {
 
   address?: string;
 
-  networkId?: "mainnet" | "testnet";
   settingChain?: boolean;
 
   onOpenPicker?: () => void;

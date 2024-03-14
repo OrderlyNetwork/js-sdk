@@ -46,9 +46,12 @@ export * from "use-debounce";
 
 export { useMediaQuery } from "./useMediaQuery";
 
-export { usePoster, type drawOptions } from "./usePoster";
+export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";
-export { type PosterLayoutConfig } from "./services/painter/basePaint";
+export type {
+  PosterLayoutConfig,
+  DrawOptions,
+} from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";
 
