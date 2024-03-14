@@ -49,6 +49,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
 
     return (<Sheet open={visible} onOpenChange={onOpenChange}>
         <SheetContent
+            id="orderly-referral-mweb-bg"
             className="orderly-px-4"
         >
             <SheetHeader
@@ -97,6 +98,7 @@ const DesktopSharePnL: FC<PropsWithChildren<{
         >
 
             <div
+                id="orderly-referral-desktop-bg"
                 style={{ height: `${viewportHeight}px` }}
             >
                 <DesktopSharePnLContent position={position} leverage={leverage} hide={hide} baseDp={baseDp} quoteDp={quoteDp} />

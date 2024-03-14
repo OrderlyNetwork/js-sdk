@@ -22,7 +22,7 @@ export const BottomButtons: FC<{
           Download
         </Button>
   
-        <Button className="orderly-w-[188px]" onClick={onClickCopy}>
+        <Button className="orderly-w-[188px] orderly-text-base-contrast" onClick={onClickCopy}>
           <span>
             <CopyIcon/>
           </span>

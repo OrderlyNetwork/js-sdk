@@ -152,7 +152,7 @@ export const DesktopSharePnLContent: FC<{
       <button onClick={() => {
         props.hide();
       }} className="orderly-absolute orderly-top-0 orderly-right-0 orderly-w-[40px] orderly-h-[40px] orderly-flex orderly-justify-center orderly-items-center">
-        <CloseIcon size={12} />
+        <CloseIcon size={12} className="orderly-fill-base-contrast-54" />
       </button>
     </div>
   );

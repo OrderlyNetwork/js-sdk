@@ -299,3 +299,9 @@ body {
 .orderly-referral .orderly-referral-download-btn-bg {
   background-color: rgba(75, 83, 105, 1);
 }
+#orderly-referral-desktop-bg {
+  background-color: rgba(27, 32, 40, 1);
+}
+#orderly-referral-mweb-bg {
+  background-color: rgba(27, 32, 40, 1);
+}
