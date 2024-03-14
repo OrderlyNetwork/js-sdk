@@ -441,7 +441,7 @@ const CarouselBackgroundImage: FC<{
       <PrevButton onClick={onPrevButtonClick} />
       <div
         ref={emblaRef}
-        className="orderly-w-[552px] orderly-h-[92px] orderly-overflow orderly-overflow-x-auto orderly-mx-2"
+        className="orderly-w-[552px] orderly-overflow orderly-overflow-x-auto orderly-scrollbar-hidden orderly-hide-scrollbar orderly-mx-2"
       >
         <div className="orderly-flex">
           {backgroundImages.map((e, index) => (
