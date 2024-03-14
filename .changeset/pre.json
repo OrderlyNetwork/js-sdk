@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.5-internal.5"
   },
   "changesets": [
+    "big-pets-fetch",
     "funny-birds-smoke",
     "kind-comics-speak",
     "long-months-chew",
