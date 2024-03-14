@@ -191,7 +191,9 @@ export declare namespace API {
     mark_price: number;
     est_liq_price: number | null;
     timestamp: number;
-    // Maintenance margin ratio
+    /**
+     * Maintenance margin ratio
+     */
     mmr: number;
     imr: number;
     IMR_withdraw_orders: number;

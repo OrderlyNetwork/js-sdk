@@ -12,7 +12,7 @@ import { BaseOrderCreator } from "./baseCreator";
 
 export class StopMarketOrderCreator extends BaseOrderCreator {
   create(values: OrderEntity, config: ValuesDepConfig): AlgoOrderEntry {
-    this.totalToQuantity(values, config);
+    console.log("values", values, config);
 
     const order = {
       ...this.baseOrder(values),
@@ -24,15 +24,6 @@ export class StopMarketOrderCreator extends BaseOrderCreator {
       // price: values["order_price"],
       trigger_price_type: TriggerPriceType.MARK_PRICE,
     };
-    // delete order["order_quantity"];
-    // delete order["order_price"];
-    // // @ts-ignore
-    // delete order["order_type"];
-    // // @ts-ignore
-    // delete order["isStopOrder"];
-    // delete order["total"];
-
-    // console.log("result is", order);
 
     return pick(
       [
