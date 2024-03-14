@@ -69,7 +69,7 @@ export class DataPaint extends BasePaint {
       ["layout", "position"],
       options
     ) as layoutInfo;
-    const { position } = layout;
+    const { position, fontSize = 14 } = layout;
     let left = this._ratio(position.left!);
 
     let top = layout.position.top! + offsetTop + this.transformTop;
@@ -85,7 +85,7 @@ export class DataPaint extends BasePaint {
             : this.DEFAULT_LOSE_COLOR,
         left,
         top: this._ratio(top),
-        fontSize: this._ratio(14),
+        fontSize: this._ratio(fontSize),
         fontFamily: options.fontFamily,
       });
     }
@@ -98,7 +98,7 @@ export class DataPaint extends BasePaint {
           color: "rgba(255,255,255,0.2)",
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         });
       }
@@ -108,7 +108,7 @@ export class DataPaint extends BasePaint {
         color: layout.color,
         left: left,
         top: this._ratio(top),
-        fontSize: this._ratio(12),
+        fontSize: this._ratio(fontSize),
         fontFamily: options.fontFamily,
       });
     }
@@ -121,7 +121,7 @@ export class DataPaint extends BasePaint {
           color: "rgba(255,255,255,0.2)",
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         });
       }
@@ -132,7 +132,7 @@ export class DataPaint extends BasePaint {
           color: layout.color,
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         }
       );
@@ -146,6 +146,7 @@ export class DataPaint extends BasePaint {
       options
     ) as layoutInfo & {
       secondaryColor: string;
+      secondaryFontSize: number;
     };
     const { position } = layout;
     let left = this._ratio(position.left!);
@@ -196,7 +197,7 @@ export class DataPaint extends BasePaint {
       const fontSize =
         typeof options.data.position.ROI === "undefined"
           ? this._ratio(layout.fontSize as number)
-          : this._ratio((layout.fontSize as number) * 0.6);
+          : this._ratio(layout.secondaryFontSize as number);
 
       prevElementBoundingBox = this._drawText(text, {
         color,
