@@ -1,22 +1,13 @@
 import { useState } from "react";
 
 import { API, AlgoOrderEntry, SDKError } from "@orderly.network/types";
-import { calculateHelper } from "./utils";
+import { UpdateOrderKey, calculateHelper } from "./utils";
 
 export type ValidateError = {
   tp_tigger_price?: string | null;
   sl_tigger_price?: string | null;
   qty?: string | null;
 };
-
-export type UpdateOrderKey =
-  | "tp_trigger_price"
-  | "sl_trigger_price"
-  | "quantity"
-  | "tp_offset"
-  | "sl_offset"
-  | "tp_offset_percentage"
-  | "sl_offset_percentage";
 
 export type ComputedAlgoOrder = Partial<
   AlgoOrderEntry & {
@@ -66,7 +57,7 @@ export const useTaskProfitAndStopLossInternal = (
   const [error, setError] = useState<ValidateError | null>(null);
 
   const updateOrder = (key: UpdateOrderKey, value: number | string) => {
-    const newValue = calculateHelper({
+    const newValue = calculateHelper(key, {
       key,
       value: Number(value),
       markPrice,
