@@ -55,7 +55,7 @@ const sheetVariants = cva(
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {
-  //是否显示关闭按钮
+  // if true, show close button
   closeable?: boolean;
 }
 

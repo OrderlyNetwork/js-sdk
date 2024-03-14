@@ -9,15 +9,11 @@ import { FC } from "react";
 export const FreeCollat = () => {
   const isTable = useMediaQuery(MEDIA_TABLET);
 
-  return isTable ? (
-    <MobileFreeCollat />
-  ) : (
-    <DesktopFreeCollat title="Free Collat." />
-  );
+  return isTable ? <MobileFreeCollat /> : <DesktopFreeCollat title="Avbl." />;
 };
 
 export const MobileFreeCollat = () => {
-  return <span>Free Collat.</span>;
+  return <span>Avbl.</span>;
 };
 export const DesktopFreeCollat: FC<{ title?: string; className?: string }> = (
   props

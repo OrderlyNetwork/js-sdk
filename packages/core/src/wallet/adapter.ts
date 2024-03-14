@@ -36,9 +36,14 @@ export interface IWalletAdapter {
   getTransactionRecipect: (txHash: string) => Promise<any>;
   signTypedData: (address: string, data: any) => Promise<string>;
 
-  pollTransactionReceiptWithBackoff: (txHash: string, baseInterval?: number, maxInterval?: number, maxRetries?: number) => Promise<any>;
+  pollTransactionReceiptWithBackoff: (
+    txHash: string,
+    baseInterval?: number,
+    maxInterval?: number,
+    maxRetries?: number
+  ) => Promise<any>;
 
-  // 查询余额
+  // Get the balance of address
   getBalance: (
     // address: string,
     userAddress: string

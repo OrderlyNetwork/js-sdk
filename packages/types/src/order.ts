@@ -90,7 +90,7 @@ export interface AlgoOrderEntry {
   trigger_price_type: TriggerPriceType;
   type: OrderType;
   visible_quantity?: number | string;
-  tp_trigger_price?: string |number;
+  tp_trigger_price?: string | number;
   sl_trigger_price?: string | number;
 }
 

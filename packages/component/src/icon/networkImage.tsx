@@ -26,7 +26,6 @@ export interface NetworkImageProps {
   symbol?: string;
 }
 
-// TODO: 添加icon生成adpater
 export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   const { rounded = true } = props;
   const [url, setUrl] = React.useState<string>();

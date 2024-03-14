@@ -1,9 +1,9 @@
-import { BasePaint, type drawOptions } from "./basePaint";
+import { BasePaint, type DrawOptions } from "./basePaint";
 
 export class BackgroundPaint extends BasePaint {
   private img: HTMLImageElement | null = null;
 
-  async draw(options: drawOptions) {
+  async draw(options: DrawOptions) {
     console.log("BackgroundPaint draw: ", options.backgroundColor);
 
     if (
@@ -16,7 +16,7 @@ export class BackgroundPaint extends BasePaint {
     }
   }
 
-  _drawColor(options: drawOptions) {
+  _drawColor(options: DrawOptions) {
     console.log("graw background color", options);
     this.ctx.fillStyle = options.backgroundColor || "black";
     this.ctx.fillRect(
@@ -27,7 +27,7 @@ export class BackgroundPaint extends BasePaint {
     );
   }
 
-  async _drawImage(options: drawOptions) {
+  async _drawImage(options: DrawOptions) {
     return this.loadImg(options.backgroundImg!).then((img) => {
       this.img = img;
       this.ctx.drawImage(

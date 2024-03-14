@@ -54,7 +54,6 @@ export const Statistic: FC<StatisticProps> = (props) => {
     return props.label;
   }, [props.label]);
 
-  // 给Value添加颜色
   // lose, profit, neutral
   const colorClassName = useMemo(() => {
     if (!props.coloring) return "";

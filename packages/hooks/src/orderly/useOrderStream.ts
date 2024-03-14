@@ -11,6 +11,7 @@ import { useMutation } from "../useMutation";
 import version from "../version";
 import { useDataCenterContext } from "../dataProvider";
 import { generateKeyFun } from "../utils/swr";
+import { useEventEmitter } from "../useEventEmitter";
 
 type OrderType = "normalOrder" | "algoOrder";
 
@@ -50,6 +51,9 @@ export const useOrderStream = (
   const { status, symbol, side, size = 100 } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
+
+  const ee = useEventEmitter();
+
   const { regesterKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
@@ -161,7 +165,17 @@ export const useOrderStream = (
    * update algo order
    */
   const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "algoOrder");
+    return _updateOrder(orderId, order, "algoOrder").then((res) => {
+      // TODO: remove this when the WS service provides the correct data
+      ee.emit("algoOrder:cache", {
+        // ...res.data.rows[0],
+        ...order,
+        order_id: Number(orderId),
+        // trigger_price: price,
+      });
+      //------------fix end----------------
+      return res;
+    });
   }, []);
 
   const _cancelOrder = useCallback(

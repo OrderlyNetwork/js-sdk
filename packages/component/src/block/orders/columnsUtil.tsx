@@ -183,7 +183,7 @@ export const columnsBasis = (props: {
       dataIndex: "visible",
       className: "orderly-h-[48px] orderly-font-semibold",
       render: (value: number, record: any) => {
-        return <span>{value === record.quantity ? "No" : "Yes"}</span>;
+        return <span>{record.visible_quantity !== 0 ? "No" : "Yes"}</span>;
       },
     },
     {

@@ -8,12 +8,11 @@ import {
 } from "react";
 
 export interface DetailsPageContextState {
-  /** 模板名称 */
   moduleName: string;
   setModuleName: (moduleName: string) => void;
   slug: string;
   type: string;
-  /** api 名称 */
+
   apiName: string;
   setApiName: (apiName: string) => void;
 }

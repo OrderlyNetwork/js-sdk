@@ -75,19 +75,16 @@ export function useLocalStorage<T>(
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent | CustomEvent) => {
-      
       if ((event as StorageEvent)?.key && (event as StorageEvent).key !== key) {
-        return
+        return;
       }
       setStoredValue(readValue());
     };
 
-    // 添加 storage 事件监听器
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      // 清除 storage 事件监听器
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, [key]);
 

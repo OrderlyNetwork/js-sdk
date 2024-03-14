@@ -10,7 +10,7 @@ export interface CoinProps {
   className?: string;
 }
 
-// TODO: 添加icon生成adpater
+// TODO: add icon generate adpater
 export const Coin: FC<CoinProps> = (props) => {
   const [url, setUrl] = React.useState<string>();
 

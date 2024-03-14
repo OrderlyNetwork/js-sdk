@@ -8,7 +8,7 @@
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build": "tsup --tsconfig tsconfig.build.json",
     "doc": "typedoc --out docs src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "leo",

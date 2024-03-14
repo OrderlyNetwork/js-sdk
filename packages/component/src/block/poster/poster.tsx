@@ -1,11 +1,11 @@
-import { drawOptions, usePoster } from "@orderly.network/hooks";
+import { type DrawOptions, usePoster } from "@orderly.network/hooks";
 import { FC, forwardRef, useImperativeHandle } from "react";
 
 export type PosterProps = {
   width: number;
   height: number;
   className?: string;
-  data: drawOptions;
+  data: DrawOptions;
   style?: React.CSSProperties;
 };
 
@@ -29,6 +29,12 @@ export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
   }));
 
   return (
-    <canvas ref={ref} width={width} height={height} className={className} style={style}/>
+    <canvas
+      ref={ref}
+      width={width}
+      height={height}
+      className={className}
+      style={style}
+    />
   );
 });

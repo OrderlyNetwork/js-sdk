@@ -44,18 +44,38 @@ export const updateOrdersHandler = (
   // console.log(key);
   const isAlgoOrder = "algoOrderId" in updatedOrder;
 
+  const underscoreOrder = object2underscore(updatedOrder);
+
   let formattedOrder: API.Order & API.AlgoOrder = {
-    ...object2underscore(updatedOrder),
-    created_time: updatedOrder.timestamp,
+    ...underscoreOrder,
+    updated_time: updatedOrder.timestamp,
+    type: updatedOrder.type.replace("_ORDER", ""),
+    //@ts-ignore
+    // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
   };
+
+  if (typeof formattedOrder.visible_quantity === "undefined") {
+    // check visible field;
+    // @ts-ignore
+    formattedOrder.visible_quantity = updatedOrder.visible;
+  }
+
+  // console.log(formattedOrder, updatedOrder);
+
+  const hasCreateTime = "created_time" in formattedOrder;
+  if (!hasCreateTime) {
+    formattedOrder["created_time"] = updatedOrder.timestamp;
+  }
 
   if (isAlgoOrder) {
     if (typeof updatedOrder.triggerTradePrice !== "undefined") {
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
 
-    if (updatedOrder.type === "MARKET_ORDER") {
-      (formattedOrder as API.AlgoOrder).price = undefined;
+    if (formattedOrder.type === "MARKET") {
+      const {price, ...newObj} = formattedOrder;
+      // @ts-ignore
+      formattedOrder = newObj;
     }
   } else {
     // formattedOrder.created_time = updatedOrder.timestamp;
@@ -153,14 +173,14 @@ function updateOrders(
       rows: item.rows.map((order: API.Order | API.AlgoOrder) => {
         const isAlgoOrder = "algo_order_id" in order;
 
-        const updatedOrderId = isAlgoOrder
-          ? formattedOrder.algo_order_id
-          : formattedOrder.order_id;
-
         if (
-          order.algo_order_id === updatedOrderId ||
-          (order as API.Order).order_id === updatedOrderId
+          isAlgoOrder &&
+          formattedOrder?.algo_order_id === order?.algo_order_id
         ) {
+          return { ...order, ...formattedOrder };
+        }
+
+        if (!isAlgoOrder && formattedOrder?.order_id === order?.order_id) {
           return { ...order, ...formattedOrder };
         }
 
