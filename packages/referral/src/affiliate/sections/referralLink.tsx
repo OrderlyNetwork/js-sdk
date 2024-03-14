@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { HintIcon, CopyIcon } from "../icons";
-import { Input, Numeral, cn, toast } from "@orderly.network/react";
+import { Input, Numeral, Tooltip, cn, toast } from "@orderly.network/react";
 
 
 export const ReferralLink: FC<{className?: string}> = (props) => {
@@ -13,9 +13,9 @@ export const ReferralLink: FC<{className?: string}> = (props) => {
 
             <div className="orderly-mt-4 orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-3">
 
-            <div className="lg:orderly-w-1/6 orderly-flex orderly-items-center ">
-                <Info title="Earn" value={"0"} className="orderly-flex-1"/>
-                <Info title="Share" value={"0"} className="orderly-flex-1"/>
+            <div className="lg:orderly-w-1/6 orderly-flex orderly-items-center">
+                <Info title="Earn" value={"0"} className="orderly-flex-1" tooltip="40% WOOFi Pro net fee that deduct Orderly fee."/>
+                <Info title="Share" value={"0"} className="orderly-flex-1" tooltip="Your referees get 0% of their WOOFi Pro net fee"/>
             </div>
 
             <div className="lg:orderly-w-5/6 orderly-flex orderly-flex-col orderly-gap-2">
@@ -29,15 +29,17 @@ export const ReferralLink: FC<{className?: string}> = (props) => {
     );
 }
 
-const Info: FC<{ title: string, value: any, className?: string }> = (props) => {
+const Info: FC<{ title: string, value: any, className?: string, tooltip: any }> = (props) => {
 
-    const { title, value, className } = props;
+    const { title, value, className, tooltip } = props;
 
     return (
         <div className={className}>
             <div className={cn("orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs" )}>
                 {title}
-                <HintIcon className="orderly-ml-2" />
+                <Tooltip content={tooltip} className="orderly-max-w-[200px]">
+                    <div><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1}  /></div>
+                </Tooltip>
             </div>
             <div className="orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px]">
                 <Numeral>
