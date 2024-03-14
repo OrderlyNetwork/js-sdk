@@ -296,3 +296,6 @@ body {
 .orderly-referral .orderly-referral-shadow {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+.orderly-referral .orderly-referral-download-btn-bg {
+  background-color: rgba(75, 83, 105, 1);
+}

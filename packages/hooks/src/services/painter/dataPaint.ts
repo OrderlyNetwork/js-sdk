@@ -6,7 +6,7 @@ export class DataPaint extends BasePaint {
   private positionInfoCellWidth = 110;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
-  private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
+  private DEFAULT_LOSS_COLOR = "rgb(255,103,194)";
 
   private transformTop = 0;
 
@@ -80,9 +80,9 @@ export class DataPaint extends BasePaint {
     if (typeof options.data?.position.side !== "undefined") {
       prevElementBoundingBox = this._drawText(options.data.position.side, {
         color:
-          options.data?.position.side === "LONG"
+          options.data?.position.side.toUpperCase() === "LONG"
             ? this.DEFAULT_PROFIT_COLOR
-            : this.DEFAULT_LOSE_COLOR,
+            : this.DEFAULT_LOSS_COLOR,
         left,
         top: this._ratio(top),
         fontSize: this._ratio(fontSize),
@@ -163,7 +163,7 @@ export class DataPaint extends BasePaint {
           color:
             prefix === "+"
               ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-              : options.lossColor || this.DEFAULT_LOSE_COLOR,
+              : options.lossColor || this.DEFAULT_LOSS_COLOR,
           left,
           top: this._ratio(top),
 
@@ -191,7 +191,7 @@ export class DataPaint extends BasePaint {
         typeof options.data.position.ROI === "undefined"
           ? prefix === "+"
             ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-            : options.lossColor || this.DEFAULT_LOSE_COLOR
+            : options.lossColor || this.DEFAULT_LOSS_COLOR
           : layout.secondaryColor;
 
       const fontSize =

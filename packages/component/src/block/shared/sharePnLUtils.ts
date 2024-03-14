@@ -38,22 +38,22 @@ export function getPnLPosterData(
     const positionData: any = {
         symbol,
         currency,
-        side: position.position_qty > 0 ? "Long" : "Short",
+        side: position.position_qty > 0 ? "LONG" : "SHORT",
     };
 
 
     switch (pnlType) {
         case "pnl": {
-            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi": {
-            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi_pnl": {
-            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
-            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI.toFixed(2)).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
     }
