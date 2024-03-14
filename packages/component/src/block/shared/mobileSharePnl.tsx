@@ -77,7 +77,7 @@ export const MobileSharePnLContent: FC<{
     const data = posterRef.current?.toDataURL();
     const blob = dataURItoBlob(data);
     try {
-      // 检查浏览器是否支持分享功能
+      // Check if the browser supports the share feature
       if (navigator.share) {
         await navigator.share({
           title: "Share PnL",
@@ -313,7 +313,7 @@ const ShareOption: FC<{
       {isSelected && <CircleCheckIcon size={20} />}
     </div>
   );
-}; // 将 base64 图片数据转换为 Blob 对象
+};
 function dataURItoBlob(dataURI: string) {
   const byteString = atob(dataURI.split(",")[1]);
   const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];

@@ -33,7 +33,6 @@ export const SectionBase: FC<Props> = (props) => {
         field="description"
         label={{
           text: "Description",
-          // extra: <Tooltip content='详情'><IconHelpCircle style={{ color: 'var(--semi-color-text-2)' }}/></Tooltip>
         }}
       />
 
