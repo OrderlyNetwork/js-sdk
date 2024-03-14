@@ -33,10 +33,14 @@ export const SharePoisitionView = create<{
         <MobileSharePnL
             position={position}
             leverage={leverage}
+            baseDp={base_dp}
+            quoteDp={quote_dp}
         /> :
         <DesktopSharePnL
             position={position}
             leverage={leverage}
+            baseDp={base_dp}
+            quoteDp={quote_dp}
         />;
 });
 
@@ -57,7 +61,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
         >
             <SheetHeader
                 id="orderly-asset-and-margin-sheet-title"
-                leading={<Logo.secondary size={30} />}
+                // leading={<Logo.secondary size={30} />}
             >
                 PnL Sharing
             </SheetHeader>
