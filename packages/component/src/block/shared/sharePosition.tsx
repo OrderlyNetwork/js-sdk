@@ -6,7 +6,6 @@ import { useLeverage, useMediaQuery, useSymbolsInfo } from "@orderly.network/hoo
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
-import { Logo } from "@/logo";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePoisitionView = create<{
@@ -20,14 +19,6 @@ export const SharePoisitionView = create<{
 
     const base_dp = symbolInfo?.("base_dp");
     const quote_dp = symbolInfo?.("quote_dp");
-    const base_tick = symbolInfo?.("base_tick");
-    const quote_tick = symbolInfo?.("quote_tick");
-
-    console.log("symbolInfo", base_dp,
-    quote_dp,
-    base_tick,
-    quote_tick,);
-    
 
     return isTablet ?
         <MobileSharePnL
@@ -58,6 +49,7 @@ const MobileSharePnL: FC<PropsWithChildren<{
 
     return (<Sheet open={visible} onOpenChange={onOpenChange}>
         <SheetContent
+        className="orderly-px-4"
         >
             <SheetHeader
                 id="orderly-asset-and-margin-sheet-title"

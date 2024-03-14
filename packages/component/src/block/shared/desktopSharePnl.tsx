@@ -453,9 +453,9 @@ const CarouselBackgroundImage: FC<{
                 emblaApi?.scrollTo(index);
               }}
               className={cn(
-                "orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-h-[92px] orderly-rounded-sm",
+                "orderly-shrink-0 orderly-mx-2 orderly-w-[162px] orderly-my-1 orderly-mr-[21px] orderly-rounded-sm",
                 selectedSnap === index &&
-                  "orderly-border orderly-border-primary"
+                  "orderly-outline orderly-outline-1 orderly-outline-primary"
               )}
             >
               <img src={e} className="orderly-rounded-sm" />
