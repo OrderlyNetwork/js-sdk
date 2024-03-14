@@ -8,6 +8,7 @@ import { useSymbolContext } from "@/provider/symbolProvider";
 import { TickerMask } from "./tickerMask";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
 import { OrderlyIcon } from "@/icon";
+import { Decimal } from "@orderly.network/utils";
 
 interface Props {
   symbol: string;
@@ -19,7 +20,7 @@ export const Ticker: FC<Props> = (props) => {
   const [leadingVisible, setLeadingVisible] = useState(false);
   const [tailingVisible, setTailingVisible] = useState(false);
 
-  const { base } = useSymbolContext();
+  const { base, quote } = useSymbolContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const leadingElementRef = useRef<HTMLDivElement>(null);
   const tailingElementRef = useRef<HTMLDivElement>(null);
@@ -80,7 +81,7 @@ export const Ticker: FC<Props> = (props) => {
             value={
               <div className={"orderly-flex orderly-space-x-1"}>
                 {/* @ts-ignore */}
-                <Numeral coloring>{data?.["24h_change"]}</Numeral>
+                <NumeralWithCtx coloring>{data?.["24h_change"]}</NumeralWithCtx>
                 <span className={"orderly-text-base-contrast-54"}>/</span>
                 <Numeral coloring rule={"percentages"}>
                   {/* @ts-ignore */}
@@ -98,8 +99,8 @@ export const Ticker: FC<Props> = (props) => {
 
           <Statistic
             label={"Index"}
-            // value={<NumeralWithCtx>data?.index_price</NumeralWithCtx>}
-            value={data?.index_price}
+            value={<NumeralWithCtx>{data?.index_price}</NumeralWithCtx>}
+            // value={data?.index_price}
             rule={"price"}
             hint="Average of the last prices across other exchanges."
           />
@@ -117,7 +118,14 @@ export const Ticker: FC<Props> = (props) => {
           <MemoizedCompnent symbol={props.symbol} />
           <Statistic
             label={"Open interest"}
-            value={<Numeral unit={base}>{data?.open_interest}</Numeral>}
+            value={
+              <Numeral rule="human" unit={quote}>
+                {new Decimal(data?.open_interest ?? 0)
+                  .mul(data?.index_price ?? 0)
+                  .toDecimalPlaces(2)
+                  .valueOf()}
+              </Numeral>
+            }
             rule={"price"}
             hint="Total size of positions per side."
           />
