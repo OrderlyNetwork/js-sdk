@@ -1,5 +1,16 @@
 # examples
 
+## 0.2.5-internal.10
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.10
+  - @orderly.network/web3-onboard@0.1.5-internal.10
+  - @orderly.network/hooks@1.1.5-internal.10
+  - @orderly.network/core@0.2.5-internal.10
+
 ## 0.2.5-internal.9
 
 ### Patch Changes
