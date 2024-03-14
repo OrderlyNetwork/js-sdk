@@ -43,7 +43,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
     formState: { errors, submitCount, isSubmitting },
   } = useForm({
     values: {
-      order_price: undefined,
+      order_price: Math.abs(position?.mark_price!),
       order_quantity: Math.abs(position?.position_qty!),
       symbol: position?.symbol,
       order_type: OrderType.LIMIT,
