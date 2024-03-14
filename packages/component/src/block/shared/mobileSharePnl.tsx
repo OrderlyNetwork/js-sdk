@@ -253,7 +253,7 @@ const PnlFormatView: FC<{
       className={cn(
         "orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-2",
         isSelected &&
-          "orderly-outline orderly-outline-primary orderly-outline-1"
+          "orderly-bg-primary"
       )}
       onClick={() => {
         setPnlFormat(type);
