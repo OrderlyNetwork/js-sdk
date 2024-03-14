@@ -21,6 +21,8 @@ export const MobileSharePnLContent: FC<{
   position: any;
   leverage: any;
   hide: any;
+  baseDp?: number;
+  quoteDp?: number;
 }> = (props) => {
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
@@ -28,6 +30,7 @@ export const MobileSharePnLContent: FC<{
   );
   const [message, setMessage] = useState("");
   const { shareOptions } = useContext(OrderlyAppContext);
+  const { backgroundImages, ...resetOptions } = shareOptions.pnl;
 
   const [domain, setDomain] = useState("");
 
@@ -47,7 +50,9 @@ export const MobileSharePnLContent: FC<{
     message,
     domain,
     pnlFormat,
-    shareOption
+    shareOption,
+    props.baseDp,
+    props.quoteDp
   );
   // console.log("pster data", posterData, props.position);
 
@@ -72,6 +77,7 @@ export const MobileSharePnLContent: FC<{
     const data = posterRef.current?.toDataURL();
     const blob = dataURItoBlob(data);
     try {
+      // 检查浏览器是否支持分享功能
       if (navigator.share) {
         await navigator.share({
           title: "Share PnL",
@@ -109,14 +115,9 @@ export const MobileSharePnLContent: FC<{
                   width={552}
                   height={310}
                   data={{
-                    fontFamily: shareOptions.pnl.fontFamily,
                     backgroundImg: item,
-                    color: "rgba(255, 255, 255, 0.98)",
-                    profitColor: "rgb(0,181,159)",
-                    loseColor: "rgb(255,103,194)",
-                    brandColor: "rgb(0,181,159)",
+                    ...resetOptions,
                     data: posterData,
-                    layout: {},
                   }}
                   ref={posterRefs[index]}
                 />
@@ -250,7 +251,7 @@ const PnlFormatView: FC<{
   return (
     <div
       className={cn(
-        "orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3",
+        "orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-2",
         isSelected &&
           "orderly-outline orderly-outline-primary orderly-outline-1"
       )}
@@ -258,10 +259,8 @@ const PnlFormatView: FC<{
         setPnlFormat(type);
       }}
     >
-      <div className="orderly-text-sm orderly-flex-1 orderly-text-base-contrast">
-        {text}
-      </div>
-      {isSelected && <RadioIcon size={20} />}
+      <div className="orderly-text-sm orderly-text-base-contrast">{text}</div>
+      {/* {isSelected && <RadioIcon size={20} />} */}
     </div>
   );
 };
@@ -314,7 +313,7 @@ const ShareOption: FC<{
       {isSelected && <CircleCheckIcon size={20} />}
     </div>
   );
-};
+}; // 将 base64 图片数据转换为 Blob 对象
 function dataURItoBlob(dataURI: string) {
   const byteString = atob(dataURI.split(",")[1]);
   const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];

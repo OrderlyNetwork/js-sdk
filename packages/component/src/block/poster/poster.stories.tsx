@@ -13,7 +13,7 @@ const POSTERS = [
     backgroundImg: "/images/poster_bg_5.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
-    loseColor: "rgb(255,103,194)",
+    lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
       message: "I am the WOO KING.",
@@ -41,7 +41,7 @@ const POSTERS = [
     backgroundImg: "/images/poster_bg_1.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
-    loseColor: "rgb(255,103,194)",
+    lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
       message: "I am the WOO KING.",
@@ -69,7 +69,7 @@ const POSTERS = [
     backgroundImg: "/images/poster_bg_5.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
-    loseColor: "rgb(255,103,194)",
+    lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
       message: "I am the WOO KING.",
@@ -97,7 +97,7 @@ const POSTERS = [
     backgroundImg: "/images/poster_bg_2.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
-    loseColor: "rgb(255,103,194)",
+    lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
       message: "I am the WOO KING.",
@@ -130,7 +130,7 @@ const meta: Meta = {
     backgroundImg: "/images/poster_bg_3.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
-    loseColor: "rgb(255,103,194)",
+    lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
       message: "I am the WOO KING.",
@@ -158,7 +158,7 @@ const meta: Meta = {
     backgroundColor: { control: "color" },
     brandColor: { control: "color" },
     profitColor: { control: "color" },
-    loseColor: { control: "color" },
+    lossColor: { control: "color" },
     color: { control: "color" },
     backgroundImg: { control: { type: "file", accept: ".png" } },
     data: { control: "object" },

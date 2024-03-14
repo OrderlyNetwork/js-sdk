@@ -44,23 +44,38 @@ export const updateOrdersHandler = (
   // console.log(key);
   const isAlgoOrder = "algoOrderId" in updatedOrder;
 
+  const underscoreOrder = object2underscore(updatedOrder);
+
   let formattedOrder: API.Order & API.AlgoOrder = {
-    ...object2underscore(updatedOrder),
+    ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
     type: updatedOrder.type.replace("_ORDER", ""),
+    //@ts-ignore
+    // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
   };
 
-  if (isAlgoOrder) {
-    if (formattedOrder?.created_time === undefined) {
-      formattedOrder["created_time"] = updatedOrder.timestamp;
-    }
+  if (typeof formattedOrder.visible_quantity === "undefined") {
+    // check visible field;
+    // @ts-ignore
+    formattedOrder.visible_quantity = updatedOrder.visible;
+  }
 
+  // console.log(formattedOrder, updatedOrder);
+
+  const hasCreateTime = "created_time" in formattedOrder;
+  if (!hasCreateTime) {
+    formattedOrder["created_time"] = updatedOrder.timestamp;
+  }
+
+  if (isAlgoOrder) {
     if (typeof updatedOrder.triggerTradePrice !== "undefined") {
       formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
     }
 
-    if (updatedOrder.type === "MARKET") {
-      (formattedOrder as API.AlgoOrder).price = undefined;
+    if (formattedOrder.type === "MARKET") {
+      const {price, ...newObj} = formattedOrder;
+      // @ts-ignore
+      formattedOrder = newObj;
     }
   } else {
     // formattedOrder.created_time = updatedOrder.timestamp;

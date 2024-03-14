@@ -6,11 +6,10 @@ import {
 } from "./timeIntervalToolbar";
 import { type TradingViewChartProps } from "./tradingViewChart";
 import { TimeInterval } from "@/block/tradingView/types";
-import {
-  TradingView,
-  TradingViewOptions,
-  ChartMode,
-} from "@orderly.network/trading-view";
+import { TradingView, ChartMode } from "@orderly.network/trading-view";
+
+import { toast } from "@/toast";
+import { Spinner } from "@/spinner";
 
 export type TradingViewChartConfig = TradingViewChartProps &
   TimeIntervalToolbarProps & {
@@ -61,6 +60,8 @@ export const TradingViewChart: FC<TradingViewChartConfig> = (props) => {
         tradingViewScriptSrc={props?.scriptSRC}
         tradingViewCustomCssUrl={props?.customCssUrl}
         overrides={props.overrides}
+        onToast={toast}
+        loadingElement={<Spinner />}
       />
     </div>
   );

@@ -89,7 +89,7 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "prod" });
+      const configStore = new CustomConfigStore({ networkId, env: "qa" });
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
@@ -120,6 +120,10 @@ const preview = {
                   "/images/poster_bg_4.png",
                   "/images/poster_bg_5.png",
                 ],
+                // color: "rgba(255, 255, 255, 0.98)",
+                // profitColor: "rgb(255,0,0)",
+                // lossColor: "rgb(0,0,255)",
+                // brandColor: "rgb(0,181,159)",
               },
             }}
             onChainChanged={(networkId, isTestnet) => {

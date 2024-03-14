@@ -19,7 +19,7 @@ import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
 import { OrderFactory, availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
-import { order } from "@orderly.network/perp";
+import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -568,7 +568,7 @@ export function useOrderEntry(
     ee.on("orderbook:update", onOrderbookUpdate);
 
     return () => {
-      ee.off("orderbook_update", onOrderbookUpdate);
+      ee.off("orderbook:update", onOrderbookUpdate);
     };
   }, [optionsValue?.watchOrderbook]);
 
@@ -657,13 +657,20 @@ export function useOrderEntry(
     const { price, quantity } = result;
     if (!price || !quantity) return null;
 
-    const liqPrice = order.estLiqPrice({
+    const orderFee = orderUtils.orderFee({
+      qty: quantity,
+      price,
+      futuresTakeFeeRate: Number(accountInfo["futures_taker_fee_rate"]) / 10000,
+    });
+
+    const liqPrice = orderUtils.estLiqPrice({
       markPrice,
       baseIMR,
       baseMMR,
       totalCollateral,
       positions,
       IMR_Factor: accountInfo["imr_factor"][symbol],
+      orderFee,
       newOrder: {
         qty: quantity,
         price,
@@ -693,7 +700,7 @@ export function useOrderEntry(
     const result = getPriceAndQty(formattedOrder as OrderEntity);
     if (result === null || !result.price || !result.quantity) return null;
 
-    const leverage = order.estLeverage({
+    const leverage = orderUtils.estLeverage({
       totalCollateral,
       positions,
       newOrder: {

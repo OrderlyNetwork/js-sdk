@@ -17,6 +17,7 @@ import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
 import { cleanStringStyle } from "@orderly.network/hooks";
+import { Input } from "@/input";
 
 export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -95,6 +96,7 @@ const EditingState: FC<{
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
+    console.log("cancel popover");
     setOpen(-1);
     setQuantity(order.quantity.toString());
   };
@@ -145,8 +147,6 @@ const EditingState: FC<{
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-
-      inputRef.current?.blur();
       onClick();
     }
   };
@@ -249,7 +249,7 @@ const EditingState: FC<{
         </div>
 
         <PopoverAnchor asChild>
-          <input
+          <Input
             ref={inputRef}
             type="text"
             value={commify(quantity)}
@@ -265,7 +265,8 @@ const EditingState: FC<{
             }}
             onKeyDown={handleKeyDown}
             autoFocus
-            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
+            containerClassName="orderly-h-auto orderly-pl-7"
+            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
           />
         </PopoverAnchor>
         <div
