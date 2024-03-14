@@ -51,7 +51,11 @@ const AssetsDetail = () => {
           title="Free collateral"
           className="orderly-text-xs"
         />
-        <Numeral>{freeCollateral}</Numeral>
+        <Numeral
+          surfix={<span className={"orderly-text-base-contrast-36"}>USDC</span>}
+        >
+          {freeCollateral}
+        </Numeral>
       </div>
       <div className={"orderly-flex orderly-justify-between"}>
         <Tooltip
