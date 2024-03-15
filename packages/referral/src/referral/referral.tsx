@@ -18,7 +18,7 @@ export const Referral = () => {
     }
 
     // if (!isAffilate && !isTrader) {
-        return <Dashboard />
+    //     return <Dashboard />
     // }
 
     return (

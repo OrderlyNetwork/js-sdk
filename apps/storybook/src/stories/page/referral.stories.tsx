@@ -18,14 +18,15 @@ export default {
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   //   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  // argTypes: {},
-  //   decorators: [
-  //     (Story) => (
-  //       <OrderlyAppProvider brokerId="orderly" networkId="testnet">
-  //         <Story />
-  //       </OrderlyAppProvider>
-  //     ),
-  //   ],
+  argTypes: {},
+    decorators: [
+      (Story) => (
+        <ReferralProvider becomeAnAffiliateUrl="https://orderly.network"
+        learnAffiliateUrl="https://orderly.network">
+          <Story />
+        </ReferralProvider>
+      ),
+    ],
 };
 
 type Story = StoryObj<typeof Dashboard>;
@@ -33,14 +34,15 @@ type Story = StoryObj<typeof Dashboard>;
 export const Default: Story = {
   render: (args, { globals }) => {
 
-    return (
-      <ReferralProvider 
-        becomeAnAffiliateUrl="https://orderly.network"
-        learnAffiliateUrl="https://orderly.network"
-      >
-        <Referral />
-      </ReferralProvider>
-    );
+    return <Referral />;
+    // return (
+    //   <ReferralProvider 
+    //     becomeAnAffiliateUrl="https://orderly.network"
+    //     learnAffiliateUrl="https://orderly.network"
+    //   >
+    //     <Referral />
+    //   </ReferralProvider>
+    // );
   }
 };
 

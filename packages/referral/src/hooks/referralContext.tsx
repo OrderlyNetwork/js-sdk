@@ -1,5 +1,6 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
 import { FC, PropsWithChildren, createContext } from "react";
+import { API } from "../types/api";
 
 export type ReferralContextProps = {
     becomeAnAffiliate?: () => void,
@@ -10,7 +11,7 @@ export type ReferralContextProps = {
 }
 
 export type ReferralContextReturns = {
-    referralInfo: any,
+    referralInfo?: API.ReferralInfo,
     isAffiliate?: boolean,
     isTrader?: boolean,
     mutate: any,
@@ -27,7 +28,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         learnAffiliateUrl,
     } = props;
 
-    const { data, mutate } = usePrivateQuery<any>("/v1/referral/info", {
+    const { data, mutate } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
         revalidateOnFocus: true,
     });
 
