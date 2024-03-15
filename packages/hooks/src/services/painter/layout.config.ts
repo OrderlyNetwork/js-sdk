@@ -4,6 +4,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   domain: {
     fontSize: 13,
     // color: undefined,
+    textBaseline: "bottom",
     position: {
       left: 20,
       bottom: 17,
@@ -50,8 +51,9 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     fontSize: 10,
     color: "rgba(255,255,255,0.5)",
     textAlign: "end",
+    textBaseline: "bottom",
     position: {
-      right: 15,
+      right: 20,
       bottom: 17,
     },
   },
