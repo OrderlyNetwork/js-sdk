@@ -23,6 +23,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
+import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -371,7 +372,7 @@ export function useOrderEntry(
           maxQty,
           markPrice: markPrice,
         })
-        .then((errors) => {
+        .then((errors: any) => {
           submitted.current = true;
 
           if (
@@ -540,7 +541,7 @@ export function useOrderEntry(
   useEffect(() => {
     if (!markPrice) return;
     // validate order data;
-    validator(formattedOrder)?.then((err) => {
+    validator(formattedOrder)?.then((err: VerifyResult) => {
       setErrors(err);
     });
   }, [

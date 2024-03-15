@@ -7,6 +7,8 @@ import {
   priceToOffsetPercentage,
   pnlToPrice,
   priceToPnl,
+  calculateHelper,
+  UpdateOrderKey,
 } from "../utils"; // Import functions to be tested
 import { OrderSide } from "@orderly.network/types";
 
@@ -301,6 +303,103 @@ describe("TP/SL Utils function", () => {
       };
 
       expect(priceToPnl(inputs)).toBe(-100);
+    });
+  });
+
+  describe("calculateHelper: Side = OrderSide.BUY", () => {
+    const inputs = {
+      key: "tp_trigger_price" as UpdateOrderKey,
+      value: 67000,
+      entryPrice: 66000,
+      qty: 0.1,
+      orderSide: OrderSide.BUY,
+      orderType: AlgoOrderType.TAKE_PROFIT,
+    };
+
+    test("Calculates trigger price correctly for tp_trigger_price key", () => {
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        tp_trigger_price: 67000,
+        tp_offset: 1000,
+        tp_offset_percentage: 0.015151515151515152,
+        tp_pnl: 100,
+      });
+    });
+
+    test("Calculates trigger price correctly for sl_trigger_price key", () => {
+      inputs.key = "sl_trigger_price";
+      inputs.value = 65000;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        sl_trigger_price: 65000,
+        sl_offset: 1000,
+        sl_offset_percentage: 0.015151515151515152,
+        sl_pnl: -100,
+      });
+    });
+
+    test("Calculates trigger price correctly for tp_pnl key", () => {
+      inputs.key = "tp_pnl";
+      inputs.value = 200;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        tp_trigger_price: 68000,
+        tp_offset: 2000,
+        tp_offset_percentage: 0.030303030303030304,
+        tp_pnl: 200,
+      });
+    });
+
+    test("Calculates trigger price correctly for sl_pnl key", () => {
+      inputs.key = "sl_pnl";
+      inputs.value = -500;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        sl_trigger_price: 61000,
+        sl_offset: 5000,
+        sl_offset_percentage: 0.07575757575757576,
+        sl_pnl: -500,
+      });
+    });
+
+    test("Calculates trigger price correctly for tp_offset key", () => {
+      inputs.key = "tp_offset";
+      inputs.value = 5000;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        tp_trigger_price: 71000,
+        tp_offset: 5000,
+        tp_offset_percentage: 0.07575757575757576,
+        tp_pnl: 500,
+      });
+    });
+
+    test("Calculates trigger price correctly for sl_offset key", () => {
+      inputs.key = "sl_offset";
+      inputs.value = 1000;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        sl_trigger_price: 65000,
+        sl_offset: inputs.value,
+        sl_offset_percentage: 0.015151515151515152,
+        sl_pnl: -100,
+      });
+    });
+
+    test("Calculates trigger price correctly for tp_offset_percentage key", () => {
+      inputs.key = "tp_offset_percentage";
+      inputs.value = 0.15;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        tp_trigger_price: 75900,
+        tp_offset: 9900,
+        tp_offset_percentage: inputs.value,
+        tp_pnl: 990,
+      });
+    });
+
+    test("Calculates trigger price correctly for sl_offset_percentage key", () => {
+      inputs.key = "sl_offset_percentage";
+      inputs.value = 0.15;
+      expect(calculateHelper(inputs.key, inputs)).toEqual({
+        sl_trigger_price: 56100,
+        sl_offset: 9900,
+        sl_offset_percentage: inputs.value,
+        sl_pnl: -990,
+      });
     });
   });
 });

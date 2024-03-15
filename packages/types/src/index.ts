@@ -6,11 +6,16 @@ export {
   OrderType,
   OrderSide,
   OrderStatus,
-  AlogRootOrderType,
+  AlogOrderRootType,
   AlgoOrderType,
   TriggerPriceType,
 } from "./order";
-export type { OrderEntity, AlgoOrderEntry } from "./order";
+export type {
+  OrderEntity,
+  AlgoOrderEntry,
+  TPSLOrderEntry,
+  BaseAlgoOrderEntry,
+} from "./order";
 export * from "./withdraw";
 export * from "./chains";
 export type { ChainConfig, ChainInfo, NativeCurrency } from "./chains";

@@ -8,7 +8,7 @@ import { AlgoOrderEntry } from "@orderly.network/types";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
-export class LimitOrderCreator extends BaseOrderCreator {
+export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
   create(values: OrderEntity, config: ValuesDepConfig): OrderEntity {
     const order = {
       ...this.baseOrder(values),

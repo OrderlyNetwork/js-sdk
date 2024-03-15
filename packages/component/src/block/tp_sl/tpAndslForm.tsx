@@ -11,6 +11,10 @@ import { PnlInput } from "@/block/tp_sl/pnlInput";
 
 export interface Props {
   symbol: string;
+  /**
+   * Base tick size
+   */
+  // base_tick: number;
   onChange: (key: string, value: number | string) => void;
   maxQty: number;
   onSubmit: () => Promise<void>;
@@ -67,10 +71,16 @@ export const TPForm: FC<Props> = (props) => {
         />
         <Slider
           min={0}
-          max={maxQty}
           color={"primary"}
-          value={[100]}
+          max={Math.abs(maxQty)}
           markCount={4}
+          step={symbolInfo("base_tick")}
+          value={[Number(order.quantity ?? maxQty)]}
+          onValueChange={(value) => {
+            if (typeof value[0] !== "undefined") {
+              props.onChange("quantity", value[0]);
+            }
+          }}
           className={"orderly-mt-2"}
         />
         <div

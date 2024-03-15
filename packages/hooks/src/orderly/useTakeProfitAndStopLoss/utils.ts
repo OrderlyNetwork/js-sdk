@@ -5,12 +5,14 @@ import { Decimal } from "@orderly.network/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"
-  | "sl_trigger_price"
-  | "quantity"
-  | "tp_offset"
-  | "sl_offset"
   | "tp_offset_percentage"
-  | "sl_offset_percentage";
+  | "tp_pnl"
+  | "tp_offset"
+  | "quantity"
+  | "sl_trigger_price"
+  | "sl_offset_percentage"
+  | "sl_pnl"
+  | "sl_offset";
 
 /**
  * offset -> TP/SL price
@@ -213,8 +215,118 @@ export function priceToPnl(inputs: {
 
 export function calculateHelper(
   key: UpdateOrderKey,
-  inputs: Record<string, any>
-) {
-  switch (key) {
+  inputs: {
+    key: UpdateOrderKey;
+    value: number;
+    entryPrice: number;
+    qty: number;
+    orderSide: OrderSide;
   }
+) {
+  // if not need to be computed, return the value directly
+  if (
+    key !== "quantity" &&
+    key !== "tp_trigger_price" &&
+    key !== "sl_trigger_price" &&
+    key !== "tp_pnl" &&
+    key !== "sl_pnl" &&
+    key !== "tp_offset" &&
+    key !== "sl_offset" &&
+    key !== "tp_offset_percentage" &&
+    key !== "sl_offset_percentage"
+  ) {
+    return {
+      [key]: inputs.value,
+    };
+  }
+
+  const orderType = key.startsWith("tp_")
+    ? AlgoOrderType.TAKE_PROFIT
+    : AlgoOrderType.STOP_LOSS;
+  const keyPrefix = key.slice(0, 3);
+
+  let qty = key === "quantity" ? inputs.value : inputs.qty;
+
+  let trigger_price, offset, offset_percentage, pnl;
+
+  switch (key) {
+    case "tp_trigger_price":
+    case "sl_trigger_price": {
+      trigger_price = inputs.value;
+      break;
+    }
+
+    case "tp_pnl":
+    case "sl_pnl": {
+      pnl = inputs.value;
+      trigger_price = pnlToPrice({
+        qty,
+        pnl: inputs.value,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      });
+      break;
+    }
+
+    case "tp_offset":
+    case "sl_offset": {
+      offset = inputs.value;
+      trigger_price = offsetToPrice({
+        qty,
+        offset: inputs.value,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType:
+          key === "tp_offset"
+            ? AlgoOrderType.TAKE_PROFIT
+            : AlgoOrderType.STOP_LOSS,
+      });
+      break;
+    }
+
+    case "tp_offset_percentage":
+    case "sl_offset_percentage": {
+      offset_percentage = inputs.value;
+      trigger_price = offsetPercentageToPrice({
+        qty,
+        percentage: inputs.value,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      });
+      break;
+    }
+  }
+
+  return {
+    [`${keyPrefix}trigger_price`]: trigger_price,
+    [`${keyPrefix}offset`]:
+      offset ??
+      priceToOffset({
+        qty,
+        price: trigger_price!,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      }),
+    [`${keyPrefix}offset_percentage`]:
+      offset_percentage ??
+      priceToOffsetPercentage({
+        qty,
+        price: trigger_price!,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      }),
+    [`${keyPrefix}pnl`]:
+      pnl ??
+      priceToPnl({
+        qty,
+        price: trigger_price!,
+        entryPrice: inputs.entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      }),
+  };
 }

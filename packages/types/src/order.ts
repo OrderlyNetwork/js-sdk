@@ -17,7 +17,7 @@ export enum OrderType {
   CLOSE_POSITION = "CLOSE_POSITION",
 }
 
-export enum AlogRootOrderType {
+export enum AlogOrderRootType {
   TP_SL = "TP_SL",
   POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
   STOP = "STOP",
@@ -56,7 +56,7 @@ export enum OrderStatus {
 export interface OrderEntity {
   symbol: string;
   order_type: OrderType;
-  algo_type?: AlogRootOrderType;
+  algo_type?: AlogOrderRootType;
   order_type_ext?: OrderType;
   order_price?: string | number;
   order_quantity?: string | number;
@@ -74,11 +74,17 @@ export interface OrderEntity {
   trigger_price?: string | number;
 }
 
-export interface AlgoOrderEntry {
-  algo_type: AlogRootOrderType;
-  // child_orders?: (Partial<AlgoOrderEntry> & {
-  //   order_type: AlgoOrderType;
-  // })[];
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+type RequireKeys<T extends object, K extends keyof T> = Required<Pick<T, K>> &
+  Omit<T, K>;
+
+export interface BaseAlgoOrderEntry<T extends AlogOrderRootType>
+  extends OrderEntity {
+  algo_type: AlogOrderRootType;
+  child_orders: (Partial<Omit<AlgoOrderEntry<T>, "algo_type" | "type">> & {
+    algo_type: AlgoOrderType;
+    type: OrderType;
+  })[];
   client_order_id?: string;
   order_tag?: string;
   price?: number | string;
@@ -89,11 +95,25 @@ export interface AlgoOrderEntry {
   trigger_price: number | string;
   trigger_price_type: TriggerPriceType;
   type: OrderType;
-  visible_quantity?: number | string;
+  visible_quantity?: number;
   tp_trigger_price?: string | number;
   sl_trigger_price?: string | number;
 }
 
-export type AlgoOrderEntryExt = AlgoOrderEntry & {
-  // internal fields
-};
+export type AlgoOrderEntry<
+  T extends AlogOrderRootType = AlogOrderRootType.STOP
+> = T extends AlogOrderRootType.TP_SL
+  ? Optional<
+      BaseAlgoOrderEntry<T>,
+      "side" | "type" | "trigger_price" | "order_type"
+    >
+  : Omit<BaseAlgoOrderEntry<T>, "child_orders" | "order_type">;
+
+export type TPSLOrderEntry = Optional<
+  AlgoOrderEntry<AlogOrderRootType.TP_SL>,
+  "side" | "type" | "trigger_price"
+>;
+
+// export type AlgoOrderEntryExt = AlgoOrderEntry & {
+//   // internal fields
+// };

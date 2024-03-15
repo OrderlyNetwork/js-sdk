@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
+import React from "react";
 import { TPForm } from "./tpAndslForm";
 import {
   within,
@@ -11,6 +11,8 @@ import {
 import { expect } from "@storybook/jest";
 
 import { PnLMode } from "./pnlInput";
+
+import { useTaskProfitAndStopLoss } from "@orderly.network/hooks";
 
 const meta: Meta = {
   title: "Block/TP&SL Form",
@@ -126,5 +128,42 @@ export const Default: Story = {
     order: {
       quantity: 1.2,
     },
+  },
+};
+
+export const WithHooks: Story = {
+  render: () => {
+    const positon = {
+      symbol: "PERP_BTC_USDC",
+      position_qty: 0.01737,
+      cost_position: 1183.642321,
+      last_sum_unitary_funding: 5749.6,
+      pending_long_qty: 0,
+      pending_short_qty: 0,
+      settle_price: 68142.90852044,
+      average_open_price: 68549.7,
+      unsettled_pnl: 8.893292,
+      mark_price: 68654.9,
+      est_liq_price: 0,
+      timestamp: 1710488695826,
+      imr: 0.1,
+      mmr: 0.025,
+      IMR_withdraw_orders: 0.1,
+      MMR_with_orders: 0.025,
+      pnl_24_h: 0.828036,
+      fee_24_h: 2.534924,
+    };
+    const [order, { setValue }] = useTaskProfitAndStopLoss(positon);
+    return (
+      <TPForm
+        symbol={"PERP_BTC_USDC"}
+        onChange={setValue}
+        maxQty={positon.position_qty}
+        onSubmit={function (): Promise<void> {
+          throw new Error("Function not implemented.");
+        }}
+        order={order}
+      />
+    );
   },
 };

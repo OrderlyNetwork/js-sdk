@@ -2,8 +2,8 @@ import { OrderEntity } from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 
-export class MarketOrderCreator extends BaseOrderCreator {
-  create(values: OrderEntity): OrderEntity {
+export class MarketOrderCreator extends BaseOrderCreator<OrderEntity> {
+  create(values: OrderEntity) {
     const data = this.baseOrder(values);
 
     delete data["order_price"];

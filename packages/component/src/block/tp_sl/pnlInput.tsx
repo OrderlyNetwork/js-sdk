@@ -14,10 +14,10 @@ interface Props {
   quote: string;
   onChange: (key: string, value: number | string) => void;
   testId?: string;
-  values: {
-    pnl: string;
-    offset: string;
-  };
+  // values: {
+  //   pnl: string;
+  //   offset: string;
+  // };
 }
 
 export enum PnLMode {

@@ -1,6 +1,6 @@
 import {
   AlgoOrderEntry,
-  AlogRootOrderType,
+  AlogOrderRootType,
   OrderEntity,
   OrderType,
   TriggerPriceType,
@@ -10,15 +10,19 @@ import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { pick } from "ramda";
 import { BaseOrderCreator } from "./baseCreator";
 
-export class StopMarketOrderCreator extends BaseOrderCreator {
-  create(values: OrderEntity, config: ValuesDepConfig): AlgoOrderEntry {
-    console.log("values", values, config);
-
+export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
+  create(
+    values: AlgoOrderEntry & {
+      order_quantity: number;
+      order_price: number;
+    },
+    config: ValuesDepConfig
+  ) {
     const order = {
-      ...this.baseOrder(values),
+      ...this.baseOrder(values as unknown as OrderEntity),
       // order_price: values.order_price,
       trigger_price: values.trigger_price!,
-      algo_type: AlogRootOrderType.STOP,
+      algo_type: AlogOrderRootType.STOP,
       type: OrderType.MARKET,
       quantity: values["order_quantity"]!,
       // price: values["order_price"],

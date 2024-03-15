@@ -1,4 +1,4 @@
-import { AlogRootOrderType, OrderType } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
 import { MarketOrderCreator } from "./marketOrderCreator";
 import { LimitOrderCreator } from "./limitOrderCreator";
 import { StopLimitOrderCreator } from "./stopLimitOrderCreator";
@@ -8,9 +8,12 @@ import { StopMarketOrderCreator } from "./stopMarketOrderCreator";
 import { PostOnlyOrderCreator } from "./postOnlyCreator";
 import { FOKOrderCreator } from "./fokCreator";
 import { IOCOrderCreator } from "./iocCreator";
+import { AlogOrderRootType } from "@orderly.network/types";
+import { OrderEntity } from "@orderly.network/types";
+import { AlgoOrderEntry } from "@orderly.network/types";
 
 export class OrderFactory {
-  static create(type: OrderType | AlogRootOrderType): OrderCreator {
+  static create(type: OrderType | AlogOrderRootType): OrderCreator<any> {
     switch (type) {
       case OrderType.LIMIT:
         return new LimitOrderCreator();
@@ -33,9 +36,9 @@ export class OrderFactory {
         return new StopMarketOrderCreator();
 
       // algo order
-      case AlogRootOrderType.TP_SL:
+      case AlogOrderRootType.TP_SL:
         return new GeneralOrderCreator();
-      case AlogRootOrderType.POSITIONAL_TP_SL:
+      case AlogOrderRootType.POSITIONAL_TP_SL:
         return new GeneralOrderCreator();
 
       default:

@@ -15,11 +15,8 @@ export type ValuesDepConfig = {
   markPrice: number;
 };
 
-export interface OrderCreator {
-  create: (
-    values: OrderEntity,
-    configs: ValuesDepConfig
-  ) => OrderEntity | AlgoOrderEntry;
+export interface OrderCreator<T> {
+  create: (values: T, configs: ValuesDepConfig) => T;
   validate: (
     values: OrderFormEntity,
     configs: ValuesDepConfig

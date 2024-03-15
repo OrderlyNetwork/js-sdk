@@ -2,7 +2,7 @@ import { OrderEntity } from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 
-export class GeneralOrderCreator extends BaseOrderCreator {
+export class GeneralOrderCreator extends BaseOrderCreator<OrderEntity> {
   create(data: OrderEntity): OrderEntity {
     return {
       ...this.baseOrder(data),

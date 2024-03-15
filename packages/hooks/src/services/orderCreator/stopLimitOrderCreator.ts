@@ -1,6 +1,6 @@
 import {
   AlgoOrderEntry,
-  AlogRootOrderType,
+  AlogOrderRootType,
   OrderEntity,
   TriggerPriceType,
 } from "@orderly.network/types";
@@ -13,15 +13,21 @@ import { pick } from "ramda";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
-export class StopLimitOrderCreator extends BaseOrderCreator {
-  create(values: OrderEntity, config: ValuesDepConfig): AlgoOrderEntry {
+export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
+  create(
+    values: AlgoOrderEntry & {
+      order_quantity: number;
+      order_price: number;
+    },
+    config: ValuesDepConfig
+  ): AlgoOrderEntry<AlogOrderRootType.STOP> {
     this.totalToQuantity(values, config);
 
-    const order: AlgoOrderEntry = {
-      ...this.baseOrder(values as OrderEntity),
+    const order: AlgoOrderEntry<AlogOrderRootType.STOP> = {
+      ...this.baseOrder(values as unknown as OrderEntity),
 
       trigger_price: values.trigger_price!,
-      algo_type: AlogRootOrderType.STOP,
+      algo_type: AlogOrderRootType.STOP,
       type: OrderType.LIMIT,
       quantity: values["order_quantity"]!,
       price: values["order_price"],

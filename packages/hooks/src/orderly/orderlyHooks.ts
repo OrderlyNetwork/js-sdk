@@ -33,3 +33,8 @@ export { useSettleSubscription } from "./useSettleSubscription";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
 
 export { useSymbolPriceRange } from "./useSymbolPriceRange";
+
+export {
+  useTaskProfitAndStopLoss,
+  type ComputedAlgoOrder,
+} from "./useTakeProfitAndStopLoss";

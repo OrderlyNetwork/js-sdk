@@ -9,9 +9,8 @@ interface Props {
   // onDeposit?: () => void;
 }
 
-export const AccountInfo: FC<Props> = (props) => {
-  const { visible, toggleVisible, onDeposit, onWithdraw } =
-    useContext(AssetsContext);
+export const AccountInfo: FC<Props> = () => {
+  const { onDeposit, onWithdraw } = useContext(AssetsContext);
 
   return (
     <>
