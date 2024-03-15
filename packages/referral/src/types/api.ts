@@ -5,12 +5,21 @@ export declare namespace API {
         referee_info: RefereeInfo,
     }
 
+    export type ReferralCode = {
+        "code": string,
+        "max_rebate_rate": number,
+        "referee_rebate_rate": number,
+        "referrer_rebate_rate": number,
+        "total_invites": number,
+        "total_traded": number
+    }
+
     export type ReferrerInfo = {
         "total_invites": number,
         "total_traded": number,
         "total_referee_volume": number,
         "total_referee_fee": number,
-        "referral_codes": any[],
+        "referral_codes": ReferralCode[],
         "total_referrer_rebate": number,
         "1d_invites": number,
         "7d_invites": number,

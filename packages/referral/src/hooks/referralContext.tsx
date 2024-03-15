@@ -8,6 +8,7 @@ export type ReferralContextProps = {
     bindReferralCodeState?: (success: boolean, error: any, hide: any) => void,
     learnAffiliate?: () => void,
     learnAffiliateUrl?: string,
+    referralLinkUrl: string,
 }
 
 export type ReferralContextReturns = {
@@ -26,6 +27,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         bindReferralCodeState,
         learnAffiliate,
         learnAffiliateUrl,
+        referralLinkUrl,
     } = props;
 
     const { data, mutate } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
@@ -49,6 +51,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             bindReferralCodeState,
             learnAffiliate,
             learnAffiliateUrl,
+            referralLinkUrl,
         }}>
             {props.children}
         </ReferralContext.Provider>

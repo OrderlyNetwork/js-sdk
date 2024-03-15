@@ -56,7 +56,7 @@ export const AsAnAffiliate = () => {
   }, [referralInfo?.referrer_info?.total_referrer_rebate, isAffiliate]);
 
   return (
-    <div id="dashboard_affiliate_container" className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-top orderly-to-referral-bottom">
+    <div id="dashboard_affiliate_container" className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-from orderly-to-referral-to">
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
           <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">As an affiliate</div>

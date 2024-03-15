@@ -21,8 +21,11 @@ export default {
   argTypes: {},
     decorators: [
       (Story) => (
-        <ReferralProvider becomeAnAffiliateUrl="https://orderly.network"
-        learnAffiliateUrl="https://orderly.network">
+        <ReferralProvider 
+        becomeAnAffiliateUrl="https://orderly.network"
+        learnAffiliateUrl="https://orderly.network"
+        referralLinkUrl="https://dex.woo.org/en/trade"
+        >
           <Story />
         </ReferralProvider>
       ),
