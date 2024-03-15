@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.2.5-internal.11
+
+### Patch Changes
+
+- fix bus
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.11
+
 ## 0.2.5-internal.10
 
 ### Patch Changes

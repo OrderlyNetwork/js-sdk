@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 0.1.5-internal.11
+
+### Patch Changes
+
+- fix bus
+
 ## 0.1.5-internal.10
 
 ### Patch Changes

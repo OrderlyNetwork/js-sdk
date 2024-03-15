@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.1.5-internal.11
+
+### Patch Changes
+
+- fix bus
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.11
+  - @orderly.network/utils@0.1.5-internal.11
+  - @orderly.network/core@0.2.5-internal.11
+  - @orderly.network/perp@2.0.5-internal.11
+  - @orderly.network/net@1.1.5-internal.11
+
 ## 1.1.5-internal.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.1.5-internal.11
+
+### Patch Changes
+
+- fix bus
+
 ## 1.1.5-internal.10
 
 ### Patch Changes

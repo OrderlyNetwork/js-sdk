@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.2.5-internal.11
+
+### Patch Changes
+
+- fix bus
+
 ## 0.2.5-internal.10
 
 ### Patch Changes
