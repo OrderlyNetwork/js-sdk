@@ -179,12 +179,14 @@ export class DataPaint extends BasePaint {
       let text = `${prefix}${commify(options.data?.position.pnl)} ${
         options.data?.position.currency
       }`;
+      let fontWeight = 600;
 
       if (prevElementBoundingBox.width) {
         left += (prevElementBoundingBox.width ?? 0) + this._ratio(8);
         text = `(${text})`;
       } else {
         left = this._ratio(position.left!);
+        fontWeight = 700;
       }
 
       const color =
@@ -204,7 +206,7 @@ export class DataPaint extends BasePaint {
         left,
         top: this._ratio(top),
         fontSize,
-        fontWeight: 600,
+        fontWeight,
         fontFamily: options.fontFamily,
       });
     }
@@ -260,6 +262,8 @@ export class DataPaint extends BasePaint {
       fontSize: this._ratio(layout.fontSize as number),
       color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
       fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
+      fontWeight: 600,
     });
   }
 
@@ -277,8 +281,9 @@ export class DataPaint extends BasePaint {
       top: this._ratio(top),
       fontSize: this._ratio(layout.fontSize as number),
       color: layout.color as string,
-      textAlign: "end",
+      textAlign: layout.textAlign,
       fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
     });
   }
 
