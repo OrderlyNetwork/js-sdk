@@ -38,22 +38,22 @@ export function getPnLPosterData(
     const positionData: any = {
         symbol,
         currency,
-        side: position.position_qty > 0 ? "Long" : "Short",
+        side: position.position_qty > 0 ? "LONG" : "SHORT",
     };
 
 
     switch (pnlType) {
         case "pnl": {
-            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi": {
-            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi_pnl": {
-            positionData["pnl"] = new Decimal(position.unsettlement_pnl).toFixed(2, Decimal.ROUND_DOWN);
-            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI.toFixed(2)).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
     }
@@ -111,14 +111,21 @@ interface SymbolResult {
     currency: string;
 }
 
-function processSymbol(symbol: symbol): SymbolResult {
-    const parts = symbol.toString().split('_');
-    const currency = parts.pop();
-    const symbolName = parts.join('_');
-
+function processSymbol(symbol: string): SymbolResult {
+    const tokens = symbol.split('_');
+  if (tokens.length !== 3) {
     return {
-        symbol: symbolName,
-        currency: currency || "USDC"
+        symbol: symbol,
+        currency: 'USDC',
+    };
+  }
+
+  const [symbol1, symbol2, symbol3] = tokens;
+  const formattedString = `${symbol2}-${symbol1}`;
+  
+    return {
+        symbol: formattedString,
+        currency: symbol3 || "USDC"
     };
 }
 

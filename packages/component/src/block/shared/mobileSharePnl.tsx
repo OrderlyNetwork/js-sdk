@@ -30,7 +30,7 @@ export const MobileSharePnLContent: FC<{
   );
   const [message, setMessage] = useState("");
   const { shareOptions } = useContext(OrderlyAppContext);
-  const { backgroundImages, ...resetOptions} = shareOptions.pnl;
+  const { backgroundImages, ...resetOptions } = shareOptions.pnl;
 
   const [domain, setDomain] = useState("");
 
@@ -68,7 +68,7 @@ export const MobileSharePnLContent: FC<{
       setCarouselHeight(divHeight);
       setScale(divWidth / 552);
     }
-  }, [carouselRef]);
+  }, [carouselRef, domain]);
 
   const onSharePnL = async (
     posterRef: React.MutableRefObject<PosterRef | null>
@@ -77,7 +77,7 @@ export const MobileSharePnLContent: FC<{
     const data = posterRef.current?.toDataURL();
     const blob = dataURItoBlob(data);
     try {
-      // 检查浏览器是否支持分享功能
+      // Check if the browser supports the share feature
       if (navigator.share) {
         await navigator.share({
           title: "Share PnL",
@@ -96,7 +96,7 @@ export const MobileSharePnLContent: FC<{
   };
 
   return (
-    <div className="orderly-p-0">
+    <div className="orderly-referral">
       <div
         ref={carouselRef}
         className="orderly-w-full orderly-mt-4 orderly-overflow-hidden"
@@ -126,8 +126,8 @@ export const MobileSharePnLContent: FC<{
           </CarouselContent>
           <div className="orderly-mt-2 orderly-mb-1 orderly-flex orderly-justify-center">
             <MyIdentifier
-              dotClassName="orderly-w-[16px] orderly-h-[4px] orderly-bg-base-300"
-              dotActiveClassName="orderly-bg-primary orderly-w-[20px]"
+              dotClassName="orderly-w-[16px] orderly-h-[4px] orderly-bg-base-300 orderly-dot-normal"
+              dotActiveClassName="orderly-bg-primary orderly-w-[20px] orderly-dot-sel"
               setSelectIndex={setSelectIndex}
             />
           </div>
@@ -216,7 +216,7 @@ export const MobileSharePnLContent: FC<{
       <div className="orderly-pt-2">
         <Button
           fullWidth
-          className="orderly-h-[40px]"
+          className="orderly-h-[40px] orderly-text-[16px]"
           onClick={() => {
             onSharePnL(posterRefs[selectIndex]);
           }}
@@ -251,9 +251,8 @@ const PnlFormatView: FC<{
   return (
     <div
       className={cn(
-        "orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-2",
-        isSelected &&
-          "orderly-outline orderly-outline-primary orderly-outline-1"
+        "orderly-shadow-lg orderly-rounded-lg orderly-h-[46px] orderly-flex-1 orderly-bg-base-400 hover:orderly-cursor-pointer orderly-flex orderly-items-center orderly-px-3 orderly-referral-shadow",
+        isSelected && "orderly-bg-primary orderly-dot-sel"
       )}
       onClick={() => {
         setPnlFormat(type);
@@ -292,7 +291,7 @@ const ShareOption: FC<{
   return (
     <div
       className={cn(
-        "orderly-shadow-lg orderly-rounded-lg orderly-h-[48px] orderly-mt-0 orderly-w-[calc(50%-6px)] orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3"
+        "orderly-shadow-lg orderly-rounded-lg orderly-h-[46px] orderly-mt-0 orderly-w-[calc(50%-6px)] orderly-bg-base-400 hover:orderly-cursor-pointer orderly-items-center orderly-flex orderly-p-3 orderly-referral-shadow"
       )}
       onClick={() => {
         // setPnlFormat(type);
@@ -313,7 +312,7 @@ const ShareOption: FC<{
       {isSelected && <CircleCheckIcon size={20} />}
     </div>
   );
-}; // 将 base64 图片数据转换为 Blob 对象
+};
 function dataURItoBlob(dataURI: string) {
   const byteString = atob(dataURI.split(",")[1]);
   const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];

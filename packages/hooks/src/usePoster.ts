@@ -21,7 +21,13 @@ export const usePoster = (
   /**
    * The options to draw the poster
    */
-  options: DrawOptions
+  data: DrawOptions,
+  options?: {
+    /**
+     * The ratio of the poster
+     */
+    ratio?: number;
+  }
 ) => {
   const [error, setError] = useState<Error | null>(null);
   const [canCopy, setCanCopy] = useState<boolean>(
@@ -35,11 +41,14 @@ export const usePoster = (
   useEffect(() => {
     // Create the painter instance
     if (target && !painterRef.current) {
-      painterRef.current = new PosterPainter(target);
+      painterRef.current = new PosterPainter(target, {
+        ratio: 1,
+        ...options,
+      });
       painterRef.current.draw(
         mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
-          options
+          data
         )
       );
     }
@@ -50,11 +59,11 @@ export const usePoster = (
       painterRef.current.draw(
         mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
-          options
+          data
         )
       );
     }
-  }, [options]);
+  }, [data]);
 
   const toDataURL = (type?: string, encoderOptions?: number) => {
     if (!target) {

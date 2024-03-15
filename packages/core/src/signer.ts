@@ -20,7 +20,7 @@ export type SignedMessagePayload = {
 };
 
 /**
- * 签名
+ * Singer interface
  * @example
  * ```ts
  * const signer = new BaseSigner(keyStore);

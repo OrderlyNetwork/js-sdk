@@ -27,7 +27,7 @@ export interface TabsProps {
   extraData?: any;
   keepAlive?: boolean;
   fullWidth?: boolean;
-  // 是否显示tab指示器，default: true
+
   showIdentifier?: boolean;
 
   collapsed?: boolean;

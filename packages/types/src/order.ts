@@ -6,8 +6,8 @@ export enum OrderType {
   POST_ONLY = "POST_ONLY",
   ASK = "ASK",
   BID = "BID",
-  STOP_LIMIT="STOP_LIMIT",
-  STOP_MARKET="STOP_MARKET",
+  STOP_LIMIT = "STOP_LIMIT",
+  STOP_MARKET = "STOP_MARKET",
 }
 
 export enum OrderSide {
@@ -36,7 +36,6 @@ export interface OrderEntity {
   order_price?: string | number;
   order_quantity?: string | number;
   order_amount?: number;
-  // 是否显示在orderbook, 默认=order_quantity, =0时不显示,
   visible_quantity?: number;
   reduce_only?: boolean;
   side: OrderSide;
@@ -46,5 +45,5 @@ export interface OrderEntity {
   total?: string | number;
   // hideInOrderbook?: boolean;
   isStopOrder?: boolean;
-  trigger_price?: string | number,
+  trigger_price?: string | number;
 }

@@ -15,7 +15,7 @@ export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   columns: Column<RecordType>[];
   dataSource?: RecordType[] | null;
   /**
-   * @description 加载中
+   * @description loading state
    * @default false
    */
   loading?: boolean;

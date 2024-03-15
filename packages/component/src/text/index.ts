@@ -6,9 +6,6 @@ import { TradingPair } from "./tradingPair";
 import { Text } from "./text";
 
 export type CombinedComponent = typeof Numeral & {
-  /**
-   * 需要搭配 @orderly.network/hooks 使用
-   */
   symbol: typeof NumeralWithSymbol;
   total: typeof NumeralTotal;
   withCtx: typeof NumeralWithCtx;

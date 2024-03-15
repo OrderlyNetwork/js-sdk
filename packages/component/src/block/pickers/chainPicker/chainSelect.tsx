@@ -67,7 +67,7 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
 
   const currentChain = useMemo(() => {
     if (!value || !chains || !Array.isArray(chains)) return undefined;
-    // 如果value是不支持的chain, 显示unknown
+
     if (
       chains.findIndex(
         // @ts-ignore
@@ -109,7 +109,6 @@ export const ChainSelect: FC<ChainSelectProps> = (props) => {
   );
 
   useEffect(() => {
-    // 获取 到chain列表之后，初始化chain及其token列表
     if (!!chains || !!props.chains) {
       let chainInfo: Chain | undefined;
 

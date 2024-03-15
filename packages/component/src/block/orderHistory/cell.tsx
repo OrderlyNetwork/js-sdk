@@ -2,7 +2,7 @@ import { SymbolContext } from "@/provider";
 import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { Text } from "@/text";
-import { firstLetterToUpperCase } from "@/utils/string";
+import { firstLetterToUpperCase, upperCaseFirstLetter } from "@/utils/string";
 import { API } from "@orderly.network/types";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
@@ -37,6 +37,19 @@ export const Cell: FC<HistoryCellProps> = (props) => {
     // go to the top of page
     window.scrollTo(0, 0);
   };
+
+  const state = useMemo(() => {
+    const status = item.status || item.algo_status;
+
+    if (status === "NEW") {
+      return upperCaseFirstLetter("pending");
+    }
+    return upperCaseFirstLetter(status);
+
+  }, [
+    item.status,
+    item.algo_status
+  ]);
 
   return (
     <div className="orderly-p-4">
@@ -79,7 +92,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           rule="status"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={item.status}
+          value={state}
           align="right"
         />
         <Statistic
@@ -119,7 +132,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           }
           value={
             item.type === OrderType.MARKET ||
-            item.type === OrderType.STOP_MARKET
+              item.type === OrderType.STOP_MARKET
               ? "Market"
               : item.trigger_price
           }

@@ -143,7 +143,6 @@ export class WS {
     // If the network is not available, do not process it
     if (!navigator.onLine) return;
 
-    // 如果已断开，则重连
     // public
     if (!this.publicIsReconnecting) {
       if (this._publicSocket.readyState === WebSocket.CLOSED) {
@@ -546,7 +545,6 @@ export class WS {
       });
       this._publicSocket.send(JSON.stringify(subscribeMessage));
     } else {
-      // 是否once,如果是once,则替换掉之前的callback
       if (once) {
         handler.callback = [callbacks];
         this._publicSocket.send(JSON.stringify(subscribeMessage));

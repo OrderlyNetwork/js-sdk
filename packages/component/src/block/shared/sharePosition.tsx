@@ -6,7 +6,6 @@ import { useLeverage, useMediaQuery, useSymbolsInfo } from "@orderly.network/hoo
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
-import { Logo } from "@/logo";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
 export const SharePoisitionView = create<{
@@ -20,23 +19,19 @@ export const SharePoisitionView = create<{
 
     const base_dp = symbolInfo?.("base_dp");
     const quote_dp = symbolInfo?.("quote_dp");
-    const base_tick = symbolInfo?.("base_tick");
-    const quote_tick = symbolInfo?.("quote_tick");
-
-    console.log("symbolInfo", base_dp,
-    quote_dp,
-    base_tick,
-    quote_tick,);
-    
 
     return isTablet ?
         <MobileSharePnL
             position={position}
             leverage={leverage}
+            baseDp={base_dp}
+            quoteDp={quote_dp}
         /> :
         <DesktopSharePnL
             position={position}
             leverage={leverage}
+            baseDp={base_dp}
+            quoteDp={quote_dp}
         />;
 });
 
@@ -54,10 +49,12 @@ const MobileSharePnL: FC<PropsWithChildren<{
 
     return (<Sheet open={visible} onOpenChange={onOpenChange}>
         <SheetContent
+            id="orderly-referral-mweb-bg"
+            className="orderly-px-4"
         >
             <SheetHeader
                 id="orderly-asset-and-margin-sheet-title"
-                leading={<Logo.secondary size={30} />}
+            // leading={<Logo.secondary size={30} />}
             >
                 PnL Sharing
             </SheetHeader>
@@ -90,20 +87,21 @@ const DesktopSharePnL: FC<PropsWithChildren<{
         };
     }, []);
 
-    
+
 
     return (<Dialog open={visible} onOpenChange={onOpenChange}>
         <DialogContent
-            className="orderly-shadow-lg orderly-w-[640px] orderly-bg-base-700 desktop:orderly-max-w-[640px]"
-            style={{height: `${viewportHeight}px`}}
+            className="orderly-shadow-lg orderly-w-[640px] orderly-bg-base-800 desktop:orderly-max-w-[640px] orderly-py-0"
+            style={{ height: `${viewportHeight}px` }}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
+        >
+
+            <div
+                id="orderly-referral-desktop-bg"
+                style={{ height: `${viewportHeight}px` }}
             >
-            
-            <div 
-            style={{height: `${viewportHeight}px`}}
-            >
-            <DesktopSharePnLContent position={position} leverage={leverage} hide={hide} baseDp={baseDp} quoteDp={quoteDp}/>
+                <DesktopSharePnLContent position={position} leverage={leverage} hide={hide} baseDp={baseDp} quoteDp={quoteDp} />
             </div>
         </DialogContent>
     </Dialog>);

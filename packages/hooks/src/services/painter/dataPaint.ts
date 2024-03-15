@@ -6,7 +6,7 @@ export class DataPaint extends BasePaint {
   private positionInfoCellWidth = 110;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
-  private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
+  private DEFAULT_LOSS_COLOR = "rgb(255,103,194)";
 
   private transformTop = 0;
 
@@ -69,7 +69,7 @@ export class DataPaint extends BasePaint {
       ["layout", "position"],
       options
     ) as layoutInfo;
-    const { position } = layout;
+    const { position, fontSize = 14 } = layout;
     let left = this._ratio(position.left!);
 
     let top = layout.position.top! + offsetTop + this.transformTop;
@@ -80,12 +80,12 @@ export class DataPaint extends BasePaint {
     if (typeof options.data?.position.side !== "undefined") {
       prevElementBoundingBox = this._drawText(options.data.position.side, {
         color:
-          options.data?.position.side === "LONG"
+          options.data?.position.side.toUpperCase() === "LONG"
             ? this.DEFAULT_PROFIT_COLOR
-            : this.DEFAULT_LOSE_COLOR,
+            : this.DEFAULT_LOSS_COLOR,
         left,
         top: this._ratio(top),
-        fontSize: this._ratio(14),
+        fontSize: this._ratio(fontSize),
         fontFamily: options.fontFamily,
       });
     }
@@ -98,7 +98,7 @@ export class DataPaint extends BasePaint {
           color: "rgba(255,255,255,0.2)",
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         });
       }
@@ -108,7 +108,7 @@ export class DataPaint extends BasePaint {
         color: layout.color,
         left: left,
         top: this._ratio(top),
-        fontSize: this._ratio(12),
+        fontSize: this._ratio(fontSize),
         fontFamily: options.fontFamily,
       });
     }
@@ -121,7 +121,7 @@ export class DataPaint extends BasePaint {
           color: "rgba(255,255,255,0.2)",
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         });
       }
@@ -132,7 +132,7 @@ export class DataPaint extends BasePaint {
           color: layout.color,
           left,
           top: this._ratio(top),
-          fontSize: this._ratio(12),
+          fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
         }
       );
@@ -146,6 +146,7 @@ export class DataPaint extends BasePaint {
       options
     ) as layoutInfo & {
       secondaryColor: string;
+      secondaryFontSize: number;
     };
     const { position } = layout;
     let left = this._ratio(position.left!);
@@ -162,7 +163,7 @@ export class DataPaint extends BasePaint {
           color:
             prefix === "+"
               ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-              : options.lossColor || this.DEFAULT_LOSE_COLOR,
+              : options.lossColor || this.DEFAULT_LOSS_COLOR,
           left,
           top: this._ratio(top),
 
@@ -178,32 +179,34 @@ export class DataPaint extends BasePaint {
       let text = `${prefix}${commify(options.data?.position.pnl)} ${
         options.data?.position.currency
       }`;
+      let fontWeight = 600;
 
       if (prevElementBoundingBox.width) {
         left += (prevElementBoundingBox.width ?? 0) + this._ratio(8);
         text = `(${text})`;
       } else {
         left = this._ratio(position.left!);
+        fontWeight = 700;
       }
 
       const color =
         typeof options.data.position.ROI === "undefined"
           ? prefix === "+"
             ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-            : options.lossColor || this.DEFAULT_LOSE_COLOR
+            : options.lossColor || this.DEFAULT_LOSS_COLOR
           : layout.secondaryColor;
 
       const fontSize =
         typeof options.data.position.ROI === "undefined"
           ? this._ratio(layout.fontSize as number)
-          : this._ratio((layout.fontSize as number) * 0.6);
+          : this._ratio(layout.secondaryFontSize as number);
 
       prevElementBoundingBox = this._drawText(text, {
         color,
         left,
         top: this._ratio(top),
         fontSize,
-        fontWeight: 600,
+        fontWeight,
         fontFamily: options.fontFamily,
       });
     }
@@ -259,6 +262,8 @@ export class DataPaint extends BasePaint {
       fontSize: this._ratio(layout.fontSize as number),
       color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
       fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
+      fontWeight: 600,
     });
   }
 
@@ -276,8 +281,9 @@ export class DataPaint extends BasePaint {
       top: this._ratio(top),
       fontSize: this._ratio(layout.fontSize as number),
       color: layout.color as string,
-      textAlign: "end",
+      textAlign: layout.textAlign,
       fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
     });
   }
 
