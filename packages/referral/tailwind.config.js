@@ -59,6 +59,10 @@ module.exports = {
         ],
       },
       colors: {
+        referral: {
+          top: "rgb(var(--orderly-referral-gradient-from) / <alpha-value>)",
+          bottom: "rgb(var(--orderly-referral-gradient-to) / <alpha-value>)",
+        },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",
           light: "rgb(var(--orderly-color-primary-light) / <alpha-value>)",

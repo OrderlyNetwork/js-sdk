@@ -35,6 +35,7 @@ export const AsAnAffiliate = () => {
     return (
       <div className="orderly-flex orderly-justify-between orderly-mt-2">
         <Button
+        id="dashboard_become_an_affiliate_btn"
           onClick={() => {
             if (becomeAnAffiliate) {
               becomeAnAffiliate?.();
@@ -42,8 +43,8 @@ export const AsAnAffiliate = () => {
               window.open(becomeAnAffiliateUrl, "__blank");
             }
           }}
-          className="orderly-text-base xl:orderly-text-lg 2xl:orderly-text-lg"
-        >Become an affliate</Button>
+          className="orderly-bg-white orderly-text-base-900 xl:orderly-text-lg 2xl:orderly-text-lg"
+        >Become an affiliate</Button>
 
         <div>
           <div className="orderly-text-[22px] md:orderly-text-[24px] lg:orderly-text-[26px] xl:orderly-text-[26px] 2xl:orderly-text-[28px]">40%~80%</div>
@@ -55,7 +56,7 @@ export const AsAnAffiliate = () => {
   }, [referralInfo?.referrer_info?.total_referrer_rebate, isAffiliate]);
 
   return (
-    <div className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-to-[rgba(41,137,226,1)] orderly-from-[rgba(39,43,147,1)]">
+    <div id="dashboard_affiliate_container" className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-top orderly-to-referral-bottom">
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
           <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">As an affiliate</div>

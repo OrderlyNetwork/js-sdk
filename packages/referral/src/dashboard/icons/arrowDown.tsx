@@ -21,7 +21,7 @@ export const ArrorDownIcon: FC<IconProps> = (props) => {
             </g>
             <defs>
                 <clipPath id="clip0_8507_104242">
-                    <rect width="16" height="16" fill="white" transform="translate(16) rotate(90)" />
+                    <rect width="16" height="16" transform="translate(16) rotate(90)" />
                 </clipPath>
             </defs>
         </svg>
