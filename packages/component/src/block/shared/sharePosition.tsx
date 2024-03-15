@@ -51,6 +51,8 @@ const MobileSharePnL: FC<PropsWithChildren<{
         <SheetContent
             id="orderly-referral-mweb-bg"
             className="orderly-px-4"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onCloseAutoFocus={(e) => e.preventDefault()}
         >
             <SheetHeader
                 id="orderly-asset-and-margin-sheet-title"
@@ -93,6 +95,7 @@ const DesktopSharePnL: FC<PropsWithChildren<{
         <DialogContent
             className="orderly-shadow-lg orderly-w-[640px] orderly-bg-base-800 desktop:orderly-max-w-[640px] orderly-py-0"
             style={{ height: `${viewportHeight}px` }}
+            autoFocus={false}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onCloseAutoFocus={(e) => e.preventDefault()}
         >

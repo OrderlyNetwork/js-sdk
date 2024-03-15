@@ -419,6 +419,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 className="orderly-text-base-contrast-80"
                 precision={0}
               >{`${freeCollateral ?? "--"}`}</Numeral>
+              {!isTable && (
+                <span className="orderly-text-base-contrast-36">USDC</span>
+              )}
             </div>
             <Button
               id="orderly-order-entry-deposit-button"
