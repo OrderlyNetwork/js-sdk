@@ -1,5 +1,47 @@
 # examples
 
+## 0.2.6
+
+### Patch Changes
+
+- update version
+- Updated dependencies
+  - @orderly.network/react@0.2.6
+  - @orderly.network/web3-onboard@0.1.6
+  - @orderly.network/hooks@1.1.6
+  - @orderly.network/core@0.2.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 1c2f86c8: fix bugs
+- 83a2465c: fix bugs
+- 4b635449: fix bugs
+- c5918eba: fix bugs
+- 08849940: fix bugs
+- 49e6b8a0: fix bugs
+- c47192f5: fix bugs
+- e62b8dea: fix bugs
+- 165a7cd7: hide share PnL entry
+- 32be91ac: fix bug
+- 2e482e37: fix bugs
+- Updated dependencies [1c2f86c8]
+- Updated dependencies [83a2465c]
+- Updated dependencies [4b635449]
+- Updated dependencies [c5918eba]
+- Updated dependencies [08849940]
+- Updated dependencies [49e6b8a0]
+- Updated dependencies [c47192f5]
+- Updated dependencies [e62b8dea]
+- Updated dependencies [165a7cd7]
+- Updated dependencies [32be91ac]
+- Updated dependencies [2e482e37]
+  - @orderly.network/react@0.2.5
+  - @orderly.network/web3-onboard@0.1.5
+  - @orderly.network/hooks@1.1.5
+  - @orderly.network/core@0.2.5
+
 ## 0.2.5-internal.10
 
 ### Patch Changes
