@@ -126,7 +126,7 @@ export const MobileSharePnLContent: FC<{
           </CarouselContent>
           <div className="orderly-mt-2 orderly-mb-1 orderly-flex orderly-justify-center">
             <MyIdentifier
-              dotClassName="orderly-dot-normal orderly-w-[16px] orderly-h-[4px] orderly-bg-base-300"
+              dotClassName="orderly-w-[16px] orderly-h-[4px] orderly-bg-base-300 orderly-dot-normal"
               dotActiveClassName="orderly-bg-primary orderly-w-[20px] orderly-dot-sel"
               setSelectIndex={setSelectIndex}
             />
