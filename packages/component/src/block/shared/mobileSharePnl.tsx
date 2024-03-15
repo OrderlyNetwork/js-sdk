@@ -16,6 +16,7 @@ import {
   useCarousel,
 } from "@/carousel/carousel";
 import { Carousel } from "@/carousel";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export const MobileSharePnLContent: FC<{
   position: any;
@@ -80,7 +81,7 @@ export const MobileSharePnLContent: FC<{
       // Check if the browser supports the share feature
       if (navigator.share) {
         await navigator.share({
-          title: "Share PnL",
+          // title: "Share PnL",
           text: message,
           // url: imageUrl,
           files: [new File([blob], "image.png", { type: "image/png" })],
