@@ -111,14 +111,21 @@ interface SymbolResult {
     currency: string;
 }
 
-function processSymbol(symbol: symbol): SymbolResult {
-    const parts = symbol.toString().split('_');
-    const currency = parts.pop();
-    const symbolName = parts.join('_');
-
+function processSymbol(symbol: string): SymbolResult {
+    const tokens = symbol.split('_');
+  if (tokens.length !== 3) {
     return {
-        symbol: symbolName,
-        currency: currency || "USDC"
+        symbol: symbol,
+        currency: 'USDC',
+    };
+  }
+
+  const [symbol1, symbol2, symbol3] = tokens;
+  const formattedString = `${symbol2}-${symbol1}`;
+  
+    return {
+        symbol: formattedString,
+        currency: symbol3 || "USDC"
     };
 }
 
