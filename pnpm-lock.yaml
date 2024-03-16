@@ -1016,6 +1016,9 @@ importers:
       '@orderly.network/react':
         specifier: workspace:*
         version: link:../component
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
       class-variance-authority:
         specifier: ^0.6.1
         version: 0.6.1

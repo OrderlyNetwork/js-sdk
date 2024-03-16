@@ -5,14 +5,12 @@ export const PinView: FC<{
     pin: boolean,
     onPinChange?: (isPin: boolean) => void
 }> = (props) => {
-    
-    const [pin, setPin] = useState(props.pin);
-
+    const {pin} = props;
     return (
         <button onClick={()=> {
-            setPin((value) => !value);
+            props.onPinChange?.(!pin);
         }}>
-            {pin ? <PinIcon /> : <UnPinIcon />}
+            {pin === false ? <PinIcon /> : <UnPinIcon />}
         </button>
     );
 }
