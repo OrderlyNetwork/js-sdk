@@ -1,32 +1,6 @@
-import { Button, cn } from "@orderly.network/react";
-import { TriangleDownIcon } from "../affiliate/icons";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@orderly.network/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
-
-export const BarChart: FC<{className?: string}> = (props) => {
-
-
-    return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
-            <div className="orderly-flex orderly-justify-between">
-                <div className="orderly-text-xs orderly-text-base-contrast-36">USDC</div>
-                <Button color={"tertiary"} className="orderly-flex">
-                    Commission
-                    <TriangleDownIcon className="orderly-ml-1" />
-                </Button>
-            </div>
-
-            <Chart data={[
-                ['2023-10-19', 3800],
-                ['2023-10-20', 1800],
-                ['2023-10-21', 1900],
-                ['2023-10-22', 800],
-                ['2023-10-23', 2500]
-            ]}
-            />
-        </div>
-    );
-}
 
 type ChartSize = { width: number, height: number };
 
@@ -34,8 +8,8 @@ type ChartSize = { width: number, height: number };
  * 
  *  data is array, this element is [title, value]
  */
-const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
-    const { data, className } = props;
+export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props) => {
+    const { data = [], className } = props;
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState<ChartSize>({ height: 0, width: 0 });
 
@@ -54,20 +28,9 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
 
     useEffect(() => {
         const handleResize = () => {
-
             const rect = chartContainerRef.current?.getBoundingClientRect();
-
             if (!rect) return;
             setSize({ width: rect.width, height: rect.height });
-
-            // const chartContainerWidth = rect.width;
-            // const columnCount = 6;
-            // const columnWidth = 12;
-            // const columnSpacing = (chartContainerWidth - columnCount * columnWidth) / (columnCount - 1);
-
-            // 控制台打印父级容器的宽度和计算得到的列间距
-            // console.log("父级容器宽度: ", chartContainerWidth);
-            // console.log("列间距: ", columnSpacing);
         };
 
         handleResize();
@@ -79,13 +42,19 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
     }, []);
 
     const minMaxInfo = useMemo(() => {
-        return findMinMax(data, 1);
+        try {
+            return findMinMax(data, 1);
+        } catch (err) {
+            return undefined;
+        }
     }, [data]);
 
     const yAxisChildren = useMemo(() => {
-        if (size.height === 0 || size.width === 0) {
+        if (size.height === 0 || size.width === 0 || (!minMaxInfo)) {
             return (<></>);
         }
+
+
 
         const children: any[] = [];
         const height = size.height - xAxis.height - yAxis.gridPaddingTop;
@@ -136,8 +105,12 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
     }, [size, minMaxInfo, yAxis, xAxis, data]);
 
     const columns = useMemo(() => {
+        if (data.length === 0 || (!minMaxInfo)) {
+            return (<></>);
+        }
         const columns = data.map((e) => e[1]);
         var children: any[] = [];
+
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + xAxis.columnPadding;
         var stepX = (size.width - padding) / columns.length;
@@ -154,7 +127,7 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
             console.log("columns", column, x, y, height);
 
             children.push(
-                <rect x={`${x}`} y={`${y}`} width="12" height={`${height}`} rx="2" ry="2" fill="#608CFF" class="column" />
+                <rect x={`${x}`} y={`${y}`} width="12" height={`${height}`} rx="2" ry="2" fill="#608CFF" />
             );
         }
 
@@ -162,7 +135,7 @@ const Chart: React.FC<{ className?: string, data: any[] }> = (props) => {
     }, [size, minMaxInfo, yAxis, xAxis, data]);
 
     return (
-        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full", props.className)} >
+        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full", className)} >
             <svg height="100%" style={{ width: `${size.width}px` }}>
                 {/* yAxis */}
                 <g>{yAxisChildren}</g>
@@ -193,7 +166,7 @@ function convertToYCoordinate(current: number, min: number, max: number, contain
 }
 
 function findMinMax(arr: [string, number][], maxRate: number = 1): { min: number, max: number } {
-    if (arr.length === 0) {
+    if ((arr?.length || 0) === 0) {
         throw new Error('Array is empty');
     }
 

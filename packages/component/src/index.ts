@@ -33,6 +33,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 } from "./dropdown/dropdown";
+export * from "./select";
 
 export {
   Dialog,

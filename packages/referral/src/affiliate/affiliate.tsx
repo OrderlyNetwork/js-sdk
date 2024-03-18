@@ -1,10 +1,10 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { BarChart } from "../components/barChart";
 import { CommissionAndReferees } from "./sections/commissionAndReferees";
 import { ReferralCode } from "./sections/referralCode";
 import { ReferralLink } from "./sections/referralLink";
 import { Summary } from "./sections/summary";
 import { MEDIA_LG } from "../types/constants";
+import { BarChart } from "./sections/barChart";
 
 export const Affiliate = () => {
 
