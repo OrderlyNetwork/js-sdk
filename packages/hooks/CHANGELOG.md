@@ -1,5 +1,11 @@
 # @orderly.network/hooks
 
+## 1.1.7
+
+### Patch Changes
+
+- fix bug: window is not defined
+
 ## 1.1.6
 
 ### Patch Changes

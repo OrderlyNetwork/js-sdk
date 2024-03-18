@@ -1,5 +1,12 @@
 # @orderly.network/onboard
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@1.1.7
+
 ## 0.1.6
 
 ### Patch Changes

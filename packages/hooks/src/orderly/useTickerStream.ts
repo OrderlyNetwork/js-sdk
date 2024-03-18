@@ -56,7 +56,7 @@ export const useTickerStream = (symbol: string) => {
   const value = useMemo(() => {
     //
     if (!info) return null;
-    if (!ticker) return info;
+    if (!ticker || ticker.symbol !== symbol) return info;
 
     const futureIndex = futures?.findIndex((item: any) => item.symbol === symbol);
     let _oi = openInterest;
@@ -64,7 +64,7 @@ export const useTickerStream = (symbol: string) => {
       // @ts-ignore
       _oi = futures[futureIndex].open_interest;
     }
-    
+
     const config: any = {
       ...info,
       mark_price: markPrice,
