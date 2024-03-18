@@ -8,10 +8,12 @@ type ChartSize = { width: number, height: number };
  * 
  *  data is array, this element is [title, value]
  */
-export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props) => {
-    const { data = [], className } = props;
+export const ColmunChart: React.FC<{ className?: string, data: any[], hoverTitle?: string }> = (props) => {
+    const { data = [], className, hoverTitle } = props;
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState<ChartSize>({ height: 0, width: 0 });
+
+    const [hoverItem, setHoverItem] = useState<{ x: number, y: number, item: any[] } | undefined>();
 
     const yAxis = {
         width: 44,
@@ -89,11 +91,11 @@ export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props
         var children: any[] = [];
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + xAxis.columnPadding;
-        var stepX = (size.width - padding) / titles.length;
+        var stepX = (size.width - padding - 24) / (titles.length - 1);
         for (let index = 0; index < titles.length; index++) {
             const title = titles[index];
 
-            const x = padding + stepX * index;
+            const x = padding + stepX * index + 6;
             const y = size.height - xAxis.fontSize;
 
             children.push(
@@ -113,7 +115,7 @@ export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props
 
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + xAxis.columnPadding;
-        var stepX = (size.width - padding) / columns.length;
+        var stepX = (size.width - padding - 24) / (columns.length - 1);
         const containerHeight = size.height - xAxis.height - yAxis.gridPaddingTop;
         for (let index = 0; index < columns.length; index++) {
             const column = columns[index];
@@ -124,18 +126,69 @@ export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props
             const y = (containerHeight - height) + yAxis.gridPaddingTop;
 
 
-            console.log("columns", column, x, y, height);
+            // console.log("columns", column, x, y, height);
 
             children.push(
-                <rect x={`${x}`} y={`${y}`} width="12" height={`${height}`} rx="2" ry="2" fill="#608CFF" />
+                <rect
+                    x={`${x}`}
+                    y={`${y}`}
+                    width="12"
+                    height={`${height}`}
+                    rx="2"
+                    ry="2"
+                    fill="#608CFF"
+                    onMouseEnter={() => {
+                        setHoverItem({ x, y, item: data[index] });
+                    }}
+                    onMouseLeave={() => setHoverItem(undefined)}
+                />
             );
         }
 
         return children;
     }, [size, minMaxInfo, yAxis, xAxis, data]);
 
+    const hover = useMemo(() => {
+
+        const children: any[] = [];
+
+        if (hoverItem) {
+            const x = hoverItem.x + 6 - 0.5;
+            const y = hoverItem.y;
+            children.push(
+                <line x1={x} y1={`${0}`} x2={x} y2={`${y}`} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+            );
+        }
+
+        return children;
+
+    }, [hoverItem]);
+
+    const hoverX = useMemo(() => {
+        if (!hoverItem) return 0;
+        
+        const hoverWidth = 227;
+        if (hoverItem.x > size.width/2) {
+            const x = hoverItem.x - 227;
+            if (x < 0) {
+                return 0;
+            }
+            return x;
+        } else {
+            if (hoverItem.x + hoverWidth + 12 > size.width) {
+                return 0;
+            }
+            return hoverItem.x + 12;
+        }
+
+    }, [hoverItem, size]);
+
+    console.log("hover x", hoverX);
+    
+
+
     return (
-        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full", className)} >
+        <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full orderly-relative", className)} >
             <svg height="100%" style={{ width: `${size.width}px` }}>
                 {/* yAxis */}
                 <g>{yAxisChildren}</g>
@@ -145,7 +198,31 @@ export const ColmunChart: React.FC<{ className?: string, data: any[] }> = (props
 
                 {/* columns */}
                 <g>{columns}</g>
+
+                {/* hover */}
+                <g>{hover}</g>
             </svg>
+
+            {hoverItem && <div
+                className="orderly-absolute orderly-bg-base-500 orderly-rounded-lg orderly-p-3 orderly-w-[227px] orderly-top-0"
+                style={{
+                    // marginTop: 0,
+                    // marginLeft: 0,
+                    marginLeft: hoverX,
+                    pointerEvents: 'none'
+                }}
+            >
+                <div className="orderly-flex orderly-text-xs ordelry-gap-2">
+                    <div className="orderly-flex-1">{hoverTitle}</div>
+                    <div className="orderly-flex-1 orderly-flex orderly-justify-end">
+                        {hoverItem.item[1]}
+                        <div className="orderly-text-base-contrast-54 orderly-ml-2">USDT</div>
+                    </div>
+                </div>
+                <div className="orderly-flex orderly-justify-end">
+                    {hoverItem.item[0]}
+                </div>
+            </div>}
         </div>
     );
 

@@ -44,7 +44,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 
-            <ColmunChart data={dataSource}
+            <ColmunChart 
+                data={dataSource}
+                hoverTitle={filterType}
             />
         </div>
     );
