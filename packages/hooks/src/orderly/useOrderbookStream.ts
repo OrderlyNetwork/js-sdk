@@ -369,28 +369,6 @@ export const useOrderbookStream = (
   }, []);
 
 
-
-  const middlePrice = useMemo(() => {
-    let asksFrist = 0,
-      bidsFirst = 0;
-
-    if (data.asks.length > 0) {
-      asksFrist = data.asks[0][0];
-    }
-
-    if (data.bids.length > 0) {
-      bidsFirst = data.bids[0][0];
-    }
-
-    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
-
-    return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
-  }, [ticker?.["24h_close"], data]);
-
-  useEffect(() => {
-    prevMiddlePrice.current = middlePrice;
-  }, [middlePrice]);
-
   const reducedData = reduceOrderbook(depth, level, padding, {
     asks: [...data.asks],
     bids: [...data.bids],
@@ -404,6 +382,29 @@ export const useOrderbookStream = (
     ];
     eventEmitter.emit("orderbook:update", updateData);
   }, [reducedData.asks?.[reducedData.asks.length-1]?.[0], reducedData.bids?.[0]?.[0]]);
+
+  const middlePrice = useMemo(() => {
+    let asksFrist = 0,
+      bidsFirst = 0;
+
+    if (data.asks.length > 0) {
+      asksFrist = reducedData.asks?.[reducedData.asks.length-1]?.[0];
+    }
+
+    if (data.bids.length > 0) {
+      bidsFirst = data.bids[0][0];
+    }
+
+    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
+
+    
+
+    return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
+  }, [ticker?.["24h_close"], data]);
+
+  useEffect(() => {
+    prevMiddlePrice.current = middlePrice;
+  }, [middlePrice]);
 
   return [
     {
