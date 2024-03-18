@@ -4,13 +4,25 @@
 
 ### Patch Changes
 
-- update version
-- Updated dependencies
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
   - @orderly.network/web3-modal@0.1.6
   - @orderly.network/react@0.2.6
   - @orderly.network/web3-onboard@0.1.6
   - @orderly.network/hooks@1.1.6
   - @orderly.network/core@0.2.6
+
+## 1.1.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/web3-modal@0.1.6-alpha.0
+  - @orderly.network/react@0.2.6-alpha.0
+  - @orderly.network/web3-onboard@0.1.6-alpha.0
+  - @orderly.network/hooks@1.1.6-alpha.0
+  - @orderly.network/core@0.2.6-alpha.0
 
 ## 1.1.5
 

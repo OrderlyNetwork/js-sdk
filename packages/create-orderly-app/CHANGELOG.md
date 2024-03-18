@@ -4,7 +4,13 @@
 
 ### Patch Changes
 
-- update version
+- 93a5ce6a: fix bugs;
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
 
 ## 0.2.5
 

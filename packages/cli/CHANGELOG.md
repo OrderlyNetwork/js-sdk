@@ -4,9 +4,17 @@
 
 ### Patch Changes
 
-- update version
-- Updated dependencies
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
   - @orderly.network/core@0.2.6
+
+## 0.1.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/core@0.2.6-alpha.0
 
 ## 0.1.5
 

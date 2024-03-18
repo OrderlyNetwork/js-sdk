@@ -4,14 +4,27 @@
 
 ### Patch Changes
 
-- update version
-- Updated dependencies
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
   - @orderly.network/trading-view@0.2.6
   - @orderly.network/hooks@1.1.6
   - @orderly.network/types@0.2.6
   - @orderly.network/utils@0.1.6
   - @orderly.network/core@0.2.6
   - @orderly.network/net@1.1.6
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/trading-view@0.2.6-alpha.0
+  - @orderly.network/hooks@1.1.6-alpha.0
+  - @orderly.network/types@0.2.6-alpha.0
+  - @orderly.network/utils@0.1.6-alpha.0
+  - @orderly.network/core@0.2.6-alpha.0
+  - @orderly.network/net@1.1.6-alpha.0
 
 ## 0.2.5
 

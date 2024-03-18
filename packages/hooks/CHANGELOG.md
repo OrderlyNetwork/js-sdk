@@ -4,13 +4,25 @@
 
 ### Patch Changes
 
-- update version
-- Updated dependencies
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
   - @orderly.network/types@0.2.6
   - @orderly.network/utils@0.1.6
   - @orderly.network/core@0.2.6
   - @orderly.network/perp@2.0.6
   - @orderly.network/net@1.1.6
+
+## 1.1.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@0.2.6-alpha.0
+  - @orderly.network/utils@0.1.6-alpha.0
+  - @orderly.network/core@0.2.6-alpha.0
+  - @orderly.network/perp@2.0.6-alpha.0
+  - @orderly.network/net@1.1.6-alpha.0
 
 ## 1.1.5
 
