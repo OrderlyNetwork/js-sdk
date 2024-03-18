@@ -15,8 +15,6 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
 
     const { referralInfo, referralLinkUrl } = useContext(ReferralContext);
 
-
-
     const copyLink = (code: string) => {
         copyText(addQueryParam(referralLinkUrl, "ref", code));
     }
@@ -25,31 +23,25 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     const [pinCodes, setPinCodes] = useLocalStorage<string[]>("orderly_referral_codes", [] as string[]);
     const setPinCode = (code: string, del?: boolean) => {
 
-        console.log("xxxxxxxxxxx set pin code", code, del);
-        
         if (del) {
             const index = pinCodes.findIndex((item: string) => item === code);
             if (index !== -1) {
-                pinCodes.splice(index,1);
+                pinCodes.splice(index, 1);
             }
         } else {
             (pinCodes).splice(0, 0, code);
         }
-        
+
 
         if (pinCodes.length > 6) {
             pinCodes.splice(pinCodes.length - 1, 1);
         }
 
-        setPinCodes(pinCodes);
+        setPinCodes([...pinCodes]);
     }
 
-    console.log("pin codes", pinCodes);
-    
+    const codes = useMemo((): ReferralCodeType[] => {
 
-    const getCodes = useCallback((): ReferralCodeType[] => {
-        console.log("xxxxxxxxxx update codes");
-        
         if (!referralInfo?.referrer_info.referral_codes) return [] as (ReferralCodeType[]);
         const referralCodes = [...referralInfo?.referrer_info.referral_codes];
 
@@ -67,21 +59,11 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
 
         }
 
-        console.log("sfdsfsdf", pinedItems, referralCodes);
-
-
         return [...pinedItems, ...referralCodes];
     }, [
         referralInfo?.referrer_info.referral_codes,
         pinCodes,
     ]);
-
-    const codes = getCodes();
-
-    console.log("codes list", codes);
-    
-
-
 
     return (
         <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
@@ -92,8 +74,6 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
                     <span className="orderly-text-primary">{codes.length}</span>
                 </div>
             </div>
-
-
             <CodeList dataSource={codes} copyLink={copyLink} setPinCode={setPinCode} />
         </div>
     );
@@ -104,6 +84,8 @@ export const CodeList: FC<{
     copyLink: (code: string) => void,
     setPinCode: (code: string, del?: boolean) => void,
 }> = (props) => {
+
+
     const isMD = useMediaQuery(MEDIA_MD);
     const { dataSource, copyLink } = props;
 
@@ -176,8 +158,6 @@ export const CodeList: FC<{
         ];
     }, [dataSource]);
 
-
-console.log("data source", dataSource);
 
 
     if (isMD) {
