@@ -127,7 +127,7 @@ export declare namespace API {
     symbol: string;
     algo_type: string;
     side: string;
-    quantity: number;
+    quantity: number|string;
     is_triggered: boolean;
     trigger_price: number;
     trigger_price_type: string;
@@ -397,4 +397,5 @@ export declare namespace WSMessage {
     rootAlgoStatus: string;
     algoStatus: string;
   }
+
 }

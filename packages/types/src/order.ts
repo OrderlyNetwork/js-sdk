@@ -81,7 +81,7 @@ type RequireKeys<T extends object, K extends keyof T> = Required<Pick<T, K>> &
 export interface BaseAlgoOrderEntry<T extends AlogOrderRootType>
   extends OrderEntity {
   algo_type: AlogOrderRootType;
-  child_orders: (Partial<Omit<AlgoOrderEntry<T>, "algo_type" | "type">> & {
+  child_orders: (Partial<Omit<AlgoOrderEntity<T>, "algo_type" | "type">> & {
     algo_type: AlgoOrderType;
     type: OrderType;
   })[];
@@ -100,20 +100,21 @@ export interface BaseAlgoOrderEntry<T extends AlogOrderRootType>
   sl_trigger_price?: string | number;
 }
 
-export type AlgoOrderEntry<
+export type AlgoOrderEntity<
   T extends AlogOrderRootType = AlogOrderRootType.STOP
 > = T extends AlogOrderRootType.TP_SL
   ? Optional<
       BaseAlgoOrderEntry<T>,
       "side" | "type" | "trigger_price" | "order_type"
     >
+  : T extends AlogOrderRootType.POSITIONAL_TP_SL
+  ? Optional<
+      BaseAlgoOrderEntry<T>,
+      "side" | "type" | "trigger_price" | "order_type" | "quantity"
+    >
   : Omit<BaseAlgoOrderEntry<T>, "child_orders" | "order_type">;
 
 export type TPSLOrderEntry = Optional<
-  AlgoOrderEntry<AlogOrderRootType.TP_SL>,
+  AlgoOrderEntity<AlogOrderRootType.TP_SL>,
   "side" | "type" | "trigger_price"
 >;
-
-// export type AlgoOrderEntryExt = AlgoOrderEntry & {
-//   // internal fields
-// };

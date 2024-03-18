@@ -6,7 +6,12 @@ import {
   useSessionStorage,
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
-import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
+import {
+  API,
+  AccountStatusEnum,
+  AlogOrderRootType,
+  OrderEntity,
+} from "@orderly.network/types";
 import { TabContext } from "@/tab";
 import { OrderStatus } from "@orderly.network/types";
 import { OrdersViewFull } from "@/block/orders/full";
@@ -29,13 +34,23 @@ export const MyOrders: FC<Props> = (props) => {
 
   const [side, setSide] = useState<OrderSide | "">("");
 
-  const [data, { isLoading, loadMore, cancelOrder, updateOrder, cancelAlgoOrder, updateAlgoOrder }] =
-    useOrderStream({
-      status: props.status,
-      symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
-      // @ts-ignore
-      side,
-    });
+  const [
+    data,
+    {
+      isLoading,
+      loadMore,
+      cancelOrder,
+      updateOrder,
+      cancelAlgoOrder,
+      updateAlgoOrder,
+    },
+  ] = useOrderStream({
+    status: props.status,
+    symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
+    // @ts-ignore
+    side,
+    excludes: [AlogOrderRootType.POSITIONAL_TP_SL, AlogOrderRootType.TP_SL],
+  });
 
   // const onShowAllSymbolChange = (isAll: boolean) => {
   //   setSymbol(isAll ? "" : context.symbol);

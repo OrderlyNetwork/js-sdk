@@ -11,6 +11,8 @@ import { HistoryView } from "./history";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
 import { DecimalPrecisionType } from "./decimalPrecisionCheckBox";
 import { UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
+import { MemoizedTPSLTabTitle } from "@/page/trading/desktop/sections/datalist/tpslTabTitle";
+import { TPSLListView } from "@/block/tp_sl/listview";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -86,6 +88,13 @@ export const DataListView = () => {
         {/* <OrdersPane /> */}
         <MyOrders status={OrderStatus.INCOMPLETE} />
       </TabPane>
+      {/*<TabPane*/}
+      {/*  title={<MemoizedTPSLTabTitle />}*/}
+      {/*  value="tpsl"*/}
+      {/*  className="orderly-px-3"*/}
+      {/*>*/}
+      {/*  <TPSLListView />*/}
+      {/*</TabPane>*/}
       <TabPane title="Filled" value="filled" className="orderly-px-3">
         {/* <HistoryPane /> */}
         <MyOrders status={OrderStatus.FILLED} />

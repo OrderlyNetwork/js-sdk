@@ -11,6 +11,8 @@ import { IOCOrderCreator } from "./iocCreator";
 import { AlogOrderRootType } from "@orderly.network/types";
 import { OrderEntity } from "@orderly.network/types";
 import { AlgoOrderEntry } from "@orderly.network/types";
+import { TPSLOrderCreator } from "./tpslOrderCreator";
+import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
 
 export class OrderFactory {
   static create(type: OrderType | AlogOrderRootType): OrderCreator<any> {
@@ -37,9 +39,9 @@ export class OrderFactory {
 
       // algo order
       case AlogOrderRootType.TP_SL:
-        return new GeneralOrderCreator();
+        return new TPSLOrderCreator();
       case AlogOrderRootType.POSITIONAL_TP_SL:
-        return new GeneralOrderCreator();
+        return new TPSLPositionOrderCreator();
 
       default:
         return new GeneralOrderCreator();

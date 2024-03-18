@@ -10,7 +10,7 @@ import { useCollateral } from "./useCollateral";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { useOrderStream } from "./useOrderStream";
+import { useOrderStream } from "./useOrderStream/useOrderStream";
 
 const positionsPath = pathOr([], [0, "rows"]);
 

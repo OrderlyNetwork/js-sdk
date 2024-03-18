@@ -6,15 +6,16 @@ export const useTaskProfitAndStopLoss = (
   /**
    * Position that needs to set take profit and stop loss
    */
-  position: Partial<API.PositionTPSLExt> & Pick<API.PositionTPSLExt, "symbol">
+  position: Partial<API.PositionTPSLExt> &
+    Pick<API.PositionTPSLExt, "symbol" | "average_open_price">
 ): ReturnType<typeof useTaskProfitAndStopLossInternal> => {
   if (!position) {
     throw new SDKError("Position is required");
   }
 
-  const { data: markPrice } = useMarkPrice(position.symbol);
+  // const { data: markPrice } = useMarkPrice(position.symbol);
 
-  const result = useTaskProfitAndStopLossInternal(position, markPrice);
+  const result = useTaskProfitAndStopLossInternal(position);
 
   return result;
 };

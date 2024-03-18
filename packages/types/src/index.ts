@@ -12,7 +12,7 @@ export {
 } from "./order";
 export type {
   OrderEntity,
-  AlgoOrderEntry,
+  AlgoOrderEntity,
   TPSLOrderEntry,
   BaseAlgoOrderEntry,
 } from "./order";

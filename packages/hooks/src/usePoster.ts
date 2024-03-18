@@ -128,6 +128,9 @@ export const usePoster = (
 
   return {
     error,
+    /**
+     * The ref to the canvas element, you should pass this ref to the canvas element
+     */
     ref,
     /**
      * Converts the poster to a data URL

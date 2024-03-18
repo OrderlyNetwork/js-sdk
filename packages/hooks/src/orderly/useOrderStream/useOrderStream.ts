@@ -1,19 +1,23 @@
-import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
+import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo } from "react";
 import {
   OrderSide,
   OrderEntity,
   OrderStatus,
   API,
+  OrderType,
+  AlogOrderRootType,
 } from "@orderly.network/types";
-import { useMarkPricesStream } from "./useMarkPricesStream";
-import { useMutation } from "../useMutation";
-import version from "../version";
-import { useDataCenterContext } from "../dataProvider";
-import { generateKeyFun } from "../utils/swr";
-import { useEventEmitter } from "../useEventEmitter";
+import { useMarkPricesStream } from "../useMarkPricesStream";
+import { useMutation } from "../../useMutation";
+import version from "../../version";
+import { useDataCenterContext } from "../../dataProvider";
+import { generateKeyFun } from "../../utils/swr";
+import { useEventEmitter } from "../../useEventEmitter";
 
-type OrderType = "normalOrder" | "algoOrder";
+type CreateOrderType = "normalOrder" | "algoOrder";
+
+type CombineOrderType = AlogOrderRootType | "ALL";
 
 export interface UserOrdersReturn {
   data: any[];
@@ -24,18 +28,26 @@ export interface UserOrdersReturn {
 
 // const chche: Record<string, boolean> = {};
 
-type Params = {
-  symbol?: string;
-  status?: OrderStatus;
-  size?: number;
-  side?: OrderSide;
-};
-
 export const useOrderStream = (
   /**
    * Orders query params
    */
-  params: Params,
+  params: {
+    symbol?: string;
+    status?: OrderStatus;
+    size?: number;
+    side?: OrderSide;
+    /**
+     * Include the algo order type
+     * @default ["ALL"]
+     */
+    includes?: CombineOrderType[];
+    /**
+     * Exclude the algo order type
+     * @default []
+     */
+    excludes?: CombineOrderType[];
+  },
 
   options?: {
     /**
@@ -48,7 +60,14 @@ export const useOrderStream = (
     stopOnUnmount?: boolean;
   }
 ) => {
-  const { status, symbol, side, size = 100 } = params;
+  const {
+    status,
+    symbol,
+    side,
+    size = 100,
+    includes = ["ALL"],
+    excludes = [],
+  } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
 
@@ -106,9 +125,32 @@ export const useOrderStream = (
     if (!ordersResponse.data) {
       return null;
     }
+    let orders = ordersResponse.data?.map((item) => item.rows)?.flat();
 
-    return ordersResponse.data?.map((item) => item.rows)?.flat();
-  }, [ordersResponse.data]);
+    // return ordersResponse.data?.map((item) => item.rows)?.flat();
+
+    if (includes.includes("ALL") && excludes.length === 0) {
+      return orders;
+    }
+
+    if (includes.includes("ALL") && excludes.length > 0) {
+      return orders?.filter((item) => !excludes.includes(item.algo_type));
+    }
+
+    if (includes.length > 0 && excludes.length === 0) {
+      return orders?.filter((item) => includes.includes(item.algo_type));
+    }
+
+    if (includes.length > 0 && excludes.length > 0) {
+      return orders?.filter(
+        (item) =>
+          includes.includes(item.algo_type) &&
+          !excludes.includes(item.algo_type)
+      );
+    }
+
+    return orders;
+  }, [ordersResponse.data, includes, excludes]);
 
   // console.log(ordersResponse.data);
 
@@ -129,8 +171,9 @@ export const useOrderStream = (
   }, [flattenOrders, markPrices, status]);
 
   const total = useMemo(() => {
-    return ordersResponse.data?.[0]?.meta?.total || 0;
-  }, [ordersResponse.data?.[0]?.meta?.total]);
+    return orders?.length || 0;
+    // return ordersResponse.data?.[0]?.meta?.total || 0;
+  }, [orders?.length]);
 
   /**
    * cancel all orders
@@ -138,7 +181,7 @@ export const useOrderStream = (
   const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
 
   const _updateOrder = useCallback(
-    (orderId: string, order: OrderEntity, type: OrderType) => {
+    (orderId: string, order: OrderEntity, type: CreateOrderType) => {
       switch (type) {
         case "algoOrder":
           return doUpdateAlgoOrder({
@@ -179,7 +222,7 @@ export const useOrderStream = (
   }, []);
 
   const _cancelOrder = useCallback(
-    (orderId: number, type: OrderType, symbol?: string) => {
+    (orderId: number, type: CreateOrderType, symbol?: string) => {
       switch (type) {
         case "algoOrder":
           return doCanceAlgolOrder(null, {

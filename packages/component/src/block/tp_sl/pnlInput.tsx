@@ -14,10 +14,11 @@ interface Props {
   quote: string;
   onChange: (key: string, value: number | string) => void;
   testId?: string;
-  // values: {
-  //   pnl: string;
-  //   offset: string;
-  // };
+  values: {
+    PNL: string;
+    Offset: string;
+    "Offset%": string;
+  };
 }
 
 export enum PnLMode {
@@ -40,7 +41,7 @@ export const PnlInput: FC<Props> = (props) => {
       case PnLMode.PERCENTAGE:
         return `${type.toLowerCase()}_offset_percentage`;
       default:
-        return `tp_pnl`;
+        return `${type.toLowerCase()}_pnl`;
     }
   }, [mode]);
 
@@ -52,11 +53,15 @@ export const PnlInput: FC<Props> = (props) => {
       data-testid={props.testId}
       name={props.type}
       id={props.type}
+      autoComplete={"off"}
+      thousandSeparator
       suffix={
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className={"orderly-px-2 orderly-h-full orderly-group"}
+              className={
+                "orderly-px-2 orderly-h-full orderly-group active:orderly-outline-0"
+              }
               data-testid={`${props.type}_dropdown_btn`}
             >
               <ArrowIcon
@@ -89,8 +94,9 @@ export const PnlInput: FC<Props> = (props) => {
           </DropdownMenuContent>
         </DropdownMenu>
       }
-      onChange={(e) => {
-        props.onChange(key, e.target.value);
+      value={props.values[mode as keyof Props["values"]]}
+      onValueChange={(value) => {
+        props.onChange(key, value);
       }}
     />
   );

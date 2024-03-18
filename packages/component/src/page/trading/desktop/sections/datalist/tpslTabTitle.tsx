@@ -2,11 +2,11 @@ import { AlogOrderRootType, OrderStatus } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { memo } from "react";
 
-export const OrdersTabTitle = () => {
+export const TPSLTabTitle = () => {
   const [_, { total }] = useOrderStream(
     {
       status: OrderStatus.INCOMPLETE,
-      excludes: [AlogOrderRootType.POSITIONAL_TP_SL, AlogOrderRootType.TP_SL],
+      includes: [AlogOrderRootType.POSITIONAL_TP_SL, AlogOrderRootType.TP_SL],
     },
     {
       keeplive: true,
@@ -14,10 +14,10 @@ export const OrdersTabTitle = () => {
   );
 
   if (total === 0) {
-    return <>{"Pending"}</>;
+    return <>{"TP/SL"}</>;
   }
 
-  return <>{`Pending (${total})`}</>;
+  return <>{`TP/SL (${total})`}</>;
 };
 
-export const MemoizedOrdersTabTitle = memo(OrdersTabTitle);
+export const MemoizedTPSLTabTitle = memo(TPSLTabTitle);

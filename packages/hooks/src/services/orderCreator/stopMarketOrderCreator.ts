@@ -15,8 +15,7 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
     values: AlgoOrderEntry & {
       order_quantity: number;
       order_price: number;
-    },
-    config: ValuesDepConfig
+    }
   ) {
     const order = {
       ...this.baseOrder(values as unknown as OrderEntity),

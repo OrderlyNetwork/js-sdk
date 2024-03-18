@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { TPForm } from "./tpAndslForm";
+import { TPSLForm } from "./tpAndslForm";
 import {
   within,
   userEvent,
@@ -15,8 +15,8 @@ import { PnLMode } from "./pnlInput";
 import { useTaskProfitAndStopLoss } from "@orderly.network/hooks";
 
 const meta: Meta = {
-  title: "Block/TP&SL Form",
-  component: TPForm,
+  title: "Block/TPSL/TP&SL Form",
+  component: TPSLForm,
   args: {},
   argTypes: {
     onChange: { action: "onChange" },
@@ -26,7 +26,7 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof TPForm>;
+type Story = StoryObj<typeof TPSLForm>;
 
 export const Default: Story = {
   play: async ({ canvasElement, step }) => {
@@ -153,15 +153,13 @@ export const WithHooks: Story = {
       pnl_24_h: 0.828036,
       fee_24_h: 2.534924,
     };
-    const [order, { setValue }] = useTaskProfitAndStopLoss(positon);
+    const [order, { setValue, submit }] = useTaskProfitAndStopLoss(positon);
     return (
-      <TPForm
+      <TPSLForm
         symbol={"PERP_BTC_USDC"}
         onChange={setValue}
         maxQty={positon.position_qty}
-        onSubmit={function (): Promise<void> {
-          throw new Error("Function not implemented.");
-        }}
+        onSubmit={submit}
         order={order}
       />
     );

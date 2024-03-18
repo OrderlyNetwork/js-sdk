@@ -8,7 +8,7 @@ import {
 import { Decimal } from "@orderly.network/utils";
 
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
-  abstract create(values: T, config: ValuesDepConfig): T;
+  abstract create(values: T, config?: ValuesDepConfig): T;
   abstract validate(
     values: OrderFormEntity,
     config: ValuesDepConfig

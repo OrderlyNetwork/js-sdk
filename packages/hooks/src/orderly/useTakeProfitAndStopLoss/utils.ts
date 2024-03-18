@@ -217,7 +217,7 @@ export function calculateHelper(
   key: UpdateOrderKey,
   inputs: {
     key: UpdateOrderKey;
-    value: number;
+    value: string | number;
     entryPrice: number;
     qty: number;
     orderSide: OrderSide;
@@ -245,7 +245,7 @@ export function calculateHelper(
     : AlgoOrderType.STOP_LOSS;
   const keyPrefix = key.slice(0, 3);
 
-  let qty = key === "quantity" ? inputs.value : inputs.qty;
+  let qty = Number(key === "quantity" ? inputs.value : inputs.qty);
 
   let trigger_price, offset, offset_percentage, pnl;
 
@@ -253,6 +253,15 @@ export function calculateHelper(
     case "tp_trigger_price":
     case "sl_trigger_price": {
       trigger_price = inputs.value;
+      // if trigger price is empty and the key is `*_trigger_price`, reset the offset and pnl
+      if (inputs.value === "") {
+        return {
+          [`${keyPrefix}trigger_price`]: trigger_price,
+          [`${keyPrefix}offset`]: "",
+          [`${keyPrefix}offset_percentage`]: "",
+          [`${keyPrefix}pnl`]: "",
+        };
+      }
       break;
     }
 
@@ -261,7 +270,7 @@ export function calculateHelper(
       pnl = inputs.value;
       trigger_price = pnlToPrice({
         qty,
-        pnl: inputs.value,
+        pnl: Number(inputs.value),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType,
@@ -274,7 +283,7 @@ export function calculateHelper(
       offset = inputs.value;
       trigger_price = offsetToPrice({
         qty,
-        offset: inputs.value,
+        offset: Number(inputs.value),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType:
@@ -290,7 +299,7 @@ export function calculateHelper(
       offset_percentage = inputs.value;
       trigger_price = offsetPercentageToPrice({
         qty,
-        percentage: inputs.value,
+        percentage: Number(inputs.value),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType,
@@ -305,7 +314,7 @@ export function calculateHelper(
       offset ??
       priceToOffset({
         qty,
-        price: trigger_price!,
+        price: Number(trigger_price!),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType,
@@ -314,7 +323,7 @@ export function calculateHelper(
       offset_percentage ??
       priceToOffsetPercentage({
         qty,
-        price: trigger_price!,
+        price: Number(trigger_price!),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType,
@@ -323,7 +332,7 @@ export function calculateHelper(
       pnl ??
       priceToPnl({
         qty,
-        price: trigger_price!,
+        price: Number(trigger_price!),
         entryPrice: inputs.entryPrice,
         orderSide: inputs.orderSide,
         orderType,

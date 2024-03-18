@@ -9,17 +9,13 @@ import { AlgoOrderEntry } from "@orderly.network/types";
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
 export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
-  create(values: OrderEntity, config: ValuesDepConfig): OrderEntity {
+  create(values: OrderEntity, config?: ValuesDepConfig): OrderEntity {
     const order = {
       ...this.baseOrder(values),
       order_price: values.order_price,
     };
 
-    this.totalToQuantity(order, config);
-
-    // delete order["total"];
-    // delete order["trigger_price"];
-    // delete order["isStopOrder"];
+    this.totalToQuantity(order, config!);
 
     // console.log("create", order);
 

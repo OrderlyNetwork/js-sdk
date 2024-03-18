@@ -2,12 +2,13 @@ import { Input } from "@/input";
 import { FC, useMemo } from "react";
 import { Divider } from "@/divider";
 import Button from "@/button";
-import { API, AlgoOrderEntry, SDKError } from "@orderly.network/types";
+import { AlgoOrderEntity, SDKError } from "@orderly.network/types";
 import { Numeral } from "@/text/numeral";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { commify } from "@orderly.network/utils";
 import { Slider } from "@/slider";
 import { PnlInput } from "@/block/tp_sl/pnlInput";
+import { UpdateOrderKey } from "@orderly.network/hooks/esm/orderly/useTakeProfitAndStopLoss/utils";
 
 export interface Props {
   symbol: string;
@@ -15,12 +16,12 @@ export interface Props {
    * Base tick size
    */
   // base_tick: number;
-  onChange: (key: string, value: number | string) => void;
+  onChange: (key: UpdateOrderKey, value: number | string) => void;
   maxQty: number;
   onSubmit: () => Promise<void>;
   onCancel?: () => void;
   order: Partial<
-    AlgoOrderEntry & {
+    AlgoOrderEntity & {
       /**
        * Computed take profit
        */
@@ -38,7 +39,7 @@ export interface Props {
   >;
 }
 
-export const TPForm: FC<Props> = (props) => {
+export const TPSLForm: FC<Props> = (props) => {
   if (!props.symbol) {
     throw new SDKError("Symbol is required");
   }
@@ -47,12 +48,16 @@ export const TPForm: FC<Props> = (props) => {
     throw new SDKError("Max quantity is required");
   }
 
-  if (!props.order) {
-    throw new SDKError("Order is required");
-  }
+  // if (!props.order) {
+  //   throw new SDKError("Order is required");
+  // }
 
   const { maxQty, order } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
+
+  const maxQtyNumber = useMemo(() => {
+    return Math.abs(maxQty);
+  }, [maxQty]);
 
   return (
     <div className={"orderly-space-y-4"}>
@@ -64,6 +69,7 @@ export const TPForm: FC<Props> = (props) => {
           className={"orderly-text-right"}
           name="orderQuantity"
           id="orderQuantity"
+          autoComplete={"off"}
           data-testid="order-quantity"
           onChange={(e) => {
             props.onChange("quantity", e.target.value);
@@ -72,7 +78,7 @@ export const TPForm: FC<Props> = (props) => {
         <Slider
           min={0}
           color={"primary"}
-          max={Math.abs(maxQty)}
+          max={maxQtyNumber}
           markCount={4}
           step={symbolInfo("base_tick")}
           value={[Number(order.quantity ?? maxQty)]}
@@ -89,7 +95,12 @@ export const TPForm: FC<Props> = (props) => {
           }
         >
           <span>0%</span>
-          <div>
+          <button
+            disabled={maxQtyNumber <= 0}
+            onClick={() => {
+              props.onChange("quantity", maxQty);
+            }}
+          >
             <span>Max</span>
             <Numeral
               className={"orderly-text-base-contrast-54 orderly-ml-1"}
@@ -97,7 +108,7 @@ export const TPForm: FC<Props> = (props) => {
             >
               {maxQty}
             </Numeral>
-          </div>
+          </button>
         </div>
       </div>
       <Divider />
@@ -122,14 +133,22 @@ export const TPForm: FC<Props> = (props) => {
             placeholder={symbolInfo("quote")}
             className={"orderly-text-right orderly-pr-2"}
             data-testid={"tp-price-input"}
-            onChange={(e) => {
-              props.onChange("tp_trigger_price", e.target.value);
+            value={commify(order.tp_trigger_price ?? "")}
+            thousandSeparator
+            autoComplete={"off"}
+            onValueChange={(value) => {
+              props.onChange("tp_trigger_price", value);
             }}
           />
           <PnlInput
             quote={symbolInfo("quote")}
             onChange={props.onChange}
             type={"TP"}
+            values={{
+              PNL: `${order.tp_pnl ?? ""}`,
+              Offset: `${order.tp_offset ?? ""}`,
+              "Offset%": `${order.tp_offset_percentage ?? ""}`,
+            }}
           />
         </div>
       </div>
@@ -153,11 +172,21 @@ export const TPForm: FC<Props> = (props) => {
             placeholder={symbolInfo("quote")}
             className={"orderly-text-right orderly-pr-2"}
             data-testid={"sl-price-input"}
+            thousandSeparator
+            onValueChange={(value) => {
+              props.onChange("sl_trigger_price", value);
+            }}
+            value={commify(order.sl_trigger_price ?? "")}
           />
           <PnlInput
             quote={symbolInfo("quote")}
             onChange={props.onChange}
             type={"SL"}
+            values={{
+              PNL: `${order.sl_pnl ?? ""}`,
+              Offset: `${order.sl_offset ?? ""}`,
+              "Offset%": `${order.sl_offset_percentage ?? ""}`,
+            }}
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ export class TPSLOrderCreator extends BaseOrderCreator<
 > {
   create(
     values: AlgoOrderEntry<AlogOrderRootType.TP_SL>,
-    config: ValuesDepConfig
+    // config: ValuesDepConfig
   ) {
     return {
       algo_type: AlogOrderRootType.TP_SL,

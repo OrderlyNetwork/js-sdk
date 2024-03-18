@@ -15,7 +15,7 @@ export { useLeverage } from "./useLeverage";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { usePositionStream } from "./usePositionStream";
-export { useOrderStream } from "./useOrderStream";
+export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
 export { useCollateral } from "./useCollateral";

@@ -28,6 +28,7 @@ import { API } from "@orderly.network/types";
 import { EmptyView } from "@/listView/emptyView";
 import { PositionEmptyView } from "./positionEmptyView";
 import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
+import { TPSLButton } from "./tpslButton";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -40,6 +41,7 @@ export const Listview: FC<
   const {
     data: { pnlNotionalDecimalPrecision },
   } = useTabContext();
+
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -137,26 +139,30 @@ export const Listview: FC<
           />
         ),
         render: (value: string, record: any) => {
-          return (<span>
-            <Numeral
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-            >
-              {value}
-            </Numeral>
-            {<Numeral
-              rule="percentages"
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-              prefix="("
-              surfix=")"
-            >
-              {(record.unsettled_pnl_ROI)}
-            </Numeral>}
-            <SharePnLIcon className="orderly-ml-2" position={record}/>
-          </span>)
+          return (
+            <span>
+              <Numeral
+                precision={pnlNotionalDecimalPrecision}
+                coloring
+                className="orderly-font-semibold"
+              >
+                {value}
+              </Numeral>
+              {
+                <Numeral
+                  rule="percentages"
+                  precision={pnlNotionalDecimalPrecision}
+                  coloring
+                  className="orderly-font-semibold"
+                  prefix="("
+                  surfix=")"
+                >
+                  {record.unsettled_pnl_ROI}
+                </Numeral>
+              }
+              <SharePnLIcon className="orderly-ml-2" position={record} />
+            </span>
+          );
         },
       },
       // {
@@ -229,11 +235,16 @@ export const Listview: FC<
         title: "",
         dataIndex: "close_position",
         align: "right",
-        width: 80,
+        width: 160,
         fixed: "right",
         className: "orderly-h-[48px]",
         render: (value: string) => {
-          return <CloseButton />;
+          return (
+            <div className="orderly-flex orderly-space-x-2">
+              <CloseButton />
+              <TPSLButton />
+            </div>
+          );
         },
       },
     ];

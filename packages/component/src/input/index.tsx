@@ -13,6 +13,7 @@ import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 import { CircleCloseIcon } from "@/icon";
 import { findLongestCommonSubString } from "@/utils/string";
+import { parseInputHelper } from "./utils";
 
 const inputVariants = cva(["orderly-rounded"], {
   variants: {
@@ -71,6 +72,8 @@ export interface InputProps
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
   containerClassName?: string;
+  onValueChange?: (value: string) => void;
+  thousandSeparator?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -148,6 +151,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
       if (typeof onChange === "function") {
         onChange(event);
+      }
+
+      if (typeof props.onValueChange === "function") {
+        let value = event.target.value;
+        if (props.thousandSeparator) {
+          value = parseInputHelper(value);
+        }
+        props.onValueChange(value);
       }
       prevInputValue.current = event.target.value;
       setCursor(event.target.selectionStart);

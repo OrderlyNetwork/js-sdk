@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { account, positions } from "@orderly.network/perp";
 import { type SWRConfiguration } from "swr";
-import useSWRSubscription from "swr/subscription";
 import { createGetter } from "../utils/createGetter";
 import { useFundingRates } from "./useFundingRates";
 import { type API, OrderEntity } from "@orderly.network/types";
@@ -11,7 +10,6 @@ import { useMarkPricesStream } from "./useMarkPricesStream";
 import { pathOr, propOr } from "ramda";
 import { parseHolding } from "../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useWS } from "../useWS";
 import { useMarketsStream } from "./useMarketsStream";
 
 type PriceMode = "markPrice" | "lastPrice";
