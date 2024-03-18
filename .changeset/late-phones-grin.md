@@ -18,4 +18,4 @@
 "@orderly/docs": patch
 ---
 
-fix bug
+fix bugs;
