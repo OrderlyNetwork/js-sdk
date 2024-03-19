@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.2.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
 ## 0.2.6
 
 ### Patch Changes

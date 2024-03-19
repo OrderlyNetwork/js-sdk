@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.1.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
 ## 1.1.6
 
 ### Patch Changes

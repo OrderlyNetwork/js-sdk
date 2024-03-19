@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 0.1.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
 ## 0.1.6
 
 ### Patch Changes

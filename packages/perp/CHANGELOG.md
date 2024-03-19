@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+- Updated dependencies
+  - @orderly.network/types@0.2.7
+  - @orderly.network/utils@0.1.7
+
 ## 2.0.6
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+- Updated dependencies
+  - @orderly.network/core@0.2.7
+
 ## 0.1.6
 
 ### Patch Changes

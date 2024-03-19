@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 0.1.8
+
+### Patch Changes
+
+- fix bug: window not defined;
+- Updated dependencies
+  - @orderly.network/hooks@1.1.8
+  - @orderly.network/types@0.2.7
+
 ## 0.1.7
 
 ### Patch Changes
