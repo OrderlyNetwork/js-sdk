@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Statistic, Table, cn } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text } from "@orderly.network/react";
 import { FC, useCallback, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
@@ -73,46 +73,46 @@ const _BigReferees: FC<{
         return [
             {
                 title: "Referee address",
-                dataIndex: "date",
+                dataIndex: "user_address",
                 className: "orderly-h-[64px]",
-
+                width: 106,
                 render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-2 orderly-items-center">
-                        0x8Dd04...b1b88
-                    </div>
+                    <Text rule="address" className="orderly-flex orderly-gap-2 orderly-items-center">
+                        {value || "--"}
+                    </Text>
                 )
             },
             {
                 title: "Referral code",
-                dataIndex: "Referees",
-                align: "left",
+                dataIndex: "referral_code",
+                align: "right",
                 className: "orderly-h-[64px]",
                 render: (value, record) => (
                     <div>
-                        Carbo
+                        {value}
                     </div>
                 )
             },
             {
                 title: "Total commission (USDC)",
-                dataIndex: "vol",
+                dataIndex: "referral_rebate",
                 className: "orderly-h-[64px]",
                 align: "right",
                 render: (value, record) => (
-                    <div >
-                        $1,153.64
-                    </div>
+                    <Numeral precision={2} >
+                        {value}
+                    </Numeral>
                 )
             },
             {
                 title: "Total vol. (USDC)",
-                dataIndex: "vol",
+                dataIndex: "volume",
                 className: "orderly-h-[64px]",
                 align: "right",
                 render: (value, record) => (
-                    <div >
-                        $1,153.64
-                    </div>
+                    <Numeral precision={2} >
+                        {value}
+                    </Numeral>
                 )
             },
             {
@@ -120,11 +120,10 @@ const _BigReferees: FC<{
                 dataIndex: "vol",
                 className: "orderly-h-[64px]",
                 align: "right",
-                render: (value, record) => (
-                    <div >
-                        $1,153.64
-                    </div>
-                )
+                render: (value, record) => {
+                    const date = formatYMDTime(record?.code_binding_time);
+                    return <div>{date}</div>
+                }
             },
         ];
     }, []);

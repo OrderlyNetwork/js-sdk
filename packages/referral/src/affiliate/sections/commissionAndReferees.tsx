@@ -22,6 +22,7 @@ export const CommissionAndReferees:FC<{className?: string}> = (props) => {
                 autoFit
                 value={activeTab}
                 onTabChange={onTabChange}
+                tabBarClassName="orderly-h-[61px]"
             >
 
                 <TabPane

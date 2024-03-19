@@ -30,7 +30,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             if (filterType === "Commission") {
                 return [timeText, item?.referee_rebate || 0];
             }
-            return [timeText, item?.volumn || 0];
+            return [timeText, item?.volume || 0];
 
         });
 

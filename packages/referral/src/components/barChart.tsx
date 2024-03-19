@@ -2,7 +2,6 @@ import { cn } from "@orderly.network/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
 
-
 export type BarStyle = {
     //** default is 12 */
     width: number,
