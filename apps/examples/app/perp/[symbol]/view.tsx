@@ -133,6 +133,10 @@ const View = (props: Props) => {
             // profitColor: "rgb(255,0,0)",
             // lossColor: "rgb(0,0,255)",
             // brandColor: "rgb(0,181,159)",
+            profitColor: '#00B49E',
+            lossColor: '#FF447C',
+            brandColor: 'rgba(25, 199, 166, 1)',
+            fontFamily: "DIN2014-Demi",
           },
         }}
       >

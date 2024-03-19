@@ -5,6 +5,7 @@ export type PosterProps = {
   width: number;
   height: number;
   className?: string;
+  ratio?: number;
   data: DrawOptions;
   style?: React.CSSProperties;
 };
@@ -19,7 +20,9 @@ export type PosterRef = {
 export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
   const { width, height, className, data, style } = props;
 
-  const { ref, download, toDataURL, copy, toBlob } = usePoster(data);
+  const { ref, download, toDataURL, copy, toBlob } = usePoster(data, {
+    ratio: props.ratio,
+  });
 
   useImperativeHandle(parentRef, () => ({
     download,

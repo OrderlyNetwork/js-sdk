@@ -4,6 +4,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   domain: {
     fontSize: 13,
     // color: undefined,
+    textBaseline: "bottom",
     position: {
       left: 20,
       bottom: 17,
@@ -11,7 +12,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   },
   message: {
     fontSize: 20,
-    color: "white",
+    color: "rgba(255, 255, 255, 0.98)",
     textBaseline: "top",
     position: {
       left: 20,
@@ -19,7 +20,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     },
   },
   position: {
-    fontSize: 20,
+    fontSize: 14,
     color: "rgba(255,255,255,0.98)",
     position: {
       left: 20,
@@ -29,7 +30,8 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   unrealizedPnl: {
     fontSize: 36,
     color: "rgba(255,255,255,0.5)",
-    secondaryColor: "rgba(255,255,255,0.5)",
+    secondaryColor: "rgba(255,255,255,0.54)",
+    secondaryFontSize: 20,
     position: {
       left: 20,
       top: 110,
@@ -49,8 +51,9 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     fontSize: 10,
     color: "rgba(255,255,255,0.5)",
     textAlign: "end",
+    textBaseline: "bottom",
     position: {
-      right: 15,
+      right: 20,
       bottom: 17,
     },
   },

@@ -61,3 +61,21 @@ export function isHex(value: string): boolean {
 export function isHexString(value: string): boolean {
   return typeof value === "string" && value.startsWith("0x") && isHex(value);
 }
+
+export const getGlobalObject = () => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  // @ts-ignore
+  if (typeof global !== "undefined") {
+    // @ts-ignore
+    return global;
+  }
+  throw new Error("cannot find the global object");
+};

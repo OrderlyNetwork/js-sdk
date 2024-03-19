@@ -160,7 +160,7 @@ export const usePositionStream = (
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
-        unsettled_pnl_ROI: unrealPnlROI,
+        unrealized_pnl_ROI: unrealPnlROI,
       };
     });
 

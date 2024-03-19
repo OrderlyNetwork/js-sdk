@@ -67,6 +67,7 @@ export type PosterLayoutConfig = {
   position?: layoutInfo;
   unrealizedPnl?: layoutInfo & {
     secondaryColor: string;
+    secondaryFontSize: number;
   };
 
   informations?: layoutInfo & {

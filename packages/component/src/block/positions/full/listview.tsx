@@ -157,7 +157,7 @@ export const Listview: FC<
                   prefix="("
                   surfix=")"
                 >
-                  {record.unsettled_pnl_ROI}
+                  {record.unrealized_pnl_ROI}
                 </Numeral>
               }
               <SharePnLIcon className="orderly-ml-2" position={record} />

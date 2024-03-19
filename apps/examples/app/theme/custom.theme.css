@@ -283,3 +283,25 @@ body {
 .orderly-chain-list .orderly-chain-symbol-name {
   font-size: 14px;
 }
+
+.orderly-referral .orderly-dot-sel {
+  background-color: rgba(51, 95, 252, 1);
+}
+.orderly-referral .orderly-dot-normal {
+  background-color: (40, 46, 58, 1);
+}
+.orderly-referral .orderly-infomation-bg {
+  background-color: rgba(41, 51, 70, 1);
+}
+.orderly-referral .orderly-referral-shadow {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.orderly-referral .orderly-referral-download-btn-bg {
+  background-color: rgba(75, 83, 105, 1);
+}
+#orderly-referral-desktop-bg {
+  background-color: rgba(27, 32, 40, 1);
+}
+#orderly-referral-mweb-bg {
+  background-color: rgba(27, 32, 40, 1);
+}

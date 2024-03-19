@@ -186,6 +186,8 @@ export declare namespace API {
     pending_short_qty: number;
     settle_price: number;
     average_open_price: number;
+    unrealized_pnl: number;
+    unrealized_pnl_ROI: number;
     unsettled_pnl: number;
     unsettled_pnl_ROI: number;
     mark_price: number;

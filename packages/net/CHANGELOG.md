@@ -1,5 +1,105 @@
 # @orderly.network/net
 
+## 1.1.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
+## 1.1.6
+
+### Patch Changes
+
+- 93a5ce6a: fix bugs;
+
+## 1.1.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
+## 1.1.5
+
+### Patch Changes
+
+- 1c2f86c8: fix bugs
+- 83a2465c: fix bugs
+- 4b635449: fix bugs
+- c5918eba: fix bugs
+- 08849940: fix bugs
+- 49e6b8a0: fix bugs
+- c47192f5: fix bugs
+- e62b8dea: fix bugs
+- 165a7cd7: hide share PnL entry
+- 32be91ac: fix bug
+- 2e482e37: fix bugs
+
+## 1.1.5-internal.10
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.9
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.8
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.7
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.6
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.5
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.4
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.3
+
+### Patch Changes
+
+- fix bug
+
+## 1.1.5-internal.2
+
+### Patch Changes
+
+- fix bugs
+
+## 1.1.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+
+## 1.1.5-internal.0
+
+### Patch Changes
+
+- fix bugs
+
 ## 1.1.4
 
 ### Patch Changes

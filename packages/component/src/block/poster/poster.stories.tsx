@@ -222,3 +222,37 @@ export const MultiplePosters: Story = {
     );
   },
 };
+
+export const CustomFontFamily: Story = {
+  render: (args) => {
+    const posterRef = useRef<PosterRef | null>(null);
+    return (
+      <div>
+        <Poster
+          width={500}
+          height={300}
+          data={{ ...args, fontFamily: "DIN 2014" }}
+          ref={posterRef}
+        />
+        {/* <div className="orderly-mt-3 orderly-flex orderly-gap-2">
+        <Button
+          size={"small"}
+          onClick={() => {
+            posterRef.current?.download("poster.png");
+          }}
+        >
+          Download image
+        </Button>
+        <Button
+          size={"small"}
+          onClick={() => {
+            posterRef.current?.copy();
+          }}
+        >
+          Copy image
+        </Button>
+      </div> */}
+      </div>
+    );
+  },
+};

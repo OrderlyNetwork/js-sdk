@@ -1,5 +1,199 @@
 # examples
 
+## 0.2.8
+
+### Patch Changes
+
+- fix bug: window not defined;
+- Updated dependencies
+  - @orderly.network/react@0.2.8
+  - @orderly.network/core@0.2.7
+  - @orderly.network/hooks@1.1.8
+  - @orderly.network/web3-onboard@0.1.8
+
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@1.1.7
+  - @orderly.network/react@0.2.7
+  - @orderly.network/web3-onboard@0.1.7
+
+## 0.2.6
+
+### Patch Changes
+
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
+  - @orderly.network/react@0.2.6
+  - @orderly.network/web3-onboard@0.1.6
+  - @orderly.network/hooks@1.1.6
+  - @orderly.network/core@0.2.6
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@0.2.6-alpha.0
+  - @orderly.network/web3-onboard@0.1.6-alpha.0
+  - @orderly.network/hooks@1.1.6-alpha.0
+  - @orderly.network/core@0.2.6-alpha.0
+
+## 0.2.5
+
+### Patch Changes
+
+- 1c2f86c8: fix bugs
+- 83a2465c: fix bugs
+- 4b635449: fix bugs
+- c5918eba: fix bugs
+- 08849940: fix bugs
+- 49e6b8a0: fix bugs
+- c47192f5: fix bugs
+- e62b8dea: fix bugs
+- 165a7cd7: hide share PnL entry
+- 32be91ac: fix bug
+- 2e482e37: fix bugs
+- Updated dependencies [1c2f86c8]
+- Updated dependencies [83a2465c]
+- Updated dependencies [4b635449]
+- Updated dependencies [c5918eba]
+- Updated dependencies [08849940]
+- Updated dependencies [49e6b8a0]
+- Updated dependencies [c47192f5]
+- Updated dependencies [e62b8dea]
+- Updated dependencies [165a7cd7]
+- Updated dependencies [32be91ac]
+- Updated dependencies [2e482e37]
+  - @orderly.network/react@0.2.5
+  - @orderly.network/web3-onboard@0.1.5
+  - @orderly.network/hooks@1.1.5
+  - @orderly.network/core@0.2.5
+
+## 0.2.5-internal.10
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.10
+  - @orderly.network/web3-onboard@0.1.5-internal.10
+  - @orderly.network/hooks@1.1.5-internal.10
+  - @orderly.network/core@0.2.5-internal.10
+
+## 0.2.5-internal.9
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.9
+  - @orderly.network/web3-onboard@0.1.5-internal.9
+  - @orderly.network/hooks@1.1.5-internal.9
+  - @orderly.network/core@0.2.5-internal.9
+
+## 0.2.5-internal.8
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.8
+  - @orderly.network/web3-onboard@0.1.5-internal.8
+  - @orderly.network/hooks@1.1.5-internal.8
+  - @orderly.network/core@0.2.5-internal.8
+
+## 0.2.5-internal.7
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.7
+  - @orderly.network/web3-onboard@0.1.5-internal.7
+  - @orderly.network/hooks@1.1.5-internal.7
+  - @orderly.network/core@0.2.5-internal.7
+
+## 0.2.5-internal.6
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.6
+  - @orderly.network/web3-onboard@0.1.5-internal.6
+  - @orderly.network/hooks@1.1.5-internal.6
+  - @orderly.network/core@0.2.5-internal.6
+
+## 0.2.5-internal.5
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.5
+  - @orderly.network/web3-onboard@0.1.5-internal.5
+  - @orderly.network/hooks@1.1.5-internal.5
+  - @orderly.network/core@0.2.5-internal.5
+
+## 0.2.5-internal.4
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.4
+  - @orderly.network/web3-onboard@0.1.5-internal.4
+  - @orderly.network/hooks@1.1.5-internal.4
+  - @orderly.network/core@0.2.5-internal.4
+
+## 0.2.5-internal.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.3
+  - @orderly.network/web3-onboard@0.1.5-internal.3
+  - @orderly.network/hooks@1.1.5-internal.3
+  - @orderly.network/core@0.2.5-internal.3
+
+## 0.2.5-internal.2
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.2
+  - @orderly.network/web3-onboard@0.1.5-internal.2
+  - @orderly.network/hooks@1.1.5-internal.2
+  - @orderly.network/core@0.2.5-internal.2
+
+## 0.2.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.1
+  - @orderly.network/web3-onboard@0.1.5-internal.1
+  - @orderly.network/hooks@1.1.5-internal.1
+  - @orderly.network/core@0.2.5-internal.1
+
+## 0.2.5-internal.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/react@0.2.5-internal.0
+  - @orderly.network/web3-onboard@0.1.5-internal.0
+  - @orderly.network/hooks@1.1.5-internal.0
+  - @orderly.network/core@0.2.5-internal.0
+
 ## 0.2.4
 
 ### Patch Changes

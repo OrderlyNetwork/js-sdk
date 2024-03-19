@@ -1,4 +1,4 @@
-import "./utils/dev";
+// import "./utils/dev";
 
 export { default as version } from "./version";
 
