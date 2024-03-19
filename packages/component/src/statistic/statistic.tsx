@@ -128,8 +128,8 @@ export const Statistic: FC<StatisticProps> = (props) => {
   return (
     <div
       className={cn(
-        props.className,
         alignClasses[align],
+        props.className,
         props.hint && "orderly-cursor-pointer hover:orderly-text-base-contrast"
       )}
     >

@@ -1,3 +1,5 @@
+import "@orderly.network/react/dist/styles.css";
+
 export { default as version } from "./version";
 
 export { Referral } from "./referral";

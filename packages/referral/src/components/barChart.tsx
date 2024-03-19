@@ -166,9 +166,9 @@ export const ColmunChart: React.FC<{ className?: string, data: any[], hoverTitle
 
     const hoverX = useMemo(() => {
         if (!hoverItem) return 0;
-        
+
         const hoverWidth = 227;
-        if (hoverItem.x > size.width/2) {
+        if (hoverItem.x > size.width / 2) {
             const x = hoverItem.x - 227;
             if (x < 0) {
                 return 0;
@@ -183,26 +183,29 @@ export const ColmunChart: React.FC<{ className?: string, data: any[], hoverTitle
 
     }, [hoverItem, size]);
 
-    console.log("hover x", hoverX);
+
+    console.log("chart data souce is", data);
     
 
 
     return (
         <div ref={chartContainerRef} className={cn("orderly-w-full orderly-h-full orderly-relative", className)} >
-            <svg height="100%" style={{ width: `${size.width}px` }}>
-                {/* yAxis */}
-                <g>{yAxisChildren}</g>
 
-                {/* xAxis */}
-                <g>{xAxisChildren}</g>
+            {data && (
+                <svg height="100%" style={{ width: `${size.width}px` }}>
+                    {/* yAxis */}
+                    <g>{yAxisChildren}</g>
 
-                {/* columns */}
-                <g>{columns}</g>
+                    {/* xAxis */}
+                    <g>{xAxisChildren}</g>
 
-                {/* hover */}
-                <g>{hover}</g>
-            </svg>
+                    {/* columns */}
+                    <g>{columns}</g>
 
+                    {/* hover */}
+                    <g>{hover}</g>
+                </svg>
+            )}
             {hoverItem && <div
                 className="orderly-absolute orderly-bg-base-500 orderly-rounded-lg orderly-p-3 orderly-w-[227px] orderly-top-0"
                 style={{

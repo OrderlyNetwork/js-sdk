@@ -34,6 +34,7 @@ export {
   DropdownMenuRadioGroup,
 } from "./dropdown/dropdown";
 export * from "./select";
+export * from "./statistic";
 
 export {
   Dialog,

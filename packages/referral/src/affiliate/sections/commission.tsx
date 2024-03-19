@@ -1,83 +1,109 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, Table, cn } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Table, cn } from "@orderly.network/react";
 import { EmptyView } from "@orderly.network/react";
-import { FC, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
+import { useCommission } from "../../hooks/useCommission";
+import { formatTime, formatYMDTime } from "../../utils/utils";
 
 export const CommissionList: FC<{
-    date: string,
-    dataSource: any[]
+    dateText?: string,
+    setDateText: any
 }> = (props) => {
+    const { dateText, setDateText } = props;
+
+    const [dataSource, { refresh, isLoading, loadMore }] = useCommission();
+
+    console.log("xxxxxxxxxxx data", dataSource, isLoading);
+
+    if (dataSource?.length > 0) {
+        const text = formatTime(dataSource[0].update_time);
+        if (text) {
+            setDateText(text);
+        }
+    }
+
 
     const isMD = useMediaQuery(MEDIA_MD);
-    const { date, dataSource } = props;
 
     return isMD ?
-        <_SmallCommission date={date} dataSource={dataSource} /> :
-        <_BigCommission date={date} dataSource={dataSource} />
+        <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
+        <_BigCommission dataSource={dataSource} />
 }
 
 const _SmallCommission: FC<{
-    date: string,
-    dataSource: any[]
+    date?: string,
+    dataSource: any[],
+    loadMore: any
 }> = (props) => {
+    const { date, dataSource, loadMore } = props;
 
-    const { date, dataSource } = props;
-    const content = useMemo(() => {
-        if (dataSource.length === 0) {
-            return (<EmptyView />);
-        }
+    const renderItem = (item: any, index: number) => {
+        const date = formatYMDTime(item?.updated_time);
+        const amount = item?.amount;
+        const vol = item?.volume;
+        return <CommissionCell key={index} date={date || ""} commission={amount} vol={vol} />;
+    };
 
-        return dataSource.map(() => <CommissionCell date="2022-02-22" commission="$1,233.22" vol="2222" />);
-    }, [dataSource]);
+
     return (
 
         <div className="orderly-h-[197px] orderly-overflow-auto">
-            <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden orderly-text-3xs orderly-text-base-contrast-36">{date}</div>
-            {content}
+            {date && <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
+            <ListView
+                dataSource={dataSource}
+                loadMore={loadMore}
+                renderItem={renderItem}
+            />
         </div>
     );
 }
 
 const _BigCommission: FC<{
-    date: string,
     dataSource: any[]
 }> = (props) => {
-    const { date, dataSource } = props;
+    const { dataSource } = props;
 
     const columns = useMemo<Column[]>(() => {
         return [
             {
                 title: "Date",
-                dataIndex: "date",
+                dataIndex: "updated_time",
                 className: "orderly-h-[44px]",
 
-                render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-2 orderly-items-center">
-                        2022-02-02
-                    </div>
-                )
+                render: (value, record) => {
+                    const date = formatYMDTime(value);
+
+                    console.log("value", value);
+                    
+
+                    return (
+                        <div className="orderly-flex orderly-gap-2 orderly-items-center">
+                            {date}
+                        </div>
+                    );
+                }
             },
             {
                 title: "Commission (USDC)",
-                dataIndex: "commission",
+                dataIndex: "amount",
                 align: "right",
                 className: "orderly-h-[44px]",
                 render: (value, record) => (
-                    <div>
-                        32.5% / 17.5%
-                    </div>
+                    <Numeral precision={2}>
+                        {value}
+                    </Numeral>
                 )
             },
             {
                 title: "Referral vol. (USDC)",
-                dataIndex: "vol",
+                dataIndex: "volume",
                 className: "orderly-h-[44px]",
                 align: "right",
                 render: (value, record) => (
-                    <div >
-                        293 / 12
-                    </div>
+                    <Numeral >
+                        {value}
+                    </Numeral>
                 )
             },
         ];
@@ -118,12 +144,12 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</div>
+                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</div>
+                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</Numeral>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />

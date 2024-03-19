@@ -2,12 +2,15 @@ import { TabPane, Tabs, cn } from "@orderly.network/react";
 import { FC, useCallback, useState } from "react";
 import { CommissionList } from "./commission";
 import { RefereesList } from "./referees";
+import { useCommission } from "../../hooks/useCommission";
 
 type TabType = "commission" | "referees";
 
 export const CommissionAndReferees:FC<{className?: string}> = (props) => {
     const [activeTab, setActiveTab] = useState<TabType>("commission");
+    const [dateText, setDateText] = useState<string | undefined>(undefined);
 
+   
 
     const onTabChange = useCallback((value: any) => {
         setActiveTab(value);
@@ -25,7 +28,7 @@ export const CommissionAndReferees:FC<{className?: string}> = (props) => {
                     title="Commission"
                     value="comission"
                 >
-                    <CommissionList date="2024-02-01 00:00 UTC" dataSource={[1, 2, 3, 4, 5]} />
+                    <CommissionList dateText={dateText} setDateText={setDateText} />
                 </TabPane>
 
 
@@ -33,7 +36,7 @@ export const CommissionAndReferees:FC<{className?: string}> = (props) => {
                     title="My referees"
                     value="referees"
                 >
-                    <RefereesList date="2024-02-01 00:00 UTC" dataSource={[1, 2, 3, 4, 5]} />
+                    <RefereesList dateText={dateText} setDateText={setDateText} />
 
                 </TabPane>
 

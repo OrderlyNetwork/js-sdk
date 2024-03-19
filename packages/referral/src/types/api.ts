@@ -1,8 +1,8 @@
 export declare namespace API {
 
     export interface ReferralInfo {
-        referrer_info: ReferrerInfo,
-        referee_info: RefereeInfo,
+        referrer_info: Referrer,
+        referee_info: Referee,
     }
 
     export type ReferralCode = {
@@ -14,7 +14,7 @@ export declare namespace API {
         "total_traded": number
     }
 
-    export type ReferrerInfo = {
+    export type Referrer = {
         "total_invites": number,
         "total_traded": number,
         "total_referee_volume": number,
@@ -38,7 +38,7 @@ export declare namespace API {
         "30d_referrer_rebate": number
     }
 
-    export type RefereeInfo = {
+    export type Referee = {
         "referer_code"?: string,
         "referee_rebate_rate": any,
         "1d_referee_rebate": number,
@@ -46,4 +46,16 @@ export declare namespace API {
         "30d_referee_rebate": number,
         "total_referee_rebate": number
     }
+
+    export type RefereeInfoItem = {
+        "account_id": string,
+        "code_binding_time": number,
+        "fee": number,
+        "referral_code": string,
+        "referral_rebate": number,
+        "register_time": number,
+        "trade_status": string,
+        "user_address": string,
+        "volume": number
+      }
 }

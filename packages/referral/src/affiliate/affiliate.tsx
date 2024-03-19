@@ -19,7 +19,7 @@ export const Affiliate = () => {
 
 const _SmallLayout = () => {
     return (
-        <div className="orderly-px-3 orderly-py-4 lg:orderly-px-[60px]">
+        <div className="orderly-px-4 orderly-py-4 lg:orderly-px-[60px]">
             <Summary />
             <ReferralLink className="orderly-mt-3"/>
             <ReferralCode className="orderly-mt-3"/>

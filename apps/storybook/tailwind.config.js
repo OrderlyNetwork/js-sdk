@@ -9,6 +9,7 @@ import colors from "tailwindcss/colors";
 module.exports = {
   mode: "jit",
   darkMode: ["class"],
+  important: true,
   content: [
     "./src/**/*.{ts,js,tsx,jsx}", 
     "../../packages/referral/src/**/*.{ts,js,tsx,jsx}"

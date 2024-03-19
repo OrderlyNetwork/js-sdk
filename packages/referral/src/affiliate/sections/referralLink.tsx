@@ -35,7 +35,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
 
             <div className="orderly-mt-4 orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-3">
 
-                <div className="lg:orderly-w-1/6 orderly-flex orderly-items-center">
+                <div className="lg:orderly-w-auto orderly-flex orderly-gap-3 orderly-items-center">
                     <Info
                         title="Earn"
                         value={firstCode?.referrer_rebate_rate}
@@ -58,7 +58,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                     />
                 </div>
 
-                <div className="lg:orderly-w-5/6 orderly-flex orderly-flex-col orderly-gap-2">
+                <div className="lg:orderly-flex-1 orderly-flex orderly-flex-col orderly-gap-2">
                     <CopyInfo title="Referral code" value={firstCode?.code || ""} copyText={firstCode?.code || ""} />
                     <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} />)} copyText={referralLink} />
 

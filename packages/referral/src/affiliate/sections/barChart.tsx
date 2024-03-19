@@ -5,14 +5,14 @@ import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import { TriangleDownIcon } from "../icons";
 import { ColmunChart } from "../../components/barChart";
-import { useReferee } from "../../hooks/useReferee";
+import { useRefereeHistory } from "../../hooks/useRefereeHistory";
 
 type ChartDataType = "Commission" | "Referral vol.";
 
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Commission");
 
-    const {data} = useReferee();
+    const [data, {refresh}] = useRefereeHistory({size: 7});
 
     console.log("referee data is", data);
 
@@ -40,7 +40,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     return (
         <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
-                <div className="orderly-text-xs orderly-text-base-contrast-36">USDC</div>
+                <div className="orderly-text-xs ">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 

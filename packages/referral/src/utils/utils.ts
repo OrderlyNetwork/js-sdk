@@ -19,3 +19,28 @@ export function addQueryParam(url: string, paramName: string, paramValue: string
         toast.success("Copy failed");
     }
   }
+
+  //** will be return YYYY-MM-ddThh:mm:ssZ */
+  export function formatTime(time?: string): string | undefined {
+    if (!time) return undefined;
+    const date = new Date(time);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    
+    const formattedTime = `${year}-${month}-${day} ${hours}:${minutes} UTC`;
+    return formattedTime;
+  }
+
+  export function formatYMDTime(time?: string): string | undefined {
+    if (!time) return undefined;
+    const date = new Date(time);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    
+    const formattedTime = `${year}-${month}-${day}`;
+    return formattedTime;
+  }
