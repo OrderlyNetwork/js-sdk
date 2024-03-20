@@ -1,6 +1,7 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
 import { FC, PropsWithChildren, createContext, useMemo } from "react";
 import { API } from "../types/api";
+import { useDaily } from "./useDaily";
 
 export type UserVolumeType = {
     "1d_volume"?: number,
@@ -48,17 +49,17 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         revalidateOnFocus: true,
     });
 
+    
     const {
         data: dailyVolume,
         mutate: dailyVolumeMutate
-    } = usePrivateQuery<API.DayliVolume[]>("/v1/volume/user/daily", {
-        revalidateOnFocus: true
-    });
+    } = useDaily();
 
     const {
         data: volumeStatistics,
         mutate: volumeStatisticsMutate
     } = usePrivateQuery<API.UserVolStats[]>("/v1/volume/user/stats", {
+        
         revalidateOnFocus: true,
     });
 

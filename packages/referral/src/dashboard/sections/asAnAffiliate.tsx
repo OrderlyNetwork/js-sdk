@@ -20,7 +20,7 @@ export const AsAnAffiliate = () => {
             <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
               <USDCIcon width={"100%"} height={"100%"} />
             </div>
-              <Numeral precision={2} children={totalReferrerRebate} />
+              <Numeral precision={2} >{totalReferrerRebate || '-'}</Numeral>
           </div>
 
           <button className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
@@ -56,7 +56,7 @@ export const AsAnAffiliate = () => {
   }, [referralInfo?.referrer_info?.total_referrer_rebate, isAffiliate]);
 
   return (
-    <div id="dashboard_affiliate_container" className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-from orderly-to-referral-to">
+    <div id="dashboard_affiliate_container" className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to">
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
           <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">As an affiliate</div>

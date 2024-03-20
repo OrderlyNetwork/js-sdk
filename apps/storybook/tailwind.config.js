@@ -64,8 +64,14 @@ module.exports = {
       },
       colors: {
         referral: {
-          from: "rgb(var(--orderly-referral-gradient-from) / <alpha-value>)",
-          to: "rgb(var(--orderly-referral-gradient-to) / <alpha-value>)",
+          bg: {
+            from: "rgb(var(--orderly-referral-bg-gradient-from) / <alpha-value>)",
+            to: "rgb(var(--orderly-referral-bg-gradient-to) / <alpha-value>)",
+          },
+          text: {
+            from: "rgb(var(--orderly-referral-text-gradient-from) / <alpha-value>)",
+            to: "rgb(var(--orderly-referral-text-gradient-to) / <alpha-value>)",
+          }
         },
         primary: {
           DEFAULT: "rgb(var(--orderly-color-primary) / <alpha-value>)",

@@ -100,8 +100,10 @@
     --orderly-shadow-xl: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
     --orderly-shadow-2xl: '0px 12px 20px 0px rgba(0, 0, 0, 0.3)';
 
-    --orderly-referral-gradient-from: 189 0 255;
-    --orderly-referral-gradient-to: 120 108 255;
+    --orderly-referral-bg-gradient-from: 73 31 102;
+    --orderly-referral-bg-gradient-to: 182 79 255;
+    --orderly-referral-text-gradient-from: 73 31 102;
+    --orderly-referral-text-gradient-to: 182 79 255;
   }
 }
 
@@ -185,8 +187,10 @@
 
   --orderly-font-family: 'DIN2014-Demi', 'PingFangSC-Medium', 'Noto Sans', sans-serif;
 
-  --orderly-referral-gradient-from: #BD00FF;
-  --orderly-referral-gradient-to: #786CFF;
+  --orderly-referral-bg-gradient-from: 39 43 147;
+  --orderly-referral-bg-gradient-to: 41 137 226;
+  --orderly-referral-text-gradient-from: 38 254 254;
+  --orderly-referral-text-gradient-to: 89 176 254;
 }
 
 /* ===== Scrollbar CSS ===== */

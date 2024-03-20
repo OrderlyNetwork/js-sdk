@@ -145,14 +145,14 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "dev" });
+      const configStore = new CustomConfigStore({ networkId, env: "qa" });
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
               main: {

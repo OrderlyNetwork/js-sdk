@@ -60,7 +60,7 @@ export const Summary: FC<{ className?: string }> = (props) => {
                 <SummaryFilter curType={filterType} onClick={setFiltetType} />
             </div>
 
-            <div className="orderly-mt-4 orderly-p-6 orderly-rounded-lg orderly-bg-gradient-to-t orderly-to-referral-to orderly-from-referral-from">
+            <div className="orderly-mt-4 orderly-p-6 orderly-rounded-lg orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to">
                 <div className="orderly-text-center orderly-text-xs md:orderly-text-base lg:orderly-text-base xl:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-54">Commission (USDC)</div>
                 <div className="orderly-flex orderly-justify-center orderly-items-center orderly-mt-3">
                     <USDCIcon />

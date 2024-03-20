@@ -44,7 +44,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                             { text: `${(firstCode?.referrer_rebate_rate || 0) * 100}%`, gradient: true },
                             { text: " WOOFi Pro net fee that deduct Orderly fee." },
                         ]} />}
-                        valueClassName="orderly-bg-gradient-to-r orderly-from-referral-from orderly-to-referral-to orderly-bg-clip-text orderly-text-transparent"
+                        valueClassName="orderly-bg-gradient-to-r orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-bg-clip-text orderly-text-transparent"
                     />
                     <Info
                         title="Share"

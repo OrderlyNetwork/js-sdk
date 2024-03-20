@@ -15,7 +15,7 @@ export const GradientText: FC<PropsWithChildren<{ texts: GradientTextItem[], cla
             <h1>
                 {texts.map((item, index) => {
                     if (item.gradient) {
-                        return (<span key={index} className="orderly-bg-gradient-to-r orderly-from-referral-from orderly-to-referral-to orderly-bg-clip-text orderly-text-transparent">
+                        return (<span key={index} className="orderly-bg-gradient-to-t orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent">
                             {item.text}
                         </span>);
                     }
