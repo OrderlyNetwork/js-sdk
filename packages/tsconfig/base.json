@@ -15,7 +15,16 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "target": "ES2020",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@orderly.network/react": ["../../packages/component/src"],
+      "@orderly.network/hooks": ["../../packages/hooks/src"],
+      "@orderly.network/web3-onboard": ["../../packages/onboard/src"],
+      "@orderly.network/types": ["../../packages/types/src"],
+      "@orderly.network/web3-modal": ["../../packages/walletconnect/src"]
+    },
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules"]
 }
