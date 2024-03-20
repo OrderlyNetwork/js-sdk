@@ -4,9 +4,10 @@ import { TriangleDownIcon } from "../../components/icons/triangleDown";
 import { USDCIcon } from "../../components/icons/usdc";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, Numeral, cn } from "@orderly.network/react";
 import { ReferralContext } from "../../hooks/referralContext";
-import { SummaryFilter } from "./summaryFilter";
+import { SummaryFilter } from "../../components/summaryFilter";
+import { FilterType } from "../../types/types";
 
-export type FilterType = "All" | "1D" | "7D" | "30D";
+
 export const Summary: FC<{ className?: string }> = (props) => {
 
     const [filterType, setFiltetType] = useState<FilterType>("All");
@@ -56,8 +57,6 @@ export const Summary: FC<{ className?: string }> = (props) => {
         <div className={cn("orderly-p-6 orderly-bg-base-600 orderly-rounded-lg", props.className)}>
             <div className="orderly-flex orderly-justify-between">
                 <span className="orderly-text-base 2xl:orderly-text-lg">Summary</span>
-
-
                 <SummaryFilter curType={filterType} onClick={setFiltetType} />
             </div>
 

@@ -1,6 +1,13 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
-import { FC, PropsWithChildren, createContext } from "react";
+import { FC, PropsWithChildren, createContext, useMemo } from "react";
 import { API } from "../types/api";
+
+export type UserVolumeType = {
+    "1d_volume"?: number,
+    "7d_volume"?: number,
+    "30d_volume"?: number,
+    "all_volume"?: number,
+}
 
 export type ReferralContextProps = {
     becomeAnAffiliate?: () => void,
@@ -16,6 +23,7 @@ export type ReferralContextReturns = {
     isAffiliate?: boolean,
     isTrader?: boolean,
     mutate: any,
+    userVolume?: UserVolumeType
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>({} as ReferralContextReturns);
@@ -30,14 +38,61 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         referralLinkUrl,
     } = props;
 
-    const { data, mutate } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
+    const {
+        data,
+        mutate: referralInfoMutate
+    } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
+        revalidateOnFocus: true,
+    });
+
+    const {
+        data: dailyVolume,
+        mutate: dailyVolumeMutate
+    } = usePrivateQuery<[{
+        date: string,
+        perp_volume: number
+      }]>("/v1/volume/user/daily", {
+        revalidateOnFocus: true
+    });
+
+    const {
+        data: volumeStatistics,
+        mutate: volumeStatisticsMutate
+    } = usePrivateQuery<API.UserVolStats[]>("/v1/volume/user/stats", {
         revalidateOnFocus: true,
     });
 
     const isAffiliate = data?.referrer_info?.referral_codes ? data?.referrer_info?.referral_codes.length > 0 : undefined;
     const isTrader = data?.referee_info.referer_code ? data?.referee_info.referer_code !== undefined : undefined;
 
-    console.log("mutate is", mutate);
+
+    const userVolume = useMemo(() => {
+
+        const volume: any = {};
+
+        if ((dailyVolume?.length || 0) > 0) {
+            volume["1d_volume"] = dailyVolume?.[0].perp_volume;
+        }
+
+        if ((volumeStatistics?.length || 0) > 0) {
+            volume["7d_volume"] =  volumeStatistics?.[0].perp_volume_last_7_days;
+            volume["30d_volume"] = volumeStatistics?.[0].perp_volume_last_30_days;
+            volume["all_volume"] = volumeStatistics?.[0].perp_volume_ltd;
+        }
+
+        return volume;
+
+    }, [
+        dailyVolume,
+        volumeStatistics
+    ]);
+    
+
+    const mutate = () => {
+        volumeStatisticsMutate();
+        dailyVolumeMutate();
+        referralInfoMutate();
+    };
 
 
     return (
@@ -52,6 +107,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             learnAffiliate,
             learnAffiliateUrl,
             referralLinkUrl,
+            userVolume,
         }}>
             {props.children}
         </ReferralContext.Provider>

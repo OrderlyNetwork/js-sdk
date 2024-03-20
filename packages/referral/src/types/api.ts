@@ -58,4 +58,12 @@ export declare namespace API {
         "user_address": string,
         "volume": number
       }
+
+      //** use volume statistics */
+      export type UserVolStats = {
+        "perp_volume_last_30_days": number,
+        "perp_volume_last_7_days": number,
+        "perp_volume_ltd": number,
+        "perp_volume_ytd": number
+      }
 }
