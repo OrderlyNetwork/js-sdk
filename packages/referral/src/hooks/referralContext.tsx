@@ -9,6 +9,8 @@ export type UserVolumeType = {
     "all_volume"?: number,
 }
 
+
+
 export type ReferralContextProps = {
     becomeAnAffiliate?: () => void,
     becomeAnAffiliateUrl?: string,
@@ -24,6 +26,7 @@ export type ReferralContextReturns = {
     isTrader?: boolean,
     mutate: any,
     userVolume?: UserVolumeType
+    dailyVolume?: API.DayliVolume[],
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>({} as ReferralContextReturns);
@@ -48,10 +51,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
     const {
         data: dailyVolume,
         mutate: dailyVolumeMutate
-    } = usePrivateQuery<[{
-        date: string,
-        perp_volume: number
-      }]>("/v1/volume/user/daily", {
+    } = usePrivateQuery<API.DayliVolume[]>("/v1/volume/user/daily", {
         revalidateOnFocus: true
     });
 
@@ -70,23 +70,38 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
 
         const volume: any = {};
 
-        if ((dailyVolume?.length || 0) > 0) {
-            volume["1d_volume"] = dailyVolume?.[0].perp_volume;
+        if (dailyVolume && (dailyVolume.length) > 0) {
+            volume["1d_volume"] = dailyVolume.reduce((accumulator, currentValue) => {
+                return accumulator + currentValue.perp_volume;
+            }, 0);
         }
 
-        if ((volumeStatistics?.length || 0) > 0) {
-            volume["7d_volume"] =  volumeStatistics?.[0].perp_volume_last_7_days;
-            volume["30d_volume"] = volumeStatistics?.[0].perp_volume_last_30_days;
-            volume["all_volume"] = volumeStatistics?.[0].perp_volume_ltd;
-        }
+        if (volumeStatistics && (volumeStatistics.length) > 0) {
 
+            const sum = volumeStatistics.reduce((accumulator, currentValue) => {
+                accumulator["perp_volume_last_30_days"] = currentValue["perp_volume_last_30_days"];
+                accumulator["perp_volume_last_7_days"] = currentValue["perp_volume_last_7_days"];
+                accumulator["perp_volume_ltd"] = currentValue["perp_volume_ltd"];
+                accumulator["perp_volume_ytd"] = currentValue["perp_volume_ytd"];
+                return accumulator;
+            }, {
+                "perp_volume_last_30_days": 0,
+                "perp_volume_last_7_days": 0,
+                "perp_volume_ltd": 0,
+                "perp_volume_ytd": 0
+            } as API.UserVolStats);
+
+            volume["7d_volume"] = sum.perp_volume_last_7_days;
+            volume["30d_volume"] = sum.perp_volume_last_30_days;
+            volume["all_volume"] = sum.perp_volume_ltd;
+        }
         return volume;
 
     }, [
         dailyVolume,
         volumeStatistics
     ]);
-    
+
 
     const mutate = () => {
         volumeStatisticsMutate();
@@ -108,6 +123,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             learnAffiliateUrl,
             referralLinkUrl,
             userVolume,
+            dailyVolume,
         }}>
             {props.children}
         </ReferralContext.Provider>

@@ -66,4 +66,19 @@ export declare namespace API {
         "perp_volume_ltd": number,
         "perp_volume_ytd": number
       }
+
+      export type Distribution = {
+        "amount": number,
+        "created_time": number,
+        "id": number,
+        "status": string,
+        "token": string,
+        "type": string,
+        "updated_time": number,
+      }
+
+      export type DayliVolume = {
+        date: string,
+        perp_volume: number
+    }
 }

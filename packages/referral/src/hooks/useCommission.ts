@@ -4,9 +4,9 @@ import { useRefereeHistory } from "./useRefereeHistory";
 
 export const useCommission = () => {
 
-    const [referee, { refreshReferee, loadMore: loadMoreReferee, }] = useRefereeHistory({ });
+    const [referee, { refresh: refreshReferee, loadMore: loadMoreReferee, }] = useRefereeHistory({ });
 
-    const [distribution, { refreshDistribution, loadMore: loadMoreDistribution, isLoading }] = useDistribution({ });
+    const [distribution, { refresh: refreshDistribution, loadMore: loadMoreDistribution, isLoading }] = useDistribution({ });
     
     const commissionData = useMemo(() => {
 

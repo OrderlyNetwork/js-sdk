@@ -80,7 +80,7 @@ const InitialXAxis: XAxis = {
     height: 30,
     fontSize: 10,
     textFill: "rgba(255, 255, 255, 0.36)",
-    textAnchor: "center",
+    textAnchor: "middle",
 };
 
 type ChartSize = { width: number, height: number };

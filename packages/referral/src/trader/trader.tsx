@@ -4,6 +4,7 @@ import { Rebates } from "./sections/rebates";
 import { Summary } from "./sections/summary";
 import { TraderTitle } from "./sections/traderTitle";
 import { MEDIA_LG } from "../types/constants";
+import { BarChart } from "./sections/barChart";
 
 export const Trader = () => {
     
@@ -21,7 +22,7 @@ const _SmallLayout = () => {
         <div className="orderly-px-3 orderly-py-4 lg:orderly-px-[60px]">
             <TraderTitle />
             <Summary className="orderly-mt-3"/>
-            {/* <BarChart className="orderly-mt-3"/> */}
+            <BarChart className="orderly-mt-3"/>
             <Rebates className="orderly-mt-3"/>
         </div>
     );
@@ -39,7 +40,7 @@ const _BigLayout = () => {
                     <Summary className="orderly-flex-1"/>
                 </div>
                 <div className="orderly-w-3/5 orderly-flex orderly-flex-col orderly-gap-4">
-                    {/* <BarChart className="orderly-flex-1"/> */}
+                    <BarChart className="orderly-flex-1"/>
                 </div>
             </div>
 

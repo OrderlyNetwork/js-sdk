@@ -1,6 +1,7 @@
 import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks"
 import { generateKeyFun } from "../utils/swr";
 import { useMemo } from "react";
+import { API } from "../types/api";
 
 type Params = {
     //** default is 100 */
@@ -13,7 +14,7 @@ type Params = {
     initialSize?: number,
 }
 
-export const useDistribution = (params: Params): any[] => {
+export const useDistribution = (params: Params) => {
     const { size = 10, startDate, endDate, initialSize } = params;
 
     const ordersResponse = usePrivateInfiniteQuery(
@@ -39,7 +40,7 @@ export const useDistribution = (params: Params): any[] => {
     }, [ordersResponse.data?.[0]?.meta?.total]);
 
 
-    const flattenOrders = useMemo(() => {
+    const flattenOrders = useMemo((): API.Distribution[] | null => {
         if (!ordersResponse.data) {
             return null;
         }
