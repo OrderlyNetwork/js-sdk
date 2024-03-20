@@ -1,15 +1,18 @@
 import { Blockie } from "@/avatar";
 import Button, { IconButton } from "@/button";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { Text } from "@/text";
-import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
+import { useAccount, useMutation, useConfig, usePrivateQuery } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
-import { CopyIcon } from "@/icon";
+import { ArrowRightIcon, CopyIcon } from "@/icon";
 import { useGetChains } from "./useGetChains";
 import { type ConfigStore } from "@orderly.network/core";
+import { Divider } from "@/divider";
+import { Statistic } from "@/statistic";
+
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -92,6 +95,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </IconButton> */}
         </div>
       </div>
+      <ReferralInfo />
       {props.showGetTestUSDC ? (
         <div className="orderly-py-4 orderly-grid orderly-grid-cols-2 orderly-gap-3">
           <Button
@@ -134,3 +138,59 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
     </div>
   );
 };
+
+
+const ReferralInfo = () => {
+  const {
+    data
+  } = usePrivateQuery<any>("/v1/referral/info", {
+    revalidateOnFocus: true,
+  });
+  const commission = useMemo(() => {
+    if (!data) return "-";
+
+    return data.referee_info?.["30d_referee_rebate"] + data.referrer_info?.["30d_referrer_rebate"];
+  }, [data]);
+
+  const {
+    data: volumeStatistics
+  } = usePrivateQuery<any>("/v1/volume/user/stats", {
+
+    revalidateOnFocus: true,
+  });
+
+  const vol = useMemo(() => {
+    if (volumeStatistics && data) {
+      return volumeStatistics?.perp_volume_last_30_days || 0 + data.referrer_info?.["30d_referee_volume"];
+    }
+
+    return "-";
+
+  }, [data, volumeStatistics]);
+
+  return (
+    <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3">
+      <div className="orderly-flex orderly-items-center">
+        <div className="orderly-flex-1">Referral</div>
+        <ArrowRightIcon size={14} fillOpacity={1} className="orderly-fill-primary" />
+      </div>
+      <Divider className="orderly-py-3" />
+      <div className="orderly-grid orderly-grid-cols-2">
+        <Statistic
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-mt-1 orderly-text-[16px]"
+          label="30d commission"
+          value={commission}
+          precision={2}
+        />
+        <Statistic
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-mt-1 orderly-text-[16px]"
+          label="30d vol."
+          value={vol}
+          precision={2}
+        />
+      </div>
+    </div>
+  );
+}

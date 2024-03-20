@@ -58,7 +58,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
     const {
         data: volumeStatistics,
         mutate: volumeStatisticsMutate
-    } = usePrivateQuery<API.UserVolStats[]>("/v1/volume/user/stats", {
+    } = usePrivateQuery<API.UserVolStats>("/v1/volume/user/stats", {
 
         revalidateOnFocus: true,
     });
@@ -77,24 +77,10 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             }, 0);
         }
 
-        if (volumeStatistics && (volumeStatistics.length) > 0) {
-
-            const sum = volumeStatistics.reduce((accumulator, currentValue) => {
-                accumulator["perp_volume_last_30_days"] = currentValue["perp_volume_last_30_days"];
-                accumulator["perp_volume_last_7_days"] = currentValue["perp_volume_last_7_days"];
-                accumulator["perp_volume_ltd"] = currentValue["perp_volume_ltd"];
-                accumulator["perp_volume_ytd"] = currentValue["perp_volume_ytd"];
-                return accumulator;
-            }, {
-                "perp_volume_last_30_days": 0,
-                "perp_volume_last_7_days": 0,
-                "perp_volume_ltd": 0,
-                "perp_volume_ytd": 0
-            } as API.UserVolStats);
-
-            volume["7d_volume"] = sum.perp_volume_last_7_days;
-            volume["30d_volume"] = sum.perp_volume_last_30_days;
-            volume["all_volume"] = sum.perp_volume_ltd;
+        if (volumeStatistics) {
+            volume["7d_volume"] = volumeStatistics.perp_volume_last_7_days;
+            volume["30d_volume"] = volumeStatistics.perp_volume_last_30_days;
+            volume["all_volume"] = volumeStatistics.perp_volume_ltd;
         }
         return volume;
 
