@@ -1,5 +1,4 @@
 import { FC, useContext, useMemo } from "react";
-import { useLocalStorage, useMediaQuery } from "../../../../hooks/dist";
 import { MEDIA_MD } from "../../types/constants";
 import { Button, Column, Divider, Table, cn, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
@@ -8,6 +7,7 @@ import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
 import { Decimal } from "@orderly.network/utils";
+import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 
 type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
 
