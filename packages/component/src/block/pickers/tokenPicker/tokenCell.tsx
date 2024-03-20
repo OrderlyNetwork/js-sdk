@@ -34,7 +34,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         {loading ? (
           <Spinner size={"small"} />
         ) : (
-          <Numeral precision={token.woofi_dex_precision} padding={false}>
+          <Numeral precision={2} padding={false}>
             {balance}
           </Numeral>
         )}

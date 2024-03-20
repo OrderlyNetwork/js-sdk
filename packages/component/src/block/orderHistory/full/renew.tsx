@@ -23,16 +23,27 @@ export const Renew: FC<{ record: any }> = (props) => {
   const onSubmit = useCallback(() => {
     setLoading(false);
     setOpen(false);
-    doCreateOrder({
+    const data: OrderEntity = {
       symbol: record.symbol,
       order_type: record.type,
       order_price: record.price,
       order_quantity: record.quantity,
       order_amount: record.amount,
-      visible_quantity: record.visible,
+      // visible_quantity: record.visible,
       side: record.side,
+      // reduce_only: record.reduce_only,
       broker_id: brokerId,
-    });
+    };
+
+    if (Number(record.visible_quantity) < Number(record.quantity)) {
+      data.visible_quantity = 0;
+    }
+
+    if (typeof record.reduce_only !== "undefined") {
+      data.reduce_only = record.reduce_only;
+    }
+
+    doCreateOrder(data);
   }, []);
 
   const ordetEntity = useMemo(() => {
@@ -63,6 +74,8 @@ export const Renew: FC<{ record: any }> = (props) => {
       size={"small"}
       variant={"outlined"}
       color={"tertiary"}
+      loading={isMutating}
+      disabled={isMutating}
       onClick={(event) => {
         // setOpen(true);
         event.preventDefault();

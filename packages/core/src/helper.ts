@@ -1,7 +1,4 @@
 import { definedTypes } from "@orderly.network/types";
-import { MemoryConfigStore } from "./configStore/configStore";
-// import { definedTypes } from "./constants";
-
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
 import { SignatureDomain } from "./utils";
@@ -24,12 +21,6 @@ export const getDefaultSigner = () => {
 
   return new BaseSigner(localStorageStore);
 };
-
-export const getMemoryConfigStore = () => {
-  return new MemoryConfigStore();
-};
-
-//
 
 export function getVerifyingContract() {
   return "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";

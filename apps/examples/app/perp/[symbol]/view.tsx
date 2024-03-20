@@ -30,7 +30,7 @@ const orderlyOverrides = {
   "scalesProperties.lineColor": "#2B2833",
 };
 
-const wooOverrides = {
+const customOverrides = {
   // "paneProperties.background": "#ffffff",
   // "mainSeriesProperties.style": 1,
   "paneProperties.backgroundType": "solid",
@@ -48,7 +48,7 @@ const wooOverrides = {
 const tradingViewConfig: any = {
   scriptSRC: "/tradingview/charting_library/charting_library.js",
   library_path: "/tradingview/charting_library/",
-  overrides: wooOverrides,
+  overrides: customOverrides,
   // overrides: orderlyOverrides,
 };
 
@@ -117,11 +117,28 @@ const View = (props: Props) => {
       <OrderlyAppProvider
         networkId={networkId}
         brokerId="orderly"
-        brokerName="WOOFi Pro"
-        onlyTestnet={false}
+        brokerName="Orderly"
         appIcons={{ secondary: { img: "/orderly_logo.svg" } }}
         onChainChanged={onChainChanged}
-        enableSwapDeposit
+        shareOptions={{
+          pnl: {
+            backgroundImages: [
+              "/images/poster_bg_1.png",
+              "/images/poster_bg_2.png",
+              "/images/poster_bg_3.png",
+              "/images/poster_bg_4.png",
+              "/images/poster_bg_5.png",
+            ],
+            // color: "rgba(255, 255, 255, 0.98)",
+            // profitColor: "rgb(255,0,0)",
+            // lossColor: "rgb(0,0,255)",
+            // brandColor: "rgb(0,181,159)",
+            profitColor: '#00B49E',
+            lossColor: '#FF447C',
+            brandColor: 'rgba(25, 199, 166, 1)',
+            fontFamily: "DIN2014-Demi",
+          },
+        }}
       >
         <TradingPage
           symbol={props.symbol}

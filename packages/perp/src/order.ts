@@ -1,10 +1,9 @@
-import { API } from "@orderly.network/types";
+import { API as orderUtils } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { notional } from "./positions";
 
 /**
  * Maximum price when placing an order
- * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-price
  */
 export function maxPrice(markprice: number, range: number) {
   return markprice * (1 + range);
@@ -12,7 +11,6 @@ export function maxPrice(markprice: number, range: number) {
 
 /**
  * Minimum price when placing an order
- * @see https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Min-price
  */
 export function minPrice(markprice: number, range: number) {
   return markprice * (1 - range);
@@ -33,14 +31,32 @@ export function scropePrice(
   return price * (1 + scrope);
 }
 
+/**
+ * Calculate the order fee
+ */
+export function orderFee(inputs: {
+  /**
+   * Order quantity
+   */
+  qty: number;
+  price: number;
+  futuresTakeFeeRate: number;
+}): number {
+  return new Decimal(inputs.qty)
+    .mul(inputs.price)
+    .mul(inputs.futuresTakeFeeRate)
+    .toNumber();
+}
+
 export type EstimatedLiquidationPriceInputs = {
   totalCollateral: number;
   markPrice: number;
   baseMMR: number;
   baseIMR: number;
   IMR_Factor: number;
+  orderFee: number;
   positions: Pick<
-    API.PositionExt,
+    orderUtils.PositionExt,
     "position_qty" | "mark_price" | "symbol" | "mmr"
   >[];
   newOrder: {
@@ -63,11 +79,15 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     markPrice,
     baseIMR,
     baseMMR,
+    orderFee,
     IMR_Factor,
   } = inputs;
   // opened positions for the symbol
   let currentPosition:
-    | Pick<API.PositionExt, "position_qty" | "mark_price" | "symbol" | "mmr">
+    | Pick<
+        orderUtils.PositionExt,
+        "position_qty" | "mark_price" | "symbol" | "mmr"
+      >
     | undefined = undefined;
 
   let newTotalMM = zero;
@@ -83,6 +103,11 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     }
 
     newTotalMM = newTotalMM.add(notional.abs().mul(position.mmr));
+  }
+
+  // if no position
+  if (!currentPosition) {
+    newTotalMM = newTotalMM.add(newOrderNotional.mul(baseMMR));
   }
 
   const newMMR = Math.max(
@@ -117,6 +142,7 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     .add(
       new Decimal(totalCollateral)
         .sub(newTotalMM)
+        .sub(orderFee)
         .div(newQty.abs().mul(newMMR).sub(newQty))
     )
     .toNumber();
@@ -126,7 +152,10 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
 
 export type EstimatedLeverageInputs = {
   totalCollateral: number;
-  positions: Pick<API.PositionExt, "position_qty" | "mark_price" | "symbol">[];
+  positions: Pick<
+    orderUtils.PositionExt,
+    "position_qty" | "mark_price" | "symbol"
+  >[];
   newOrder: {
     symbol: string;
     qty: number;

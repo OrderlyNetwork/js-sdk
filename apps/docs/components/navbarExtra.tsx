@@ -14,7 +14,7 @@ export const NavbarExtra = () => {
     return (
       <div className="border border-base-400 px-2 rounded h-[35px] flex items-center text-base-contrast-80">
         <img
-          src="https://oss.woo.network/static/wallet_icon/metamask.png"
+          src="https://oss.orderly.network/static/wallet_icon/metamask.png"
           alt="metamask"
           className="w-[20px] h-[20px] mr-1 rounded-full overflow-hidden"
         />

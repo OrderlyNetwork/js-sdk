@@ -11,6 +11,7 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
   const { height } = useContext(TabContext);
 
   return (
+    // @ts-ignore
     <OrderListProvider
       cancelOrder={props.onCancelOrder}
       editOrder={function (orderId: string, order: OrderEntity): Promise<any> {

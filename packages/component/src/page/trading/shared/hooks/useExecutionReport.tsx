@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { toast } from "@/toast";
 import { getOrderExecutionReportMsg } from "@/block/orders/getOrderExecutionReportMsg";
-import { useSymbolsInfo, useWS, useEventEmitter } from "@orderly.network/hooks";
+import {
+  useSymbolsInfo,
+  useWS,
+  useEventEmitter,
+  useDebouncedCallback,
+} from "@orderly.network/hooks";
 
 export function useExecutionReport() {
   const ee = useEventEmitter();
@@ -12,6 +17,27 @@ export function useExecutionReport() {
   useEffect(() => {
     symbolsInfoRef.current = symbolsInfo;
   }, [symbolsInfo]);
+
+  const handler = useDebouncedCallback((data: any) => {
+    const showToast = (data: any) => {
+      const { title, msg } = getOrderExecutionReportMsg(
+        data,
+        symbolsInfoRef.current
+      );
+
+      if (title && msg) {
+        toast.success(
+          <div>
+            {title}
+            <br />
+            <div className="orderly-text-white/[0.54]">{msg}</div>
+          </div>
+        );
+      }
+    };
+
+    showToast(data);
+  }, 100);
 
   useEffect(() => {
     const showToast = (data: any) => {
@@ -31,10 +57,10 @@ export function useExecutionReport() {
       }
     };
 
-    const handler = (data: any) => {
-      // console.log("orders:changed", data);
-      showToast(data);
-    };
+    // const handler = (data: any) => {
+    //   // console.log("orders:changed", data);
+    //   showToast(data);
+    // };
 
     ee.on("orders:changed", handler);
 

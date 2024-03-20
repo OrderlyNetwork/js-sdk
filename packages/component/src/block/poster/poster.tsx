@@ -1,11 +1,12 @@
-import { drawOptions, usePoster } from "@orderly.network/hooks";
+import { type DrawOptions, usePoster } from "@orderly.network/hooks";
 import { FC, forwardRef, useImperativeHandle } from "react";
 
 export type PosterProps = {
   width: number;
   height: number;
   className?: string;
-  data: drawOptions;
+  ratio?: number;
+  data: DrawOptions;
   style?: React.CSSProperties;
 };
 
@@ -19,7 +20,9 @@ export type PosterRef = {
 export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
   const { width, height, className, data, style } = props;
 
-  const { ref, download, toDataURL, copy, toBlob } = usePoster(data);
+  const { ref, download, toDataURL, copy, toBlob } = usePoster(data, {
+    ratio: props.ratio,
+  });
 
   useImperativeHandle(parentRef, () => ({
     download,
@@ -29,6 +32,12 @@ export const Poster = forwardRef<PosterRef, PosterProps>((props, parentRef) => {
   }));
 
   return (
-    <canvas ref={ref} width={width} height={height} className={className} style={style}/>
+    <canvas
+      ref={ref}
+      width={width}
+      height={height}
+      className={className}
+      style={style}
+    />
   );
 });

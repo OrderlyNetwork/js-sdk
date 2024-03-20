@@ -76,7 +76,6 @@ module.exports = {
           light: "rgb(var(--orderly-color-link-light) / <alpha-value>)",
         },
 
-        // 用于页面背景色，大块元素背景色
         base: {
           100: "rgb(var(--orderly-color-base-100) / <alpha-value>)",
           200: "rgb(var(--orderly-color-base-200) / <alpha-value>)",
@@ -121,7 +120,6 @@ module.exports = {
         // fill:{
         //   100: "rgb(var(--orderly-color-fill-100) / <alpha-value>)",
         // },
-        // 用于input等填充色
         fill: {
           DEFAULT: "rgb(var(--orderly-color-fill) / <alpha-value>)",
           light: "rgb(var(--orderly-color-fill-light) / <alpha-value>)",

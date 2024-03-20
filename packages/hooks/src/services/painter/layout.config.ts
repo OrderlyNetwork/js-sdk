@@ -1,17 +1,18 @@
-import { layoutInfo, posterLayoutConfig } from "./basePaint";
+import { type PosterLayoutConfig } from "./basePaint";
 
-export const defaultLayoutConfig: posterLayoutConfig = {
+export const DefaultLayoutConfig: PosterLayoutConfig = {
   domain: {
     fontSize: 13,
     // color: undefined,
+    textBaseline: "bottom",
     position: {
       left: 20,
-      bottom: 37,
+      bottom: 17,
     },
   },
   message: {
     fontSize: 20,
-    color: "white",
+    color: "rgba(255, 255, 255, 0.98)",
     textBaseline: "top",
     position: {
       left: 20,
@@ -19,8 +20,8 @@ export const defaultLayoutConfig: posterLayoutConfig = {
     },
   },
   position: {
-    fontSize: 20,
-    color: "white",
+    fontSize: 14,
+    color: "rgba(255,255,255,0.98)",
     position: {
       left: 20,
       top: 70,
@@ -29,6 +30,8 @@ export const defaultLayoutConfig: posterLayoutConfig = {
   unrealizedPnl: {
     fontSize: 36,
     color: "rgba(255,255,255,0.5)",
+    secondaryColor: "rgba(255,255,255,0.54)",
+    secondaryFontSize: 20,
     position: {
       left: 20,
       top: 110,
@@ -36,7 +39,8 @@ export const defaultLayoutConfig: posterLayoutConfig = {
   },
   informations: {
     fontSize: 12,
-    color: "rgba(255,255,255,0.54)",
+    color: "rgba(255, 255, 255, 0.8)",
+    labelColor: "rgba(255,255,255,0.36)",
     position: {
       left: 20,
       top: 150,
@@ -47,9 +51,10 @@ export const defaultLayoutConfig: posterLayoutConfig = {
     fontSize: 10,
     color: "rgba(255,255,255,0.5)",
     textAlign: "end",
+    textBaseline: "bottom",
     position: {
-      right: 15,
-      bottom: 15,
+      right: 20,
+      bottom: 17,
     },
   },
 };

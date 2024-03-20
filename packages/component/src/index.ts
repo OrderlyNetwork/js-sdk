@@ -127,3 +127,5 @@ export { cn, parseNumber } from "./utils";
 export { useCSSVariable } from "./hooks/useCSSVariable";
 
 export type { OrderlyConfig, OrderlyConfigCtx } from "./types/orderly.config";
+
+export { installExtension, ExtensionPosition } from "./plugin";

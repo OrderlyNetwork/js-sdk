@@ -1,4 +1,7 @@
+import "./utils/dev";
+
 export { default as version } from "./version";
+
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
@@ -35,7 +38,6 @@ export {
 
 export * from "./orderly/orderlyHooks";
 
-import { fromPairs } from "ramda";
 import useSWR, { type SWRConfiguration, SWRConfig } from "swr";
 
 export { useSWR, SWRConfig, type SWRConfiguration };
@@ -44,13 +46,15 @@ export * from "use-debounce";
 
 export { useMediaQuery } from "./useMediaQuery";
 
-export { usePoster, type drawOptions } from "./usePoster";
+export { usePoster } from "./usePoster";
+export { DefaultLayoutConfig } from "./services/painter/layout.config";
+export type {
+  PosterLayoutConfig,
+  DrawOptions,
+} from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
-
-//---- woo only -----
-export * from "./woo/woo";
 
 export type { WalletAdapter } from "@orderly.network/core";

@@ -12,12 +12,12 @@ export const FreeCollat = () => {
   return isTable ? (
     <MobileFreeCollat />
   ) : (
-    <DesktopFreeCollat title="Free Collat." />
+    <DesktopFreeCollat title="Available" />
   );
 };
 
 export const MobileFreeCollat = () => {
-  return <span>Free Collat.</span>;
+  return <span>Available</span>;
 };
 export const DesktopFreeCollat: FC<{ title?: string; className?: string }> = (
   props

@@ -26,7 +26,6 @@ export interface NetworkImageProps {
   symbol?: string;
 }
 
-// TODO: 添加icon生成adpater
 export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
   const { rounded = true } = props;
   const [url, setUrl] = React.useState<string>();
@@ -81,16 +80,16 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
           name = arr[1];
         }
         // coin logos
-        img.src = `https://oss.woo.network/static/symbol_logo/${name}.png`;
+        img.src = `https://oss.orderly.network/static/symbol_logo/${name}.png`;
       }
       if (props.type === "chain") {
-        img.src = `https://oss.woo.network/static/network_logo/${props.id}.png`;
+        img.src = `https://oss.orderly.network/static/network_logo/${props.id}.png`;
       }
 
       if (props.type === "wallet") {
         const split = props.name?.split(" ");
         const formatWalletName = split?.[0]?.toLowerCase();
-        img.src = `https://oss.woo.network/static/wallet_icon/${formatWalletName}.png`;
+        img.src = `https://oss.orderly.network/static/wallet_icon/${formatWalletName}.png`;
       }
 
       if (props.type === "path") {

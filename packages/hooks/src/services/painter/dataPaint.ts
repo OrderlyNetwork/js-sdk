@@ -1,27 +1,41 @@
 import { commify } from "@orderly.network/utils";
-import { BasePaint, drawOptions, layoutInfo } from "./basePaint";
+import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
 import { path } from "ramda";
 
 export class DataPaint extends BasePaint {
-  private positionInfoCellWidth = 100;
+  private positionInfoCellWidth = 110;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
-  private DEFAULT_LOSE_COLOR = "rgb(255,103,194)";
+  private DEFAULT_LOSS_COLOR = "rgb(255,103,194)";
 
-  async draw(options: drawOptions) {
+  private transformTop = 0;
+
+  async draw(options: DrawOptions) {
+    const needDrawDetails =
+      Array.isArray(options.data?.position?.informations) &&
+      (options.data?.position?.informations?.length ?? 0) > 0;
+
+    const hasMessage = !!options.data?.message;
+
+    this.transformTop = hasMessage ? 0 : needDrawDetails ? -40 : -150;
+
+    // If position details are not displayed, the position PNL information will be margin
+    const offsetTop = hasMessage ? 50 : 100;
+    // const offsetMessage = hasMessage ? 0 : -50;
+
     if (!!options.data?.message) {
       this.drawMessage(options);
     }
 
     if (!!options.data?.position) {
-      this.drawPosition(options);
+      this.drawPosition(options, needDrawDetails ? 0 : offsetTop);
     }
 
-    if (Array.isArray(options.data?.position?.informations)) {
+    if (needDrawDetails) {
       this.drawInformations(options);
     }
 
-    this.drawUnrealizedPnL(options);
+    this.drawUnrealizedPnL(options, needDrawDetails ? 0 : offsetTop);
 
     if (!!options.data?.domain) {
       this.drawDomainUrl(options);
@@ -32,7 +46,7 @@ export class DataPaint extends BasePaint {
     }
   }
 
-  private drawMessage(options: drawOptions) {
+  private drawMessage(options: DrawOptions) {
     // console.log("draw message", options);
 
     const layout = path<layoutInfo>(
@@ -47,15 +61,18 @@ export class DataPaint extends BasePaint {
       top: this._ratio(position.top!),
       left: this._ratio(position.left!),
       textBaseline: "top",
+      fontFamily: options.fontFamily,
     });
   }
-  private drawPosition(options: drawOptions) {
+  private drawPosition(options: DrawOptions, offsetTop: number = 0) {
     const layout = path<layoutInfo>(
       ["layout", "position"],
       options
     ) as layoutInfo;
-    const { position } = layout;
+    const { position, fontSize = 14 } = layout;
     let left = this._ratio(position.left!);
+
+    let top = layout.position.top! + offsetTop + this.transformTop;
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
 
     // draw position side;
@@ -63,12 +80,13 @@ export class DataPaint extends BasePaint {
     if (typeof options.data?.position.side !== "undefined") {
       prevElementBoundingBox = this._drawText(options.data.position.side, {
         color:
-          options.data?.position.side === "LONG"
+          options.data?.position.side.toUpperCase() === "LONG"
             ? this.DEFAULT_PROFIT_COLOR
-            : this.DEFAULT_LOSE_COLOR,
+            : this.DEFAULT_LOSS_COLOR,
         left,
-        top: this._ratio(70),
-        fontSize: this._ratio(14),
+        top: this._ratio(top),
+        fontSize: this._ratio(fontSize),
+        fontFamily: options.fontFamily,
       });
     }
 
@@ -79,17 +97,19 @@ export class DataPaint extends BasePaint {
         prevElementBoundingBox = this._drawText("|", {
           color: "rgba(255,255,255,0.2)",
           left,
-          top: this._ratio(70),
-          fontSize: this._ratio(12),
+          top: this._ratio(top),
+          fontSize: this._ratio(fontSize),
+          fontFamily: options.fontFamily,
         });
       }
 
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
       prevElementBoundingBox = this._drawText(options.data?.position.symbol!, {
-        color: "rgba(255,255,255,0.98)",
+        color: layout.color,
         left: left,
-        top: this._ratio(70),
-        fontSize: this._ratio(12),
+        top: this._ratio(top),
+        fontSize: this._ratio(fontSize),
+        fontFamily: options.fontFamily,
       });
     }
 
@@ -100,32 +120,39 @@ export class DataPaint extends BasePaint {
         prevElementBoundingBox = this._drawText("|", {
           color: "rgba(255,255,255,0.2)",
           left,
-          top: this._ratio(70),
-          fontSize: this._ratio(12),
+          top: this._ratio(top),
+          fontSize: this._ratio(fontSize),
+          fontFamily: options.fontFamily,
         });
       }
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
       prevElementBoundingBox = this._drawText(
         `${options.data?.position.leverage}X`,
         {
-          color: "rgba(255,255,255,0.98)",
+          color: layout.color,
           left,
-          top: this._ratio(70),
-          fontSize: this._ratio(12),
+          top: this._ratio(top),
+          fontSize: this._ratio(fontSize),
+          fontFamily: options.fontFamily,
         }
       );
     }
   }
 
-  private drawUnrealizedPnL(options: drawOptions) {
+  private drawUnrealizedPnL(options: DrawOptions, offsetTop: number = 0) {
     // reset left value;
     const layout = path<layoutInfo>(
       ["layout", "unrealizedPnl"],
       options
-    ) as layoutInfo;
+    ) as layoutInfo & {
+      secondaryColor: string;
+      secondaryFontSize: number;
+    };
     const { position } = layout;
     let left = this._ratio(position.left!);
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
+
+    const top = (position.top ?? 0) + offsetTop + this.transformTop;
 
     // ROI
     if (typeof options.data?.position.ROI !== "undefined") {
@@ -136,12 +163,13 @@ export class DataPaint extends BasePaint {
           color:
             prefix === "+"
               ? options.profitColor || this.DEFAULT_PROFIT_COLOR
-              : options.loseColor || this.DEFAULT_LOSE_COLOR,
+              : options.lossColor || this.DEFAULT_LOSS_COLOR,
           left,
-          top: this._ratio(position.top!),
+          top: this._ratio(top),
 
           fontSize: this._ratio(layout.fontSize as number),
           fontWeight: 700,
+          fontFamily: options.fontFamily,
         }
       );
     }
@@ -151,54 +179,76 @@ export class DataPaint extends BasePaint {
       let text = `${prefix}${commify(options.data?.position.pnl)} ${
         options.data?.position.currency
       }`;
+      let fontWeight = 600;
 
       if (prevElementBoundingBox.width) {
         left += (prevElementBoundingBox.width ?? 0) + this._ratio(8);
         text = `(${text})`;
       } else {
         left = this._ratio(position.left!);
+        fontWeight = 700;
       }
 
+      const color =
+        typeof options.data.position.ROI === "undefined"
+          ? prefix === "+"
+            ? options.profitColor || this.DEFAULT_PROFIT_COLOR
+            : options.lossColor || this.DEFAULT_LOSS_COLOR
+          : layout.secondaryColor;
+
+      const fontSize =
+        typeof options.data.position.ROI === "undefined"
+          ? this._ratio(layout.fontSize as number)
+          : this._ratio(layout.secondaryFontSize as number);
+
       prevElementBoundingBox = this._drawText(text, {
-        color: "rgba(255,255,255,0.5)",
+        color,
         left,
-        top: this._ratio(position.top!),
-        fontSize: this._ratio((layout.fontSize as number) * 0.6),
-        fontWeight: 600,
+        top: this._ratio(top),
+        fontSize,
+        fontWeight,
+        fontFamily: options.fontFamily,
       });
     }
   }
 
-  private drawInformations(options: drawOptions) {
+  private drawInformations(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "informations"],
       options
-    ) as layoutInfo;
+    ) as layoutInfo & {
+      labelColor?: string;
+    };
     const { position } = layout;
 
+    const isVertical = (options.data?.position.informations.length ?? 0) === 2;
+
     options.data?.position.informations.forEach((info, index) => {
-      const left = position.left! + this.positionInfoCellWidth * (index % 2);
-      const top = (position.top as number) + Math.floor(index / 2) * 40;
+      // let cellWidth = this.positionInfoCellWidth;
+      let left =
+        position.left! + this.positionInfoCellWidth * Math.floor(index / 2);
+      let top = (position.top as number) + (index % 2) * 38 + this.transformTop;
 
       this._drawText(info.title, {
         left: this._ratio(left),
         top: this._ratio(top),
         fontSize: this._ratio(10),
-        color: "rgba(255,255,255,0.2)",
+        color: layout.labelColor,
+        fontFamily: options.fontFamily,
       });
+
       this._drawText(info.value, {
-        left: this._ratio(
-          position.left! + this.positionInfoCellWidth * (index % 2)
-        ),
+        left: this._ratio(left),
         top: this._ratio(top + 17),
         fontSize: this._ratio(layout.fontSize as number),
         fontWeight: 500,
         color: layout.color as string,
+        fontFamily: options.fontFamily,
       });
     });
   }
 
-  private drawDomainUrl(options: drawOptions) {
+  private drawDomainUrl(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "domain"],
       options
@@ -211,10 +261,13 @@ export class DataPaint extends BasePaint {
       top: this._ratio(top),
       fontSize: this._ratio(layout.fontSize as number),
       color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
+      fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
+      fontWeight: 600,
     });
   }
 
-  private drawPositionTime(options: drawOptions) {
+  private drawPositionTime(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "updateTime"],
       options
@@ -228,7 +281,9 @@ export class DataPaint extends BasePaint {
       top: this._ratio(top),
       fontSize: this._ratio(layout.fontSize as number),
       color: layout.color as string,
-      textAlign: "end",
+      textAlign: layout.textAlign,
+      fontFamily: options.fontFamily,
+      textBaseline: layout.textBaseline,
     });
   }
 
@@ -238,6 +293,7 @@ export class DataPaint extends BasePaint {
       left?: number;
       top?: number;
       fontSize?: number;
+      fontFamily?: string;
       fontWeight?: number;
       color?: string;
       textBaseline?: CanvasTextBaseline;
@@ -256,7 +312,9 @@ export class DataPaint extends BasePaint {
     } = options ?? {};
 
     this.ctx.save();
-    this.ctx.font = `${fontWeight} ${fontSize}px Manrope`;
+    // "Nunito Sans",-apple-system,"San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif
+    this.ctx.font = `${fontWeight} ${fontSize}px ${options?.fontFamily}`;
+
     this.ctx.fillStyle = color;
     this.ctx.textBaseline = textBaseline;
     this.ctx.textAlign = textAlign;

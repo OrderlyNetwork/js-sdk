@@ -1,5 +1,127 @@
 # @orderly.network/web3-modal
 
+## 0.1.6
+
+### Patch Changes
+
+- update version
+
+## 0.1.5
+
+### Patch Changes
+
+- 1c2f86c8: fix bugs
+- 83a2465c: fix bugs
+- 4b635449: fix bugs
+- c5918eba: fix bugs
+- 08849940: fix bugs
+- 49e6b8a0: fix bugs
+- c47192f5: fix bugs
+- e62b8dea: fix bugs
+- 165a7cd7: hide share PnL entry
+- 32be91ac: fix bug
+- 2e482e37: fix bugs
+
+## 0.1.5-internal.10
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.9
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.8
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.7
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.6
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.5
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.4
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.3
+
+### Patch Changes
+
+- fix bug
+
+## 0.1.5-internal.2
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+
+## 0.1.5-internal.0
+
+### Patch Changes
+
+- fix bugs
+
+## 0.1.4
+
+### Patch Changes
+
+- 686fd454: fix bugs;
+- 9bac5c5c: split cross-swap code;
+- 410fe957: refactor hook;
+- fix bugs;
+- 410fe957: update
+
+## 0.1.4-experimental.3
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.1.4-experimental.2
+
+### Patch Changes
+
+- refactor hook;
+
+## 0.1.4-experimental.1
+
+### Patch Changes
+
+- update
+
+## 0.1.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+
 ## 0.1.3
 
 ### Patch Changes

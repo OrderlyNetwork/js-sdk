@@ -21,29 +21,31 @@ interface Props {
 
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
+  pnlNotionalDecimalPrecision: any,
 }
 
 export const Header: FC<Props> = (props) => {
   const unrealPnL = props.aggregated?.unrealPnL ?? 0;
   const { onSettle } = useContext(AssetsContext);
-  const { data: { pnlNotionalDecimalPrecision } } = useTabContext();
+  const { pnlNotionalDecimalPrecision } = props;
+
 
   const onSettleClick = useCallback(() => {
     modal
       .confirm({
         title: "Settle PnL",
-        content: (<SettlePnlContent />),
+        content: <SettlePnlContent />,
         maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
         },
         onOk() {
-          return onSettle();
+          return onSettle().catch((e) => {});
         },
       })
       .then(
-        () => { },
-        (error) => { }
+        () => {},
+        (error) => {}
       );
   }, []);
 
@@ -67,7 +69,9 @@ export const Header: FC<Props> = (props) => {
                   "orderly-text-trade-profit": unrealPnL > 0,
                 })}
               >
-                <Numeral precision={pnlNotionalDecimalPrecision}>{unrealPnL}</Numeral>
+                <Numeral precision={pnlNotionalDecimalPrecision}>
+                  {unrealPnL}
+                </Numeral>
                 <Numeral
                   rule="percentages"
                   prefix={"("}

@@ -20,66 +20,82 @@
     }
 */
 
+import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 
-export function getPnLPosterData(position: any, leverage: number, message: string, domain: string, pnlType: PnLDisplayFormat, options: Set<ShareOptions>) {    
+export function getPnLPosterData(
+    position: any,
+    leverage: number,
+    message: string,
+    domain: string,
+    pnlType: PnLDisplayFormat,
+    options: Set<ShareOptions>,
+    baseDp?: number,
+    quoteDp?: number,
+) {
 
     const { symbol, currency } = processSymbol(position.symbol);
     const positionData: any = {
         symbol,
         currency,
-        side: position.position_qty > 0 ? "long" : "short",
+        side: position.position_qty > 0 ? "LONG" : "SHORT",
     };
 
 
     switch (pnlType) {
         case "pnl": {
-            positionData["pnl"] = position.unsettlement_pnl;
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi": {
-            positionData["ROI"] = position.unsettled_pnl_ROI.toFixed(4);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
         case "roi_pnl": {
-            positionData["pnl"] = position.unsettlement_pnl;
-            positionData["ROI"] = position.unsettled_pnl_ROI.toFixed(4);
+            positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(2, Decimal.ROUND_DOWN);
+            positionData["ROI"] = new Decimal(position.unsettled_pnl_ROI*100).toFixed(2, Decimal.ROUND_DOWN);
             break;
         }
     }
 
     const informations: { title: string; value: any; }[] = [];
 
-    options.forEach((op) => {
-        
-        switch (op) {
-            case "leverage": {
-                positionData["leverage"] = leverage; break;
-                break;
+
+    if (options.has("leverage")) {
+        positionData["leverage"] = leverage;
+    }
+    const array: ShareOptions[] = ["openPrice", "openTime", "markPrice", "quantity"];
+    array.forEach((key) => {
+        if (options.has(key)) {
+            switch (key) {
+                case "leverage": {
+                    break;
+                }
+                case "openPrice": {
+                    informations.push({ "title": "Open price", "value": formatFixed(position.average_open_price, quoteDp || 2) });
+                    break;
+                } case "openTime": {
+                    informations.push({ "title": "Opened at", "value": formatOpenTime(position.timestamp) });
+                    break;
+                }
+                case "markPrice": {
+                    informations.push({ "title": "Mark price", "value": formatFixed(position.mark_price, quoteDp || 2) });
+                    break;
+                }
+                case "quantity": {
+                    informations.push({ "title": "Quantity", "value": formatFixed(position.position_qty, baseDp || 2) });
+                }
+                default: break;
             }
-            case "openPrice": {
-                informations.push({"title": "Open Price", "value": position.average_open_price});
-                break;
-            } case "openTime": {
-                informations.push({"title": "Opened At", "value": formatTime(position.timestamp)});
-                break;
-            }
-            case "markPrice": {
-                informations.push({"title": "Mark Price", "value": position.mark_price});
-                break;
-            }
-            case "quantity": {
-                informations.push({"title": "Quantity", "value": position.position_qty});
-            }
-            default: break;
         }
+
     });
 
     positionData["informations"] = informations;
 
     const data: any = {
         position: positionData,
-        updateTime: formatTime(new Date()),
+        updateTime: formatShareTime(new Date()),
         domain
     }
     if (message.length > 0) {
@@ -95,52 +111,75 @@ interface SymbolResult {
     currency: string;
 }
 
-function processSymbol(symbol: symbol): SymbolResult {
-    const parts = symbol.toString().split('_');
-    const currency = parts.pop();
-    const symbolName = parts.join('_');
-
+function processSymbol(symbol: string): SymbolResult {
+    const tokens = symbol.split('_');
+  if (tokens.length !== 3) {
     return {
-        symbol: symbolName,
-        currency: currency || "USDC"
+        symbol: symbol,
+        currency: 'USDC',
+    };
+  }
+
+  const [symbol1, symbol2, symbol3] = tokens;
+  const formattedString = `${symbol2}-${symbol1}`;
+  
+    return {
+        symbol: formattedString,
+        currency: symbol3 || "USDC"
     };
 }
 
-function formatTime(input: number): string;
-function formatTime(input: Date): string;
-function formatTime(input: number | Date): string {
+function formatShareTime(input: number): string;
+function formatShareTime(input: Date): string;
+function formatShareTime(input: number | Date): string {
     const date = input instanceof Date ? input : new Date(input);
     const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
     };
-  
+
     const formatter = new Intl.DateTimeFormat('en-US', options);
     const formattedParts = formatter.formatToParts(date);
 
     // console.log("formattedParts", formattedParts);
-    
-  
-    
-    const year = formattedParts.find((part) => part.type === "year" ? part.value: "")?.value;
-    const month = formattedParts.find((part) => part.type === "month" ? part.value: "")?.value;
-    const day = formattedParts.find((part) => part.type === "day" ? part.value: "")?.value;
-    const hour = formattedParts.find((part) => part.type === "hour" ? part.value: "")?.value;
-    const minute = formattedParts.find((part) => part.type === "minute" ? part.value: "")?.value;
+
+
+
+    const year = formattedParts.find((part) => part.type === "year" ? part.value : "")?.value;
+    const month = formattedParts.find((part) => part.type === "month" ? part.value : "")?.value;
+    const day = formattedParts.find((part) => part.type === "day" ? part.value : "")?.value;
+    const hour = formattedParts.find((part) => part.type === "hour" ? part.value : "")?.value;
+    const minute = formattedParts.find((part) => part.type === "minute" ? part.value : "")?.value;
 
     return `${year}-${month}-${day} ${hour}:${minute}`;
-  
-    // const formattedTime = formattedParts
-    //   .map(part => {
-    //     if (part.type === 'literal') {
-    //       return part.value;
-    //     } else {
-    //       return part.value.toUpperCase();
-    //     }
-    //   })
-    //   .join('');
-    // return formattedTime;
+}
+
+function formatOpenTime(input: number | Date): string {
+    const date = input instanceof Date ? input : new Date(input);
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+
+    const formatter = new Intl.DateTimeFormat('en-US', options);
+    const formattedParts = formatter.formatToParts(date);
+
+    // console.log("formattedParts", formattedParts);
+
+    const month = formattedParts.find((part) => part.type === "month" ? part.value : "")?.value;
+    const day = formattedParts.find((part) => part.type === "day" ? part.value : "")?.value;
+    const hour = formattedParts.find((part) => part.type === "hour" ? part.value : "")?.value;
+    const minute = formattedParts.find((part) => part.type === "minute" ? part.value : "")?.value;
+
+    return `${month}-${day} ${hour}:${minute}`;
+}
+
+function formatFixed(value:number, dp: number) {
+    return new Decimal(value).toFixed(dp, Decimal.ROUND_DOWN);
 }

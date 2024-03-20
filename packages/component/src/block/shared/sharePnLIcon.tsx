@@ -9,7 +9,8 @@ export const SharePnLIcon: FC<PropsWithChildren<{
     className?: string,
     position: any,
 }>> = (props) => {
-    
+
+
     return (<PositionShareIcon
         size={12}
         className={
@@ -18,7 +19,7 @@ export const SharePnLIcon: FC<PropsWithChildren<{
         fill="current"
         fillOpacity={1}
         onClick={() => {
-            
+
             modal.show(SharePoisitionView, {
                 position: props.position,
             });

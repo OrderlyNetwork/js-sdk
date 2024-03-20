@@ -7,14 +7,12 @@ export const apiPrefixMiddleware: Middleware = (useSWRNext: SWRHook) => {
   const { apiBaseUrl } = useContext(OrderlyContext);
 
   return (key, fetcher, config) => {
-    // 将日志记录器添加到原始 fetcher。
     const extendedFetcher = (...args: any[]) => {
       // @ts-ignore
       return fetcher(...args);
     };
     // key =  `${apiBaseUrl}${key}`;
 
-    // 使用新的 fetcher 执行 hook。
     return useSWRNext(key, extendedFetcher, config);
   };
   // return (key, fetcher, config) => {

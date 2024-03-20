@@ -74,7 +74,8 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           label="Filled"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={order.executed ?? "-"}
+          // @ts-ignore
+          value={order.total_executed_quantity ?? "-"}
           rule="price"
           precision={base_dp}
         />

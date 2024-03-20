@@ -105,7 +105,7 @@ function symbolKey(symbol: string, currency?: string, unit?: string): string {
 }
 
 export class SymbolsStorage {
-    private readonly _exchangesList: string[] = ['WOO X'];
+    private readonly _exchangesList: string[] = ['Orderly'];
     private readonly _symbolsInfo: SymbolInfoMap = {};
     private readonly _symbolsList: string[] = [];
     private readonly _datafeedUrl: string;

@@ -79,6 +79,7 @@ const preview = {
           { value: "PERP_TIA_USDC", title: "PERP_TIA_USDC" },
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
           { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
+          { value: "PERP_JUP_USDC", title: "PERP_JUP_USDC" },
         ],
       },
     },
@@ -95,7 +96,6 @@ const preview = {
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            enableSwapDeposit={true}
             // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
@@ -119,8 +119,12 @@ const preview = {
                   "/images/poster_bg_3.png",
                   "/images/poster_bg_4.png",
                   "/images/poster_bg_5.png",
-                ]
-              }
+                ],
+                // color: "rgba(255, 255, 255, 0.98)",
+                // profitColor: "rgb(255,0,0)",
+                // lossColor: "rgb(0,0,255)",
+                // brandColor: "rgb(0,181,159)",
+              },
             }}
             onChainChanged={(networkId, isTestnet) => {
               console.log("network changed", networkId, isTestnet);
@@ -141,13 +145,10 @@ const preview = {
     },
     withThemeByDataAttribute({
       themes: {
-        // light: "light",
-        // dark: "dark",
-        "woo/dark": "",
-        "woo/light": "woo_light",
-        orderly: "orderly",
+        orderly: "",
+        custom: "custom",
       },
-      defaultTheme: "woo/dark",
+      defaultTheme: "orderly",
       attributeName: "data-o-theme",
     }),
   ],

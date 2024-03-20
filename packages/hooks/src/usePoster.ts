@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { mergeDeepRight } from "ramda";
 import { PosterPainter } from "./services/painter/painter";
-import { type drawOptions } from "./services/painter/basePaint";
-import { defaultLayoutConfig } from "./services/painter/layout.config";
+import { type DrawOptions } from "./services/painter/basePaint";
+import { DefaultLayoutConfig } from "./services/painter/layout.config";
 import { SDKError } from "@orderly.network/types";
-
-export { type drawOptions } from "./services/painter/basePaint";
 
 /**
  * Generates a poster image based on position information. You can set the size, background color, font color, font size, and content position of the poster.
@@ -23,7 +21,13 @@ export const usePoster = (
   /**
    * The options to draw the poster
    */
-  options: drawOptions
+  data: DrawOptions,
+  options?: {
+    /**
+     * The ratio of the poster
+     */
+    ratio?: number;
+  }
 ) => {
   const [error, setError] = useState<Error | null>(null);
   const [canCopy, setCanCopy] = useState<boolean>(
@@ -37,9 +41,15 @@ export const usePoster = (
   useEffect(() => {
     // Create the painter instance
     if (target && !painterRef.current) {
-      painterRef.current = new PosterPainter(target);
+      painterRef.current = new PosterPainter(target, {
+        ratio: 1,
+        ...options,
+      });
       painterRef.current.draw(
-        mergeDeepRight({ layout: defaultLayoutConfig }, options)
+        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
+          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
+          data
+        )
       );
     }
   }, [target]);
@@ -47,10 +57,13 @@ export const usePoster = (
   useEffect(() => {
     if (painterRef.current) {
       painterRef.current.draw(
-        mergeDeepRight({ layout: defaultLayoutConfig }, options)
+        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
+          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
+          data
+        )
       );
     }
-  }, [options]);
+  }, [data]);
 
   const toDataURL = (type?: string, encoderOptions?: number) => {
     if (!target) {

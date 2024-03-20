@@ -38,6 +38,9 @@ export const OrderListProvider: FC<
   }, []);
 
   const onEditOrder = useCallback(async (order: API.Order) => {
+    // @ts-ignore
+    let isHidden = order.visible_quantity !== undefined ? order.visible_quantity  === 0 : (order.visible !== undefined ? order.visible === 0 : false);
+    
     const orderEntry = await modal.sheet({
       title: "Edit Order",
       contentClassName: "orderly-edit-order-sheet-content",
@@ -48,7 +51,7 @@ export const OrderListProvider: FC<
             if (order.algo_order_id !== undefined) {
               return editAlgoOrder(order.algo_order_id.toString(), {...value});
             }
-            return editOrder(order.order_id.toString(), {...value});
+            return editOrder(order.order_id.toString(), {...value, ...(isHidden ? {visible_quantity: 0} : {})});
           }}
         />
       ),

@@ -1,5 +1,195 @@
 # @orderly.network/futures
 
+## 2.0.6
+
+### Patch Changes
+
+- update version
+- Updated dependencies
+  - @orderly.network/types@0.2.6
+  - @orderly.network/utils@0.1.6
+
+## 2.0.5
+
+### Patch Changes
+
+- 1c2f86c8: fix bugs
+- 83a2465c: fix bugs
+- 4b635449: fix bugs
+- c5918eba: fix bugs
+- 08849940: fix bugs
+- 49e6b8a0: fix bugs
+- c47192f5: fix bugs
+- e62b8dea: fix bugs
+- 165a7cd7: hide share PnL entry
+- 32be91ac: fix bug
+- 2e482e37: fix bugs
+- Updated dependencies [1c2f86c8]
+- Updated dependencies [83a2465c]
+- Updated dependencies [4b635449]
+- Updated dependencies [c5918eba]
+- Updated dependencies [08849940]
+- Updated dependencies [49e6b8a0]
+- Updated dependencies [c47192f5]
+- Updated dependencies [e62b8dea]
+- Updated dependencies [165a7cd7]
+- Updated dependencies [32be91ac]
+- Updated dependencies [2e482e37]
+  - @orderly.network/types@0.2.5
+  - @orderly.network/utils@0.1.5
+
+## 2.0.5-internal.10
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.10
+  - @orderly.network/utils@0.1.5-internal.10
+
+## 2.0.5-internal.9
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.9
+  - @orderly.network/utils@0.1.5-internal.9
+
+## 2.0.5-internal.8
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.8
+  - @orderly.network/utils@0.1.5-internal.8
+
+## 2.0.5-internal.7
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.7
+  - @orderly.network/utils@0.1.5-internal.7
+
+## 2.0.5-internal.6
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.6
+  - @orderly.network/utils@0.1.5-internal.6
+
+## 2.0.5-internal.5
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.5
+  - @orderly.network/utils@0.1.5-internal.5
+
+## 2.0.5-internal.4
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.4
+  - @orderly.network/utils@0.1.5-internal.4
+
+## 2.0.5-internal.3
+
+### Patch Changes
+
+- fix bug
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.3
+  - @orderly.network/utils@0.1.5-internal.3
+
+## 2.0.5-internal.2
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.2
+  - @orderly.network/utils@0.1.5-internal.2
+
+## 2.0.5-internal.1
+
+### Patch Changes
+
+- hide share PnL entry
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.1
+  - @orderly.network/utils@0.1.5-internal.1
+
+## 2.0.5-internal.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/types@0.2.5-internal.0
+  - @orderly.network/utils@0.1.5-internal.0
+
+## 2.0.4
+
+### Patch Changes
+
+- 686fd454: fix bugs;
+- 9bac5c5c: split cross-swap code;
+- 410fe957: refactor hook;
+- fix bugs;
+- 410fe957: update
+- Updated dependencies [686fd454]
+- Updated dependencies [9bac5c5c]
+- Updated dependencies [410fe957]
+- Updated dependencies
+- Updated dependencies [410fe957]
+  - @orderly.network/types@0.2.4
+  - @orderly.network/utils@0.1.4
+
+## 2.0.4-experimental.3
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@0.2.4-experimental.3
+  - @orderly.network/utils@0.1.4-experimental.3
+
+## 2.0.4-experimental.2
+
+### Patch Changes
+
+- refactor hook;
+- Updated dependencies
+  - @orderly.network/types@0.2.4-experimental.2
+  - @orderly.network/utils@0.1.4-experimental.2
+
+## 2.0.4-experimental.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@0.2.4-experimental.1
+  - @orderly.network/utils@0.1.4-experimental.1
+
+## 2.0.4-experimental.0
+
+### Patch Changes
+
+- split cross-swap code;
+- Updated dependencies
+  - @orderly.network/types@0.2.4-experimental.0
+  - @orderly.network/utils@0.1.4-experimental.0
+
 ## 2.0.3
 
 ### Patch Changes

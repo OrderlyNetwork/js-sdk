@@ -126,8 +126,8 @@ export class LocalStorageStore extends BaseKeyStore {
     return value[name];
   }
 }
-// Woo是用readux管理状态，需要另外实现针对 woo 的存取方法
 
+// for readux manage state
 export class MockKeyStore implements OrderlyKeyStore {
   constructor(private readonly secretKey: string) {}
   generateKey() {

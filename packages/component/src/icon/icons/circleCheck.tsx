@@ -11,8 +11,8 @@ export const CircleCheckIcon: FC<IconProps> = (props) => {
     return (
         <svg
             width={`${size}px`}
-            height={`${size}px`}
-            viewBox="0 0 20 20"
+            height={`${size+1}px`}
+            viewBox={`0 0 20 ${size+1}`}
             fill="white"
             fillOpacity={0.98}
             xmlns="http://www.w3.org/2000/svg"

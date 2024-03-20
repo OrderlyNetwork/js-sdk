@@ -1,10 +1,21 @@
 import { ReactNode } from "react";
 
-export interface Plugin {
+export interface Extension<Props> {
+  __isInternal: boolean;
+
   get name(): string;
-  get endpoint(): string;
+  get positions(): ExtensionPosition[];
 
-  initialize(): void;
+  initialize?: () => void;
 
-  render(): ReactNode;
+  render(ctx: any): ReactNode;
 }
+
+export enum ExtensionPosition {
+  DepositForm = "depositForm",
+  WithdrawForm = "withdrawForm",
+}
+
+export type DepositProps = {
+  onOk: () => void;
+};

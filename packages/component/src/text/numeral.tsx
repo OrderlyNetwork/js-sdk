@@ -17,7 +17,7 @@ export interface NumeralProps {
   rule?: NumeralRule;
 
   /**
-   * 小数点后保留位数，默认2位
+   * Decimal point reserved digits, default 2 digits
    * @default 2
    */
 
@@ -25,12 +25,13 @@ export interface NumeralProps {
 
   tick?: number;
   /**
-   * 小数点后保留位截段取整方式，可选 ceil, floor, round，作用与 Math.ceil、Math.floor、Math.round 对齐,默认floor
+   * The method of rounding the decimal digits after the decimal point, options are ceil, floor, round, aligns with Math.ceil, Math.floor, Math.round.
+   * @default floor
    */
   truncate?: "ceil" | "floor" | "round";
 
   /**
-   * 需要格式化的数字
+   * The number to be formatted
    */
   children: number | string;
 
@@ -47,11 +48,11 @@ export interface NumeralProps {
   cureency?: string;
 
   /**
-   * 是否显示为*****
+   * Whether to display as *****
    */
   visible?: boolean;
   /**
-   * 是否需要补齐小数点后的0
+   * Whether to pad with 0
    * @default true
    */
   padding?: boolean;

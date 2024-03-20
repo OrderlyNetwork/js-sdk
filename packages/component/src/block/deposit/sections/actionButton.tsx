@@ -7,13 +7,13 @@ import { Notice } from "./notice";
 import { modal } from "@/modal";
 import { useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
-import { OrderlyAppContext } from "@/provider";
+import { DepositContext } from "../DepositProvider";
 
 export interface ActionButtonProps {
   chains: API.NetworkInfos[];
   chain: CurrentChain | null;
   token?: API.TokenInfo;
-  onDeposit: () => Promise<any>;
+  onDeposit: () => void;
   disabled: boolean;
   switchChain: (options: { chainId: string }) => Promise<any>;
   quantity: string;
@@ -22,8 +22,6 @@ export interface ActionButtonProps {
   submitting: boolean;
   maxQuantity: string;
   chainNotSupport: boolean;
-  needSwap: boolean;
-  needCrossChain: boolean;
   warningMessage?: string;
   onApprove?: () => Promise<any>;
   onChainChange?: (value: any) => void;
@@ -43,15 +41,11 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     onApprove,
     submitting,
     maxQuantity,
-    needSwap,
-    needCrossChain,
     warningMessage,
     chainNotSupport,
   } = props;
-  const { enableSwapDeposit } = useContext(OrderlyAppContext);
 
   const [_, { findByChainId }] = useChains(undefined, {
-    wooSwapEnabled: enableSwapDeposit,
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
@@ -76,15 +70,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
 
   const actionButton = useMemo(() => {
     if (!chainNotSupport) {
-      let label = "Deposit";
-      // if (needCrossChain) {
-      //   label = "Swap and deposit";
-      // } else if (needSwap) {
-      //   label = "Bridge and deposit";
-      // }
-      if (needSwap || needCrossChain) {
-        label = "Swap and deposit";
-      }
       return (
         <StatusGuardButton>
           <ApproveButton
@@ -95,7 +80,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             submitting={submitting}
             maxQuantity={maxQuantity}
             token={token?.symbol}
-            label={label}
+            label="Deposit"
             disabled={disabled}
             buttonId="orderly-deposit-confirm-button"
           />
@@ -125,8 +110,6 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     onDeposit,
     submitting,
     maxQuantity,
-    needSwap,
-    needCrossChain,
   ]);
 
   return (
@@ -137,14 +120,7 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
             {chainWarningMessage}
           </div>
         ) : (
-          <Notice
-            needCrossChain={needCrossChain}
-            needSwap={needSwap}
-            warningMessage={warningMessage}
-            onOpenPicker={onOpenPicker}
-            currentChain={chain}
-            notSupportChain={chainNotSupport}
-          />
+          <Notice warningMessage={warningMessage} />
         )}
       </div>
 

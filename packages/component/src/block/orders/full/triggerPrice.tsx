@@ -11,7 +11,8 @@ import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { cleanStringStyle } from "@orderly.network/hooks";
+import { cleanStringStyle, useEventEmitter } from "@orderly.network/hooks";
+import { Input } from "@/input";
 
 export const TriggerPrice = (props: { order: API.OrderExt }) => {
   const { order } = props;
@@ -88,6 +89,8 @@ const EditingState: FC<{
 
   const { editAlgoOrder } = useContext(OrderListContext);
 
+  const ee = useEventEmitter();
+
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
@@ -108,7 +111,6 @@ const EditingState: FC<{
       if (!el2 || el2.contains(event.target as Node)) {
         return;
       }
-      
 
       setPrice(order.trigger_price?.toString() ?? "0");
       setEditting(false);
@@ -138,8 +140,6 @@ const EditingState: FC<{
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-
-      inputRef.current?.blur();
       onClick();
     }
   };
@@ -151,7 +151,7 @@ const EditingState: FC<{
 
   const onConfirm = () => {
     // @ts-ignore
-    editAlgoOrder(order.algo_order_id, {
+    const data = {
       // price: price,
       quantity: order.quantity,
       trigger_price: price,
@@ -160,7 +160,9 @@ const EditingState: FC<{
       // side: order.side,
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
-    })
+    };
+    // @ts-ignore
+    editAlgoOrder(`${order.algo_order_id}`, data)
       .then(
         (result) => {
           closePopover();
@@ -212,7 +214,7 @@ const EditingState: FC<{
         </div>
 
         <PopoverAnchor asChild>
-          <input
+          <Input
             ref={inputRef}
             type="text"
             value={commify(price)}
@@ -228,7 +230,8 @@ const EditingState: FC<{
             }}
             autoFocus
             onKeyDown={handleKeyDown}
-            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded focus-visible:orderly-outline-1 focus-visible:orderly-outline-primary focus-visible:orderly-outline focus-visible:orderly-ring-0"
+            containerClassName="orderly-h-auto orderly-pl-7"
+            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded "
           />
         </PopoverAnchor>
         <div
@@ -276,6 +279,7 @@ const EditingState: FC<{
                   Cancel
                 </Button>
                 <Button
+                  // @ts-ignore
                   ref={confirmRef}
                   loading={isSubmitting}
                   onClick={onConfirm}

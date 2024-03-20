@@ -10,7 +10,6 @@ import { useCollateral } from "./useCollateral";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { usePositionStream } from "./usePositionStream";
 import { pathOr } from "ramda";
-import { useWS } from "../useWS";
 import { useOrderStream } from "./useOrderStream";
 
 const positionsPath = pathOr([], [0, "rows"]);
@@ -34,34 +33,6 @@ export const useMaxQty = (
   const { data: markPrices } = useMarkPricesStream();
 
   const [orders] = useOrderStream({ status: OrderStatus.NEW });
-
-  // const {
-  //   data: orders,
-  //   error,
-  //   mutate: updateOrder,
-  // } = usePrivateQuery<API.Order[]>(`/v1/orders?status=NEW&size=99`, {
-  //   formatter: (data) => data.rows,
-  //   onError: (err) => { },
-  // });
-
-  // const ws = useWS();
-  // useEffect(() => {
-  //   const unsubscribe = ws.privateSubscribe(
-  //     {
-  //       id: "executionreport_orders",
-  //       event: "subscribe",
-  //       topic: "executionreport",
-  //       ts: Date.now(),
-  //     },
-  //     {
-  //       onMessage: (data: any) => {
-  //         console.log("refresh orders", data);
-  //         updateOrder();
-  //       },
-  //     }
-  //   );
-  //   return () => unsubscribe();
-  // }, []);
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
@@ -94,7 +65,9 @@ export const useMaxQty = (
 
     const getSymbolInfo = symbolInfo[symbol];
 
-    const filterAlgoOrders = orders.filter((item) => item.algo_order_id === undefined);
+    const filterAlgoOrders = orders.filter(
+      (item) => item.algo_order_id === undefined
+    );
 
     // current symbol buy order quantity
     const buyOrdersQty = account.getQtyFromOrdersBySide(
@@ -132,7 +105,7 @@ export const useMaxQty = (
       baseMaxQty: getSymbolInfo("base_max"),
       totalCollateral,
       maxLeverage: accountInfo.max_leverage,
-      takerFeeRate: accountInfo.taker_fee_rate,
+      takerFeeRate: accountInfo.futures_taker_fee_rate,
       baseIMR: getSymbolInfo("base_imr"),
       otherIMs,
       positionQty,
@@ -151,6 +124,20 @@ export const useMaxQty = (
     totalCollateral,
     reduceOnly,
   ]);
+
+  // debugPrint({
+  //   maxQty,
+  //   totalCollateral,
+  //   side,
+  //   // reduceOnly,
+  //   orders: orders?.map((o) => o.quantity),
+  //   // positionsData,
+  //   // markPrices,
+  //   // accountInfo,
+  //   // symbolInfo,
+  //   // symbol,
+  // });
+  // console.log("maxQty", maxQty);
 
   return Math.max(maxQty, 0) as number;
 };

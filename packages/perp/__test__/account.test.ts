@@ -1,70 +1,122 @@
-import { MMR, extractSymbols, maxQty, maxQtyByLong } from "../src/account"; // Update the path to your source file
+import {
+  MMR,
+  extractSymbols,
+  maxQty,
+  otherIMs,
+  maxQtyByLong,
+  maxQtyByShort,
+} from "../src/account"; // Update the path to your source file
 
-describe("extractSymbols", () => {
-  it("should extract unique symbols from positions and orders", () => {
-    const positions = [
-      { symbol: "AAPL" },
-      { symbol: "GOOGL" },
-      { symbol: "AAPL" }, // Duplicate symbol
-    ];
+describe("account farmula", () => {
+  describe("extractSymbols", () => {
+    test("should extract unique symbols from positions and orders", () => {
+      const positions = [
+        { symbol: "AAPL" },
+        { symbol: "GOOGL" },
+        { symbol: "AAPL" }, // Duplicate symbol
+      ];
 
-    const orders = [{ symbol: "GOOGL" }, { symbol: "MSFT" }];
+      const orders = [{ symbol: "GOOGL" }, { symbol: "MSFT" }];
 
-    const symbols = extractSymbols(positions, orders);
+      const symbols = extractSymbols(positions, orders);
 
-    expect(symbols).toEqual(expect.arrayContaining(["AAPL", "GOOGL", "MSFT"]));
-    expect(symbols).toHaveLength(3);
+      expect(symbols).toEqual(
+        expect.arrayContaining(["AAPL", "GOOGL", "MSFT"])
+      );
+      expect(symbols).toHaveLength(3);
+    });
   });
 
-  // it("maxQty", () => {
-  //   const qty = maxQtyByLong({
-  //     baseMaxQty: 71500,
-  //     totalCollateral: 2952.013334,
-  //     otherIMs: 231.4123,
-  //     maxLeverage: 4,
-  //     baseIMR: 0.1,
-  //     takerFeeRate: 10,
-  //     markPrice: 1.25,
-  //     positionQty: 12,
-  //     buyOrdersQty: 0,
-  //     sellOrdersQty: 0,
-  //     symbol: "BTCUSDT",
-  //     IMR_Factor: 0.0000048045,
-  //   });
+  describe("maxQty", () => {
+    test("maxQty long", () => {
+      const data = {
+        markPrice: 25986.2,
+        symbol: "PERP_BTC_USDC",
+        baseMaxQty: 20,
+        totalCollateral: 1981.66,
+        maxLeverage: 10,
+        takerFeeRate: 8,
+        baseIMR: 0.1,
+        otherIMs: 491.523,
+        positionQty: 0.2,
+        buyOrdersQty: 0.3,
+        sellOrdersQty: 0.5,
+        IMR_Factor: 0.0000002512,
+      };
+      const qty = maxQtyByLong(data);
+      //0.06158150257159509
+      //0.0615815026
+      expect(qty).toBe(0.06158150257159509);
+    });
 
-  //   // Add your assertions here
-  // });
+    test("maxQty short", () => {
+      const data = {
+        markPrice: 25986.2,
+        symbol: "PERP_BTC_USDC",
+        baseMaxQty: 20,
+        totalCollateral: 1981.66,
+        maxLeverage: 10,
+        takerFeeRate: 8,
+        baseIMR: 0.1,
+        otherIMs: 491.523,
+        positionQty: 0.2,
+        buyOrdersQty: 0.3,
+        sellOrdersQty: 0.5,
+        IMR_Factor: 0.0000002512,
+      };
+      const qty = maxQtyByShort(data);
+      /// 0.861581503
 
-  // it("should handle empty positions and orders arrays", () => {
-  //   const positions = [];
-  //   const orders = [];
+      expect(qty).toBe(0.26158150257159507);
+    });
 
-  //   const symbols = extractSymbols(positions, orders);
+    test("maxQty: short position", () => {
+      const data = {
+        markPrice: 25986.2,
+        symbol: "PERP_BTC_USDC",
+        baseMaxQty: 20,
+        totalCollateral: 1981.66,
+        maxLeverage: 10,
+        takerFeeRate: 8,
+        baseIMR: 0.1,
+        otherIMs: 491.523,
+        positionQty: -0.3,
+        buyOrdersQty: 0,
+        sellOrdersQty: 0,
+        IMR_Factor: 0.0000002512,
+      };
+      const qty = maxQtyByLong(data);
 
-  //   expect(symbols).toEqual([]);
-  // });
-});
+      // const shortQty = maxQtyByShort(data);
+      /// 0.861581503
 
-describe("MMR", () => {
-  it("should return null if the user does not have any positions", () => {
-    const inputs = {
-      positionsNotional: 0,
-      positionsMMR: 100,
-    };
-
-    const result = MMR(inputs);
-
-    expect(result).toBeNull();
+      //0.861581503
+      expect(qty).toBe(0.861581502571595);
+      // expect(shortQty).toBe(0.261581503);
+    });
   });
 
-  it("should calculate MMR correctly", () => {
-    const inputs = {
-      positionsNotional: 10112.43,
-      positionsMMR: 505.61,
-    };
+  describe("MMR", () => {
+    test("should return null if the user does not have any positions", () => {
+      const inputs = {
+        positionsNotional: 0,
+        positionsMMR: 100,
+      };
 
-    const result = MMR(inputs);
+      const result = MMR(inputs);
 
-    expect(result).toBe(0.04999886278570037);
+      expect(result).toBeNull();
+    });
+
+    test("should calculate MMR correctly", () => {
+      const inputs = {
+        positionsNotional: 10112.43,
+        positionsMMR: 505.61,
+      };
+
+      const result = MMR(inputs);
+
+      expect(result).toBe(0.04999886278570037);
+    });
   });
 });

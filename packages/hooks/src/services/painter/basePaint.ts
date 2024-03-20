@@ -2,6 +2,9 @@ import { OrderSide } from "@orderly.network/types";
 import { PosterPainter } from "./painter";
 
 export type posterDataSource = {
+  /**
+   * slogan of the poster
+   */
   message?: string;
   position: {
     symbol: string;
@@ -20,7 +23,7 @@ export type posterDataSource = {
      */
     ROI: number;
     /**
-     * The informations of the position, such as open price, opened at, mark price, quantity
+     * The informations of the position, such as open price, opened at, mark price, quantity and custom message.
      */
     informations: { title: string; value: string }[];
     /**
@@ -45,6 +48,7 @@ export type layoutInfo = {
   // padding?: number;
   // margin?: number;
   fontSize?: number;
+
   color?: string;
   textAlign?: CanvasTextAlign;
   textBaseline?: CanvasTextBaseline;
@@ -56,26 +60,32 @@ export type layoutInfo = {
   }>;
 };
 
-export type posterLayoutConfig = {
+export type PosterLayoutConfig = {
   message?: layoutInfo;
 
   domain?: layoutInfo;
   position?: layoutInfo;
-  unrealizedPnl?: layoutInfo;
+  unrealizedPnl?: layoutInfo & {
+    secondaryColor: string;
+    secondaryFontSize: number;
+  };
 
-  informations?: layoutInfo;
+  informations?: layoutInfo & {
+    labelColor?: string;
+  };
   updateTime?: layoutInfo;
 };
 
-export type drawOptions = {
+export type DrawOptions = {
   /**
    * Color of common text
    */
   color?: string;
+  fontFamily?: string;
   /**
    * Lose color
    */
-  loseColor?: string;
+  lossColor?: string;
   /**
    * Profit color
    */
@@ -87,7 +97,7 @@ export type drawOptions = {
   backgroundColor?: string;
   backgroundImg?: string;
   data?: posterDataSource;
-  layout?: posterLayoutConfig;
+  layout?: PosterLayoutConfig;
 };
 
 export abstract class BasePaint {
@@ -95,5 +105,5 @@ export abstract class BasePaint {
     protected ctx: CanvasRenderingContext2D,
     protected painter: PosterPainter
   ) {}
-  abstract draw(options: drawOptions): Promise<void>;
+  abstract draw(options: DrawOptions): Promise<void>;
 }

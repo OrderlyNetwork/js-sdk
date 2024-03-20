@@ -3,6 +3,7 @@ import { FC, useContext, useMemo } from "react";
 import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
 import { ChainSelect } from "../chainPicker";
 import { OrderlyContext } from "@orderly.network/hooks";
+import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export type Wallet = {
   // token: string;
@@ -19,18 +20,16 @@ export interface WalletPickerProps {
 
   address?: string;
 
-  networkId?: "mainnet" | "testnet";
   settingChain?: boolean;
 
   onOpenPicker?: () => void;
   onChainChange?: (chain: any) => void;
   onChainInited?: (chain: API.Chain) => void;
-
-  wooSwapEnabled?: boolean;
+  chains?: Chains<undefined, undefined>;
 }
 
 export const WalletPicker: FC<WalletPickerProps> = (props) => {
-  const { chain } = props;
+  const { chain, chains } = props;
 
   const address = useMemo(() => {
     if (!props.address) return "--";
@@ -53,7 +52,7 @@ export const WalletPicker: FC<WalletPickerProps> = (props) => {
         onValueChange={props.onChainChange}
         onChainInited={props.onChainInited}
         settingChain={props.settingChain}
-        wooSwapEnabled={props.wooSwapEnabled}
+        chains={props.chains}
       />
     </div>
   );

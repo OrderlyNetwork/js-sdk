@@ -12,8 +12,7 @@ const View = (props: Props) => {
       <OrderlyAppProvider
         networkId="mainnet"
         brokerId="orderly"
-        onlyTestnet={false}
-        logoUrl="/woo_fi_logo.svg"
+        logoUrl="/orderly_logo.svg"
       >
         <TradingPage symbol={"PERP_ETH_USDC"} tradingViewConfig={undefined} />
       </OrderlyAppProvider>

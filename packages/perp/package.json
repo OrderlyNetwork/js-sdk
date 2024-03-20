@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "2.0.3",
+  "version": "2.0.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -8,7 +8,7 @@
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build": "tsup --tsconfig tsconfig.build.json",
     "doc": "typedoc --out docs src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "leo",

@@ -14,7 +14,7 @@ export default defineConfig((options) => ({
   sourcemap: true,
   clean: !options.watch,
   dts: true,
-  noExternal: ["bs58", "@noble/ed25519"],
+  noExternal: ["bs58", "@noble/ed25519", "@enzoferey/ethers-error-parser"],
   esbuildPlugins: [
     plugin(stdLibBrowser),
     // polyfillNode({

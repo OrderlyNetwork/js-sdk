@@ -27,7 +27,7 @@ const AssetsDetail = () => {
           return Promise.reject("cancel");
         },
         onOk() {
-          return onSettle();
+          return onSettle().catch((e) => {});
         },
       })
       .then(

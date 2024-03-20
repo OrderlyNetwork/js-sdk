@@ -16,7 +16,6 @@ export const WsStatus: React.FC = () => {
         connect to stronger Wi-Fi.{" "}
         {/* <a
           className="orderly-text-link-light"
-          href="https://learn.woo.org/user-guides/faqs/perpetual-futures"
           target="_blank"
         >-
           View FAQs

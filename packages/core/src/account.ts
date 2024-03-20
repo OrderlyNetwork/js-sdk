@@ -217,7 +217,7 @@ export class Account {
     });
   }
 
-  // 检查账户状态
+  // Check account status
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
     //
@@ -304,7 +304,6 @@ export class Account {
 
       return AccountStatusEnum.NotConnected;
     } catch (err) {
-      // 用户从Metamask切换账户，需要重新登录
       // return this.stateValue.status;
     }
 
@@ -503,9 +502,9 @@ export class Account {
     //
 
     if (res.success) {
-      return res;
+      return Promise.resolve(res);
     } else {
-      throw new Error(res.message);
+      return Promise.reject(res);
     }
   }
 

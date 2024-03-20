@@ -1,13 +1,18 @@
 import { BackgroundPaint } from "./backgroundPaint";
-import { drawOptions } from "./basePaint";
+import { DrawOptions } from "./basePaint";
 import { DataPaint } from "./dataPaint";
 export class PosterPainter {
   private ctx: CanvasRenderingContext2D;
   width: number = 0;
   height: number = 0;
-  ratio: number = 1;
+  ratio: number;
   // resourceManager: Resource;
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(
+    private canvas: HTMLCanvasElement,
+    options?: {
+      ratio: number;
+    }
+  ) {
     // console.log("PosterPainter constructor");
 
     this.ctx = this.canvas.getContext("2d")!;
@@ -15,7 +20,7 @@ export class PosterPainter {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
-    this.ratio = Math.floor(window.devicePixelRatio) || 1;
+    this.ratio = options?.ratio || Math.floor(window.devicePixelRatio) || 1;
 
     console.log("this ratio", this.ratio);
 
@@ -28,13 +33,14 @@ export class PosterPainter {
     //
   }
 
-  draw(options: drawOptions) {
+  draw(options: DrawOptions) {
     requestAnimationFrame(() => this._draw.bind(this)(options));
   }
 
-  async _draw(options: drawOptions) {
+  async _draw(options: DrawOptions) {
     if (this.ctx === null) return;
-    console.log("============ DRAW ============");
+    // console.log("============ DRAW ============");
+    // this.ctx.font = options.fontFamily!;
     // this.ctx.clearRect(0, 0, this.width * this.ratio, this.height * this.ratio);
     // start draw
     // background

@@ -18,13 +18,12 @@ export type TotalValueInputs = {
   nonUSDCHolding: {
     holding: number;
     markPrice: number;
-    //保證金替代率 暂时默认0
+    //Margin replacement rate, currently default to 0
     discount: number;
   }[];
 };
 /**
- * 用戶總資產價值 (USDC計價)，包含無法作為保證金的資產
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Value}
+ * User's total asset value (denominated in USDC), including assets that cannot be used as collateral.
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
@@ -37,18 +36,16 @@ export function totalValue(inputs: TotalValueInputs): Decimal {
 }
 
 /**
- * 用戶帳戶當前可用保證金的價值總和 (USDC計價)
- *
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Free-collateral}
+ * Total value of available collateral in the user's account (denominated in USDC).
  */
 export type FreeCollateralInputs = {
-  // 总保证金
+  // Total collateral
   totalCollateral: Decimal;
-  // 总初始保证金
+  // Total initial margin with orders
   totalInitialMarginWithOrders: number;
 };
 /**
- * 计算可用保证金
+ * Calculate free collateral.
  */
 export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
   const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
@@ -57,20 +54,19 @@ export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
 }
 
 export type TotalCollateralValueInputs = {
-  // USDC 的 holding 數量
+  // Quantity of USDC holdings
   USDCHolding: number;
   nonUSDCHolding: {
     holding: number;
     markPrice: number;
-    //保證金替代率 暂时默认0
+    // Margin replacement rate, currently default to 0
     discount: number;
   }[];
-  // 未结算盈亏
+  // Unsettled profit and loss
   unsettlementPnL: number;
 };
 /**
- * 计算总保证金
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D}
+ * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
   const { USDCHolding, nonUSDCHolding } = inputs;
@@ -93,7 +89,7 @@ export type PositionNotionalWithOrderInputs = {
   positionQtyWithOrders: number;
 };
 /**
- * 單一 Symbol position / orders notional 加總
+ * Sum of notional value for a symbol's position and orders.
  */
 export function positionNotionalWithOrder_by_symbol(
   inputs: PositionNotionalWithOrderInputs
@@ -103,13 +99,13 @@ export function positionNotionalWithOrder_by_symbol(
 
 export type PositionQtyWithOrderInputs = {
   positionQty: number;
-  // 单个Symbol的所有买单合计
+  // Total quantity of buy orders for a symbol
   buyOrdersQty: number;
-  // 单个Symbol的所有卖单合计
+  // Total quantity of sell orders for a symbol
   sellOrdersQty: number;
 };
 /**
- *  單一 Symbol position / orders qty 加總
+ *  Sum of position quantity and orders quantity for a symbol.
  */
 export function positionQtyWithOrders_by_symbol(
   inputs: PositionQtyWithOrderInputs
@@ -134,7 +130,7 @@ export type IMRInputs = {
 };
 
 /**
- * 單一 Symbol 初始保證金率
+ * Initial margin rate for a symbol.
  * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
 export function IMR(inputs: IMRInputs): number {
@@ -179,7 +175,7 @@ export function sellOrdersFilter_by_symbol(
 }
 
 /**
- * 从仓位列表中获取指定symbol的仓位数量
+ * Get the quantity of a specified symbol from the list of positions.
  */
 export function getQtyFromPositions(
   positions: API.Position[],
@@ -193,7 +189,7 @@ export function getQtyFromPositions(
 }
 
 /**
- * 从订单列表中获取指定symbol的看多，看空订单数量，
+ * Get the quantity of long and short orders for a specified symbol from the list of orders.
  */
 export function getQtyFromOrdersBySide(
   orders: API.Order[],
@@ -239,7 +235,7 @@ export type TotalInitialMarginWithOrdersInputs = {
 } & Pick<IMRInputs, "maxLeverage">;
 
 /**
- * 计算用戶已使用初始保證金加總 ( 包含 position / orders )
+ * Calculate the total initial margin used by the user (including positions and orders).
  */
 export function totalInitialMarginWithOrders(
   inputs: TotalInitialMarginWithOrdersInputs
@@ -300,7 +296,7 @@ export function totalInitialMarginWithOrders(
 }
 
 /**
- * 把订单按照symbol分组, 因为一个symbol可以有多个挂单
+ * Group orders by symbol, as a symbol can have multiple orders.
  */
 export function groupOrdersBySymbol(orders: API.Order[]) {
   const symbols: { [key: string]: API.Order[] } = {};
@@ -344,9 +340,9 @@ export function extractSymbols(
 // function otherIM(inputs: {}): number {}
 
 export type OtherIMsInputs = {
-  // 传入除当前symbol外的其他symbol的仓位列表
+  // the position list for other symbols except the current symbol
   positions: API.Position[];
-  // 传入除当前symbol外的其他symbol的订单列表
+  // the order list for other symbols except the current symbol
   orders: API.Order[];
 
   markPrices: { [key: string]: number };
@@ -355,7 +351,7 @@ export type OtherIMsInputs = {
   IMR_Factors: { [key: string]: number };
 };
 /**
- * 除当前symbol外的其他symbol已占用的总保证金
+ * Total margin used by other symbols (except the current symbol).
  */
 export function otherIMs(inputs: OtherIMsInputs): number {
   const {
@@ -433,10 +429,10 @@ export function otherIMs(inputs: OtherIMsInputs): number {
 export type MaxQtyInputs = {
   symbol: string;
 
-  //單次開倉最大 Qty 限制,  /v1/public/info.base_max
+  // Maximum quantity limit for opening a single position, /v1/public/info.base_max
   baseMaxQty: number;
   /**
-   * 用户保证金总额（USDC 计价）, 可以由 totalCollateral 计算得出
+   * Total collateral of the user (denominated in USDC), can be calculated from totalCollateral.
    * @see totalCollateral
    */
   totalCollateral: number;
@@ -447,11 +443,11 @@ export type MaxQtyInputs = {
    */
   otherIMs: number;
   markPrice: number;
-  // 已开仓数量
+  // Quantity of open positions
   positionQty: number;
-  // 已挂多单数量
+  // Quantity of long orders
   buyOrdersQty: number;
-  // 已挂空单数量
+  // Quantity of short orders
   sellOrdersQty: number;
 
   IMR_Factor: number;
@@ -460,8 +456,7 @@ export type MaxQtyInputs = {
 };
 
 /**
- * 最大可下单数量
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Max-Order-QTY}
+ * Maximum order quantity.
  */
 export function maxQty(
   side: OrderSide,
@@ -521,11 +516,11 @@ export function maxQtyByLong(
       .toPower(1 / 1.8)
       .div(markPrice)
       .sub(
-        new Decimal(positionQty)
-          .add(buyOrdersQty)
-          // .abs()
-          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
+        new Decimal(positionQty).add(buyOrdersQty)
+        // .abs()
+        // .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )
+      .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       .mul(0.995)
       .toNumber();
 
@@ -566,7 +561,9 @@ export function maxQtyByShort(
       )
       .div(markPrice)
       .mul(0.995)
-      .add(new Decimal(positionQty).add(sellOrdersQty))
+      // .add(new Decimal(positionQty).add(sellOrdersQty))
+      .add(positionQty)
+      .sub(sellOrdersQty)
 
       .toNumber();
 
@@ -579,12 +576,14 @@ export function maxQtyByShort(
       .div(IMR_Factor)
       .toPower(1 / 1.8)
       .div(markPrice)
-      .add(
-        new Decimal(positionQty)
-          .add(sellOrdersQty)
-          // .abs()
-          .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
-      )
+      // .add(
+      // new Decimal(positionQty)
+      //   .add(sellOrdersQty)
+      //   // .abs()
+      //   )
+      .add(positionQty)
+      .sub(sellOrdersQty)
+      .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       .mul(0.995)
       .toNumber();
 
@@ -600,7 +599,7 @@ export type TotalMarginRatioInputs = {
   positions: API.Position[];
 };
 /**
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Margin-Ratio}
+ * total margin ratio
  */
 export function totalMarginRatio(
   inputs: TotalMarginRatioInputs,
@@ -633,7 +632,6 @@ export type TotalUnrealizedROIInputs = {
 
 /**
  * totalUnrealizedROI
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-Unrealized-ROI}
  */
 export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
   const { totalUnrealizedPnL, totalValue } = inputs;
@@ -644,7 +642,7 @@ export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
 }
 
 /**
- * @see {@link https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Current-account-leverage}
+ * current account leverage
  */
 export function currentLeverage(totalMarginRatio: number) {
   if (totalMarginRatio === 0) {

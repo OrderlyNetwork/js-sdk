@@ -20,13 +20,15 @@ import {
   ConfigProviderProps,
   useAccountInstance,
   OrderlyContext,
+  useChains,
 } from "@orderly.network/hooks";
 import toast, { useToasterStore } from "react-hot-toast";
 import { LocalProvider } from "@/i18n";
 import { IContract } from "@orderly.network/core";
 import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
-import { ShareConfigProps } from "@/block/shared/shareConfigProps";
+import { PnLDefaultProps, ShareConfigProps } from "@/block/shared/shareConfigProps";
+import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -57,12 +59,13 @@ export type OrderlyAppContextState = {
   onSetChain: (chainId: number) => Promise<any>;
 
   errors: AppStateErrors;
-  enableSwapDeposit?: boolean;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -78,11 +81,12 @@ export interface OrderlyAppProviderProps {
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  enableSwapDeposit?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
-  shareOptions: ShareConfigProps,
+  shareOptions: ShareConfigProps;
+  /** custom chains  */
+  chains?: Chains<undefined, undefined>;
 }
 
 export const OrderlyAppProvider: FC<
@@ -100,10 +104,10 @@ export const OrderlyAppProvider: FC<
     includeTestnet,
     contracts,
     toastLimitCount,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
+    chains,
   } = props;
 
   return (
@@ -113,18 +117,17 @@ export const OrderlyAppProvider: FC<
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
       networkId={networkId}
-      enableSwapDeposit={enableSwapDeposit}
       contracts={contracts}
     >
       <InnerProvider
         appIcons={logos}
         theme={theme}
         toastLimitCount={toastLimitCount}
-        enableSwapDeposit={enableSwapDeposit}
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
-        shareOptions={shareOptions}
+        shareOptions={{...PnLDefaultProps, ...shareOptions}}
+        chains={chains}
       >
         {props.children}
       </InnerProvider>
@@ -138,10 +141,10 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     appIcons: logos,
     brokerName,
     toastLimitCount = 1,
-    enableSwapDeposit,
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
+    chains: customChains,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -151,16 +154,23 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     disconnect,
     wallet: currentWallet,
     setChain,
-    chains,
   } = useWalletConnector();
 
   const account = useAccountInstance();
 
-  // const [testChains] = useChains(networkId, { wooSwapEnabled: false });
-
-  //
-
   const { networkId } = useContext<any>(OrderlyContext);
+
+  const [orderlyChains] = useChains();
+
+  const chains = useMemo(() => {
+    const _chains = customChains || orderlyChains;
+
+    if (!_chains) {
+      return [];
+    }
+
+    return [..._chains?.mainnet, ..._chains.testnet];
+  }, [customChains, orderlyChains]);
 
   const [errors, setErrors] = useSessionStorage<AppStateErrors>("APP_ERRORS", {
     ChainNetworkNotSupport: false,
@@ -187,12 +197,13 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         return false;
       }
 
-      const isSupport = chains.some((item: { id: string | number }) => {
-        if (typeof item.id === "string") {
-          // return `0x${Number(item.id).toString(16)}` === chainId;
-          return parseInt(item.id, 16) === chainId;
+      const isSupport = chains.some((item) => {
+        const _chainId = item.network_infos?.chain_id;
+        if (typeof _chainId === "string") {
+          // return `0x${Number(_chainId).toString(16)}` === chainId;
+          return parseInt(_chainId, 16) === chainId;
         }
-        return item.id === chainId;
+        return _chainId === chainId;
       });
 
       return isSupport;
@@ -354,11 +365,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onWalletConnect: _onWalletConnect,
         onWalletDisconnect: _onWalletDisconnect,
         onSetChain: _onSetChain,
-        enableSwapDeposit,
         onChainChanged,
         brokerName,
         footerStatusBarProps,
         shareOptions,
+        chains: props.chains,
       }}
     >
       <TooltipProvider>

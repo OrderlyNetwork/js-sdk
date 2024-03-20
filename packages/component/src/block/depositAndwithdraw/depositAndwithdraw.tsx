@@ -1,14 +1,13 @@
 import { TabPane, Tabs } from "@/tab";
 import { FC, useEffect, useState } from "react";
 import { Withdraw } from "../withdraw";
-import { Deposit } from "../deposit/deposit";
 import { create } from "@/modal/modalHelper";
 import { useModal } from "@/modal";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";
+import { DepositSlot } from "./slot";
 import { ArrowDownToLineIcon } from "@/icon";
-import { cn } from "@/utils";
 
 type activeName = "deposit" | "withdraw";
 
@@ -41,7 +40,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            <Deposit onOk={props.onOk} />
+            <DepositSlot onOk={props.onOk!} />
           </div>
         </TabPane>
         <TabPane

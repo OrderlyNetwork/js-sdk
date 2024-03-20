@@ -7,7 +7,6 @@ type URLS = {
   publicWsUrl: string;
   privateWsUrl: string;
   operatorUrl: string;
-  // swapSupportApiUrl: string;
 };
 
 const API_URLS: Record<ENV_NAME, URLS> = {
@@ -55,7 +54,6 @@ export class CustomConfigStore implements ConfigStore {
       ["privateWsUrl", urls["privateWsUrl"]],
       ["operatorUrl", urls["operatorUrl"]],
       ["networkId", networkId],
-      ["swapSupportApiUrl", "https://fi-api.woo.org"],
     ]);
   }
   get<T>(key: ConfigKey): T {

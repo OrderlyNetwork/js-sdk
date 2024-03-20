@@ -107,10 +107,15 @@ export class Widget {
   }
 
   public setSymbol(symbol: string, callback?: any) {
-    this._instance?.onChartReady(() => {
-      const interval = this._instance?.symbolInterval()?.interval;
-      this._instance?.setSymbol(symbol, interval as any, callback);
-    });
+    try {
+
+      this._instance?.onChartReady(() => {
+        const interval = this._instance?.symbolInterval()?.interval;
+        this._instance?.setSymbol(symbol, interval as any, callback);
+      });
+    } catch (e) {
+      console.log('set symbol error', e);
+    }
   }
 
   public subscribeClick(onClick: any) {
