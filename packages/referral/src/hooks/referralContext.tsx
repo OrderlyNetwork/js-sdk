@@ -1,5 +1,5 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
-import { FC, PropsWithChildren, createContext, useMemo } from "react";
+import { FC, PropsWithChildren, createContext, useEffect, useMemo } from "react";
 import { API } from "../types/api";
 import { useDaily } from "./useDaily";
 
@@ -49,7 +49,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         revalidateOnFocus: true,
     });
 
-    
+
     const {
         data: dailyVolume,
         mutate: dailyVolumeMutate
@@ -59,7 +59,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         data: volumeStatistics,
         mutate: volumeStatisticsMutate
     } = usePrivateQuery<API.UserVolStats[]>("/v1/volume/user/stats", {
-        
+
         revalidateOnFocus: true,
     });
 
@@ -109,6 +109,14 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         dailyVolumeMutate();
         referralInfoMutate();
     };
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const refCode = searchParams.get('ref');
+        if (refCode) {
+            localStorage.setItem("referral_code", refCode);
+        }
+    }, []);
 
 
     return (

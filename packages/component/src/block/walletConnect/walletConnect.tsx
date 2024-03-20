@@ -4,11 +4,12 @@ import { Switch } from "@/switch";
 import { FC, useCallback, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount, useMutation } from "@orderly.network/hooks";
 
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
+import { ReferralCode } from "./sections/referralCode";
 
 export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -28,6 +29,12 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   const [handleStep, setHandleStep] = useState(0);
   const [remember, setRemember] = useState(true);
+  const localRefCode = localStorage.getItem("referral_code") || undefined;
+  const [refCode, setRefCode] = useState<string | undefined>(localRefCode);
+  const [
+    bindRefCode,
+    { error: updateOrderError, isMutating: updateMutating },
+  ] = useMutation("/v1/referral/bind", "POST");
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -52,6 +59,11 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         .onEnableTrading?.(remember)
         .then(
           () => {
+            if (refCode && refCode.length > 0) {
+              bindRefCode({referral_code: refCode}).catch((e) => {}).finally(() => {
+                localStorage.removeItem("referral_code");
+              });
+            }
             props.onComplete?.();
           },
           (error) => {
@@ -107,6 +119,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
+      <ReferralCode className="orderly-pt-5" refCode={refCode} setRefCode={setRefCode} />
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>
