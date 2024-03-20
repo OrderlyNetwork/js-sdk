@@ -61,6 +61,7 @@ export type OrderlyAppContextState = {
   errors: AppStateErrors;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  onClickReferral?: () => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;

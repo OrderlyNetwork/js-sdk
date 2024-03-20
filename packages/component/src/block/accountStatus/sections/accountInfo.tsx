@@ -1,8 +1,8 @@
 import { Blockie } from "@/avatar";
 import Button, { IconButton } from "@/button";
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import { Text } from "@/text";
-import { useAccount, useMutation, useConfig, usePrivateQuery } from "@orderly.network/hooks";
+import { useAccount, useMutation, useConfig, usePrivateQuery, OrderlyContext } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -12,6 +12,7 @@ import { useGetChains } from "./useGetChains";
 import { type ConfigStore } from "@orderly.network/core";
 import { Divider } from "@/divider";
 import { Statistic } from "@/statistic";
+import { OrderlyAppContext } from "@/provider";
 
 
 export interface AccountInfoProps {
@@ -141,6 +142,14 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
 
 
 const ReferralInfo = () => {
+
+  const { onClickReferral } = useContext(OrderlyAppContext);
+
+  const clickReferral = useCallback(() => {
+    onClickReferral?.();
+  }, [onClickReferral]);
+
+
   const {
     data
   } = usePrivateQuery<any>("/v1/referral/info", {
@@ -170,7 +179,7 @@ const ReferralInfo = () => {
 
   return (
     <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3">
-      <div className="orderly-flex orderly-items-center">
+      <div className="orderly-flex orderly-items-center orderly-cursor-pointer" onClick={clickReferral}>
         <div className="orderly-flex-1">Referral</div>
         <ArrowRightIcon size={14} fillOpacity={1} className="orderly-fill-primary" />
       </div>

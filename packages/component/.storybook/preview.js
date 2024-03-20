@@ -9,6 +9,7 @@ import walletConnectModule from "@web3-onboard/walletconnect";
 import { CustomContractManager } from "./CustomContract";
 import { CustomConfigStore } from "./CustomConfigStore";
 import "../src/tailwind.css"; // tailwind css
+import { log } from "console";
 
 const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
 const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
@@ -141,6 +142,9 @@ const preview = {
               setTimeout(() => {
                 window.location.reload();
               }, 100);
+            }}
+            onClickReferral={() => {
+              console.log("click referral");
             }}
           >
             <Story />
