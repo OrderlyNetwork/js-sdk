@@ -8,14 +8,11 @@
     "dist"
   ],
   "scripts": {
-    "watch": "tsup --watch --tsconfig tsconfig.build.json",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
-    "build:tsup": "tsup --tsconfig tsconfig.build.json",
-    "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
-    "dev": "pnpm run storybook",
-    "storybook": "storybook dev -p 6060",
-    "build-storybook": "storybook build"
+    "dev": "tsup --watch --tsconfig tsconfig.build.json",
+    "build": "tsup --tsconfig tsconfig.build.json",
+    "docs:generate": "typedoc",
+    "docs:parse": "@orderly.network/typedoc-json-parser",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

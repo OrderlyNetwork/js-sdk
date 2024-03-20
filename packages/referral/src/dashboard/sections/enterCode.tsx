@@ -1,11 +1,19 @@
-import { Button, Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle, Divider, Input, toast, useModal } from "@orderly.network/react";
-import { create } from "@orderly.network/react";
-import { useContext, useState } from "react";
+import {
+  create,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Input,
+  toast,
+  useModal
+} from "@orderly.network/react";
+import { useState } from "react";
 import { CloseIcon } from "../icons/close";
 import { useMutation } from "@orderly.network/hooks";
-import { ReferralContext } from "../../hooks/referralContext";
 
-export const InputCode = create<{
+export const ReferralInputCode = create<{
   mutate: any,
   bindReferralCodeState?: (success: boolean, error: any, hide: any) => void
 }>((props) => {

@@ -4,13 +4,13 @@ import { ReferralContext } from "../../hooks/referralContext";
 import { USDCIcon } from "../../affiliate/icons";
 import { ArrowRightIcon } from "../icons/arrowRight";
 import { TraderIcon } from "../icons/trader";
-import { InputCode } from "./enterCode";
+import { ReferralInputCode } from "./enterCode";
 export const AsAnTrader = () => {
 
   const { referralInfo, isTrader, mutate, bindReferralCodeState } = useContext(ReferralContext);
 
   const enterCode = () => {
-    modal.show(InputCode, { mutate, bindReferralCodeState });
+    modal.show(ReferralInputCode, { mutate, bindReferralCodeState });
   };
 
   const bottomInfo = useMemo(() => {

@@ -61,6 +61,7 @@ export {
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
+export type { ModalHocProps } from "./modal";
 export { create } from "./modal/modalHelper";
 export { Divider } from "./divider";
 export {

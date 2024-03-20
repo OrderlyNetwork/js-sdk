@@ -14,7 +14,7 @@ type Params = {
     initialSize?: number,
 }
 
-export const useDistribution = (params: Params) => {
+export const useDistribution = (params: Params) : any => {
     const { size = 10, startDate, endDate, initialSize } = params;
 
     const ordersResponse = usePrivateInfiniteQuery(
