@@ -23,6 +23,8 @@ export const ReferralInputCode = create<{
 
   const [code, setCode] = useState("");
 
+  const [errorInfo, setErrorInfo] = useState("");
+
   const [
     bindCode,
     { error, isMutating },
@@ -46,6 +48,16 @@ export const ReferralInputCode = create<{
       } else {
         toast.error(`${e}`);
       }
+    }
+  };
+
+  const checkInput = (code: string) => {
+    const regex = /^[A-Z0-9]+$/;
+    
+    if (regex.test(code) && code.length >= 4 && code.length <= 6) {
+      setErrorInfo("");
+    } else {
+      setErrorInfo("This referral code does not exist.");
     }
   };
 
@@ -74,19 +86,27 @@ export const ReferralInputCode = create<{
           </div>
 
           <Input
-            containerClassName="orderly-h-[40px] orderly-mt-3"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-800"
             placeholder="Enter code"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e) => {
+              setCode(e.target.value);
+              checkInput(e.target.value);
+            }}
             suffix={(<button className="orderly-mx-3" onClick={(e) => {
               e.stopPropagation();
               setCode("");
             }}><CloseIcon className="hover:orderly-fill-slate-300" /></button>)}
           />
 
+          {errorInfo.length > 0 && (<div className="orderly-flex orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-center">
+            <div className="orderly-inline-block orderly-bg-danger orderly-rounded-full orderly-w-[4px] orderly-h-[4px] orderly-mr-1"></div>
+            {errorInfo}
+          </div>)}
+
           <Button
             id="referral_bind_referral_code_btn"
-            disabled={code.length == 0}
+            disabled={code.length == 0 || errorInfo.length > 0}
             loading={isMutating}
             className="orderly-my-6"
             onClick={(e) => {

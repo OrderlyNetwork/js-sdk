@@ -118,13 +118,14 @@ export const EditReferralRate = create<{
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
                     />
 
-                    {showError && (
-                        <div className="orderly-text-danger orderly-text-3xs orderly-mt-6">The total commission rate cannot exceed your maximum commission rate limit </div>
-                    )}
+                    {showError && (<div className="orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-start orderly-relative">
+                        <div className="orderly-bg-danger orderly-rounded-full orderly-w-[4px] orderly-h-[4px] orderly-mr-1 orderly-mt-2 orderly-absolute orderly-top-0"></div>
+                        <div className="orderly-ml-2">{`The total commission rate cannot exceed your maximum commission rate limit`}</div>
+                    </div>)}
 
                     <Button
                         id="referral_bind_referral_code_btn"
-                        disabled={refereeRebateRate.length === 0 || referrerRebateRate.length === 0 || showError }
+                        disabled={refereeRebateRate.length === 0 || referrerRebateRate.length === 0 || showError}
                         loading={isMutating}
                         className="orderly-my-6"
                         onClick={(e) => {
