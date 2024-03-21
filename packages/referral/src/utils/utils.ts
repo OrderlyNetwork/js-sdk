@@ -67,6 +67,19 @@ export function addQueryParam(url: string, paramName: string, paramValue: string
     const formattedTime = `${hours}:${minutes}`;
     return formattedTime;
   }
+  
+  
+  //** will return MM:dd */
+  export function formatMdTime(time?: number | string): string | undefined {
+    const date = parseTime(time);
+    if (!date) return undefined;
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    
+    const formattedTime = `${month}-${day}`;
+    return formattedTime;
+  }
+
 
   //** compare two date, yyyy-mm-dd */
 export function compareDate(d1?: Date, d2?: Date) {

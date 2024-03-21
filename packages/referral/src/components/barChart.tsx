@@ -1,6 +1,7 @@
 import { cn } from "@orderly.network/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
+import { formatMdTime } from "../utils/utils";
 
 export type BarStyle = {
     //** default is 12 */
@@ -40,6 +41,8 @@ export type YAxis = {
     textFill: string,
     //** default is end */
     textAnchor: string,
+    min?: number,
+    max?: number,
 }
 
 export type XAxis = {
@@ -53,18 +56,18 @@ export type XAxis = {
     textAnchor: string,
 };
 
-const InitialBarStyle: BarStyle = {
+export const InitialBarStyle: BarStyle = {
     width: 12,
     fill: "#B64FFF",
     rx: 2,
     ry: 2,
     columnPadding: 10,
-    hoverLineStroke: "rgba(255,255,255,0.2)", 
+    hoverLineStroke: "rgba(255,255,255,0.2)",
     hoverLineStrokeWidth: 1,
     hoverContainerWidth: 227,
 }
 
-const InitialYAxis: YAxis = {
+export const InitialYAxis: YAxis = {
     width: 44,
     fontSize: 10,
     gridCount: 5,
@@ -76,7 +79,7 @@ const InitialYAxis: YAxis = {
     textAnchor: "end",
 };
 
-const InitialXAxis: XAxis = {
+export const InitialXAxis: XAxis = {
     height: 30,
     fontSize: 10,
     textFill: "rgba(255, 255, 255, 0.36)",
@@ -97,13 +100,13 @@ export const ColmunChart: React.FC<{
     yAxis?: YAxis,
     xAxis?: XAxis,
 }> = (props) => {
-    const { 
-        data = [], 
-        className, 
-        hoverTitle, 
-        barStyle = InitialBarStyle, 
-        yAxis= InitialYAxis, 
-        xAxis = InitialXAxis 
+    const {
+        data = [],
+        className,
+        hoverTitle,
+        barStyle = InitialBarStyle,
+        yAxis = InitialYAxis,
+        xAxis = InitialXAxis
     } = props;
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState<ChartSize>({ height: 0, width: 0 });
@@ -125,15 +128,23 @@ export const ColmunChart: React.FC<{
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    }, []);
+    }, [data]);
 
     const minMaxInfo = useMemo(() => {
         try {
-            return findMinMax(data, 1);
+            const info = findMinMax(data, 1);
+            if (yAxis.min) {
+                info["min"] = yAxis.min;
+            }
+            if (yAxis.max) {
+                info["max"] = yAxis.max;
+            }
+
+            return info;
         } catch (err) {
             return undefined;
         }
-    }, [data]);
+    }, [data, yAxis]);
 
     const yAxisChildren = useMemo(() => {
         if (size.height === 0 || size.width === 0 || (!minMaxInfo)) {
@@ -344,4 +355,25 @@ function findMinMax(arr: [string, number][], maxRate: number = 1): { min: number
     }
 
     return { min: 0, max: max * (maxRate || 1) };
+}
+
+
+export const emptyDataSource = (isLG: boolean) => {
+    const date = Date.now();
+
+    return Array.from({ length: isLG ? 7 : 14 }, (_, index) => {
+        const timestamp = date - (86400 * index) * 1000;
+        return [
+            formatMdTime(timestamp),
+            0
+        ]
+
+    }).reverse();
+
+};
+
+
+//** default min is 0, max is 4000 */
+export function emptyDataSourceYAxis(options?: { min: number, max: number }): YAxis {
+    return { ...InitialYAxis, min: options?.min || 0, max: options?.max || 4000 };
 }

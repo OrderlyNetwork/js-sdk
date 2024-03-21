@@ -39,9 +39,11 @@ const _BigLayout = () => {
                     <TraderTitle/>
                     <Summary className="orderly-flex-1"/>
                 </div>
-                <div className="orderly-w-3/5 orderly-flex orderly-flex-col orderly-gap-4">
+                {/* <div className="orderly-w-3/5 orderly-flex orderly-flex-col orderly-gap-4">
                     <BarChart className="orderly-flex-1"/>
-                </div>
+                </div> */}
+
+                <BarChart className="orderly-flex-1 orderly-h-full" />
             </div>
 
             <Rebates className="orderly-mt-4"/>

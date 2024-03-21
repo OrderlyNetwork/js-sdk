@@ -4,11 +4,13 @@ import { Select, cn } from "@orderly.network/react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 
-import { ColmunChart } from "../../components/barChart";
+import { ColmunChart, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { useRefereeHistory } from "../../hooks/useRefereeHistory";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
-import { formatHMTime } from "../../utils/utils";
+import { formatHMTime, formatMdTime } from "../../utils/utils";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { MEDIA_LG } from "../../types/constants";
 
 type ChartDataType = "Rebate" | "Volume";
 
@@ -17,6 +19,8 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
     const [distributionData, { refresh }] = useDistribution({ size: 30 });
     const { dailyVolume } = useContext(ReferralContext);
+
+    const isLG = useMediaQuery(MEDIA_LG);
 
 
     const dataSource = useMemo(() => {
@@ -29,7 +33,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             let newData = distributionData.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
 
             console.log("new data", newData);
-            
+
 
             if (newData.length > 7) {
                 newData = newData.slice(0, 7);
@@ -45,7 +49,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         else if (filterType === "Volume") {
             if (!dailyVolume || dailyVolume.length === 0) return [];
 
-            const newData = dailyVolume.length > 7 ? dailyVolume.slice(0,7) : dailyVolume;
+            const newData = dailyVolume.length > 7 ? dailyVolume.slice(0, 7) : dailyVolume;
 
             return newData.map((item) => {
                 const timeText = formatHMTime(item.date);
@@ -58,21 +62,29 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
     }, [distributionData, filterType]);
 
-    console.log("data source", dataSource, "distributionData",distributionData);
+
+    const yAxis = useMemo(() => {
+        if (dataSource.length === 0) {
+            return emptyDataSourceYAxis();
+        }
+        return { ...InitialYAxis }
+    }, [dataSource]);
+
     
 
 
     return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg orderly-flex orderly-flex-col", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
                 <div className="orderly-text-xs ">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 
             <ColmunChart
-                data={dataSource.length === 0 ? [["", 0]] : dataSource}
-                hoverTitle={filterType}
-            />
+                    data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
+                    hoverTitle={filterType}
+                    yAxis={yAxis}
+                />
         </div>
     );
 }

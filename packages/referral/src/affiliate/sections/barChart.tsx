@@ -4,8 +4,11 @@ import { Select, cn } from "@orderly.network/react";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import { TriangleDownIcon } from "../icons";
-import { ColmunChart } from "../../components/barChart";
+import { ColmunChart, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { useRefereeHistory } from "../../hooks/useRefereeHistory";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { MEDIA_LG } from "../../types/constants";
+import { formatMdTime } from "../../utils/utils";
 
 type ChartDataType = "Commission" | "Referral vol.";
 
@@ -13,39 +16,51 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Commission");
 
     const [data, {refresh}] = useRefereeHistory({size: 7});
-
+    const isLG = useMediaQuery(MEDIA_LG);
 
     const dataSource = useMemo(() => {
+        
         // @ts-ignore
         if ((data?.length || 0) === 0) return [];
 
         
+        const end = isLG ? Math.min(14, data.length) : Math.min(7, data.length);
 
         // @ts-ignore
-        return data.slice(0,7).map((item) => {
+        return data.slice(0,end).map((item) => {
 
-            const time = new Date(item.date);
-            const timeText = time.getMonth().toString() + "-"+ time.getDay().toString();
+            
+            const timeText = formatMdTime(item.date);
             if (filterType === "Commission") {
                 return [timeText, item?.referee_rebate || 0];
             }
             return [timeText, item?.volume || 0];
 
-        });
+        }).reverse();
 
     }, [data, filterType]);
+
+    const yAxis = useMemo(() => {
+        if (dataSource.length === 0) {
+            return emptyDataSourceYAxis();
+        }
+        return { ...InitialYAxis }
+    }, [dataSource]);
+
     
 
     return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg orderly-flex orderly-flex-col", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
                 <div className="orderly-text-xs ">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 
             <ColmunChart 
-                data={dataSource}
+                data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
                 hoverTitle={filterType}
+                yAxis={yAxis}
+                
             />
         </div>
     );

@@ -14,7 +14,7 @@ export const SummaryFilter: FC<{
     const [open, setOpen] = useState(false);
     const [width, setWidth] = useState(0);
     const { curType, onClick } = props;
-    const types: FilterType[] = ["All", "1D", "7D", "30D"];
+    const types: FilterType[] = ["1D", "7D", "30D", "All"];
 
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
     useEffect(() => {
@@ -35,7 +35,7 @@ export const SummaryFilter: FC<{
             </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-            className="orderly-bg-base-900 orderly-px-0"
+            className="orderly-bg-base-800 orderly-px-0"
             // onFocusCapture={(e) => e.preventDefault()}
             align="start"
             style={{ minWidth: `${width}px` }}
