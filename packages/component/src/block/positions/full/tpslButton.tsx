@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
-import { OrderType } from "@orderly.network/types";
+import { API, OrderType } from "@orderly.network/types";
 import { useSymbolContext } from "@/provider/symbolProvider";
 import { cn } from "@/utils/css";
 import { toast } from "@/toast";
@@ -18,6 +18,7 @@ export const TPSLButton = () => {
     type,
     submitting,
     position,
+    tpslOrder,
   } = usePositionsRowContext();
 
   const { base, quote, symbol } = useSymbolContext();
@@ -52,7 +53,7 @@ export const TPSLButton = () => {
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <button
-          disabled={disabled}
+          // disabled={disabled}
           className={cn(
             "orderly-border orderly-border-base-contrast-36 orderly-text-base-contrast-54 orderly-rounded orderly-w-full orderly-h-[28px] hover:orderly-bg-base-contrast/10 disabled:orderly-opacity-50 disabled:orderly-cursor-not-allowed",
             {
@@ -68,13 +69,17 @@ export const TPSLButton = () => {
         align="end"
         side="top"
         className="orderly-w-[375px] orderly-ui-tp_sl-poper"
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+        }}
       >
         <TPSLEditor
-          quantity={Number(quantity)}
+          maxQty={Number(quantity)}
           symbol={symbol}
           onCancel={onClose}
-          position={position}
+          position={position as API.PositionTPSLExt}
           onSuccess={onClose}
+          order={tpslOrder}
         />
       </PopoverContent>
     </Popover>

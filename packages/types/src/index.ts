@@ -6,7 +6,7 @@ export {
   OrderType,
   OrderSide,
   OrderStatus,
-  AlogOrderRootType,
+  AlgoOrderRootType,
   AlgoOrderType,
   TriggerPriceType,
 } from "./order";
@@ -14,7 +14,7 @@ export type {
   OrderEntity,
   AlgoOrderEntity,
   TPSLOrderEntry,
-  BaseAlgoOrderEntry,
+  BaseAlgoOrderEntity,
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

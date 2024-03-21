@@ -8,10 +8,12 @@ import {
 } from "@/dropdown/dropdown";
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { parseNumber } from "@/utils";
 
 interface Props {
   type: "TP" | "SL";
   quote: string;
+  quote_db?: number;
   onChange: (key: string, value: number | string) => void;
   testId?: string;
   values: {
@@ -28,7 +30,7 @@ export enum PnLMode {
 }
 
 export const PnlInput: FC<Props> = (props) => {
-  const { quote, type } = props;
+  const { quote, type, quote_db = 2 } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
@@ -45,11 +47,20 @@ export const PnlInput: FC<Props> = (props) => {
     }
   }, [mode]);
 
+  const value = useMemo(() => {
+    const val = props.values[mode as keyof Props["values"]];
+    if (!!val) {
+      return parseNumber(val, { rule: "price", precision: quote_db });
+    }
+
+    return val;
+  }, [props.values, mode]);
+
   return (
     <Input
       prefix={mode}
       placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
-      className={"orderly-text-right orderly-pr-2"}
+      className={"orderly-text-right orderly-text-sm"}
       data-testid={props.testId}
       name={props.type}
       id={props.type}
@@ -67,7 +78,7 @@ export const PnlInput: FC<Props> = (props) => {
               <ArrowIcon
                 size={12}
                 className={
-                  "group-data-[state=open]:orderly-rotate-180 orderly-transition"
+                  "group-data-[state=open]:orderly-rotate-180 orderly-transition orderly-text-base-contrast-54"
                 }
               />
             </button>
@@ -94,7 +105,7 @@ export const PnlInput: FC<Props> = (props) => {
           </DropdownMenuContent>
         </DropdownMenu>
       }
-      value={props.values[mode as keyof Props["values"]]}
+      value={value}
       onValueChange={(value) => {
         props.onChange(key, value);
       }}

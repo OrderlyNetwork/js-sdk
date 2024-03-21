@@ -92,6 +92,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       helpText,
       loading,
       onChange,
+      onValueChange,
       ...props
     },
     ref
@@ -153,12 +154,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         onChange(event);
       }
 
-      if (typeof props.onValueChange === "function") {
+      if (typeof onValueChange === "function") {
         let value = event.target.value;
         if (props.thousandSeparator) {
           value = parseInputHelper(value);
         }
-        props.onValueChange(value);
+        onValueChange(value);
       }
       prevInputValue.current = event.target.value;
       setCursor(event.target.selectionStart);
@@ -265,7 +266,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onBlur={onInputBlur}
             onChange={onInputChange}
             {...(props as any)}
-            disabled={!!disabled}
+            disabled={disabled}
             className={cn(
               "orderly-input",
               "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20 orderly-tabular-nums",

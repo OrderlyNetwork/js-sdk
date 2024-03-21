@@ -1,4 +1,4 @@
-import { AlgoOrderEntry, OrderEntity, OrderType } from "@orderly.network/types";
+import { OrderEntity, OrderType } from "@orderly.network/types";
 import {
   OrderCreator,
   OrderFormEntity,
@@ -9,6 +9,7 @@ import { Decimal } from "@orderly.network/utils";
 
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   abstract create(values: T, config?: ValuesDepConfig): T;
+
   abstract validate(
     values: OrderFormEntity,
     config: ValuesDepConfig

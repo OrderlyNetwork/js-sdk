@@ -1,6 +1,6 @@
 import {
   AlgoOrderEntry,
-  AlogOrderRootType,
+  AlgoOrderRootType,
   OrderEntity,
   OrderType,
   TriggerPriceType,
@@ -21,7 +21,7 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
       ...this.baseOrder(values as unknown as OrderEntity),
       // order_price: values.order_price,
       trigger_price: values.trigger_price!,
-      algo_type: AlogOrderRootType.STOP,
+      algo_type: AlgoOrderRootType.STOP,
       type: OrderType.MARKET,
       quantity: values["order_quantity"]!,
       // price: values["order_price"],

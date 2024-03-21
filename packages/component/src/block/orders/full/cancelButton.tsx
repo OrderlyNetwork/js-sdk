@@ -3,41 +3,15 @@ import { toast } from "@/toast";
 import type { API } from "@orderly.network/types";
 import { useState, type FC, useContext } from "react";
 import { OrderListContext } from "../shared/orderListContext";
+import { OrderCancelButton } from "@/block/commons/orderCancelButton";
 
-interface CancelButtonProps {
+export const CancelButton: FC<{
   order: API.Order;
-}
-
-export const CancelButton: FC<CancelButtonProps> = (props) => {
+}> = (props) => {
   const { order } = props;
   const { onCancelOrder } = useContext(OrderListContext);
 
-  const [isLoading, setIsLoading] = useState(false);
-
   return (
-    <Button
-      size="small"
-      variant={"outlined"}
-      color={"tertiary"}
-      loading={isLoading}
-      onClick={(event) => {
-        if (!onCancelOrder) return;
-        event.preventDefault();
-        event.stopPropagation();
-        setIsLoading(true);
-        onCancelOrder(order)
-          .then(
-            (res) => {},
-            (error) => {
-              toast.error(error.message);
-            }
-          )
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }}
-    >
-      Cancel
-    </Button>
+    <OrderCancelButton<API.Order> order={order} onCancelOrder={onCancelOrder} />
   );
 };

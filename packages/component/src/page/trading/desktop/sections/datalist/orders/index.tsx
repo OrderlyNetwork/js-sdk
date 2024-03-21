@@ -9,7 +9,7 @@ import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import {
   API,
   AccountStatusEnum,
-  AlogOrderRootType,
+  AlgoOrderRootType,
   OrderEntity,
 } from "@orderly.network/types";
 import { TabContext } from "@/tab";
@@ -49,7 +49,7 @@ export const MyOrders: FC<Props> = (props) => {
     symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
     // @ts-ignore
     side,
-    excludes: [AlogOrderRootType.POSITIONAL_TP_SL, AlogOrderRootType.TP_SL],
+    excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   });
 
   // const onShowAllSymbolChange = (isAll: boolean) => {

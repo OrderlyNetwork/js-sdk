@@ -1,6 +1,6 @@
 import {
   API,
-  AlogOrderRootType,
+  AlgoOrderRootType,
   OrderStatus,
   OrderSide,
 } from "@orderly.network/types";
@@ -10,10 +10,20 @@ import { Numeral, Text } from "@/text";
 import { upperCaseFirstLetter } from "@/utils/string";
 import { cx } from "class-variance-authority";
 import { OrderQuantity } from "@/block/orders/full/quantity";
-import { Price } from "@/block/orders/full/price";
-import { TriggerPrice } from "@/block/orders/full/triggerPrice";
-import { CancelButton } from "@/block/orders/full/cancelButton";
+import { CancelButton } from "./cancelButton";
 import { cn } from "@/utils";
+import { AlgoOrderBadge } from "./algoOrderTypeBadge";
+import { TPSLTriggerPrice } from "@/block/positions/full/tpslTriggerPrice";
+import Button from "@/button";
+import { SymbolProvider } from "@/provider";
+import {
+  TPSLOrderRowProvider,
+  useTPSLOrderRowContext,
+} from "@/block/tp_sl/tpslOrderRowContext";
+import { Decimal } from "@orderly.network/utils";
+import { OrderPrice } from "./orderPrice";
+import { OrderTriggerPrice } from "./orderTriggerPrice";
+import { EditButton } from "./editButton";
 
 interface Props {
   dataSource: any[];
@@ -27,7 +37,7 @@ interface Props {
 
 export const TPSLListView: FC<Props> = (props) => {
   const columns = useMemo(() => {
-    const columns: Column<API.AlgoOrder>[] = [
+    const columns: Column<API.AlgoOrderExt>[] = [
       {
         title: "Instrument",
         dataIndex: "symbol",
@@ -39,34 +49,24 @@ export const TPSLListView: FC<Props> = (props) => {
           }
           return r2.symbol.localeCompare(r1.symbol);
         },
-        render: (value: string) => (
-          <Text
-            rule={"symbol"}
-            className="orderly-font-semibold"
-            onClick={(e) => {
-              props.onSymbolChange?.({ symbol: value } as API.Symbol);
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            {value}
-          </Text>
+        render: (value: string, record) => (
+          <div className={"orderly-flex orderly-flex-col orderly-py-1"}>
+            <Text
+              rule={"symbol"}
+              className="orderly-font-semibold"
+              onClick={(e) => {
+                props.onSymbolChange?.({ symbol: value } as API.Symbol);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
+              {value}
+            </Text>
+            <AlgoOrderBadge order={record} />
+          </div>
         ),
       },
-      {
-        title: "Type",
-        width: 100,
-        className: "orderly-h-[48px] orderly-font-semibold",
-        dataIndex: "type",
-        formatter: (value: string, record: any) => {
-          if (record.algo_order_id) {
-            return (
-              `Stop ` + `${record.type.replace("_ORDER", "")}`.toLowerCase()
-            );
-          }
-          return upperCaseFirstLetter(value);
-        },
-      },
+
       {
         title: "Side",
         width: 100,
@@ -92,25 +92,20 @@ export const TPSLListView: FC<Props> = (props) => {
         ),
       },
       {
-        title: "Filled / Quantity",
+        title: "Quantity",
         className:
           "orderly-h-[48px] orderly-ui-pending-list-input-container orderly-ui-pending-list-quantity-input-container",
         dataIndex: "quantity",
         width: 120,
-        onSort: props.status === OrderStatus.INCOMPLETE,
-        render: (value: string, record: any) => (
-          <OrderQuantity order={record} />
-        ),
+        // onSort: props.status === OrderStatus.INCOMPLETE,
+        render: (value: string, record: any) => {
+          if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+            return "Entire position";
+          }
+          return <OrderQuantity order={record} />;
+        },
       },
-      {
-        title: "Price",
-        className:
-          "orderly-h-[48px] orderly-ui-pending-list-input-container rderly-ui-pending-list-price-input-container",
-        dataIndex: "price",
-        width: 120,
-        onSort: props.status === OrderStatus.INCOMPLETE,
-        render: (value: string, record: any) => <Price order={record} />,
-      },
+
       {
         title: "Trigger",
         className:
@@ -118,14 +113,29 @@ export const TPSLListView: FC<Props> = (props) => {
         dataIndex: "trigger_price",
         width: 120,
         // onSort: props.status === OrderStatus.INCOMPLETE,
-        render: (value: string, record: any) => <TriggerPrice order={record} />,
+        render: (value: string) => {
+          return <OrderTriggerPrice />;
+        },
       },
       {
-        title: "Est. total",
+        title: "Price",
+        className:
+          "orderly-h-[48px] orderly-ui-pending-list-input-container rderly-ui-pending-list-price-input-container",
+        dataIndex: "price",
+        width: 80,
+        render: (value: string) => {
+          return <OrderPrice />;
+        },
+      },
+      {
+        title: "Notional",
         width: 100,
         className: "orderly-h-[48px] orderly-font-semibold",
         dataIndex: "executed",
-        render: (value: string, record: any) => {
+        render: (value: string, record: API.AlgoOrderExt) => {
+          if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+            return "Entire position";
+          }
           return (
             <Numeral
               className={
@@ -133,39 +143,42 @@ export const TPSLListView: FC<Props> = (props) => {
               }
               precision={2}
             >
-              {record.quantity === 0 ||
-              Number.isNaN(record.price) ||
-              record.price === null
+              {record.quantity === 0
                 ? "--"
-                : `${record.quantity * record.price}`}
+                : `${new Decimal(record.mark_price)
+                    .mul(record.quantity)
+                    .todp(2)
+                    .toNumber()}`}
             </Numeral>
           );
         },
       },
       {
-        title: "Reduce",
+        title: "Reduce-only",
         dataIndex: "reduce_only",
         width: 100,
         className: "orderly-h-[48px] orderly-font-semibold",
-        render: (value: boolean) => {
-          return <span>{value ? "Yes" : "No"}</span>;
+        render: (value: boolean, record) => {
+          return (
+            <span>{record.child_orders[0].reduce_only ? "Yes" : "No"}</span>
+          );
         },
       },
-      {
-        title: "Hidden",
-        dataIndex: "visible",
-        width: 100,
-        className: "orderly-h-[48px] orderly-font-semibold",
-        render: (value: number, record) => {
-          // @ts-ignore
-          return <span>{record.visible_quantity !== 0 ? "No" : "Yes"}</span>;
-        },
-      },
+      // {
+      //   title: "Hidden",
+      //   dataIndex: "visible",
+      //   width: 100,
+      //   className: "orderly-h-[48px] orderly-font-semibold",
+      //   render: (value: number, record) => {
+      //     // @ts-ignore
+      //     return <span>{record.visible_quantity !== 0 ? "No" : "Yes"}</span>;
+      //   },
+      // },
       {
         title: "Order time",
         dataIndex: "created_time",
         width: 150,
-        onSort: props.status === OrderStatus.INCOMPLETE,
+        onSort: true,
         className: "orderly-h-[48px]",
         render: (value: string) => (
           <Text
@@ -182,12 +195,17 @@ export const TPSLListView: FC<Props> = (props) => {
         className: "orderly-h-[48px]",
         align: "right",
         fixed: "right",
-        width: 100,
+        width: 160,
         render: (_: string, record) => {
-          if (props.status === OrderStatus.INCOMPLETE) {
-            // return <CancelButton order={record} />;
-          }
-          return null;
+          return (
+            <div className="orderly-flex orderly-space-x-2 orderly-justify-end">
+              {/*<Button size="small" variant={"outlined"} color={"tertiary"}>*/}
+              {/*  Edit*/}
+              {/*</Button>*/}
+              <EditButton />
+              <CancelButton />
+            </div>
+          );
         },
       },
     ];
@@ -199,7 +217,9 @@ export const TPSLListView: FC<Props> = (props) => {
 
   return (
     <div className="orderly-h-full orderly-overflow-y-auto">
-      <Table<API.AlgoOrder>
+      <Table<API.AlgoOrderExt>
+        bordered
+        justified
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
         className={cn(
           "orderly-text-2xs orderly-text-base-contrast-80",
@@ -207,6 +227,15 @@ export const TPSLListView: FC<Props> = (props) => {
         )}
         columns={columns}
         dataSource={props.dataSource}
+        renderRowContainer={(record, index, children) => {
+          return (
+            <SymbolProvider symbol={record.symbol}>
+              <TPSLOrderRowProvider order={record}>
+                {children}
+              </TPSLOrderRowProvider>
+            </SymbolProvider>
+          );
+        }}
       />
     </div>
   );

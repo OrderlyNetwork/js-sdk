@@ -3,7 +3,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import {
   pathOr_unsettledPnLPathOr,
   usePositionStream,
-} from "./usePositionStream";
+} from "./usePositionStream/usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
 import { type API, OrderStatus } from "@orderly.network/types";

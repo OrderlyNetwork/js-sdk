@@ -2,6 +2,7 @@ import { API } from "@orderly.network/types";
 import { WSMessage } from "@orderly.network/types";
 import { camelCaseToUnderscoreCase } from "@orderly.network/utils";
 import { is, lensIndex, over, startsWith } from "ramda";
+// import { useSWRConfig, unstable_serialize } from "swr";
 
 export const generateKeyFun =
   (args: { status?: string; symbol?: string; side?: string; size?: number }) =>
@@ -49,7 +50,7 @@ export const updateOrdersHandler = (
   let formattedOrder: API.Order & API.AlgoOrder = {
     ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
-    type: updatedOrder.type.replace("_ORDER", ""),
+    type: updatedOrder.type?.replace("_ORDER", ""),
     //@ts-ignore
     // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
   };
@@ -73,7 +74,7 @@ export const updateOrdersHandler = (
     }
 
     if (formattedOrder.type === "MARKET") {
-      const {price, ...newObj} = formattedOrder;
+      const { price, ...newObj } = formattedOrder;
       // @ts-ignore
       formattedOrder = newObj;
     }
@@ -268,4 +269,9 @@ function object2underscore(obj: any) {
     acc[camelCaseToUnderscoreCase(key)] = obj[key];
     return acc;
   }, {} as any);
+}
+
+export function getPositionBySymbol(symbol: string) {
+  // const config = useSWRConfig();
+  // console.log(config);
 }

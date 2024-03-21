@@ -17,7 +17,7 @@ export enum OrderType {
   CLOSE_POSITION = "CLOSE_POSITION",
 }
 
-export enum AlogOrderRootType {
+export enum AlgoOrderRootType {
   TP_SL = "TP_SL",
   POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
   STOP = "STOP",
@@ -55,8 +55,9 @@ export enum OrderStatus {
 
 export interface OrderEntity {
   symbol: string;
+
   order_type: OrderType;
-  algo_type?: AlogOrderRootType;
+  algo_type?: AlgoOrderRootType;
   order_type_ext?: OrderType;
   order_price?: string | number;
   order_quantity?: string | number;
@@ -78,13 +79,16 @@ type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type RequireKeys<T extends object, K extends keyof T> = Required<Pick<T, K>> &
   Omit<T, K>;
 
-export interface BaseAlgoOrderEntry<T extends AlogOrderRootType>
+export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   extends OrderEntity {
-  algo_type: AlogOrderRootType;
+  algo_type: AlgoOrderRootType;
   child_orders: (Partial<Omit<AlgoOrderEntity<T>, "algo_type" | "type">> & {
     algo_type: AlgoOrderType;
     type: OrderType;
+    // trigger_price: number | string;
   })[];
+  // if update the order, then need to provide the order_id
+  order_id?: string;
   client_order_id?: string;
   order_tag?: string;
   price?: number | string;
@@ -96,25 +100,26 @@ export interface BaseAlgoOrderEntry<T extends AlogOrderRootType>
   trigger_price_type: TriggerPriceType;
   type: OrderType;
   visible_quantity?: number;
+  is_activated?: boolean;
   tp_trigger_price?: string | number;
   sl_trigger_price?: string | number;
 }
 
 export type AlgoOrderEntity<
-  T extends AlogOrderRootType = AlogOrderRootType.STOP
-> = T extends AlogOrderRootType.TP_SL
+  T extends AlgoOrderRootType = AlgoOrderRootType.STOP
+> = T extends AlgoOrderRootType.TP_SL
   ? Optional<
-      BaseAlgoOrderEntry<T>,
+        BaseAlgoOrderEntity<T>,
       "side" | "type" | "trigger_price" | "order_type"
     >
-  : T extends AlogOrderRootType.POSITIONAL_TP_SL
+  : T extends AlgoOrderRootType.POSITIONAL_TP_SL
   ? Optional<
-      BaseAlgoOrderEntry<T>,
+            BaseAlgoOrderEntity<T>,
       "side" | "type" | "trigger_price" | "order_type" | "quantity"
     >
-  : Omit<BaseAlgoOrderEntry<T>, "child_orders" | "order_type">;
+  : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
 
 export type TPSLOrderEntry = Optional<
-  AlgoOrderEntity<AlogOrderRootType.TP_SL>,
+  AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
   "side" | "type" | "trigger_price"
 >;

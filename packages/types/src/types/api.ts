@@ -126,6 +126,7 @@ export declare namespace API {
     parent_algo_order_id: number;
     symbol: string;
     algo_type: string;
+    child_orders:AlgoOrder[];
     side: string;
     quantity: number|string;
     is_triggered: boolean;
@@ -142,6 +143,12 @@ export declare namespace API {
     reduce_only: boolean;
     created_time: number;
     updated_time: number;
+    is_activated: boolean;
+  }
+
+  export interface AlgoOrderExt extends AlgoOrder {
+    mark_price: string;
+    position?: Partial<Position>;
   }
 
   export interface OrderResponse {
@@ -210,8 +217,15 @@ export declare namespace API {
   }
 
   export interface PositionTPSLExt extends PositionExt {
-    take_profit_trigger_price?: number;
-    stop_loss_trigger_price?: number;
+    tp_trigger_price?: number;
+    sl_trigger_price?: number;
+
+    // has_position_tp_sl: boolean;
+
+    /**
+     * related position tp/sl order
+     */
+    algo_order?:AlgoOrder;
   }
 
   export interface Trade {

@@ -1,5 +1,5 @@
 import { Input } from "@/input";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useRef } from "react";
 import { Divider } from "@/divider";
 import Button from "@/button";
 import { AlgoOrderEntity, SDKError } from "@orderly.network/types";
@@ -9,6 +9,7 @@ import { commify } from "@orderly.network/utils";
 import { Slider } from "@/slider";
 import { PnlInput } from "@/block/tp_sl/pnlInput";
 import { UpdateOrderKey } from "@orderly.network/hooks/esm/orderly/useTakeProfitAndStopLoss/utils";
+import { cn, parseNumber } from "@/utils";
 
 export interface Props {
   symbol: string;
@@ -18,6 +19,7 @@ export interface Props {
   // base_tick: number;
   onChange: (key: UpdateOrderKey, value: number | string) => void;
   maxQty: number;
+  canModifyQty?: boolean;
   onSubmit: () => Promise<void>;
   onCancel?: () => void;
   order: Partial<
@@ -52,66 +54,97 @@ export const TPSLForm: FC<Props> = (props) => {
   //   throw new SDKError("Order is required");
   // }
 
-  const { maxQty, order } = props;
+  const { maxQty, order, canModifyQty = true } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
 
   const maxQtyNumber = useMemo(() => {
     return Math.abs(maxQty);
   }, [maxQty]);
 
+  const qtyRef = useRef<HTMLInputElement>(null);
+
+  const isPosition = useMemo(
+    () => !!props.order.quantity && props.order.quantity === maxQty,
+    [props.order.quantity, maxQty]
+  );
+
   return (
     <div className={"orderly-space-y-4"}>
-      <div>
-        <Input
-          prefix="Quantity"
-          suffix={symbolInfo("base")}
-          value={commify(props.order.quantity ?? 0)}
-          className={"orderly-text-right"}
-          name="orderQuantity"
-          id="orderQuantity"
-          autoComplete={"off"}
-          data-testid="order-quantity"
-          onChange={(e) => {
-            props.onChange("quantity", e.target.value);
-          }}
-        />
-        <Slider
-          min={0}
-          color={"primary"}
-          max={maxQtyNumber}
-          markCount={4}
-          step={symbolInfo("base_tick")}
-          value={[Number(order.quantity ?? maxQty)]}
-          onValueChange={(value) => {
-            if (typeof value[0] !== "undefined") {
-              props.onChange("quantity", value[0]);
-            }
-          }}
-          className={"orderly-mt-2"}
-        />
-        <div
-          className={
-            "orderly-flex orderly-justify-between orderly-text-primary orderly-text-xs"
-          }
-        >
-          <span>0%</span>
-          <button
-            disabled={maxQtyNumber <= 0}
-            onClick={() => {
-              props.onChange("quantity", maxQty);
-            }}
-          >
-            <span>Max</span>
-            <Numeral
-              className={"orderly-text-base-contrast-54 orderly-ml-1"}
-              precision={symbolInfo("base_dp")}
+      {canModifyQty ? (
+        <>
+          <div>
+            <div className={"orderly-flex"}>
+              <Input
+                ref={qtyRef}
+                prefix="Quantity"
+                suffix={isPosition ? "Entire position" : symbolInfo("base")}
+                value={isPosition ? "" : commify(props.order.quantity ?? 0)}
+                className={"orderly-text-right"}
+                containerClassName={"orderly-flex-1 orderly-mr-2"}
+                name="orderQuantity"
+                id="tpslOrderQuantity"
+                autoComplete={"off"}
+                data-testid="order-quantity"
+                onChange={(e) => {
+                  props.onChange("quantity", e.target.value);
+                }}
+              />
+              <button
+                onClick={() => {
+                  if (isPosition) {
+                    props.onChange("quantity", "");
+                    qtyRef.current?.focus();
+                  } else {
+                    props.onChange("quantity", maxQty);
+                  }
+                }}
+                className={cn(
+                  "orderly-bg-base-600 orderly-rounded orderly-px-2 orderly-text-base-contrast-54 orderly-border orderly-border-base-300",
+                  isPosition && "orderly-border-primary orderly-text-primary"
+                )}
+              >
+                Position
+              </button>
+            </div>
+            <Slider
+              min={0}
+              color={"primary"}
+              max={maxQtyNumber}
+              markCount={4}
+              step={symbolInfo("base_tick")}
+              value={[Number(order.quantity ?? maxQty)]}
+              onValueChange={(value) => {
+                if (typeof value[0] !== "undefined") {
+                  props.onChange("quantity", value[0]);
+                }
+              }}
+              className={"orderly-mt-2"}
+            />
+            <div
+              className={
+                "orderly-flex orderly-justify-between orderly-text-primary orderly-text-2xs"
+              }
             >
-              {maxQty}
-            </Numeral>
-          </button>
-        </div>
-      </div>
-      <Divider />
+              <span>0%</span>
+              <button
+                disabled={maxQtyNumber <= 0}
+                onClick={() => {
+                  props.onChange("quantity", maxQty);
+                }}
+              >
+                <span>Max</span>
+                <Numeral
+                  className={"orderly-text-base-contrast-54 orderly-ml-1"}
+                  precision={symbolInfo("base_dp")}
+                >
+                  {maxQty}
+                </Numeral>
+              </button>
+            </div>
+          </div>
+          <Divider />
+        </>
+      ) : null}
 
       <div>
         <div
@@ -124,14 +157,14 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-xs"}
             data-testid="tpEstPnL"
           >
-            {`est. PNL: ${order.tp_pnl ?? "-"}`}
+            {`est. PNL: ${order.tp_pnl ? parseNumber(order.tp_pnl) : "-"}`}
           </div>
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
           <Input
             prefix={"TP price"}
             placeholder={symbolInfo("quote")}
-            className={"orderly-text-right orderly-pr-2"}
+            className={"orderly-text-right orderly-pr-2 orderly-text-sm"}
             data-testid={"tp-price-input"}
             value={commify(order.tp_trigger_price ?? "")}
             thousandSeparator
@@ -163,14 +196,14 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-xs"}
             data-testid="slEstPnL"
           >
-            {`est. PNL: ${order.sl_pnl ?? "-"}`}
+            {`est. PNL: ${order.sl_pnl ? parseNumber(order.sl_pnl) : "-"}`}
           </div>
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
           <Input
             prefix={"SL price"}
             placeholder={symbolInfo("quote")}
-            className={"orderly-text-right orderly-pr-2"}
+            className={"orderly-text-right orderly-pr-2  orderly-text-sm"}
             data-testid={"sl-price-input"}
             thousandSeparator
             onValueChange={(value) => {

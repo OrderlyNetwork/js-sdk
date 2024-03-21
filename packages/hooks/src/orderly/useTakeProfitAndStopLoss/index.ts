@@ -1,4 +1,4 @@
-import { API, SDKError } from "@orderly.network/types";
+import { API, AlgoOrderEntity, SDKError } from "@orderly.network/types";
 import { useTaskProfitAndStopLossInternal } from "./useTPSL";
 import { useMarkPrice } from "../useMarkPrice";
 
@@ -7,7 +7,14 @@ export const useTaskProfitAndStopLoss = (
    * Position that needs to set take profit and stop loss
    */
   position: Partial<API.PositionTPSLExt> &
-    Pick<API.PositionTPSLExt, "symbol" | "average_open_price">
+    Pick<API.PositionTPSLExt, "symbol" | "average_open_price">,
+  options?: {
+    /**
+     * You can set the default value for the take profit and stop loss order,
+     * it is usually used when editing order
+     */
+    defaultOrder?: API.AlgoOrder;
+  }
 ): ReturnType<typeof useTaskProfitAndStopLossInternal> => {
   if (!position) {
     throw new SDKError("Position is required");
@@ -15,7 +22,7 @@ export const useTaskProfitAndStopLoss = (
 
   // const { data: markPrice } = useMarkPrice(position.symbol);
 
-  const result = useTaskProfitAndStopLossInternal(position);
+  const result = useTaskProfitAndStopLossInternal(position, options);
 
   return result;
 };

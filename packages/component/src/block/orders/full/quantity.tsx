@@ -179,8 +179,6 @@ const EditingState: FC<{
       params["order_tag"] = order.tag;
     }
 
-    console.log("current order", order, params, quantity);
-
     let future;
 
     if (order.algo_order_id !== undefined) {

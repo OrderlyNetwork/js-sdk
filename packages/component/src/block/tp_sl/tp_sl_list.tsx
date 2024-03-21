@@ -1,28 +1,50 @@
 import { TPSLListView } from "@/block/tp_sl/tpsl_listview";
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 import { TabContext } from "@/tab";
 import { Divider } from "@/divider";
 import { Header } from "@/block/orders/full/header";
-import { API } from "@orderly.network/types";
+import {
+  API,
+  AlgoOrderRootType,
+  OrderStatus,
+  OrderSide,
+} from "@orderly.network/types";
+import { useOrderStream } from "@orderly.network/hooks";
 
 export const TPSLList: FC<{
-  dataSource: API.AlgoOrder[];
+  // dataSource: API.AlgoOrder[];
 }> = (props) => {
   const { height } = useContext(TabContext);
+  const [side, setSide] = useState<OrderSide | "">("");
+
+  const [orders, { total }] = useOrderStream(
+    {
+      status: OrderStatus.INCOMPLETE,
+      side,
+      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+    },
+    {
+      keeplive: true,
+    }
+  );
+
+  // console.log("orders", orders);
+
   return (
     <div>
-      {/*<Header*/}
-      {/*    count={ 0}*/}
-      {/*    // onSideChange={props.onSideChange}*/}
-      {/*    // side={props.side}*/}
-      {/*    // status={props.status}*/}
-      {/*/>*/}
+      <Header
+        count={orders?.length ?? 0}
+        onSideChange={setSide}
+        side={side}
+        orderType={AlgoOrderRootType.TP_SL}
+        // status={props.status}
+      />
       <Divider />
       <div
         className="orderly-relative"
-        style={{ height: `${(height?.content ?? 300) - 55}px` }}
+        style={{ height: `${(height?.content ?? 100) - 55}px` }}
       >
-        <TPSLListView dataSource={[]} />
+        <TPSLListView dataSource={orders ?? []} />
       </div>
     </div>
   );

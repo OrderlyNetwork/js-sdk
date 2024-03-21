@@ -1,6 +1,6 @@
 import {
   AlgoOrderEntry,
-  AlogOrderRootType,
+  AlgoOrderRootType,
   OrderEntity,
   TriggerPriceType,
 } from "@orderly.network/types";
@@ -20,14 +20,14 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
       order_price: number;
     },
     config?: ValuesDepConfig
-  ): AlgoOrderEntry<AlogOrderRootType.STOP> {
+  ): AlgoOrderEntry<AlgoOrderRootType.STOP> {
     this.totalToQuantity(values, config!);
 
-    const order: AlgoOrderEntry<AlogOrderRootType.STOP> = {
+    const order: AlgoOrderEntry<AlgoOrderRootType.STOP> = {
       ...this.baseOrder(values as unknown as OrderEntity),
 
       trigger_price: values.trigger_price!,
-      algo_type: AlogOrderRootType.STOP,
+      algo_type: AlgoOrderRootType.STOP,
       type: OrderType.LIMIT,
       quantity: values["order_quantity"]!,
       price: values["order_price"],

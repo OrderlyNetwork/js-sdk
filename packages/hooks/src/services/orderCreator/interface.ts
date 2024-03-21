@@ -1,4 +1,4 @@
-import { API, AlgoOrderEntry, OrderEntity } from "@orderly.network/types";
+import { API, OrderEntity } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };

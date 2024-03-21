@@ -3,7 +3,7 @@ import { OrdersViewFull } from ".";
 import { useOrderStream } from "@orderly.network/hooks";
 import React from "react";
 import {
-  AlogOrderRootType,
+  AlgoOrderRootType,
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
@@ -28,7 +28,7 @@ export const withHook: Story = {
     const [data, { isLoading }] = useOrderStream({
       status: OrderStatus.INCOMPLETE,
       symbol: symbol,
-      excludes: [AlogOrderRootType.POSITIONAL_TP_SL, AlogOrderRootType.TP_SL],
+      excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
     });
 
     return <OrdersViewFull dataSource={data} isLoading={isLoading} />;

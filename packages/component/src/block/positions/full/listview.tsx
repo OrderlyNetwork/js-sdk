@@ -29,6 +29,7 @@ import { EmptyView } from "@/listView/emptyView";
 import { PositionEmptyView } from "./positionEmptyView";
 import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
 import { TPSLButton } from "./tpslButton";
+import { TPSLTriggerPrice } from "@/block/positions/full/tpslTriggerPrice";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -42,7 +43,7 @@ export const Listview: FC<
     data: { pnlNotionalDecimalPrecision },
   } = useTabContext();
 
-  const columns = useMemo<Column[]>(() => {
+  const columns = useMemo<Column<API.PositionTPSLExt>[]>(() => {
     return [
       {
         title: "Instrument",
@@ -165,21 +166,19 @@ export const Listview: FC<
           );
         },
       },
-      // {
-      //   title: "Unreal. ROI",
-      //   className: "orderly-h-[48px]",
-      //   dataIndex: "unsettled_pnl_ROI",
-      //   width: 120,
-      //   onSort: true,
-      //   render: (value: string) => (
+      {
+        title: "TP/SL",
+        className: "orderly-h-[48px]",
+        dataIndex: "__",
+        width: 150,
+        render: (_: string, record) => (
+          <TPSLTriggerPrice
+            stopLossPrice={record.sl_trigger_price}
+            takeProfitPrice={record.tp_trigger_price}
+          />
+        ),
+      },
 
-      //   ),
-      // },
-      // {
-      //   title: "Daily real.",
-      //   className: "orderly-h-[48px]",
-      //   dataIndex: "open_price",
-      // },
       {
         title: "Est. total",
         dataIndex: "notional",
@@ -259,7 +258,7 @@ export const Listview: FC<
       className="orderly-relative"
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
     >
-      <Table<API.PositionExt>
+      <Table<API.PositionTPSLExt>
         bordered
         justified
         showMaskElement={false}

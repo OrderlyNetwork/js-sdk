@@ -6,7 +6,7 @@ import {
   OrderStatus,
   API,
   OrderType,
-  AlogOrderRootType,
+  AlgoOrderRootType,
 } from "@orderly.network/types";
 import { useMarkPricesStream } from "../useMarkPricesStream";
 import { useMutation } from "../../useMutation";
@@ -17,7 +17,7 @@ import { useEventEmitter } from "../../useEventEmitter";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
-type CombineOrderType = AlogOrderRootType | "ALL";
+type CombineOrderType = AlgoOrderRootType | "ALL";
 
 export interface UserOrdersReturn {
   data: any[];

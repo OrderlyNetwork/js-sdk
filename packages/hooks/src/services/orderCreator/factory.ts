@@ -8,14 +8,14 @@ import { StopMarketOrderCreator } from "./stopMarketOrderCreator";
 import { PostOnlyOrderCreator } from "./postOnlyCreator";
 import { FOKOrderCreator } from "./fokCreator";
 import { IOCOrderCreator } from "./iocCreator";
-import { AlogOrderRootType } from "@orderly.network/types";
+import { AlgoOrderRootType } from "@orderly.network/types";
 import { OrderEntity } from "@orderly.network/types";
 import { AlgoOrderEntry } from "@orderly.network/types";
 import { TPSLOrderCreator } from "./tpslOrderCreator";
 import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
 
 export class OrderFactory {
-  static create(type: OrderType | AlogOrderRootType): OrderCreator<any> {
+  static create(type: OrderType | AlgoOrderRootType): OrderCreator<any> {
     switch (type) {
       case OrderType.LIMIT:
         return new LimitOrderCreator();
@@ -38,9 +38,9 @@ export class OrderFactory {
         return new StopMarketOrderCreator();
 
       // algo order
-      case AlogOrderRootType.TP_SL:
+      case AlgoOrderRootType.TP_SL:
         return new TPSLOrderCreator();
-      case AlogOrderRootType.POSITIONAL_TP_SL:
+      case AlgoOrderRootType.POSITIONAL_TP_SL:
         return new TPSLPositionOrderCreator();
 
       default:
