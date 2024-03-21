@@ -5,20 +5,48 @@ import { ReferralContext } from "../../hooks/referralContext";
 import { addQueryParam } from "../../utils/utils";
 import { AutoHideText } from "../../components/autoHideText";
 import { GradientText } from "../../components/gradientText";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { API } from "../../types/api";
 
 
 export const ReferralLink: FC<{ className?: string }> = (props) => {
 
 
     const { referralInfo, referralLinkUrl } = useContext(ReferralContext);
+    const [pinCodes, setPinCodes] = useLocalStorage<string[]>("orderly_referral_codes", [] as string[]);
+
+    const codes = useMemo((): API.ReferralCode[] => {
+
+        if (!referralInfo?.referrer_info.referral_codes) return [] as (API.ReferralCode[]);
+        const referralCodes = [...referralInfo?.referrer_info.referral_codes];
+
+        const pinedItems: API.ReferralCode[] = [];
+
+        for (let i = 0; i < pinCodes.length; i++) {
+            const code = pinCodes[i];
+
+            const index = referralCodes.findIndex((item) => item.code === code);
+            if (index !== -1) {
+
+                pinedItems.push({ ...referralCodes[index]});
+                referralCodes.splice(index, 1);
+            }
+
+        }
+
+        return [...pinedItems, ...referralCodes];
+    }, [
+        referralInfo?.referrer_info.referral_codes,
+        pinCodes,
+    ]);
 
     const firstCode = useMemo(() => {
-        if (referralInfo?.referrer_info.referral_codes.length === 0) {
+        if (codes.length === 0) {
             return undefined;
         }
 
-        return referralInfo?.referrer_info.referral_codes[0];
-    }, [referralInfo?.referrer_info.referral_codes]);
+        return codes[0];
+    }, [codes]);
 
     const referralLink = useMemo(() => {
         if (!firstCode) return "";
