@@ -23,7 +23,7 @@ const _SmallLayout = () => {
             <TraderTitle />
             <Summary className="orderly-mt-3"/>
             <BarChart className="orderly-mt-3"/>
-            <Rebates className="orderly-mt-3"/>
+            <Rebates className="orderly-mt-3 orderly-sticky orderly-top-6"/>
         </div>
     );
 

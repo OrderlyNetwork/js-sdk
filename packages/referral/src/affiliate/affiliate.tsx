@@ -24,7 +24,7 @@ const _SmallLayout = () => {
             <ReferralLink className="orderly-mt-3"/>
             <ReferralCode className="orderly-mt-3"/>
             <BarChart className="orderly-mt-3"/>
-            <CommissionAndReferees className="orderly-mt-3"/>
+            <CommissionAndReferees className="orderly-mt-3 orderly-sticky orderly-top-6"/>
         </div>
     );
 
