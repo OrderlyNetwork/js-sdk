@@ -4,7 +4,7 @@ import { FC, useContext, useMemo, useState } from "react";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
-import { compareDate } from "../../utils/utils";
+import { compareDate, formatTime } from "../../utils/utils";
 
 export type RebatesItem = API.Distribution & {
     vol?: number
@@ -14,7 +14,7 @@ export const Rebates: FC<{
     className?: string,
 }> = (props) => {
 
-    const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
+    // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
     const [distributionData, { refresh, loadMore }] = useDistribution({});
     const { dailyVolume } = useContext(ReferralContext);
 
@@ -40,6 +40,11 @@ export const Rebates: FC<{
 
         return [];
     }, [distributionData, dailyVolume]);
+
+    let displayDate = undefined;
+    if ((dataSource?.length || 0) > 0) {
+        displayDate = formatTime(dataSource?.[0].created_time);
+    }
 
     return (
         <div className={cn("orderly-p-3 orderly-rounded-lg orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600", props.className)}>
