@@ -23,7 +23,7 @@ export const AsAnTrader = () => {
             <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
               <USDCIcon width={"100%"} height={"100%"} />
             </div>
-            <Numeral precision={2} children={totalReferrerRebate} />
+            <Numeral precision={2} >{totalReferrerRebate || 0}</Numeral>
           </div>
 
           <button className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">

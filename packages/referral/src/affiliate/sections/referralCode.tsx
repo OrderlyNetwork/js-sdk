@@ -1,6 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 import { MEDIA_MD } from "../../types/constants";
-import { Button, Column, Divider, Table, cn, toast } from "@orderly.network/react";
+import { Button, Column, Divider, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
@@ -8,15 +8,20 @@ import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
 import { Decimal } from "@orderly.network/utils";
 import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
+import { EditIcon } from "../../components/icons/edit";
+import { EditReferralRate } from "./editReferralRate";
 
-type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
+export type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
 
 export const ReferralCode: FC<{ className?: string }> = (props) => {
 
-    const { referralInfo, referralLinkUrl } = useContext(ReferralContext);
+    const { referralInfo, referralLinkUrl, mutate } = useContext(ReferralContext);
 
     const copyLink = (code: string) => {
         copyText(addQueryParam(referralLinkUrl, "ref", code));
+    }
+    const editRate = (code: ReferralCodeType) => {
+        modal.show(EditReferralRate, { code: code, mutate });
     }
 
 
@@ -74,7 +79,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
                     <span className="orderly-text-primary">{codes.length}</span>
                 </div> */}
             </div>
-            <CodeList dataSource={codes} copyLink={copyLink} setPinCode={setPinCode} />
+            <CodeList dataSource={codes} copyLink={copyLink} editRate={editRate} setPinCode={setPinCode} />
         </div>
     );
 }
@@ -82,12 +87,13 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
 export const CodeList: FC<{
     dataSource: ReferralCodeType[],
     copyLink: (code: string) => void,
+    editRate: (item: ReferralCodeType) => void,
     setPinCode: (code: string, del?: boolean) => void,
 }> = (props) => {
 
 
     const isMD = useMediaQuery(MEDIA_MD);
-    const { dataSource, copyLink } = props;
+    const { dataSource, copyLink, editRate } = props;
 
     const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 
@@ -126,8 +132,13 @@ export const CodeList: FC<{
                 dataIndex: "referees",
                 className: "orderly-h-[44px]",
                 render: (value, record) => (
-                    <div>
+                    <div className="orderly-flex orderly-gap-2">
                         {getRate(record)}
+                        <EditIcon
+                            onClick={() => editRate(record)}
+                            fillOpacity={1}
+                            className="orderly-cursor-pointer orderly-fill-base-contrast-20 hover:orderly-fill-base-contrast"
+                        />
                     </div>
                 )
             },
@@ -166,9 +177,11 @@ export const CodeList: FC<{
                 code={item.code}
                 rate={getRate(item)}
                 count={getCount(item)}
-                copyLink={copyLink}
+                copyLink={() => copyLink(item.code)}
+                editRate={() => editRate(item)}
                 inPinned={item.isPined}
                 setPinCode={props.setPinCode}
+
             />))}
         </div>;
     }
@@ -200,7 +213,8 @@ const SmallCodeCell: FC<{
     code: string,
     rate: string,
     count: string,
-    copyLink: (code: string) => void,
+    copyLink: () => void,
+    editRate: () => void,
     inPinned?: boolean,
     setPinCode: (code: string, del?: boolean) => void,
 }> = (props) => {
@@ -238,11 +252,19 @@ const SmallCodeCell: FC<{
                 <PinView pin={inPinned || false} onPinChange={(inPinned) => {
                     props.setPinCode(code, !inPinned);
                 }} />
-                <_CopyLink
-                    onClick={(event) => {
-                        props.copyLink(code);
-                    }}
-                />
+                <div className="orderly-flex orderly-gap-2">
+
+                    <_EditLink
+                        onClick={(event) => {
+                            props.editRate();
+                        }}
+                    />
+                    <_CopyLink
+                        onClick={(event) => {
+                            props.copyLink();
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -254,10 +276,25 @@ const _CopyLink: FC<{ onClick: (event: any) => void }> = (props) => {
         <Button
             size="small"
             variant={"outlined"}
-            className="orderly-text-primary orderly-border-primary"
+            className="orderly-text-primary orderly-border-primary orderly-w-[90px] md:orderly-w-[125px]"
             onClick={props.onClick}
         >
             Copy link
+        </Button>
+    );
+}
+
+const _EditLink: FC<{ onClick: (event: any) => void }> = (props) => {
+
+    return (
+        <Button
+            size="small"
+            color={"tertiary"}
+            variant={"outlined"}
+            className="orderly-w-[90px] md:orderly-w-[125px]"
+            onClick={props.onClick}
+        >
+            Edit
         </Button>
     );
 }

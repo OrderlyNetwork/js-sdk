@@ -33,7 +33,7 @@ export const ReferralInputCode = create<{
 
     try {
       await bindCode({ "referral_code": code });
-      toast.success("bind success");
+      toast.success("Referral code bound");
       mutate();
       if (props.bindReferralCodeState) {
         props.bindReferralCodeState(true, null, hide);
