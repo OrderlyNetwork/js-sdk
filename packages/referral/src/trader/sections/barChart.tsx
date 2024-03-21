@@ -26,13 +26,16 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
             if (!distributionData || distributionData.length === 0) return [];
 
-            let newData = distributionData.filter((item) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
+            let newData = distributionData.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
+
+            console.log("new data", newData);
+            
 
             if (newData.length > 7) {
                 newData = newData.slice(0, 7);
             }
 
-            return newData.map((item) => {
+            return newData.map((item: any) => {
                 const time = new Date(item.updated_time);
                 const timeText = time.getMonth().toString() + "-" + time.getDay().toString();
                 return [timeText, Number((item?.amount || 0).toFixed(2))];
@@ -55,6 +58,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
     }, [distributionData, filterType]);
 
+    console.log("data source", dataSource, "distributionData",distributionData);
+    
+
 
     return (
         <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
@@ -64,7 +70,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             </div>
 
             <ColmunChart
-                data={dataSource}
+                data={dataSource.length === 0 ? [["", 0]] : dataSource}
                 hoverTitle={filterType}
             />
         </div>

@@ -12,7 +12,15 @@ export const CommissionList: FC<{
 }> = (props) => {
     const { dateText, setDateText } = props;
 
-    const [dataSource, { refresh, isLoading, loadMore }] = useCommission();
+    const [data, { refresh, isLoading, loadMore }] = useCommission();
+
+    const dataSource = useMemo(()=>{
+        return data?.filter((item: any) => {
+            return item.type === "REFERRAL_REBATE" && item.status === "COMPLETED";
+        });
+    }, [
+        data,
+    ]);
 
 
     if (dataSource?.length > 0) {
@@ -20,6 +28,8 @@ export const CommissionList: FC<{
         if (text) {
             setDateText(text);
         }
+    } else {
+        setDateText(undefined);
     }
 
 
@@ -36,8 +46,6 @@ const _SmallCommission: FC<{
     loadMore: any
 }> = (props) => {
     const { date, dataSource, loadMore } = props;
-
-    console.log("date text", date, dataSource);
     
 
     const renderItem = (item: any, index: number) => {

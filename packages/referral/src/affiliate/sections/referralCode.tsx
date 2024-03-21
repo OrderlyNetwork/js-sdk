@@ -67,12 +67,12 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
 
     return (
         <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
-            <div className="orderly-flex orderly-items-center orderly-justify-between">
+            <div className="orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
-                <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
+                {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
                     Remaining referral codes:&nbsp;
                     <span className="orderly-text-primary">{codes.length}</span>
-                </div>
+                </div> */}
             </div>
             <CodeList dataSource={codes} copyLink={copyLink} setPinCode={setPinCode} />
         </div>
