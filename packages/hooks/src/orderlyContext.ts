@@ -22,6 +22,7 @@ export interface OrderlyConfigContextState {
    */
   onlyTestnet?: boolean;
   // extraApis:ExtraAPIs
+  saveRefCode?: boolean;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

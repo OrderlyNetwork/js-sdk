@@ -62,6 +62,7 @@ export type OrderlyAppContextState = {
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   onClickReferral?: () => void;
+  enableReferral?: boolean,
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -83,6 +84,7 @@ export interface OrderlyAppProviderProps {
    */
   includeTestnet?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  saveRefCode?: boolean,
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -109,6 +111,7 @@ export const OrderlyAppProvider: FC<
     footerStatusBarProps,
     shareOptions,
     chains,
+    saveRefCode,
   } = props;
 
   return (
@@ -119,6 +122,7 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       contracts={contracts}
+      saveRefCode={saveRefCode}
     >
       <InnerProvider
         appIcons={logos}
