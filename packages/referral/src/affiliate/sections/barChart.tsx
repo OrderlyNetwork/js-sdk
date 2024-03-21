@@ -14,7 +14,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
     const [data, {refresh}] = useRefereeHistory({size: 7});
 
-    console.log("referee data is", data);
 
     const dataSource = useMemo(() => {
         // @ts-ignore

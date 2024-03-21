@@ -22,9 +22,6 @@ export const ReferralTab = () => {
         bindReferralCodeState
     } = useContext(ReferralContext);
 
-    const isLG = useMediaQuery(MEDIA_LG);
-
-    console.log("is LG", isLG);
     
 
     const [activeTab, setActiveTab] = useState<ReferralTabType>(isAffiliate ? "affiliateTab" : "traderTab")

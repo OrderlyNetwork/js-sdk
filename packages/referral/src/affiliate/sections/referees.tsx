@@ -17,7 +17,7 @@ export const RefereesList: FC<{
     const { dateText, setDateText } = props;
 
     if (dataSource?.length > 0) {
-        const text = formatTime(dataSource[0].update_time);
+        const text = formatTime(dataSource[0].code_binding_time);
         if (text) {
             setDateText(text);
         }

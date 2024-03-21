@@ -18,7 +18,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [distributionData, { refresh }] = useDistribution({ size: 30 });
     const { dailyVolume } = useContext(ReferralContext);
 
-    console.log("referee data is", distributionData);
 
     const dataSource = useMemo(() => {
 

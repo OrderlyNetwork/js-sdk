@@ -14,10 +14,9 @@ export const CommissionList: FC<{
 
     const [dataSource, { refresh, isLoading, loadMore }] = useCommission();
 
-    console.log("xxxxxxxxxxx data", dataSource, isLoading);
 
     if (dataSource?.length > 0) {
-        const text = formatTime(dataSource[0].update_time);
+        const text = formatTime(dataSource[0].created_time);
         if (text) {
             setDateText(text);
         }
@@ -38,6 +37,9 @@ const _SmallCommission: FC<{
 }> = (props) => {
     const { date, dataSource, loadMore } = props;
 
+    console.log("date text", date, dataSource);
+    
+
     const renderItem = (item: any, index: number) => {
         const date = formatYMDTime(item?.updated_time);
         const amount = item?.amount;
@@ -49,7 +51,7 @@ const _SmallCommission: FC<{
     return (
 
         <div className="orderly-h-[197px] orderly-overflow-auto">
-            {date && <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
+            {date && <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
             <ListView
                 dataSource={dataSource}
                 loadMore={loadMore}
