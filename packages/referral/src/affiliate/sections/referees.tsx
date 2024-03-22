@@ -124,13 +124,13 @@ const _BigReferees: FC<{
 
     return (
         <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
-            height: `${Math.min(600, Math.max(230, 42 + dataSource.length * 56))}px`
+            height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
             <EndReachedBox onEndReached={props.loadMore}>
             <Table
                 bordered
                 justified
-                showMaskElement={false}
+                showMaskElement={true}
                 columns={columns}
                 dataSource={dataSource}
                 headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"

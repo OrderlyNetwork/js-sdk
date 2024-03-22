@@ -122,7 +122,7 @@ const _BigCommission: FC<{
 
     return (
         <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
-            height: `${Math.min(580, Math.max(230, 42 + dataSource.length * 52))}px`
+            height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
             <EndReachedBox onEndReached={props.loadMore}>
                 <Table
