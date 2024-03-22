@@ -19,6 +19,7 @@ export type ReferralContextProps = {
     learnAffiliate?: () => void,
     learnAffiliateUrl?: string,
     referralLinkUrl: string,
+    showReferralPage?: () => void,
 }
 
 export type ReferralContextReturns = {
@@ -40,6 +41,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         learnAffiliate,
         learnAffiliateUrl,
         referralLinkUrl,
+        showReferralPage,
     } = props;
 
     const {
@@ -121,6 +123,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             referralLinkUrl,
             userVolume,
             dailyVolume,
+            showReferralPage,
         }}>
             {props.children}
         </ReferralContext.Provider>

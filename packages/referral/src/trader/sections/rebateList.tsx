@@ -9,6 +9,7 @@ export const RebateList: FC<{
     className?: string,
     dataSource?: RebatesItem[],
     loadMore: any,
+    loading: boolean,
 }> = (props) => {
 
     const { className, dataSource, loadMore } = props;
@@ -70,21 +71,27 @@ export const RebateList: FC<{
 
 
     return (
-        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4">
-            <EndReachedBox onEndReached={props.loadMore}>
+        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-relative">
+            <EndReachedBox onEndReached={() => {
+                 if (!props.loading) {
+                    props.loadMore?.();
+                  }
+            }}>
                 <Table
-                    bordered
-                    justified
-                    showMaskElement={false}
-                    columns={columns}
-                    dataSource={dataSource}
-                    headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
-                    className={cn(
-                        "orderly-text-xs 2xl:orderly-text-base",
-                    )}
-                    generatedRowKey={(rec, index) => `${index}`}
-                />
+                bordered
+                justified
+                showMaskElement={true}
+                columns={columns}
+                dataSource={dataSource}
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                className={cn(
+                    "orderly-text-xs 2xl:orderly-text-base",
+                )}
+                generatedRowKey={(rec, index) => `${index}`}
+            />
             </EndReachedBox>
+
+            
         </div>
 
 

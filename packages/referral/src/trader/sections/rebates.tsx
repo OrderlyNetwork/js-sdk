@@ -15,15 +15,15 @@ export const Rebates: FC<{
 }> = (props) => {
 
     // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
-    const [distributionData, { refresh, loadMore }] = useDistribution({});
+    const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
     const { dailyVolume } = useContext(ReferralContext);
 
     const dataSource = useMemo((): RebatesItem[] | undefined => {
         if (!distributionData) return undefined;
 
         return distributionData
-        .filter((item) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
-        .map((item) => {
+        .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
+        .map((item: any) => {
 
             const createdTime = item.created_time;
 
@@ -54,7 +54,7 @@ export const Rebates: FC<{
             </div>
 
             <Divider className="orderly-mt-3" />
-            <RebateList dataSource={dataSource} loadMore={loadMore} />
+            <RebateList dataSource={dataSource} loadMore={loadMore} loading={isLoading}/>
         </div>
     );
 }

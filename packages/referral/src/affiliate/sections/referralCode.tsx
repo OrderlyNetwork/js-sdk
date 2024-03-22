@@ -112,7 +112,7 @@ export const CodeList: FC<{
             {
                 title: "Referral Codes",
                 dataIndex: "code",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[48px]",
 
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-2 orderly-items-center">
@@ -130,7 +130,7 @@ export const CodeList: FC<{
             {
                 title: "You / Referee",
                 dataIndex: "referees",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[48px]",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-2">
                         {getRate(record)}
@@ -145,7 +145,7 @@ export const CodeList: FC<{
             {
                 title: "Referees / Traders",
                 dataIndex: "referees",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[48px]",
                 align: "right",
                 render: (value, record) => (
                     <div >
@@ -156,11 +156,12 @@ export const CodeList: FC<{
             {
                 title: "Actions",
                 dataIndex: "referees",
-                className: "orderly-h-[44px] orderly-text-right",
+                className: "orderly-h-[48px] orderly-text-right",
                 align: "right",
+                width: 90,
                 render: (value, record) => (
                     <div className="orderly-flex orderly-justify-end">
-                        <_CopyLink
+                        <_CopyLink className="lg:orderly-w-[82px]"
                             onClick={(event) => copyText(value)}
                         />
                     </div>
@@ -189,7 +190,7 @@ export const CodeList: FC<{
 
 
     return (
-        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4">
+        <div className="orderly-h-[340px] orderly-overflow-y-auto orderly-mt-4">
             <Table
                 bordered
                 justified
@@ -270,13 +271,13 @@ const SmallCodeCell: FC<{
     );
 }
 
-const _CopyLink: FC<{ onClick: (event: any) => void }> = (props) => {
+const _CopyLink: FC<{ onClick: (event: any) => void, className?: string }> = (props) => {
 
     return (
         <Button
             size="small"
             variant={"outlined"}
-            className="orderly-text-primary orderly-border-primary orderly-w-[90px] md:orderly-w-[125px]"
+            className={cn("orderly-text-primary orderly-border-primary orderly-w-[90px] md:orderly-w-[125px]", props.className)}
             onClick={props.onClick}
         >
             Copy link

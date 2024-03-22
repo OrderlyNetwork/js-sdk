@@ -25,6 +25,10 @@ export default {
         becomeAnAffiliateUrl="https://orderly.network"
         learnAffiliateUrl="https://orderly.network"
         referralLinkUrl="https://dex.woo.org/en/trade"
+        showReferralPage={()=>{
+          console.log("show referral page");
+          
+        }}
         >
           <Story />
         </ReferralProvider>
