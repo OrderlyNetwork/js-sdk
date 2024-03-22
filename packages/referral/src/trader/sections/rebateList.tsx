@@ -22,7 +22,7 @@ export const RebateList: FC<{
             {
                 title: "Date",
                 dataIndex: "created_time",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
                 width: 110,
                 render: (value, record) => (
                     <div>
@@ -33,7 +33,7 @@ export const RebateList: FC<{
             {
                 title: "Commission (USDC)",
                 dataIndex: "amount",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2}>
@@ -44,7 +44,7 @@ export const RebateList: FC<{
             {
                 title: "Trading vol. (USDC)",
                 dataIndex: "vol",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2}>
@@ -71,7 +71,9 @@ export const RebateList: FC<{
 
 
     return (
-        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-relative">
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
+            height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
+        }}>
             <EndReachedBox onEndReached={() => {
                  if (!props.loading) {
                     props.loadMore?.();
@@ -83,7 +85,7 @@ export const RebateList: FC<{
                 showMaskElement={true}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base",
                 )}

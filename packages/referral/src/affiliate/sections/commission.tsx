@@ -80,7 +80,7 @@ const _BigCommission: FC<{
             {
                 title: "Date",
                 dataIndex: "updated_time",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
 
                 render: (value, record) => {
                     const date = formatYMDTime(value);
@@ -99,7 +99,7 @@ const _BigCommission: FC<{
                 title: "Commission (USDC)",
                 dataIndex: "amount",
                 align: "right",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
                 render: (value, record) => (
                     <Numeral precision={2}>
                         {value}
@@ -109,7 +109,7 @@ const _BigCommission: FC<{
             {
                 title: "Referral vol. (USDC)",
                 dataIndex: "volume",
-                className: "orderly-h-[44px]",
+                className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
                     <Numeral >
@@ -121,7 +121,9 @@ const _BigCommission: FC<{
     }, []);
 
     return (
-        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-px-3">
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
+            height: `${Math.min(580, Math.max(230, 42 + dataSource.length * 52))}px`
+        }}>
             <EndReachedBox onEndReached={props.loadMore}>
                 <Table
                     bordered
@@ -129,7 +131,7 @@ const _BigCommission: FC<{
                     showMaskElement={true}
                     columns={columns}
                     dataSource={dataSource}
-                    headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                    headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
                     className={cn(
                         "orderly-text-xs 2xl:orderly-text-base",
                     )}

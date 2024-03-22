@@ -35,13 +35,6 @@ const _SmallReferees: FC<{
 }> = (props) => {
 
     const { date, dataSource, loadMore } = props;
-    // const content = useMemo(() => {
-    //     if (dataSource.length === 0) {
-    //         return (<EmptyView />);
-    //     }
-
-    //     return dataSource.map(() => <RefereesCell address="0x8Dd04...b1b88" code="$1,233.22" vol="2222" totalCommission="	$1,153.64" />);
-    // }, [dataSource]);
 
     const renderItem = (item: any, index: number) => {
         const date = formatYMDTime(item?.code_binding_time);
@@ -75,8 +68,8 @@ const _BigReferees: FC<{
             {
                 title: "Referee address",
                 dataIndex: "user_address",
-                className: "orderly-h-[64px]",
-                width: 106,
+                className: "orderly-h-[56px]",
+                width: 140,
                 render: (value, record) => (
                     <Text rule="address" className="orderly-flex orderly-gap-2 orderly-items-center">
                         {value || "--"}
@@ -87,7 +80,7 @@ const _BigReferees: FC<{
                 title: "Referral code",
                 dataIndex: "referral_code",
                 align: "right",
-                className: "orderly-h-[64px]",
+                className: "orderly-h-[56px]",
                 render: (value, record) => (
                     <div>
                         {value}
@@ -97,7 +90,7 @@ const _BigReferees: FC<{
             {
                 title: "Total commission (USDC)",
                 dataIndex: "referral_rebate",
-                className: "orderly-h-[64px]",
+                className: "orderly-h-[56px]",
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2} >
@@ -108,7 +101,7 @@ const _BigReferees: FC<{
             {
                 title: "Total vol. (USDC)",
                 dataIndex: "volume",
-                className: "orderly-h-[64px]",
+                className: "orderly-h-[56px]",
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2} >
@@ -119,7 +112,7 @@ const _BigReferees: FC<{
             {
                 title: "Invication Time",
                 dataIndex: "vol",
-                className: "orderly-h-[64px]",
+                className: "orderly-h-[56px]",
                 align: "right",
                 render: (value, record) => {
                     const date = formatYMDTime(record?.code_binding_time);
@@ -130,7 +123,9 @@ const _BigReferees: FC<{
     }, []);
 
     return (
-        <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-px-3">
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
+            height: `${Math.min(600, Math.max(230, 42 + dataSource.length * 56))}px`
+        }}>
             <EndReachedBox onEndReached={props.loadMore}>
             <Table
                 bordered
@@ -138,7 +133,7 @@ const _BigReferees: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base",
                 )}
