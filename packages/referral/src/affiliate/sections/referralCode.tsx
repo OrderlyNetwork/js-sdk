@@ -194,7 +194,7 @@ export const CodeList: FC<{
             <Table
                 bordered
                 justified
-                showMaskElement={false}
+                showMaskElement={true}
                 columns={columns}
                 dataSource={dataSource}
                 headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"

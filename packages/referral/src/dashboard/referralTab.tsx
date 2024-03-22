@@ -61,7 +61,7 @@ export const DashboardTab = () => {
                         Affilate
                     </div>
                 )}>
-                <Affiliate />
+                <div className="orderly-mt-3"><Affiliate /></div>
             </TabPane>
         );
     }, []);
@@ -77,7 +77,7 @@ export const DashboardTab = () => {
                     </div>
                 )}
             >
-                <Trader />
+                <div className="orderly-mt-3"><Trader /></div>
             </TabPane>
         );
     }, []);
