@@ -152,8 +152,12 @@ const preview = {
             networkId={networkId ?? "testnet"}
             brokerId="woofi_pro"
             brokerName="WOOFi"
-            configStore={configStore}
+            // configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
+            // saveRefCode
+            onClickReferral={() => {
+              console.log("click referral");
+            }}
             appIcons={{
               main: {
                 img: "/orderly-logo.svg",

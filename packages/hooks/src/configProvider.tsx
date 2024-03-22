@@ -41,6 +41,7 @@ export interface ConfigProviderProps {
   brokerId: string;
   networkId: NetworkId;
   saveRefCode?: boolean; 
+  onClickReferral?: () => void;
 }
 
 export const OrderlyConfigProvider = (
@@ -57,6 +58,7 @@ export const OrderlyConfigProvider = (
     networkId,
     contracts,
     saveRefCode,
+    onClickReferral,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -127,6 +129,7 @@ export const OrderlyConfigProvider = (
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
         saveRefCode,
+        onClickReferral,
         // apiBaseUrl,
       }}
     >

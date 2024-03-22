@@ -64,8 +64,7 @@ export const RebateList: FC<{
                 renderItem={(item, index) => {
                     return <SmallCodeCell item={item} />
                 }}
-            />
-        );
+            />);
     }
 
 

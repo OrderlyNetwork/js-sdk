@@ -1,8 +1,9 @@
 import { CircleCloseIcon } from "@/icon";
 import { Input } from "@/input";
+import { OrderlyAppContext } from "@/provider";
 import { cn } from "@/utils";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { FC, useState } from "react";
+import { OrderlyContext, useLocalStorage } from "@orderly.network/hooks";
+import { FC, useContext, useState } from "react";
 
 export const ReferralCode: FC<{
     className?: string,
@@ -12,9 +13,13 @@ export const ReferralCode: FC<{
 
     const { className, refCode ,setRefCode } = props;
 
+    const { saveRefCode } = useContext(OrderlyContext);
+
+    console.log("xxxxxxxxxxxx saveRefCode", saveRefCode);
     
 
-    if (!refCode) return <></>;
+
+    if (!refCode || !saveRefCode) return <></>;
 
     return (
         <div className={cn("orderly-text-2xs orderly-text-base-contrast-80", props.className)}>
