@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text, EndReachedBox } from "@orderly.network/react";
 import { FC, useCallback, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
@@ -25,7 +25,7 @@ export const RefereesList: FC<{
 
     return isMD ?
         <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
-        <_BigReferees dataSource={dataSource} />
+        <_BigReferees dataSource={dataSource} loadMore={loadMore} />
 }
 
 const _SmallReferees: FC<{
@@ -65,7 +65,8 @@ const _SmallReferees: FC<{
 }
 
 const _BigReferees: FC<{
-    dataSource: any[]
+    dataSource: any[],
+    loadMore: any,
 }> = (props) => {
     const { dataSource } = props;
 
@@ -130,6 +131,7 @@ const _BigReferees: FC<{
 
     return (
         <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-px-3">
+            <EndReachedBox onEndReached={props.loadMore}>
             <Table
                 bordered
                 justified
@@ -142,6 +144,7 @@ const _BigReferees: FC<{
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
             />
+            </EndReachedBox>
         </div>
     );
 }

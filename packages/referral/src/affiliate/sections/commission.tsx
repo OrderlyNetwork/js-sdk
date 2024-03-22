@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Table, cn } from "@orderly.network/react";
+import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
 import { EmptyView } from "@orderly.network/react";
 import { FC, ReactNode, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
@@ -14,7 +14,7 @@ export const CommissionList: FC<{
 
     const [data, { refresh, isLoading, loadMore }] = useCommission();
 
-    const dataSource = useMemo(()=>{
+    const dataSource = useMemo(() => {
         return data?.filter((item: any) => {
             return item.type === "REFERRAL_REBATE" && item.status === "COMPLETED";
         });
@@ -37,7 +37,7 @@ export const CommissionList: FC<{
 
     return isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
-        <_BigCommission dataSource={dataSource} />
+        <_BigCommission dataSource={dataSource} loadMore={loadMore} />
 }
 
 const _SmallCommission: FC<{
@@ -46,7 +46,7 @@ const _SmallCommission: FC<{
     loadMore: any
 }> = (props) => {
     const { date, dataSource, loadMore } = props;
-    
+
 
     const renderItem = (item: any, index: number) => {
         const date = formatYMDTime(item?.updated_time);
@@ -71,6 +71,7 @@ const _SmallCommission: FC<{
 
 const _BigCommission: FC<{
     dataSource: any[]
+    loadMore: any
 }> = (props) => {
     const { dataSource } = props;
 
@@ -85,7 +86,7 @@ const _BigCommission: FC<{
                     const date = formatYMDTime(value);
 
                     console.log("value", value);
-                    
+
 
                     return (
                         <div className="orderly-flex orderly-gap-2 orderly-items-center">
@@ -121,18 +122,20 @@ const _BigCommission: FC<{
 
     return (
         <div className="orderly-h-[300px] orderly-overflow-y-auto orderly-mt-4 orderly-px-3">
-            <Table
-                bordered
-                justified
-                showMaskElement={false}
-                columns={columns}
-                dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
-                className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
-                )}
-                generatedRowKey={(rec, index) => `${index}`}
-            />
+            <EndReachedBox onEndReached={props.loadMore}>
+                <Table
+                    bordered
+                    justified
+                    showMaskElement={false}
+                    columns={columns}
+                    dataSource={dataSource}
+                    headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                    className={cn(
+                        "orderly-text-xs 2xl:orderly-text-base",
+                    )}
+                    generatedRowKey={(rec, index) => `${index}`}
+                />
+            </EndReachedBox>
         </div>
     );
 }

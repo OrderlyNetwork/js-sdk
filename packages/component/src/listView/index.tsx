@@ -3,6 +3,7 @@ import { ListView } from "./listView";
 import { SeparatedListView } from "./separated";
 import { EmptyView } from "./emptyView";
 import { ListTileForSymbol } from "./listTileForSymbol";
+import { EndReachedBox } from "./endReachedBox";
 
 type ListViewType = typeof ListView & {
   separated: typeof SeparatedListView;
@@ -25,4 +26,4 @@ type ListTileComponent = typeof ListTile & {
 const ListTileComponent = ListTile as ListTileComponent;
 ListTileComponent.symbol = ListTileForSymbol;
 
-export { Component as ListView, ListTileComponent as ListTile, EmptyView };
+export { Component as ListView, ListTileComponent as ListTile, EmptyView, EndReachedBox };
