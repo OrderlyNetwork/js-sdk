@@ -29,6 +29,14 @@ export default {
           console.log("show referral page");
           
         }}
+        enterAffiliatePage={() => {
+          console.log("show affiliate page");
+        }}
+
+        enterTraderPage={() => {
+          console.log("show trader page");
+          
+        }}
         >
           <Story />
         </ReferralProvider>

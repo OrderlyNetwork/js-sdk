@@ -19,7 +19,12 @@ export type ReferralContextProps = {
     learnAffiliate?: () => void,
     learnAffiliateUrl?: string,
     referralLinkUrl: string,
+    //** referral index page */
     showReferralPage?: () => void,
+    enterTraderPage?: () => void,
+    enterAffiliatePage?: () => void,
+    //** tab + tab content */
+    showDashboard?: () => void,
 }
 
 export type ReferralContextReturns = {
@@ -42,6 +47,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         learnAffiliateUrl,
         referralLinkUrl,
         showReferralPage,
+        enterTraderPage,
+        enterAffiliatePage,
     } = props;
 
     const {
@@ -111,9 +118,9 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         <ReferralContext.Provider value={{
             referralInfo: data,
             isAffiliate: isAffiliate,
-            // isTrader: isTrader,
-            // isAffiliate: true,
-            isTrader: false,
+            isTrader: isTrader,
+            // isAffiliate: false,
+            // isTrader: true,
             mutate,
             becomeAnAffiliate,
             becomeAnAffiliateUrl,
@@ -124,6 +131,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             userVolume,
             dailyVolume,
             showReferralPage,
+            enterTraderPage,
+            enterAffiliatePage,
         }}>
             {props.children}
         </ReferralContext.Provider>

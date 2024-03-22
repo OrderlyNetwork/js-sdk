@@ -8,7 +8,7 @@ import { ArrowRightIcon } from "../icons/arrowRight";
 
 export const AsAnAffiliate = () => {
 
-  const { referralInfo, isAffiliate, becomeAnAffiliate, becomeAnAffiliateUrl } = useContext(ReferralContext);
+  const { referralInfo, isAffiliate, becomeAnAffiliate, becomeAnAffiliateUrl, enterAffiliatePage } = useContext(ReferralContext);
 
   const bottomInfo = useMemo(() => {
     const totalReferrerRebate = referralInfo?.referrer_info?.total_referrer_rebate;
@@ -23,7 +23,7 @@ export const AsAnAffiliate = () => {
               <Numeral precision={2} >{totalReferrerRebate || '-'}</Numeral>
           </div>
 
-          <button className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
+          <button onClick={enterAffiliatePage} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
             Enter
             <ArrowRightIcon fill="white" fillOpacity={0.98}/>
           </button>

@@ -8,7 +8,7 @@ import { Trader } from "../trader";
 
 export type ReferralTabType = "affiliateTab" | "traderTab";
 
-export const ReferralTab = () => {
+export const DashboardTab = () => {
 
     const {
         isAffiliate,
