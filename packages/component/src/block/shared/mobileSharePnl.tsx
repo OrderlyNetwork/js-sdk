@@ -32,7 +32,7 @@ export const MobileSharePnLContent: FC<{
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options)
   );
-  const [message, setMessage] = useState(localPnlConfig.message);
+  const [message, setMessage] = useState<string>(localPnlConfig.message);
   const [selectIndex, setSelectIndex] = useState(localPnlConfig.bgIndex);
   const { shareOptions } = useContext(OrderlyAppContext);
   const { backgroundImages, ...resetOptions } = shareOptions.pnl;
