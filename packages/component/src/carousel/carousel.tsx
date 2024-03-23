@@ -18,6 +18,7 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  initIndex?: number,
 };
 
 type CarouselContextProps = {
@@ -68,7 +69,7 @@ const Carousel = React.forwardRef<
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const [selectedIndex, setSelectedIndex] = React.useState(props.initIndex ||0);
     const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
     const onSelect = React.useCallback(
@@ -129,6 +130,9 @@ const Carousel = React.forwardRef<
       api.on("reInit", onSelect);
       api.on("select", onSelect);
 
+      if (props.initIndex) {
+        api.scrollTo(props.initIndex);
+      }
       return () => {
         api?.off("select", onSelect);
       };
@@ -171,6 +175,8 @@ const CarouselContent = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel();
+
+  
 
   return (
     <div ref={carouselRef} className="orderly-overflow-hidden">

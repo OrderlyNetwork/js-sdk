@@ -8,7 +8,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
 import { PosterRef } from "../poster/poster";
-import { getPnLPosterData } from "./sharePnLUtils";
+import { getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
 import {
   CarouselContent,
   CarouselItem,
@@ -25,11 +25,15 @@ export const MobileSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
 }> = (props) => {
-  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
+
+  const localPnlConfig = getPnlInfo();
+
+  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(localPnlConfig.pnlFormat);
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
-    new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"])
+    new Set(localPnlConfig.options)
   );
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(localPnlConfig.message);
+  const [selectIndex, setSelectIndex] = useState(localPnlConfig.bgIndex);
   const { shareOptions } = useContext(OrderlyAppContext);
   const { backgroundImages, ...resetOptions } = shareOptions.pnl;
 
@@ -38,7 +42,6 @@ export const MobileSharePnLContent: FC<{
   const posterRefs = shareOptions.pnl.backgroundImages.map(() =>
     useRef<PosterRef | null>(null)
   );
-  const [selectIndex, setSelectIndex] = useState(0);
 
   useEffect(() => {
     const currentDomain = window.location.hostname;
@@ -96,6 +99,13 @@ export const MobileSharePnLContent: FC<{
     }
   };
 
+  savePnlInfo(
+    pnlFormat,
+    shareOption,
+    selectIndex,
+    message,
+  );
+
   return (
     <div className="orderly-referral">
       <div
@@ -106,6 +116,7 @@ export const MobileSharePnLContent: FC<{
         <Carousel
           className="orderly-w-full orderly-overflow-hidden"
           opts={{ align: "start" }}
+          initIndex={selectIndex}
         >
           <CarouselContent style={{ height: `${carouselHeight}px` }}>
             {shareOptions.pnl.backgroundImages.map((item, index) => (
