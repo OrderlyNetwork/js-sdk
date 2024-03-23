@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.1.7-referral.0
+
+### Patch Changes
+
+- publish referral
+- Updated dependencies
+  - @orderly.network/types@0.2.7-referral.0
+  - @orderly.network/utils@0.1.7-referral.0
+  - @orderly.network/core@0.2.7-referral.0
+  - @orderly.network/perp@2.0.7-referral.0
+  - @orderly.network/net@1.1.7-referral.0
+
 ## 1.1.6
 
 ### Patch Changes

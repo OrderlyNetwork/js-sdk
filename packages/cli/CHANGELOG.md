@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.7-referral.0
+
+### Patch Changes
+
+- publish referral
+- Updated dependencies
+  - @orderly.network/core@0.2.7-referral.0
+
 ## 0.1.6
 
 ### Patch Changes

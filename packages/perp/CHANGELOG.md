@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.7-referral.0
+
+### Patch Changes
+
+- publish referral
+- Updated dependencies
+  - @orderly.network/types@0.2.7-referral.0
+  - @orderly.network/utils@0.1.7-referral.0
+
 ## 2.0.6
 
 ### Patch Changes

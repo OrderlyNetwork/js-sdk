@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.1.7-referral.0
+
+### Patch Changes
+
+- publish referral
+
 ## 0.1.6
 
 ### Patch Changes
