@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 0.2.7-internal.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@1.1.7-internal.0
+  - @orderly.network/core@0.2.7-internal.0
+  - @orderly.network/net@1.1.7-internal.0
+  - @orderly.network/trading-view@0.2.7-internal.0
+  - @orderly.network/types@0.2.7-internal.0
+  - @orderly.network/utils@0.1.7-internal.0
+
 ## 0.2.6
 
 ### Patch Changes
