@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 0.2.7-internal.2
+
+### Patch Changes
+
+- fix bug
+
 ## 0.2.7-internal.1
 
 ### Patch Changes
