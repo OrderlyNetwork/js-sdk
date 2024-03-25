@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.6"
   },
   "changesets": [
-    "hip-maps-wave"
+    "hip-maps-wave",
+    "lovely-spies-vanish"
   ]
 }
