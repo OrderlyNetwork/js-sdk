@@ -16,7 +16,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Commission");
 
     const [data, {refresh}] = useRefereeHistory({size: 7});
-    const isLG = useMediaQuery(MEDIA_LG);
 
     const dataSource = useMemo(() => {
         
@@ -24,7 +23,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         if ((data?.length || 0) === 0) return [];
 
         
-        const end = isLG ? Math.min(14, data.length) : Math.min(7, data.length);
+        const end = Math.min(7, data.length);
 
         // @ts-ignore
         return data.slice(0,end).map((item) => {
@@ -57,7 +56,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             </div>
 
             <ColmunChart 
-                data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
+                data={dataSource.length === 0 ? emptyDataSource(true) : dataSource}
                 hoverTitle={filterType}
                 yAxis={yAxis}
                 

@@ -1,14 +1,15 @@
 import { useContext } from "react";
 import { ReferralContext } from "../hooks/referralContext";
 import { Referral } from "../referral";
-import { DashboardTab } from "./referralTab";
+import { DashboardTab } from "./dashboardTab";
 
 export const Dashboard = () => {
 
     const { isAffiliate, isTrader } = useContext(ReferralContext);
 
-
-    if (isAffiliate === true || isTrader === true) {
+    console.log("xxxxxxxx isAffiliate", isAffiliate, isTrader);
+    
+    if (isAffiliate || isTrader) {
         return (
             <DashboardTab />
         );

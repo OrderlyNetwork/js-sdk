@@ -19,7 +19,7 @@ export const AsAnTrader = () => {
     if (isTrader) {
       return (
         <div className="orderly-mt-3 orderly-text-[24px] lg:orderly-txt-[26px] 2xl:orderly-text-[30[px] orderly-flex orderly-justify-between">
-          <div className="orderly-flex-1 orderly-flex">
+          <div className="orderly-flex-1 orderly-flex orderly-items-center">
             <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
               <USDCIcon width={"100%"} height={"100%"} />
             </div>

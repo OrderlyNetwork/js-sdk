@@ -152,7 +152,7 @@ const preview = {
             networkId={networkId ?? "testnet"}
             brokerId="woofi_pro"
             brokerName="WOOFi"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             // saveRefCode
             onClickReferral={() => {

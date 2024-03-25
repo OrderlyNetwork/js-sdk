@@ -29,8 +29,8 @@ export type ReferralContextProps = {
 
 export type ReferralContextReturns = {
     referralInfo?: API.ReferralInfo,
-    isAffiliate?: boolean,
-    isTrader?: boolean,
+    isAffiliate: boolean,
+    isTrader: boolean,
     mutate: any,
     userVolume?: UserVolumeType
     dailyVolume?: API.DayliVolume[],
@@ -72,8 +72,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         revalidateOnFocus: true,
     });
 
-    const isAffiliate = data?.referrer_info?.referral_codes ? data?.referrer_info?.referral_codes.length > 0 : undefined;
-    const isTrader = data?.referee_info.referer_code ? data?.referee_info.referer_code !== undefined : undefined;
+    const isAffiliate = (data?.referrer_info?.referral_codes?.length || 0) > 0;
+    const isTrader = data?.referee_info.referer_code !== null;
 
 
     const userVolume = useMemo(() => {

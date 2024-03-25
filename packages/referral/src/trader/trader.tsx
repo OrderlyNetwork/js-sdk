@@ -3,15 +3,15 @@ import { useMediaQuery } from "@orderly.network/hooks";
 import { Rebates } from "./sections/rebates";
 import { Summary } from "./sections/summary";
 import { TraderTitle } from "./sections/traderTitle";
-import { MEDIA_LG } from "../types/constants";
+import { MEDIA_LG, MEDIA_XL } from "../types/constants";
 import { BarChart } from "./sections/barChart";
 
 export const Trader = () => {
     
-    const isLG = useMediaQuery(MEDIA_LG);
+    const isXL = useMediaQuery(MEDIA_XL);
 
-    return (<div className="orderly-bg-base-900">
-           {isLG ? <_SmallLayout /> : <_BigLayout />}
+    return (<div className="orderly-h-full">
+           {isXL ? <_SmallLayout /> : <_BigLayout />}
         </div>);
 }
 
@@ -32,17 +32,17 @@ const _SmallLayout = () => {
 const _BigLayout = () => {
 
     return (
-        <div className="orderly-py-4 orderly-px-[60px]">
+        <div className="orderly-py-4 orderly-px-[60px] orderly-flex orderly-flex-col orderly-items-center orderly-justify-center">
 
-            <div className="orderly-flex orderly-gap-4 orderly-h-[328px] 2xl:orderly-h-[336px]">
+            <div className="orderly-flex orderly- orderly-gap-4 orderly-h-[328px] 2xl:orderly-h-[336px] xl:orderly-w-[904px] 2xl:orderly-w-[1324px]">
                 <div className="orderly-w-2/5 orderly-flex orderly-flex-col orderly-gap-4">
                     <TraderTitle/>
                     <Summary className="orderly-flex-1"/>
                 </div>
-                <BarChart className="orderly-flex-1 orderly-h-full" />
+                <BarChart className="orderly-w-3/5 orderly-h-full" />
             </div>
 
-            <Rebates className="orderly-mt-4"/>
+            <Rebates className="orderly-mt-4 xl:orderly-w-[904px] 2xl:orderly-w-[1324px]"/>
         </div>
     );
 }

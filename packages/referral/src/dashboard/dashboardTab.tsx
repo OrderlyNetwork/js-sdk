@@ -6,7 +6,7 @@ import { Affiliate } from "../affiliate";
 import { TraderIcon } from "./icons/trader";
 import { Trader } from "../trader";
 
-export type ReferralTabType = "affiliateTab" | "traderTab";
+export type DashboardTabType = "affiliateTab" | "traderTab";
 
 export const DashboardTab = () => {
 
@@ -18,7 +18,7 @@ export const DashboardTab = () => {
 
     
 
-    const [activeTab, setActiveTab] = useState<ReferralTabType>(isAffiliate ? "affiliateTab" : "traderTab")
+    const [activeTab, setActiveTab] = useState<DashboardTabType>(isAffiliate ? "affiliateTab" : "traderTab")
     const onTabChange = (tab: any) => {
         setActiveTab(tab);
     }

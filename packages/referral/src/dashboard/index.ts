@@ -1,3 +1,3 @@
 export { Dashboard } from "./dashboard";
 
-export { DashboardTab } from "./referralTab";
+export { DashboardTab } from "./dashboardTab";
