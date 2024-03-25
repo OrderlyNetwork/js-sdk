@@ -119,7 +119,7 @@ export const CodeList: FC<{
                         <PinView pin={record.isPined || false} onPinChange={(isPinned) => {
                             props.setPinCode(value, !isPinned);
                         }} />
-                        <div>{value}</div>
+                        <span>{value}</span>
                         <CopyIcon
                             className="orderly-mr-3 orderly-cursor-pointer"
                             onClick={() => copyText(value)}
@@ -197,7 +197,7 @@ export const CodeList: FC<{
                 showMaskElement={true}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base",
                 )}

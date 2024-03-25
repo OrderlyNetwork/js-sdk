@@ -11,7 +11,9 @@ export const Dashboard = () => {
     
     if (isAffiliate || isTrader) {
         return (
-            <DashboardTab />
+            <div className="orderly-referral-tab">
+                <DashboardTab />
+            </div>
         );
     }
     return <Referral />;

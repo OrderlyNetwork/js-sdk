@@ -89,7 +89,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px]",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -106,7 +106,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px]",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -121,7 +121,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px]",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
