@@ -38,7 +38,7 @@ export const AsAnTrader = () => {
     return (
       <div className="orderly-flex orderly-justify-between orderly-mt-2 orderly-items-center">
         <Button
-          id="dashboard_as_a_trader_btn"
+          id="referral_as_a_trader_btn"
           onClick={enterCode}
           className="orderly-bg-white orderly-text-base-900 xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
         >

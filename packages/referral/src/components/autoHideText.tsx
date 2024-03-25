@@ -1,9 +1,9 @@
 import { FC, useEffect, useRef, useState } from "react";
 
-export const AutoHideText: FC<{text: string}> = (props) => {
+export const AutoHideText: FC<{text: string, className?: string}> = (props) => {
 
     const {text} = props;
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     const [truncatedText, setTruncatedText] = useState(text);
 
@@ -26,7 +26,7 @@ export const AutoHideText: FC<{text: string}> = (props) => {
     }, [text]);
   
     return (
-      <div ref={containerRef} style={{ maxWidth: '100%', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+      <div ref={containerRef} style={{ maxWidth: '100%', overflow: 'hidden', whiteSpace: 'nowrap' }} className={props.className}>
         {truncatedText}
       </div>
     );

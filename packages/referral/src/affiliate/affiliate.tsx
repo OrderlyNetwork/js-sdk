@@ -10,7 +10,7 @@ export const Affiliate = () => {
 
     const isXL = useMediaQuery(MEDIA_XL);
 
-    return (<div className="orderly-h-full">
+    return (<div className="orderly-h-full orderly-text-base-contrast">
            {isXL ? <_SmallLayout /> : <_BigLayout />}
         </div>);
 

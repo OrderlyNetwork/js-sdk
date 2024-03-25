@@ -4,7 +4,7 @@ import { Select, cn } from "@orderly.network/react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 
-import { ColmunChart, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
+import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { useRefereeHistory } from "../../hooks/useRefereeHistory";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
@@ -17,8 +17,8 @@ type ChartDataType = "Rebate" | "Volume";
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Rebate");
 
-    const [distributionData, { refresh }] = useDistribution({ size: 30 });
-    const { dailyVolume } = useContext(ReferralContext);
+    const [distributionData, { refresh }] = useDistribution({ size: 14 });
+    const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
     const isLG = useMediaQuery(MEDIA_LG);
 
@@ -31,9 +31,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             if (!distributionData || distributionData.length === 0) return [];
 
             let newData = distributionData.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
-
-            console.log("new data", newData);
-
 
             if (newData.length > 7) {
                 newData = newData.slice(0, 7);
@@ -83,7 +80,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             <ColmunChart
                     data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
                     hoverTitle={filterType}
-                    yAxis={yAxis}
+                    yAxis={{...chartConfig?.yAxis, ...yAxis}}
+                    barStyle={{...chartConfig?.bar, ...InitialBarStyle}}
+                    xAxis={{...chartConfig?.bar, ...InitialXAxis}}
                 />
         </div>
     );

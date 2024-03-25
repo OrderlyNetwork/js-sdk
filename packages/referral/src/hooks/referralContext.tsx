@@ -2,6 +2,7 @@ import { usePrivateQuery } from "@orderly.network/hooks";
 import { FC, PropsWithChildren, createContext, useEffect, useMemo } from "react";
 import { API } from "../types/api";
 import { useDaily } from "./useDaily";
+import { XAxis, YAxis, BarStyle } from "../components";
 
 export type UserVolumeType = {
     "1d_volume"?: number,
@@ -25,6 +26,11 @@ export type ReferralContextProps = {
     enterAffiliatePage?: () => void,
     //** tab + tab content */
     showDashboard?: () => void,
+    chartConfig?: {
+        bar: BarStyle,
+        yAxis: YAxis,
+        xAxis: XAxis,
+    }
 }
 
 export type ReferralContextReturns = {
@@ -49,6 +55,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         showReferralPage,
         enterTraderPage,
         enterAffiliatePage,
+        chartConfig,
     } = props;
 
     const {
@@ -133,6 +140,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             showReferralPage,
             enterTraderPage,
             enterAffiliatePage,
+            chartConfig,
         }}>
             {props.children}
         </ReferralContext.Provider>

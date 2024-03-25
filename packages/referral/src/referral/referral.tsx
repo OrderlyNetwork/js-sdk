@@ -17,7 +17,7 @@ export const Referral = () => {
   };
 
   return (
-    <div className="orderly-h-full orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4">
+    <div className="orderly-h-full orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4 orderly-text-base-contrast">
       <div className="orderly-text-base-contrast orderly-text-center">
         <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px]">
           <GradientText texts={[

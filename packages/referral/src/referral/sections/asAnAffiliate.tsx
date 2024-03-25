@@ -10,6 +10,14 @@ export const AsAnAffiliate = () => {
 
   const { referralInfo, isAffiliate, becomeAnAffiliate, becomeAnAffiliateUrl, enterAffiliatePage } = useContext(ReferralContext);
 
+  const onClickAffiliate = () => {
+    if (becomeAnAffiliate) {
+      becomeAnAffiliate?.();
+    } else if (becomeAnAffiliateUrl) {
+      window.open(becomeAnAffiliateUrl, "__blank");
+    }
+  };
+
   const bottomInfo = useMemo(() => {
     const totalReferrerRebate = referralInfo?.referrer_info?.total_referrer_rebate;
 
@@ -35,16 +43,12 @@ export const AsAnAffiliate = () => {
     return (
       <div className="orderly-flex orderly-justify-between orderly-mt-2 orderly-items-center">
         <Button
-          id="dashboard_become_an_affiliate_btn"
-          onClick={() => {
-            if (becomeAnAffiliate) {
-              becomeAnAffiliate?.();
-            } else if (becomeAnAffiliateUrl) {
-              window.open(becomeAnAffiliateUrl, "__blank");
-            }
-          }}
+          id="referral_become_an_affiliate_btn"
+          onClick={onClickAffiliate}
           className="orderly-bg-white orderly-text-base-900 xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
-        >Become an affiliate</Button>
+        >
+          Become an affiliate
+        </Button>
 
         <div>
           <div className="orderly-text-[22px] md:orderly-text-[24px] lg:orderly-text-[26px] xl:orderly-text-[26px] 2xl:orderly-text-[28px]">40%~80%</div>

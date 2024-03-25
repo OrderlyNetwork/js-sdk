@@ -358,10 +358,10 @@ function findMinMax(arr: [string, number][], maxRate: number = 1): { min: number
 }
 
 
-export const emptyDataSource = (isLG: boolean) => {
+export const emptyDataSource = (level7: boolean) => {
     const date = Date.now();
 
-    return Array.from({ length: isLG ? 7 : 14 }, (_, index) => {
+    return Array.from({ length: level7 ? 7 : 14 }, (_, index) => {
         const timestamp = date - (86400 * index) * 1000;
         return [
             formatMdTime(timestamp),
