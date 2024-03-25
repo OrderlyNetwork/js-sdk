@@ -30,6 +30,7 @@ interface TabListProps {
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
   className?: string;
+  identifierClassName?: string;
   showIdentifier?: boolean;
   fullWidth?: boolean;
   mode: TabViewMode;
@@ -97,6 +98,7 @@ export const TabList: FC<TabListProps> = (props) => {
                 disabled={item.disabled}
                 fullWidth={props.fullWidth}
                 mode={props.mode}
+                className={props.identifierClassName}
                 active={
                   !!item.value &&
                   !!props.value &&

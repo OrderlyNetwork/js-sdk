@@ -57,14 +57,14 @@ export const DashboardTab = () => {
                 value="affiliateTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <ReferralIcon />
+                        <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")}/>
                         Affilate
                     </div>
                 )}>
                 <div className="orderly-mt-3"><Affiliate /></div>
             </TabPane>
         );
-    }, []);
+    }, [activeTab]);
 
     const traderPane = useMemo(() => {
         return (
@@ -72,7 +72,7 @@ export const DashboardTab = () => {
                 value="traderTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <TraderIcon />
+                        <TraderIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "traderTab" && "orderly-fill-base-contrast")}/>
                         Trader
                     </div>
                 )}
@@ -80,7 +80,7 @@ export const DashboardTab = () => {
                 <div className="orderly-mt-3"><Trader /></div>
             </TabPane>
         );
-    }, []);
+    }, [activeTab]);
 
 
     if (isAffiliate && isTrader == false) {
@@ -94,6 +94,7 @@ export const DashboardTab = () => {
                 )}
                 onTabChange={onTabChange}
                 tabBarExtra={tabBarExtra}
+                identifierClassName={"after:orderly-bg-gradient-to-l after:orderly-from-referral-text-from after:orderly-to-referral-text-to"}
             >
                 {affiliatePane}
             </Tabs>
@@ -111,6 +112,7 @@ export const DashboardTab = () => {
                 )}
                 onTabChange={onTabChange}
                 tabBarExtra={tabBarExtra}
+                identifierClassName={"after:orderly-bg-gradient-to-l after:orderly-from-referral-text-from after:orderly-to-referral-text-to"}
             >
                 {traderPane}
             </Tabs>
@@ -126,6 +128,7 @@ export const DashboardTab = () => {
                 )}
                 onTabChange={onTabChange}
                 tabBarExtra={tabBarExtra}
+                identifierClassName={"after:orderly-bg-gradient-to-l after:orderly-from-referral-text-from after:orderly-to-referral-text-to"}
             >
                 {affiliatePane}
                 {traderPane}

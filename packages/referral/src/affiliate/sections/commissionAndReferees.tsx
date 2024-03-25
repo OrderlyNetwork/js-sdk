@@ -27,6 +27,7 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
                 tabBarExtra={
                     <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center orderly-invisible orderly-w-0 md:orderly-visible md:orderly-w-auto orderly-text-3xs orderly-text-base-contrast-36">{dateText}</div>
                 }
+                identifierClassName={"after:orderly-bg-gradient-to-l after:orderly-from-referral-text-from after:orderly-to-referral-text-to"}
             >
 
                 <TabPane
