@@ -291,29 +291,7 @@ export const useOrderbookStream = (
                     const {data: wsData, ts} = message;
                     const {asks, bids, prevTs} = wsData;
                     orderbooksService.updateOrderbook(symbol, {asks, bids, ts, prevTs}, () => needRequestFullOrderbook = true);
-                    if ( needRequestFullOrderbook) {
 
-                        fullOrderBookUpdateSub = ws.onceSubscribe(
-                            {
-                                event: "request",
-                                id: `${symbol}@orderbook`,
-                                params: {
-                                    type: "orderbook",
-                                    symbol: symbol,
-                                },
-                            },
-                            {
-                                formatter: (message) => message,
-                                onMessage: (message: any) => {
-                                    const {symbol, asks, bids, ts} = message.data;
-                                    orderbooksService.setFullOrderbook(symbol, {asks, bids, ts})
-
-                                    setIsLoading(false);
-                                },
-                            }
-                        )
-                        needRequestFullOrderbook= false;
-                    }
 
                     const data = orderbooksService.getRawOrderbook(symbol);
                     setData({bids: data.bids, asks: data.asks});
@@ -321,6 +299,33 @@ export const useOrderbookStream = (
                 }
             }
         )
+
+        if ( needRequestFullOrderbook) {
+            setIsLoading(true);
+
+            fullOrderBookUpdateSub = ws.onceSubscribe(
+                {
+                    event: "request",
+                    id: `${symbol}@orderbook`,
+                    params: {
+                        type: "orderbook",
+                        symbol: symbol,
+                    },
+                },
+                {
+                    formatter: (message) => message,
+                    onMessage: (message: any) => {
+                        const {symbol, asks, bids, ts} = message.data;
+                        orderbooksService.setFullOrderbook(symbol, {asks, bids, ts})
+                        const data = orderbooksService.getRawOrderbook(symbol);
+                        setData({bids: data.bids, asks: data.asks});
+
+                        setIsLoading(false);
+                    },
+                }
+            )
+            needRequestFullOrderbook= false;
+        }
 
         return () => {
             // unsubscribe
