@@ -21,5 +21,5 @@ function debugPrint(msg: any, tag?: string) {
 }
 
 if (typeof window !== "undefined") {
-  window.debugPrint = debugPrint;
+  (window as any).debugPrint = debugPrint;
 }

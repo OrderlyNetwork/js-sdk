@@ -1,4 +1,4 @@
-import { MessageHandler } from "@/types/ws";
+import { MessageHandler } from "../../types/ws";
 import PingHandler from "./ping";
 
 export type MessageType =

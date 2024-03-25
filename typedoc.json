@@ -1,8 +1,15 @@
 {
-    "entryPoints": ["packages/*"],
-    "name": "Orderly JS SDK",
-    "entryPointStrategy": "packages",
-    "includeVersion": false,
-    "json": "apps/docs/_doc_meta_/documentation.json"
-    // "plugin": ["typedoc-plugin-markdown"]
-  }
+  "entryPoints": [
+    "packages/core",
+    "packages/hooks",
+    "packages/net",
+    "packages/perp",
+    "packages/types"
+  ],
+  "name": "Orderly SDKs",
+  "entryPointStrategy": "packages",
+  "includeVersion": false,
+  "json": "apps/docs/_doc_meta_/documentation.json",
+  "plugin": ["typedoc-plugin-markdown"],
+  "out": "./docs"
+}
