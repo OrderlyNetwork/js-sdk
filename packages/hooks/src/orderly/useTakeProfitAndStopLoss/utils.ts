@@ -51,7 +51,7 @@ export function priceToOffset(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol: API.SymbolExt }
+  options: { symbol?: API.SymbolExt } = {}
 ) {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
@@ -73,7 +73,11 @@ export function priceToOffset(
     decimal = new Decimal(entryPrice).minus(new Decimal(price));
   }
 
-  return decimal!.abs().todp(symbol.quote_dp).toNumber();
+  if (symbol) {
+    return decimal!.abs().todp(symbol.quote_dp).toNumber();
+  }
+
+  return decimal!.abs().toNumber();
 }
 
 export function offsetPercentageToPrice(inputs: {
@@ -194,7 +198,7 @@ export function priceToPnl(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol: API.SymbolExt }
+  options: { symbol?: API.SymbolExt } = {}
 ): number {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
@@ -224,7 +228,11 @@ export function priceToPnl(
     );
   }
 
-  return decimal.todp(symbol.quote_dp).toNumber();
+  if (symbol) {
+    return decimal.todp(symbol.quote_dp).toNumber();
+  }
+
+  return decimal.toNumber();
 }
 
 export function calculateHelper(
@@ -236,9 +244,7 @@ export function calculateHelper(
     qty: number;
     orderSide: OrderSide;
   },
-  options: {
-    symbol: API.SymbolExt;
-  }
+  options: { symbol?: API.SymbolExt } = {}
 ) {
   const { symbol } = options;
   // if not need to be computed, return the value directly
@@ -327,9 +333,9 @@ export function calculateHelper(
   }
 
   return {
-    [`${keyPrefix}trigger_price`]: new Decimal(Number(trigger_price))
-      .todp(symbol.quote_dp)
-      .toNumber(),
+    [`${keyPrefix}trigger_price`]: symbol
+      ? new Decimal(Number(trigger_price)).todp(symbol.quote_dp).toNumber()
+      : trigger_price,
     [`${keyPrefix}offset`]:
       offset ??
       priceToOffset(
