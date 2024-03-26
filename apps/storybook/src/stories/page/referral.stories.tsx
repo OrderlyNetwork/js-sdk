@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Dashboard, Affiliate, Trader, ReferralProvider, Referral } from "@orderly.network/referral";
+import { Dashboard, Affiliate, Trader, ReferralProvider, Referral, InitialBarStyle } from "@orderly.network/referral";
 import { OrderlyAppProvider } from "@orderly.network/react";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountState } from "@orderly.network/core";
@@ -19,15 +19,15 @@ export default {
   //   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-    decorators: [
-      (Story) => (
-        <ReferralProvider 
+  decorators: [
+    (Story) => (
+      <ReferralProvider
         becomeAnAffiliateUrl="https://orderly.network"
         learnAffiliateUrl="https://orderly.network"
         referralLinkUrl="https://dex.woo.org/en/trade"
-        showReferralPage={()=>{
+        showReferralPage={() => {
           console.log("show referral page");
-          
+
         }}
         enterAffiliatePage={() => {
           console.log("show affiliate page");
@@ -35,13 +35,23 @@ export default {
 
         enterTraderPage={() => {
           console.log("show trader page");
-          
+
         }}
-        >
-          <Story />
-        </ReferralProvider>
-      ),
-    ],
+        chartConfig={
+          {
+            trader: { 
+              bar: { ...InitialBarStyle, fill: "#00B49E" } 
+            },
+            affiliate: { 
+              bar: { ...InitialBarStyle, fill: "#608CFF" } 
+            },
+          }
+        }
+      >
+        <Story />
+      </ReferralProvider>
+    ),
+  ],
 };
 
 type Story = StoryObj<typeof Dashboard>;
@@ -70,13 +80,13 @@ export const LoginState: Story = {
     const account = useAccount();
 
     console.log("account", account);
-    
+
 
     // @ts-ignore
     if (account.state.status !== AccountStatusEnum.EnableTrading) {
       return (
         <button onClick={() => {
-          
+
         }}>Login</button>
       );
     }

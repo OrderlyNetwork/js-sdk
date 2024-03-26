@@ -27,9 +27,16 @@ export type ReferralContextProps = {
     //** tab + tab content */
     showDashboard?: () => void,
     chartConfig?: {
-        bar?: BarStyle,
-        yAxis?: YAxis,
-        xAxis?: XAxis,
+        affiliate: {
+            bar?: BarStyle,
+            yAxis?: YAxis,
+            xAxis?: XAxis,
+        },
+        trader: {
+            bar?: BarStyle,
+            yAxis?: YAxis,
+            xAxis?: XAxis,
+        }
     }
 }
 

@@ -56,9 +56,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             <ColmunChart
                 data={dataSource.length === 0 ? emptyDataSource(true) : dataSource}
                 hoverTitle={filterType}
-                yAxis={{ ...chartConfig?.yAxis, ...yAxis }}
-                barStyle={{ ...chartConfig?.bar, ...InitialBarStyle }}
-                xAxis={{ ...chartConfig?.bar, ...InitialXAxis }}
+                yAxis={{ ...yAxis, ...chartConfig?.affiliate.yAxis, }}
+                barStyle={{ ...InitialBarStyle, ...chartConfig?.affiliate.bar, }}
+                xAxis={{ ...InitialXAxis, ...chartConfig?.affiliate.bar, }}
 
             />
         </div>
@@ -81,7 +81,7 @@ const _FilterData: FC<{
             fullWidth
             // size={"small"}
             value={curType}
-            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[103px] orderly-bg-base-700"
+            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[105px] orderly-bg-base-700"
             contentClassName="orderly-bg-base-800 orderly-px-0"
             onChange={(value: any) => {
                 props.onClick?.(value);

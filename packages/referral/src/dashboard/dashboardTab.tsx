@@ -58,7 +58,7 @@ export const DashboardTab = () => {
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
                         <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")}/>
-                        Affilate
+                        Affiliate
                     </div>
                 )}>
                 <div className="orderly-mt-3"><Affiliate /></div>

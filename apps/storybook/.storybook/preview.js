@@ -154,7 +154,7 @@ const preview = {
             brokerName="WOOFi"
             configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
-            // saveRefCode
+            saveRefCode
             onClickReferral={() => {
               console.log("click referral");
             }}

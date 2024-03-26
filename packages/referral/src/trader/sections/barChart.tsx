@@ -67,7 +67,8 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         return { ...InitialYAxis }
     }, [dataSource]);
 
-    
+
+    console.log("xxxxxxxxxx chartConfig", chartConfig);
 
 
     return (
@@ -78,12 +79,12 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             </div>
 
             <ColmunChart
-                    data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
-                    hoverTitle={filterType}
-                    yAxis={{...chartConfig?.yAxis, ...yAxis}}
-                    barStyle={{...chartConfig?.bar, ...InitialBarStyle}}
-                    xAxis={{...chartConfig?.bar, ...InitialXAxis}}
-                />
+                data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
+                hoverTitle={filterType}
+                yAxis={{ ...yAxis, ...chartConfig?.trader.yAxis, }}
+                barStyle={{ ...InitialBarStyle, ...chartConfig?.trader.bar, }}
+                xAxis={{ ...InitialXAxis, ...chartConfig?.trader.bar, }}
+            />
         </div>
     );
 }
