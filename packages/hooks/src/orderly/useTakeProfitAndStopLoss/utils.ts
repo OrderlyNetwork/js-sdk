@@ -74,7 +74,7 @@ export function priceToOffset(
   }
 
   if (symbol) {
-    return decimal!.abs().todp(symbol.quote_dp).toNumber();
+    return decimal!.abs().todp(symbol.quote_dp, 4).toNumber();
   }
 
   return decimal!.abs().toNumber();
@@ -229,7 +229,7 @@ export function priceToPnl(
   }
 
   if (symbol) {
-    return decimal.todp(symbol.quote_dp).toNumber();
+    return decimal.todp(symbol.quote_dp, 4).toNumber();
   }
 
   return decimal.toNumber();
@@ -334,7 +334,7 @@ export function calculateHelper(
 
   return {
     [`${keyPrefix}trigger_price`]: symbol
-      ? new Decimal(Number(trigger_price)).todp(symbol.quote_dp).toNumber()
+      ? new Decimal(Number(trigger_price)).todp(symbol.quote_dp, 4).toNumber()
       : trigger_price,
     [`${keyPrefix}offset`]:
       offset ??
