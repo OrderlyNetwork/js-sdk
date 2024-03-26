@@ -72,7 +72,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                             { text: `${(firstCode?.referrer_rebate_rate || 0) * 100}%`, gradient: true },
                             { text: " WOOFi Pro net fee that deduct Orderly fee." },
                         ]} />}
-                        valueClassName="orderly-bg-gradient-to-r orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-bg-clip-text orderly-text-transparent"
+                        valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
                     />
                     <Info
                         title="Share"
@@ -115,7 +115,7 @@ const Info: FC<{
                     <div><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>
                 </Tooltip>
             </div>
-            <div className={cn("orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px]", props.valueClassName)}>
+            <div className={cn("orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px] orderly-mt-1", props.valueClassName)}>
                 <Numeral rule="percentages" precision={0}>
                     {value}
                 </Numeral>
