@@ -29,7 +29,7 @@ export const Rebates: FC<{
 
             const volume = dailyVolume?.filter((item) => {
                 return compareDate(new Date(createdTime), new Date(item.date));
-            }).reduce((c, item) => c + item.perp_volume, 0);
+            })?.[0];
             if (volume) {
                 return {...item, volume};
             }
@@ -38,7 +38,6 @@ export const Rebates: FC<{
 
         });
 
-        return [];
     }, [distributionData, dailyVolume]);
 
     let displayDate = undefined;

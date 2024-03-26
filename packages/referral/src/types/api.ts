@@ -40,7 +40,7 @@ export declare namespace API {
 
     export type Referee = {
         "referer_code"?: string,
-        "referee_rebate_rate": any,
+        "referee_rebate_rate"?: number,
         "1d_referee_rebate": number,
         "7d_referee_rebate": number,
         "30d_referee_rebate": number,

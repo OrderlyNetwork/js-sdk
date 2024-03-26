@@ -5,6 +5,7 @@ import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
 import { formatTime, formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
+import { AutoHideText } from "../../components/autoHideText";
 
 export const RefereesList: FC<{
     dateText?: string,
@@ -38,7 +39,7 @@ const _SmallReferees: FC<{
 
     const renderItem = (item: any, index: number) => {
         const date = formatYMDTime(item?.code_binding_time);
-        const addres = item?.use_address;
+        const addres = item?.user_address;
         const code = item?.referral_code;
         const vol = item?.volume;
         const totalCommission = item?.referral_rebate;
@@ -170,7 +171,7 @@ export const RefereesCell: FC<{
             <Statistic
                 label={label}
                 labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
-                value={value}
+                value={(<AutoHideText text={value}/>)}
                 valueClassName="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80"
                 rule={rule}
                 className={className}

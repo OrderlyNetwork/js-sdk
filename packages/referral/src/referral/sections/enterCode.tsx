@@ -54,7 +54,7 @@ export const ReferralInputCode = create<{
   const checkInput = (code: string) => {
     const regex = /^[A-Z0-9]+$/;
     
-    if (regex.test(code) && code.length >= 4 && code.length <= 6) {
+    if (regex.test(code) && code.length >= 4 && code.length <= 10) {
       setErrorInfo("");
     } else {
       setErrorInfo("This referral code does not exist.");

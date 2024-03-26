@@ -49,7 +49,7 @@ const _SmallCommission: FC<{
 
 
     const renderItem = (item: any, index: number) => {
-        const date = formatYMDTime(item?.updated_time);
+        const date = formatYMDTime(item?.created_time);
         const amount = item?.amount;
         const vol = item?.volume;
         return <CommissionCell key={index} date={date || ""} commission={amount} vol={vol} />;
@@ -79,7 +79,7 @@ const _BigCommission: FC<{
         return [
             {
                 title: "Date",
-                dataIndex: "updated_time",
+                dataIndex: "created_time",
                 className: "orderly-h-[52px]",
 
                 render: (value, record) => {

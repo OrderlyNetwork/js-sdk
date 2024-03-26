@@ -17,7 +17,7 @@ export const Summary: FC<{ className?: string }> = (props) => {
         if (!referralInfo) return 0;
         // 
         switch (filterType) {
-            case "All": return referralInfo.referrer_info.total_traded;
+            case "All": return referralInfo.referrer_info.total_referrer_rebate;
             case "1D":  return referralInfo.referrer_info["1d_referrer_rebate"];
             case "7D":  return referralInfo.referrer_info["7d_referrer_rebate"];
             case "30D": return referralInfo.referrer_info["30d_referrer_rebate"];
@@ -36,10 +36,10 @@ export const Summary: FC<{ className?: string }> = (props) => {
     const referees = useMemo(() => {
         if (!referralInfo) return 0;
         switch (filterType) {
-            case "All": return referralInfo.referrer_info.total_referee_fee;
-            case "1D":  return referralInfo.referrer_info["1d_referee_fee"];
-            case "7D":  return referralInfo.referrer_info["7d_referee_fee"];
-            case "30D": return referralInfo.referrer_info["30d_referee_fee"];
+            case "All": return referralInfo.referrer_info.total_invites;
+            case "1D":  return referralInfo.referrer_info["1d_invites"];
+            case "7D":  return referralInfo.referrer_info["7d_invites"];
+            case "30D": return referralInfo.referrer_info["30d_invites"];
         }
     }, [referralInfo, , filterType]);
 
