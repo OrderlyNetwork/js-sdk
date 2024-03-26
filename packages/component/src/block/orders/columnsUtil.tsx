@@ -18,9 +18,9 @@ import { AlgoOrderRootType } from "@orderly.network/types";
 export const columnsBasis = (props: {
   status?: OrderStatus;
   onSymbolChange?: (symbol: API.Symbol) => void;
-}): Column<API.Order>[] => {
+}): Column<API.Order | API.AlgoOrder>[] => {
   const { status, onSymbolChange } = props || {};
-  const columns: Column<API.Order>[] = [
+  const columns: Column<API.Order | API.AlgoOrder>[] = [
     {
       title: "Instrument",
       dataIndex: "symbol",

@@ -22,8 +22,6 @@ export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
     const cols = columnsBasis({ onSymbolChange: props.onSymbolChange });
 
-    //
-
     cols[2] = {
       title: "Side",
       className: "orderly-h-[48px]",
@@ -80,7 +78,7 @@ export const Listview: FC<Props> = (props) => {
 
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
-      <Table
+      <Table<API.AlgoOrder | API.Order>
         bordered
         justified
         showMaskElement={false}
@@ -94,11 +92,13 @@ export const Listview: FC<Props> = (props) => {
           props.className
         )}
         generatedRowKey={(record, index) =>
-          `${index}${record.order_id || record.algo_order_id}`
+          `${index}${(record as API.Order).order_id || record.algo_order_id}`
         }
         onRow={(record) => {
-          // console.log(record);
-          if (record.status === OrderStatus.CANCELLED) {
+          if (
+            (record as API.Order).status === OrderStatus.CANCELLED ||
+            (record as API.AlgoOrder).algo_status === OrderStatus.CANCELLED
+          ) {
             return {
               className: "orderly-text-base-contrast-20",
               "data-cancelled": "true",
