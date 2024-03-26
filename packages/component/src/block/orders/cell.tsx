@@ -8,9 +8,12 @@ import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { OrderListContext } from "./shared/orderListContext";
 import { SymbolContext } from "@/provider";
+import { AlgoOrderRootType } from "@orderly.network/types";
+import { utils } from "@orderly.network/hooks";
+import { useTPSLOrderRowContext } from "../tp_sl/tpslOrderRowContext";
 
 interface OrderCellProps {
-  order: API.OrderExt;
+  order: API.OrderExt | API.AlgoOrderExt;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
@@ -20,6 +23,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
 
   const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
+  const { position } = useTPSLOrderRowContext();
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   // console.log("price node", order);
@@ -46,12 +50,58 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     window.scrollTo(0, 0);
   };
 
+  const tpslInfo = useMemo(() => {
+    if (!("algo_type" in order)) {
+      return null;
+    }
+    const tp_sl = utils.findTPSLFromOrder(order);
+    const keys = [];
+    if (tp_sl.tp_trigger_price) {
+      keys.push("TP");
+    }
+
+    if (tp_sl.sl_trigger_price) {
+      keys.push("SL");
+    }
+
+    if (keys.length === 0) {
+      return null;
+    }
+
+    if (keys.length === 2) {
+      keys.splice(1, 0, "/");
+    }
+
+    return (
+      <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-mt-1">
+        {order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ? (
+          <Tag className="orderly-bg-primary/20" size="small">
+            Position
+          </Tag>
+        ) : null}
+        <Tag
+          className="orderly-bg-white/10 orderly-text-base-contrast-54"
+          size="small"
+        >
+          {keys.map((key) => (
+            <span key={key}>{key}</span>
+          ))}
+        </Tag>
+      </div>
+    );
+  }, [order]);
+
   return (
     <div className="orderly-px-4 orderly-py-2">
-      <div className="orderly-flex orderly-items-center orderly-gap-2 orderly-mb-1">
-        {typeTag}
-        <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
-          <Text rule="symbol">{order.symbol}</Text>
+      <div className="orderly-mb-1 orderly-flex orderly-items-end orderly-justify-between">
+        <div className="orderly-flex-col">
+          <div className="orderly-flex orderly-items-center orderly-gap-2 ">
+            {typeTag}
+            <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
+              <Text rule="symbol">{order.symbol}</Text>
+            </div>
+          </div>
+          {tpslInfo}
         </div>
         <div className="orderly-text-4xs orderly-text-base-contrast-36">
           <Text rule="date">{order.created_time}</Text>
@@ -121,7 +171,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           }
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={isStopMarket ? <span>Market</span>: order.price ?? "-"}
+          value={isStopMarket ? <span>Market</span> : order.price ?? "-"}
           rule="price"
           precision={quote_dp}
         />
@@ -147,7 +197,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           size="small"
           color="tertiary"
           className="orderly-w-[120px] orderly-text-4xs"
-          onClick={() => onEditOrder(order)}
+          onClick={() => onEditOrder(order, position)}
         >
           Edit
         </Button>

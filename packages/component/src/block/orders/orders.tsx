@@ -8,6 +8,7 @@ import { API, OrderEntity } from "@orderly.network/types";
 import { OrderListContext, OrderListProvider } from "./shared/orderListContext";
 import { SymbolProvider } from "@/provider";
 import { OrdersViewProps } from "./types";
+import { TPSLOrderRowProvider } from "../tp_sl/tpslOrderRowContext";
 
 export const OrdersView: FC<OrdersViewProps> = (props) => {
   return (
@@ -30,7 +31,9 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
           renderSeparator={(_, index) => <Divider />}
           renderItem={(item, index) => (
             <SymbolProvider symbol={item.symbol}>
-              <OrderCell order={item} onSymbolChange={props.onSymbolChange} />
+              <TPSLOrderRowProvider order={item}>
+                <OrderCell order={item} onSymbolChange={props.onSymbolChange} />
+              </TPSLOrderRowProvider>
             </SymbolProvider>
           )}
           loadMore={props.loadMore}

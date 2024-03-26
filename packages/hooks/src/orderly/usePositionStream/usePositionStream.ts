@@ -17,7 +17,6 @@ import { parseHolding } from "../../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useMarketsStream } from "../useMarketsStream";
 import { useOrderStream } from "../orderlyHooks";
-import { OrderType } from "@orderly.network/react/lib/block/orderEntry/types";
 import {
   findPositionTPSLFromOrders,
   findTPSLFromOrder,

@@ -23,7 +23,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
-import { VerifyResult } from "../utils/createOrder";
+// import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -410,12 +410,12 @@ export function useOrderEntry(
               if (res.success) {
                 // TODO: remove when the WS service is fixed
 
-                if (Array.isArray(res.data.rows)) {
-                  ee.emit("algoOrder:cache", {
-                    ...res.data.rows[0],
-                    trigger_price: data.trigger_price,
-                  });
-                }
+                // if (Array.isArray(res.data.rows)) {
+                //   ee.emit("algoOrder:cache", {
+                //     ...res.data.rows[0],
+                //     trigger_price: data.trigger_price,
+                //   });
+                // }
 
                 resolve(res.data);
               } else {
@@ -541,7 +541,7 @@ export function useOrderEntry(
   useEffect(() => {
     if (!markPrice) return;
     // validate order data;
-    validator(formattedOrder)?.then((err: VerifyResult) => {
+    validator(formattedOrder)?.then((err: any) => {
       setErrors(err);
     });
   }, [

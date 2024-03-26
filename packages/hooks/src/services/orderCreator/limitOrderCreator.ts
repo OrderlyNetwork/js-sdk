@@ -4,7 +4,6 @@ import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
 import { pick } from "ramda";
-import { AlgoOrderEntry } from "@orderly.network/types";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 

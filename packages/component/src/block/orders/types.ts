@@ -8,6 +8,7 @@ export interface OrdersViewProps {
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
   cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
   editAlgoOrder: (orderId: string, order: OrderEntity) => Promise<any>;
+  cancelTPSLOrder: (orderId: number, rootAlgoOrderId: number) => Promise<any>;
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
   symbol: string;

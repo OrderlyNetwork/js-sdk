@@ -12,37 +12,42 @@ import { OrderFactory } from "../../services/orderCreator/factory";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
 import { findTPSLFromOrder } from "../usePositionStream/utils";
-
-export type ValidateError = {
-  tp_tigger_price?: string | null;
-  sl_tigger_price?: string | null;
-  qty?: string | null;
-};
+import { useSymbolsInfo } from "../useSymbolsInfo";
+import { useMarkPrice } from "../useMarkPrice";
 
 export type ComputedAlgoOrder = Partial<
-  AlgoOrderEntity<AlgoOrderRootType.TP_SL> & {
-    /**
-     * Computed take profit
-     */
-    tp_pnl: number;
-    tp_offset: number;
-    tp_offset_percentage: number;
+  AlgoOrderEntity<
+    AlgoOrderRootType.TP_SL & {
+      /**
+       * Computed take profit
+       */
+      tp_pnl: number;
+      tp_offset: number;
+      tp_offset_percentage: number;
 
-    /**
-     * Computed stop loss
-     */
-    sl_pnl: number;
-    sl_offset: number;
-    sl_offset_percentage: number;
-  }
+      /**
+       * Computed stop loss
+       */
+      sl_pnl: number;
+      sl_offset: number;
+      sl_offset_percentage: number;
+    }
+  >
 >;
+
+export type ValidateError = {
+  [P in keyof ComputedAlgoOrder]?: {
+    type: string;
+    message: string;
+  };
+};
 
 /**
  * @hidden
  */
 export const useTaskProfitAndStopLossInternal = (
   position: Partial<API.PositionTPSLExt> &
-    Pick<API.PositionTPSLExt, "symbol" | "average_open_price">,
+    Pick<API.PositionTPSLExt, "symbol" | "average_open_price" | "position_qty">,
   options?: {
     defaultOrder?: API.AlgoOrder;
   }
@@ -54,6 +59,7 @@ export const useTaskProfitAndStopLossInternal = (
      */
     setValue: (key: UpdateOrderKey, value: number | string) => void;
     setValues: (values: Partial<ComputedAlgoOrder>) => void;
+    // getOrderEntity: () => AlgoOrderEntity<AlgoOrderRootType.TP_SL|AlgoOrderRootType.POSITIONAL_TP_SL>;
     /**
      * Submit the take profit and stop loss order
      */
@@ -62,17 +68,26 @@ export const useTaskProfitAndStopLossInternal = (
      * Create the take profit and stop loss order, auto-detect the order type
      */
     create: () => Promise<void>;
-    update: (orderId: string) => Promise<any>;
+    update: (orderId: number) => Promise<any>;
     error: ValidateError | null;
+    validate: () => Promise<
+      AlgoOrderEntity<
+        AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
+      >
+    >;
   }
 ] => {
   const [order, setOrder] = useState<ComputedAlgoOrder>({
-    symbol: position.symbol,
+    algo_order_id: options?.defaultOrder?.algo_order_id,
+    symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity: options?.defaultOrder?.quantity || position.position_qty,
-    // tp_trigger_price: options?.defaultOrder?.tp_trigger_price,
-    // sl_trigger_price: options?.defaultOrder?.sl_trigger_price,
+    quantity:
+      options?.defaultOrder?.quantity || Math.abs(position.position_qty),
+    algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
   });
+
+  const symbolInfo = useSymbolsInfo()[position.symbol!]();
+  const { data: markPrice } = useMarkPrice(order.symbol!);
 
   const [doCreateOrder] = useMutation("/v1/algo/order");
   const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
@@ -91,23 +106,46 @@ export const useTaskProfitAndStopLossInternal = (
     }
   }, []);
 
-  const setOrderValue = (key: UpdateOrderKey, value: number | string) => {
-    console.log("updateOrder", key, value);
-    // if key is quantity;
-    if (key === "quantity") {
-      setOrder((prev) => ({ ...prev, quantity: value }));
-      // TODO: calulate the tp and sl
-      return;
+  const _setOrderValue = (key: UpdateOrderKey, value: number | string) => {
+    console.log("updateOrder", key, value, position.position_qty);
+    const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
+
+    if (key === "sl_pnl") {
+      value = value ? `-${value}` : "";
     }
 
     const newValue = calculateHelper(key, {
       key,
       value,
       entryPrice: position.average_open_price!,
-      qty: position.position_qty!,
-      orderSide: position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL,
+      qty:
+        side === OrderSide.BUY
+          ? Number(order.quantity)!
+          : -Number(order.quantity)!,
+      orderSide: side,
     });
+
     setOrder((prev) => ({ ...prev, ...newValue }));
+  };
+
+  const setOrderValue = (key: UpdateOrderKey, value: number | string) => {
+    // console.log("updateOrder", key, value);
+    // if key is quantity;
+    if (key === "quantity") {
+      setOrder((prev) => ({ ...prev, quantity: value }));
+
+      if (typeof order.sl_trigger_price !== "undefined") {
+        _setOrderValue("sl_trigger_price", order.sl_trigger_price);
+      }
+
+      if (typeof order.tp_trigger_price !== "undefined") {
+        _setOrderValue("tp_trigger_price", order.tp_trigger_price);
+      }
+
+      return;
+    }
+
+    _setOrderValue(key, value);
   };
 
   const setValues = (values: Partial<ComputedAlgoOrder>) => {
@@ -120,20 +158,45 @@ export const useTaskProfitAndStopLossInternal = (
     });
   };
 
-  const validate = (): ValidateError => {
-    const errors: ValidateError = {};
+  const validate = (): Promise<
+    AlgoOrderEntity<
+      AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
+    >
+  > => {
+    const orderCreator = getOrderCreator();
 
-    return errors;
+    return new Promise((resolve, reject) => {
+      return orderCreator
+        .validate(order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>, {
+          symbol: symbolInfo,
+          maxQty: Math.abs(position.position_qty),
+          markPrice,
+        })
+        .then((errors) => {
+          console.log("errors", errors);
+
+          if (errors) {
+            setError(errors);
+            return reject(errors);
+          }
+
+          resolve(
+            orderCreator.create(
+              order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>
+            )
+          );
+        });
+    });
   };
 
   useEffect(() => {
-    setError(validate());
+    // setError(validate());
   }, [order]);
 
   const compare = (): boolean => {
     const quantityNum = Number(order.quantity);
     if (isNaN(quantityNum)) return false;
-    return quantityNum === Number(position.position_qty);
+    return quantityNum === Math.abs(Number(position.position_qty));
   };
 
   const getOrderCreator = () => {
@@ -178,8 +241,6 @@ export const useTaskProfitAndStopLossInternal = (
       throw new SDKError("No child orders");
     }
 
-    console.log("-----", orderBody, orderCreator);
-
     return doCreateOrder(orderBody);
   };
 
@@ -194,9 +255,14 @@ export const useTaskProfitAndStopLossInternal = (
     const orderCreator = getOrderCreator() as TPSLPositionOrderCreator;
 
     const newOrder = orderCreator.crateUpdateOrder(
+      // @ts-ignore
       order,
       options?.defaultOrder
     );
+
+    if (newOrder.child_orders.length === 0) {
+      return Promise.resolve("Not any order needs to update");
+    }
 
     const needDelete =
       newOrder.child_orders.filter(
@@ -226,7 +292,7 @@ export const useTaskProfitAndStopLossInternal = (
       setValues,
       // createPositionTPSL: submit,
       // createTPSL: submit,
-
+      validate,
       error,
     },
   ];

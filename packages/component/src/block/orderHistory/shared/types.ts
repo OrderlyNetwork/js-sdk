@@ -9,7 +9,13 @@ export interface OrderHistoryListViewProps {
   onSideChange?: (side: OrderSide) => void;
   onStatusChange?: (status: OrderStatus) => void;
   onSymbolChange?: (symbol: API.Symbol) => void;
-  onCancelOrder: (orderId: number | OrderEntity, symbol: string) => Promise<any>;
+  onCancelOrder: (
+    orderId: number | OrderEntity,
+    symbol: string
+  ) => Promise<any>;
+  onCancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
+
+  // cancelTPSLOrder: (orderId: number, rootAlgoOrderId: number) => Promise<any>;
   loadMore: () => void;
   className?: string;
 }

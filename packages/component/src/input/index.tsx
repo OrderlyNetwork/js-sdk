@@ -3,6 +3,7 @@ import React, {
   InputHTMLAttributes,
   forwardRef,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -73,6 +74,9 @@ export interface InputProps
   // disabled?: boolean;
   containerClassName?: string;
   onValueChange?: (value: string) => void;
+  /**
+   * Whether to display the thousandth symbol
+   */
   thousandSeparator?: boolean;
 }
 
@@ -93,6 +97,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       loading,
       onChange,
       onValueChange,
+      thousandSeparator,
+      id,
       ...props
     },
     ref
@@ -101,6 +107,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const [cursor, setCursor] = useState<number | null>(null);
     const innerInputRef = useRef<HTMLInputElement>(null);
     const prevInputValue = useRef<string | null>(null);
+    const cid = useId();
 
     useEffect(() => {
       if (!ref) return;
@@ -156,7 +163,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
       if (typeof onValueChange === "function") {
         let value = event.target.value;
-        if (props.thousandSeparator) {
+
+        if (thousandSeparator) {
           value = parseInputHelper(value);
         }
         onValueChange(value);
@@ -205,7 +213,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (typeof prefix === "string") {
         return (
           <InputMask
-            name={props.name}
+            name={id || cid}
             className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
           >
             {prefix}
@@ -224,7 +232,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (typeof suffix === "string") {
         return (
           <InputMask
-            name={props.name}
+            name={id || cid}
             className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
           >
             {suffix}
@@ -266,6 +274,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onBlur={onInputBlur}
             onChange={onInputChange}
             {...(props as any)}
+            id={id || cid}
             disabled={disabled}
             className={cn(
               "orderly-input",

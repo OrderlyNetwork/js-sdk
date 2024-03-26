@@ -1,4 +1,4 @@
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide, PositionSide } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -185,7 +185,7 @@ export function priceToPnl(inputs: {
   entryPrice: number;
   orderSide: OrderSide;
   orderType: AlgoOrderType;
-}) {
+}): number {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
 
   if (orderSide === OrderSide.BUY) {
@@ -211,6 +211,8 @@ export function priceToPnl(inputs: {
       .mul(new Decimal(price).minus(new Decimal(entryPrice)))
       .toNumber();
   }
+
+  return 0;
 }
 
 export function calculateHelper(

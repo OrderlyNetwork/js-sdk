@@ -38,17 +38,16 @@ export const useOrderStream = (
     size?: number;
     side?: OrderSide;
     /**
-     * Include the algo order type
+     * Include the order type
      * @default ["ALL"]
      */
     includes?: CombineOrderType[];
     /**
-     * Exclude the algo order type
+     * Exclude the order type
      * @default []
      */
     excludes?: CombineOrderType[];
   },
-
   options?: {
     /**
      * Keep the state update alive
@@ -163,10 +162,22 @@ export const useOrderStream = (
       return flattenOrders;
     }
     return flattenOrders.map((item) => {
-      return {
+      const order = {
         ...item,
         mark_price: (markPrices as any)[item.symbol] ?? 0,
       };
+
+      ///TODO: remove this when BE provides the correct data
+      // console.log("------------->>>>>>>>", order);
+      if (
+        order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
+        order.algo_type === AlgoOrderRootType.TP_SL
+      ) {
+        order.quantity = order.child_orders[0].quantity;
+      }
+      ///-----------------todo end----------------
+
+      return order;
     });
   }, [flattenOrders, markPrices, status]);
 
@@ -210,12 +221,12 @@ export const useOrderStream = (
   const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
     return _updateOrder(orderId, order, "algoOrder").then((res) => {
       // TODO: remove this when the WS service provides the correct data
-      ee.emit("algoOrder:cache", {
-        // ...res.data.rows[0],
-        ...order,
-        order_id: Number(orderId),
-        // trigger_price: price,
-      });
+      // ee.emit("algoOrder:cache", {
+      //   // ...res.data.rows[0],
+      //   ...order,
+      //   order_id: Number(orderId),
+      //   // trigger_price: price,
+      // });
       //------------fix end----------------
       return res;
     });
@@ -277,6 +288,21 @@ export const useOrderStream = (
     ordersResponse.setSize(ordersResponse.size + 1);
   };
 
+  const cancelTPSLOrder = useCallback(
+    (orderId: number, rootAlgoOrderId: number): Promise<any> => {
+      return doUpdateAlgoOrder({
+        order_id: rootAlgoOrderId,
+        child_orders: [
+          {
+            order_id: orderId,
+            is_activated: false,
+          },
+        ],
+      });
+    },
+    []
+  );
+
   return [
     orders,
     {
@@ -289,6 +315,7 @@ export const useOrderStream = (
       cancelOrder,
       updateAlgoOrder,
       cancelAlgoOrder,
+      cancelTPSLOrder,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

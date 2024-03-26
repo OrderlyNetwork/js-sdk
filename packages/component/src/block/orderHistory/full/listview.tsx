@@ -1,6 +1,6 @@
 import { FC, useMemo, useRef } from "react";
 import { Table } from "@/table";
-import { OrderStatus, OrderSide, API } from "@orderly.network/types";
+import { OrderStatus, OrderSide, API, OrderType } from "@orderly.network/types";
 import { cx } from "class-variance-authority";
 import { upperCaseFirstLetter } from "@/utils/string";
 import { SymbolProvider } from "@/provider";
@@ -54,6 +54,9 @@ export const Listview: FC<Props> = (props) => {
       dataIndex: "quantity",
       width: 200,
       render: (value: string, record: any) => {
+        if (record.type === OrderType.CLOSE_POSITION) {
+          return "Entire position";
+        }
         return (
           <span
             className={cx("orderly-font-semibold", {

@@ -3,7 +3,7 @@ import { TPSLOrderEditButton } from "@/block/commons/tpslOrderEditButton";
 import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
 
 export const EditButton: FC<{}> = (props) => {
-  const { getRelatedPosition, order, position } = useTPSLOrderRowContext();
+  const { order, position } = useTPSLOrderRowContext();
 
   return (
     <TPSLOrderEditButton
@@ -13,6 +13,7 @@ export const EditButton: FC<{}> = (props) => {
       order={order}
       position={position}
       maxQty={position?.position_qty}
+      isEditing
     />
   );
 };

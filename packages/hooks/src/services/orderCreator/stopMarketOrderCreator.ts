@@ -1,5 +1,5 @@
 import {
-  AlgoOrderEntry,
+  AlgoOrderEntity,
   AlgoOrderRootType,
   OrderEntity,
   OrderType,
@@ -10,9 +10,9 @@ import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { pick } from "ramda";
 import { BaseOrderCreator } from "./baseCreator";
 
-export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
+export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   create(
-    values: AlgoOrderEntry & {
+    values: AlgoOrderEntity & {
       order_quantity: number;
       order_price: number;
     }

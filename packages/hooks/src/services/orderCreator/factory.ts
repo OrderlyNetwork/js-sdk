@@ -9,8 +9,7 @@ import { PostOnlyOrderCreator } from "./postOnlyCreator";
 import { FOKOrderCreator } from "./fokCreator";
 import { IOCOrderCreator } from "./iocCreator";
 import { AlgoOrderRootType } from "@orderly.network/types";
-import { OrderEntity } from "@orderly.network/types";
-import { AlgoOrderEntry } from "@orderly.network/types";
+
 import { TPSLOrderCreator } from "./tpslOrderCreator";
 import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
 

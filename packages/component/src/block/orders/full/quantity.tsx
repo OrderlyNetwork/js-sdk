@@ -28,6 +28,10 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
+  useEffect(() => {
+    setQuantity(order.quantity.toString());
+  }, [props.order.quantity]);
+
   if (!editting && open <= 0) {
     return (
       <NormalState order={order} quantity={quantity} setEditing={setEditting} />
@@ -51,6 +55,7 @@ const NormalState: FC<{
   order: any;
   quantity: string;
   setEditing: any;
+  partial?: boolean;
 }> = (props) => {
   const { order, quantity } = props;
 

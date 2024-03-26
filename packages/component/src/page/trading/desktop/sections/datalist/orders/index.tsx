@@ -60,9 +60,8 @@ export const MyOrders: FC<Props> = (props) => {
   const { state } = useAccount();
 
   const onCancelOrder = useCallback(
-    (orderId: number | OrderEntity, symbol: string): Promise<any> => {
-      // @ts-ignore
-      return cancelOrder(orderId, symbol);
+    (orderId: number, symbol: string): Promise<any> => {
+      return cancelOrder(orderId as number, symbol);
     },
     []
   );

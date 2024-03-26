@@ -14,6 +14,8 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
     // @ts-ignore
     <OrderListProvider
       cancelOrder={props.onCancelOrder}
+      cancelAlgoOrder={props.onCancelAlgoOrder}
+      // cancelTPSLOrder={props.cancelTPSLOrder}
       editOrder={function (orderId: string, order: OrderEntity): Promise<any> {
         throw new Error("Function not implemented.");
       }}

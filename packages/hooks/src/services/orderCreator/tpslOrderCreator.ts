@@ -1,21 +1,15 @@
-import {
-  OrderEntity,
-  AlgoOrderEntry,
-  OrderType,
-  API,
-} from "@orderly.network/types";
-import { BaseOrderCreator } from "./baseCreator";
-import { ValuesDepConfig, OrderFormEntity, VerifyResult } from "./interface";
+import { AlgoOrderEntity, OrderType, API } from "@orderly.network/types";
 import { TriggerPriceType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types/src/order";
 import { OrderSide } from "@orderly.network/types";
+import { BaseAlgoOrderCreator } from "./baseAlgoCreator";
 
-export class TPSLOrderCreator extends BaseOrderCreator<
-  AlgoOrderEntry<AlgoOrderRootType.TP_SL>
+export class TPSLOrderCreator extends BaseAlgoOrderCreator<
+  AlgoOrderEntity<AlgoOrderRootType.TP_SL>
 > {
   create(
-    values: AlgoOrderEntry<AlgoOrderRootType.TP_SL>
+    values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>
     // config: ValuesDepConfig
   ) {
     const side =
@@ -23,7 +17,7 @@ export class TPSLOrderCreator extends BaseOrderCreator<
 
     const child_orders = [];
 
-    if (values.tp_trigger_price) {
+    if (typeof values.tp_trigger_price !== "undefined") {
       child_orders.push({
         algo_type: AlgoOrderType.TAKE_PROFIT,
         reduce_only: true,
@@ -35,7 +29,7 @@ export class TPSLOrderCreator extends BaseOrderCreator<
       });
     }
 
-    if (values.sl_trigger_price) {
+    if (typeof values.sl_trigger_price !== "undefined") {
       child_orders.push({
         algo_type: AlgoOrderType.STOP_LOSS,
         reduce_only: true,
@@ -58,7 +52,7 @@ export class TPSLOrderCreator extends BaseOrderCreator<
   }
 
   crateUpdateOrder(
-    values: AlgoOrderEntry<AlgoOrderRootType.TP_SL>,
+    values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
     oldValue: API.AlgoOrder
   ) {
     const data = this.create(values);
@@ -98,15 +92,22 @@ export class TPSLOrderCreator extends BaseOrderCreator<
       }
     });
 
+    if (needUpdateQty && newData.length < 2) {
+      // if quantity is changed, need to update all child orders
+      const missingOrders = oldValue.child_orders.filter(
+        (order) => order.algo_order_id !== newData[0].order_id
+      );
+
+      if (missingOrders.length) {
+        newData.push({
+          quantity: Number(data.quantity),
+          order_id: missingOrders[0].algo_order_id,
+        });
+      }
+    }
+
     return {
       child_orders: newData,
     };
-  }
-
-  validate(
-    values: OrderFormEntity,
-    config: ValuesDepConfig
-  ): Promise<VerifyResult> {
-    throw new Error("Method not implemented.");
   }
 }

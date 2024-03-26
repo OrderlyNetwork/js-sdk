@@ -41,10 +41,6 @@ export const TPSLOrderRowProvider: FC<
     order: API.AlgoOrderExt;
   }>
 > = (props) => {
-  const { sl_trigger_price, tp_trigger_price } = utils.findTPSLFromOrder(
-    props.order
-  );
-
   const [position, setPosition] = useState<API.PositionTPSLExt>();
 
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
@@ -73,10 +69,19 @@ export const TPSLOrderRowProvider: FC<
     );
   };
 
+  const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
+    if (!("algo_type" in props.order)) {
+      return {};
+    }
+    return utils.findTPSLFromOrder(props.order);
+  }, [props.order]);
+
   useEffect(() => {
-    const position = getRelatedPosition(props.order.symbol);
-    if (position) {
-      setPosition(position);
+    if ("algo_type" in props.order) {
+      const position = getRelatedPosition(props.order.symbol);
+      if (position) {
+        setPosition(position);
+      }
     }
   }, [props.order.symbol]);
 

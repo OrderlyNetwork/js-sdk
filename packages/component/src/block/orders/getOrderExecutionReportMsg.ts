@@ -3,9 +3,16 @@ import {
   transSymbolformString,
 } from "@orderly.network/utils";
 import { parseNumber } from "@/utils/num";
+import { API } from "@orderly.network/types";
 
-export function getOrderExecutionReportMsg(data: any, symbolsInfo: any) {
-  const { symbol, status, side, quantity, totalExecutedQuantity } = data;
+export function getOrderExecutionReportMsg(
+  data: API.AlgoOrder | API.Order,
+  symbolsInfo: any
+) {
+  const { symbol, side, quantity } = data;
+  const total_executed_quantity =
+    "total_executed_quantity" in data ? data.total_executed_quantity : 0;
+  const status = "status" in data ? data.status : data.algo_status;
   const getSymbolInfo = symbolsInfo[symbol];
   const base_dp = getSymbolInfo("base_dp");
   const displaySide = capitalizeString(side);
@@ -26,8 +33,8 @@ export function getOrderExecutionReportMsg(data: any, symbolsInfo: any) {
     case "PARTIAL_FILLED":
       const displayTotalExecutedQuantity =
         base_dp === undefined
-          ? totalExecutedQuantity
-          : parseNumber(totalExecutedQuantity, { precision: base_dp });
+          ? total_executed_quantity
+          : parseNumber(total_executed_quantity, { precision: base_dp });
       title = "Order filled";
       msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
@@ -41,7 +48,7 @@ export function getOrderExecutionReportMsg(data: any, symbolsInfo: any) {
       break;
     case "REPLACED":
       title = "Order edited";
-      msg = `${side} ${displaySymbol} ${totalExecutedQuantity} / ${displayQuantity}`;
+      msg = `${side} ${displaySymbol} ${total_executed_quantity} / ${displayQuantity}`;
       break;
     default:
       break;

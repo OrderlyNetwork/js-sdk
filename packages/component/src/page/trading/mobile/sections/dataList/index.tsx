@@ -24,7 +24,7 @@ export const DataListView = () => {
         <PositionPane />
       </TabPane>
       <TabPane
-        title={<MemoizedOrdersTabTitle />}
+        title={<MemoizedOrdersTabTitle excludes={[]} />}
         value="orders"
         id="orderly-data-list-pending"
       >

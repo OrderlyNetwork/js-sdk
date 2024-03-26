@@ -1,5 +1,5 @@
 import {
-  AlgoOrderEntry,
+  AlgoOrderEntity,
   AlgoOrderRootType,
   OrderEntity,
   TriggerPriceType,
@@ -13,17 +13,17 @@ import { pick } from "ramda";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
-export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntry> {
+export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   create(
-    values: AlgoOrderEntry & {
+    values: AlgoOrderEntity & {
       order_quantity: number;
       order_price: number;
     },
     config?: ValuesDepConfig
-  ): AlgoOrderEntry<AlgoOrderRootType.STOP> {
+  ): AlgoOrderEntity<AlgoOrderRootType.STOP> {
     this.totalToQuantity(values, config!);
 
-    const order: AlgoOrderEntry<AlgoOrderRootType.STOP> = {
+    const order: AlgoOrderEntity<AlgoOrderRootType.STOP> = {
       ...this.baseOrder(values as unknown as OrderEntity),
 
       trigger_price: values.trigger_price!,

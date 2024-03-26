@@ -68,7 +68,7 @@ describe("StopMarketOrderCreator", () => {
       reduce_only: false,
     };
 
-    const createdOrder = orderCreator.create(values as any, config as any);
+    const createdOrder = orderCreator.create(values as any);
 
     expect(createdOrder).toEqual(expectedOrder);
   });

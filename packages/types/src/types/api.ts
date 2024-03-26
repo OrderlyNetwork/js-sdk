@@ -110,6 +110,7 @@ export declare namespace API {
     fee_asset: string;
     client_order_id: null;
     average_executed_price: number;
+    visible_quantity: number;
     created_time: number;
     updated_time: number;
     reduce_only: boolean;
@@ -126,9 +127,9 @@ export declare namespace API {
     parent_algo_order_id: number;
     symbol: string;
     algo_type: string;
-    child_orders:AlgoOrder[];
+    child_orders: AlgoOrder[];
     side: string;
-    quantity: number|string;
+    quantity: number | string;
     is_triggered: boolean;
     trigger_price: number;
     trigger_price_type: string;
@@ -149,6 +150,8 @@ export declare namespace API {
   export interface AlgoOrderExt extends AlgoOrder {
     mark_price: string;
     position?: Partial<Position>;
+    tp_trigger_price?: number;
+    sl_trigger_price?: number;
   }
 
   export interface OrderResponse {
@@ -225,7 +228,7 @@ export declare namespace API {
     /**
      * related position tp/sl order
      */
-    algo_order?:AlgoOrder;
+    algo_order?: AlgoOrder;
   }
 
   export interface Trade {
@@ -413,5 +416,4 @@ export declare namespace WSMessage {
     rootAlgoStatus: string;
     algoStatus: string;
   }
-
 }

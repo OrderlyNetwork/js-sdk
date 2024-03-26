@@ -44,11 +44,9 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
     <DataCenterContext.Provider
       value={{
         regesterKeyHandler: (key, fun) => {
-          console.log("regesterKeyHandler", key);
           getKeyHandlerMapRef.current.set(key, fun);
         },
         unregisterKeyHandler: (key) => {
-          console.log("unregisterKeyHandler", key);
           getKeyHandlerMapRef.current.delete(key);
         },
       }}

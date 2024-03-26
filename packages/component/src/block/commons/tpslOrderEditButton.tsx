@@ -15,6 +15,7 @@ export const TPSLOrderEditButton: FC<{
   maxQty: number;
   position: API.PositionTPSLExt;
   disabled?: boolean;
+  isEditing?: boolean;
 }> = (props) => {
   const { onSubmit, order, maxQty, position, disabled } = props;
   const [open, setOpen] = useState(false);
@@ -78,6 +79,7 @@ export const TPSLOrderEditButton: FC<{
           order={order}
           position={position}
           canModifyQty={order.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL}
+          isEditing={props.isEditing}
         />
       </PopoverContent>
     </Popover>

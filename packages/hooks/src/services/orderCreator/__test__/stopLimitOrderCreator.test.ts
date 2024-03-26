@@ -1,6 +1,5 @@
 import { OrderEntity } from "@orderly.network/types";
 import { StopLimitOrderCreator } from "../stopLimitOrderCreator";
-import { AlgoOrderEntry } from "@orderly.network/types";
 
 describe("StopLimitOrderCreator", () => {
   let orderCreator: StopLimitOrderCreator;

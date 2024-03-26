@@ -15,6 +15,9 @@ export type {
   AlgoOrderEntity,
   TPSLOrderEntry,
   BaseAlgoOrderEntity,
+  Optional,
+  PositionSide,
+  RequireKeys,
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

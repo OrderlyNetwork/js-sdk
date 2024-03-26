@@ -103,7 +103,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
               {"Est. Total"}
             </span>
             <div className="orderly-inline-block">
-              <span>{commify(order.total || "" )}</span>
+              <span>{commify(order.total || "")}</span>
               <span className="orderly-text-base-contrast-36 orderly-ml-1">
                 {quote}
               </span>
@@ -111,12 +111,16 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
           </div>
         </div>
       </div>
-      {props.isTable ? <OrderConfirmCheckBox /> : undefined}
+      {props.isTable ? (
+        <div className="orderly-pt-3">
+          <OrderConfirmCheckBox />
+        </div>
+      ) : undefined}
     </div>
   );
 };
 
-const OrderConfirmCheckBox: FC<{
+export const OrderConfirmCheckBox: FC<{
   className?: string;
 }> = (props) => {
   const [needConfirm, setNeedConfirm] = useLocalStorage(
@@ -127,7 +131,7 @@ const OrderConfirmCheckBox: FC<{
   return (
     <div
       className={cn(
-        "orderly-flex orderly-items-center orderly-gap-2 orderly-pt-3",
+        "orderly-flex orderly-items-center orderly-gap-2",
         props.className
       )}
     >
@@ -135,8 +139,6 @@ const OrderConfirmCheckBox: FC<{
         id="orderConfirm"
         checked={!needConfirm}
         onCheckedChange={(checked) => {
-          console.log("checked", checked);
-
           setNeedConfirm(!!!checked);
         }}
       />

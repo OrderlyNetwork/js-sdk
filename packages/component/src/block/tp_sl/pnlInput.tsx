@@ -8,7 +8,8 @@ import {
 } from "@/dropdown/dropdown";
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { parseNumber } from "@/utils";
+import { cn, parseNumber } from "@/utils";
+import { commify } from "@orderly.network/utils";
 
 interface Props {
   type: "TP" | "SL";
@@ -49,8 +50,12 @@ export const PnlInput: FC<Props> = (props) => {
 
   const value = useMemo(() => {
     const val = props.values[mode as keyof Props["values"]];
-    if (!!val) {
-      return parseNumber(val, { rule: "price", precision: quote_db });
+    // if (!!val && !val.endsWith(".")) {
+    //   return parseNumber(val, { rule: "price", precision: quote_db });
+    // }
+
+    if (mode === PnLMode.PNL || mode === PnLMode.OFFSET) {
+      return commify(val);
     }
 
     return val;
@@ -60,14 +65,20 @@ export const PnlInput: FC<Props> = (props) => {
     <Input
       prefix={mode}
       placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
-      className={"orderly-text-right orderly-text-sm"}
+      className={cn(
+        "orderly-text-right orderly-text-sm",
+        Number(props.values.PNL) > 0
+          ? "orderly-text-trade-profit"
+          : "orderly-text-trade-loss"
+      )}
+      containerClassName={"desktop:orderly-bg-base-700 orderly-bg-base-500"}
       data-testid={props.testId}
       name={props.type}
       id={props.type}
       autoComplete={"off"}
       thousandSeparator
       suffix={
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <button
               className={

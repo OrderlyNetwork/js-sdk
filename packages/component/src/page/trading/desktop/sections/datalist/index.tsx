@@ -100,13 +100,13 @@ export const DataListView = () => {
         {/* <HistoryPane /> */}
         <MyOrders status={OrderStatus.FILLED} />
       </TabPane>
-      <TabPane title="Cancelled" value="cancelled" className="orderly-px-3">
-        {/* <HistoryPane /> */}
+      {/* <TabPane title="Cancelled" value="cancelled" className="orderly-px-3">
+        
         <MyOrders status={OrderStatus.CANCELLED} />
       </TabPane>
       <TabPane title="Rejected" value="rejected" className="orderly-px-3">
         <MyOrders status={OrderStatus.REJECTED} />
-      </TabPane>
+      </TabPane> */}
       <TabPane title="Order history" value="history" className="orderly-px-3">
         <HistoryView />
       </TabPane>

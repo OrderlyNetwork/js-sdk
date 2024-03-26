@@ -1,12 +1,17 @@
 import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
-import { memo } from "react";
+import { FC, memo } from "react";
 
-export const OrdersTabTitle = () => {
+export const OrdersTabTitle: FC<{
+  excludes?: AlgoOrderRootType[];
+}> = (props) => {
+  const {
+    excludes = [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  } = props;
   const [_, { total }] = useOrderStream(
     {
       status: OrderStatus.INCOMPLETE,
-      excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+      excludes,
     },
     {
       keeplive: true,

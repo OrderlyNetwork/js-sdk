@@ -37,6 +37,11 @@ export enum OrderSide {
   SELL = "SELL",
 }
 
+export enum PositionSide {
+  LONG = "LONG",
+  SHORT = "SHORT",
+}
+
 export enum OrderStatus {
   OPEN = "OPEN",
   NEW = "NEW",
@@ -75,8 +80,10 @@ export interface OrderEntity {
   trigger_price?: string | number;
 }
 
-type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-type RequireKeys<T extends object, K extends keyof T> = Required<Pick<T, K>> &
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type RequireKeys<T extends object, K extends keyof T> = Required<
+  Pick<T, K>
+> &
   Omit<T, K>;
 
 export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
@@ -88,7 +95,7 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
     // trigger_price: number | string;
   })[];
   // if update the order, then need to provide the order_id
-  order_id?: string;
+  algo_order_id?: number;
   client_order_id?: string;
   order_tag?: string;
   price?: number | string;
@@ -109,12 +116,12 @@ export type AlgoOrderEntity<
   T extends AlgoOrderRootType = AlgoOrderRootType.STOP
 > = T extends AlgoOrderRootType.TP_SL
   ? Optional<
-        BaseAlgoOrderEntity<T>,
+      BaseAlgoOrderEntity<T>,
       "side" | "type" | "trigger_price" | "order_type"
     >
   : T extends AlgoOrderRootType.POSITIONAL_TP_SL
   ? Optional<
-            BaseAlgoOrderEntity<T>,
+      BaseAlgoOrderEntity<T>,
       "side" | "type" | "trigger_price" | "order_type" | "quantity"
     >
   : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;

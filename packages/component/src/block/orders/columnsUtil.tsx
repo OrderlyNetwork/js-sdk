@@ -1,4 +1,9 @@
-import { API, OrderSide, OrderStatus } from "@orderly.network/types";
+import {
+  API,
+  AlgoOrderType,
+  OrderSide,
+  OrderStatus,
+} from "@orderly.network/types";
 import { Renew } from "../orderHistory/full/renew";
 import { CancelButton } from "./full/cancelButton";
 import { upperCaseFirstLetter } from "@/utils/string";
@@ -6,6 +11,8 @@ import { Numeral, Text } from "@/text";
 import { cx } from "class-variance-authority";
 import { Column } from "@/table";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
+import { OrderType } from "@orderly.network/types";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 /// get columns for cancel/fill/reject/history
 export const columnsBasis = (props: {
@@ -39,6 +46,20 @@ export const columnsBasis = (props: {
       className: "orderly-h-[48px] orderly-font-semibold",
       dataIndex: "type",
       formatter: (value: string, record: any) => {
+        if (!!record.parent_algo_type) {
+          if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+            return record.type === OrderType.CLOSE_POSITION
+              ? `Position SL`
+              : "SL";
+          }
+
+          if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+            return record.type === OrderType.CLOSE_POSITION
+              ? `Position TP`
+              : "TP";
+          }
+        }
+
         if (record.algo_order_id) {
           return `Stop ` + `${record.type}`.toLowerCase();
         }
@@ -69,6 +90,9 @@ export const columnsBasis = (props: {
       dataIndex: "quantity",
       width: 200,
       render: (value: string, record: any) => {
+        if (record.type === OrderType.CLOSE_POSITION) {
+          return "Entire position";
+        }
         return (
           <span
             className={cx(
@@ -87,7 +111,10 @@ export const columnsBasis = (props: {
       dataIndex: "price",
       width: 100,
       render: (value: string, record: any) => {
-        if (record.type === "MARKET") {
+        if (
+          record.type === "MARKET" ||
+          record.trigger_price_type === "MARK_PRICE"
+        ) {
           return <span>Market</span>;
         }
         return (
@@ -132,6 +159,10 @@ export const columnsBasis = (props: {
       className: "orderly-h-[48px] orderly-font-semibold",
       dataIndex: "executed",
       render: (value: string, record: any) => {
+        if (record.type === OrderType.CLOSE_POSITION) {
+          return "Entire position";
+        }
+
         return (
           <NumeralWithCtx
             className={"orderly-font-semibold orderly-text-2xs"}
@@ -216,7 +247,10 @@ export const columnsBasis = (props: {
           return <Renew record={record} />;
         }
 
-        if (record.status === OrderStatus.NEW) {
+        if (
+          record.status === OrderStatus.NEW ||
+          record.algo_status === OrderStatus.NEW
+        ) {
           return <CancelButton order={record} />;
         }
 
