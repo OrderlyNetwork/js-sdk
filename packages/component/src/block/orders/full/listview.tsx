@@ -217,53 +217,46 @@ export const Listview: FC<Props> = (props) => {
 
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
-      <EndReachedBox
-        onEndReached={() => {
-          if (!props.loading) {
-            props.loadMore?.();
-          }
-        }}
-      >
-        <Table<API.Order>
-          bordered
-          justified
-          showMaskElement={false}
-          columns={columns}
-          dataSource={props.dataSource}
-          headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
-          className={cn(
-            "orderly-text-2xs orderly-text-base-contrast-80",
-            props.className
-          )}
-          generatedRowKey={(record, index) =>
-            `${index}${record.order_id || record.algo_order_id}`
-          }
-          renderRowContainer={(record, index, children) => {
-            return (
-              <SymbolProvider
-                key={index}
-                symbol={record.symbol}
-                children={children}
-              />
-            );
-          }}
-          expandRowRender={
-            props.status === "FILLED"
-              ? (record: any, index: number) => {
-                  return <OrderTrades record={record} index={index} />;
-                }
-              : undefined
-          }
-        />
-
-        {(!props.dataSource || props.dataSource.length <= 0) && (
-          <OrdersEmptyView
-            watchRef={divRef}
-            left={0}
-            right={props.status === OrderStatus.INCOMPLETE ? 100 : 120}
-          />
+      <Table<API.Order>
+        bordered
+        justified
+        showMaskElement={false}
+        columns={columns}
+        dataSource={props.dataSource}
+        loadMore={props.loadMore}
+        headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"
+        className={cn(
+          "orderly-text-2xs orderly-text-base-contrast-80",
+          props.className
         )}
-      </EndReachedBox>
+        generatedRowKey={(record, index) =>
+          `${index}${record.order_id || record.algo_order_id}`
+        }
+        renderRowContainer={(record, index, children) => {
+          return (
+            <SymbolProvider
+              key={index}
+              symbol={record.symbol}
+              children={children}
+            />
+          );
+        }}
+        expandRowRender={
+          props.status === "FILLED"
+            ? (record: any, index: number) => {
+                return <OrderTrades record={record} index={index} />;
+              }
+            : undefined
+        }
+      />
+
+      {(!props.dataSource || props.dataSource.length <= 0) && (
+        <OrdersEmptyView
+          watchRef={divRef}
+          left={0}
+          right={props.status === OrderStatus.INCOMPLETE ? 100 : 120}
+        />
+      )}
     </div>
   );
 };

@@ -74,7 +74,7 @@ export const Header: FC<Props> = (props) => {
       <Select
         size={"small"}
         options={options}
-        value={props.side}
+        value={props.side || ""}
         onChange={(value) => {
           // console.log(value);
           // setSide(value as OrderSide);

@@ -22,7 +22,7 @@ export const EndReachedBox: FC<PropsWithChildren<EndReachedBoxProps>> = (
       {props.children}
       <div
         ref={sentinelRef}
-        className="orderly-relative orderly-invisible orderly-h-[1px] orderly-top-[-300px]"
+        className="orderly-relative orderly-invisible orderly-h-[1px] orderly-bg-red-400"
       />
     </>
   );

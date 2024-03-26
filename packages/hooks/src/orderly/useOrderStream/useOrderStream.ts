@@ -5,7 +5,6 @@ import {
   OrderEntity,
   OrderStatus,
   API,
-  OrderType,
   AlgoOrderRootType,
 } from "@orderly.network/types";
 import { useMarkPricesStream } from "../useMarkPricesStream";
@@ -14,19 +13,11 @@ import version from "../../version";
 import { useDataCenterContext } from "../../dataProvider";
 import { generateKeyFun } from "../../utils/swr";
 import { useEventEmitter } from "../../useEventEmitter";
+import { SDKError } from "@orderly.network/types";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
 type CombineOrderType = AlgoOrderRootType | "ALL";
-
-export interface UserOrdersReturn {
-  data: any[];
-  loading: boolean;
-  update: (order: any) => void;
-  cancel: (order: any) => void;
-}
-
-// const chche: Record<string, boolean> = {};
 
 export const useOrderStream = (
   /**
@@ -219,17 +210,7 @@ export const useOrderStream = (
    * update algo order
    */
   const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "algoOrder").then((res) => {
-      // TODO: remove this when the WS service provides the correct data
-      // ee.emit("algoOrder:cache", {
-      //   // ...res.data.rows[0],
-      //   ...order,
-      //   order_id: Number(orderId),
-      //   // trigger_price: price,
-      // });
-      //------------fix end----------------
-      return res;
-    });
+    return _updateOrder(orderId, order, "algoOrder");
   }, []);
 
   const _cancelOrder = useCallback(
@@ -288,7 +269,11 @@ export const useOrderStream = (
     ordersResponse.setSize(ordersResponse.size + 1);
   };
 
-  const cancelTPSLOrder = useCallback(
+  // const cancelTPSLOrder = useCallback((orderId:number, symbol:string)=>{
+  //   return
+  // });
+
+  const cancelTPSLChildOrder = useCallback(
     (orderId: number, rootAlgoOrderId: number): Promise<any> => {
       return doUpdateAlgoOrder({
         order_id: rootAlgoOrderId,
@@ -298,6 +283,25 @@ export const useOrderStream = (
             is_activated: false,
           },
         ],
+      });
+    },
+    []
+  );
+
+  const updateTPSLOrder = useCallback(
+    (
+      /**
+       * the root algo order id
+       */
+      orderId: number,
+      childOrders: API.AlgoOrder["child_orders"]
+    ) => {
+      if (!Array.isArray(childOrders)) {
+        throw new SDKError("children orders is required");
+      }
+      return doUpdateAlgoOrder({
+        order_id: orderId,
+        children_orders: childOrders,
       });
     },
     []
@@ -315,7 +319,8 @@ export const useOrderStream = (
       cancelOrder,
       updateAlgoOrder,
       cancelAlgoOrder,
-      cancelTPSLOrder,
+      cancelTPSLChildOrder,
+      updateTPSLOrder,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

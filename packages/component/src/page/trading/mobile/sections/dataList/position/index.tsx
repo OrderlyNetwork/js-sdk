@@ -15,7 +15,7 @@ import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
 import { TPSLEditor } from "@/block/tp_sl/tp_sl_editor";
-import { TPSLSheet } from "../../../../../../block/tp_sl/tpslSheet";
+import { TPSLOrderEditorSheet } from "../../../../../../block/tp_sl/tpslSheet";
 
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
@@ -61,7 +61,7 @@ export const PositionPane = () => {
       return modal
         .sheet({
           title: "TP / SL",
-          content: <TPSLSheet position={position} order={order} />,
+          content: <TPSLOrderEditorSheet position={position} order={order} />,
         })
         .then(() => {});
     },

@@ -1,5 +1,4 @@
 import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { Row } from "./row";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
 import { cn } from "@/utils/css";
@@ -10,6 +9,7 @@ import { TableProvider } from "./tableContext";
 import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FixedDivide } from "./fixedDivide";
 import { TBody, TBodyProps } from "./tbody";
+import { EndReachedBox } from "@/listView/endReachedBox";
 
 export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   columns: Column<RecordType>[];
@@ -22,6 +22,7 @@ export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   className?: string;
   headerClassName?: string;
   showMaskElement?: boolean;
+  loadMore?: () => void;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -128,16 +129,23 @@ export const Table = <RecordType extends unknown>(
           bordered={props.bordered}
           justified={props.justified}
         />
-
-        <table
-          className={cn(
-            "orderly-table-fixed orderly-border-collapse orderly-w-full"
-          )}
+        <EndReachedBox
+          onEndReached={() => {
+            // if (!props.loading) {
+            props.loadMore?.();
+            // }
+          }}
         >
-          <ColGroup columns={props.columns} />
+          <table
+            className={cn(
+              "orderly-table-fixed orderly-border-collapse orderly-w-full"
+            )}
+          >
+            <ColGroup columns={props.columns} />
 
-          <TBody {...rest} />
-        </table>
+            <TBody {...rest} />
+          </table>
+        </EndReachedBox>
         {showMaskElement && maskElement}
       </div>
       <FixedDivide />

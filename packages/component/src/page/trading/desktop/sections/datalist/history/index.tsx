@@ -2,8 +2,7 @@ import { HistoryListViewFull } from "@/block/orderHistory";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 import { useTabContext } from "@/tab/tabContext";
 import { useOrderStream, useAccount } from "@orderly.network/hooks";
-import { OrderEntity, OrderType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+import { OrderEntity } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 
 import {
@@ -26,7 +25,7 @@ export const HistoryView = () => {
       // @ts-ignore
       status,
       symbol: tabExtraData.showAllSymbol ? "" : symbol,
-      size: 5,
+      size: 20,
     });
 
   const onCancelOrder = useCallback(

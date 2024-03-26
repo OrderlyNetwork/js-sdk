@@ -83,7 +83,10 @@ export const TPSLOrderRowProvider: FC<
   };
 
   const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
-    if (!("algo_type" in props.order)) {
+    if (
+      !("algo_type" in props.order) ||
+      !Array.isArray(props.order.child_orders)
+    ) {
       return {};
     }
     return utils.findTPSLFromOrder(props.order);

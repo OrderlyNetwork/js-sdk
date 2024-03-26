@@ -10,6 +10,7 @@ import { Slider } from "@/slider";
 import { PnlInput } from "@/block/tp_sl/pnlInput";
 import { cn } from "@/utils";
 import { AlgoOrderType } from "@orderly.network/types";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 export interface Props {
   symbol: string;
@@ -73,13 +74,11 @@ export const TPSLForm: FC<Props> = (props) => {
   );
 
   const dirty = useMemo(() => {
-    // if (
-    //   typeof order.tp_trigger_price !== "undefined" &&
-    //   typeof order.sl_trigger_price !== "undefined"
-    // )
-    //   return false;
-
-    if (Number(order.quantity) !== props.oldOrder?.quantity) return true;
+    if (
+      props.oldOrder?.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL &&
+      Number(order.quantity) !== props.oldOrder?.quantity
+    )
+      return true;
 
     if (props.oldOrder) {
       if (
@@ -104,6 +103,8 @@ export const TPSLForm: FC<Props> = (props) => {
     order.quantity,
     props.oldOrder,
   ]);
+
+  console.log("dirty", dirty);
 
   return (
     <div className={cn("orderly-space-y-4", props.className)}>
@@ -272,6 +273,8 @@ export const TPSLForm: FC<Props> = (props) => {
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
           <Input
+            error={!!props.errors?.sl_trigger_price?.message}
+            helpText={props.errors?.sl_trigger_price?.message}
             prefix={"SL price"}
             placeholder={symbolInfo("quote")}
             className={"orderly-text-right orderly-pr-2  orderly-text-sm"}
