@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, Fragment, ReactNode, useMemo } from "react";
 import { Numeral } from "@/text";
 import { cn } from "@/utils";
 import { Tooltip } from "@/tooltip";
@@ -36,7 +36,7 @@ export const TPSLTriggerPrice: FC<{
 
     const keys = Object.keys(children);
 
-    const values = Object.values(children);
+    const values = Object.values<ReactNode>(children);
 
     if (keys.length === 0) return null;
 
@@ -51,12 +51,12 @@ export const TPSLTriggerPrice: FC<{
     return (
       <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-mt-2">
         <div className="orderly-flex orderly-gap-1">
-          {keys.map((key) => {
-            return <span key={key}>{key}</span>;
+          {keys.map((key, index) => {
+            return <span key={index}>{key}</span>;
           })}
           <span>:</span>
           {values.map((child, index) => {
-            return <>{child}</>;
+            return <Fragment key={index}>{child}</Fragment>;
           })}
         </div>
       </div>

@@ -8,11 +8,10 @@ export const EditButton: FC<{}> = (props) => {
   return (
     <TPSLOrderEditButton
       disabled={!position}
-      onSubmit={() => {}}
       label={"Edit"}
       order={order}
-      position={position}
-      maxQty={position?.position_qty}
+      position={position!}
+      maxQty={position?.position_qty ?? 0}
       isEditing
     />
   );

@@ -8,7 +8,7 @@ import {
 } from "@/dropdown/dropdown";
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { cn, parseNumber } from "@/utils";
+import { cn } from "@/utils";
 import { commify } from "@orderly.network/utils";
 
 interface Props {
@@ -50,12 +50,15 @@ export const PnlInput: FC<Props> = (props) => {
 
   const value = useMemo(() => {
     const val = props.values[mode as keyof Props["values"]];
-    // if (!!val && !val.endsWith(".")) {
-    //   return parseNumber(val, { rule: "price", precision: quote_db });
-    // }
+
+    if (val === "") return val;
 
     if (mode === PnLMode.PNL || mode === PnLMode.OFFSET) {
       return commify(val);
+    }
+
+    if (mode === PnLMode.PERCENTAGE) {
+      return (Number(val) * 100).toFixed();
     }
 
     return val;
@@ -118,6 +121,9 @@ export const PnlInput: FC<Props> = (props) => {
       }
       value={value}
       onValueChange={(value) => {
+        if (mode === PnLMode.PERCENTAGE && value !== "") {
+          value = Number(value) / 100;
+        }
         props.onChange(key, value);
       }}
     />

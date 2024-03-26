@@ -73,7 +73,7 @@ export interface InputProps
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
   containerClassName?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: any) => void;
   /**
    * Whether to display the thousandth symbol
    */

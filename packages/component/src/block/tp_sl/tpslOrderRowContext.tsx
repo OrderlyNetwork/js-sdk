@@ -22,18 +22,19 @@ export type TPSLOrderRowContextState = {
   sl_trigger_price?: number;
 
   onCancelOrder: (order: API.AlgoOrderExt) => Promise<void>;
+  onUpdateOrder: (order: API.AlgoOrderExt, params: any) => Promise<void>;
 
   getRelatedPosition: (symbol: string) => API.PositionTPSLExt | undefined;
 
   position?: API.PositionTPSLExt;
 };
 
-export const tpslOrderRowContext = createContext(
+export const TPSLOrderRowContext = createContext(
   {} as TPSLOrderRowContextState
 );
 
 export const useTPSLOrderRowContext = () => {
-  return useContext(tpslOrderRowContext);
+  return useContext(TPSLOrderRowContext);
 };
 
 export const TPSLOrderRowProvider: FC<
@@ -44,6 +45,7 @@ export const TPSLOrderRowProvider: FC<
   const [position, setPosition] = useState<API.PositionTPSLExt>();
 
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
+  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
 
   const config = useSWRConfig();
   const { state } = useAccount();
@@ -56,6 +58,17 @@ export const TPSLOrderRowProvider: FC<
     return doDeleteOrder(null, {
       order_id: order.algo_order_id,
       symbol: order.symbol,
+    });
+  };
+
+  const onUpdateOrder = async (order: API.AlgoOrderExt, params: any) => {
+    console.log("onUpdateOrder", order, position);
+    return doUpdateOrder({
+      order_id: order.algo_order_id,
+      child_orders: order.child_orders.map((order) => ({
+        order_id: order.algo_order_id,
+        quantity: params.order_quantity,
+      })),
     });
   };
 
@@ -86,17 +99,18 @@ export const TPSLOrderRowProvider: FC<
   }, [props.order.symbol]);
 
   return (
-    <tpslOrderRowContext.Provider
+    <TPSLOrderRowContext.Provider
       value={{
         order: props.order,
         sl_trigger_price,
         tp_trigger_price,
         onCancelOrder,
+        onUpdateOrder,
         getRelatedPosition,
         position,
       }}
     >
       {props.children}
-    </tpslOrderRowContext.Provider>
+    </TPSLOrderRowContext.Provider>
   );
 };

@@ -25,6 +25,11 @@ export interface Props {
   isEditing?: boolean;
   className?: string;
   oldOrder?: API.AlgoOrder;
+  errors: {
+    [key: string]: {
+      message: string;
+    };
+  } | null;
   order: Partial<
     AlgoOrderEntity & {
       /**
@@ -68,7 +73,11 @@ export const TPSLForm: FC<Props> = (props) => {
   );
 
   const dirty = useMemo(() => {
-    if (!order.tp_trigger_price && !order.sl_trigger_price) return false;
+    // if (
+    //   typeof order.tp_trigger_price !== "undefined" &&
+    //   typeof order.sl_trigger_price !== "undefined"
+    // )
+    //   return false;
 
     if (Number(order.quantity) !== props.oldOrder?.quantity) return true;
 
@@ -211,6 +220,8 @@ export const TPSLForm: FC<Props> = (props) => {
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
           <Input
+            error={!!props.errors?.tp_trigger_price?.message}
+            helpText={props.errors?.tp_trigger_price?.message}
             prefix={"TP price"}
             placeholder={symbolInfo("quote")}
             className={"orderly-text-right orderly-pr-2 orderly-text-sm"}

@@ -8,5 +8,5 @@ describe("tpslPositionOrderCreator", () => {
     orderCreator = new TPSLPositionOrderCreator();
   });
 
-  return test("update order data", () => {});
+  // return test("update order data", () => {});
 });

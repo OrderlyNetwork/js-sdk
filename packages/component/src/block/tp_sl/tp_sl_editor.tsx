@@ -23,7 +23,7 @@ export const TPSLEditor: FC<{
   maxQty: number;
   onSuccess?: () => void;
   onCancel?: () => void;
-  position: API.PositionTPSLExt;
+  position: API.Position;
   order?: API.AlgoOrder;
   canModifyQty?: boolean;
   isEditing?: boolean;
@@ -33,16 +33,18 @@ export const TPSLEditor: FC<{
     useState<Partial<AlgoOrderEntity> | null>();
   const [open, setOpen] = useState(false);
 
-  const [order, { submit, setValue, validate }] = useTaskProfitAndStopLoss(
-    {
-      symbol,
-      position_qty: props.position.position_qty,
-      average_open_price: props.position.average_open_price,
-    },
-    {
-      defaultOrder: props.order,
-    }
-  );
+  const [order, { submit, setValue, validate, errors }] =
+    useTaskProfitAndStopLoss(
+      {
+        symbol,
+        position_qty: props.position.position_qty,
+        average_open_price: props.position.average_open_price,
+      },
+      {
+        defaultOrder: props.order,
+      }
+    );
+  const [showError, setShowError] = useState(false);
 
   const isTablet = useMediaQuery(MEDIA_TABLET);
 
@@ -101,7 +103,8 @@ export const TPSLEditor: FC<{
           return true;
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
+          setShowError(true);
           return false;
         }
       )
@@ -131,6 +134,7 @@ export const TPSLEditor: FC<{
         canModifyQty={props.canModifyQty}
         isEditing={props.isEditing}
         oldOrder={props.order}
+        errors={showError ? errors : null}
       />
       <SimpleDialog
         open={open}

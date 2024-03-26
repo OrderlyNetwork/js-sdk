@@ -1,15 +1,13 @@
-import { useSymbolContext } from "@/provider/symbolProvider";
 import { toast } from "@/toast";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
 import { cn } from "@/utils";
-import { OrderType, API, AlgoOrderRootType } from "@orderly.network/types";
+import { API, AlgoOrderRootType } from "@orderly.network/types";
 import { TPSLEditor } from "@/block/tp_sl/tp_sl_editor";
-import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
 import { Button } from "@/button/button";
 
 export const TPSLOrderEditButton: FC<{
-  onSubmit: () => Promise<any>;
+  // onSubmit: () => Promise<any>;
   order: API.AlgoOrderExt;
   label: string;
   maxQty: number;
@@ -17,36 +15,25 @@ export const TPSLOrderEditButton: FC<{
   disabled?: boolean;
   isEditing?: boolean;
 }> = (props) => {
-  const { onSubmit, order, maxQty, position, disabled } = props;
+  const { order, maxQty, position, disabled } = props;
   const [open, setOpen] = useState(false);
 
   // const { base, quote, symbol } = useSymbolContext();
 
-  const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setOpen(false);
-      },
-      (error: Error) => {
-        toast.error(error.message);
-      }
-    );
-  };
+  // const onConfirm = () => {
+  //   return onSubmit().then(
+  //     (res) => {
+  //       setOpen(false);
+  //     },
+  //     (error: Error) => {
+  //       toast.error(error.message);
+  //     }
+  //   );
+  // };
 
   const onClose = () => {
     setOpen(false);
   };
-
-  // const disabled = useMemo(() => {
-  //   if (type === OrderType.MARKET) {
-  //     if (!quantity) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  //
-  //   return !price || !quantity;
-  // }, [price, quantity, type]);
 
   return (
     <Popover onOpenChange={setOpen} open={open}>

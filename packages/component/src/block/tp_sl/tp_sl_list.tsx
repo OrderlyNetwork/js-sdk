@@ -8,14 +8,16 @@ import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
+  OrderEntity,
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
+import { OrderListProvider } from "../orders/shared/orderListContext";
 
 export const TPSLList: FC<{
   // dataSource: API.AlgoOrder[];
 }> = (props) => {
   const { height } = useContext(TabContext);
-  const [side, setSide] = useState<OrderSide | "">("");
+  const [side, setSide] = useState<OrderSide>();
 
   const [orders, { total }] = useOrderStream(
     {
@@ -37,7 +39,7 @@ export const TPSLList: FC<{
         onSideChange={setSide}
         side={side}
         orderType={AlgoOrderRootType.TP_SL}
-        // status={props.status}
+        status={OrderStatus.INCOMPLETE}
       />
       <Divider />
       <div

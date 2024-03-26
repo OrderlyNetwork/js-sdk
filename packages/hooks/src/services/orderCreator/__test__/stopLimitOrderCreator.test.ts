@@ -68,7 +68,7 @@ describe("StopLimitOrderCreator", () => {
       trigger_price_type: "MARK_PRICE",
     };
 
-    const createdOrder = orderCreator.create(values, config as any);
+    const createdOrder = orderCreator.create(values as any, config as any);
 
     expect(createdOrder).toEqual(expectedOrder);
   });
@@ -134,7 +134,7 @@ describe("StopLimitOrderCreator", () => {
       trigger_price_type: "MARK_PRICE",
     };
 
-    const createdOrder = orderCreator.create(values, config as any);
+    const createdOrder = orderCreator.create(values as any, config as any);
 
     expect(createdOrder).toEqual(expectedOrder);
   });

@@ -13,7 +13,7 @@ export abstract class BaseAlgoOrderCreator<
   >
 > implements OrderCreator<T>
 {
-  abstract create(values: T): T;
+  abstract create(values: T, config: ValuesDepConfig): T;
   validate(
     values: Partial<T>,
     config: ValuesDepConfig
@@ -26,6 +26,18 @@ export abstract class BaseAlgoOrderCreator<
     const result = Object.create(null);
     return Promise.resolve().then(() => {
       const { tp_trigger_price, sl_trigger_price, side } = values;
+
+      if (Number(tp_trigger_price) < 0) {
+        result.tp_trigger_price = {
+          message: `TP Price must be greater than 0`,
+        };
+      }
+
+      if (Number(sl_trigger_price) < 0) {
+        result.sl_trigger_price = {
+          message: `SL Price must be greater than 0`,
+        };
+      }
 
       // there need use position side to validate
       // so if order's side is buy, then position's side is sell

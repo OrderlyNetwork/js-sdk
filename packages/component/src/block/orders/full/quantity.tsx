@@ -18,8 +18,12 @@ import { toast } from "@/toast";
 import { Divider } from "@/divider";
 import { cleanStringStyle } from "@orderly.network/hooks";
 import { Input } from "@/input";
+import { AlgoOrderRootType } from "@orderly.network/types";
+import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
 
-export const OrderQuantity = (props: { order: API.OrderExt }) => {
+export const OrderQuantity = (props: {
+  order: API.OrderExt | API.AlgoOrder;
+}) => {
   const { order } = props;
 
   const [quantity, setQuantity] = useState<string>(order.quantity.toString());
@@ -52,14 +56,14 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
 };
 
 const NormalState: FC<{
-  order: any;
+  order: API.AlgoOrder | API.OrderExt;
   quantity: string;
   setEditing: any;
   partial?: boolean;
 }> = (props) => {
   const { order, quantity } = props;
 
-  const executed = order.total_executed_quantity;
+  const executed = (order as API.OrderExt).total_executed_quantity;
 
   return (
     <div
@@ -76,8 +80,14 @@ const NormalState: FC<{
         props.setEditing(true);
       }}
     >
-      <span>{executed}</span>
-      <span>/</span>
+      {"algo_type" in order &&
+      order.algo_type === AlgoOrderRootType.TP_SL ? null : (
+        <>
+          <span>{executed}</span>
+          <span>/</span>
+        </>
+      )}
+
       <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
         {quantity}
       </div>
@@ -86,7 +96,7 @@ const NormalState: FC<{
 };
 
 const EditingState: FC<{
-  order: API.OrderExt;
+  order: API.OrderExt | API.AlgoOrder;
   quantity: string;
   setQuantity: any;
   editting: boolean;
@@ -98,6 +108,7 @@ const EditingState: FC<{
     props;
 
   const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const { onUpdateOrder: onUpdateTPSLOrder } = useTPSLOrderRowContext();
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
@@ -186,10 +197,14 @@ const EditingState: FC<{
 
     let future;
 
-    if (order.algo_order_id !== undefined) {
-      future = editAlgoOrder(order.algo_order_id.toString(), params);
+    if ("algo_type" in order && order.algo_type === AlgoOrderRootType.TP_SL) {
+      future = onUpdateTPSLOrder(order as API.AlgoOrderExt, params);
     } else {
-      future = editOrder(order.order_id.toString(), params);
+      if (order.algo_order_id !== undefined) {
+        future = editAlgoOrder(order.algo_order_id.toString(), params);
+      } else {
+        future = editOrder((order as API.OrderExt).order_id.toString(), params);
+      }
     }
 
     // @ts-ignore

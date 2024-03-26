@@ -5,7 +5,7 @@ import { FC, PropsWithChildren, createContext, useCallback } from "react";
 import { OrderEditFormSheet } from "../dialog/editor/editorSheet";
 
 export interface OrderListContextState {
-  onCancelOrder: (order: API.Order) => Promise<any>;
+  onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;
   onEditOrder: (
     order: API.Order | API.AlgoOrder,
     position?: API.Position
@@ -60,13 +60,13 @@ export const OrderListProvider: FC<
   );
 
   const onEditOrder = useCallback(
-    async (order: API.Order, position?: API.Position) => {
+    async (order: API.Order | API.AlgoOrder, position?: API.Position) => {
       // @ts-ignore
       let isHidden =
         order.visible_quantity !== undefined
           ? order.visible_quantity === 0
-          : order.visible !== undefined
-          ? order.visible === 0
+          : (order as any).visible !== undefined
+          ? (order as any).visible === 0
           : false;
 
       const orderEntry = await modal.sheet({
@@ -82,7 +82,7 @@ export const OrderListProvider: FC<
                   ...value,
                 });
               }
-              return editOrder(order.order_id.toString(), {
+              return editOrder((order as any).order_id.toString(), {
                 ...value,
                 ...(isHidden ? { visible_quantity: 0 } : {}),
               });

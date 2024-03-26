@@ -2,9 +2,10 @@ import { FC, useMemo } from "react";
 import { Numeral } from "@/text";
 import { cn } from "@/utils";
 import { Tooltip } from "@/tooltip";
-import { utils } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { useSymbolsInfo, utils } from "@orderly.network/hooks";
+import { API, AlgoOrderType } from "@orderly.network/types";
 import { Minus, Plus } from "lucide-react";
+import { OrderSide } from "@orderly.network/types";
 
 export const TPSLTriggerPrice: FC<{
   takeProfitPrice: number | undefined;
@@ -16,6 +17,7 @@ export const TPSLTriggerPrice: FC<{
   position?: API.PositionTPSLExt;
 }> = (props) => {
   const { direction = "row", order, position } = props;
+  const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
 
   const pnl = useMemo(() => {
     const msgs = [];
@@ -31,28 +33,36 @@ export const TPSLTriggerPrice: FC<{
     }
 
     if (!!props.takeProfitPrice) {
-      const tp_pnl = utils.priceToPnl({
-        qty: quantity,
-        price: props.takeProfitPrice,
-        entryPrice: position.average_open_price,
-        orderSide: order.side,
-        orderType: order.algo_type,
-      });
+      const tp_pnl = utils.priceToPnl(
+        {
+          qty: quantity,
+          price: props.takeProfitPrice,
+          entryPrice: position.average_open_price,
+          orderSide: order.side as OrderSide,
+          orderType: order.algo_type as AlgoOrderType,
+        },
+        {
+          symbol: symbolInfo,
+        }
+      );
 
       // console.log("tp_pnl:", tp_pnl, order, position);
 
       msgs.push(
         <div className="orderly-flex orderly-items-center">
-          <span className="orderly-text-base-contrast-54">TP PNL:</span>
+          <span className="orderly-text-base-contrast-54 orderly-mr-1">
+            TP PNL:
+          </span>
           <Numeral
             rule="price"
             className={
               tp_pnl > 0
                 ? "orderly-text-trade-profit orderly-gap-0"
-                : "orderly-text-trade-loss"
+                : "orderly-text-trade-loss orderly-gap-0"
             }
             prefix={
               <span>
+                {/* @ts-ignore */}
                 {tp_pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}
               </span>
             }
@@ -63,19 +73,26 @@ export const TPSLTriggerPrice: FC<{
     }
 
     if (!!props.stopLossPrice) {
-      const sl_pnl = utils.priceToPnl({
-        qty: quantity,
-        price: props.stopLossPrice,
-        entryPrice: position.average_open_price,
-        orderSide: order.side,
-        orderType: order.algo_type,
-      });
+      const sl_pnl = utils.priceToPnl(
+        {
+          qty: quantity,
+          price: props.stopLossPrice,
+          entryPrice: position.average_open_price,
+          orderSide: order.side as OrderSide,
+          orderType: order.algo_type as AlgoOrderType,
+        },
+        {
+          symbol: symbolInfo,
+        }
+      );
 
       // console.log("sl_price", sl_pnl);
 
       msgs.push(
         <div className="orderly-flex orderly-items-center">
-          <span className="orderly-text-base-contrast-54">SL PNL:</span>
+          <span className="orderly-text-base-contrast-54 orderly-mr-1">
+            SL PNL:
+          </span>
           <Numeral
             rule="price"
             className={
@@ -85,6 +102,7 @@ export const TPSLTriggerPrice: FC<{
             }
             prefix={
               <span>
+                {/* @ts-ignore */}
                 {sl_pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}
               </span>
             }

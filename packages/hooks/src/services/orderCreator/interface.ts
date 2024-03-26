@@ -17,7 +17,7 @@ export type ValuesDepConfig = {
 };
 
 export interface OrderCreator<T> {
-  create: (values: T, configs?: ValuesDepConfig) => T;
+  create: (values: T, configs: ValuesDepConfig) => T;
   validate: (
     values: T,
     configs: ValuesDepConfig

@@ -1,7 +1,7 @@
-import { OrderSide, PositionSide } from "@orderly.network/types";
+import { API, OrderSide, PositionSide } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"
@@ -43,30 +43,37 @@ export function offsetToPrice(inputs: {
   }
 }
 
-export function priceToOffset(inputs: {
-  qty: number;
-  price: number;
-  entryPrice: number;
-  orderSide: OrderSide;
-  orderType: AlgoOrderType;
-}) {
+export function priceToOffset(
+  inputs: {
+    qty: number;
+    price: number;
+    entryPrice: number;
+    orderSide: OrderSide;
+    orderType: AlgoOrderType;
+  },
+  options: { symbol: API.SymbolExt }
+) {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
+  const { symbol } = options;
+  let decimal: Decimal;
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(price).minus(new Decimal(entryPrice)).abs().toNumber();
+      decimal = new Decimal(price).minus(new Decimal(entryPrice));
     }
 
-    return new Decimal(price).minus(new Decimal(entryPrice)).abs().toNumber();
+    decimal = new Decimal(price).minus(new Decimal(entryPrice));
   }
 
   if (orderSide === OrderSide.SELL) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(price).minus(new Decimal(entryPrice)).abs().toNumber();
+      decimal = new Decimal(price).minus(new Decimal(entryPrice));
     }
 
-    return new Decimal(entryPrice).minus(new Decimal(price)).abs().toNumber();
+    decimal = new Decimal(entryPrice).minus(new Decimal(price));
   }
+
+  return decimal!.abs().todp(symbol.quote_dp).toNumber();
 }
 
 export function offsetPercentageToPrice(inputs: {
@@ -179,52 +186,61 @@ export function pnlToPrice(inputs: {
 /**
  * TP/SL price -> pnl
  */
-export function priceToPnl(inputs: {
-  qty: number;
-  price: number;
-  entryPrice: number;
-  orderSide: OrderSide;
-  orderType: AlgoOrderType;
-}): number {
+export function priceToPnl(
+  inputs: {
+    qty: number;
+    price: number;
+    entryPrice: number;
+    orderSide: OrderSide;
+    orderType: AlgoOrderType;
+  },
+  options: { symbol: API.SymbolExt }
+): number {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
+  const { symbol } = options;
+  let decimal = zero;
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(qty)
-        .mul(new Decimal(price).minus(new Decimal(entryPrice)))
-        .toNumber();
+      decimal = new Decimal(qty).mul(
+        new Decimal(price).minus(new Decimal(entryPrice))
+      );
     }
 
-    return new Decimal(qty)
-      .mul(new Decimal(price).minus(new Decimal(entryPrice)))
-      .toNumber();
+    decimal = new Decimal(qty).mul(
+      new Decimal(price).minus(new Decimal(entryPrice))
+    );
   }
 
   if (orderSide === OrderSide.SELL) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(qty)
-        .mul(new Decimal(price).minus(new Decimal(entryPrice)))
-        .toNumber();
+      decimal = new Decimal(qty).mul(
+        new Decimal(price).minus(new Decimal(entryPrice))
+      );
     }
 
-    return new Decimal(qty)
-      .mul(new Decimal(price).minus(new Decimal(entryPrice)))
-      .toNumber();
+    decimal = new Decimal(qty).mul(
+      new Decimal(price).minus(new Decimal(entryPrice))
+    );
   }
 
-  return 0;
+  return decimal.todp(symbol.quote_dp).toNumber();
 }
 
 export function calculateHelper(
-  key: UpdateOrderKey,
+  key: string,
   inputs: {
-    key: UpdateOrderKey;
+    key: string;
     value: string | number;
     entryPrice: number;
     qty: number;
     orderSide: OrderSide;
+  },
+  options: {
+    symbol: API.SymbolExt;
   }
 ) {
+  const { symbol } = options;
   // if not need to be computed, return the value directly
   if (
     key !== "quantity" &&
@@ -311,16 +327,21 @@ export function calculateHelper(
   }
 
   return {
-    [`${keyPrefix}trigger_price`]: trigger_price,
+    [`${keyPrefix}trigger_price`]: new Decimal(Number(trigger_price))
+      .todp(symbol.quote_dp)
+      .toNumber(),
     [`${keyPrefix}offset`]:
       offset ??
-      priceToOffset({
-        qty,
-        price: Number(trigger_price!),
-        entryPrice: inputs.entryPrice,
-        orderSide: inputs.orderSide,
-        orderType,
-      }),
+      priceToOffset(
+        {
+          qty,
+          price: Number(trigger_price!),
+          entryPrice: inputs.entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        },
+        options
+      ),
     [`${keyPrefix}offset_percentage`]:
       offset_percentage ??
       priceToOffsetPercentage({
@@ -332,12 +353,15 @@ export function calculateHelper(
       }),
     [`${keyPrefix}pnl`]:
       pnl ??
-      priceToPnl({
-        qty,
-        price: Number(trigger_price!),
-        entryPrice: inputs.entryPrice,
-        orderSide: inputs.orderSide,
-        orderType,
-      }),
+      priceToPnl(
+        {
+          qty,
+          price: Number(trigger_price!),
+          entryPrice: inputs.entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        },
+        options
+      ),
   };
 }

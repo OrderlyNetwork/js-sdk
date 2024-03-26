@@ -110,6 +110,7 @@ export declare namespace API {
     fee_asset: string;
     client_order_id: null;
     average_executed_price: number;
+    total_executed_quantity: number;
     visible_quantity: number;
     created_time: number;
     updated_time: number;
@@ -129,7 +130,7 @@ export declare namespace API {
     algo_type: string;
     child_orders: AlgoOrder[];
     side: string;
-    quantity: number | string;
+    quantity: number;
     is_triggered: boolean;
     trigger_price: number;
     trigger_price_type: string;

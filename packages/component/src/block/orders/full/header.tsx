@@ -11,7 +11,7 @@ import { useMutation } from "@orderly.network/hooks";
 import toast from "react-hot-toast";
 
 export interface Props {
-  side: OrderSide;
+  side?: OrderSide;
   onSideChange: (side: OrderSide) => void;
   count: number;
   status: OrderStatus;
