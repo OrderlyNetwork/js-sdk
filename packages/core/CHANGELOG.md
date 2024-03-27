@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.4.1-internal.0
+
+### Patch Changes
+
+- add TP/SL module
+- Updated dependencies
+  - @orderly.network/types@1.4.1-internal.0
+
 ## 0.2.7
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.4.1-internal.0
+
+### Patch Changes
+
+- add TP/SL module
+- Updated dependencies
+  - @orderly.network/hooks@1.4.1-internal.0
+  - @orderly.network/types@1.4.1-internal.0
+
 ## 0.1.8
 
 ### Patch Changes

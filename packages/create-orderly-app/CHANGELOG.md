@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.4.1-internal.0
+
+### Patch Changes
+
+- add TP/SL module
+
 ## 0.2.7
 
 ### Patch Changes

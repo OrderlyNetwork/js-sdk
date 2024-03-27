@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.8-internal.0
+
+### Patch Changes
+
+- add TP/SL module
+- Updated dependencies
+  - @orderly.network/types@1.4.1-internal.0
+  - @orderly.network/utils@1.4.1-internal.0
+
 ## 2.0.7
 
 ### Patch Changes

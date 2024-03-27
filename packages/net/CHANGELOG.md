@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.4.1-internal.0
+
+### Patch Changes
+
+- add TP/SL module
+
 ## 1.1.7
 
 ### Patch Changes
