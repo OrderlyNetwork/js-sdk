@@ -4,8 +4,8 @@ import { cn } from "@/utils";
 import { Tooltip } from "@/tooltip";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { API, AlgoOrderType } from "@orderly.network/types";
-import { Minus, Plus } from "lucide-react";
 import { OrderSide } from "@orderly.network/types";
+import { TriggerPriceItem } from "../shared/triggerPrice";
 
 export const TPSLTriggerPrice: FC<{
   takeProfitPrice: number | undefined;
@@ -33,82 +33,28 @@ export const TPSLTriggerPrice: FC<{
     }
 
     if (!!props.takeProfitPrice) {
-      const tp_pnl = utils.priceToPnl(
-        {
-          qty: quantity,
-          price: props.takeProfitPrice,
-          entryPrice: position.average_open_price,
-          orderSide: order.side as OrderSide,
-          orderType: order.algo_type as AlgoOrderType,
-        },
-        {
-          symbol: symbolInfo,
-        }
-      );
-
-      // console.log("tp_pnl:", tp_pnl, order, position);
-
       msgs.push(
-        <div className="orderly-flex orderly-items-center">
-          <span className="orderly-text-base-contrast-54 orderly-mr-1">
-            TP PNL:
-          </span>
-          <Numeral
-            rule="price"
-            className={
-              tp_pnl > 0
-                ? "orderly-text-trade-profit orderly-gap-0"
-                : "orderly-text-trade-loss orderly-gap-0"
-            }
-            prefix={
-              <span>
-                {/* @ts-ignore */}
-                {tp_pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}
-              </span>
-            }
-            surfix={<span className="orderly-text-base-contrast-36">USDC</span>}
-          >{`${Math.abs(tp_pnl)}`}</Numeral>
-        </div>
+        <TriggerPriceItem
+          qty={quantity}
+          price={props.takeProfitPrice}
+          entryPrice={position.average_open_price}
+          orderSide={order.side as OrderSide}
+          orderType={order.algo_type as AlgoOrderType}
+          symbolInfo={symbolInfo}
+        />
       );
     }
 
     if (!!props.stopLossPrice) {
-      const sl_pnl = utils.priceToPnl(
-        {
-          qty: quantity,
-          price: props.stopLossPrice,
-          entryPrice: position.average_open_price,
-          orderSide: order.side as OrderSide,
-          orderType: order.algo_type as AlgoOrderType,
-        },
-        {
-          symbol: symbolInfo,
-        }
-      );
-
-      // console.log("sl_price", sl_pnl);
-
       msgs.push(
-        <div className="orderly-flex orderly-items-center">
-          <span className="orderly-text-base-contrast-54 orderly-mr-1">
-            SL PNL:
-          </span>
-          <Numeral
-            rule="price"
-            className={
-              sl_pnl > 0
-                ? "orderly-text-trade-profit orderly-gap-0"
-                : "orderly-text-trade-loss orderly-gap-0"
-            }
-            prefix={
-              <span>
-                {/* @ts-ignore */}
-                {sl_pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}
-              </span>
-            }
-            surfix={<span className="orderly-text-base-contrast-36">USDC</span>}
-          >{`${Math.abs(sl_pnl)}`}</Numeral>
-        </div>
+        <TriggerPriceItem
+          qty={quantity}
+          price={props.stopLossPrice}
+          entryPrice={position.average_open_price}
+          orderSide={order.side as OrderSide}
+          orderType={order.algo_type as AlgoOrderType}
+          symbolInfo={symbolInfo}
+        />
       );
     }
 

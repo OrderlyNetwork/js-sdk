@@ -89,7 +89,7 @@ export const Table = <RecordType extends unknown>(
   }, 50);
 
   const onMaskResize = useDebouncedCallback((entry: ResizeObserverEntry) => {
-    console.log("mask resize", entry);
+    // console.log("mask resize", entry);
     const leftDivide = entry.target.parentElement?.querySelector(
       ".table-left-fixed-divide"
     );

@@ -136,16 +136,16 @@ export const TPSLEditor: FC<{
         oldOrder={props.order}
         errors={showError ? errors : null}
       />
-      <SimpleDialog
-        open={open}
-        onOpenChange={setOpen}
-        title={title}
-        maxWidth={"xs"}
-        onCancel={() => setOpen(false)}
-        onOk={() => onSubmit()}
-        closable
-      >
-        {mode === "delete" ? (
+      {mode === "delete" ? (
+        <SimpleDialog
+          open={open}
+          onOpenChange={setOpen}
+          title={title}
+          maxWidth={props.isEditing ? "xs" : "sm"}
+          onCancel={() => setOpen(false)}
+          onOk={() => onSubmit()}
+          closable
+        >
           <div className="orderly-p-5">
             {`Are you sure you want to cancel this ${
               order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -153,7 +153,17 @@ export const TPSLEditor: FC<{
                 : "TP/SL"
             } order?`}
           </div>
-        ) : (
+        </SimpleDialog>
+      ) : (
+        <SimpleDialog
+          open={open}
+          onOpenChange={setOpen}
+          title={title}
+          maxWidth={props.isEditing ? "xs" : "sm"}
+          // onCancel={() => setOpen(false)}
+          // onOk={() => onSubmit()}
+          closable
+        >
           <AlgoOrderConfirmView
             //@ts-ignore
             order={{
@@ -162,14 +172,17 @@ export const TPSLEditor: FC<{
               symbol,
               algo_order_id: order.algo_order_id,
             }}
+            isEditing={props.isEditing}
             tp_trigger_price={order.tp_trigger_price}
             sl_trigger_price={order.sl_trigger_price}
             symbol={symbol}
             isTable={isTablet}
             oldOrder={props.order}
+            onCancel={() => setOpen(false)}
+            onConfirm={() => onSubmit()}
           />
-        )}
-      </SimpleDialog>
+        </SimpleDialog>
+      )}
     </>
   );
 };

@@ -20,7 +20,7 @@ export abstract class BaseMergeHandler<
    */
   formatOrder(message: T): D {
     const data = this.pre(message);
-    console.log(data);
+
     if (!data.created_time) {
       data.created_time = (data as any).timestamp;
     }

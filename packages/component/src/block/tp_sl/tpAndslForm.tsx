@@ -74,11 +74,12 @@ export const TPSLForm: FC<Props> = (props) => {
   );
 
   const dirty = useMemo(() => {
-    if (
-      props.oldOrder?.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL &&
-      Number(order.quantity) !== props.oldOrder?.quantity
-    )
-      return true;
+    const quantity =
+      props.oldOrder?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+        ? maxQtyNumber
+        : props.oldOrder?.quantity;
+
+    if (Number(order.quantity) !== quantity) return true;
 
     if (props.oldOrder) {
       if (
@@ -103,8 +104,6 @@ export const TPSLForm: FC<Props> = (props) => {
     order.quantity,
     props.oldOrder,
   ]);
-
-  console.log("dirty", dirty);
 
   return (
     <div className={cn("orderly-space-y-4", props.className)}>

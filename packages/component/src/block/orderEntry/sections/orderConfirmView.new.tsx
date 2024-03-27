@@ -131,7 +131,7 @@ export const OrderConfirmCheckBox: FC<{
   return (
     <div
       className={cn(
-        "orderly-flex orderly-items-center orderly-gap-2",
+        "orderly-flex orderly-items-center orderly-gap-1",
         props.className
       )}
     >

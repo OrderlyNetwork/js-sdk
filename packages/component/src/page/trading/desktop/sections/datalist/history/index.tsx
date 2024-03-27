@@ -25,7 +25,7 @@ export const HistoryView = () => {
       // @ts-ignore
       status,
       symbol: tabExtraData.showAllSymbol ? "" : symbol,
-      size: 20,
+      size: 40,
     });
 
   const onCancelOrder = useCallback(

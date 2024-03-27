@@ -6,19 +6,24 @@ import { API } from "@orderly.network/types";
 
 import { Text } from "@/text/text";
 import { AlgoOrderRootType } from "@orderly.network/types";
+import { useModal } from "@/modal";
+import { Divider } from "@/divider";
 
 export const TPSLOrderEditorSheet: FC<{
   position: API.Position;
   order?: API.AlgoOrder;
   isEditing?: boolean;
+  canModifyQty?: boolean;
+  onClose?: () => void;
 }> = (props) => {
   const { position, order, isEditing } = props;
   const { data: markPrice } = useMarkPrice(position!.symbol);
+  const { hide } = useModal();
 
   return (
     <div>
       <div className="orderly-py-3 orderly-space-x-2">
-        <Text rule="symbol">{order!.symbol}</Text>
+        <Text rule="symbol">{position!.symbol}</Text>
         {isEditing ? null : (
           <>
             {position.position_qty > 0 ? (
@@ -58,12 +63,16 @@ export const TPSLOrderEditorSheet: FC<{
           valueClassName="orderly-text-xs"
         />
       </div>
+      {!props.canModifyQty && <Divider className="orderly-mb-3" />}
       <TPSLEditor
         position={position}
         symbol={position.symbol}
         maxQty={position.position_qty}
         order={props.order}
         isEditing={props.isEditing}
+        canModifyQty={props.canModifyQty}
+        onCancel={hide}
+        onSuccess={hide}
       />
     </div>
   );

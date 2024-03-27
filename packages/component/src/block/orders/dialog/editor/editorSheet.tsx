@@ -43,6 +43,10 @@ export const OrderEditFormSheet: FC<Props> = (props) => {
         order={props.order}
         position={props.position}
         isEditing
+        canModifyQty={
+          props.order.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL
+        }
+        // onClose={hide}
       />
     );
   }
