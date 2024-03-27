@@ -276,4 +276,7 @@ module.exports = {
       addUtilities(scrollBarUtilities);
     }),
   ],
+  corePlugins: {
+    preflight: false,
+  },
 };
