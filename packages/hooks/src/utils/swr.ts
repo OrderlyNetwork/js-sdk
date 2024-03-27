@@ -49,7 +49,7 @@ export const updateOrdersHandler = (
   let formattedOrder: API.Order & API.AlgoOrder = {
     ...underscoreOrder,
     updated_time: updatedOrder.timestamp,
-    type: updatedOrder.type.replace("_ORDER", ""),
+    type: typeof underscoreOrder.type ==='string'? updatedOrder.type.replace("_ORDER", ""): updatedOrder.type,
     //@ts-ignore
     // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
   };

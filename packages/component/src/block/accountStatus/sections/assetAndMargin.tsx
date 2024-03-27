@@ -84,7 +84,8 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     return Math.min(
       10,
       aggregated.notional === 0
-        ? positionsInfo["margin_ratio"](10)
+        ? // @ts-ignore
+          positionsInfo["margin_ratio"](10)
         : marginRatio
     );
   }, [marginRatio, aggregated]);
