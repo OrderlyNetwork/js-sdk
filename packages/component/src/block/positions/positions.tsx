@@ -32,6 +32,7 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
                     onLimitClose={props.onLimitClose}
                     onMarketClose={props.onMarketClose}
                     onSymbolChange={props.onSymbolChange}
+                    onTPSLOrder={props.onTPSLOrder}
                   />
                 </SymbolProvider>
               );

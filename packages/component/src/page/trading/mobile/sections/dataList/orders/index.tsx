@@ -27,11 +27,20 @@ export const OrdersPane: FC<Props> = (props) => {
     showAllSymbol ? "" : context.symbol
   );
 
-  const [data, { isLoading, loadMore, cancelOrder, updateOrder, cancelAlgoOrder, updateAlgoOrder }] =
-    useOrderStream({
-      status: OrderStatus.INCOMPLETE,
-      symbol: symbol,
-    });
+  const [
+    data,
+    {
+      isLoading,
+      loadMore,
+      cancelOrder,
+      updateOrder,
+      cancelAlgoOrder,
+      updateAlgoOrder,
+    },
+  ] = useOrderStream({
+    status: OrderStatus.INCOMPLETE,
+    symbol: symbol,
+  });
 
   const onShowAllSymbolChange = (isAll: boolean) => {
     setSymbol(isAll ? "" : context.symbol);
@@ -39,14 +48,6 @@ export const OrdersPane: FC<Props> = (props) => {
   };
 
   const { state } = useAccount();
-
-  // const onCancelOrder = useCallback(
-  //   (orderId: number | OrderEntity, symbol: string): Promise<any> => {
-  //     // @ts-ignore
-  //     return cancelOrder(orderId, symbol);
-  //   },
-  //   []
-  // );
 
   return (
     <OrdersView

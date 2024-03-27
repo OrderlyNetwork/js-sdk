@@ -20,7 +20,7 @@ export interface PositionsRowContextState {
   price: string;
   type: OrderType;
   side: OrderSide;
-  position: API.PositionExt;
+  position: API.PositionExt | API.PositionTPSLExt;
   updateQuantity: (value: string) => void;
   updatePriceChange: (value: string) => void;
 
@@ -30,6 +30,7 @@ export interface PositionsRowContextState {
 
   onSubmit: () => Promise<any>;
   submitting: boolean;
+  tpslOrder?: API.AlgoOrder;
 }
 
 export const PositionsRowContext = createContext(
@@ -41,7 +42,7 @@ export const usePositionsRowContext = () => {
 };
 
 export const PositionsRowProvider: FC<
-  PropsWithChildren<{ position: API.PositionExt }>
+  PropsWithChildren<{ position: API.PositionExt | API.PositionTPSLExt }>
 > = (props) => {
   const [quantity, setQuantity] = useState<string>(
     Math.abs(props.position.position_qty).toString()
@@ -126,6 +127,8 @@ export const PositionsRowProvider: FC<
         updatePriceChange: onUpdatePrice,
         updateQuantity: onUpdateQuantity,
         updateOrderType,
+        tpslOrder: (props.position as unknown as API.PositionTPSLExt)
+          .algo_order,
         onSubmit: postOrder,
         submitting,
         closeOrderData,

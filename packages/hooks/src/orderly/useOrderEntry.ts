@@ -17,11 +17,13 @@ import {
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
-import { OrderFactory, availableOrderTypes } from "../utils/createOrder";
+// import { availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
 import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
+import { OrderFactory } from "../services/orderCreator/factory";
+// import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -329,12 +331,13 @@ export function useOrderEntry(
     needParse?.visible_quantity,
   ]);
 
-  const isStopOrder =
+  const isAlgoOrder =
     parsedData?.order_type === OrderType.STOP_LIMIT ||
-    parsedData?.order_type === OrderType.STOP_MARKET;
+    parsedData?.order_type === OrderType.STOP_MARKET ||
+    parsedData?.order_type === OrderType.CLOSE_POSITION;
 
   const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
-    isStopOrder ? "/v1/algo/order" : "/v1/order"
+    isAlgoOrder ? "/v1/algo/order" : "/v1/order"
   );
 
   // const maxQty = 3;
@@ -348,15 +351,12 @@ export function useOrderEntry(
       throw new SDKError("side is error");
     }
 
-    if (
-      !values ||
-      typeof values.order_type === "undefined" ||
-      !includes(values.order_type, availableOrderTypes)
-    ) {
+    if (!values || typeof values.order_type === "undefined") {
       throw new SDKError("order_type is error");
     }
 
     const orderCreator = OrderFactory.create(
+      // @ts-ignore
       values.order_type_ext ? values.order_type_ext : values.order_type
     );
 
@@ -372,7 +372,7 @@ export function useOrderEntry(
           maxQty,
           markPrice: markPrice,
         })
-        .then((errors) => {
+        .then((errors: any) => {
           submitted.current = true;
 
           if (
@@ -410,12 +410,12 @@ export function useOrderEntry(
               if (res.success) {
                 // TODO: remove when the WS service is fixed
 
-                if (Array.isArray(res.data.rows)) {
-                  ee.emit("algoOrder:cache", {
-                    ...res.data.rows[0],
-                    trigger_price: data.trigger_price,
-                  });
-                }
+                // if (Array.isArray(res.data.rows)) {
+                //   ee.emit("algoOrder:cache", {
+                //     ...res.data.rows[0],
+                //     trigger_price: data.trigger_price,
+                //   });
+                // }
 
                 resolve(res.data);
               } else {
@@ -475,6 +475,7 @@ export function useOrderEntry(
   // const estLiqPrice = useMemo(() => {}, []);
 
   const validator = (values: any) => {
+    // @ts-ignore
     const creator = OrderFactory.create(values.order_type);
 
     return creator?.validate(values, {
@@ -540,7 +541,7 @@ export function useOrderEntry(
   useEffect(() => {
     if (!markPrice) return;
     // validate order data;
-    validator(formattedOrder)?.then((err) => {
+    validator(formattedOrder)?.then((err: any) => {
       setErrors(err);
     });
   }, [

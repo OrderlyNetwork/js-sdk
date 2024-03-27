@@ -1,18 +1,27 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { usePrivateQuery } from "../usePrivateQuery";
+import { useEffect, useMemo, useState } from "react";
+import { usePrivateQuery } from "../../usePrivateQuery";
 import { account, positions } from "@orderly.network/perp";
 import { type SWRConfiguration } from "swr";
-import useSWRSubscription from "swr/subscription";
-import { createGetter } from "../utils/createGetter";
-import { useFundingRates } from "./useFundingRates";
-import { type API, OrderEntity } from "@orderly.network/types";
-import { useSymbolsInfo } from "./useSymbolsInfo";
-import { useMarkPricesStream } from "./useMarkPricesStream";
+import { createGetter } from "../../utils/createGetter";
+import { useFundingRates } from "../useFundingRates";
+import {
+  type API,
+  OrderEntity,
+  AlgoOrderType,
+  AlgoOrderRootType,
+} from "@orderly.network/types";
+import { useSymbolsInfo } from "../useSymbolsInfo";
+import { useMarkPricesStream } from "../useMarkPricesStream";
 import { pathOr, propOr } from "ramda";
-import { parseHolding } from "../utils/parseHolding";
+import { parseHolding } from "../../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useWS } from "../useWS";
-import { useMarketsStream } from "./useMarketsStream";
+import { useMarketsStream } from "../useMarketsStream";
+import { useOrderStream } from "../orderlyHooks";
+import {
+  findPositionTPSLFromOrders,
+  findTPSLFromOrder,
+  findTPSLFromOrders,
+} from "./utils";
 
 type PriceMode = "markPrice" | "lastPrice";
 
@@ -64,6 +73,16 @@ export const usePositionStream = (
 
   const { data: markPrices } = useMarkPricesStream();
 
+  // get TP/SL orders;
+
+  const [tpslOrders] = useOrderStream({
+    includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  });
+  //
+  // console.log("------", tpslOrders);
+
+  // console.log("---------------");
+
   const [priceMode, setPriceMode] = useState(options?.calcMode || "markPrice");
 
   useEffect(() => {
@@ -73,8 +92,6 @@ export const usePositionStream = (
   }, [options?.calcMode]);
 
   const { data: tickers } = useMarketsStream();
-  // console.log("mark prices", markPrices);
-  // console.log("tickers", tickers);
 
   const tickerPrices = useMemo(() => {
     const data: Record<string, number> = Object.create(null);
@@ -85,7 +102,9 @@ export const usePositionStream = (
     return data;
   }, [tickers]);
 
-  const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
+  const formattedPositions = useMemo<
+    [API.PositionTPSLExt[], any] | null
+  >(() => {
     if (!data?.rows || !symbolInfo || !accountInfo) return null;
 
     const filteredData =
@@ -195,8 +214,8 @@ export const usePositionStream = (
     if (!holding || !markPrices) {
       return [zero, zero, 0];
     }
-    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formatedPositions);
-    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formatedPositions);
+    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formattedPositions);
+    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formattedPositions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
 
@@ -218,19 +237,27 @@ export const usePositionStream = (
     });
 
     return [totalCollateral, totalValue, totalUnrealizedROI];
-  }, [holding, formatedPositions, markPrices]);
+  }, [holding, formattedPositions, markPrices]);
 
-  const positionsRows = useMemo(() => {
-    if (!formatedPositions) return null;
+  const positionsRows = useMemo<API.PositionTPSLExt[] | null>(() => {
+    if (!formattedPositions) return null;
 
-    if (!symbolInfo || !accountInfo) return formatedPositions[0];
+    if (!symbolInfo || !accountInfo) return formattedPositions[0];
 
     const total = totalCollateral.toNumber();
 
-    let rows = formatedPositions[0]
+    let rows = formattedPositions[0]
       .filter((item) => item.position_qty !== 0)
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
+
+        const related_order = Array.isArray(tpslOrders)
+          ? findPositionTPSLFromOrders(tpslOrders, item.symbol)
+          : undefined;
+
+        const tp_sl_pricer = !!related_order
+          ? findTPSLFromOrder(related_order)
+          : undefined;
 
         const MMR = positions.MMR({
           baseMMR: info("base_mmr"),
@@ -247,13 +274,14 @@ export const usePositionStream = (
             markPrice: item.mark_price,
             MMR,
           }),
-          // est_liq_price: positions.liqPrice({
-          //   markPrice: item.mark_price,
-          //   totalCollateral: total,
-          //   positionQty: item.position_qty,
-          //   MMR,
-          // }),
+          tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+          sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+
           mmr: MMR,
+
+          // has_position_tp_sl:
+          //   !tp_sl_pricer?.sl_trigger_price && !tp_sl_pricer?.tp_trigger_price,
+          algo_order: related_order,
         };
       });
 
@@ -273,19 +301,19 @@ export const usePositionStream = (
     });
 
     return rows;
-  }, [formatedPositions, symbolInfo, accountInfo, totalCollateral]);
-
-  // useEffect(() => {
-  //   ee.on("positions:changed", () => {
-  //     updatePositions();
-  //   });
-  // }, []);
+  }, [
+    formattedPositions,
+    symbolInfo,
+    accountInfo,
+    totalCollateral,
+    tpslOrders,
+  ]);
 
   return [
     {
       rows: positionsRows,
       aggregated: {
-        ...(formatedPositions?.[1] ?? {}),
+        ...(formattedPositions?.[1] ?? {}),
         unrealPnlROI: totalUnrealizedROI,
       },
       totalCollateral,

@@ -21,7 +21,7 @@ export const ListTileForSymbol: FC<ListTileForSymbolProps> = (props) => {
     <ListTile
       {...rest}
       avatar={{
-        type: "coin",
+        type: "token",
         // @ts-ignore
         name: coin,
       }}

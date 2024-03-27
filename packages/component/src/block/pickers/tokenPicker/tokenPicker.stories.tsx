@@ -47,5 +47,8 @@ export const Default: Story = {
         decimals: 6,
       },
     ],
+    fetchBalance: () => {
+      return Promise.resolve(0);
+    },
   },
 };

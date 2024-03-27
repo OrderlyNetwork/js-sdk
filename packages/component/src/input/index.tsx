@@ -3,6 +3,7 @@ import React, {
   InputHTMLAttributes,
   forwardRef,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -13,6 +14,7 @@ import { InputMask } from "./inputMask";
 import { Tooltip } from "@/tooltip";
 import { CircleCloseIcon } from "@/icon";
 import { findLongestCommonSubString } from "@/utils/string";
+import { parseInputHelper } from "./utils";
 
 const inputVariants = cva(["orderly-rounded"], {
   variants: {
@@ -71,6 +73,11 @@ export interface InputProps
   inputMode?: "decimal" | "numeric" | "amount"; // extend input origin inputMode
   // disabled?: boolean;
   containerClassName?: string;
+  onValueChange?: (value: any) => void;
+  /**
+   * Whether to display the thousandth symbol
+   */
+  thousandSeparator?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -89,6 +96,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       helpText,
       loading,
       onChange,
+      onValueChange,
+      thousandSeparator,
+      id,
       ...props
     },
     ref
@@ -97,6 +107,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const [cursor, setCursor] = useState<number | null>(null);
     const innerInputRef = useRef<HTMLInputElement>(null);
     const prevInputValue = useRef<string | null>(null);
+    const cid = useId();
 
     useEffect(() => {
       if (!ref) return;
@@ -149,6 +160,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (typeof onChange === "function") {
         onChange(event);
       }
+
+      if (typeof onValueChange === "function") {
+        let value = event.target.value;
+
+        if (thousandSeparator) {
+          value = parseInputHelper(value);
+        }
+        onValueChange(value);
+      }
       prevInputValue.current = event.target.value;
       setCursor(event.target.selectionStart);
     };
@@ -193,7 +213,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (typeof prefix === "string") {
         return (
           <InputMask
-            name={props.name}
+            name={id || cid}
             className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
           >
             {prefix}
@@ -212,7 +232,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       if (typeof suffix === "string") {
         return (
           <InputMask
-            name={props.name}
+            name={id || cid}
             className="orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs"
           >
             {suffix}
@@ -254,7 +274,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onBlur={onInputBlur}
             onChange={onInputChange}
             {...(props as any)}
-            disabled={!!disabled}
+            id={id || cid}
+            disabled={disabled}
             className={cn(
               "orderly-input",
               "orderly-bg-transparent orderly-px-3 orderly-flex-1 focus-visible:orderly-outline-none orderly-h-full orderly-w-full orderly-peer placeholder:orderly-text-base-contrast-20 orderly-tabular-nums",

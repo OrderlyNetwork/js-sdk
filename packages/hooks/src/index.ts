@@ -38,9 +38,20 @@ export {
 
 export * from "./orderly/orderlyHooks";
 
-import useSWR, { type SWRConfiguration, SWRConfig } from "swr";
+import useSWR, {
+  type SWRConfiguration,
+  SWRConfig,
+  useSWRConfig,
+  unstable_serialize,
+} from "swr";
 
-export { useSWR, SWRConfig, type SWRConfiguration };
+export {
+  useSWR,
+  SWRConfig,
+  useSWRConfig,
+  type SWRConfiguration,
+  unstable_serialize,
+};
 
 export * from "use-debounce";
 
@@ -56,5 +67,7 @@ export type {
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
+
+export * as utils from "./utils";
 
 export type { WalletAdapter } from "@orderly.network/core";

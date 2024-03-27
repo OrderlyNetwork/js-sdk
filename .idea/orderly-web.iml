@@ -5,8 +5,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/apps/web" />
       <excludeFolder url="file://$MODULE_DIR$/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/apps" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/net" />
     </content>
     <content url="file://$MODULE_DIR$/packages/component" />
+    <content url="file://$MODULE_DIR$/packages/hooks" />
     <content url="file://$MODULE_DIR$/packages/net" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

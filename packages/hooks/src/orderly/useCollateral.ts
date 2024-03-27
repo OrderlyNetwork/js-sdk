@@ -3,7 +3,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import {
   pathOr_unsettledPnLPathOr,
   usePositionStream,
-} from "./usePositionStream";
+} from "./usePositionStream/usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
 import { type API, OrderStatus } from "@orderly.network/types";
@@ -11,7 +11,7 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
 import { zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useHoldingStream } from "./useHoldingStream";
-import { useOrderStream } from "./useOrderStream";
+import { useOrderStream } from "./useOrderStream/useOrderStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;
@@ -48,7 +48,8 @@ export const useCollateral = (
 
   const { usdc } = useHoldingStream();
 
-  const filterAlgoOrders = orders?.filter((item) => item.algo_order_id === undefined) ?? [];
+  const filterAlgoOrders =
+    orders?.filter((item) => item.algo_order_id === undefined) ?? [];
 
   // const { data: holding } = usePrivateQuery<API.Holding[]>(
   //   "/v1/client/holding",

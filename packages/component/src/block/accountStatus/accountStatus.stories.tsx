@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { AccountStatusBar } from ".";
 import * as React from "react";
-import { useAccount } from "@orderly.network/hooks";
-
+import { useAccount, useAccountInfo } from "@orderly.network/hooks";
 
 const meta: Meta<typeof AccountStatusBar> = {
   //   tags: ["autodocs"],
@@ -42,6 +41,7 @@ export const Default: Story = {
 export const WithHook: Story = {
   render: (args) => {
     const { account, state } = useAccount();
+    const { data: info } = useAccountInfo();
 
     //
 

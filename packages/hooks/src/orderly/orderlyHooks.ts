@@ -14,8 +14,8 @@ export { useLeverage } from "./useLeverage";
 
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
-export { usePositionStream } from "./usePositionStream";
-export { useOrderStream } from "./useOrderStream";
+export { usePositionStream } from "./usePositionStream/usePositionStream";
+export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
 export { useCollateral } from "./useCollateral";
@@ -33,3 +33,8 @@ export { useSettleSubscription } from "./useSettleSubscription";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
 
 export { useSymbolPriceRange } from "./useSymbolPriceRange";
+
+export {
+  useTaskProfitAndStopLoss,
+  type ComputedAlgoOrder,
+} from "./useTakeProfitAndStopLoss";

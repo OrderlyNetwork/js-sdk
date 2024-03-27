@@ -8,7 +8,9 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../useEventEmitter";
 import { getKeyFunction } from "../dataProvider";
 import { parseJSON } from "../utils/json";
-import { updateOrdersHandler } from "../utils/swr";
+import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
+import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
+import { object2underscore } from "../utils/ws";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -20,42 +22,55 @@ export const usePrivateDataObserver = (options: {
   const { state } = useAccount();
 
   // TODO: remove this when the WS service provides the correct data
-  const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
+  // const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
 
   const updateOrders = (
-    data: WSMessage.AlgoOrder | WSMessage.Order,
+    data: WSMessage.AlgoOrder[] | WSMessage.Order,
     isAlgoOrder: boolean
   ) => {
-    const map = options.getKeysMap("orders");
+    const keysMap = options.getKeysMap("orders");
 
     // console.log("$$$$$$$$$$$$", data, algoOrderCacheQuneue.current);
 
-    if (isAlgoOrder) {
-      /// TODO: remove this when the WS service provides the correct data
-      if (algoOrderCacheQuneue.current.length) {
-        const index = algoOrderCacheQuneue.current.findIndex(
-          (item: any) =>
-            item.order_id === (data as WSMessage.AlgoOrder).algoOrderId
-        );
+    // if (isAlgoOrder) {
+    //   /// TODO: remove this when the WS service provides the correct data
+    //   if (algoOrderCacheQuneue.current.length) {
+    //     const index = algoOrderCacheQuneue.current.findIndex(
+    //       (item: any) =>
+    //         item.order_id === (data as WSMessage.AlgoOrder).algoOrderId
+    //     );
 
-        if (index > -1) {
-          data = {
-            ...data,
-            ...algoOrderCacheQuneue.current[index],
-          };
-          algoOrderCacheQuneue.current.splice(index, 1);
-        }
-      }
-    }
+    //     if (index > -1) {
+    //       data = {
+    //         ...data,
+    //         ...algoOrderCacheQuneue.current[index],
+    //       };
+    //       algoOrderCacheQuneue.current.splice(index, 1);
+    //     }
+    //   }
+    // }
 
-    map.forEach((getKey, key) => {
+    keysMap.forEach((getKey, key) => {
       mutate(
         unstable_serialize((index, prevData) => [
           getKey(index, prevData),
           state.accountId,
         ]),
         (prevData?: any[]) => {
-          return updateOrdersHandler(key, data, prevData);
+          try {
+            if (isAlgoOrder) {
+              const result = updateAlgoOrdersHandler(
+                key,
+                data as WSMessage.AlgoOrder[],
+                prevData!
+              );
+
+              return result;
+            }
+            return updateOrdersHandler(key, data as WSMessage.Order, prevData);
+          } catch (error) {
+            return prevData;
+          }
         },
         {
           revalidate: false,
@@ -69,9 +84,15 @@ export const usePrivateDataObserver = (options: {
     //   status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
     // });
 
+    const formattedData = isAlgoOrder
+      ? AlgoOrderMergeHandler.groupOrders(data as WSMessage.AlgoOrder[])
+      : object2underscore(data);
+
     ee.emit("orders:changed", {
-      ...data,
-      status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
+      ...formattedData,
+      status: isAlgoOrder
+        ? formattedData.algo_status
+        : (data as WSMessage.Order).status,
     });
   };
 
@@ -92,18 +113,7 @@ export const usePrivateDataObserver = (options: {
     if (!state.accountId) return;
     const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
       onMessage: (data: any) => {
-        setTimeout(() => {
-          if (Array.isArray(data)) {
-            data.forEach((item) => {
-              updateOrders(item, true);
-
-              // ee.emit("orders:changed", { ...item, status: item.algoStatus });
-            });
-          } else {
-            updateOrders(data, true);
-            // ee.emit("orders:changed", { ...data, status: data.algoStatus });
-          }
-        }, 100);
+        updateOrders(data, true);
       },
     });
 
@@ -173,15 +183,15 @@ export const usePrivateDataObserver = (options: {
   }, [state.accountId]);
 
   // cache algo orders
-  useEffect(() => {
-    const handler = (data: API.AlgoOrder) => {
-      algoOrderCacheQuneue.current.push(data);
-    };
+  // useEffect(() => {
+  //   const handler = (data: API.AlgoOrder) => {
+  //     algoOrderCacheQuneue.current.push(data);
+  //   };
 
-    ee.on("algoOrder:cache", handler);
+  //   ee.on("algoOrder:cache", handler);
 
-    return () => {
-      ee.off("algoOrder:cache", handler);
-    };
-  }, []);
+  //   return () => {
+  //     ee.off("algoOrder:cache", handler);
+  //   };
+  // }, []);
 };

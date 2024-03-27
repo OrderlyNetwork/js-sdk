@@ -6,6 +6,7 @@ import { firstLetterToUpperCase, upperCaseFirstLetter } from "@/utils/string";
 import { API } from "@orderly.network/types";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
+import { TPSLOrderTag } from "../orders/useTPSLTag";
 
 interface HistoryCellProps {
   item: any;
@@ -45,20 +46,19 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       return upperCaseFirstLetter("pending");
     }
     return upperCaseFirstLetter(status);
-
-  }, [
-    item.status,
-    item.algo_status
-  ]);
+  }, [item.status, item.algo_status]);
 
   return (
-    <div className="orderly-p-4">
-      <div className="orderly-flex orderly-justify-between orderly-items-center">
-        <div className="orderly-flex-1 orderly-flex orderly-items-center">
-          {typeTag}
-          <div className="orderly-px-2 orderly-text-2xs" onClick={onSymbol}>
-            <Text rule="symbol">{item.symbol}</Text>
+    <div className="orderly-px-4 orderly-py-2">
+      <div className="orderly-mb-1 orderly-flex orderly-items-end orderly-justify-between">
+        <div className="orderly-flex-col">
+          <div className="orderly-flex orderly-items-center orderly-gap-2 ">
+            {typeTag}
+            <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
+              <Text rule="symbol">{item.symbol}</Text>
+            </div>
           </div>
+          <TPSLOrderTag order={item} />
         </div>
         <div className="orderly-text-4xs orderly-text-base-contrast-36">
           <Text rule="date">{item.created_time}</Text>
@@ -132,7 +132,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           }
           value={
             item.type === OrderType.MARKET ||
-              item.type === OrderType.STOP_MARKET
+            item.type === OrderType.STOP_MARKET
               ? "Market"
               : item.trigger_price
           }
