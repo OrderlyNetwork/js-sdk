@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.6"
   },
   "changesets": [
+    "chilly-tools-learn",
     "hip-maps-wave",
     "lovely-spies-vanish",
     "slimy-sloths-enjoy"
