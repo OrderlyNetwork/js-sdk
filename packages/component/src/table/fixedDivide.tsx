@@ -16,7 +16,7 @@ export const FixedDivide: FC = () => {
       {left > 0 ? (
         <div
           id="table_left_fixed_divide"
-          className={`${classNames} peer-data-[left=fixed]:orderly-block`}
+          className={`${classNames} peer-data-[left=fixed]:orderly-block table-left-fixed-divide`}
           style={{ left: `${left}px` }}
         ></div>
       ) : null}
@@ -24,7 +24,7 @@ export const FixedDivide: FC = () => {
       {right > 0 ? (
         <div
           id="table_right_fixed_divide"
-          className={`${classNames} peer-data-[right=fixed]:orderly-block`}
+          className={`${classNames} peer-data-[right=fixed]:orderly-block table-right-fixed-divide`}
           style={{ right: `${right}px` }}
         ></div>
       ) : null}

@@ -31,7 +31,12 @@ export const Table = <RecordType extends unknown>(
   const wrapRef = useRef<HTMLDivElement>(null);
   const { dataSource, columns, showMaskElement = true, ...rest } = props;
 
-  // console.log("props sortable:: ", props.sortable);
+  const [maskLayout, setMaskLayout] = useState({
+    left: 0,
+    right: 0,
+    top: 44.5,
+    bottom: 0,
+  });
 
   const maskElement = useMemo(() => {
     if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
@@ -43,11 +48,16 @@ export const Table = <RecordType extends unknown>(
       content = <EmptyView />;
     }
     return (
-      <div className="orderly-absolute orderly-w-full orderly-z-20 orderly-left-0 orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-flex orderly-justify-center orderly-items-center orderly-bg-base-900/30 orderly-backdrop-blur-sm">
+      <div
+        className="orderly-absolute orderly-z-20 orderly-flex-col orderly-justify-center orderly-items-center orderly-bg-base-900/30 orderly-backdrop-blur-sm"
+        style={{
+          ...maskLayout,
+        }}
+      >
         {content}
       </div>
     );
-  }, [props.dataSource, props.loading]);
+  }, [props.dataSource, props.loading, maskLayout]);
 
   const needFixed = useMemo(() => {
     return props.columns.some(
@@ -69,7 +79,6 @@ export const Table = <RecordType extends unknown>(
     }
 
     if (
-      // wrapRef.current.scrollWidth - wrapRef.current.scrollLeft === wrapRef.current.clientWidth
       wrapRef.current.scrollLeft + wrapRef.current.clientWidth >=
       wrapRef.current.scrollWidth
     ) {
@@ -78,6 +87,42 @@ export const Table = <RecordType extends unknown>(
       wrapRef.current.setAttribute("data-right", "fixed");
     }
   }, 50);
+
+  const onMaskResize = useDebouncedCallback((entry: ResizeObserverEntry) => {
+    console.log("mask resize", entry);
+    const leftDivide = entry.target.parentElement?.querySelector(
+      ".table-left-fixed-divide"
+    );
+    const rightDivide = entry.target.parentElement?.querySelector(
+      ".table-right-fixed-divide"
+    );
+
+    const tableHeader = wrapRef.current?.querySelector(
+      ".orderly-ui-table-thead"
+    );
+
+    if (leftDivide) {
+      const left = leftDivide.getBoundingClientRect();
+      console.log("leftDivide", left);
+      // setMaskLayout((layout) => ({ ...layout, left }));
+    }
+
+    if (rightDivide) {
+      const right = rightDivide.getBoundingClientRect();
+
+      const r = right.right > 0 ? entry.contentRect.right - right.right : 0;
+      setMaskLayout((layout) => ({
+        ...layout,
+        right: r,
+      }));
+    }
+
+    if (tableHeader) {
+      const top = tableHeader.getBoundingClientRect();
+
+      setMaskLayout((layout) => ({ ...layout, top: top.height }));
+    }
+  }, 200);
 
   useEffect(() => {
     if (!wrapRef.current) {
@@ -89,6 +134,7 @@ export const Table = <RecordType extends unknown>(
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         onScroll(entry.target.scrollLeft);
+        onMaskResize(entry);
       }
     });
 
@@ -142,7 +188,6 @@ export const Table = <RecordType extends unknown>(
             )}
           >
             <ColGroup columns={props.columns} />
-
             <TBody {...rest} />
           </table>
         </EndReachedBox>
