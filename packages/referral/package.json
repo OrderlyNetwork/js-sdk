@@ -45,7 +45,6 @@
     "typedoc": "^0.24.8"
   },
   "dependencies": {
-    "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/react": "workspace:*",
     "@orderly.network/utils": "workspace:*",
