@@ -4,7 +4,7 @@ import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 
 export const useSymbolsInfo = () => {
-  const { data = {} } = useQuery<API.SymbolExt[]>(`/v1/public/info`, {
+  const { data } = useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
     focusThrottleInterval: 1000 * 60 * 60 * 24,
     dedupingInterval: 1000 * 60 * 60 * 24,
     revalidateOnFocus: false,
@@ -34,9 +34,5 @@ export const useSymbolsInfo = () => {
     },
   });
 
-  return createGetter<API.SymbolExt>(data as API.SymbolExt) as Record<
-    string,
-    any
-    // (key: string, defaultValue?: any) => any
-  >;
+  return createGetter<API.SymbolExt, string>(data);
 };
