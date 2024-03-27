@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 0.2.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+- Updated dependencies
+  - @orderly.network/types@0.2.8
+
 ## 0.2.7
 
 ### Patch Changes

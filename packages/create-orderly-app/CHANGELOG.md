@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.2.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+
 ## 0.2.7
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # examples
 
+## 0.2.9
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+- Updated dependencies
+  - @orderly.network/react@0.2.9
+  - @orderly.network/core@0.2.8
+  - @orderly.network/hooks@1.1.9
+  - @orderly.network/web3-onboard@0.1.9
+
 ## 0.2.8
 
 ### Patch Changes
