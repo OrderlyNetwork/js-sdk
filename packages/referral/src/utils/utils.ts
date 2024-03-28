@@ -20,7 +20,7 @@ export function addQueryParam(url: string, paramName: string, paramValue: string
     }
   }
 
-  function parseTime(time?: number | string): Date | null {
+  export function parseTime(time?: number | string): Date | null {
     if (!time) return null;
     const timestamp = typeof time === 'number' ? time : Date.parse(time);
     

@@ -3,7 +3,7 @@ import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text, EndReac
 import { FC, useCallback, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
-import { formatTime, formatYMDTime } from "../../utils/utils";
+import { formatTime, formatYMDTime, parseTime } from "../../utils/utils";
 import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 
@@ -12,15 +12,25 @@ export const RefereesList: FC<{
     setDateText: any
 }> = (props) => {
 
-    const [dataSource, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+    const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
 
     const isMD = useMediaQuery(MEDIA_MD);
     const { dateText, setDateText } = props;
 
+    const dataSource = useMemo(() => {
+        if (!data) return null;
+
+       const newData = data.sort((a: any, b: any) => {
+            return b.code_binding_time - a.code_binding_time;
+        });
+
+        return newData;
+    }, [data]);
+
     if (dataSource?.length > 0) {
-        const text = formatTime(dataSource[0].code_binding_time);
+        const text = formatYMDTime(dataSource[0].code_binding_time);
         if (text) {
-            setDateText(text);
+            setDateText(text + " 00:00:00 UTC");
         }
     }
 
@@ -128,18 +138,18 @@ const _BigReferees: FC<{
             height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
             <EndReachedBox onEndReached={props.loadMore}>
-            <Table
-                bordered
-                justified
-                showMaskElement={true}
-                columns={columns}
-                dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
-                className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
-                )}
-                generatedRowKey={(rec, index) => `${index}`}
-            />
+                <Table
+                    bordered
+                    justified
+                    showMaskElement={true}
+                    columns={columns}
+                    dataSource={dataSource}
+                    headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                    className={cn(
+                        "orderly-text-xs 2xl:orderly-text-base",
+                    )}
+                    generatedRowKey={(rec, index) => `${index}`}
+                />
             </EndReachedBox>
         </div>
     );
@@ -171,7 +181,7 @@ export const RefereesCell: FC<{
             <Statistic
                 label={label}
                 labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
-                value={(<AutoHideText text={value}/>)}
+                value={(<AutoHideText text={value} />)}
                 valueClassName="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80"
                 rule={rule}
                 className={className}

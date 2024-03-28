@@ -14,19 +14,20 @@ export const CommissionList: FC<{
 
     const [data, { refresh, isLoading, loadMore }] = useCommission();
 
+
     const dataSource = useMemo(() => {
         return data?.filter((item: any) => {
             return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
-        });
+        }).sort((a: any,b: any) => b.created_time - a.created_time);
     }, [
         data,
     ]);
 
 
     if (dataSource?.length > 0) {
-        const text = formatTime(dataSource[0].created_time);
+        const text = formatYMDTime(dataSource[0].created_time);
         if (text) {
-            setDateText(text);
+            setDateText(text + " 00:00:00 UTC");
         }
     } else {
         setDateText(undefined);
