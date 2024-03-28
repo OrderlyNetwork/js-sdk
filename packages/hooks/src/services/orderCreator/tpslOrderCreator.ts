@@ -1,7 +1,7 @@
 import { AlgoOrderEntity, OrderType, API } from "@orderly.network/types";
 import { TriggerPriceType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types/src/order";
+import { AlgoOrderRootType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
