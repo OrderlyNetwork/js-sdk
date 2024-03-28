@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.2.9-internal.1
+
+### Patch Changes
+
+- fix: pageckage import path error
+- Updated dependencies
+  - @orderly.network/react@1.4.1-internal.1
+  - @orderly.network/web3-onboard@1.4.1-internal.1
+  - @orderly.network/hooks@1.4.1-internal.1
+  - @orderly.network/types@1.4.1-internal.1
+
 ## 0.2.9-internal.0
 
 ### Patch Changes

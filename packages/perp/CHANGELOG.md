@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 2.0.8-internal.1
+
+### Patch Changes
+
+- fix: pageckage import path error
+- Updated dependencies
+  - @orderly.network/types@1.4.1-internal.1
+  - @orderly.network/utils@1.4.1-internal.1
+
 ## 2.0.8-internal.0
 
 ### Patch Changes

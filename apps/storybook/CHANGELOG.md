@@ -1,5 +1,17 @@
 # storybook
 
+## 1.1.9-internal.1
+
+### Patch Changes
+
+- fix: pageckage import path error
+- Updated dependencies
+  - @orderly.network/web3-modal@1.4.1-internal.1
+  - @orderly.network/react@1.4.1-internal.1
+  - @orderly.network/web3-onboard@1.4.1-internal.1
+  - @orderly.network/hooks@1.4.1-internal.1
+  - @orderly.network/core@1.4.1-internal.1
+
 ## 1.1.9-internal.0
 
 ### Patch Changes

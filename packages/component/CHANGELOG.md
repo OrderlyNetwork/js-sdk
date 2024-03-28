@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 1.4.1-internal.1
+
+### Patch Changes
+
+- fix: pageckage import path error
+- Updated dependencies
+  - @orderly.network/trading-view@1.4.1-internal.1
+  - @orderly.network/hooks@1.4.1-internal.1
+  - @orderly.network/types@1.4.1-internal.1
+  - @orderly.network/utils@1.4.1-internal.1
+  - @orderly.network/core@1.4.1-internal.1
+  - @orderly.network/net@1.4.1-internal.1
+
 ## 1.4.1-internal.0
 
 ### Patch Changes

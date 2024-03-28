@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "0.1.7"
   },
   "changesets": [
+    "cold-games-build",
     "purple-crabs-smoke"
   ]
 }
