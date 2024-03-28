@@ -16,7 +16,7 @@ export const CommissionList: FC<{
 
     const dataSource = useMemo(() => {
         return data?.filter((item: any) => {
-            return item.type === "REFERRAL_REBATE" && item.status === "COMPLETED";
+            return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
         });
     }, [
         data,
