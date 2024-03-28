@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.4.1-internal.1
+
+### Patch Changes
+
+- fix: pageckage import path error
+
 ## 1.4.1-internal.0
 
 ### Patch Changes
