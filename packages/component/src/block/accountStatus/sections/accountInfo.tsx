@@ -13,6 +13,7 @@ import { type ConfigStore } from "@orderly.network/core";
 import { Divider } from "@/divider";
 import { Statistic } from "@/statistic";
 import { OrderlyAppContext } from "@/provider";
+import { commify } from "@orderly.network/utils";
 
 
 export interface AccountInfoProps {
@@ -193,8 +194,9 @@ const ReferralInfo = () => {
           labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="30d commission"
-          value={commission}
+          value={commify(commission)}
           precision={2}
+          rule="price"
         />
         <Statistic
           labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
@@ -202,6 +204,7 @@ const ReferralInfo = () => {
           label="30d vol."
           value={vol}
           precision={2}
+          rule="price"
         />
       </div>
     </div>
