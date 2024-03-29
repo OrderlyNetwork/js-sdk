@@ -74,7 +74,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           setHandleStep(0);
         });
     }
-  }, [status, remember]);
+  }, [status, remember, refCode]);
 
   return (
     <div>
