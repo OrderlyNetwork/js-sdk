@@ -3,6 +3,7 @@ import { FC, PropsWithChildren, createContext, useEffect, useMemo } from "react"
 import { API } from "../types/api";
 import { useDaily } from "./useDaily";
 import { XAxis, YAxis, BarStyle } from "../components";
+import { formatYMDTime } from "../utils/utils";
 
 export type UserVolumeType = {
     "1d_volume"?: number,
@@ -95,9 +96,16 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         const volume: any = {};
 
         if (dailyVolume && (dailyVolume.length) > 0) {
-            volume["1d_volume"] = dailyVolume.reduce((accumulator, currentValue) => {
-                return accumulator + currentValue.perp_volume;
-            }, 0);
+            const now = formatYMDTime(new Date().toLocaleDateString());
+            const index = dailyVolume.findIndex((item) => {
+                const itemDate = item.date;
+                return itemDate === now;
+            });
+            let oneDayVolume = 0;
+            if (index !== -1) {
+                oneDayVolume = dailyVolume[index].perp_volume;
+            }
+            volume["1d_volume"] = oneDayVolume;
         }
 
         if (volumeStatistics) {
@@ -134,7 +142,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             isAffiliate: isAffiliate,
             isTrader: isTrader,
             // isAffiliate: false,
-            // isTrader: true,
+            // isTrader: false,
             mutate,
             becomeAnAffiliate,
             becomeAnAffiliateUrl,
