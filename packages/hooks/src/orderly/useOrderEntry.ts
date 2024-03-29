@@ -548,6 +548,7 @@ export function useOrderEntry(
     formattedOrder.order_quantity,
     formattedOrder.total,
     formattedOrder.trigger_price,
+    formattedOrder.order_type,
     markPrice,
   ]);
 
