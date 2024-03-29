@@ -44,6 +44,7 @@ export const ReferralInputCode = create<{
       }
     } catch (e) {
       if (props.bindReferralCodeState) {
+        toast.error(`${e}`);
         props.bindReferralCodeState(false, e, hide);
       } else {
         toast.error(`${e}`);
