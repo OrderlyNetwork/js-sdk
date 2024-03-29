@@ -54,6 +54,16 @@ export type XAxis = {
     textFill: string,
     //** default is "middle" */
     textAnchor: string,
+    xTitle?: (item: any[]) => string,
+};
+
+export type ChartHover = {
+    hoverTitle?: string,
+    fontSize?: number,
+    titleFill?: string,
+    subtitleFill?: string,
+    title?: (hoverItem: any[]) => string,
+    subtitle?: (hoverItem: any[]) => string,
 };
 
 export const InitialBarStyle: BarStyle = {
@@ -95,18 +105,19 @@ type ChartSize = { width: number, height: number };
 export const ColmunChart: React.FC<{
     className?: string,
     data: any[],
-    hoverTitle?: string,
+
     barStyle?: BarStyle,
     yAxis?: YAxis,
     xAxis?: XAxis,
+    chartHover?: ChartHover,
 }> = (props) => {
     const {
         data = [],
         className,
-        hoverTitle,
         barStyle = InitialBarStyle,
         yAxis = InitialYAxis,
-        xAxis = InitialXAxis
+        xAxis = InitialXAxis,
+        chartHover,
     } = props;
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState<ChartSize>({ height: 0, width: 0 });
@@ -187,8 +198,16 @@ export const ColmunChart: React.FC<{
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
         var stepX = (size.width - padding - barStyle.width * 2) / (titles.length - 1);
+
+        if (!isFinite(stepX) || Number.isNaN(stepX)) {
+            stepX = 0;
+        }
         for (let index = 0; index < titles.length; index++) {
-            const title = titles[index];
+            let title = titles[index];
+
+            if (xAxis.xTitle) {
+                title = xAxis.xTitle(data[index]);
+            }
 
             const x = padding + stepX * index + 6;
             const y = size.height - xAxis.fontSize;
@@ -210,7 +229,11 @@ export const ColmunChart: React.FC<{
 
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
-        var stepX = (size.width - padding - barStyle.width * 2) / (columns.length - 1);
+        let stepX = (size.width - padding - barStyle.width * 2) / (columns.length - 1);
+        
+        if (!isFinite(stepX) || Number.isNaN(stepX)) {
+            stepX = 0;
+        }
         const containerHeight = size.height - xAxis.height - yAxis.gridPaddingTop;
         for (let index = 0; index < columns.length; index++) {
             const column = columns[index];
@@ -220,8 +243,8 @@ export const ColmunChart: React.FC<{
             const height = containerHeight - convertToYCoordinate(column, minMaxInfo.min, minMaxInfo.max, containerHeight);
             const y = (containerHeight - height) + yAxis.gridPaddingTop;
 
-
-            // console.log("columns", column, x, y, height);
+ 
+            // console.log(`colums: ${columns}, stepX: ${stepX} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}`);
 
             children.push(
                 <rect
@@ -264,16 +287,16 @@ export const ColmunChart: React.FC<{
 
         const hoverWidth = barStyle.hoverContainerWidth;
         if (hoverItem.x > size.width / 2) {
-            const x = hoverItem.x - hoverWidth;
-            if (x < 0) {
-                return 0;
+            const x = hoverItem.x - hoverWidth - 5;
+            if (x < 5) {
+                return 5;
             }
             return x;
         } else {
             if (hoverItem.x + hoverWidth + 12 > size.width) {
-                return 0;
+                return 5;
             }
-            return hoverItem.x + 12;
+            return hoverItem.x + 12 + 5;
         }
 
     }, [hoverItem, size]);
@@ -305,14 +328,14 @@ export const ColmunChart: React.FC<{
                 }}
             >
                 <div className="orderly-flex orderly-text-xs ordelry-gap-2">
-                    <div className="orderly-flex-1">{hoverTitle}</div>
+                    <div className="orderly-flex-1">{chartHover?.hoverTitle}</div>
                     <div className="orderly-flex-1 orderly-flex orderly-justify-end">
-                        {hoverItem.item[1]}
+                        {chartHover?.title?.(hoverItem.item) || hoverItem.item[1]}
                         <div className="orderly-text-base-contrast-54 orderly-ml-2">USDT</div>
                     </div>
                 </div>
-                <div className="orderly-flex orderly-justify-end">
-                    {hoverItem.item[0]}
+                <div className="orderly-flex orderly-justify-end orderly-text-[12px] orderly-text-base-contrast-54 orderly-mt-2">
+                    {chartHover?.subtitle?.(hoverItem.item) || hoverItem.item[0]}
                 </div>
             </div>}
         </div>

@@ -1,10 +1,11 @@
 
 import { Select, cn } from "@orderly.network/react";
-import { FC, useContext,  useMemo, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { useRefereeHistory } from "../../hooks/useRefereeHistory";
-import { formatMdTime } from "../../utils/utils";
+import { formatMdTime, formatYMDTime } from "../../utils/utils";
 import { ReferralContext } from "../../hooks/referralContext";
+import { Decimal, commify } from "@orderly.network/utils";
 
 type ChartDataType = "Commission" | "Referral vol.";
 
@@ -27,7 +28,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         return data.slice(0, end).map((item) => {
 
 
-            const timeText = formatMdTime(item.date);
+            const timeText = formatYMDTime(item.date);
             if (filterType === "Commission") {
                 return [timeText, item?.referee_rebate || 0];
             }
@@ -55,10 +56,26 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
             <ColmunChart
                 data={dataSource.length === 0 ? emptyDataSource(true) : dataSource}
-                hoverTitle={filterType}
+                chartHover={{
+                    hoverTitle: filterType,
+                    title: (item) => {
+                        try {
+                            return commify(new Decimal(item[1]).toFixed(2, Decimal.ROUND_DOWN));
+                        } catch (e) {
+
+                        }
+                        return `${item[1]}`;
+                    },
+                }}
                 yAxis={{ ...yAxis, ...chartConfig?.affiliate.yAxis, }}
                 barStyle={{ ...InitialBarStyle, ...chartConfig?.affiliate.bar, }}
-                xAxis={{ ...InitialXAxis, ...chartConfig?.affiliate.bar, }}
+                xAxis={{ ...InitialXAxis, xTitle: (item) => {
+                    const list = item[0].split("-");
+                    if (list.length === 3) {
+                        return `${list[1]}-${list[2]}`;
+                    }
+                    return item[0];
+                }, ...chartConfig?.affiliate.bar, }}
 
             />
         </div>

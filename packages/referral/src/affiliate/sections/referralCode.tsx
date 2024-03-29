@@ -6,7 +6,7 @@ import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, commify } from "@orderly.network/utils";
 import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
@@ -100,11 +100,11 @@ export const CodeList: FC<{
     const getRate = (item: API.ReferralCode) => {
         const refereeRate = new Decimal((item.referee_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
         const referralRate = new Decimal((item.referrer_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
-        return `${refereeRate}% / ${referralRate}%`;
+        return `${referralRate}% / ${refereeRate}%`;
     }
 
     const getCount = (item: API.ReferralCode) => {
-        return `${item.total_invites} / ${item.total_traded}`;
+        return `${commify(item.total_invites)} / ${commify(item.total_traded)}`;
     }
 
     const columns = useMemo<Column[]>(() => {

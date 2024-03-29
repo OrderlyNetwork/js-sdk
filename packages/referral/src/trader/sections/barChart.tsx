@@ -8,9 +8,10 @@ import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSour
 import { useRefereeHistory } from "../../hooks/useRefereeHistory";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
-import { formatHMTime, formatMdTime } from "../../utils/utils";
+import { formatHMTime, formatMdTime, formatYMDTime } from "../../utils/utils";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_LG } from "../../types/constants";
+import { Decimal, commify } from "@orderly.network/utils";
 
 type ChartDataType = "Rebate" | "Volume";
 
@@ -49,7 +50,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             const newData = dailyVolume.length > 7 ? dailyVolume.slice(0, 7) : dailyVolume;
 
             return newData.map((item) => {
-                const timeText = formatHMTime(item.date);
+                const timeText = formatYMDTime(item.date);
                 return [timeText, Number((item?.perp_volume || 0).toFixed(2))];
             });
         } else {
@@ -68,7 +69,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     }, [dataSource]);
 
 
-    console.log("xxxxxxxxxx chartConfig", chartConfig);
+    console.log("xxxxxxxxxx chartConfig", chartConfig, dataSource);
 
 
     return (
@@ -80,10 +81,28 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
             <ColmunChart
                 data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
-                hoverTitle={filterType}
+                chartHover={{
+                    hoverTitle: filterType,
+                    title: (item) => {
+                        try {
+                            return commify(new Decimal(item[1]).toFixed(2, Decimal.ROUND_DOWN));
+                        } catch (e) {
+
+                        }
+                        return `${item[1]}`;
+                    },
+                }}
                 yAxis={{ ...yAxis, ...chartConfig?.trader.yAxis, }}
                 barStyle={{ ...InitialBarStyle, ...chartConfig?.trader.bar, }}
-                xAxis={{ ...InitialXAxis, ...chartConfig?.trader.bar, }}
+                xAxis={{
+                    ...InitialXAxis, xTitle: (item) => {
+                        const list = item[0].split("-");
+                        if (list.length === 3) {
+                            return `${list[1]}-${list[2]}`;
+                        }
+                        return item[0];
+                    }, ...chartConfig?.trader.bar,
+                }}
             />
         </div>
     );
