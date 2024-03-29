@@ -21,7 +21,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
         copyText(addQueryParam(referralLinkUrl, "ref", code));
     }
     const editRate = (code: ReferralCodeType) => {
-        modal.show(EditReferralRate, { code: code, mutate });
+        modal.show(EditReferralRate, { code: {...code}, mutate });
     }
 
 
@@ -100,7 +100,7 @@ export const CodeList: FC<{
     const getRate = (item: API.ReferralCode) => {
         const refereeRate = new Decimal((item.referee_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
         const referralRate = new Decimal((item.referrer_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
-        return `${refereeRate}% / ${referralRate}%`;
+        return `${referralRate}% / ${refereeRate}%`;
     }
 
     const getCount = (item: API.ReferralCode) => {

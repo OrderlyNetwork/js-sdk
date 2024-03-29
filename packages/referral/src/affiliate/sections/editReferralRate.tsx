@@ -9,10 +9,11 @@ import {
     toast,
     useModal
 } from "@orderly.network/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cleanStringStyle, useMutation } from "@orderly.network/hooks";
 import { ReferralCodeType } from "./referralCode";
-import { commify } from "@orderly.network/utils";
+import { Decimal, commify } from "@orderly.network/utils";
+import { useFieldArray } from "react-hook-form";
 
 export const EditReferralRate = create<{
     code: ReferralCodeType,
@@ -21,12 +22,26 @@ export const EditReferralRate = create<{
 
     const { code, mutate } = props;
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
-    const maxRate = code.max_rebate_rate * 100;
-    const [refereeRebateRate, setRefereeRebateRate] = useState(`${code.referee_rebate_rate * 100}`);
-    const [referrerRebateRate, setReferrerRebateRate] = useState(`${code.referrer_rebate_rate * 100}`);
+    const maxRate = new Decimal(code.max_rebate_rate).mul(100);
+    const [refereeRebateRate, setRefereeRebateRate] = useState(`${new Decimal(code.referee_rebate_rate).mul(100)}`);
+    const [referrerRebateRate, setReferrerRebateRate] = useState(`${new Decimal(code.referrer_rebate_rate).mul(100)}`);
     const [showError, setShowError] = useState(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
+    useEffect(() => {
+        if (inputRef?.current) {
 
+            inputRef.current.focus();
+            inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+
+        }
+    }, [inputRef])
+
+    useEffect(() => {
+        setRefereeRebateRate(`${new Decimal(code.referee_rebate_rate).mul(100)}`);
+        setReferrerRebateRate(`${new Decimal(code.referrer_rebate_rate).mul(100)}`);
+    }, [code]);
+    
     const [
         editRate,
         { error, isMutating },
@@ -42,7 +57,7 @@ export const EditReferralRate = create<{
                 "referee_rebate_rate": r2 / 100,
                 "referrer_rebate_rate": r1 / 100,
             });
-            toast.success("Referral code edited ");
+            toast.success("Referral code edited");
             mutate();
             hide();
 
@@ -79,20 +94,21 @@ export const EditReferralRate = create<{
 
                     <div className="orderly-text-2xs orderly-mt-6">You receive</div>
                     <Input
+                        ref={inputRef}
                         containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-900"
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
                         autoComplete="off"
-                        value={commify(referrerRebateRate)}
+                        value={referrerRebateRate}
                         onChange={(e) => {
 
                             const text = cleanStringStyle(e.target.value);
                             const rate = Number.parseFloat(text);
                             setReferrerRebateRate(text);
                             if (!Number.isNaN(rate)) {
-                                setRefereeRebateRate(`${Math.max(0, maxRate - rate)}`);
-                                setShowError(maxRate - rate < 0);
+                                setRefereeRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
+                                setShowError(maxRate.sub(rate) < new Decimal(0));
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
@@ -105,14 +121,16 @@ export const EditReferralRate = create<{
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
-                        value={commify(refereeRebateRate)}
+                        autoComplete="off"
+                        autoFocus={false}
+                        value={refereeRebateRate}
                         onChange={(e) => {
                             const text = cleanStringStyle(e.target.value);
                             const rate = Number.parseFloat(text);
                             setRefereeRebateRate(text);
                             if (!Number.isNaN(rate)) {
-                                setReferrerRebateRate(`${Math.max(0, maxRate - rate)}`);
-                                setShowError(maxRate - rate < 0);
+                                setReferrerRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
+                                setShowError(maxRate.sub(rate) < new Decimal(0));
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
@@ -143,3 +161,8 @@ export const EditReferralRate = create<{
         </Dialog>
     );
 });
+
+
+function maxDecimal(a: Decimal, b: Decimal) {
+    return  a > b ? a : b;
+}
