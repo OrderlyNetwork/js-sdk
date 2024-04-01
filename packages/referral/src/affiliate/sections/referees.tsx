@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text, EndReachedBox } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
 import { FC, useCallback, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
@@ -134,14 +134,14 @@ const _BigReferees: FC<{
     }, []);
 
     return (
-        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
             <EndReachedBox onEndReached={props.loadMore}>
                 <Table
                     bordered
                     justified
-                    showMaskElement={true}
+                    showMaskElement={false}
                     columns={columns}
                     dataSource={dataSource}
                     headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
@@ -151,6 +151,14 @@ const _BigReferees: FC<{
                     generatedRowKey={(rec, index) => `${index}`}
                 />
             </EndReachedBox>
+
+            {
+                (!props.dataSource || props.dataSource.length <= 0) && (
+                    <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
+                        <EmptyView />
+                    </div>
+                )
+            }
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 import { MEDIA_MD } from "../../types/constants";
-import { Button, Column, Divider, Table, cn, modal, toast } from "@orderly.network/react";
+import { Button, Column, Divider, EmptyView, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
@@ -190,11 +190,11 @@ export const CodeList: FC<{
 
 
     return (
-        <div className="orderly-h-[340px] orderly-overflow-y-auto orderly-mt-4">
+        <div className="orderly-h-[340px] orderly-overflow-y-auto orderly-mt-4 orderly-relative">
             <Table
                 bordered
                 justified
-                showMaskElement={true}
+                showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
                 headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0"
@@ -203,6 +203,14 @@ export const CodeList: FC<{
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
             />
+
+{
+                (!props.dataSource || props.dataSource.length <= 0) && (
+                    <div className="orderly-absolute orderly-top-[48px] orderly-left-0 orderly-right-0 orderly-bottom-0">
+                        <EmptyView />
+                    </div>
+                )
+            }
         </div>
 
 

@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
+import { Column, Divider, EmptyView, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
 import { FC, useMemo } from "react";
 import { MEDIA_MD } from "../../types/constants";
 import { RebatesItem } from "./rebates";
@@ -70,7 +70,7 @@ export const RebateList: FC<{
 
 
     return (
-        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3" style={{
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
             <EndReachedBox onEndReached={() => {
@@ -81,7 +81,7 @@ export const RebateList: FC<{
                 <Table
                 bordered
                 justified
-                showMaskElement={true}
+                showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
                 headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
@@ -92,7 +92,13 @@ export const RebateList: FC<{
             />
             </EndReachedBox>
 
-            
+            {
+                (!props.dataSource || props.dataSource.length <= 0) && (
+                    <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
+                        <EmptyView />
+                    </div>
+                )
+            }
         </div>
 
 
