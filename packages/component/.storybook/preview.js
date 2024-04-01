@@ -10,13 +10,9 @@ import { CustomContractManager } from "./CustomContract";
 import { CustomConfigStore } from "./CustomConfigStore";
 import "../src/tailwind.css"; // tailwind css
 
-const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
-const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
-const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
-
 const wcV2InitOptions = {
   version: 2,
-  projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+  projectId: "d625af781f5af023132fd588716f7346",
   requiredChains: [42161],
   optionalChains: [421613, 42161],
   dappUrl: window.location.host,
