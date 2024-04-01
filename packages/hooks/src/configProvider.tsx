@@ -40,6 +40,8 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
+  saveRefCode?: boolean; 
+  onClickReferral?: () => void;
 }
 
 export const OrderlyConfigProvider = (
@@ -55,6 +57,8 @@ export const OrderlyConfigProvider = (
     brokerId,
     networkId,
     contracts,
+    saveRefCode,
+    onClickReferral,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -105,6 +109,14 @@ export const OrderlyConfigProvider = (
     setAccount(account);
   }, []);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window?.location?.search);
+    const refCode = searchParams.get('ref');
+    if (refCode && saveRefCode) {
+      localStorage.setItem("referral_code", refCode);
+    }
+  }, [saveRefCode]);
+
   if (!account) {
     return null;
   }
@@ -116,6 +128,8 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
+        saveRefCode,
+        onClickReferral,
         // apiBaseUrl,
       }}
     >

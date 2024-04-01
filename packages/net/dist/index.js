@@ -72,9 +72,9 @@ module.exports = __toCommonJS(src_exports);
 // src/version.ts
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.1.8";
+  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.1.7-referral.0";
 }
-var version_default = "1.1.8";
+var version_default = "1.1.7-referral.0";
 
 // src/errors/apiError.ts
 var ApiError = class extends Error {
@@ -665,8 +665,6 @@ var WS = class {
     if (this.publicIsReconnecting)
       return;
     this.publicIsReconnecting = true;
-    if (typeof window === "undefined")
-      return;
     window.setTimeout(() => {
       this.createPublicSC(this.options);
       this.emit("status:change", {
@@ -682,8 +680,6 @@ var WS = class {
     if (this.privateIsReconnecting)
       return;
     this.privateIsReconnecting = true;
-    if (typeof window === "undefined")
-      return;
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
       this.emit("status:change", {

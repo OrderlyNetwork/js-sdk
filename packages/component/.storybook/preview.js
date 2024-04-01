@@ -90,6 +90,11 @@ const preview = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       const configStore = new CustomConfigStore({ networkId, env: "qa" });
+
+      const searchParams = new URLSearchParams(window.location.search);
+    const refCode = searchParams.get('ref');
+    console.log("ref code is", refCode);
+
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
@@ -136,6 +141,9 @@ const preview = {
               setTimeout(() => {
                 window.location.reload();
               }, 100);
+            }}
+            onClickReferral={() => {
+              console.log("click referral");
             }}
           >
             <Story />

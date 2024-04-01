@@ -1,57 +1,26 @@
 # examples
 
-## 0.2.9
+## 0.2.7-referral.0
 
 ### Patch Changes
 
-- fix bug: app crashes when symbolInfo is null;
+- publish referral
 - Updated dependencies
-  - @orderly.network/react@0.2.9
-  - @orderly.network/core@0.2.8
-  - @orderly.network/hooks@1.1.9
-  - @orderly.network/web3-onboard@0.1.9
-
-## 0.2.8
-
-### Patch Changes
-
-- fix bug: window not defined;
-- Updated dependencies
-  - @orderly.network/react@0.2.8
-  - @orderly.network/core@0.2.7
-  - @orderly.network/hooks@1.1.8
-  - @orderly.network/web3-onboard@0.1.8
-
-## 0.2.7
-
-### Patch Changes
-
-- Updated dependencies
-  - @orderly.network/hooks@1.1.7
-  - @orderly.network/react@0.2.7
-  - @orderly.network/web3-onboard@0.1.7
+  - @orderly.network/react@0.2.7-referral.0
+  - @orderly.network/web3-onboard@0.1.7-referral.0
+  - @orderly.network/hooks@1.1.7-referral.0
+  - @orderly.network/core@0.2.7-referral.0
 
 ## 0.2.6
 
 ### Patch Changes
 
-- 93a5ce6a: fix bugs;
-- Updated dependencies [93a5ce6a]
+- update version
+- Updated dependencies
   - @orderly.network/react@0.2.6
   - @orderly.network/web3-onboard@0.1.6
   - @orderly.network/hooks@1.1.6
   - @orderly.network/core@0.2.6
-
-## 0.2.6-alpha.0
-
-### Patch Changes
-
-- fix bugs;
-- Updated dependencies
-  - @orderly.network/react@0.2.6-alpha.0
-  - @orderly.network/web3-onboard@0.1.6-alpha.0
-  - @orderly.network/hooks@1.1.6-alpha.0
-  - @orderly.network/core@0.2.6-alpha.0
 
 ## 0.2.5
 

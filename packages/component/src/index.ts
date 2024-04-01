@@ -12,6 +12,30 @@ export {
 // ==================== base component ====================
 export { default as Button } from "./button";
 
+export * from "./tooltip";
+export * from "./text";
+export * from "./listView";
+export * from "./table";
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from "./dropdown/dropdown";
+export * from "./select";
+export * from "./statistic";
+
 export {
   Dialog,
   DialogContent,
@@ -37,6 +61,8 @@ export {
 
 export { toast } from "./toast";
 export { modal, useModal } from "./modal";
+export type { ModalHocProps } from "./modal";
+export { create } from "./modal/modalHelper";
 export { Divider } from "./divider";
 export {
   Sheet,

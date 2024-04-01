@@ -1,28 +1,16 @@
 # @orderly.network/net
 
-## 1.1.8
+## 1.1.7-referral.0
 
 ### Patch Changes
 
-- fix bug: app crashes when symbolInfo is null;
-
-## 1.1.7
-
-### Patch Changes
-
-- fix bug: window not defined;
+- publish referral
 
 ## 1.1.6
 
 ### Patch Changes
 
-- 93a5ce6a: fix bugs;
-
-## 1.1.6-alpha.0
-
-### Patch Changes
-
-- fix bugs;
+- update version
 
 ## 1.1.5
 
