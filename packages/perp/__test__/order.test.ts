@@ -174,5 +174,23 @@ describe("order", () => {
       };
       expect(estLiqPrice(inputs)).toBe(9102.173684210526);
     });
+
+    test("estLiqPrice: no positions", () => {
+      const inputs = {
+        positions: [],
+        newOrder: {
+          symbol: "BTC",
+          qty: 0.1,
+          price: 25000,
+        },
+        totalCollateral: 1981.66,
+        markPrice: 25986.2,
+        baseMMR: 0.05,
+        baseIMR: 0.1,
+        IMR_Factor: 0.0000002512,
+        orderFee: 1.5,
+      };
+      expect(estLiqPrice(inputs)).toBe(5472);
+    });
   });
 });

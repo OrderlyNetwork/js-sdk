@@ -92,6 +92,10 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
 
   let newTotalMM = zero;
 
+  const basePrice = positions.length === 0 ? newOrder.price : markPrice;
+
+  console.log("-----basePrice", basePrice);
+
   const newOrderNotional = new Decimal(newOrder.qty).mul(newOrder.price);
 
   for (let index = 0; index < positions.length; index++) {
@@ -130,6 +134,8 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
       .toNumber()
   );
 
+  console.log("new MMR", newMMR, newTotalMM.toNumber());
+
   const newQty = new Decimal(newOrder.qty).add(
     currentPosition?.position_qty ?? 0
   );
@@ -138,7 +144,7 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     return 0;
   }
 
-  const price = new Decimal(markPrice)
+  const price = new Decimal(basePrice)
     .add(
       new Decimal(totalCollateral)
         .sub(newTotalMM)
