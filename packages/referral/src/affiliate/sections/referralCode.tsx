@@ -155,14 +155,14 @@ export const CodeList: FC<{
             },
             {
                 title: "Actions",
-                dataIndex: "referees",
+                dataIndex: "code",
                 className: "orderly-h-[48px] orderly-text-right",
                 align: "right",
                 width: 90,
                 render: (value, record) => (
                     <div className="orderly-flex orderly-justify-end">
                         <_CopyLink className="lg:orderly-w-[82px]"
-                            onClick={(event) => copyText(value)}
+                            onClick={(event) => copyLink(value)}
                         />
                     </div>
                 )
