@@ -1,13 +1,16 @@
+import { getGlobalObject } from "../utils";
 import Container from "./container";
 
 //https://github.com/kl4n4/typescript-simple-di
 export class SimpleDI {
   private static KEY = "__ORDERLY_CONTAINER__";
-  private static container: Container = (window as any)[SimpleDI.KEY] || null;
+  private static container: Container =
+    (getGlobalObject() as any)[SimpleDI.KEY] || null;
 
   private static getContainer(): Container {
     if (!SimpleDI.container) {
-      (window as any)[SimpleDI.KEY] = SimpleDI.container = new Container();
+      (getGlobalObject() as any)[SimpleDI.KEY] = SimpleDI.container =
+        new Container();
     }
     return SimpleDI.container;
   }

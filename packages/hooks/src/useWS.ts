@@ -4,6 +4,7 @@ import { WS } from "@orderly.network/net";
 import useConstant from "use-constant";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "./orderlyContext";
+import { getGlobalObject } from "@orderly.network/utils";
 
 const WS_NAME = "nativeWebsocketClient";
 
@@ -52,7 +53,7 @@ export const useWS = () => {
       });
 
       if (typeof window !== "undefined") {
-        (window as any)["__Orderly_WS"] = websocketClient;
+        (getGlobalObject() as any)["__Orderly_WS"] = websocketClient;
       }
 
       SimpleDI.registerByName(WS_NAME, websocketClient);

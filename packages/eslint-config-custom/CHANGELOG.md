@@ -1,10 +1,28 @@
 # eslint-config-custom
 
+## 0.1.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+
+## 0.1.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
 ## 0.1.6
 
 ### Patch Changes
 
-- update version
+- 93a5ce6a: fix bugs;
+
+## 0.1.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
 
 ## 0.1.5
 

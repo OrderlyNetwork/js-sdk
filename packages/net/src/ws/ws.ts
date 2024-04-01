@@ -680,6 +680,7 @@ export class WS {
     if (this.publicIsReconnecting) return;
     this.publicIsReconnecting = true;
 
+    if (typeof window === "undefined") return;
     window.setTimeout(() => {
       this.createPublicSC(this.options);
       // this.emit("reconnect:public", { count: this._publicRetryCount });
@@ -696,6 +697,7 @@ export class WS {
     if (this.privateIsReconnecting) return;
     this.privateIsReconnecting = true;
 
+    if (typeof window === "undefined") return;
     window.setTimeout(() => {
       this.createPrivateSC(this.options);
 

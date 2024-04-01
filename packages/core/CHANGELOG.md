@@ -1,12 +1,36 @@
 # @orderly.network/core
 
+## 0.2.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+- Updated dependencies
+  - @orderly.network/types@0.2.8
+
+## 0.2.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+- Updated dependencies
+  - @orderly.network/types@0.2.7
+
 ## 0.2.6
 
 ### Patch Changes
 
-- update version
-- Updated dependencies
+- 93a5ce6a: fix bugs;
+- Updated dependencies [93a5ce6a]
   - @orderly.network/types@0.2.6
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@0.2.6-alpha.0
 
 ## 0.2.5
 

@@ -198,8 +198,14 @@ export function useOrderEntry(
     return getPrecisionByNumber(symbolInfo[symbol]("quote_tick", 0));
   }, [symbolInfo]);
 
-  const baseIMR = useMemo(() => symbolInfo[symbol]("base_imr"), [symbolInfo]);
-  const baseMMR = useMemo(() => symbolInfo[symbol]("base_mmr"), [symbolInfo]);
+  const baseIMR = useMemo(
+    () => symbolInfo[symbol]("base_imr", 0),
+    [symbolInfo]
+  );
+  const baseMMR = useMemo(
+    () => symbolInfo[symbol]("base_mmr", 0),
+    [symbolInfo]
+  );
 
   const { data: markPrice } = useMarkPrice(symbol);
   // const markPrice = 1;
@@ -405,7 +411,6 @@ export function useOrderEntry(
                 ...data,
               })
             ).then((res) => {
-              console.log("--------------------res::::", res);
               // resolve(res);
               if (res.success) {
                 // TODO: remove when the WS service is fixed
@@ -538,11 +543,13 @@ export function useOrderEntry(
 
   /// validator order info
   useEffect(() => {
-    if (!markPrice) return;
+    if (!markPrice || symbolInfo.isNil) return;
     // validate order data;
-    validator(formattedOrder)?.then((err) => {
-      setErrors(err);
-    });
+    validator(formattedOrder)
+      ?.then((err) => {
+        setErrors(err);
+      })
+      .catch((err) => {});
   }, [
     formattedOrder.broker_id,
     formattedOrder.order_quantity,
@@ -604,7 +611,7 @@ export function useOrderEntry(
 
     /**
      * price
-     * if order_type = market order, 
+     * if order_type = market order,
         order side = long, then order_price_i = ask0
         order side = short, then order_price_i = bid0
       if order_type = limit order

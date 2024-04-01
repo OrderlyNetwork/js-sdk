@@ -1,10 +1,28 @@
 # create-orderly-app
 
+## 0.2.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+
+## 0.2.7
+
+### Patch Changes
+
+- fix bug: window not defined;
+
 ## 0.2.6
 
 ### Patch Changes
 
-- update version
+- 93a5ce6a: fix bugs;
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
 
 ## 0.2.5
 
