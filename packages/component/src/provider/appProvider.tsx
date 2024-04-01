@@ -116,7 +116,7 @@ export const OrderlyAppProvider: FC<
   } = props;
 
 
-  console.log("check ref status", saveRefCode, onClickReferral);
+  // console.log("check ref status", saveRefCode, onClickReferral);
   
 
   return (

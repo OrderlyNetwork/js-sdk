@@ -20,8 +20,6 @@ export interface TabProps {
 
 export const Tab: FC<TabProps> = (props) => {
   const { active, disabled, title, fullWidth, mode, className } = props;
-
-  console.log("input clas name", className);
   
 
   return (
