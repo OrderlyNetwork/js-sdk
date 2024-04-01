@@ -26,7 +26,7 @@ export const TraderTitle: FC<{
                 <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-54">Rebate:</div>
                 <div className="orderly-text-lg md:orderly-text-xl lg:orderly-text-[24px] 2xl:orderly-text-[26px] orderly-text-primary orderly-ml-3">
                     <GradientText texts={[
-                        {text: `${rebate * 100 || "0"}`, gradient: true}
+                        {text: `${rebate * 100 || "0"}%`, gradient: true}
                     ]} />
                 </div>
             </div>
