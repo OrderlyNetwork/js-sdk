@@ -53,8 +53,8 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/react": "0.2.9",
-      "@orderly.network/web3-onboard": "0.1.9"
+      "@orderly.network/react": "1.2.0-alpha.0",
+      "@orderly.network/web3-onboard": "1.2.0-alpha.0"
     }
   }
 }

@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
 ## 1.1.8
 
 ### Patch Changes

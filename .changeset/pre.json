@@ -1,0 +1,26 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@orderly/docs": "0.2.9",
+    "@orderly.network/examples": "0.2.9",
+    "@orderly.network/storybook": "1.1.9",
+    "@orderly.network/cli": "0.1.8",
+    "@orderly.network/react": "1.1.0",
+    "@orderly.network/core": "1.1.0",
+    "create-orderly-app": "0.2.8",
+    "eslint-config-custom": "0.1.8",
+    "@orderly.network/hooks": "1.1.9",
+    "@orderly.network/net": "1.1.8",
+    "@orderly.network/web3-onboard": "1.1.0",
+    "@orderly.network/perp": "2.0.8",
+    "@orderly.network/trading-view": "1.1.0",
+    "tsconfig": "0.1.8",
+    "@orderly.network/types": "1.1.0",
+    "@orderly.network/utils": "1.1.0",
+    "@orderly.network/web3-modal": "1.1.0"
+  },
+  "changesets": [
+    "thin-doors-learn"
+  ]
+}
