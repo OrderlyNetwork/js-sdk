@@ -335,7 +335,7 @@ export const ColmunChart: React.FC<{
                     <div className="orderly-flex-1">{chartHover?.hoverTitle}</div>
                     <div className="orderly-flex-1 orderly-flex orderly-justify-end">
                         {chartHover?.title?.(hoverItem.item) || hoverItem.item[1]}
-                        <div className="orderly-text-base-contrast-54 orderly-ml-2">USDT</div>
+                        <div className="orderly-text-base-contrast-54 orderly-ml-2">USDC</div>
                     </div>
                 </div>
                 <div className="orderly-flex orderly-justify-end orderly-text-[12px] orderly-text-base-contrast-54 orderly-mt-2">
