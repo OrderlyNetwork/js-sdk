@@ -120,7 +120,7 @@ const preview = {
         // ...MINIMAL_VIEWPORTS,
         ...customViewports,
       },
-      defaultViewport: 'iphone6 PRO',
+      // defaultViewport: 'iphone6 PRO',
     },
   },
   globalTypes: {
