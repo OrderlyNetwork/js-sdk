@@ -36,7 +36,7 @@ const _BigLayout = () => {
         <div className="orderly-py-4 orderly-px-[60px] orderly-flex orderly-flex-col orderly-items-center orderly-justify-center">
 
             <div className="orderly-flex orderly-gap-4 orderly-h-[616px] 2xl:orderly-h-[636px] xl:orderly-w-[904px] 2xl:orderly-w-[1324px]">
-                <div className="orderly-w-1/3 orderly-flex orderly-flex-col orderly-gap-4">
+                <div className="orderly-w-2/5 orderly-flex orderly-flex-col orderly-gap-4">
                     <Summary className="orderly-flex-1"/>
                     <BarChart className="orderly-flex-1"/>
                 </div>

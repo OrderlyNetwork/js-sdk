@@ -1,14 +1,16 @@
 
 import { Select, cn } from "@orderly.network/react";
-
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
-
-
-import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
-import { useRefereeHistory } from "../../hooks/useRefereeHistory";
+import { ColmunChart, 
+    InitialBarStyle, 
+    InitialXAxis, 
+    InitialYAxis, 
+    emptyDataSource, 
+    emptyDataSourceYAxis 
+} from "../../components/barChart";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
-import { formatHMTime, formatMdTime, formatYMDTime } from "../../utils/utils";
+import { formatYMDTime } from "../../utils/utils";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_LG } from "../../types/constants";
 import { Decimal, commify } from "@orderly.network/utils";
@@ -21,8 +23,20 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [distributionData, { refresh }] = useDistribution({ size: 14 });
     const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
-    const isLG = useMediaQuery(MEDIA_LG);
+    const [maxCount, setMaxCount] = useState(14);
 
+    useEffect(() => {
+      function handleResize() {
+        const screenWidth = window.innerWidth;
+        const newMaxCount = screenWidth > 375 ? 14 : 7; 
+        setMaxCount(newMaxCount);
+      }
+  
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []); 
 
     const dataSource = useMemo(() => {
 
@@ -33,25 +47,25 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
             let newData = distributionData.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
 
-            if (newData.length > 7) {
-                newData = newData.slice(0, 7);
+            if (newData.length > maxCount) {
+                newData = newData.slice(0, maxCount);
             }
 
             return newData.map((item: any) => {
                 const time = new Date(item.updated_time);
                 const timeText = time.getMonth().toString() + "-" + time.getDay().toString();
-                return [timeText, Number((item?.amount || 0).toFixed(2))];
+                return [timeText, item.amount];
             });
         }
 
         else if (filterType === "Volume") {
             if (!dailyVolume || dailyVolume.length === 0) return [];
 
-            const newData = dailyVolume.length > 7 ? dailyVolume.slice(0, 7) : dailyVolume;
+            const newData = dailyVolume.length > maxCount ? dailyVolume.slice(0, maxCount) : dailyVolume;
 
             return newData.map((item) => {
                 const timeText = formatYMDTime(item.date);
-                return [timeText, Number((item?.perp_volume || 0).toFixed(2))];
+                return [timeText, item.perp_volume];
             });
         } else {
             return [];
@@ -69,7 +83,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     }, [dataSource]);
 
 
-    console.log("xxxxxxxxxx chartConfig", chartConfig, dataSource);
 
 
     return (
@@ -80,7 +93,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             </div>
 
             <ColmunChart
-                data={dataSource.length === 0 ? emptyDataSource(isLG) : dataSource}
+                data={dataSource.length === 0 ? emptyDataSource(maxCount === 7) : dataSource}
                 chartHover={{
                     hoverTitle: filterType,
                     title: (item) => {
@@ -93,7 +106,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
                     },
                 }}
                 yAxis={{ ...yAxis, ...chartConfig?.trader.yAxis, }}
-                barStyle={{ ...InitialBarStyle, ...chartConfig?.trader.bar, }}
+                barStyle={{ ...InitialBarStyle, maxCount, ...chartConfig?.trader.bar, }}
                 xAxis={{
                     ...InitialXAxis, xTitle: (item) => {
                         const list = item[0].split("-");

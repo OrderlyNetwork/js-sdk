@@ -68,7 +68,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
                     },
                 }}
                 yAxis={{ ...yAxis, ...chartConfig?.affiliate.yAxis, }}
-                barStyle={{ ...InitialBarStyle, ...chartConfig?.affiliate.bar, }}
+                barStyle={{ ...InitialBarStyle, maxCount: 7, ...chartConfig?.affiliate.bar, }}
                 xAxis={{ ...InitialXAxis, xTitle: (item) => {
                     const list = item[0].split("-");
                     if (list.length === 3) {

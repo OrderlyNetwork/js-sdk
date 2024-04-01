@@ -20,6 +20,8 @@ export type BarStyle = {
     hoverLineStrokeWidth: number,
     //** default is 227 */
     hoverContainerWidth: number,
+    //** max display count */
+    maxCount?: number,
 }
 
 export type YAxis = {
@@ -197,7 +199,8 @@ export const ColmunChart: React.FC<{
         var children: any[] = [];
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
-        var stepX = (size.width - padding - barStyle.width * 2) / (titles.length - 1);
+        const maxCount = (barStyle.maxCount || (titles.length)) - 1;
+        var stepX = (size.width - padding - barStyle.width * 2) / maxCount;
 
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
@@ -229,7 +232,8 @@ export const ColmunChart: React.FC<{
 
 
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
-        let stepX = (size.width - padding - barStyle.width * 2) / (columns.length - 1);
+        const maxCount = (barStyle.maxCount || (columns.length)) - 1;
+        let stepX = (size.width - padding - barStyle.width * 2) / maxCount;
         
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
