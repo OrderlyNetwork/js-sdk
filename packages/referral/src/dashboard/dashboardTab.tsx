@@ -36,14 +36,14 @@ export const DashboardTab = () => {
         if (isAffiliate === true && isTrader === false) {
             return <Button onClick={onAsAnTrader} className="orderly-flex orderly-bg-[rgba(0,104,92,1)] lg:orderly-mr-4">
                 <TraderIcon />
-                <div>As a trader</div>
+                <div>As trader</div>
             </Button>;
         }
 
         if (isTrader === true && isAffiliate === false) {
             return <Button onClick={onAsAnAffiliate} className="orderly-flex lg:orderly-mr-4">
                 <ReferralIcon />
-                <div>As a referral</div>
+                <div>As Referrer</div>
             </Button>;
         }
 
