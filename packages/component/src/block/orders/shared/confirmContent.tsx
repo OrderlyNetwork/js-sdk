@@ -13,20 +13,21 @@ export const EditOrderConfirmContent = (
   base: string,
   symbol: string,
 ) => {
-  if (isAlgoOrder) {
+  // if (isAlgoOrder) {
     return <AlgoContent
       data={data}
       dirtyFields={dirtyFields}
       base={base}
       symbol={symbol}
       isMarketOrder={isMarketOrder}
+      isAlgoOrder={isAlgoOrder}
     />
-  }
-  return (<NormalContent
-    data={data}
-    dirtyFields={dirtyFields}
-    base={base}
-  />);
+  // }
+  // return (<NormalContent
+  //   data={data}
+  //   dirtyFields={dirtyFields}
+  //   base={base}
+  // />);
 };
 
 
@@ -89,9 +90,10 @@ const AlgoContent: FC<{
   base: string,
   symbol: string,
   isMarketOrder: boolean,
+  isAlgoOrder: boolean,
 }> = (props) => {
 
-  const { data, dirtyFields, base, symbol, isMarketOrder } = props;
+  const { data, dirtyFields, base, symbol, isMarketOrder, isAlgoOrder } = props;
   const quote = symbol?.split("_")[2];
 
   const qty = data.order_quantity || "-";
@@ -121,17 +123,17 @@ const AlgoContent: FC<{
         <span className="orderly-text-base-contrast-36">{base}</span>
       </div>
     </div>
-    <div className="orderly-flex orderly-justify-between orderly-text-sm orderly-pb-1">
+    {isAlgoOrder && <div className="orderly-flex orderly-justify-between orderly-text-sm orderly-pb-1">
       <span className="orderly-text-base-contrast-54">Trigger price</span>
       <div className="orderly-inline-block">
-        <Numeral className="orderly-mr-1">{triggerPrice}</Numeral>
+        <span className="orderly-mr-1">{commify(triggerPrice)}</span>
         <span className="orderly-text-base-contrast-36">{quote}</span>
       </div>
-    </div>
+    </div>}
     <div className="orderly-flex orderly-justify-between orderly-text-sm">
       <span className="orderly-text-base-contrast-54">Price</span>
       <div className="orderly-inline-block">
-        {isMarketOrder ? <span>Market</span> :  <Numeral>{price}</Numeral>}
+        {isMarketOrder ? <span>Market</span> :  <span>{commify(price)}</span>}
         <span className="orderly-ml-1 orderly-text-base-contrast-36">{quote}</span>
       </div>
     </div>
