@@ -11,8 +11,6 @@ import { ColmunChart,
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
 import { formatYMDTime } from "../../utils/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_LG } from "../../types/constants";
 import { Decimal, commify } from "@orderly.network/utils";
 
 type ChartDataType = "Rebate" | "Volume";
@@ -52,8 +50,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             }
 
             return newData.map((item: any) => {
-                const time = new Date(item.updated_time);
-                const timeText = time.getMonth().toString() + "-" + time.getDay().toString();
+                const timeText = formatYMDTime(item.created_time);
                 return [timeText, item.amount];
             });
         }
