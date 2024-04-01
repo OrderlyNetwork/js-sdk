@@ -18,12 +18,16 @@ export const AsAnTrader = () => {
 
     if (isTrader) {
       return (
-        <div className="orderly-mt-3 orderly-text-[24px] lg:orderly-txt-[26px] 2xl:orderly-text-[30[px] orderly-flex orderly-justify-between">
-          <div className="orderly-flex-1 orderly-flex orderly-items-center">
-            <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
-              <USDCIcon width={"100%"} height={"100%"} />
+        <div className="orderly-mt-3 orderly-text-[24px] lg:orderly-txt-[26px] 2xl:orderly-text-[30[px] orderly-flex orderly-justify-between orderly-items-end">
+
+          <div>
+            <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-[18px]">Rebate (USDC)</div>
+            <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-mt-3">
+              <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
+                <USDCIcon width={"100%"} height={"100%"} />
+              </div>
+              <Numeral precision={2} >{totalReferrerRebate || 0}</Numeral>
             </div>
-            <Numeral precision={2} >{totalReferrerRebate || 0}</Numeral>
           </div>
 
           <button onClick={enterTraderPage} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
