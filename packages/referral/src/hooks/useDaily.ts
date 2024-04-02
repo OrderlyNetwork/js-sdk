@@ -22,7 +22,7 @@ export const useDaily = (options?: {
 
     const path = "/v1/volume/user/daily";
     const endDate = options?.startDate || new Date();
-    const startDate = options?.endDate || new Date(Date.now() - 86400000 * 14);
+    const startDate = options?.endDate || new Date(Date.now() - 86400000 * 30);
 
     const start_date = formatDate(startDate);
     const end_date = formatDate(endDate);

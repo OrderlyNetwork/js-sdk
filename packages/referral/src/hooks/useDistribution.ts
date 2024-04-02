@@ -14,7 +14,7 @@ type Params = {
     initialSize?: number,
 }
 
-export const useDistribution = (params: Params) : any => {
+export const useDistribution = (params: Params): any => {
     const { size = 10, startDate, endDate, initialSize } = params;
 
     const ordersResponse = usePrivateInfiniteQuery(
@@ -45,7 +45,11 @@ export const useDistribution = (params: Params) : any => {
             return null;
         }
 
-        return ordersResponse.data?.map((item) => item.rows)?.flat();
+        return ordersResponse.data?.map((item) => item.rows)?.flat()
+            /// TODO: next version will be remove this code
+            .map((item) => {
+                return { ...item, created_time: item.created_time - 86400000, updated_time: item.updated_time - 86400000 };
+            });
     }, [ordersResponse.data]);
 
     return [

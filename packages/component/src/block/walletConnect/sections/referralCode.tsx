@@ -26,7 +26,6 @@ export const ReferralCode: FC<{
         }
     }, [saveRefCode, refCode, inputRef])
 
-    console.log("xxxxxxxxxxxx saveRefCode", saveRefCode);
 
 
 

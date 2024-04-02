@@ -12,12 +12,12 @@ export const AutoHideText: FC<{text: string, className?: string}> = (props) => {
         const containerWidth = containerRef.current.offsetWidth;
         const textWidth = containerRef.current.scrollWidth;
   
-        if (textWidth > containerWidth) {
+        if (textWidth >= containerWidth) {
           const middleIndex = Math.floor(text.length / 2);
-          const visibleLength = Math.floor(containerWidth / 8); // 根据实际情况调整每个字符的平均宽度
-  
-          const startText = text.slice(0, middleIndex - Math.ceil(visibleLength / 2));
+          const visibleLength = Math.floor(containerWidth / 6); 
+          const startText = text.slice(0, middleIndex - Math.floor(visibleLength / 2));
           const endText = text.slice(middleIndex + Math.floor(visibleLength / 2), text.length);
+          
           setTruncatedText(`${startText}...${endText}`);
         } else {
           setTruncatedText(text);

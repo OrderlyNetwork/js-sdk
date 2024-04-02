@@ -1,18 +1,17 @@
 
 import { Select, cn } from "@orderly.network/react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ColmunChart, 
-    InitialBarStyle, 
-    InitialXAxis, 
-    InitialYAxis, 
-    emptyDataSource, 
-    emptyDataSourceYAxis 
+import {
+    ColmunChart,
+    InitialBarStyle,
+    InitialXAxis,
+    InitialYAxis,
+    emptyDataSource,
+    emptyDataSourceYAxis
 } from "../../components/barChart";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
-import { formatYMDTime } from "../../utils/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_LG } from "../../types/constants";
+import { formatYMDTime, generateData } from "../../utils/utils";
 import { Decimal, commify } from "@orderly.network/utils";
 
 type ChartDataType = "Rebate" | "Volume";
@@ -26,49 +25,28 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [maxCount, setMaxCount] = useState(14);
 
     useEffect(() => {
-      function handleResize() {
-        const screenWidth = window.innerWidth;
-        const newMaxCount = screenWidth > 375 ? 14 : 7; 
-        setMaxCount(newMaxCount);
-      }
-  
-      window.addEventListener('resize', handleResize);
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []); 
+        function handleResize() {
+            const screenWidth = window.innerWidth;
+            const newMaxCount = screenWidth > 375 ? 14 : 7;
+            setMaxCount(newMaxCount);
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const dataSource = useMemo(() => {
 
 
         if (filterType === "Rebate") {
-
-            if (!distributionData || distributionData.length === 0) return [];
-
-            let newData = distributionData.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE");
-
-            if (newData.length > maxCount) {
-                newData = newData.slice(0, maxCount);
-            }
-
-            return newData.map((item: any) => {
-                const time = new Date(item.updated_time);
-                const timeText = time.getMonth().toString() + "-" + time.getDay().toString();
-                return [timeText, item.amount];
-            });
-        }
-
-        else if (filterType === "Volume") {
-            if (!dailyVolume || dailyVolume.length === 0) return [];
-
-            const newData = dailyVolume.length > maxCount ? dailyVolume.slice(0, maxCount) : dailyVolume;
-
-            return newData.map((item) => {
-                const timeText = formatYMDTime(item.date);
-                return [timeText, item.perp_volume];
-            });
+            let newData = distributionData?.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE") || [];
+            return generateData(maxCount, newData, "created_time", "amount");
+        } else if (filterType === "Volume") {
+            return generateData(maxCount, dailyVolume || [], "date", "perp_volume");
         } else {
-            return [];
+            return generateData(maxCount, [], "date", "perp_volume");
         }
 
 
@@ -93,19 +71,11 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             </div>
 
             <ColmunChart
-                data={dataSource.length === 0 ? emptyDataSource(maxCount === 7) : dataSource}
+                data={dataSource}
                 chartHover={{
                     hoverTitle: filterType,
-                    title: (item) => {
-                        try {
-                            return commify(new Decimal(item[1]).toFixed(2, Decimal.ROUND_DOWN));
-                        } catch (e) {
-
-                        }
-                        return `${item[1]}`;
-                    },
                 }}
-                yAxis={{ ...yAxis, ...chartConfig?.trader.yAxis, }}
+                yAxis={{ ...yAxis, maxRate: 1.2, ...chartConfig?.trader.yAxis, }}
                 barStyle={{ ...InitialBarStyle, maxCount, ...chartConfig?.trader.bar, }}
                 xAxis={{
                     ...InitialXAxis, xTitle: (item) => {

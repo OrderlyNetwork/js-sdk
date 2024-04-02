@@ -45,6 +45,7 @@ export type YAxis = {
     textAnchor: string,
     min?: number,
     max?: number,
+    maxRate?: number,
 }
 
 export type XAxis = {
@@ -153,6 +154,10 @@ export const ColmunChart: React.FC<{
                 info["max"] = yAxis.max;
             }
 
+            if (yAxis.maxRate) {
+                info["max"] = info.max * yAxis.maxRate;
+            }
+
             return info;
         } catch (err) {
             return undefined;
@@ -184,7 +189,7 @@ export const ColmunChart: React.FC<{
             );
             children.push(
                 <text x={`${yAxis.width}`} y={`${info.y}`} textAnchor={`${yAxis.textAnchor}`} fontSize={`${yAxis.fontSize}px`} fill={`${yAxis.textFill}`}>
-                    {info.text}
+                    {abbreviatedNumbers(info.text)}
                 </text>
             );
         }
@@ -234,7 +239,7 @@ export const ColmunChart: React.FC<{
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
         const maxCount = (barStyle.maxCount || (columns.length)) - 1;
         let stepX = (size.width - padding - barStyle.width * 2) / maxCount;
-        
+
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
         }
@@ -247,7 +252,7 @@ export const ColmunChart: React.FC<{
             const height = containerHeight - convertToYCoordinate(column, minMaxInfo.min, minMaxInfo.max, containerHeight);
             const y = (containerHeight - height) + yAxis.gridPaddingTop;
 
- 
+
             // console.log(`colums: ${columns}, stepX: ${stepX} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}`);
 
             children.push(
@@ -334,8 +339,8 @@ export const ColmunChart: React.FC<{
                 <div className="orderly-flex orderly-text-xs ordelry-gap-2">
                     <div className="orderly-flex-1">{chartHover?.hoverTitle}</div>
                     <div className="orderly-flex-1 orderly-flex orderly-justify-end">
-                        {chartHover?.title?.(hoverItem.item) || hoverItem.item[1]}
-                        <div className="orderly-text-base-contrast-54 orderly-ml-2">USDT</div>
+                        {chartHover?.title?.(hoverItem.item) || abbreviatedNumbers(hoverItem.item[1])}
+                        <div className="orderly-text-base-contrast-54 orderly-ml-2">USDC</div>
                     </div>
                 </div>
                 <div className="orderly-flex orderly-justify-end orderly-text-[12px] orderly-text-base-contrast-54 orderly-mt-2">
@@ -404,3 +409,23 @@ export const emptyDataSource = (level7: boolean) => {
 export function emptyDataSourceYAxis(options?: { min: number, max: number }): YAxis {
     return { ...InitialYAxis, min: options?.min || 0, max: options?.max || 4000 };
 }
+
+//** Abbreviated numbers, eg: 1234 1.2k */
+export function abbreviatedNumbers(input?: string | number | undefined) {
+    if (input === undefined || input === null) return "";
+
+    
+    const value = Number.parseFloat(input.toString());
+    const absNumber = Math.abs(value);
+    const suffixes = ['', 'k', 'm', 'b', 't', 'q'];
+
+    if (absNumber === 0) {
+        return "0";
+    }
+  
+    const magnitude = Math.floor(Math.log10(absNumber) / 3);
+    const scaledNumber = value / Math.pow(10, magnitude * 3);
+    const formattedNumber = scaledNumber.toFixed(1);
+  
+    return formattedNumber + suffixes[magnitude];
+  }

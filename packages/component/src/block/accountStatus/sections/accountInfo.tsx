@@ -194,7 +194,7 @@ const ReferralInfo = () => {
           labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="30d commission"
-          value={commify(commission)}
+          value={(commission)}
           precision={2}
           rule="price"
         />
@@ -202,7 +202,7 @@ const ReferralInfo = () => {
           labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="30d vol."
-          value={vol}
+          value={(vol)}
           precision={2}
           rule="price"
         />

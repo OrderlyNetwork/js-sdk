@@ -60,14 +60,18 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         .then(
           () => {
             if (refCode && refCode.length > 0) {
-              bindRefCode({referral_code: refCode}).catch((e) => {}).finally(() => {
+              bindRefCode({ referral_code: refCode }).catch((e) => { }).finally(() => {
                 localStorage.removeItem("referral_code");
               });
             }
             props.onComplete?.();
           },
-          (error) => {
-            toast.error(error.message);
+          (e) => {
+            let errorText = `${e}`;
+            if ("message" in (e)) {
+              errorText = e.message;
+            }
+            toast.error(errorText);
           }
         )
         .finally(() => {

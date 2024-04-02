@@ -86,9 +86,14 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
 
         revalidateOnFocus: true,
     });
+    
+    const isAffiliate = useMemo(() => {
+        return (data?.referrer_info?.referral_codes?.length || 0) > 0;
+    }, [data?.referrer_info]);
 
-    const isAffiliate = (data?.referrer_info?.referral_codes?.length || 0) > 0;
-    const isTrader = data?.referee_info.referer_code !== null;
+    const isTrader = useMemo(() => {
+        return (data?.referee_info.referer_code?.length || 0) > 0;
+    }, [data?.referee_info]);
 
 
     const userVolume = useMemo(() => {

@@ -64,10 +64,10 @@ export const AsAnTrader = () => {
     <div className="orderly-rounded-lg orderly-p-6 orderly-w-full orderly-bg-[rgba(0,104,92,1)] orderly-h-[196px] lg:orderly-h-[221px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between">
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
-          <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">As a trader</div>
-          <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">
+          <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">{isTrader ? 'Trader' : 'As a trader'}</div>
+          {!isTrader && <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">
             Get fee rebates on every trade
-          </div>
+          </div>}
         </div>
         <TraderIcon />
       </div>

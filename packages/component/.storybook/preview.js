@@ -101,7 +101,7 @@ const preview = {
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
               main: {
@@ -145,6 +145,7 @@ const preview = {
             onClickReferral={() => {
               console.log("click referral");
             }}
+            saveRefCode
           >
             <Story />
           </OrderlyAppProvider>
