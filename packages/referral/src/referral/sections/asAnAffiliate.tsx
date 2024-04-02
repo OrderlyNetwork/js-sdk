@@ -69,10 +69,10 @@ export const AsAnAffiliate = () => {
     >
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
-          <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">As an affiliate</div>
-          <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
+          <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">{isAffiliate ? 'Affiliate' :'As an affiliate'}</div>
+         {!isAffiliate &&  <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
             Onboard traders to earn passive income
-          </div>
+          </div>}
         </div>
         <ReferralIcon />
       </div>
