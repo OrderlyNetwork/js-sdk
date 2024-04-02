@@ -28,6 +28,7 @@ export const Listview: FC<Props> = (props) => {
   const columns = useMemo<Column<API.Order>[]>(() => {
     // const columns = columnsBasis();
 
+    // if status is incomplete then return this columns, else return columnsBasis
     if (props.status === OrderStatus.INCOMPLETE) {
       const columns: Column<API.Order>[] = [
         {

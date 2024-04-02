@@ -27,6 +27,7 @@ export const OrdersView: FC<OrdersViewProps> = (props) => {
         <Divider />
         <ListView.separated
           isLoading={props.isLoading}
+          className="orderly-relative"
           dataSource={props.dataSource}
           renderSeparator={(_, index) => <Divider />}
           renderItem={(item, index) => (

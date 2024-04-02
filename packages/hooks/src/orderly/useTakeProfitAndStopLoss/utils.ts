@@ -163,6 +163,10 @@ export function pnlToPrice(inputs: {
 }) {
   const { qty, pnl, entryPrice, orderType, orderSide } = inputs;
 
+  if (!pnl) {
+    return;
+  }
+
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(entryPrice)
@@ -331,6 +335,15 @@ export function calculateHelper(
       break;
     }
   }
+
+  if (!trigger_price)
+    return {
+      [`${keyPrefix}trigger_price`]: "",
+      [`${keyPrefix}offset`]: "",
+      [`${keyPrefix}offset_percentage`]: "",
+      [`${keyPrefix}pnl`]: "",
+      [key]: inputs.value,
+    };
 
   return {
     [`${keyPrefix}trigger_price`]: symbol

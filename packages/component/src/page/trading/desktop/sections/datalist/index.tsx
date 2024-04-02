@@ -36,16 +36,6 @@ export const DataListView = () => {
 
   const onTabChange = useCallback((value: string) => {
     setActiveTab(value);
-    // setOrderStatus(
-    //   {
-    //     positions: "positions",
-    //     orders: OrderStatus.INCOMPLETE,
-    //     filled: OrderStatus.FILLED,
-    //     cancelled: OrderStatus.CANCELLED,
-    //     rejected: OrderStatus.REJECTED,
-    //     history: "history",
-    //   }[value]
-    // );
   }, []);
 
   return (
@@ -101,7 +91,7 @@ export const DataListView = () => {
         <MyOrders status={OrderStatus.FILLED} />
       </TabPane>
       {/* <TabPane title="Cancelled" value="cancelled" className="orderly-px-3">
-        
+
         <MyOrders status={OrderStatus.CANCELLED} />
       </TabPane>
       <TabPane title="Rejected" value="rejected" className="orderly-px-3">

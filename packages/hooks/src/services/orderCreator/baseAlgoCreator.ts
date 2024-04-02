@@ -14,6 +14,10 @@ export abstract class BaseAlgoOrderCreator<
 > implements OrderCreator<T>
 {
   abstract create(values: T, config: ValuesDepConfig): T;
+
+  /**
+   * base validate
+   */
   validate(
     values: Partial<T>,
     config: ValuesDepConfig
@@ -26,6 +30,14 @@ export abstract class BaseAlgoOrderCreator<
     const result = Object.create(null);
     return Promise.resolve().then(() => {
       const { tp_trigger_price, sl_trigger_price, side } = values;
+
+      const qty = Number(values.quantity);
+      const maxQty = config.maxQty;
+      if (!isNaN(qty) && qty > maxQty) {
+        result.quantity = {
+          message: `Quantity must be less than ${config.maxQty}`,
+        };
+      }
 
       if (Number(tp_trigger_price) < 0) {
         result.tp_trigger_price = {
@@ -47,7 +59,7 @@ export abstract class BaseAlgoOrderCreator<
           Number(sl_trigger_price) >= config.markPrice
         ) {
           result.sl_trigger_price = {
-            message: `SL Price must be less than ${config.markPrice}`,
+            message: `SL price must be less than ${config.markPrice}`,
           };
         }
 
@@ -56,7 +68,7 @@ export abstract class BaseAlgoOrderCreator<
           Number(tp_trigger_price) <= config.markPrice
         ) {
           result.tp_trigger_price = {
-            message: `TP Price must be greater than ${config.markPrice}`,
+            message: `TP price must be greater than ${config.markPrice}`,
           };
         }
       }
@@ -67,7 +79,7 @@ export abstract class BaseAlgoOrderCreator<
           Number(sl_trigger_price) <= config.markPrice
         ) {
           result.sl_trigger_price = {
-            message: `SL Price must be greater than ${config.markPrice}`,
+            message: `SL price must be greater than ${config.markPrice}`,
           };
         }
 
@@ -76,7 +88,7 @@ export abstract class BaseAlgoOrderCreator<
           Number(tp_trigger_price) >= config.markPrice
         ) {
           result.tp_trigger_price = {
-            message: `TP Price must be less than ${config.markPrice}`,
+            message: `TP price must be less than ${config.markPrice}`,
           };
         }
       }

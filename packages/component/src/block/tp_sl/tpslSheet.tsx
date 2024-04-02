@@ -18,7 +18,12 @@ export const TPSLOrderEditorSheet: FC<{
 }> = (props) => {
   const { position, order, isEditing } = props;
   const { data: markPrice } = useMarkPrice(position!.symbol);
-  const { hide } = useModal();
+  const { hide, setStates } = useModal();
+
+  const onTypeChange = (type: AlgoOrderRootType) => {
+    // console.log(type);
+    setStates({ type });
+  };
 
   return (
     <div>
@@ -73,6 +78,7 @@ export const TPSLOrderEditorSheet: FC<{
         canModifyQty={props.canModifyQty}
         onCancel={hide}
         onSuccess={hide}
+        onTypeChange={onTypeChange}
       />
     </div>
   );

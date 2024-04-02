@@ -79,31 +79,52 @@ export const TPSLForm: FC<Props> = (props) => {
         ? maxQtyNumber
         : props.oldOrder?.quantity;
 
-    if (Number(order.quantity) !== quantity) return true;
+    let diff: number = 0;
+
+    if (Number(order.quantity) !== quantity) {
+      diff = 1;
+    }
 
     if (props.oldOrder) {
+      const tp = props.oldOrder.child_orders.find(
+        (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT
+      );
+      const sl = props.oldOrder.child_orders.find(
+        (o) => o.algo_type === AlgoOrderType.STOP_LOSS
+      );
+
       if (
-        props.oldOrder.child_orders.find(
-          (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT
-        )?.trigger_price !== Number(order.tp_trigger_price)
+        tp?.trigger_price !== Number(order.tp_trigger_price) &&
+        !!order.tp_trigger_price
       ) {
-        return true;
+        // return true;
+        diff = 2;
       }
 
       if (
-        props.oldOrder.child_orders.find(
-          (o) => o.algo_type === AlgoOrderType.STOP_LOSS
-        )?.trigger_price !== Number(order.sl_trigger_price)
+        sl?.trigger_price !== Number(order.sl_trigger_price) &&
+        !!order.sl_trigger_price
       ) {
-        return true;
+        diff = 3;
       }
     }
+
+    if (diff === 1 && !order.tp_trigger_price && !order.sl_trigger_price) {
+      diff = -1;
+    }
+
+    return diff;
   }, [
     order.tp_trigger_price,
     order.sl_trigger_price,
     order.quantity,
     props.oldOrder,
   ]);
+
+  const cleanQtyInput = () => {
+    props.onChange("quantity", "");
+    qtyRef.current?.focus();
+  };
 
   return (
     <div className={cn("orderly-space-y-4", props.className)}>
@@ -112,12 +133,23 @@ export const TPSLForm: FC<Props> = (props) => {
           <div>
             <div className={"orderly-flex"}>
               <Input
+                error={!!props.errors?.quantity?.message}
+                helpText={props.errors?.quantity?.message}
                 ref={qtyRef}
                 prefix="Quantity"
                 suffix={
-                  isPositionTPSLOrder && !props.isEditing
-                    ? "Entire position"
-                    : symbolInfo("base")
+                  isPositionTPSLOrder && !props.isEditing ? (
+                    <button
+                      className="orderly-pr-2 orderly-text-base-contrast-54 orderly-h-full"
+                      onClick={() => {
+                        cleanQtyInput();
+                      }}
+                    >
+                      Entire position
+                    </button>
+                  ) : (
+                    symbolInfo("base")
+                  )
                 }
                 value={
                   isPositionTPSLOrder && !props.isEditing
@@ -140,8 +172,9 @@ export const TPSLForm: FC<Props> = (props) => {
                 <button
                   onClick={() => {
                     if (isPositionTPSLOrder) {
-                      props.onChange("quantity", "");
-                      qtyRef.current?.focus();
+                      // props.onChange("quantity", "");
+                      // qtyRef.current?.focus();
+                      cleanQtyInput();
                     } else {
                       props.onChange("quantity", maxQtyNumber);
                     }
@@ -315,7 +348,7 @@ export const TPSLForm: FC<Props> = (props) => {
           className={"orderly-flex-1 desktop:orderly-w-[98px]"}
           data-testid={"confirm"}
           onClick={props.onSubmit}
-          disabled={!dirty}
+          disabled={dirty <= 0}
         >
           Confirm
         </Button>

@@ -49,7 +49,7 @@ export const Table = <RecordType extends unknown>(
     }
     return (
       <div
-        className="orderly-absolute orderly-z-20 orderly-flex-col orderly-justify-center orderly-items-center orderly-bg-base-900/30 orderly-backdrop-blur-sm"
+        className="orderly-absolute orderly-flex orderly-z-20 orderly-flex-col orderly-justify-center orderly-items-center orderly-bg-base-900/30 orderly-backdrop-blur-sm"
         style={{
           ...maskLayout,
         }}
