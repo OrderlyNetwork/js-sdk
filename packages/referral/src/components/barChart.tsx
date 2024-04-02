@@ -189,7 +189,7 @@ export const ColmunChart: React.FC<{
             );
             children.push(
                 <text x={`${yAxis.width}`} y={`${info.y}`} textAnchor={`${yAxis.textAnchor}`} fontSize={`${yAxis.fontSize}px`} fill={`${yAxis.textFill}`}>
-                    {info.text}
+                    {abbreviatedNumbers(info.text)}
                 </text>
             );
         }
@@ -339,7 +339,7 @@ export const ColmunChart: React.FC<{
                 <div className="orderly-flex orderly-text-xs ordelry-gap-2">
                     <div className="orderly-flex-1">{chartHover?.hoverTitle}</div>
                     <div className="orderly-flex-1 orderly-flex orderly-justify-end">
-                        {chartHover?.title?.(hoverItem.item) || hoverItem.item[1]}
+                        {chartHover?.title?.(hoverItem.item) || abbreviatedNumbers(hoverItem.item[1])}
                         <div className="orderly-text-base-contrast-54 orderly-ml-2">USDC</div>
                     </div>
                 </div>
@@ -409,3 +409,23 @@ export const emptyDataSource = (level7: boolean) => {
 export function emptyDataSourceYAxis(options?: { min: number, max: number }): YAxis {
     return { ...InitialYAxis, min: options?.min || 0, max: options?.max || 4000 };
 }
+
+//** Abbreviated numbers, eg: 1234 1.2k */
+export function abbreviatedNumbers(input?: string | number | undefined) {
+    if (input === undefined || input === null) return "";
+
+    
+    const value = Number.parseFloat(input.toString());
+    const absNumber = Math.abs(value);
+    const suffixes = ['', 'k', 'm', 'b', 't', 'q'];
+
+    if (absNumber === 0) {
+        return "0";
+    }
+  
+    const magnitude = Math.floor(Math.log10(absNumber) / 3);
+    const scaledNumber = value / Math.pow(10, magnitude * 3);
+    const formattedNumber = scaledNumber.toFixed(1);
+  
+    return formattedNumber + suffixes[magnitude];
+  }

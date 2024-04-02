@@ -94,7 +94,7 @@ export function compareDate(d1?: Date, d2?: Date) {
 
 
 
-export function generateData(itemCount: number, data: any[], timeKey: string, valueKey: string): [string, number][] {
+export function generateData(itemCount: number, data: any[] | null | undefined, timeKey: string, valueKey: string): [string, number][] {
   const result: [string, number][] = [];
   
   for (let i = 0; i < itemCount; i++) {
@@ -102,7 +102,7 @@ export function generateData(itemCount: number, data: any[], timeKey: string, va
     currentDate.setDate(currentDate.getDate() - i);
     const currentDateStr = currentDate.toISOString().substring(0, 10);
     
-    const matchedData = data.find(item => {
+    const matchedData = data?.find(item => {
       const itemDate = parseTime(item[timeKey]);
       if (!itemDate) return false;
       return itemDate.toISOString().substring(0, 10) === currentDateStr;

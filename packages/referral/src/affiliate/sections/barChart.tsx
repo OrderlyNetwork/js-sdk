@@ -40,14 +40,6 @@ export const BarChart: FC<{ className?: string }> = (props) => {
                 data={dataSource.length === 0 ? emptyDataSource(true) : dataSource}
                 chartHover={{
                     hoverTitle: filterType,
-                    title: (item) => {
-                        try {
-                            return commify(new Decimal(item[1]).toFixed(2, Decimal.ROUND_DOWN));
-                        } catch (e) {
-
-                        }
-                        return `${item[1]}`;
-                    },
                 }}
                 yAxis={{ ...yAxis, maxRate: 1.2, ...chartConfig?.affiliate.yAxis, }}
                 barStyle={{ ...InitialBarStyle, maxCount: 7, ...chartConfig?.affiliate.bar, }}
