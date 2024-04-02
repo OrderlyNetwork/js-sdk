@@ -91,3 +91,29 @@ export function compareDate(d1?: Date, d2?: Date) {
   
   return isEqual;
 }
+
+
+
+export function generateData(itemCount: number, data: any[], timeKey: string, valueKey: string): [string, number][] {
+  const result: [string, number][] = [];
+  
+  for (let i = 0; i < itemCount; i++) {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - i);
+    const currentDateStr = currentDate.toISOString().substring(0, 10);
+    
+    const matchedData = data.find(item => {
+      const itemDate = parseTime(item[timeKey]);
+      if (!itemDate) return false;
+      return itemDate.toISOString().substring(0, 10) === currentDateStr;
+    });
+    
+    if (matchedData) {
+      result.push([currentDateStr, matchedData[valueKey]]);
+    } else {
+      result.push([currentDateStr, 0]);
+    }
+  }
+  
+  return result.reverse();
+}

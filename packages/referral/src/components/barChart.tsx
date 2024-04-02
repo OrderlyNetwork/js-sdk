@@ -45,6 +45,7 @@ export type YAxis = {
     textAnchor: string,
     min?: number,
     max?: number,
+    maxRate?: number,
 }
 
 export type XAxis = {
@@ -153,6 +154,10 @@ export const ColmunChart: React.FC<{
                 info["max"] = yAxis.max;
             }
 
+            if (yAxis.maxRate) {
+                info["max"] = info.max * yAxis.maxRate;
+            }
+
             return info;
         } catch (err) {
             return undefined;
@@ -234,7 +239,7 @@ export const ColmunChart: React.FC<{
         const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
         const maxCount = (barStyle.maxCount || (columns.length)) - 1;
         let stepX = (size.width - padding - barStyle.width * 2) / maxCount;
-        
+
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
         }
@@ -247,7 +252,7 @@ export const ColmunChart: React.FC<{
             const height = containerHeight - convertToYCoordinate(column, minMaxInfo.min, minMaxInfo.max, containerHeight);
             const y = (containerHeight - height) + yAxis.gridPaddingTop;
 
- 
+
             // console.log(`colums: ${columns}, stepX: ${stepX} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}`);
 
             children.push(
