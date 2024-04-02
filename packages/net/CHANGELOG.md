@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
 ## 1.2.0-alpha.0
 
 ### Minor Changes
