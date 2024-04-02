@@ -54,8 +54,8 @@ export const EditReferralRate = create<{
 
             await editRate({
                 "referral_code": code.code,
-                "referee_rebate_rate": r2 / 100,
-                "referrer_rebate_rate": r1 / 100,
+                "referee_rebate_rate": r1 / 100,
+                "referrer_rebate_rate": r2 / 100,
             });
             toast.success("Referral code edited");
             mutate();
