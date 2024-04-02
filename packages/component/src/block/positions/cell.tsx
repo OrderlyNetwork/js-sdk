@@ -64,7 +64,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
                 surfix=")"
                 className="orderly-text-4xs"
               >
-                {item.unsettled_pnl_ROI}
+                {item.unrealized_pnl_ROI}
               </Numeral>
               <SharePnLIcon className="orderly-ml-2" position={item} />
             </div>

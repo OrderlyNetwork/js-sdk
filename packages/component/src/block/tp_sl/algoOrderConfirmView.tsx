@@ -73,7 +73,7 @@ export const AlgoOrderConfirmView: FC<{
       )}
       <div className="orderly-flex orderly-items-center orderly-pb-4">
         <NetworkImage symbol={order.symbol} type="symbol" size={20} />
-        <span className="orderly-text-lg orderly-pl-2">{`${symbolConfig.base}-PERP`}</span>
+        <span className="desktop:orderly-text-lg orderly-pl-2">{`${symbolConfig.base}-PERP`}</span>
       </div>
       <div
         className={cn(
@@ -81,11 +81,11 @@ export const AlgoOrderConfirmView: FC<{
         )}
       >
         {!props.isEditing && (
-          <div className={"desktop:orderly-flex-1"}>
-            <div className="orderly-mr-3 orderly-w-[89px]">{type}</div>
+          <div className={" orderly-w-[78px] desktop:orderly-flex-1"}>
+            <div className="orderly-mr-3">{type}</div>
           </div>
         )}
-        <div className="orderly-flex-1 orderly-gap-2 orderly-text-sm">
+        <div className="orderly-flex-1 orderly-gap-2 orderly-text-xs desktop:orderly-text-sm">
           <div className="orderly-flex orderly-justify-between orderly-mb-1">
             <span className="orderly-text-base-contrast-54">Qty.</span>
             <span>{qty}</span>
@@ -148,7 +148,7 @@ export const AlgoOrderConfirmView: FC<{
           </div>
         ) : null}
 
-        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-2 ">
+        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-2">
           <Button
             className="orderly-confirm-dialog-cancal-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
             key="cancel"

@@ -27,6 +27,7 @@ export const TPSLEditor: FC<{
   order?: API.AlgoOrder;
   canModifyQty?: boolean;
   isEditing?: boolean;
+  onTypeChange?: (type: AlgoOrderRootType) => void;
 }> = (props) => {
   const { symbol, maxQty } = props;
   const [orderEntity, setOrderEntity] =
@@ -76,6 +77,18 @@ export const TPSLEditor: FC<{
       }
     );
   };
+
+  useEffect(() => {
+    let type: AlgoOrderRootType;
+
+    if (order.quantity === maxQty) {
+      type = AlgoOrderRootType.POSITIONAL_TP_SL;
+    } else {
+      type = AlgoOrderRootType.TP_SL;
+    }
+
+    props.onTypeChange?.(type);
+  }, [order.quantity, maxQty]);
 
   const onConfirm = () => {
     // check the order status, if it is a new order, then create it, otherwise update it,

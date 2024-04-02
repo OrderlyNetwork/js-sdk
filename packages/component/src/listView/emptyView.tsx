@@ -17,7 +17,7 @@ export const EmptyView: FC<EmptyViewProps> = (props) => {
   }, [props.text]);
 
   return (
-    <div className="orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-h-full">
+    <div className="orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-h-full orderly-absolute orderly-left-1/2 orderly-translate-x-[-50%]">
       <div>{icon}</div>
       <div className="orderly-text-base-contrast-54">{text}</div>
     </div>

@@ -15,6 +15,7 @@ import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
 import { TPSLOrderEditorSheet } from "@/block/tp_sl/tpslSheet";
+import { TPSLSheetTitle } from "./tpslSheetTitle";
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
 
@@ -56,9 +57,10 @@ export const PositionPane = () => {
 
   const onTPSLOrder = useCallback(
     async (position: API.PositionTPSLExt, order?: API.AlgoOrder) => {
+      console.log(position, order);
       return modal
         .sheet({
-          title: "TP / SL",
+          title: <TPSLSheetTitle />,
           content: <TPSLOrderEditorSheet position={position} order={order} />,
         })
         .then(() => {});

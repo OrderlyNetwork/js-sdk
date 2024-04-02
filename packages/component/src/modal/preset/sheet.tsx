@@ -2,9 +2,10 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/sheet";
 import { modalActions } from "../modalContext";
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
+import React from "react";
 
 export interface SheetProps {
-  title: string;
+  title: string | React.ReactNode;
   content?: React.ReactNode;
   contentClassName?: string;
 }
