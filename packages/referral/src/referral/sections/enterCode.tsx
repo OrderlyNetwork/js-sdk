@@ -42,12 +42,17 @@ export const ReferralInputCode = create<{
       } else {
         hide();
       }
-    } catch (e) {
+    } catch (e: any) {
+      let errorText = `${e}`;
+      if ("message" in (e)) {
+        errorText = e.message;
+      }
+      
       if (props.bindReferralCodeState) {
-        toast.error(`${e}`);
+        toast.error(errorText);
         props.bindReferralCodeState(false, e, hide);
       } else {
-        toast.error(`${e}`);
+        toast.error(errorText);
       }
     }
   };
