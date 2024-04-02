@@ -31,7 +31,7 @@ export const Rebates: FC<{
                 return compareDate(new Date(createdTime), new Date(item.date));
             })?.[0];
             if (volume) {
-                return {...item, volume};
+                return {...item, vol: volume.perp_volume};
             }
 
             return item;
