@@ -5,7 +5,7 @@ import { Share } from "./share";
 
 export const Introduce = () => {
     return (<div className="orderly-border orderly-border-base-100 orderly-rounded-lg orderly-p-6 orderly-mt-8">
-        <div className="orderly-flex orderly-justify-center orderly-mb-6">Becoming an affiliate is easy</div>
+        <div className="orderly-flex orderly-justify-center orderly-mb-6 orderly-text-[15px] md:orderly-text-[16px] xl:orderly-text-[18px] 2xl:orderly-text-[20px]">Becoming an affiliate is easy</div>
 
         <div className="orderly-flex orderly-flex-col sm:orderly-flex-col md:orderly-flex-col lg:orderly-flex-row xl:orderly-flex-row 2xl:orderly-flex-row">
             <div className="lg:orderly-flex-1"><Apply /></div>

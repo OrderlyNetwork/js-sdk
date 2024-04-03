@@ -40,9 +40,9 @@ export const Referral = () => {
             }}
             className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary"
           >
-            <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs">
+            <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs orderly-items-center">
               Learn how it works
-              <ArrowRightIcon className="orderly-ml-2" />
+              <ArrowRightIcon className="orderly-ml-2 orderly-fill-primary" fillOpacity={1}/>
             </div>
           </button>
         </div>

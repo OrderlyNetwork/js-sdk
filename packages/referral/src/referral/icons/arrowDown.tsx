@@ -12,7 +12,7 @@ export const ArrorDownIcon: FC<IconProps> = (props) => {
             width={`${size}px`}
             height={`${size}px`}
             fill="#608CFF"
-            fillOpacity={0.54}
+            fillOpacity={1}
             viewBox={`0 0 16 16`}
             {...rest}
         >
