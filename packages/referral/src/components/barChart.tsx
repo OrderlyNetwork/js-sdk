@@ -1,4 +1,5 @@
 import { cn } from "@orderly.network/react";
+import { Decimal } from "@orderly.network/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
 import { formatMdTime } from "../utils/utils";
@@ -157,6 +158,9 @@ export const ColmunChart: React.FC<{
             if (yAxis.maxRate) {
                 info["max"] = info.max * yAxis.maxRate;
             }
+
+            console.log("max info", info);
+            
 
             return info;
         } catch (err) {
@@ -422,10 +426,16 @@ export function abbreviatedNumbers(input?: string | number | undefined) {
     if (absNumber === 0) {
         return "0";
     }
-  
+
+
+    if (absNumber < 1000) {
+        return new Decimal(`${absNumber}`).toDecimalPlaces(2, Decimal.ROUND_DOWN).toString();
+    }
+    
+    
     const magnitude = Math.floor(Math.log10(absNumber) / 3);
     const scaledNumber = value / Math.pow(10, magnitude * 3);
-    const formattedNumber = scaledNumber.toFixed(1);
-  
+    const formattedNumber = new Decimal(`${scaledNumber}`).toDecimalPlaces(2, Decimal.ROUND_DOWN).toString();
+    
     return formattedNumber + suffixes[magnitude];
   }
