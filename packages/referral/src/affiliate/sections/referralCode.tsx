@@ -1,5 +1,5 @@
-import { FC, useContext, useMemo } from "react";
-import { MEDIA_MD } from "../../types/constants";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { MEDIA_2XL, MEDIA_MD, MEDIA_XL } from "../../types/constants";
 import { Button, Column, Divider, EmptyView, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
@@ -93,6 +93,10 @@ export const CodeList: FC<{
 
 
     const isMD = useMediaQuery(MEDIA_MD);
+    const isXL = useMediaQuery(MEDIA_2XL);
+
+    console.log("ix 2xl", isXL);
+    
     const { dataSource, copyLink, editRate } = props;
 
     const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
@@ -108,7 +112,21 @@ export const CodeList: FC<{
     }
 
     const columns = useMemo<Column[]>(() => {
-        return [
+        const action: Column = {
+            title: "Actions",
+            dataIndex: "code",
+            className: "orderly-h-[48px] orderly-text-right",
+            align: "right",
+            width: isXL ? 90 : 120,
+            render: (value, record) => (
+                <div className="orderly-flex orderly-justify-end">
+                    <_CopyLink className="lg:orderly-w-[82px]"
+                        onClick={(event) => copyLink(value)}
+                    />
+                </div>
+            )
+        };
+        const cols: Column[] = [
             {
                 title: "Referral Codes",
                 dataIndex: "code",
@@ -131,9 +149,11 @@ export const CodeList: FC<{
                 title: "You / Referee",
                 dataIndex: "referees",
                 className: "orderly-h-[48px]",
+                width: isXL ? 132 : 146,
+                align: "right",
                 render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-2">
-                        {getRate(record)}
+                    <div className="orderly-flex orderly-gap-1">
+                        <div className="orderly-flex-1">{getRate(record)}</div>
                         <EditIcon
                             onClick={() => editRate(record)}
                             fillOpacity={1}
@@ -142,33 +162,59 @@ export const CodeList: FC<{
                     </div>
                 )
             },
-            {
-                title: "Referees / Traders",
-                dataIndex: "referees",
-                className: "orderly-h-[48px]",
-                align: "right",
-                render: (value, record) => (
-                    <div >
-                        {getCount(record)}
-                    </div>
-                )
-            },
-            {
-                title: "Actions",
-                dataIndex: "code",
-                className: "orderly-h-[48px] orderly-text-right",
-                align: "right",
-                width: 90,
-                render: (value, record) => (
-                    <div className="orderly-flex orderly-justify-end">
-                        <_CopyLink className="lg:orderly-w-[82px]"
-                            onClick={(event) => copyLink(value)}
-                        />
-                    </div>
-                )
-            },
+            
         ];
-    }, [dataSource]);
+
+        if (!isXL) {
+            cols.push(
+                {
+                    title: "Referees",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record).split("/")?.[0]}
+                        </div>
+                    )
+                }
+            );
+            cols.push(
+                {
+                    title: "Traders",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record).split("/")?.[1]}
+                        </div>
+                    )
+                }
+            );
+        } else {
+            cols.push(
+                {
+                    title: "Referees / Traders",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record)}
+                        </div>
+                    )
+                }
+            );
+        }
+
+        cols.push(action);
+
+        return cols;
+    }, [dataSource, isXL]);
+
+    console.log("isXL", isXL);
+    
 
 
 
