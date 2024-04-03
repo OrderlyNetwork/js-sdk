@@ -32,7 +32,7 @@ export const Summary: FC<{className?: string}> = (props) => {
             case "7D":  return userVolume["7d_volume"];
             case "30D": return userVolume["30d_volume"];
         }
-    }, [referralInfo, , filterType]);
+    }, [userVolume, filterType]);
     
 
     return (
