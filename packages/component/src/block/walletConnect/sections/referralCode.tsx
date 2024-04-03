@@ -15,6 +15,8 @@ export const ReferralCode: FC<{
 
     const { saveRefCode } = useContext(OrderlyContext);
 
+    const localRefCode = localStorage.getItem("referral_code");
+
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
@@ -27,9 +29,7 @@ export const ReferralCode: FC<{
     }, [saveRefCode, refCode, inputRef])
 
 
-
-
-    if (!saveRefCode) return <></>;
+    if (!saveRefCode || ((localRefCode?.length || 0) <= 0)) return <></>;
 
     return (
         <div className={cn("orderly-text-2xs orderly-text-base-contrast-80", props.className)}>
