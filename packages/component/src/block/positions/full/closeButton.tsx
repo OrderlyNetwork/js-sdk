@@ -23,8 +23,12 @@ export const CloseButton = () => {
       (res) => {
         setOpen(false);
       },
-      (error: Error) => {
-        toast.error(error.message);
+      (error: any) => {
+        if (typeof error === 'string') {
+          toast.error(error);
+        } else {
+          toast.error(error.message)
+        }
       }
     );
   };

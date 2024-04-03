@@ -1,16 +1,10 @@
 # create-orderly-app
 
-## 1.4.1-internal.1
+## 0.2.8
 
 ### Patch Changes
 
-- fix: pageckage import path error
-
-## 1.4.1-internal.0
-
-### Patch Changes
-
-- add TP/SL module
+- fix bug: app crashes when symbolInfo is null;
 
 ## 0.2.7
 

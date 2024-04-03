@@ -1,16 +1,22 @@
 # @orderly.network/net
 
-## 1.4.1-internal.1
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
+## 1.1.8
 
 ### Patch Changes
 
-- fix: pageckage import path error
-
-## 1.4.1-internal.0
-
-### Patch Changes
-
-- add TP/SL module
+- fix bug: app crashes when symbolInfo is null;
 
 ## 1.1.7
 

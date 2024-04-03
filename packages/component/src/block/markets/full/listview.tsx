@@ -21,21 +21,28 @@ interface Props {
 
 export const ListViewFull = forwardRef<
   ListViewRef,
-  MarketListViewProps & Props & { 
-    prefixRender?: (item: API.MarketInfoExt, index: number) => React.ReactNode, 
-    suffixRender?: (item: API.MarketInfoExt, index: number) => React.ReactNode, 
-  }
+  MarketListViewProps &
+    Props & {
+      prefixRender?: (
+        item: API.MarketInfoExt,
+        index: number
+      ) => React.ReactNode;
+      suffixRender?: (
+        item: API.MarketInfoExt,
+        index: number
+      ) => React.ReactNode;
+    }
 >((props, ref) => {
-
   const config = useSymbolsInfo();
-  
+
   const renderItem = (
     item: API.MarketInfoExt,
     index: number,
     extraData: any
-    ) => {
-    const symbolInfo = config ? config?.[item.symbol] : {};
-    const baseDp = symbolInfo?.("quote_dp") || 2;
+  ) => {
+    if (config.isNil) return null;
+    const symbolInfo = config?.[item.symbol];
+    const baseDp = symbolInfo("quote_dp", 2);
     return (
       <div
         onMouseEnter={() => {
@@ -51,14 +58,21 @@ export const ListViewFull = forwardRef<
         onClick={() => props.onItemClick?.(item)}
       >
         <div className="orderly-col-span-2 orderly-flex orderly-items-center">
-          {props.prefixRender && (props.prefixRender(item,extraData))}
-          <NetworkImage type="symbol" symbol={item.symbol} size={"small"} className="orderly-mr-2"/>
+          {props.prefixRender && props.prefixRender(item, extraData)}
+          <NetworkImage
+            type="symbol"
+            symbol={item.symbol}
+            size={"small"}
+            className="orderly-mr-2"
+          />
           <Text rule="symbol">{item.symbol}</Text>
           {/* @ts-ignore */}
-          {item.leverage && (<div className="orderly-ml-1 orderly-rounded-sm orderly-px-1 orderly-py-[2px] orderly-flex orderly-items-center orderly-text-3xs orderly-text-primary orderly-bg-base-600">
-            {/* @ts-ignore */}
-            {`${item.leverage}x`}
-          </div>)}
+          {item.leverage && (
+            <div className="orderly-ml-1 orderly-rounded-sm orderly-px-1 orderly-py-[2px] orderly-flex orderly-items-center orderly-text-3xs orderly-text-primary orderly-bg-base-600">
+              {/* @ts-ignore */}
+              {`${item.leverage}x`}
+            </div>
+          )}
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
           <Numeral precision={baseDp}>{item["24h_close"]}</Numeral>
@@ -81,7 +95,7 @@ export const ListViewFull = forwardRef<
         </div>
         {props.suffixRender && (
           <div className="orderly-col-span-1 orderly-text-right orderly-text-base-contrast-54">
-            {props.suffixRender(item,index)}
+            {props.suffixRender(item, index)}
           </div>
         )}
       </div>
@@ -90,7 +104,11 @@ export const ListViewFull = forwardRef<
 
   return (
     <div>
-      <SortGroup readLastSortCondition={props.readLastSortCondition} onChange={props.onSort} hasSuffix={props.suffixRender !== undefined} />
+      <SortGroup
+        readLastSortCondition={props.readLastSortCondition}
+        onChange={props.onSort}
+        hasSuffix={props.suffixRender !== undefined}
+      />
       <ListView<API.MarketInfoExt, any>
         // @ts-ignore
         ref={ref}

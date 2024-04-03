@@ -1,25 +1,35 @@
 # examples
 
-## 0.2.9-internal.1
+## 0.2.10
 
 ### Patch Changes
 
-- fix: pageckage import path error
-- Updated dependencies
-  - @orderly.network/react@1.4.1-internal.1
-  - @orderly.network/web3-onboard@1.4.1-internal.1
-  - @orderly.network/hooks@1.4.1-internal.1
-  - @orderly.network/core@1.4.1-internal.1
+- Updated dependencies [52bebed3]
+  - @orderly.network/react@1.2.0
+  - @orderly.network/web3-onboard@1.2.0
+  - @orderly.network/hooks@1.2.0
+  - @orderly.network/core@1.2.0
 
-## 0.2.9-internal.0
+## 0.2.10-alpha.0
 
 ### Patch Changes
 
 - Updated dependencies
-  - @orderly.network/react@1.4.1-internal.0
-  - @orderly.network/web3-onboard@1.4.1-internal.0
-  - @orderly.network/hooks@1.4.1-internal.0
-  - @orderly.network/core@1.4.1-internal.0
+  - @orderly.network/react@1.2.0-alpha.0
+  - @orderly.network/web3-onboard@1.2.0-alpha.0
+  - @orderly.network/hooks@1.2.0-alpha.0
+  - @orderly.network/core@1.2.0-alpha.0
+
+## 0.2.9
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+- Updated dependencies
+  - @orderly.network/react@0.2.9
+  - @orderly.network/core@0.2.8
+  - @orderly.network/hooks@1.1.9
+  - @orderly.network/web3-onboard@0.1.9
 
 ## 0.2.8
 

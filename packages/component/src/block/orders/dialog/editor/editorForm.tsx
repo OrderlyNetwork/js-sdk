@@ -25,9 +25,21 @@ interface OrderEditFormProps {
 export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const { order, onSubmit } = props;
 
+  const isAlgoOrder = order.algo_order_id !== undefined;
+  const isMarket = order.type === "MARKET";
   // const { hide, reject, resolve } = useModal();
   // @ts-ignore
   const { markPrice, maxQty, helper } = useOrderEntry(order.symbol, order.side);
+
+
+  const orderType = useMemo(() => {
+    if (isAlgoOrder) {
+      return `STOP_${order.type}`;
+    }
+
+    return order.type;
+
+  }, [order, isAlgoOrder]);
 
   const {
     handleSubmit,
@@ -42,7 +54,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
       order_quantity: order.quantity.toString(),
       trigger_price: order.trigger_price?.toString(),
       symbol: order.symbol,
-      order_type: order.type,
+      order_type: orderType,
       side: order.side,
       reduce_only: Boolean(order.reduce_only),
     },
@@ -59,8 +71,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     },
   });
 
-  const isAlgoOrder = order.algo_order_id !== undefined;
-  const isMarket = order.type === "MARKET";
+  
 
   // console.log("editor form ", order);
 

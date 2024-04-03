@@ -102,10 +102,8 @@ export const usePositionStream = (
     return data;
   }, [tickers]);
 
-  const formattedPositions = useMemo<
-    [API.PositionTPSLExt[], any] | null
-  >(() => {
-    if (!data?.rows || !symbolInfo || !accountInfo) return null;
+  const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
+    if (!data?.rows || symbolInfo.isNil || !accountInfo) return null;
 
     const filteredData =
       typeof symbol === "undefined" || symbol === ""
@@ -132,7 +130,7 @@ export const usePositionStream = (
         markPrices
       ) as unknown as number;
 
-      const info = symbolInfo?.[item.symbol];
+      const info = symbolInfo[item.symbol];
       //
 
       const notional = positions.notional(item.position_qty, price);
@@ -214,8 +212,8 @@ export const usePositionStream = (
     if (!holding || !markPrices) {
       return [zero, zero, 0];
     }
-    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formattedPositions);
-    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formattedPositions);
+    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formatedPositions);
+    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formatedPositions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
 
@@ -237,16 +235,16 @@ export const usePositionStream = (
     });
 
     return [totalCollateral, totalValue, totalUnrealizedROI];
-  }, [holding, formattedPositions, markPrices]);
+  }, [holding, formatedPositions, markPrices]);
 
   const positionsRows = useMemo<API.PositionTPSLExt[] | null>(() => {
-    if (!formattedPositions) return null;
+    if (!formatedPositions) return null;
 
-    if (!symbolInfo || !accountInfo) return formattedPositions[0];
+    if (!symbolInfo || !accountInfo) return formatedPositions[0];
 
     const total = totalCollateral.toNumber();
 
-    let rows = formattedPositions[0]
+    let rows = formatedPositions[0]
       .filter((item) => item.position_qty !== 0)
       .map((item) => {
         const info = symbolInfo?.[item.symbol];
@@ -301,26 +299,25 @@ export const usePositionStream = (
     });
 
     return rows;
-  }, [
-    formattedPositions,
-    symbolInfo,
-    accountInfo,
-    totalCollateral,
-    tpslOrders,
-  ]);
+  }, [formatedPositions, symbolInfo, accountInfo, totalCollateral, tpslOrders]);
+
+  const positionInfoGetter = createGetter<
+    Omit<API.PositionInfo, "rows">,
+    keyof Omit<API.PositionInfo, "rows">
+  >(data as any, 1);
 
   return [
     {
       rows: positionsRows,
       aggregated: {
-        ...(formattedPositions?.[1] ?? {}),
+        ...(formatedPositions?.[1] ?? {}),
         unrealPnlROI: totalUnrealizedROI,
       },
       totalCollateral,
       totalValue,
       totalUnrealizedROI,
     },
-    createGetter<Omit<API.Position, "rows">>(data as any, 1),
+    positionInfoGetter,
     {
       // close: onClosePosition,
       loading: false,
