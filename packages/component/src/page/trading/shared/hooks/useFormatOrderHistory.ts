@@ -20,9 +20,15 @@ export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
         element.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
         element.algo_type === AlgoOrderRootType.TP_SL
       ) {
-        if (element.algo_status !== OrderStatus.FILLED) {
+        if (
+          element.algo_status !== OrderStatus.FILLED &&
+          element.algo_status !== OrderStatus.PARTIAL_FILLED
+        ) {
           for (let j = 0; j < element.child_orders.length; j++) {
             const e = element.child_orders[j];
+            if (!e.is_activated || !e.trigger_price) {
+              continue;
+            }
             (e as any).parent_algo_type = element.algo_type;
             _data.push(e);
           }
