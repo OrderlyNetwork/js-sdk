@@ -7,7 +7,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
     textBaseline: "bottom",
     position: {
       left: 20,
-      bottom: 17,
+      bottom: 32,
     },
   },
   message: {
@@ -49,11 +49,11 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
 
   updateTime: {
     fontSize: 10,
-    color: "rgba(255,255,255,0.5)",
-    textAlign: "end",
+    color: "rgba(255,255,255,0.3)",
+    // textAlign: "end",
     textBaseline: "bottom",
     position: {
-      right: 20,
+      left: 20,
       bottom: 17,
     },
   },

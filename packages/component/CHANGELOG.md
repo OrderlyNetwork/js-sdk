@@ -1,5 +1,37 @@
 # @orderly.network/react
 
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+### Patch Changes
+
+- Updated dependencies [52bebed3]
+  - @orderly.network/trading-view@1.2.0
+  - @orderly.network/hooks@1.2.0
+  - @orderly.network/types@1.2.0
+  - @orderly.network/utils@1.2.0
+  - @orderly.network/core@1.2.0
+  - @orderly.network/net@1.2.0
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/trading-view@1.2.0-alpha.0
+  - @orderly.network/hooks@1.2.0-alpha.0
+  - @orderly.network/types@1.2.0-alpha.0
+  - @orderly.network/utils@1.2.0-alpha.0
+  - @orderly.network/core@1.2.0-alpha.0
+  - @orderly.network/net@1.2.0-alpha.0
+
 ## 0.2.9
 
 ### Patch Changes
