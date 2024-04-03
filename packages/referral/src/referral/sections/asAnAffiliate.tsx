@@ -34,7 +34,7 @@ export const AsAnAffiliate = () => {
             </div>
           </div>
 
-          <button onClick={enterAffiliatePage} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
+          <button onClick={() => enterAffiliatePage?.({tab: 0})} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
             Enter
             <ArrowRightIcon fill="white" fillOpacity={0.98} />
           </button>

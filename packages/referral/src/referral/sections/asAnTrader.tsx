@@ -30,7 +30,7 @@ export const AsAnTrader = () => {
             </div>
           </div>
 
-          <button onClick={enterTraderPage} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
+          <button onClick={() => enterTraderPage?.({tab: 1})} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
             Enter
             <ArrowRightIcon fill="white" fillOpacity={0.98} />
           </button>

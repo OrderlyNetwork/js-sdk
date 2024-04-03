@@ -23,8 +23,8 @@ export type ReferralContextProps = {
     referralLinkUrl: string,
     //** referral index page */
     showReferralPage?: () => void,
-    enterTraderPage?: () => void,
-    enterAffiliatePage?: () => void,
+    enterTraderPage?: (params?: {}) => void,
+    enterAffiliatePage?: (params?: {}) => void,
     //** tab + tab content */
     showDashboard?: () => void,
     chartConfig?: {

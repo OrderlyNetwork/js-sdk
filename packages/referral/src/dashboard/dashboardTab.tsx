@@ -1,5 +1,5 @@
 import { Button, TabPane, Tabs, cn, modal } from "@orderly.network/react";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ReferralContext } from "../hooks/referralContext";
 import { ReferralIcon } from "./icons/referral";
 import { Affiliate } from "../affiliate";
@@ -15,6 +15,17 @@ export const DashboardTab = () => {
         isTrader,
         showReferralPage,
     } = useContext(ReferralContext);
+
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('tab');
+        if (code && code === '0') {
+            setActiveTab("affiliateTab");
+        } else if (code && code === '1') {
+            setActiveTab("traderTab");
+        } 
+    }, []);
 
     
 
