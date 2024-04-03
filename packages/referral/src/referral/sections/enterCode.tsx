@@ -47,6 +47,10 @@ export const ReferralInputCode = create<{
       if ("message" in (e)) {
         errorText = e.message;
       }
+
+      if ("referral code not exist" === errorText) {
+        errorText = "This referral code does not exist";
+      }
       
       if (props.bindReferralCodeState) {
         toast.error(errorText);
@@ -63,7 +67,7 @@ export const ReferralInputCode = create<{
     if (regex.test(code) && code.length >= 4 && code.length <= 10) {
       setErrorInfo("");
     } else {
-      setErrorInfo("This referral code does not exist.");
+      // setErrorInfo("This referral code does not exist.");
     }
   };
 
@@ -105,10 +109,10 @@ export const ReferralInputCode = create<{
             }}><CloseIcon className="hover:orderly-fill-slate-300" /></button>)}
           />
 
-          {errorInfo.length > 0 && (<div className="orderly-flex orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-center">
+          {/* {errorInfo.length > 0 && (<div className="orderly-flex orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-center">
             <div className="orderly-inline-block orderly-bg-danger orderly-rounded-full orderly-w-[4px] orderly-h-[4px] orderly-mr-1"></div>
             {errorInfo}
-          </div>)}
+          </div>)} */}
 
           <Button
             id="referral_bind_referral_code_btn"

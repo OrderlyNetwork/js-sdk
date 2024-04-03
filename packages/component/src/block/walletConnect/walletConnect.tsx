@@ -71,6 +71,10 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
             if ("message" in (e)) {
               errorText = e.message;
             }
+
+            if ("referral code not exist" === errorText) {
+              errorText = "This referral code does not exist";
+            }
             toast.error(errorText);
           }
         )
