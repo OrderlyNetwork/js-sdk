@@ -36,7 +36,11 @@ export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
           // if order is filled then show only the filled order
           for (let j = 0; j < element.child_orders.length; j++) {
             const e = element.child_orders[j];
-            if (!!e && e.is_triggered) {
+            if (
+              !!e &&
+              (e.algo_status === OrderStatus.FILLED ||
+                e.algo_status === OrderStatus.PARTIAL_FILLED)
+            ) {
               (e as any).parent_algo_type = element.algo_type;
               _data.push(e);
             }
