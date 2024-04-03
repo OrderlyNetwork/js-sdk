@@ -18,7 +18,7 @@ export const DashboardTab = () => {
 
     
 
-    const [activeTab, setActiveTab] = useState<DashboardTabType>(isTrader ? "traderTab" : "affiliateTab")
+    const [activeTab, setActiveTab] = useState<DashboardTabType>(isAffiliate ? "affiliateTab" : "traderTab")
     const onTabChange = (tab: any) => {
         setActiveTab(tab);
     }
