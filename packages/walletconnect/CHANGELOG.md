@@ -1,5 +1,17 @@
 # @orderly.network/web3-modal
 
+## 1.3.0-internal.1
+
+### Minor Changes
+
+- TP/SL
+
+## 1.3.0-internal.0
+
+### Minor Changes
+
+- TP/SL
+
 ## 1.2.0
 
 ### Minor Changes

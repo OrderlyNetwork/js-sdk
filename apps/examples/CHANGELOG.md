@@ -1,5 +1,33 @@
 # examples
 
+## 0.3.0-internal.1
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.3.0-internal.1
+  - @orderly.network/web3-onboard@1.3.0-internal.1
+  - @orderly.network/hooks@1.3.0-internal.1
+  - @orderly.network/core@1.3.0-internal.1
+
+## 0.3.0-internal.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.3.0-internal.0
+  - @orderly.network/hooks@1.3.0-internal.0
+  - @orderly.network/core@1.3.0-internal.0
+  - @orderly.network/web3-onboard@1.3.0-internal.0
+
 ## 0.2.10
 
 ### Patch Changes

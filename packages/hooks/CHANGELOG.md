@@ -1,5 +1,35 @@
 # @orderly.network/hooks
 
+## 1.3.0-internal.1
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.3.0-internal.1
+  - @orderly.network/utils@1.3.0-internal.1
+  - @orderly.network/core@1.3.0-internal.1
+  - @orderly.network/perp@4.0.0-internal.1
+  - @orderly.network/net@1.3.0-internal.1
+
+## 1.3.0-internal.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.3.0-internal.0
+  - @orderly.network/perp@4.0.0-internal.0
+  - @orderly.network/core@1.3.0-internal.0
+  - @orderly.network/net@1.3.0-internal.0
+  - @orderly.network/utils@1.3.0-internal.0
+
 ## 1.2.0
 
 ### Minor Changes
