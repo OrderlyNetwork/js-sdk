@@ -1,5 +1,13 @@
 # eslint-config-custom
 
+## 0.2.0
+
+### Minor Changes
+
+- ae98b279: TP/SL
+- ae98b279: TP/SL
+- TP/SL
+
 ## 0.2.0-internal.1
 
 ### Minor Changes

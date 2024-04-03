@@ -1,5 +1,23 @@
 # @orderly.network/cli
 
+## 0.2.0
+
+### Minor Changes
+
+- ae98b279: TP/SL
+- ae98b279: TP/SL
+- TP/SL
+
+### Patch Changes
+
+- a7a55b5a: fix: pageckage import path error
+- Updated dependencies [a7a55b5a]
+- Updated dependencies [ae98b279]
+- Updated dependencies [ae98b279]
+- Updated dependencies [ffdd0beb]
+- Updated dependencies
+  - @orderly.network/core@1.3.0
+
 ## 0.2.0-internal.1
 
 ### Minor Changes

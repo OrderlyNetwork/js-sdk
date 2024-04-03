@@ -2,7 +2,16 @@
   "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@orderly.network/hooks",
+      "@orderly.network/react",
+      "@orderly.network/types",
+      "@orderly.network/utils",
+      "@orderly.network/core",
+      "@orderly.network/trading-view"
+    ]
+  ],
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",

@@ -1,5 +1,18 @@
 # create-orderly-app
 
+## 0.3.0
+
+### Minor Changes
+
+- ae98b279: TP/SL
+- ae98b279: TP/SL
+- TP/SL
+
+### Patch Changes
+
+- a7a55b5a: fix: pageckage import path error
+- ffdd0beb: add TP/SL module
+
 ## 0.3.0-internal.1
 
 ### Minor Changes
