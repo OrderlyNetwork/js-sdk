@@ -1,4 +1,4 @@
-import { MessageHandler } from "@/types/ws";
+import { MessageHandler } from "../../types/ws";
 
 export default class BaseHandler implements MessageHandler {
   handle(message: any, webSocket: WebSocket) {

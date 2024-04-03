@@ -1,5 +1,47 @@
 # @orderly.network/hooks
 
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+### Patch Changes
+
+- Updated dependencies [52bebed3]
+  - @orderly.network/types@1.2.0
+  - @orderly.network/utils@1.2.0
+  - @orderly.network/core@1.2.0
+  - @orderly.network/net@1.2.0
+  - @orderly.network/perp@3.0.0
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.2.0-alpha.0
+  - @orderly.network/utils@1.2.0-alpha.0
+  - @orderly.network/core@1.2.0-alpha.0
+  - @orderly.network/net@1.2.0-alpha.0
+  - @orderly.network/perp@3.0.0-alpha.0
+
+## 1.1.9
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+- Updated dependencies
+  - @orderly.network/core@0.2.8
+  - @orderly.network/net@1.1.8
+  - @orderly.network/perp@2.0.8
+  - @orderly.network/types@0.2.8
+  - @orderly.network/utils@0.1.8
+
 ## 1.1.8
 
 ### Patch Changes

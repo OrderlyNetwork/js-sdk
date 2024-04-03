@@ -1,4 +1,4 @@
-import { ApiError } from "@/errors/apiError";
+import { ApiError } from "../errors/apiError";
 
 async function request(url: string, options: RequestInit) {
   //
