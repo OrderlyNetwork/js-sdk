@@ -1,5 +1,21 @@
 # @orderly.network/futures
 
+## 4.0.0-internal.0
+
+### Minor Changes
+
+- 9ad14a77: TP/SL
+- TP/SL
+- 9ad14a77: TP/SL
+
+### Patch Changes
+
+- Updated dependencies [9ad14a77]
+- Updated dependencies
+- Updated dependencies [9ad14a77]
+  - @orderly.network/types@1.4.0-internal.0
+  - @orderly.network/utils@1.4.0-internal.0
+
 ## 4.0.0
 
 ### Minor Changes

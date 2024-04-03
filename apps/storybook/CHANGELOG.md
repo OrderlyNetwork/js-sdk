@@ -1,5 +1,23 @@
 # storybook
 
+## 1.3.0-internal.0
+
+### Minor Changes
+
+- 9ad14a77: TP/SL
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies [9ad14a77]
+- Updated dependencies
+- Updated dependencies [9ad14a77]
+  - @orderly.network/web3-modal@1.4.0-internal.0
+  - @orderly.network/react@1.4.0-internal.0
+  - @orderly.network/web3-onboard@1.4.0-internal.0
+  - @orderly.network/hooks@1.4.0-internal.0
+  - @orderly.network/core@1.4.0-internal.0
+
 ## 1.2.0
 
 ### Minor Changes
