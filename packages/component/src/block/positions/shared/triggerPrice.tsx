@@ -44,7 +44,11 @@ export const TriggerPriceItem: FC<{
           // @ts-ignore
           <span>{pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}</span>
         }
-        surfix={<span className="orderly-text-base-contrast-36">USDC</span>}
+        surfix={
+          <span className="orderly-text-base-contrast-36 orderly-ml-1">
+            USDC
+          </span>
+        }
       >{`${Math.abs(pnl)}`}</Numeral>
     </div>
   );

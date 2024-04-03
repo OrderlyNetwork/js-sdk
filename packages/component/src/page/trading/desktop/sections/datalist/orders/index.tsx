@@ -17,6 +17,7 @@ import { OrderStatus } from "@orderly.network/types";
 import { OrdersViewFull } from "@/block/orders/full";
 import { OrderSide } from "@orderly.network/types";
 import { useTabContext } from "@/tab/tabContext";
+import { useFormatOrderHistory } from "@/page/trading/shared/hooks/useFormatOrderHistory";
 
 interface Props {
   // symbol: string;
@@ -49,7 +50,10 @@ export const MyOrders: FC<Props> = (props) => {
     symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
     // @ts-ignore
     side,
-    excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+    excludes:
+      props.status === OrderStatus.FILLED
+        ? []
+        : [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   });
 
   // const onShowAllSymbolChange = (isAll: boolean) => {
@@ -66,10 +70,14 @@ export const MyOrders: FC<Props> = (props) => {
     []
   );
 
+  const formattedData = useFormatOrderHistory(
+    state.status < AccountStatusEnum.EnableTrading || !data ? [] : data
+  );
+
   return (
     <OrdersViewFull
       // @ts-ignore
-      dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
+      dataSource={formattedData}
       isLoading={isLoading}
       symbol={context.symbol}
       onSideChange={setSide}

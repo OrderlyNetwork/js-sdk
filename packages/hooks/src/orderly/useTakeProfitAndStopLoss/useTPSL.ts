@@ -160,9 +160,6 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
-    // console.log("updateOrder", key, value);
-    // if key is quantity;
-    // const { ignoreValidate = false } = options || {};
     if (key === "quantity") {
       setOrder((prev) => ({ ...prev, quantity: value }));
 
@@ -184,6 +181,15 @@ export const useTaskProfitAndStopLossInternal = (
     _setOrderValue(key, value, options);
   };
 
+  /**
+   * calculate value config
+   */
+  const valueConfig = {
+    symbol: symbolInfo,
+    maxQty: Math.abs(position.position_qty),
+    markPrice,
+  };
+
   // auto validate when order changed
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -195,7 +201,7 @@ export const useTaskProfitAndStopLossInternal = (
           setErrors(errors);
         });
     });
-  }, [order]);
+  }, [order, valueConfig.markPrice, order.quantity]);
 
   const setValues = (values: Partial<ComputedAlgoOrder>) => {
     const keys = Object.keys(values);
@@ -205,15 +211,6 @@ export const useTaskProfitAndStopLossInternal = (
         values[key as keyof ComputedAlgoOrder] as number | string
       );
     });
-  };
-
-  /**
-   * calculate value config
-   */
-  const valueConfig = {
-    symbol: symbolInfo,
-    maxQty: Math.abs(position.position_qty),
-    markPrice,
   };
 
   const validate = (): Promise<
@@ -230,7 +227,7 @@ export const useTaskProfitAndStopLossInternal = (
           valueConfig
         )
         .then((errors) => {
-          console.log("errors", errors);
+          console.log("errors::", errors);
 
           if (errors) {
             setErrors(errors);
@@ -295,8 +292,6 @@ export const useTaskProfitAndStopLossInternal = (
       order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
       valueConfig
     );
-
-    console.log("orderBody", orderBody);
 
     if (orderBody.child_orders.length === 0) {
       throw new SDKError("No child orders");

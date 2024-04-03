@@ -42,7 +42,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
     <>
       <div
         id="orderly-data-list-positions-header"
-        className="orderly-flex orderly-justify-between orderly-bg-base-900 orderly-px-4 orderly-py-3"
+        className="orderly-flex orderly-justify-between orderly-bg-base-900 orderly-px-4 orderly-pt-3"
       >
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
@@ -63,7 +63,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
           label=""
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs"
-          value={<div/>}
+          value={<div />}
           rule="price"
           coloring
           align="right"

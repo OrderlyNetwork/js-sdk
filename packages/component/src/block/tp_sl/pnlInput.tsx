@@ -69,7 +69,7 @@ export const PnlInput: FC<Props> = (props) => {
       prefix={mode}
       placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
       className={cn(
-        "orderly-text-right orderly-text-sm",
+        "orderly-text-right orderly-text-sm orderly-caret-white",
         Number(props.values.PNL) > 0
           ? "orderly-text-trade-profit"
           : "orderly-text-trade-loss"

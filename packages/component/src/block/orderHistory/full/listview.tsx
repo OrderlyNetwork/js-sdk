@@ -18,6 +18,7 @@ interface Props {
   //   onCancelOrder?: (orderId: number, symbol: string) => Promise<any>;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
+
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo(() => {
     const cols = columnsBasis({ onSymbolChange: props.onSymbolChange });
@@ -27,22 +28,26 @@ export const Listview: FC<Props> = (props) => {
       className: "orderly-h-[48px]",
       width: 100,
       dataIndex: "side",
-      render: (value: string, record: any) => (
-        <span
-          className={cx("orderly-font-semibold", {
-            "orderly-text-trade-profit":
-              record.status !== OrderStatus.CANCELLED &&
-              record.status !== OrderStatus.REJECTED &&
-              value === OrderSide.BUY,
-            "orderly-text-trade-loss":
-              record.status !== OrderStatus.CANCELLED &&
-              record.status !== OrderStatus.REJECTED &&
-              value === OrderSide.SELL,
-          })}
-        >
-          {upperCaseFirstLetter(value)}
-        </span>
-      ),
+      render: (value: string, record: any) => {
+        const status = record.status || record.algo_status;
+
+        return (
+          <span
+            className={cx("orderly-font-semibold", {
+              "orderly-text-trade-profit":
+                status !== OrderStatus.CANCELLED &&
+                status !== OrderStatus.REJECTED &&
+                value === OrderSide.BUY,
+              "orderly-text-trade-loss":
+                status !== OrderStatus.CANCELLED &&
+                status !== OrderStatus.REJECTED &&
+                value === OrderSide.SELL,
+            })}
+          >
+            {upperCaseFirstLetter(value)}
+          </span>
+        );
+      },
     };
 
     cols[3] = {
@@ -51,19 +56,23 @@ export const Listview: FC<Props> = (props) => {
       dataIndex: "quantity",
       width: 200,
       render: (value: string, record: any) => {
-        if (record.type === OrderType.CLOSE_POSITION) {
+        if (
+          record.type === OrderType.CLOSE_POSITION &&
+          record.status !== OrderStatus.FILLED
+        ) {
           return "Entire position";
         }
+        const status = record.status || record.algo_status;
         return (
           <span
             className={cx("orderly-font-semibold", {
               "orderly-text-trade-profit":
-                record.status !== OrderStatus.CANCELLED &&
-                record.status !== OrderStatus.REJECTED &&
+                status !== OrderStatus.CANCELLED &&
+                status !== OrderStatus.REJECTED &&
                 record.side === OrderSide.BUY,
               "orderly-text-trade-loss":
-                record.status !== OrderStatus.CANCELLED &&
-                record.status !== OrderStatus.REJECTED &&
+                status !== OrderStatus.CANCELLED &&
+                status !== OrderStatus.REJECTED &&
                 record.side === OrderSide.SELL,
             })}
           >{`${record.total_executed_quantity} / ${record.quantity}`}</span>
@@ -81,7 +90,7 @@ export const Listview: FC<Props> = (props) => {
       <Table<API.AlgoOrder | API.Order>
         bordered
         justified
-        showMaskElement={false}
+        showMaskElement={props.loading}
         columns={columns}
         loading={props.loading}
         dataSource={props.dataSource}
@@ -120,9 +129,10 @@ export const Listview: FC<Props> = (props) => {
         }}
       />
 
-      {(!props.dataSource || props.dataSource.length <= 0) && (
+      {/* {(!props.dataSource ||
+        (props.dataSource.length <= 0 && !props.loading)) && (
         <PositionEmptyView watchRef={divRef} left={0} right={120} />
-      )}
+      )} */}
     </div>
   );
 };

@@ -29,7 +29,7 @@ export const useTaskProfitAndStopLoss = (
   }
 
   if (typeof position.position_qty === "undefined") {
-    throw new SDKError("Position qty is required");
+    throw new SDKError("Position quantity is required");
   }
 
   // const { data: markPrice } = useMarkPrice(position.symbol);

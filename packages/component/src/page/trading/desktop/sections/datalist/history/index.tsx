@@ -11,6 +11,7 @@ import {
   OrderStatus,
 } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useFormatOrderHistory } from "@/page/trading/shared/hooks/useFormatOrderHistory";
 
 export const HistoryView = () => {
   const [side, setSide] = useState<OrderSide | "">("");
@@ -41,45 +42,11 @@ export const HistoryView = () => {
     [refresh]
   );
 
-  const formattedData = useMemo(() => {
-    if (state.status < AccountStatusEnum.EnableTrading || !data) {
-      return [];
-    }
-    const _data = [];
+  const formattedData = useFormatOrderHistory(
+    state.status < AccountStatusEnum.EnableTrading || !data ? [] : data
+  );
 
-    for (let index = 0; index < data.length; index++) {
-      const element = data[index];
-      // console.log("element", element);
-      if (
-        element.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
-        element.algo_type === AlgoOrderRootType.TP_SL
-      ) {
-        if (element.algo_status !== OrderStatus.FILLED) {
-          for (let j = 0; j < element.child_orders.length; j++) {
-            const e = element.child_orders[j];
-            e.parent_algo_type = element.algo_type;
-            _data.push(e);
-          }
-        } else {
-          // if order is filled then show only the filled order
-          for (let j = 0; j < element.length; j++) {
-            const e = element[j];
-
-            if (e.is_triggered) {
-              e.parent_algo_type = element.algo_type;
-              _data.push(e);
-            }
-          }
-        }
-      } else {
-        _data.push(element);
-      }
-    }
-
-    return _data;
-
-    // data.map((item) => {});
-  }, [data]);
+  console.log("formattedData", isLoading);
 
   return (
     <HistoryListViewFull

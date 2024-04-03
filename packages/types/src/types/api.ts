@@ -132,6 +132,7 @@ export declare namespace API {
     side: string;
     quantity: number;
     is_triggered: boolean;
+    is_activated: boolean;
     trigger_price: number;
     trigger_price_type: string;
     type: string;
@@ -145,7 +146,6 @@ export declare namespace API {
     reduce_only: boolean;
     created_time: number;
     updated_time: number;
-    is_activated: boolean;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {

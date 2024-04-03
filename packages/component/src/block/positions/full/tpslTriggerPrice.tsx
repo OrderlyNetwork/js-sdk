@@ -39,7 +39,7 @@ export const TPSLTriggerPrice: FC<{
           price={props.takeProfitPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
-          orderType={order.algo_type as AlgoOrderType}
+          orderType={AlgoOrderType.TAKE_PROFIT}
           symbolInfo={symbolInfo}
         />
       );
@@ -52,7 +52,7 @@ export const TPSLTriggerPrice: FC<{
           price={props.stopLossPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
-          orderType={order.algo_type as AlgoOrderType}
+          orderType={AlgoOrderType.STOP_LOSS}
           symbolInfo={symbolInfo}
         />
       );
@@ -74,9 +74,7 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Numeral
           className={cn(
-            "orderly-text-trade-profit orderly-gap-0  orderly-decoration-white/20",
-            props.tooltip &&
-              "orderly-underline orderly-underline-offset-4 orderly-decoration-dashed"
+            "orderly-text-trade-profit orderly-gap-0  orderly-decoration-white/20"
           )}
           key={"tp"}
           rule="price"
@@ -96,9 +94,7 @@ export const TPSLTriggerPrice: FC<{
         <Numeral
           key={"sl"}
           className={cn(
-            "orderly-text-trade-loss orderly-gap-0 orderly-decoration-white/20 ",
-            props.tooltip &&
-              "orderly-decoration-dashed orderly-underline orderly-underline-offset-4"
+            "orderly-text-trade-loss orderly-gap-0 orderly-decoration-white/20 "
           )}
           rule={"price"}
           children={props.stopLossPrice}
