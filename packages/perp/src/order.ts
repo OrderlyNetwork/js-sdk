@@ -134,7 +134,7 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
       .toNumber()
   );
 
-  console.log("new MMR", newMMR, newTotalMM.toNumber());
+  // console.log("new MMR", newMMR, newTotalMM.toNumber());
 
   const newQty = new Decimal(newOrder.qty).add(
     currentPosition?.position_qty ?? 0

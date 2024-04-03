@@ -72,6 +72,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
+  const quoteDp = useMemo(() => symbolInfo("quote_dp"), [symbolInfo]);
 
   const typeText = useMemo(() => {
     if (side === OrderSide.SELL) return <Text type={"sell"}>Limit Sell</Text>;
@@ -146,6 +147,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
         <Statistic
           label="Last price"
           value={markPrice}
+          precision={quoteDp}
           rule="price"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
