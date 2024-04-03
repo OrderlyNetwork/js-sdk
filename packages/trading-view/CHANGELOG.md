@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 1.4.0-internal.1
+
+### Patch Changes
+
+- TP/SL
+- Updated dependencies
+  - @orderly.network/hooks@1.4.0-internal.1
+  - @orderly.network/types@1.4.0-internal.1
+  - @orderly.network/utils@1.4.0-internal.1
+  - @orderly.network/core@1.4.0-internal.1
+  - @orderly.network/net@1.4.0-internal.1
+
 ## 1.4.0-internal.0
 
 ### Minor Changes

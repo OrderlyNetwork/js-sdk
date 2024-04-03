@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.0-internal.1
+
+### Patch Changes
+
+- TP/SL
+
 ## 0.3.0-internal.0
 
 ### Minor Changes
