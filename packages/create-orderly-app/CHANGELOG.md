@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 0.4.0-internal.2
+
+### Patch Changes
+
+- TP/SL
+
 ## 0.4.0-internal.1
 
 ### Patch Changes

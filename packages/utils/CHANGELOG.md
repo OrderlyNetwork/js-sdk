@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.4.0-internal.2
+
+### Patch Changes
+
+- TP/SL
+
 ## 1.4.0-internal.1
 
 ### Patch Changes
