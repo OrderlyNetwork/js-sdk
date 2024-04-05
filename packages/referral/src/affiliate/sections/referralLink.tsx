@@ -102,7 +102,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
 
                 <div className="lg:orderly-flex-1 orderly-flex orderly-flex-col orderly-gap-2">
                     <CopyInfo title="Referral code" value={firstCode?.code || ""} copyText={firstCode?.code || ""} />
-                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} className="orderly-max-w-[100px] sm:orderly-max-w-[151px]"/>)} copyText={referralLink} />
+                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} />)} copyText={referralLink} />
 
                 </div>
 
@@ -155,8 +155,8 @@ const CopyInfo: FC<{ title: string, value: string | React.ReactNode, copyText: s
     return (
         <div className="orderly-flex orderly-p-3 orderly-items-center orderly-bg-base-500 orderly-rounded-md orderly-justify-between">
             <div className="orderly-w-[88px] orderly-text-base-contrast-54 orderly-text-3xs lg:orderly-text-2xs 2xl:orderly-text-xs">{title}</div>
-            <div className="orderly-flex">
-                <div className="orderly-flex-1 orderly-max-w-[100px] sm:orderly-max-w-[151px] orderly-mx-3 orderly-text-right orderly-text-xs 2xl:orderly-text-base">{value}</div>
+            <div className="orderly-flex-1 orderly-flex">
+                <div className="orderly-flex-1 orderly-mx-3 orderly-text-right orderly-text-xs 2xl:orderly-text-base">{value}</div>
                 <CopyIcon
                     fillOpacity={1}
                     className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"

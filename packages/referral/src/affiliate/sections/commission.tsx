@@ -86,9 +86,6 @@ const _BigCommission: FC<{
                 render: (value, record) => {
                     const date = formatYMDTime(value);
 
-                    console.log("value", value);
-
-
                     return (
                         <div className="orderly-flex orderly-gap-2 orderly-items-center">
                             {date}
