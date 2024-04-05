@@ -15,7 +15,7 @@ import { useMutation } from "@orderly.network/hooks";
 
 export const ReferralInputCode = create<{
   mutate: any,
-  bindReferralCodeState?: (success: boolean, error: any, hide: any) => void
+  bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void
 }>((props) => {
 
   const { mutate } = props;
@@ -38,7 +38,7 @@ export const ReferralInputCode = create<{
       toast.success("Referral code bound");
       mutate();
       if (props.bindReferralCodeState) {
-        props.bindReferralCodeState(true, null, hide);
+        props.bindReferralCodeState(true, null, hide, {tab: 1});
       } else {
         hide();
       }
@@ -54,7 +54,7 @@ export const ReferralInputCode = create<{
       
       if (props.bindReferralCodeState) {
         toast.error(errorText);
-        props.bindReferralCodeState(false, e, hide);
+        props.bindReferralCodeState(false, e, hide, {});
       } else {
         toast.error(errorText);
       }
