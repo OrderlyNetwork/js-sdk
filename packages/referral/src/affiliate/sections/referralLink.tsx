@@ -70,14 +70,14 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
     }, [firstCode?.referee_rebate_rate]);
 
     return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl", props.className)}>
             <div className="orderly-text-base 2xl:orderly-text-lg">
                 Referral link
             </div>
 
             <div className="orderly-mt-4 orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-3">
 
-                <div className="lg:orderly-w-auto orderly-flex orderly-gap-3 orderly-items-center">
+                <div className="lg:orderly-w-auto orderly-flex orderly-gap-5 orderly-items-center">
                     <Info
                         title="Earn"
                         value={earn}
@@ -123,7 +123,7 @@ const Info: FC<{
 
     return (
         <div className={className}>
-            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs"}>
+            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px]"}>
                 {title}
                 <Tooltip content={tooltip} className="orderly-max-w-[200px]">
                     <div><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>

@@ -71,7 +71,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     ]);
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl", props.className)}>
             <div className="orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">

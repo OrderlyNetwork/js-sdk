@@ -65,7 +65,7 @@ export const AsAnAffiliate = () => {
   return (
     <div
       id="dashboard_affiliate_container"
-      className="orderly-rounded-lg orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-h-[196px] lg:orderly-h-[221px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between"
+      className="orderly-rounded-xl orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-h-[196px] lg:orderly-h-[221px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between"
     >
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">

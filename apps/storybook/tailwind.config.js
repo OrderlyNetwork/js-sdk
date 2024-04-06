@@ -163,6 +163,7 @@ module.exports = {
       borderRadius: {
         DEFAULT: "var(--orderly-rounded)",
         lg: "var(--orderly-rounded-lg)",
+        xl: "var(--orderly-rounded-xl)",
         full: "var(--orderly-rounded-full)",
         sm: "var(--orderly-rounded-sm)",
       },

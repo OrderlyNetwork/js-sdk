@@ -333,7 +333,7 @@ export const ColmunChart: React.FC<{
                 </svg>
             )}
             {hoverItem && <div
-                className="orderly-absolute orderly-bg-base-500 orderly-rounded-lg orderly-p-3 orderly-top-0"
+                className="orderly-absolute orderly-bg-base-500 orderly-rounded-xl orderly-p-3 orderly-top-0"
                 style={{
                     marginLeft: hoverX,
                     pointerEvents: 'none',

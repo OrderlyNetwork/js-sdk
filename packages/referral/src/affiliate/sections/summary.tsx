@@ -54,13 +54,13 @@ export const Summary: FC<{ className?: string }> = (props) => {
     }, [referralInfo, , filterType]);
 
     return (
-        <div className={cn("orderly-p-6 orderly-bg-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-p-6 orderly-bg-base-600 orderly-rounded-xl orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
             <div className="orderly-flex orderly-justify-between">
                 <span className="orderly-text-base 2xl:orderly-text-lg">Summary</span>
                 <SummaryFilter curType={filterType} onClick={setFiltetType} />
             </div>
 
-            <div className="orderly-mt-4 orderly-p-6 orderly-rounded-lg orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to">
+            <div className="orderly-mt-4 orderly-p-6 orderly-rounded-xl orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to">
                 <div className="orderly-text-center orderly-text-xs md:orderly-text-base lg:orderly-text-base xl:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-54">Commission (USDC)</div>
                 <div className="orderly-flex orderly-justify-center orderly-items-center orderly-mt-3">
                     <USDCIcon />
@@ -70,7 +70,7 @@ export const Summary: FC<{ className?: string }> = (props) => {
                 </div>
             </div>
 
-            <div className="orderly-mt-2">
+            <div className="orderly-mt-4">
                 <Item title="Referral vol. (USDC)" value={referralVol} />
                 <Item title="Referees" value={referees} />
                 <Item title="Referees that traded" value={refereesTades} />

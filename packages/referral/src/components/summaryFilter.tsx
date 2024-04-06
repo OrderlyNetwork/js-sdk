@@ -27,7 +27,7 @@ export const SummaryFilter: FC<{
         <DropdownMenuTrigger >
             <button
                 ref={triggerRef}
-                className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px] orderly-bg-base-400 orderly-rounded-md orderly-h-[24px] orderly-text-2xs"
+                className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px] orderly-bg-base-400 orderly-rounded-md orderly-h-[24px] orderly-text-2xs orderly-text-base-contrast-80"
             >
                 <HistoryIcon />
                 <span>{curType}</span>

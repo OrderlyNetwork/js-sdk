@@ -17,13 +17,13 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
 
 
     return (
-        <div className={cn("orderly-referral-tab orderly-p-3 orderly-rounded-lg orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600", props.className)}>
+        <div className={cn("orderly-referral-tab orderly-py-3 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600", props.className)}>
             <Tabs
                 id="commission_referees_tab"
                 autoFit
                 value={activeTab}
                 onTabChange={onTabChange}
-                tabBarClassName="orderly-referral-tab-bar orderly-h-[61px] orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg"
+                tabBarClassName="orderly-referral-tab-bar orderly-h-[61px] orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-px-3"
                 tabBarExtra={
                     <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center orderly-invisible orderly-w-0 md:orderly-visible md:orderly-w-auto orderly-text-3xs orderly-text-base-contrast-36">{dateText}</div>
                 }
@@ -34,7 +34,9 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
                     title="Commission"
                     value="commission"
                 >
-                    <CommissionList dateText={dateText} setDateText={setDateText} />
+                    <div className="orderly-px-3">
+                        <CommissionList dateText={dateText} setDateText={setDateText} />
+                    </div>
                 </TabPane>
 
 
@@ -42,7 +44,9 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
                     title="My referees"
                     value="referees"
                 >
-                    <RefereesList dateText={dateText} setDateText={setDateText} />
+                    <div className="orderly-px-3">
+                        <RefereesList dateText={dateText} setDateText={setDateText} />
+                    </div>
 
                 </TabPane>
 
