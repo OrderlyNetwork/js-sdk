@@ -18,7 +18,7 @@ export const CommissionList: FC<{
     const dataSource = useMemo(() => {
         return data?.filter((item: any) => {
             return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
-        }).sort((a: any,b: any) => b.created_time - a.created_time);
+        }).sort((a: any, b: any) => b.created_time - a.created_time);
     }, [
         data,
     ]);
@@ -37,16 +37,17 @@ export const CommissionList: FC<{
     const isMD = useMediaQuery(MEDIA_MD);
 
     return isMD ?
-        <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
-        <_BigCommission dataSource={dataSource} loadMore={loadMore} />
+        <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
+        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
 }
 
 const _SmallCommission: FC<{
     date?: string,
     dataSource: any[],
-    loadMore: any
+    loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
-    const { date, dataSource, loadMore } = props;
+    const { date, dataSource, loadMore, isLoading } = props;
 
 
     const renderItem = (item: any, index: number) => {
@@ -64,6 +65,7 @@ const _SmallCommission: FC<{
             <ListView
                 dataSource={dataSource}
                 loadMore={loadMore}
+                isLoading={isLoading}
                 renderItem={renderItem}
             />
         </div>
@@ -72,7 +74,8 @@ const _SmallCommission: FC<{
 
 const _BigCommission: FC<{
     dataSource: any[]
-    loadMore: any
+    loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
     const { dataSource } = props;
 
@@ -118,12 +121,12 @@ const _BigCommission: FC<{
         ];
     }, []);
 
+
     return (
-        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
+        <div className="orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
-            <EndReachedBox onEndReached={props.loadMore}>
-                <Table
+           <Table
                     bordered
                     justified
                     showMaskElement={false}
@@ -134,8 +137,14 @@ const _BigCommission: FC<{
                         "orderly-text-xs 2xl:orderly-text-base",
                     )}
                     generatedRowKey={(rec, index) => `${index}`}
+                    scrollToEnd={() => {
+                        console.log("scroll to end");
+                        
+                        if (!props.isLoading) {
+                            props.loadMore();
+                        }
+                    }}
                 />
-            </EndReachedBox>
 
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (

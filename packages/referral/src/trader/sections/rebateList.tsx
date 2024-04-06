@@ -9,10 +9,10 @@ export const RebateList: FC<{
     className?: string,
     dataSource?: RebatesItem[],
     loadMore: any,
-    loading: boolean,
+    isLoading: boolean,
 }> = (props) => {
 
-    const { className, dataSource, loadMore } = props;
+    const { className, dataSource, loadMore, isLoading } = props;
     const isMD = useMediaQuery(MEDIA_MD);
 
     const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
@@ -60,6 +60,7 @@ export const RebateList: FC<{
             <ListView
                 className={clsName}
                 loadMore={loadMore}
+                isLoading={isLoading}
                 dataSource={dataSource}
                 renderItem={(item, index) => {
                     return <SmallCodeCell item={item} />
@@ -73,11 +74,6 @@ export const RebateList: FC<{
         <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
-            <EndReachedBox onEndReached={() => {
-                 if (!props.loading) {
-                    props.loadMore?.();
-                  }
-            }}>
                 <Table
                 bordered
                 justified
@@ -89,8 +85,12 @@ export const RebateList: FC<{
                     "orderly-text-xs 2xl:orderly-text-base",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
+                scrollToEnd={() => {
+                    if (!props.isLoading) {
+                        props.loadMore?.();
+                      }
+                }}
             />
-            </EndReachedBox>
 
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (

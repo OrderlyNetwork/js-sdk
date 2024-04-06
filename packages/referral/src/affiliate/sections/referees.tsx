@@ -35,14 +35,15 @@ export const RefereesList: FC<{
     }
 
     return isMD ?
-        <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
-        <_BigReferees dataSource={dataSource} loadMore={loadMore} />
+        <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
+        <_BigReferees dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
 }
 
 const _SmallReferees: FC<{
     date?: string,
     dataSource?: API.RefereeInfoItem[],
     loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
 
     const { date, dataSource, loadMore } = props;
@@ -71,6 +72,7 @@ const _SmallReferees: FC<{
 const _BigReferees: FC<{
     dataSource: any[],
     loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
     const { dataSource } = props;
 
@@ -137,7 +139,6 @@ const _BigReferees: FC<{
         <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
-            <EndReachedBox onEndReached={props.loadMore}>
                 <Table
                     bordered
                     justified
@@ -149,8 +150,12 @@ const _BigReferees: FC<{
                         "orderly-text-xs 2xl:orderly-text-base",
                     )}
                     generatedRowKey={(rec, index) => `${index}`}
+                    scrollToEnd={() => {
+                        if (!props.isLoading) {
+                            props.loadMore();
+                        }
+                    }}
                 />
-            </EndReachedBox>
 
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (

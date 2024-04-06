@@ -10,6 +10,7 @@ import { TableProvider } from "./tableContext";
 import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FixedDivide } from "./fixedDivide";
 import { TBody, TBodyProps } from "./tbody";
+import { EndReachedBox } from "..";
 
 export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   columns: Column<RecordType>[];
@@ -22,6 +23,7 @@ export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   className?: string;
   headerClassName?: string;
   showMaskElement?: boolean;
+  scrollToEnd?: () => void;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -137,10 +139,21 @@ export const Table = <RecordType extends unknown>(
           <ColGroup columns={props.columns} />
 
           <TBody {...rest} />
+          <tbody>
+            <tr>
+              <td>
+                <EndReachedBox
+                  className="orderly-h-[1px] orderly-invisible"
+                  onEndReached={props.scrollToEnd}
+                />
+              </td>
+            </tr>
+          </tbody>
         </table>
         {showMaskElement && maskElement}
       </div>
       <FixedDivide />
+
     </TableProvider>
   );
 };

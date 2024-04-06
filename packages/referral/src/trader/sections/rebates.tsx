@@ -53,7 +53,7 @@ export const Rebates: FC<{
             </div>
 
             <Divider className="orderly-mt-3" />
-            <RebateList dataSource={dataSource} loadMore={loadMore} loading={isLoading}/>
+            <RebateList dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
         </div>
     );
 }
