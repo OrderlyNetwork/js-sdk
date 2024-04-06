@@ -21,7 +21,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
         copyText(addQueryParam(referralLinkUrl, "ref", code));
     }
     const editRate = (code: ReferralCodeType) => {
-        modal.show(EditReferralRate, { code: {...code}, mutate });
+        modal.show(EditReferralRate, { code: { ...code }, mutate });
     }
 
 
@@ -96,7 +96,7 @@ export const CodeList: FC<{
     const isXL = useMediaQuery(MEDIA_2XL);
 
     console.log("ix 2xl", isXL);
-    
+
     const { dataSource, copyLink, editRate } = props;
 
     const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
@@ -152,8 +152,10 @@ export const CodeList: FC<{
                 width: isXL ? 132 : 146,
                 align: "right",
                 render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-1">
-                        <div className="orderly-flex-1">{getRate(record)}</div>
+                    <div className="orderly-flex orderly-gap-1 orderly-justify-end">
+                        <span>
+                            {getRate(record)}
+                        </span>
                         <EditIcon
                             onClick={() => editRate(record)}
                             fillOpacity={1}
@@ -162,7 +164,7 @@ export const CodeList: FC<{
                     </div>
                 )
             },
-            
+
         ];
 
         if (!isXL) {
@@ -214,7 +216,7 @@ export const CodeList: FC<{
     }, [dataSource, isXL]);
 
     console.log("isXL", isXL);
-    
+
 
 
 
@@ -250,7 +252,7 @@ export const CodeList: FC<{
                 generatedRowKey={(rec, index) => `${index}`}
             />
 
-{
+            {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[48px] orderly-left-0 orderly-right-0 orderly-bottom-0">
                         <EmptyView />

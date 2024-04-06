@@ -5,15 +5,33 @@ export const AutoHideText: FC<{ text: string, className?: string }> = (props) =>
 
   const { text } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const [scrollWidth, setScrollWidth] = useState<number | undefined>(undefined);
   const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined);
+
+  function getTextWidth(ref: HTMLDivElement, text: string): number | undefined {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.font = getComputedStyle(ref).font;
+      const width = context.measureText(text).width;
+      return width;
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
-        const containerWidth = containerRef.current.parentElement?.offsetWidth;
+        const containerWidth = containerRef.current.clientWidth;
         setContainerWidth(containerWidth);
+      }
+
+
+      if (textRef.current) {
+        const width = getTextWidth(textRef.current, text);
+        if (width) {
+          setScrollWidth(width);
+        }
       }
     };
 
@@ -25,30 +43,30 @@ export const AutoHideText: FC<{ text: string, className?: string }> = (props) =>
       window.removeEventListener("resize", handleResize);
     }
   }, [text]);
-  
-  useEffect(() => {
-    if (textRef.current) {
 
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      if (context) {
+  // useEffect(() => {
+  //   if (textRef.current) {
 
-        context.font = getComputedStyle(textRef.current).font;
-    
-        const width = context.measureText(text).width;
-        setScrollWidth(width);
-    
-        console.log('Text width:', width, context.font);
-      }
-    }
-  }, [text]);
+  //     const canvas = document.createElement('canvas');
+  //     const context = canvas.getContext('2d');
+  //     if (context) {
+
+  //       context.font = getComputedStyle(textRef.current).font;
+
+  //       const width = context.measureText(text).width;
+  //       setScrollWidth(width);
+
+  //       console.log('Text width:', width, context.font);
+  //     }
+  //   }
+  // }, [text]);
 
 
   const truncatedText = useMemo(() => {
-    if (containerWidth && scrollWidth && scrollWidth > containerWidth) {      
+    if (containerWidth && scrollWidth && scrollWidth > containerWidth) {
       const count = (text.match(/\//g) || []).length;
-      const maxCharacters = Math.floor(containerWidth / scrollWidth * text.length) - (count + 1);
-    
+      const maxCharacters = Math.floor(containerWidth / scrollWidth * text.length) - (count + 5);
+
       const startText = text.slice(0, Math.ceil(maxCharacters / 2));
       const endText = text.slice(text.length - Math.floor(maxCharacters / 2), text.length);
 
@@ -61,10 +79,10 @@ export const AutoHideText: FC<{ text: string, className?: string }> = (props) =>
 
   return (
     <div ref={containerRef} className="orderly-relative">
-      <div className={cn("orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-y orderly-absolute orderly-top-0 orderly-right-0 orderly-bottom-0 orderly-left-0", props.className)}>
-        <span ref={textRef}>
+      <div className={cn("orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-x orderly-absolute orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-left-0", props.className)}>
+        <div ref={textRef}>
           {truncatedText}
-        </span>
+        </div>
       </div>
     </div>
   );
