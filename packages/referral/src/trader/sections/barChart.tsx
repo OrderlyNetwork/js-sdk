@@ -27,7 +27,12 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     useEffect(() => {
         function handleResize() {
             const screenWidth = window.innerWidth;
-            const newMaxCount = screenWidth > 375 ? 14 : 7;
+            let newMaxCount = 7;
+
+            if (screenWidth >= 1440) {
+                newMaxCount = 14;
+            }
+            
             setMaxCount(newMaxCount);
         }
 
@@ -50,7 +55,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         }
 
 
-    }, [distributionData, filterType]);
+    }, [distributionData, filterType, maxCount]);
 
 
     const yAxis = useMemo(() => {
