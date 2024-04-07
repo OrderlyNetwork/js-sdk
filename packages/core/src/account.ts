@@ -29,7 +29,12 @@ import { SDKError } from "@orderly.network/types";
 export interface AccountState {
   status: AccountStatusEnum;
 
-  checking: boolean;
+  // checking: boolean;
+
+  /**
+   * whether the account is validating
+   */
+  validating: boolean;
 
   accountId?: string;
   userId?: string;
@@ -41,8 +46,8 @@ export interface AccountState {
     name: string;
   };
 
-  balance: string;
-  leverage: number;
+  // balance: string;
+  // leverage: number;
 }
 
 /**
@@ -70,9 +75,10 @@ export class Account {
 
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
-    balance: "",
-    checking: false,
-    leverage: Number.NaN,
+    // balance: "",
+    // checking: false,
+    validating: false,
+    // leverage: Number.NaN,
     isNew: false,
   };
 
@@ -151,6 +157,7 @@ export class Account {
       address,
       accountId: undefined, // if address change, accountId should be reset
       connectWallet: wallet?.wallet,
+      validating: true,
     };
 
     this._ee.emit("change:status", nextState);
@@ -198,21 +205,21 @@ export class Account {
   /**
    * set user positions count
    */
-  set position(position: string[]) {
-    const nextState = {
-      ...this.stateValue,
-      positon: position,
-    };
-    this._ee.emit("change:status", nextState);
-  }
+  // set position(position: string[]) {
+  //   const nextState = {
+  //     ...this.stateValue,
+  //     positon: position,
+  //   };
+  //   this._ee.emit("change:status", nextState);
+  // }
 
-  set orders(orders: string[]) {
-    const nextState = {
-      ...this.stateValue,
-      orders,
-    };
-    this._ee.emit("change:status", nextState);
-  }
+  // set orders(orders: string[]) {
+  //   const nextState = {
+  //     ...this.stateValue,
+  //     orders,
+  //   };
+  //   this._ee.emit("change:status", nextState);
+  // }
 
   private _bindEvents() {
     this._ee.addListener("change:status", (state: AccountState) => {
@@ -224,7 +231,7 @@ export class Account {
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
     //
-    let nextState;
+    let nextState: AccountState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
@@ -248,6 +255,7 @@ export class Account {
 
         nextState = {
           ...this.stateValue,
+          validating: false,
           status: AccountStatusEnum.NotSignedIn,
         };
 
@@ -263,6 +271,7 @@ export class Account {
       nextState = {
         ...this.stateValue,
         isNew: false,
+        validating: false,
         status: AccountStatusEnum.DisabledTrading,
       };
 
