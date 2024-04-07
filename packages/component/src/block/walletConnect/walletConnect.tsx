@@ -23,7 +23,7 @@ export interface WalletConnectProps {
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
   // const { status = AccountStatusEnum.NotConnected } = props;
   const {
-    state: { status },
+    state: { status, isNew },
   } = useAccount();
 
   const [handleStep, setHandleStep] = useState(0);
@@ -64,32 +64,37 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     }
   }, [status, remember]);
 
+  const isExpired = status === AccountStatusEnum.DisabledTrading && !isNew;
+
   return (
     <div>
       <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-py-4 desktop:orderly-text-base">
-        Sign two requests to verify ownership of your wallet and enable trading.
-        Signing is free.
+        {isExpired
+          ? "Your previous access has expired, you will receive a signature request to enable trading. Signing is free and will not send a transaction."
+          : "Sign two requests to verify ownership of your wallet and enable trading. Signing is free."}
       </div>
 
       <Paper className="orderly-bg-base-500">
-        <ListTile
-          className="orderly-text-xs desktop:orderly-text-base"
-          avatar={
-            <StepItem
-              active={status <= AccountStatusEnum.NotSignedIn}
-              isLoading={handleStep === 1}
-              isCompleted={status >= AccountStatusEnum.SignedIn}
-            >
-              1
-            </StepItem>
-          }
-          title="Sign in"
-          disabled={
-            status < AccountStatusEnum.NotConnected ||
-            status >= AccountStatusEnum.SignedIn
-          }
-          subtitle="Confirm you own this wallet"
-        />
+        {!isExpired && (
+          <ListTile
+            className="orderly-text-xs desktop:orderly-text-base"
+            avatar={
+              <StepItem
+                active={status <= AccountStatusEnum.NotSignedIn}
+                isLoading={handleStep === 1}
+                isCompleted={status >= AccountStatusEnum.SignedIn}
+              >
+                1
+              </StepItem>
+            }
+            title="Sign in"
+            disabled={
+              status < AccountStatusEnum.NotConnected ||
+              status >= AccountStatusEnum.SignedIn
+            }
+            subtitle="Confirm you own this wallet"
+          />
+        )}
         <ListTile
           className="orderly-text-xs desktop:orderly-text-base"
           disabled={status < AccountStatusEnum.SignedIn}

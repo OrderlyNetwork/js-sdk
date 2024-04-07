@@ -1,5 +1,17 @@
 # @orderly.network/types
 
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
 ## 0.2.8
 
 ### Patch Changes

@@ -12,7 +12,7 @@ import "../src/tailwind.css"; // tailwind css
 
 const wcV2InitOptions = {
   version: 2,
-  projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+  projectId: "e2df8a7d186b83f3027973333f4c72b9",
   requiredChains: [42161],
   optionalChains: [421613, 42161],
   dappUrl: window.location.host,

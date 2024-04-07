@@ -38,6 +38,7 @@ export const CarouselBackgroundImage: FC<{
       onSelect(emblaApi);
       emblaApi.on("reInit", onSelect);
       emblaApi.on("select", onSelect);
+      emblaApi?.scrollTo(selectedSnap);
     }, [emblaApi, onSelect]);
   
     return (

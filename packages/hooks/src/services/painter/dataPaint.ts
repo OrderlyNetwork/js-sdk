@@ -15,12 +15,14 @@ export class DataPaint extends BasePaint {
       Array.isArray(options.data?.position?.informations) &&
       (options.data?.position?.informations?.length ?? 0) > 0;
 
-    const hasMessage = !!options.data?.message;
+    // const hasMessage = !!options.data?.message;
+    const hasMessage = true;
 
     this.transformTop = hasMessage ? 0 : needDrawDetails ? -40 : -150;
 
     // If position details are not displayed, the position PNL information will be margin
-    const offsetTop = hasMessage ? 50 : 100;
+    // const offsetTop = hasMessage ? 50 : 100;
+    const offsetTop = 100;
     // const offsetMessage = hasMessage ? 0 : -50;
 
     if (!!options.data?.message) {
@@ -225,9 +227,12 @@ export class DataPaint extends BasePaint {
 
     options.data?.position.informations.forEach((info, index) => {
       // let cellWidth = this.positionInfoCellWidth;
-      let left =
-        position.left! + this.positionInfoCellWidth * Math.floor(index / 2);
-      let top = (position.top as number) + (index % 2) * 38 + this.transformTop;
+      let left = position.left! + (index % 2) * this.positionInfoCellWidth;
+      // let top = (position.top as number) + (index / 2) * 38 + this.transformTop;
+      let top =
+        (position.top as number) +
+        Math.floor(index / 2) * 38 +
+        this.transformTop;
 
       this._drawText(info.title, {
         left: this._ratio(left),
@@ -274,7 +279,9 @@ export class DataPaint extends BasePaint {
     ) as layoutInfo;
     const { position } = layout;
     const top = this.painter.height - position.bottom!;
-    const left = this.painter.width - position.right!;
+    const left = position.left!;
+
+    console.log("*******", left, top, options.data?.updateTime);
 
     this._drawText(options.data?.updateTime!, {
       left: this._ratio(left),

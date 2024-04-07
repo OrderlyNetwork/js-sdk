@@ -13,7 +13,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Divider } from "@/divider";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
-import { getPnLPosterData } from "./sharePnLUtils";
+import { getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
 import { PosterRef } from "../poster/poster";
 import { CarouselBackgroundImage} from "./desktop/carousel";
 import { PnlFormatView } from "./desktop/pnlFormat";
@@ -28,15 +28,19 @@ export const DesktopSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
 }> = (props) => {
-  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>("roi_pnl");
+
+  const localPnlConfig = getPnlInfo();
+  
+
+  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(localPnlConfig.pnlFormat);
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
-    new Set(["openPrice", "openTime", "markPrice", "quantity", "leverage"])
+    new Set(localPnlConfig.options)
   );
-  const [message, setMessage] = useState("");
+  const [selectedSnap, setSelectedSnap] = useState(localPnlConfig.bgIndex);
+  const [message, setMessage] = useState(localPnlConfig.message);
   const [check, setCheck] = useState(false);
   const { shareOptions } = useContext(OrderlyAppContext);
   const { backgroundImages, ...resetOptions } = shareOptions.pnl;
-  const [selectedSnap, setSelectedSnap] = useState(0);
   const [domain, setDomain] = useState("");
 
   const posterRef = useRef<PosterRef | null>(null);
@@ -90,6 +94,14 @@ export const DesktopSharePnLContent: FC<{
   const formats: PnLDisplayFormat[] = ["roi_pnl", "roi", "pnl"];
   const options: ShareOptions[] = ["openPrice", "markPrice", "openTime", "leverage", "quantity"];
 
+
+
+  savePnlInfo(
+    pnlFormat,
+    shareOption,
+    selectedSnap,
+    message,
+  );
 
   return (
     <div className="orderly-h-full orderly-flex orderly-flex-col orderly-relative orderly-referral">

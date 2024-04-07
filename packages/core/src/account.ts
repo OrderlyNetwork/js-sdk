@@ -34,6 +34,8 @@ export interface AccountState {
   accountId?: string;
   userId?: string;
   address?: string;
+  /** new account */
+  isNew?: boolean;
 
   connectWallet?: {
     name: string;
@@ -71,6 +73,7 @@ export class Account {
     balance: "",
     checking: false,
     leverage: Number.NaN,
+    isNew: false,
   };
 
   private readonly contractManger;
@@ -259,6 +262,7 @@ export class Account {
 
       nextState = {
         ...this.stateValue,
+        isNew: false,
         status: AccountStatusEnum.DisabledTrading,
       };
 
@@ -368,6 +372,7 @@ export class Account {
         status: AccountStatusEnum.DisabledTrading,
         accountId: res.data.account_id,
         userId: res.data.user_id,
+        isNew: true,
       };
 
       this._ee.emit("change:status", nextState);
