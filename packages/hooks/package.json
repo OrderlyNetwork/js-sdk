@@ -11,13 +11,18 @@
   ],
   "scripts": {
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs",
+    "build:tsc": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs",
     "build:tsup": "tsup --tsconfig tsconfig.build.json",
     "build:esm": "tsc --project tsconfig.build.json --outDir esm",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib",
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",
-    "test": "jest"
+    "test": "jest",
+    "build": "rimraf -rf dist esm lib && pnpm build:swc:esm && pnpm build:swc:cjs",
+    "build:swc:esm": "pnpm generateType:esm && swc src -d esm --strip-leading-paths",
+    "build:swc:cjs": "pnpm generateType:cjs && swc src -d lib --config module.type=commonjs --strip-leading-paths",
+    "generateType:esm": "tsc --emitDeclarationOnly --project tsconfig.build.json --outDir esm",
+    "generateType:cjs": "tsc --emitDeclarationOnly --project tsconfig.build.json --module commonjs --outDir lib"
   },
   "keywords": [],
   "peerDependencies": {
@@ -26,6 +31,9 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.12",
+    "@swc/plugin-remove-console": "^1.5.121",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.3",
     "@types/ramda": "^0.29.3",

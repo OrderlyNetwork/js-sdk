@@ -5,7 +5,8 @@
       "name": "next"
     }],
     "jsx": "react-jsx",
-    "typeRoots": ["node_modules/@types", "./typings"]
+    "typeRoots": ["node_modules/@types", "./typings"],
+    "sourceMap": true,
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./typings/*.d.ts"],
   "exclude": ["node_modules", "__test__", "__mocks__"],
