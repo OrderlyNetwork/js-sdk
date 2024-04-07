@@ -1,10 +1,10 @@
 import { Paper } from "@/layout";
 import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { useAccount, useMutation } from "@orderly.network/hooks";
+import { OrderlyContext, useAccount, useMutation } from "@orderly.network/hooks";
 
 import Button from "@/button";
 import { toast } from "@/toast";
@@ -36,6 +36,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     { error: updateOrderError, isMutating: updateMutating },
   ] = useMutation("/v1/referral/bind", "POST");
 
+
+  const { onBoundRefCode } = useContext(OrderlyContext);
+
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
       return "Sign in";
@@ -60,7 +63,11 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         .then(
           () => {
             if (refCode && refCode.length > 0) {
-              bindRefCode({ referral_code: refCode }).catch((e) => { }).finally(() => {
+              bindRefCode({ referral_code: refCode }).then((res) => {
+                onBoundRefCode?.(true, undefined);
+              }).catch((e) => {
+                onBoundRefCode?.(false, e);
+               }).finally(() => {
                 localStorage.removeItem("referral_code");
               });
             }

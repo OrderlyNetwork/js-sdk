@@ -85,6 +85,7 @@ export interface OrderlyAppProviderProps {
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
   saveRefCode?: boolean,
   onClickReferral?: () => void,
+  onBoundRefCode?: (success: boolean, error: any) => void,
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -113,6 +114,7 @@ export const OrderlyAppProvider: FC<
     chains,
     saveRefCode,
     onClickReferral,
+    onBoundRefCode,
   } = props;
 
 
@@ -129,6 +131,7 @@ export const OrderlyAppProvider: FC<
       contracts={contracts}
       saveRefCode={saveRefCode}
       onClickReferral={onClickReferral}
+      onBoundRefCode={onBoundRefCode}
     >
       <InnerProvider
         appIcons={logos}

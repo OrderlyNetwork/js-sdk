@@ -42,6 +42,7 @@ export interface ConfigProviderProps {
   networkId: NetworkId;
   saveRefCode?: boolean; 
   onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
 }
 
 export const OrderlyConfigProvider = (
@@ -59,6 +60,7 @@ export const OrderlyConfigProvider = (
     contracts,
     saveRefCode,
     onClickReferral,
+    onBoundRefCode,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -130,6 +132,7 @@ export const OrderlyConfigProvider = (
         networkId: networkId,
         saveRefCode,
         onClickReferral,
+        onBoundRefCode,
         // apiBaseUrl,
       }}
     >

@@ -158,6 +158,7 @@ const preview = {
             onClickReferral={() => {
               console.log("click referral");
             }}
+            onBoundRefCode={(success, error) => { }}
             appIcons={{
               main: {
                 img: "/orderly-logo.svg",

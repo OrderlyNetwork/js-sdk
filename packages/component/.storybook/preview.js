@@ -145,6 +145,10 @@ const preview = {
             onClickReferral={() => {
               console.log("click referral");
             }}
+            onBoundRefCode={(success, error) => {
+              console.log("on bound ref code", success, error);
+              
+            }}
             saveRefCode
           >
             <Story />
