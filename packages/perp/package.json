@@ -13,9 +13,6 @@
   "keywords": [],
   "author": "leo",
   "license": "ISC",
-  "peerDependencies": {
-    "@orderly.network/types": "workspace:*"
-  },
   "files": [
     "dist"
   ],
