@@ -5,6 +5,7 @@ import { FC, ReactNode, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
 import { useCommission } from "../../hooks/useCommission";
 import { formatTime, formatYMDTime } from "../../utils/utils";
+import { commify } from "@orderly.network/utils";
 
 export const CommissionList: FC<{
     dateText?: string,
@@ -38,7 +39,7 @@ export const CommissionList: FC<{
 
     return isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
-        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
+        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
 }
 
 const _SmallCommission: FC<{
@@ -60,8 +61,8 @@ const _SmallCommission: FC<{
 
     return (
 
-        <div className="orderly-h-[197px] orderly-overflow-auto">
-            {date && <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
+        <div className="orderly-max-h-[431px] orderly-overflow-auto">
+            {date && <div className="orderly-mt-1 orderly-px-0 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
             <ListView
                 dataSource={dataSource}
                 loadMore={loadMore}
@@ -102,9 +103,9 @@ const _BigCommission: FC<{
                 align: "right",
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
-                    <Numeral precision={2}>
-                        {value}
-                    </Numeral>
+                    <span>
+                        {`$${commify(value, 2)}`}
+                    </span>
                 )
             },
             {
@@ -113,9 +114,9 @@ const _BigCommission: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <Numeral >
-                        {value}
-                    </Numeral>
+                    <span>
+                        {`$${commify(value || "0", 2)}`}
+                    </span>
                 )
             },
         ];
@@ -126,25 +127,25 @@ const _BigCommission: FC<{
         <div className="orderly-mt-4 orderly-px-3 orderly-relative" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
-           <Table
-                    bordered
-                    justified
-                    showMaskElement={false}
-                    columns={columns}
-                    dataSource={dataSource}
-                    headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
-                    className={cn(
-                        "orderly-text-xs 2xl:orderly-text-base",
-                    )}
-                    generatedRowKey={(rec, index) => `${index}`}
-                    scrollToEnd={() => {
-                        console.log("scroll to end");
-                        
-                        if (!props.isLoading) {
-                            props.loadMore();
-                        }
-                    }}
-                />
+            <Table
+                bordered
+                justified
+                showMaskElement={false}
+                columns={columns}
+                dataSource={dataSource}
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                className={cn(
+                    "orderly-text-xs 2xl:orderly-text-base",
+                )}
+                generatedRowKey={(rec, index) => `${index}`}
+                scrollToEnd={() => {
+                    console.log("scroll to end");
+
+                    if (!props.isLoading) {
+                        props.loadMore();
+                    }
+                }}
+            />
 
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
@@ -166,7 +167,7 @@ export const CommissionCell: FC<{
     const { date, commission, vol } = props;
 
     return (
-        <div className="orderly-my-3 orderly-px-3">
+        <div className="orderly-my-3" style={{letterSpacing: "0px"}}>
             <div className="orderly-flex orderly-justify-between">
                 <div>
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Date</div>
@@ -174,12 +175,12 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</Numeral>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(commission, 2)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</Numeral>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(vol || 0, 2)}`}</div>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />

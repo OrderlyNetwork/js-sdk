@@ -24,10 +24,10 @@ export const DashboardTab = () => {
             setActiveTab("affiliateTab");
         } else if (code && code === '1') {
             setActiveTab("traderTab");
-        } 
+        }
     }, []);
 
-    
+
 
     const [activeTab, setActiveTab] = useState<DashboardTabType>(isAffiliate ? "affiliateTab" : "traderTab")
     const onTabChange = (tab: any) => {
@@ -45,7 +45,11 @@ export const DashboardTab = () => {
 
     const tabBarExtra = useMemo(() => {
         if (isAffiliate === true && isTrader === false) {
-            return <Button onClick={onAsAnTrader} className="orderly-flex orderly-bg-[rgba(0,104,92,1)] lg:orderly-mr-4">
+            return <Button
+                id="orderly-referral-dashboard-as-trader-btn"
+                onClick={onAsAnTrader}
+                className="orderly-flex orderly-bg-[rgba(0,104,92,1)] lg:orderly-mr-4"
+            >
                 <TraderIcon />
                 <div>As trader</div>
             </Button>;
@@ -68,7 +72,7 @@ export const DashboardTab = () => {
                 value="affiliateTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")}/>
+                        <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")} />
                         Affiliate
                     </div>
                 )}>
@@ -83,7 +87,7 @@ export const DashboardTab = () => {
                 value="traderTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <TraderIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "traderTab" && "orderly-fill-base-contrast")}/>
+                        <TraderIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "traderTab" && "orderly-fill-base-contrast")} />
                         Trader
                     </div>
                 )}

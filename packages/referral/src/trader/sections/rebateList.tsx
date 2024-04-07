@@ -4,6 +4,7 @@ import { FC, useMemo } from "react";
 import { MEDIA_MD } from "../../types/constants";
 import { RebatesItem } from "./rebates";
 import { formatYMDTime } from "../../utils/utils";
+import { commify } from "@orderly.network/utils";
 
 export const RebateList: FC<{
     className?: string,
@@ -36,9 +37,9 @@ export const RebateList: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <Numeral precision={2}>
-                        {value}
-                    </Numeral>
+                    <span>
+                        {`$${commify(value,2)}`}
+                    </span>
                 )
             },
             {
@@ -47,9 +48,9 @@ export const RebateList: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <Numeral precision={2}>
-                        {value}
-                    </Numeral>
+                    <span>
+                        {`$${commify(value || 0,2)}`}
+                    </span>
                 )
             }
         ];
@@ -119,12 +120,12 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Commission(USDC)</div>
-                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.amount}</Numeral>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.amount,2)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Trading vol. (USDC)</div>
-                    <Numeral className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.vol || "--"}</Numeral>
+                    <Numeral className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.vol || 0,2)}`}</Numeral>
                 </div>
 
 

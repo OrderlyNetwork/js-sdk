@@ -81,7 +81,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                     <Info
                         title="Earn"
                         value={earn}
-                        className="orderly-flex-1"
+                        className="orderly-flex-1 2xl:orderly-min-w-[120px] xl:orderly-min-w-[60px]"
                         tooltip={<GradientText texts={[
                             { text: earn, gradient: true },
                             { text: " WOOFi Pro net fee that deduct Orderly fee." },
@@ -91,7 +91,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                     <Info
                         title="Share"
                         value={share}
-                        className="orderly-flex-1"
+                        className="orderly-flex-1 2xl:orderly-min-w-[120px] xl:orderly-min-w-[60px]"
                         tooltip={<GradientText texts={[
                             { text: "Your referees get " },
                             { text: share, gradient: true },

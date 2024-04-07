@@ -137,7 +137,7 @@ export const CodeList: FC<{
                         <PinView pin={record.isPined || false} onPinChange={(isPinned) => {
                             props.setPinCode(value, !isPinned);
                         }} />
-                        <span>{value}</span>
+                        <span className="orderly-text-ellipsis overflow-hidden">{value}</span>
                         <CopyIcon
                             className="orderly-mr-3 orderly-cursor-pointer"
                             onClick={() => copyText(value)}
