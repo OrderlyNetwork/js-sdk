@@ -24,6 +24,7 @@ interface Props {
   className?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
+
 export const Listview: FC<Props> = (props) => {
   const columns = useMemo<Column<API.Order>[]>(() => {
     // const columns = columnsBasis();
@@ -65,10 +66,12 @@ export const Listview: FC<Props> = (props) => {
           className: "orderly-h-[48px] orderly-font-semibold",
           dataIndex: "type",
           formatter: (value: string, record: any) => {
+            const type =
+              typeof record.type === "string"
+                ? record.type.replace("_ORDER", "").toLowerCase()
+                : record.type;
             if (record.algo_order_id) {
-              return (
-                `Stop ` + `${record.type.replace("_ORDER", "")}`.toLowerCase()
-              );
+              return `Stop ${type}`;
             }
             return upperCaseFirstLetter(value);
           },

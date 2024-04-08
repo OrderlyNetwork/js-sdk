@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.1.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+
 ## 0.1.7
 
 ### Patch Changes

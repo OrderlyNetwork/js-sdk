@@ -1,5 +1,23 @@
 # @orderly.network/net
 
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
+## 1.1.8
+
+### Patch Changes
+
+- fix bug: app crashes when symbolInfo is null;
+
 ## 1.1.7
 
 ### Patch Changes

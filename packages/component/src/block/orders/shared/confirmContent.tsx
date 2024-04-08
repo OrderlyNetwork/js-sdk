@@ -1,5 +1,5 @@
 import { NetworkImage } from "@/icon";
-import { Numeral } from "@/text";
+import { Text } from "@/text";
 import { cn } from "@/utils";
 import { OrderEntity } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
@@ -13,6 +13,9 @@ export const EditOrderConfirmContent = (
   base: string,
   symbol: string,
 ) => {
+
+
+
   if (isAlgoOrder) {
     return <AlgoContent
       data={data}
@@ -20,12 +23,12 @@ export const EditOrderConfirmContent = (
       base={base}
       symbol={symbol}
       isMarketOrder={isMarketOrder}
-    />
-  }
-  return (<NormalContent
-    data={data}
-    dirtyFields={dirtyFields}
-    base={base}
+      />
+    }
+    return (<NormalContent
+      data={data}
+      dirtyFields={dirtyFields}
+      base={base}
   />);
 };
 
@@ -33,7 +36,7 @@ export const EditOrderConfirmContent = (
 const NormalContent: FC<{
   data: OrderEntity,
   dirtyFields: Partial<OrderEntity>,
-  base: string
+  base: string,
 }> = (props) => {
 
   const { data, dirtyFields, base } = props;
@@ -98,9 +101,6 @@ const AlgoContent: FC<{
   const triggerPrice = data.trigger_price || "-";
   const price = data.order_price || "-";
 
-  console.log("algo content", symbol, data);
-  
-
   return (<div>
     <div className="orderly-text-sm orderly-text-base-contrast-80">
       {`You agree to edit your ${base}-PERP order.`}
@@ -114,24 +114,28 @@ const AlgoContent: FC<{
     <div className="orderly-flex orderly-justify-between orderly-text-sm orderly-pb-1">
       <span className="orderly-text-base-contrast-54">Qty</span>
       <div className="orderly-inline-block">
-        <Numeral className={cn(
-          "orderly-mr-1",
-          data.side === "BUY" ? "orderly-text-trade-profit" : "orderly-text-trade-loss",
-        )}>{qty}</Numeral>
+        <Text
+          className={cn(
+            "orderly-mr-1",
+            data.side === "BUY" ? "orderly-text-trade-profit" : "orderly-text-trade-loss",
+          )}
+        >
+          {commify(qty)}
+        </Text>
         <span className="orderly-text-base-contrast-36">{base}</span>
       </div>
     </div>
     <div className="orderly-flex orderly-justify-between orderly-text-sm orderly-pb-1">
       <span className="orderly-text-base-contrast-54">Trigger price</span>
       <div className="orderly-inline-block">
-        <Numeral className="orderly-mr-1">{triggerPrice}</Numeral>
+        <Text className="orderly-mr-1">{commify(triggerPrice)}</Text>
         <span className="orderly-text-base-contrast-36">{quote}</span>
       </div>
     </div>
     <div className="orderly-flex orderly-justify-between orderly-text-sm">
       <span className="orderly-text-base-contrast-54">Price</span>
       <div className="orderly-inline-block">
-        {isMarketOrder ? <span>Market</span> :  <Numeral>{price}</Numeral>}
+        {isMarketOrder ? <span>Market</span> : <Text>{commify(price)}</Text>}
         <span className="orderly-ml-1 orderly-text-base-contrast-36">{quote}</span>
       </div>
     </div>

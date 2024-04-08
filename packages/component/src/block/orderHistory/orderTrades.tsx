@@ -9,10 +9,12 @@ export const OrderTrades: FC<{
   index: number;
 }> = (props) => {
   const { record, index } = props;
-  const algoOrderId =
-    "root_algo_order_id" in record
-      ? record.root_algo_order_id
-      : record.algo_order_id;
+  // const algoOrderId =
+  //   "root_algo_order_id" in record
+  //     ? record.root_algo_order_id
+  //     : record.algo_order_id;
+
+  const algoOrderId = record.algo_order_id;
 
   const path =
     algoOrderId !== undefined
@@ -21,8 +23,13 @@ export const OrderTrades: FC<{
   const { data } = usePrivateQuery<any[]>(path);
   const base = record?.symbol?.split("_")?.[1] || "";
   const config = useSymbolsInfo();
-  const symbolInfo = config ? config?.[record.symbol] : {};
-  const baseDp = symbolInfo?.("quote_dp") || 2;
+
+  if (config.isNil) return null;
+
+  // const symbolInfo = config ? config?.[record.symbol] : {};
+  // const baseDp = symbolInfo?.("quote_dp") || 2;
+  const symbolInfo = config[record.symbol];
+  const baseDp = symbolInfo("quote_dp", 2);
 
   const body = useMemo(() => {
     if (data === undefined) {

@@ -1,23 +1,46 @@
-type objectDepth = 1 | 2;
-type propertyType<T, K, F> = T extends 1 ? K : F;
+import { API } from "@orderly.network/types";
+import { isNil } from "ramda";
 
+type objectDepth = 1 | 2;
+type propertyType<D, K, F> = D extends 1 ? K : F;
+
+// {
+//   // [P in K]: (key: P, defaultValue?: T[P]) => T[K][P];
+//   [P in K]: (key: P, defaultValue?: T[P]) => T[K][P];
+// }
+
+// type KeyOf<T> = keyof T;
+type ValueOf<T> = T[keyof T];
+
+// export function createGetter<T extends Record<string, any>, K extends keyof T>(
 export function createGetter<
-  T extends Record<string, any>,
-  K extends keyof T = string
->(data: T, depth: objectDepth = 2) {
+  T extends any,
+  K extends string = string,
+  Key = keyof T
+>(
+  data: Record<string, T> | null | undefined,
+  depth: objectDepth = 2
+): (typeof depth extends 1
+  ? { [P in K]: (defaultValue?: any) => any }
+  : { [P in K]: (key?: Key, defaultValue?: ValueOf<T>) => any }) & {
+  isNil: boolean;
+} {
   return new Proxy(data || {}, {
     get(
       target: any,
-      property: propertyType<typeof depth, K, any>,
+      property: propertyType<typeof depth, keyof T, any>,
       receiver
     ): any {
+      if (property === "isNil") {
+        return isNil(data);
+      }
       if (depth === 1) {
         return (defaultValue: any) => {
           if (!target) return defaultValue;
           return target[property] ?? defaultValue;
         };
       }
-      return (key: K, defaultValue: any) => {
+      return (key?: Key, defaultValue?: any) => {
         if (key) {
           return (target as any)[property]?.[key] ?? defaultValue;
         } else {
