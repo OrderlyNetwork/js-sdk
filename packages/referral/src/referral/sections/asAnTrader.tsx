@@ -5,6 +5,7 @@ import { USDCIcon } from "../../affiliate/icons";
 import { ArrowRightIcon } from "../icons/arrowRight";
 import { TraderIcon } from "../icons/trader";
 import { ReferralInputCode } from "./enterCode";
+import { commify } from "@orderly.network/utils";
 export const AsAnTrader = () => {
 
   const { referralInfo, isTrader, mutate, bindReferralCodeState, enterTraderPage } = useContext(ReferralContext);
@@ -26,11 +27,11 @@ export const AsAnTrader = () => {
               <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
                 <USDCIcon width={"100%"} height={"100%"} />
               </div>
-              <Numeral precision={2} >{totalReferrerRebate || 0}</Numeral>
+              <div >{commify(totalReferrerRebate != undefined ? totalReferrerRebate : '-', 2)}</div>
             </div>
           </div>
 
-          <button onClick={() => enterTraderPage?.({tab: 1})} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
+          <button onClick={() => enterTraderPage?.({ tab: 1 })} className="orderly-flex orderly-items-center orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-gap-2">
             Enter
             <ArrowRightIcon fill="white" fillOpacity={0.98} />
           </button>
