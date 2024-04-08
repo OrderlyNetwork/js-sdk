@@ -80,7 +80,7 @@ export const AutoHideText: FC<{ text: string, className?: string, visibleCount?:
     <div ref={containerRef} className="orderly-relative">
       <div className={cn("orderly-hidden orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-x orderly-absolute orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-left-0", props.className)}>
         <div ref={textRef}>
-          {`${text}...`}
+          {text}
         </div>
       </div>
       <div>{truncatedText}</div>
