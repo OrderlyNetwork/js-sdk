@@ -28,7 +28,7 @@ const getDisabledFeatures = (mode: ChartMode) => {
             "header_widget",
             "control_bar",
             "left_toolbar",
-            "timeframes_toolbar",
+            // "timeframes_toolbar",
             "go_to_date",
             "timezone_menu",
             "create_volume_indicator_by_default",
