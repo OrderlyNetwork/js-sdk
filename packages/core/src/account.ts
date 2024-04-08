@@ -268,15 +268,20 @@ export class Account {
       // const orderlyKey = this.keyStore.getOrderlyKey(address);
       const orderlyKey = this.keyStore.getOrderlyKey();
 
-      nextState = {
-        ...this.stateValue,
-        isNew: false,
-        validating: false,
-        status: AccountStatusEnum.DisabledTrading,
-      };
+      // nextState = {
+      //   ...this.stateValue,
+      //   isNew: false,
+      //   validating: false,
+      //   status: AccountStatusEnum.DisabledTrading,
+      // };
 
       if (!orderlyKey) {
-        this._ee.emit("change:status", nextState);
+        this._ee.emit("change:status", {
+          ...this.stateValue,
+          isNew: false,
+          validating: false,
+          status: AccountStatusEnum.DisabledTrading,
+        });
 
         return AccountStatusEnum.DisabledTrading;
       }
@@ -303,12 +308,16 @@ export class Account {
           return AccountStatusEnum.DisabledTrading;
         }
 
-        const nextState = {
-          ...this.stateValue,
-          status: AccountStatusEnum.EnableTrading,
-        };
+        // const nextState = {
+        //   ...this.stateValue,
+        //   status: AccountStatusEnum.EnableTrading,
+        // };
 
-        this._ee.emit("change:status", nextState);
+        this._ee.emit("change:status", {
+          ...this.stateValue,
+          validating: false,
+          status: AccountStatusEnum.EnableTrading,
+        });
 
         return AccountStatusEnum.EnableTrading;
       }
