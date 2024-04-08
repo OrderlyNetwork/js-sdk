@@ -91,7 +91,7 @@ export function offsetPercentageToPrice(inputs: {
 }) {
   const { qty, percentage, entryPrice, orderType, orderSide } = inputs;
 
-  if (percentage) return;
+  if (!percentage) return;
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
