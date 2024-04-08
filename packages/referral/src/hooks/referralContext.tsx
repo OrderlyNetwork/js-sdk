@@ -144,10 +144,10 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
     return (
         <ReferralContext.Provider value={{
             referralInfo: data,
-            // isAffiliate: isAffiliate,
-            // isTrader: isTrader,
-            isAffiliate: true,
-            isTrader: false,
+            isAffiliate: isAffiliate,
+            isTrader: isTrader,
+            // isAffiliate: true,
+            // isTrader: false,
             mutate,
             becomeAnAffiliate,
             becomeAnAffiliateUrl,
