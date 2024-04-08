@@ -108,7 +108,7 @@ const _BigReferees: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span >
-                        {`$${commify(value, 2)}`}
+                        {`$${commify(value, 6)}`}
                     </span>
                 )
             },
@@ -214,7 +214,7 @@ export const RefereesCell: FC<{
             <div className="orderly-my-3 orderly-grid orderly-gap-3 orderly-grid-cols-2">
                 {buildNode("Referee address", address, "orderly-col-span-1", "address")}
                 {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 2)}`, "orderly-col-span-1", "price")}
+                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 6)}`, "orderly-col-span-1", "price")}
                 {buildNode("Total vol. (USDC)", `$${commify(vol || 0, 2)}`, "orderly-col-span-1", "price", "right")}
                 {buildNode("Invication time:", invicationTime, "orderly-col-span-2", "text", "left", true)}
             </div>
@@ -228,7 +228,7 @@ export const RefereesCell: FC<{
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-w-[159px]", "text")}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 2)}`, "orderly-w-[159px]", "price", "right")}
+                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 6)}`, "orderly-w-[159px]", "price", "right")}
             </div>
             <div className="orderly-flex orderly-my-3">
                 {buildNode("Total vol. (USDC)", `$${commify(vol || 0, 2)}`, "orderly-w-[159px]", "price",)}

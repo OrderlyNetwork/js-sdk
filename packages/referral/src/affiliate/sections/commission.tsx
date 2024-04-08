@@ -104,7 +104,7 @@ const _BigCommission: FC<{
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value, 2)}`}
+                        {`$${commify(value, 6)}`}
                     </span>
                 )
             },
@@ -175,7 +175,7 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(commission, 2)}`}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(commission, 6)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">

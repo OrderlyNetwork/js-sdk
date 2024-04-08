@@ -433,7 +433,7 @@ export function abbreviatedNumbers(input?: string | number | undefined) {
     }
 
     if (absNumber < 0.01) {
-        return input;
+        return new Decimal(`${absNumber}`).toDecimalPlaces(6, Decimal.ROUND_DOWN).toString();;
     }
 
 

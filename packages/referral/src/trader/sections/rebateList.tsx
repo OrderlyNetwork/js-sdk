@@ -38,7 +38,7 @@ export const RebateList: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value,2)}`}
+                        {`$${commify(value,6)}`}
                     </span>
                 )
             },
@@ -120,7 +120,7 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Commission(USDC)</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.amount,2)}`}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.amount,6)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
