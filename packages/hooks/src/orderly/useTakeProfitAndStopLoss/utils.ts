@@ -26,6 +26,8 @@ export function offsetToPrice(inputs: {
 }) {
   const { qty, offset, entryPrice, orderType, orderSide } = inputs;
 
+  if (!offset) return;
+
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(entryPrice).add(new Decimal(offset)).toNumber();
@@ -88,6 +90,8 @@ export function offsetPercentageToPrice(inputs: {
   orderType: AlgoOrderType;
 }) {
   const { qty, percentage, entryPrice, orderType, orderSide } = inputs;
+
+  if (percentage) return;
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
