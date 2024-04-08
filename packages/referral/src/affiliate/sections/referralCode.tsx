@@ -10,6 +10,7 @@ import { Decimal, commify } from "@orderly.network/utils";
 import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
+import { refCommify } from "../../utils/decimal";
 
 export type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
 
@@ -71,7 +72,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     ]);
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl", props.className)}>
+        <div className={cn("orderly-px-4 orderly-pt-4 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl", props.className)}>
             <div className="orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
@@ -108,7 +109,7 @@ export const CodeList: FC<{
     }
 
     const getCount = (item: API.ReferralCode) => {
-        return `${commify(item.total_invites)} / ${commify(item.total_traded)}`;
+        return `${refCommify(item.total_invites)} / ${refCommify(item.total_traded)}`;
     }
 
     const columns = useMemo<Column[]>(() => {

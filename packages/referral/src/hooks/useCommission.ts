@@ -22,7 +22,7 @@ export const useCommission = () => {
                     return false;
                 });
                 if (index !== -1) {
-                    return { ...item, volume: referee?.[index].volume }
+                    return { ...item, volume: referee?.[index].volume };
                 }
             }
             return { ...item };

@@ -5,7 +5,8 @@ import { FC, ReactNode, useMemo } from "react";
 import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
 import { useCommission } from "../../hooks/useCommission";
 import { formatTime, formatYMDTime } from "../../utils/utils";
-import { commify } from "@orderly.network/utils";
+import { refCommify } from "../../utils/decimal";
+
 
 export const CommissionList: FC<{
     dateText?: string,
@@ -104,7 +105,7 @@ const _BigCommission: FC<{
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value, 6)}`}
+                        {`${refCommify(value, 6)}`}
                     </span>
                 )
             },
@@ -115,7 +116,7 @@ const _BigCommission: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value || "0", 2)}`}
+                        {`${refCommify(value, 2)}`}
                     </span>
                 )
             },
@@ -175,12 +176,12 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(commission, 6)}`}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`${refCommify(commission, 6)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`$${commify(vol || 0, 2)}`}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`${refCommify(vol, 2)}`}</div>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />

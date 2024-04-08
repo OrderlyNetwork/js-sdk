@@ -5,6 +5,7 @@ import { ReferralContext } from "../../hooks/referralContext";
 import { USDCIcon } from "../../affiliate/icons";
 import { ArrowRightIcon } from "../icons/arrowRight";
 import { commify } from "@orderly.network/utils";
+import { refCommify } from "../../utils/decimal";
 
 
 export const AsAnAffiliate = () => {
@@ -31,7 +32,7 @@ export const AsAnAffiliate = () => {
               <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
                 <USDCIcon width={"100%"} height={"100%"} />
               </div>
-              <div >{commify(totalReferrerRebate !== undefined ? totalReferrerRebate : '-', 2)}</div>
+              <div >{refCommify(totalReferrerRebate, 2)}</div>
             </div>
           </div>
 

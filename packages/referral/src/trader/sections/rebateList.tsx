@@ -5,6 +5,7 @@ import { MEDIA_MD } from "../../types/constants";
 import { RebatesItem } from "./rebates";
 import { formatYMDTime } from "../../utils/utils";
 import { commify } from "@orderly.network/utils";
+import { refCommify } from "../../utils/decimal";
 
 export const RebateList: FC<{
     className?: string,
@@ -38,7 +39,7 @@ export const RebateList: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value,6)}`}
+                        {`${refCommify(value,6)}`}
                     </span>
                 )
             },
@@ -49,7 +50,7 @@ export const RebateList: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span>
-                        {`$${commify(value || 0,2)}`}
+                        {`${refCommify(value,2)}`}
                     </span>
                 )
             }
@@ -120,12 +121,12 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Commission(USDC)</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.amount,6)}`}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`${refCommify(item.amount,6)}`}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Trading vol. (USDC)</div>
-                    <Numeral className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`$${commify(item.vol || 0,2)}`}</Numeral>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`${refCommify(item.vol,2)}`}</div>
                 </div>
 
 

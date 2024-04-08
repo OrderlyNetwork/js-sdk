@@ -7,6 +7,7 @@ import { formatTime, formatYMDTime, parseTime } from "../../utils/utils";
 import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 import { commify } from "@orderly.network/utils";
+import { refCommify } from "../../utils/decimal";
 
 export const RefereesList: FC<{
     dateText?: string,
@@ -108,7 +109,7 @@ const _BigReferees: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span >
-                        {`$${commify(value, 6)}`}
+                        {`${refCommify(value, 6)}`}
                     </span>
                 )
             },
@@ -119,7 +120,7 @@ const _BigReferees: FC<{
                 align: "right",
                 render: (value, record) => (
                     <span >
-                        {`$${commify(value, 2)}`}
+                        {`${refCommify(value, 2)}`}
                     </span>
                 )
             },
@@ -214,8 +215,8 @@ export const RefereesCell: FC<{
             <div className="orderly-my-3 orderly-grid orderly-gap-3 orderly-grid-cols-2">
                 {buildNode("Referee address", address, "orderly-col-span-1", "address")}
                 {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 6)}`, "orderly-col-span-1", "price")}
-                {buildNode("Total vol. (USDC)", `$${commify(vol || 0, 2)}`, "orderly-col-span-1", "price", "right")}
+                {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-col-span-1", "price")}
+                {buildNode("Total vol. (USDC)", `${refCommify(vol, 2)}`, "orderly-col-span-1", "price", "right")}
                 {buildNode("Invication time:", invicationTime, "orderly-col-span-2", "text", "left", true)}
             </div>
             <Divider />
@@ -228,10 +229,10 @@ export const RefereesCell: FC<{
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-w-[159px]", "text")}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `$${commify(totalCommission, 6)}`, "orderly-w-[159px]", "price", "right")}
+                {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-w-[159px]", "price", "right")}
             </div>
             <div className="orderly-flex orderly-my-3">
-                {buildNode("Total vol. (USDC)", `$${commify(vol || 0, 2)}`, "orderly-w-[159px]", "price",)}
+                {buildNode("Total vol. (USDC)", `${refCommify(vol, 2)}`, "orderly-w-[159px]", "price",)}
                 {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
             </div>
 
