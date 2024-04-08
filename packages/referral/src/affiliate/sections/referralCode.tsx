@@ -282,10 +282,10 @@ const SmallCodeCell: FC<{
         <div>
             <Divider className="orderly-my-3" />
             <div className="orderly-flex orderly-justify-between">
-                <div>
+                <div className="orderly-max-w-[94px] md:orderly-max-w-[140px]">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Referral Codes</div>
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-flex orderly-gap-2">
-                        <div>{code}</div>
+                        <div className="orderly-text-ellipsis orderly-flex-1 orderly-overflow-hidden">{code}</div>
 
                         <CopyIcon
                             fillOpacity={1}
