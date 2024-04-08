@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.0-internal.4
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/core@1.4.0-internal.4
+
 ## 0.3.0-internal.3
 
 ### Patch Changes
