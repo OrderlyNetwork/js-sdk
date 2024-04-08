@@ -22,7 +22,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [distributionData, { refresh }] = useDistribution({ size: 14 });
     const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
-    const [maxCount, setMaxCount] = useState(14);
+    const [maxCount, setMaxCount] = useState(7);
 
     useEffect(() => {
         function handleResize() {
@@ -36,11 +36,16 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             setMaxCount(newMaxCount);
         }
 
+        handleResize();
+
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    console.log("xxxx setMaxCount", maxCount);
+    
 
     const dataSource = useMemo(() => {
 

@@ -1,9 +1,9 @@
 import { cn } from "@orderly.network/react";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 
-export const AutoHideText: FC<{ text: string, className?: string }> = (props) => {
+export const AutoHideText: FC<{ text: string, className?: string, visibleCount?: number, }> = (props) => {
 
-  const { text } = props;
+  const { text, visibleCount } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [scrollWidth, setScrollWidth] = useState<number | undefined>(undefined);
@@ -65,8 +65,7 @@ export const AutoHideText: FC<{ text: string, className?: string }> = (props) =>
   const truncatedText = useMemo(() => {
     if (containerWidth && scrollWidth && scrollWidth > containerWidth) {
       const count = (text.match(/\//g) || []).length;
-      const maxCharacters = Math.floor(containerWidth / scrollWidth * text.length) - (count + 5);
-
+      const maxCharacters = visibleCount || Math.floor(containerWidth / scrollWidth * (text.length  - count - 5));
       const startText = text.slice(0, Math.ceil(maxCharacters / 2));
       const endText = text.slice(text.length - Math.floor(maxCharacters / 2), text.length);
 
@@ -75,15 +74,16 @@ export const AutoHideText: FC<{ text: string, className?: string }> = (props) =>
       return (text);
     }
 
-  }, [scrollWidth, containerWidth, text]);
+  }, [scrollWidth, containerWidth, text, visibleCount]);
 
   return (
     <div ref={containerRef} className="orderly-relative">
-      <div className={cn("orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-x orderly-absolute orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-left-0", props.className)}>
+      <div className={cn("orderly-hidden orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-x orderly-absolute orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-left-0", props.className)}>
         <div ref={textRef}>
-          {truncatedText}
+          {`${text}...`}
         </div>
       </div>
+      <div>{truncatedText}</div>
     </div>
   );
 }

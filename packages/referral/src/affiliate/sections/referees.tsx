@@ -191,6 +191,7 @@ export const RefereesCell: FC<{
         rule?: string,
         align?: "left" | "right" | "center",
         flex: boolean = false,
+        visibleCount?: number,
     ) => {
         const alignClassName = (align === "center") ? "orderly-text-center" : ((align === "right") ? "orderly-text-right" : "orderly-text-left");
 
@@ -203,7 +204,7 @@ export const RefereesCell: FC<{
                 )}>
                     <div className={cn("orderly-h-[15px] md:orderly-h-[20px] orderly-leading-[15px] md:orderly-leading-[20px]", flex && "orderly-ml-1")}>
 
-                        <AutoHideText text={value} />
+                        {rule === "address" ?  <AutoHideText text={value} visibleCount={visibleCount} /> : <div>{value}</div>}
                     </div>
                 </div>
             </div>
@@ -213,7 +214,7 @@ export const RefereesCell: FC<{
     if (isSM) {
         return <div>
             <div className="orderly-my-3 orderly-grid orderly-gap-3 orderly-grid-cols-2">
-                {buildNode("Referee address", address, "orderly-col-span-1", "address")}
+                {buildNode("Referee address", address, "orderly-col-span-1", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
                 {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-col-span-1", "price")}
                 {buildNode("Total vol. (USDC)", `${refCommify(vol, 2)}`, "orderly-col-span-1", "price", "right")}
@@ -227,7 +228,7 @@ export const RefereesCell: FC<{
     return (
         <div className="orderly-my-3">
             <div className="orderly-flex">
-                {buildNode("Referee address", address, "orderly-w-[159px]", "text")}
+                {buildNode("Referee address", address, "orderly-w-[159px]", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
                 {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-w-[159px]", "price", "right")}
             </div>

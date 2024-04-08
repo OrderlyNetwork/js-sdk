@@ -1,6 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 import { HintIcon, CopyIcon } from "../icons";
-import { Input, Text, Numeral, Tooltip, cn, toast } from "@orderly.network/react";
+import { Input, Text, Numeral, Tooltip, cn, toast, modal } from "@orderly.network/react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { addQueryParam } from "../../utils/utils";
 import { AutoHideText } from "../../components/autoHideText";
@@ -126,7 +126,16 @@ const Info: FC<{
             <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px]"}>
                 {title}
                 <Tooltip content={tooltip} className="orderly-max-w-[200px]">
-                    <div><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>
+                    <div onClick={() => {
+                        modal.alert({
+                            title: title,
+                            message: (
+                              <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">
+                                {tooltip}
+                              </div>
+                            ),
+                          });
+                    }} ><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>
                 </Tooltip>
             </div>
             <div className={cn("orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px] orderly-mt-1 orderly-h-[32px] md:orderly-h-[34px] xl:orderly-h-[36px]", props.valueClassName)}>
