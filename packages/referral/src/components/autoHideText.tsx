@@ -6,84 +6,116 @@ export const AutoHideText: FC<{ text: string, className?: string, visibleCount?:
   const { text, visibleCount } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [scrollWidth, setScrollWidth] = useState<number | undefined>(undefined);
-  const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined);
+  const lastContainerWidth = useRef<number | undefined>(undefined);
 
   function getTextWidth(ref: HTMLDivElement, text: string): number | undefined {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    if (context) {
-      context.font = getComputedStyle(ref).font;
+    const element = document.getElementById("auto-hide-text-id-orderly");
+    if (context && element) {
+      let fontStyle = getComputedStyle(element).font;
+      if (fontStyle.length === 0) {
+        fontStyle = [
+          getComputedStyle(element).fontWeight,
+          getComputedStyle(element).fontSize,
+          getComputedStyle(element).fontFamily,
+        ].join(" ");
+      }
+      context.font = fontStyle;
+      context.letterSpacing = getComputedStyle(element).letterSpacing;
+
+      
+
       const width = context.measureText(text).width;
       return width;
     }
+    return undefined;
   }
 
+
+  const [visibleChars, setVisibleChars] = useState(0);
+
+
   useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
+    const calculateVisibleChars = () => {
+
+      if (containerRef.current && textRef.current) {
+
         const containerWidth = containerRef.current.clientWidth;
-        setContainerWidth(containerWidth);
-      }
+
+        if (containerWidth == lastContainerWidth.current) return;
+        lastContainerWidth.current = containerWidth;
 
 
-      if (textRef.current) {
-        const width = getTextWidth(textRef.current, text);
-        if (width) {
-          setScrollWidth(width);
+        const textElement = textRef.current;
+
+        const textContent = text;
+
+        const pWidth = Math.ceil(getTextWidth(textElement, "...") || 0);
+
+        getComputedStyle(textElement)
+
+
+        let start = 0;
+        let end = textContent.length - 1;
+        let mid;
+
+        while (start <= end) {
+          mid = Math.floor((start + end) / 2);
+          const slicedText = textContent.slice(0, mid + 1);
+          const measuredWidth = getTextWidth(textRef.current, slicedText);
+          if (!measuredWidth) break;
+
+          if (measuredWidth < (containerWidth - pWidth)) {
+            start = mid + 1;
+          } else {
+            end = mid - 1;
+          }
         }
+
+        // console.log("end end end", end - 3, containerWidth,);
+
+        setVisibleChars(end - 3);
+
       }
+
     };
 
-    handleResize();
+    lastContainerWidth.current = undefined;
+    calculateVisibleChars();
 
-    window.addEventListener("resize", handleResize);
-
+    window.addEventListener('resize', calculateVisibleChars);
     return () => {
-      window.removeEventListener("resize", handleResize);
-    }
-  }, [text]);
-
-  // useEffect(() => {
-  //   if (textRef.current) {
-
-  //     const canvas = document.createElement('canvas');
-  //     const context = canvas.getContext('2d');
-  //     if (context) {
-
-  //       context.font = getComputedStyle(textRef.current).font;
-
-  //       const width = context.measureText(text).width;
-  //       setScrollWidth(width);
-
-  //       console.log('Text width:', width, context.font);
-  //     }
-  //   }
-  // }, [text]);
-
+      lastContainerWidth.current = undefined;
+      window.removeEventListener('resize', calculateVisibleChars);
+    };
+  }, [text, textRef]);
 
   const truncatedText = useMemo(() => {
-    if (containerWidth && scrollWidth && scrollWidth > containerWidth) {
-      const count = (text.match(/\//g) || []).length;
-      const maxCharacters = visibleCount || Math.floor(containerWidth / scrollWidth * (text.length  - count - 5));
-      const startText = text.slice(0, Math.ceil(maxCharacters / 2));
-      const endText = text.slice(text.length - Math.floor(maxCharacters / 2), text.length);
 
-      return (`${startText}...${endText}`);
-    } else {
-      return (text);
+    if (visibleChars + 1 >= text.length) {
+      return text;
     }
 
-  }, [scrollWidth, containerWidth, text, visibleCount]);
+    const maxCharacters = visibleCount || visibleChars;
+
+    const startText = text.slice(0, Math.ceil(maxCharacters / 2));
+    const endText = text.slice(text.length - Math.floor(maxCharacters / 2), text.length);
+
+
+    return (`${startText}...${endText}`);
+
+
+  }, [text, visibleCount, visibleChars]);
 
   return (
-    <div ref={containerRef} className="orderly-relative">
+    <div ref={containerRef} className="orderly-relative orderly-font-medium">
       <div className={cn("orderly-hidden orderly-whitespace-nowrap orderly-overflow orderly-overflow-hidden-x orderly-absolute orderly-top-0 orderly-bottom-0 orderly-right-0 orderly-left-0", props.className)}>
-        <div ref={textRef}>
+        <span ref={textRef}>
           {text}
-        </div>
+        </span>
       </div>
-      <div>{truncatedText}</div>
+      <div id="auto-hide-text-id-orderly">{truncatedText}</div>
     </div>
   );
 }

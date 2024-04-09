@@ -7,10 +7,10 @@ export const PinView: FC<{
 }> = (props) => {
     const {pin} = props;
     return (
-        <button onClick={()=> {
+        <div onClick={()=> {
             props.onPinChange?.(!pin);
         }}>
             {pin === false ? <PinIcon fillOpacity={1} className="orderly-fill-base-contrast-36 hover:orderly-fill-base-contrast"/> : <UnPinIcon fillOpacity={1} className="orderly-fill-primary hover:orderly-fill-primary/80"/>}
-        </button>
+        </div>
     );
 }

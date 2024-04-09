@@ -3,10 +3,10 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { CommissionList } from "./commission";
 import { RefereesList } from "./referees";
 
-type TabType = "commission" | "referees";
+type TabType = "affiliate_commissionTab" | "affiliate_refereesTab";
 
 export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
-    const [activeTab, setActiveTab] = useState<TabType>("commission");
+    const [activeTab, setActiveTab] = useState<TabType>("affiliate_commissionTab");
     const [dateText, setDateText] = useState<string | undefined>(undefined);
 
 
@@ -32,7 +32,7 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
 
                 <TabPane
                     title={(<div className="ordelry-ml-1">Commission</div>)}
-                    value="commission"
+                    value="affiliate_commissionTab"
                 >
                     <div className="orderly-px-1">
                         <CommissionList dateText={dateText} setDateText={setDateText} />
@@ -42,7 +42,7 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
 
                 <TabPane
                     title="My referees"
-                    value="referees"
+                    value="affiliate_refereesTab"
                 >
                     <div className="orderly-px-1">
                         <RefereesList dateText={dateText} setDateText={setDateText} />
