@@ -34,14 +34,14 @@ export const RebateList: FC<{
                 )
             },
             {
-                title: "Commission (USDC)",
+                title: "Rebates (USDC)",
                 dataIndex: "amount",
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <span>
-                        {`${refCommify(value,6)}`}
-                    </span>
+                    <Numeral precision={6} prefix="$">
+                        {value}
+                    </Numeral>
                 )
             },
             {
@@ -50,9 +50,9 @@ export const RebateList: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <span>
-                        {`${refCommify(value,2)}`}
-                    </span>
+                    <Numeral precision={2} prefix="$">
+                        {value || 0}
+                    </Numeral>
                 )
             }
         ];
@@ -122,13 +122,13 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{formatYMDTime(item.created_time)}</div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
-                    <div className="orderly-text-3xs orderly-text-base-contrast-36">Commission(USDC)</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`${refCommify(item.amount,6)}`}</div>
+                    <div className="orderly-text-3xs orderly-text-base-contrast-36">Rebates(USDC)</div>
+                    <Numeral prefix="$" precision={6} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.amount}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Trading vol. (USDC)</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{`${refCommify(item.vol,2)}`}</div>
+                    <Numeral prefix="$" precision={2} rule="price" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.vol || 0}</Numeral>
                 </div>
 
 

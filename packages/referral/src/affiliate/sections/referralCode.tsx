@@ -73,7 +73,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     ]);
 
     return (
-        <div className={cn("orderly-px-4 orderly-pt-4 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-4 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
             <div className="orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
@@ -132,7 +132,7 @@ export const CodeList: FC<{
                 title: "Referral Codes",
                 dataIndex: "code",
                 className: "orderly-h-[48px]",
-
+                align:"left",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-2 orderly-items-center">
                         <PinView pin={record.isPined || false} onPinChange={(isPinned) => {

@@ -110,9 +110,9 @@ const _BigReferees: FC<{
                 className: "orderly-h-[56px]",
                 align: "right",
                 render: (value, record) => (
-                    <span >
-                        {`${refCommify(value, 6)}`}
-                    </span>
+                    <Numeral precision={6} prefix="$" >
+                        {value}
+                    </Numeral>
                 )
             },
             {
@@ -121,9 +121,9 @@ const _BigReferees: FC<{
                 className: "orderly-h-[56px]",
                 align: "right",
                 render: (value, record) => (
-                    <span >
-                        {`${refCommify(value, 2)}`}
-                    </span>
+                    <Numeral precision={2} prefix="$" >
+                        {value}
+                    </Numeral>
                 )
             },
             {
@@ -194,6 +194,7 @@ export const RefereesCell: FC<{
         align?: "left" | "right" | "center",
         flex: boolean = false,
         visibleCount?: number,
+        dp?: number,
     ) => {
         const alignClassName = (align === "center") ? "orderly-text-center" : ((align === "right") ? "orderly-text-right" : "orderly-text-left");
 
@@ -218,8 +219,8 @@ export const RefereesCell: FC<{
             <div className="orderly-my-3 orderly-grid orderly-gap-3 orderly-grid-cols-2">
                 {buildNode("Referee address", address, "orderly-col-span-1", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-col-span-1", "price")}
-                {buildNode("Total vol. (USDC)", `${refCommify(vol, 2)}`, "orderly-col-span-1", "price", "right")}
+                {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-col-span-1", "price")}
+                {buildNode("Total vol. (USDC)", (<Numeral precision={6} prefix="$">{vol}</Numeral>), "orderly-col-span-1", "price", "right")}
                 {buildNode("Invication time:", invicationTime, "orderly-col-span-2", "text", "left", true)}
             </div>
             <Divider />
@@ -232,10 +233,10 @@ export const RefereesCell: FC<{
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-w-[159px]", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
-                {buildNode("Total commission (USDC)", `${refCommify(totalCommission, 6)}`, "orderly-w-[159px]", "price", "right")}
+                {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-w-[159px]", "price", "right")}
             </div>
             <div className="orderly-flex orderly-my-3">
-                {buildNode("Total vol. (USDC)", `${refCommify(vol, 2)}`, "orderly-w-[159px]", "price",)}
+                {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol}</Numeral>), "orderly-w-[159px]", "price",)}
                 {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
             </div>
 

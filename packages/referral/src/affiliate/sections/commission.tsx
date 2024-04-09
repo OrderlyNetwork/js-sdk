@@ -89,7 +89,7 @@ const _BigCommission: FC<{
                 title: "Date",
                 dataIndex: "created_time",
                 className: "orderly-h-[52px]",
-
+                width: 110,
                 render: (value, record) => {
                     const date = formatYMDTime(value);
 
@@ -106,9 +106,9 @@ const _BigCommission: FC<{
                 align: "right",
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
-                    <span>
-                        {`${refCommify(value, 6)}`}
-                    </span>
+                    <Numeral precision={6} prefix="$">
+                        {value}
+                    </Numeral>
                 )
             },
             {
@@ -117,9 +117,9 @@ const _BigCommission: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <span>
-                        {`${refCommify(value, 2)}`}
-                    </span>
+                    <Numeral precision={2} prefix="$">
+                        {value}
+                    </Numeral>
                 )
             },
         ];
@@ -178,12 +178,12 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`${refCommify(commission, 6)}`}</div>
+                    <Numeral precision={6} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{`${refCommify(vol, 2)}`}</div>
+                    <Numeral precision={2} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</Numeral>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />
