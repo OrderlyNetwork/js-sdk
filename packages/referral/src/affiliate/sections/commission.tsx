@@ -63,7 +63,7 @@ const _SmallCommission: FC<{
 
     return (
 
-        <div className="orderly-max-h-[431px] orderly-overflow-auto">
+        <div className="orderly-px-3 orderly-max-h-[431px] orderly-overflow-auto">
             {date && <div className="orderly-mt-1 orderly-px-0 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
             <ListView
                 dataSource={dataSource}
@@ -88,7 +88,7 @@ const _BigCommission: FC<{
             {
                 title: "Date",
                 dataIndex: "created_time",
-                className: "orderly-h-[52px]",
+                className: "orderly-h-[52px] orderly-px-1",
                 width: 110,
                 render: (value, record) => {
                     const date = formatYMDTime(value);
@@ -127,7 +127,7 @@ const _BigCommission: FC<{
 
 
     return (
-        <div className="orderly-mt-4 orderly-px-3 orderly-relative" style={{
+        <div className="orderly-mt-4 orderly-relative orderly-px-3" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
             <Table
@@ -136,9 +136,9 @@ const _BigCommission: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-px-1"
                 className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
                 scrollToEnd={() => {

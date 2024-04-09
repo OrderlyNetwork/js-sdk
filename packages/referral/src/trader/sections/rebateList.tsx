@@ -18,7 +18,7 @@ export const RebateList: FC<{
     const { className, dataSource, loadMore, isLoading } = props;
     const isMD = useMediaQuery(MEDIA_MD);
 
-    const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
+    const clsName = "orderly-px-3 orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 
     const columns = useMemo<Column[]>(() => {
         return [
@@ -75,7 +75,7 @@ export const RebateList: FC<{
 
 
     return (
-        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
+        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-2 orderly-relative" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
                 <Table
@@ -86,7 +86,7 @@ export const RebateList: FC<{
                 dataSource={dataSource}
                 headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
                 className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
                 scrollToEnd={() => {

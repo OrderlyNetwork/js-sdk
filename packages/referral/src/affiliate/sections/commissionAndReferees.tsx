@@ -31,10 +31,10 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
             >
 
                 <TabPane
-                    title="Commission"
+                    title={(<div className="ordelry-ml-1">Commission</div>)}
                     value="commission"
                 >
-                    <div className="orderly-px-4">
+                    <div className="orderly-px-1">
                         <CommissionList dateText={dateText} setDateText={setDateText} />
                     </div>
                 </TabPane>
@@ -44,7 +44,7 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
                     title="My referees"
                     value="referees"
                 >
-                    <div className="orderly-px-4">
+                    <div className="orderly-px-1">
                         <RefereesList dateText={dateText} setDateText={setDateText} />
                     </div>
 

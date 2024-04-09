@@ -46,8 +46,8 @@ export const Rebates: FC<{
     }
 
     return (
-        <div className={cn("orderly-p-4 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
-            <div className="orderly-flex orderly-items-center orderly-justify-between">
+        <div className={cn("orderly-py-6 orderly-px-1 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
+            <div className="orderly-flex orderly-items-center orderly-justify-between orderly-px-3">
                 <div className="orderly-flex-1 orderly-text-base 2xl:orderly-text-lg lg:orderly-px-3">My rebates</div>
                 {displayDate && <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-mr-3">{displayDate}</div>}
             </div>

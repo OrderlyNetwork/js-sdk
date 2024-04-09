@@ -61,7 +61,7 @@ const _SmallReferees: FC<{
     };
     return (
 
-        <div className="orderly-max-h-[431px] orderly-overflow-auto">
+        <div className="orderly-max-h-[431px] orderly-overflow-auto orderly-px-3">
             <div className="orderly-mt-1 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden orderly-text-3xs orderly-text-base-contrast-36">{date}</div>
             <ListView
                 dataSource={dataSource}
@@ -149,9 +149,9 @@ const _BigReferees: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-mt-0"
                 className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
                 scrollToEnd={() => {

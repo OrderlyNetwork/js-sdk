@@ -73,8 +73,8 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     ]);
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-4 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
-            <div className="orderly-flex orderly-items-center orderly-justify-start">
+        <div className={cn("orderly-pt-4 orderly-px-3 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
+            <div className="orderly-px-3 orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
                     Remaining referral codes:&nbsp;
@@ -100,7 +100,7 @@ export const CodeList: FC<{
 
     const { dataSource, copyLink, editRate } = props;
 
-    const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
+    const clsName = "orderly-px-3 orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 
     const getRate = (item: API.ReferralCode) => {
         const refereeRate = new Decimal((item.referee_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
@@ -150,7 +150,7 @@ export const CodeList: FC<{
                 title: "You / Referee",
                 dataIndex: "referees",
                 className: "orderly-h-[48px]",
-                width: isXL ? 132 : 146,
+                // width: isXL ? 132 : 146,
                 align: "right",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-1 orderly-justify-end">
@@ -241,9 +241,9 @@ export const CodeList: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900"
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-px-0"
                 className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
             />
