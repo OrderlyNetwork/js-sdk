@@ -109,6 +109,9 @@ export const EditReferralRate = create<{
                             if (!Number.isNaN(rate)) {
                                 setRefereeRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
                                 setShowError(maxRate.sub(rate) < new Decimal(0));
+                            } else {
+                                setRefereeRebateRate("");
+                                setReferrerRebateRate("");
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
@@ -131,6 +134,9 @@ export const EditReferralRate = create<{
                             if (!Number.isNaN(rate)) {
                                 setReferrerRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
                                 setShowError(maxRate.sub(rate) < new Decimal(0));
+                            } else {
+                                setRefereeRebateRate("");
+                                setReferrerRebateRate("");
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
