@@ -67,7 +67,7 @@ export const AsAnAffiliate = () => {
   return (
     <div
       id="dashboard_affiliate_container"
-      className="orderly-rounded-xl orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-h-[196px] lg:orderly-h-[221px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between"
+      className="orderly-rounded-xl orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-h-[195px] lg:orderly-h-[199px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between"
     >
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
@@ -76,7 +76,7 @@ export const AsAnAffiliate = () => {
             Onboard traders to earn passive income
           </div>}
         </div>
-        <ReferralIcon />
+        <ReferralIcon className="orderly-w-[72px] orderly-h-[72px] lg:orderly-w-[64px] lg:orderly-h-[64px] xl:orderly-w-[90px] xl:orderly-h-[90px] 2xl:orderly-w-[120px] 2xl:orderly-h-[120px]" />
       </div>
 
       {bottomInfo}
