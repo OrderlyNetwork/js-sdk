@@ -207,23 +207,23 @@ module.exports = {
   plugins: [
     require("@tailwindcss/typography"),
     require("tailwindcss-animate"),
-    plugin(function ({ addBase }) {
-      addBase({
-        html: {
-          fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-900))",
-          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
-          fontFamily: "var(--orderly-font-family)",
-        },
-        body: {
-          fontSize: "var(--orderly-font-size-base)",
-          backgroundColor: "rgb(var(--orderly-color-base-900))",
-          color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
-          fontFamily: "var(--orderly-font-family)",
-        },
+    // plugin(function ({ addBase }) {
+    //   addBase({
+    //     html: {
+    //       fontSize: "var(--orderly-font-size-base)",
+          // backgroundColor: "rgb(var(--orderly-color-base-900))",
+          // color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+          // fontFamily: "var(--orderly-font-family)",
+        // },
+        // body: {
+          // fontSize: "var(--orderly-font-size-base)",
+          // backgroundColor: "rgb(var(--orderly-color-base-900))",
+          // color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
+          // fontFamily: "var(--orderly-font-family)",
+        // },
         // ':root':{}
-      });
-    }),
+    //   });
+    // }),
     plugin(function ({ addUtilities }) {
       const scrollBarUtilities = {
         ".hide-scrollbar::-webkit-scrollbar": {
