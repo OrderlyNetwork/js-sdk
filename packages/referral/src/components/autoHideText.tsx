@@ -75,7 +75,7 @@ export const AutoHideText: FC<{ text: string, className?: string, visibleCount?:
 
         // console.log("end end end", end - 3, containerWidth,);
 
-        setVisibleChars(end - 3);
+        setVisibleChars(end - 6);
 
       }
 
