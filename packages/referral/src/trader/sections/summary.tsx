@@ -5,6 +5,7 @@ import { HistoryIcon, TriangleDownIcon, USDCIcon } from "../../affiliate/icons";
 import { FilterType } from "../../types/types";
 import { ReferralContext } from "../../hooks/referralContext";
 import { SummaryFilter } from "../../components/summaryFilter";
+import { refCommify } from "../../utils/decimal";
 
 export const Summary: FC<{className?: string}> = (props) => {
     const [filterType, setFiltetType] = useState<FilterType>("All");
@@ -69,7 +70,7 @@ const Item: FC<{title: string, value: any, className?: string}> = (props) => {
                 {title}
             </div>
 
-            <Numeral className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{value}</Numeral>
+            <div className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{refCommify(value,2)}</div>
         </div>
     );
 };
