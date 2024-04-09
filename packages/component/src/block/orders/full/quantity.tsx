@@ -154,7 +154,7 @@ const EditingState: FC<{
   const onConfirm = useCallback(() => {
     setIsSubmitting(true);
 
-    const params: any = {
+    let params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -168,18 +168,14 @@ const EditingState: FC<{
       params.reduce_only = order.reduce_only;
     }
 
+    if (order.order_tag !== undefined) {
+      params = {...params, order_tag: order.order_tag};
+    }
+
     // @ts-ignore
     if (order.visible_quantity === 0) {
       params["visible_quantity"] = 0;
     }
-
-    // @ts-ignore
-    if (order.tag !== undefined) {
-      // @ts-ignore
-      params["order_tag"] = order.tag;
-    }
-
-    console.log("current order", order, params, quantity);
 
     let future;
 

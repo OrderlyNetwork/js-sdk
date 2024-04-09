@@ -48,6 +48,10 @@ export const OrderListProvider: FC<
         <OrderEditFormSheet
           order={order}
           editOrder={(value: OrderEntity) => {
+            /// check order has order_tag, if exits add order_tag to request body
+            if (typeof order.order_tag !== undefined) {
+              value = {...value, order_tag: order.order_tag};
+            }
             if (order.algo_order_id !== undefined) {
               return editAlgoOrder(order.algo_order_id.toString(), {...value});
             }

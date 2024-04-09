@@ -184,6 +184,11 @@ const EditingState: FC<{
       data.reduce_only = order.reduce_only;
     }
 
+
+    if (order.order_tag !== undefined) {
+      data = {...data, order_tag: order.order_tag};
+    }
+
     if (isAlgoOrder) {
       order_id = order.algo_order_id as number;
       data = {

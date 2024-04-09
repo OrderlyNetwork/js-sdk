@@ -151,7 +151,7 @@ const EditingState: FC<{
 
   const onConfirm = () => {
     // @ts-ignore
-    const data = {
+    let data: any = {
       // price: price,
       quantity: order.quantity,
       trigger_price: price,
@@ -161,6 +161,10 @@ const EditingState: FC<{
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
+
+    if (order.order_tag !== undefined) {
+      data = {...data, order_tag: order.order_tag};
+    }
     // @ts-ignore
     editAlgoOrder(`${order.algo_order_id}`, data)
       .then(

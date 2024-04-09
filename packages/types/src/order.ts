@@ -46,4 +46,5 @@ export interface OrderEntity {
   // hideInOrderbook?: boolean;
   isStopOrder?: boolean;
   trigger_price?: string | number;
+  order_tag?: string;
 }
