@@ -37,7 +37,7 @@ export const ReferralCode: FC<{
             <div className="orderly-pt-3">
                 <Input
                     ref={inputRef}
-                    containerClassName="orderly-h-[40px] orderly-bg-base-900"
+                    containerClassName="orderly-h-[40px] orderly-bg-base-700"
                     value={refCode}
                     onChange={(e) => setRefCode(e.target.value)}
                     autoFocus
@@ -45,7 +45,7 @@ export const ReferralCode: FC<{
                         e.stopPropagation();
                         setRefCode("");
                     }}>
-                        <CircleCloseIcon size={18} />
+                        <CircleCloseIcon size={18} fillOpacity={1} className="orderly-fill-base-contrast-20 hover:orderly-fill-base-contrast-54" />
                     </button>}
                 />
             </div>

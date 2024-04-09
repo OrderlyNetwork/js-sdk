@@ -116,7 +116,7 @@ export const WalletConnectDialog = create<WalletConnectProps>((props) => {
 
   return (
     <Dialog open={visible} onOpenChange={_onOpenChange}>
-      <DialogContent maxWidth={"sm"} closable onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent maxWidth={"sm"} closable onOpenAutoFocus={(e) => e.preventDefault()} className="orderly-bg-base-800">
         <DialogHeader>
           <DialogTitle>Connect wallet</DialogTitle>
         </DialogHeader>
