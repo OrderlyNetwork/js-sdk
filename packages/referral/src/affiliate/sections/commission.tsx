@@ -118,7 +118,7 @@ const _BigCommission: FC<{
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2} prefix="$">
-                        {value}
+                        {value || 0}
                     </Numeral>
                 )
             },
@@ -183,7 +183,7 @@ export const CommissionCell: FC<{
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <Numeral precision={2} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</Numeral>
+                    <Numeral precision={2} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol || 0}</Numeral>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />

@@ -89,7 +89,7 @@ const Item: FC<{ title: string, value: any, className?: string }> = (props) => {
                 {title}
             </div>
 
-            <Numeral className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{value}</Numeral>
+            <Numeral className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{value || 0}</Numeral>
         </div>
     );
 };

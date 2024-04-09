@@ -32,7 +32,7 @@ export const AsAnAffiliate = () => {
               <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
                 <USDCIcon width={"100%"} height={"100%"} />
               </div>
-              <div >{refCommify(totalReferrerRebate, 2)}</div>
+              <div >{commify(totalReferrerRebate || 0)}</div>
             </div>
           </div>
 

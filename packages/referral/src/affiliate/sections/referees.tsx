@@ -122,7 +122,7 @@ const _BigReferees: FC<{
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2} prefix="$" >
-                        {value}
+                        {value || 0}
                     </Numeral>
                 )
             },
@@ -220,7 +220,7 @@ export const RefereesCell: FC<{
                 {buildNode("Referee address", address, "orderly-col-span-1", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
                 {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-col-span-1", "price")}
-                {buildNode("Total vol. (USDC)", (<Numeral precision={6} prefix="$">{vol}</Numeral>), "orderly-col-span-1", "price", "right")}
+                {buildNode("Total vol. (USDC)", (<Numeral precision={6} prefix="$">{vol || 0}</Numeral>), "orderly-col-span-1", "price", "right")}
                 {buildNode("Invication time:", invicationTime, "orderly-col-span-2", "text", "left", true)}
             </div>
             <Divider />
@@ -236,7 +236,7 @@ export const RefereesCell: FC<{
                 {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-w-[159px]", "price", "right")}
             </div>
             <div className="orderly-flex orderly-my-3">
-                {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol}</Numeral>), "orderly-w-[159px]", "price",)}
+                {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-w-[159px]", "price",)}
                 {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
             </div>
 
