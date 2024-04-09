@@ -26,7 +26,7 @@ export const TraderTitle: FC<{
     return (
         <div className={cn("orderly-flex orderly-justify-between", props.className)}>
             <div className="orderly-flex orderly-items-center">
-                <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg">Your referral</div>
+                <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg">Your referrer</div>
                 <div className="orderly-ml-3 orderly-flex orderly-items-center orderly-justify-center orderly-px-[10px] orderly-h-[32px] orderly-text-primary orderly-text-[15px] orderly-bg-[#282E3A] orderly-rounded">{code || "-"}</div>
             </div>
             <div className="orderly-flex orderly-items-center">
