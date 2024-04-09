@@ -74,7 +74,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl orderly-flex orderly-flex-col", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl orderly-flex orderly-flex-col", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
                 <div className="orderly-text-xs ">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />

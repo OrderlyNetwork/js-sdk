@@ -70,7 +70,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
     }, [firstCode?.referee_rebate_rate]);
 
     return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-xl", props.className)}>
+        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
             <div className="orderly-text-base 2xl:orderly-text-lg">
                 Referral link
             </div>

@@ -17,7 +17,7 @@ export const CommissionAndReferees: FC<{ className?: string }> = (props) => {
 
 
     return (
-        <div className={cn("orderly-referral-tab orderly-py-3 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600", props.className)}>
+        <div className={cn("orderly-referral-tab orderly-py-3 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
             <Tabs
                 id="commission_referees_tab"
                 autoFit
