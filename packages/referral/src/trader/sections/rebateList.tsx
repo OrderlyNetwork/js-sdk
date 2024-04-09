@@ -6,6 +6,7 @@ import { RebatesItem } from "./rebates";
 import { formatYMDTime } from "../../utils/utils";
 import { commify } from "@orderly.network/utils";
 import { refCommify } from "../../utils/decimal";
+import { RefEmptyView } from "../../components/icons/emptyView";
 
 export const RebateList: FC<{
     className?: string,
@@ -67,6 +68,7 @@ export const RebateList: FC<{
                 renderItem={(item, index) => {
                     return <SmallCodeCell item={item} />
                 }}
+                emptyView={<RefEmptyView />}
             />);
     }
 
@@ -97,7 +99,7 @@ export const RebateList: FC<{
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView />
                     </div>
                 )
             }

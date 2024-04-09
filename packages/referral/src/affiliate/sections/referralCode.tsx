@@ -11,6 +11,7 @@ import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
 import { refCommify } from "../../utils/decimal";
+import { RefEmptyView } from "../../components/icons/emptyView";
 
 export type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
 
@@ -96,7 +97,6 @@ export const CodeList: FC<{
     const isMD = useMediaQuery(MEDIA_MD);
     const isXL = useMediaQuery(MEDIA_2XL);
 
-    console.log("ix 2xl", isXL);
 
     const { dataSource, copyLink, editRate } = props;
 
@@ -216,11 +216,6 @@ export const CodeList: FC<{
         return cols;
     }, [dataSource, isXL]);
 
-    console.log("isXL", isXL);
-
-
-
-
     if (isMD) {
         return <div className={clsName} >
             {(dataSource.map((item, index) => <SmallCodeCell
@@ -256,7 +251,7 @@ export const CodeList: FC<{
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[48px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView />
                     </div>
                 )
             }

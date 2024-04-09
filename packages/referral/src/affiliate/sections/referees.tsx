@@ -8,6 +8,7 @@ import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 import { commify } from "@orderly.network/utils";
 import { refCommify } from "../../utils/decimal";
+import { RefEmptyView } from "../../components/icons/emptyView";
 
 export const RefereesList: FC<{
     dateText?: string,
@@ -66,6 +67,7 @@ const _SmallReferees: FC<{
                 dataSource={dataSource}
                 loadMore={loadMore}
                 renderItem={renderItem}
+                emptyView={<RefEmptyView />}
             />
         </div>
     );
@@ -162,7 +164,7 @@ const _BigReferees: FC<{
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView />
                     </div>
                 )
             }

@@ -6,6 +6,7 @@ import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
 import { useCommission } from "../../hooks/useCommission";
 import { formatTime, formatYMDTime } from "../../utils/utils";
 import { refCommify } from "../../utils/decimal";
+import { RefEmptyView } from "../../components/icons/emptyView";
 
 
 export const CommissionList: FC<{
@@ -69,6 +70,7 @@ const _SmallCommission: FC<{
                 loadMore={loadMore}
                 isLoading={isLoading}
                 renderItem={renderItem}
+                emptyView={<RefEmptyView />}
             />
         </div>
     );
@@ -151,7 +153,7 @@ const _BigCommission: FC<{
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView  iconSize={62}/>
                     </div>
                 )
             }

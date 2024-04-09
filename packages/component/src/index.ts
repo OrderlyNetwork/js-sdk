@@ -35,6 +35,7 @@ export {
 } from "./dropdown/dropdown";
 export * from "./select";
 export * from "./statistic";
+export * from "./illustration";
 
 export {
   Dialog,
