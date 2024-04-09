@@ -132,7 +132,7 @@ export const CodeList: FC<{
                 title: "Referral Codes",
                 dataIndex: "code",
                 className: "orderly-h-[48px]",
-                align:"left",
+                align: "left",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-2 orderly-items-center">
                         <PinView pin={record.isPined || false} onPinChange={(isPinned) => {
@@ -282,11 +282,12 @@ const SmallCodeCell: FC<{
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-flex orderly-gap-2">
                         <div className="orderly-text-ellipsis orderly-flex-1 orderly-overflow-hidden">{code}</div>
 
-                        <CopyIcon
-                            fillOpacity={1}
-                            className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"
-                            onClick={() => copyText(code)}
-                        />
+                        <button onClick={() => copyText(code)}>
+                            <CopyIcon
+                                fillOpacity={1}
+                                className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"
+                            />
+                        </button>
                     </div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
