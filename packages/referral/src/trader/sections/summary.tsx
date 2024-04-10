@@ -43,7 +43,7 @@ export const Summary: FC<{className?: string}> = (props) => {
             </div>
 
             <div className="orderly-my-4 orderly-p-6 orderly-rounded-xl orderly-bg-[#00685C] orderly-flex-grow">
-                <div className="orderly-text-center orderly-text-xs md:orderly-text-base lg:orderly-text-base xl:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-54">Rebates (USDC)</div>
+                <div className="orderly-text-center orderly-text-xs md:orderly-text-base lg:orderly-text-base xl:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-80">Rebates (USDC)</div>
                 <div className="orderly-flex orderly-justify-center orderly-items-center orderly-mt-3">
                     <USDCIcon size={28} />
                     <Numeral className="orderly-ml-2 orderly-text-[22px] md:orderly-text-[24px] lg:orderly-text-[28px] xl:orderly-text-[28px] 2xl:orderly-text-[32px]">
