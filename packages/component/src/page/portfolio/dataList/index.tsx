@@ -30,9 +30,9 @@ export const DataList = () => {
       <TabPane title="Funding" value={EPortfolioTab.Funding}>
         <FundingFee />
       </TabPane>
-      <TabPane title="Liquidations" value={EPortfolioTab.Liquidations}>
+      {/* <TabPane title="Liquidations" value={EPortfolioTab.Liquidations}>
         <Liquidations />
-      </TabPane>
+      </TabPane> */}
     </Tabs>
   );
 };
