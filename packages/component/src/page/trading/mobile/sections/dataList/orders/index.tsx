@@ -6,15 +6,25 @@ import {
   useSessionStorage,
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
-import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
+import {
+  API,
+  AccountStatusEnum,
+  AlgoOrderRootType,
+  OrderEntity,
+} from "@orderly.network/types";
 import { TabContext } from "@/tab";
 import { OrderStatus } from "@orderly.network/types";
 
 interface Props {
   // symbol: string;
+  excludes?: AlgoOrderRootType[];
+  includes?: AlgoOrderRootType[];
 }
 
 export const OrdersPane: FC<Props> = (props) => {
+  // const {
+  //   excludes = [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  // } = props;
   const context = useContext(TradingPageContext);
   const tabContext = useContext(TabContext);
 
@@ -40,6 +50,8 @@ export const OrdersPane: FC<Props> = (props) => {
   ] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
     symbol: symbol,
+    excludes: props.excludes,
+    includes: props.includes,
   });
 
   const onShowAllSymbolChange = (isAll: boolean) => {

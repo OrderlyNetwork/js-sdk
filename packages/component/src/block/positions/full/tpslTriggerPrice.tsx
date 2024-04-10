@@ -35,6 +35,7 @@ export const TPSLTriggerPrice: FC<{
     if (!!props.takeProfitPrice) {
       msgs.push(
         <TriggerPriceItem
+          key={"tp"}
           qty={quantity}
           price={props.takeProfitPrice}
           entryPrice={position.average_open_price}
@@ -48,6 +49,7 @@ export const TPSLTriggerPrice: FC<{
     if (!!props.stopLossPrice) {
       msgs.push(
         <TriggerPriceItem
+          key={"sl"}
           qty={quantity}
           price={props.stopLossPrice}
           entryPrice={position.average_open_price}
@@ -81,7 +83,9 @@ export const TPSLTriggerPrice: FC<{
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
-              <span className={"orderly-text-base-contrast-54"}>TP-</span>
+              <span className={"orderly-text-base-contrast-54"}>
+                TP&nbsp;-&nbsp;
+              </span>
             ) : (
               ""
             )
@@ -100,7 +104,9 @@ export const TPSLTriggerPrice: FC<{
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
-              <span className={"orderly-text-base-contrast-54"}>SL-</span>
+              <span className={"orderly-text-base-contrast-54"}>
+                SL&nbsp;-&nbsp;
+              </span>
             ) : (
               ""
             )

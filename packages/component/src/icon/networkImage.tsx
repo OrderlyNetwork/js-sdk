@@ -39,6 +39,8 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
 
   const currentUrl = useRef<string>();
 
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+
   useEffect(() => {
     if (
       typeof props.type === "undefined" &&
@@ -52,21 +54,38 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
     }
 
     const img = new Image();
-    setLoading(true);
+
+    timer.current = setTimeout(() => {
+      setLoading(true);
+    }, 100);
+
+    const stopLoading = (isFailed = false) => {
+      // if (loading) {
+      setLoading(false);
+      setFailed(isFailed);
+      // }
+
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
 
     img.onload = function () {
       if (currentUrl.current !== img.src) {
         return;
       }
       setUrl(img.src);
-      setLoading(false);
-      setFailed(false);
+      // setLoading(false);
+      // setFailed(false);
+      stopLoading();
     };
 
     img.onerror = function () {
       // setIsPlacholder(true);
-      setFailed(true);
-      setLoading(false);
+      // setFailed(true);
+      // setLoading(false);
+
+      stopLoading(true);
     };
 
     // if (props.type === "token") {
@@ -103,6 +122,10 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
     // crypto logos
     // https://cryptologos.cc/logos/
     // img.src = `https://cryptologos.cc/logos/${props.name.toLowerCase()}-${props.size}.png?v=010`;
+
+    return () => {
+      clearTimeout(timer.current);
+    };
   }, [props.type, props.symbol, props.name, props.id]);
 
   const icon = useMemo(() => {

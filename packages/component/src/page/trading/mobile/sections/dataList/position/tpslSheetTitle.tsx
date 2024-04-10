@@ -15,7 +15,7 @@ export const TPSLSheetTitle = () => {
     ) {
       setTitle("Position TP/SL");
     } else {
-      setTitle("PL / SL");
+      setTitle("TP / SL");
     }
   }, [(state as any).type]);
 

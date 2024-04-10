@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { API } from "@orderly.network/types";
-import { BaseAlgoOrderCreator } from "./baseAlgoCreator";
+import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 
@@ -24,7 +24,7 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
     const child_orders = [];
 
     if (typeof values.tp_trigger_price !== "undefined") {
-      const tp_trigger_price = !!values.sl_trigger_price
+      const tp_trigger_price = !!values.tp_trigger_price
         ? new Decimal(values.tp_trigger_price)
             .todp(config.symbol.quote_dp)
             .toNumber()
@@ -76,7 +76,10 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
      */
     oldValue: API.AlgoOrder,
     config: ValuesDepConfig
-  ) {
+  ): [
+    { child_orders: AlgoOrderUpdateEntity[] },
+    AlgoOrderEntity<AlgoOrderRootType.POSITIONAL_TP_SL>
+  ] {
     const data = this.create(values, config);
     const newData: {
       trigger_price?: number;
@@ -105,8 +108,11 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
       }
     });
 
-    return {
-      child_orders: newData,
-    };
+    return [
+      {
+        child_orders: newData,
+      },
+      data,
+    ];
   }
 }

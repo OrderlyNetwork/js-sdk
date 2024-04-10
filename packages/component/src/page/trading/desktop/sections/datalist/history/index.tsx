@@ -46,7 +46,7 @@ export const HistoryView = () => {
     state.status < AccountStatusEnum.EnableTrading || !data ? [] : data
   );
 
-  console.log("formattedData", isLoading);
+  // console.log("formattedData", formattedData);
 
   return (
     <HistoryListViewFull

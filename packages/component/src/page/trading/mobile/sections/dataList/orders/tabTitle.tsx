@@ -19,10 +19,10 @@ export const OrdersTabTitle: FC<{
   );
 
   if (total === 0) {
-    return <>{"Pending"}</>;
+    return <>Pending</>;
   }
 
-  return <>{`Pending (${total})`}</>;
+  return <>{`Pending(${total})`}</>;
 };
 
 export const MemoizedOrdersTabTitle = memo(OrdersTabTitle);

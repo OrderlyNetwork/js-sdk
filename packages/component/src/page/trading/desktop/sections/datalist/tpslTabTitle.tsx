@@ -17,7 +17,7 @@ export const TPSLTabTitle = () => {
     return <>{"TP/SL"}</>;
   }
 
-  return <>{`TP/SL (${total})`}</>;
+  return <>{`TP/SL(${total})`}</>;
 };
 
 export const MemoizedTPSLTabTitle = memo(TPSLTabTitle);

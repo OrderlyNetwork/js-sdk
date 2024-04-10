@@ -60,6 +60,7 @@ export const AlgoOrderConfirmView: FC<{
   }, [order]);
 
   const qty = useMemo(() => {
+    console.log("********", order.algo_type);
     if (order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
       return "Entire position";
     }

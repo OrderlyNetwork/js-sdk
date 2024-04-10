@@ -6,7 +6,7 @@ import { firstLetterToUpperCase, upperCaseFirstLetter } from "@/utils/string";
 import { API } from "@orderly.network/types";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
-import { TPSLOrderTag } from "../orders/useTPSLTag";
+import { OrderTypeTag } from "./typeTag";
 
 interface HistoryCellProps {
   item: any;
@@ -58,7 +58,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               <Text rule="symbol">{item.symbol}</Text>
             </div>
           </div>
-          <TPSLOrderTag order={item} />
+          <OrderTypeTag order={item} />
         </div>
         <div className="orderly-text-4xs orderly-text-base-contrast-36">
           <Text rule="date">{item.created_time}</Text>

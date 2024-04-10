@@ -122,38 +122,41 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
-    console.log("updateOrder", key, value, position.position_qty);
-    const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
+    console.log("[updateOrder:]", key, value, order.quantity);
 
-    if (key === "sl_pnl") {
-      value = value ? `-${value}` : "";
-    }
+    setOrder((prev) => {
+      const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
 
-    const newValue = calculateHelper(
-      key,
-      {
-        key,
-        value,
-        entryPrice: position.average_open_price!,
-        qty:
-          side === OrderSide.BUY
-            ? Number(order.quantity)!
-            : -Number(order.quantity)!,
-        orderSide: side,
-      },
-      {
-        symbol: symbolInfo,
+      if (key === "sl_pnl") {
+        value = value ? `-${value}` : "";
       }
-    );
 
-    setOrder((prev) => ({
-      ...prev,
-      ...newValue,
-      ignoreValidate: options?.ignoreValidate,
-    }));
+      const newValue = calculateHelper(
+        key,
+        {
+          key,
+          value,
+          entryPrice: position.average_open_price!,
+          qty:
+            side === OrderSide.BUY
+              ? Number(prev.quantity)!
+              : -Number(prev.quantity)!,
+          orderSide: side,
+        },
+        {
+          symbol: symbolInfo,
+        }
+      );
+
+      return {
+        ...prev,
+        ...newValue,
+        ignoreValidate: options?.ignoreValidate,
+      };
+    });
   };
 
-  const setOrderValue = (
+  const setOrderValue = async (
     key: string,
     value: number | string,
     options?: {
@@ -255,6 +258,11 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   const getOrderCreator = () => {
+    // if the order is existed, and the order type is POSITIONAL_TP_SL, always return POSITIONAL_TP_SL
+    // else use qty to determine the order type
+    if (options?.defaultOrder?.algo_type === AlgoOrderRootType.TP_SL) {
+      return OrderFactory.create(AlgoOrderRootType.TP_SL);
+    }
     return OrderFactory.create(
       compare() ? AlgoOrderRootType.POSITIONAL_TP_SL : AlgoOrderRootType.TP_SL
     );
@@ -310,19 +318,19 @@ export const useTaskProfitAndStopLossInternal = (
   const updateOrder = (orderId: number): Promise<any> => {
     const orderCreator = getOrderCreator() as TPSLPositionOrderCreator;
 
-    const newOrder = orderCreator.crateUpdateOrder(
+    const [updatedOrderEntity, orderEntity] = orderCreator.crateUpdateOrder(
       // @ts-ignore
       order,
       options?.defaultOrder,
       valueConfig
     );
 
-    if (newOrder.child_orders.length === 0) {
+    if (updatedOrderEntity.child_orders.length === 0) {
       return Promise.resolve("Not any order needs to update");
     }
 
     const needDelete =
-      newOrder.child_orders.filter(
+      orderEntity.child_orders.filter(
         (order) =>
           typeof order.is_activated === "boolean" && !order.is_activated
       ).length === 2;
@@ -333,7 +341,7 @@ export const useTaskProfitAndStopLossInternal = (
 
     return doUpdateOrder({
       order_id: orderId,
-      ...newOrder,
+      ...updatedOrderEntity,
     });
   };
 
