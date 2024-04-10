@@ -25,7 +25,7 @@ export const RebateList: FC<{
             {
                 title: "Date",
                 dataIndex: "created_time",
-                className: "orderly-h-[52px]",
+                className: "orderly-h-[52px] orderly-px-0",
                 width: 110,
                 render: (value, record) => (
                     <div>
@@ -47,7 +47,7 @@ export const RebateList: FC<{
             {
                 title: "Trading vol. (USDC)",
                 dataIndex: "vol",
-                className: "orderly-h-[52px]",
+                className: "orderly-h-[52px] orderly-px-0",
                 align: "right",
                 render: (value, record) => (
                     <Numeral precision={2} prefix="$">
@@ -84,7 +84,7 @@ export const RebateList: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-36 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-36 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-px-0"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
