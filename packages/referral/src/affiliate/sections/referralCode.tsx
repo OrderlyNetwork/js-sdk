@@ -109,7 +109,7 @@ export const CodeList: FC<{
     }
 
     const getCount = (item: API.ReferralCode) => {
-        return `${refCommify(item.total_invites)} / ${refCommify(item.total_traded)}`;
+        return `${(item.total_invites)} / ${(item.total_traded)}`;
     }
 
     const columns = useMemo<Column[]>(() => {
@@ -140,7 +140,8 @@ export const CodeList: FC<{
                         }} />
                         <span className="orderly-text-ellipsis overflow-hidden">{value}</span>
                         <CopyIcon
-                            className="orderly-mr-3 orderly-cursor-pointer"
+                            fillOpacity={1}
+                            className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-20 hover:orderly-fill-base-contrast-80"
                             onClick={() => copyText(value)}
                         />
                     </div>
@@ -153,7 +154,7 @@ export const CodeList: FC<{
                 // width: isXL ? 132 : 146,
                 align: "right",
                 render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-1 orderly-justify-end">
+                    <div className="orderly-flex orderly-gap-1 orderly-justify-end orderly-items-center">
                         <span>
                             {getRate(record)}
                         </span>
@@ -241,7 +242,7 @@ export const CodeList: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-px-0"
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-pl-0 orderly-pr-2"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}

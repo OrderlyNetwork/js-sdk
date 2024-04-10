@@ -144,7 +144,7 @@ const _BigReferees: FC<{
             height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
             <Table
-                bordered
+                // bordered
                 justified
                 showMaskElement={false}
                 columns={columns}
@@ -229,13 +229,13 @@ export const RefereesCell: FC<{
 
 
     return (
-        <div className="orderly-my-3">
+        <div className="orderly-pb-4 orderly-pt-1">
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-w-[159px]", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
                 {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-w-[159px]", "price", "right")}
             </div>
-            <div className="orderly-flex orderly-my-3">
+            <div className="orderly-flex orderly-mt-3">
                 {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-w-[159px]", "price",)}
                 {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
             </div>

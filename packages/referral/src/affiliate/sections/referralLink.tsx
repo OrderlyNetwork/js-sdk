@@ -123,7 +123,7 @@ const Info: FC<{
 
     return (
         <div className={className}>
-            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px]"}>
+            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px] orderly-text-base-contrast-54"}>
                 {title}
                 <Tooltip content={tooltip} className="orderly-max-w-[200px]">
                     <div onClick={() => {
