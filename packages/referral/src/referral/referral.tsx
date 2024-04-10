@@ -26,7 +26,7 @@ export const Referral = () => {
             {text: ' affiliate'},
           ]} />
         </div>
-        <div className="orderly-mt-8 orderly-text-sm md:orderly-text-base lg:orderly-text-lg xl:orderly-text-lg 2xl:orderly-text-xl">
+        <div className="orderly-mt-8 orderly-text-sm md:orderly-text-base lg:orderly-text-lg xl:orderly-text-lg 2xl:orderly-text-xl orderly-text-base-contrast-80">
           Grow your brand | Get 40% commission | Unlock exclusive perks
         </div>
         <div className="orderly-flex orderly-justify-center">
@@ -38,11 +38,11 @@ export const Referral = () => {
                 handleOpenNewTab(learnAffiliateUrl);
               }
             }}
-            className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary"
+            className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-link"
           >
             <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs orderly-items-center">
               Learn how it works
-              <ArrowRightIcon className="orderly-ml-2 orderly-fill-primary" fillOpacity={1}/>
+              <ArrowRightIcon className="orderly-ml-2 orderly-fill-link" fillOpacity={1}/>
             </div>
           </button>
         </div>

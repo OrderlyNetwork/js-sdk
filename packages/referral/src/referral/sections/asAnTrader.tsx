@@ -23,7 +23,7 @@ export const AsAnTrader = () => {
         <div className="orderly-mt-3 orderly-text-[24px] lg:orderly-txt-[26px] 2xl:orderly-text-[30[px] orderly-flex orderly-justify-between orderly-items-end">
 
           <div>
-            <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-[18px]">Rebate (USDC)</div>
+            <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-[18px] orderly-text-base-contrast-80">Rebate (USDC)</div>
             <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-mt-3">
               <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
                 <USDCIcon width={"100%"} height={"100%"} />
@@ -46,14 +46,14 @@ export const AsAnTrader = () => {
         <Button
           id="referral_as_a_trader_btn"
           onClick={enterCode}
-          className="orderly-bg-white orderly-text-base-900 xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
+          className="orderly-bg-white xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px] orderly-text-[#282E3A]"
         >
           Enter code
         </Button>
 
         <div>
           <div className="orderly-text-[22px] md:orderly-text-[24px] lg:orderly-text-[26px] xl:orderly-text-[26px] 2xl:orderly-text-[28px]">0%~20%</div>
-          <div className="orderly-text-3xs 2xl:orderly-text-xs orderly-text-right">Rebate</div>
+          <div className="orderly-text-3xs 2xl:orderly-text-xs orderly-text-right orderly-text-base-contrast-54">Rebate</div>
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ export const AsAnTrader = () => {
       <div className="orderly-flex orderly-justify-between">
         <div className="orderly-justify-between">
           <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">{isTrader ? 'Trader' : 'As a trader'}</div>
-          {!isTrader && <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">
+          {!isTrader && <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
             Get fee rebates on every trade
           </div>}
         </div>

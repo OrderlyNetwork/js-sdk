@@ -27,7 +27,7 @@ export const AsAnAffiliate = () => {
       return (
         <div className="orderly-mt-3 orderly-text-[24px] lg:orderly-txt-[26px] 2xl:orderly-text-[30[px] orderly-flex orderly-justify-between orderly-items-end">
           <div>
-            <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-[18px]">Commission (USDC)</div>
+            <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-[18px] orderly-text-base-contrast-80">Commission (USDC)</div>
             <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-mt-3">
               <div className="orderly-mr-3 orderly-w-[28px] orderly-h-[28px] xl:orderly-w-[32px] xl:orderly-h-[32px] 2xl:orderly-w-[36px] 2xl:orderly-h-[36px]">
                 <USDCIcon width={"100%"} height={"100%"} />
@@ -50,14 +50,14 @@ export const AsAnAffiliate = () => {
         <Button
           id="referral_become_an_affiliate_btn"
           onClick={onClickAffiliate}
-          className="orderly-bg-white orderly-text-base-900 xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
+          className="orderly-bg-white orderly-text-[#282E3A] xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
         >
           Become an affiliate
         </Button>
 
         <div>
           <div className="orderly-text-[22px] md:orderly-text-[24px] lg:orderly-text-[26px] xl:orderly-text-[26px] 2xl:orderly-text-[28px]">40%~80%</div>
-          <div className="orderly-text-3xs 2xl:orderly-text-xs orderly-text-right">Commission</div>
+          <div className="orderly-text-3xs 2xl:orderly-text-xs orderly-text-right orderly-text-base-contrast-54">Commission</div>
         </div>
       </div>
     );
