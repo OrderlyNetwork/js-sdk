@@ -27,7 +27,7 @@ export const SummaryFilter: FC<{
         <DropdownMenuTrigger >
             <div
                 ref={triggerRef}
-                className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px] orderly-bg-base-400 orderly-rounded-md orderly-h-[24px] orderly-text-2xs orderly-text-base-contrast-80"
+                className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px] orderly-bg-base-500 orderly-outline orderly-outline-1 orderly-outline-base-400 orderly-rounded-md orderly-h-[24px] orderly-text-2xs orderly-text-base-contrast-80"
             >
                 <HistoryIcon />
                 <span>{curType}</span>
@@ -35,7 +35,7 @@ export const SummaryFilter: FC<{
             </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-            className="orderly-bg-base-700 orderly-px-0"
+            className="orderly-bg-base-800 orderly-px-0 orderly-pt-2"
             // onFocusCapture={(e) => e.preventDefault()}
             align="start"
             style={{ minWidth: `${width}px` }}
@@ -45,7 +45,7 @@ export const SummaryFilter: FC<{
                 return (
                     <DropdownMenuItem
                         key={index}
-                        className={cn("orderly-cursor-pointer orderly-text-base-contrast/60 hover:orderly-bg-base-500 orderly-text-3xs desktop:orderly-text-2xs", curType === item && "orderly-text-base-contrast")}
+                        className={cn("orderly-cursor-pointer orderly-text-base-contrast/60 hover:orderly-bg-base-600 orderly-text-3xs desktop:orderly-text-2xs orderly-h-[24px]", curType === item && "orderly-text-base-contrast")}
                         onSelect={(event) => {
                             onClick?.(item);
                         }}
@@ -56,24 +56,4 @@ export const SummaryFilter: FC<{
             })}
         </DropdownMenuContent>
     </DropdownMenu>);
-
-    // return (
-
-    //     <div className="orderly-flex orderly-items-center orderly-h-[24px] orderly-bg-base-300 orderly-px-2 orderly-rounded-sm">
-    //         <HistoryIcon />
-    //         <Select
-    //             options={types.map((e) => ({ value: e, label: e }))}
-    //             fullWidth
-    //             // size={"small"}
-    //             value={curType}
-    //             className="orderly-text-4xs orderly-text-base-contrast-54 orderly-ml-2 orderly-h-[24px] orderly-px-0 orderly-bg-trasparent"
-    //             contentClassName="orderly-bg-base-500 orderly-px-0 "
-    //             onChange={(value: any) => {
-    //                 props.onClick?.(value);
-    //             }}
-    //             color={"default"}
-    //         />
-    //     </div>
-
-    // );
 }
