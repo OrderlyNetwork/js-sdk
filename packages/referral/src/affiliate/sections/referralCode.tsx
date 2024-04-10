@@ -244,11 +244,16 @@ export const CodeList: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-pl-0 orderly-pr-2"
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-pl-0 orderly-pr-2 orderly-border-[rgba(255,255,255,0.04)]"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
+                onRow={(rec, index) => {
+                    return {
+                        className: "orderly-border-[rgba(255,255,255,0.04)]"
+                    };
+                }}
             />
 
             {

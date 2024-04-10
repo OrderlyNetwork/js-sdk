@@ -150,7 +150,7 @@ const _BigReferees: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-mt-0"
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-mt-0 orderly-border-[rgba(255,255,255,0.12)]"
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
@@ -159,6 +159,11 @@ const _BigReferees: FC<{
                     if (!props.isLoading) {
                         props.loadMore();
                     }
+                }}
+                onRow={(rec, index) => {
+                    return {
+                        className: "orderly-border-[rgba(255,255,255,0.04)]"
+                    };
                 }}
             />
 
