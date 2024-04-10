@@ -19,7 +19,7 @@ export const Referral = () => {
   return (
     <div className="orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4 orderly-text-base-contrast">
       <div className="orderly-text-center">
-        <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px]" style={{lineHeight: "normal"}}>
+        <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px] orderly-font-bold" style={{lineHeight: "normal"}}>
           <GradientText texts={[
             {text: 'Earn more as a '},
             {text: `${brokerName}`, gradient: true},
