@@ -13,6 +13,7 @@ import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
 import { formatYMDTime, generateData } from "../../utils/utils";
 import { Decimal, commify } from "@orderly.network/utils";
+import { RefFilterMenu } from "../../components/refFilterMenu";
 
 type ChartDataType = "Rebate" | "Volume";
 
@@ -32,7 +33,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
             if (screenWidth >= 1440) {
                 newMaxCount = 14;
             }
-            
+
             setMaxCount(newMaxCount);
         }
 
@@ -44,7 +45,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         };
     }, []);
 
-    
+
 
     const dataSource = useMemo(() => {
 
@@ -105,25 +106,12 @@ const _FilterData: FC<{
     onClick?: (type: ChartDataType) => void,
 }> = (props) => {
 
-    const [open, setOpen] = useState(false);
     const { curType, onClick } = props;
-
-    const types: ChartDataType[] = ["Rebate", "Volume"];
-
-    return (
-        <Select
-            options={types.map((e) => ({ value: e, label: e, className: "hover:orderly-bg-base-600 orderly-h-[24px]" }))}
-            fullWidth
-            // size={"small"}
-            value={curType}
-            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[80px] orderly-bg-base-500 orderly-h-[24px] orderly-outline orderly-outline-1 orderly-outline-base-400"
-            contentClassName="!orderly-bg-base-800 orderly-px-0"
-            onChange={(value: any) => {
-                props.onClick?.(value);
-            }}
-            color={"default"}
-        />
-    );
+    return <RefFilterMenu
+        curType={`${curType}`}
+        onClick={(e: any) => onClick?.(e)}
+        types={["Rebate", "Volume"]}
+    />;
 }
 
 

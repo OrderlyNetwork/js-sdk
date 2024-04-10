@@ -243,7 +243,9 @@ export const RefereesCell: FC<{
             </div>
             <div className="orderly-flex orderly-mt-3">
                 {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-w-[159px]", "price",)}
-                {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
+                {buildNode("Invication time", invicationTime, "orderly-flex-1", "text", "right")}
+                {buildNode("", (<></>), "orderly-w-[159px]", "price", "right")}
+
             </div>
             <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0"/>
         </div>
