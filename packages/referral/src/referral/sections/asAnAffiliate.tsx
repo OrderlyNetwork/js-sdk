@@ -69,14 +69,14 @@ export const AsAnAffiliate = () => {
       id="dashboard_affiliate_container"
       className="orderly-rounded-xl orderly-w-full orderly-p-6 orderly-bg-gradient-to-t orderly-from-referral-bg-from orderly-to-referral-bg-to orderly-h-[195px] lg:orderly-h-[199px] xl:orderly-h-[216px] 2xl:orderly-h-[248px] orderly-flex orderly-flex-col orderly-justify-between"
     >
-      <div className="orderly-flex orderly-justify-between">
+      <div className="orderly-flex orderly-justify-between orderly-relative">
         <div className="orderly-justify-between">
           <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">{isAffiliate ? 'Affiliate' : 'As an affiliate'}</div>
           {!isAffiliate && <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
             Onboard traders to earn passive income
           </div>}
         </div>
-        <ReferralIcon className="orderly-w-[72px] orderly-h-[72px] lg:orderly-w-[64px] lg:orderly-h-[64px] xl:orderly-w-[90px] xl:orderly-h-[90px] 2xl:orderly-w-[120px] 2xl:orderly-h-[120px]" />
+        <ReferralIcon className="orderly-absolute orderly-top-0 orderly-right-0 orderly-w-[72px] orderly-h-[72px] lg:orderly-w-[64px] lg:orderly-h-[64px] xl:orderly-w-[90px] xl:orderly-h-[90px] 2xl:orderly-w-[120px] 2xl:orderly-h-[120px]" />
       </div>
 
       {bottomInfo}
