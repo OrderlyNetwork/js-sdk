@@ -29,7 +29,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
             const index = referralCodes.findIndex((item) => item.code === code);
             if (index !== -1) {
 
-                pinedItems.push({ ...referralCodes[index]});
+                pinedItems.push({ ...referralCodes[index] });
                 referralCodes.splice(index, 1);
             }
 
@@ -62,7 +62,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
     }, [
         firstCode?.referrer_rebate_rate
     ]);
-    
+
     const share = useMemo(() => {
         const value = new Decimal(firstCode?.referee_rebate_rate || "0").mul(100).toDecimalPlaces(0, Decimal.ROUND_DOWN).toString();
         return `${value}%`
@@ -86,7 +86,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                             { text: earn, gradient: true },
                             { text: " WOOFi Pro net fee that deduct Orderly fee." },
                         ]} />}
-                        // valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
+                    // valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
                     />
                     <Info
                         title="Share"
@@ -102,7 +102,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
 
                 <div className="lg:orderly-flex-1 orderly-flex orderly-flex-col orderly-gap-2">
                     <CopyInfo title="Referral code" value={firstCode?.code || ""} copyText={firstCode?.code || ""} />
-                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} className="orderly-leading-4"/>)} copyText={referralLink} />
+                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} className="orderly-leading-4" />)} copyText={referralLink} />
 
                 </div>
 
@@ -130,17 +130,19 @@ const Info: FC<{
                         modal.alert({
                             title: title,
                             message: (
-                              <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">
-                                {tooltip}
-                              </div>
+                                <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">
+                                    {tooltip}
+                                </div>
                             ),
-                          });
-                    }} ><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>
+                        });
+                    }} >
+                        <HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer orderly-mt-[1px]" fillOpacity={1} />
+                    </div>
                 </Tooltip>
             </div>
             <div className={cn("orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px] orderly-mt-1 orderly-h-[32px] md:orderly-h-[34px] xl:orderly-h-[36px]", props.valueClassName)}>
-                    {value}
-                
+                {value}
+
 
                 {/* <GradientText texts={[{ text: value, gradient: gradient }]} /> */}
             </div>
