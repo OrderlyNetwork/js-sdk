@@ -71,7 +71,7 @@ export const Summary: FC<{ className?: string }> = (props) => {
             </div>
 
             <div>
-                <Item title="Referral vol. (USDC)" value={referralVol} className="orderly-mt-0" />
+                <Item title="Referral vol. (USDC)" value={referralVol} className="orderly-mt-0" dp={2} />
                 <Item title="Referees" value={referees} />
                 <Item title="Referees that traded" value={refereesTades} />
             </div>
@@ -80,8 +80,8 @@ export const Summary: FC<{ className?: string }> = (props) => {
 }
 
 
-const Item: FC<{ title: string, value: any, className?: string }> = (props) => {
-    const { title, value, className } = props;
+const Item: FC<{ title: string, value: any, className?: string, dp?: number }> = (props) => {
+    const { title, value, className, dp = 0 } = props;
 
     return (
         <div className={cn("orderly-flex orderly-justify-between orderly-items-center orderly-mt-2", className)}>
@@ -89,7 +89,7 @@ const Item: FC<{ title: string, value: any, className?: string }> = (props) => {
                 {title}
             </div>
 
-            <Numeral className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{value || 0}</Numeral>
+            <Numeral precision={dp} className="orderly-text-2xs md:orderly-text-xs lg:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base">{value || 0}</Numeral>
         </div>
     );
 };
