@@ -16,7 +16,7 @@ export const SummaryFilter: FC<{
     const { curType, onClick } = props;
     const types: FilterType[] = ["1D", "7D", "30D", "All"];
 
-    const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+    const triggerRef = React.useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         if (triggerRef.current) {
             setWidth(triggerRef.current.offsetWidth);
@@ -25,17 +25,17 @@ export const SummaryFilter: FC<{
 
     return (<DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
         <DropdownMenuTrigger >
-            <button
+            <div
                 ref={triggerRef}
                 className="orderly-flex orderly-items-center orderly-justify-between orderly-gap-2 orderly-px-2 orderly-py-[6px] orderly-bg-base-400 orderly-rounded-md orderly-h-[24px] orderly-text-2xs orderly-text-base-contrast-80"
             >
                 <HistoryIcon />
                 <span>{curType}</span>
                 <TriangleDownIcon />
-            </button>
+            </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-            className="orderly-bg-base-800 orderly-px-0"
+            className="orderly-bg-base-700 orderly-px-0"
             // onFocusCapture={(e) => e.preventDefault()}
             align="start"
             style={{ minWidth: `${width}px` }}
@@ -45,7 +45,7 @@ export const SummaryFilter: FC<{
                 return (
                     <DropdownMenuItem
                         key={index}
-                        className={cn("orderly-text-base-contrast/60 hover:orderly-bg-base-700 orderly-text-3xs desktop:orderly-text-2xs", curType === item && "orderly-text-base-contrast")}
+                        className={cn("orderly-cursor-pointer orderly-text-base-contrast/60 hover:orderly-bg-base-500 orderly-text-3xs desktop:orderly-text-2xs", curType === item && "orderly-text-base-contrast")}
                         onSelect={(event) => {
                             onClick?.(item);
                         }}

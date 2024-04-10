@@ -24,6 +24,8 @@ import React from "react";
 export type SelectOption = {
   value: string | number;
   label: string;
+  className?: string;
+  activeClassName?: string;
 };
 
 const selectVariants = cva(
@@ -179,7 +181,9 @@ const Select: FC<SelectProps> = ({
                 option.value === props.value &&
                   (color === "buy"
                     ? "orderly-text-trade-profit"
-                    : (color === "sell" ? "orderly-text-trade-loss" : "orderly-text-base-contract"))
+                    : (color === "sell" ? "orderly-text-trade-loss" : "orderly-text-base-contract")),
+                    option.className,
+                    option.value === props.value && option.activeClassName,
               )}
               onSelect={(evnet) => {
                 // @ts-ignore

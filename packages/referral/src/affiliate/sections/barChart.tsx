@@ -70,12 +70,12 @@ const _FilterData: FC<{
 
     return (
         <Select
-            options={types.map((e) => ({ value: e, label: e }))}
+            options={types.map((e) => ({ value: e, label: e, className: "hover:orderly-bg-base-500" }))}
             fullWidth
             // size={"small"}
             value={curType}
-            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[105px] orderly-bg-base-700"
-            contentClassName="orderly-bg-base-800 orderly-px-0"
+            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[105px] orderly-bg-base-500"
+            contentClassName="orderly-bg-base-700 orderly-px-0"
             onChange={(value: any) => {
                 props.onClick?.(value);
             }}
