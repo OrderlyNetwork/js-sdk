@@ -46,7 +46,7 @@ export const AsAnTrader = () => {
         <Button
           id="referral_as_a_trader_btn"
           onClick={enterCode}
-          className="orderly-bg-white xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px] orderly-text-[#282E3A]"
+          className="orderly-bg-white xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px] xl:orderly-h-[54px] orderly-text-[#282E3A]"
         >
           Enter code
         </Button>

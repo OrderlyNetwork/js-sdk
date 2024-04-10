@@ -50,7 +50,7 @@ export const AsAnAffiliate = () => {
         <Button
           id="referral_become_an_affiliate_btn"
           onClick={onClickAffiliate}
-          className="orderly-bg-white orderly-text-[#282E3A] xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px]"
+          className="orderly-bg-white orderly-text-[#282E3A] xl:orderly-text-lg 2xl:orderly-text-lg orderly-px-3 orderly-h-[44px] xl:orderly-h-[54px]"
         >
           Become an affiliate
         </Button>
