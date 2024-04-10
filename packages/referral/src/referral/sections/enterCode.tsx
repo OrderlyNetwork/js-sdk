@@ -75,7 +75,7 @@ export const ReferralInputCode = create<{
     <Dialog open={visible} onOpenChange={onOpenChange}>
       <DialogContent
 
-        className="orderly-p-5 "
+        className="orderly-p-6 orderly-bg-base-800"
         maxWidth={"lg"}
         closable
       >
@@ -91,12 +91,12 @@ export const ReferralInputCode = create<{
           <div className="orderly-text-xs orderly-text-base-contrast-54">
             Bind a referral code to earn trading fee rebates.
           </div>
-          <div className="orderly-text-xs orderly-text-base-contrast-54 orderly-mt-6">
+          <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-6">
             Enter referral code
           </div>
 
           <Input
-            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-800"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
             placeholder="Enter code"
             value={code}
             onChange={(e) => {
@@ -118,7 +118,7 @@ export const ReferralInputCode = create<{
             id="referral_bind_referral_code_btn"
             disabled={code.length == 0 || errorInfo.length > 0}
             loading={isMutating}
-            className="orderly-my-6"
+            className="orderly-mt-6 orderly-mb-4"
             onClick={(e) => {
               e.stopPropagation();
               onClickConfirm();
