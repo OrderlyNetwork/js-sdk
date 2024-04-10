@@ -1,7 +1,6 @@
 import { Numeral } from "@/text/numeral";
 import { utils } from "@orderly.network/hooks";
 import { API, AlgoOrderType, OrderSide } from "@orderly.network/types";
-import { Minus, Plus } from "lucide-react";
 import { FC } from "react";
 
 export const TriggerPriceItem: FC<{
@@ -42,7 +41,7 @@ export const TriggerPriceItem: FC<{
         }
         prefix={
           // @ts-ignore
-          <span>{pnl > 0 ? <Plus size={10} /> : <Minus size={10} />}</span>
+          <span>{pnl > 0 ? "+" : "-"}</span>
         }
         surfix={
           <span className="orderly-text-base-contrast-36 orderly-ml-1">

@@ -4,6 +4,7 @@ import {
 } from "@orderly.network/utils";
 import { parseNumber } from "@/utils/num";
 import { API } from "@orderly.network/types";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 export function getOrderExecutionReportMsg(
   data: API.AlgoOrder | API.Order,
@@ -18,7 +19,9 @@ export function getOrderExecutionReportMsg(
   const displaySide = capitalizeString(side);
   const displaySymbol = transSymbolformString(symbol);
   const displayQuantity =
-    base_dp === undefined
+    "algo_type" in data && data.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+      ? "Entire position"
+      : base_dp === undefined
       ? quantity
       : parseNumber(quantity, { precision: base_dp });
 

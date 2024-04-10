@@ -95,7 +95,7 @@ export const TPSLForm: FC<Props> = (props) => {
 
       if (
         tp?.trigger_price !== Number(order.tp_trigger_price) &&
-        !!order.tp_trigger_price
+        typeof typeof order.tp_trigger_price !== "undefined"
       ) {
         // return true;
         diff = 2;
@@ -103,7 +103,7 @@ export const TPSLForm: FC<Props> = (props) => {
 
       if (
         sl?.trigger_price !== Number(order.sl_trigger_price) &&
-        !!order.sl_trigger_price
+        typeof order.sl_trigger_price !== "undefined"
       ) {
         diff = 3;
       }
@@ -120,6 +120,18 @@ export const TPSLForm: FC<Props> = (props) => {
     order.quantity,
     props.oldOrder,
   ]);
+
+  const canSubmit = useMemo(() => {
+    if (
+      props.oldOrder?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+      Number(order.quantity) < maxQty &&
+      !order.tp_trigger_price &&
+      !order.sl_trigger_price
+    ) {
+      return false;
+    }
+    return dirty > 0 && !!order.quantity;
+  }, [dirty, order.quantity, maxQty, props.oldOrder]);
 
   const cleanQtyInput = () => {
     props.onChange("quantity", "");
@@ -348,7 +360,7 @@ export const TPSLForm: FC<Props> = (props) => {
           className={"orderly-flex-1 desktop:orderly-w-[98px]"}
           data-testid={"confirm"}
           onClick={props.onSubmit}
-          disabled={dirty <= 0}
+          disabled={!canSubmit}
         >
           Confirm
         </Button>

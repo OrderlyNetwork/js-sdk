@@ -1,5 +1,5 @@
 import { Input } from "@/input";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +9,7 @@ import {
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { cn } from "@/utils";
-import { commify } from "@orderly.network/utils";
+import { Decimal, commify } from "@orderly.network/utils";
 
 interface Props {
   type: "TP" | "SL";
@@ -37,6 +37,8 @@ export const PnlInput: FC<Props> = (props) => {
     PnLMode.PERCENTAGE
   );
 
+  const percentageSuffix = useRef<string>("");
+
   const key = useMemo(() => {
     switch (mode) {
       case PnLMode.OFFSET:
@@ -51,6 +53,8 @@ export const PnlInput: FC<Props> = (props) => {
   const value = useMemo(() => {
     const val = props.values[mode as keyof Props["values"]];
 
+    // console.log("val", val);
+
     if (val === "") return val;
 
     if (mode === PnLMode.PNL || mode === PnLMode.OFFSET) {
@@ -58,11 +62,16 @@ export const PnlInput: FC<Props> = (props) => {
     }
 
     if (mode === PnLMode.PERCENTAGE) {
-      return (Number(val) * 100).toFixed();
+      return `${new Decimal(val).mul(100).todp(2, 4).toString()}${
+        percentageSuffix.current
+      }`;
+      // return (Number(val) * 100).toFixed(2);
     }
 
     return val;
   }, [props.values, mode]);
+
+  const pnlNumber = Number(props.values.PNL);
 
   return (
     <Input
@@ -70,8 +79,10 @@ export const PnlInput: FC<Props> = (props) => {
       placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
       className={cn(
         "orderly-text-right orderly-text-sm orderly-caret-white",
-        Number(props.values.PNL) > 0
+        pnlNumber > 0
           ? "orderly-text-trade-profit"
+          : pnlNumber === 0
+          ? ""
           : "orderly-text-trade-loss"
       )}
       containerClassName={"desktop:orderly-bg-base-700 orderly-bg-base-500"}
@@ -121,10 +132,13 @@ export const PnlInput: FC<Props> = (props) => {
       }
       value={value}
       onValueChange={(value) => {
+        console.log("value", value);
         if (mode === PnLMode.PERCENTAGE && value !== "") {
-          value = Number(value) / 100;
+          percentageSuffix.current = value.endsWith(".") ? "." : "";
+          value = new Decimal(value).div(100).todp(4, 4).toNumber();
         }
         props.onChange(key, value);
+        // setInnerValue(value);
       }}
     />
   );
