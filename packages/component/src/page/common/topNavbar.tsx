@@ -1,4 +1,4 @@
-import { FC, useCallback, useContext, useMemo } from "react";
+import { FC, ReactNode, useCallback, useContext } from "react";
 import {
   StatusContext,
   WsNetworkStatus,
@@ -6,25 +6,35 @@ import {
 } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { WalletConnectSheet } from "@/block/walletConnect";
 import { OrderlyAppContext } from "@/provider/appProvider";
 import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
-import { CopyIcon } from "@/icon";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 
-interface Props {
-  // logo?: ReactNode;
-}
+export type TopNavbarProps = {
+  left: ReactNode;
+  right: ReactNode;
+  nav: ReactNode;
+};
 
-export const TopNavbar: FC<Props> = (props) => {
+export const TopNavbar: FC = (props) => {
   const { state } = useAccount();
-  const { errors, appIcons: logos, accountMenuItems, onClickAccountMenuItem } = useContext(OrderlyAppContext);
+  const {
+    errors,
+    accountMenuItems,
+    onClickAccountMenuItem,
+    topBar,
+    topBarProps,
+  } = useContext(OrderlyAppContext);
+
+  const { left, nav, right } = topBarProps || {};
+
   const { ws: wsStatus } = useContext(StatusContext);
 
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
     useContext(OrderlyAppContext);
+
   const onConnect = useCallback(() => {
     onWalletConnect().then(
       (result: { wallet: any; status: AccountStatusEnum }) => {
@@ -39,41 +49,40 @@ export const TopNavbar: FC<Props> = (props) => {
     );
   }, []);
 
-  const logoElement = useMemo(() => {
-    if (logos?.main?.component) {
-      return logos?.main?.component;
-    }
-    if (logos?.main?.img) {
-      return <img src={logos?.main?.img} />;
-    }
-    return null;
-  }, [logos?.main]);
-
   return (
     <>
-      <div className="orderly-h-[48px] orderly-flex">
-        <div className="orderly-flex-1">
-          <Logo />
-        </div>
+      {topBar || (
+        <div className="orderly-h-[48px] orderly-flex">
+          <div className="orderly-flex orderly-flex-1">
+            <Logo />
+            {left}
+            <div className="orderly-flex-1">{nav}</div>
+          </div>
 
-        <AccountStatus
-          status={state.status}
-          address={state.address}
-          chains={[]}
-          accountInfo={undefined}
-          className="orderly-mr-3"
-          onConnect={onConnect}
-          dropMenuItem={accountMenuItems}
-          onClickDropMenuItem={onClickAccountMenuItem}
-        />
-      </div>
-      {wsStatus === WsNetworkStatus.Unstable ? (
-        <WsStatus />
-      ) : (
-        errors?.ChainNetworkNotSupport && (
-          <ChainIdSwtich onSetChain={onSetChain} />
-        )
+          {right || (
+            <AccountStatus
+              status={state.status}
+              address={state.address}
+              chains={[]}
+              accountInfo={undefined}
+              className="orderly-mr-3"
+              onConnect={onConnect}
+              dropMenuItem={accountMenuItems}
+              onClickDropMenuItem={onClickAccountMenuItem}
+            />
+          )}
+        </div>
       )}
+
+      <div>
+        {wsStatus === WsNetworkStatus.Unstable ? (
+          <WsStatus />
+        ) : (
+          errors?.ChainNetworkNotSupport && (
+            <ChainIdSwtich onSetChain={onSetChain} />
+          )
+        )}
+      </div>
     </>
   );
 };
