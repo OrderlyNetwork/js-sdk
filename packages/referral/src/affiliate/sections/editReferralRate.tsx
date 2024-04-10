@@ -71,7 +71,7 @@ export const EditReferralRate = create<{
         <Dialog open={visible} onOpenChange={onOpenChange}>
             <DialogContent
 
-                className="orderly-p-5 orderly-max-w-[320px]"
+                className="orderly-px-6 orderly-max-w-[320px] orderly-bg-base-800 orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
                 maxWidth={"lg"}
                 closable
             >
@@ -87,15 +87,15 @@ export const EditReferralRate = create<{
                     <div className="orderly-text-xs orderly-text-base-contrast-54">
                         Set the ratio of referral rate shared with your referees
                     </div>
-                    <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-6 orderly-flex">
+                    <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-2 orderly-flex">
                         {`Your max commission rate: `}
                         <div className="orderly-text-warning orderly-pl-1">{`${code.max_rebate_rate * 100}%`}</div>
                     </div>
 
-                    <div className="orderly-text-2xs orderly-mt-6">You receive</div>
+                    <div className="orderly-text-2xs orderly-mt-6 orderly-text-base-contrast-80">You receive</div>
                     <Input
                         ref={inputRef}
-                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-900"
+                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
@@ -118,9 +118,9 @@ export const EditReferralRate = create<{
                     />
 
 
-                    <div className="orderly-text-2xs orderly-mt-6">Referee receives</div>
+                    <div className="orderly-text-2xs orderly-mt-6 orderly-text-base-contrast-80">Referee receives</div>
                     <Input
-                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-900"
+                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
@@ -151,7 +151,7 @@ export const EditReferralRate = create<{
                         id="referral_bind_referral_code_btn"
                         disabled={refereeRebateRate.length === 0 || referrerRebateRate.length === 0 || showError}
                         loading={isMutating}
-                        className="orderly-my-6"
+                        className="orderly-mt-6 orderly-mb-4"
                         onClick={(e) => {
                             e.stopPropagation();
                             onClickConfirm();
