@@ -95,8 +95,10 @@ export const CodeList: FC<{
 
 
     const isMD = useMediaQuery(MEDIA_MD);
-    const isXL = useMediaQuery(MEDIA_2XL);
-
+    const isXL = useMediaQuery("(min-width: 1024px)");
+    const is2XL = useMediaQuery("(min-width: 1440px)");
+    
+ 
 
     const { dataSource, copyLink, editRate } = props;
 
@@ -116,9 +118,8 @@ export const CodeList: FC<{
         const action: Column = {
             title: "Actions",
             dataIndex: "code",
-            className: "orderly-h-[48px] orderly-text-right",
+            className: "orderly-h-[48px] orderly-text-right orderly-w-[90px] 2xl:orderly-w-[120px]",
             align: "right",
-            width: isXL ? 90 : 120,
             render: (value, record) => (
                 <div className="orderly-flex orderly-justify-end">
                     <_CopyLink className="lg:orderly-w-[82px]"
@@ -150,8 +151,8 @@ export const CodeList: FC<{
             {
                 title: "You / Referee",
                 dataIndex: "referees",
-                className: "orderly-h-[48px]",
-                // width: isXL ? 132 : 146,
+                className: "orderly-h-[48px] ",
+                width: is2XL ? 146 : isXL ?134 : undefined,
                 align: "right",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-1 orderly-justify-end orderly-items-center">
@@ -169,7 +170,7 @@ export const CodeList: FC<{
 
         ];
 
-        if (!isXL) {
+        if (is2XL) {
             cols.push(
                 {
                     title: "Referees",
@@ -203,6 +204,7 @@ export const CodeList: FC<{
                     dataIndex: "referees",
                     className: "orderly-h-[48px]",
                     align: "right",
+                    width: is2XL ? 137 : isXL ?130 : undefined,
                     render: (value, record) => (
                         <div >
                             {getCount(record)}
