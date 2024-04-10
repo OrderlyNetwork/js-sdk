@@ -76,7 +76,7 @@ export const DashboardTab = () => {
                         Affiliate
                     </div>
                 )}>
-                <div className="orderly-mt-3"><Affiliate /></div>
+                <div className="orderly-mt-0"><Affiliate /></div>
             </TabPane>
         );
     }, [activeTab]);
@@ -92,7 +92,7 @@ export const DashboardTab = () => {
                     </div>
                 )}
             >
-                <div className="orderly-mt-3"><Trader /></div>
+                <div className="orderly-mt-0"><Trader /></div>
             </TabPane>
         );
     }, [activeTab]);
@@ -104,7 +104,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -122,7 +122,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -138,7 +138,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
