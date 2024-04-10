@@ -131,7 +131,7 @@ const _BigCommission: FC<{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
             <Table
-                // bordered
+                bordered
                 justified
                 showMaskElement={false}
                 columns={columns}

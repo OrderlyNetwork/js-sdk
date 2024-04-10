@@ -68,6 +68,7 @@ const _SmallReferees: FC<{
                 loadMore={loadMore}
                 renderItem={renderItem}
                 emptyView={<RefEmptyView />}
+                contentClassName="orderly-space-y-0"
             />
         </div>
     );
@@ -144,7 +145,7 @@ const _BigReferees: FC<{
             height: `${Math.min(600, Math.max(230, 42 + (dataSource || []).length * 56))}px`
         }}>
             <Table
-                // bordered
+                bordered
                 justified
                 showMaskElement={false}
                 columns={columns}
@@ -229,7 +230,7 @@ export const RefereesCell: FC<{
 
 
     return (
-        <div className="orderly-pb-4 orderly-pt-1">
+        <div className="orderly-pt-4">
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-w-[159px]", "address", "left", false, 12)}
                 {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
@@ -239,7 +240,7 @@ export const RefereesCell: FC<{
                 {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-w-[159px]", "price",)}
                 {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
             </div>
-
+            <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0"/>
         </div>
     );
 }

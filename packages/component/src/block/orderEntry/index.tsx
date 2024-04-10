@@ -550,7 +550,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           />
           <div
             className={cn(
-              "orderly-hidden desktop:orderly-flex orderly-justify-between -orderly-mt-2",
+              "orderly-hidden desktop:!orderly-flex orderly-justify-between -orderly-mt-2",
               {
                 "orderly-text-trade-profit": side === OrderSide.BUY,
                 "orderly-text-trade-loss": side === OrderSide.SELL,
