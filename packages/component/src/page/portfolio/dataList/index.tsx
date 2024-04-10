@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TabPane, Tabs } from "@/tab";
 import AssetHistory from "./assetHistory";
+import FundingFee from "./fundingFee";
 
 export enum EPortfolioTab {
   DepositsWithdrawals = "deposits_withdrawals",
@@ -9,9 +10,7 @@ export enum EPortfolioTab {
 }
 
 export const DataList = () => {
-  const [activeTab, setActiveTab] = useState<string>(
-    EPortfolioTab.DepositsWithdrawals
-  );
+  const [activeTab, setActiveTab] = useState<string>(EPortfolioTab.Funding);
 
   return (
     <Tabs
@@ -26,7 +25,7 @@ export const DataList = () => {
         <AssetHistory />
       </TabPane>
       <TabPane title="Funding" value={EPortfolioTab.Funding}>
-        <></>
+        <FundingFee />
       </TabPane>
       <TabPane title="Liquidations" value={EPortfolioTab.Liquidations}>
         <></>
