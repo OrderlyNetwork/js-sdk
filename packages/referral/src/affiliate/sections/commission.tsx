@@ -1,11 +1,8 @@
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
-import { EmptyView } from "@orderly.network/react";
-import { FC, ReactNode, useMemo } from "react";
-import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
+import { FC, useMemo } from "react";
 import { useCommission } from "../../hooks/useCommission";
-import { formatTime, formatYMDTime } from "../../utils/utils";
-import { refCommify } from "../../utils/decimal";
+import { formatYMDTime } from "../../utils/utils";
 import { RefEmptyView } from "../../components/icons/emptyView";
 
 
@@ -37,7 +34,7 @@ export const CommissionList: FC<{
     }
 
 
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767px)");
 
     return isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :

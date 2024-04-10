@@ -1,11 +1,8 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, EmptyView, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Table, cn } from "@orderly.network/react";
 import { FC, useMemo } from "react";
-import { MEDIA_MD } from "../../types/constants";
 import { RebatesItem } from "./rebates";
 import { formatYMDTime } from "../../utils/utils";
-import { commify } from "@orderly.network/utils";
-import { refCommify } from "../../utils/decimal";
 import { RefEmptyView } from "../../components/icons/emptyView";
 
 export const RebateList: FC<{
@@ -16,7 +13,7 @@ export const RebateList: FC<{
 }> = (props) => {
 
     const { className, dataSource, loadMore, isLoading } = props;
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767px)");
 
     const clsName = "orderly-px-3 orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 

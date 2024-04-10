@@ -3,7 +3,6 @@ import { useMediaQuery } from "@orderly.network/hooks";
 import { Rebates } from "./sections/rebates";
 import { Summary } from "./sections/summary";
 import { TraderTitle } from "./sections/traderTitle";
-import { MEDIA_LG, MEDIA_XL } from "../types/constants";
 import { BarChart } from "./sections/barChart";
 
 export const Trader = () => {

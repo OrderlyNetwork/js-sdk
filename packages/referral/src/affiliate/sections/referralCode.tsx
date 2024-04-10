@@ -1,16 +1,14 @@
-import { FC, useContext, useEffect, useMemo, useState } from "react";
-import { MEDIA_2XL, MEDIA_MD, MEDIA_XL } from "../../types/constants";
+import { FC, useContext, useMemo } from "react";
 import { Button, Column, Divider, EmptyView, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
-import { refCommify } from "../../utils/decimal";
 import { RefEmptyView } from "../../components/icons/emptyView";
 
 export type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
@@ -94,7 +92,7 @@ export const CodeList: FC<{
 }> = (props) => {
 
 
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767)");
     const isXL = useMediaQuery("(min-width: 1024px)");
     const is2XL = useMediaQuery("(min-width: 1440px)");
     

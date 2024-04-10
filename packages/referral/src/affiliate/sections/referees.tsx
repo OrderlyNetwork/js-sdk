@@ -1,13 +1,10 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Statistic, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
+import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
 import { FC, useCallback, useMemo } from "react";
-import { MEDIA_LG, MEDIA_MD, MEDIA_SM } from "../../types/constants";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
-import { formatTime, formatYMDTime, parseTime } from "../../utils/utils";
+import { formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
-import { commify } from "@orderly.network/utils";
-import { refCommify } from "../../utils/decimal";
 import { RefEmptyView } from "../../components/icons/emptyView";
 
 export const RefereesList: FC<{
@@ -17,8 +14,9 @@ export const RefereesList: FC<{
 
     const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
 
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767px)");
     const { dateText, setDateText } = props;
+    
 
     const dataSource = useMemo(() => {
         if (!data) return null;
@@ -188,9 +186,8 @@ export const RefereesCell: FC<{
 
     const { address, code, vol, totalCommission, invicationTime } = props;
 
-    const isSM = useMediaQuery(MEDIA_SM);
+    const isSM = useMediaQuery("(max-width: 479px)");
 
-    console.log("ssss is SM", isSM);
 
     const buildNode = useCallback((
         label: string,
@@ -237,14 +234,14 @@ export const RefereesCell: FC<{
     return (
         <div className="orderly-pt-4">
             <div className="orderly-flex">
-                {buildNode("Referee address", address, "orderly-w-[159px]", "address", "left", false, 12)}
-                {buildNode("Referee code", code, "orderly-flex-1", "text", "right")}
-                {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-w-[159px]", "price", "right")}
+                {buildNode("Referee address", address, "orderly-flex-1", "address", "left", false, 12)}
+                {buildNode("Referee code", code, "orderly-w-[90px]", "text", "right")}
+                {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-flex-1", "price", "right")}
             </div>
             <div className="orderly-flex orderly-mt-3">
-                {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-w-[159px]", "price",)}
-                {buildNode("Invication time", invicationTime, "orderly-flex-1", "text", "right")}
-                {buildNode("", (<></>), "orderly-w-[159px]", "price", "right")}
+                {buildNode("Total vol. (USDC)", (<Numeral precision={2} prefix="$">{vol || 0}</Numeral>), "orderly-flex-1", "price",)}
+                {buildNode("Invication time", invicationTime, "orderly-w-[90px]", "text", "right")}
+                {buildNode("", (<></>), "orderly-flex-1", "price", "right")}
 
             </div>
             <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0"/>

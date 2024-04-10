@@ -3,7 +3,6 @@ import { CommissionAndReferees } from "./sections/commissionAndReferees";
 import { ReferralCode } from "./sections/referralCode";
 import { ReferralLink } from "./sections/referralLink";
 import { Summary } from "./sections/summary";
-import { MEDIA_LG, MEDIA_XL } from "../types/constants";
 import { BarChart } from "./sections/barChart";
 
 export const Affiliate = () => {
