@@ -3,7 +3,7 @@ import { TriggerPriceType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
-import { BaseAlgoOrderCreator } from "./baseAlgoCreator";
+import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 
@@ -68,14 +68,12 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
     values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
     oldValue: API.AlgoOrder,
     config: ValuesDepConfig
-  ) {
+  ): [
+    { child_orders: AlgoOrderUpdateEntity[] },
+    AlgoOrderEntity<AlgoOrderRootType.TP_SL>
+  ] {
     const data = this.create(values, config);
-    const newData: {
-      trigger_price?: number;
-      order_id: number;
-      quantity?: number;
-      is_activated?: boolean;
-    }[] = [];
+    const newData: AlgoOrderUpdateEntity[] = [];
 
     const needUpdateQty = values.quantity !== oldValue.quantity;
 
@@ -120,8 +118,11 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
       }
     }
 
-    return {
-      child_orders: newData,
-    };
+    return [
+      {
+        child_orders: newData,
+      },
+      data,
+    ];
   }
 }

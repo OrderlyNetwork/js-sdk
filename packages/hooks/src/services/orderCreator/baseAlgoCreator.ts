@@ -7,6 +7,13 @@ import {
 } from "./interface";
 import { AlgoOrderRootType } from "@orderly.network/types";
 
+export type AlgoOrderUpdateEntity = {
+  trigger_price?: number;
+  order_id: number;
+  quantity?: number;
+  is_activated?: boolean;
+};
+
 export abstract class BaseAlgoOrderCreator<
   T extends AlgoOrderEntity<
     AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL

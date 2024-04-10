@@ -1,4 +1,4 @@
-import { OrderSide } from "../order";
+import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
 
 export declare namespace API {
   //v1/public/token
@@ -126,6 +126,7 @@ export declare namespace API {
     algo_order_id: number;
     root_algo_order_id: number;
     parent_algo_order_id: number;
+    parent_algo_type: AlgoOrderRootType;
     symbol: string;
     algo_type: string;
     child_orders: AlgoOrder[];
@@ -135,7 +136,7 @@ export declare namespace API {
     is_activated: boolean;
     trigger_price: number;
     trigger_price_type: string;
-    type: string;
+    type: OrderType;
     root_algo_status: string;
     algo_status: string;
     price?: number;

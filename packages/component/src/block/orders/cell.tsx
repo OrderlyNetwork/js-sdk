@@ -11,7 +11,7 @@ import { SymbolContext } from "@/provider";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { utils } from "@orderly.network/hooks";
 import { useTPSLOrderRowContext } from "../tp_sl/tpslOrderRowContext";
-import { TPSLOrderTag } from "./useTPSLTag";
+import { TPSLOrderTag } from "./orderTPSLTag";
 import { RegularCell } from "./cell.regular";
 import { TPSLCell } from "./cell.tpsl";
 

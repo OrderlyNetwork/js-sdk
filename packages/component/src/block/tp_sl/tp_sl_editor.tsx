@@ -104,7 +104,10 @@ export const TPSLEditor: FC<{
             const isRemove = !order.tp_trigger_price && !order.sl_trigger_price;
             if (isRemove) {
               setMode("delete");
-            } else if (order.algo_order_id) {
+            } else if (
+              !!order.algo_order_id &&
+              order.algo_type === orderEntity.algo_type
+            ) {
               setMode("update");
             } else {
               setMode("create");
@@ -189,7 +192,6 @@ export const TPSLEditor: FC<{
             tp_trigger_price={order.tp_trigger_price}
             sl_trigger_price={order.sl_trigger_price}
             symbol={symbol}
-            isTable={isTablet}
             oldOrder={props.order}
             onCancel={() => setOpen(false)}
             onConfirm={() => onSubmit()}

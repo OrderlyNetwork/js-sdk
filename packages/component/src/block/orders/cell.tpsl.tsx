@@ -1,18 +1,12 @@
 import { FC, Fragment, useMemo } from "react";
 import { Statistic } from "@/statistic/statistic";
-import { NumeralTotal } from "@/text/numeralTotal";
 import {
   API,
   AlgoOrderRootType,
   AlgoOrderType,
   OrderSide,
 } from "@orderly.network/types";
-import {
-  Popover,
-  PopoverArrow,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
 import { TriggerPriceItem } from "../positions/shared/triggerPrice";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTPSLOrderRowContext } from "../tp_sl/tpslOrderRowContext";

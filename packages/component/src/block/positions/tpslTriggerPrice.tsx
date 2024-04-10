@@ -41,11 +41,11 @@ export const TPSLTriggerPrice: FC<{
     if (keys.length === 0) return null;
 
     if (keys.length === 2) {
-      keys.splice(1, 0, "|");
+      keys.splice(1, 0, "/");
     }
 
     if (values.length === 2) {
-      values.splice(1, 0, <span>|</span>);
+      values.splice(1, 0, <span>/</span>);
     }
 
     return (

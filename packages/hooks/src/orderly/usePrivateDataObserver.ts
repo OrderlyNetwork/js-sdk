@@ -30,26 +30,6 @@ export const usePrivateDataObserver = (options: {
   ) => {
     const keysMap = options.getKeysMap("orders");
 
-    // console.log("$$$$$$$$$$$$", data, algoOrderCacheQuneue.current);
-
-    // if (isAlgoOrder) {
-    //   /// TODO: remove this when the WS service provides the correct data
-    //   if (algoOrderCacheQuneue.current.length) {
-    //     const index = algoOrderCacheQuneue.current.findIndex(
-    //       (item: any) =>
-    //         item.order_id === (data as WSMessage.AlgoOrder).algoOrderId
-    //     );
-
-    //     if (index > -1) {
-    //       data = {
-    //         ...data,
-    //         ...algoOrderCacheQuneue.current[index],
-    //       };
-    //       algoOrderCacheQuneue.current.splice(index, 1);
-    //     }
-    //   }
-    // }
-
     keysMap.forEach((getKey, key) => {
       mutate(
         unstable_serialize((index, prevData) => [
