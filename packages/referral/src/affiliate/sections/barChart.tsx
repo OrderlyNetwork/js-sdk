@@ -75,7 +75,7 @@ const _FilterData: FC<{
             // size={"small"}
             value={curType}
             className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[105px] orderly-bg-base-500 orderly-h-[24px] orderly-outline orderly-outline-1 orderly-outline-base-400"
-            contentClassName="orderly-bg-base-800 orderly-px-0 orderly-py-2"
+            contentClassName="!orderly-bg-base-800 orderly-px-0 orderly-py-2"
             onChange={(value: any) => {
                 props.onClick?.(value);
             }}

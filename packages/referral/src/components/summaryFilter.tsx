@@ -35,7 +35,7 @@ export const SummaryFilter: FC<{
             </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-            className="orderly-bg-base-800 orderly-px-0 orderly-pt-2"
+            className="!orderly-bg-base-800 orderly-px-0 orderly-pt-2"
             // onFocusCapture={(e) => e.preventDefault()}
             align="start"
             style={{ minWidth: `${width}px` }}
