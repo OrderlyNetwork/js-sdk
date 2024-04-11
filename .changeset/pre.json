@@ -21,6 +21,7 @@
     "@orderly.network/web3-modal": "1.2.0"
   },
   "changesets": [
+    "honest-cameras-hunt",
     "soft-plants-drop"
   ]
 }

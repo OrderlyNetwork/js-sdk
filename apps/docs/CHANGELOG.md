@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.2.11-internal.1
+
+### Patch Changes
+
+- fix
+- Updated dependencies
+  - @orderly.network/react@1.2.1-internal.1
+  - @orderly.network/web3-onboard@1.2.1-internal.1
+  - @orderly.network/hooks@1.2.1-internal.1
+  - @orderly.network/types@1.2.1-internal.1
+
 ## 0.2.11-internal.0
 
 ### Patch Changes
