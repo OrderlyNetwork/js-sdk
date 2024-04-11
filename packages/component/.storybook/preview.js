@@ -8,6 +8,7 @@ import injectedModule from "@web3-onboard/injected-wallets";
 import walletConnectModule from "@web3-onboard/walletconnect";
 import { CustomContractManager } from "./CustomContract";
 import { CustomConfigStore } from "./CustomConfigStore";
+import NavbarTab from "../src/page/common/navbarTab";
 import "../src/tailwind.css"; // tailwind css
 
 const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
@@ -106,6 +107,7 @@ const preview = {
                 img: "/orderly-logo-secondary.svg",
               },
             }}
+            topBarProps={{ nav: <NavbarTab /> }}
             footerStatusBarProps={{
               xUrl: "https://twitter.com/OrderlyNetwork",
               // telegramUrl: "https://orderly.network",

@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.2.1-internal.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.2.1-internal.0
+
 ## 1.2.0
 
 ### Minor Changes

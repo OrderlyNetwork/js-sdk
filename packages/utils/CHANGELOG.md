@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.2.1-internal.0
+
+### Patch Changes
+
+- update
+
 ## 1.2.0
 
 ### Minor Changes
