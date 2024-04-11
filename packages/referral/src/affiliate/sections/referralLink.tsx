@@ -123,7 +123,7 @@ const Info: FC<{
 
     return (
         <div className={className}>
-            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px] orderly-text-base-contrast-54"}>
+            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px] orderly-text-base-contrast-54 orderly-gap-2"}>
                 {title}
                 <Tooltip content={tooltip} className="orderly-max-w-[200px]">
                     <div onClick={() => {
@@ -136,7 +136,7 @@ const Info: FC<{
                             ),
                         });
                     }} >
-                        <HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer orderly-mt-[1px]" fillOpacity={1} />
+                        <HintIcon className=" orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer orderly-mt-[1px]" fillOpacity={1} />
                     </div>
                 </Tooltip>
             </div>

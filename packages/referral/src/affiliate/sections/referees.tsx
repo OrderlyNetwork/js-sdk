@@ -221,7 +221,7 @@ export const RefereesCell: FC<{
         return <div>
             <div className="orderly-my-3 orderly-grid orderly-gap-3 orderly-grid-cols-2">
                 {buildNode("Referee address", address, "orderly-col-span-1", "address", "left", false, 12)}
-                {buildNode("Referee code", code, "orderly-col-span-1", "text", "right")}
+                {buildNode("Referral code", code, "orderly-col-span-1", "text", "right")}
                 {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-col-span-1", "price")}
                 {buildNode("Total vol. (USDC)", (<Numeral precision={6} prefix="$">{vol || 0}</Numeral>), "orderly-col-span-1", "price", "right")}
                 {buildNode("Invication time:", invicationTime, "orderly-col-span-2", "text", "left", true)}
@@ -235,7 +235,7 @@ export const RefereesCell: FC<{
         <div className="orderly-pt-4">
             <div className="orderly-flex">
                 {buildNode("Referee address", address, "orderly-flex-1", "address", "left", false, 12)}
-                {buildNode("Referee code", code, "orderly-w-[90px]", "text", "right")}
+                {buildNode("Referral code", code, "orderly-w-[90px]", "text", "right")}
                 {buildNode("Total commission (USDC)", (<Numeral precision={6} prefix="$">{totalCommission}</Numeral>), "orderly-flex-1", "price", "right")}
             </div>
             <div className="orderly-flex orderly-mt-3">

@@ -92,9 +92,12 @@ export const CodeList: FC<{
 }> = (props) => {
 
 
-    const isMD = useMediaQuery("(max-width: 767)");
+    const isMD = useMediaQuery("(max-width: 767px)");
     const isXL = useMediaQuery("(min-width: 1024px)");
     const is2XL = useMediaQuery("(min-width: 1440px)");
+
+    console.log("xxxxx is md", isMD);
+    
     
  
 
