@@ -1,13 +1,36 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
-import { usePrivateQuery, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  usePrivateInfiniteQuery,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { NetworkImage } from "@/icon";
 import { Decimal } from "@orderly.network/utils";
+import { generateKeyFun, getAnnualRate, getInfiniteData } from "../utils";
+import { useEndReached } from "@/listView/useEndReached";
 
-const FundingFee: React.FC = (props) => {
+const FundingFee: React.FC = () => {
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   const symbolInfo = useSymbolsInfo();
-  const { data, isLoading } = usePrivateQuery<any[]>("/v1/funding_fee/history");
+
+  const { data, size, setSize, isLoading } = usePrivateInfiniteQuery(
+    generateKeyFun("/v1/funding_fee/history", { size: 100 }),
+    {
+      initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    }
+  );
+
+  const dataSource = useMemo(() => getInfiniteData(data), [data]);
+
+  useEndReached(sentinelRef, () => {
+    if (!isLoading) {
+      setSize(size + 1);
+    }
+  });
 
   const columns = useMemo<Column[]>(() => {
     return [
@@ -45,19 +68,9 @@ const FundingFee: React.FC = (props) => {
         dataIndex: "funding_rate",
         render(value, record, index) {
           const funding_period =
-            symbolInfo?.[record.symbol]?.("funding_period") ?? 1;
-          // const annualRate = new BigNumber(row.fundingRate)
-          //     .multipliedBy(new BigNumber(24).div(new BigNumber(symbolInfo('funding_period') ?? 0)))
-          //     .multipliedBy(365)
-          //     .multipliedBy(100)
-          //     .decimalPlaces(2)
-          //     .toFixed();
-          const annualRate = new Decimal(value)
-            .mul(new Decimal(24).div(new Decimal(funding_period)))
-            .mul(365)
-            .mul(100)
-            .toFixed(2);
+            symbolInfo?.[record.symbol]?.("funding_period");
           const percent = new Decimal(value).mul(100).toFixed(6);
+          const annualRate = getAnnualRate(value, funding_period);
           return (
             <div className="orderly-text-base-contrast-80">{`${percent}% / ${annualRate}%`}</div>
           );
@@ -85,8 +98,6 @@ const FundingFee: React.FC = (props) => {
         align: "right",
         render(value, record, index) {
           const isReceived = record.payment_type === "Receive";
-          const split = record.symbol?.split("_");
-          const token = split?.[split?.length - 1];
           return (
             <div
               className={
@@ -97,28 +108,38 @@ const FundingFee: React.FC = (props) => {
             >
               {isReceived ? "+" : "-"}
               <Numeral precision={8}>{Math.abs(value)}</Numeral>
-              <span className="orderly-text-base-contrast-36 orderly-ml-[4px]">
-                {token}
-              </span>
+              <Text
+                rule="symbol"
+                symbolElement="quote"
+                className="orderly-text-base-contrast-36 orderly-ml-[4px]"
+              >
+                {record.symbol}
+              </Text>
             </div>
           );
         },
       },
     ];
-  }, []);
+  }, [symbolInfo]);
 
   return (
-    <Table
-      dataSource={data}
-      columns={columns}
-      loading={isLoading}
-      className="orderly-text-2xs"
-      headerClassName="orderly-h-[40px] orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)]"
-      generatedRowKey={(record) => record.id}
-      onRow={(record) => ({
-        className: "orderly-h-[50px]",
-      })}
-    />
+    <div className="orderly-overflow-y-auto orderly-h-[100vh] orderly-pb-[50px]">
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        loading={isLoading}
+        className="orderly-text-2xs orderly-min-h-[300px]"
+        headerClassName="orderly-h-[40px] orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)] orderly-bg-base-900"
+        generatedRowKey={(record) => record.id}
+        onRow={(record) => ({
+          className: "orderly-h-[50px]",
+        })}
+      />
+      <div
+        ref={sentinelRef}
+        className="orderly-relative orderly-invisible orderly-h-[1px] orderly-top-[-300px]"
+      />
+    </div>
   );
 };
 

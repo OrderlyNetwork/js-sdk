@@ -1,25 +1,38 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
-import { usePrivateQuery } from "@orderly.network/hooks";
+import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { Tooltip } from "@/tooltip";
 import { NetworkImage } from "@/icon";
+import {
+  formatTxID,
+  generateKeyFun,
+  getInfiniteData,
+  upperFirstLetter,
+} from "../utils";
+import { useEndReached } from "@/listView/useEndReached";
 
-function formatTxID(value?: string) {
-  if (value === undefined || value === null) return "";
-  if (value.length < 10) return value;
-  return `${value.slice(0, 5)}...${value.slice(-5)}`;
-}
+type AssetHistoryProps = {};
 
-function formatStatus(status: string) {
-  if (!status) {
-    return status;
-  }
-  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-}
+const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-const AssetHistory: React.FC = (props) => {
-  const { data, isLoading } = usePrivateQuery<any[]>("/v1/asset/history");
+  const { data, size, setSize, isLoading } = usePrivateInfiniteQuery(
+    generateKeyFun("/v1/asset/history", { size: 100 }),
+    {
+      initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    }
+  );
+
+  const dataSource = useMemo(() => getInfiniteData(data), [data]);
+
+  useEndReached(sentinelRef, () => {
+    if (!isLoading) {
+      setSize(size + 1);
+    }
+  });
 
   const columns = useMemo<Column[]>(() => {
     return [
@@ -28,7 +41,7 @@ const AssetHistory: React.FC = (props) => {
         dataIndex: "token",
         render(value, record, index) {
           return (
-            <div className=" orderly-flex orderly-items-center">
+            <div className="orderly-flex orderly-items-center orderly-text-base-contrast-80">
               <NetworkImage type={"token"} name={value} size="small" rounded />
               <div className="orderly-ml-[6px]">{value}</div>
             </div>
@@ -43,7 +56,7 @@ const AssetHistory: React.FC = (props) => {
             <Text
               rule="date"
               formatString="YYYY-MM-DD HH:mm:ss"
-              className="orderly-text-base-contrast-80 orderly-text-3xs"
+              className="orderly-text-base-contrast-98 orderly-text-3xs"
             >
               {value}
             </Text>
@@ -76,7 +89,7 @@ const AssetHistory: React.FC = (props) => {
                   : "orderly-text-base-contrast-98"
               }
             >
-              {formatStatus(value)}
+              {upperFirstLetter(value)}
             </div>
           );
         },
@@ -93,7 +106,7 @@ const AssetHistory: React.FC = (props) => {
                   : "orderly-text-danger-light"
               }
             >
-              {value}
+              {upperFirstLetter(value)}
             </div>
           );
         },
@@ -127,17 +140,23 @@ const AssetHistory: React.FC = (props) => {
   }, []);
 
   return (
-    <Table
-      dataSource={data}
-      columns={columns}
-      loading={isLoading}
-      className="orderly-text-2xs"
-      headerClassName="orderly-h-[40px] orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)]"
-      generatedRowKey={(record) => record.id}
-      onRow={(record) => ({
-        className: "orderly-h-[50px]",
-      })}
-    />
+    <div className="orderly-overflow-y-auto orderly-h-[100vh] orderly-pb-[300px]">
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        loading={isLoading}
+        className="orderly-text-2xs orderly-min-h-[300px]"
+        headerClassName="orderly-h-[40px] orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)] orderly-bg-base-900"
+        generatedRowKey={(record) => record.id}
+        onRow={(record) => ({
+          className: "orderly-h-[40px]",
+        })}
+      />
+      <div
+        ref={sentinelRef}
+        className="orderly-relative orderly-invisible orderly-h-[1px] orderly-top-[-300px]"
+      />
+    </div>
   );
 };
 
