@@ -7,7 +7,8 @@ import { FC, useMemo } from "react";
 export const EstInfo: FC<{
   estLiqPrice?: number | null;
   estLeverage?: number | null;
-}> = ({ estLeverage, estLiqPrice }) => {
+  precision?: number;
+}> = ({ estLeverage, estLiqPrice, precision }) => {
   const { currentLeverage } = useMarginRatio();
   const { state } = useAccount();
 
@@ -43,7 +44,7 @@ export const EstInfo: FC<{
         <span>Est. Liq. price</span>
         <span className="orderly-flex orderly-gap-1">
           <span className="orderly-text-base-contrast">
-            <Numeral>{estLiqPrice ?? "--"}</Numeral>
+            <Numeral precision={precision}>{estLiqPrice ?? "--"}</Numeral>
           </span>
           <span>USDC</span>
         </span>

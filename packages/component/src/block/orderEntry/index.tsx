@@ -611,6 +611,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               <Divider />
               <EstInfo
                 estLiqPrice={props.estLiqPrice}
+                precision={symbolConfig?.quote_dp}
                 estLeverage={props.estLeverage}
               />
             </>

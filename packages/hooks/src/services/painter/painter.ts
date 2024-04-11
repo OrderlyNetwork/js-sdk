@@ -20,7 +20,12 @@ export class PosterPainter {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
-    this.ratio = options?.ratio || Math.floor(window.devicePixelRatio) || 1;
+    this.ratio =
+      options?.ratio ||
+      (typeof window !== "undefined"
+        ? Math.floor(window.devicePixelRatio)
+        : 1) ||
+      1;
 
     console.log("this ratio", this.ratio);
 

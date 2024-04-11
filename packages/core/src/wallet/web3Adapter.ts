@@ -7,7 +7,7 @@ export class Web3WalletAdapter implements IWalletAdapter {
   private _chainId: number;
   constructor(options: WalletAdapterOptions) {
     this.web3 = new Web3(options.provider);
-    this._chainId = parseInt(options.chain.id, 16);
+    this._chainId = parseInt(options.chain.id as any, 16);
   }
   // @ts-ignore
   sendTransaction(tx: TransactionRequest): Promise<TransactionResponse> {

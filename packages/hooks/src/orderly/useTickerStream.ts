@@ -56,15 +56,17 @@ export const useTickerStream = (symbol: string) => {
   const value = useMemo(() => {
     //
     if (!info) return null;
-    if (!ticker) return info;
+    if (!ticker || ticker.symbol !== symbol) return info;
 
-    const futureIndex = futures?.findIndex((item: any) => item.symbol === symbol);
+    const futureIndex = futures?.findIndex(
+      (item: any) => item.symbol === symbol
+    );
     let _oi = openInterest;
     if (!_oi && futureIndex !== -1 && futures) {
       // @ts-ignore
       _oi = futures[futureIndex].open_interest;
     }
-    
+
     const config: any = {
       ...info,
       mark_price: markPrice,
@@ -103,5 +105,5 @@ export const useTickerStream = (symbol: string) => {
     return config;
   }, [info, symbol, ticker, futures, openInterest]);
 
-  return value as API.MarketInfo;
+  return value as API.MarketInfo & { change?: Decimal; "24h_change"?: Decimal };
 };

@@ -139,26 +139,30 @@ export const Listview: FC<
           />
         ),
         render: (value: string, record: any) => {
-          return (<span>
-            <Numeral
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-            >
-              {value}
-            </Numeral>
-            {<Numeral
-              rule="percentages"
-              precision={pnlNotionalDecimalPrecision}
-              coloring
-              className="orderly-font-semibold"
-              prefix="("
-              surfix=")"
-            >
-              {(record.unsettled_pnl_ROI)}
-            </Numeral>}
-            <SharePnLIcon className="orderly-ml-2" position={record}/>
-          </span>)
+          return (
+            <span>
+              <Numeral
+                precision={pnlNotionalDecimalPrecision}
+                coloring
+                className="orderly-font-semibold"
+              >
+                {value}
+              </Numeral>
+              {
+                <Numeral
+                  rule="percentages"
+                  precision={pnlNotionalDecimalPrecision}
+                  coloring
+                  className="orderly-font-semibold"
+                  prefix="("
+                  surfix=")"
+                >
+                  {record.unrealized_pnl_ROI}
+                </Numeral>
+              }
+              <SharePnLIcon className="orderly-ml-2" position={record} />
+            </span>
+          );
         },
       },
       // {

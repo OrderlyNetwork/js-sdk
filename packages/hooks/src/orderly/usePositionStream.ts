@@ -86,7 +86,7 @@ export const usePositionStream = (
   }, [tickers]);
 
   const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
-    if (!data?.rows || !symbolInfo || !accountInfo) return null;
+    if (!data?.rows || symbolInfo.isNil || !accountInfo) return null;
 
     const filteredData =
       typeof symbol === "undefined" || symbol === ""
@@ -113,7 +113,7 @@ export const usePositionStream = (
         markPrices
       ) as unknown as number;
 
-      const info = symbolInfo?.[item.symbol];
+      const info = symbolInfo[item.symbol];
       //
 
       const notional = positions.notional(item.position_qty, price);
@@ -162,7 +162,7 @@ export const usePositionStream = (
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
-        unsettled_pnl_ROI: unrealPnlROI,
+        unrealized_pnl_ROI: unrealPnlROI,
       };
     });
 
@@ -281,6 +281,11 @@ export const usePositionStream = (
   //   });
   // }, []);
 
+  const positionInfoGetter = createGetter<
+    Omit<API.PositionInfo, "rows">,
+    keyof Omit<API.PositionInfo, "rows">
+  >(data as any, 1);
+
   return [
     {
       rows: positionsRows,
@@ -292,7 +297,7 @@ export const usePositionStream = (
       totalValue,
       totalUnrealizedROI,
     },
-    createGetter<Omit<API.Position, "rows">>(data as any, 1),
+    positionInfoGetter,
     {
       // close: onClosePosition,
       loading: false,

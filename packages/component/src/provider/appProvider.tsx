@@ -29,6 +29,7 @@ import { isTestnet, praseChainIdToNumber } from "@orderly.network/utils";
 import { FooterStatusBarProps } from "@/block/systemStatusBar/index";
 import { PnLDefaultProps, ShareConfigProps } from "@/block/shared/shareConfigProps";
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
+import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -67,6 +68,8 @@ export type OrderlyAppContextState = {
   shareOptions: ShareConfigProps;
   /** custom chains  */
   chains?: Chains<undefined, undefined>;
+  accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
+  onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 };
 
 export const OrderlyAppContext = createContext<OrderlyAppContextState>(
@@ -91,6 +94,8 @@ export interface OrderlyAppProviderProps {
   shareOptions: ShareConfigProps;
   /** custom chains  */
   chains?: Chains<undefined, undefined>;
+  accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
+  onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 }
 
 export const OrderlyAppProvider: FC<
@@ -115,11 +120,9 @@ export const OrderlyAppProvider: FC<
     saveRefCode,
     onClickReferral,
     onBoundRefCode,
+    accountMenuItems,
+    onClickAccountMenuItem,
   } = props;
-
-
-  // console.log("check ref status", saveRefCode, onClickReferral);
-  
 
   return (
     <OrderlyConfigProvider
@@ -142,6 +145,8 @@ export const OrderlyAppProvider: FC<
         footerStatusBarProps={footerStatusBarProps}
         shareOptions={{...PnLDefaultProps, ...shareOptions}}
         chains={chains}
+        accountMenuItems={accountMenuItems}
+        onClickAccountMenuItem={onClickAccountMenuItem}
       >
         {props.children}
       </InnerProvider>
@@ -159,6 +164,8 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     footerStatusBarProps,
     shareOptions,
     chains: customChains,
+    accountMenuItems,
+    onClickAccountMenuItem,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -384,6 +391,8 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         footerStatusBarProps,
         shareOptions,
         chains: props.chains,
+        accountMenuItems,
+        onClickAccountMenuItem,
       }}
     >
       <TooltipProvider>
