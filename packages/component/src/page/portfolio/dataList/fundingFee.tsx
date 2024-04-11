@@ -103,6 +103,7 @@ const FundingFee: React.FC = () => {
         title: "Funding fee",
         dataIndex: "funding_fee",
         align: "right",
+        className: "orderly-w-[150px]",
         render(value, record, index) {
           const isReceived = record.payment_type === "Receive";
           return (

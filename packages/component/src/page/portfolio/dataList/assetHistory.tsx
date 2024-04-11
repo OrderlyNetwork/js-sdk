@@ -123,6 +123,7 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "Amount",
         dataIndex: "amount",
         align: "right",
+        className: "orderly-w-[120px]",
         render(value, record, index) {
           const isDeposit = record.side === "DEPOSIT";
           return (
