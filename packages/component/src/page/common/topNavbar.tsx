@@ -13,9 +13,9 @@ import { Logo } from "@/logo";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 
 export type TopNavbarProps = {
-  left: ReactNode;
-  right: ReactNode;
-  nav: ReactNode;
+  left?: ReactNode;
+  right?: ReactNode;
+  nav?: ReactNode;
 };
 
 export const TopNavbar: FC = (props) => {

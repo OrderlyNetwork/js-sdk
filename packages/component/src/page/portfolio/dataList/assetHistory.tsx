@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
-import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
+import { useAccount, usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { Tooltip } from "@/tooltip";
 import { NetworkImage } from "@/icon";
 import {
@@ -11,11 +11,13 @@ import {
   upperFirstLetter,
 } from "../utils";
 import { useEndReached } from "@/listView/useEndReached";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 type AssetHistoryProps = {};
 
 const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const { state } = useAccount();
 
   const { data, size, setSize, isLoading } = usePrivateInfiniteQuery(
     generateKeyFun("/v1/asset/history", { size: 100 }),
@@ -26,7 +28,12 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
     }
   );
 
-  const dataSource = useMemo(() => getInfiniteData(data), [data]);
+  const dataSource = useMemo(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return [];
+    }
+    return getInfiniteData(data);
+  }, [state, data]);
 
   useEndReached(sentinelRef, () => {
     if (!isLoading) {
@@ -116,6 +123,7 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "Amount",
         dataIndex: "amount",
         align: "right",
+        className: "orderly-w-[120px]",
         render(value, record, index) {
           const isDeposit = record.side === "DEPOSIT";
           return (

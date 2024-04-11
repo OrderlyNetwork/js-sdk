@@ -18,7 +18,7 @@ export const Portfolio: FC = (props) => {
       </Header>
 
       <Layout style={{ paddingBottom: "42px" }}>
-        <Content className="orderly-overflow-hidden orderly-px-[82px] orderly-py-[53px]">
+        <Content className="orderly-overflow-hidden orderly-py-[53px]">
           <DataList />
         </Content>
       </Layout>
