@@ -11,6 +11,7 @@ import { Decimal } from "@orderly.network/utils";
 import { generateKeyFun, getAnnualRate, getInfiniteData } from "../utils";
 import { useEndReached } from "@/listView/useEndReached";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { cn } from "@/utils";
 
 const FundingFee: React.FC = () => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -137,10 +138,14 @@ const FundingFee: React.FC = () => {
         columns={columns}
         loading={isLoading}
         className="orderly-text-2xs orderly-min-h-[300px]"
-        headerClassName="orderly-h-[40px] orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)] orderly-bg-base-900"
+        headerClassName={cn(
+          "orderly-h-[40px] orderly-text-base-contrast-54 orderly-bg-base-900",
+          "orderly-border-b orderly-border-b-divider"
+        )}
         generatedRowKey={(record) => record.id}
         onRow={(record) => ({
-          className: "orderly-h-[50px]",
+          className:
+            "orderly-h-[40px] orderly-border-b-[1px] orderly-border-b-solid orderly-border-[rgba(255,255,255,0.04)]",
         })}
       />
       <div
