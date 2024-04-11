@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.0.1-internal.2
+
+### Patch Changes
+
+- update ui
+- Updated dependencies
+  - @orderly.network/types@1.2.1-internal.2
+  - @orderly.network/utils@1.2.1-internal.2
+
 ## 3.0.1-internal.1
 
 ### Patch Changes

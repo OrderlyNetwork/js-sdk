@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.2.1-internal.2
+
+### Patch Changes
+
+- update ui
+
 ## 1.2.1-internal.1
 
 ### Patch Changes
