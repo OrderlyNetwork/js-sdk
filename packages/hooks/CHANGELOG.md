@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 1.3.0-internal.0
+
+### Minor Changes
+
+- update
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/utils@1.3.0-internal.0
+  - @orderly.network/core@1.3.0-internal.0
+  - @orderly.network/net@1.3.0-internal.0
+  - @orderly.network/perp@3.1.0-internal.0
+  - @orderly.network/types@1.3.0-internal.0
+
 ## 1.2.0
 
 ### Minor Changes

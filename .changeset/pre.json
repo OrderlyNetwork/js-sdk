@@ -1,27 +1,28 @@
 {
   "mode": "pre",
-  "tag": "referral",
+  "tag": "internal",
   "initialVersions": {
-    "@orderly/docs": "0.2.6",
-    "@orderly.network/examples": "0.2.6",
-    "@orderly.network/storybook": "1.1.6",
-    "@orderly.network/cli": "0.1.6",
-    "@orderly.network/react": "0.2.6",
-    "@orderly.network/core": "0.2.6",
-    "create-orderly-app": "0.2.6",
-    "eslint-config-custom": "0.1.6",
-    "@orderly.network/hooks": "1.1.6",
-    "@orderly.network/net": "1.1.6",
-    "@orderly.network/web3-onboard": "0.1.6",
-    "@orderly.network/perp": "2.0.6",
-    "@orderly.network/referral": "0.0.1",
-    "@orderly.network/trading-view": "0.2.6",
-    "tsconfig": "0.1.6",
-    "@orderly.network/types": "0.2.6",
-    "@orderly.network/utils": "0.1.6",
-    "@orderly.network/web3-modal": "0.1.6"
+    "@orderly/docs": "0.2.10",
+    "@orderly.network/examples": "0.2.10",
+    "@orderly.network/storybook": "1.1.10",
+    "@orderly.network/cli": "0.1.9",
+    "@orderly.network/react": "1.2.0",
+    "@orderly.network/core": "1.2.0",
+    "create-orderly-app": "0.2.8",
+    "eslint-config-custom": "0.1.8",
+    "@orderly.network/hooks": "1.2.0",
+    "@orderly.network/net": "1.2.0",
+    "@orderly.network/web3-onboard": "1.2.0",
+    "@orderly.network/perp": "3.0.0",
+    "@orderly.network/referral": "0.0.2-referral.4",
+    "@orderly.network/trading-view": "1.2.0",
+    "tsconfig": "0.1.8",
+    "@orderly.network/types": "1.2.0",
+    "@orderly.network/utils": "1.2.0",
+    "@orderly.network/web3-modal": "1.2.0"
   },
   "changesets": [
-    "good-buttons-leave"
+    "good-buttons-leave",
+    "thick-boxes-kneel"
   ]
 }
