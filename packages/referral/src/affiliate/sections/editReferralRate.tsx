@@ -71,7 +71,7 @@ export const EditReferralRate = create<{
         <Dialog open={visible} onOpenChange={onOpenChange}>
             <DialogContent
 
-                className="orderly-p-5 orderly-max-w-[320px]"
+                className="orderly-px-6 orderly-max-w-[320px] orderly-bg-base-800 orderly-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
                 maxWidth={"lg"}
                 closable
             >
@@ -87,15 +87,15 @@ export const EditReferralRate = create<{
                     <div className="orderly-text-xs orderly-text-base-contrast-54">
                         Set the ratio of referral rate shared with your referees
                     </div>
-                    <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-6 orderly-flex">
+                    <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-2 orderly-flex">
                         {`Your max commission rate: `}
                         <div className="orderly-text-warning orderly-pl-1">{`${code.max_rebate_rate * 100}%`}</div>
                     </div>
 
-                    <div className="orderly-text-2xs orderly-mt-6">You receive</div>
+                    <div className="orderly-text-2xs orderly-mt-6 orderly-text-base-contrast-80">You receive</div>
                     <Input
                         ref={inputRef}
-                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-900"
+                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
@@ -109,15 +109,18 @@ export const EditReferralRate = create<{
                             if (!Number.isNaN(rate)) {
                                 setRefereeRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
                                 setShowError(maxRate.sub(rate) < new Decimal(0));
+                            } else {
+                                setRefereeRebateRate("");
+                                setReferrerRebateRate("");
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
                     />
 
 
-                    <div className="orderly-text-2xs orderly-mt-6">Referee receives</div>
+                    <div className="orderly-text-2xs orderly-mt-6 orderly-text-base-contrast-80">Referee receives</div>
                     <Input
-                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-900"
+                        containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
                         placeholder="Enter code"
                         type="text"
                         inputMode="decimal"
@@ -131,6 +134,9 @@ export const EditReferralRate = create<{
                             if (!Number.isNaN(rate)) {
                                 setReferrerRebateRate(`${maxDecimal(new Decimal(0), maxRate.sub(rate))}`);
                                 setShowError(maxRate.sub(rate) < new Decimal(0));
+                            } else {
+                                setRefereeRebateRate("");
+                                setReferrerRebateRate("");
                             }
                         }}
                         suffix={(<div className="orderly-px-3 orderly-text-base-contrast-54 orderly-text-[16px]">%</div>)}
@@ -138,14 +144,14 @@ export const EditReferralRate = create<{
 
                     {showError && (<div className="orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-start orderly-relative">
                         <div className="orderly-bg-danger orderly-rounded-full orderly-w-[4px] orderly-h-[4px] orderly-mr-1 orderly-mt-2 orderly-absolute orderly-top-0"></div>
-                        <div className="orderly-ml-2">{`The total commission rate cannot exceed your maximum commission rate limit`}</div>
+                        <div className="orderly-ml-2">{`The total commission rate must equal to your maximum commission rate limit`}</div>
                     </div>)}
 
                     <Button
                         id="referral_bind_referral_code_btn"
                         disabled={refereeRebateRate.length === 0 || referrerRebateRate.length === 0 || showError}
                         loading={isMutating}
-                        className="orderly-my-6"
+                        className="orderly-mt-6 orderly-mb-4"
                         onClick={(e) => {
                             e.stopPropagation();
                             onClickConfirm();

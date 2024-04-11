@@ -40,10 +40,10 @@ export default {
         chartConfig={
           {
             trader: { 
-              bar: { ...InitialBarStyle, fill: "#00B49E" } 
+              bar: { ...InitialBarStyle, fill: "#00B49E", columnPadding: 20 } 
             },
             affiliate: { 
-              bar: { ...InitialBarStyle, fill: "#608CFF" } 
+              bar: { ...InitialBarStyle, fill: "#608CFF", columnPadding: 20 } 
             },
           }
         }

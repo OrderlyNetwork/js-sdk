@@ -1,10 +1,10 @@
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
-import { EmptyView } from "@orderly.network/react";
-import { FC, ReactNode, useMemo } from "react";
-import { MEDIA_LG, MEDIA_MD } from "../../types/constants";
+import { FC, useMemo } from "react";
 import { useCommission } from "../../hooks/useCommission";
-import { formatTime, formatYMDTime } from "../../utils/utils";
+import { formatYMDTime } from "../../utils/utils";
+import { RefEmptyView } from "../../components/icons/emptyView";
+
 
 export const CommissionList: FC<{
     dateText?: string,
@@ -18,7 +18,7 @@ export const CommissionList: FC<{
     const dataSource = useMemo(() => {
         return data?.filter((item: any) => {
             return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
-        }).sort((a: any,b: any) => b.created_time - a.created_time);
+        }).sort((a: any, b: any) => b.created_time - a.created_time);
     }, [
         data,
     ]);
@@ -34,19 +34,20 @@ export const CommissionList: FC<{
     }
 
 
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767px)");
 
     return isMD ?
-        <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} /> :
-        <_BigCommission dataSource={dataSource} loadMore={loadMore} />
+        <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
+        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
 }
 
 const _SmallCommission: FC<{
     date?: string,
     dataSource: any[],
-    loadMore: any
+    loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
-    const { date, dataSource, loadMore } = props;
+    const { date, dataSource, loadMore, isLoading } = props;
 
 
     const renderItem = (item: any, index: number) => {
@@ -59,12 +60,14 @@ const _SmallCommission: FC<{
 
     return (
 
-        <div className="orderly-h-[197px] orderly-overflow-auto">
-            {date && <div className="orderly-mt-1 orderly-px-4 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
+        <div className="orderly-px-3 orderly-max-h-[431px] orderly-overflow-auto">
+            {date && <div className="orderly-mt-1 orderly-px-0 orderly-py-2 sm:orderly-flex orderly-items-center md:orderly-hidden md:orderly-h-0 orderly-text-3xs orderly-text-base-contrast-36">{date}</div>}
             <ListView
                 dataSource={dataSource}
                 loadMore={loadMore}
+                isLoading={isLoading}
                 renderItem={renderItem}
+                emptyView={<RefEmptyView />}
             />
         </div>
     );
@@ -72,7 +75,8 @@ const _SmallCommission: FC<{
 
 const _BigCommission: FC<{
     dataSource: any[]
-    loadMore: any
+    loadMore: any,
+    isLoading: boolean,
 }> = (props) => {
     const { dataSource } = props;
 
@@ -81,13 +85,10 @@ const _BigCommission: FC<{
             {
                 title: "Date",
                 dataIndex: "created_time",
-                className: "orderly-h-[52px]",
-
+                className: "orderly-h-[52px] orderly-px-1",
+                width: 110,
                 render: (value, record) => {
                     const date = formatYMDTime(value);
-
-                    console.log("value", value);
-
 
                     return (
                         <div className="orderly-flex orderly-gap-2 orderly-items-center">
@@ -102,7 +103,7 @@ const _BigCommission: FC<{
                 align: "right",
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
-                    <Numeral precision={2}>
+                    <Numeral precision={6} prefix="$">
                         {value}
                     </Numeral>
                 )
@@ -113,37 +114,48 @@ const _BigCommission: FC<{
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
-                    <Numeral >
-                        {value}
+                    <Numeral precision={2} prefix="$">
+                        {value || 0}
                     </Numeral>
                 )
             },
         ];
     }, []);
 
+
     return (
-        <div className=" orderly-overflow-y-auto orderly-mt-4 orderly-px-3 orderly-relative" style={{
+        <div className="orderly-mt-4 orderly-relative orderly-px-3" style={{
             height: `${Math.min(580, Math.max(230, 42 + (dataSource || []).length * 52))}px`
         }}>
-            <EndReachedBox onEndReached={props.loadMore}>
-                <Table
-                    bordered
-                    justified
-                    showMaskElement={false}
-                    columns={columns}
-                    dataSource={dataSource}
-                    headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0"
-                    className={cn(
-                        "orderly-text-xs 2xl:orderly-text-base",
-                    )}
-                    generatedRowKey={(rec, index) => `${index}`}
-                />
-            </EndReachedBox>
+            <Table
+                bordered
+                justified
+                showMaskElement={false}
+                columns={columns}
+                dataSource={dataSource}
+                headerClassName="orderly-text-2xs orderly-h-[42px] orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900 orderly-sticky orderly-top-0 orderly-px-1 orderly-border-[rgba(255,255,255,0.12)]"
+                className={cn(
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
+                )}
+                generatedRowKey={(rec, index) => `${index}`}
+                scrollToEnd={() => {
+                    console.log("scroll to end");
+
+                    if (!props.isLoading) {
+                        props.loadMore();
+                    }
+                }}
+                onRow={(rec, index) => {
+                    return {
+                        className: "orderly-border-[rgba(255,255,255,0.04)]"
+                    };
+                }}
+            />
 
             {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[42px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView  iconSize={62}/>
                     </div>
                 )
             }
@@ -160,7 +172,7 @@ export const CommissionCell: FC<{
     const { date, commission, vol } = props;
 
     return (
-        <div className="orderly-my-3 orderly-px-3">
+        <div className="orderly-my-3" style={{letterSpacing: "0px"}}>
             <div className="orderly-flex orderly-justify-between">
                 <div>
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Date</div>
@@ -168,12 +180,12 @@ export const CommissionCell: FC<{
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Commission (USDC)`}</div>
-                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</Numeral>
+                    <Numeral precision={6} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{commission}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">{`Referral vol. (USDC)`}</div>
-                    <Numeral precision={2} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol}</Numeral>
+                    <Numeral precision={2} prefix="$" className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-text-base-contrast-80">{vol || 0}</Numeral>
                 </div>
             </div>
             <Divider className="orderly-mt-3" />

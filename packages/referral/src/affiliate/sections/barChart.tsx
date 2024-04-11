@@ -6,6 +6,7 @@ import { useRefereeHistory } from "../../hooks/useRefereeHistory";
 import { formatMdTime, formatYMDTime, generateData } from "../../utils/utils";
 import { ReferralContext } from "../../hooks/referralContext";
 import { Decimal, commify } from "@orderly.network/utils";
+import { RefFilterMenu } from "../../components/refFilterMenu";
 
 type ChartDataType = "Commission" | "Referral vol.";
 
@@ -30,9 +31,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg orderly-flex orderly-flex-col", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl orderly-flex orderly-flex-col orderly-h-[293px]", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
-                <div className="orderly-text-xs ">Statistic</div>
+                <div className="orderly-flex-1 orderly-text-base 2xl:orderly-text-lg">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 
@@ -63,25 +64,13 @@ const _FilterData: FC<{
     onClick?: (type: ChartDataType) => void,
 }> = (props) => {
 
-    const [open, setOpen] = useState(false);
     const { curType, onClick } = props;
+    return <RefFilterMenu
+        curType={`${curType}`}
+        onClick={(e: any) => onClick?.(e)}
+        types={["Commission", "Referral vol."]}
+    />;
 
-    const types: ChartDataType[] = ["Commission", "Referral vol."];
-
-    return (
-        <Select
-            options={types.map((e) => ({ value: e, label: e }))}
-            fullWidth
-            // size={"small"}
-            value={curType}
-            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[105px] orderly-bg-base-700"
-            contentClassName="orderly-bg-base-800 orderly-px-0"
-            onChange={(value: any) => {
-                props.onClick?.(value);
-            }}
-            color={"default"}
-        />
-    );
 }
 
 

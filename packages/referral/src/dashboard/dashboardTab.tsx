@@ -1,5 +1,5 @@
 import { Button, TabPane, Tabs, cn, modal } from "@orderly.network/react";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ReferralContext } from "../hooks/referralContext";
 import { ReferralIcon } from "./icons/referral";
 import { Affiliate } from "../affiliate";
@@ -16,9 +16,20 @@ export const DashboardTab = () => {
         showReferralPage,
     } = useContext(ReferralContext);
 
-    
 
-    const [activeTab, setActiveTab] = useState<DashboardTabType>(isTrader ? "traderTab" : "affiliateTab")
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('tab');
+        if (code && code === '0') {
+            setActiveTab("affiliateTab");
+        } else if (code && code === '1') {
+            setActiveTab("traderTab");
+        }
+    }, []);
+
+
+
+    const [activeTab, setActiveTab] = useState<DashboardTabType>(isAffiliate ? "affiliateTab" : "traderTab")
     const onTabChange = (tab: any) => {
         setActiveTab(tab);
     }
@@ -34,7 +45,11 @@ export const DashboardTab = () => {
 
     const tabBarExtra = useMemo(() => {
         if (isAffiliate === true && isTrader === false) {
-            return <Button onClick={onAsAnTrader} className="orderly-flex orderly-bg-[rgba(0,104,92,1)] lg:orderly-mr-4">
+            return <Button
+                id="orderly-referral-dashboard-as-trader-btn"
+                onClick={onAsAnTrader}
+                className="orderly-flex orderly-bg-[rgba(0,104,92,1)] lg:orderly-mr-4"
+            >
                 <TraderIcon />
                 <div>As trader</div>
             </Button>;
@@ -57,11 +72,11 @@ export const DashboardTab = () => {
                 value="affiliateTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")}/>
+                        <ReferralIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "affiliateTab" && "orderly-fill-base-contrast")} />
                         Affiliate
                     </div>
                 )}>
-                <div className="orderly-mt-3"><Affiliate /></div>
+                <div className="orderly-mt-0"><Affiliate /></div>
             </TabPane>
         );
     }, [activeTab]);
@@ -72,12 +87,12 @@ export const DashboardTab = () => {
                 value="traderTab"
                 title={(
                     <div className="orderly-flex orderly-items-center orderly-px-2 orderly-gap-2">
-                        <TraderIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "traderTab" && "orderly-fill-base-contrast")}/>
+                        <TraderIcon fillOpacity={1.0} className={cn("orderly-fill-white/20", activeTab === "traderTab" && "orderly-fill-base-contrast")} />
                         Trader
                     </div>
                 )}
             >
-                <div className="orderly-mt-3"><Trader /></div>
+                <div className="orderly-mt-0"><Trader /></div>
             </TabPane>
         );
     }, [activeTab]);
@@ -89,7 +104,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -107,7 +122,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}
@@ -123,7 +138,7 @@ export const DashboardTab = () => {
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
-                    "orderly-justify-center lg:orderly-justify-center orderly-h-[63px] orderly-referral-tab-bar",
+                    "orderly-justify-center lg:orderly-justify-center orderly-h-[60px] orderly-referral-tab-bar",
                     (!isAffiliate || !isTrader) && "orderly-justify-start"
                 )}
                 onTabChange={onTabChange}

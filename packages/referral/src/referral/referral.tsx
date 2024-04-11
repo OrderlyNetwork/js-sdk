@@ -17,16 +17,16 @@ export const Referral = () => {
   };
 
   return (
-    <div className="orderly-h-full orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4 orderly-text-base-contrast">
-      <div className="orderly-text-base-contrast orderly-text-center">
-        <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px]">
+    <div className="orderly-flex orderly-flex-col orderly-items-center orderly-w-full orderly-p-4 orderly-text-base-contrast">
+      <div className="orderly-text-center">
+        <div className="orderly-text-[32px] lg:orderly-text-[42px] xl:orderly-text-[50px] 2xl:orderly-text-[56px] orderly-font-bold" style={{lineHeight: "normal"}}>
           <GradientText texts={[
             {text: 'Earn more as a '},
             {text: `${brokerName}`, gradient: true},
             {text: ' affiliate'},
           ]} />
         </div>
-        <div className="orderly-mt-8 orderly-text-sm md:orderly-text-base lg:orderly-text-lg xl:orderly-text-lg 2xl:orderly-text-xl">
+        <div className="orderly-mt-8 orderly-text-sm md:orderly-text-base lg:orderly-text-lg xl:orderly-text-lg 2xl:orderly-text-xl orderly-text-base-contrast-80">
           Grow your brand | Get 40% commission | Unlock exclusive perks
         </div>
         <div className="orderly-flex orderly-justify-center">
@@ -38,11 +38,11 @@ export const Referral = () => {
                 handleOpenNewTab(learnAffiliateUrl);
               }
             }}
-            className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-primary"
+            className="orderly-flex orderly-items-center orderly-mt-3 orderly-text-link"
           >
-            <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs">
+            <div className="orderly-flex orderly-text-3xs 2xl:orderly-text-xs orderly-items-center">
               Learn how it works
-              <ArrowRightIcon className="orderly-ml-2" />
+              <ArrowRightIcon className="orderly-ml-2 orderly-fill-link" fillOpacity={1}/>
             </div>
           </button>
         </div>

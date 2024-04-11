@@ -17,14 +17,14 @@ export type UserVolumeType = {
 export type ReferralContextProps = {
     becomeAnAffiliate?: () => void,
     becomeAnAffiliateUrl?: string,
-    bindReferralCodeState?: (success: boolean, error: any, hide: any) => void,
+    bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void,
     learnAffiliate?: () => void,
     learnAffiliateUrl?: string,
     referralLinkUrl: string,
     //** referral index page */
     showReferralPage?: () => void,
-    enterTraderPage?: () => void,
-    enterAffiliatePage?: () => void,
+    enterTraderPage?: (params?: {}) => void,
+    enterAffiliatePage?: (params?: {}) => void,
     //** tab + tab content */
     showDashboard?: () => void,
     chartConfig?: {
@@ -146,7 +146,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
             referralInfo: data,
             isAffiliate: isAffiliate,
             isTrader: isTrader,
-            // isAffiliate: false,
+            // isAffiliate: true,
             // isTrader: false,
             mutate,
             becomeAnAffiliate,

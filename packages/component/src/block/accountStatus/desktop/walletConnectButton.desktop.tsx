@@ -33,6 +33,7 @@ import { OrderlyAppContext } from "@/provider";
 import { DesktopDropMenuItem } from "./accountStatus.desktop";
 import { isTestnet } from "@orderly.network/utils";
 import { CopyDesktopIcon, DisconnectIcon, ShareIcon } from "@/icon";
+import { cn } from "@/utils";
 
 const IconTooltip = (props: { trigger: ReactNode; tooltipContent: string }) => (
   <Tooltip>
@@ -50,10 +51,11 @@ const IconTooltip = (props: { trigger: ReactNode; tooltipContent: string }) => (
 const MenuItem = (props: {
   icon: ReactNode;
   title: string;
+  className?: string,
   onClick: () => void;
 }) => (
   <div
-    className="orderly-flex orderly-cursor-pointer orderly-items-center orderly-w-full orderly-fill-base-contrast-36 orderly-text-base-contrast-36 hover:orderly-fill-danger-light hover:orderly-text-danger-light orderly-py-4"
+    className={cn("orderly-flex orderly-cursor-pointer orderly-items-center orderly-w-full orderly-fill-base-contrast-36 orderly-text-base-contrast-36 hover:orderly-fill-base-contrast hover:orderly-text-base-contrast orderly-py-4", props.className)}
     onClick={props.onClick}
   >
     {props.icon}
@@ -132,6 +134,7 @@ export const DesktopWalletConnnectButton: FC<
             <MenuItem
               icon={item.icon}
               title={item.title}
+              className={item.className}
               onClick={() => {
                 item.onClick?.();
                 onClickDropMenuItem?.(item);
@@ -144,7 +147,7 @@ export const DesktopWalletConnnectButton: FC<
     }
     return (
       <>
-        {props.dropMenuItem} <Divider />
+        {props.dropMenuItem}
       </>
     );
   }, [props.dropMenuItem, props.onClickDropMenuItem]);
@@ -210,6 +213,7 @@ export const DesktopWalletConnnectButton: FC<
         <MenuItem
           icon={<DisconnectIcon size={24} />}
           title="Disconnect"
+          className="hover:orderly-fill-danger-light hover:orderly-text-danger-light"
           onClick={() => {
             setOpen(false);
             onWalletDisconnect?.();

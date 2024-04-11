@@ -13,6 +13,7 @@ import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
 import { formatYMDTime, generateData } from "../../utils/utils";
 import { Decimal, commify } from "@orderly.network/utils";
+import { RefFilterMenu } from "../../components/refFilterMenu";
 
 type ChartDataType = "Rebate" | "Volume";
 
@@ -22,20 +23,29 @@ export const BarChart: FC<{ className?: string }> = (props) => {
     const [distributionData, { refresh }] = useDistribution({ size: 14 });
     const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
-    const [maxCount, setMaxCount] = useState(14);
+    const [maxCount, setMaxCount] = useState(7);
 
     useEffect(() => {
         function handleResize() {
             const screenWidth = window.innerWidth;
-            const newMaxCount = screenWidth > 375 ? 14 : 7;
+            let newMaxCount = 7;
+
+            if (screenWidth >= 1440) {
+                newMaxCount = 14;
+            }
+
             setMaxCount(newMaxCount);
         }
+
+        handleResize();
 
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+
 
     const dataSource = useMemo(() => {
 
@@ -50,7 +60,7 @@ export const BarChart: FC<{ className?: string }> = (props) => {
         }
 
 
-    }, [distributionData, filterType]);
+    }, [distributionData, filterType, maxCount]);
 
 
     const yAxis = useMemo(() => {
@@ -64,9 +74,9 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg orderly-flex orderly-flex-col", props.className)}>
+        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-3 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl orderly-flex orderly-flex-col orderly-h-[293px]", props.className)}>
             <div className="orderly-flex orderly-justify-between orderly-items-center">
-                <div className="orderly-text-xs ">Statistic</div>
+                <div className="orderly-flex-1 orderly-text-base 2xl:orderly-text-lg">Statistic</div>
                 <_FilterData curType={filterType} onClick={setFiltetType} />
             </div>
 
@@ -96,25 +106,12 @@ const _FilterData: FC<{
     onClick?: (type: ChartDataType) => void,
 }> = (props) => {
 
-    const [open, setOpen] = useState(false);
     const { curType, onClick } = props;
-
-    const types: ChartDataType[] = ["Rebate", "Volume"];
-
-    return (
-        <Select
-            options={types.map((e) => ({ value: e, label: e }))}
-            fullWidth
-            // size={"small"}
-            value={curType}
-            className="orderly-text-4xs orderly-text-base-contrast-54 orderly-w-[103px] orderly-bg-base-700"
-            contentClassName="orderly-bg-base-800 orderly-px-0"
-            onChange={(value: any) => {
-                props.onClick?.(value);
-            }}
-            color={"default"}
-        />
-    );
+    return <RefFilterMenu
+        curType={`${curType}`}
+        onClick={(e: any) => onClick?.(e)}
+        types={["Rebate", "Volume"]}
+    />;
 }
 
 

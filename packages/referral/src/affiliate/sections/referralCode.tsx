@@ -1,15 +1,15 @@
 import { FC, useContext, useMemo } from "react";
-import { MEDIA_MD } from "../../types/constants";
 import { Button, Column, Divider, EmptyView, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
+import { RefEmptyView } from "../../components/icons/emptyView";
 
 export type ReferralCodeType = API.ReferralCode & { isPined?: boolean };
 
@@ -21,7 +21,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
         copyText(addQueryParam(referralLinkUrl, "ref", code));
     }
     const editRate = (code: ReferralCodeType) => {
-        modal.show(EditReferralRate, { code: {...code}, mutate });
+        modal.show(EditReferralRate, { code: { ...code }, mutate });
     }
 
 
@@ -71,8 +71,8 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
     ]);
 
     return (
-        <div className={cn("orderly-px-6 orderly-pt-6 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
-            <div className="orderly-flex orderly-items-center orderly-justify-start">
+        <div className={cn("orderly-pt-4 orderly-px-3 orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
+            <div className="orderly-px-3 orderly-flex orderly-items-center orderly-justify-start">
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
                     Remaining referral codes:&nbsp;
@@ -92,10 +92,18 @@ export const CodeList: FC<{
 }> = (props) => {
 
 
-    const isMD = useMediaQuery(MEDIA_MD);
+    const isMD = useMediaQuery("(max-width: 767px)");
+    const isXL = useMediaQuery("(min-width: 1024px)");
+    const is2XL = useMediaQuery("(min-width: 1440px)");
+
+    console.log("xxxxx is md", isMD);
+    
+    
+ 
+
     const { dataSource, copyLink, editRate } = props;
 
-    const clsName = "orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
+    const clsName = "orderly-px-3 orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 
     const getRate = (item: API.ReferralCode) => {
         const refereeRate = new Decimal((item.referee_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
@@ -104,24 +112,38 @@ export const CodeList: FC<{
     }
 
     const getCount = (item: API.ReferralCode) => {
-        return `${commify(item.total_invites)} / ${commify(item.total_traded)}`;
+        return `${(item.total_invites)} / ${(item.total_traded)}`;
     }
 
     const columns = useMemo<Column[]>(() => {
-        return [
+        const action: Column = {
+            title: "Actions",
+            dataIndex: "code",
+            className: "orderly-h-[48px] orderly-text-right orderly-w-[90px] 2xl:orderly-w-[120px]",
+            align: "right",
+            render: (value, record) => (
+                <div className="orderly-flex orderly-justify-end">
+                    <_CopyLink className="lg:orderly-w-[82px]"
+                        onClick={(event) => copyLink(value)}
+                    />
+                </div>
+            )
+        };
+        const cols: Column[] = [
             {
                 title: "Referral Codes",
                 dataIndex: "code",
                 className: "orderly-h-[48px]",
-
+                align: "left",
                 render: (value, record) => (
                     <div className="orderly-flex orderly-gap-2 orderly-items-center">
                         <PinView pin={record.isPined || false} onPinChange={(isPinned) => {
                             props.setPinCode(value, !isPinned);
                         }} />
-                        <span>{value}</span>
+                        <span className="orderly-text-ellipsis overflow-hidden">{value}</span>
                         <CopyIcon
-                            className="orderly-mr-3 orderly-cursor-pointer"
+                            fillOpacity={1}
+                            className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-20 hover:orderly-fill-base-contrast-80"
                             onClick={() => copyText(value)}
                         />
                     </div>
@@ -130,10 +152,14 @@ export const CodeList: FC<{
             {
                 title: "You / Referee",
                 dataIndex: "referees",
-                className: "orderly-h-[48px]",
+                className: "orderly-h-[48px] ",
+                width: is2XL ? 146 : isXL ?134 : undefined,
+                align: "right",
                 render: (value, record) => (
-                    <div className="orderly-flex orderly-gap-2">
-                        {getRate(record)}
+                    <div className="orderly-flex orderly-gap-1 orderly-justify-end orderly-items-center">
+                        <span>
+                            {getRate(record)}
+                        </span>
                         <EditIcon
                             onClick={() => editRate(record)}
                             fillOpacity={1}
@@ -142,35 +168,57 @@ export const CodeList: FC<{
                     </div>
                 )
             },
-            {
-                title: "Referees / Traders",
-                dataIndex: "referees",
-                className: "orderly-h-[48px]",
-                align: "right",
-                render: (value, record) => (
-                    <div >
-                        {getCount(record)}
-                    </div>
-                )
-            },
-            {
-                title: "Actions",
-                dataIndex: "code",
-                className: "orderly-h-[48px] orderly-text-right",
-                align: "right",
-                width: 90,
-                render: (value, record) => (
-                    <div className="orderly-flex orderly-justify-end">
-                        <_CopyLink className="lg:orderly-w-[82px]"
-                            onClick={(event) => copyLink(value)}
-                        />
-                    </div>
-                )
-            },
+
         ];
-    }, [dataSource]);
 
+        if (is2XL) {
+            cols.push(
+                {
+                    title: "Referees",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record).split("/")?.[0]}
+                        </div>
+                    )
+                }
+            );
+            cols.push(
+                {
+                    title: "Traders",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record).split("/")?.[1]}
+                        </div>
+                    )
+                }
+            );
+        } else {
+            cols.push(
+                {
+                    title: "Referees / Traders",
+                    dataIndex: "referees",
+                    className: "orderly-h-[48px]",
+                    align: "right",
+                    width: is2XL ? 137 : isXL ?130 : undefined,
+                    render: (value, record) => (
+                        <div >
+                            {getCount(record)}
+                        </div>
+                    )
+                }
+            );
+        }
 
+        cols.push(action);
+
+        return cols;
+    }, [dataSource, isXL]);
 
     if (isMD) {
         return <div className={clsName} >
@@ -197,17 +245,22 @@ export const CodeList: FC<{
                 showMaskElement={false}
                 columns={columns}
                 dataSource={dataSource}
-                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900"
+                headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-sticky orderly-top-0 orderly-bg-base-900 orderly-pl-0 orderly-pr-2 orderly-border-[rgba(255,255,255,0.04)]"
                 className={cn(
-                    "orderly-text-xs 2xl:orderly-text-base",
+                    "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
+                onRow={(rec, index) => {
+                    return {
+                        className: "orderly-border-[rgba(255,255,255,0.04)]"
+                    };
+                }}
             />
 
-{
+            {
                 (!props.dataSource || props.dataSource.length <= 0) && (
                     <div className="orderly-absolute orderly-top-[48px] orderly-left-0 orderly-right-0 orderly-bottom-0">
-                        <EmptyView />
+                        <RefEmptyView />
                     </div>
                 )
             }
@@ -233,16 +286,17 @@ const SmallCodeCell: FC<{
         <div>
             <Divider className="orderly-my-3" />
             <div className="orderly-flex orderly-justify-between">
-                <div>
+                <div className="orderly-max-w-[94px] md:orderly-max-w-[140px]">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Referral Codes</div>
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-flex orderly-gap-2">
-                        <div>{code}</div>
+                        <div className="orderly-text-ellipsis orderly-flex-1 orderly-overflow-hidden">{code}</div>
 
-                        <CopyIcon
-                            fillOpacity={1}
-                            className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"
-                            onClick={() => copyText(code)}
-                        />
+                        <button onClick={() => copyText(code)}>
+                            <CopyIcon
+                                fillOpacity={1}
+                                className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"
+                            />
+                        </button>
                     </div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">

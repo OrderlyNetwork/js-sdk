@@ -20,7 +20,7 @@ interface Props {
 
 export const TopNavbar: FC<Props> = (props) => {
   const { state } = useAccount();
-  const { errors, appIcons: logos } = useContext(OrderlyAppContext);
+  const { errors, appIcons: logos, accountMenuItems, onClickAccountMenuItem } = useContext(OrderlyAppContext);
   const { ws: wsStatus } = useContext(StatusContext);
 
   const { onWalletConnect, onSetChain, onWalletDisconnect } =
@@ -63,18 +63,8 @@ export const TopNavbar: FC<Props> = (props) => {
           accountInfo={undefined}
           className="orderly-mr-3"
           onConnect={onConnect}
-          // dropMenuItem={
-          //   <div className="orderly-flex orderly-h-[56px] orderly-items-center">
-          //     Custom Menu
-          //   </div>
-          // }
-          // dropMenuItem={[
-          //   { icon: <CopyIcon size={20} />, title: "Menu 1", key: "1" },
-          //   { icon: <CopyIcon size={20} />, title: "Menu 2", key: "2" },
-          // ]}
-          // onClickDropMenuItem={(item) => {
-          //   console.log("onClickDropMenuItem", item);
-          // }}
+          dropMenuItem={accountMenuItems}
+          onClickDropMenuItem={onClickAccountMenuItem}
         />
       </div>
       {wsStatus === WsNetworkStatus.Unstable ? (

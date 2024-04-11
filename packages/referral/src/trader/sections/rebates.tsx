@@ -46,14 +46,14 @@ export const Rebates: FC<{
     }
 
     return (
-        <div className={cn("orderly-p-3 orderly-rounded-lg orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-600", props.className)}>
-            <div className="orderly-flex orderly-items-center orderly-justify-between">
-                <div className="orderly-flex-1 orderly-text-base 2xl:orderly-text-lg">My rebates</div>
-                {displayDate && <div className="orderly-text-3xs orderly-text-base-contrast-36">{displayDate}</div>}
+        <div className={cn("orderly-py-6 orderly-px-1 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
+            <div className="orderly-flex orderly-items-center orderly-justify-between orderly-px-2">
+                <div className="orderly-flex-1 orderly-text-base 2xl:orderly-text-lg orderly-px-1 lg:orderly-px-3">My rebates</div>
+                {displayDate && <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-mr-1 lg:orderly-mr-3">{displayDate}</div>}
             </div>
 
-            <Divider className="orderly-mt-3" />
-            <RebateList dataSource={dataSource} loadMore={loadMore} loading={isLoading}/>
+            <Divider className="orderly-mt-3 orderly-px-3 lg:orderly-px-5" />
+            <RebateList dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
         </div>
     );
 }

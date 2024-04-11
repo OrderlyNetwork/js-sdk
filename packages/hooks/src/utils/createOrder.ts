@@ -160,7 +160,10 @@ export class LimitOrderCreator extends BaseOrderCreator {
     delete order['trigger_price'];
     delete order['isStopOrder'];
 
-    console.log("create", order);
+    const { quote_dp } = config.symbol;
+    if (values.order_price) {
+      order["order_price"] = new Decimal(Number.parseFloat(values.order_price.toString())).toFixed(quote_dp, Decimal.ROUND_DOWN);
+    }
 
     return order;
   }
@@ -270,6 +273,15 @@ export class StopLimitOrderCreator extends LimitOrderCreator {
     // @ts-ignore
     delete order["isStopOrder"];
     delete order['total'];
+
+    const { quote_dp } = config.symbol;
+    if (values.order_price) {
+      order["order_price"] = new Decimal(Number.parseFloat(values.order_price.toString())).toFixed(quote_dp, Decimal.ROUND_DOWN);
+    }
+    
+    if (values.trigger_price) {
+      order["trigger_price"] = new Decimal(Number.parseFloat(values.trigger_price.toString())).toFixed(quote_dp, Decimal.ROUND_DOWN);
+    }
 
     return order;
   }

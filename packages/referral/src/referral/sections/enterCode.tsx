@@ -15,7 +15,7 @@ import { useMutation } from "@orderly.network/hooks";
 
 export const ReferralInputCode = create<{
   mutate: any,
-  bindReferralCodeState?: (success: boolean, error: any, hide: any) => void
+  bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void
 }>((props) => {
 
   const { mutate } = props;
@@ -38,7 +38,7 @@ export const ReferralInputCode = create<{
       toast.success("Referral code bound");
       mutate();
       if (props.bindReferralCodeState) {
-        props.bindReferralCodeState(true, null, hide);
+        props.bindReferralCodeState(true, null, hide, {tab: 1});
       } else {
         hide();
       }
@@ -47,10 +47,14 @@ export const ReferralInputCode = create<{
       if ("message" in (e)) {
         errorText = e.message;
       }
+
+      if ("referral code not exist" === errorText) {
+        errorText = "This referral code does not exist";
+      }
       
       if (props.bindReferralCodeState) {
         toast.error(errorText);
-        props.bindReferralCodeState(false, e, hide);
+        props.bindReferralCodeState(false, e, hide, {});
       } else {
         toast.error(errorText);
       }
@@ -63,7 +67,7 @@ export const ReferralInputCode = create<{
     if (regex.test(code) && code.length >= 4 && code.length <= 10) {
       setErrorInfo("");
     } else {
-      setErrorInfo("This referral code does not exist.");
+      // setErrorInfo("This referral code does not exist.");
     }
   };
 
@@ -71,7 +75,7 @@ export const ReferralInputCode = create<{
     <Dialog open={visible} onOpenChange={onOpenChange}>
       <DialogContent
 
-        className="orderly-p-5 "
+        className="orderly-p-6 orderly-bg-base-800"
         maxWidth={"lg"}
         closable
       >
@@ -87,12 +91,12 @@ export const ReferralInputCode = create<{
           <div className="orderly-text-xs orderly-text-base-contrast-54">
             Bind a referral code to earn trading fee rebates.
           </div>
-          <div className="orderly-text-xs orderly-text-base-contrast-54 orderly-mt-6">
+          <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-6">
             Enter referral code
           </div>
 
           <Input
-            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-800"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
             placeholder="Enter code"
             value={code}
             onChange={(e) => {
@@ -105,16 +109,16 @@ export const ReferralInputCode = create<{
             }}><CloseIcon className="hover:orderly-fill-slate-300" /></button>)}
           />
 
-          {errorInfo.length > 0 && (<div className="orderly-flex orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-center">
+          {/* {errorInfo.length > 0 && (<div className="orderly-flex orderly-text-danger orderly-text-3xs orderly-mt-3 orderly-items-center">
             <div className="orderly-inline-block orderly-bg-danger orderly-rounded-full orderly-w-[4px] orderly-h-[4px] orderly-mr-1"></div>
             {errorInfo}
-          </div>)}
+          </div>)} */}
 
           <Button
             id="referral_bind_referral_code_btn"
             disabled={code.length == 0 || errorInfo.length > 0}
             loading={isMutating}
-            className="orderly-my-6"
+            className="orderly-mt-6 orderly-mb-4"
             onClick={(e) => {
               e.stopPropagation();
               onClickConfirm();

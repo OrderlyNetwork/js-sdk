@@ -6,7 +6,7 @@ export const CardContainer: FC<PropsWithChildren<{ id?: string, className?: stri
     return (
         <div
             id={props.id}
-            className={cn("orderly-rounded-lg", props.className)}
+            className={cn("orderly-rounded-xl", props.className)}
         >
             {props.children}
         </div>

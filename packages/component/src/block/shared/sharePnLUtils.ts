@@ -223,3 +223,44 @@ function formatOpenTime(input: number | Date): string {
 function formatFixed(value: number, dp: number) {
   return new Decimal(value).toFixed(dp, Decimal.ROUND_DOWN);
 }
+
+export function savePnlInfo(
+  format: PnLDisplayFormat,
+  options: Set<ShareOptions>,
+  bgIndex: number,
+  message: string
+) {
+  localStorage.setItem(
+    "pnl_config_key",
+    JSON.stringify({
+      bgIndex: bgIndex,
+      pnlFormat: format,
+      options: Array.from(options),
+      message: message,
+    })
+  );
+}
+
+export function getPnlInfo(): {
+  bgIndex: number;
+  pnlFormat: PnLDisplayFormat;
+  options: ShareOptions[];
+  message: "";
+} {
+  const str = localStorage.getItem("pnl_config_key");
+
+  if (str && str.length > 0) {
+    try {
+      const json = JSON.parse(str);
+      console.log("local json", json);
+
+      return json;
+    } catch (e) {}
+  }
+  return {
+    bgIndex: 0,
+    pnlFormat: "roi_pnl",
+    options: ["openPrice", "openTime", "markPrice", "quantity", "leverage"],
+    message: "",
+  };
+}

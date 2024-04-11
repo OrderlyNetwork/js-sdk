@@ -1,4 +1,5 @@
 import { cn } from "@orderly.network/react";
+import { Decimal } from "@orderly.network/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./barChart.css";
 import { formatMdTime } from "../utils/utils";
@@ -157,6 +158,7 @@ export const ColmunChart: React.FC<{
             if (yAxis.maxRate) {
                 info["max"] = info.max * yAxis.maxRate;
             }
+            
 
             return info;
         } catch (err) {
@@ -203,9 +205,15 @@ export const ColmunChart: React.FC<{
         const titles = data.map((e) => e[0]);
         var children: any[] = [];
 
-        const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
+        // const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
+        // const maxCount = (barStyle.maxCount || (titles.length)) - 1;
+        // var stepX = (size.width - padding - barStyle.width * 2) / maxCount;
+
+
+        const leftPading = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
+        const padding = leftPading + barStyle.columnPadding;
         const maxCount = (barStyle.maxCount || (titles.length)) - 1;
-        var stepX = (size.width - padding - barStyle.width * 2) / maxCount;
+        let stepX = (size.width - padding - barStyle.width ) / maxCount;
 
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
@@ -217,7 +225,7 @@ export const ColmunChart: React.FC<{
                 title = xAxis.xTitle(data[index]);
             }
 
-            const x = padding + stepX * index + 6;
+            const x = leftPading + stepX * index + 6;
             const y = size.height - xAxis.fontSize;
 
             children.push(
@@ -236,9 +244,10 @@ export const ColmunChart: React.FC<{
         var children: any[] = [];
 
 
-        const padding = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
+        const leftPading = yAxis.width + yAxis.gridPaddingLeft + barStyle.columnPadding;
+        const padding = leftPading + barStyle.columnPadding;
         const maxCount = (barStyle.maxCount || (columns.length)) - 1;
-        let stepX = (size.width - padding - barStyle.width * 2) / maxCount;
+        let stepX = (size.width - padding - barStyle.width ) / maxCount;
 
         if (!isFinite(stepX) || Number.isNaN(stepX)) {
             stepX = 0;
@@ -247,13 +256,13 @@ export const ColmunChart: React.FC<{
         for (let index = 0; index < columns.length; index++) {
             const column = columns[index];
 
-            const x = padding + stepX * index;
+            const x = leftPading + stepX * index;
             // const y = size.height - xAxis.fontSize;
             const height = containerHeight - convertToYCoordinate(column, minMaxInfo.min, minMaxInfo.max, containerHeight);
             const y = (containerHeight - height) + yAxis.gridPaddingTop;
 
 
-            // console.log(`colums: ${columns}, stepX: ${stepX} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}`);
+            // console.log(`colums: ${columns}, stepX: ${stepX} leftPading: ${leftPading} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}, width: ${size.width}, barStyle:`, barStyle);
 
             children.push(
                 <rect
@@ -329,7 +338,7 @@ export const ColmunChart: React.FC<{
                 </svg>
             )}
             {hoverItem && <div
-                className="orderly-absolute orderly-bg-base-500 orderly-rounded-lg orderly-p-3 orderly-top-0"
+                className="orderly-absolute orderly-bg-base-500 orderly-rounded-[6px] orderly-p-3 orderly-top-0"
                 style={{
                     marginLeft: hoverX,
                     pointerEvents: 'none',
@@ -422,10 +431,20 @@ export function abbreviatedNumbers(input?: string | number | undefined) {
     if (absNumber === 0) {
         return "0";
     }
-  
+
+    if (absNumber < 0.01) {
+        return new Decimal(`${absNumber}`).toDecimalPlaces(6, Decimal.ROUND_DOWN).toString();;
+    }
+
+
+    if (absNumber < 1000) {
+        return new Decimal(`${absNumber}`).toDecimalPlaces(2, Decimal.ROUND_DOWN).toString();
+    }
+    
+    
     const magnitude = Math.floor(Math.log10(absNumber) / 3);
     const scaledNumber = value / Math.pow(10, magnitude * 3);
-    const formattedNumber = scaledNumber.toFixed(1);
-  
+    const formattedNumber = new Decimal(`${scaledNumber}`).toDecimalPlaces(2, Decimal.ROUND_DOWN).toString();
+    
     return formattedNumber + suffixes[magnitude];
   }

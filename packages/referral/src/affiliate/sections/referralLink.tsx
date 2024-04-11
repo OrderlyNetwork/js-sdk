@@ -1,6 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 import { HintIcon, CopyIcon } from "../icons";
-import { Input, Text, Numeral, Tooltip, cn, toast } from "@orderly.network/react";
+import { Input, Text, Numeral, Tooltip, cn, toast, modal } from "@orderly.network/react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { addQueryParam } from "../../utils/utils";
 import { AutoHideText } from "../../components/autoHideText";
@@ -29,7 +29,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
             const index = referralCodes.findIndex((item) => item.code === code);
             if (index !== -1) {
 
-                pinedItems.push({ ...referralCodes[index]});
+                pinedItems.push({ ...referralCodes[index] });
                 referralCodes.splice(index, 1);
             }
 
@@ -62,7 +62,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
     }, [
         firstCode?.referrer_rebate_rate
     ]);
-    
+
     const share = useMemo(() => {
         const value = new Decimal(firstCode?.referee_rebate_rate || "0").mul(100).toDecimalPlaces(0, Decimal.ROUND_DOWN).toString();
         return `${value}%`
@@ -70,28 +70,28 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
     }, [firstCode?.referee_rebate_rate]);
 
     return (
-        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-600 orderly-rounded-lg", props.className)}>
+        <div className={cn("orderly-p-6 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 orderly-rounded-xl", props.className)}>
             <div className="orderly-text-base 2xl:orderly-text-lg">
                 Referral link
             </div>
 
             <div className="orderly-mt-4 orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-3">
 
-                <div className="lg:orderly-w-auto orderly-flex orderly-gap-3 orderly-items-center">
+                <div className="lg:orderly-w-auto orderly-flex orderly-gap-5 orderly-items-center">
                     <Info
                         title="Earn"
-                        value={earn}
-                        className="orderly-flex-1"
+                        value={<GradientText texts={[{ text: earn, gradient: true }]} />}
+                        className="orderly-flex-1 2xl:orderly-min-w-[120px] xl:orderly-min-w-[60px]"
                         tooltip={<GradientText texts={[
                             { text: earn, gradient: true },
                             { text: " WOOFi Pro net fee that deduct Orderly fee." },
                         ]} />}
-                        valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
+                    // valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
                     />
                     <Info
                         title="Share"
                         value={share}
-                        className="orderly-flex-1"
+                        className="orderly-flex-1 2xl:orderly-min-w-[120px] xl:orderly-min-w-[60px]"
                         tooltip={<GradientText texts={[
                             { text: "Your referees get " },
                             { text: share, gradient: true },
@@ -102,7 +102,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
 
                 <div className="lg:orderly-flex-1 orderly-flex orderly-flex-col orderly-gap-2">
                     <CopyInfo title="Referral code" value={firstCode?.code || ""} copyText={firstCode?.code || ""} />
-                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} className="orderly-max-w-[100px] sm:orderly-max-w-[151px]"/>)} copyText={referralLink} />
+                    <CopyInfo title="Referral link" value={(<AutoHideText text={referralLink} className="orderly-leading-4" />)} copyText={referralLink} />
 
                 </div>
 
@@ -123,15 +123,26 @@ const Info: FC<{
 
     return (
         <div className={className}>
-            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs"}>
+            <div className={"orderly-flex orderly-items-center orderly-text-3xs md:orderly-text-2xs xl:orderly-text-xs xl:orderly-min-w-[60px] orderly-text-base-contrast-54 orderly-gap-2"}>
                 {title}
                 <Tooltip content={tooltip} className="orderly-max-w-[200px]">
-                    <div><HintIcon className="orderly-ml-2 orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer" fillOpacity={1} /></div>
+                    <div onClick={() => {
+                        modal.alert({
+                            title: title,
+                            message: (
+                                <div className="orderly-text-base-contrast/30 orderly-space-y-3 orderly-text-3xs desktop:orderly-text-xs">
+                                    {tooltip}
+                                </div>
+                            ),
+                        });
+                    }} >
+                        <HintIcon className=" orderly-fill-white/40 hover:orderly-fill-white/80 orderly-cursor-pointer orderly-mt-[1px]" fillOpacity={1} />
+                    </div>
                 </Tooltip>
             </div>
             <div className={cn("orderly-text-[24px] lg:orderly-text-[26px] 2xl:orderly-text-[28px] orderly-mt-1 orderly-h-[32px] md:orderly-h-[34px] xl:orderly-h-[36px]", props.valueClassName)}>
-                    {value}
-                
+                {value}
+
 
                 {/* <GradientText texts={[{ text: value, gradient: gradient }]} /> */}
             </div>
@@ -154,9 +165,9 @@ const CopyInfo: FC<{ title: string, value: string | React.ReactNode, copyText: s
 
     return (
         <div className="orderly-flex orderly-p-3 orderly-items-center orderly-bg-base-500 orderly-rounded-md orderly-justify-between">
-            <div className="orderly-w-[88px] orderly-text-base-contrast-54 orderly-text-3xs lg:orderly-text-2xs 2xl:orderly-text-xs">{title}</div>
-            <div className="orderly-flex">
-                <div className="orderly-flex-1 orderly-max-w-[100px] sm:orderly-max-w-[151px] orderly-mx-3 orderly-text-right orderly-text-xs 2xl:orderly-text-base">{value}</div>
+            <div className="orderly-text-base-contrast-54 orderly-text-3xs lg:orderly-text-2xs 2xl:orderly-text-xs">{title}</div>
+            <div className="orderly-flex-1 orderly-flex orderly-items-center">
+                <div className="orderly-flex-1 orderly-mx-3 orderly-text-right orderly-text-xs 2xl:orderly-text-base">{value}</div>
                 <CopyIcon
                     fillOpacity={1}
                     className="orderly-mr-3 orderly-cursor-pointer orderly-fill-base-contrast-54 hover:orderly-fill-base-contrast"

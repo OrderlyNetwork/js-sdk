@@ -1,16 +1,40 @@
 # @orderly.network/types
 
-## 0.2.7-referral.0
+## 1.2.0
+
+### Minor Changes
+
+- 52bebed3: fix bugs;
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- fix bugs;
+
+## 0.2.8
 
 ### Patch Changes
 
-- publish referral
+- fix bug: app crashes when symbolInfo is null;
+
+## 0.2.7
+
+### Patch Changes
+
+- fix bug: window not defined;
 
 ## 0.2.6
 
 ### Patch Changes
 
-- update version
+- 93a5ce6a: fix bugs;
+
+## 0.2.6-alpha.0
+
+### Patch Changes
+
+- fix bugs;
 
 ## 0.2.5
 
