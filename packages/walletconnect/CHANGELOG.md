@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.3.0-internal.1
+
+### Patch Changes
+
+- update
+
 ## 1.3.0-internal.0
 
 ### Minor Changes
