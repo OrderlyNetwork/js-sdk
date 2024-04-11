@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
 import {
+  useAccount,
   usePrivateInfiniteQuery,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
@@ -9,10 +10,11 @@ import { NetworkImage } from "@/icon";
 import { Decimal } from "@orderly.network/utils";
 import { generateKeyFun, getAnnualRate, getInfiniteData } from "../utils";
 import { useEndReached } from "@/listView/useEndReached";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 const FundingFee: React.FC = () => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-
+  const { state } = useAccount();
   const symbolInfo = useSymbolsInfo();
 
   const { data, size, setSize, isLoading } = usePrivateInfiniteQuery(
@@ -24,7 +26,12 @@ const FundingFee: React.FC = () => {
     }
   );
 
-  const dataSource = useMemo(() => getInfiniteData(data), [data]);
+  const dataSource = useMemo(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return [];
+    }
+    return getInfiniteData(data);
+  }, [state, data]);
 
   useEndReached(sentinelRef, () => {
     if (!isLoading) {
