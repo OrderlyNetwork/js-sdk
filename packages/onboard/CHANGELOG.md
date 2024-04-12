@@ -1,5 +1,17 @@
 # @orderly.network/onboard
 
+## 1.3.0-referral.0
+
+### Minor Changes
+
+- fix bugs;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@1.3.0-referral.0
+  - @orderly.network/types@1.3.0-referral.0
+
 ## 1.2.0
 
 ### Minor Changes

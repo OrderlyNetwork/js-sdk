@@ -1,5 +1,18 @@
 # @orderly.network/referral
 
+## 0.1.0-referral.5
+
+### Minor Changes
+
+- fix bugs;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.3.0-referral.0
+  - @orderly.network/hooks@1.3.0-referral.0
+  - @orderly.network/utils@1.3.0-referral.0
+
 ## 0.0.2-referral.0
 
 ### Patch Changes

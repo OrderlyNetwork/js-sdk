@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.3.0-referral.0
+
+### Minor Changes
+
+- fix bugs;
+
 ## 1.2.0
 
 ### Minor Changes

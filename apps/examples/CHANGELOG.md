@@ -1,5 +1,19 @@
 # examples
 
+## 0.3.0-referral.0
+
+### Minor Changes
+
+- fix bugs;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.3.0-referral.0
+  - @orderly.network/web3-onboard@1.3.0-referral.0
+  - @orderly.network/hooks@1.3.0-referral.0
+  - @orderly.network/core@1.3.0-referral.0
+
 ## 0.2.10
 
 ### Patch Changes

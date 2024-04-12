@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "0.1.6"
   },
   "changesets": [
+    "big-queens-marry",
     "good-buttons-leave"
   ]
 }

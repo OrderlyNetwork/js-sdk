@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.2.0-referral.0
+
+### Minor Changes
+
+- fix bugs;
+
 ## 0.1.8
 
 ### Patch Changes
