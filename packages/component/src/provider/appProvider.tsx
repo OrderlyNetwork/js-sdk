@@ -73,6 +73,10 @@ export type CommonOrderlyAppState = {
 
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
+
+  saveRefCode?: boolean;
+  onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -114,6 +118,9 @@ export const OrderlyAppProvider: FC<
     footerStatusBarProps,
     shareOptions,
     chains,
+    saveRefCode,
+    onClickReferral,
+    onBoundRefCode,
     accountMenuItems,
     onClickAccountMenuItem,
     topBar,
@@ -128,6 +135,9 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       contracts={contracts}
+      saveRefCode={saveRefCode}
+      onClickReferral={onClickReferral}
+      onBoundRefCode={onBoundRefCode}
     >
       <InnerProvider
         appIcons={logos}

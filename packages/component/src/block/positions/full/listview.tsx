@@ -33,13 +33,15 @@ export const Listview: FC<
   PositionsViewProps & {
     unPnlPriceBasis: any;
     setUnPnlPriceBasic: any;
+    pnlNotionalDecimalPrecision: any,
   }
 > = (props) => {
+  const { pnlNotionalDecimalPrecision } = props;
   const { height } = useContext(TabContext);
   // const { footerHeight } = useContext(LayoutContext);
-  const {
-    data: { pnlNotionalDecimalPrecision },
-  } = useTabContext();
+  // const {
+  //   data: { pnlNotionalDecimalPrecision },
+  // } = useTabContext();
   const columns = useMemo<Column[]>(() => {
     return [
       {

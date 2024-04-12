@@ -1,31 +1,9 @@
 {
-  "extends": "tsconfig/react-library.json",
-  "include": ["src"],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules",
-    "**/*.test.tsx",
-    "**/*.test.ts",
-    "**/*.test.js",
-    "**/*.spec.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.js",
-    "**/*.stories.tsx",
-  ],
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "module": "esnext",
-    "outDir": "dist",
-    "declarationDir": "types",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-
     "paths": {
-      "@/*": ["./src/*"]
+      "@orderly.network/react": ["../../packages/component/src"],
+      "@orderly.network/referral": ["../../packages/referral/src"],
     },
-    "typeRoots": ["./node_modules/@types", "./src/@types"]
   }
 }
