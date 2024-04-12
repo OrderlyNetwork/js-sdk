@@ -62,7 +62,7 @@ export type CommonOrderlyAppState = {
   shareOptions: ShareConfigProps;
 
   /** custom chains  */
-  chains?: Chains<undefined, undefined>;
+  customChains?: Chains<undefined, undefined>;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 
   topBar?: ReactNode;
@@ -117,7 +117,7 @@ export const OrderlyAppProvider: FC<
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
-    chains,
+    customChains,
     saveRefCode,
     onClickReferral,
     onBoundRefCode,
@@ -147,7 +147,7 @@ export const OrderlyAppProvider: FC<
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
         shareOptions={{ ...PnLDefaultProps, ...shareOptions }}
-        chains={chains}
+        customChains={customChains}
         accountMenuItems={accountMenuItems}
         onClickAccountMenuItem={onClickAccountMenuItem}
         topBar={topBar}
@@ -168,7 +168,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
-    chains: customChains,
+    customChains,
     accountMenuItems,
     onClickAccountMenuItem,
     topBar,
@@ -397,7 +397,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         brokerName,
         footerStatusBarProps,
         shareOptions,
-        chains: props.chains,
+        customChains: props.customChains,
         accountMenuItems,
         onClickAccountMenuItem,
         topBar,
