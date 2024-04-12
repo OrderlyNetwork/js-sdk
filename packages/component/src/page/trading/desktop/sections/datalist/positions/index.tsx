@@ -21,6 +21,10 @@ export const PositionPane: FC<{
   const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol, {calcMode});
   const { state } = useAccount();
 
+  const {
+    data: { pnlNotionalDecimalPrecision },
+  } = useTabContext();
+
 
   return (
     <PositionsViewFull
@@ -31,6 +35,7 @@ export const PositionPane: FC<{
       isLoading={loading}
       showAllSymbol={tabExtraData.showAllSymbol}
       onSymbolChange={context.onSymbolChange}
+      pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
       {...props}
     />
   );

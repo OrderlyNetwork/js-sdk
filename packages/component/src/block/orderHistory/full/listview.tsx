@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { Table } from "@/table";
 import { OrderStatus, OrderSide, API } from "@orderly.network/types";
 import { cx } from "class-variance-authority";
@@ -78,13 +78,7 @@ export const Listview: FC<Props> = (props) => {
 
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
-      <EndReachedBox
-        onEndReached={() => {
-          if (!props.loading) {
-            props.loadMore?.();
-          }
-        }}
-      >
+      
         <Table
           bordered
           justified
@@ -122,12 +116,16 @@ export const Listview: FC<Props> = (props) => {
           expandRowRender={(record, index) => {
             return <OrderTrades record={record} index={index} />;
           }}
+          scrollToEnd={() => {
+            if (!props.loading) {
+              props.loadMore?.();
+            }
+          }}
         />
 
         {(!props.dataSource || props.dataSource.length <= 0) && (
           <PositionEmptyView watchRef={divRef} left={0} right={120} />
         )}
-      </EndReachedBox>
     </div>
   );
 };

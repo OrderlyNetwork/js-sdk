@@ -1,0 +1,1 @@
+export type FilterType = "All" | "1D" | "7D" | "30D";
