@@ -1,15 +1,18 @@
 import { NoData } from "@/illustration";
 import { FC, useMemo } from "react";
+import { cn } from "..";
 
 interface EmptyViewProps {
   // visible?: boolean;
   text?: string;
   icon?: React.ReactNode;
+  iconSize?: number;
+  className?: string;
 }
 
 export const EmptyView: FC<EmptyViewProps> = (props) => {
   const icon = useMemo(() => {
-    return <NoData />;
+    return <NoData width={props.iconSize || 101} height={props.iconSize || 101}/>;
   }, [props.icon]);
 
   const text = useMemo(() => {
@@ -17,7 +20,7 @@ export const EmptyView: FC<EmptyViewProps> = (props) => {
   }, [props.text]);
 
   return (
-    <div className="orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-min-h-[180px]">
+    <div className={cn("orderly-flex orderly-flex-col orderly-items-center orderly-justify-center orderly-min-h-[180px]", props.className)}>
       <div>{icon}</div>
       <div className="orderly-text-base-contrast-54">{text}</div>
     </div>

@@ -9,12 +9,13 @@ export const PositionsViewFull: FC<
   Omit<PositionsViewProps, "onShowAllSymbolChange"> & {
     unPnlPriceBasis: any;
     setUnPnlPriceBasic: any;
+    pnlNotionalDecimalPrecision: any;
 }
 > = (props) => {
   return (
     <>
       <AssetsProvider>
-        <Header aggregated={props.aggregated} />
+        <Header aggregated={props.aggregated} pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision} />
       </AssetsProvider>
       <Divider />
       <Listview {...props} />

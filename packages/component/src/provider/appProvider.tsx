@@ -62,6 +62,7 @@ export type OrderlyAppContextState = {
   errors: AppStateErrors;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  onClickReferral?: () => void;
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -85,6 +86,9 @@ export interface OrderlyAppProviderProps {
    */
   includeTestnet?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  saveRefCode?: boolean,
+  onClickReferral?: () => void,
+  onBoundRefCode?: (success: boolean, error: any) => void,
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -93,7 +97,7 @@ export interface OrderlyAppProviderProps {
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 }
- 
+
 export const OrderlyAppProvider: FC<
   PropsWithChildren<OrderlyAppProviderProps & ConfigProviderProps>
 > = (props) => {
@@ -113,6 +117,9 @@ export const OrderlyAppProvider: FC<
     footerStatusBarProps,
     shareOptions,
     chains,
+    saveRefCode,
+    onClickReferral,
+    onBoundRefCode,
     accountMenuItems,
     onClickAccountMenuItem,
   } = props;
@@ -125,6 +132,9 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       contracts={contracts}
+      saveRefCode={saveRefCode}
+      onClickReferral={onClickReferral}
+      onBoundRefCode={onBoundRefCode}
     >
       <InnerProvider
         appIcons={logos}

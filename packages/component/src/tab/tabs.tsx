@@ -29,6 +29,7 @@ export interface TabsProps {
   fullWidth?: boolean;
 
   showIdentifier?: boolean;
+  identifierClassName?: string;
 
   collapsed?: boolean;
   onToggleCollapsed?: () => void;
@@ -230,6 +231,7 @@ const TabsInner = (
         showIdentifier={showIdentifier}
         className={props.tabBarClassName}
         fullWidth={props.fullWidth}
+        identifierClassName={props.identifierClassName}
       />
     ) : (
       <TabGroup tabList={tabList} className={props.tabBarClassName} />

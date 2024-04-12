@@ -1,14 +1,15 @@
 import { Paper } from "@/layout";
 import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { useAccount } from "@orderly.network/hooks";
+import { OrderlyContext, useAccount, useMutation } from "@orderly.network/hooks";
 
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
+import { ReferralCode } from "./sections/referralCode";
 
 export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -28,6 +29,15 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   const [handleStep, setHandleStep] = useState(0);
   const [remember, setRemember] = useState(true);
+  const localRefCode = localStorage.getItem("referral_code") || undefined;
+  const [refCode, setRefCode] = useState<string | undefined>(localRefCode);
+  const [
+    bindRefCode,
+    { error: updateOrderError, isMutating: updateMutating },
+  ] = useMutation("/v1/referral/bind", "POST");
+
+
+  const { onBoundRefCode } = useContext(OrderlyContext);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -52,17 +62,34 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         .onEnableTrading?.(remember)
         .then(
           () => {
+            if (refCode && refCode.length > 0) {
+              bindRefCode({ referral_code: refCode }).then((res) => {
+                onBoundRefCode?.(true, undefined);
+              }).catch((e) => {
+                onBoundRefCode?.(false, e);
+               }).finally(() => {
+                localStorage.removeItem("referral_code");
+              });
+            }
             props.onComplete?.();
           },
-          (error) => {
-            toast.error(error.message);
+          (e) => {
+            let errorText = `${e}`;
+            if ("message" in (e)) {
+              errorText = e.message;
+            }
+
+            if ("referral code not exist" === errorText) {
+              errorText = "This referral code does not exist";
+            }
+            toast.error(errorText);
           }
         )
         .finally(() => {
           setHandleStep(0);
         });
     }
-  }, [status, remember]);
+  }, [status, remember, refCode]);
 
   return (
     <div>
@@ -107,6 +134,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
+      <ReferralCode className="orderly-pt-5" refCode={refCode} setRefCode={setRefCode} />
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>

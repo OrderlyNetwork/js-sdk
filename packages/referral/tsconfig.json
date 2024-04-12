@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "paths": {
+      "@orderly.network/react": ["../component/src"],
+    },
+  }
+}
