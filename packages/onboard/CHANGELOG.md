@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.2.1-internal.3
+
+### Patch Changes
+
+- update ui
+- Updated dependencies
+  - @orderly.network/hooks@1.2.1-internal.3
+  - @orderly.network/types@1.2.1-internal.3
+
 ## 1.2.1-internal.2
 
 ### Patch Changes
