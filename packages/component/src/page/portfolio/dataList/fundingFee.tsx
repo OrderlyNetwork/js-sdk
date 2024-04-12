@@ -101,7 +101,7 @@ const FundingFee: React.FC = () => {
       },
 
       {
-        title: "Funding fee",
+        title: "Funding fee (USDC)",
         dataIndex: "funding_fee",
         align: "right",
         className: "orderly-w-[150px]",
@@ -117,13 +117,6 @@ const FundingFee: React.FC = () => {
             >
               {isReceived ? "+" : "-"}
               <Numeral precision={8}>{Math.abs(value)}</Numeral>
-              <Text
-                rule="symbol"
-                symbolElement="quote"
-                className="orderly-text-base-contrast-36 orderly-ml-[4px]"
-              >
-                {record.symbol}
-              </Text>
             </div>
           );
         },

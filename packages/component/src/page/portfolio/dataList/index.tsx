@@ -19,15 +19,14 @@ export const DataList = () => {
   const { pageHeaderHeight, headerHeight, footerHeight } =
     useContext(LayoutContext);
 
-
   const height = `calc(100vh - ${
-    headerHeight + footerHeight + (pageHeaderHeight ?? 0) + 53 * 2
+    headerHeight + footerHeight + (pageHeaderHeight ?? 0) + 20 + 32
   }px)`;
 
   return (
     <div
       style={{ height }}
-      className="orderly-overflow-hidden orderly-max-w-[1408px] orderly-min-w-[736px] orderly-mx-auto"
+      className="orderly-overflow-hidden orderly-max-w-[1408px] orderly-min-w-[736px] orderly-mx-auto orderly-tabular-nums"
     >
       <Tabs
         value={activeTab}

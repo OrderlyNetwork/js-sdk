@@ -75,9 +75,12 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "TxID",
         dataIndex: "tx_id",
         render(value, record, index) {
+          if (!value) {
+            return <div className="orderly-text-base-contrast-54">-</div>;
+          }
           return (
-            <Tooltip content={value}>
-              <span className="orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-dashed orderly-border-base-contrast-54">
+            <Tooltip content={value} delayDuration={0}>
+              <span className="orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-dashed orderly-border-base-contrast-54 orderly-cursor-pointer">
                 {formatTxID(value)}
               </span>
             </Tooltip>
@@ -88,7 +91,7 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "Status",
         dataIndex: "trans_status",
         render(value, record, index) {
-          const isEnd = ["COMPLETED", "CANCELED", "FAILED"];
+          const isEnd = ["COMPLETED", "CANCELED", "FAILED"].includes(value);
           return (
             <div
               className={
