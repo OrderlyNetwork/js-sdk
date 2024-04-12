@@ -1,7 +1,11 @@
 import React, { useMemo, useRef } from "react";
 import { Column, Table } from "@/table";
 import { Numeral, Text } from "@/text";
-import { useAccount, usePrivateInfiniteQuery } from "@orderly.network/hooks";
+import {
+  useAccount,
+  usePrivateInfiniteQuery,
+  useQuery,
+} from "@orderly.network/hooks";
 import { Tooltip } from "@/tooltip";
 import { NetworkImage } from "@/icon";
 import {
@@ -19,6 +23,8 @@ type AssetHistoryProps = {};
 const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const { state } = useAccount();
+
+  const { data: chains } = useQuery("/v1/public/chain_info");
 
   const { data, size, setSize, isLoading } = usePrivateInfiniteQuery(
     generateKeyFun("/v1/asset/history", { size: 100 }),
@@ -75,12 +81,22 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "TxID",
         dataIndex: "tx_id",
         render(value, record, index) {
+          if (!value) {
+            return <div className="orderly-text-base-contrast-54">-</div>;
+          }
+          const chainInfo = (chains as any[])?.find(
+            (item) => parseInt(record.chain_id) === parseInt(item.chain_id)
+          );
+          const explorer_base_url = chainInfo?.explorer_base_url;
+          const href = `${explorer_base_url}/tx/${value}`;
           return (
-            <Tooltip content={value}>
-              <span className="orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-dashed orderly-border-base-contrast-54">
-                {formatTxID(value)}
-              </span>
-            </Tooltip>
+            <a href={href} target="_blank">
+              <Tooltip content={value} delayDuration={0}>
+                <span className="orderly-text-base-contrast-54 orderly-border-b-[1px] orderly-border-dashed orderly-border-base-contrast-54 orderly-cursor-pointer">
+                  {formatTxID(value)}
+                </span>
+              </Tooltip>
+            </a>
           );
         },
       },
@@ -88,7 +104,7 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         title: "Status",
         dataIndex: "trans_status",
         render(value, record, index) {
-          const isEnd = ["COMPLETED", "CANCELED", "FAILED"];
+          const isEnd = ["COMPLETED", "CANCELED", "FAILED"].includes(value);
           return (
             <div
               className={
@@ -146,7 +162,7 @@ const AssetHistory: React.FC<AssetHistoryProps> = (props) => {
         },
       },
     ];
-  }, []);
+  }, [chains]);
 
   return (
     <div className="orderly-overflow-y-auto orderly-h-[100vh] orderly-pb-[300px]">
