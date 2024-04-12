@@ -6,11 +6,6 @@ import { prop } from "ramda";
 import { isTestnet } from "@orderly.network/utils";
 import { TestnetChains, nativeTokenAddress } from "@orderly.network/types";
 
-type InputOptions = {
-  filter?: (item: API.Chain) => boolean;
-  pick?: "dexs" | "network_infos" | "token_infos";
-};
-
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
 };
@@ -32,9 +27,12 @@ export type Chains<
       mainnet: API.Chain[];
     };
 
-export type Options = InputOptions & SWRConfiguration;
+export type UseChainsOptions = {
+  filter?: (item: API.Chain) => boolean;
+  pick?: "dexs" | "network_infos" | "token_infos";
+} & SWRConfiguration;
 
-export type ReturnObject = {
+export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
   error: any;
 };
@@ -42,27 +40,30 @@ export type ReturnObject = {
 export function useChains(
   networkId?: undefined,
   options?: undefined
-): [Chains<undefined, undefined>, ReturnObject];
+): [Chains<undefined, undefined>, UseChainsReturnObject];
 
 export function useChains<
   T extends NetworkId | undefined,
-  K extends Options | undefined
+  K extends UseChainsOptions | undefined
 >(
   networkId?: T,
   options?: K
 ): [
   Chains<
     T,
-    K extends Options
+    K extends UseChainsOptions
       ? K["pick"] extends keyof API.Chain
         ? K["pick"]
         : undefined
       : undefined
   >,
-  ReturnObject
+  UseChainsReturnObject
 ];
 
-export function useChains(networkId?: NetworkId, options: Options = {}) {
+export function useChains(
+  networkId?: NetworkId,
+  options: UseChainsOptions = {}
+) {
   const { pick: pickField, ...swrOptions } = options;
 
   const filterFun = useRef(options?.filter);

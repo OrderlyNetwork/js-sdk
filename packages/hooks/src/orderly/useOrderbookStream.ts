@@ -218,12 +218,11 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
 
 /**
  * Configuration for the Order Book
- * @level Indicates the number of data entries to return for ask/bid, default is 10
- * @padding Whether to fill in when the actual data entries are less than the level. If filled, it will add [nan, nan, nan, nan]
- *          default is true
  */
 export type OrderbookOptions = {
+    /** Indicates the number of data entries to return for ask/bid, default is 10 */
     level?: number;
+    /** Whether to fill in when the actual data entries are less than the level. If filled, it will add [nan, nan, nan, nan]. Default is true */
     padding?: boolean;
 };
 

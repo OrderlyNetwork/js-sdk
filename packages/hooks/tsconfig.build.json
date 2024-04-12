@@ -1,9 +1,12 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "plugins": [{
-      "name": "next"
-    }],
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "jsx": "react-jsx",
     "typeRoots": ["node_modules/@types", "./typings"]
   },
