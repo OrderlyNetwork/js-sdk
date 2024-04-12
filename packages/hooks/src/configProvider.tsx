@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
@@ -16,7 +16,12 @@ import {
 } from "@orderly.network/core";
 
 import useConstant from "use-constant";
-import { NetworkId } from "@orderly.network/types";
+import {
+  Chain,
+  NetworkId,
+  defaultMainnetChains,
+  defaultTestnetChains,
+} from "@orderly.network/types";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { StatusProvider } from "./statusProvider";
@@ -40,9 +45,18 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
-  saveRefCode?: boolean; 
+  saveRefCode?: boolean;
   onClickReferral?: () => void;
   onBoundRefCode?: (success: boolean, error: any) => void;
+
+  /**
+   * you can disable some chains, if you provide this field, the chains will be filtered by this field
+   * default all chains will be shown
+   */
+  chains?: {
+    mainnet?: Chain[];
+    testnet?: Chain[];
+  };
 }
 
 export const OrderlyConfigProvider = (
@@ -113,11 +127,20 @@ export const OrderlyConfigProvider = (
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window?.location?.search);
-    const refCode = searchParams.get('ref');
+    const refCode = searchParams.get("ref");
     if (refCode && saveRefCode) {
       localStorage.setItem("referral_code", refCode);
     }
   }, [saveRefCode]);
+
+  const chains = useMemo(() => {
+    const { mainnet, testnet } = props.chains || {};
+
+    return {
+      mainnet: mainnet || defaultMainnetChains,
+      testnet: testnet || defaultTestnetChains,
+    };
+  }, [props.chains]);
 
   if (!account) {
     return null;
@@ -133,6 +156,7 @@ export const OrderlyConfigProvider = (
         saveRefCode,
         onClickReferral,
         onBoundRefCode,
+        chains,
         // apiBaseUrl,
       }}
     >

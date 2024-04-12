@@ -34,6 +34,7 @@ import {
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { TopNavbarProps } from "@/page/common/topNavbar";
+import { ChainInfo } from "@orderly.network/types";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;

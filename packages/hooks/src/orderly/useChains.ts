@@ -1,10 +1,11 @@
 import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
 import { useQuery } from "../useQuery";
 import { prop } from "ramda";
 import { isTestnet } from "@orderly.network/utils";
 import { TestnetChains, nativeTokenAddress } from "@orderly.network/types";
+import { OrderlyContext } from "../orderlyContext";
 
 type InputOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -64,6 +65,7 @@ export function useChains<
 
 export function useChains(networkId?: NetworkId, options: Options = {}) {
   const { pick: pickField, ...swrOptions } = options;
+  const { chains: allowedChains } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;

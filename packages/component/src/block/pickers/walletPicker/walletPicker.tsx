@@ -1,6 +1,6 @@
 import { Input } from "@/input";
 import { FC, useContext, useMemo } from "react";
-import { API, ChainConfig, CurrentChain } from "@orderly.network/types";
+import { API, Chain, CurrentChain } from "@orderly.network/types";
 import { ChainSelect } from "../chainPicker";
 import { OrderlyContext } from "@orderly.network/hooks";
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
