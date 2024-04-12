@@ -3,7 +3,7 @@ import { Statistic } from "@/statistic";
 import { Tag } from "@/tag";
 import { Text } from "@/text";
 import { firstLetterToUpperCase, upperCaseFirstLetter } from "@/utils/string";
-import { API } from "@orderly.network/types";
+import { API, AlgoOrderRootType } from "@orderly.network/types";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
 import { OrderTypeTag } from "./typeTag";
@@ -48,6 +48,13 @@ export const Cell: FC<HistoryCellProps> = (props) => {
     return upperCaseFirstLetter(status);
   }, [item.status, item.algo_status]);
 
+  const qty = useMemo(() => {
+    if (item.parent_algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      return <span>Entire position</span>;
+    }
+    return item.quantity ?? "-";
+  }, [item]);
+
   return (
     <div className="orderly-px-4 orderly-py-2">
       <div className="orderly-mb-1 orderly-flex orderly-items-end orderly-justify-between">
@@ -69,11 +76,13 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           label="Qty."
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs"
-          value={item.quantity ?? "-"}
+          value={qty}
           rule="price"
           precision={base_dp}
           className={
-            item.side === OrderSide.BUY
+            item.parent_algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+              ? ""
+              : item.side === OrderSide.BUY
               ? "orderly-text-trade-profit"
               : "orderly-text-trade-loss"
           }

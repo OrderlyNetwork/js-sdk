@@ -64,6 +64,7 @@ export const TPSLOrderEditorSheet: FC<{
           label={"Mark price"}
           value={markPrice}
           rule="price"
+          align="right"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-xs"
         />
