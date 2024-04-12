@@ -284,8 +284,8 @@ export function calculateHelper(
   if (qty === 0)
     return {
       [`${keyPrefix}trigger_price`]: "",
-      [`${keyPrefix}offset`]: "",
-      [`${keyPrefix}offset_percentage`]: "",
+      // [`${keyPrefix}offset`]: "",
+      // [`${keyPrefix}offset_percentage`]: "",
       [`${keyPrefix}pnl`]: "",
       [key]: inputs.value,
     };
