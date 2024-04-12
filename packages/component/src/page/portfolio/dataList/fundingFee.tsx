@@ -116,7 +116,7 @@ const FundingFee: React.FC = () => {
               }
             >
               {isReceived ? "+" : "-"}
-              <Numeral precision={8}>{Math.abs(value)}</Numeral>
+              <Numeral precision={6}>{Math.abs(value)}</Numeral>
             </div>
           );
         },
