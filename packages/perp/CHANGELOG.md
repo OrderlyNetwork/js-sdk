@@ -1,5 +1,21 @@
 # @orderly.network/futures
 
+## 3.1.0
+
+### Minor Changes
+
+- 1ac07c02: fix bugs;
+
+### Patch Changes
+
+- fix bugs;
+- e4edd4c7: publish referral
+- Updated dependencies [1ac07c02]
+- Updated dependencies
+- Updated dependencies [e4edd4c7]
+  - @orderly.network/types@1.3.0
+  - @orderly.network/utils@1.3.0
+
 ## 3.1.0-referral.0
 
 ### Minor Changes

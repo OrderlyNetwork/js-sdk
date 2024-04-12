@@ -1,5 +1,25 @@
 # @orderly.network/react
 
+## 1.3.0
+
+### Minor Changes
+
+- 1ac07c02: fix bugs;
+
+### Patch Changes
+
+- fix bugs;
+- e4edd4c7: publish referral
+- Updated dependencies [1ac07c02]
+- Updated dependencies
+- Updated dependencies [e4edd4c7]
+  - @orderly.network/trading-view@1.3.0
+  - @orderly.network/hooks@1.3.0
+  - @orderly.network/types@1.3.0
+  - @orderly.network/utils@1.3.0
+  - @orderly.network/core@1.3.0
+  - @orderly.network/net@1.3.0
+
 ## 1.3.0-referral.0
 
 ### Minor Changes

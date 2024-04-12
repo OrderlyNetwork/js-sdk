@@ -1,5 +1,16 @@
 # @orderly.network/utils
 
+## 1.3.0
+
+### Minor Changes
+
+- 1ac07c02: fix bugs;
+
+### Patch Changes
+
+- fix bugs;
+- e4edd4c7: publish referral
+
 ## 1.3.0-referral.0
 
 ### Minor Changes
