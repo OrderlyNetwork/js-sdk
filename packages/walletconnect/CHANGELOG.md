@@ -1,5 +1,12 @@
 # @orderly.network/web3-modal
 
+## 1.2.1-internal.4
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- update ui
+
 ## 1.2.1-internal.3
 
 ### Patch Changes

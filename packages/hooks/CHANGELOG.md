@@ -1,5 +1,19 @@
 # @orderly.network/hooks
 
+## 1.2.1-internal.4
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- update ui
+- Updated dependencies [e4edd4c7]
+- Updated dependencies
+  - @orderly.network/types@1.2.1-internal.4
+  - @orderly.network/utils@1.2.1-internal.4
+  - @orderly.network/core@1.2.1-internal.4
+  - @orderly.network/perp@3.0.1-internal.4
+  - @orderly.network/net@1.2.1-internal.4
+
 ## 1.2.1-internal.3
 
 ### Patch Changes
