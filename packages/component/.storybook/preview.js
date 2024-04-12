@@ -86,13 +86,18 @@ const preview = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       const configStore = new CustomConfigStore({ networkId, env: "qa" });
+
+      const searchParams = new URLSearchParams(window.location.search);
+    const refCode = searchParams.get('ref');
+    console.log("ref code is", refCode);
+
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
               main: {
@@ -133,6 +138,14 @@ const preview = {
                 window.location.reload();
               }, 100);
             }}
+            onClickReferral={() => {
+              console.log("click referral");
+            }}
+            onBoundRefCode={(success, error) => {
+              console.log("on bound ref code", success, error);
+              
+            }}
+            saveRefCode
           >
             <Story />
           </OrderlyAppProvider>

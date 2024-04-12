@@ -8,6 +8,8 @@ import { dialog } from "./preset/dialog";
 import { confirm } from "./preset/confirm";
 import { actionSheet } from "@/modal/preset/actionSheet";
 
+export type { ModalHocProps } from "./types";
+
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";
 

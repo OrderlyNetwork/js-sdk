@@ -18,6 +18,7 @@ export interface DesktopDropMenuItem {
   icon: ReactNode;
   title: string;
   key?: string;
+  className?: string;
   onClick?: () => void;
 }
 

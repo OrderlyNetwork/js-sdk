@@ -16,6 +16,7 @@ export interface ListViewProps<T, D extends unknown> {
   style?: React.CSSProperties;
 
   extraData?: D;
+  emptyView?: React.ReactNode;
 }
 
 export type ListViewRef = ForwardedRef<{
@@ -43,7 +44,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
 
     if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
       // @ts-ignore
-      return <EmptyView visible />;
+      return props.emptyView || <EmptyView visible />;
     }
 
     return props.dataSource.map((item, index) => (
@@ -51,7 +52,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
         {props.renderItem(item, index, props.extraData)}
       </React.Fragment>
     ));
-  }, [props.dataSource, props.extraData]);
+  }, [props.dataSource, props.extraData, props.emptyView]);
 
   const loadingViewElement = useMemo(() => {
     if (!props.isLoading && !!props.dataSource) {

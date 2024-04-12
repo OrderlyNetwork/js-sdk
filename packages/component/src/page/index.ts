@@ -5,3 +5,4 @@ export {
   TradingPageProvider,
   type TradingPageContextValue,
 } from "./trading/context/tradingPageContext";
+export { Portfolio } from "./portfolio";
