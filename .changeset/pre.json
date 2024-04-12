@@ -22,6 +22,7 @@
     "@orderly.network/referral": "0.0.2-referral.4"
   },
   "changesets": [
+    "dry-bottles-rhyme",
     "good-buttons-leave",
     "honest-cameras-hunt",
     "honest-dolphins-chew",

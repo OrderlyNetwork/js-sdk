@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.1.10-internal.5
+
+### Patch Changes
+
+- fix
+- Updated dependencies
+  - @orderly.network/core@1.2.1-internal.5
+
 ## 0.1.10-internal.4
 
 ### Patch Changes
