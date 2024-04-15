@@ -1,4 +1,4 @@
-export interface ChainConfig {
+export interface Chain {
   id: number;
   chainNameShort: string;
   chainLogo: string;
@@ -391,7 +391,7 @@ export const OptimismGoerli = {
   chainLogo: "",
 };
 
-export const chainsInfoMap: Map<number, ChainConfig> = new Map([
+export const chainsInfoMap: Map<number, Chain> = new Map([
   [Ethereum.id, Ethereum],
   [Avalanche.id, Avalanche],
   [Fuji.id, Fuji],
@@ -465,4 +465,5 @@ export const TestnetChains = [
   // },
 ];
 
-export const defaultChains = [Arbitrum, Base, Optimism];
+export const defaultMainnetChains = [Arbitrum, Base, Optimism];
+export const defaultTestnetChains = [ArbitrumSepolia];

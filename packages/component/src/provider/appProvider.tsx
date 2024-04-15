@@ -34,6 +34,7 @@ import {
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { TopNavbarProps } from "@/page/common/topNavbar";
+import { ChainInfo } from "@orderly.network/types";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -60,9 +61,8 @@ export type CommonOrderlyAppState = {
   theme: any;
   brokerName?: string;
   shareOptions: ShareConfigProps;
-
   /** custom chains  */
-  chains?: Chains<undefined, undefined>;
+  customChains?: Chains<undefined, undefined>;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 
   topBar?: ReactNode;
@@ -118,6 +118,7 @@ export const OrderlyAppProvider: FC<
     footerStatusBarProps,
     shareOptions,
     chains,
+    customChains,
     saveRefCode,
     onClickReferral,
     onBoundRefCode,
@@ -138,6 +139,7 @@ export const OrderlyAppProvider: FC<
       saveRefCode={saveRefCode}
       onClickReferral={onClickReferral}
       onBoundRefCode={onBoundRefCode}
+      chains={chains}
     >
       <InnerProvider
         appIcons={logos}
@@ -147,7 +149,7 @@ export const OrderlyAppProvider: FC<
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
         shareOptions={{ ...PnLDefaultProps, ...shareOptions }}
-        chains={chains}
+        customChains={customChains}
         accountMenuItems={accountMenuItems}
         onClickAccountMenuItem={onClickAccountMenuItem}
         topBar={topBar}
@@ -168,7 +170,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
-    chains: customChains,
+    customChains,
     accountMenuItems,
     onClickAccountMenuItem,
     topBar,
@@ -397,7 +399,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         brokerName,
         footerStatusBarProps,
         shareOptions,
-        chains: props.chains,
+        customChains: props.customChains,
         accountMenuItems,
         onClickAccountMenuItem,
         topBar,

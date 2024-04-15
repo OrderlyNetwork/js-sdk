@@ -106,7 +106,7 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -149,6 +149,16 @@ const EditingState: FC<{
 
     if (Number(price) === Number(order.price)) {
       return;
+    }
+
+    if (typeof order.reduce_only === "undefined") {
+      const notionalText = checkMinNotional(order.symbol, price, order.quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
     }
 
     setOpen(1);

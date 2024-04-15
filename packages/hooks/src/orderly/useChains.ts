@@ -1,15 +1,16 @@
-import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
-import { useCallback, useMemo, useRef } from "react";
+import {
+  NetworkId,
+  type API,
+  chainsInfoMap,
+  Chain as FlatChain,
+} from "@orderly.network/types";
+import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
 import { useQuery } from "../useQuery";
 import { prop } from "ramda";
 import { isTestnet } from "@orderly.network/utils";
 import { TestnetChains, nativeTokenAddress } from "@orderly.network/types";
-
-type InputOptions = {
-  filter?: (item: API.Chain) => boolean;
-  pick?: "dexs" | "network_infos" | "token_infos";
-};
+import { OrderlyContext } from "../orderlyContext";
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
@@ -32,9 +33,12 @@ export type Chains<
       mainnet: API.Chain[];
     };
 
-export type Options = InputOptions & SWRConfiguration;
+export type UseChainsOptions = {
+  filter?: (item: API.Chain) => boolean;
+  pick?: "dexs" | "network_infos" | "token_infos";
+} & SWRConfiguration;
 
-export type ReturnObject = {
+export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
   error: any;
 };
@@ -42,28 +46,32 @@ export type ReturnObject = {
 export function useChains(
   networkId?: undefined,
   options?: undefined
-): [Chains<undefined, undefined>, ReturnObject];
+): [Chains<undefined, undefined>, UseChainsReturnObject];
 
 export function useChains<
   T extends NetworkId | undefined,
-  K extends Options | undefined
+  K extends UseChainsOptions | undefined
 >(
   networkId?: T,
   options?: K
 ): [
   Chains<
     T,
-    K extends Options
+    K extends UseChainsOptions
       ? K["pick"] extends keyof API.Chain
         ? K["pick"]
         : undefined
       : undefined
   >,
-  ReturnObject
+  UseChainsReturnObject
 ];
 
-export function useChains(networkId?: NetworkId, options: Options = {}) {
+export function useChains(
+  networkId?: NetworkId,
+  options: UseChainsOptions = {}
+) {
   const { pick: pickField, ...swrOptions } = options;
+  const { chains: allowedChains } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -132,6 +140,9 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       return a.network_infos.bridgeless ? -1 : 1;
     });
 
+    mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
+    testnetArr = filterByAllowedChains(testnetArr, allowedChains?.testnet);
+
     if (!!pickField) {
       //@ts-ignore
       testnetArr = testnetArr.map((item) => item[pickField]);
@@ -151,7 +162,7 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [networkId, tokenChains, chainInfos, pickField]);
+  }, [networkId, tokenChains, chainInfos, pickField, allowedChains]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -279,4 +290,20 @@ export function updateTestnetInfo(
       testnetArr[index] = chain;
     }
   }
+}
+
+export function filterByAllowedChains(
+  chains: API.Chain[],
+  allowedChains: FlatChain[]
+) {
+  if (!allowedChains) {
+    return chains;
+  }
+
+  return chains.filter((chain) =>
+    allowedChains.some(
+      (allowedChain) =>
+        allowedChain.id === parseInt(chain?.network_infos?.chain_id as any)
+    )
+  );
 }

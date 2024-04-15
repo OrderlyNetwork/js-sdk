@@ -6,7 +6,7 @@ import {
   type getWalletAdapterFunc,
 } from "@orderly.network/core";
 
-import { NetworkId } from "@orderly.network/types";
+import { Chain, NetworkId } from "@orderly.network/types";
 
 export interface OrderlyConfigContextState {
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
@@ -25,6 +25,11 @@ export interface OrderlyConfigContextState {
   saveRefCode?: boolean;
   onClickReferral?: () => void;
   onBoundRefCode?: (success: boolean, error: any) => void;
+
+  chains: {
+    mainnet: Chain[];
+    testnet: Chain[];
+  };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

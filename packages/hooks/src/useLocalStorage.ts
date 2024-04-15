@@ -29,7 +29,7 @@ export function useLocalStorage<T>(
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = useCallback(
+  const setValue: React.Dispatch<T> = useCallback(
     (value: T) => {
       // Prevent build error "window is undefined" but keeps working
       if (typeof window === "undefined") {

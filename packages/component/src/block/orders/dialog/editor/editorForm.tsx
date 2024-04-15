@@ -29,7 +29,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const isMarket = order.type === "MARKET";
   // const { hide, reject, resolve } = useModal();
   // @ts-ignore
-  const { markPrice, maxQty, helper } = useOrderEntry(order.symbol, order.side);
+  const { markPrice, maxQty, helper, metaState } = useOrderEntry(order.symbol, order.side);
 
 
   const orderType = useMemo(() => {
@@ -64,6 +64,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     resolver: async (values) => {
       // @ts-ignore
       const errors = await helper.validator(values);
+      if (errors.total?.message !== undefined) {
+        toast.error(errors.total?.message);
+      }
+      
       return {
         values,
         errors,
