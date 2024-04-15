@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { TPSLForm } from "@/block/tp_sl/tpAndslForm";
 import {
   useLocalStorage,
-  useTaskProfitAndStopLoss,
+  useStopOrder,
   useMediaQuery,
 } from "@orderly.network/hooks";
 import {
@@ -34,17 +34,16 @@ export const TPSLEditor: FC<{
     useState<Partial<AlgoOrderEntity> | null>();
   const [open, setOpen] = useState(false);
 
-  const [order, { submit, setValue, validate, errors }] =
-    useTaskProfitAndStopLoss(
-      {
-        symbol,
-        position_qty: props.position.position_qty,
-        average_open_price: props.position.average_open_price,
-      },
-      {
-        defaultOrder: props.order,
-      }
-    );
+  const [order, { submit, setValue, validate, errors }] = useStopOrder(
+    {
+      symbol,
+      position_qty: props.position.position_qty,
+      average_open_price: props.position.average_open_price,
+    },
+    {
+      defaultOrder: props.order,
+    }
+  );
   const [showError, setShowError] = useState(false);
 
   const isTablet = useMediaQuery(MEDIA_TABLET);

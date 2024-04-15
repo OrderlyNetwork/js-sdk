@@ -167,8 +167,6 @@ export function pnlToPrice(inputs: {
 }) {
   const { qty, pnl, entryPrice, orderType, orderSide } = inputs;
 
-  console.log("pnlToPrice", inputs);
-
   if (!pnl) {
     return;
   }
@@ -284,8 +282,8 @@ export function calculateHelper(
   if (qty === 0)
     return {
       [`${keyPrefix}trigger_price`]: "",
-      [`${keyPrefix}offset`]: "",
-      [`${keyPrefix}offset_percentage`]: "",
+      // [`${keyPrefix}offset`]: "",
+      // [`${keyPrefix}offset_percentage`]: "",
       [`${keyPrefix}pnl`]: "",
       [key]: inputs.value,
     };
