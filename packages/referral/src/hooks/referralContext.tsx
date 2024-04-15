@@ -1,9 +1,11 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
-import { FC, PropsWithChildren, createContext, useEffect, useMemo } from "react";
+import { FC, PropsWithChildren, ReactNode, createContext, useEffect, useMemo } from "react";
 import { API } from "../types/api";
 import { useDaily } from "./useDaily";
 import { XAxis, YAxis, BarStyle } from "../components";
 import { formatYMDTime } from "../utils/utils";
+import { IntlProvider, MessageFormatElement } from "react-intl";
+import { en } from "../locale/en-US";
 
 export type UserVolumeType = {
     "1d_volume"?: number,
@@ -12,13 +14,53 @@ export type UserVolumeType = {
     "all_volume"?: number,
 }
 
+export type OverwiteCard = {
+    ref?: BuildNode,
+    refClassName?: string,
+    refIcon?: ReactNode,
 
+    trader?: BuildNode,
+    traderClassName?: string,
+    traderIcon?: ReactNode,
+}
+
+export type Overwrite = {
+    ref?: {
+        gradientTitle?: string,
+        top?: BuildNode,
+        card?: ReactNode | OverwiteCard,
+        step?: BuildNode | {
+            applyIcon?: ReactNode,
+            shareIcon?: ReactNode,
+            earnIcon?: ReactNode,
+        },
+
+    }
+};
+
+export type ChartConfig = {
+    affiliate: {
+        bar?: BarStyle,
+        yAxis?: YAxis,
+        xAxis?: XAxis,
+    },
+    trader: {
+        bar?: BarStyle,
+        yAxis?: YAxis,
+        xAxis?: XAxis,
+    }
+};
 
 export type ReferralContextProps = {
+    //** click become an affiliate, If this method is implemented, the `becomeAnAffiliateUrl` will not work */
     becomeAnAffiliate?: () => void,
+    //** set become an affiliate url */
     becomeAnAffiliateUrl?: string,
+    //** bind refferal code callback */
     bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void,
+    //** click learn affilate, if this method is implemented, the `learnAffilateUrl` will not work */
     learnAffiliate?: () => void,
+    //** set learn affiliate url */
     learnAffiliateUrl?: string,
     referralLinkUrl: string,
     //** referral index page */
@@ -27,18 +69,10 @@ export type ReferralContextProps = {
     enterAffiliatePage?: (params?: {}) => void,
     //** tab + tab content */
     showDashboard?: () => void,
-    chartConfig?: {
-        affiliate: {
-            bar?: BarStyle,
-            yAxis?: YAxis,
-            xAxis?: XAxis,
-        },
-        trader: {
-            bar?: BarStyle,
-            yAxis?: YAxis,
-            xAxis?: XAxis,
-        }
-    }
+    //** col chart config */
+    chartConfig?: ChartConfig,
+    //** overwrite refferal */
+    overwrite: Overwrite,
 }
 
 export type ReferralContextReturns = {
@@ -52,7 +86,15 @@ export type ReferralContextReturns = {
 
 export const ReferralContext = createContext<ReferralContextReturns>({} as ReferralContextReturns);
 
-export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (props) => {
+export type BuildNode = (state: ReferralContextReturns) => ReactNode;
+
+export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
+    intl?: {
+        messages?: Record<string, string> | Record<string, MessageFormatElement[]>,
+        locale: string,
+        defaultLocale?: string,
+    }
+}>> = (props) => {
     const {
         becomeAnAffiliate,
         becomeAnAffiliateUrl,
@@ -64,6 +106,12 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         enterTraderPage,
         enterAffiliatePage,
         chartConfig,
+        intl = {
+            messages: en,
+            locale: "en",
+            defaultLocale: "en",
+        },
+        overwrite,
     } = props;
 
     const {
@@ -83,10 +131,9 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
         data: volumeStatistics,
         mutate: volumeStatisticsMutate
     } = usePrivateQuery<API.UserVolStats>("/v1/volume/user/stats", {
-
         revalidateOnFocus: true,
     });
-    
+
     const isAffiliate = useMemo(() => {
         return (data?.referrer_info?.referral_codes?.length || 0) > 0;
     }, [data?.referrer_info]);
@@ -141,28 +188,39 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (pr
     }, []);
 
 
+    const { messages, locale, defaultLocale } = intl;
+
+
+
     return (
-        <ReferralContext.Provider value={{
-            referralInfo: data,
-            isAffiliate: isAffiliate,
-            isTrader: isTrader,
-            // isAffiliate: true,
-            // isTrader: false,
-            mutate,
-            becomeAnAffiliate,
-            becomeAnAffiliateUrl,
-            bindReferralCodeState,
-            learnAffiliate,
-            learnAffiliateUrl,
-            referralLinkUrl,
-            userVolume,
-            dailyVolume,
-            showReferralPage,
-            enterTraderPage,
-            enterAffiliatePage,
-            chartConfig,
-        }}>
-            {props.children}
-        </ReferralContext.Provider>
+        <IntlProvider
+            messages={messages}
+            locale={locale}
+            defaultLocale={defaultLocale}
+        >
+            <ReferralContext.Provider value={{
+                referralInfo: data,
+                isAffiliate: isAffiliate,
+                isTrader: isTrader,
+                // isAffiliate: false,
+                // isTrader: false,
+                mutate,
+                becomeAnAffiliate,
+                becomeAnAffiliateUrl,
+                bindReferralCodeState,
+                learnAffiliate,
+                learnAffiliateUrl,
+                referralLinkUrl,
+                userVolume,
+                dailyVolume,
+                showReferralPage,
+                enterTraderPage,
+                enterAffiliatePage,
+                chartConfig,
+                overwrite,
+            }}>
+                {props.children}
+            </ReferralContext.Provider>
+        </IntlProvider>
     );
 }
