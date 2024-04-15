@@ -139,15 +139,15 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       return a.network_infos.bridgeless ? -1 : 1;
     });
 
+    mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
+    testnetArr = filterByAllowedChains(testnetArr, allowedChains?.testnet);
+
     if (!!pickField) {
       //@ts-ignore
       testnetArr = testnetArr.map((item) => item[pickField]);
       //@ts-ignore
       mainnetArr = mainnetArr.map((item) => item[pickField]);
     }
-
-    mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
-    testnetArr = filterByAllowedChains(testnetArr, allowedChains?.testnet);
 
     if (networkId === "mainnet") {
       return mainnetArr;
@@ -299,11 +299,10 @@ export function filterByAllowedChains(
     return chains;
   }
 
-  const _chains = chains.filter((chain) =>
+  return chains.filter((chain) =>
     allowedChains.some(
-      (allowedChain) => allowedChain.id === parseInt((chain as any)?.chain_id)
+      (allowedChain) =>
+        allowedChain.id === parseInt(chain?.network_infos?.chain_id as any)
     )
   );
-
-  return _chains;
 }
