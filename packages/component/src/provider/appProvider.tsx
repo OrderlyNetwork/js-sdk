@@ -61,7 +61,6 @@ export type CommonOrderlyAppState = {
   theme: any;
   brokerName?: string;
   shareOptions: ShareConfigProps;
-
   /** custom chains  */
   customChains?: Chains<undefined, undefined>;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -118,6 +117,7 @@ export const OrderlyAppProvider: FC<
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
+    chains,
     customChains,
     saveRefCode,
     onClickReferral,
@@ -139,6 +139,7 @@ export const OrderlyAppProvider: FC<
       saveRefCode={saveRefCode}
       onClickReferral={onClickReferral}
       onBoundRefCode={onBoundRefCode}
+      chains={chains}
     >
       <InnerProvider
         appIcons={logos}

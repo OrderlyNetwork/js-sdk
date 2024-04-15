@@ -1,4 +1,9 @@
-import { NetworkId, type API, chainsInfoMap } from "@orderly.network/types";
+import {
+  NetworkId,
+  type API,
+  chainsInfoMap,
+  Chain as FlatChain,
+} from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
 import { useQuery } from "../useQuery";
@@ -134,6 +139,9 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       return a.network_infos.bridgeless ? -1 : 1;
     });
 
+    mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
+    testnetArr = filterByAllowedChains(testnetArr, allowedChains?.testnet);
+
     if (!!pickField) {
       //@ts-ignore
       testnetArr = testnetArr.map((item) => item[pickField]);
@@ -153,7 +161,7 @@ export function useChains(networkId?: NetworkId, options: Options = {}) {
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [networkId, tokenChains, chainInfos, pickField]);
+  }, [networkId, tokenChains, chainInfos, pickField, allowedChains]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -281,4 +289,20 @@ export function updateTestnetInfo(
       testnetArr[index] = chain;
     }
   }
+}
+
+export function filterByAllowedChains(
+  chains: API.Chain[],
+  allowedChains: FlatChain[]
+) {
+  if (!allowedChains) {
+    return chains;
+  }
+
+  return chains.filter((chain) =>
+    allowedChains.some(
+      (allowedChain) =>
+        allowedChain.id === parseInt(chain?.network_infos?.chain_id as any)
+    )
+  );
 }
