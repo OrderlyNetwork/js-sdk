@@ -62,7 +62,11 @@ export type OrderlyAppContextState = {
   errors: AppStateErrors;
   //   errors?: AppStateErrors;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
-  onClickReferral?: () => void;
+  referral?: {
+    saveRefCode?: boolean,
+    onClickReferral?: () => void,
+    onBoundRefCode?: (success: boolean, error: any) => void,
+  },
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -86,9 +90,11 @@ export interface OrderlyAppProviderProps {
    */
   includeTestnet?: boolean;
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
-  saveRefCode?: boolean,
-  onClickReferral?: () => void,
-  onBoundRefCode?: (success: boolean, error: any) => void,
+  referral?: {
+    saveRefCode?: boolean,
+    onClickReferral?: () => void,
+    onBoundRefCode?: (success: boolean, error: any) => void,
+  }
   brokerName?: string;
   footerStatusBarProps?: FooterStatusBarProps;
   shareOptions: ShareConfigProps;
@@ -117,9 +123,7 @@ export const OrderlyAppProvider: FC<
     footerStatusBarProps,
     shareOptions,
     chains,
-    saveRefCode,
-    onClickReferral,
-    onBoundRefCode,
+    referral,
     accountMenuItems,
     onClickAccountMenuItem,
   } = props;
@@ -132,9 +136,6 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       contracts={contracts}
-      saveRefCode={saveRefCode}
-      onClickReferral={onClickReferral}
-      onBoundRefCode={onBoundRefCode}
     >
       <InnerProvider
         appIcons={logos}
@@ -143,10 +144,11 @@ export const OrderlyAppProvider: FC<
         onChainChanged={onChainChanged}
         brokerName={brokerName}
         footerStatusBarProps={footerStatusBarProps}
-        shareOptions={{...PnLDefaultProps, ...shareOptions}}
+        shareOptions={{ ...PnLDefaultProps, ...shareOptions }}
         chains={chains}
         accountMenuItems={accountMenuItems}
         onClickAccountMenuItem={onClickAccountMenuItem}
+        referral={referral}
       >
         {props.children}
       </InnerProvider>
@@ -166,6 +168,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     chains: customChains,
     accountMenuItems,
     onClickAccountMenuItem,
+    referral,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -377,6 +380,17 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       .forEach((t) => toast.dismiss(t.id)); // Dismiss – Use toast.remove(t.id) removal without animation
   }, [toasts]);
 
+
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window?.location?.search);
+    const refCode = searchParams.get('ref');
+    if (refCode && referral?.saveRefCode === true) {
+      localStorage.setItem("referral_code", refCode);
+    }
+  }, [referral?.saveRefCode]);
+
+
   return (
     <OrderlyAppContext.Provider
       value={{
@@ -393,6 +407,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         chains: props.chains,
         accountMenuItems,
         onClickAccountMenuItem,
+        referral,
       }}
     >
       <TooltipProvider>

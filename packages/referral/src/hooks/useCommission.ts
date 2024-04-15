@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { useDistribution } from "./useDistribution";
 import { useRefereeHistory } from "./useRefereeHistory";
 
-export const useCommission = () => {
+export const useCommission = (options?: { size?: number }) => {
 
-    const [referee, { refresh: refreshReferee, loadMore: loadMoreReferee, }] = useRefereeHistory({ });
+    const [referee, { refresh: refreshReferee, loadMore: loadMoreReferee, }] = useRefereeHistory({ size: options?.size });
 
-    const [distribution, { refresh: refreshDistribution, loadMore: loadMoreDistribution, isLoading }] = useDistribution({ });
-    
+    const [distribution, { refresh: refreshDistribution, loadMore: loadMoreDistribution, isLoading }] = useDistribution({ size: options?.size });
+
     const commissionData = useMemo(() => {
 
         return distribution?.map((item: any) => {
@@ -55,6 +55,6 @@ function compareDate(d1?: Date, d2?: Date) {
         && d1.getMonth() === d2.getMonth()
         && d1.getFullYear() === d2.getFullYear();
 
-    
+
     return isEqual;
 }

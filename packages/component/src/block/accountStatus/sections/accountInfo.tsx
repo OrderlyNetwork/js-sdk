@@ -144,11 +144,11 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
 
 const ReferralInfo = () => {
 
-  const { onClickReferral, saveRefCode } = useContext(OrderlyContext);
+  const { referral } = useContext(OrderlyAppContext);
 
   const clickReferral = useCallback(() => {
-    onClickReferral?.();
-  }, [onClickReferral]);
+    referral?.onClickReferral?.();
+  }, [referral?.onClickReferral]);
 
 
   const {
@@ -178,7 +178,7 @@ const ReferralInfo = () => {
 
   }, [data, volumeStatistics]);
 
-  if (!saveRefCode) {
+  if (referral?.saveRefCode !== true) {
     return <></>;
   }
 

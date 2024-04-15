@@ -9,8 +9,6 @@ import { SummaryFilter } from "../../components/summaryFilter";
 export const Summary: FC<{className?: string}> = (props) => {
     const [filterType, setFiltetType] = useState<FilterType>("All");
     const { referralInfo, userVolume } = useContext(ReferralContext);
-
-    console.log("referralInfo.referee_info", referralInfo?.referee_info, "vol", userVolume);
     
 
     const rebates = useMemo(() => {
