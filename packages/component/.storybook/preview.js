@@ -92,8 +92,8 @@ const preview = {
       const configStore = new CustomConfigStore({ networkId, env: "qa" });
 
       const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get('ref');
-    console.log("ref code is", refCode);
+      const refCode = searchParams.get('ref');
+      console.log("ref code is", refCode);
 
       return (
         <ConnectorProvider options={options}>
@@ -142,14 +142,16 @@ const preview = {
                 window.location.reload();
               }, 100);
             }}
-            onClickReferral={() => {
-              console.log("click referral");
+            referral={{
+              saveRefCode: true,
+              onClickReferral: () => {
+                console.log("click referral");
+              },
+              onBoundRefCode: (success, error) => { 
+                console.log("onBoundRefCode", success, error);
+
+              },
             }}
-            onBoundRefCode={(success, error) => {
-              console.log("on bound ref code", success, error);
-              
-            }}
-            saveRefCode
           >
             <Story />
           </OrderlyAppProvider>

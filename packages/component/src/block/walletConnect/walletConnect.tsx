@@ -10,6 +10,7 @@ import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
 import { ReferralCode } from "./sections/referralCode";
+import { OrderlyAppContext } from "@/provider";
 
 export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -37,7 +38,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
   ] = useMutation("/v1/referral/bind", "POST");
 
 
-  const { onBoundRefCode } = useContext(OrderlyContext);
+  const { referral } = useContext(OrderlyAppContext);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -64,9 +65,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           () => {
             if (refCode && refCode.length > 0) {
               bindRefCode({ referral_code: refCode }).then((res) => {
-                onBoundRefCode?.(true, undefined);
+                referral?.onBoundRefCode?.(true, undefined);
               }).catch((e) => {
-                onBoundRefCode?.(false, e);
+                referral?.onBoundRefCode?.(false, e);
                }).finally(() => {
                 localStorage.removeItem("referral_code");
               });

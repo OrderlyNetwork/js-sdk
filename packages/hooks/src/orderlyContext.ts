@@ -22,9 +22,6 @@ export interface OrderlyConfigContextState {
    */
   onlyTestnet?: boolean;
   // extraApis:ExtraAPIs
-  saveRefCode?: boolean;
-  onClickReferral?: () => void;
-  onBoundRefCode?: (success: boolean, error: any) => void;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
