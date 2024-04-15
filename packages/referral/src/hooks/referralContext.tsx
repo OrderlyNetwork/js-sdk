@@ -54,19 +54,20 @@ export type ChartConfig = {
 export type ReferralContextProps = {
     //** click become an affiliate, If this method is implemented, the `becomeAnAffiliateUrl` will not work */
     becomeAnAffiliate?: () => void,
-    //** set become an affiliate url */
+    //** set become an affiliate url, default is `https://orderly.network/` */
     becomeAnAffiliateUrl?: string,
     //** bind refferal code callback */
     bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void,
     //** click learn affilate, if this method is implemented, the `learnAffilateUrl` will not work */
     learnAffiliate?: () => void,
-    //** set learn affiliate url */
+    //** set learn affiliate url, default is `https://orderly.network/` */
     learnAffiliateUrl?: string,
+    //** default is `https://orderly.network/` */
     referralLinkUrl: string,
     //** referral index page */
     showReferralPage?: () => void,
-    enterTraderPage?: (params?: {}) => void,
-    enterAffiliatePage?: (params?: {}) => void,
+    enterTraderPage?: (params?: any) => void,
+    enterAffiliatePage?: (params?: any) => void,
     //** tab + tab content */
     showDashboard?: () => void,
     //** col chart config */
@@ -97,11 +98,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
 }>> = (props) => {
     const {
         becomeAnAffiliate,
-        becomeAnAffiliateUrl,
+        becomeAnAffiliateUrl = "https://orderly.network/",
         bindReferralCodeState,
         learnAffiliate,
-        learnAffiliateUrl,
-        referralLinkUrl,
+        learnAffiliateUrl= "https://orderly.network/",
+        referralLinkUrl= "https://orderly.network/",
         showReferralPage,
         enterTraderPage,
         enterAffiliatePage,

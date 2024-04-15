@@ -22,9 +22,9 @@ export default {
   decorators: [
     (Story) => (
       <ReferralProvider
-        becomeAnAffiliateUrl="https://orderly.network"
-        learnAffiliateUrl="https://orderly.network"
-        referralLinkUrl="https://dex.woo.org/en/trade"
+        // becomeAnAffiliateUrl="https://orderly.network"
+        // learnAffiliateUrl="https://orderly.network"
+        // referralLinkUrl="https://dex.woo.org/en/trade"
         showReferralPage={() => {
           console.log("show referral page");
 
