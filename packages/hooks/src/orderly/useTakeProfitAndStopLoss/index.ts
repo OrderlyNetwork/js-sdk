@@ -2,7 +2,7 @@ import { API, AlgoOrderEntity, SDKError } from "@orderly.network/types";
 import { useTaskProfitAndStopLossInternal } from "./useTPSL";
 import { useMarkPrice } from "../useMarkPrice";
 
-export const useTaskProfitAndStopLoss = (
+export const useStopOrder = (
   /**
    * Position that needs to set take profit and stop loss
    */

@@ -35,6 +35,6 @@ export { usePrivateDataObserver } from "./usePrivateDataObserver";
 export { useSymbolPriceRange } from "./useSymbolPriceRange";
 
 export {
-  useTaskProfitAndStopLoss,
+  useStopOrder,
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
