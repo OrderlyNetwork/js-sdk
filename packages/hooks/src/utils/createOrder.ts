@@ -65,9 +65,11 @@ export abstract class BaseOrderCreator implements OrderCreator {
       [P in keyof OrderEntity]?: { type: string; message: string };
     } = {};
 
-    const { maxQty } = configs;
+    const { maxQty, symbol } = configs;
 
-    let { order_quantity, total, order_price } = values;
+    // @ts-ignore
+    let { order_quantity, total, order_price, reduce_only } = values;
+    const { min_notional } = symbol;
 
     if (!order_quantity) {
       // calculate order_quantity from total
@@ -126,6 +128,15 @@ export abstract class BaseOrderCreator implements OrderCreator {
       }
     }
 
+    const notionalHintStr = checkNotional(order_price, order_quantity, min_notional);
+    
+    if (notionalHintStr !== undefined && typeof reduce_only === undefined) {
+      errors.total = {
+        type: "min",
+        message: notionalHintStr,
+      }
+    }
+
     return Promise.resolve(errors);
   }
 
@@ -145,6 +156,26 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
     return order as OrderEntity;
   }
+}
+
+export function checkNotional(price?: string | number, qty?: string | number, minNotional?: number): string | undefined {
+
+  
+  
+  if (price !== undefined && qty !== undefined && minNotional !== undefined) {
+    
+    try {
+      const calcNotional = new Decimal(price).mul(new Decimal(qty)).toNumber();
+      const notional = Number.parseFloat(`${minNotional}`);
+      
+      const str = calcNotional < notional ? `The order value should be greater or equal to ${minNotional} USDC` : undefined;
+      return str;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  return undefined;
 }
 
 export class LimitOrderCreator extends BaseOrderCreator {

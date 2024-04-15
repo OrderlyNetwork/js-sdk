@@ -383,6 +383,8 @@ export function useOrderEntry(
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
+    
+
     return new Promise((resolve, reject) => {
       return orderCreator
         .validate(values, {
@@ -397,7 +399,8 @@ export function useOrderEntry(
           if (
             errors.order_price ||
             errors.order_quantity ||
-            errors.trigger_price
+            errors.trigger_price ||
+            errors.total
           ) {
             setErrors(errors);
             reject(
