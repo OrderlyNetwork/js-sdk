@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.3.2-internal.2
+
+### Patch Changes
+
+- fix bugs
+
 ## 1.3.2-internal.1
 
 ### Patch Changes
