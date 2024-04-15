@@ -51,8 +51,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
-                    ? "orderly-text-trade-loss"
-                    : "orderly-text-base-contrast/50"
+                  ? "orderly-text-trade-loss"
+                  : "orderly-text-base-contrast/50"
               )}
             >
               <Numeral>{item["unrealized_pnl"]}</Numeral>
@@ -62,12 +62,9 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
                 surfix=")"
                 className="orderly-text-4xs"
               >
-                {item.unsettled_pnl_ROI}
+                {item.unrealized_pnl_ROI}
               </Numeral>
-              <SharePnLIcon
-                className="orderly-ml-2"
-                position={item}
-              />
+              <SharePnLIcon className="orderly-ml-2" position={item} />
             </div>
           }
           rule="price"
