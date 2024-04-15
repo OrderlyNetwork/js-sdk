@@ -56,5 +56,6 @@ export type {
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
+export { OrderFactory, checkNotional } from "./utils/createOrder";
 
 export type { WalletAdapter } from "@orderly.network/core";
