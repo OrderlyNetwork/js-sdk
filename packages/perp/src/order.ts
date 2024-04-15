@@ -181,16 +181,19 @@ export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
   }
   let hasPosition = false;
   let sumPositionNotional = positions.reduce((acc, cur) => {
-    acc = acc.add(
-      new Decimal(new Decimal(cur.position_qty).mul(cur.mark_price).abs())
-    );
+    let count = new Decimal(cur.position_qty).mul(cur.mark_price);
+    // acc = acc.add(
+    //   new Decimal(cur.position_qty).mul(cur.mark_price)
+    //   // .abs()
+    // );
 
     if (cur.symbol === newOrder.symbol) {
       hasPosition = true;
-      acc = acc.add(new Decimal(newOrder.qty).mul(newOrder.price));
+      // acc = acc.add(new Decimal(newOrder.qty).mul(newOrder.price));
+      count = count.add(new Decimal(newOrder.qty).mul(newOrder.price));
     }
 
-    return acc;
+    return acc.add(count.abs());
   }, zero);
 
   if (!hasPosition) {

@@ -49,6 +49,25 @@ describe("order", () => {
       };
       expect(estLeverage(inputs)).toBe(6.36);
     });
+
+    it(" estimated leverage correctly: ====>>>>>", () => {
+      const inputs = {
+        totalCollateral: 1981.66,
+        positions: [
+          {
+            symbol: "ETH",
+            position_qty: -3,
+            mark_price: 1638.41,
+          },
+        ],
+        newOrder: {
+          symbol: "ETH",
+          qty: -3,
+          price: 1638.41,
+        },
+      };
+      expect(estLeverage(inputs)).toBe(4.96);
+    });
   });
 
   describe("order fee", () => {
@@ -192,5 +211,25 @@ describe("order", () => {
       };
       expect(estLiqPrice(inputs)).toBe(5472);
     });
+
+    // test("estLiqPrice: ====>>>>>>", () => {
+    //   const inputs = {
+    //     positions: [
+    //       { symbol: "ETH", position_qty: 0.01, mark_price: 3137.4, mmr: 0.05 },
+    //     ],
+    //     newOrder: {
+    //       symbol: "ETH",
+    //       qty: 1,
+    //       price: 3139.2,
+    //     },
+    //     totalCollateral: 993.163404,
+    //     markPrice: 3139.2,
+    //     baseMMR: 0.025,
+    //     baseIMR: 0.05,
+    //     IMR_Factor: 0.0000003754,
+    //     orderFee: 1.5,
+    //   };
+    //   expect(estLiqPrice(inputs)).toBe(5472);
+    // });
   });
 });
