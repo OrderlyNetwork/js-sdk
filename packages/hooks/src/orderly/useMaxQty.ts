@@ -14,6 +14,12 @@ import { useOrderStream } from "./useOrderStream";
 
 const positionsPath = pathOr([], [0, "rows"]);
 
+/**
+ * @param symbol
+ * @param side
+ * @param reduceOnly
+ * @returns the maximum quantity available for trading in USD
+ */
 export const useMaxQty = (
   symbol: string,
   side: OrderSide,
