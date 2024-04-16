@@ -151,7 +151,7 @@ const EditingState: FC<{
       return;
     }
 
-    if (typeof order.reduce_only === "undefined") {
+    if (order.reduce_only !== true) {
       const notionalText = checkMinNotional(order.symbol, price, order.quantity);
       if (notionalText) {
         toast.error(notionalText);
