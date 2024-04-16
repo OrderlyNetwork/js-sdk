@@ -1,5 +1,20 @@
 # @orderly.network/react
 
+## 1.4.0-internal.7
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+- Updated dependencies [e4edd4c7]
+- Updated dependencies
+  - @orderly.network/trading-view@1.4.0-internal.7
+  - @orderly.network/hooks@1.4.0-internal.7
+  - @orderly.network/types@1.4.0-internal.7
+  - @orderly.network/utils@1.4.0-internal.7
+  - @orderly.network/core@1.4.0-internal.7
+  - @orderly.network/net@1.4.0-internal.7
+
 ## 1.4.0-internal.6
 
 ### Patch Changes

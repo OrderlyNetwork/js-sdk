@@ -1,5 +1,18 @@
 # @orderly/docs
 
+## 0.4.0-internal.7
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+- Updated dependencies [e4edd4c7]
+- Updated dependencies
+  - @orderly.network/react@1.4.0-internal.7
+  - @orderly.network/web3-onboard@1.4.0-internal.7
+  - @orderly.network/hooks@1.4.0-internal.7
+  - @orderly.network/types@1.4.0-internal.7
+
 ## 0.4.0-internal.6
 
 ### Patch Changes

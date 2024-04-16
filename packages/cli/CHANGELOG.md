@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.3.0-internal.7
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+- Updated dependencies [e4edd4c7]
+- Updated dependencies
+  - @orderly.network/core@1.4.0-internal.7
+
 ## 0.3.0-internal.6
 
 ### Patch Changes

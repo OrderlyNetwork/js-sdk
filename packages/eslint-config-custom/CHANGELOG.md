@@ -1,5 +1,12 @@
 # eslint-config-custom
 
+## 0.3.0-internal.7
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+
 ## 0.3.0-internal.6
 
 ### Patch Changes
