@@ -7,7 +7,7 @@ export const Dashboard = () => {
 
     const { isAffiliate, isTrader } = useContext(ReferralContext);
 
-    console.log("xxxxxxxx isAffiliate", isAffiliate, isTrader);
+    
     
     if (isAffiliate || isTrader) {
         return (

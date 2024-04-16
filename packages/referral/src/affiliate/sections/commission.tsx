@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useCommission } from "../../hooks/useCommission";
 import { formatYMDTime } from "../../utils/utils";
 import { RefEmptyView } from "../../components/icons/emptyView";
@@ -24,14 +24,18 @@ export const CommissionList: FC<{
     ]);
 
 
-    if (dataSource?.length > 0) {
-        const text = formatYMDTime(dataSource[0].created_time);
-        if (text) {
-            setDateText(text + " 00:00:00 UTC");
+    useEffect(() => {
+
+        if (dataSource?.length > 0) {
+            const text = formatYMDTime(dataSource[0].created_time);
+            if (text) {
+                setDateText(text + " 00:00:00 UTC");
+            }
+        } else {
+            setDateText(undefined);
         }
-    } else {
-        setDateText(undefined);
-    }
+
+    }, [dataSource]);
 
 
     const isMD = useMediaQuery("(max-width: 767px)");
@@ -139,8 +143,6 @@ const _BigCommission: FC<{
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
                 scrollToEnd={() => {
-                    console.log("scroll to end");
-
                     if (!props.isLoading) {
                         props.loadMore();
                     }

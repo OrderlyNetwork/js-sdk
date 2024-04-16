@@ -56,7 +56,10 @@ export const DashboardTab = () => {
         }
 
         if (isTrader === true && isAffiliate === false) {
-            return <Button onClick={onAsAnAffiliate} className="orderly-flex lg:orderly-mr-4">
+            return <Button
+                id="orderly-referral-dashboard-as-affiliate-btn"
+                onClick={onAsAnAffiliate} className="orderly-flex lg:orderly-mr-4"
+            >
                 <ReferralIcon />
                 <div>As Referrer</div>
             </Button>;
@@ -134,7 +137,7 @@ export const DashboardTab = () => {
         );
     } else {
         return (
-            <Tabs key={"referralTab-trader"}
+            <Tabs key={"referralTab-trader-affiliate"}
                 autoFit
                 value={activeTab}
                 tabBarClassName={cn(
