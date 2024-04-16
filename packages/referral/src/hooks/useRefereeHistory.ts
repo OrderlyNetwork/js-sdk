@@ -1,6 +1,7 @@
 import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks"
 import { generateKeyFun } from "../utils/swr";
 import { useMemo } from "react";
+import { API } from "../types/api";
 
 type Params = {
     //** default is 10 */

@@ -11,7 +11,7 @@ import { useTranslation } from "../../locale/useTranslation";
 export const AsAnTrader = () => {
 
   const state = useContext(ReferralContext);
-  const { referralInfo, isTrader, mutate, bindReferralCodeState, enterTraderPage, overwrite } = state;
+  const { referralInfo, isTrader, mutate, bindReferralCodeState, onEnterTraderPage: enterTraderPage, overwrite } = state;
   const tr = useTranslation();
 
   const enterCode = () => {

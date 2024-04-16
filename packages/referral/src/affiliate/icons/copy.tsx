@@ -15,7 +15,7 @@ export const CopyIcon: FC<IconProps> = (props) => {
             viewBox="0 0 12 12"
             xmlns="http://www.w3.org/2000/svg"
             fill="white"
-            fill-opacity="0.54"
+            fillOpacity="0.54"
             {...rest}
         >
             <path d="M3 11V3H11V1H1V11H3Z"/>
