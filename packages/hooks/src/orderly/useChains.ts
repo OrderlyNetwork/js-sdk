@@ -71,7 +71,7 @@ export function useChains(
   options: UseChainsOptions = {}
 ) {
   const { pick: pickField, ...swrOptions } = options;
-  const { chains: allowedChains } = useContext(OrderlyContext);
+  const { filteredChains: allowedChains } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -294,7 +294,7 @@ export function updateTestnetInfo(
 
 export function filterByAllowedChains(
   chains: API.Chain[],
-  allowedChains: FlatChain[]
+  allowedChains?: FlatChain[]
 ) {
   if (!allowedChains) {
     return chains;
