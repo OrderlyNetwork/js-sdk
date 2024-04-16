@@ -187,10 +187,10 @@ export const ColmunChart: React.FC<{
             const gridY = info.y;
 
             children.push(
-                <line x1={`${gridX}`} y1={`${gridY}`} x2={`${size.width}`} y2={`${gridY}`} stroke={`${yAxis.gridStroke}`} strokeWidth={`${yAxis.strokeWidth}`} />
+                <line key={i} x1={`${gridX}`} y1={`${gridY}`} x2={`${size.width}`} y2={`${gridY}`} stroke={`${yAxis.gridStroke}`} strokeWidth={`${yAxis.strokeWidth}`} />
             );
             children.push(
-                <text x={`${yAxis.width}`} y={`${info.y}`} textAnchor={`${yAxis.textAnchor}`} fontSize={`${yAxis.fontSize}px`} fill={`${yAxis.textFill}`}>
+                <text key={i} x={`${yAxis.width}`} y={`${info.y}`} textAnchor={`${yAxis.textAnchor}`} fontSize={`${yAxis.fontSize}px`} fill={`${yAxis.textFill}`}>
                     {abbreviatedNumbers(info.text)}
                 </text>
             );
@@ -229,7 +229,7 @@ export const ColmunChart: React.FC<{
             const y = size.height - xAxis.fontSize;
 
             children.push(
-                <text x={`${x}`} y={`${y}`} textAnchor={`${xAxis.textAnchor}`} fontSize={`${xAxis.fontSize}px`} fill={`${xAxis.textFill}`}>{title}</text>
+                <text key={index} x={`${x}`} y={`${y}`} textAnchor={`${xAxis.textAnchor}`} fontSize={`${xAxis.fontSize}px`} fill={`${xAxis.textFill}`}>{title}</text>
             );
         }
 
@@ -264,8 +264,10 @@ export const ColmunChart: React.FC<{
 
             // console.log(`colums: ${columns}, stepX: ${stepX} leftPading: ${leftPading} padding: ${padding} x: ${x} y: ${y} height: ${height} ${isFinite(stepX)}, width: ${size.width}, barStyle:`, barStyle);
 
+            if (Number.isNaN(height)) continue;
             children.push(
                 <rect
+                    key={index}
                     x={`${x}`}
                     y={`${y}`}
                     width={`${barStyle.width}`}
