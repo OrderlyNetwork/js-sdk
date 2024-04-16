@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo } from "react";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
 import { formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
@@ -28,12 +28,16 @@ export const RefereesList: FC<{
         return newData;
     }, [data]);
 
-    if (dataSource?.length > 0) {
-        const text = formatYMDTime(dataSource[0].code_binding_time);
-        if (text) {
-            setDateText(text + " 00:00:00 UTC");
+    useEffect(() => {
+        if (dataSource?.length > 0) {
+            const text = formatYMDTime(dataSource[0].code_binding_time);
+            if (text) {
+                setDateText(text + " 00:00:00 UTC");
+            }
+        } else {
+            setDateText(undefined);
         }
-    }
+    }, [dataSource]);
 
     return isMD ?
         <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
