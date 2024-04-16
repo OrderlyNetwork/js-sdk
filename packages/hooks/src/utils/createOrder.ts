@@ -130,7 +130,7 @@ export abstract class BaseOrderCreator implements OrderCreator {
 
     const notionalHintStr = checkNotional(order_price, order_quantity, min_notional);
     
-    if (notionalHintStr !== undefined && typeof reduce_only === undefined) {
+    if (notionalHintStr !== undefined && reduce_only !== true) {
       errors.total = {
         type: "min",
         message: notionalHintStr,
