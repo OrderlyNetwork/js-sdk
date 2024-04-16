@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.3.2-internal.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.3.2-internal.7
+  - @orderly.network/utils@1.3.2-internal.7
+  - @orderly.network/core@1.3.2-internal.7
+  - @orderly.network/perp@3.1.2-internal.7
+  - @orderly.network/net@1.3.2-internal.7
+
 ## 1.3.2-internal.6
 
 ### Patch Changes
