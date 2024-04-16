@@ -38,6 +38,12 @@ type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
     [K in R]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<R, K>>>;
   }[R];
 
+type filteredChains = {
+  mainnet?: Chain[];
+  testnet?: Chain[];
+};
+
+type filterChainsFunc = (config: ConfigStore) => filteredChains;
 export interface ConfigProviderProps {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
@@ -49,14 +55,7 @@ export interface ConfigProviderProps {
   onClickReferral?: () => void;
   onBoundRefCode?: (success: boolean, error: any) => void;
 
-  /**
-   * you can disable some chains, if you provide this field, the chains will be filtered by this field
-   * default all chains will be shown
-   */
-  chains?: {
-    mainnet?: Chain[];
-    testnet?: Chain[];
-  };
+  chainFilter?: filteredChains | filterChainsFunc;
 }
 
 export const OrderlyConfigProvider = (
@@ -75,6 +74,7 @@ export const OrderlyConfigProvider = (
     saveRefCode,
     onClickReferral,
     onBoundRefCode,
+    chainFilter,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -133,14 +133,20 @@ export const OrderlyConfigProvider = (
     }
   }, [saveRefCode]);
 
-  const chains = useMemo(() => {
-    const { mainnet, testnet } = props.chains || {};
+  const filteredChains = useMemo(() => {
+    if (typeof chainFilter === "function") {
+      return chainFilter(innerConfigStore);
+    }
 
-    return {
-      mainnet: mainnet || defaultMainnetChains,
-      testnet: testnet || defaultTestnetChains,
-    };
-  }, [props.chains]);
+    return chainFilter;
+
+    // const { mainnet, testnet } = props.chains || {};
+
+    // return {
+    //   mainnet: mainnet || defaultMainnetChains,
+    //   testnet: testnet || defaultTestnetChains,
+    // };
+  }, [props.chainFilter, innerConfigStore]);
 
   if (!account) {
     return null;
@@ -156,7 +162,7 @@ export const OrderlyConfigProvider = (
         saveRefCode,
         onClickReferral,
         onBoundRefCode,
-        chains,
+        filteredChains: filteredChains,
         // apiBaseUrl,
       }}
     >

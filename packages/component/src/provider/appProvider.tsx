@@ -34,7 +34,6 @@ import {
 import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
 import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { TopNavbarProps } from "@/page/common/topNavbar";
-import { ChainInfo } from "@orderly.network/types";
 
 export type AppStateErrors = {
   ChainNetworkNotSupport: boolean;
@@ -117,7 +116,7 @@ export const OrderlyAppProvider: FC<
     onChainChanged,
     footerStatusBarProps,
     shareOptions,
-    chains,
+    chainFilter,
     customChains,
     saveRefCode,
     onClickReferral,
@@ -139,7 +138,7 @@ export const OrderlyAppProvider: FC<
       saveRefCode={saveRefCode}
       onClickReferral={onClickReferral}
       onBoundRefCode={onBoundRefCode}
-      chains={chains}
+      chainFilter={chainFilter}
     >
       <InnerProvider
         appIcons={logos}

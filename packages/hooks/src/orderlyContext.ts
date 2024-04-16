@@ -8,6 +8,15 @@ import {
 
 import { Chain, NetworkId } from "@orderly.network/types";
 
+export type filteredChains = {
+  mainnet?: Chain[];
+  testnet?: Chain[];
+};
+
+export type chainFilterFunc = (config: ConfigStore) => filteredChains;
+
+export type chainFilter = filteredChains | chainFilterFunc;
+
 export interface OrderlyConfigContextState {
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
 
@@ -26,10 +35,7 @@ export interface OrderlyConfigContextState {
   onClickReferral?: () => void;
   onBoundRefCode?: (success: boolean, error: any) => void;
 
-  chains: {
-    mainnet: Chain[];
-    testnet: Chain[];
-  };
+  filteredChains?: filteredChains | null;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
