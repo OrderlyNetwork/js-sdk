@@ -6,6 +6,7 @@ import {
   VerifyResult,
 } from "./interface";
 import { Decimal } from "@orderly.network/utils";
+import { checkNotional } from "../../utils/createOrder";
 
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   abstract create(values: T, config?: ValuesDepConfig): T;
@@ -51,9 +52,11 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       [P in keyof OrderEntity]?: { type: string; message: string };
     } = {};
 
-    const { maxQty } = configs;
+    const { maxQty, symbol } = configs;
 
-    let { order_quantity, total, order_price } = values;
+    let { order_quantity, total, order_price, reduce_only } = values;
+
+    const { min_notional } = symbol;
 
     if (!order_quantity) {
       // calculate order_quantity from total
@@ -110,6 +113,19 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
           ).todp(quote_dp)}`,
         };
       }
+    }
+
+    const notionalHintStr = checkNotional(
+      order_price,
+      order_quantity,
+      min_notional
+    );
+
+    if (notionalHintStr !== undefined && typeof reduce_only === undefined) {
+      errors.total = {
+        type: "min",
+        message: notionalHintStr,
+      };
     }
 
     return Promise.resolve(errors);

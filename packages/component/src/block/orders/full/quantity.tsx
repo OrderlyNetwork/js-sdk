@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { API, OrderSide, OrderStatus } from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
 import { Popover, PopoverAnchor, PopoverContent } from "@/popover";
@@ -16,7 +16,7 @@ import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { OrderFactory, checkNotional, cleanStringStyle, useSymbolsInfo } from "@orderly.network/hooks";
+import { cleanStringStyle } from "@orderly.network/hooks";
 import { Input } from "@/input";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
@@ -107,7 +107,8 @@ const EditingState: FC<{
   const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
     props;
 
-  const { editOrder, editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } =
+    useContext(OrderListContext);
   const { onUpdateOrder: onUpdateTPSLOrder } = useTPSLOrderRowContext();
 
   const closePopover = () => setOpen(0);
@@ -156,7 +157,8 @@ const EditingState: FC<{
       return;
     }
 
-    const price = order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    const price =
+      order.algo_order_id !== undefined ? order.trigger_price : order.price;
     if (price !== null && typeof order.reduce_only === "undefined") {
       const notionalText = checkMinNotional(order.symbol, price, quantity);
       if (notionalText) {
@@ -196,7 +198,7 @@ const EditingState: FC<{
     }
 
     if (order.order_tag !== undefined) {
-      params = {...params, order_tag: order.order_tag};
+      params = { ...params, order_tag: order.order_tag };
     }
 
     // @ts-ignore

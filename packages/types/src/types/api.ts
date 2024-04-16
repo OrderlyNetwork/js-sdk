@@ -148,6 +148,7 @@ export declare namespace API {
     reduce_only: boolean;
     created_time: number;
     updated_time: number;
+    order_tag?: string;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
