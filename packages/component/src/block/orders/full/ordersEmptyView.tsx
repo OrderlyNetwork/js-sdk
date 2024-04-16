@@ -83,10 +83,9 @@ export const OrdersEmptyView: FC<{
     <div
       className="orderly-ui-table-empty orderly-absolute orderly-left-0 orderly-right-0 orderly-top-[44px] orderly-bottom-10 orderly-bg-base-900"
       style={{
-        left: `${xPosition.left}px`,
-        right: `${xPosition.right}px`,
-      }}
-    >
+        paddingLeft: `${xPosition.left}px`,
+        paddingRight: `${xPosition.right}px`,
+      }}    >
       <EmptyView />
     </div>
   );

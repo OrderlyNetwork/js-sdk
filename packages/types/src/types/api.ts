@@ -116,6 +116,7 @@ export declare namespace API {
     updated_time: number;
     reduce_only: boolean;
     trigger_price?: number;
+    order_tag?: string;
   }
 
   export interface OrderExt extends Order {

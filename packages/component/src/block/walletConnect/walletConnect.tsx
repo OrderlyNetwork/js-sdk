@@ -1,14 +1,16 @@
 import { Paper } from "@/layout";
 import { ListTile } from "@/listView/listTile";
 import { Switch } from "@/switch";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { useAccount } from "@orderly.network/hooks";
+import { OrderlyContext, useAccount, useMutation } from "@orderly.network/hooks";
 
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
+import { ReferralCode } from "./sections/referralCode";
+import { OrderlyAppContext } from "@/provider";
 
 export interface WalletConnectProps {
   onSignIn?: () => Promise<any>;
@@ -23,11 +25,20 @@ export interface WalletConnectProps {
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
   // const { status = AccountStatusEnum.NotConnected } = props;
   const {
-    state: { status },
+    state: { status, isNew },
   } = useAccount();
 
   const [handleStep, setHandleStep] = useState(0);
   const [remember, setRemember] = useState(true);
+  const localRefCode = localStorage.getItem("referral_code") || undefined;
+  const [refCode, setRefCode] = useState<string | undefined>(localRefCode);
+  const [
+    bindRefCode,
+    { error: updateOrderError, isMutating: updateMutating },
+  ] = useMutation("/v1/referral/bind", "POST");
+
+
+  const { referral } = useContext(OrderlyAppContext);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -52,44 +63,66 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         .onEnableTrading?.(remember)
         .then(
           () => {
+            if (refCode && refCode.length > 0) {
+              bindRefCode({ referral_code: refCode }).then((res) => {
+                referral?.onBoundRefCode?.(true, undefined);
+              }).catch((e) => {
+                referral?.onBoundRefCode?.(false, e);
+               }).finally(() => {
+                localStorage.removeItem("referral_code");
+              });
+            }
             props.onComplete?.();
           },
-          (error) => {
-            toast.error(error.message);
+          (e) => {
+            let errorText = `${e}`;
+            if ("message" in (e)) {
+              errorText = e.message;
+            }
+
+            if ("referral code not exist" === errorText) {
+              errorText = "This referral code does not exist";
+            }
+            toast.error(errorText);
           }
         )
         .finally(() => {
           setHandleStep(0);
         });
     }
-  }, [status, remember]);
+  }, [status, remember, refCode]);
+
+  const isExpired = status === AccountStatusEnum.DisabledTrading && !isNew;
 
   return (
     <div>
       <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-py-4 desktop:orderly-text-base">
-        Sign two requests to verify ownership of your wallet and enable trading.
-        Signing is free.
+        {isExpired
+          ? "Your previous access has expired, you will receive a signature request to enable trading. Signing is free and will not send a transaction."
+          : "Sign two requests to verify ownership of your wallet and enable trading. Signing is free."}
       </div>
 
       <Paper className="orderly-bg-base-500">
-        <ListTile
-          className="orderly-text-xs desktop:orderly-text-base"
-          avatar={
-            <StepItem
-              active={status <= AccountStatusEnum.NotSignedIn}
-              isLoading={handleStep === 1}
-              isCompleted={status >= AccountStatusEnum.SignedIn}
-            >
-              1
-            </StepItem>
-          }
-          title="Sign in"
-          disabled={
-            status < AccountStatusEnum.NotConnected ||
-            status >= AccountStatusEnum.SignedIn
-          }
-          subtitle="Confirm you own this wallet"
-        />
+        {!isExpired && (
+          <ListTile
+            className="orderly-text-xs desktop:orderly-text-base"
+            avatar={
+              <StepItem
+                active={status <= AccountStatusEnum.NotSignedIn}
+                isLoading={handleStep === 1}
+                isCompleted={status >= AccountStatusEnum.SignedIn}
+              >
+                1
+              </StepItem>
+            }
+            title="Sign in"
+            disabled={
+              status < AccountStatusEnum.NotConnected ||
+              status >= AccountStatusEnum.SignedIn
+            }
+            subtitle="Confirm you own this wallet"
+          />
+        )}
         <ListTile
           className="orderly-text-xs desktop:orderly-text-base"
           disabled={status < AccountStatusEnum.SignedIn}
@@ -99,7 +132,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
               isLoading={handleStep === 2}
               isCompleted={status >= AccountStatusEnum.EnableTrading}
             >
-              2
+              {isExpired ? 1 : 2}
             </StepItem>
           }
           title="Enable Trading"
@@ -107,6 +140,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
+      <ReferralCode className="orderly-pt-5" refCode={refCode} setRefCode={setRefCode} />
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>

@@ -27,12 +27,11 @@ export type CollateralOutputs = {
 const positionsPath = pathOr([], [0, "rows"]);
 const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
 
-type Options = {
-  dp: number;
-};
-
 export const useCollateral = (
-  options: Options = { dp: 6 }
+  options: {
+    /** decimal precision */
+    dp: number;
+  } = { dp: 6 }
 ): CollateralOutputs => {
   const { dp } = options;
   const positions = usePositionStream();

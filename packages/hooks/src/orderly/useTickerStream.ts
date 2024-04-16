@@ -58,7 +58,9 @@ export const useTickerStream = (symbol: string) => {
     if (!info) return null;
     if (!ticker || ticker.symbol !== symbol) return info;
 
-    const futureIndex = futures?.findIndex((item: any) => item.symbol === symbol);
+    const futureIndex = futures?.findIndex(
+      (item: any) => item.symbol === symbol
+    );
     let _oi = openInterest;
     if (!_oi && futureIndex !== -1 && futures) {
       // @ts-ignore
@@ -103,5 +105,5 @@ export const useTickerStream = (symbol: string) => {
     return config;
   }, [info, symbol, ticker, futures, openInterest]);
 
-  return value as API.MarketInfo;
+  return value as API.MarketInfo & { change?: Decimal; "24h_change"?: Decimal };
 };

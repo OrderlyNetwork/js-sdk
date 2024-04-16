@@ -16,7 +16,7 @@ import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { cleanStringStyle } from "@orderly.network/hooks";
+import { OrderFactory, checkNotional, cleanStringStyle, useSymbolsInfo } from "@orderly.network/hooks";
 import { Input } from "@/input";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
@@ -107,7 +107,7 @@ const EditingState: FC<{
   const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
     props;
 
-  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
   const { onUpdateOrder: onUpdateTPSLOrder } = useTPSLOrderRowContext();
 
   const closePopover = () => setOpen(0);
@@ -155,6 +155,18 @@ const EditingState: FC<{
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
+
+    const price = order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    if (price !== null && typeof order.reduce_only === "undefined") {
+      const notionalText = checkMinNotional(order.symbol, price, quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
+    }
+
     setOpen(1);
   };
 
@@ -169,7 +181,7 @@ const EditingState: FC<{
   const onConfirm = useCallback(() => {
     setIsSubmitting(true);
 
-    const params: any = {
+    let params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -181,6 +193,10 @@ const EditingState: FC<{
 
     if (typeof order.reduce_only !== "undefined") {
       params.reduce_only = order.reduce_only;
+    }
+
+    if (order.order_tag !== undefined) {
+      params = {...params, order_tag: order.order_tag};
     }
 
     // @ts-ignore

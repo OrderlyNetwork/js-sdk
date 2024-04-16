@@ -29,18 +29,25 @@ import { SDKError } from "@orderly.network/types";
 export interface AccountState {
   status: AccountStatusEnum;
 
-  checking: boolean;
+  // checking: boolean;
+
+  /**
+   * whether the account is validating
+   */
+  validating: boolean;
 
   accountId?: string;
   userId?: string;
   address?: string;
+  /** new account */
+  isNew?: boolean;
 
   connectWallet?: {
     name: string;
   };
 
-  balance: string;
-  leverage: number;
+  // balance: string;
+  // leverage: number;
 }
 
 /**
@@ -68,9 +75,11 @@ export class Account {
 
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
-    balance: "",
-    checking: false,
-    leverage: Number.NaN,
+    // balance: "",
+    // checking: false,
+    validating: false,
+    // leverage: Number.NaN,
+    isNew: false,
   };
 
   private readonly contractManger;
@@ -148,6 +157,7 @@ export class Account {
       address,
       accountId: undefined, // if address change, accountId should be reset
       connectWallet: wallet?.wallet,
+      validating: true,
     };
 
     this._ee.emit("change:status", nextState);
@@ -195,21 +205,21 @@ export class Account {
   /**
    * set user positions count
    */
-  set position(position: string[]) {
-    const nextState = {
-      ...this.stateValue,
-      positon: position,
-    };
-    this._ee.emit("change:status", nextState);
-  }
+  // set position(position: string[]) {
+  //   const nextState = {
+  //     ...this.stateValue,
+  //     positon: position,
+  //   };
+  //   this._ee.emit("change:status", nextState);
+  // }
 
-  set orders(orders: string[]) {
-    const nextState = {
-      ...this.stateValue,
-      orders,
-    };
-    this._ee.emit("change:status", nextState);
-  }
+  // set orders(orders: string[]) {
+  //   const nextState = {
+  //     ...this.stateValue,
+  //     orders,
+  //   };
+  //   this._ee.emit("change:status", nextState);
+  // }
 
   private _bindEvents() {
     this._ee.addListener("change:status", (state: AccountState) => {
@@ -221,7 +231,7 @@ export class Account {
   private async _checkAccount(address: string): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
     //
-    let nextState;
+    let nextState: AccountState;
     try {
       // check account is exist
       const accountInfo = await this._checkAccountExist(address);
@@ -245,6 +255,7 @@ export class Account {
 
         nextState = {
           ...this.stateValue,
+          validating: false,
           status: AccountStatusEnum.NotSignedIn,
         };
 
@@ -257,13 +268,20 @@ export class Account {
       // const orderlyKey = this.keyStore.getOrderlyKey(address);
       const orderlyKey = this.keyStore.getOrderlyKey();
 
-      nextState = {
-        ...this.stateValue,
-        status: AccountStatusEnum.DisabledTrading,
-      };
+      // nextState = {
+      //   ...this.stateValue,
+      //   isNew: false,
+      //   validating: false,
+      //   status: AccountStatusEnum.DisabledTrading,
+      // };
 
       if (!orderlyKey) {
-        this._ee.emit("change:status", nextState);
+        this._ee.emit("change:status", {
+          ...this.stateValue,
+          isNew: false,
+          validating: false,
+          status: AccountStatusEnum.DisabledTrading,
+        });
 
         return AccountStatusEnum.DisabledTrading;
       }
@@ -290,12 +308,16 @@ export class Account {
           return AccountStatusEnum.DisabledTrading;
         }
 
-        const nextState = {
-          ...this.stateValue,
-          status: AccountStatusEnum.EnableTrading,
-        };
+        // const nextState = {
+        //   ...this.stateValue,
+        //   status: AccountStatusEnum.EnableTrading,
+        // };
 
-        this._ee.emit("change:status", nextState);
+        this._ee.emit("change:status", {
+          ...this.stateValue,
+          validating: false,
+          status: AccountStatusEnum.EnableTrading,
+        });
 
         return AccountStatusEnum.EnableTrading;
       }
@@ -368,6 +390,7 @@ export class Account {
         status: AccountStatusEnum.DisabledTrading,
         accountId: res.data.account_id,
         userId: res.data.user_id,
+        isNew: true,
       };
 
       this._ee.emit("change:status", nextState);

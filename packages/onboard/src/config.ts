@@ -3,12 +3,10 @@ import { init } from "@web3-onboard/react";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
 import { getChainsArray } from "./chains";
 
-const API_KEY = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
-
 export const initConfig: (
   apiKey?: string,
   options?: InitOptions
-) => Promise<OnboardAPI> = (apiKey = API_KEY, options) => {
+) => Promise<OnboardAPI> = (apiKey, options) => {
   return Promise.resolve().then(() =>
     init({
       apiKey,
@@ -26,8 +24,8 @@ export const initConfig: (
           { name: "Coinbase", url: "https://wallet.coinbase.com/" },
           { name: "MetaMask", url: "https://metamask.io" },
           { name: "Trezor", url: "https://trezor.io/" },
-          { name: "Walletconnect", url: "https://walletconnect.com/"},
-          { name: "Ledger", url: "https://www.ledger.com/"}
+          { name: "Walletconnect", url: "https://walletconnect.com/" },
+          { name: "Ledger", url: "https://www.ledger.com/" },
         ],
         agreement: {
           version: "1.0.0",
