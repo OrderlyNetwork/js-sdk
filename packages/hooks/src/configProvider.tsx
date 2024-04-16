@@ -51,9 +51,6 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
-  saveRefCode?: boolean;
-  onClickReferral?: () => void;
-  onBoundRefCode?: (success: boolean, error: any) => void;
 
   chainFilter?: filteredChains | filterChainsFunc;
 }
@@ -71,9 +68,6 @@ export const OrderlyConfigProvider = (
     brokerId,
     networkId,
     contracts,
-    saveRefCode,
-    onClickReferral,
-    onBoundRefCode,
     chainFilter,
   } = props;
 
@@ -125,14 +119,6 @@ export const OrderlyConfigProvider = (
     setAccount(account);
   }, []);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window?.location?.search);
-    const refCode = searchParams.get("ref");
-    if (refCode && saveRefCode) {
-      localStorage.setItem("referral_code", refCode);
-    }
-  }, [saveRefCode]);
-
   const filteredChains = useMemo(() => {
     if (typeof chainFilter === "function") {
       return chainFilter(innerConfigStore);
@@ -159,9 +145,6 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
-        saveRefCode,
-        onClickReferral,
-        onBoundRefCode,
         filteredChains: filteredChains,
         // apiBaseUrl,
       }}

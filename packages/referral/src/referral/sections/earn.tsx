@@ -1,13 +1,31 @@
 
+import { useContext, useMemo } from "react";
 import { EarnIcon } from "../icons/earn";
 import { ListTile } from "./listTile";
+import { ReferralContext } from "../../hooks/referralContext";
+import { useTranslation } from "../../locale/useTranslation";
 
 export const Earn = () => {
+
+  const { overwrite } = useContext(ReferralContext);
+  const tr = useTranslation();
+  const icon = useMemo(() => {
+    if (typeof overwrite?.ref?.step === 'object') {
+      return overwrite?.ref?.step?.earnIcon;
+    }
+
+
+    return <EarnIcon width={"100%"} height="100%" className="orderly-fill-primary"/>
+
+  }, [overwrite]);
+
+  
+
   return (
     <ListTile
-      icon={<EarnIcon className="lg:orderly-w-[80px] lg:orderly-h-[80px] orderly-fill-primary"/>}
-      title="Earn"
-      subtitle="Get paid and receive special treatment 24/7, 365"
+      icon={<div className="lg:orderly-w-[80px] lg:orderly-h-[80px]">{icon}</div>}
+      title={tr("referral.step.earn.title")}
+      subtitle={tr("referral.step.earn.subtitle")}
     />
   );
 };

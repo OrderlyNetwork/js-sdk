@@ -154,11 +154,13 @@ const preview = {
             brokerName="WOOFi"
             configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
-            saveRefCode
-            onClickReferral={() => {
-              console.log("click referral");
+            referral={{
+              saveRefCode: true,
+              onClickReferral: () => {
+                console.log("click referral");
+              },
+              onBoundRefCode: (success, error) => { },
             }}
-            onBoundRefCode={(success, error) => { }}
             appIcons={{
               main: {
                 img: "/orderly-logo.svg",
@@ -197,7 +199,7 @@ const preview = {
           >
             <Story />
           </OrderlyAppProvider>
-        </ConnectorProvider>
+        </ConnectorProvider >
       );
     },
     withThemeByDataAttribute({

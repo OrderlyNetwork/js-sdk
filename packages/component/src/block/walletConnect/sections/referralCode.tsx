@@ -13,23 +13,23 @@ export const ReferralCode: FC<{
 
     const { className, refCode, setRefCode } = props;
 
-    const { saveRefCode } = useContext(OrderlyContext);
+    const { referral } = useContext(OrderlyAppContext);
 
     const localRefCode = localStorage.getItem("referral_code");
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
-        if (saveRefCode && inputRef) {
+        if (referral?.saveRefCode === true && inputRef) {
 
             inputRef?.current?.focus();
             inputRef?.current?.setSelectionRange(inputRef?.current.value.length, inputRef.current.value.length);
 
         }
-    }, [saveRefCode, refCode, inputRef])
+    }, [referral?.saveRefCode, refCode, inputRef])
 
 
-    if (!saveRefCode || ((localRefCode?.length || 0) <= 0)) return <></>;
+    if (referral?.saveRefCode !== true || ((localRefCode?.length || 0) <= 0)) return <></>;
 
     return (
         <div className={cn("orderly-text-2xs orderly-text-base-contrast-80", props.className)}>

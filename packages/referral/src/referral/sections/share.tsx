@@ -1,12 +1,31 @@
+import { useContext, useMemo } from "react";
 import { ShareIcon } from "../icons/share";
 import { ListTile } from "./listTile";
+import { ReferralContext } from "../../hooks/referralContext";
+import { useTranslation } from "../../locale/useTranslation";
 
 export const Share = () => {
+
+
+  const { overwrite } = useContext(ReferralContext);
+  const tr = useTranslation();
+  const icon = useMemo(() => {
+    if (typeof overwrite?.ref?.step === 'object') {
+      return overwrite?.ref?.step?.shareIcon;
+    }
+
+
+    return <ShareIcon width={"100%"} height="100%" className="orderly-fill-primary" />
+
+  }, [overwrite]);
+
+
+
   return (
     <ListTile
-      icon={<ShareIcon className="lg:orderly-w-[80px] lg:orderly-h-[80px] orderly-fill-primary"/>}
-      title="Share"
-      subtitle="Unlock your affiliate link and share it with your community"
+      icon={<div className="lg:orderly-w-[80px] lg:orderly-h-[80px]">{icon}</div>}
+      title={tr("referral.step.share.title")}
+      subtitle={tr("referral.step.share.subtitle")}
     />
   );
 };

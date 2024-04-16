@@ -3,7 +3,7 @@ import { generateKeyFun } from "../utils/swr";
 import { useMemo } from "react";
 
 type Params = {
-    //** default is 100 */
+    //** default is 10 */
     size?: number,
     //** YYYY-MM-dd */
     startDate?: string,

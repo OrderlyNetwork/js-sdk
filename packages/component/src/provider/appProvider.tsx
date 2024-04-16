@@ -73,9 +73,11 @@ export type CommonOrderlyAppState = {
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 
-  saveRefCode?: boolean;
-  onClickReferral?: () => void;
-  onBoundRefCode?: (success: boolean, error: any) => void;
+  referral?: {
+    saveRefCode?: boolean,
+    onClickReferral?: () => void,
+    onBoundRefCode?: (success: boolean, error: any) => void,
+  }
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -96,6 +98,11 @@ type OrderlyAppProviderProps = CommonOrderlyAppState & {
    * are include testnet chains
    */
   includeTestnet?: boolean;
+  referral?: {
+    saveRefCode?: boolean,
+    onClickReferral?: () => void,
+    onBoundRefCode?: (success: boolean, error: any) => void,
+  }
 };
 
 export const OrderlyAppProvider: FC<
@@ -118,9 +125,7 @@ export const OrderlyAppProvider: FC<
     shareOptions,
     chainFilter,
     customChains,
-    saveRefCode,
-    onClickReferral,
-    onBoundRefCode,
+    referral,
     accountMenuItems,
     onClickAccountMenuItem,
     topBar,
@@ -135,9 +140,6 @@ export const OrderlyAppProvider: FC<
       brokerId={brokerId}
       networkId={networkId}
       contracts={contracts}
-      saveRefCode={saveRefCode}
-      onClickReferral={onClickReferral}
-      onBoundRefCode={onBoundRefCode}
       chainFilter={chainFilter}
     >
       <InnerProvider
@@ -153,6 +155,7 @@ export const OrderlyAppProvider: FC<
         onClickAccountMenuItem={onClickAccountMenuItem}
         topBar={topBar}
         topBarProps={topBarProps}
+        referral={referral}
       >
         {props.children}
       </InnerProvider>
@@ -174,6 +177,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
     onClickAccountMenuItem,
     topBar,
     topBarProps,
+    referral,
   } = props;
 
   const { toasts } = useToasterStore();
@@ -385,6 +389,14 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
       .forEach((t) => toast.dismiss(t.id)); // Dismiss – Use toast.remove(t.id) removal without animation
   }, [toasts]);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+        localStorage.setItem("referral_code", refCode);
+    }
+}, []);
+
   return (
     <OrderlyAppContext.Provider
       value={{
@@ -403,6 +415,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
         onClickAccountMenuItem,
         topBar,
         topBarProps,
+        referral,
       }}
     >
       <TooltipProvider>
