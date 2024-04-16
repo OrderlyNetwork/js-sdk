@@ -23,9 +23,9 @@ export interface TradingViewPorps {
     tradingViewScriptSrc?: string;
     tradingViewCustomCssUrl?: string;
     interval?: string;
-    overrides?: any;
+    overrides?: Record<string, string>;
+    studiesOverrides?: Record<string, string>;
     theme?: string;
-    studiesOverrides?: any;
     fullscreen?: boolean;
     closePositionConfirmCallback?: (data: any) => void;
     onToast?: any;

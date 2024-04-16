@@ -86,6 +86,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
+  const quoteDP = useMemo(() => symbolInfo("quote_dp"), [symbolInfo]);
 
   const typeText = useMemo(() => {
     if (order.side === OrderSide.SELL)
@@ -170,6 +171,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           label="Last price"
           value={markPrice}
           rule="price"
+          precision={quoteDP || 2}
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
         />

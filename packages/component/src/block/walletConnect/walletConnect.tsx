@@ -131,7 +131,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
               isLoading={handleStep === 2}
               isCompleted={status >= AccountStatusEnum.EnableTrading}
             >
-              2
+              {isExpired ? 1 : 2}
             </StepItem>
           }
           title="Enable Trading"
