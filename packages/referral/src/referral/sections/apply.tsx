@@ -22,7 +22,7 @@ export const Apply = () => {
 
   return (
     <ListTile
-      icon={<div className="lg:orderly-w-[80px] lg:orderly-h-[80px]">{icon}</div>}
+      icon={<div className="orderly-h-[60px] orderly-w-[60px] lg:orderly-w-[80px] lg:orderly-h-[80px]">{icon}</div>}
       title={tr("referral.step.apply.title")}
       subtitle={tr("referral.step.apply.subtitle")}
     />

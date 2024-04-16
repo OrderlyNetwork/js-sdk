@@ -49,7 +49,7 @@ export const AsAnAffiliate = () => {
 
 
     return (
-      <div className="orderly-flex orderly-justify-between orderly-mt-2 orderly-items-center">
+      <div className="orderly-flex orderly-justify-between md:orderly-mt-2 orderly-items-center">
         <Button
           id="referral_become_an_affiliate_btn"
           onClick={onClickAffiliate}
@@ -101,8 +101,8 @@ export const AsAnAffiliate = () => {
         <div className="orderly-flex orderly-justify-between orderly-relative">
           <div className="orderly-justify-between orderly-max-w-[211px] md:orderly-max-w-[310px] lg:orderly-max-w-[480px] xl:orderly-max-w-[264px] 2xl:orderly-max-w-[282px]">
             <div className="orderly-text-2xl lg:orderly-text-[26px] xl:orderly-text-[28px] 2xl:orderly-text-[30px]">{isAffiliate ? tr("referral.ref.card.title") : tr("referral.not.ref.card.title")}</div>
-            {!isAffiliate && <div className="orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
-              {tr("referral.not.ref.card.hint.subtitle")}
+            {!isAffiliate && <div className="orderly-mt-4 md:orderly-mt-6 orderly-text-2xs lg:orderly-text-xs md:orderly-text-xs xl:orderly-text-xs 2xl:orderly-text-base orderly-text-base-contrast-54">
+              {tr("referral.not.ref.card.subtitle")}
             </div>}
           </div>
           <div className="orderly-absolute orderly-top-0 orderly-right-0 orderly-w-[72px] orderly-h-[72px] lg:orderly-w-[64px] lg:orderly-h-[64px] xl:orderly-w-[90px] xl:orderly-h-[90px] 2xl:orderly-w-[120px] 2xl:orderly-h-[120px]">
