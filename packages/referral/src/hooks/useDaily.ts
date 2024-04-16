@@ -2,7 +2,9 @@ import { usePrivateQuery } from "@orderly.network/hooks";
 import { API } from "../types/api";
 
 export const useDaily = (options?: {
+    //** default Date() - 30d */
     startDate?: Date,
+    //** default Date() */
     endDate?: Date
 }): {
     data?: API.DayliVolume[],
