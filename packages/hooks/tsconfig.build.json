@@ -1,6 +1,7 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
+    "resolveJsonModule": true,
     "plugins": [
       {
         "name": "next"
@@ -10,7 +11,8 @@
     "typeRoots": [
       "node_modules/@types",
       "./typings"
-    ]
+    ],
+    "sourceMap": true
   },
   "include": [
     "./src/**/*.ts",
@@ -18,7 +20,9 @@
     "./typings/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "__test__",
+    "__mocks__"
   ],
   "typedocOptions": {
     "entryPoints": [

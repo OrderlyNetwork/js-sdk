@@ -106,7 +106,7 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -151,6 +151,16 @@ const EditingState: FC<{
       return;
     }
 
+    if (typeof order.reduce_only === "undefined") {
+      const notionalText = checkMinNotional(order.symbol, price, order.quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
+    }
+
     setOpen(1);
   };
 
@@ -182,6 +192,11 @@ const EditingState: FC<{
     };
     if (typeof order.reduce_only !== "undefined") {
       data.reduce_only = order.reduce_only;
+    }
+
+
+    if (order.order_tag !== undefined) {
+      data = {...data, order_tag: order.order_tag};
     }
 
     if (isAlgoOrder) {

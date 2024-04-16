@@ -87,7 +87,7 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editAlgoOrder } = useContext(OrderListContext);
+  const { editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
 
   const ee = useEventEmitter();
 
@@ -133,6 +133,16 @@ const EditingState: FC<{
       return;
     }
 
+    if (order.price && typeof order.reduce_only === "undefined") {
+      const notionalText = checkMinNotional(order.symbol, order.price, order.quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
+    }
+
     setOpen(1);
   };
 
@@ -150,8 +160,10 @@ const EditingState: FC<{
   };
 
   const onConfirm = () => {
+    setIsSubmitting(true);
+
     // @ts-ignore
-    const data = {
+    let data: any = {
       // price: price,
       quantity: order.quantity,
       trigger_price: price,
@@ -161,6 +173,10 @@ const EditingState: FC<{
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
+
+    if (order.order_tag !== undefined) {
+      data = {...data, order_tag: order.order_tag};
+    }
     // @ts-ignore
     editAlgoOrder(`${order.algo_order_id}`, data)
       .then(

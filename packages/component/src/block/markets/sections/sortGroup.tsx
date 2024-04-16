@@ -7,6 +7,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 interface Props {
   value?: SortKey;
   onChange: (values: SortCondition) => void;
+  readLastSortCondition?: boolean;
 }
 
 export const SortGroup: FC<Props> = (props) => {
@@ -15,7 +16,7 @@ export const SortGroup: FC<Props> = (props) => {
     onSort,
     direction,
     value: currentValue,
-  } = useSort(props.value);
+  } = useSort(props.value, props.readLastSortCondition);
 
   useEffect(() => {
     props.onChange?.({ key: sortKey, direction });

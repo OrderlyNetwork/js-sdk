@@ -11,7 +11,7 @@ export default function useEditOrder(onToast: any) {
   return useCallback(
     (order: any, lineValue: any) => {
       if (order.algo_order_id) {
-        const values = {
+        const values: any = {
           quantity: order.quantity,
           trigger_price: order.trigger_price,
           symbol: order.symbol,
@@ -21,6 +21,9 @@ export default function useEditOrder(onToast: any) {
           // reduce_only: Boolean(order.reduce_only),
           algo_order_id: order.algo_order_id,
         };
+        if (order.order_tag) {
+            values.order_tag = order.order_tag;
+        }
         if (lineValue.type === "price") {
           values.price = new Decimal(lineValue.value).toString();
         }
@@ -50,6 +53,9 @@ export default function useEditOrder(onToast: any) {
       if (!Object.keys(order).includes("reduce_only")) {
         delete values.reduce_only;
       }
+        if (order.order_tag) {
+            values.order_tag = order.order_tag;
+        }
       if (lineValue.type === "price") {
         values.order_price = new Decimal(lineValue.value).toString();
       }

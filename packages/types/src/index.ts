@@ -21,7 +21,7 @@ export type {
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";
-export type { ChainConfig, ChainInfo, NativeCurrency } from "./chains";
+export type { Chain as ChainConfig, ChainInfo, NativeCurrency } from "./chains";
 export * from "./wallet";
 
 export { ApiError, SDKError } from "./errors";

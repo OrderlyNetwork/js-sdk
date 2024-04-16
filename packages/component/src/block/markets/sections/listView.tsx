@@ -13,7 +13,7 @@ import { sortFunc } from "../utils";
 
 interface Props {
   onSort: (value: Partial<{ key: SortKey; direction: SortDirection }>) => void;
-  listHeight?: number
+  listHeight?: number;
 }
 
 export const MarketListView: FC<MarketListViewProps & Props> = (props) => {
@@ -29,12 +29,9 @@ export const MarketListView: FC<MarketListViewProps & Props> = (props) => {
     return <Divider className="orderly-my-[16px]" />;
   }, []);
 
- 
-
-
   return (
     <>
-      <SortGroup onChange={props.onSort} />
+      <SortGroup onChange={props.onSort} readLastSortCondition />
       <Divider />
       <div
         className="orderly-overflow-y-auto orderly-overflow-hidden orderly-scrollbar-hidden orderly-hide-scrollbar orderly-my-2"

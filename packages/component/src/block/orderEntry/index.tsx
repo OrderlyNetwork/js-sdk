@@ -248,7 +248,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           if (
             metaState.errors?.order_price?.message ||
             metaState.errors?.order_quantity?.message ||
-            metaState.errors?.trigger_price?.message
+            metaState.errors?.trigger_price?.message ||
+            metaState.errors?.total?.message
           ) {
             setErrorsVisible(true);
             return Promise.reject("cancel");
@@ -550,7 +551,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           />
           <div
             className={cn(
-              "orderly-hidden desktop:orderly-flex orderly-justify-between -orderly-mt-2",
+              "orderly-hidden desktop:!orderly-flex orderly-justify-between -orderly-mt-2",
               {
                 "orderly-text-trade-profit": side === OrderSide.BUY,
                 "orderly-text-trade-loss": side === OrderSide.SELL,
@@ -593,6 +594,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             name="order_total_input"
             autoComplete="off"
             autoFocus={false}
+            error={!!metaState.errors?.total && errorsVisible}
+            helpText={metaState.errors?.total?.message}
             value={commify(
               currentFocusInput.current === InputType.TOTAL
                 ? formattedOrder.total!

@@ -10,7 +10,7 @@ export const cutNumber = (num: number | string, lenght: number) => { };
 
 export const zero = new Decimal(0);
 
-export const commify = (num: number | string): string => {
+export const commify = (num: number | string, fix?: number): string => {
   var parts = num.toString().split(".");
   const numberPart = parts[0];
   const decimalPart = parts[1];
@@ -18,7 +18,7 @@ export const commify = (num: number | string): string => {
 
   const endsWithPoint = num.toString().endsWith(".") && num.toString().length > 1;
   return (
-    numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : (endsWithPoint ? "." : ""))
+    numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart.substring(0, fix || decimalPart.length) : (endsWithPoint ? "." : ""))
   );
 };
 

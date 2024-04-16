@@ -23,9 +23,9 @@ export interface TradingViewPorps {
     tradingViewScriptSrc?: string;
     tradingViewCustomCssUrl?: string;
     interval?: string;
-    overrides?: any;
+    overrides?: Record<string, string>;
+    studiesOverrides?: Record<string, string>;
     theme?: string;
-    studiesOverrides?: any;
     fullscreen?: boolean;
     closePositionConfirmCallback?: (data: any) => void;
     onToast?: any;
@@ -249,6 +249,9 @@ export function TradingView({
             height: '100%', width: '100%', margin: '0 auto',
             position: 'relative',
         }}>
+            {
+                tradingViewScriptSrc &&
+
             <div style={{
                 position: 'absolute',
                 left: 0,
@@ -264,6 +267,7 @@ export function TradingView({
                 {loadingElement ?? <div>laoding</div>}
             </div>
 
+            }
         <div style={{
             height: '100%', width: '100%', margin: '0 auto'
         }} ref={chartRef}>

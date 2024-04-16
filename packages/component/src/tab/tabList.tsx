@@ -30,6 +30,7 @@ interface TabListProps {
   onTabChange?: (value: string) => void;
   tabBarExtra?: ReactNode | TabBarExtraRender;
   className?: string;
+  identifierClassName?: string;
   showIdentifier?: boolean;
   fullWidth?: boolean;
   mode: TabViewMode;
@@ -75,7 +76,8 @@ export const TabList: FC<TabListProps> = (props) => {
     >
       <div
         className={cn(
-          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center"
+          "orderly-relative orderly-flex-1 orderly-h-full orderly-flex orderly-items-center",
+          props.className,
           // {
           //   "orderly-pb-1": props.mode === TabViewMode.Tab,
           // }
@@ -96,6 +98,7 @@ export const TabList: FC<TabListProps> = (props) => {
                 disabled={item.disabled}
                 fullWidth={props.fullWidth}
                 mode={props.mode}
+                className={props.identifierClassName}
                 active={
                   !!item.value &&
                   !!props.value &&

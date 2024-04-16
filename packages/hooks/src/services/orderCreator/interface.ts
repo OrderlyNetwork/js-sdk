@@ -6,7 +6,7 @@ export type VerifyResult = {
 
 export type OrderFormEntity = Pick<
   OrderEntity,
-  "order_price" | "order_quantity" | "total"
+  "order_price" | "order_quantity" | "total" | "reduce_only"
 >;
 
 export type ValuesDepConfig = {

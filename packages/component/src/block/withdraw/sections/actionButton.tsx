@@ -83,10 +83,12 @@ export const ActionButton: FC<ActionButtonProps> = (props) => {
     // check cur chain is support no not
     if (chainNotSupport) {
       if (chains?.length && chains.length > 1) {
-        return `Withdrawals are not supported on ${networkName}. Please switch to any of the bridgeless networks.`;
+        return `Withdrawals are not supported on ${
+          networkName ?? "this chain"
+        }. Please switch to any of the bridgeless networks.`;
       }
 
-      return `Withdrawals are not supported on ${networkName}.`;
+      return `Withdrawals are not supported on ${networkName ?? "this chain"}.`;
     }
     // check quantity and vaultBalance
     if (crossChainWithdraw) {
