@@ -29,7 +29,7 @@ const _Top = () => {
   const { brokerName } = useContext(OrderlyAppContext);
 
 
-  const { learnAffiliate, learnAffiliateUrl, overwrite } = useContext(ReferralContext);
+  const { onLearnAffiliate: learnAffiliate, learnAffiliateUrl, overwrite } = useContext(ReferralContext);
   const handleOpenNewTab = (url: string) => {
     window.open(url, '_blank');
   };

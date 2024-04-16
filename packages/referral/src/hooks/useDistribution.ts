@@ -25,7 +25,7 @@ export const useDistribution = (params: Params): any => {
             // onError: (err) => {
             //   console.error("fetch failed::::", err);
             // },
-            formatter: (data) => data,
+            formatter: (data: any) => data,
             revalidateOnFocus: false,
         }
     );
@@ -45,9 +45,9 @@ export const useDistribution = (params: Params): any => {
             return null;
         }
 
-        return ordersResponse.data?.map((item) => item.rows)?.flat()
+        return ordersResponse.data?.map((item: any) => item.rows)?.flat()
             /// TODO: next version will be remove this code
-            .map((item) => {
+            .map((item: any) => {
                 return { ...item, created_time: item.created_time - 86400000, updated_time: item.updated_time - 86400000 };
             });
     }, [ordersResponse.data]);
