@@ -5,7 +5,7 @@ export const en = {
     "referral.not.ref.card.title": "As an affiliate",
     "referral.not.ref.card.subtitle": "Onboard traders to earn passive income",
     "referral.not.ref.card.btn": "Become an affiliate",
-    "referral.not.ref.card.hint.title": "40%~80%",
+    "referral.not.ref.card.hint.title": "40%~60%",
     "referral.not.ref.card.hint.subtitle": "Commission",
     "referral.ref.card.title": "Affiliate",
     "referral.ref.card.comission": "Commission (USDC)",
