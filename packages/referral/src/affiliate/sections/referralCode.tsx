@@ -96,7 +96,6 @@ export const CodeList: FC<{
     const isXL = useMediaQuery("(min-width: 1024px)");
     const is2XL = useMediaQuery("(min-width: 1440px)");
 
-    console.log("xxxxx is md", isMD);
     
     
  
@@ -118,7 +117,7 @@ export const CodeList: FC<{
     const columns = useMemo<Column[]>(() => {
         const action: Column = {
             title: "Actions",
-            dataIndex: "code",
+            dataIndex: "",
             className: "orderly-h-[48px] orderly-text-right orderly-w-[90px] 2xl:orderly-w-[120px]",
             align: "right",
             render: (value, record) => (
@@ -151,7 +150,7 @@ export const CodeList: FC<{
             },
             {
                 title: "You / Referee",
-                dataIndex: "referees",
+                dataIndex: "you-referee",
                 className: "orderly-h-[48px] ",
                 width: is2XL ? 146 : isXL ?134 : undefined,
                 align: "right",
@@ -175,7 +174,7 @@ export const CodeList: FC<{
             cols.push(
                 {
                     title: "Referees",
-                    dataIndex: "referees",
+                    dataIndex: "referres",
                     className: "orderly-h-[48px]",
                     align: "right",
                     render: (value, record) => (
@@ -188,7 +187,7 @@ export const CodeList: FC<{
             cols.push(
                 {
                     title: "Traders",
-                    dataIndex: "referees",
+                    dataIndex: "traders",
                     className: "orderly-h-[48px]",
                     align: "right",
                     render: (value, record) => (
@@ -202,7 +201,7 @@ export const CodeList: FC<{
             cols.push(
                 {
                     title: "Referees / Traders",
-                    dataIndex: "referees",
+                    dataIndex: "referees.traders",
                     className: "orderly-h-[48px]",
                     align: "right",
                     width: is2XL ? 137 : isXL ?130 : undefined,
@@ -249,7 +248,7 @@ export const CodeList: FC<{
                 className={cn(
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
-                generatedRowKey={(rec, index) => `${index}`}
+                generatedRowKey={(rec, index) => `${rec.code}${index}`}
                 onRow={(rec, index) => {
                     return {
                         className: "orderly-border-[rgba(255,255,255,0.04)]"
