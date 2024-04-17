@@ -61,13 +61,13 @@ export const useOrderStream = (
 
   const { data: markPrices = {} } = useMarkPricesStream();
 
-  const ee = useEventEmitter();
-
   const { regesterKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
   ] = useMutation("/v1/order", "DELETE");
+
+  const [doCancelAllOrders] = useMutation("/v1/orders", "DELETE");
 
   const [
     doUpdateOrder,
@@ -78,6 +78,8 @@ export const useOrderStream = (
     doCanceAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
+
+  const [doCancelAllAlgoOrders] = useMutation("/v1/algo/orders", "DELETE");
 
   const [
     doUpdateAlgoOrder,
@@ -180,7 +182,19 @@ export const useOrderStream = (
   /**
    * cancel all orders
    */
-  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
+  const cancelAllOrders = useCallback(() => {
+    return Promise.all([
+      doCancelAllOrders(null),
+      doCancelAllAlgoOrders(null, { algo_type: "STOP" }),
+    ]);
+  }, [ordersResponse.data]);
+
+  const cancelAllAlgoOrders = useCallback(() => {
+    return Promise.all([
+      doCancelAllAlgoOrders(null, { algo_type: "TP_SL" }),
+      doCancelAllAlgoOrders(null, { algo_type: "POSITIONAL_TP_SL" }),
+    ]);
+  }, [ordersResponse.data]);
 
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
@@ -315,6 +329,7 @@ export const useOrderStream = (
       refresh: ordersResponse.mutate,
       loadMore,
       cancelAllOrders,
+      cancelAllAlgoOrders,
       updateOrder,
       cancelOrder,
       updateAlgoOrder,

@@ -28,8 +28,9 @@ export const TPSLEditor: FC<{
   canModifyQty?: boolean;
   isEditing?: boolean;
   onTypeChange?: (type: AlgoOrderRootType) => void;
+  quoteDp?: number,
 }> = (props) => {
-  const { symbol, maxQty } = props;
+  const { symbol, maxQty, quoteDp } = props;
   const [orderEntity, setOrderEntity] =
     useState<Partial<AlgoOrderEntity> | null>();
   const [open, setOpen] = useState(false);
@@ -194,6 +195,7 @@ export const TPSLEditor: FC<{
             oldOrder={props.order}
             onCancel={() => setOpen(false)}
             onConfirm={() => onSubmit()}
+            quoteDp={quoteDp}
           />
         </SimpleDialog>
       )}

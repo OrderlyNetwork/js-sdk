@@ -29,7 +29,7 @@ export const TriggerPriceItem: FC<{
 
   return (
     <div className="orderly-flex orderly-items-center">
-      <span className="orderly-text-base-contrast-54 orderly-mr-1">PNL:</span>
+      <span className="orderly-text-base-contrast-54 orderly-mr-1">{`${type} PnL:`}</span>
       <Numeral
         rule="price"
         className={

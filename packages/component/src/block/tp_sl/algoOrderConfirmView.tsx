@@ -17,6 +17,7 @@ export const AlgoOrderConfirmView: FC<{
   onConfirm: () => Promise<any>;
   oldOrder?: API.AlgoOrder;
   isEditing?: boolean;
+  quoteDp?: number,
 }> = (props) => {
   const { order, oldOrder, tp_trigger_price, sl_trigger_price } = props;
 
@@ -60,7 +61,6 @@ export const AlgoOrderConfirmView: FC<{
   }, [order]);
 
   const qty = useMemo(() => {
-    console.log("********", order.algo_type);
     if (order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
       return "Entire position";
     }
@@ -96,6 +96,7 @@ export const AlgoOrderConfirmView: FC<{
               <span className="orderly-text-base-contrast-54">TP Price</span>
               <Numeral
                 children={tp_trigger_price}
+                precision={props.quoteDp}
                 rule="price"
                 coloring
                 surfix={
@@ -111,6 +112,7 @@ export const AlgoOrderConfirmView: FC<{
               <span className="orderly-text-base-contrast-54">SL Price</span>
               <Numeral
                 children={sl_trigger_price}
+                precision={props.quoteDp}
                 rule="price"
                 className="orderly-text-trade-loss"
                 surfix={

@@ -47,7 +47,7 @@ export const AlgoOrderBadge: FC<{
   }, [props.order.child_orders]);
 
   return (
-    <div className={"orderly-flex orderly-gap-1 orderly-text-3xs"}>
+    <div className={"orderly-flex orderly-gap-1 orderly-text-3xs orderly-td-bg-transparent"}>
       {positionBadge} {tpslBadge}
     </div>
   );
