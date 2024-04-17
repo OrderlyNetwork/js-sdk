@@ -36,11 +36,11 @@ export const Default: Story = {
 
     const tp_pnl = await canvas.findByTestId("tpEstPnL");
 
-    expect(tp_pnl).toHaveTextContent("est. PNL: -");
+    expect(tp_pnl).toHaveTextContent("est. PnL: -");
 
     const sl_pnl = await canvas.findByTestId("slEstPnL");
 
-    expect(sl_pnl).toHaveTextContent("est. PNL: -");
+    expect(sl_pnl).toHaveTextContent("est. PnL: -");
 
     // check mode if store in local storage
 
@@ -70,7 +70,7 @@ export const Default: Story = {
 
       await waitFor(
         async () => {
-          const currentMode = await canvas.getAllByLabelText("PNL");
+          const currentMode = await canvas.getAllByLabelText("PnL");
 
           expect(currentMode).toHaveLength(2);
         },
