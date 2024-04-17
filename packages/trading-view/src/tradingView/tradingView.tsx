@@ -11,6 +11,8 @@ import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 
+export { Datafeed }
+
 
 export interface TradingViewOptions {
 
