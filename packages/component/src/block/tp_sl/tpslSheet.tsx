@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TPSLEditor } from "@/block/tp_sl/tp_sl_editor";
 import { Statistic } from "@/statistic";
-import { useMarkPrice } from "@orderly.network/hooks";
+import { useMarkPrice, useSymbolsInfo } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 
 import { Text } from "@/text/text";
@@ -19,6 +19,7 @@ export const TPSLOrderEditorSheet: FC<{
   const { position, order, isEditing } = props;
   const { data: markPrice } = useMarkPrice(position!.symbol);
   const { hide, setStates } = useModal();
+  const priceDp = useSymbolsInfo()[position!.symbol]("quote_dp") || 2;
 
   const onTypeChange = (type: AlgoOrderRootType) => {
     // console.log(type);
@@ -57,12 +58,15 @@ export const TPSLOrderEditorSheet: FC<{
         <Statistic
           label={"Avg. open"}
           value={position.average_open_price}
+          rule="price"
+          precision={priceDp}
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-xs"
-        />
+          />
         <Statistic
           label={"Mark price"}
           value={markPrice}
+          precision={priceDp}
           rule="price"
           align="right"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
@@ -80,6 +84,7 @@ export const TPSLOrderEditorSheet: FC<{
         onCancel={hide}
         onSuccess={hide}
         onTypeChange={onTypeChange}
+        quoteDp={priceDp}
       />
     </div>
   );
