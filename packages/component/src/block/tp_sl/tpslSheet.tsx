@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TPSLEditor } from "@/block/tp_sl/tp_sl_editor";
 import { Statistic } from "@/statistic";
 import { useMarkPrice, useSymbolsInfo } from "@orderly.network/hooks";
@@ -20,10 +20,12 @@ export const TPSLOrderEditorSheet: FC<{
   const { data: markPrice } = useMarkPrice(position!.symbol);
   const { hide, setStates } = useModal();
   const priceDp = useSymbolsInfo()[position!.symbol]("quote_dp") || 2;
+  const [type, setType] = useState(order?.algo_type)
 
   const onTypeChange = (type: AlgoOrderRootType) => {
     // console.log(type);
     setStates({ type });
+    setType(type);
   };
 
   return (
@@ -48,7 +50,7 @@ export const TPSLOrderEditorSheet: FC<{
         <Statistic
           label={"Order type"}
           value={
-            order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+            type === AlgoOrderRootType.POSITIONAL_TP_SL
               ? "Position TP/SL"
               : "TP/SL"
           }
