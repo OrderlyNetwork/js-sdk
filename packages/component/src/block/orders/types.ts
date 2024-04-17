@@ -2,8 +2,10 @@ import { API, OrderEntity } from "@orderly.network/types";
 
 export interface OrdersViewProps {
   dataSource: any[];
-  onCancelAll?: () => void;
+
+  onCancelAll?: () => Promise<any>;
   isLoading: boolean;
+  isStopOrder?: boolean;
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
   cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
