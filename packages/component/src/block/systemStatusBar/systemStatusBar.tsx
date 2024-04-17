@@ -67,7 +67,7 @@ export const SystemStatusBar: FC<FooterStatusBarProps> = (props) => {
 
   return (
     <>
-      <div className="orderly-flex orderly-items-center">
+      <div id="orderly-bottom-navigation-bar" className="orderly-flex orderly-items-center">
         <NetworkStatus />
         <div className="orderly-pl-2">
           <Divider vertical />

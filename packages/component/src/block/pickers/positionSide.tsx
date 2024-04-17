@@ -7,6 +7,7 @@ interface SidePickerProps extends BasePickerProps<any> {}
 export const SidePicker: FC<SidePickerProps> = () => {
   return (
     <Picker
+      id="orderly-side-picker"
       size={"small"}
       options={[
         {

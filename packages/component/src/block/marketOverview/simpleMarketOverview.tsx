@@ -11,7 +11,7 @@ export const SimpleMarketOverview: FC<SimpleMarketOverviewProps> = (props) => {
   const { quote_dp } = useContext(SymbolContext);
   //
   return (
-    <div className="orderly-flex orderly-gap-4 orderly-items-center">
+    <div id="orderly-market-overview" className="orderly-flex orderly-gap-4 orderly-items-center">
       <Numeral precision={quote_dp}>{props.price}</Numeral>
       <Numeral rule={"percentages"} coloring>
         {props.change}

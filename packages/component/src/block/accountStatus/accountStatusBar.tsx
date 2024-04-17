@@ -61,7 +61,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
 
   return (
     <div
-      id="orderly-botom-bar"
+      id="orderly-bottom-bar"
       className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full"
     >
       {status !== AccountStatusEnum.NotConnected &&

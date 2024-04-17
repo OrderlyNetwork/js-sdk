@@ -43,7 +43,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       pendingOrders={[]}
       showTotal={false}
     >
-      <div className={cn("orderly-h-full orderly-relative", props.className)} >
+      <div id="orderly-orderbook-mobile" className={cn("orderly-h-full orderly-relative", props.className)} >
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
