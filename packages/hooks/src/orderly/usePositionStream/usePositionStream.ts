@@ -9,6 +9,7 @@ import {
   OrderEntity,
   AlgoOrderType,
   AlgoOrderRootType,
+  OrderStatus,
 } from "@orderly.network/types";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { useMarkPricesStream } from "../useMarkPricesStream";
@@ -76,10 +77,10 @@ export const usePositionStream = (
   // get TP/SL orders;
 
   const [tpslOrders] = useOrderStream({
+    status: OrderStatus.INCOMPLETE,
     includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   });
   //
-  // console.log("------", tpslOrders);
 
   // console.log("---------------");
 

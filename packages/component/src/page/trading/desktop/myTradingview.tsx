@@ -45,7 +45,6 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
   };
 
   const onConfirm = async () => {
-    console.log("-- order data", orderData);
     orderData.order_quantity = Math.abs(orderData.order_quantity);
     return onSubmit(orderData).then(
       (res) => {

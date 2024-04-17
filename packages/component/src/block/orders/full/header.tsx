@@ -7,7 +7,7 @@ import {
   OrderStatus,
 } from "@orderly.network/types";
 import Button from "@/button";
-import { useMutation } from "@orderly.network/hooks";
+import { useMutation, useOrderStream } from "@orderly.network/hooks";
 import toast from "react-hot-toast";
 
 export interface Props {
@@ -20,8 +20,10 @@ export interface Props {
 
 export const Header: FC<Props> = (props) => {
   // const {orderType} = props;
-  const [cancelAll, { error: cancelOrderError, isMutating: cancelMutating }] =
-    useMutation("/v1/orders", "DELETE");
+  // const [cancelAll, { error: cancelOrderError, isMutating: cancelMutating }] =
+  //   useMutation("/v1/orders", "DELETE");
+
+  const [_, { cancelAllOrders, cancelAllAlgoOrders }] = useOrderStream({});
 
   function cancelAllOrder() {
     modal
@@ -29,15 +31,21 @@ export const Header: FC<Props> = (props) => {
         title: "Cancel all orders",
         content: (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
-            Are you sure you want to cancel all of your pending orders,
-            including TP/SL orders?
+            {props.orderType === AlgoOrderRootType.TP_SL
+              ? "Are you sure you want to cancel all of your TP/SL orders?"
+              : "Are you sure you want to cancel all of your pending order?"}
           </div>
         ),
         contentClassName: "desktop:orderly-w-[364px]",
         onOk: async () => {
           // do cancel all orders
           try {
-            await cancelAll(null, { source_type: "ALL" });
+            // await cancelAll(null, { source_type: "ALL" });
+            if (props.orderType === AlgoOrderRootType.TP_SL) {
+              await cancelAllAlgoOrders();
+            } else {
+              await cancelAllOrders();
+            }
           } catch (error) {
             // @ts-ignore
             if (error?.message !== undefined) {

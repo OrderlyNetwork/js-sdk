@@ -55,10 +55,12 @@ export const findPositionTPSLFromOrders = (
   symbol: string
 ): API.AlgoOrder | undefined => {
   return orders?.find((order) => {
+    // console.log(order.symbol, symbol, order.algo_type);
     return (
       order.symbol === symbol &&
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
       (order.root_algo_status === OrderStatus.NEW ||
+        order.root_algo_status === OrderStatus.REPLACED ||
         order.root_algo_status === OrderStatus.PARTIAL_FILLED)
     );
   });
