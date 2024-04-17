@@ -123,7 +123,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </Button>
         </div>
       ) : (
-        <div className="orderly-flex orderly-justify-center">
+        <div className="orderly-py-4 orderly-flex orderly-justify-center">
           <Button
             variant={"outlined"}
             color={"danger"}
