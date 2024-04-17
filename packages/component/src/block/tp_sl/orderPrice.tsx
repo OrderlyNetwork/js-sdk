@@ -5,7 +5,7 @@ export const OrderPrice = () => {
   return (
     <div>
       {!!tp_trigger_price ? (
-        <div className={"orderly-text-base-contrast-80"}>
+        <div className={"orderly-text-base-contrast-80 orderly-td-bg-transparent"}>
           <span className={"orderly-text-base-contrast-54"}>
             TP&nbsp;-&nbsp;
           </span>
@@ -13,7 +13,7 @@ export const OrderPrice = () => {
         </div>
       ) : null}
       {!!sl_trigger_price ? (
-        <div className={"orderly-text-base-contrast-80"}>
+        <div className={"orderly-text-base-contrast-80 orderly-td-bg-transparent"}>
           <span className={"orderly-text-base-contrast-54"}>
             SL&nbsp;-&nbsp;
           </span>
