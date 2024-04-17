@@ -61,7 +61,7 @@ export const Default: Story = {
 
       await waitFor(
         () => {
-          userEvent.click(screen.getByTestId("PNL_menu_item"));
+          userEvent.click(screen.getByTestId("PnL_menu_item"));
         },
         {
           timeout: 3000,
