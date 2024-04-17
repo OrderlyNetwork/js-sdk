@@ -380,7 +380,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         onClick={() => {
           isClickForm.current = true;
         }}
-        id="orderEntryForm"
+        id="orderly-order-entry-form"
       >
         <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
           <SegmentedButton
