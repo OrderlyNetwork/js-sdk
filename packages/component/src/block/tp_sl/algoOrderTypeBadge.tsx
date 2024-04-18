@@ -1,5 +1,6 @@
 import { FC, useMemo } from "react";
 import { API, AlgoOrderRootType, AlgoOrderType } from "@orderly.network/types";
+import { Tag } from "@/tag";
 
 export const AlgoOrderBadge: FC<{
   order: API.AlgoOrder;
@@ -10,13 +11,13 @@ export const AlgoOrderBadge: FC<{
     }
 
     return (
-      <span
+      <Tag
         className={
-          "orderly-text-primary orderly-inline-block orderly-bg-primary/10 orderly-px-1 orderly-rounded"
+          "orderly-text-primary orderly-bg-primary/10"
         }
       >
         Position
-      </span>
+      </Tag>
     );
   }, [props.order.algo_type]);
 
@@ -36,18 +37,18 @@ export const AlgoOrderBadge: FC<{
     }
 
     return (
-      <span
+      <Tag
         className={
-          "orderly-text-base-contrast-36 orderly-inline-block orderly-bg-white/10 orderly-px-1 orderly-rounded"
+          "orderly-text-base-contrast-36 orderly-bg-white/10"
         }
       >
         {tpOrder && slOrder ? "TP/SL" : tpOrder ? "TP" : "SL"}
-      </span>
+      </Tag>
     );
   }, [props.order.child_orders]);
 
   return (
-    <div className={"orderly-flex orderly-gap-1 orderly-text-3xs orderly-td-bg-transparent"}>
+    <div className={"orderly-flex orderly-gap-1 orderly-text-3xs orderly-td-bg-transparent orderly-h-[18px]"}>
       {positionBadge} {tpslBadge}
     </div>
   );

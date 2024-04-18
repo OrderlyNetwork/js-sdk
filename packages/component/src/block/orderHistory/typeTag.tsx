@@ -16,7 +16,7 @@ export const OrderTypeTag: FC<{
     }
     if (props.order.parent_algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
       return (
-        <Tag className="orderly-bg-primary/20" size="small">
+        <Tag className="orderly-bg-primary/20">
           Position
         </Tag>
       );
@@ -60,7 +60,6 @@ export const OrderTypeTag: FC<{
     return (
       <Tag
         className="orderly-bg-white/10 orderly-text-base-contrast-54"
-        size="small"
       >
         {type}
       </Tag>
