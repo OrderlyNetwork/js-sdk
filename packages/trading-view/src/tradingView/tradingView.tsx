@@ -10,6 +10,7 @@ import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
+import { withExchangePrefix } from "./tradingViewAdapter/util";
 
 
 export interface TradingViewOptions {
@@ -169,7 +170,6 @@ export function TradingView({
     }, [accountState]);
 
     useLazyEffect(() => {
-        console.log('-- isloggedin', isLoggedIn);
         if (!chartingLibrarySciprtReady || !tradingViewScriptSrc) {
             return;
         }
@@ -181,7 +181,7 @@ export function TradingView({
             const options: any = {
                 fullscreen: fullscreen ?? false,
                 autosize: true,
-                symbol,
+                symbol: withExchangePrefix(symbol!),
                 // locale: getLocale(),
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 container: chartRef.current,
@@ -193,10 +193,13 @@ export function TradingView({
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
+                contextMenu: {
+                    items_processor: async (defaultItems: any) => {
+                        return defaultItems;
+                    },
+                },
                 getBroker: (isLoggedIn && !isMobile) ?
                     (instance: any, host: any) => {
-                        console.log('-- start create render');
-                        console.log('-- instance', instance);
                         createRenderer(instance, host, broker);
                         console.log('-- create render');
                         return getBrokerAdapter(host, broker);
@@ -239,9 +242,7 @@ export function TradingView({
         if (!chart.current) {
             return;
         }
-        chart.current.updateOverrides({
-            interval,
-        });
+        chart.current.setSymbol(symbol, interval);
 
     }, [interval]);
     return (

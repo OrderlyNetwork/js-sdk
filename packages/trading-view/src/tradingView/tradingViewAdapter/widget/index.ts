@@ -10,6 +10,7 @@ import type {
   ResolutionString,
   TradingTerminalWidgetOptions,
 } from "../type";
+import { withoutExchangePrefix } from "../util";
 import { ChartHack } from "./chart_hack";
 import getOptions from "./option";
 import {
@@ -106,12 +107,18 @@ export class Widget {
     this.instance.applyOverrides(overrides);
   }
 
-  public setSymbol(symbol: string, callback?: any) {
+  public setSymbol(symbol: string, interval?: number, callback?: any) {
+
     try {
 
       this._instance?.onChartReady(() => {
-        const interval = this._instance?.symbolInterval()?.interval;
-        this._instance?.setSymbol(symbol, interval as any, callback);
+        let currentInterval = interval ?? this._instance?.symbolInterval()?.interval;
+        if (!currentInterval){
+          currentInterval = 1;
+
+        }
+        console.log('current interval', currentInterval, symbol)
+        this._instance?.setSymbol(symbol, currentInterval as any, callback);
       });
     } catch (e) {
       console.log('set symbol error', e);
@@ -266,7 +273,12 @@ export class Widget {
         removeValue: () => {},
       },
     });
-
+    this._instance!.onChartReady(() => {
+      // console.log('-- options symbol', options.symbol, this._instance?.activeChart().symbol());
+      if (options.symbol && this._instance?.activeChart().symbol() !== withoutExchangePrefix(options!.symbol as string)) {
+        this.setSymbol(options.symbol as string);
+      }
+    });
     this.subscribeAutoSave();
     this.subscribeClick(onClick);
     this.chartHack();
