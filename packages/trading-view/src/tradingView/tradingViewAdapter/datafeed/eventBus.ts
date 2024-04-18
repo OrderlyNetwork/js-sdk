@@ -1,5 +1,3 @@
-
-
 export class MultiBroadcastEventBus {
     private subscribers: Map<string, Array<(data: any) => void>> = new Map();
 
@@ -10,7 +8,6 @@ export class MultiBroadcastEventBus {
         const callbacks = this.subscribers.get(eventName)!;
         callbacks.push(callback);
 
-        // 返回取消订阅的函数
         return () => {
             this.unsubscribe(eventName, callback);
         };
