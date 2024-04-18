@@ -104,3 +104,15 @@ export function parseNumStr(str: string | number): Decimal | undefined {
 
   return result;
 }
+
+//** remove trailing zeros 0.00000100 => 0.000001, 1 => 1 */
+export function removeTrailingZeros(value: number, fixedCount: number = 16): string {
+  const text = `${value}`;
+  let scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
+  let isScientific = scientificNotationPattern.test(text);
+  if (!value.toString().includes(".") && !isScientific) {
+    return `${value}`;
+  }
+  let formattedNumber = new Decimal(value).toFixed(fixedCount).replace(/(\.[0-9]*[1-9])0+$/, "$1");
+  return formattedNumber;
+}
