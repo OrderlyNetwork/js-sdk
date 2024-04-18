@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/storybook",
-  "version": "1.2.2-internal.10",
+  "version": "1.2.2-internal.11",
   "description": "",
   "main": "index.js",
   "private": true,
