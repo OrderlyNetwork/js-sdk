@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.3.0-alpha.0
+
+### Minor Changes
+
+- update;
+
 ## 1.2.0
 
 ### Minor Changes

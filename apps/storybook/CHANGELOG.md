@@ -1,5 +1,20 @@
 # storybook
 
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- update;
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.3.0-alpha.0
+  - @orderly.network/web3-onboard@1.3.0-alpha.0
+  - @orderly.network/hooks@1.3.0-alpha.0
+  - @orderly.network/core@1.3.0-alpha.0
+  - @orderly.network/web3-modal@1.3.0-alpha.0
+
 ## 1.1.10
 
 ### Patch Changes
