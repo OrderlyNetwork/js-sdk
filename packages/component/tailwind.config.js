@@ -124,7 +124,13 @@ module.exports = {
           DEFAULT: "rgb(var(--orderly-color-fill) / <alpha-value>)",
           light: "rgb(var(--orderly-color-fill-light) / <alpha-value>)",
         },
-        divider: "rgb(var(--orderly-color-divider) / <alpha-value>)",
+        divider: {
+          DEFAULT: "rgb(var(--orderly-color-divider) / <alpha-value>)",
+          "fill2": "rgb(var(--orderly-color-divider-fill) / 0.12)", 
+          "fill3": "rgb(var(--orderly-color-divider-fill) / 0.08)", 
+          "fill4": "rgb(var(--orderly-color-divider-fill) / 0.06)", 
+          "fill5": "rgb(var(--orderly-color-divider-fill) / 0.04)", 
+        },
         // disable:'',
         trade: {
           loss: {
