@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 1.4.0-internal.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/trading-view@1.4.0-internal.9
+  - @orderly.network/hooks@1.4.0-internal.9
+  - @orderly.network/types@1.4.0-internal.9
+  - @orderly.network/utils@1.4.0-internal.9
+  - @orderly.network/core@1.4.0-internal.9
+  - @orderly.network/net@1.4.0-internal.9
+
 ## 1.4.0-internal.8
 
 ### Patch Changes

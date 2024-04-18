@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "1.4.0-internal.8",
+  "version": "1.4.0-internal.9",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
