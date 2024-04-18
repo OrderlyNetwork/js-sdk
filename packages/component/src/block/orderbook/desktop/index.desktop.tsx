@@ -14,8 +14,8 @@ export interface DesktopOrderBookProps {
   markPrice: number;
   lastPrice: number[];
   onItemClick?: (item: number[]) => void;
-  depth: number[];
-  activeDepth: number;
+  depth: string[];
+  activeDepth?: string;
   onDepthChange?: (depth: number) => void;
   //
   autoSize?: boolean;

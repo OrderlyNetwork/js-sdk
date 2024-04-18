@@ -2,8 +2,8 @@ import { Picker, Select } from "@/select";
 import { FC, useMemo } from "react";
 
 interface DepthSelectProps {
-  depth: number[];
-  value: number;
+  depth: string[];
+  value?: string;
   onChange?: (depth: number) => void;
 }
 
