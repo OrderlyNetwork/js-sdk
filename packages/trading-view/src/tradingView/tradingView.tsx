@@ -31,6 +31,7 @@ export interface TradingViewPorps {
     closePositionConfirmCallback?: (data: any) => void;
     onToast?: any;
     loadingElement?: any;
+    positionControlCallback?: Function;
 }
 
 function Link(props: {
@@ -101,7 +102,8 @@ export function TradingView({
     fullscreen,
     closePositionConfirmCallback,
     onToast,
-    loadingElement
+    loadingElement,
+                                positionControlCallback
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -206,6 +208,7 @@ export function TradingView({
                     }
                     : undefined,
 
+                positionControlCallback,
             };
 
             const chartProps: WidgetProps = {

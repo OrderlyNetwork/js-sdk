@@ -26,6 +26,9 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
   const symbolInfo = useSymbolsInfo()[symbol];
   const [orderData, setOrderData] = useState<any>();
 
+  const positionControlCallback = () => {
+    setOpen(true);
+  };
   const closePositionConfirmCallback = (data: any) => {
     const side = new Decimal(data.balance).greaterThan(0)
       ? OrderSide.SELL
@@ -75,6 +78,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
           closePositionConfirmCallback={closePositionConfirmCallback}
           onToast={toast}
           loadingElement={<Spinner />}
+          positionControlCallback={positionControlCallback}
         />
         <Popover onOpenChange={setOpen} open={open}>
           <PopoverTrigger asChild>

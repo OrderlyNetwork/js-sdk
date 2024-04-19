@@ -63,7 +63,7 @@ export class Datafeed extends AbstractDatafeed {
     }
 
     public remove() {
-        Array.from(this._subscribeQuoteMap.values()).forEach((s) => s?.unsubscribe());
+        Array.from(this._subscribeQuoteMap.values()).forEach((s) => s?.());
     }
 
     private getSubscriptionId(listenerGuid: string) {

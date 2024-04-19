@@ -18,7 +18,7 @@ export class Renderer{
 
     async renderPositions(positions: ChartPosition[] | null) {
         await this.chartReady();
-
+        await this.onDataLoaded();
         this.positionLineService.renderPositions(positions);
     }
 
@@ -30,6 +30,26 @@ export class Renderer{
 
     remove() {
         this.positionLineService.removePositions();
+    }
+
+    onDataLoaded(): Promise<void> {
+        if (this.instance.activeChart().symbolExt()) {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve) =>
+            // eslint-disable-next-line no-promise-executor-return
+            this.instance
+                .activeChart()
+                .onDataLoaded()
+                .subscribe(
+                    null,
+                    () => {
+                        resolve();
+                    },
+                    true,
+                ),
+        );
     }
 
 
