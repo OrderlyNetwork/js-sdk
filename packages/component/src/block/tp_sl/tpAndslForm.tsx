@@ -261,7 +261,7 @@ export const TPSLForm: FC<Props> = (props) => {
             ) : (
               "-"
             )}
-            {/* {`est. PNL: ${order.tp_pnl ? parseNumber(order.tp_pnl) : "-"}`} */}
+            {/* {`est. PnL: ${order.tp_pnl ? parseNumber(order.tp_pnl) : "-"}`} */}
           </div>
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
@@ -290,7 +290,7 @@ export const TPSLForm: FC<Props> = (props) => {
             onChange={props.onChange}
             type={"TP"}
             values={{
-              PNL: `${order.tp_pnl ?? ""}`,
+              PnL: `${order.tp_pnl ?? ""}`,
               Offset: `${order.tp_offset ?? ""}`,
               "Offset%": `${order.tp_offset_percentage ?? ""}`,
             }}
@@ -308,7 +308,7 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-2xs"}
             data-testid="slEstPnL"
           >
-            <span>est. PNL: </span>
+            <span>est. PnL: </span>
             {order.sl_pnl ? (
               <Numeral rule="price" coloring>
                 {order.sl_pnl}
@@ -344,7 +344,7 @@ export const TPSLForm: FC<Props> = (props) => {
             onChange={props.onChange}
             type={"SL"}
             values={{
-              PNL: `${order.sl_pnl ?? ""}`,
+              PnL: `${order.sl_pnl ?? ""}`,
               Offset: `${order.sl_offset ?? ""}`,
               "Offset%": `${order.sl_offset_percentage ?? ""}`,
             }}

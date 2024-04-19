@@ -30,7 +30,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
 
   const typeTag = useMemo(() => {
     return (
-      <Tag color={order.side === "BUY" ? "buy" : "sell"} size="small">
+      <Tag color={order.side === "BUY" ? "buy" : "sell"}>
         {order.side === "BUY" ? "Buy" : "Sell"}
       </Tag>
     );

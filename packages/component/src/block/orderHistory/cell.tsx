@@ -120,6 +120,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          rule="price"
+          precision={quote_dp}
           label={
             <>
               <span className="orderly-text-base-contrast-36">Order price</span>
@@ -131,6 +133,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          rule="price"
+          precision={quote_dp}
           label={
             <>
               <span className="orderly-text-base-contrast-36">

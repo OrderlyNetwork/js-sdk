@@ -18,14 +18,14 @@ interface Props {
   onChange: (key: string, value: number | string) => void;
   testId?: string;
   values: {
-    PNL: string;
+    PnL: string;
     Offset: string;
     "Offset%": string;
   };
 }
 
 export enum PnLMode {
-  PNL = "PNL",
+  PnL = "PnL",
   OFFSET = "Offset",
   PERCENTAGE = "Offset%",
 }
@@ -57,7 +57,7 @@ export const PnlInput: FC<Props> = (props) => {
 
     if (val === "") return val;
 
-    if (mode === PnLMode.PNL || mode === PnLMode.OFFSET) {
+    if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
       return commify(val);
     }
 
@@ -71,7 +71,7 @@ export const PnlInput: FC<Props> = (props) => {
     return val;
   }, [props.values, mode]);
 
-  const pnlNumber = Number(props.values.PNL);
+  const pnlNumber = Number(props.values.PnL);
 
   return (
     <Input
@@ -111,10 +111,10 @@ export const PnlInput: FC<Props> = (props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align={"end"} className={"orderly-w-[120px]"}>
             <DropdownMenuItem
-              onSelect={() => setMode(PnLMode.PNL)}
-              data-testid={`${PnLMode.PNL}_menu_item`}
+              onSelect={() => setMode(PnLMode.PnL)}
+              data-testid={`${PnLMode.PnL}_menu_item`}
             >
-              {PnLMode.PNL}
+              {PnLMode.PnL}
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => setMode(PnLMode.OFFSET)}

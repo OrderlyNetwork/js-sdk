@@ -299,8 +299,8 @@ const EditingState: FC<{
             }}
             onKeyDown={handleKeyDown}
             autoFocus
-            containerClassName="orderly-h-auto orderly-pl-7"
-            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
+            containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"
+            className="orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
           />
         </PopoverAnchor>
         <div
