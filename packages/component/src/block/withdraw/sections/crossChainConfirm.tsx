@@ -12,7 +12,7 @@ export const CrossChainConfirm: FC<CrossChainConfirmProps> = (props) => {
 
     const { address, chain, amount } = props;
 
-    return (<div id="orderly-deposit-and-withdraw">
+    return (<div id="orderly-cross-chain-confirm">
         <Title title="Recipient address" />
         <SubTitle subtitle={address} />
 

@@ -157,9 +157,8 @@ const EditingState: FC<{
       return;
     }
 
-    const price =
-      order.algo_order_id !== undefined ? order.trigger_price : order.price;
-    if (price !== null && typeof order.reduce_only === "undefined") {
+    const price = order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    if (price !== null && order.reduce_only !== true) {
       const notionalText = checkMinNotional(order.symbol, price, quantity);
       if (notionalText) {
         toast.error(notionalText);

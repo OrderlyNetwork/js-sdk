@@ -35,7 +35,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
     : (props.accumulated / props.count) * 100;
 
   const dp = useMemo(() => {
-    return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
+    return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
 
   const totalAmount = Number.isNaN(props.accumulated)

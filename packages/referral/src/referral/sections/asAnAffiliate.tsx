@@ -12,7 +12,7 @@ import { useTranslation } from "../../locale/useTranslation";
 export const AsAnAffiliate = () => {
 
   const state = useContext(ReferralContext);
-  const { referralInfo, isAffiliate, becomeAnAffiliate, becomeAnAffiliateUrl, enterAffiliatePage, overwrite } = state;
+  const { referralInfo, isAffiliate, onBecomeAnAffiliate: becomeAnAffiliate, becomeAnAffiliateUrl, onEnterAffiliatePage: enterAffiliatePage, overwrite } = state;
   const tr = useTranslation();
 
   const onClickAffiliate = () => {

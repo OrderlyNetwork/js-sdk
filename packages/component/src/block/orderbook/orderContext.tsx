@@ -4,7 +4,7 @@ import { QtyMode, TotalMode } from "./types";
 export interface OrderBookContextValue {
   cellHeight: number;
   mode: QtyMode;
-  depth: number;
+  depth?: string;
   onModeChange?: (mode: QtyMode) => void;
   onItemClick?: (item: number[]) => void;
   showTotal: boolean;
@@ -19,7 +19,7 @@ export const OrderBookContext = createContext({
 
 interface OrderBookProviderProps {
   cellHeight: number;
-  depth: number;
+  depth?: string;
   showTotal: boolean;
   pendingOrders: number[];
   onItemClick?: (item: number[]) => void;

@@ -47,6 +47,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   return (
     <>
       <div
+      id="orderly-quantity-input-view"
         className={cn(
           "orderly-bg-base-500 dark:orderly-bg-base-100 orderly-rounded orderly-pl-1 orderly-pr-2 orderly-py-2 focus-within:orderly-bg-bg-base-500 focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
           props.className,

@@ -13,7 +13,7 @@ export const TriangleDownIcon: FC<IconProps> = (props) => {
         height="7" 
         viewBox="0 0 10 7" 
         fill="white" 
-        fill-opacity="0.54"
+        fillOpacity="0.54"
         xmlns="http://www.w3.org/2000/svg"
         {...rest}
         >

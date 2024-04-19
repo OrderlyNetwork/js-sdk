@@ -6,7 +6,8 @@ import {
   useSymbolsInfo,
   useEventEmitter,
 } from "@orderly.network/hooks";
-import { FC, memo, useEffect, useRef, useState } from "react";
+import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { FC, memo, useEffect, useMemo, useRef, useState } from "react";
 
 interface MyOrderBookProps {
   symbol: string;
@@ -22,6 +23,8 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     });
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];
+
+  const quote_dp = symbolInfo("quote_dp");
 
   const ee = useEventEmitter();
 
@@ -40,6 +43,21 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     };
   }, []);
 
+  const selDepth = useMemo(() => {
+
+    if (typeof depth === 'undefined' || typeof quote_dp === 'undefined') {
+      return undefined;
+    }
+
+    let formattedNumber = removeTrailingZeros(depth);
+    return formattedNumber;
+  }, [depth, quote_dp]);
+
+
+  const depths = useMemo(() => {
+    return allDepths?.map((e) => (removeTrailingZeros(e))) || [];
+  }, [allDepths,quote_dp]);
+
   return (
     <div
       id="orderly-order-book"
@@ -52,8 +70,8 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
           bids={data.bids!}
           markPrice={data.markPrice!}
           lastPrice={data.middlePrice!}
-          depth={allDepths!}
-          activeDepth={depth!}
+          depth={depths}
+          activeDepth={selDepth}
           base={symbolInfo("base")}
           quote={symbolInfo("quote")}
           isLoading={isLoading}

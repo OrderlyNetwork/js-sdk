@@ -51,29 +51,31 @@ export type ChartConfig = {
     }
 };
 
+
+
 export type ReferralContextProps = {
     //** click become an affiliate, If this method is implemented, the `becomeAnAffiliateUrl` will not work */
-    becomeAnAffiliate?: () => void,
+    onBecomeAnAffiliate?: () => void,
     //** set become an affiliate url, default is `https://orderly.network/` */
     becomeAnAffiliateUrl?: string,
     //** bind refferal code callback */
     bindReferralCodeState?: (success: boolean, error: any, hide: any, queryParams: any) => void,
     //** click learn affilate, if this method is implemented, the `learnAffilateUrl` will not work */
-    learnAffiliate?: () => void,
+    onLearnAffiliate?: () => void,
     //** set learn affiliate url, default is `https://orderly.network/` */
     learnAffiliateUrl?: string,
     //** default is `https://orderly.network/` */
     referralLinkUrl: string,
     //** referral index page */
     showReferralPage?: () => void,
-    enterTraderPage?: (params?: any) => void,
-    enterAffiliatePage?: (params?: any) => void,
+    onEnterTraderPage?: (params?: any) => void,
+    onEnterAffiliatePage?: (params?: any) => void,
     //** tab + tab content */
     showDashboard?: () => void,
     //** col chart config */
     chartConfig?: ChartConfig,
     //** overwrite refferal */
-    overwrite: Overwrite,
+    overwrite?: Overwrite,
 }
 
 export type ReferralContextReturns = {
@@ -97,15 +99,15 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
     }
 }>> = (props) => {
     const {
-        becomeAnAffiliate,
+        onBecomeAnAffiliate: becomeAnAffiliate,
         becomeAnAffiliateUrl = "https://orderly.network/",
         bindReferralCodeState,
-        learnAffiliate,
+        onLearnAffiliate: learnAffiliate,
         learnAffiliateUrl= "https://orderly.network/",
         referralLinkUrl= "https://orderly.network/",
         showReferralPage,
-        enterTraderPage,
-        enterAffiliatePage,
+        onEnterTraderPage: enterTraderPage,
+        onEnterAffiliatePage: enterAffiliatePage,
         chartConfig,
         intl = {
             messages: en,
@@ -206,17 +208,17 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
                 // isAffiliate: false,
                 // isTrader: false,
                 mutate,
-                becomeAnAffiliate,
+                onBecomeAnAffiliate: becomeAnAffiliate,
                 becomeAnAffiliateUrl,
                 bindReferralCodeState,
-                learnAffiliate,
+                onLearnAffiliate: learnAffiliate,
                 learnAffiliateUrl,
                 referralLinkUrl,
                 userVolume,
                 dailyVolume,
                 showReferralPage,
-                enterTraderPage,
-                enterAffiliatePage,
+                onEnterTraderPage: enterTraderPage,
+                onEnterAffiliatePage: enterAffiliatePage,
                 chartConfig,
                 overwrite,
             }}>

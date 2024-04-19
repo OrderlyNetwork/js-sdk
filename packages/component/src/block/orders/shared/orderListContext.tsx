@@ -24,7 +24,6 @@ export interface OrderListProviderProps {
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
   cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
-  // cancelTPSLOrder: (orderId: number, rootAlgoOrderId: number) => Promise<any>;
   editAlgoOrder: (orderId: string, order: OrderEntity) => Promise<any>;
 }
 
@@ -80,7 +79,7 @@ export const OrderListProvider: FC<
             position={position}
             editOrder={(value: OrderEntity) => {
                 /// check order has order_tag, if exits add order_tag to request body
-                if (typeof order.order_tag !== undefined && typeof order.reduce_only === "undefined") {
+                if (typeof order.order_tag !== undefined && order.reduce_only !== true) {
                     value = {...value, order_tag: order.order_tag};
                 }
               if (order.algo_order_id !== undefined) {

@@ -95,7 +95,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
   const isExpired = status === AccountStatusEnum.DisabledTrading && !isNew;
 
   return (
-    <div>
+    <div id="orderly-wallet-connect-view">
       <div className="orderly-text-base-contrast-54 orderly-text-2xs orderly-py-4 desktop:orderly-text-base">
         {isExpired
           ? "Your previous access has expired, you will receive a signature request to enable trading. Signing is free and will not send a transaction."
