@@ -5,8 +5,8 @@ import { MEDIA_TABLET } from "@orderly.network/types";
 import { SettingsIcon } from "@/icon";
 
 interface DesktopDepthSelectProps {
-  depth: number[];
-  value: number;
+  depth: string[];
+  value?: string;
   onChange?: (depth: number) => void;
 }
 

@@ -1,7 +1,7 @@
 import { FC, useContext, useMemo } from "react";
 import { CellBar, CellBarDirection } from "./cellBar";
 import { OrderBookContext } from "@/block/orderbook/orderContext";
-import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
+import { Decimal, getPrecisionByNumber, removeTrailingZeros } from "@orderly.network/utils";
 import { QtyMode } from "./types";
 import { Numeral } from "@/text/numeral";
 import { SymbolContext } from "@/provider";
@@ -36,7 +36,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   }
 
   const dp = useMemo(() => {
-    return typeof depth === "number" ? getPrecisionByNumber(depth) : quote_dp;
+    return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
 
   return (
