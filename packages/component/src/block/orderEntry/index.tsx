@@ -40,7 +40,7 @@ import {
 } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal, commify, removeTrailingZeros } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
 import { convertValueToPercentage } from "@/slider/utils";
@@ -153,7 +153,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             formattedOrder.order_type === OrderType.STOP_LIMIT ||
             formattedOrder.order_type === OrderType.STOP_MARKET
           ) {
-            props.onFieldChange("trigger_price", item[0].toString());
+            props.onFieldChange("trigger_price", removeTrailingZeros(item[0]));
             focusInputElement(triggerPriceInputRef.current);
           }
         } else {
@@ -161,7 +161,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             formattedOrder.order_type === OrderType.STOP_LIMIT ||
             formattedOrder.order_type === OrderType.LIMIT
           ) {
-            props.onFieldChange("order_price", item[0].toString());
+            props.onFieldChange("order_price", removeTrailingZeros(item[0]));
             focusInputElement(priceInputRef.current);
           } else {
             // other order type
@@ -176,7 +176,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             if (typeof newType !== "undefined") {
               props.onFieldChange("order_type", newType);
             }
-            props.onFieldChange("order_price", item[0].toString());
+            props.onFieldChange("order_price", removeTrailingZeros(item[0]));
             focusInputElement(priceInputRef.current);
           }
         }
@@ -380,7 +380,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         onClick={() => {
           isClickForm.current = true;
         }}
-        id="orderEntryForm"
+        id="orderly-order-entry-form"
       >
         <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
           <SegmentedButton

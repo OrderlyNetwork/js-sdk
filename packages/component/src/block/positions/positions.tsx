@@ -9,7 +9,7 @@ import { PositionsViewProps } from "./shared/types";
 
 export const PositionsView: FC<PositionsViewProps> = (props) => {
   return (
-    <StatisticStyleProvider
+    <div id="orderly-positions-mobile"><StatisticStyleProvider
       labelClassName="orderly-text-3xs orderly-text-base-contrast/30"
       valueClassName="orderly-text-base-contrast/80"
     >
@@ -44,6 +44,8 @@ export const PositionsView: FC<PositionsViewProps> = (props) => {
           />
         </>
       </div>
+
     </StatisticStyleProvider>
+    </div>
   );
 };

@@ -15,8 +15,8 @@ export const useDaily = (options?: {
     const formatDate = (date: Date): string => {
 
         const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = `${date.getUTCMonth() + 1}`.padStart(2, '0');
+        const day = `${date.getUTCDate()}`.padStart(2, '0');
 
         const formattedTime = `${year}-${month}-${day}`;
         return formattedTime;

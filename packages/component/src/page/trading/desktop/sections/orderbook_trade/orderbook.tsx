@@ -8,8 +8,9 @@ import {
   useSymbolsInfo,
   useEventEmitter,
 } from "@orderly.network/hooks";
-import { FC, memo, useEffect, useRef, useState } from "react";
+import { FC, memo, useEffect, useMemo, useRef, useState } from "react";
 import { usePendingOrderStream } from "./usePendingOrderStream";
+import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 
 interface MyOrderBookProps {
   symbol: string;
@@ -26,7 +27,7 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
   const [cellHeight, setCellHeight] = useState(DEFAULT_CELL_HEIGHT);
 
   const [level, setLevel] = useState(10);
-  const { base, quote } = useSymbolContext();
+  const { base, quote, quote_dp } = useSymbolContext();
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
@@ -67,6 +68,24 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
     }
   }, [height?.content]);
 
+  
+
+
+    const selDepth = useMemo(() => {
+
+      if (typeof depth === 'undefined' || typeof quote_dp === 'undefined') {
+        return undefined;
+      }
+
+      let formattedNumber = removeTrailingZeros(depth);
+      return formattedNumber;
+    }, [depth, quote_dp]);
+
+
+    const depths = useMemo(() => {
+      return allDepths?.map((e) => (removeTrailingZeros(e))) || [];
+    }, [allDepths,quote_dp]);
+
   return (
     <DesktopOrderBook
       level={level}
@@ -74,8 +93,8 @@ export const MyOrderBook: FC<MyOrderBookProps> = (props) => {
       bids={data.bids!}
       markPrice={data.markPrice!}
       lastPrice={data.middlePrice!}
-      depth={allDepths!}
-      activeDepth={depth!}
+      depth={depths}
+      activeDepth={selDepth}
       base={base}
       quote={quote}
       isLoading={isLoading}

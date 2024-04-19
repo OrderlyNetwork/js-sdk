@@ -13,12 +13,12 @@ export const PositionsViewFull: FC<
 }
 > = (props) => {
   return (
-    <>
+    <div id="orderly-positions-desktop">
       <AssetsProvider>
         <Header aggregated={props.aggregated} pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision} />
       </AssetsProvider>
       <Divider />
       <Listview {...props} />
-    </>
+    </div>
   );
 };

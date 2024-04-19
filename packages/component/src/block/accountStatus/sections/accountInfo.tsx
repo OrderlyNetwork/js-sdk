@@ -123,7 +123,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
           </Button>
         </div>
       ) : (
-        <div className="orderly-flex orderly-justify-center">
+        <div className="orderly-py-4 orderly-flex orderly-justify-center">
           <Button
             variant={"outlined"}
             color={"danger"}
@@ -183,7 +183,7 @@ const ReferralInfo = () => {
   }
 
   return (
-    <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3">
+    <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3 orderly-mb-3">
       <div className="orderly-flex orderly-items-center orderly-cursor-pointer" onClick={clickReferral}>
         <div className="orderly-flex-1">Referral</div>
         <ArrowRightIcon size={14} fillOpacity={1} className="orderly-fill-primary" />
