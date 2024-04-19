@@ -3,6 +3,7 @@ import { API, OrderEntity } from "@orderly.network/types";
 import { FC, PropsWithChildren, createContext, useCallback } from "react";
 
 import { OrderEditFormSheet } from "../dialog/editor/editorSheet";
+import { checkNotional, useSymbolsInfo } from "@orderly.network/hooks";
 
 export interface OrderListContextState {
   onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;
@@ -12,6 +13,7 @@ export interface OrderListContextState {
   ) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
+  checkMinNotional: (symbol: string, price?: string | number, qty?: string | number) => string | undefined;
 }
 
 export const OrderListContext = createContext<OrderListContextState>(
@@ -22,7 +24,6 @@ export interface OrderListProviderProps {
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
   editOrder: (orderId: string, order: OrderEntity) => Promise<any>;
   cancelAlgoOrder: (orderId: number, symbol: string) => Promise<any>;
-  // cancelTPSLOrder: (orderId: number, rootAlgoOrderId: number) => Promise<any>;
   editAlgoOrder: (orderId: string, order: OrderEntity) => Promise<any>;
 }
 
@@ -36,7 +37,7 @@ export const OrderListProvider: FC<
     editAlgoOrder,
     // cancelTPSLOrder,
   } = props;
-
+    const symbolInfo = useSymbolsInfo();
   const onCancelOrder = useCallback(
     async (order: API.Order | API.AlgoOrder) => {
       if (order.algo_order_id !== undefined) {
@@ -77,6 +78,10 @@ export const OrderListProvider: FC<
             order={order}
             position={position}
             editOrder={(value: OrderEntity) => {
+                /// check order has order_tag, if exits add order_tag to request body
+                if (typeof order.order_tag !== undefined && order.reduce_only !== true) {
+                    value = {...value, order_tag: order.order_tag};
+                }
               if (order.algo_order_id !== undefined) {
                 return editAlgoOrder(order.algo_order_id.toString(), {
                   ...value,
@@ -94,9 +99,14 @@ export const OrderListProvider: FC<
     []
   );
 
+  const checkMinNotional = useCallback((symbol: string, price?: string | number, qty?: string | number) => {
+    const { min_notional } = symbolInfo[symbol]();
+    return checkNotional(price, qty, min_notional);
+  }, [symbolInfo]);
+
   return (
     <OrderListContext.Provider
-      value={{ onCancelOrder, onEditOrder, editOrder, editAlgoOrder }}
+      value={{ onCancelOrder, onEditOrder, editOrder, editAlgoOrder, checkMinNotional }}
     >
       {props.children}
     </OrderListContext.Provider>

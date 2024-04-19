@@ -148,6 +148,8 @@ export const useTaskProfitAndStopLossInternal = (
         }
       );
 
+      console.log("newValue::", newValue);
+
       return {
         ...prev,
         ...newValue,

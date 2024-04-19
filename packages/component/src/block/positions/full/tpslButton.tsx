@@ -21,7 +21,9 @@ export const TPSLButton = () => {
     tpslOrder,
   } = usePositionsRowContext();
 
-  const { base, quote, symbol } = useSymbolContext();
+
+
+  const { base, quote, symbol, quote_dp: priceDp } = useSymbolContext();
 
   const onConfirm = () => {
     return onSubmit().then(
@@ -80,6 +82,7 @@ export const TPSLButton = () => {
           position={position as API.PositionTPSLExt}
           onSuccess={onClose}
           order={tpslOrder}
+          quoteDp={priceDp}
         />
       </PopoverContent>
     </Popover>

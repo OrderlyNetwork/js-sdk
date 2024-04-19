@@ -29,19 +29,19 @@ export const TriggerPriceItem: FC<{
 
   return (
     <div className="orderly-flex orderly-items-center">
-      <span className="orderly-text-base-contrast-54 orderly-mr-1">
-        {`${type} PNL:`}
-      </span>
+      <span className="orderly-text-base-contrast-54 orderly-mr-1">{`${type} PnL:`}</span>
       <Numeral
         rule="price"
         className={
-          pnl > 0
+          pnl === 0
+            ? "orderly-text-base-contrast-36"
+            : pnl > 0
             ? "orderly-text-trade-profit orderly-gap-0"
             : "orderly-text-trade-loss orderly-gap-0"
         }
         prefix={
           // @ts-ignore
-          <span>{pnl > 0 ? "+" : "-"}</span>
+          <span>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</span>
         }
         surfix={
           <span className="orderly-text-base-contrast-36 orderly-ml-1">

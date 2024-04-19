@@ -12,7 +12,7 @@ import { expect } from "@storybook/jest";
 
 import { PnLMode } from "./pnlInput";
 
-import { useTaskProfitAndStopLoss } from "@orderly.network/hooks";
+import { useStopOrder } from "@orderly.network/hooks";
 
 const meta: Meta = {
   title: "Block/TPSL/TP&SL Form",
@@ -36,11 +36,11 @@ export const Default: Story = {
 
     const tp_pnl = await canvas.findByTestId("tpEstPnL");
 
-    expect(tp_pnl).toHaveTextContent("est. PNL: -");
+    expect(tp_pnl).toHaveTextContent("est. PnL: -");
 
     const sl_pnl = await canvas.findByTestId("slEstPnL");
 
-    expect(sl_pnl).toHaveTextContent("est. PNL: -");
+    expect(sl_pnl).toHaveTextContent("est. PnL: -");
 
     // check mode if store in local storage
 
@@ -61,7 +61,7 @@ export const Default: Story = {
 
       await waitFor(
         () => {
-          userEvent.click(screen.getByTestId("PNL_menu_item"));
+          userEvent.click(screen.getByTestId("PnL_menu_item"));
         },
         {
           timeout: 3000,
@@ -70,7 +70,7 @@ export const Default: Story = {
 
       await waitFor(
         async () => {
-          const currentMode = await canvas.getAllByLabelText("PNL");
+          const currentMode = await canvas.getAllByLabelText("PnL");
 
           expect(currentMode).toHaveLength(2);
         },
@@ -153,7 +153,7 @@ export const WithHooks: Story = {
       pnl_24_h: 0.828036,
       fee_24_h: 2.534924,
     };
-    const [order, { setValue, submit }] = useTaskProfitAndStopLoss(positon);
+    const [order, { setValue, submit }] = useStopOrder(positon);
     return (
       <TPSLForm
         symbol={"PERP_BTC_USDC"}

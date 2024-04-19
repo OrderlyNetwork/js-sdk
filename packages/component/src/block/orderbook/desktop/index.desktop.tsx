@@ -14,8 +14,8 @@ export interface DesktopOrderBookProps {
   markPrice: number;
   lastPrice: number[];
   onItemClick?: (item: number[]) => void;
-  depth: number[];
-  activeDepth: number;
+  depth: string[];
+  activeDepth?: string;
   onDepthChange?: (depth: number) => void;
   //
   autoSize?: boolean;
@@ -78,7 +78,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       showTotal={showTotal}
       pendingOrders={props.pendingOrders || []}
     >
-      <div className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
+      <div id="orderly-orderbook-desktop" className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
         <DesktopDepthSelect
           depth={props.depth}
           value={props.activeDepth}

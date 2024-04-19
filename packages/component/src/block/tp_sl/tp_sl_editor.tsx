@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { TPSLForm } from "@/block/tp_sl/tpAndslForm";
 import {
   useLocalStorage,
-  useTaskProfitAndStopLoss,
+  useStopOrder,
   useMediaQuery,
 } from "@orderly.network/hooks";
 import {
@@ -28,23 +28,23 @@ export const TPSLEditor: FC<{
   canModifyQty?: boolean;
   isEditing?: boolean;
   onTypeChange?: (type: AlgoOrderRootType) => void;
+  quoteDp?: number,
 }> = (props) => {
-  const { symbol, maxQty } = props;
+  const { symbol, maxQty, quoteDp } = props;
   const [orderEntity, setOrderEntity] =
     useState<Partial<AlgoOrderEntity> | null>();
   const [open, setOpen] = useState(false);
 
-  const [order, { submit, setValue, validate, errors }] =
-    useTaskProfitAndStopLoss(
-      {
-        symbol,
-        position_qty: props.position.position_qty,
-        average_open_price: props.position.average_open_price,
-      },
-      {
-        defaultOrder: props.order,
-      }
-    );
+  const [order, { submit, setValue, validate, errors }] = useStopOrder(
+    {
+      symbol,
+      position_qty: props.position.position_qty,
+      average_open_price: props.position.average_open_price,
+    },
+    {
+      defaultOrder: props.order,
+    }
+  );
   const [showError, setShowError] = useState(false);
 
   const isTablet = useMediaQuery(MEDIA_TABLET);
@@ -195,6 +195,7 @@ export const TPSLEditor: FC<{
             oldOrder={props.order}
             onCancel={() => setOpen(false)}
             onConfirm={() => onSubmit()}
+            quoteDp={quoteDp}
           />
         </SimpleDialog>
       )}

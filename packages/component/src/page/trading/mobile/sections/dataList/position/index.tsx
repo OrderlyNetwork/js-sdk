@@ -57,7 +57,6 @@ export const PositionPane = () => {
 
   const onTPSLOrder = useCallback(
     async (position: API.PositionTPSLExt, order?: API.AlgoOrder) => {
-      console.log(position, order);
       return modal
         .sheet({
           title: <TPSLSheetTitle />,

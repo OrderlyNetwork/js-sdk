@@ -78,6 +78,7 @@ export interface OrderEntity {
   // hideInOrderbook?: boolean;
   isStopOrder?: boolean;
   trigger_price?: string | number;
+  order_tag?: string;
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

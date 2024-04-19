@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { API, OrderSide, OrderStatus } from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
 import { Popover, PopoverAnchor, PopoverContent } from "@/popover";
@@ -107,7 +107,8 @@ const EditingState: FC<{
   const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
     props;
 
-  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } =
+    useContext(OrderListContext);
   const { onUpdateOrder: onUpdateTPSLOrder } = useTPSLOrderRowContext();
 
   const closePopover = () => setOpen(0);
@@ -155,6 +156,18 @@ const EditingState: FC<{
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
+
+    const price = order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    if (price !== null && order.reduce_only !== true) {
+      const notionalText = checkMinNotional(order.symbol, price, quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
+    }
+
     setOpen(1);
   };
 
@@ -169,7 +182,7 @@ const EditingState: FC<{
   const onConfirm = useCallback(() => {
     setIsSubmitting(true);
 
-    const params: any = {
+    let params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -181,6 +194,10 @@ const EditingState: FC<{
 
     if (typeof order.reduce_only !== "undefined") {
       params.reduce_only = order.reduce_only;
+    }
+
+    if (order.order_tag !== undefined) {
+      params = { ...params, order_tag: order.order_tag };
     }
 
     // @ts-ignore
@@ -282,8 +299,8 @@ const EditingState: FC<{
             }}
             onKeyDown={handleKeyDown}
             autoFocus
-            containerClassName="orderly-h-auto orderly-pl-7"
-            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
+            containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"
+            className="orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
           />
         </PopoverAnchor>
         <div

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
+import {  
   API,
   OrderEntity,
   OrderSide,
@@ -254,7 +254,8 @@ export function useOrderEntry(
 
   const parseString2Number = (
     order: OrderParams & Record<string, any>,
-    key: keyof OrderParams
+    key: keyof OrderParams,
+    dp?: number,
   ) => {
     if (typeof order[key] !== "string") return;
     // fix: delete the comma then remove the forward one of the string
@@ -266,6 +267,16 @@ export function useOrderEntry(
 
     // order[`${key}_origin`] = order[key];
     (order[key] as string) = (order[key] as string).replace(/,/g, "");
+
+    // format input by decimal precision
+    if (dp && (order[key] as string).length > 0) {
+      const hasPoint = `${order[key]}`.includes(".");
+      const endOfPoint = `${order[key]}`.endsWith(".");
+      const decimalPart = `${order[key]}`.split(".");
+      if (hasPoint && !endOfPoint) {
+        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(0,quoteDP)}`;
+      }
+    }
   };
 
   // just for performance optimization
@@ -305,15 +316,15 @@ export function useOrderEntry(
     }
 
     if (typeof symbolOrOrder.order_price === "string") {
-      parseString2Number(symbolOrOrder, "order_price");
+      parseString2Number(symbolOrOrder, "order_price", quoteDP);
     }
 
     if (typeof symbolOrOrder.total === "string") {
-      parseString2Number(symbolOrOrder, "total");
+      parseString2Number(symbolOrOrder, "total", quoteDP);
     }
 
     if (typeof symbolOrOrder.trigger_price === "string") {
-      parseString2Number(symbolOrOrder, "trigger_price");
+      parseString2Number(symbolOrOrder, "trigger_price", quoteDP);
     }
 
     // if (typeof symbolOrOrder.trigger_price === "string") {
@@ -335,6 +346,8 @@ export function useOrderEntry(
     needParse?.reduce_only,
     needParse?.side,
     needParse?.visible_quantity,
+    quoteDP,
+    baseDP,
   ]);
 
   const isAlgoOrder =
@@ -370,6 +383,8 @@ export function useOrderEntry(
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
+    
+
     return new Promise((resolve, reject) => {
       return orderCreator
         .validate(values, {
@@ -384,7 +399,8 @@ export function useOrderEntry(
           if (
             errors.order_price ||
             errors.order_quantity ||
-            errors.trigger_price
+            errors.trigger_price ||
+            errors.total
           ) {
             setErrors(errors);
             reject(

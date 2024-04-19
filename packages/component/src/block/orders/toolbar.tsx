@@ -3,18 +3,19 @@ import { FC } from "react";
 import { SidePicker } from "@/block/pickers";
 import { Label } from "@/label";
 import { Checkbox } from "@/checkbox";
-import { useMutation } from "@orderly.network/hooks";
+import { useOrderStream } from "@orderly.network/hooks";
 import { modal } from "@/modal";
 
 interface Props {
-  onCancelAll?: () => void;
+  onCancelAll?: () => Promise<void>;
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
+  isStopOrder?: boolean;
 }
 
 export const Toolbar: FC<Props> = (props) => {
-  const [cancelAll, { error: cancelOrderError, isMutating: cancelMutating }] =
-    useMutation("/v1/orders", "DELETE");
+  // const [cancelAll, { error: cancelOrderError, isMutating: cancelMutating }] =
+  //   useMutation("/v1/orders", "DELETE");
 
   function cancelAllOrder() {
     modal
@@ -22,15 +23,16 @@ export const Toolbar: FC<Props> = (props) => {
         title: "Cancel all orders",
         content: (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
-            Are you sure you want to cancel all of your pending orders,
-            including TP/SL orders?
+            {props.isStopOrder
+              ? "Are you sure you want to cancel all of your TP/SL orders?"
+              : "Are you sure you want to cancel all of your pending order?"}
           </div>
         ),
         contentClassName: "desktop:orderly-w-[364px]",
         onOk: async () => {
           // do cancel all orders
           try {
-            await cancelAll(null, { source_type: "ALL" });
+            await props.onCancelAll?.();
           } catch (error) {
             // @ts-ignore
             if (error?.message !== undefined) {

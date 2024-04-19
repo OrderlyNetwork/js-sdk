@@ -16,7 +16,7 @@ export const OrderTypeTag: FC<{
     }
     if (props.order.parent_algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
       return (
-        <Tag className="orderly-bg-primary/20" size="small">
+        <Tag className="orderly-bg-primary/20">
           Position
         </Tag>
       );
@@ -24,25 +24,33 @@ export const OrderTypeTag: FC<{
   }, [props.order]);
 
   const orderType = useMemo(() => {
-    if (!("algo_type" in props.order)) {
-      return null;
-    }
+    // if (!("algo_type" in props.order)) {
+    //   return null;
+    // }
 
     let type;
 
-    if (props.order.algo_type === AlgoOrderType.TAKE_PROFIT) {
-      // need check if it is STOP LIMIT or STOP MARKET
-      if (props.order.type === OrderType.MARKET) {
-        type = "Stop market";
-      } else if (props.order.type === OrderType.LIMIT) {
-        type = "Stop limit";
-      } else {
-        type = "TP";
+    if ("algo_type" in props.order) {
+      if (props.order.algo_type === AlgoOrderType.TAKE_PROFIT) {
+        // need check if it is STOP LIMIT or STOP MARKET
+        if (props.order.type === OrderType.MARKET) {
+          type = "Stop market";
+        } else if (props.order.type === OrderType.LIMIT) {
+          type = "Stop limit";
+        } else {
+          type = "TP";
+        }
       }
-    }
 
-    if (props.order.algo_type === AlgoOrderType.STOP_LOSS) {
-      type = "SL";
+      if (props.order.algo_type === AlgoOrderType.STOP_LOSS) {
+        type = "SL";
+      }
+    } else {
+      if (props.order.type === OrderType.MARKET) {
+        type = "Market";
+      } else if (props.order.type === OrderType.LIMIT) {
+        type = "Limit";
+      }
     }
 
     if (!type) {
@@ -52,7 +60,6 @@ export const OrderTypeTag: FC<{
     return (
       <Tag
         className="orderly-bg-white/10 orderly-text-base-contrast-54"
-        size="small"
       >
         {type}
       </Tag>

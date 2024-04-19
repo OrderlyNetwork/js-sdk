@@ -10,13 +10,9 @@ import { CustomContractManager } from "./CustomContract";
 import { CustomConfigStore } from "./CustomConfigStore";
 import "../src/tailwind.css"; // tailwind css
 
-const apiKey = "a2c206fa-686c-466c-9046-433ea1bf5fa6";
-const FujiRpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
-const INFURA_KEY = "3039f275d050427d8859a728ccd45e0c";
-
 const wcV2InitOptions = {
   version: 2,
-  projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+  projectId: "e2df8a7d186b83f3027973333f4c72b9",
   requiredChains: [42161],
   optionalChains: [421613, 42161],
   dappUrl: window.location.host,
@@ -80,6 +76,7 @@ const preview = {
           { value: "PERP_AVAX_USDC", title: "PERP_AVAX_USDC" },
           { value: "PERP_WOO_USDC", title: "PERP_WOO_USDC" },
           { value: "PERP_JUP_USDC", title: "PERP_JUP_USDC" },
+          { value: "PERP_1000PEPE_USDC", title: "1000PEPE_PERP" },
         ],
       },
     },
@@ -90,13 +87,18 @@ const preview = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       const configStore = new CustomConfigStore({ networkId, env: "qa" });
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const refCode = searchParams.get('ref');
+      console.log("ref code is", refCode);
+
       return (
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
             brokerId="orderly"
             brokerName="Orderly"
-            // configStore={configStore}
+            configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             appIcons={{
               main: {
@@ -136,6 +138,16 @@ const preview = {
               setTimeout(() => {
                 window.location.reload();
               }, 100);
+            }}
+            referral={{
+              saveRefCode: true,
+              onClickReferral: () => {
+                console.log("click referral");
+              },
+              onBoundRefCode: (success, error) => { 
+                console.log("onBoundRefCode", success, error);
+
+              },
             }}
           >
             <Story />

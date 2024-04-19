@@ -78,7 +78,10 @@ export const ListViewFull = forwardRef<
           <Numeral precision={baseDp}>{item["24h_close"]}</Numeral>
         </div>
         <div className="orderly-col-span-1 orderly-text-right">
-          <Numeral coloring rule="percentages" showIcon>
+          <Numeral coloring rule="percentages" showIcon icons={{
+            loss: (<div>-</div>),
+            profit: (<div>+</div>)
+          }}>
             {item?.change ?? 0}
           </Numeral>
         </div>

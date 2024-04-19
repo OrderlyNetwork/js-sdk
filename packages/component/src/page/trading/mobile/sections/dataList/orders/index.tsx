@@ -1,5 +1,12 @@
 import { OrdersView } from "@/block/orders";
-import { FC, useCallback, useContext, useEffect, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   useOrderStream,
   useAccount,
@@ -46,6 +53,8 @@ export const OrdersPane: FC<Props> = (props) => {
       updateOrder,
       cancelAlgoOrder,
       updateAlgoOrder,
+      cancelAllOrders,
+      cancelAllAlgoOrders,
     },
   ] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
@@ -61,6 +70,21 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const { state } = useAccount();
 
+  const isStopOrder = useMemo(() => {
+    return (
+      props.includes?.includes(AlgoOrderRootType.POSITIONAL_TP_SL) ||
+      props.includes?.includes(AlgoOrderRootType.TP_SL)
+    );
+  }, [props.includes]);
+
+  const cancelAllOrdersHandler = () => {
+    if (isStopOrder) {
+      return cancelAllAlgoOrders();
+    } else {
+      return cancelAllOrders();
+    }
+  };
+
   return (
     <OrdersView
       // @ts-ignore
@@ -69,12 +93,14 @@ export const OrdersPane: FC<Props> = (props) => {
       symbol={context.symbol}
       showAllSymbol={showAllSymbol}
       cancelOrder={cancelOrder}
+      onCancelAll={cancelAllOrdersHandler}
       cancelAlgoOrder={cancelAlgoOrder}
       onShowAllSymbolChange={onShowAllSymbolChange}
       editOrder={updateOrder}
       editAlgoOrder={updateAlgoOrder}
       onSymbolChange={context.onSymbolChange}
       loadMore={loadMore}
+      isStopOrder={isStopOrder}
     />
   );
 };

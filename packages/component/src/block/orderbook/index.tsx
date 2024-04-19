@@ -15,8 +15,8 @@ export interface OrderBookProps {
   markPrice: number;
   lastPrice: number[];
   onItemClick?: (item: number[]) => void;
-  depth: number[];
-  activeDepth: number;
+  depth?: string[];
+  activeDepth?: string;
   onDepthChange?: (depth: number) => void;
   //
   autoSize?: boolean;
@@ -43,13 +43,13 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       pendingOrders={[]}
       showTotal={false}
     >
-      <div className={cn("orderly-h-full orderly-relative", props.className)} >
+      <div id="orderly-orderbook-mobile" className={cn("orderly-h-full orderly-relative", props.className)} >
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
         <DepthSelect
-          depth={props.depth}
+          depth={props.depth || []}
           value={props.activeDepth}
           onChange={onDepthChange}
         />

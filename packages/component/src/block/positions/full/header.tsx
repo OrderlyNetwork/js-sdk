@@ -21,14 +21,14 @@ interface Props {
 
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
+  pnlNotionalDecimalPrecision: any,
 }
 
 export const Header: FC<Props> = (props) => {
   const unrealPnL = props.aggregated?.unrealPnL ?? 0;
   const { onSettle } = useContext(AssetsContext);
-  const {
-    data: { pnlNotionalDecimalPrecision },
-  } = useTabContext();
+  const { pnlNotionalDecimalPrecision } = props;
+
 
   const onSettleClick = useCallback(() => {
     modal

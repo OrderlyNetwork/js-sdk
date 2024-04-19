@@ -29,7 +29,7 @@ export const usePrivateInfiniteQuery = (
       return [queryKey, account.state.accountId];
     },
     (url: string, init: RequestInit) => {
-      return get(url, init, formatter);
+      return restOptions.fetcher?.(url, init) || get(url, init, formatter);
     },
     {
       ...restOptions,

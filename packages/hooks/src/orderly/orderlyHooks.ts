@@ -1,4 +1,9 @@
 export { useOrderbookStream } from "./useOrderbookStream";
+export type {
+  OrderbookData,
+  OrderBookItem,
+  OrderbookOptions,
+} from "./useOrderbookStream";
 export { useOrderEntry } from "./useOrderEntry";
 export type { UseOrderEntryMetaState, OrderParams } from "./useOrderEntry";
 export { useSymbolsInfo } from "./useSymbolsInfo";
@@ -19,10 +24,17 @@ export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
 export { useCollateral } from "./useCollateral";
+export type { CollateralOutputs } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
+export type {
+  UseChainsOptions,
+  Chain,
+  Chains,
+  UseChainsReturnObject,
+} from "./useChains";
 export { useChain } from "./useChain";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
@@ -35,6 +47,6 @@ export { usePrivateDataObserver } from "./usePrivateDataObserver";
 export { useSymbolPriceRange } from "./useSymbolPriceRange";
 
 export {
-  useTaskProfitAndStopLoss,
+  useStopOrder,
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";

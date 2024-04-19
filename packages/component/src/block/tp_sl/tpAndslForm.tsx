@@ -139,7 +139,7 @@ export const TPSLForm: FC<Props> = (props) => {
   };
 
   return (
-    <div className={cn("orderly-space-y-4", props.className)}>
+    <div className={cn("orderly-space-y-4 orderly-text-3xs", props.className)}>
       {canModifyQty ? (
         <>
           <div>
@@ -149,6 +149,7 @@ export const TPSLForm: FC<Props> = (props) => {
                 helpText={props.errors?.quantity?.message}
                 ref={qtyRef}
                 prefix="Quantity"
+                fixClassName="desktop:orderly-text-2xs"
                 suffix={
                   isPositionTPSLOrder && !props.isEditing ? (
                     <button
@@ -252,7 +253,7 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-2xs"}
             data-testid="tpEstPnL"
           >
-            <span>est. PNL: </span>
+            <span>Est. PnL: </span>
             {order.tp_pnl ? (
               <Numeral rule="price" coloring>
                 {order.tp_pnl}
@@ -260,7 +261,7 @@ export const TPSLForm: FC<Props> = (props) => {
             ) : (
               "-"
             )}
-            {/* {`est. PNL: ${order.tp_pnl ? parseNumber(order.tp_pnl) : "-"}`} */}
+            {/* {`est. PnL: ${order.tp_pnl ? parseNumber(order.tp_pnl) : "-"}`} */}
           </div>
         </div>
         <div className={"orderly-grid orderly-grid-cols-2 orderly-gap-2"}>
@@ -268,8 +269,11 @@ export const TPSLForm: FC<Props> = (props) => {
             error={!!props.errors?.tp_trigger_price?.message}
             helpText={props.errors?.tp_trigger_price?.message}
             prefix={"TP price"}
+            fixClassName="desktop:orderly-text-3xs"
             placeholder={symbolInfo("quote")}
-            className={"orderly-text-right orderly-pr-2 orderly-text-sm"}
+            className={
+              "orderly-text-right orderly-pr-2 orderly-text-3xs placeholder:orderly-text-3xs"
+            }
             data-testid={"tp-price-input"}
             value={commify(order.tp_trigger_price ?? "")}
             thousandSeparator
@@ -286,7 +290,7 @@ export const TPSLForm: FC<Props> = (props) => {
             onChange={props.onChange}
             type={"TP"}
             values={{
-              PNL: `${order.tp_pnl ?? ""}`,
+              PnL: `${order.tp_pnl ?? ""}`,
               Offset: `${order.tp_offset ?? ""}`,
               "Offset%": `${order.tp_offset_percentage ?? ""}`,
             }}
@@ -304,7 +308,7 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-2xs"}
             data-testid="slEstPnL"
           >
-            <span>est. PNL: </span>
+            <span>est. PnL: </span>
             {order.sl_pnl ? (
               <Numeral rule="price" coloring>
                 {order.sl_pnl}
@@ -320,8 +324,11 @@ export const TPSLForm: FC<Props> = (props) => {
             error={!!props.errors?.sl_trigger_price?.message}
             helpText={props.errors?.sl_trigger_price?.message}
             prefix={"SL price"}
+            fixClassName="desktop:orderly-text-3xs"
             placeholder={symbolInfo("quote")}
-            className={"orderly-text-right orderly-pr-2  orderly-text-sm"}
+            className={
+              "orderly-text-right orderly-pr-2 orderly-text-3xs placeholder:orderly-text-3xs"
+            }
             data-testid={"sl-price-input"}
             thousandSeparator
             containerClassName={
@@ -337,7 +344,7 @@ export const TPSLForm: FC<Props> = (props) => {
             onChange={props.onChange}
             type={"SL"}
             values={{
-              PNL: `${order.sl_pnl ?? ""}`,
+              PnL: `${order.sl_pnl ?? ""}`,
               Offset: `${order.sl_offset ?? ""}`,
               "Offset%": `${order.sl_offset_percentage ?? ""}`,
             }}
@@ -351,13 +358,17 @@ export const TPSLForm: FC<Props> = (props) => {
       >
         <Button
           color={"tertiary"}
-          className={"orderly-flex-1 desktop:orderly-w-[98px]"}
+          className={
+            "orderly-flex-1 desktop:orderly-w-[98px] desktop:orderly-h-[32px] desktop:orderly-flex-none"
+          }
           onClick={() => props.onCancel?.()}
         >
           Cancel
         </Button>
         <Button
-          className={"orderly-flex-1 desktop:orderly-w-[98px]"}
+          className={
+            "orderly-flex-1 desktop:orderly-w-[98px] desktop:orderly-h-[32px] desktop:orderly-flex-none"
+          }
           data-testid={"confirm"}
           onClick={props.onSubmit}
           disabled={!canSubmit}

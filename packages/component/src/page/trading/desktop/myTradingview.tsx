@@ -15,6 +15,7 @@ interface Props {
     scriptSRC?: string;
     library_path: string;
     overrides?: Record<string, string>;
+    studiesOverrides?: Record<string, string>;
     customCssUrl?: string;
   };
 }
@@ -47,7 +48,6 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
   };
 
   const onConfirm = async () => {
-    console.log("-- order data", orderData);
     orderData.order_quantity = Math.abs(orderData.order_quantity);
     return onSubmit(orderData).then(
       (res) => {
@@ -66,6 +66,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
   const onClose = () => {
     setOpen(false);
   };
+
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <SymbolProvider symbol={symbol}>
@@ -75,6 +76,7 @@ export const MyTradingView = ({ symbol, tradingViewConfig }: Props) => {
           tradingViewScriptSrc={tradingViewConfig?.scriptSRC}
           tradingViewCustomCssUrl={tradingViewConfig?.customCssUrl}
           overrides={tradingViewConfig?.overrides}
+          studiesOverrides={tradingViewConfig?.studiesOverrides}
           closePositionConfirmCallback={closePositionConfirmCallback}
           onToast={toast}
           loadingElement={<Spinner />}

@@ -29,7 +29,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const isMarket = order.type === "MARKET";
   // const { hide, reject, resolve } = useModal();
   // @ts-ignore
-  const { markPrice, maxQty, helper } = useOrderEntry(order.symbol, order.side);
+  const { markPrice, maxQty, helper, metaState } = useOrderEntry(order.symbol, order.side);
 
 
   const orderType = useMemo(() => {
@@ -64,6 +64,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     resolver: async (values) => {
       // @ts-ignore
       const errors = await helper.validator(values);
+      if (errors.total?.message !== undefined) {
+        toast.error(errors.total?.message);
+      }
+      
       return {
         values,
         errors,
@@ -82,6 +86,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
 
   const base = useMemo(() => symbolInfo("base"), [symbolInfo]);
   const quote = useMemo(() => symbolInfo("quote"), [symbolInfo]);
+  const quoteDP = useMemo(() => symbolInfo("quote_dp"), [symbolInfo]);
 
   const typeText = useMemo(() => {
     if (order.side === OrderSide.SELL)
@@ -166,6 +171,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           label="Last price"
           value={markPrice}
           rule="price"
+          precision={quoteDP || 2}
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
         />
