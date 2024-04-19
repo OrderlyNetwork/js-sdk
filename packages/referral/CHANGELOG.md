@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 0.0.2-internal.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.4.0-internal.11
+  - @orderly.network/hooks@1.4.0-internal.11
+  - @orderly.network/utils@1.4.0-internal.11
+
 ## 0.0.2-internal.8
 
 ### Patch Changes
