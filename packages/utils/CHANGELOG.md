@@ -1,5 +1,16 @@
 # @orderly.network/utils
 
+## 1.3.0
+
+### Minor Changes
+
+- fd452911: update;
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+
 ## 1.3.0-alpha.0
 
 ### Minor Changes

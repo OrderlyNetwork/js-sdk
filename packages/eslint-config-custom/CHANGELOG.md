@@ -1,5 +1,16 @@
 # eslint-config-custom
 
+## 0.2.0
+
+### Minor Changes
+
+- fd452911: update;
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+
 ## 0.2.0-alpha.0
 
 ### Minor Changes

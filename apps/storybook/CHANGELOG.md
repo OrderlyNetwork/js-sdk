@@ -1,5 +1,24 @@
 # storybook
 
+## 1.2.0
+
+### Minor Changes
+
+- fd452911: update;
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+- Updated dependencies [e4edd4c7]
+- Updated dependencies
+- Updated dependencies [fd452911]
+  - @orderly.network/web3-modal@1.3.0
+  - @orderly.network/react@1.3.0
+  - @orderly.network/web3-onboard@1.3.0
+  - @orderly.network/hooks@1.3.0
+  - @orderly.network/core@1.3.0
+
 ## 1.2.0-alpha.0
 
 ### Minor Changes
