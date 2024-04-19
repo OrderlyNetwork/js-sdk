@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { API, OrderSide } from "@orderly.network/types";
+import { API, OrderSide, OrderType } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
 import { Popover, PopoverAnchor, PopoverContent } from "@/popover";
@@ -191,6 +191,11 @@ const EditingState: FC<{
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
+
+    if (typeof params.algo_order_id !== 'undefined' && params.order_type === 'MARKET') { // stop market order
+      const { order_price, ...rest} = params;
+      params = rest;
+    }
 
     if (typeof order.reduce_only !== "undefined") {
       params.reduce_only = order.reduce_only;
