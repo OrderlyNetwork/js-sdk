@@ -6,26 +6,34 @@ import { formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 import { RefEmptyView } from "../../components/icons/emptyView";
+import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
 
 export const RefereesList: FC<{
     dateText?: string,
     setDateText: any
 }> = (props) => {
 
-    const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+    // const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+
+    const { data, mutate: refresh, isLoading } = useRefereeRebateSummary({
+        endDate: new Date(Date.now() - 86400000 * 30),
+    });
+
+    const loadMore = () => {};
+
 
     const isMD = useMediaQuery("(max-width: 767px)");
     const { dateText, setDateText } = props;
     
 
     const dataSource = useMemo(() => {
-        if (!data) return null;
+        if (typeof data === 'undefined') return [];
 
-        const newData = data.sort((a: any, b: any) => {
-            return b.code_binding_time - a.code_binding_time;
-        });
+        // const newData = data.sort((a: any, b: any) => {
+        //     return b.code_binding_time - a.code_binding_time;
+        // });
 
-        return newData;
+        return data;
     }, [data]);
 
     useEffect(() => {
@@ -46,7 +54,7 @@ export const RefereesList: FC<{
 
 const _SmallReferees: FC<{
     date?: string,
-    dataSource?: API.RefereeInfoItem[],
+    dataSource?: API.RefereeRebateSummary[],
     loadMore: any,
     isLoading: boolean,
 }> = (props) => {
