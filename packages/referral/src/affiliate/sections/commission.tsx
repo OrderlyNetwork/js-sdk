@@ -145,7 +145,7 @@ const _BigCommission: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
+                loadMore={() => {
                     if (!props.isLoading) {
                         props.loadMore();
                     }

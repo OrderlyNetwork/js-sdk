@@ -21,7 +21,7 @@ export const RebateList: FC<{
         return [
             {
                 title: "Date",
-                dataIndex: "created_time",
+                dataIndex: "date",
                 className: "orderly-h-[52px] orderly-px-0 orderly-border-red-300",
                 width: 110,
                 render: (value, record) => (
@@ -32,7 +32,7 @@ export const RebateList: FC<{
             },
             {
                 title: "Rebates (USDC)",
-                dataIndex: "amount",
+                dataIndex: "referee_rebate",
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
@@ -86,11 +86,11 @@ export const RebateList: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
-                    if (!props.isLoading) {
-                        props.loadMore?.();
-                      }
-                }}
+                // loadMore={() => {
+                //     if (!props.isLoading) {
+                //         props.loadMore?.();
+                //       }
+                // }}
                 onRow={(rec, index) => {
                     return {
                         className: "orderly-border-[rgba(255,255,255,0.04)]"

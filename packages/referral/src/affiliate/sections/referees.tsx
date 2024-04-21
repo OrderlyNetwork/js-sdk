@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
-import { FC, useCallback, useEffect, useMemo } from "react";
+import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView, DatePicker } from "@orderly.network/react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
 import { formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
@@ -13,18 +13,19 @@ export const RefereesList: FC<{
     setDateText: any
 }> = (props) => {
 
-    // const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+    const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+    // const [pickDate, setPickDate] = useState({ from: new Date(Date.now() - 86400 * 30), to: new Date() });
+    // const { data, mutate: refresh, isLoading } = useRefereeRebateSummary({
+    //     startDate: pickDate.from,
+    //     endDate: pickDate.to,
+    // });
 
-    const { data, mutate: refresh, isLoading } = useRefereeRebateSummary({
-        endDate: new Date(Date.now() - 86400000 * 30),
-    });
-
-    const loadMore = () => {};
+    // const loadMore = () => { };
 
 
     const isMD = useMediaQuery("(max-width: 767px)");
     const { dateText, setDateText } = props;
-    
+
 
     const dataSource = useMemo(() => {
         if (typeof data === 'undefined') return [];
@@ -38,7 +39,7 @@ export const RefereesList: FC<{
 
     useEffect(() => {
         if (dataSource?.length > 0) {
-            const text = formatYMDTime(dataSource[0].code_binding_time);
+            const text = formatYMDTime(dataSource[0].date);
             if (text) {
                 setDateText(text + " 00:00:00 UTC");
             }
@@ -49,7 +50,7 @@ export const RefereesList: FC<{
 
     return isMD ?
         <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
-        <_BigReferees dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
+        <_BigReferees dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
 }
 
 const _SmallReferees: FC<{
@@ -165,7 +166,7 @@ const _BigReferees: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
+                loadMore={() => {
                     if (!props.isLoading) {
                         props.loadMore();
                     }
@@ -222,7 +223,7 @@ export const RefereesCell: FC<{
                 )}>
                     <div className={cn("orderly-h-[15px] md:orderly-h-[20px] orderly-leading-[15px] md:orderly-leading-[20px]", flex && "orderly-ml-1")}>
 
-                        {rule === "address" ?  <AutoHideText text={value} visibleCount={visibleCount} /> : <div>{value}</div>}
+                        {rule === "address" ? <AutoHideText text={value} visibleCount={visibleCount} /> : <div>{value}</div>}
                     </div>
                 </div>
             </div>
@@ -256,7 +257,7 @@ export const RefereesCell: FC<{
                 {buildNode("", (<></>), "orderly-flex-1", "price", "right")}
 
             </div>
-            <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0"/>
+            <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0" />
         </div>
     );
 }
