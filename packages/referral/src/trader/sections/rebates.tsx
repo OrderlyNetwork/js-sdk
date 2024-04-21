@@ -6,6 +6,7 @@ import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { compareDate, formatTime } from "../../utils/utils";
 import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
+import { useMediaQuery } from "@orderly.network/hooks";
 
 export type RebatesItem = API.RefereeRebateSummary & {
     vol?: number
@@ -47,9 +48,11 @@ export const Rebates: FC<{
     }, [distributionData, dailyVolume]);
 
     let displayDate = undefined;
-        if ((dataSource?.length || 0) > 0) {
-            displayDate = formatTime(dataSource?.[0].date);
-        }
+    if ((dataSource?.length || 0) > 0) {
+        displayDate = formatTime(dataSource?.[0].date);
+    }
+
+    const isMD = useMediaQuery("(max-width: 767px)")
 
     return (
         <div className={cn("orderly-py-6 orderly-px-1 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
@@ -69,9 +72,10 @@ export const Rebates: FC<{
                 }}
                 initDate={pickDate}
                 triggerClassName="orderly-w-[196px] orderly-rounded-sm orderly-justify-between"
-                className="orderly-ml-4 xl:orderly-flex-row"
+                numberOfMonths={isMD ? 1 : 2}
+                className="orderly-ml-4 lg:orderly-flex-row"
                 classNames={{
-                    months: "orderly-flex orderly-flex-col xl:orderly-flex-row orderly-gap-5"
+                    months: "orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-5"
                 }}
             />
             <RebateList dataSource={dataSource} loadMore={() => { }} isLoading={isLoading} />
