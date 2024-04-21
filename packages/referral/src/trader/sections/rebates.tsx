@@ -22,21 +22,21 @@ export const Rebates: FC<{
         if (!distributionData) return undefined;
 
         return distributionData
-        .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
-        .map((item: any) => {
+            .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
+            .map((item: any) => {
 
-            const createdTime = item.created_time;
+                const createdTime = item.created_time;
 
-            const volume = dailyVolume?.filter((item) => {
-                return compareDate(new Date(createdTime), new Date(item.date));
-            })?.[0];
-            if (volume) {
-                return {...item, vol: volume.perp_volume};
-            }
+                const volume = dailyVolume?.filter((item) => {
+                    return compareDate(new Date(createdTime), new Date(item.date));
+                })?.[0];
+                if (volume) {
+                    return { ...item, vol: volume.perp_volume };
+                }
 
-            return item;
+                return item;
 
-        });
+            });
 
     }, [distributionData, dailyVolume]);
 
@@ -52,8 +52,16 @@ export const Rebates: FC<{
                 {displayDate && <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-mr-1 lg:orderly-mr-3">{displayDate}</div>}
             </div>
 
-            <Divider className="orderly-mt-3 orderly-px-3 lg:orderly-px-5" />
-            <RebateList dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
+            <Divider className="orderly-my-3 orderly-px-3 lg:orderly-px-5" />
+            {/* <DatePicker
+                onDateUpdate={(date) => {
+
+                    refresh();
+                }}
+                triggerClassName="orderly-w-[220px]" 
+                className="orderly-ml-4 xl:orderly-flex-row"
+            /> */}
+            <RebateList dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
         </div>
     );
 }

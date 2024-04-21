@@ -6,21 +6,19 @@ import {
     InitialBarStyle,
     InitialXAxis,
     InitialYAxis,
-    emptyDataSource,
     emptyDataSourceYAxis
 } from "../../components/barChart";
-import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
-import { formatYMDTime, generateData } from "../../utils/utils";
-import { Decimal, commify } from "@orderly.network/utils";
+import { generateData } from "../../utils/utils";
 import { RefFilterMenu } from "../../components/refFilterMenu";
+import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
 
 type ChartDataType = "Rebate" | "Volume";
 
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Rebate");
 
-    const [distributionData, { refresh }] = useDistribution({ size: 14 });
+    const {data: distributionData, mutate} = useRefereeRebateSummary({});
     const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
     const [maxCount, setMaxCount] = useState(7);
@@ -48,18 +46,14 @@ export const BarChart: FC<{ className?: string }> = (props) => {
 
 
     const dataSource = useMemo(() => {
-
-
         if (filterType === "Rebate") {
-            let newData = distributionData?.filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE") || [];
-            return generateData(maxCount, newData, "created_time", "amount");
+            let newData = distributionData || [];
+            return generateData(maxCount, newData, "date", "referee_rebate");
         } else if (filterType === "Volume") {
             return generateData(maxCount, dailyVolume || [], "date", "perp_volume");
         } else {
             return generateData(maxCount, [], "date", "perp_volume");
         }
-
-
     }, [distributionData, filterType, maxCount]);
 
 
