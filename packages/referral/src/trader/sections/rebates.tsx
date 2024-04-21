@@ -1,12 +1,13 @@
-import { Divider, cn } from "@orderly.network/react";
+import { DatePicker, Divider, cn } from "@orderly.network/react";
 import { RebateList } from "./rebateList";
-import { FC, useContext, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useDistribution } from "../../hooks/useDistribution";
 import { ReferralContext } from "../../hooks/referralContext";
 import { API } from "../../types/api";
 import { compareDate, formatTime } from "../../utils/utils";
+import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
 
-export type RebatesItem = API.Distribution & {
+export type RebatesItem = API.RefereeRebateSummary & {
     vol?: number
 };
 
@@ -15,17 +16,22 @@ export const Rebates: FC<{
 }> = (props) => {
 
     // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
-    const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
+    // const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
+    const [pickDate, setPickDate] = useState({ from: new Date(Date.now() - 86400 * 30), to: new Date() });
+    const { data: distributionData, mutate, isLoading, } = useRefereeRebateSummary({
+        startDate: pickDate.from,
+        endDate: pickDate.to,
+    });
     const { dailyVolume } = useContext(ReferralContext);
 
     const dataSource = useMemo((): RebatesItem[] | undefined => {
         if (!distributionData) return undefined;
 
         return distributionData
-            .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
-            .map((item: any) => {
+            // .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
+            .map((item) => {
 
-                const createdTime = item.created_time;
+                const createdTime = item.date;
 
                 const volume = dailyVolume?.filter((item) => {
                     return compareDate(new Date(createdTime), new Date(item.date));
@@ -41,9 +47,9 @@ export const Rebates: FC<{
     }, [distributionData, dailyVolume]);
 
     let displayDate = undefined;
-    if ((dataSource?.length || 0) > 0) {
-        displayDate = formatTime(dataSource?.[0].created_time);
-    }
+        if ((dataSource?.length || 0) > 0) {
+            displayDate = formatTime(dataSource?.[0].date);
+        }
 
     return (
         <div className={cn("orderly-py-6 orderly-px-1 orderly-rounded-xl orderly-pb-1 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12", props.className)}>
@@ -53,15 +59,22 @@ export const Rebates: FC<{
             </div>
 
             <Divider className="orderly-my-3 orderly-px-3 lg:orderly-px-5" />
-            {/* <DatePicker
+            <DatePicker
                 onDateUpdate={(date) => {
 
-                    refresh();
+                    setPickDate((pre) => ({
+                        from: date.from,
+                        to: date.to || date.from
+                    }));
                 }}
-                triggerClassName="orderly-w-[220px]" 
+                initDate={pickDate}
+                triggerClassName="orderly-w-[196px] orderly-rounded-sm orderly-justify-between"
                 className="orderly-ml-4 xl:orderly-flex-row"
-            /> */}
-            <RebateList dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
+                classNames={{
+                    months: "orderly-flex orderly-flex-col xl:orderly-flex-row orderly-gap-5"
+                }}
+            />
+            <RebateList dataSource={dataSource} loadMore={() => { }} isLoading={isLoading} />
         </div>
     );
 }

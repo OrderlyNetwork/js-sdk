@@ -31,8 +31,10 @@ export const useRefereeRebateSummary = (params: Params): {
     const endDate = params?.startDate || new Date();
     const startDate = params?.endDate || new Date(Date.now() - 86400000 * 14);
 
-    const start_date = formatDate(startDate);
-    const end_date = formatDate(endDate);
+
+
+    const start_date = formatDate(minDate(startDate, endDate));
+    const end_date = formatDate(maxDate(startDate, endDate));
 
 
     const url = `${path}?start_date=${start_date}&end_date=${end_date}`;
@@ -49,4 +51,12 @@ export const useRefereeRebateSummary = (params: Params): {
         mutate,
         isLoading,
     }
+}
+
+function minDate(a: Date, b: Date)  {
+    return a < b ? a : b;
+}
+
+function maxDate(a: Date, b: Date) {
+    return a > b ? a : b;
 }

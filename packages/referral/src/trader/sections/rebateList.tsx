@@ -121,11 +121,11 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
             <div className="orderly-flex orderly-justify-between orderly-mt-3">
                 <div>
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Date</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{formatYMDTime(item.created_time)}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{formatYMDTime(item.date)}</div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Rebates(USDC)</div>
-                    <Numeral prefix="$" precision={6} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.amount}</Numeral>
+                    <Numeral prefix="$" precision={6} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.referee_rebate}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
