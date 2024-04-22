@@ -131,4 +131,4 @@ export type { OrderlyConfig, OrderlyConfigCtx } from "./types/orderly.config";
 
 export { installExtension, ExtensionPosition } from "./plugin";
 
-export { DatePicker } from "./datePicker";
+export * from "./datePicker";

@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/popover"
 import { cn } from "@/utils"
 import { CalendarIcon } from "./sections/calendarIcon";
 import { Calendar, CalendarProps } from "./calendar";
-import { format } from "date-fns";
+import { format, addDays, subDays } from "date-fns";
 import { ArrowDown } from "./sections/arrowIcon";
 
 export type DateRange = {
@@ -28,11 +28,19 @@ export const DatePicker: React.FC<{
     ...rest
   } = props;
   const [date, setDate] = React.useState<DateRange>(initDate || {
-    from: new Date(Date.now() - 86400 * 30),
+    from: subDays(new Date(), 30),
     to: new Date(),
   });
 
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (initDate) {
+      setDate(initDate);
+    }
+  }, [initDate]);
+
+console.log("xxxxxx date is", format(date.from, "yyyy/MM/dd"), format(date.to || date.from, "yyyy/MM/dd"));
 
 
   const triggerView = React.useMemo((): React.ReactNode => {

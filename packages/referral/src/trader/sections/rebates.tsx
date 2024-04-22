@@ -1,4 +1,4 @@
-import { DatePicker, Divider, cn } from "@orderly.network/react";
+import { DatePicker, format, subDays, Divider, cn, sub } from "@orderly.network/react";
 import { RebateList } from "./rebateList";
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useDistribution } from "../../hooks/useDistribution";
@@ -18,7 +18,7 @@ export const Rebates: FC<{
 
     // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
     // const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
-    const [pickDate, setPickDate] = useState({ from: new Date(Date.now() - 86400 * 30), to: new Date() });
+    const [pickDate, setPickDate] = useState({ from: subDays(new Date(), 30), to: new Date() });
     const { data: distributionData, mutate, isLoading, } = useRefereeRebateSummary({
         startDate: pickDate.from,
         endDate: pickDate.to,
