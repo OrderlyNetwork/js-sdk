@@ -2,6 +2,7 @@ import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks
 import { generateKeyFun } from "../utils/swr";
 import { useMemo } from "react";
 import { API } from "../types/api";
+import { format } from "@orderly.network/react";
 
 type Params = {
    //** default Date() - 14d */
@@ -18,13 +19,7 @@ export const useRefereeRebateSummary = (params: Params): {
     
 
     const formatDate = (date: Date): string => {
-
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-
-        const formattedTime = `${year}-${month}-${day}`;
-        return formattedTime;
+        return format(date, "yyyy-MM-dd");
     };
 
     const path = "/v1/referral/referee_rebate_summary";

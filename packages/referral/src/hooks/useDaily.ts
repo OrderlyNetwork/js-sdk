@@ -1,5 +1,6 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
 import { API } from "../types/api";
+import { format } from "@orderly.network/react";
 
 export const useDaily = (options?: {
     //** default Date() - 30d */
@@ -13,13 +14,7 @@ export const useDaily = (options?: {
 
 
     const formatDate = (date: Date): string => {
-
-        const year = date.getUTCFullYear();
-        const month = `${date.getUTCMonth() + 1}`.padStart(2, '0');
-        const day = `${date.getUTCDate()}`.padStart(2, '0');
-
-        const formattedTime = `${year}-${month}-${day}`;
-        return formattedTime;
+        return format(date, "yyyy-MM-dd");
     };
 
     const path = "/v1/volume/user/daily";
