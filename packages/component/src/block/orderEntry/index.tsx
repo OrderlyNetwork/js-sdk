@@ -140,6 +140,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
+    const baseDP = symbolConfig?.base_dp
+
     const ee = useEventEmitter();
     const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
       formattedOrder.order_type || OrderType.LIMIT
@@ -578,7 +580,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               <span className="orderly-text-base-contrast-54">
                 {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
               </span>
-              <Numeral precision={4}>{maxQty}</Numeral>
+              <Numeral precision={baseDP}>{maxQty}</Numeral>
             </button>
           </div>
 
