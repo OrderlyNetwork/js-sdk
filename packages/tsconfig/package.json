@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "0.3.0-internal.13",
+  "version": "0.3.0-internal.14",
   "private": true,
   "license": "MIT",
   "publishConfig": {
