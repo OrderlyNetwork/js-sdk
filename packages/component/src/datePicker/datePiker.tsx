@@ -43,7 +43,7 @@ export const DatePicker: React.FC<{
   const dateText = React.useMemo(() => {
 
     if (typeof date?.from !== 'undefined') {
-      return `${format(date.from, "yyyy/MM/dd")}${`- ${format(date.to || date.from, "yyyy/MM/dd")}`}`;
+      return `${format(date.from, "yyyy/MM/dd")}${` - ${format(date.to || date.from, "yyyy/MM/dd")}`}`;
     }
     return 'select date';
 
