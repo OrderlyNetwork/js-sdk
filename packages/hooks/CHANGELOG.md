@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.4.0-internal.12
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.4.0-internal.12
+  - @orderly.network/utils@1.4.0-internal.12
+  - @orderly.network/core@1.4.0-internal.12
+  - @orderly.network/perp@4.0.0-internal.12
+  - @orderly.network/net@1.4.0-internal.12
+
 ## 1.4.0-internal.11
 
 ### Patch Changes
