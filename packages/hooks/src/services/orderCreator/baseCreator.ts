@@ -121,7 +121,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       min_notional
     );
 
-    if (notionalHintStr !== undefined && typeof reduce_only === undefined) {
+    if (notionalHintStr !== undefined && reduce_only !== true) {
       errors.total = {
         type: "min",
         message: notionalHintStr,
