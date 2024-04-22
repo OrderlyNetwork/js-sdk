@@ -9,7 +9,7 @@ import { ArrowDown } from "./sections/arrowIcon";
 export type DateRange = {
   from?: Date,
   to?: Date,
-}
+};
 
 export const DatePicker: React.FC<{
   initDate?: DateRange,
@@ -45,7 +45,7 @@ export const DatePicker: React.FC<{
     if (typeof date?.from !== 'undefined') {
       return `${format(date.from, "yyyy/MM/dd")}${`- ${format(date.to || date.from, "yyyy/MM/dd")}`}`;
     }
-    return '';
+    return 'select date';
 
   }, [date]);
 

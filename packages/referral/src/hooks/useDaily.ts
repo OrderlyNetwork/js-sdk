@@ -12,17 +12,12 @@ export const useDaily = (options?: {
     mutate: any,
 } => {
 
-
-    const formatDate = (date: Date): string => {
-        return format(date, "yyyy-MM-dd");
-    };
-
     const path = "/v1/volume/user/daily";
     const endDate = options?.startDate || new Date();
     const startDate = options?.endDate || new Date(Date.now() - 86400000 * 30);
 
-    const start_date = formatDate(startDate);
-    const end_date = formatDate(endDate);
+    const start_date = format(startDate, "yyyy-MM-dd");
+    const end_date = format(endDate, "yyyy-MM-dd");
 
     const url = `${path}?start_date=${start_date}&end_date=${end_date}`;
     const {

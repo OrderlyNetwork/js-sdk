@@ -1,5 +1,5 @@
 
-import { Select, cn } from "@orderly.network/react";
+import { Select, cn, sub, subDays } from "@orderly.network/react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
     ColmunChart,
@@ -18,7 +18,10 @@ type ChartDataType = "Rebate" | "Volume";
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Rebate");
 
-    const {data: distributionData, mutate} = useRefereeRebateSummary({});
+    const {data: distributionData, mutate} = useRefereeRebateSummary({
+        startDate: subDays(new Date(), 15),
+        endDate: subDays(new Date(), 1),
+    });
     const { dailyVolume, chartConfig } = useContext(ReferralContext);
 
     const [maxCount, setMaxCount] = useState(7);

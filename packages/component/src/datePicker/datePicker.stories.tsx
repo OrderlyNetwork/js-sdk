@@ -24,6 +24,7 @@ export const Base: Story = {
     return (
       <div>
         <DatePicker
+          required
           onDateUpdate={(date) => {
             console.log("xxxx on date update", date);
 
