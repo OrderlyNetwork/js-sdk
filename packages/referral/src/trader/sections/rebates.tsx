@@ -1,4 +1,4 @@
-import { DatePicker, format, subDays, Divider, cn, sub } from "@orderly.network/react";
+import { DatePicker, format, subDays, Divider, cn, sub, DateRange } from "@orderly.network/react";
 import { RebateList } from "./rebateList";
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useDistribution } from "../../hooks/useDistribution";
@@ -18,15 +18,15 @@ export const Rebates: FC<{
 
     // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
     // const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
-    const [pickDate, setPickDate] = useState({ from: subDays(new Date(), 30), to: new Date() });
+    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 91), to: subDays(new Date(), 1) });
     const { data: distributionData, mutate, isLoading, } = useRefereeRebateSummary({
-        startDate: pickDate.from,
-        endDate: pickDate.to,
+        startDate: pickDate?.from,
+        endDate: pickDate?.to,
     });
     const { dailyVolume } = useContext(ReferralContext);
 
     const dataSource = useMemo((): RebatesItem[] | undefined => {
-        if (!distributionData) return undefined;
+        if (typeof distributionData === 'undefined') return [];
 
         return distributionData
             // .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
@@ -64,19 +64,27 @@ export const Rebates: FC<{
             <Divider className="orderly-my-3 orderly-px-3 lg:orderly-px-5" />
             <DatePicker
                 onDateUpdate={(date) => {
+                    if (typeof date?.from === 'undefined') {
+                        setPickDate(undefined);
+                        return;
+                    }
 
                     setPickDate((pre) => ({
                         from: date.from,
-                        to: date.to || date.from
+                        to: date.to
                     }));
                 }}
                 initDate={pickDate}
-                triggerClassName="orderly-w-[196px] orderly-rounded-sm orderly-justify-between"
+                triggerClassName="orderly-max-w-[196px] orderly-rounded-sm orderly-justify-between"
                 numberOfMonths={isMD ? 1 : 2}
                 className="orderly-ml-4 lg:orderly-flex-row"
                 classNames={{
                     months: "orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-5"
                 }}
+                disabled={{
+                    after: subDays(new Date(), 1)
+                }}
+                required
             />
             <RebateList dataSource={dataSource} loadMore={() => { }} isLoading={isLoading} />
         </div>

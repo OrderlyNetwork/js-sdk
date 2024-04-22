@@ -7,9 +7,9 @@ import { format, addDays, subDays } from "date-fns";
 import { ArrowDown } from "./sections/arrowIcon";
 
 export type DateRange = {
-  from: Date,
+  from?: Date,
   to?: Date,
-}
+};
 
 export const DatePicker: React.FC<{
   initDate?: DateRange,
@@ -27,7 +27,7 @@ export const DatePicker: React.FC<{
     numberOfMonths = 2,
     ...rest
   } = props;
-  const [date, setDate] = React.useState<DateRange>(initDate || {
+  const [date, setDate] = React.useState<DateRange | undefined>(initDate || {
     from: subDays(new Date(), 30),
     to: new Date(),
   });
@@ -40,8 +40,14 @@ export const DatePicker: React.FC<{
     }
   }, [initDate]);
 
-console.log("xxxxxx date is", format(date.from, "yyyy/MM/dd"), format(date.to || date.from, "yyyy/MM/dd"));
+  const dateText = React.useMemo(() => {
 
+    if (typeof date?.from !== 'undefined') {
+      return `${format(date.from, "yyyy/MM/dd")}${`- ${format(date.to || date.from, "yyyy/MM/dd")}`}`;
+    }
+    return 'select date';
+
+  }, [date]);
 
   const triggerView = React.useMemo((): React.ReactNode => {
 
@@ -50,7 +56,7 @@ console.log("xxxxxx date is", format(date.from, "yyyy/MM/dd"), format(date.to ||
       className={cn("orderly-cursor-pointer orderly-flex orderly-gap-2 orderly-items-center orderly-h-[24px] orderly-text-3xs orderly-text-base-contrast-54 orderly-justify-start orderly-text-left orderly-px-2 orderly-py-2 orderly-bg-base-600 orderly-fill-base-contrast-54 hover:orderly-text-base-contrast-80", triggerClassName)}
     >
       <CalendarIcon fillOpacity={1} fill="current" className="orderly-fill-base-contrast-54 hover:orderly-fill-white/80" />
-      {`${format(date.from, "yyyy/MM/dd")}${`- ${format(date.to || date.from, "yyyy/MM/dd")}`}`}
+      {dateText}
       <ArrowDown fillOpacity={1} className="orderly-fill-base-contrast-54 hover:orderly-fill-white/80" />
     </div>;
   }, [trigger, triggerClassName, date]);
@@ -70,7 +76,8 @@ console.log("xxxxxx date is", format(date.from, "yyyy/MM/dd"), format(date.to ||
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date.from}
+            defaultMonth={date?.from}
+            // @ts-ignore
             selected={date}
             // @ts-ignore
             onSelect={(date) => {

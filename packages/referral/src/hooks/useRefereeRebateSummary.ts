@@ -1,13 +1,10 @@
-import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks"
-import { generateKeyFun } from "../utils/swr";
-import { useMemo } from "react";
+import { usePrivateQuery } from "@orderly.network/hooks"
 import { API } from "../types/api";
+import { format } from "@orderly.network/react";
 
 type Params = {
-   //** default Date() - 14d */
-   startDate?: Date,
-   //** default Date() */
-   endDate?: Date
+    startDate?: Date,
+    endDate?: Date
 }
 
 export const useRefereeRebateSummary = (params: Params): {
@@ -15,29 +12,19 @@ export const useRefereeRebateSummary = (params: Params): {
     mutate: any,
     isLoading: boolean,
 } => {
-    
-
-    const formatDate = (date: Date): string => {
-
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-
-        const formattedTime = `${year}-${month}-${day}`;
-        return formattedTime;
-    };
-
     const path = "/v1/referral/referee_rebate_summary";
-    const endDate = params?.startDate || new Date();
-    const startDate = params?.endDate || new Date(Date.now() - 86400000 * 14);
 
+    let url = path;
+    if (typeof params.endDate !== 'undefined' && typeof params.startDate !== 'undefined') {
 
-
-    const start_date = formatDate(minDate(startDate, endDate));
-    const end_date = formatDate(maxDate(startDate, endDate));
-
-
-    const url = `${path}?start_date=${start_date}&end_date=${end_date}`;
+        const sDate = minDate(params.startDate, params.endDate);
+        const eDate = maxDate(params.startDate, params.endDate);
+        const search = new URLSearchParams([]);
+        search.set(`start_date`, format(sDate, 'yyyy-MM-dd'));
+        search.set(`end_date`, format(eDate, 'yyyy-MM-dd'));
+        const queryParams = search.toString() || "";
+        url = `${path}?${queryParams}`;
+    }
     const {
         data,
         mutate,
@@ -53,7 +40,7 @@ export const useRefereeRebateSummary = (params: Params): {
     }
 }
 
-function minDate(a: Date, b: Date)  {
+function minDate(a: Date, b: Date) {
     return a < b ? a : b;
 }
 
