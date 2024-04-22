@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.4.0-internal.17
+
+### Patch Changes
+
+- update
+
 ## 1.4.0-internal.16
 
 ### Patch Changes
