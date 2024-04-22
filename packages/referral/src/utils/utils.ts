@@ -97,7 +97,7 @@ export function generateData(itemCount: number, data: any[] | null | undefined, 
 
   for (let i = 0; i < itemCount; i++) {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - i);
+    currentDate.setDate(currentDate.getDate() - i - 1);
     const currentDateStr = currentDate.toISOString().substring(0, 10);
 
     const matchedData = data?.find(item => {
