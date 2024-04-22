@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/utils",
-  "version": "1.4.0-internal.15",
+  "version": "1.4.0-internal.16",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
