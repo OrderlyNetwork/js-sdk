@@ -1,11 +1,12 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView } from "@orderly.network/react";
-import { FC, useCallback, useEffect, useMemo } from "react";
+import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView, DatePicker } from "@orderly.network/react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useRefereeInfo } from "../../hooks/useRefereeInfo";
 import { formatYMDTime } from "../../utils/utils";
 import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 import { RefEmptyView } from "../../components/icons/emptyView";
+import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
 
 export const RefereesList: FC<{
     dateText?: string,
@@ -13,24 +14,32 @@ export const RefereesList: FC<{
 }> = (props) => {
 
     const [data, { loadMore, refresh, isLoading }] = useRefereeInfo({});
+    // const [pickDate, setPickDate] = useState({ from: new Date(Date.now() - 86400 * 30), to: new Date() });
+    // const { data, mutate: refresh, isLoading } = useRefereeRebateSummary({
+    //     startDate: pickDate.from,
+    //     endDate: pickDate.to,
+    // });
+
+    // const loadMore = () => { };
+
 
     const isMD = useMediaQuery("(max-width: 767px)");
     const { dateText, setDateText } = props;
-    
+
 
     const dataSource = useMemo(() => {
-        if (!data) return null;
+        if (typeof data === 'undefined') return [];
 
-        const newData = data.sort((a: any, b: any) => {
-            return b.code_binding_time - a.code_binding_time;
-        });
+        // const newData = data.sort((a: any, b: any) => {
+        //     return b.code_binding_time - a.code_binding_time;
+        // });
 
-        return newData;
+        return data;
     }, [data]);
 
     useEffect(() => {
         if (dataSource?.length > 0) {
-            const text = formatYMDTime(dataSource[0].code_binding_time);
+            const text = formatYMDTime(dataSource[0].date);
             if (text) {
                 setDateText(text + " 00:00:00 UTC");
             }
@@ -41,12 +50,12 @@ export const RefereesList: FC<{
 
     return isMD ?
         <_SmallReferees date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
-        <_BigReferees dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
+        <_BigReferees dataSource={dataSource} loadMore={loadMore} isLoading={isLoading}/>
 }
 
 const _SmallReferees: FC<{
     date?: string,
-    dataSource?: API.RefereeInfoItem[],
+    dataSource?: API.RefereeRebateSummary[],
     loadMore: any,
     isLoading: boolean,
 }> = (props) => {
@@ -157,7 +166,7 @@ const _BigReferees: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
+                loadMore={() => {
                     if (!props.isLoading) {
                         props.loadMore();
                     }
@@ -214,7 +223,7 @@ export const RefereesCell: FC<{
                 )}>
                     <div className={cn("orderly-h-[15px] md:orderly-h-[20px] orderly-leading-[15px] md:orderly-leading-[20px]", flex && "orderly-ml-1")}>
 
-                        {rule === "address" ?  <AutoHideText text={value} visibleCount={visibleCount} /> : <div>{value}</div>}
+                        {rule === "address" ? <AutoHideText text={value} visibleCount={visibleCount} /> : <div>{value}</div>}
                     </div>
                 </div>
             </div>
@@ -248,7 +257,7 @@ export const RefereesCell: FC<{
                 {buildNode("", (<></>), "orderly-flex-1", "price", "right")}
 
             </div>
-            <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0"/>
+            <Divider className="orderly-mt-3 orderly-mb-0 orderly-pb-0" />
         </div>
     );
 }

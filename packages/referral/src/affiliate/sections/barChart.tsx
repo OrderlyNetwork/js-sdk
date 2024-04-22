@@ -2,24 +2,25 @@
 import { Select, cn } from "@orderly.network/react";
 import { FC, useContext, useMemo, useState } from "react";
 import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
-import { useRefereeHistory } from "../../hooks/useRefereeHistory";
-import { formatMdTime, formatYMDTime, generateData } from "../../utils/utils";
 import { ReferralContext } from "../../hooks/referralContext";
-import { Decimal, commify } from "@orderly.network/utils";
 import { RefFilterMenu } from "../../components/refFilterMenu";
+import { useReferalRebateSummary } from "../../hooks/useReferalRebateSummary";
+import { generateData } from "../../utils/utils";
 
 type ChartDataType = "Commission" | "Referral vol.";
 
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Commission");
 
-    const [data, { refresh }] = useRefereeHistory({ size: 7 });
+    const [ rebateSummary] = useReferalRebateSummary({});
 
     const { chartConfig } = useContext(ReferralContext);
 
     const dataSource = useMemo(() => {
-        return generateData(7, data, "date", filterType === "Commission" ? "referee_rebate" : "volume");
-    }, [data, filterType]);
+        // return generateData(7, data, "date", filterType === "Commission" ? "referee_rebate" : "volume");
+        
+        return generateData(7, rebateSummary, "date", filterType === "Commission" ? "referral_rebate" : "volume");
+    }, [rebateSummary, filterType]);
 
     const yAxis = useMemo(() => {
         if (dataSource.length === 0) {
