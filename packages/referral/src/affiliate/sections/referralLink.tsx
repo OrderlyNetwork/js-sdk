@@ -84,7 +84,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                         className="orderly-flex-1 2xl:orderly-min-w-[120px] xl:orderly-min-w-[60px]"
                         tooltip={<GradientText texts={[
                             { text: earn, gradient: true },
-                            { text: " WOOFi Pro net fee that deduct Orderly fee." },
+                            { text: " Orderly net fee that deduct Orderly fee." },
                         ]} />}
                     // valueClassName="orderly-bg-gradient-to-l orderly-from-referral-text-from orderly-to-referral-text-to orderly-bg-clip-text orderly-text-transparent"
                     />
@@ -95,7 +95,7 @@ export const ReferralLink: FC<{ className?: string }> = (props) => {
                         tooltip={<GradientText texts={[
                             { text: "Your referees get " },
                             { text: share, gradient: true },
-                            { text: " of their WOOFi Pro net fee" },
+                            { text: " of their Orderly net fee" },
                         ]} />}
                     />
                 </div>
