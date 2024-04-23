@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
 ## 0.3.2
 
 ### Patch Changes

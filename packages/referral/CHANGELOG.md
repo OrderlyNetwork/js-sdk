@@ -1,5 +1,18 @@
 # @orderly.network/referral
 
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@1.5.0-alpha.0
+  - @orderly.network/hooks@1.4.0-alpha.0
+  - @orderly.network/utils@1.4.0-alpha.0
+
 ## 0.1.2
 
 ### Patch Changes

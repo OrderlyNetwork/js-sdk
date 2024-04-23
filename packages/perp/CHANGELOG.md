@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 3.2.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.4.0-alpha.0
+  - @orderly.network/utils@1.4.0-alpha.0
+
 ## 3.1.2
 
 ### Patch Changes

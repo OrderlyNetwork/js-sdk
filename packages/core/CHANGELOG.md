@@ -1,5 +1,16 @@
 # @orderly.network/core
 
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.4.0-alpha.0
+
 ## 1.3.2
 
 ### Patch Changes
