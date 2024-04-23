@@ -17,6 +17,7 @@ const useBroker = ({
         downColor: string,
         pnlUpColor: string;
         pnlDownColor: string;
+        pnlZoreColor: string;
         textColor: string;
         qtyTextColor: string;
         font: string;

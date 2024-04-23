@@ -20,6 +20,7 @@ export class Renderer{
         await this.chartReady();
         await this.onDataLoaded();
         this.positionLineService.renderPositions(positions);
+        this.orderLineService.updatePositions(positions);
     }
 
     async renderPendingOrders(pendingOrders:any) {

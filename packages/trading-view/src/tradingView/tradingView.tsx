@@ -49,13 +49,14 @@ function Link(props: {
 }
 
 const upColor = "#00B59F";
-const downColor = "#FF67C2";
+const downColor = "#FB5CB8";
 const chartBG = '#16141c';
 const pnlUpColor = '#27DEC8';
 const pnlDownColor = '#FFA5C0';
+const pnlZoreColor = '#808080'
 const textColor = '#FFFFFF';
 const qtyTextColor = '#F4F7F9';
-const font = 'regular 11px DIN2014';
+const font = 'regular 11px Manrope';
 
 const getOveriides = () => {
     const overrides = {
@@ -120,12 +121,13 @@ export function TradingView({
         chartBG,
         pnlUpColor,
         pnlDownColor,
+        pnlZoreColor,
         textColor,
         qtyTextColor,
         font,
     }
     const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
-    const [renderer, createRenderer] = useCreateRenderer(symbol!);
+    const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!);
     const chartMask = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -225,7 +227,7 @@ export function TradingView({
 
         return () => {
             chart.current?.remove();
-            renderer.current?.remove();
+            removeRenderer();
         };
     }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
 
