@@ -53,6 +53,9 @@ export const useTaskProfitAndStopLossInternal = (
     defaultOrder?: API.AlgoOrder;
   }
 ): [
+  /**
+   * return the computed & formatted order
+   */
   ComputedAlgoOrder,
   {
     /**
@@ -62,15 +65,18 @@ export const useTaskProfitAndStopLossInternal = (
     setValues: (values: Partial<ComputedAlgoOrder>) => void;
     // getOrderEntity: () => AlgoOrderEntity<AlgoOrderRootType.TP_SL|AlgoOrderRootType.POSITIONAL_TP_SL>;
     /**
-     * Submit the take profit and stop loss order
+     * Submit the TP/SL order
      */
     submit: () => Promise<void>;
-    /**
-     * Create the take profit and stop loss order, auto-detect the order type
-     */
-    create: () => Promise<void>;
-    update: (orderId: number) => Promise<any>;
+    // /**
+    //  * Create the take profit and stop loss order, auto-detect the order type
+    //  */
+    // create: () => Promise<void>;
+    // update: (orderId: number) => Promise<any>;
     errors: ValidateError | null;
+    /**
+     *
+     */
     validate: () => Promise<
       AlgoOrderEntity<
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
@@ -249,9 +255,9 @@ export const useTaskProfitAndStopLossInternal = (
     });
   };
 
-  useEffect(() => {
-    // setError(validate());
-  }, [order]);
+  // useEffect(() => {
+  //   // setError(validate());
+  // }, [order]);
 
   const compare = (): boolean => {
     const quantityNum = Number(order.quantity);
@@ -307,6 +313,11 @@ export const useTaskProfitAndStopLossInternal = (
       throw new SDKError("No child orders");
     }
 
+    // filter the order that is not activated
+    orderBody.child_orders = orderBody.child_orders.filter(
+      (order: API.AlgoOrderExt) => order.is_activated
+    );
+
     return doCreateOrder(orderBody);
   };
 
@@ -335,7 +346,7 @@ export const useTaskProfitAndStopLossInternal = (
       orderEntity.child_orders.filter(
         (order) =>
           typeof order.is_activated === "boolean" && !order.is_activated
-      ).length === 2;
+      ).length === orderEntity.child_orders.length;
 
     if (needDelete) {
       return deleteOrder(orderId, order.symbol!);
@@ -352,9 +363,9 @@ export const useTaskProfitAndStopLossInternal = (
     {
       submit,
 
-      create: submit,
+      // create: submit,
 
-      update: updateOrder,
+      // update: updateOrder,/
       setValue: setOrderValue,
       setValues,
       // createPositionTPSL: submit,

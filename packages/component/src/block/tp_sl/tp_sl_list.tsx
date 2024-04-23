@@ -12,15 +12,20 @@ import {
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { OrderListProvider } from "../orders/shared/orderListContext";
+import { useTabContext } from "@/tab/tabContext";
+import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export const TPSLList: FC<{
   // dataSource: API.AlgoOrder[];
 }> = (props) => {
+  const context = useContext(TradingPageContext);
   const { height } = useContext(TabContext);
   const [side, setSide] = useState<OrderSide>();
+  const { data: tabExtraData } = useTabContext();
 
   const [orders, { total }] = useOrderStream(
     {
+      symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
       status: OrderStatus.INCOMPLETE,
       side,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
