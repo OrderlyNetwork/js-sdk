@@ -315,7 +315,7 @@ export const useOrderStream = (
       }
       return doUpdateAlgoOrder({
         order_id: orderId,
-        children_orders: childOrders,
+        child_orders: childOrders,
       });
     },
     []
