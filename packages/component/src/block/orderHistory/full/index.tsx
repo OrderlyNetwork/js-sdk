@@ -15,10 +15,8 @@ export const HistoryListViewFull: FC<OrderHistoryListViewProps> = (props) => {
 
       <OrderListProvider
         cancelOrder={props.onCancelOrder}
+        cancelAlgoOrder={props.onCancelAlgoOrder}
         editOrder={(orderId: string, order: OrderEntity): Promise<any> => {
-          throw new Error("Function not implemented.");
-        }}
-        cancelAlgoOrder={(orderId: number, symbol: string): Promise<any> => {
           throw new Error("Function not implemented.");
         }}
         editAlgoOrder={(orderId: string, order: OrderEntity): Promise<any> => {
