@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "1.4.0-internal.18",
+  "version": "1.4.0-internal.19",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",

@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.0-internal.19
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.4.0-internal.19
+  - @orderly.network/utils@1.4.0-internal.19
+
 ## 4.0.0-internal.18
 
 ### Minor Changes
