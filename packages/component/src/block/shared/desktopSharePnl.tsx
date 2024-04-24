@@ -23,7 +23,7 @@ import { Message } from "./desktop/message";
 
 export const DesktopSharePnLContent: FC<{
   position: any;
-  leverage: number;
+  leverage: number | string;
   hide: any;
   baseDp?: number;
   quoteDp?: number;

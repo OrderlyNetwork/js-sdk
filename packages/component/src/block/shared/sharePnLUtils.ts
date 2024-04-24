@@ -25,7 +25,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 
 export function getPnLPosterData(
   position: any,
-  leverage: number,
+  leverage: number | string,
   message: string,
   domain: string,
   pnlType: PnLDisplayFormat,
