@@ -1,5 +1,19 @@
 # @orderly.network/onboard
 
+## 1.4.0-internal.18
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies [764eb2da]
+- Updated dependencies
+  - @orderly.network/hooks@1.4.0-internal.18
+  - @orderly.network/types@1.4.0-internal.18
+
 ## 1.4.0-internal.17
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @orderly.network/referral
 
+## 0.1.0-internal.16
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies [764eb2da]
+- Updated dependencies
+  - @orderly.network/react@1.4.0-internal.18
+  - @orderly.network/hooks@1.4.0-internal.18
+  - @orderly.network/utils@1.4.0-internal.18
+
 ## 0.0.2-internal.15
 
 ### Patch Changes

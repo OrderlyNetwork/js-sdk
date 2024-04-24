@@ -1,5 +1,22 @@
 # @orderly.network/trading-view
 
+## 1.4.0-internal.18
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies [764eb2da]
+- Updated dependencies
+  - @orderly.network/hooks@1.4.0-internal.18
+  - @orderly.network/types@1.4.0-internal.18
+  - @orderly.network/utils@1.4.0-internal.18
+  - @orderly.network/core@1.4.0-internal.18
+  - @orderly.network/net@1.4.0-internal.18
+
 ## 1.4.0-internal.17
 
 ### Patch Changes
