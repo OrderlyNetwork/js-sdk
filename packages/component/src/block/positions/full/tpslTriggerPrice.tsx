@@ -13,11 +13,12 @@ export const TPSLTriggerPrice: FC<{
   className?: string;
   direction?: "row" | "column";
   tooltip?: boolean;
-  order?: API.AlgoOrderExt;
+  order?: API.AlgoOrder;
   position?: API.PositionTPSLExt;
 }> = (props) => {
   const { direction = "row", order, position } = props;
-  const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
+  // const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
+  const symbolInfo = useSymbolsInfo();
 
   const pnl = useMemo(() => {
     const msgs = [];
@@ -41,7 +42,7 @@ export const TPSLTriggerPrice: FC<{
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.TAKE_PROFIT}
-          symbolInfo={symbolInfo}
+          symbolInfo={symbolInfo[order.symbol]()}
         />
       );
     }
@@ -55,7 +56,7 @@ export const TPSLTriggerPrice: FC<{
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.STOP_LOSS}
-          symbolInfo={symbolInfo}
+          symbolInfo={symbolInfo[order.symbol]()}
         />
       );
     }
@@ -72,6 +73,8 @@ export const TPSLTriggerPrice: FC<{
 
   const child = useMemo(() => {
     const children = [];
+
+    if (!order?.symbol) return <span>-</span>;
     if (props.takeProfitPrice) {
       children.push(
         <Numeral
@@ -80,6 +83,7 @@ export const TPSLTriggerPrice: FC<{
           )}
           key={"tp"}
           rule="price"
+          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
@@ -101,6 +105,7 @@ export const TPSLTriggerPrice: FC<{
             "orderly-text-trade-loss orderly-gap-0 orderly-decoration-white/20 "
           )}
           rule={"price"}
+          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
@@ -122,7 +127,7 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice]);
+  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol]);
 
   const content = (
     <div

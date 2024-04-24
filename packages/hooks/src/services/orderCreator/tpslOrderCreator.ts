@@ -20,7 +20,7 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
     const child_orders = [];
 
     if (typeof values.tp_trigger_price !== "undefined") {
-      const tp_trigger_price = !!values.sl_trigger_price
+      const tp_trigger_price = !!values.tp_trigger_price
         ? new Decimal(values.tp_trigger_price)
             .todp(config.symbol.quote_dp)
             .toNumber()

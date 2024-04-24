@@ -123,9 +123,10 @@ const EditingState: FC<{
 
   const setQuantity = (qty: string) => {
     originSetQuantity(qty);
-    if (position && Number(qty) > position?.position_qty) {
+    const positionQty = Math.abs(position?.position_qty || 0);
+    if (position && Number(qty) > positionQty) {
       setError(
-        `Quantity should be less than position quantity : ${position?.position_qty}`
+        `Quantity should be less than position quantity : ${positionQty}`
       );
     } else {
       setError(undefined);

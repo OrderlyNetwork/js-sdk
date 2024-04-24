@@ -1,10 +1,6 @@
 import { FC, Fragment, ReactNode, useMemo } from "react";
 import { Numeral } from "@/text";
-import { cn } from "@/utils";
-import { Tooltip } from "@/tooltip";
-import { utils } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
-import { Minus, Plus } from "lucide-react";
 
 export const TPSLTriggerPrice: FC<{
   takeProfitPrice: number | undefined;
@@ -12,6 +8,7 @@ export const TPSLTriggerPrice: FC<{
   className?: string;
   order?: API.AlgoOrderExt;
   position?: API.PositionTPSLExt;
+  quote_dp: number;
 }> = (props) => {
   const { order, position } = props;
 
@@ -20,7 +17,11 @@ export const TPSLTriggerPrice: FC<{
 
     if (!!props.takeProfitPrice) {
       children.TP = (
-        <Numeral rule="price" className="orderly-text-trade-profit">
+        <Numeral
+          rule="price"
+          className="orderly-text-trade-profit"
+          precision={props.quote_dp}
+        >
           {props.takeProfitPrice}
         </Numeral>
       );
@@ -28,7 +29,11 @@ export const TPSLTriggerPrice: FC<{
 
     if (!!props.stopLossPrice) {
       children.SL = (
-        <Numeral rule="price" className="orderly-text-trade-loss">
+        <Numeral
+          rule="price"
+          className="orderly-text-trade-loss"
+          precision={props.quote_dp}
+        >
           {props.stopLossPrice}
         </Numeral>
       );
