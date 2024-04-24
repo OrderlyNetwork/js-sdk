@@ -14,7 +14,8 @@ import { Decimal, commify } from "@orderly.network/utils";
 interface Props {
   type: "TP" | "SL";
   quote: string;
-  quote_db?: number;
+
+  quote_dp?: number;
   onChange: (key: string, value: number | string) => void;
   testId?: string;
   values: {
@@ -31,7 +32,7 @@ export enum PnLMode {
 }
 
 export const PnlInput: FC<Props> = (props) => {
-  const { quote, type, quote_db = 2 } = props;
+  const { quote, type, quote_dp = 2 } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
@@ -109,7 +110,13 @@ export const PnlInput: FC<Props> = (props) => {
               />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align={"end"} className={"orderly-w-[120px]"}>
+          <DropdownMenuContent
+            align={"end"}
+            className={"orderly-w-[120px]"}
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+            }}
+          >
             <DropdownMenuItem
               onSelect={() => setMode(PnLMode.PnL)}
               data-testid={`${PnLMode.PnL}_menu_item`}
@@ -133,11 +140,17 @@ export const PnlInput: FC<Props> = (props) => {
       }
       value={value}
       onValueChange={(value) => {
-        console.log("value", value);
-        if (mode === PnLMode.PERCENTAGE && value !== "") {
-          percentageSuffix.current = value.endsWith(".") ? "." : "";
-          value = new Decimal(value).div(100).todp(4, 4).toNumber();
+        if (mode === PnLMode.PERCENTAGE) {
+          if (value !== "") {
+            percentageSuffix.current = value.endsWith(".") ? "." : "";
+            value = new Decimal(value).div(100).todp(4, 4).toNumber();
+          }
+        } else {
+          if (value !== "" && !value.endsWith(".")) {
+            value = new Decimal(value).todp(quote_dp, 4).toNumber();
+          }
         }
+
         props.onChange(key, value);
         // setInnerValue(value);
       }}
