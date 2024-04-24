@@ -52,7 +52,7 @@ export default function useEditOrder(onToast: any) {
                     }
 
                     // @ts-ignore
-                    return updateAlgoOrder(orderl.algo_order_id, values).then(res => {
+                    return updateAlgoOrder(order.algo_order_id, values).then(res => {
                     }).catch(e => {
                         if (onToast) {
                             onToast.error(e.message);

@@ -165,13 +165,15 @@ export class OrderLineService {
   }
 
   getOrderQuantity(pendingOrder: OrderInterface){
-    if (isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)) {
-      return '100%';
+    if (pendingOrder.algo_order_id) {
+      if (isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)) {
+        return '100%';
+      }
+      if (isActivatedQuantityTpsl(pendingOrder)) {
+        return new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString();
+      }
     }
-    if (isActivatedQuantityTpsl(pendingOrder)) {
-      return new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString();
-    }
-    new Decimal(pendingOrder.quantity)
+    return new Decimal(pendingOrder.quantity)
         .toString();
   }
 
