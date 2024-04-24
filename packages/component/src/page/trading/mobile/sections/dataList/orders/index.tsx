@@ -54,7 +54,7 @@ export const OrdersPane: FC<Props> = (props) => {
       cancelAlgoOrder,
       updateAlgoOrder,
       cancelAllOrders,
-      cancelAllAlgoOrders,
+      cancelAllTPSLOrders,
     },
   ] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
@@ -79,7 +79,7 @@ export const OrdersPane: FC<Props> = (props) => {
 
   const cancelAllOrdersHandler = () => {
     if (isStopOrder) {
-      return cancelAllAlgoOrders();
+      return cancelAllTPSLOrders();
     } else {
       return cancelAllOrders();
     }

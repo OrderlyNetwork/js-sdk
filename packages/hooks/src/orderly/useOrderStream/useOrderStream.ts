@@ -14,6 +14,7 @@ import { useDataCenterContext } from "../../dataProvider";
 import { generateKeyFun } from "../../utils/swr";
 import { useEventEmitter } from "../../useEventEmitter";
 import { SDKError } from "@orderly.network/types";
+import { AlgoOrderType } from "@orderly.network/types";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
@@ -179,6 +180,24 @@ export const useOrderStream = (
     // return ordersResponse.data?.[0]?.meta?.total || 0;
   }, [orders?.length]);
 
+  const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
+    if (!types) {
+      throw new SDKError("types is required");
+    }
+
+    if (!Array.isArray(types)) {
+      throw new SDKError("types should be an array");
+    }
+
+    // TODO: order type check
+
+    return Promise.all(
+      types.map((type) => {
+        return doCancelAllAlgoOrders(null, { algo_type: type });
+      })
+    );
+  };
+
   /**
    * cancel all orders
    */
@@ -189,10 +208,10 @@ export const useOrderStream = (
     ]);
   }, [ordersResponse.data]);
 
-  const cancelAllAlgoOrders = useCallback(() => {
-    return Promise.all([
-      doCancelAllAlgoOrders(null, { algo_type: "TP_SL" }),
-      doCancelAllAlgoOrders(null, { algo_type: "POSITIONAL_TP_SL" }),
+  const cancelAllTPSLOrders = useCallback(() => {
+    return cancelAlgoOrdersByTypes([
+      AlgoOrderRootType.POSITIONAL_TP_SL,
+      AlgoOrderRootType.TP_SL,
     ]);
   }, [ordersResponse.data]);
 
@@ -315,7 +334,7 @@ export const useOrderStream = (
       }
       return doUpdateAlgoOrder({
         order_id: orderId,
-        children_orders: childOrders,
+        child_orders: childOrders,
       });
     },
     []
@@ -329,7 +348,8 @@ export const useOrderStream = (
       refresh: ordersResponse.mutate,
       loadMore,
       cancelAllOrders,
-      cancelAllAlgoOrders,
+      cancelAllTPSLOrders,
+      cancelAlgoOrdersByTypes,
       updateOrder,
       cancelOrder,
       updateAlgoOrder,

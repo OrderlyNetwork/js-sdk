@@ -104,12 +104,33 @@ const EditingState: FC<{
   open: number;
   setOpen: any;
 }> = (props) => {
-  const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
-    props;
+  const {
+    order,
+    quantity,
+    setQuantity: originSetQuantity,
+    editting,
+    setEditting,
+    setOpen,
+    open,
+  } = props;
+
+  const [error, setError] = useState<string>();
 
   const { editOrder, editAlgoOrder, checkMinNotional } =
     useContext(OrderListContext);
-  const { onUpdateOrder: onUpdateTPSLOrder } = useTPSLOrderRowContext();
+  const { onUpdateOrder: onUpdateTPSLOrder, position } =
+    useTPSLOrderRowContext();
+
+  const setQuantity = (qty: string) => {
+    originSetQuantity(qty);
+    if (position && Number(qty) > position?.position_qty) {
+      setError(
+        `Quantity should be less than position quantity : ${position?.position_qty}`
+      );
+    } else {
+      setError(undefined);
+    }
+  };
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
@@ -126,7 +147,7 @@ const EditingState: FC<{
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const clickHandler = (event: MouseEvent) => {
+    const docClickHandler = (event: MouseEvent) => {
       // close the input when click outside of boxRef
       const el = boxRef?.current;
       if (!el || el.contains(event.target as Node)) {
@@ -142,22 +163,25 @@ const EditingState: FC<{
       setEditting(false);
     };
 
-    document.body.addEventListener("click", clickHandler);
+    document.body.addEventListener("click", docClickHandler);
 
     return () => {
-      document.body.removeEventListener("click", clickHandler);
+      document.body.removeEventListener("click", docClickHandler);
     };
   }, []);
 
-  const onClick = () => {
-    // event.stopPropagation();
-    // event.preventDefault();
+  const clickHandler = () => {
+    if (!!error) {
+      return;
+    }
+
     setEditting(false);
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
 
-    const price = order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    const price =
+      order.algo_order_id !== undefined ? order.trigger_price : order.price;
     if (price !== null && order.reduce_only !== true) {
       const notionalText = checkMinNotional(order.symbol, price, quantity);
       if (notionalText) {
@@ -171,11 +195,18 @@ const EditingState: FC<{
     setOpen(1);
   };
 
+  const onClick = (event: MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    clickHandler();
+  };
+
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-      onClick();
+      clickHandler();
     }
   };
 
@@ -192,8 +223,12 @@ const EditingState: FC<{
       algo_order_id: order.algo_order_id,
     };
 
-    if (typeof params.algo_order_id !== 'undefined' && params.order_type === 'MARKET') { // stop market order
-      const { order_price, ...rest} = params;
+    if (
+      typeof params.algo_order_id !== "undefined" &&
+      params.order_type === "MARKET"
+    ) {
+      // stop market order
+      const { order_price, ...rest } = params;
       params = rest;
     }
 
@@ -274,7 +309,7 @@ const EditingState: FC<{
               e.stopPropagation();
               e.preventDefault();
               setEditting(false);
-              setQuantity(order.quantity);
+              setQuantity(order.quantity.toString());
             }}
           >
             {/* @ts-ignore */}
@@ -302,6 +337,8 @@ const EditingState: FC<{
                 }
               }, 100);
             }}
+            error={!!error}
+            helpText={error}
             onKeyDown={handleKeyDown}
             autoFocus
             containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"

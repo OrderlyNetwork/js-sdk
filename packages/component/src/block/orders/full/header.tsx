@@ -23,7 +23,7 @@ export const Header: FC<Props> = (props) => {
   // const [cancelAll, { error: cancelOrderError, isMutating: cancelMutating }] =
   //   useMutation("/v1/orders", "DELETE");
 
-  const [_, { cancelAllOrders, cancelAllAlgoOrders }] = useOrderStream({});
+  const [_, { cancelAllOrders, cancelAllTPSLOrders }] = useOrderStream({});
 
   function cancelAllOrder() {
     modal
@@ -42,7 +42,7 @@ export const Header: FC<Props> = (props) => {
           try {
             // await cancelAll(null, { source_type: "ALL" });
             if (props.orderType === AlgoOrderRootType.TP_SL) {
-              await cancelAllAlgoOrders();
+              await cancelAllTPSLOrders();
             } else {
               await cancelAllOrders();
             }
