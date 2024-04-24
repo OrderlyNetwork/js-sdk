@@ -26,6 +26,7 @@ import {
 import { DataCenterProvider } from "./dataProvider";
 import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
+import { ProxyConfigStore } from "./dev/proxyConfigStore";
 // import { useParamsCheck } from "./useParamsCheck";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
@@ -44,6 +45,7 @@ type filteredChains = {
 };
 
 type filterChainsFunc = (config: ConfigStore) => filteredChains;
+
 export interface ConfigProviderProps {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
@@ -83,7 +85,9 @@ export const OrderlyConfigProvider = (
   }
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
-    return configStore || new DefaultConfigStore({ brokerId, networkId });
+    return new ProxyConfigStore(
+      configStore || new DefaultConfigStore({ brokerId, networkId })
+    );
   });
 
   const innerKeyStore = useConstant<OrderlyKeyStore>(() => {
