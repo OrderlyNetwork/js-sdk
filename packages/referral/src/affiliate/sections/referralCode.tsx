@@ -123,7 +123,7 @@ export const CodeList: FC<{
             render: (value, record) => (
                 <div className="orderly-flex orderly-justify-end">
                     <_CopyLink className="lg:orderly-w-[82px]"
-                        onClick={(event) => copyLink(value)}
+                        onClick={(event) => copyLink(record.code)}
                     />
                 </div>
             )
