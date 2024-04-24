@@ -255,7 +255,7 @@ export const TPSLForm: FC<Props> = (props) => {
           >
             <span>Est. PnL: </span>
             {order.tp_pnl ? (
-              <Numeral rule="price" coloring>
+              <Numeral rule="price" coloring precision={symbolInfo("quote_dp")}>
                 {order.tp_pnl}
               </Numeral>
             ) : (
@@ -287,6 +287,7 @@ export const TPSLForm: FC<Props> = (props) => {
           />
           <PnlInput
             quote={symbolInfo("quote")}
+            quote_dp={symbolInfo("quote_dp")}
             onChange={props.onChange}
             type={"TP"}
             values={{
@@ -310,7 +311,7 @@ export const TPSLForm: FC<Props> = (props) => {
           >
             <span>est. PnL: </span>
             {order.sl_pnl ? (
-              <Numeral rule="price" coloring>
+              <Numeral rule="price" coloring precision={symbolInfo("quote_dp")}>
                 {order.sl_pnl}
               </Numeral>
             ) : (
@@ -343,6 +344,7 @@ export const TPSLForm: FC<Props> = (props) => {
             quote={symbolInfo("quote")}
             onChange={props.onChange}
             type={"SL"}
+            quote_dp={symbolInfo("quote_dp")}
             values={{
               PnL: `${order.sl_pnl ?? ""}`,
               Offset: `${order.sl_offset ?? ""}`,
