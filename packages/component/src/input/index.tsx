@@ -168,6 +168,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         if (thousandSeparator) {
           value = parseInputHelper(value);
         }
+
         onValueChange(value);
       }
       prevInputValue.current = event.target.value;

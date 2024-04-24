@@ -154,6 +154,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       <TPSLTriggerPrice
         stopLossPrice={item.sl_trigger_price}
         takeProfitPrice={item.tp_trigger_price}
+        quote_dp={quote_dp}
       />
       <div className="orderly-flex orderly-justify-end orderly-items-center orderly-gap-2 orderly-py-2">
         <Button

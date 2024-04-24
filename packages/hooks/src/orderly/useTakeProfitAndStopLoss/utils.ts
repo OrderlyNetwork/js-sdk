@@ -243,6 +243,19 @@ export function priceToPnl(
   return decimal.toNumber();
 }
 
+function formatPrice(price: number | string, symbol?: API.SymbolExt) {
+  if (typeof price !== "string") {
+    price = `${price}`;
+  }
+
+  if (price.endsWith(".") || !symbol) {
+    return price;
+  }
+  return new Decimal(Number(price))
+    .todp(symbol.quote_dp, Decimal.ROUND_UP)
+    .toNumber();
+}
+
 export function calculateHelper(
   key: string,
   inputs: {
@@ -359,11 +372,7 @@ export function calculateHelper(
     };
 
   return {
-    [`${keyPrefix}trigger_price`]: symbol
-      ? new Decimal(Number(trigger_price))
-          .todp(symbol.quote_dp, Decimal.ROUND_UP)
-          .toNumber()
-      : trigger_price,
+    [`${keyPrefix}trigger_price`]: formatPrice(trigger_price, symbol),
     [`${keyPrefix}offset`]:
       offset ??
       priceToOffset(

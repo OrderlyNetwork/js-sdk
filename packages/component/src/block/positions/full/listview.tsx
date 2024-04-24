@@ -30,6 +30,7 @@ import { PositionEmptyView } from "./positionEmptyView";
 import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
 import { TPSLButton } from "./tpslButton";
 import { TPSLTriggerPrice } from "@/block/positions/full/tpslTriggerPrice";
+import { TriggerPrice } from "./triggerPrice";
 
 export const Listview: FC<
   PositionsViewProps & {
@@ -172,7 +173,7 @@ export const Listview: FC<
         dataIndex: "__",
         width: 150,
         render: (_: string, record) => (
-          <TPSLTriggerPrice
+          <TriggerPrice
             stopLossPrice={record.sl_trigger_price}
             takeProfitPrice={record.tp_trigger_price}
           />
