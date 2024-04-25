@@ -70,17 +70,36 @@ describe("TP/SL Utils function", () => {
 
       expect(priceToOffset(inputs)).toBe(1000);
     });
-    test("Calculates offset correctly for LONG/STOP_LOSS type with target price above mark price", () => {
+
+    test("Calculates offset correctly for LONG/TAKE_PROFIT type with target price above mark price", () => {
       const inputs = {
         qty: 0.1,
-        price: 63000,
+        price: 67000,
         entryPrice: 66000,
         orderSide: OrderSide.BUY,
-        orderType: AlgoOrderType.STOP_LOSS,
+        orderType: AlgoOrderType.TAKE_PROFIT,
       };
 
-      expect(priceToOffset(inputs)).toBe(3000);
+      expect(priceToOffset(inputs)).toBe(1000);
     });
+
+    // test("Calculates offset correctly *******", () => {
+    //   const inputs = {
+    //     qty: 0.1,
+    //     price: 1.4774,
+    //     entryPrice: 5.4774043,
+    //     orderSide: OrderSide.BUY,
+    //     orderType: AlgoOrderType.STOP_LOSS,
+    //   };
+
+    //   expect(
+    //     priceToOffset(inputs, {
+    //       symbol: {
+    //         quote_dp: 4,
+    //       },
+    //     })
+    //   ).toBe(3000);
+    // });
 
     test("Calculates offset correctly for SHORT/TAKE_PROFIT type with target price above mark price", () => {
       const inputs = {
