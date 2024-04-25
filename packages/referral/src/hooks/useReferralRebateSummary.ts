@@ -14,7 +14,7 @@ type Params = {
     initialSize?: number,
 }
 
-export const useReferalRebateSummary = (params: Params): any[] => {
+export const useReferralRebateSummary = (params: Params): any[] => {
     const { size = 10, startDate, endDate, initialSize } = params;
 
     const response = usePrivateInfiniteQuery(
@@ -56,5 +56,5 @@ export const useReferalRebateSummary = (params: Params): any[] => {
             refresh: response.mutate,
             loadMore
         }
-    ] as const;
+    ];
 }

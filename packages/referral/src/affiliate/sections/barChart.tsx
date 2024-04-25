@@ -4,7 +4,7 @@ import { FC, useContext, useMemo, useState } from "react";
 import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { ReferralContext } from "../../hooks/referralContext";
 import { RefFilterMenu } from "../../components/refFilterMenu";
-import { useReferalRebateSummary } from "../../hooks/useReferalRebateSummary";
+import { useReferralRebateSummary } from "../../hooks/useReferralRebateSummary";
 import { generateData } from "../../utils/utils";
 
 type ChartDataType = "Commission" | "Referral vol.";
@@ -12,7 +12,7 @@ type ChartDataType = "Commission" | "Referral vol.";
 export const BarChart: FC<{ className?: string }> = (props) => {
     const [filterType, setFiltetType] = useState<ChartDataType>("Commission");
 
-    const [ rebateSummary] = useReferalRebateSummary({
+    const [ rebateSummary] = useReferralRebateSummary({
         startDate: format(subDays(new Date(), 15), 'yyyy-MM-dd'),
         endDate: format(subDays(new Date(), 1), 'yyyy-MM-dd'),
     });

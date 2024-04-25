@@ -56,5 +56,5 @@ export const useRefereeHistory = (params: Params): any[] => {
             refresh: response.mutate,
             loadMore
         }
-    ] as const;
+    ];
 }
