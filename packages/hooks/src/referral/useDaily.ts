@@ -1,14 +1,14 @@
-import { usePrivateQuery } from "@orderly.network/hooks";
-import { API } from "../types/api";
-import { format } from "@orderly.network/react";
 
+import { usePrivateQuery } from "../usePrivateQuery";
+import { RefferalAPI } from "./api";
+import { formatDate } from "./format";
 export const useDaily = (options?: {
     //** default Date() - 30d */
     startDate?: Date,
     //** default Date() */
     endDate?: Date
 }): {
-    data?: API.DayliVolume[],
+    data?: RefferalAPI.DayliVolume[],
     mutate: any,
 } => {
 
@@ -16,14 +16,14 @@ export const useDaily = (options?: {
     const endDate = options?.startDate || new Date();
     const startDate = options?.endDate || new Date(Date.now() - 86400000 * 30);
 
-    const start_date = format(startDate, "yyyy-MM-dd");
-    const end_date = format(endDate, "yyyy-MM-dd");
+    const start_date = formatDate(startDate);
+    const end_date = formatDate(endDate);
 
     const url = `${path}?start_date=${start_date}&end_date=${end_date}`;
     const {
         data: dailyVolume,
         mutate,
-    } = usePrivateQuery<API.DayliVolume[]>(url, {
+    } = usePrivateQuery<RefferalAPI.DayliVolume[]>(url, {
         revalidateOnFocus: true
     });
 
@@ -32,5 +32,6 @@ export const useDaily = (options?: {
         mutate,
     }
 }
+
 
 

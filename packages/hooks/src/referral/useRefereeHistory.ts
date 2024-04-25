@@ -1,7 +1,6 @@
-import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks"
-import { generateKeyFun } from "../utils/swr";
+import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
+import { generateKeyFun } from "./swr";
 import { useMemo } from "react";
-import { API } from "../types/api";
 
 type Params = {
     //** default is 10 */
@@ -14,11 +13,11 @@ type Params = {
     initialSize?: number,
 }
 
-export const useReferralRebateSummary = (params: Params): any[] => {
+export const useRefereeHistory = (params: Params): any[] => {
     const { size = 10, startDate, endDate, initialSize } = params;
 
     const response = usePrivateInfiniteQuery(
-        generateKeyFun({ path: '/v1/referral/rebate_summary', size, startDate, endDate }),
+        generateKeyFun({ path: '/v1/referral/referee_history', size, startDate, endDate }),
         {
             initialSize: initialSize,
             // revalidateFirstPage: false,
@@ -40,7 +39,7 @@ export const useReferralRebateSummary = (params: Params): any[] => {
     }, [response.data?.[0]?.meta?.total]);
 
 
-    const flattenOrders = useMemo((): API.ReferralRebateSummary[] | null => {
+    const flattenOrders = useMemo(() => {
         if (!response.data) {
             return null;
         }

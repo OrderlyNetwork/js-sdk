@@ -1,12 +1,11 @@
 import { FC, useContext, useMemo } from "react";
 import { HintIcon, CopyIcon } from "../icons";
-import { Input, Text, Numeral, Tooltip, cn, toast, modal } from "@orderly.network/react";
+import { Tooltip, cn, toast, modal } from "@orderly.network/react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { addQueryParam } from "../../utils/utils";
 import { AutoHideText } from "../../components/autoHideText";
 import { GradientText } from "../../components/gradientText";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { API } from "../../types/api";
+import { useLocalStorage, ReferralAPI as API } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
 

@@ -1,11 +1,11 @@
 
-import { Select, cn, format, subDays } from "@orderly.network/react";
+import { cn, format, subDays } from "@orderly.network/react";
 import { FC, useContext, useMemo, useState } from "react";
 import { ColmunChart, InitialBarStyle, InitialXAxis, InitialYAxis, emptyDataSource, emptyDataSourceYAxis } from "../../components/barChart";
 import { ReferralContext } from "../../hooks/referralContext";
 import { RefFilterMenu } from "../../components/refFilterMenu";
-import { useReferralRebateSummary } from "../../hooks/useReferralRebateSummary";
 import { generateData } from "../../utils/utils";
+import { useReferralRebateSummary } from "@orderly.network/hooks";
 
 type ChartDataType = "Commission" | "Referral vol.";
 

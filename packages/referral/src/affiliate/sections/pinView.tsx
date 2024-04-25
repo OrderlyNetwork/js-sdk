@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { PinIcon, UnPinIcon } from "../icons/pin";
 
 export const PinView: FC<{

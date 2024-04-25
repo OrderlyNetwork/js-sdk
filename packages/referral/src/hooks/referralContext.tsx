@@ -1,11 +1,9 @@
-import { usePrivateQuery } from "@orderly.network/hooks";
 import { FC, PropsWithChildren, ReactNode, createContext, useEffect, useMemo } from "react";
-import { API } from "../types/api";
-import { useDaily } from "./useDaily";
 import { XAxis, YAxis, BarStyle } from "../components";
 import { formatYMDTime } from "../utils/utils";
 import { IntlProvider, MessageFormatElement } from "react-intl";
 import { en } from "../locale/en-US";
+import { RefferalAPI as API, usePrivateQuery, useDaily } from "@orderly.network/hooks";
 
 export type UserVolumeType = {
     "1d_volume"?: number,

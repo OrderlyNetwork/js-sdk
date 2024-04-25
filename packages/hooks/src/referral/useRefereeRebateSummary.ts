@@ -1,6 +1,6 @@
-import { usePrivateQuery } from "@orderly.network/hooks"
-import { API } from "../types/api";
-import { format } from "@orderly.network/react";
+import { usePrivateQuery } from "../usePrivateQuery";
+import { RefferalAPI } from "./api";
+import { formatDate } from "./format";
 
 type Params = {
     startDate?: Date,
@@ -8,7 +8,7 @@ type Params = {
 }
 
 export const useRefereeRebateSummary = (params: Params): {
-    data?: API.RefereeRebateSummary[],
+    data?: RefferalAPI.RefereeRebateSummary[],
     mutate: any,
     isLoading: boolean,
 } => {
@@ -20,8 +20,8 @@ export const useRefereeRebateSummary = (params: Params): {
         const sDate = minDate(params.startDate, params.endDate);
         const eDate = maxDate(params.startDate, params.endDate);
         const search = new URLSearchParams([]);
-        search.set(`start_date`, format(sDate, 'yyyy-MM-dd'));
-        search.set(`end_date`, format(eDate, 'yyyy-MM-dd'));
+        search.set(`start_date`, formatDate(sDate, ));
+        search.set(`end_date`, formatDate(eDate,));
         const queryParams = search.toString() || "";
         url = `${path}?${queryParams}`;
     }
@@ -29,7 +29,7 @@ export const useRefereeRebateSummary = (params: Params): {
         data,
         mutate,
         isLoading,
-    } = usePrivateQuery<API.RefereeRebateSummary[]>(url, {
+    } = usePrivateQuery<RefferalAPI.RefereeRebateSummary[]>(url, {
         revalidateOnFocus: true
     });
 

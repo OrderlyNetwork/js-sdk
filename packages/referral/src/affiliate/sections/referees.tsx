@@ -1,12 +1,9 @@
-import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, ListView, Numeral, Table, cn, Text, EndReachedBox, EmptyView, DatePicker } from "@orderly.network/react";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { useRefereeInfo } from "../../hooks/useRefereeInfo";
+import { useMediaQuery, useRefereeInfo, ReferralAPI as API } from "@orderly.network/hooks";
+import { Column, Divider, ListView, Numeral, Table, cn, Text } from "@orderly.network/react";
+import { FC, useCallback, useEffect, useMemo } from "react";
 import { formatYMDTime } from "../../utils/utils";
-import { API } from "../../types/api";
 import { AutoHideText } from "../../components/autoHideText";
 import { RefEmptyView } from "../../components/icons/emptyView";
-import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
 
 export const RefereesList: FC<{
     dateText?: string,
