@@ -1,7 +1,7 @@
 import { API, OrderSide, PositionSide } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { Decimal, todpIfNeed, zero } from "@orderly.network/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"
@@ -167,7 +167,7 @@ export function pnlToPrice(inputs: {
 }) {
   const { qty, pnl, entryPrice, orderType, orderSide } = inputs;
 
-  console.log("pnlToPrice", inputs);
+  // console.log("pnlToPrice", inputs);
 
   if (!pnl) {
     return;
@@ -245,18 +245,18 @@ export function priceToPnl(
   return decimal.toNumber();
 }
 
-function formatPrice(price: number | string, symbol?: API.SymbolExt) {
-  if (typeof price !== "string") {
-    price = `${price}`;
-  }
+// function formatPrice(price: number | string, symbol?: API.SymbolExt) {
+//   if (typeof price !== "string") {
+//     price = `${price}`;
+//   }
 
-  if (price.endsWith(".") || !symbol) {
-    return price;
-  }
-  return new Decimal(Number(price))
-    .todp(symbol.quote_dp, Decimal.ROUND_UP)
-    .toNumber();
-}
+//   if (price.endsWith(".") || !symbol) {
+//     return price;
+//   }
+//   return new Decimal(Number(price))
+//     .todp(symbol.quote_dp, Decimal.ROUND_UP)
+//     .toNumber();
+// }
 
 export function calculateHelper(
   key: string,
@@ -305,6 +305,12 @@ export function calculateHelper(
 
   let trigger_price, offset, offset_percentage, pnl;
 
+  const entryPrice = new Decimal(inputs.entryPrice)
+    .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
+    .toNumber();
+
+  // console.log("******* entryPrice", options.symbol?.quote_dp, entryPrice);
+
   switch (key) {
     case "tp_trigger_price":
     case "sl_trigger_price": {
@@ -327,7 +333,7 @@ export function calculateHelper(
       trigger_price = pnlToPrice({
         qty,
         pnl: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       });
@@ -340,7 +346,7 @@ export function calculateHelper(
       trigger_price = offsetToPrice({
         qty,
         offset: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType:
           key === "tp_offset"
@@ -356,7 +362,7 @@ export function calculateHelper(
       trigger_price = offsetPercentageToPrice({
         qty,
         percentage: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       });
@@ -374,14 +380,17 @@ export function calculateHelper(
     };
 
   return {
-    [`${keyPrefix}trigger_price`]: formatPrice(trigger_price, symbol),
+    [`${keyPrefix}trigger_price`]: todpIfNeed(
+      trigger_price,
+      symbol?.quote_dp ?? 2
+    ),
     [`${keyPrefix}offset`]:
       offset ??
       priceToOffset(
         {
           qty,
           price: Number(trigger_price!),
-          entryPrice: inputs.entryPrice,
+          entryPrice,
           orderSide: inputs.orderSide,
           orderType,
         },
@@ -392,7 +401,7 @@ export function calculateHelper(
       priceToOffsetPercentage({
         qty,
         price: Number(trigger_price!),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       }),
@@ -402,7 +411,7 @@ export function calculateHelper(
         {
           qty,
           price: Number(trigger_price!),
-          entryPrice: inputs.entryPrice,
+          entryPrice,
           orderSide: inputs.orderSide,
           orderType,
         },

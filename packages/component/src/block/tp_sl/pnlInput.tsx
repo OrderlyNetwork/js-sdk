@@ -9,7 +9,7 @@ import {
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { cn } from "@/utils";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal, commify, todpIfNeed } from "@orderly.network/utils";
 
 interface Props {
   type: "TP" | "SL";
@@ -146,9 +146,7 @@ export const PnlInput: FC<Props> = (props) => {
             value = new Decimal(value).div(100).todp(4, 4).toNumber();
           }
         } else {
-          if (value !== "" && !value.endsWith(".")) {
-            value = new Decimal(value).todp(quote_dp, 4).toNumber();
-          }
+          value = todpIfNeed(value, quote_dp);
         }
 
         props.onChange(key, value);
