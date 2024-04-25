@@ -1,7 +1,7 @@
 import { API, OrderSide, PositionSide } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { Decimal, todpIfNeed, zero } from "@orderly.network/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"
@@ -245,18 +245,18 @@ export function priceToPnl(
   return decimal.toNumber();
 }
 
-function formatPrice(price: number | string, symbol?: API.SymbolExt) {
-  if (typeof price !== "string") {
-    price = `${price}`;
-  }
+// function formatPrice(price: number | string, symbol?: API.SymbolExt) {
+//   if (typeof price !== "string") {
+//     price = `${price}`;
+//   }
 
-  if (price.endsWith(".") || !symbol) {
-    return price;
-  }
-  return new Decimal(Number(price))
-    .todp(symbol.quote_dp, Decimal.ROUND_UP)
-    .toNumber();
-}
+//   if (price.endsWith(".") || !symbol) {
+//     return price;
+//   }
+//   return new Decimal(Number(price))
+//     .todp(symbol.quote_dp, Decimal.ROUND_UP)
+//     .toNumber();
+// }
 
 export function calculateHelper(
   key: string,
@@ -380,7 +380,10 @@ export function calculateHelper(
     };
 
   return {
-    [`${keyPrefix}trigger_price`]: formatPrice(trigger_price, symbol),
+    [`${keyPrefix}trigger_price`]: todpIfNeed(
+      trigger_price,
+      symbol?.quote_dp ?? 2
+    ),
     [`${keyPrefix}offset`]:
       offset ??
       priceToOffset(

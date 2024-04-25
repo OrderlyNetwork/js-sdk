@@ -9,8 +9,7 @@ import {
 import { ArrowIcon } from "@/icon";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { cn } from "@/utils";
-import { Decimal, commify } from "@orderly.network/utils";
-import { todpIfNeed } from "@/input/utils";
+import { Decimal, commify, todpIfNeed } from "@orderly.network/utils";
 
 interface Props {
   type: "TP" | "SL";
