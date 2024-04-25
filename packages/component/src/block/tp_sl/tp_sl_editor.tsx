@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { TPSLForm } from "@/block/tp_sl/tpAndslForm";
 import {
   useLocalStorage,
-  useStopOrder,
+  useTPSLOrder,
   useMediaQuery,
 } from "@orderly.network/hooks";
 import {
@@ -28,14 +28,14 @@ export const TPSLEditor: FC<{
   canModifyQty?: boolean;
   isEditing?: boolean;
   onTypeChange?: (type: AlgoOrderRootType) => void;
-  quoteDp?: number,
+  quoteDp?: number;
 }> = (props) => {
   const { symbol, maxQty, quoteDp } = props;
   const [orderEntity, setOrderEntity] =
     useState<Partial<AlgoOrderEntity> | null>();
   const [open, setOpen] = useState(false);
 
-  const [order, { submit, setValue, validate, errors }] = useStopOrder(
+  const [order, { submit, setValue, validate, errors }] = useTPSLOrder(
     {
       symbol,
       position_qty: props.position.position_qty,

@@ -167,6 +167,8 @@ export function pnlToPrice(inputs: {
 }) {
   const { qty, pnl, entryPrice, orderType, orderSide } = inputs;
 
+  // console.log("pnlToPrice", inputs);
+
   if (!pnl) {
     return;
   }
@@ -303,6 +305,12 @@ export function calculateHelper(
 
   let trigger_price, offset, offset_percentage, pnl;
 
+  const entryPrice = new Decimal(inputs.entryPrice)
+    .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
+    .toNumber();
+
+  // console.log("******* entryPrice", options.symbol?.quote_dp, entryPrice);
+
   switch (key) {
     case "tp_trigger_price":
     case "sl_trigger_price": {
@@ -325,7 +333,7 @@ export function calculateHelper(
       trigger_price = pnlToPrice({
         qty,
         pnl: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       });
@@ -338,7 +346,7 @@ export function calculateHelper(
       trigger_price = offsetToPrice({
         qty,
         offset: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType:
           key === "tp_offset"
@@ -354,7 +362,7 @@ export function calculateHelper(
       trigger_price = offsetPercentageToPrice({
         qty,
         percentage: Number(inputs.value),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       });
@@ -379,7 +387,7 @@ export function calculateHelper(
         {
           qty,
           price: Number(trigger_price!),
-          entryPrice: inputs.entryPrice,
+          entryPrice,
           orderSide: inputs.orderSide,
           orderType,
         },
@@ -390,7 +398,7 @@ export function calculateHelper(
       priceToOffsetPercentage({
         qty,
         price: Number(trigger_price!),
-        entryPrice: inputs.entryPrice,
+        entryPrice,
         orderSide: inputs.orderSide,
         orderType,
       }),
@@ -400,7 +408,7 @@ export function calculateHelper(
         {
           qty,
           price: Number(trigger_price!),
-          entryPrice: inputs.entryPrice,
+          entryPrice,
           orderSide: inputs.orderSide,
           orderType,
         },

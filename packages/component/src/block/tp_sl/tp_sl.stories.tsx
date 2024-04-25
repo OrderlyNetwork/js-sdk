@@ -12,7 +12,7 @@ import { expect } from "@storybook/jest";
 
 import { PnLMode } from "./pnlInput";
 
-import { useStopOrder } from "@orderly.network/hooks";
+import { useTPSLOrder } from "@orderly.network/hooks";
 
 const meta: Meta = {
   title: "Block/TPSL/TP&SL Form",
@@ -153,7 +153,7 @@ export const WithHooks: Story = {
       pnl_24_h: 0.828036,
       fee_24_h: 2.534924,
     };
-    const [order, { setValue, submit }] = useStopOrder(positon);
+    const [order, { setValue, submit }] = useTPSLOrder(positon);
     return (
       <TPSLForm
         symbol={"PERP_BTC_USDC"}
