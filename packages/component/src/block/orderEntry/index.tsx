@@ -140,6 +140,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
+    const baseDP = symbolConfig?.base_dp
+
     const ee = useEventEmitter();
     const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
       formattedOrder.order_type || OrderType.LIMIT
@@ -222,7 +224,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
-    const isTable = useMediaQuery(MEDIA_TABLET);
+    // const isTable = useMediaQuery(MEDIA_TABLET);
 
     const onFocus = (type: InputType) => (_: FocusEvent<HTMLInputElement>) => {
       currentFocusInput.current = type;
@@ -261,7 +263,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               onCancel: () => {
                 return Promise.reject("cancel");
               },
-              footer: !isTable ? (
+              footer: !isTablet ? (
                 <OrderConfirmFooter
                   onCancel={() => {
                     return Promise.reject("cancel");
@@ -281,7 +283,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   symbol={symbol}
                   base={symbolConfig?.base}
                   quote={symbolConfig?.quote}
-                  isTable={isTable}
+                  isTable={isTablet}
                 />
               ),
             });
@@ -420,7 +422,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 className="orderly-text-base-contrast-80"
                 precision={0}
               >{`${freeCollateral ?? "--"}`}</Numeral>
-              {!isTable && (
+              {!isTablet && (
                 <span className="orderly-text-base-contrast-36">USDC</span>
               )}
             </div>
@@ -578,7 +580,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               <span className="orderly-text-base-contrast-54">
                 {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
               </span>
-              <Numeral precision={4}>{maxQty}</Numeral>
+              <Numeral precision={baseDP}>{maxQty}</Numeral>
             </button>
           </div>
 

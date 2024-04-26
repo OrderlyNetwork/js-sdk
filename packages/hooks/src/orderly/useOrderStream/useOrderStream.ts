@@ -1,42 +1,45 @@
-import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
+import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo } from "react";
 import {
   OrderSide,
   OrderEntity,
   OrderStatus,
   API,
+  AlgoOrderRootType,
 } from "@orderly.network/types";
-import { useMarkPricesStream } from "./useMarkPricesStream";
-import { useMutation } from "../useMutation";
-import version from "../version";
-import { useDataCenterContext } from "../dataProvider";
-import { generateKeyFun } from "../utils/swr";
-import { useEventEmitter } from "../useEventEmitter";
+import { useMarkPricesStream } from "../useMarkPricesStream";
+import { useMutation } from "../../useMutation";
+import version from "../../version";
+import { useDataCenterContext } from "../../dataProvider";
+import { generateKeyFun } from "../../utils/swr";
+import { useEventEmitter } from "../../useEventEmitter";
+import { SDKError } from "@orderly.network/types";
+import { AlgoOrderType } from "@orderly.network/types";
 
-type OrderType = "normalOrder" | "algoOrder";
+type CreateOrderType = "normalOrder" | "algoOrder";
 
-export interface UserOrdersReturn {
-  data: any[];
-  loading: boolean;
-  update: (order: any) => void;
-  cancel: (order: any) => void;
-}
-
-// const chche: Record<string, boolean> = {};
-
-type Params = {
-  symbol?: string;
-  status?: OrderStatus;
-  size?: number;
-  side?: OrderSide;
-};
+type CombineOrderType = AlgoOrderRootType | "ALL";
 
 export const useOrderStream = (
   /**
    * Orders query params
    */
-  params: Params,
-
+  params: {
+    symbol?: string;
+    status?: OrderStatus;
+    size?: number;
+    side?: OrderSide;
+    /**
+     * Include the order type
+     * @default ["ALL"]
+     */
+    includes?: CombineOrderType[];
+    /**
+     * Exclude the order type
+     * @default []
+     */
+    excludes?: CombineOrderType[];
+  },
   options?: {
     /**
      * Keep the state update alive
@@ -48,17 +51,24 @@ export const useOrderStream = (
     stopOnUnmount?: boolean;
   }
 ) => {
-  const { status, symbol, side, size = 100 } = params;
+  const {
+    status,
+    symbol,
+    side,
+    size = 100,
+    includes = ["ALL"],
+    excludes = [],
+  } = params;
 
   const { data: markPrices = {} } = useMarkPricesStream();
-
-  const ee = useEventEmitter();
 
   const { regesterKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
   ] = useMutation("/v1/order", "DELETE");
+
+  const [doCancelAllOrders] = useMutation("/v1/orders", "DELETE");
 
   const [
     doUpdateOrder,
@@ -69,6 +79,8 @@ export const useOrderStream = (
     doCanceAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
+
+  const [doCancelAllAlgoOrders] = useMutation("/v1/algo/orders", "DELETE");
 
   const [
     doUpdateAlgoOrder,
@@ -106,9 +118,32 @@ export const useOrderStream = (
     if (!ordersResponse.data) {
       return null;
     }
+    let orders = ordersResponse.data?.map((item) => item.rows)?.flat();
 
-    return ordersResponse.data?.map((item) => item.rows)?.flat();
-  }, [ordersResponse.data]);
+    // return ordersResponse.data?.map((item) => item.rows)?.flat();
+
+    if (includes.includes("ALL") && excludes.length === 0) {
+      return orders;
+    }
+
+    if (includes.includes("ALL") && excludes.length > 0) {
+      return orders?.filter((item) => !excludes.includes(item.algo_type));
+    }
+
+    if (includes.length > 0 && excludes.length === 0) {
+      return orders?.filter((item) => includes.includes(item.algo_type));
+    }
+
+    if (includes.length > 0 && excludes.length > 0) {
+      return orders?.filter(
+        (item) =>
+          includes.includes(item.algo_type) &&
+          !excludes.includes(item.algo_type)
+      );
+    }
+
+    return orders;
+  }, [ordersResponse.data, includes, excludes]);
 
   // console.log(ordersResponse.data);
 
@@ -121,24 +156,67 @@ export const useOrderStream = (
       return flattenOrders;
     }
     return flattenOrders.map((item) => {
-      return {
+      const order = {
         ...item,
         mark_price: (markPrices as any)[item.symbol] ?? 0,
       };
+
+      ///TODO: remove this when BE provides the correct data
+      // console.log("------------->>>>>>>>", order);
+      if (
+        order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
+        order.algo_type === AlgoOrderRootType.TP_SL
+      ) {
+        order.quantity = order.child_orders[0].quantity;
+      }
+      ///-----------------todo end----------------
+
+      return order;
     });
   }, [flattenOrders, markPrices, status]);
 
   const total = useMemo(() => {
-    return ordersResponse.data?.[0]?.meta?.total || 0;
-  }, [ordersResponse.data?.[0]?.meta?.total]);
+    return orders?.length || 0;
+    // return ordersResponse.data?.[0]?.meta?.total || 0;
+  }, [orders?.length]);
+
+  const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
+    if (!types) {
+      throw new SDKError("types is required");
+    }
+
+    if (!Array.isArray(types)) {
+      throw new SDKError("types should be an array");
+    }
+
+    // TODO: order type check
+
+    return Promise.all(
+      types.map((type) => {
+        return doCancelAllAlgoOrders(null, { algo_type: type });
+      })
+    );
+  };
 
   /**
    * cancel all orders
    */
-  const cancelAllOrders = useCallback(() => {}, [ordersResponse.data]);
+  const cancelAllOrders = useCallback(() => {
+    return Promise.all([
+      doCancelAllOrders(null),
+      doCancelAllAlgoOrders(null, { algo_type: "STOP" }),
+    ]);
+  }, [ordersResponse.data]);
+
+  const cancelAllTPSLOrders = useCallback(() => {
+    return cancelAlgoOrdersByTypes([
+      AlgoOrderRootType.POSITIONAL_TP_SL,
+      AlgoOrderRootType.TP_SL,
+    ]);
+  }, [ordersResponse.data]);
 
   const _updateOrder = useCallback(
-    (orderId: string, order: OrderEntity, type: OrderType) => {
+    (orderId: string, order: OrderEntity, type: CreateOrderType) => {
       switch (type) {
         case "algoOrder":
           return doUpdateAlgoOrder({
@@ -165,21 +243,11 @@ export const useOrderStream = (
    * update algo order
    */
   const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "algoOrder").then((res) => {
-      // TODO: remove this when the WS service provides the correct data
-      ee.emit("algoOrder:cache", {
-        // ...res.data.rows[0],
-        ...order,
-        order_id: Number(orderId),
-        // trigger_price: price,
-      });
-      //------------fix end----------------
-      return res;
-    });
+    return _updateOrder(orderId, order, "algoOrder");
   }, []);
 
   const _cancelOrder = useCallback(
-    (orderId: number, type: OrderType, symbol?: string) => {
+    (orderId: number, type: CreateOrderType, symbol?: string) => {
       switch (type) {
         case "algoOrder":
           return doCanceAlgolOrder(null, {
@@ -234,6 +302,44 @@ export const useOrderStream = (
     ordersResponse.setSize(ordersResponse.size + 1);
   };
 
+  // const cancelTPSLOrder = useCallback((orderId:number, symbol:string)=>{
+  //   return
+  // });
+
+  const cancelTPSLChildOrder = useCallback(
+    (orderId: number, rootAlgoOrderId: number): Promise<any> => {
+      return doUpdateAlgoOrder({
+        order_id: rootAlgoOrderId,
+        child_orders: [
+          {
+            order_id: orderId,
+            is_activated: false,
+          },
+        ],
+      });
+    },
+    []
+  );
+
+  const updateTPSLOrder = useCallback(
+    (
+      /**
+       * the root algo order id
+       */
+      orderId: number,
+      childOrders: API.AlgoOrder["child_orders"]
+    ) => {
+      if (!Array.isArray(childOrders)) {
+        throw new SDKError("children orders is required");
+      }
+      return doUpdateAlgoOrder({
+        order_id: orderId,
+        child_orders: childOrders,
+      });
+    },
+    []
+  );
+
   return [
     orders,
     {
@@ -242,10 +348,14 @@ export const useOrderStream = (
       refresh: ordersResponse.mutate,
       loadMore,
       cancelAllOrders,
+      cancelAllTPSLOrders,
+      cancelAlgoOrdersByTypes,
       updateOrder,
       cancelOrder,
       updateAlgoOrder,
       cancelAlgoOrder,
+      cancelTPSLChildOrder,
+      updateTPSLOrder,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

@@ -28,21 +28,23 @@ import { API } from "@orderly.network/types";
 import { EmptyView } from "@/listView/emptyView";
 import { PositionEmptyView } from "./positionEmptyView";
 import { SharePnLIcon } from "@/block/shared/sharePnLIcon";
+import { TPSLButton } from "./tpslButton";
+import { TPSLTriggerPrice } from "@/block/positions/full/tpslTriggerPrice";
+import { TriggerPrice } from "./triggerPrice";
 
 export const Listview: FC<
   PositionsViewProps & {
     unPnlPriceBasis: any;
     setUnPnlPriceBasic: any;
-    pnlNotionalDecimalPrecision: any,
   }
 > = (props) => {
-  const { pnlNotionalDecimalPrecision } = props;
   const { height } = useContext(TabContext);
   // const { footerHeight } = useContext(LayoutContext);
-  // const {
-  //   data: { pnlNotionalDecimalPrecision },
-  // } = useTabContext();
-  const columns = useMemo<Column[]>(() => {
+  const {
+    data: { pnlNotionalDecimalPrecision },
+  } = useTabContext();
+
+  const columns = useMemo<Column<API.PositionTPSLExt>[]>(() => {
     return [
       {
         title: "Instrument",
@@ -165,21 +167,19 @@ export const Listview: FC<
           );
         },
       },
-      // {
-      //   title: "Unreal. ROI",
-      //   className: "orderly-h-[48px]",
-      //   dataIndex: "unsettled_pnl_ROI",
-      //   width: 120,
-      //   onSort: true,
-      //   render: (value: string) => (
+      {
+        title: "TP/SL",
+        className: "orderly-h-[48px]",
+        dataIndex: "__",
+        width: 150,
+        render: (_: string, record) => (
+          <TriggerPrice
+            stopLossPrice={record.sl_trigger_price}
+            takeProfitPrice={record.tp_trigger_price}
+          />
+        ),
+      },
 
-      //   ),
-      // },
-      // {
-      //   title: "Daily real.",
-      //   className: "orderly-h-[48px]",
-      //   dataIndex: "open_price",
-      // },
       {
         title: "Est. total",
         dataIndex: "notional",
@@ -235,11 +235,16 @@ export const Listview: FC<
         title: "",
         dataIndex: "close_position",
         align: "right",
-        width: 80,
+        width: 160,
         fixed: "right",
         className: "orderly-h-[48px]",
         render: (value: string) => {
-          return <CloseButton />;
+          return (
+            <div className="orderly-flex orderly-space-x-2">
+              <CloseButton />
+              <TPSLButton />
+            </div>
+          );
         },
       },
     ];
@@ -254,7 +259,7 @@ export const Listview: FC<
       className="orderly-relative"
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
     >
-      <Table<API.PositionExt>
+      <Table<API.PositionTPSLExt>
         bordered
         justified
         showMaskElement={false}

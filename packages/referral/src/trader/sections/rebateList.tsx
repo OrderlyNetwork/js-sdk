@@ -21,7 +21,7 @@ export const RebateList: FC<{
         return [
             {
                 title: "Date",
-                dataIndex: "created_time",
+                dataIndex: "date",
                 className: "orderly-h-[52px] orderly-px-0 orderly-border-red-300",
                 width: 110,
                 render: (value, record) => (
@@ -32,7 +32,7 @@ export const RebateList: FC<{
             },
             {
                 title: "Rebates (USDC)",
-                dataIndex: "amount",
+                dataIndex: "referee_rebate",
                 className: "orderly-h-[52px]",
                 align: "right",
                 render: (value, record) => (
@@ -86,11 +86,11 @@ export const RebateList: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
-                    if (!props.isLoading) {
-                        props.loadMore?.();
-                      }
-                }}
+                // loadMore={() => {
+                //     if (!props.isLoading) {
+                //         props.loadMore?.();
+                //       }
+                // }}
                 onRow={(rec, index) => {
                     return {
                         className: "orderly-border-[rgba(255,255,255,0.04)]"
@@ -121,11 +121,11 @@ const SmallCodeCell: FC<{ item: RebatesItem }> = (props) => {
             <div className="orderly-flex orderly-justify-between orderly-mt-3">
                 <div>
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Date</div>
-                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{formatYMDTime(item.created_time)}</div>
+                    <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{formatYMDTime(item.date)}</div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
                     <div className="orderly-text-3xs orderly-text-base-contrast-36">Rebates(USDC)</div>
-                    <Numeral prefix="$" precision={6} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.amount}</Numeral>
+                    <Numeral prefix="$" precision={6} className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{item.referee_rebate}</Numeral>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">

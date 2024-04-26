@@ -8,6 +8,7 @@ import {
   OrderStatus,
 } from "@orderly.network/types";
 import { useContext, useState } from "react";
+import { useFormatOrderHistory } from "@/page/trading/shared/hooks/useFormatOrderHistory";
 
 export const HistoryPane = () => {
   const [side, setSide] = useState<OrderSide | "">("");
@@ -21,17 +22,26 @@ export const HistoryPane = () => {
     status,
   });
 
+  const formattedData = useFormatOrderHistory(
+    state.status < AccountStatusEnum.EnableTrading || !data ? [] : data
+  );
+
   return (
     <HistoryListView
       isLoading={isLoading}
-      // @ts-ignore
-      dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
+      dataSource={formattedData}
       onSideChange={setSide}
       onStatusChange={setStauts}
       onSymbolChange={onSymbolChange}
       side={side}
       status={status}
       loadMore={loadMore}
+      onCancelAlgoOrder={() => {
+        throw new Error("Not implemented");
+      }}
+      onCancelOrder={() => {
+        throw new Error("Not implemented");
+      }}
     />
   );
 };

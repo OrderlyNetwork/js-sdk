@@ -48,9 +48,6 @@ export function toNonExponential(num: number) {
  * @example
  * const number1 = 12345;
  * const number2 = 987654321;
- *
- *
- *
  */
 export function numberToHumanStyle(
   number: number,
@@ -106,13 +103,46 @@ export function parseNumStr(str: string | number): Decimal | undefined {
 }
 
 //** remove trailing zeros 0.00000100 => 0.000001, 1 => 1 */
-export function removeTrailingZeros(value: number, fixedCount: number = 16): string {
+export function removeTrailingZeros(
+  value: number,
+  fixedCount: number = 16
+): string {
   const text = `${value}`;
   let scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
   let isScientific = scientificNotationPattern.test(text);
   if (!value.toString().includes(".") && !isScientific) {
     return `${value}`;
   }
-  let formattedNumber = new Decimal(value).toFixed(fixedCount).replace(/(\.[0-9]*[1-9])0+$/, "$1");
+  let formattedNumber = new Decimal(value)
+    .toFixed(fixedCount)
+    .replace(/(\.[0-9]*[1-9])0+$/, "$1");
   return formattedNumber;
 }
+
+export const todpIfNeed = (value: string | number, dp: number) => {
+  if (value === undefined || value === "") return value;
+
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+
+  if (value.endsWith(".")) {
+    return value;
+  }
+
+  const numbers = value.split(".");
+
+  if (numbers.length === 1) {
+    return value;
+  }
+
+  if (numbers[1].length <= dp || !numbers[1]) {
+    return value;
+  }
+
+  return `${numbers[0]}.${numbers[1].substring(0, dp)}`;
+
+  // return value.substring(0, value.indexOf(".") + dp + 1);
+
+  // return new Decimal(value).todp(dp, round).toNumber();
+};

@@ -58,13 +58,6 @@ const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      // {
-      //   variant: "text",
-      //   color: "primary",
-      //   class:
-      //     "orderly-text-primary orderly-bg-transparent hover:orderly-bg-slate-100 hover:orderly-text-primary",
-      // },
-
       {
         variant: "contained",
         color: "primary",
@@ -76,7 +69,7 @@ const buttonVariants = cva(
         color: "primary",
         disabled: true,
         class:
-          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast/[.15]",
+          "orderly-bg-base-400 hover:orderly-bg-base-400 orderly-text-base-contrast/[.15] hover:orderly-text-base-contrast/[.15] active:orderly-bg-base-400",
       },
       {
         variant: "contained",

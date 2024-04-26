@@ -6,12 +6,18 @@ import {
   useSessionStorage,
 } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
-import { API, AccountStatusEnum, OrderEntity } from "@orderly.network/types";
+import {
+  API,
+  AccountStatusEnum,
+  AlgoOrderRootType,
+  OrderEntity,
+} from "@orderly.network/types";
 import { TabContext } from "@/tab";
 import { OrderStatus } from "@orderly.network/types";
 import { OrdersViewFull } from "@/block/orders/full";
 import { OrderSide } from "@orderly.network/types";
 import { useTabContext } from "@/tab/tabContext";
+import { useFormatOrderHistory } from "@/page/trading/shared/hooks/useFormatOrderHistory";
 
 interface Props {
   // symbol: string;
@@ -29,13 +35,26 @@ export const MyOrders: FC<Props> = (props) => {
 
   const [side, setSide] = useState<OrderSide | "">("");
 
-  const [data, { isLoading, loadMore, cancelOrder, updateOrder, cancelAlgoOrder, updateAlgoOrder }] =
-    useOrderStream({
-      status: props.status,
-      symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
-      // @ts-ignore
-      side,
-    });
+  const [
+    data,
+    {
+      isLoading,
+      loadMore,
+      cancelOrder,
+      updateOrder,
+      cancelAlgoOrder,
+      updateAlgoOrder,
+    },
+  ] = useOrderStream({
+    status: props.status,
+    symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
+    // @ts-ignore
+    side,
+    excludes:
+      props.status === OrderStatus.FILLED
+        ? []
+        : [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  });
 
   // const onShowAllSymbolChange = (isAll: boolean) => {
   //   setSymbol(isAll ? "" : context.symbol);
@@ -45,17 +64,20 @@ export const MyOrders: FC<Props> = (props) => {
   const { state } = useAccount();
 
   const onCancelOrder = useCallback(
-    (orderId: number | OrderEntity, symbol: string): Promise<any> => {
-      // @ts-ignore
-      return cancelOrder(orderId, symbol);
+    (orderId: number, symbol: string): Promise<any> => {
+      return cancelOrder(orderId as number, symbol);
     },
     []
+  );
+
+  const formattedData = useFormatOrderHistory(
+    state.status < AccountStatusEnum.EnableTrading || !data ? [] : data
   );
 
   return (
     <OrdersViewFull
       // @ts-ignore
-      dataSource={state.status < AccountStatusEnum.EnableTrading ? [] : data}
+      dataSource={formattedData}
       isLoading={isLoading}
       symbol={context.symbol}
       onSideChange={setSide}

@@ -24,10 +24,11 @@ export const ListTile: FC<PropsWithChildren<ListTileProps>> = (props) => {
     if (!props.avatar) {
       return null;
     }
+
     if (
-      (typeof props.avatar === "object" &&
-        (props.avatar as NetworkImageProps).type === "token") ||
-      (props.avatar as NetworkImageProps).type === "chain"
+      typeof props.avatar === "object" &&
+      ((props.avatar as NetworkImageProps).type === "token" ||
+        (props.avatar as NetworkImageProps).type === "chain")
     ) {
       return (
         <div className="orderly-flex orderly-items-center">

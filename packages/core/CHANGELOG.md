@@ -1,5 +1,37 @@
 # @orderly.network/core
 
+## 1.4.0
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- 59f5fa99: fix bugs;
+- Updated dependencies [764eb2da]
+- Updated dependencies [59f5fa99]
+  - @orderly.network/types@1.4.0
+
+## 1.4.0-alpha.1
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.4.0-alpha.1
+
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.4.0-alpha.0
+
 ## 1.3.2
 
 ### Patch Changes

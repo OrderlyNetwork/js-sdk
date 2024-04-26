@@ -21,6 +21,7 @@ export const OrdersViewFull: FC<Props> = (props) => {
       editOrder={props.editOrder}
       cancelAlgoOrder={props.cancelAlgoOrder}
       editAlgoOrder={props.editAlgoOrder}
+      // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Header
         count={props.dataSource?.length ?? 0}

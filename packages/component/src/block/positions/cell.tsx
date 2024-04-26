@@ -7,10 +7,12 @@ import { SymbolContext } from "@/provider";
 import { API } from "@orderly.network/types";
 import { cn } from "@/utils/css";
 import { SharePnLIcon } from "../shared/sharePnLIcon";
+import { TPSLTriggerPrice } from "./tpslTriggerPrice";
 
 interface PositionCellProps {
   onLimitClose?: (position: any) => void;
   onMarketClose?: (position: any) => void;
+  onTPSLOrder?: (position: API.PositionTPSLExt, order?: API.AlgoOrder) => void;
   item: any;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
@@ -149,14 +151,28 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           precision={quote_dp}
         />
       </div>
+      <TPSLTriggerPrice
+        stopLossPrice={item.sl_trigger_price}
+        takeProfitPrice={item.tp_trigger_price}
+        quote_dp={quote_dp}
+      />
       <div className="orderly-flex orderly-justify-end orderly-items-center orderly-gap-2 orderly-py-2">
+        <Button
+          variant={"outlined"}
+          size={"small"}
+          color={"tertiary"}
+          onClick={() => props.onTPSLOrder?.(props.item, props.item.algo_order)}
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+        >
+          TP / SL
+        </Button>
         <Button
           id="orderly-position-cell-limit-close-button"
           variant={"outlined"}
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
-          className="orderly-w-[120px] orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
         >
           Limit close
         </Button>
@@ -166,7 +182,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
-          className="orderly-w-[120px] orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
         >
           Market close
         </Button>

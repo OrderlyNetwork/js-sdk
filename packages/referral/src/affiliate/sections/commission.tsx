@@ -1,9 +1,11 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { Column, Divider, EndReachedBox, ListView, Numeral, Table, cn } from "@orderly.network/react";
-import { FC, useEffect, useMemo } from "react";
+import { Column, DatePicker, Divider, EndReachedBox, ListView, Numeral, Table, cn, format, subDays } from "@orderly.network/react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useCommission } from "../../hooks/useCommission";
 import { formatYMDTime } from "../../utils/utils";
 import { RefEmptyView } from "../../components/icons/emptyView";
+import { useReferalRebateSummary } from "../../hooks/useReferalRebateSummary";
+import { DateRange } from "../../../../component/esm";
 
 
 export const CommissionList: FC<{
@@ -12,13 +14,25 @@ export const CommissionList: FC<{
 }> = (props) => {
     const { dateText, setDateText } = props;
 
-    const [data, { refresh, isLoading, loadMore }] = useCommission();
+    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 91), to: subDays(new Date(), 1) });
+    const [data, { refresh, isLoading, loadMore }] = useReferalRebateSummary({
+        startDate: pickDate?.from !== undefined ? format(pickDate.from, 'yyyy-MM-dd') : undefined,
+        endDate: pickDate?.to !== undefined ? format(pickDate.to, 'yyyy-MM-dd') : undefined,
+    });
+
+    // const loadMore = () => {};
+
+    useEffect(() => {
+        refresh();
+    }, [pickDate]);
 
 
     const dataSource = useMemo(() => {
-        return data?.filter((item: any) => {
-            return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
-        }).sort((a: any, b: any) => b.created_time - a.created_time);
+        // return data?.filter((item: any) => {
+        //     return item.type === "REFERRER_REBATE" && item.status === "COMPLETED";
+        // }).sort((a: any, b: any) => b.created_time - a.created_time);
+
+        return data;
     }, [
         data,
     ]);
@@ -40,9 +54,35 @@ export const CommissionList: FC<{
 
     const isMD = useMediaQuery("(max-width: 767px)");
 
-    return isMD ?
+    return <>
+    <DatePicker
+                onDateUpdate={(date) => {
+                    if (typeof date?.from === 'undefined') {
+                        setPickDate(undefined);
+                        return;
+                    }
+
+                    setPickDate((pre) => ({
+                        from: date.from,
+                        to: date.to
+                    }));
+                }}
+                initDate={pickDate}
+                triggerClassName="orderly-max-w-[196px] orderly-rounded-sm orderly-justify-between"
+                numberOfMonths={isMD ? 1 : 2}
+                className="orderly-ml-4 lg:orderly-flex-row orderly-mt-3"
+                classNames={{
+                    months: "orderly-flex orderly-flex-col lg:orderly-flex-row orderly-gap-5"
+                }}
+                disabled={{
+                    after: subDays(new Date(), 1)
+                }}
+                required
+            />
+    {isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
-        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />
+        <_BigCommission dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} />}
+    </>
 }
 
 const _SmallCommission: FC<{
@@ -55,8 +95,8 @@ const _SmallCommission: FC<{
 
 
     const renderItem = (item: any, index: number) => {
-        const date = formatYMDTime(item?.created_time);
-        const amount = item?.amount;
+        const date = item.date;;
+        const amount = item?.referral_rebate;
         const vol = item?.volume;
         return <CommissionCell key={index} date={date || ""} commission={amount} vol={vol} />;
     };
@@ -88,7 +128,7 @@ const _BigCommission: FC<{
         return [
             {
                 title: "Date",
-                dataIndex: "created_time",
+                dataIndex: "date",
                 className: "orderly-h-[52px] orderly-px-1",
                 width: 110,
                 render: (value, record) => {
@@ -103,7 +143,7 @@ const _BigCommission: FC<{
             },
             {
                 title: "Commission (USDC)",
-                dataIndex: "amount",
+                dataIndex: "referral_rebate",
                 align: "right",
                 className: "orderly-h-[52px]",
                 render: (value, record) => (
@@ -142,7 +182,7 @@ const _BigCommission: FC<{
                     "orderly-text-xs 2xl:orderly-text-base orderly-px-3",
                 )}
                 generatedRowKey={(rec, index) => `${index}`}
-                scrollToEnd={() => {
+                loadMore={() => {
                     if (!props.isLoading) {
                         props.loadMore();
                     }

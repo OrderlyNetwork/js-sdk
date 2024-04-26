@@ -11,6 +11,9 @@ import { HistoryView } from "./history";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
 import { DecimalPrecisionType } from "./decimalPrecisionCheckBox";
 import { UnPnlPriceBasisType } from "./unPnlPriceBasisCheckBox";
+import { MemoizedTPSLTabTitle } from "@/page/trading/desktop/sections/datalist/tpslTabTitle";
+import { TPSLListView } from "@/block/tp_sl/tpsl_listview";
+import { TPSLList } from "@/block/tp_sl/tp_sl_list";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -33,16 +36,6 @@ export const DataListView = () => {
 
   const onTabChange = useCallback((value: string) => {
     setActiveTab(value);
-    // setOrderStatus(
-    //   {
-    //     positions: "positions",
-    //     orders: OrderStatus.INCOMPLETE,
-    //     filled: OrderStatus.FILLED,
-    //     cancelled: OrderStatus.CANCELLED,
-    //     rejected: OrderStatus.REJECTED,
-    //     history: "history",
-    //   }[value]
-    // );
   }, []);
 
   return (
@@ -86,17 +79,24 @@ export const DataListView = () => {
         {/* <OrdersPane /> */}
         <MyOrders status={OrderStatus.INCOMPLETE} />
       </TabPane>
+      <TabPane
+        title={<MemoizedTPSLTabTitle />}
+        value="tpsl"
+        className="orderly-px-3"
+      >
+        <TPSLList />
+      </TabPane>
       <TabPane title="Filled" value="filled" className="orderly-px-3">
         {/* <HistoryPane /> */}
         <MyOrders status={OrderStatus.FILLED} />
       </TabPane>
-      <TabPane title="Cancelled" value="cancelled" className="orderly-px-3">
-        {/* <HistoryPane /> */}
+      {/* <TabPane title="Cancelled" value="cancelled" className="orderly-px-3">
+
         <MyOrders status={OrderStatus.CANCELLED} />
       </TabPane>
       <TabPane title="Rejected" value="rejected" className="orderly-px-3">
         <MyOrders status={OrderStatus.REJECTED} />
-      </TabPane>
+      </TabPane> */}
       <TabPane title="Order history" value="history" className="orderly-px-3">
         <HistoryView />
       </TabPane>

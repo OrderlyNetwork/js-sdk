@@ -71,6 +71,8 @@ export const WithHook: Story = {
     // const [reduceOnly, setReduceOnly] = useState(false);
     const formState = useOrderEntry(order);
 
+    console.log(formState);
+
     // console.log(formState.errors);
 
     return (

@@ -1,11 +1,17 @@
-import { OrderStatus } from "@orderly.network/types";
+import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
-import { memo } from "react";
+import { FC, memo } from "react";
 
-export const OrdersTabTitle = () => {
+export const OrdersTabTitle: FC<{
+  excludes?: AlgoOrderRootType[];
+}> = (props) => {
+  const {
+    excludes = [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  } = props;
   const [_, { total }] = useOrderStream(
     {
       status: OrderStatus.INCOMPLETE,
+      excludes,
     },
     {
       keeplive: true,
@@ -13,10 +19,10 @@ export const OrdersTabTitle = () => {
   );
 
   if (total === 0) {
-    return <>{"Pending"}</>;
+    return <>Pending</>;
   }
 
-  return <>{`Pending (${total})`}</>;
+  return <>{`Pending(${total})`}</>;
 };
 
 export const MemoizedOrdersTabTitle = memo(OrdersTabTitle);

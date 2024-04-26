@@ -159,11 +159,11 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     return (
-      <span className="orderly-inline-flex orderly-items-center orderly-gap-1 orderly-tabular-nums">
+      <>
         {prefixEle}
         {child}
         {surfixEle}
-      </span>
+      </>
     );
   }, [child, surfix, unit, prefix]);
 
@@ -174,7 +174,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
   return (
     <span
       className={cn(
-        "orderly-inline-flex orderly-items-center",
+        "orderly-inline-flex orderly-items-center orderly-gap-1 orderly-tabular-nums",
         colorClassName,
         props.className
       )}

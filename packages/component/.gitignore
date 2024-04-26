@@ -1,3 +1,4 @@
 # public/
 storybook-static/
-.swc/
+cypress/e2e/1-getting-started/**/*
+cypress/e2e2-advanced-examples/**/*

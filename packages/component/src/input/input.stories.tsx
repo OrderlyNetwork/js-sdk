@@ -23,8 +23,8 @@ export const Primary: Story = {
   },
 };
 
-export const TokenInput: Story = {
-  render: (args) => {
-    return <TokenQtyInput />;
-  },
-};
+// export const TokenInput: Story = {
+//   render: (args) => {
+//     return <TokenQtyInput />;
+//   },
+// };

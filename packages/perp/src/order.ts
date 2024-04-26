@@ -94,8 +94,6 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
 
   const basePrice = positions.length === 0 ? newOrder.price : markPrice;
 
-  console.log("-----basePrice", basePrice);
-
   const newOrderNotional = new Decimal(newOrder.qty).mul(newOrder.price);
 
   for (let index = 0; index < positions.length; index++) {
