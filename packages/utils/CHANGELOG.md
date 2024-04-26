@@ -1,5 +1,15 @@
 # @orderly.network/utils
 
+## 1.4.0
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- 59f5fa99: fix bugs;
+
 ## 1.4.0-alpha.1
 
 ### Patch Changes
