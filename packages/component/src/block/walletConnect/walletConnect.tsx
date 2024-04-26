@@ -4,8 +4,7 @@ import { Switch } from "@/switch";
 import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { OrderlyContext, useAccount, useMutation } from "@orderly.network/hooks";
-
+import { useAccount, useMutation } from "@orderly.network/hooks";
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
