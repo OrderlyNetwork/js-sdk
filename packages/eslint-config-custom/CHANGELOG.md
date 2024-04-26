@@ -1,5 +1,17 @@
 # eslint-config-custom
 
+## 0.3.1-internal.0
+
+### Patch Changes
+
+- update
+
+## 0.3.0
+
+### Minor Changes
+
+- update
+
 ## 0.2.2
 
 ### Patch Changes
