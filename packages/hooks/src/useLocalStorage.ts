@@ -81,10 +81,10 @@ export function useLocalStorage<T>(
       setStoredValue(readValue());
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window?.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window?.removeEventListener("storage", handleStorageChange);
     };
   }, [key]);
 
