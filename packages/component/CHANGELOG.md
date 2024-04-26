@@ -1,5 +1,36 @@
 # @orderly.network/react
 
+## 1.5.0
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- 59f5fa99: fix bugs;
+- Updated dependencies [764eb2da]
+- Updated dependencies [59f5fa99]
+  - @orderly.network/trading-view@1.4.0
+  - @orderly.network/hooks@1.4.0
+  - @orderly.network/types@1.4.0
+  - @orderly.network/utils@1.4.0
+  - @orderly.network/core@1.4.0
+  - @orderly.network/net@1.4.0
+
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/trading-view@1.4.0-alpha.1
+  - @orderly.network/hooks@1.4.0-alpha.1
+  - @orderly.network/types@1.4.0-alpha.1
+  - @orderly.network/utils@1.4.0-alpha.1
+  - @orderly.network/core@1.4.0-alpha.1
+  - @orderly.network/net@1.4.0-alpha.1
+
 ## 1.5.0-alpha.0
 
 ### Minor Changes

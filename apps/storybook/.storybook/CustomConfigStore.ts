@@ -47,7 +47,7 @@ export class CustomConfigStore implements ConfigStore {
     const urls = API_URLS[env];
 
     this.map = new Map<ConfigKey, any>([
-      ["brokerId", "woofi_pro"],
+      ["brokerId", "orderly"],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],

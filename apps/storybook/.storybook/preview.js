@@ -150,8 +150,8 @@ const preview = {
         <ConnectorProvider options={options}>
           <OrderlyAppProvider
             networkId={networkId ?? "testnet"}
-            brokerId="woofi_pro"
-            brokerName="WOOFi"
+            brokerId="orderly"
+            brokerName="Orderly"
             configStore={configStore}
             // contracts={new CustomContractManager(configStore)}
             referral={{
