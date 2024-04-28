@@ -4,7 +4,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import { RefferalAPI } from "./api";
 
 export const useReferralInfo = ():{
-  data: any;
+  data?: RefferalAPI.ReferralInfo;
   isTrader?: boolean;
   isAffiliate?: boolean;
   error: any;

@@ -17,6 +17,7 @@
           { title: "Quantity", value: "0.123" },
         ],
       },
+      referralCode: "AAAA"
     }
 */
 
@@ -31,7 +32,8 @@ export function getPnLPosterData(
   pnlType: PnLDisplayFormat,
   options: Set<ShareOptions>,
   baseDp?: number,
-  quoteDp?: number
+  quoteDp?: number,
+  refCode?: string,
 ) {
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
@@ -127,6 +129,10 @@ export function getPnLPosterData(
     data["message"] = message;
   }
 
+  if ((refCode?.length || 0) > 0) {
+    data["referralCode"] = refCode;
+  }
+  
   return data;
 }
 

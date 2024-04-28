@@ -7,6 +7,7 @@ import {
   useLeverage,
   useMediaQuery,
   useQuery,
+  useReferralInfo,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
@@ -44,12 +45,20 @@ export const SharePoisitionView = create<{
     return Math.min(maxAccountLeverage, maxSymbolLeverage);
   }, [maxAccountLeverage, maxSymbolLeverage]);
 
-  if (symbolInfo.isNil) return null;
+  const { data } = useReferralInfo();
 
-  
+  if (symbolInfo.isNil) return null;
 
   const base_dp = symbolInfo[position.symbol]("base_dp");
   const quote_dp = symbolInfo[position.symbol]("quote_dp");
+
+  const refCode = useMemo(() => {
+    if (typeof data !== 'undefined') {
+      return data.referee_info.referer_code;
+    }
+    return undefined;
+  }, [data]);
+
 
   return isTablet ? (
     <MobileSharePnL
@@ -57,14 +66,16 @@ export const SharePoisitionView = create<{
       leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
-    />
-  ) : (
-    <DesktopSharePnL
+      refCode={refCode}
+      />
+    ) : (
+      <DesktopSharePnL
       position={position}
       leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
-    />
+      refCode={refCode}
+      />
   );
 });
 
@@ -75,9 +86,10 @@ const MobileSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    refCode?: string;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, refCode } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   return (
@@ -100,6 +112,7 @@ const MobileSharePnL: FC<
           hide={hide}
           baseDp={baseDp}
           quoteDp={quoteDp}
+          refCode={refCode}
         />
       </SheetContent>
     </Sheet>
@@ -113,9 +126,10 @@ const DesktopSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    refCode?: string;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, refCode } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [viewportHeight, setViewportHeight] = useState(
@@ -153,6 +167,7 @@ const DesktopSharePnL: FC<
             hide={hide}
             baseDp={baseDp}
             quoteDp={quoteDp}
+            refCode={refCode}
           />
         </div>
       </DialogContent>
