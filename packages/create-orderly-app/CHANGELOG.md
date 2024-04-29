@@ -1,5 +1,56 @@
 # create-orderly-app
 
+## 1.5.0
+
+### Minor Changes
+
+- 764eb2da: TP/SL
+
+### Patch Changes
+
+- 59f5fa99: fix bugs;
+
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- fix bugs;
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- TP/SL
+
+## 0.3.2
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.3.1
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.3.0
+
+### Minor Changes
+
+- fd452911: update;
+
+### Patch Changes
+
+- e4edd4c7: publish referral
+- fix bugs;
+
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- update;
+
 ## 0.2.8
 
 ### Patch Changes

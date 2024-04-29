@@ -83,7 +83,7 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
   };
 
   return (
-    <div className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums orderly-pb-2">
+    <div id="orderly-markets-desktop" className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums orderly-pb-2">
       <Header
         onSearch={setSearchKey}
         keyword={searchKey}
@@ -150,12 +150,13 @@ const MarketsBody: FC<{
 
   return (
     <Tabs
+      id="orderly-markets-desktop-tab"
       autoFit
       value={activeTab}
       onTabChange={updateActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold orderly-bg-base-800"
     >
-      <TabPane title="Favorites" value="favorites" className="orderly-px-0">
+      <TabPane id="orderly-markets-desktop-favorites-pane" title="Favorites" value="favorites" className="orderly-px-0">
         <FavoritesTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -165,7 +166,7 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane title="Recent" value="recent" className="orderly-px-0">
+      <TabPane id="orderly-markets-desktop-recent-pane" title="Recent" value="recent" className="orderly-px-0">
         <RecentTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -175,7 +176,7 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane title="All" value="all" className="orderly-px-0">
+      <TabPane id="orderly-markets-desktop-all-pane" title="All" value="all" className="orderly-px-0">
         <AllTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}

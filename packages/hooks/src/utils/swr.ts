@@ -1,7 +1,10 @@
 import { API } from "@orderly.network/types";
 import { WSMessage } from "@orderly.network/types";
-import { camelCaseToUnderscoreCase } from "@orderly.network/utils";
 import { is, lensIndex, over, startsWith } from "ramda";
+import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
+import { RegularOrderMergeHandler } from "../services/orderMerge/regularOrderMergeHandler";
+
+// import { useSWRConfig, unstable_serialize } from "swr";
 
 export const generateKeyFun =
   (args: { status?: string; symbol?: string; side?: string; size?: number }) =>
@@ -34,133 +37,159 @@ export const generateKeyFun =
 
 export const updateOrdersHandler = (
   key: string,
-  updatedOrder: WSMessage.AlgoOrder | WSMessage.Order,
+  updatedOrder: WSMessage.Order,
+  // isAlgoOrder:boolean,
   orders?: API.OrderResponse[]
 ) => {
   if (!orders) {
     return;
   }
+  const handler = new RegularOrderMergeHandler(updatedOrder);
+
+  return handler.merge(key, updatedOrder, orders);
 
   // console.log(key);
-  const isAlgoOrder = "algoOrderId" in updatedOrder;
+  // const isAlgoOrder = "algoOrderId" in updatedOrder;
 
-  const underscoreOrder = object2underscore(updatedOrder);
+  // // if (isAlgoOrder) {
+  // //   mergeHandler = new AlgoOrderMergeHandler();
+  // // } else {
+  // //   mergeHandler = new RegularOrderMergeHandler();
+  // // }
 
-  let formattedOrder: API.Order & API.AlgoOrder = {
-    ...underscoreOrder,
-    updated_time: updatedOrder.timestamp,
-    type: typeof underscoreOrder.type ==='string'? updatedOrder.type.replace("_ORDER", ""): updatedOrder.type,
-    //@ts-ignore
-    // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
-  };
+  // const underscoreOrder = object2underscore(updatedOrder);
 
-  if (typeof formattedOrder.visible_quantity === "undefined") {
-    // check visible field;
-    // @ts-ignore
-    formattedOrder.visible_quantity = updatedOrder.visible;
-  }
+  // let formattedOrder: API.Order & API.AlgoOrder = {
+  //   ...underscoreOrder,
+  //   updated_time: updatedOrder.timestamp,
+  //   type: updatedOrder.type?.replace("_ORDER", ""),
+  //   //@ts-ignore
+  //   // visible_quantity: updatedOrder.visibleQuantity || updatedOrder.visible,
+  // };
 
-  // console.log(formattedOrder, updatedOrder);
+  // if (typeof formattedOrder.visible_quantity === "undefined") {
+  //   // check visible field;
+  //   // @ts-ignore
+  //   formattedOrder.visible_quantity = updatedOrder.visible;
+  // }
 
-  const hasCreateTime = "created_time" in formattedOrder;
-  if (!hasCreateTime) {
-    formattedOrder["created_time"] = updatedOrder.timestamp;
-  }
+  // // console.log(formattedOrder, updatedOrder);
 
-  if (isAlgoOrder) {
-    if (typeof updatedOrder.triggerTradePrice !== "undefined") {
-      formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
-    }
+  // const hasCreateTime = "created_time" in formattedOrder;
+  // if (!hasCreateTime) {
+  //   formattedOrder["created_time"] = updatedOrder.timestamp;
+  // }
 
-    if (formattedOrder.type === "MARKET") {
-      const {price, ...newObj} = formattedOrder;
-      // @ts-ignore
-      formattedOrder = newObj;
-    }
-  } else {
-    // formattedOrder.created_time = updatedOrder.timestamp;
-  }
+  // if (isAlgoOrder) {
+  //   if (typeof updatedOrder.triggerTradePrice !== "undefined") {
+  //     formattedOrder.trigger_price = updatedOrder.triggerTradePrice;
+  //   }
 
-  // const index = lensIndex(0);
-  const orderId =
-    (updatedOrder as WSMessage.Order).orderId ||
-    (updatedOrder as WSMessage.AlgoOrder).algoOrderId;
+  //   if (formattedOrder.type === "MARKET") {
+  //     const { price, ...newObj } = formattedOrder;
+  //     // @ts-ignore
+  //     formattedOrder = newObj;
+  //   }
+  // } else {
+  //   // formattedOrder.created_time = updatedOrder.timestamp;
+  // }
 
-  const isExisting = orderIsExisting(orders, orderId);
+  // // const index = lensIndex(0);
+  // const orderId =
+  //   (updatedOrder as WSMessage.Order).orderId ||
+  //   (updatedOrder as WSMessage.AlgoOrder).algoOrderId;
 
-  const status =
-    (updatedOrder as WSMessage.Order).status ||
-    (updatedOrder as WSMessage.AlgoOrder).rootAlgoStatus;
+  // const isExisting = orderIsExisting(orders, orderId);
 
-  switch (status) {
-    case "NEW": {
-      // chceck if the order is already in the list
-      if (
-        isExisting ||
-        key.startsWith("orders:CANCELLED") ||
-        key.startsWith("orders:FILLED") ||
-        key.startsWith("orders:REJECTED")
-      ) {
-        return orders;
-      }
-      return insertOrders(orders, formattedOrder);
-    }
+  // const status =
+  //   (updatedOrder as WSMessage.Order).status ||
+  //   (updatedOrder as WSMessage.AlgoOrder).rootAlgoStatus;
 
-    case "CANCELLED": {
-      if (
-        key.startsWith("orders:FILLED") ||
-        key.startsWith("orders:REJECTED")
-      ) {
-        return orders;
-      }
-      if (key.startsWith("orders:NEW") || key.startsWith("orders:INCOMPLETE")) {
-        return removeOrderIfExisting(orders, orderId);
-      }
+  // switch (status) {
+  //   case "NEW": {
+  //     // chceck if the order is already in the list
+  //     if (
+  //       isExisting ||
+  //       key.startsWith("orders:CANCELLED") ||
+  //       key.startsWith("orders:FILLED") ||
+  //       key.startsWith("orders:REJECTED")
+  //     ) {
+  //       return orders;
+  //     }
+  //     return insertOrders(orders, formattedOrder);
+  //   }
 
-      if (key.startsWith("orders:CANCELLED")) {
-        return insertOrders(orders, formattedOrder);
-      }
+  //   case "CANCELLED": {
+  //     if (
+  //       key.startsWith("orders:FILLED") ||
+  //       key.startsWith("orders:REJECTED")
+  //     ) {
+  //       return orders;
+  //     }
+  //     if (key.startsWith("orders:NEW") || key.startsWith("orders:INCOMPLETE")) {
+  //       return removeOrderIfExisting(orders, orderId);
+  //     }
 
-      return updateOrders(orders, formattedOrder);
-    }
+  //     if (key.startsWith("orders:CANCELLED")) {
+  //       return insertOrders(orders, formattedOrder);
+  //     }
 
-    case "REPLACED":
-      return updateOrders(orders, formattedOrder);
+  //     return updateOrders(orders, formattedOrder);
+  //   }
 
-    case "FILLED": {
-      if (isExisting) {
-        // for new list, remove the order if it exists
-        if (
-          key.startsWith("orders:INCOMPLETE") ||
-          key.startsWith("orders:NEW")
-        ) {
-          // if fullfilled, remove from the list
-          if (updatedOrder.totalExecutedQuantity === updatedOrder.quantity) {
-            return removeOrderIfExisting(orders, orderId);
-          }
+  //   case "REPLACED":
+  //     return updateOrders(orders, formattedOrder);
 
-          // update
-          return updateOrders(orders, formattedOrder);
-        }
-      } else {
-        // for filled list, insert the order if it doesn't exist
+  //   case "FILLED": {
+  //     if (isExisting) {
+  //       // for new list, remove the order if it exists
+  //       if (
+  //         key.startsWith("orders:INCOMPLETE") ||
+  //         key.startsWith("orders:NEW")
+  //       ) {
+  //         // if fullfilled, remove from the list
+  //         if (updatedOrder.totalExecutedQuantity === updatedOrder.quantity) {
+  //           return removeOrderIfExisting(orders, orderId);
+  //         }
 
-        if (
-          key.startsWith("orders:CANCELLED") ||
-          key.startsWith("orders:INCOMPLETE") ||
-          key.startsWith("orders:NEW")
-        ) {
-          return orders;
-        }
-        // if filled/history list:
-        return insertOrders(orders, formattedOrder);
-      }
-    }
+  //         // update
+  //         return updateOrders(orders, formattedOrder);
+  //       }
+  //     } else {
+  //       // for filled list, insert the order if it doesn't exist
 
-    default:
-      return orders;
-  }
+  //       if (
+  //         key.startsWith("orders:CANCELLED") ||
+  //         key.startsWith("orders:INCOMPLETE") ||
+  //         key.startsWith("orders:NEW")
+  //       ) {
+  //         return orders;
+  //       }
+  //       // if filled/history list:
+  //       return insertOrders(orders, formattedOrder);
+  //     }
+  //   }
+
+  //   default:
+  //     return orders;
+  // }
 };
+
+export function updateAlgoOrdersHandler(
+  key: string,
+  message: WSMessage.AlgoOrder[],
+  orders: API.OrderResponse[]
+) {
+  if (!orders) {
+    return;
+  }
+
+  const mergeHandler = new AlgoOrderMergeHandler(message);
+
+  const result = mergeHandler.merge(key, message, orders);
+
+  return result;
+}
 
 function updateOrders(
   orders: API.OrderResponse[],
@@ -263,9 +292,7 @@ function orderIsExisting(orders: API.OrderResponse[], orderId: number) {
   return Array.isArray(index);
 }
 
-function object2underscore(obj: any) {
-  return Object.keys(obj).reduce((acc, key) => {
-    acc[camelCaseToUnderscoreCase(key)] = obj[key];
-    return acc;
-  }, {} as any);
+export function getPositionBySymbol(symbol: string) {
+  // const config = useSWRConfig();
+  // console.log(config);
 }

@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
@@ -16,11 +16,17 @@ import {
 } from "@orderly.network/core";
 
 import useConstant from "use-constant";
-import { NetworkId } from "@orderly.network/types";
+import {
+  Chain,
+  NetworkId,
+  defaultMainnetChains,
+  defaultTestnetChains,
+} from "@orderly.network/types";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
+import { ProxyConfigStore } from "./dev/proxyConfigStore";
 // import { useParamsCheck } from "./useParamsCheck";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
@@ -33,6 +39,13 @@ type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
     [K in R]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<R, K>>>;
   }[R];
 
+type filteredChains = {
+  mainnet?: Chain[];
+  testnet?: Chain[];
+};
+
+type filterChainsFunc = (config: ConfigStore) => filteredChains;
+
 export interface ConfigProviderProps {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
@@ -40,6 +53,8 @@ export interface ConfigProviderProps {
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
   networkId: NetworkId;
+
+  chainFilter?: filteredChains | filterChainsFunc;
 }
 
 export const OrderlyConfigProvider = (
@@ -55,6 +70,7 @@ export const OrderlyConfigProvider = (
     brokerId,
     networkId,
     contracts,
+    chainFilter,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -69,7 +85,9 @@ export const OrderlyConfigProvider = (
   }
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
-    return configStore || new DefaultConfigStore({ brokerId, networkId });
+    return new ProxyConfigStore(
+      configStore || new DefaultConfigStore({ brokerId, networkId })
+    );
   });
 
   const innerKeyStore = useConstant<OrderlyKeyStore>(() => {
@@ -105,6 +123,21 @@ export const OrderlyConfigProvider = (
     setAccount(account);
   }, []);
 
+  const filteredChains = useMemo(() => {
+    if (typeof chainFilter === "function") {
+      return chainFilter(innerConfigStore);
+    }
+
+    return chainFilter;
+
+    // const { mainnet, testnet } = props.chains || {};
+
+    // return {
+    //   mainnet: mainnet || defaultMainnetChains,
+    //   testnet: testnet || defaultTestnetChains,
+    // };
+  }, [props.chainFilter, innerConfigStore]);
+
   if (!account) {
     return null;
   }
@@ -116,6 +149,7 @@ export const OrderlyConfigProvider = (
         keyStore: innerKeyStore,
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
+        filteredChains: filteredChains,
         // apiBaseUrl,
       }}
     >

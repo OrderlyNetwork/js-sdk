@@ -5,6 +5,8 @@ import { OrdersPane } from "@/page/trading/mobile/sections/dataList/orders";
 import { HistoryPane } from "./history";
 import { PositionTabTitle } from "./position/tabTitle";
 import { MemoizedOrdersTabTitle } from "./orders/tabTitle";
+import { TPSLTabTitle } from "@/page/trading/desktop/sections/datalist/tpslTabTitle";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 export const DataListView = () => {
   const [activeTab, setActiveTab] = useState("positions");
@@ -28,7 +30,24 @@ export const DataListView = () => {
         value="orders"
         id="orderly-data-list-pending"
       >
-        <OrdersPane />
+        <OrdersPane
+          excludes={[
+            AlgoOrderRootType.POSITIONAL_TP_SL,
+            AlgoOrderRootType.TP_SL,
+          ]}
+        />
+      </TabPane>
+      <TabPane
+        title={<TPSLTabTitle />}
+        value="tpsl"
+        id="orderly-tpsl-list-pending"
+      >
+        <OrdersPane
+          includes={[
+            AlgoOrderRootType.POSITIONAL_TP_SL,
+            AlgoOrderRootType.TP_SL,
+          ]}
+        />
       </TabPane>
       <TabPane title="History" value="history" id="orderly-data-list-history">
         <HistoryPane />

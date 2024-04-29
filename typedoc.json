@@ -4,6 +4,7 @@
     "packages/hooks",
     "packages/net",
     "packages/perp",
+    "packages/trading-view",
     "packages/types"
   ],
   "name": "Orderly SDKs",

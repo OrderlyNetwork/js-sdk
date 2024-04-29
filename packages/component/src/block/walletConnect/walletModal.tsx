@@ -81,7 +81,7 @@ export const WalletConnectSheet = create<WalletConnectProps>((props) => {
 
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
-      <SheetContent>
+      <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader leading={<Logo />}>
           <SheetTitle>Connect wallet</SheetTitle>
         </SheetHeader>
@@ -116,7 +116,7 @@ export const WalletConnectDialog = create<WalletConnectProps>((props) => {
 
   return (
     <Dialog open={visible} onOpenChange={_onOpenChange}>
-      <DialogContent maxWidth={"sm"} closable>
+      <DialogContent maxWidth={"sm"} closable onOpenAutoFocus={(e) => e.preventDefault()} className="orderly-bg-base-800 desktop:orderly-max-w-[400px] orderly-px-[24px] orderly-py-6">
         <DialogHeader>
           <DialogTitle>Connect wallet</DialogTitle>
         </DialogHeader>

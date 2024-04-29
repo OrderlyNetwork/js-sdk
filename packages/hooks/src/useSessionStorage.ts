@@ -23,7 +23,7 @@ export function useSessionStorage<T>(
   }, [initialValue, key]);
   const [storedValue, setStoredValue] = useState<T>(readValue);
 
-  const setValue = (value: any) => {
+  const setValue: React.Dispatch<T> = (value: any) => {
     // Prevent build error "window is undefined" but keeps working
     if (typeof window == "undefined") {
       console.warn(

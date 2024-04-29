@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import { OrderlyProvider } from "../provider";
 import { ListTile } from ".";
 import { Statistic } from "../statistic";
 
@@ -19,7 +18,7 @@ export const Default: Story = {
     title: "BTC-PERP",
     subtitle: "226.621M",
     avatar: {
-      type: "coin",
+      type: "token",
       name: "BTC",
     },
     tailing: (

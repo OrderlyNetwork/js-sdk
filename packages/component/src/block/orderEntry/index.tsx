@@ -40,7 +40,7 @@ import {
 } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
 import { StatusGuardButton } from "@/button/statusGuardButton";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal, commify, removeTrailingZeros } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
 import { convertValueToPercentage } from "@/slider/utils";
@@ -140,6 +140,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
+    const baseDP = symbolConfig?.base_dp
+
     const ee = useEventEmitter();
     const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
       formattedOrder.order_type || OrderType.LIMIT
@@ -153,7 +155,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             formattedOrder.order_type === OrderType.STOP_LIMIT ||
             formattedOrder.order_type === OrderType.STOP_MARKET
           ) {
-            props.onFieldChange("trigger_price", item[0].toString());
+            props.onFieldChange("trigger_price", removeTrailingZeros(item[0]));
             focusInputElement(triggerPriceInputRef.current);
           }
         } else {
@@ -161,7 +163,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             formattedOrder.order_type === OrderType.STOP_LIMIT ||
             formattedOrder.order_type === OrderType.LIMIT
           ) {
-            props.onFieldChange("order_price", item[0].toString());
+            props.onFieldChange("order_price", removeTrailingZeros(item[0]));
             focusInputElement(priceInputRef.current);
           } else {
             // other order type
@@ -176,7 +178,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             if (typeof newType !== "undefined") {
               props.onFieldChange("order_type", newType);
             }
-            props.onFieldChange("order_price", item[0].toString());
+            props.onFieldChange("order_price", removeTrailingZeros(item[0]));
             focusInputElement(priceInputRef.current);
           }
         }
@@ -222,7 +224,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     const [buttonText, setButtonText] = useState<string>("Buy / Long");
 
-    const isTable = useMediaQuery(MEDIA_TABLET);
+    // const isTable = useMediaQuery(MEDIA_TABLET);
 
     const onFocus = (type: InputType) => (_: FocusEvent<HTMLInputElement>) => {
       currentFocusInput.current = type;
@@ -248,7 +250,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           if (
             metaState.errors?.order_price?.message ||
             metaState.errors?.order_quantity?.message ||
-            metaState.errors?.trigger_price?.message
+            metaState.errors?.trigger_price?.message ||
+            metaState.errors?.total?.message
           ) {
             setErrorsVisible(true);
             return Promise.reject("cancel");
@@ -260,7 +263,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               onCancel: () => {
                 return Promise.reject("cancel");
               },
-              footer: !isTable ? (
+              footer: !isTablet ? (
                 <OrderConfirmFooter
                   onCancel={() => {
                     return Promise.reject("cancel");
@@ -280,7 +283,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                   symbol={symbol}
                   base={symbolConfig?.base}
                   quote={symbolConfig?.quote}
-                  isTable={isTable}
+                  isTable={isTablet}
                 />
               ),
             });
@@ -379,7 +382,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         onClick={() => {
           isClickForm.current = true;
         }}
-        id="orderEntryForm"
+        id="orderly-order-entry-form"
       >
         <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
           <SegmentedButton
@@ -419,7 +422,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 className="orderly-text-base-contrast-80"
                 precision={0}
               >{`${freeCollateral ?? "--"}`}</Numeral>
-              {!isTable && (
+              {!isTablet && (
                 <span className="orderly-text-base-contrast-36">USDC</span>
               )}
             </div>
@@ -550,7 +553,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           />
           <div
             className={cn(
-              "orderly-hidden desktop:orderly-flex orderly-justify-between -orderly-mt-2",
+              "orderly-hidden desktop:!orderly-flex orderly-justify-between -orderly-mt-2",
               {
                 "orderly-text-trade-profit": side === OrderSide.BUY,
                 "orderly-text-trade-loss": side === OrderSide.SELL,
@@ -577,7 +580,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               <span className="orderly-text-base-contrast-54">
                 {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
               </span>
-              <Numeral precision={4}>{maxQty}</Numeral>
+              <Numeral precision={baseDP}>{maxQty}</Numeral>
             </button>
           </div>
 
@@ -593,6 +596,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             name="order_total_input"
             autoComplete="off"
             autoFocus={false}
+            error={!!metaState.errors?.total && errorsVisible}
+            helpText={metaState.errors?.total?.message}
             value={commify(
               currentFocusInput.current === InputType.TOTAL
                 ? formattedOrder.total!

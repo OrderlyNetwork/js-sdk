@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { API, OrderSide, OrderStatus } from "@orderly.network/types";
+import { API, OrderSide, OrderType } from "@orderly.network/types";
 import { Check, X } from "lucide-react";
 import { cn } from "@/utils/css";
 import { Popover, PopoverAnchor, PopoverContent } from "@/popover";
@@ -18,8 +18,12 @@ import { toast } from "@/toast";
 import { Divider } from "@/divider";
 import { cleanStringStyle } from "@orderly.network/hooks";
 import { Input } from "@/input";
+import { AlgoOrderRootType } from "@orderly.network/types";
+import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
 
-export const OrderQuantity = (props: { order: API.OrderExt }) => {
+export const OrderQuantity = (props: {
+  order: API.OrderExt | API.AlgoOrder;
+}) => {
   const { order } = props;
 
   const [quantity, setQuantity] = useState<string>(order.quantity.toString());
@@ -27,6 +31,10 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
 
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
+
+  useEffect(() => {
+    setQuantity(order.quantity.toString());
+  }, [props.order.quantity]);
 
   if (!editting && open <= 0) {
     return (
@@ -48,13 +56,14 @@ export const OrderQuantity = (props: { order: API.OrderExt }) => {
 };
 
 const NormalState: FC<{
-  order: any;
+  order: API.AlgoOrder | API.OrderExt;
   quantity: string;
   setEditing: any;
+  partial?: boolean;
 }> = (props) => {
   const { order, quantity } = props;
 
-  const executed = order.total_executed_quantity;
+  const executed = (order as API.OrderExt).total_executed_quantity;
 
   return (
     <div
@@ -71,8 +80,14 @@ const NormalState: FC<{
         props.setEditing(true);
       }}
     >
-      <span>{executed}</span>
-      <span>/</span>
+      {"algo_type" in order &&
+      order.algo_type === AlgoOrderRootType.TP_SL ? null : (
+        <>
+          <span>{executed}</span>
+          <span>/</span>
+        </>
+      )}
+
       <div className="orderly-px-2 orderly-flex orderly-min-w-[70px] orderly-items-center orderly-h-[28px] orderly-bg-base-700 orderly-text-2xs orderly-font-semibold orderly-rounded-lg">
         {quantity}
       </div>
@@ -81,7 +96,7 @@ const NormalState: FC<{
 };
 
 const EditingState: FC<{
-  order: API.OrderExt;
+  order: API.OrderExt | API.AlgoOrder;
   quantity: string;
   setQuantity: any;
   editting: boolean;
@@ -89,14 +104,37 @@ const EditingState: FC<{
   open: number;
   setOpen: any;
 }> = (props) => {
-  const { order, quantity, setQuantity, editting, setEditting, setOpen, open } =
-    props;
+  const {
+    order,
+    quantity,
+    setQuantity: originSetQuantity,
+    editting,
+    setEditting,
+    setOpen,
+    open,
+  } = props;
 
-  const { editOrder, editAlgoOrder } = useContext(OrderListContext);
+  const [error, setError] = useState<string>();
+
+  const { editOrder, editAlgoOrder, checkMinNotional } =
+    useContext(OrderListContext);
+  const { onUpdateOrder: onUpdateTPSLOrder, position } =
+    useTPSLOrderRowContext();
+
+  const setQuantity = (qty: string) => {
+    originSetQuantity(qty);
+    const positionQty = Math.abs(position?.position_qty || 0);
+    if (position && Number(qty) > positionQty) {
+      setError(
+        `Quantity should be less than position quantity : ${positionQty}`
+      );
+    } else {
+      setError(undefined);
+    }
+  };
 
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
-    console.log("cancel popover");
     setOpen(-1);
     setQuantity(order.quantity.toString());
   };
@@ -110,7 +148,7 @@ const EditingState: FC<{
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const clickHandler = (event: MouseEvent) => {
+    const docClickHandler = (event: MouseEvent) => {
       // close the input when click outside of boxRef
       const el = boxRef?.current;
       if (!el || el.contains(event.target as Node)) {
@@ -126,35 +164,57 @@ const EditingState: FC<{
       setEditting(false);
     };
 
-    document.body.addEventListener("click", clickHandler);
+    document.body.addEventListener("click", docClickHandler);
 
     return () => {
-      document.body.removeEventListener("click", clickHandler);
+      document.body.removeEventListener("click", docClickHandler);
     };
   }, []);
 
-  const onClick = () => {
-    // event.stopPropagation();
-    // event.preventDefault();
+  const clickHandler = () => {
+    if (!!error) {
+      return;
+    }
+
     setEditting(false);
     if (Number(quantity) === Number(order.quantity)) {
       return;
     }
+
+    const price =
+      order.algo_order_id !== undefined ? order.trigger_price : order.price;
+    if (price !== null && order.reduce_only !== true) {
+      const notionalText = checkMinNotional(order.symbol, price, quantity);
+      if (notionalText) {
+        toast.error(notionalText);
+        setIsSubmitting(false);
+        cancelPopover();
+        return;
+      }
+    }
+
     setOpen(1);
+  };
+
+  const onClick = (event: MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    clickHandler();
   };
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
       event.stopPropagation();
       event.preventDefault();
-      onClick();
+      clickHandler();
     }
   };
 
   const onConfirm = useCallback(() => {
     setIsSubmitting(true);
 
-    const params: any = {
+    let params: any = {
       symbol: order.symbol,
       order_type: order.type,
       side: order.side,
@@ -164,8 +224,21 @@ const EditingState: FC<{
       algo_order_id: order.algo_order_id,
     };
 
+    if (
+      typeof params.algo_order_id !== "undefined" &&
+      params.order_type === "MARKET"
+    ) {
+      // stop market order
+      const { order_price, ...rest } = params;
+      params = rest;
+    }
+
     if (typeof order.reduce_only !== "undefined") {
       params.reduce_only = order.reduce_only;
+    }
+
+    if (order.order_tag !== undefined) {
+      params = { ...params, order_tag: order.order_tag };
     }
 
     // @ts-ignore
@@ -179,14 +252,16 @@ const EditingState: FC<{
       params["order_tag"] = order.tag;
     }
 
-    console.log("current order", order, params, quantity);
-
     let future;
 
-    if (order.algo_order_id !== undefined) {
-      future = editAlgoOrder(order.algo_order_id.toString(), params);
+    if ("algo_type" in order && order.algo_type === AlgoOrderRootType.TP_SL) {
+      future = onUpdateTPSLOrder(order as API.AlgoOrderExt, params);
     } else {
-      future = editOrder(order.order_id.toString(), params);
+      if (order.algo_order_id !== undefined) {
+        future = editAlgoOrder(order.algo_order_id.toString(), params);
+      } else {
+        future = editOrder((order as API.OrderExt).order_id.toString(), params);
+      }
     }
 
     // @ts-ignore
@@ -235,7 +310,7 @@ const EditingState: FC<{
               e.stopPropagation();
               e.preventDefault();
               setEditting(false);
-              setQuantity(order.quantity);
+              setQuantity(order.quantity.toString());
             }}
           >
             {/* @ts-ignore */}
@@ -263,10 +338,12 @@ const EditingState: FC<{
                 }
               }, 100);
             }}
+            error={!!error}
+            helpText={error}
             onKeyDown={handleKeyDown}
             autoFocus
-            containerClassName="orderly-h-auto orderly-pl-7"
-            className="orderly-w-full orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
+            containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"
+            className="orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
           />
         </PopoverAnchor>
         <div

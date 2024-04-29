@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrdersViewFull } from ".";
 import { useOrderStream } from "@orderly.network/hooks";
 import React from "react";
-import { OrderStatus } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  OrderStatus,
+  OrderType,
+} from "@orderly.network/types";
 
 const meta: Meta<typeof OrdersViewFull> = {
   component: OrdersViewFull,
@@ -24,6 +28,7 @@ export const withHook: Story = {
     const [data, { isLoading }] = useOrderStream({
       status: OrderStatus.INCOMPLETE,
       symbol: symbol,
+      excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
     });
 
     return <OrdersViewFull dataSource={data} isLoading={isLoading} />;

@@ -3,10 +3,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "declarationDir": "types",
+    "resolveJsonModule": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

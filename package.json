@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --concurrency=18",
+    "dev": "turbo run dev --concurrency=19",
     "react": "pnpm --filter @orderly.network/react dev",
     "react:watch": "pnpm --filter @orderly.network/react watch",
     "example": "pnpm --filter @orderly.network/examples dev",
@@ -13,7 +13,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

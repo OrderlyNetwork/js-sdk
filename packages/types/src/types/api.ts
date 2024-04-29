@@ -1,4 +1,4 @@
-import { OrderSide } from "../order";
+import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
 
 export declare namespace API {
   //v1/public/token
@@ -110,10 +110,13 @@ export declare namespace API {
     fee_asset: string;
     client_order_id: null;
     average_executed_price: number;
+    total_executed_quantity: number;
+    visible_quantity: number;
     created_time: number;
     updated_time: number;
     reduce_only: boolean;
     trigger_price?: number;
+    order_tag?: string;
   }
 
   export interface OrderExt extends Order {
@@ -124,14 +127,17 @@ export declare namespace API {
     algo_order_id: number;
     root_algo_order_id: number;
     parent_algo_order_id: number;
+    parent_algo_type: AlgoOrderRootType;
     symbol: string;
     algo_type: string;
+    child_orders: AlgoOrder[];
     side: string;
     quantity: number;
     is_triggered: boolean;
+    is_activated: boolean;
     trigger_price: number;
     trigger_price_type: string;
-    type: string;
+    type: OrderType;
     root_algo_status: string;
     algo_status: string;
     price?: number;
@@ -142,6 +148,14 @@ export declare namespace API {
     reduce_only: boolean;
     created_time: number;
     updated_time: number;
+    order_tag?: string;
+  }
+
+  export interface AlgoOrderExt extends AlgoOrder {
+    mark_price: string;
+    position?: Partial<Position>;
+    tp_trigger_price?: number;
+    sl_trigger_price?: number;
   }
 
   export interface OrderResponse {
@@ -193,7 +207,9 @@ export declare namespace API {
     mark_price: number;
     est_liq_price: number | null;
     timestamp: number;
-    // Maintenance margin ratio
+    /**
+     * Maintenance margin ratio
+     */
     mmr: number;
     imr: number;
     IMR_withdraw_orders: number;
@@ -205,6 +221,18 @@ export declare namespace API {
   export interface PositionExt extends Position {
     notional: number;
     mm: number;
+  }
+
+  export interface PositionTPSLExt extends PositionExt {
+    tp_trigger_price?: number;
+    sl_trigger_price?: number;
+
+    // has_position_tp_sl: boolean;
+
+    /**
+     * related position tp/sl order
+     */
+    algo_order?: AlgoOrder;
   }
 
   export interface Trade {

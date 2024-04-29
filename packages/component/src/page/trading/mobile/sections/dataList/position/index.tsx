@@ -14,8 +14,8 @@ import { PositionLimitCloseDialog } from "@/block/positions/sections/closeDialog
 import { useMutation, useAccount } from "@orderly.network/hooks";
 import { TradingPageContext } from "@/page";
 import { toast } from "@/toast";
-import { TabContext } from "@/tab";
-
+import { TPSLOrderEditorSheet } from "@/block/tp_sl/tpslSheet";
+import { TPSLSheetTitle } from "./tpslSheetTitle";
 export const PositionPane = () => {
   const context = useContext(TradingPageContext);
 
@@ -55,6 +55,18 @@ export const PositionPane = () => {
       .catch((e) => {});
   }, []);
 
+  const onTPSLOrder = useCallback(
+    async (position: API.PositionTPSLExt, order?: API.AlgoOrder) => {
+      return modal
+        .sheet({
+          title: <TPSLSheetTitle />,
+          content: <TPSLOrderEditorSheet position={position} order={order} />,
+        })
+        .then(() => {});
+    },
+    []
+  );
+
   const onMarketClose = useCallback(async (position: API.Position) => {
     return modal
       .confirm({
@@ -92,6 +104,7 @@ export const PositionPane = () => {
       isLoading={loading}
       onLimitClose={onLimitClose}
       onMarketClose={onMarketClose}
+      onTPSLOrder={onTPSLOrder}
       showAllSymbol={showAllSymbol}
       onShowAllSymbolChange={onShowAllSymbolChange}
       onSymbolChange={context.onSymbolChange}

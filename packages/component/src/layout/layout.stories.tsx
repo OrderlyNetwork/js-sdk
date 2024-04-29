@@ -19,9 +19,9 @@ export const Default: Story = {
   render: (args) => {
     return (
       <Layout>
+        <Header className="orderly-h-[40px]">Header</Header>
         <Sider>Sider</Sider>
         <Layout>
-          <Header className="orderly-h-[40px]">Header</Header>
           <Content>Content</Content>
         </Layout>
       </Layout>

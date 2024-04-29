@@ -8,6 +8,9 @@ const meta: Meta<typeof QuantityInput> = {
     onValueChange: { action: "onValueChange" },
   },
   args: {
+    decimals: 2,
+    quantity: "0",
+    markPrice: 72000,
     tokens: [
       {
         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",

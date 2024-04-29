@@ -50,16 +50,6 @@ export const Header: FC<Props> = (props) => {
           }}
         />
       </div>
-
-      {/* <Button
-        size={"small"}
-        variant={"outlined"}
-        disabled={props.count <= 0}
-        color={"tertiary"}
-        onClick={cancelAllOrder}
-      >
-        Cancel all
-      </Button> */}
     </div>
   );
 };

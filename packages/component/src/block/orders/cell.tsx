@@ -8,9 +8,15 @@ import { Text } from "@/text";
 import { NumeralTotal } from "@/text/numeralTotal";
 import { OrderListContext } from "./shared/orderListContext";
 import { SymbolContext } from "@/provider";
+import { AlgoOrderRootType } from "@orderly.network/types";
+import { utils } from "@orderly.network/hooks";
+import { useTPSLOrderRowContext } from "../tp_sl/tpslOrderRowContext";
+import { TPSLOrderTag } from "./orderTPSLTag";
+import { RegularCell } from "./cell.regular";
+import { TPSLCell } from "./cell.tpsl";
 
 interface OrderCellProps {
-  order: API.OrderExt;
+  order: API.OrderExt | API.AlgoOrderExt;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }
 
@@ -20,15 +26,11 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
 
   const { onCancelOrder, onEditOrder } = useContext(OrderListContext);
   const { quote, quote_dp, base, base_dp } = useContext(SymbolContext);
-
-  const isAlgoOrder = order?.algo_order_id !== undefined;
-  // console.log("price node", order);
-
-  const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
+  const { position } = useTPSLOrderRowContext();
 
   const typeTag = useMemo(() => {
     return (
-      <Tag color={order.side === "BUY" ? "buy" : "sell"} size="small">
+      <Tag color={order.side === "BUY" ? "buy" : "sell"}>
         {order.side === "BUY" ? "Buy" : "Sell"}
       </Tag>
     );
@@ -46,99 +48,41 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
     window.scrollTo(0, 0);
   };
 
+  const infoEle = useMemo(() => {
+    if (
+      "algo_type" in order &&
+      (order.algo_type === AlgoOrderRootType.TP_SL ||
+        order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL)
+    ) {
+      return <TPSLCell order={order} base_dp={base_dp} quote_dp={quote_dp} />;
+    }
+    return (
+      <RegularCell
+        order={order as API.OrderExt}
+        base_dp={base_dp}
+        quote_dp={quote_dp}
+      />
+    );
+  }, [order, base_dp, quote_dp]);
+
   return (
-    <div className="orderly-px-4 orderly-py-2">
-      <div className="orderly-flex orderly-items-center orderly-gap-2 orderly-mb-1">
-        {typeTag}
-        <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
-          <Text rule="symbol">{order.symbol}</Text>
+    <div className="orderly-px-4 orderly-py-3">
+      <div className="orderly-mb-1 orderly-flex orderly-items-end orderly-justify-between">
+        <div className="orderly-flex-col">
+          <div className="orderly-flex orderly-items-center orderly-gap-2 ">
+            {typeTag}
+            <div className="orderly-flex-1 orderly-text-2xs" onClick={onSymbol}>
+              <Text rule="symbol">{order.symbol}</Text>
+            </div>
+          </div>
+          <TPSLOrderTag order={order} />
         </div>
         <div className="orderly-text-4xs orderly-text-base-contrast-36">
           <Text rule="date">{order.created_time}</Text>
         </div>
       </div>
-      <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
-        <Statistic
-          label="Qty."
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          value={order.quantity ?? "-"}
-          precision={base_dp}
-          rule="price"
-          valueClassName={
-            order.side === OrderSide.BUY
-              ? "orderly-text-trade-profit orderly-text-3xs"
-              : "orderly-text-trade-loss orderly-text-3xs"
-          }
-        />
-        <Statistic
-          label="Filled"
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          // @ts-ignore
-          value={order.total_executed_quantity ?? "-"}
-          rule="price"
-          precision={base_dp}
-        />
-        <Statistic
-          label={
-            <>
-              <span className="orderly-text-base-contrast-36">Est. total</span>
-              <span className="orderly-text-base-contrast-20">(USDC)</span>
-            </>
-          }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={
-            <NumeralTotal
-              price={props.order.price ?? 1}
-              quantity={props.order.quantity}
-              precision={quote_dp}
-            />
-          }
-          align="right"
-        />
-        <Statistic
-          label={
-            <>
-              <span className="orderly-text-base-contrast-36">
-                Trigger price
-              </span>
-              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
-            </>
-          }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          rule="price"
-          precision={quote_dp}
-          value={order.trigger_price}
-        />
-        <Statistic
-          label={
-            <>
-              <span className="orderly-text-base-contrast-36">Limit price</span>
-              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
-            </>
-          }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={isStopMarket ? <span>Market</span>: order.price ?? "-"}
-          rule="price"
-          precision={quote_dp}
-        />
-        <Statistic
-          label={
-            <>
-              <span className="orderly-text-base-contrast-36">Mark price</span>
-              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
-            </>
-          }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          rule="price"
-          precision={quote_dp}
-          value={order.mark_price}
-          align="right"
-        />
+      <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2 orderly-py-1">
+        {infoEle}
       </div>
       <div className="orderly-flex orderly-gap-3 orderly-text-4xs orderly-justify-end orderly-mt-2">
         <Button
@@ -147,7 +91,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           size="small"
           color="tertiary"
           className="orderly-w-[120px] orderly-text-4xs"
-          onClick={() => onEditOrder(order)}
+          onClick={() => onEditOrder(order, position)}
         >
           Edit
         </Button>

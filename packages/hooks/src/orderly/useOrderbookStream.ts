@@ -4,7 +4,7 @@ import {useMarkPrice} from "./useMarkPrice";
 import {useWS} from "../useWS";
 import {useEventEmitter} from "../useEventEmitter";
 import {useSymbolsInfo} from "./useSymbolsInfo";
-import {Decimal} from "@orderly.network/utils";
+import {Decimal, removeTrailingZeros} from "@orderly.network/utils";
 import {max, min} from "ramda";
 import {SDKError} from "@orderly.network/types";
 import orderbooksService from './orderbook.service';
@@ -56,7 +56,7 @@ const reduceItems = (
                 const priceStr = price.toString();
                 const index = priceStr.indexOf(".");
                 const decimal = priceStr.slice(index + 1);
-                const decimalDepth = depth.toString().slice(2).length;
+                const decimalDepth = removeTrailingZeros(depth).toString().slice(2).length;
                 const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
                 priceKey = new Decimal(
                     priceStr.slice(0, index) + "." + decimalStr
@@ -218,12 +218,11 @@ export const mergeOrderbook = (data: OrderbookData, update: OrderbookData) => {
 
 /**
  * Configuration for the Order Book
- * @level Indicates the number of data entries to return for ask/bid, default is 10
- * @padding Whether to fill in when the actual data entries are less than the level. If filled, it will add [nan, nan, nan, nan]
- *          default is true
  */
 export type OrderbookOptions = {
+    /** Indicates the number of data entries to return for ask/bid, default is 10 */
     level?: number;
+    /** Whether to fill in when the actual data entries are less than the level. If filled, it will add [nan, nan, nan, nan]. Default is true */
     padding?: boolean;
 };
 
@@ -259,8 +258,15 @@ export const useOrderbookStream = (
 
     const depths = useMemo(() => {
         const tick = config("quote_tick");
+        if (typeof tick === 'undefined') return [];
 
-        return [tick, tick * 10, tick * 100, tick * 1000];
+        try {
+            const base = new Decimal(tick);
+            return [base.toNumber(), base.mul(10).toNumber(), base.mul(100).toNumber(), base.mul(1000).toNumber()];
+        } catch (e) {
+
+        }
+        return [tick];
     }, [config("quote_tick")]);
 
     useEffect(() => {

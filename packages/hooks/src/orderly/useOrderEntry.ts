@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
+import {  
   API,
   OrderEntity,
   OrderSide,
@@ -17,11 +17,13 @@ import {
 } from "../utils/orderEntryHelper";
 import { useCollateral } from "./useCollateral";
 import { useMaxQty } from "./useMaxQty";
-import { OrderFactory, availableOrderTypes } from "../utils/createOrder";
+// import { availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "./useMarkPrice";
 import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
+import { OrderFactory } from "../services/orderCreator/factory";
+// import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -252,7 +254,8 @@ export function useOrderEntry(
 
   const parseString2Number = (
     order: OrderParams & Record<string, any>,
-    key: keyof OrderParams
+    key: keyof OrderParams,
+    dp?: number,
   ) => {
     if (typeof order[key] !== "string") return;
     // fix: delete the comma then remove the forward one of the string
@@ -264,6 +267,16 @@ export function useOrderEntry(
 
     // order[`${key}_origin`] = order[key];
     (order[key] as string) = (order[key] as string).replace(/,/g, "");
+
+    // format input by decimal precision
+    if (dp && (order[key] as string).length > 0) {
+      const hasPoint = `${order[key]}`.includes(".");
+      const endOfPoint = `${order[key]}`.endsWith(".");
+      const decimalPart = `${order[key]}`.split(".");
+      if (hasPoint && !endOfPoint) {
+        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(0,quoteDP)}`;
+      }
+    }
   };
 
   // just for performance optimization
@@ -303,15 +316,15 @@ export function useOrderEntry(
     }
 
     if (typeof symbolOrOrder.order_price === "string") {
-      parseString2Number(symbolOrOrder, "order_price");
+      parseString2Number(symbolOrOrder, "order_price", quoteDP);
     }
 
     if (typeof symbolOrOrder.total === "string") {
-      parseString2Number(symbolOrOrder, "total");
+      parseString2Number(symbolOrOrder, "total", quoteDP);
     }
 
     if (typeof symbolOrOrder.trigger_price === "string") {
-      parseString2Number(symbolOrOrder, "trigger_price");
+      parseString2Number(symbolOrOrder, "trigger_price", quoteDP);
     }
 
     // if (typeof symbolOrOrder.trigger_price === "string") {
@@ -333,14 +346,17 @@ export function useOrderEntry(
     needParse?.reduce_only,
     needParse?.side,
     needParse?.visible_quantity,
+    quoteDP,
+    baseDP,
   ]);
 
-  const isStopOrder =
+  const isAlgoOrder =
     parsedData?.order_type === OrderType.STOP_LIMIT ||
-    parsedData?.order_type === OrderType.STOP_MARKET;
+    parsedData?.order_type === OrderType.STOP_MARKET ||
+    parsedData?.order_type === OrderType.CLOSE_POSITION;
 
   const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
-    isStopOrder ? "/v1/algo/order" : "/v1/order"
+    isAlgoOrder ? "/v1/algo/order" : "/v1/order"
   );
 
   // const maxQty = 3;
@@ -354,21 +370,20 @@ export function useOrderEntry(
       throw new SDKError("side is error");
     }
 
-    if (
-      !values ||
-      typeof values.order_type === "undefined" ||
-      !includes(values.order_type, availableOrderTypes)
-    ) {
+    if (!values || typeof values.order_type === "undefined") {
       throw new SDKError("order_type is error");
     }
 
     const orderCreator = OrderFactory.create(
+      // @ts-ignore
       values.order_type_ext ? values.order_type_ext : values.order_type
     );
 
     if (!orderCreator) {
       return Promise.reject(new SDKError("orderCreator is null"));
     }
+
+    
 
     return new Promise((resolve, reject) => {
       return orderCreator
@@ -378,13 +393,14 @@ export function useOrderEntry(
           maxQty,
           markPrice: markPrice,
         })
-        .then((errors) => {
+        .then((errors: any) => {
           submitted.current = true;
 
           if (
             errors.order_price ||
             errors.order_quantity ||
-            errors.trigger_price
+            errors.trigger_price ||
+            errors.total
           ) {
             setErrors(errors);
             reject(
@@ -415,12 +431,12 @@ export function useOrderEntry(
               if (res.success) {
                 // TODO: remove when the WS service is fixed
 
-                if (Array.isArray(res.data.rows)) {
-                  ee.emit("algoOrder:cache", {
-                    ...res.data.rows[0],
-                    trigger_price: data.trigger_price,
-                  });
-                }
+                // if (Array.isArray(res.data.rows)) {
+                //   ee.emit("algoOrder:cache", {
+                //     ...res.data.rows[0],
+                //     trigger_price: data.trigger_price,
+                //   });
+                // }
 
                 resolve(res.data);
               } else {
@@ -480,6 +496,7 @@ export function useOrderEntry(
   // const estLiqPrice = useMemo(() => {}, []);
 
   const validator = (values: any) => {
+    // @ts-ignore
     const creator = OrderFactory.create(values.order_type);
 
     return creator?.validate(values, {

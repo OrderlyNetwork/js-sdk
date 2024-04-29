@@ -9,14 +9,25 @@ export const OrderTrades: FC<{
   index: number;
 }> = (props) => {
   const { record, index } = props;
+  // const algoOrderId =
+  //   "root_algo_order_id" in record
+  //     ? record.root_algo_order_id
+  //     : record.algo_order_id;
+
+  const algoOrderId = record.algo_order_id;
+
   const path =
-    record.algo_order_id !== undefined
-      ? `/v1/algo/order/${record.algo_order_id}/trades`
+    algoOrderId !== undefined
+      ? `/v1/algo/order/${algoOrderId}/trades`
       : `/v1/order/${record.order_id}/trades`;
   const { data } = usePrivateQuery<any[]>(path);
   const base = record?.symbol?.split("_")?.[1] || "";
   const config = useSymbolsInfo();
+
   if (config.isNil) return null;
+
+  // const symbolInfo = config ? config?.[record.symbol] : {};
+  // const baseDp = symbolInfo?.("quote_dp") || 2;
   const symbolInfo = config[record.symbol];
   const baseDp = symbolInfo("quote_dp", 2);
 
