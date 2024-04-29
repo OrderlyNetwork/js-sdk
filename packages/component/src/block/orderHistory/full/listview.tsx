@@ -8,6 +8,7 @@ import { cn } from "@/utils";
 import { columnsBasis } from "@/block/orders/columnsUtil";
 import { OrderTrades } from "../orderTrades";
 import { PositionEmptyView } from "@/block/positions/full/positionEmptyView";
+import { NumeralWithCtx } from "@/text/numeralWithCtx";
 
 interface Props {
   dataSource: API.OrderExt[];
@@ -79,6 +80,39 @@ export const Listview: FC<Props> = (props) => {
         );
       },
     };
+
+    // realized_pnl
+
+    cols.splice(7, 0, {
+      title: "Realized PnL",
+      width: 100,
+      className: "orderly-h-[48px] orderly-font-semibold",
+      dataIndex: "realized_pnl",
+      render: (value: string, record: any) => {
+        if (
+          record.type === OrderType.CLOSE_POSITION &&
+          record.status !== OrderStatus.FILLED
+        ) {
+          return "Entire position";
+        }
+
+        return (
+          <NumeralWithCtx
+            className={cn("orderly-font-semibold orderly-text-2xs", record.realized_pnl === 0 ? "" : (record.realized_pnl > 0
+              ? "orderly-text-trade-profit"
+              : "orderly-text-trade-loss"))}
+            // precision={2}
+            rule="price"
+          >
+            {record.realized_pnl === 0 ||
+            Number.isNaN(record.realized_pnl) ||
+            record.realized_pnl === null
+              ? "-"
+              : `${record.realized_pnl}`}
+          </NumeralWithCtx>
+        );
+      },
+    });
 
     return cols;
   }, []);

@@ -9,7 +9,6 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@/modal";
 import { toast } from "@/toast";
-import { type ConfigStore } from "@orderly.network/core";
 
 const localStorageItem = "Orderly_GetTestUSDC";
 
@@ -17,7 +16,7 @@ export const GetTestUSDC = () => {
   const { account, state } = useAccount();
   const { configStore } = useContext<any>(OrderlyContext);
   const [show, setShow] = useState(false);
-  const config = useConfig<ConfigStore>();
+  const config = useConfig();
 
   useEffect(() => {
     const value = localStorage.getItem(

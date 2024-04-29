@@ -57,7 +57,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
 
   return (
     <div className="orderly-px-4 orderly-py-2">
-      <div className="orderly-mb-1 orderly-flex orderly-items-end orderly-justify-between">
+      <div className="orderly-mb-1 orderly-flex orderly-items-start orderly-justify-between">
         <div className="orderly-flex-col">
           <div className="orderly-flex orderly-items-center orderly-gap-2 ">
             {typeTag}
@@ -67,7 +67,10 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           </div>
           <OrderTypeTag order={item} />
         </div>
-        <div className="orderly-text-4xs orderly-text-base-contrast-36">
+        <div className="orderly-text-4xs orderly-text-base-contrast-36 orderly-flex orderly-flex-col orderly-gap-1">
+          <div className="orderly-text-3xs orderly-text-base-contrast-80 orderly-text-right">
+            {state}
+          </div>
           <Text rule="date">{item.created_time}</Text>
         </div>
       </div>
@@ -97,11 +100,24 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           precision={base_dp}
         />
         <Statistic
-          label="Status"
-          rule="status"
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
-          value={state}
+          rule="price"
+          precision={quote_dp}
+          label={
+            <>
+              <span className="orderly-text-base-contrast-36">
+                Trigger price
+              </span>
+              {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
+            </>
+          }
+          value={
+            item.type === OrderType.MARKET ||
+            item.type === OrderType.STOP_MARKET
+              ? "Market"
+              : item.trigger_price
+          }
           align="right"
         />
         <Statistic
@@ -132,23 +148,21 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          valueClassName="orderly-text-3xs"
           rule="price"
           precision={quote_dp}
           label={
             <>
               <span className="orderly-text-base-contrast-36">
-                Trigger price
+                Realized PnL(USDC)
               </span>
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          value={
-            item.type === OrderType.MARKET ||
-            item.type === OrderType.STOP_MARKET
-              ? "Market"
-              : item.trigger_price
-          }
+          className={item.realized_pnl === 0 ? "" : (item.realized_pnl > 0
+            ? "orderly-text-trade-profit"
+            : "orderly-text-trade-loss")}
+          value={item.realized_pnl === 0 ? '-' : item.realized_pnl}
           align="right"
         />
       </div>

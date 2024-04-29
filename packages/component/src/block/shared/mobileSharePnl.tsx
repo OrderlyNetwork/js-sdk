@@ -24,6 +24,7 @@ export const MobileSharePnLContent: FC<{
   hide: any;
   baseDp?: number;
   quoteDp?: number;
+  refLink?: string;
 }> = (props) => {
 
   const localPnlConfig = getPnlInfo();
@@ -56,7 +57,8 @@ export const MobileSharePnLContent: FC<{
     pnlFormat,
     shareOption,
     props.baseDp,
-    props.quoteDp
+    props.quoteDp,
+    props.refLink,
   );
   // console.log("pster data", posterData, props.position);
 

@@ -5,9 +5,12 @@ import { DashboardTab } from "./dashboardTab";
 
 export const Dashboard = () => {
 
-    const { isAffiliate, isTrader } = useContext(ReferralContext);
+    const { isAffiliate, isTrader, splashPage, isLoading } = useContext(ReferralContext);
 
     
+    if (isLoading && typeof splashPage !== 'undefined') {
+         return splashPage?.();
+    }
     
     if (isAffiliate || isTrader) {
         return (

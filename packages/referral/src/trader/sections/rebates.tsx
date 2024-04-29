@@ -72,7 +72,7 @@ export const Rebates: FC<{
                     }));
                 }}
                 initDate={pickDate}
-                triggerClassName="orderly-max-w-[196px] orderly-rounded-sm orderly-justify-between"
+                triggerClassName="orderly-w-fit orderly-rounded-sm orderly-justify-between"
                 numberOfMonths={isMD ? 1 : 2}
                 className="orderly-ml-4 lg:orderly-flex-row"
                 classNames={{

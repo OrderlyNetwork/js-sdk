@@ -4,8 +4,7 @@ import { Switch } from "@/switch";
 import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { OrderlyContext, useAccount, useMutation } from "@orderly.network/hooks";
-
+import { useAccount, useMutation } from "@orderly.network/hooks";
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
@@ -32,11 +31,8 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
   const [remember, setRemember] = useState(true);
   const localRefCode = localStorage.getItem("referral_code") || undefined;
   const [refCode, setRefCode] = useState<string | undefined>(localRefCode);
-  const [
-    bindRefCode,
-    { error: updateOrderError, isMutating: updateMutating },
-  ] = useMutation("/v1/referral/bind", "POST");
-
+  const [bindRefCode, { error: updateOrderError, isMutating: updateMutating }] =
+    useMutation("/v1/referral/bind", "POST");
 
   const { referral } = useContext(OrderlyAppContext);
 
@@ -50,45 +46,54 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     return "--";
   }, [status]);
 
+  const enableTrading = useCallback(() => {
+    setHandleStep(2);
+    return props
+      .onEnableTrading?.(remember)
+      .then(
+        () => {
+          if (refCode && refCode.length > 0) {
+            bindRefCode({ referral_code: refCode })
+              .then((res) => {
+                referral?.onBoundRefCode?.(true, undefined);
+              })
+              .catch((e) => {
+                referral?.onBoundRefCode?.(false, e);
+              })
+              .finally(() => {
+                localStorage.removeItem("referral_code");
+              });
+          }
+          props.onComplete?.();
+        },
+        (e) => {
+          let errorText = `${e}`;
+          if ("message" in e) {
+            errorText = e.message;
+          }
+
+          if ("referral code not exist" === errorText) {
+            errorText = "This referral code does not exist";
+          }
+          toast.error(errorText);
+        }
+      )
+      .finally(() => {
+        setHandleStep(0);
+      });
+  }, []);
+
   const onClick = useCallback(() => {
     if (status < AccountStatusEnum.SignedIn) {
       setHandleStep(1);
       return props.onSignIn?.().finally(() => {
         setHandleStep(0);
+        // sign in success then auto enable trading
+        enableTrading();
       });
     }
     if (status < AccountStatusEnum.EnableTrading) {
-      setHandleStep(2);
-      return props
-        .onEnableTrading?.(remember)
-        .then(
-          () => {
-            if (refCode && refCode.length > 0) {
-              bindRefCode({ referral_code: refCode }).then((res) => {
-                referral?.onBoundRefCode?.(true, undefined);
-              }).catch((e) => {
-                referral?.onBoundRefCode?.(false, e);
-               }).finally(() => {
-                localStorage.removeItem("referral_code");
-              });
-            }
-            props.onComplete?.();
-          },
-          (e) => {
-            let errorText = `${e}`;
-            if ("message" in (e)) {
-              errorText = e.message;
-            }
-
-            if ("referral code not exist" === errorText) {
-              errorText = "This referral code does not exist";
-            }
-            toast.error(errorText);
-          }
-        )
-        .finally(() => {
-          setHandleStep(0);
-        });
+      return enableTrading();
     }
   }, [status, remember, refCode]);
 
@@ -140,7 +145,11 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
-      <ReferralCode className="orderly-pt-5" refCode={refCode} setRefCode={setRefCode} />
+      <ReferralCode
+        className="orderly-pt-5"
+        refCode={refCode}
+        setRefCode={setRefCode}
+      />
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>

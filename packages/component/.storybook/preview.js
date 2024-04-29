@@ -148,6 +148,7 @@ const preview = {
                 console.log("onBoundRefCode", success, error);
 
               },
+              refLink: "https://orderly.netowork/referral?abc=123",
             }}
           >
             <Story />

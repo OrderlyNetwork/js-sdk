@@ -3,7 +3,7 @@ import { SimpleDI, Account, MessageFactor } from "@orderly.network/core";
 import { useConfig } from "../useConfig";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
-  const apiBaseUrl = useConfig<string>("apiBaseUrl");
+  const apiBaseUrl = useConfig("apiBaseUrl");
   return (key, fetcher, config) => {
     try {
       const extendedFetcher = async (args: any) => {

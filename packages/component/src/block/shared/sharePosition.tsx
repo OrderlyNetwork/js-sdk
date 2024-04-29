@@ -7,12 +7,21 @@ import {
   useLeverage,
   useMediaQuery,
   useQuery,
+  useReferralInfo,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { FC, PropsWithChildren, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { MobileSharePnLContent } from "./mobileSharePnl";
+import { OrderlyAppContext } from "@/provider";
 
 export const SharePoisitionView = create<{
   position: any;
@@ -44,12 +53,34 @@ export const SharePoisitionView = create<{
     return Math.min(maxAccountLeverage, maxSymbolLeverage);
   }, [maxAccountLeverage, maxSymbolLeverage]);
 
-  if (symbolInfo.isNil) return null;
+  const { getFirstRefCode } = useReferralInfo();
 
-  
+  if (symbolInfo.isNil) return null;
 
   const base_dp = symbolInfo[position.symbol]("base_dp");
   const quote_dp = symbolInfo[position.symbol]("quote_dp");
+  const { referral } = useContext(OrderlyAppContext);
+
+  const refLink = useMemo(() => {
+    function generateNewUrl(url: string, refCode: string): string {
+      let newUrl: string;
+      if (url.includes("?")) {
+        newUrl = `${url}&ref=${refCode}`;
+      } else {
+        newUrl = `${url}?ref=${refCode}`;
+      }
+      return newUrl;
+    }
+
+    const code = getFirstRefCode()?.code;
+    const link = referral?.refLink;
+
+    if (typeof code !== "undefined" && typeof link !== "undefined") {
+      return generateNewUrl(link, code);
+    }
+
+    return undefined;
+  }, [getFirstRefCode, referral]);
 
   return isTablet ? (
     <MobileSharePnL
@@ -57,6 +88,7 @@ export const SharePoisitionView = create<{
       leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
+      refLink={refLink}
     />
   ) : (
     <DesktopSharePnL
@@ -64,6 +96,7 @@ export const SharePoisitionView = create<{
       leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
+      refLink={refLink}
     />
   );
 });
@@ -75,9 +108,10 @@ const MobileSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    refLink?: string;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, refLink } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   return (
@@ -100,6 +134,7 @@ const MobileSharePnL: FC<
           hide={hide}
           baseDp={baseDp}
           quoteDp={quoteDp}
+          refLink={refLink}
         />
       </SheetContent>
     </Sheet>
@@ -113,9 +148,10 @@ const DesktopSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    refLink?: string;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, refLink } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [viewportHeight, setViewportHeight] = useState(
@@ -153,6 +189,7 @@ const DesktopSharePnL: FC<
             hide={hide}
             baseDp={baseDp}
             quoteDp={quoteDp}
+            refLink={refLink}
           />
         </div>
       </DialogContent>
