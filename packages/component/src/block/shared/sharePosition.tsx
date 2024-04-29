@@ -26,14 +26,15 @@ export const SharePoisitionView = create<{
   const maxAccountLeverage = info?.max_leverage;
 
   const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
-    focusThrottleInterval: 1000 * 60 * 60 * 24,
-    dedupingInterval: 1000 * 60 * 60 * 24,
-    revalidateOnFocus: false,
+    // focusThrottleInterval: 1000 * 60 * 60 * 24,
+    // dedupingInterval: 1000 * 60 * 60 * 24,
+    // revalidateOnFocus: false,
   });
 
   const maxSymbolLeverage = useMemo(() => {
     const base = res?.data?.base_imr;
     if (base) return 1 / base;
+    return undefined;
   }, [res]);
 
   const maxLeverage = useMemo(() => {
