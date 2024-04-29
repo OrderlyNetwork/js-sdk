@@ -28,7 +28,7 @@
     "typedoc": "^0.24.8",
     "typedoc-plugin-markdown": "^3.17.1"
   },
-  "packageManager": "pnpm@7.15.0",
+  "packageManager": "pnpm@9.0.6+sha256.0624e30eff866cdeb363b15061bdb7fd9425b17bc1bb42c22f5f4efdea21f6b3",
   "name": "orderly-web",
   "dependencies": {
     "@orderly.network/hooks": "workspace:^",
