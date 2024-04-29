@@ -26,7 +26,6 @@ import { NetworkImage } from "@/icon";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { modal } from "@/modal";
-import { ConfigStore } from "@orderly.network/core";
 import { cn } from "@/utils/css";
 import { isTestnet } from "@orderly.network/utils";
 import { Divider } from "@/divider";
@@ -48,7 +47,7 @@ export const Assets: FC<AssetsProps> = (props) => {
 
   const [disableGetTestUSDC, setDisableGetTestUSDC] = useState(false);
   const { connectedChain } = useWalletConnector();
-  const config = useConfig<ConfigStore>();
+  const config = useConfig();
 
   const { account, state } = useAccount();
   const showGetTestUSDC = useMemo(() => {
