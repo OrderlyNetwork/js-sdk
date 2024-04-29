@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.4.2"
   },
   "changesets": [
-    "cuddly-trees-brake"
+    "cuddly-trees-brake",
+    "eight-seals-perform"
   ]
 }
