@@ -1,0 +1,27 @@
+{
+  "mode": "pre",
+  "tag": "internal",
+  "initialVersions": {
+    "@orderly/docs": "0.3.5",
+    "@orderly.network/examples": "0.3.5",
+    "@orderly.network/storybook": "1.2.5",
+    "@orderly.network/cli": "0.2.5",
+    "@orderly.network/react": "1.4.2",
+    "@orderly.network/core": "1.4.2",
+    "create-orderly-app": "1.4.2",
+    "eslint-config-custom": "0.2.4",
+    "@orderly.network/hooks": "1.4.2",
+    "@orderly.network/net": "1.4.2",
+    "@orderly.network/web3-onboard": "1.4.2",
+    "@orderly.network/perp": "3.2.2",
+    "@orderly.network/referral": "1.4.2",
+    "@orderly.network/trading-view": "1.4.2",
+    "tsconfig": "0.2.4",
+    "@orderly.network/types": "1.4.2",
+    "@orderly.network/utils": "1.4.2",
+    "@orderly.network/web3-modal": "1.4.2"
+  },
+  "changesets": [
+    "cuddly-trees-brake"
+  ]
+}

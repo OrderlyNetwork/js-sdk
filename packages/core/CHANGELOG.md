@@ -1,5 +1,29 @@
 # @orderly.network/core
 
+## 1.4.3-internal.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.4.3-internal.0
+
+## 1.4.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.4.2
+
+## 1.4.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.4.1
+
 ## 1.4.0
 
 ### Minor Changes
