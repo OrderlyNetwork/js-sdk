@@ -12,8 +12,8 @@ export type ConfigKey =
   | "markets";
 
 export interface ConfigStore {
-  get<T>(key: ConfigKey): T;
-  getOr<T>(key: ConfigKey, defaultValue: T): T;
+  get<T = string>(key: ConfigKey): T;
+  getOr<T = string>(key: ConfigKey, defaultValue: T): T;
   set<T>(key: ConfigKey, value: T): void;
   clear(): void;
 }

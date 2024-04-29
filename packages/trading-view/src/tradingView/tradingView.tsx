@@ -106,7 +106,7 @@ export function TradingView({
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
-    const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
+    const apiBaseUrl = useConfig("apiBaseUrl");
     const { state: accountState } = useAccount();
     const isMobile = useMediaQuery(MEDIA_TABLET);
 
