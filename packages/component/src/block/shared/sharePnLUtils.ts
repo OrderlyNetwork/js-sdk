@@ -17,7 +17,7 @@
           { title: "Quantity", value: "0.123" },
         ],
       },
-      referralCode: "AAAA"
+      referralLink: "{baseUrl}?ref=AAAA"
     }
 */
 
@@ -130,7 +130,7 @@ export function getPnLPosterData(
   }
 
   if ((refCode?.length || 0) > 0) {
-    data["referralCode"] = refCode;
+    data["referralLink"] = refCode;
   }
   
   return data;

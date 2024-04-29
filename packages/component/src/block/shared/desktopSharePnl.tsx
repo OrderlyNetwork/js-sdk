@@ -27,7 +27,7 @@ export const DesktopSharePnLContent: FC<{
   hide: any;
   baseDp?: number;
   quoteDp?: number;
-  refCode?: string;
+  refLink?: string;
 }> = (props) => {
 
   const localPnlConfig = getPnlInfo();
@@ -64,7 +64,7 @@ export const DesktopSharePnLContent: FC<{
     shareOption,
     props.baseDp,
     props.quoteDp,
-    props.refCode,
+    props.refLink,
   );
 
   const onCopy = () => {

@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useQuery } from "../useQuery";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { RefferalAPI } from "./api";
+import { useLocalStorage } from "../useLocalStorage";
 
 export const useReferralInfo = ():{
   data?: RefferalAPI.ReferralInfo;
@@ -9,6 +10,7 @@ export const useReferralInfo = ():{
   isAffiliate?: boolean;
   error: any;
   isLoading: boolean;
+  getFirstRefCode: () => RefferalAPI.ReferralCode | undefined;
 } => {
   const {
     data,
@@ -28,6 +30,33 @@ export const useReferralInfo = ():{
     if (typeof data?.referrer_info?.referral_codes === 'undefined') return undefined;
     return (data?.referrer_info?.referral_codes?.length || 0) > 0;
   }, [data?.referrer_info]);
+
+
+  const [pinCodes] = useLocalStorage<string[]>("orderly_referral_codes", [] as string[]);
+
+  const getFirstRefCode = useCallback(() : RefferalAPI.ReferralCode | undefined => {
+
+    if (!data?.referrer_info.referral_codes) return undefined;
+    const referralCodes = [...data?.referrer_info.referral_codes];
+
+    const pinedItems: RefferalAPI.ReferralCode[] = [];
+
+    for (let i = 0; i < pinCodes.length; i++) {
+        const code = pinCodes[i];
+
+        const index = referralCodes.findIndex((item) => item.code === code);
+        if (index !== -1) {
+
+            pinedItems.push({ ...referralCodes[index]});
+            referralCodes.splice(index, 1);
+        }
+
+    }
+
+    const newCodes = [...pinedItems, ...referralCodes];
+
+    return newCodes?.[0];
+  }, [pinCodes, data]);
   
 
   return {
@@ -36,5 +65,6 @@ export const useReferralInfo = ():{
     isAffiliate,
     error,
     isLoading,
+    getFirstRefCode,
   };
 };
