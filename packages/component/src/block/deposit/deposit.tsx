@@ -9,6 +9,7 @@ import {
 import { API, CurrentChain } from "@orderly.network/types";
 import { DepositProvider } from "./DepositProvider";
 import { praseChainIdToNumber } from "@orderly.network/utils";
+import { NetworkId } from "@orderly.network/types";
 
 export enum DepositStatus {
   Checking = "Checking",
@@ -22,7 +23,7 @@ export interface DepositProps {
 }
 
 export const Deposit: FC<DepositProps> = (props) => {
-  const networkId = useConfig("networkId");
+  const networkId = useConfig<NetworkId>("networkId");
 
   // @ts-ignore
   const [chains, { findByChainId }] = useChains(networkId, {

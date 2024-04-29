@@ -19,9 +19,9 @@ export interface WithdrawProps {
 export const Withdraw: FC<WithdrawProps> = (props) => {
   const { connectedChain, wallet, setChain } = useWalletConnector();
 
-  const networkId = useConfig("networkId");
+  const networkId = useConfig<NetworkId>("networkId");
 
-  const [chains, { findByChainId }] = useChains(networkId as NetworkId, {
+  const [chains, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
   });
 
