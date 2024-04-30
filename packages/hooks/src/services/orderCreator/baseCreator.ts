@@ -52,9 +52,10 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       [P in keyof OrderEntity]?: { type: string; message: string };
     } = {};
 
-    const { maxQty, symbol } = configs;
+    const { maxQty, symbol, markPrice } = configs;
 
-    let { order_quantity, total, order_price, reduce_only } = values;
+    // @ts-ignore
+    let { order_quantity, total, order_price, reduce_only, order_type } = values;
 
     const { min_notional } = symbol;
 
@@ -115,8 +116,9 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       }
     }
 
+    const price = `${order_type}`.includes("MARKET") ? markPrice : order_price;
     const notionalHintStr = checkNotional(
-      order_price,
+      price,
       order_quantity,
       min_notional
     );
