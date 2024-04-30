@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // import { fn } from '@storybook/test';
-import { BaseIcon, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, Flex, Setting, SettingFill } from '@orderly.network/ui';
+import { BaseIcon, Box, Check, CheckCircleFill, CheckSquareFill, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, CloseCircleFill, CloseSquareFill, Flex, Setting, SettingFill } from '@orderly.network/ui';
 
 
 const meta = {
@@ -29,12 +29,8 @@ const meta = {
             step:0.1
         }
     },
-    width:{control:{
-      type: 'number',
-        min: 0,
-        step: 1,
-    },},
-    height:{control:{
+
+    size:{control:{
       type: 'number',
         min: 0,
         step: 1,
@@ -46,8 +42,7 @@ const meta = {
       // py: 2,
       color: 'primary',
       opacity: 1,
-width: 24,
-height: 24,
+size: 24,
      },
   } satisfies Meta<typeof BaseIcon>;
   
@@ -56,9 +51,14 @@ height: 24,
 
   export const Icons: Story = {
     render: (args) => {
-        return <Flex gap={3}>
+        return <Box width={'400px'} height={'300px'}>
+            <Flex gap={3} wrap={'wrap'}>
             <Close {...args}/>
+            <CloseSquareFill {...args}/>
+            <CloseCircleFill {...args}/>
             <Check {...args}/>
+            <CheckCircleFill {...args}/>
+            <CheckSquareFill {...args}/>
             <ChevronUp {...args}/>
             <ChevronDown {...args}/>
             <ChevronLeft {...args}/>
@@ -66,6 +66,7 @@ height: 24,
             <Setting {...args}/>
             <SettingFill {...args}/>
         </Flex>
+        </Box>
     },
   };
 

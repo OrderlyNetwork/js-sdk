@@ -1,37 +1,56 @@
 import { FC, HTMLAttributes } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
+import {
+  ComponentPropsWithout,
+  RemovedProps,
+} from "../helpers/component-props";
 
 const spinnerVariants = tv({
   base: "oui-text-gray-200 oui-animate-spin dark:oui-text-gray-600 oui-fill-primary",
   variants: {
     size: {
-      small: "oui-w-4 oui-h-4",
+      nano: "oui-w-3 oui-h-3",
+      mini: "oui-w-4 oui-h-4",
+      medium: "oui-w-6 oui-h-6",
       default: "oui-w-8 oui-h-8",
       large: "oui-w-12 oui-h-12",
     },
-    background: {
-      default: "oui-text-base-contrast/40",
-      transparent: "oui-text-transparent",
+    color: {
+      primary: "oui-fill-primary",
+      success: "oui-fill-success",
+      danger: "oui-fill-danger",
+      warning: "oui-fill-warning",
+      gray: "oui-fill-gray",
+      darkGray: "oui-fill-darkGray",
     },
+    // background: {
+    //   default: "oui-text-base-contrast/40",
+    //   transparent: "oui-text-transparent",
+    // },
   },
 
   defaultVariants: {
     size: "default",
-    background: "default",
+    color: "primary",
   },
 });
 
 interface SpinnerProps
-  extends HTMLAttributes<HTMLOrSVGElement>,
-    VariantProps<typeof spinnerVariants> {}
+  extends ComponentPropsWithout<"svg", RemovedProps>,
+    VariantProps<typeof spinnerVariants> {
+  loading?: boolean;
+}
 
 const Spinner: FC<SpinnerProps> = (props) => {
-  const { size, background, className } = props;
+  const { size, color, loading = true, children, className } = props;
+  if (!loading) {
+    return <>{children}</>;
+  }
   return (
-    <div role="status" className="oui-inline-block">
+    <span role="status" className="oui-inline-block">
       <svg
         aria-hidden="true"
-        className={spinnerVariants({ size, className, background })}
+        className={spinnerVariants({ size, className, color })}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +66,7 @@ const Spinner: FC<SpinnerProps> = (props) => {
         />
       </svg>
       <span className="oui-sr-only">Loading...</span>
-    </div>
+    </span>
   );
 };
 

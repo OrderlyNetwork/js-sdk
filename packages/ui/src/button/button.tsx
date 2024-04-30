@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
-import React, { ButtonHTMLAttributes } from "react";
+import React, { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
+import { BaseButton, BaseButtonProps } from "./base";
 
 const buttonVariants = tv({
   base: [
@@ -117,33 +118,30 @@ const buttonVariants = tv({
 });
 
 interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
+  extends Omit<BaseButtonProps, "size">,
+    VariantProps<typeof buttonVariants> {}
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, color, fullWidth, asChild = false, ...props },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={buttonVariants({
-          variant,
-          size,
-          color,
-          className,
-          disabled: props.disabled,
-          fullWidth,
-        })}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+const Button = React.forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<ButtonProps>
+>(({ className, variant, size, color, fullWidth, ...props }, ref) => {
+  // const Comp = asChild ? Slot : "button";
+  return (
+    <BaseButton
+      className={buttonVariants({
+        variant,
+        size,
+        color,
+        className,
+        disabled: props.disabled,
+        fullWidth,
+      })}
+      size={size}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

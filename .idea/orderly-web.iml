@@ -8,9 +8,11 @@
       <excludeFolder url="file://$MODULE_DIR$/apps" />
       <excludeFolder url="file://$MODULE_DIR$/packages/net" />
     </content>
+    <content url="file://$MODULE_DIR$/apps/storybook2" />
     <content url="file://$MODULE_DIR$/packages/component" />
     <content url="file://$MODULE_DIR$/packages/hooks" />
     <content url="file://$MODULE_DIR$/packages/net" />
+    <content url="file://$MODULE_DIR$/packages/ui" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

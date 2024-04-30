@@ -7,3 +7,7 @@ export { ChevronLeft } from "./chevronLeft";
 export { ChevronRight } from "./chevronRight";
 export { Setting } from "./setting";
 export { SettingFill } from "./settingFill";
+export { CloseSquareFill } from "./closeSquareFill";
+export { CloseCircleFill } from "./closeCircleFill";
+export { CheckCircleFill } from "./checkCircleFill";
+export { CheckSquareFill } from "./checkSquareFill";

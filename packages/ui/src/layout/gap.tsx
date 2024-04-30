@@ -1,7 +1,3 @@
-import { cva } from "cva";
-import { tv } from "tailwind-variants";
-import { layoutVariants } from "./layout";
-
 export const gapVariants = {
   // extend: layoutVariants,
   variants: {

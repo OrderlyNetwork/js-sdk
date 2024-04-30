@@ -1,11 +1,11 @@
 import type {Meta, StoryObj} from '@storybook/react';
 // import { fn } from '@storybook/test';
-import {Spinner} from '@orderly.network/ui';
+import {Input} from '@orderly.network/ui';
 
 
 const meta = {
-    title: 'Base/Spinner',
-    component: Spinner,
+    title: 'Base/Input',
+    component: Input,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
         layout: 'centered',
@@ -18,21 +18,26 @@ const meta = {
             control: {
                 type: "inline-radio",
             },
-            options: ["primary", 'success', 'danger', 'warning'],
+            options: ["default", 'success', 'danger', 'warning'],
         },
         size: {
             control: {
                 type: "inline-radio",
             },
-            options: ['nano', 'mini','medium','default','large'],
+            options: ['mini','medium','default','large'],
+        },
+        disabled:{
+            control:{
+                type:'boolean'
+            }
         }
     },
     // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     args: {
-      // size:'default'
-        color: 'primary'
+      size:'default',
+      disabled:false
     },
-} satisfies Meta<typeof Spinner>;
+} satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

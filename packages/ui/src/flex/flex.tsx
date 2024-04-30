@@ -1,11 +1,10 @@
 import { ElementRef, forwardRef } from "react";
-import { cva, compose } from "cva";
 import { layoutVariants } from "../layout/layout";
 import { gapVariants } from "../layout/gap";
 import { parseSizeProps } from "../helpers/parse-props";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "../helpers/cn";
 import { tv, VariantProps } from "tailwind-variants";
+import { positionVariants } from "../layout/position";
 
 type FlexElement = ElementRef<"div">;
 
@@ -18,6 +17,7 @@ const flexBaseVariant = tv({
   variants: {
     ...gapVariants.variants,
     ...layoutVariants.variants,
+    ...positionVariants.variants,
   },
 });
 
@@ -103,6 +103,8 @@ const Flex = forwardRef<FlexElement, FlexProps>((props, forwardedRef) => {
     gapX,
     gapY,
     style,
+    wrap,
+    position,
     ...rest
   } = parseSizeProps(props);
 
@@ -122,6 +124,8 @@ const Flex = forwardRef<FlexElement, FlexProps>((props, forwardedRef) => {
         direction,
         justify,
         itemAlign,
+        wrap,
+        position,
       })}
       {...rest}
       ref={forwardedRef}

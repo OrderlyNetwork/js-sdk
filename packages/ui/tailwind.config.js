@@ -37,72 +37,73 @@ module.exports = withTV({
     extend: {
       spacing:{
         '13': '3.25rem',
+      },
+      colors:{
+        primary: {
+          DEFAULT: "rgb(var(--oui-color-primary) / <alpha-value>)",
+          // light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
+          // darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
+          contrast:
+            "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "rgb(var(--oui-color-secondary) / <alpha-value>)",
+        },
+        tertiary: {
+          DEFAULT: "rgb(var(--oui-color-tertiary) / <alpha-value>)",
+        },
+        
+        quaternary: {
+          DEFAULT: "rgb(var(--oui-color-quaternary) / <alpha-value>)",
+        },
+        link: {
+          DEFAULT: "rgb(var(--oui-color-link) / <alpha-value>)",
+          light: "rgb(var(--oui-color-link-light) / <alpha-value>)",
+        },
+        danger: {
+          DEFAULT: "rgb(var(--oui-color-danger) / <alpha-value>)",
+          light: "rgb(var(--oui-color-danger-light) / <alpha-value>)",
+          darken: "rgb(var(--oui-color-danger-darken) / <alpha-value>)",
+          contrast: "rgb(var(--oui-color-danger-contrast) / <alpha-value>)",
+        },
+        warning: {
+          DEFAULT: "rgb(var(--oui-color-warning) / <alpha-value>)",
+          light: "rgb(var(--oui-color-warning-light) / <alpha-value>)",
+          darken: "rgb(var(--oui-color-warning-darken) / <alpha-value>)",
+          contrast:
+            "rgb(var(--oui-color-warning-contrast) / <alpha-value>)",
+        },
+        success: {
+          DEFAULT: "rgb(var(--oui-color-success) / <alpha-value>)",
+          light: "rgb(var(--oui-color-success-light) / <alpha-value>)",
+          darken: "rgb(var(--oui-color-success-darken) / <alpha-value>)",
+          contrast:
+            "rgb(var(--oui-color-success-contrast) / <alpha-value>)",
+        },
+        base: {
+          1: "rgb(var(--oui-color-base-1) / <alpha-value>)",
+          2: "rgb(var(--oui-color-base-2) / <alpha-value>)",
+          3: "rgb(var(--oui-color-base-3) / <alpha-value>)",
+          4: "rgb(var(--oui-color-base-4) / <alpha-value>)",
+          5: "rgb(var(--oui-color-base-5) / <alpha-value>)",
+          6: "rgb(var(--oui-color-base-6) / <alpha-value>)",
+          7: "rgb(var(--oui-color-base-7) / <alpha-value>)",
+          8: "rgb(var(--oui-color-base-8) / <alpha-value>)",
+          9: "rgb(var(--oui-color-base-9) / <alpha-value>)",
+          10: "rgb(var(--oui-color-base-10) / <alpha-value>)",
+          contrast: {
+            // DEFAULT:"rgb(var(--oui-color-base-foreground) / <alpha-value>)",
+            DEFAULT: "rgb(var(--oui-color-base-foreground) / 0.98)",
+            80: "rgb(var(--oui-color-base-foreground) / 0.80)",
+            54: "rgb(var(--oui-color-base-foreground) / 0.54)",
+            36: "rgb(var(--oui-color-base-foreground) / 0.36)",
+            20: "rgb(var(--oui-color-base-foreground) / 0.2)",
+            12: "rgb(var(--oui-color-base-foreground) / 0.12)",
+          },
+        },
       }
     },
-    colors:{
-      primary: {
-        DEFAULT: "rgb(var(--oui-color-primary) / <alpha-value>)",
-        // light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
-        // darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
-        contrast:
-          "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
-      },
-      secondary: {
-        DEFAULT: "rgb(var(--oui-color-secondary) / <alpha-value>)",
-      },
-      tertiary: {
-        DEFAULT: "rgb(var(--oui-color-tertiary) / <alpha-value>)",
-      },
-      
-      quaternary: {
-        DEFAULT: "rgb(var(--oui-color-quaternary) / <alpha-value>)",
-      },
-      link: {
-        DEFAULT: "rgb(var(--oui-color-link) / <alpha-value>)",
-        light: "rgb(var(--oui-color-link-light) / <alpha-value>)",
-      },
-      danger: {
-        DEFAULT: "rgb(var(--oui-color-danger) / <alpha-value>)",
-        light: "rgb(var(--oui-color-danger-light) / <alpha-value>)",
-        darken: "rgb(var(--oui-color-danger-darken) / <alpha-value>)",
-        contrast: "rgb(var(--oui-color-danger-contrast) / <alpha-value>)",
-      },
-      warning: {
-        DEFAULT: "rgb(var(--oui-color-warning) / <alpha-value>)",
-        light: "rgb(var(--oui-color-warning-light) / <alpha-value>)",
-        darken: "rgb(var(--oui-color-warning-darken) / <alpha-value>)",
-        contrast:
-          "rgb(var(--oui-color-warning-contrast) / <alpha-value>)",
-      },
-      success: {
-        DEFAULT: "rgb(var(--oui-color-success) / <alpha-value>)",
-        light: "rgb(var(--oui-color-success-light) / <alpha-value>)",
-        darken: "rgb(var(--oui-color-success-darken) / <alpha-value>)",
-        contrast:
-          "rgb(var(--oui-color-success-contrast) / <alpha-value>)",
-      },
-      base: {
-        1: "rgb(var(--oui-color-base-1) / <alpha-value>)",
-        2: "rgb(var(--oui-color-base-2) / <alpha-value>)",
-        3: "rgb(var(--oui-color-base-3) / <alpha-value>)",
-        4: "rgb(var(--oui-color-base-4) / <alpha-value>)",
-        5: "rgb(var(--oui-color-base-5) / <alpha-value>)",
-        6: "rgb(var(--oui-color-base-6) / <alpha-value>)",
-        7: "rgb(var(--oui-color-base-7) / <alpha-value>)",
-        8: "rgb(var(--oui-color-base-8) / <alpha-value>)",
-        9: "rgb(var(--oui-color-base-9) / <alpha-value>)",
-        10: "rgb(var(--oui-color-base-10) / <alpha-value>)",
-        contrast: {
-          // DEFAULT:"rgb(var(--oui-color-base-foreground) / <alpha-value>)",
-          DEFAULT: "rgb(var(--oui-color-base-foreground) / 0.98)",
-          80: "rgb(var(--oui-color-base-foreground) / 0.80)",
-          54: "rgb(var(--oui-color-base-foreground) / 0.54)",
-          36: "rgb(var(--oui-color-base-foreground) / 0.36)",
-          20: "rgb(var(--oui-color-base-foreground) / 0.2)",
-          12: "rgb(var(--oui-color-base-foreground) / 0.12)",
-        },
-      },
-    }
+    
   },
   plugins: [sizePlugin(),require("tailwindcss-animate"),],
 });

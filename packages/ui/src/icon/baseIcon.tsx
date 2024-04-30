@@ -25,19 +25,19 @@ const iconVariants = tv({
 export interface BaseIconProps
   extends ComponentPropsWithout<"svg", RemovedProps>,
     VariantProps<typeof iconVariants> {
-  width?: number;
-  height?: number;
+  // width?: number;
+  size?: number;
   opacity?: number;
 }
 
 export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
-    const { width = 24, height = 24, color, className, ...rest } = props;
+    const { size = 24, color, className, ...rest } = props;
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width={width}
-        height={height}
+        width={size}
+        height={size}
         fill="none"
         viewBox="0 0 24 24"
         ref={ref}

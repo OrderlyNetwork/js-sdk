@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // import { fn } from '@storybook/test';
-import { Button, Flex } from '@orderly.network/ui';
+import { Button, Close, Flex } from '@orderly.network/ui';
 
 
 const meta = {
@@ -8,7 +8,7 @@ const meta = {
     component: Button,
     parameters: {
       // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-      // layout: 'centered',
+      layout: 'centered',
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ['autodocs'],
@@ -27,6 +27,11 @@ const meta = {
       },
       options:['primary','success','danger','warning','gray','darkGray']
     },
+    loading:{
+      control:{
+        type:'boolean'
+      }
+    },
     variant:{
       control:{
         type:'inline-radio'
@@ -43,7 +48,8 @@ const meta = {
       color: 'primary',
       children: 'Button',
       disabled:false,
-      fullWidth:false
+      fullWidth:false,
+      loading:false,
     }
   } satisfies Meta<typeof Button>;
   
@@ -62,9 +68,18 @@ const meta = {
       return <Flex gap={2} itemAlign={'center'}>
         <Button {...rest} size='nano'>Nano</Button>
         <Button {...rest} size='mini'>Mini</Button>
-        <Button {...rest} size='medium'>Menium</Button>
+        <Button {...rest} size='medium'>Medium</Button>
         <Button {...rest}>Default</Button>
         <Button {...rest} size='large'>Large</Button>
       </Flex>
+    }
+  }
+
+  export const IconButton:Story = {
+    render: (args) => {
+      return <Flex gap={2} itemAlign={'center'}>
+<Button {...args} leading={<Close color='white' size={12} />}>Left icon</Button>
+<Button {...args} trailing={<Close color='white' size={12} />}>Right icon</Button>
+        </Flex>
     }
   }
