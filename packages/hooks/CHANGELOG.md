@@ -1,5 +1,41 @@
 # @orderly.network/hooks
 
+## 1.4.3
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.4.3
+  - @orderly.network/utils@1.4.3
+  - @orderly.network/core@1.4.3
+  - @orderly.network/perp@3.2.3
+  - @orderly.network/net@1.4.3
+
+## 1.4.2
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.4.2
+  - @orderly.network/utils@1.4.2
+  - @orderly.network/core@1.4.2
+  - @orderly.network/perp@3.2.2
+  - @orderly.network/net@1.4.2
+
+## 1.4.1
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/core@1.4.1
+  - @orderly.network/net@1.4.1
+  - @orderly.network/perp@3.2.1
+  - @orderly.network/types@1.4.1
+  - @orderly.network/utils@1.4.1
+
 ## 1.4.0
 
 ### Minor Changes

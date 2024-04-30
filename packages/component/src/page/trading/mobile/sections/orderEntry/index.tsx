@@ -133,8 +133,15 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
           //     // timestamp: Date.now(),
           //   }));
           // } else {
+
+          let nValue = order;
+          if (field === 'order_type' && (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET || value === OrderType.MARKET)) {
+            const {order_type_ext, ...rest} = nValue;
+            nValue = rest;
+          }
+
           setOrder((order) => ({
-            ...order,
+            ...nValue,
             [field]: value,
             // timestamp: Date.now(),
           }));

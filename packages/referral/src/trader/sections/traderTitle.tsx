@@ -1,4 +1,4 @@
-import { Button, cn } from "@orderly.network/react"
+import { cn } from "@orderly.network/react"
 import { FC, useContext, useMemo } from "react";
 import { GradientText } from "../../components/gradientText";
 import { ReferralContext } from "../../hooks/referralContext";

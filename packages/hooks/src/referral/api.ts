@@ -1,4 +1,4 @@
-export declare namespace API {
+export declare namespace RefferalAPI {
 
   export interface ReferralInfo {
     referrer_info: Referrer,

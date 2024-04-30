@@ -1,12 +1,9 @@
-import { DatePicker, format, subDays, Divider, cn, sub, DateRange } from "@orderly.network/react";
+import { DatePicker, subDays, Divider, cn, sub, DateRange } from "@orderly.network/react";
 import { RebateList } from "./rebateList";
-import { FC, useContext, useEffect, useMemo, useState } from "react";
-import { useDistribution } from "../../hooks/useDistribution";
+import { FC, useContext, useMemo, useState } from "react";
 import { ReferralContext } from "../../hooks/referralContext";
-import { API } from "../../types/api";
 import { compareDate, formatTime } from "../../utils/utils";
-import { useRefereeRebateSummary } from "../../hooks/useRefereeRebateSummary";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useMediaQuery, ReferralAPI as API, useRefereeRebateSummary  } from "@orderly.network/hooks";
 
 export type RebatesItem = API.RefereeRebateSummary & {
     vol?: number

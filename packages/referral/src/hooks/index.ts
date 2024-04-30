@@ -1,2 +1,1 @@
-export { ReferralProvider } from "./referralContext";
-export {}
+export * from "./referralContext";

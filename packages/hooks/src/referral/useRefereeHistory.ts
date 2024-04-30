@@ -1,7 +1,6 @@
-import { usePrivateInfiniteQuery, usePrivateQuery } from "@orderly.network/hooks"
-import { generateKeyFun } from "../utils/swr";
+import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
+import { generateKeyFun } from "./swr";
 import { useMemo } from "react";
-import { API } from "../types/api";
 
 type Params = {
     //** default is 10 */
@@ -56,5 +55,5 @@ export const useRefereeHistory = (params: Params): any[] => {
             refresh: response.mutate,
             loadMore
         }
-    ] as const;
+    ];
 }

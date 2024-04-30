@@ -1,12 +1,11 @@
 import { FC, useContext, useMemo } from "react";
-import { Button, Column, Divider, EmptyView, Table, cn, modal, toast } from "@orderly.network/react";
+import { Button, Column, Divider, Table, cn, modal, toast } from "@orderly.network/react";
 import { PinView } from "./pinView";
 import { CopyIcon } from "../icons";
 import { ReferralContext } from "../../hooks/referralContext";
-import { API } from "../../types/api";
 import { addQueryParam, copyText } from "../../utils/utils";
 import { Decimal } from "@orderly.network/utils";
-import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
+import { useLocalStorage, useMediaQuery, ReferralAPI as API } from "@orderly.network/hooks";
 import { EditIcon } from "../../components/icons/edit";
 import { EditReferralRate } from "./editReferralRate";
 import { RefEmptyView } from "../../components/icons/emptyView";
@@ -123,7 +122,7 @@ export const CodeList: FC<{
             render: (value, record) => (
                 <div className="orderly-flex orderly-justify-end">
                     <_CopyLink className="lg:orderly-w-[82px]"
-                        onClick={(event) => copyLink(value)}
+                        onClick={(event) => copyLink(record.code)}
                     />
                 </div>
             )

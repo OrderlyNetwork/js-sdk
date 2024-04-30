@@ -1,10 +1,9 @@
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useMediaQuery, useCommission, useReferralRebateSummary } from "@orderly.network/hooks";
 import { Column, DatePicker, Divider, EndReachedBox, ListView, Numeral, Table, cn, format, subDays } from "@orderly.network/react";
 import { FC, useEffect, useMemo, useState } from "react";
-import { useCommission } from "../../hooks/useCommission";
+
 import { formatYMDTime } from "../../utils/utils";
 import { RefEmptyView } from "../../components/icons/emptyView";
-import { useReferalRebateSummary } from "../../hooks/useReferalRebateSummary";
 import { DateRange } from "../../../../component/esm";
 
 
@@ -15,7 +14,7 @@ export const CommissionList: FC<{
     const { dateText, setDateText } = props;
 
     const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 91), to: subDays(new Date(), 1) });
-    const [data, { refresh, isLoading, loadMore }] = useReferalRebateSummary({
+    const [data, { refresh, isLoading, loadMore }] = useReferralRebateSummary({
         startDate: pickDate?.from !== undefined ? format(pickDate.from, 'yyyy-MM-dd') : undefined,
         endDate: pickDate?.to !== undefined ? format(pickDate.to, 'yyyy-MM-dd') : undefined,
     });

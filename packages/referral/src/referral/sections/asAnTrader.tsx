@@ -5,8 +5,6 @@ import { USDCIcon } from "../../affiliate/icons";
 import { ArrowRightIcon } from "../icons/arrowRight";
 import { TraderIcon } from "../icons/trader";
 import { ReferralInputCode } from "./enterCode";
-import { commify } from "@orderly.network/utils";
-import { refCommify } from "../../utils/decimal";
 import { useTranslation } from "../../locale/useTranslation";
 export const AsAnTrader = () => {
 
