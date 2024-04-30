@@ -95,6 +95,7 @@ const Select: FC<SelectProps> = ({
 
       if (activeItem) return activeItem.label;
     }
+    //@ts-ignore
     return props.value || props.label || props.placeholder;
   }, [props.value]);
 
@@ -113,14 +114,14 @@ const Select: FC<SelectProps> = ({
 
   useEffect(() => {
     if (triggerRef.current) {
-      const resizeObserver = new ResizeObserver(entries => {
+      const resizeObserver = new ResizeObserver((entries) => {
         if (triggerRef.current) {
           setWidth(triggerRef.current.offsetWidth);
         }
       });
 
       resizeObserver.observe(triggerRef.current);
-      
+
       return () => {
         if (triggerRef.current) {
           resizeObserver.unobserve(triggerRef.current);
@@ -181,9 +182,11 @@ const Select: FC<SelectProps> = ({
                 option.value === props.value &&
                   (color === "buy"
                     ? "orderly-text-trade-profit"
-                    : (color === "sell" ? "orderly-text-trade-loss" : "orderly-text-base-contract")),
-                    option.className,
-                    option.value === props.value && option.activeClassName,
+                    : color === "sell"
+                    ? "orderly-text-trade-loss"
+                    : "orderly-text-base-contract"),
+                option.className,
+                option.value === props.value && option.activeClassName
               )}
               onSelect={(evnet) => {
                 // @ts-ignore
