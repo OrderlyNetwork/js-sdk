@@ -1,5 +1,35 @@
 # @orderly.network/referral
 
+## 1.4.3
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.4.3
+  - @orderly.network/hooks@1.4.3
+  - @orderly.network/utils@1.4.3
+
+## 1.4.2
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.4.2
+  - @orderly.network/hooks@1.4.2
+  - @orderly.network/utils@1.4.2
+
+## 1.4.1
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.4.1
+  - @orderly.network/hooks@1.4.1
+  - @orderly.network/utils@1.4.1
+
 ## 1.4.0
 
 ### Minor Changes

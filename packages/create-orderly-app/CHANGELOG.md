@@ -1,5 +1,23 @@
 # create-orderly-app
 
+## 1.4.3
+
+### Patch Changes
+
+- fix bugs;
+
+## 1.4.2
+
+### Patch Changes
+
+- fix bugs;
+
+## 1.4.1
+
+### Patch Changes
+
+- fix bugs;
+
 ## 1.5.0
 
 ### Minor Changes
