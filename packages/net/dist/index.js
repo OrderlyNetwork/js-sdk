@@ -72,9 +72,9 @@ module.exports = __toCommonJS(src_exports);
 // src/version.ts
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.5.1-internal.0";
+  window.__ORDERLY_VERSION__["@orderly.network/net"] = "1.5.1-internal.1";
 }
-var version_default = "1.5.1-internal.0";
+var version_default = "1.5.1-internal.1";
 
 // src/errors/apiError.ts
 var ApiError = class extends Error {
@@ -246,14 +246,16 @@ var WS = class {
     this.bindEvents();
   }
   bindEvents() {
+    var _a, _b;
     if (typeof document !== "undefined") {
-      document.addEventListener(
+      (_a = document.addEventListener) == null ? void 0 : _a.call(
+        document,
         "visibilitychange",
         this.onVisibilityChange.bind(this)
       );
     }
     if (typeof window !== "undefined") {
-      window.addEventListener("online", this.onNetworkStatusChange.bind(this));
+      (_b = window.addEventListener) == null ? void 0 : _b.call(window, "online", this.onNetworkStatusChange.bind(this));
     }
   }
   onVisibilityChange() {
