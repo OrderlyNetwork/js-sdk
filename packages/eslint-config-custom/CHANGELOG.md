@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.2.5-internal.2
+
+### Patch Changes
+
+- update
+
 ## 0.2.5-internal.1
 
 ### Patch Changes
