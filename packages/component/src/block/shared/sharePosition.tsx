@@ -38,8 +38,11 @@ export const SharePoisitionView = create<{
   }, [res]);
 
   const maxLeverage = useMemo(() => {
-    if (!maxAccountLeverage || !maxSymbolLeverage) {
-      return "-";
+    if (typeof maxAccountLeverage === 'undefined') {
+      return "-A";
+    }
+    if (typeof maxSymbolLeverage === 'undefined') {
+      return "-B";
     }
 
     return Math.min(maxAccountLeverage, maxSymbolLeverage);
