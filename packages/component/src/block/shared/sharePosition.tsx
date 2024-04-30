@@ -25,28 +25,28 @@ export const SharePoisitionView = create<{
 
   const maxAccountLeverage = info?.max_leverage;
 
-  const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
+  const {data: symbolData} = useQuery<any>(`/v1/public/info/${position.symbol}`, {
     // focusThrottleInterval: 1000 * 60 * 60 * 24,
     // dedupingInterval: 1000 * 60 * 60 * 24,
     // revalidateOnFocus: false,
+    errorRetryCount: 3,
+    errorRetryInterval: 200,
   });
-
-  const maxSymbolLeverage = useMemo(() => {
-    const base = res?.data?.base_imr;
-    if (base) return 1 / base;
-    return undefined;
-  }, [res]);
 
   const maxLeverage = useMemo(() => {
     if (typeof maxAccountLeverage === 'undefined') {
-      return "-A";
+      return "-";
     }
-    if (typeof maxSymbolLeverage === 'undefined') {
-      return "-B";
+    const base = symbolData?.base_imr;
+    if (typeof base === 'undefined') {
+      return "-";
     }
+    const maxSymbolLeverage = 1/base;
+    console.log("symbol data", symbolData, maxSymbolLeverage);
+    
 
     return Math.min(maxAccountLeverage, maxSymbolLeverage);
-  }, [maxAccountLeverage, maxSymbolLeverage]);
+  }, [info?.max_leverage, symbolData]);
 
   if (symbolInfo.isNil) return null;
 
