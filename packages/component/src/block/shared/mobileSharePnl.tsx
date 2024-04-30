@@ -110,6 +110,7 @@ export const MobileSharePnLContent: FC<{
 
   return (
     <div className="orderly-referral">
+      <div>{`leverage: ${props.leverage}x`}</div>
       <div
         ref={carouselRef}
         className="orderly-w-full orderly-mt-4 orderly-overflow-hidden"
