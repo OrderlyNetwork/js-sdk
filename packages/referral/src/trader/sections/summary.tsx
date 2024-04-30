@@ -1,7 +1,7 @@
-import React, { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { FC } from "react";
 import { Numeral, cn } from "@orderly.network/react";
-import { HistoryIcon, TriangleDownIcon, USDCIcon } from "../../affiliate/icons";
+import {  USDCIcon } from "../../affiliate/icons";
 import { FilterType } from "../../types/types";
 import { ReferralContext } from "../../hooks/referralContext";
 import { SummaryFilter } from "../../components/summaryFilter";

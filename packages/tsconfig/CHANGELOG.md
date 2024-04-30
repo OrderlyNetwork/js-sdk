@@ -1,5 +1,23 @@
 # tsconfig
 
+## 0.2.5
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.2.4
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.2.3
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.2.2
 
 ### Patch Changes

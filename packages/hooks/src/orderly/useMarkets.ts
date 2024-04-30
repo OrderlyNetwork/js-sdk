@@ -1,6 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from "react";
 import { useMarketsStream } from "./useMarketsStream";
-import { useConfig } from "../useConfig";
 import { OrderlyContext } from "../orderlyContext";
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";

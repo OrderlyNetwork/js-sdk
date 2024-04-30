@@ -9,7 +9,6 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { WalletConnectSheet } from "@/block/walletConnect";
 import { ArrowRightIcon, CopyIcon } from "@/icon";
 import { useGetChains } from "./useGetChains";
-import { type ConfigStore } from "@orderly.network/core";
 import { Divider } from "@/divider";
 import { Statistic } from "@/statistic";
 import { OrderlyAppContext } from "@/provider";
@@ -27,7 +26,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
   const { onDisconnect } = props;
   const { account, state } = useAccount();
   // const [loading,setLoading] = React.useState(false);
-  const config = useConfig<ConfigStore>();
+  const config = useConfig();
 
   const [getTestUSDC, { isMutating }] = useMutation(
     `${config.get("operatorUrl")}/v1/faucet/usdc`

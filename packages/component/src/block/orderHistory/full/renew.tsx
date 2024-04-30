@@ -18,8 +18,7 @@ export const Renew: FC<{ record: any }> = (props) => {
   >("/v1/order");
   const [loading, setLoading] = useState(false);
 
-  // @ts-ignore
-  const { brokerId } = useConfig<ConfigStore>();
+  const brokerId = useConfig("brokerId");
   const onSubmit = useCallback(() => {
     setLoading(false);
     setOpen(false);

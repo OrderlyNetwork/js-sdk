@@ -1,8 +1,6 @@
 import { FC, useContext, useMemo, useState } from "react";
-import { HistoryIcon } from "../../components/icons/history";
-import { TriangleDownIcon } from "../../components/icons/triangleDown";
 import { USDCIcon } from "../../components/icons/usdc";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, Numeral, cn } from "@orderly.network/react";
+import { Numeral, cn } from "@orderly.network/react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { SummaryFilter } from "../../components/summaryFilter";
 import { FilterType } from "../../types/types";

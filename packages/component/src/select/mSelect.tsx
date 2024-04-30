@@ -23,6 +23,7 @@ export const MSelect: FC<SelectProps> = ({
 
       if (activeItem) return activeItem.label;
     }
+    //@ts-ignore
     return props.value || props.label || props.placeholder;
   }, [props.value]);
 

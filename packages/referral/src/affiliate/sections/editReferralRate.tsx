@@ -12,8 +12,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { cleanStringStyle, useMutation } from "@orderly.network/hooks";
 import { ReferralCodeType } from "./referralCode";
-import { Decimal, commify } from "@orderly.network/utils";
-import { useFieldArray } from "react-hook-form";
+import { Decimal } from "@orderly.network/utils";
 
 export const EditReferralRate = create<{
     code: ReferralCodeType,

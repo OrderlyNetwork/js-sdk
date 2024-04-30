@@ -4,8 +4,6 @@ import { useContext, useMemo } from "react";
 import { OverwiteCard, ReferralContext } from "../../hooks/referralContext";
 import { USDCIcon } from "../../affiliate/icons";
 import { ArrowRightIcon } from "../icons/arrowRight";
-import { commify } from "@orderly.network/utils";
-import { refCommify } from "../../utils/decimal";
 import { useTranslation } from "../../locale/useTranslation";
 
 

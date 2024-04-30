@@ -3,12 +3,14 @@ import { create } from "@/modal/modalHelper";
 import { Sheet, SheetContent, SheetHeader } from "@/sheet/sheet";
 import { Dialog, DialogContent } from "@/dialog/dialog";
 import {
+  useAccountInfo,
   useLeverage,
   useMediaQuery,
+  useQuery,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 
@@ -17,10 +19,34 @@ export const SharePoisitionView = create<{
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
   const { position } = props;
-  const [leverage] = useLeverage();
+  // const [leverage] = useLeverage();
   const symbolInfo = useSymbolsInfo();
+  const { data: info } = useAccountInfo();
+
+  const maxAccountLeverage = info?.max_leverage;
+
+  const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
+    focusThrottleInterval: 1000 * 60 * 60 * 24,
+    dedupingInterval: 1000 * 60 * 60 * 24,
+    revalidateOnFocus: false,
+  });
+
+  const maxSymbolLeverage = useMemo(() => {
+    const base = res?.data?.base_imr;
+    if (base) return 1 / base;
+  }, [res]);
+
+  const maxLeverage = useMemo(() => {
+    if (!maxAccountLeverage || !maxSymbolLeverage) {
+      return "-";
+    }
+
+    return Math.min(maxAccountLeverage, maxSymbolLeverage);
+  }, [maxAccountLeverage, maxSymbolLeverage]);
 
   if (symbolInfo.isNil) return null;
+
+  
 
   const base_dp = symbolInfo[position.symbol]("base_dp");
   const quote_dp = symbolInfo[position.symbol]("quote_dp");
@@ -28,14 +54,14 @@ export const SharePoisitionView = create<{
   return isTablet ? (
     <MobileSharePnL
       position={position}
-      leverage={leverage}
+      leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
     />
   ) : (
     <DesktopSharePnL
       position={position}
-      leverage={leverage}
+      leverage={maxLeverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
     />
@@ -46,7 +72,7 @@ const MobileSharePnL: FC<
   PropsWithChildren<{
     className?: string;
     position: any;
-    leverage: number;
+    leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
   }>
@@ -84,7 +110,7 @@ const DesktopSharePnL: FC<
   PropsWithChildren<{
     className?: string;
     position: any;
-    leverage: number;
+    leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
   }>

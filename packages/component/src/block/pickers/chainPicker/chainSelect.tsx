@@ -36,7 +36,7 @@ export interface ChainSelectProps {
 
 export const ChainSelect: FC<ChainSelectProps> = (props) => {
   const isTable = useMediaQuery(MEDIA_TABLET);
-  const networkId = useConfig("networkId") as NetworkId;
+  const networkId = useConfig<NetworkId>("networkId");
   const [allChains, { findByChainId }] = useChains(undefined, {
     pick: "network_infos",
     filter: (chain: any) =>
