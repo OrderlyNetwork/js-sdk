@@ -44,14 +44,20 @@ export function generateRegisterAccountMessage(inputs: {
   chainId: number;
   registrationNonce: number;
   brokerId: string;
+  timestamp?: number;
 }) {
-  const { chainId, registrationNonce, brokerId } = inputs;
-  const now = Date.now();
+  const {
+    chainId,
+    registrationNonce,
+    brokerId,
+    timestamp = Date.now(),
+  } = inputs;
+  // const now = Date.now();
   const primaryType = "Registration";
   const message = {
     brokerId,
     chainId,
-    timestamp: now,
+    timestamp,
     registrationNonce,
   };
 
@@ -79,6 +85,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
   brokerId: string;
   primaryType: keyof typeof definedTypes;
   expiration?: number;
+  timestamp?: number;
 }) {
   const {
     publicKey,
@@ -86,16 +93,17 @@ export function generateAddOrderlyKeyMessage(inputs: {
     primaryType,
     brokerId,
     expiration = 365,
+    timestamp = Date.now(),
   } = inputs;
-  const now = Date.now();
+  // const now = Date.now();
   // message;
   const message = {
     brokerId,
     orderlyKey: publicKey,
     scope: "read,trading",
     chainId,
-    timestamp: now,
-    expiration: now + 1000 * 60 * 60 * 24 * expiration,
+    timestamp,
+    expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
   };
 
   const typeDefinition = {
