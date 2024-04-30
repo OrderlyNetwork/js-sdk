@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.5.0"
   },
   "changesets": [
+    "big-coats-itch",
     "eleven-days-smell",
     "tasty-rats-move"
   ]
