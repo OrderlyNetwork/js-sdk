@@ -136,22 +136,30 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
           //   }));
           // } else {
 
-          let nValue = order;
           if (
             field === "order_type" &&
             (value === OrderType.STOP_LIMIT ||
               value === OrderType.STOP_MARKET ||
               value === OrderType.MARKET)
           ) {
-            const { order_type_ext, ...rest } = nValue;
-            nValue = rest;
+            // const {order_type_ext, ...rest} = nValue;
+            // nValue = rest;
+
+            setOrder((order) => {
+              const { order_type_ext, ...rest } = order;
+              return {
+                ...rest,
+                [field]: value,
+              };
+            });
+          } else {
+            setOrder((order) => ({
+              ...order,
+              [field]: value,
+              // timestamp: Date.now(),
+            }));
           }
 
-          setOrder((order) => ({
-            ...nValue,
-            [field]: value,
-            // timestamp: Date.now(),
-          }));
           // }
         }}
         setValues={(values) => {
