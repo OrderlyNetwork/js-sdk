@@ -1,6 +1,3 @@
-import { cva } from "cva";
-import { tv } from "tailwind-variants";
-
 export const layoutVariants = {
   variants: {
     p: {

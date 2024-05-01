@@ -5,11 +5,13 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "../helpers/cn";
 import { parseSizeProps } from "../helpers/parse-props";
 import { tv, VariantProps } from "tailwind-variants";
+import { shadowVariants } from "../layout/shadow";
 
 const baseBoxVariants = tv({
   base: ["oui-box oui-size"],
   variants: {
     ...layoutVariants.variants,
+    ...shadowVariants.variants,
   },
 });
 
@@ -37,6 +39,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     px,
     py,
     style,
+    elevation,
     ...rest
   } = parseSizeProps(props);
 
@@ -50,6 +53,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
         p,
         px,
         py,
+        elevation,
       })}
       {...rest}
       ref={forwardedRef}

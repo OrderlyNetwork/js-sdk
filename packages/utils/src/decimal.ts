@@ -11,13 +11,13 @@ export const cutNumber = (num: number | string, lenght: number) => {};
 export const zero = new Decimal(0);
 
 export const commify = (num: number | string, fix?: number): string => {
-  var parts = num.toString().split(".");
+  const str = `${num}`;
+  var parts = str.split(".");
   const numberPart = parts[0];
   const decimalPart = parts[1];
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
 
-  const endsWithPoint =
-    num.toString().endsWith(".") && num.toString().length > 1;
+  const endsWithPoint = str.endsWith(".") && str.length > 1;
   return (
     numberPart.replace(thousands, ",") +
     (decimalPart

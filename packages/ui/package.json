@@ -24,8 +24,10 @@
   "keywords": [],
   "author": "orderly.network",
   "dependencies": {
+    "@orderly.network/utils": "workspace:*",
     "@radix-ui/react-slot": "^1.0.2",
     "cva": "1.0.0-beta.1",
+    "ramda": "^0.29.0",
     "tailwind-merge": "^1.14.0",
     "tailwind-variants": "^0.2.1"
   }

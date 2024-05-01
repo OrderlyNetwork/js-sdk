@@ -24,6 +24,7 @@
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "target": "ES2022",
     "paths": {
       "@/*": [
         "./src/*"

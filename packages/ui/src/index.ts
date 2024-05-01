@@ -3,7 +3,7 @@ export { Box } from "./box";
 export { Flex } from "./flex";
 export { Text } from "./typography";
 export { Spinner } from "./spinner";
-export { Input } from "./input";
+export { Input, inputFormatter, InputAdditional } from "./input";
 
 export * from "./icon";
 

@@ -1,10 +1,11 @@
-import { Slot } from "@radix-ui/react-slot";
-import React, { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import { BaseButton, BaseButtonProps } from "./base";
+import { shadowVariants } from "../layout/shadow";
 
 const buttonVariants = tv({
   base: [
+    "oui-button",
     "oui-inline-flex",
     "oui-items-center",
     "oui-justify-center",
@@ -13,6 +14,7 @@ const buttonVariants = tv({
     "disabled:oui-cursor-not-allowed",
   ],
   variants: {
+    ...shadowVariants.variants,
     variant: {
       // text: "oui-bg-transparent",
       outlined: "oui-border",
@@ -114,6 +116,7 @@ const buttonVariants = tv({
     size: "default",
     variant: "contained",
     color: "primary",
+    // elevation: "none",
   },
 });
 
@@ -124,7 +127,7 @@ interface ButtonProps
 const Button = React.forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ButtonProps>
->(({ className, variant, size, color, fullWidth, ...props }, ref) => {
+>(({ className, variant, size, color, fullWidth, shadow, ...props }, ref) => {
   // const Comp = asChild ? Slot : "button";
   return (
     <BaseButton
@@ -135,6 +138,7 @@ const Button = React.forwardRef<
         className,
         disabled: props.disabled,
         fullWidth,
+        shadow,
       })}
       size={size}
       ref={ref}

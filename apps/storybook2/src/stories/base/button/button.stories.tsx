@@ -37,6 +37,12 @@ const meta = {
         type:'inline-radio'
       },
       options:['contained','outlined','gradient']
+    },
+    shadow:{
+      control:{
+        type:'inline-radio'
+      },
+      options:['sm','base','md','lg','xl','2xl','inner','none']
     }
     
     },
@@ -50,6 +56,7 @@ const meta = {
       disabled:false,
       fullWidth:false,
       loading:false,
+      shadow:'base'
     }
   } satisfies Meta<typeof Button>;
   

@@ -1,0 +1,26 @@
+import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
+import { commify } from "@orderly.network/utils";
+
+export const currencyFormatter: InputFormatter = {
+  onRenderBefore: function (
+    value: string | number,
+    options: InputFormatterOptions
+  ): string {
+    if (value === null || value === undefined) return "";
+    return commify(value);
+  },
+  onSendBefore: function (
+    value: string,
+    options: InputFormatterOptions
+  ): string {
+    if (value === null || value === undefined) return "";
+
+    if (typeof value === "number") {
+      value = `${value}`;
+    }
+
+    value = value.replace(/,/g, "");
+
+    return value;
+  },
+};

@@ -1,5 +1,8 @@
-import React, { type InputHTMLAttributes } from "react";
+import React, { type InputHTMLAttributes, useId } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
+import { BaseInput, BaseInputProps } from "./baseInput";
+import { InputPrefix } from "./prefix";
+import { InputSuffix } from "./suffix";
 
 const inputs = tv({
   slots: {
@@ -8,13 +11,14 @@ const inputs = tv({
       "oui-bg-transparent",
       "oui-flex-1",
       "focus-visible:oui-outline-none",
-      "oui-w-full",
+      "oui-flex",
       "oui-peer",
       "placeholder:oui-text-base-contrast-20",
       "placeholder:oui-text-xs",
       "oui-tabular-nums",
       "placeholder:oui-text-base-contrast-20",
       "oui-text-white",
+      "autofill:oui-bg-transparent",
     ],
     box: [
       "oui-rounded",
@@ -26,24 +30,31 @@ const inputs = tv({
       "oui-outline-1",
       "focus-within:oui-outline-primary",
     ],
+    additional: [
+      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",
+    ],
   },
   variants: {
     size: {
       mini: {
         input: ["oui-h-7", "oui-text-2xs"],
-        box: ["oui-h-7 oui-px-3"],
+        box: ["oui-h-7"],
+        additional: ["oui-text-2xs"],
       },
       medium: {
         input: ["oui-h-8", "oui-text-2xs"],
-        box: ["oui-h-8 oui-px-3"],
+        box: ["oui-h-8"],
+        additional: ["oui-text-sm"],
       },
       default: {
         input: ["oui-h-10", "oui-text-sm"],
-        box: ["oui-h-10 oui-px-3 oui-rounded-md"],
+        box: ["oui-h-10 oui-rounded-md"],
+        additional: ["oui-text-sm"],
       },
       large: {
         input: ["oui-h-12", "oui-text-base"],
-        box: ["oui-h-12 oui-px-3 oui-rounded-md"],
+        box: ["oui-h-12 oui-rounded-md"],
+        additional: ["oui-text-sm"],
       },
     },
     color: {
@@ -66,6 +77,27 @@ const inputs = tv({
         box: ["oui-bg-base-8"],
       },
     },
+    pl: {
+      true: {
+        box: "oui-pl-3",
+      },
+      false: {
+        box: "oui-pl-0",
+      },
+    },
+    pr: {
+      true: {
+        box: "oui-pr-3",
+      },
+      false: {
+        box: "oui-pr-0",
+      },
+    },
+    fullWidth: {
+      true: {
+        box: "oui-w-full",
+      },
+    },
   },
   //   compoundVariants: [{ size: "default", className: ["oui-bg-transparent"] }],
   defaultVariants: {
@@ -74,21 +106,11 @@ const inputs = tv({
 });
 
 interface InputProps<T = string>
-  extends Omit<
-      InputHTMLAttributes<HTMLInputElement>,
-      "size" | "prefix" | "disabled" | "inputMode" | "color"
-    >,
+  extends BaseInputProps<T>,
     VariantProps<typeof inputs> {
   prefix?: string | React.ReactNode;
   suffix?: string | React.ReactNode;
-  clearable?: boolean;
-  onClean?: () => void;
-  fixClassName?: string;
-  helpText?: string;
-  loading?: boolean;
-  inputMode?: "decimal" | "numeric" | "amount";
-  containerClassName?: string;
-  onValueChange?: (value: T) => void;
+  fullWidth?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
@@ -96,28 +118,39 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     size,
     disabled,
     color,
-    prefix,
     suffix,
-    clearable,
-    onClean,
-    fixClassName,
-    helpText,
-    loading,
-    inputMode,
-    containerClassName,
-    onValueChange,
+    prefix,
+    id,
+    pl,
+    pr,
+    fullWidth,
+    className,
     ...inputProps
   } = props;
 
-  const { input, box } = inputs({ size, disabled, color });
+  console.log(props);
+
+  const { input, box, additional } = inputs({
+    size,
+    disabled,
+    color,
+    fullWidth,
+    className,
+    pl: typeof prefix === "undefined" || pl,
+    pr: typeof suffix === "undefined" || pr,
+  });
+  const cid = useId();
   return (
     <div className={box()}>
-      <input
+      <InputPrefix id={id || cid} prefix={prefix} className={additional()} />
+      <BaseInput
         {...inputProps}
+        id={id || cid}
         disabled={disabled}
         ref={ref}
         className={input()}
       />
+      <InputSuffix id={id || cid} suffix={suffix} className={additional()} />
     </div>
   );
 });
