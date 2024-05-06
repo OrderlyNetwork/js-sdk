@@ -295,6 +295,60 @@ export function totalInitialMarginWithOrders(
   return total_initial_margin_with_orders;
 }
 
+export function totalInitialMarginWithQty(inputs: {
+  positions: API.Position[];
+  // account: API.AccountInfo;
+  markPrices: { [key: string]: number };
+  symbolInfo: any;
+  IMR_Factors: { [key: string]: number };
+  maxLeverage: number;
+}) {
+  const { positions, markPrices, IMR_Factors, symbolInfo, maxLeverage } =
+    inputs;
+  const symbols = positions.map((item) => item.symbol);
+
+  const total_initial_margin_with_orders = symbols.reduce((acc, cur) => {
+    const symbol = cur;
+    const position = positions.find((item) => item.symbol === symbol);
+    const positionQty = position?.position_qty || 0;
+
+    const buyOrdersQty = position?.pending_long_qty || 0;
+    const sellOrdersQty = position?.pending_short_qty || 0;
+
+    const markPrice = markPrices[symbol] || 0;
+
+    //---
+    const positionQtyWithOrders = positionQtyWithOrders_by_symbol({
+      positionQty,
+      buyOrdersQty,
+      sellOrdersQty,
+    });
+
+    //---
+    const position_notional_with_orders = positionNotionalWithOrder_by_symbol({
+      markPrice,
+      positionQtyWithOrders,
+    });
+
+    //----
+    const markPriceDecimal = new Decimal(markPrice);
+
+    const imr = IMR({
+      positionNotional: markPriceDecimal.mul(positionQty).toNumber(),
+      ordersNotional: markPriceDecimal
+        .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
+        .toNumber(),
+      maxLeverage,
+      IMR_Factor: IMR_Factors[symbol],
+      baseIMR: symbolInfo[symbol]("base_imr", 0),
+    });
+
+    return position_notional_with_orders.mul(imr).add(acc).toNumber();
+  }, 0);
+
+  return total_initial_margin_with_orders;
+}
+
 /**
  * Group orders by symbol, as a symbol can have multiple orders.
  */

@@ -39,9 +39,18 @@ export const usePositionStream = (
    * If symbol is passed, only the position of that symbol will be returned.
    */
   symbol?: string,
-  options?: SWRConfiguration & { calcMode?: PriceMode }
+  options?: SWRConfiguration & {
+    calcMode?: PriceMode;
+    /**
+     * If true, the pending order will be included in the result.
+     */
+    includedPendingOrder?: boolean;
+  }
 ) => {
   const symbolInfo = useSymbolsInfo();
+
+  const { includedPendingOrder = false } = options || {};
+
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
@@ -245,44 +254,55 @@ export const usePositionStream = (
 
     const total = totalCollateral.toNumber();
 
-    let rows = formatedPositions[0]
-      .filter((item) => item.position_qty !== 0)
-      .map((item) => {
-        const info = symbolInfo?.[item.symbol];
+    let rows = formatedPositions[0];
 
-        const related_order = Array.isArray(tpslOrders)
-          ? findPositionTPSLFromOrders(tpslOrders, item.symbol)
-          : undefined;
+    if (!includedPendingOrder) {
+      rows = rows.filter((item) => item.position_qty !== 0);
+    } else {
+      rows = rows.filter(
+        (item) =>
+          item.position_qty !== 0 ||
+          item.pending_long_qty !== 0 ||
+          item.pending_short_qty !== 0
+      );
+    }
+    // .filter((item) => item.position_qty !== 0)
+    rows = rows.map((item) => {
+      const info = symbolInfo?.[item.symbol];
 
-        const tp_sl_pricer = !!related_order
-          ? findTPSLFromOrder(related_order)
-          : undefined;
+      const related_order = Array.isArray(tpslOrders)
+        ? findPositionTPSLFromOrders(tpslOrders, item.symbol)
+        : undefined;
 
-        const MMR = positions.MMR({
-          baseMMR: info("base_mmr"),
-          baseIMR: info("base_imr"),
-          IMRFactor: accountInfo.imr_factor[item.symbol] as number,
-          positionNotional: item.notional,
-          IMR_factor_power: 4 / 5,
-        });
+      const tp_sl_pricer = !!related_order
+        ? findTPSLFromOrder(related_order)
+        : undefined;
 
-        return {
-          ...item,
-          mm: positions.maintenanceMargin({
-            positionQty: item.position_qty,
-            markPrice: item.mark_price,
-            MMR,
-          }),
-          tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
-          sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
-
-          mmr: MMR,
-
-          // has_position_tp_sl:
-          //   !tp_sl_pricer?.sl_trigger_price && !tp_sl_pricer?.tp_trigger_price,
-          algo_order: related_order,
-        };
+      const MMR = positions.MMR({
+        baseMMR: info("base_mmr"),
+        baseIMR: info("base_imr"),
+        IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+        positionNotional: item.notional,
+        IMR_factor_power: 4 / 5,
       });
+
+      return {
+        ...item,
+        mm: positions.maintenanceMargin({
+          positionQty: item.position_qty,
+          markPrice: item.mark_price,
+          MMR,
+        }),
+        tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+        sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+
+        mmr: MMR,
+
+        // has_position_tp_sl:
+        //   !tp_sl_pricer?.sl_trigger_price && !tp_sl_pricer?.tp_trigger_price,
+        algo_order: related_order,
+      };
+    });
 
     // calculate est_liq_price
     rows = rows.map((item) => {
