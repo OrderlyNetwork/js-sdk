@@ -8,7 +8,7 @@ import {
   useLocalStorage,
   useReferralInfo,
 } from "@orderly.network/hooks";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 export const ReferralCode: FC<{
   className?: string;
@@ -33,13 +33,27 @@ export const ReferralCode: FC<{
     }
   }, [referral?.saveRefCode, refCode, inputRef]);
 
-
   const { isExist } = useCheckReferralCode(refCode);
 
-  if (
-    referral?.saveRefCode !== true ||
-    (localRefCode?.length || 0) <= 0
-  )
+  const errorInfo = useMemo(() => {
+    const length = refCode?.length || 0;
+    if (length < 4 || length > 10) {
+      return "The referral_code must be 4 to 10 characters long, only accept upper case roman characters and numbers";
+    }
+
+    return isExist ? "" : "This referral code does not exist.";
+  }, [refCode]);
+
+  const isError = useMemo(() => {
+    const length = refCode?.length || 0;
+    if (length < 4 || length > 10) {
+      return true;
+    }
+
+    return isExist === false;
+  }, [refCode, isExist]);
+
+  if (referral?.saveRefCode !== true || (localRefCode?.length || 0) <= 0)
     return <></>;
 
   return (
@@ -58,8 +72,8 @@ export const ReferralCode: FC<{
           onChange={(e) => {
             setRefCode(e.target.value.replace(/[^A-Z0-9]/g, ""));
           }}
-          error={isExist === false}
-          helpText="This referral code does not exist."
+          error={isError}
+          helpText={errorInfo}
           autoFocus
           suffix={
             <button
