@@ -18,7 +18,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
     useContext(LayoutContext);
 
-  const containerRef = useRef<HTMLDivElement | undefined>();
+  const containerRef = useRef();
   const [entryMaxWidth, setEntryMaxWidth] = useState(500);
 
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
