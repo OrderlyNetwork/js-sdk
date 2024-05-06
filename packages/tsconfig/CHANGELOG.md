@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.1-internal.3
+
+### Patch Changes
+
+- fix bugs
+
 ## 0.3.1-internal.2
 
 ### Patch Changes
