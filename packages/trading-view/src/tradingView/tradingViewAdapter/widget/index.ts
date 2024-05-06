@@ -286,7 +286,6 @@ export class Widget {
         // @ts-ignore
         this._adapterSetting = adapterSetting;
         this._savedData = savedData;
-        console.log('-- adapterSetting["chart.lastUsedTimeBasedResolution"] ??', adapterSetting["chart.lastUsedTimeBasedResolution"]);
         this._instance = new TradingView.widget({
             ...getOptions(widgetOptions, mode),
             interval:

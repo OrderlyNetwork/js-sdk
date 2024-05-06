@@ -221,7 +221,7 @@ export function TradingView({
                         return defaultItems;
                     },
                 },
-                getBroker: (isLoggedIn && !isMobile) ?
+                getBroker: isLoggedIn  ?
                     (instance: any, host: any) => {
                         createRenderer(instance, host, broker);
                         console.log('-- create render');

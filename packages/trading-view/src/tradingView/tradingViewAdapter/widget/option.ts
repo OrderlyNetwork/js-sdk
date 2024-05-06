@@ -26,7 +26,6 @@ const getDisabledFeatures = (mode: ChartMode) => {
     if (mode === ChartMode.MOBILE) {
         disabledFeatures = [
             ...disabledFeatures,
-            "control_bar",
             "left_toolbar",
             // "timeframes_toolbar",
             "go_to_date",
