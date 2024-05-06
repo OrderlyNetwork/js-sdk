@@ -56,7 +56,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
 
   /// local storage hidden check box
   const [visibleQuantity, setVisibleQuantity] = useLocalStorage(
-    "visible_quantity_key",
+    "visible_quantity",
     1
   );
 
@@ -72,7 +72,8 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
     reduce_only: reduceOnly,
     side: orderSide,
     order_type: orderType,
-    isStopOrder: orderType === OrderType.STOP_LIMIT || orderType === OrderType.STOP_MARKET,
+    isStopOrder:
+      orderType === OrderType.STOP_LIMIT || orderType === OrderType.STOP_MARKET,
     symbol,
     visible_quantity: visibleQuantity,
     order_type_ext: orderType === OrderType.LIMIT ? orderTypeExt : undefined,
@@ -122,10 +123,8 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
             setVisibleQuantity(value);
           }
 
-
           /// save to session storage and not refresh ui
           setEntrySessionStorage(field, value);
-
 
           // if (field === "reduce_only") {
           //   setOrder((order) => ({
@@ -138,8 +137,13 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
           // } else {
 
           let nValue = order;
-          if (field === 'order_type' && (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET || value === OrderType.MARKET)) {
-            const {order_type_ext, ...rest} = nValue;
+          if (
+            field === "order_type" &&
+            (value === OrderType.STOP_LIMIT ||
+              value === OrderType.STOP_MARKET ||
+              value === OrderType.MARKET)
+          ) {
+            const { order_type_ext, ...rest } = nValue;
             nValue = rest;
           }
 
