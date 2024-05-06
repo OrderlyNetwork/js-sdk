@@ -20,12 +20,12 @@ const getDisabledFeatures = (mode: ChartMode) => {
         'add_to_watchlist',
         'chart_crosshair_menu',
         'header_fullscreen_button',
+        'header_widget',
     ];
 
     if (mode === ChartMode.MOBILE) {
         disabledFeatures = [
             ...disabledFeatures,
-            "header_widget",
             "control_bar",
             "left_toolbar",
             // "timeframes_toolbar",

@@ -11,10 +11,20 @@ import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 import { withExchangePrefix } from "./tradingViewAdapter/util";
+import {ActionId} from "@orderly.network/react/src/@types/charting_library";
 
 
 export interface TradingViewOptions {
 
+}
+
+export interface DisplayControlSettingInterface {
+    position: boolean;
+    buySell: boolean;
+    limitOrders: boolean;
+    stopOrders: boolean;
+    tpsl: boolean;
+    positionTpsl: boolean;
 }
 
 export interface TradingViewPorps {
@@ -32,6 +42,10 @@ export interface TradingViewPorps {
     onToast?: any;
     loadingElement?: any;
     positionControlCallback?: Function;
+    topToolbarOpenSetting?: boolean;
+    topToolbarOpenIndicators?: boolean;
+    topToolbarLineType?: string;
+    displayControlSetting?:DisplayControlSettingInterface
 }
 
 function Link(props: {
@@ -104,7 +118,12 @@ export function TradingView({
     closePositionConfirmCallback,
     onToast,
     loadingElement,
-                                positionControlCallback
+
+                                positionControlCallback,
+                                topToolbarOpenSetting,
+                                topToolbarOpenIndicators,
+    topToolbarLineType,
+    displayControlSetting,
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -127,7 +146,7 @@ export function TradingView({
         font,
     }
     const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
-    const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!);
+    const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -250,6 +269,30 @@ export function TradingView({
         chart.current.setSymbol(symbol, interval);
 
     }, [interval]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.executeActionById('chartProperties');
+
+    }, [topToolbarOpenSetting]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.executeActionById('insertIndicator');
+
+    }, [topToolbarOpenIndicators]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.changeLineType(Number(topToolbarLineType))
+
+    }, [topToolbarLineType])
     return (
         <div style={{
             height: '100%', width: '100%', margin: '0 auto',

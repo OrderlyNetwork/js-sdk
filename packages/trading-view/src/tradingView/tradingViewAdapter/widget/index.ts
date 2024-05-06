@@ -1,4 +1,4 @@
-import {Overrides, ThemeName} from "../charting_library";
+import {ChartActionId, Overrides, ThemeName} from "../charting_library";
 import type {AbstractDatafeed} from "../datafeed/abstract-datafeed";
 import type {
     ChartMode,
@@ -123,6 +123,33 @@ export class Widget {
             });
         } catch (e) {
             console.log('set symbol error', e);
+        }
+    }
+
+    public executeActionById(actionId: ChartActionId) {
+        try {
+
+            this._instance?.onChartReady(() => {
+                // this._instance?.activeChart().showPropertiesDialog(this._instance.activeChart().getAllShapes()[0].id);
+
+                this._instance?.activeChart().executeActionById(actionId)
+
+            });
+        } catch (e) {
+            console.log('executeActionId error', e);
+        }
+    }
+    public changeLineType (lineType: any) {
+        try {
+
+            this._instance?.onChartReady(() => {
+                // this._instance?.activeChart().showPropertiesDialog(this._instance.activeChart().getAllShapes()[0].id);
+
+                this._instance?.activeChart().setChartType(lineType)
+
+            });
+        } catch (e) {
+            console.log('executeActionId error', e);
         }
     }
 
@@ -259,6 +286,7 @@ export class Widget {
         // @ts-ignore
         this._adapterSetting = adapterSetting;
         this._savedData = savedData;
+        console.log('-- adapterSetting["chart.lastUsedTimeBasedResolution"] ??', adapterSetting["chart.lastUsedTimeBasedResolution"]);
         this._instance = new TradingView.widget({
             ...getOptions(widgetOptions, mode),
             interval:
@@ -274,17 +302,6 @@ export class Widget {
                 removeValue: () => {
                 },
             },
-        });
-        const widget = this.instance;
-        widget!.headerReady().then(function () {
-            var button = widget!.createButton({align: 'right'});
-            button.id='control-warp';
-            button.textContent = 'position control';
-            button.addEventListener('click', () => {
-              if (options.positionControlCallback) {
-                  options.positionControlCallback();
-              }
-            });
         });
 
 
