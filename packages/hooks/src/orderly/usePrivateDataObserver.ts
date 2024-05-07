@@ -11,6 +11,7 @@ import { parseJSON } from "../utils/json";
 import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { object2underscore } from "../utils/ws";
+import { useLocalStorage } from "../useLocalStorage";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -23,6 +24,8 @@ export const usePrivateDataObserver = (options: {
 
   // TODO: remove this when the WS service provides the correct data
   // const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
+
+  const [subOrder, setSubOrder] = useLocalStorage("orderly_subscribe_order", true);
 
   const updateOrders = (
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
@@ -79,6 +82,7 @@ export const usePrivateDataObserver = (options: {
   // orders
   useEffect(() => {
     if (!state.accountId) return;
+    if (subOrder !== true) return;
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
         updateOrders(data, false);
@@ -86,11 +90,12 @@ export const usePrivateDataObserver = (options: {
     });
 
     return () => unsubscribe?.();
-  }, [state.accountId]);
+  }, [state.accountId, subOrder]);
 
   // algo orders
   useEffect(() => {
     if (!state.accountId) return;
+    if (subOrder !== true) return;
     const unsubscribe = ws.privateSubscribe("algoexecutionreport", {
       onMessage: (data: any) => {
         updateOrders(data, true);
@@ -98,7 +103,7 @@ export const usePrivateDataObserver = (options: {
     });
 
     return () => unsubscribe?.();
-  }, [state.accountId]);
+  }, [state.accountId, subOrder]);
 
   // positions
   useEffect(() => {
