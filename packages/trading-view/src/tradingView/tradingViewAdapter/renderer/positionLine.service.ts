@@ -1,6 +1,6 @@
 import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
-import {ChartPosition} from '../type';
+import {ChartMode, ChartPosition} from '../type';
 import { Decimal} from "@orderly.network/utils";
 import {IPositionLineAdapter} from "@orderly.network/react/src/@types/charting_library";
 
@@ -100,8 +100,10 @@ export class PositionLineService{
             .setQuantityBorderColor(sideColor)
             .setText(PositionLineService.getPositionPnL(position.unrealPnl, position.unrealPnlDecimal))
 
-            .onClose(null, () => {
-                this.broker.closePosition(position);
-            });
+            if (this.broker.mode !== ChartMode.MOBILE) {
+               this.positionLines[idx].onClose(null, () => {
+                       this.broker.closePosition(position);
+                   });
+            }
     }
 }

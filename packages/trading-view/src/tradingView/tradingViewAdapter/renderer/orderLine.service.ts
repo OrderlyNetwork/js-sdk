@@ -1,7 +1,7 @@
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import { Decimal } from "@orderly.network/utils";
-import { SideType, AlgoType, OrderCombinationType, OrderType, OrderInterface, ChartPosition } from "../type";
+import { SideType, AlgoType, OrderCombinationType, OrderType, OrderInterface, ChartPosition, ChartMode } from "../type";
 import { TpslCalService } from "./tpslCal.service";
 import {getTpslTag, isActivatedPositionTpsl, isActivatedQuantityTpsl, isPositionTpsl, isTpslOrder } from "./tpsl.util";
 import {CHART_QTY_DECIMAL, getOrderId } from "./order.util";
@@ -211,8 +211,11 @@ export class OrderLineService {
       .setLineColor(color)
       .setLineLength(lineLength)
       .setQuantity(quantity ?? '')
-      .setPrice(price)
-      .onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+      .setPrice(price);
+    if (this.broker.mode !== ChartMode.MOBILE) {
+
+      orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+    }
 
     this.applyEditOnMove(orderLine, pendingOrder);
 

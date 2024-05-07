@@ -152,7 +152,7 @@ export function TradingView({
         qtyTextColor,
         font,
     }
-    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
+    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast, mode });
     const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
 
