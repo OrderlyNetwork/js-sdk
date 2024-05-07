@@ -64,8 +64,8 @@ export default function MyTradingView({ symbol, tradingViewConfig }: IProps) {
 
   return (
     <div
-      className="orderly-flex orderly-flex-col"
-      style={{ position: "relative", width: "100%", height: "100%" }}
+      className="orderly-flex orderly-flex-col orderly-h-[240px]"
+      style={{ position: "relative", width: "100%" }}
     >
       <SymbolProvider symbol={symbol}>
         <TopBar
