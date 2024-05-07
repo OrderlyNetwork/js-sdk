@@ -28,7 +28,7 @@ const needNumberOnlyFields: (keyof OrderEntity)[] = [
 /// only save number
 export const cleanStringStyle = (str: string | number): string => {
   if (typeof str !== "string") {
-    str = str.toString();
+    str = `${str}`;
   }
   str = str.replace(/,/g, "");
   // clear extra character expect number and .
@@ -306,3 +306,37 @@ export const getCalculateHandler = (
       return otherInputHandle;
   }
 };
+
+//** format number */
+export function formatNumber(
+  qty?: string | number,
+  dp?: number | string
+): string | undefined {
+  if (typeof qty === "undefined") return qty;
+  if (typeof dp === "undefined") return `${qty}`;
+
+  try {
+    const _dp = new Decimal(dp);
+
+    if (_dp.lessThan(1)) {
+      const numStr = dp.toString();
+      const decimalIndex = numStr.indexOf(".");
+      const digitsAfterDecimal =
+        decimalIndex === -1 ? 0 : numStr.length - decimalIndex - 1;
+
+      const result = new Decimal(qty)
+        .toDecimalPlaces(digitsAfterDecimal, Decimal.ROUND_DOWN)
+        .toString();
+
+      return result;
+    }
+
+    return new Decimal(qty)
+      .dividedBy(_dp)
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .mul(dp)
+      .toString();
+  } catch (e) {    
+    return undefined;
+  }
+}

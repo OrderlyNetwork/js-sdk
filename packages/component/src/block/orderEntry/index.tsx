@@ -24,7 +24,7 @@ import {
   useDebounce,
   useMediaQuery,
 } from "@orderly.network/hooks";
-import type { UseOrderEntryMetaState } from "@orderly.network/hooks";
+import { UseOrderEntryMetaState, utils } from "@orderly.network/hooks";
 
 import {
   API,
@@ -140,7 +140,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       true
     );
 
-    const baseDP = symbolConfig?.base_dp
+    const baseDP = symbolConfig?.base_dp;
 
     const ee = useEventEmitter();
     const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
@@ -226,6 +226,17 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
 
     // const isTable = useMediaQuery(MEDIA_TABLET);
 
+    const formatQty = () => {
+      const dp = new Decimal(symbolConfig?.base_tick || "0").toNumber();
+      // TODO: optimization
+      if (dp < 1) return;
+      const quantity = utils.formatNumber(
+        formattedOrder?.order_quantity,
+        new Decimal(symbolConfig?.base_tick || "0").toNumber()
+      );
+      props.onFieldChange("order_quantity", quantity);
+    }
+
     const onFocus = (type: InputType) => (_: FocusEvent<HTMLInputElement>) => {
       currentFocusInput.current = type;
     };
@@ -235,6 +246,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         if (currentFocusInput.current !== type) return;
         currentFocusInput.current = InputType.NONE;
       }, 300);
+
+      if (type === InputType.QUANTITY) {
+        formatQty();
+      }
     };
 
     const onSubmit = (event: FormEvent) => {
@@ -256,6 +271,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             setErrorsVisible(true);
             return Promise.reject("cancel");
           }
+          formatQty();
           if (needConfirm) {
             return modal.confirm({
               maxWidth: "sm",

@@ -40,22 +40,14 @@ export const usePoster = (
 
   useEffect(() => {
     // Create the painter instance
-    if (target && !painterRef.current) {
-      painterRef.current = new PosterPainter(target, {
-        ratio: 1,
-        ...options,
-      });
-      painterRef.current.draw(
-        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
-          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
-          data
-        )
-      );
-    }
-  }, [target]);
+    if (target) {
+      if (!painterRef.current) {
+        painterRef.current = new PosterPainter(target, {
+          ratio: 1,
+          ...options,
+        });
+      }
 
-  useEffect(() => {
-    if (painterRef.current) {
       painterRef.current.draw(
         mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
@@ -63,7 +55,18 @@ export const usePoster = (
         )
       );
     }
-  }, [data]);
+  }, [target, data]);
+
+  // useEffect(() => {
+  //   if (painterRef.current) {
+  //     painterRef.current.draw(
+  //       mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
+  //         { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
+  //         data
+  //       )
+  //     );
+  //   }
+  // }, [data]);
 
   const toDataURL = (type?: string, encoderOptions?: number) => {
     if (!target) {

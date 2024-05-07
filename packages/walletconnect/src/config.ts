@@ -41,6 +41,7 @@ export const initConfig = (
     const { modalOptions, wagmiConfig } = config;
 
     createWeb3Modal({
+      // @ts-ignore
       wagmiConfig,
       projectId,
       chains: wagmiConfig.chains,

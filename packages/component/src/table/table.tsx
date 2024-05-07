@@ -103,7 +103,7 @@ export const Table = <RecordType extends unknown>(
 
     if (leftDivide) {
       const left = leftDivide.getBoundingClientRect();
-      console.log("leftDivide", left);
+      // console.log("leftDivide", left);
       // setMaskLayout((layout) => ({ ...layout, left }));
     }
 
