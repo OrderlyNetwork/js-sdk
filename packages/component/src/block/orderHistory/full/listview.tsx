@@ -101,7 +101,8 @@ export const Listview: FC<Props> = (props) => {
             className={cn("orderly-font-semibold orderly-text-2xs", record.realized_pnl === 0 ? "" : (record.realized_pnl > 0
               ? "orderly-text-trade-profit"
               : "orderly-text-trade-loss"))}
-            // precision={2}
+            tick="quote_dp"
+            
             rule="price"
           >
             {record.realized_pnl === 0 ||
