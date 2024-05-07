@@ -1,3 +1,4 @@
+//@ts-ignore
 import QRious from "qrious";
 
 export const qrPaint = (
