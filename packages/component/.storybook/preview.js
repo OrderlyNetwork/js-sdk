@@ -86,10 +86,10 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
       const searchParams = new URLSearchParams(window.location.search);
-      const refCode = searchParams.get('ref');
+      const refCode = searchParams.get("ref");
       console.log("ref code is", refCode);
 
       return (
@@ -144,9 +144,8 @@ const preview = {
               onClickReferral: () => {
                 console.log("click referral");
               },
-              onBoundRefCode: (success, error) => { 
+              onBoundRefCode: (success, error) => {
                 console.log("onBoundRefCode", success, error);
-
               },
             }}
           >

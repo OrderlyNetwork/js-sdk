@@ -1,12 +1,13 @@
 import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
-import {ChartPosition} from '../type';
+import {ChartMode, ChartPosition} from '../type';
 import { Decimal} from "@orderly.network/utils";
+import {IPositionLineAdapter} from "@orderly.network/react/src/@types/charting_library";
 
 
 export class PositionLineService{
     private instance: IChartingLibraryWidget;
-    private positionLines: Record<number, IOrderLineAdapter>;
+    private positionLines: Record<number, IPositionLineAdapter>;
     private currentSymbol: string;
     private broker: ReturnType<typeof useBroker>;
     private lastPositions: ChartPosition[] | null;
@@ -44,15 +45,15 @@ export class PositionLineService{
     getBasePositionLine() {
         return this.instance
             .activeChart()
-            .createOrderLine()
-            .setCancelTooltip('Close Position')
+            .createPositionLine()
+            .setTooltip('Close Position')
             .setQuantityBackgroundColor(this.broker.colorConfig.chartBG)
-            .setCancelButtonBackgroundColor(this.broker.colorConfig.chartBG)
+            .setCloseButtonBackgroundColor(this.broker.colorConfig.chartBG)
             .setBodyTextColor(this.broker.colorConfig.textColor)
             .setQuantityTextColor(this.broker.colorConfig.qtyTextColor)
-            // .setBodyFont(FONT)
+            .setBodyFont(this.broker.colorConfig.font)
             .setQuantityFont(this.broker.colorConfig.font)
-            .setLineLength(50)
+            .setLineLength(100)
             .setLineStyle(1);
     }
 
@@ -76,7 +77,13 @@ export class PositionLineService{
         const isPositiveUnrealPnl = position.unrealPnl >= 0;
         const isPositiveBalance = position.balance >= 0;
 
-        const pnlColor = isPositiveUnrealPnl ? colorConfig.upColor:colorConfig.downColor;
+        let pnlColor = colorConfig.pnlZoreColor;
+        const pnlDecimal = new Decimal(position.unrealPnl);
+        if (pnlDecimal.greaterThan(0)) {
+            pnlColor = colorConfig.upColor;
+        }  else if (pnlDecimal.lessThan(0)) {
+            pnlColor = colorConfig.downColor;
+        }
         const borderColor = isPositiveUnrealPnl ? colorConfig.pnlUpColor:colorConfig.pnlDownColor;
         const sideColor = isPositiveBalance ? colorConfig.upColor:colorConfig.downColor;
         const price = new Decimal(position.open).todp(position.basePriceDecimal, Decimal.ROUND_DOWN).toNumber();
@@ -85,17 +92,18 @@ export class PositionLineService{
         this.positionLines[idx]
             .setQuantity(PositionLineService.getPositionQuantity(position.balance))
             .setPrice(price)
-            .setCancelButtonIconColor(sideColor)
-            .setCancelButtonBorderColor(sideColor)
+            .setCloseButtonIconColor(sideColor)
+            .setCloseButtonBorderColor(sideColor)
             .setBodyBackgroundColor(pnlColor)
-            .setBodyBorderColor(borderColor)
+            .setBodyBorderColor(pnlColor)
             .setLineColor(sideColor)
             .setQuantityBorderColor(sideColor)
             .setText(PositionLineService.getPositionPnL(position.unrealPnl, position.unrealPnlDecimal))
-            .onMove(() => {
-            })
-            .onCancel(null, () => {
-                this.broker.closePosition(position);
-            });
+
+            if (this.broker.mode !== ChartMode.MOBILE) {
+               this.positionLines[idx].onClose(null, () => {
+                       this.broker.closePosition(position);
+                   });
+            }
     }
 }

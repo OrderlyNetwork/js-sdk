@@ -1,22 +1,27 @@
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import { Decimal } from "@orderly.network/utils";
-import { SideType, AlgoType, OrderCombinationType, OrderType } from "../type";
+import { SideType, AlgoType, OrderCombinationType, OrderType, OrderInterface, ChartPosition, ChartMode } from "../type";
+import { TpslCalService } from "./tpslCal.service";
+import {getTpslTag, isActivatedPositionTpsl, isActivatedQuantityTpsl, isPositionTpsl, isTpslOrder } from "./tpsl.util";
+import {CHART_QTY_DECIMAL, getOrderId } from "./order.util";
 
 export class OrderLineService {
   private instance: IChartingLibraryWidget;
   private pendingOrderLineMap: Map<number, IOrderLineAdapter>;
   private pendingOrders: any[];
   private broker: ReturnType<typeof useBroker>;
+  private tpslCalService: TpslCalService;
 
   constructor(
     instance: IChartingLibraryWidget,
-    broker: ReturnType<typeof useBroker>
+    broker: ReturnType<typeof useBroker>,
   ) {
     this.instance = instance;
     this.pendingOrderLineMap = new Map();
     this.pendingOrders = [];
     this.broker = broker;
+    this.tpslCalService = new TpslCalService();
   }
 
   renderPendingOrders(newPendingOrders: any[]) {
@@ -24,8 +29,17 @@ export class OrderLineService {
       this.pendingOrders = newPendingOrders;
     }
     this.cleanOldPendingOrders(this.pendingOrders);
+    this.tpslCalService.prepareTpslPnlMap(this.pendingOrders);
+    this.tpslCalService.prepareQuantityTpslNoMap(this.pendingOrders);
     this.pendingOrders.forEach((order) => this.renderPendingOrder(order));
   }
+
+  updatePositions(positions: ChartPosition[] | null) {
+    const changed = this.tpslCalService.recalculatePnl(positions, this.pendingOrders);
+
+    this.pendingOrders.filter((order) => changed.includes(getOrderId(order)!)).forEach((order) => this.renderPendingOrder(order));
+  }
+
 
   renderPendingOrder(order: any) {
     const orderId = OrderLineService.getOrderId(order);
@@ -70,10 +84,12 @@ export class OrderLineService {
       .setCancelTooltip("Cancel Order")
       .setQuantityTextColor(colorConfig.qtyTextColor)
       .setQuantityBackgroundColor(colorConfig.chartBG)
+        .setBodyBackgroundColor(colorConfig.chartBG)
       .setCancelButtonBackgroundColor(colorConfig.chartBG)
       .setLineStyle(1)
       .setBodyFont(colorConfig.font)
-      .setQuantityFont(colorConfig.font);
+      .setQuantityFont(colorConfig.font)
+        ;
   }
 
   static getCombinationType(order: any): OrderCombinationType {
@@ -123,9 +139,47 @@ export class OrderLineService {
     return order.algo_order_id || order.order_id;
   };
 
-  drawOrderLine(orderId: number, pendingOrder: any) {
-    const text = OrderLineService.getText(pendingOrder);
+  getTPSLTextWithTpsl(text: string, pendingOrder: OrderInterface) {
+    const orderId = getOrderId(pendingOrder);
+    if (!orderId) {
+      return text;
+    }
 
+    // first hiden pnl
+    // const unrealPnl = this.tpslCalService.getTpslPnlMap().get(orderId);
+    // if (unrealPnl) {
+    //   return `${text} | PnL ${unrealPnl}`;
+    // }
+
+    return text;
+  }
+
+  getTPSLText(pendingOrder: any) {
+    const tpslTypeText = getTpslTag(pendingOrder, this.tpslCalService.getQuantityTpslNoMap());
+
+    if (tpslTypeText) {
+      return this.getTPSLTextWithTpsl(tpslTypeText, pendingOrder);
+    }
+
+    return null;
+  }
+
+  getOrderQuantity(pendingOrder: OrderInterface){
+    if (pendingOrder.algo_order_id) {
+      if (isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)) {
+        return '100%';
+      }
+      if (isActivatedQuantityTpsl(pendingOrder)) {
+        return new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString();
+      }
+    }
+    return new Decimal(pendingOrder.quantity)
+        .toString();
+  }
+
+  drawOrderLine(orderId: number, pendingOrder: any) {
+    // const text = OrderLineService.getText(pendingOrder);
+    const text = isTpslOrder(pendingOrder) ? this.getTPSLText(pendingOrder) : OrderLineService.getText(pendingOrder);
     if (text === null) {
       return null;
     }
@@ -143,9 +197,7 @@ export class OrderLineService {
         : colorConfig.pnlDownColor;
     const price = OrderLineService.getOrderPrice(pendingOrder);
     const lineLength = 100;
-    const quantity = new Decimal(pendingOrder.quantity)
-      .minus(pendingOrder.executed ?? 0)
-      .toString();
+    const quantity = this.getOrderQuantity(pendingOrder);
     const textColor = colorConfig.textColor;
 
     orderLine
@@ -153,14 +205,17 @@ export class OrderLineService {
       .setCancelButtonIconColor(color)
       .setCancelButtonBorderColor(color)
       .setBodyTextColor(textColor)
-      .setBodyBorderColor(borderColor)
+      .setBodyBorderColor(color)
       .setQuantityBorderColor(color)
-      .setBodyBackgroundColor(color)
+      // .setBodyBackgroundColor(color)
       .setLineColor(color)
       .setLineLength(lineLength)
-      .setQuantity(quantity)
-      .setPrice(price)
-      .onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+      .setQuantity(quantity ?? '')
+      .setPrice(price);
+    if (this.broker.mode !== ChartMode.MOBILE) {
+
+      orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+    }
 
     this.applyEditOnMove(orderLine, pendingOrder);
 

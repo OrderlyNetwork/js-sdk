@@ -188,7 +188,7 @@ export class SymbolsStorage {
                     const symbolInfo = item.symbolInfo;
                     return {
                         symbol: symbolInfo.name,
-                        full_name: symbolInfo.full_name,
+                        full_name: `${symbolInfo.exchange}:${symbolInfo.name}`,
                         description: symbolInfo.description,
                         exchange: symbolInfo.exchange,
                         params: [],
@@ -257,7 +257,7 @@ export class SymbolsStorage {
                 const symbolName = data.symbol[symbolIndex];
                 const listedExchange = extractField(data, 'exchange-listed', symbolIndex);
                 const tradedExchange = extractField(data, 'exchange-traded', symbolIndex);
-                const fullName = symbolName;
+                const fullName = tradedExchange + ':' + symbolName;
                 const currencyCode = extractField(data, 'currency-code', symbolIndex);
                 const unitId = extractField(data, 'unit-id', symbolIndex);
 
@@ -266,7 +266,7 @@ export class SymbolsStorage {
                 const symbolInfo: LibrarySymbolInfo = {
                     ticker: ticker,
                     name: symbolName,
-                    base_name: [symbolName],
+                    base_name: [listedExchange + ':' + symbolName],
                     full_name: fullName,
                     listed_exchange: listedExchange,
                     exchange: tradedExchange,
@@ -277,7 +277,7 @@ export class SymbolsStorage {
                     unit_conversion_types: extractField(data, 'unit-conversion-types', symbolIndex, true),
                     description: extractField(data, 'description', symbolIndex),
                     has_intraday: definedValueOrDefault(extractField(data, 'has-intraday', symbolIndex), false),
-                    visible_plots_set: definedValueOrDefault(extractField(data, 'visible-plots-set', symbolIndex), undefined),
+                    visible_plots_set: definedValueOrDefault(extractField(data, 'visible-plots-set', symbolIndex), 'ohlcv'),
                     minmov: extractField(data, 'minmovement', symbolIndex) || extractField(data, 'minmov', symbolIndex) || 0,
                     minmove2: extractField(data, 'minmove2', symbolIndex) || extractField(data, 'minmov2', symbolIndex),
                     fractional: extractField(data, 'fractional', symbolIndex),

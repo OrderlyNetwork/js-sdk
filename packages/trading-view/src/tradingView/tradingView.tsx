@@ -10,12 +10,31 @@ import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
+import { withExchangePrefix } from "./tradingViewAdapter/util";
 
 export { Datafeed }
 
 
 export interface TradingViewOptions {
 
+}
+
+
+export const TradingViewSDKLocalstorageKey = {
+    interval: "TradingviewSDK.lastUsedTimeBasedResolution",
+    lineType: "TradingviewSDK.lastUsedStyle",
+    displayControlSetting: "TradingviewSDK.displaySetting",
+};
+
+
+
+export interface DisplayControlSettingInterface {
+    position: boolean;
+    buySell: boolean;
+    limitOrders: boolean;
+    stopOrders: boolean;
+    tpsl: boolean;
+    positionTpsl: boolean;
 }
 
 export interface TradingViewPorps {
@@ -32,6 +51,11 @@ export interface TradingViewPorps {
     closePositionConfirmCallback?: (data: any) => void;
     onToast?: any;
     loadingElement?: any;
+    positionControlCallback?: Function;
+    topToolbarOpenSetting?: boolean;
+    topToolbarOpenIndicators?: boolean;
+    topToolbarLineType?: string;
+    displayControlSetting?:DisplayControlSettingInterface
 }
 
 function Link(props: {
@@ -49,13 +73,14 @@ function Link(props: {
 }
 
 const upColor = "#00B59F";
-const downColor = "#FF67C2";
+const downColor = "#FB5CB8";
 const chartBG = '#16141c';
 const pnlUpColor = '#27DEC8';
 const pnlDownColor = '#FFA5C0';
+const pnlZoreColor = '#808080'
 const textColor = '#FFFFFF';
 const qtyTextColor = '#F4F7F9';
-const font = 'regular 11px DIN2014';
+const font = 'regular 11px Manrope';
 
 const getOveriides = () => {
     const overrides = {
@@ -102,11 +127,17 @@ export function TradingView({
     fullscreen,
     closePositionConfirmCallback,
     onToast,
-    loadingElement
+    loadingElement,
+
+                                positionControlCallback,
+                                topToolbarOpenSetting,
+                                topToolbarOpenIndicators,
+    topToolbarLineType,
+    displayControlSetting,
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
-    const apiBaseUrl = useConfig("apiBaseUrl");
+    const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
     const { state: accountState } = useAccount();
     const isMobile = useMediaQuery(MEDIA_TABLET);
 
@@ -119,12 +150,13 @@ export function TradingView({
         chartBG,
         pnlUpColor,
         pnlDownColor,
+        pnlZoreColor,
         textColor,
         qtyTextColor,
         font,
     }
-    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast });
-    const [renderer, createRenderer] = useCreateRenderer(symbol!);
+    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast, mode });
+    const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -171,7 +203,6 @@ export function TradingView({
     }, [accountState]);
 
     useLazyEffect(() => {
-        console.log('-- isloggedin', isLoggedIn);
         if (!chartingLibrarySciprtReady || !tradingViewScriptSrc) {
             return;
         }
@@ -183,7 +214,7 @@ export function TradingView({
             const options: any = {
                 fullscreen: fullscreen ?? false,
                 autosize: true,
-                symbol,
+                symbol: withExchangePrefix(symbol!),
                 // locale: getLocale(),
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 container: chartRef.current,
@@ -195,16 +226,20 @@ export function TradingView({
                 overrides: overrides,
                 studiesOverrides,
                 datafeed: new Datafeed(apiBaseUrl!, ws),
-                getBroker: (isLoggedIn && !isMobile) ?
+                contextMenu: {
+                    items_processor: async (defaultItems: any) => {
+                        return defaultItems;
+                    },
+                },
+                getBroker: isLoggedIn  ?
                     (instance: any, host: any) => {
-                        console.log('-- start create render');
-                        console.log('-- instance', instance);
                         createRenderer(instance, host, broker);
                         console.log('-- create render');
                         return getBrokerAdapter(host, broker);
                     }
                     : undefined,
 
+                positionControlCallback,
             };
 
             const chartProps: WidgetProps = {
@@ -221,7 +256,7 @@ export function TradingView({
 
         return () => {
             chart.current?.remove();
-            renderer.current?.remove();
+            removeRenderer();
         };
     }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
 
@@ -241,11 +276,33 @@ export function TradingView({
         if (!chart.current) {
             return;
         }
-        chart.current.updateOverrides({
-            interval,
-        });
+        chart.current.setSymbol(symbol, interval);
 
     }, [interval]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.executeActionById('chartProperties');
+
+    }, [topToolbarOpenSetting]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.executeActionById('insertIndicator');
+
+    }, [topToolbarOpenIndicators]);
+
+    useEffect(() => {
+        if (!chart.current) {
+            return;
+        }
+        chart.current.changeLineType(Number(topToolbarLineType))
+
+    }, [topToolbarLineType])
     return (
         <div style={{
             height: '100%', width: '100%', margin: '0 auto',
