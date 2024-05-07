@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { ReferralContext } from "../hooks/referralContext";
 import { Referral } from "../referral";
 import { DashboardTab } from "./dashboardTab";
+import { Loader } from "../components/loader";
 
 export const Dashboard = () => {
 
@@ -9,7 +10,10 @@ export const Dashboard = () => {
 
     
     if (isLoading && typeof splashPage !== 'undefined') {
-         return splashPage?.();
+        return <div id="orderly-refferral-dashboard-loader" className="orderly-bg-base-900 orderly-flex orderly-items-center">
+            <Loader />
+        </div>
+        //  return splashPage?.();
     }
     
     if (isAffiliate || isTrader) {

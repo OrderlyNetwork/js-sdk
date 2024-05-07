@@ -75,6 +75,7 @@ export const ReferralCode: FC<{
           error={isError}
           helpText={errorInfo}
           autoFocus
+          autoComplete="off"
           suffix={
             <button
               className="orderly-mr-2"
