@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.4.3"
   },
   "changesets": [
+    "gorgeous-radios-brush",
     "spicy-goats-jam"
   ]
 }

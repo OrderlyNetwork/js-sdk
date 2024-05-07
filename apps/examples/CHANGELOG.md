@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.0-internal.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.0-internal.1
+  - @orderly.network/web3-onboard@1.5.0-internal.1
+  - @orderly.network/hooks@1.5.0-internal.1
+  - @orderly.network/core@1.5.0-internal.1
+
 ## 0.4.0-internal.0
 
 ### Minor Changes
