@@ -150,6 +150,11 @@ const meta: Meta = {
           { title: "Quantity", value: "0.123" },
         ],
       },
+      referral: {
+        code: "WRECKED",
+        link: "https://woo.org?size=100",
+        slogan: "Try WOOFi Pro now with:",
+      },
     },
     layout: {},
   },

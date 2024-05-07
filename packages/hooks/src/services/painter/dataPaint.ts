@@ -1,6 +1,7 @@
 import { commify } from "@orderly.network/utils";
 import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
 import { path } from "ramda";
+import { qrPaint } from "./qrPaint";
 
 export class DataPaint extends BasePaint {
   private positionInfoCellWidth = 110;
@@ -9,6 +10,8 @@ export class DataPaint extends BasePaint {
   private DEFAULT_LOSS_COLOR = "rgb(255,103,194)";
 
   private transformTop = 0;
+
+  private QRCODE_SIZE = 56;
 
   async draw(options: DrawOptions) {
     const needDrawDetails =
@@ -45,6 +48,10 @@ export class DataPaint extends BasePaint {
 
     if (typeof options.data?.updateTime !== "undefined") {
       this.drawPositionTime(options);
+    }
+
+    if (typeof options.data?.referral !== "undefined") {
+      this.drawReferralCode(options);
     }
   }
 
@@ -253,23 +260,35 @@ export class DataPaint extends BasePaint {
     });
   }
 
-  private drawDomainUrl(options: DrawOptions) {
+  private drawDomainUrl(options: DrawOptions, onlyMeasure: boolean = false) {
     const layout = path<layoutInfo>(
       ["layout", "domain"],
       options
     ) as layoutInfo;
+
+    const hasReferral = this.hasReferral(options);
+
     const { position } = layout;
     const top = this.painter.height - position.bottom!;
 
-    this._drawText(options.data?.domain!, {
-      left: this._ratio(position.left!),
-      top: this._ratio(top),
-      fontSize: this._ratio(layout.fontSize as number),
-      color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
-      fontFamily: options.fontFamily,
-      textBaseline: layout.textBaseline,
-      fontWeight: 600,
-    });
+    return this._drawText(
+      options.data?.domain!,
+      {
+        left: !hasReferral
+          ? this._ratio(position.left!)
+          : this._ratio(this.painter.width - 20),
+        top: !hasReferral
+          ? this._ratio(top)
+          : this._ratio(this.painter.height - 16),
+        fontSize: this._ratio(layout.fontSize as number),
+        color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
+        fontFamily: options.fontFamily,
+        textBaseline: layout.textBaseline,
+        textAlign: !hasReferral ? layout.textAlign : "end",
+        fontWeight: 600,
+      },
+      onlyMeasure
+    );
   }
 
   private drawPositionTime(options: DrawOptions) {
@@ -278,19 +297,96 @@ export class DataPaint extends BasePaint {
       options
     ) as layoutInfo;
     const { position } = layout;
-    const top = this.painter.height - position.bottom!;
-    const left = position.left!;
+    const hasReferral = this.hasReferral(options);
 
-    console.log("*******", left, top, options.data?.updateTime);
+    let top = this.painter.height - position.bottom!;
+    let left = this._ratio(position.left!);
 
-    this._drawText(options.data?.updateTime!, {
-      left: this._ratio(left),
-      top: this._ratio(top),
-      fontSize: this._ratio(layout.fontSize as number),
-      color: layout.color as string,
-      textAlign: layout.textAlign,
+    if (hasReferral) {
+      const metrics = this.drawDomainUrl(options, true);
+      // console.log("metrics", metrics);
+      left =
+        this._ratio(this.painter.width) -
+        metrics.width -
+        this._ratio(8 + position.left!);
+      top = this.painter.height - position.bottom!;
+      // console.log("left", left, top, metrics.width, this._ratio(top));
+    }
+
+    this._drawText(
+      !hasReferral
+        ? options.data?.updateTime!
+        : `${options.data?.updateTime}   |`,
+      {
+        left,
+        top: this._ratio(top),
+        // top: 536,
+        fontSize: this._ratio(layout.fontSize as number),
+        color: layout.color as string,
+        // color: "red",
+        textAlign: !hasReferral ? layout.textAlign : "end",
+        fontFamily: options.fontFamily,
+        textBaseline: layout.textBaseline,
+      }
+    );
+  }
+
+  private drawReferralCode(options: DrawOptions) {
+    if (!options.data?.referral) {
+      return;
+    }
+
+    const layout = path<layoutInfo>(
+      ["layout", "updateTime"],
+      options
+    ) as layoutInfo;
+    const { position } = layout;
+    const top = this.painter.height - (position.bottom ?? 0);
+
+    const messageLayout = path<layoutInfo>(
+      ["layout", "message"],
+      options
+    ) as layoutInfo;
+
+    const url = new URL(options.data.referral.link);
+
+    const searchParams = url.searchParams;
+    searchParams.append("ref", options.data.referral.code);
+
+    url.search = searchParams.toString();
+
+    qrPaint(this.ctx, {
+      size: this._ratio(this.QRCODE_SIZE),
+      left: this._ratio(position.left!),
+      top: this._ratio(top - this.QRCODE_SIZE),
+      data: `${url.toString()}`,
+    });
+
+    this._drawText(options.data.referral.slogan, {
+      left: this._ratio(position.left! + 66),
+      top: this._ratio(top - this.QRCODE_SIZE),
+      fontSize: this._ratio(14),
+      color: options.brandColor ?? this.DEFAULT_PROFIT_COLOR,
       fontFamily: options.fontFamily,
-      textBaseline: layout.textBaseline,
+      textBaseline: "top",
+    });
+
+    this._drawText("Referral Code", {
+      left: this._ratio(position.left! + 66),
+      top: this._ratio(top - 29),
+      fontSize: this._ratio(12),
+      color: layout.color as string,
+      fontFamily: options.fontFamily,
+      textBaseline: "middle",
+    });
+
+    this._drawText(options.data.referral.code, {
+      left: this._ratio(position.left! + 66),
+      top: this._ratio(top),
+      fontSize: this._ratio(16),
+      color: messageLayout.color as string,
+      fontFamily: options.fontFamily,
+      textBaseline: "bottom",
     });
   }
 
@@ -305,7 +401,8 @@ export class DataPaint extends BasePaint {
       color?: string;
       textBaseline?: CanvasTextBaseline;
       textAlign?: CanvasTextAlign;
-    }
+    },
+    onlyMeasure: boolean = false
   ): TextMetrics {
     let boundingBox: TextMetrics;
     const {
@@ -327,10 +424,16 @@ export class DataPaint extends BasePaint {
     this.ctx.textAlign = textAlign;
     boundingBox = this.ctx.measureText(str);
 
-    this.ctx.fillText(str, left, top);
+    if (!onlyMeasure) {
+      this.ctx.fillText(str, left, top);
+    }
     this.ctx.restore();
 
     return boundingBox;
+  }
+
+  private hasReferral(options: DrawOptions): boolean {
+    return typeof options.data?.referral !== "undefined";
   }
 
   private _ratio(num: number) {

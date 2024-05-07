@@ -40,6 +40,12 @@ export type posterDataSource = {
    * The update time of the position
    */
   updateTime: string;
+
+  referral?: {
+    code: string;
+    slogan: string;
+    link: string;
+  } | null;
 };
 
 export type layoutInfo = {
