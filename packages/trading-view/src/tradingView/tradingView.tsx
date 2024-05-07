@@ -11,12 +11,19 @@ import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 import { withExchangePrefix } from "./tradingViewAdapter/util";
-import {ActionId} from "@orderly.network/react/src/@types/charting_library";
-
 
 export interface TradingViewOptions {
 
 }
+
+
+export const TradingViewSDKLocalstorageKey = {
+    interval: "TradingviewSDK.lastUsedTimeBasedResolution",
+    lineType: "TradingviewSDK.lastUsedStyle",
+    displayControlSetting: "TradingviewSDK.displaySetting",
+};
+
+
 
 export interface DisplayControlSettingInterface {
     position: boolean;

@@ -1,12 +1,11 @@
 import { SettingsOutlineIcon } from "@/icon/icons/settings-outline";
 import { Tooltip } from "@/tooltip";
 import { IndicatorIcon } from "@/icon/icons/indicator";
-import { KChartIcon } from "@/icon/icons/kchart";
 import React, { useState } from "react";
 import LineTypeSelect from "@/page/trading/desktop/myTradingview/lineTypeSelect";
 import TimeInterval from "@/page/trading/desktop/myTradingview/timeInterval";
 import DisplayControl from "@/page/trading/desktop/myTradingview/displayControl";
-import { DisplayControlStateInterface } from "@/page/trading/desktop/myTradingview/index";
+import { DisplayControlSettingInterface } from "@orderly.network/trading-view";
 
 interface IProps {
   changeInterval: (interval: string) => void;
@@ -15,8 +14,8 @@ interface IProps {
   changeLineType: (type: string) => void;
   interval: string;
   lineType: string;
-  displayControlState: DisplayControlStateInterface;
-  changeDisplaySetting: (state: DisplayControlStateInterface) => void;
+  displayControlState: DisplayControlSettingInterface;
+  changeDisplaySetting: (state: DisplayControlSettingInterface) => void;
 }
 
 export default function TopBar({

@@ -9,11 +9,11 @@ import {
 import { cn } from "@/utils/css";
 import { ChevronDown } from "lucide-react";
 import { Switch } from "@/switch";
-import { DisplayControlStateInterface } from "@/page/trading/desktop/myTradingview/index";
+import { DisplayControlSettingInterface } from "@orderly.network/trading-view";
 
 const DisplayControlMap: {
   label: string;
-  id: keyof DisplayControlStateInterface;
+  id: keyof DisplayControlSettingInterface;
 }[] = [
   {
     label: "Position",
@@ -42,8 +42,8 @@ const DisplayControlMap: {
 ];
 
 interface IProps {
-  displayControlState: DisplayControlStateInterface;
-  changeDisplayControlState: (state: DisplayControlStateInterface) => void;
+  displayControlState: DisplayControlSettingInterface;
+  changeDisplayControlState: (state: DisplayControlSettingInterface) => void;
 }
 export default function DisplayControl({
   displayControlState,

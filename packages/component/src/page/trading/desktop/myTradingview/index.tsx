@@ -1,4 +1,8 @@
-import { TradingView } from "@orderly.network/trading-view";
+import {
+  DisplayControlSettingInterface,
+  TradingView,
+  TradingViewSDKLocalstorageKey,
+} from "@orderly.network/trading-view";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
 import { useEffect, useMemo, useState } from "react";
 import { SymbolProvider, useSymbolContext } from "@/provider/symbolProvider";
@@ -10,7 +14,7 @@ import { Decimal } from "@orderly.network/utils";
 import { Spinner } from "@/spinner";
 import TopBar from "@/page/trading/desktop/myTradingview/topBar";
 
-interface Props {
+interface IProps {
   symbol: string;
   tradingViewConfig?: {
     scriptSRC?: string;
@@ -21,22 +25,7 @@ interface Props {
   };
 }
 
-const TradingViewSDKLocalstorageKey = {
-  interval: "TradingviewSDK.lastUsedTimeBasedResolution",
-  lineType: "TradingviewSDK.lastUsedStyle",
-  displayControlSetting: "TradingviewSDK.displaySetting",
-};
-
-export interface DisplayControlStateInterface {
-  position: boolean;
-  buySell: boolean;
-  limitOrders: boolean;
-  stopOrders: boolean;
-  tpsl: boolean;
-  positionTpsl: boolean;
-}
-
-export default function MyTradingView({ symbol, tradingViewConfig }: Props) {
+export default function MyTradingView({ symbol, tradingViewConfig }: IProps) {
   const [open, setOpen] = useState(false);
   const [side, setSide] = useState<OrderSide>(OrderSide.BUY);
   const { helper, onSubmit, submitting } = useOrderEntry(symbol, side, true);
@@ -64,12 +53,12 @@ export default function MyTradingView({ symbol, tradingViewConfig }: Props) {
     return lastUsedLineType;
   });
   const [displayControlState, setDisplayControlState] =
-    useState<DisplayControlStateInterface>(() => {
+    useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
         TradingViewSDKLocalstorageKey.displayControlSetting
       );
       if (displaySettingInfo) {
-        return JSON.parse(displaySettingInfo) as DisplayControlStateInterface;
+        return JSON.parse(displaySettingInfo) as DisplayControlSettingInterface;
       }
       return {
         position: true,
@@ -127,7 +116,7 @@ export default function MyTradingView({ symbol, tradingViewConfig }: Props) {
     setLineType(newLineType);
   };
 
-  const changeDisplaySetting = (newSetting: DisplayControlStateInterface) => {
+  const changeDisplaySetting = (newSetting: DisplayControlSettingInterface) => {
     localStorage.setItem(
       TradingViewSDKLocalstorageKey.displayControlSetting,
       JSON.stringify(newSetting)
