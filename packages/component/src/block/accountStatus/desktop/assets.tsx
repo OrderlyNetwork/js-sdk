@@ -163,6 +163,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       {showGetTestUSDC && (
         <div className="orderly-w-full orderly-pb-4">
           <Button
+            id="orderly-get-test-usdc"
             variant={"outlined"}
             fullWidth
             size={"small"}

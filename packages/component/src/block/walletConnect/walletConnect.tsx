@@ -162,6 +162,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
+          id="orderly-wallet-connector-button"
           className="orderly-text-xs orderly-text-base-contrast"
           fullWidth
           disabled={handleStep > 0}

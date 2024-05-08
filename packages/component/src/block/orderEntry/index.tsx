@@ -402,17 +402,20 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       >
         <div className="orderly-flex orderly-flex-col orderly-gap-3 orderly-text-3xs">
           <SegmentedButton
+            id="orderly-order-entry-trade-type"
             buttons={[
               {
+                id: "orderly-order-entry-buy-button",
                 label: "Buy",
                 value: OrderSide.BUY,
                 disabled,
                 activeClassName:
-                  "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit orderly-font-bold desktop:orderly-font-bold",
+                "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit orderly-font-bold desktop:orderly-font-bold",
                 disabledClassName:
-                  "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
+                "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
               },
               {
+                id: "orderly-order-entry-sell-button",
                 label: "Sell",
                 value: OrderSide.SELL,
                 disabled,
@@ -454,16 +457,17 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             </Button>
           </div>
           <MSelect
+            id="orderly-order-entry-order-type"
             label={"Order Type"}
             value={formattedOrder.order_type}
             className="orderly-bg-base-600 orderly-font-semibold"
             color={side === OrderSide.BUY ? "buy" : "sell"}
             fullWidth
             options={[
-              { label: "Limit order", value: "LIMIT" },
-              { label: "Market order", value: "MARKET" },
-              { label: "Stop limit", value: "STOP_LIMIT" },
-              { label: "Stop market", value: "STOP_MARKET" },
+              { label: "Limit order", value: "LIMIT", id: "orderly-order-entry-order-type-limit" },
+              { label: "Market order", value: "MARKET", id: "orderly-order-entry-order-type-market" },
+              { label: "Stop limit", value: "STOP_LIMIT", id: "orderly-order-entry-order-type-stop-limit" },
+              { label: "Stop market", value: "STOP_MARKET", id: "orderly-order-entry-order-type-stop-market" },
             ]}
             onChange={(value) => {
               // field.onChange(value);
@@ -587,6 +591,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
               %
             </span>
             <button
+              id="orderly-order-entry-max-buy-or-sell"
               type="button"
               className="orderly-flex orderly-items-center orderly-gap-1 orderly-tabular-nums"
               onClick={() => {
@@ -649,7 +654,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             reduceOnly={formattedOrder.reduce_only}
             onFieldChange={props.onFieldChange}
           />
-          <StatusGuardButton>
+          <StatusGuardButton id="orderly-order-entry-status-guard-button">
             <Button
               id="orderly-order-entry-confirm-button"
               className="orderly-text-xs desktop:orderly-font-bold desktop:orderly-text-sm"

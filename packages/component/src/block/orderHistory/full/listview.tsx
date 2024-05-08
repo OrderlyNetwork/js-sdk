@@ -123,6 +123,7 @@ export const Listview: FC<Props> = (props) => {
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <Table<API.AlgoOrder | API.Order>
+        id="orderly-desktop-order-history-content"
         bordered
         justified
         showMaskElement={props.loading}

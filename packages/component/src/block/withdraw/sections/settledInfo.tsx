@@ -43,6 +43,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
         <span>USDC</span>
       </div>
       <Button
+        id="orderly-deposit-content-settle-button"
         className="orderly-text-primary-light orderly-text-4xs desktop:orderly-text-3xs"
         size="small"
         variant={"text"}

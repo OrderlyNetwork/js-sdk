@@ -260,6 +260,7 @@ export const Listview: FC<
       style={{ height: `${(height?.content ?? 100) - 68}px` }}
     >
       <Table<API.PositionTPSLExt>
+        id="orderly-desktop-positions-content"
         bordered
         justified
         showMaskElement={false}

@@ -24,6 +24,7 @@ export const AccountInfo: FC<Props> = () => {
         </div>
         <div className="orderly-flex orderly-gap-2">
           <Button
+            id="orderly-desktop-withdraw-button"
             size={"small"}
             variant={"outlined"}
             color={"tertiary"}
@@ -33,6 +34,7 @@ export const AccountInfo: FC<Props> = () => {
             Withdraw
           </Button>
           <Button
+            id="orderly-desktop-deposit-button"
             size={"small"}
             variant={"outlined"}
             color={"tertiary"}
