@@ -112,6 +112,7 @@ export const Chains: FC<ChainsProps> = (props) => {
       <DropdownMenuTrigger>
         <div className="orderly-h-[48px] orderly-flex orderly-items-center">
           <Button
+            id="orderly-desktop-botom-bar-switch-chain-button"
             variant={"outlined"}
             size={"small"}
             color={"buy"}

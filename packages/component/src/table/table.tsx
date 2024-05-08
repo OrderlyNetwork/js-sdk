@@ -23,6 +23,7 @@ export interface TableProps<RecordType> extends TBodyProps<RecordType> {
   headerClassName?: string;
   showMaskElement?: boolean;
   loadMore?: () => void;
+  id?: string;
 }
 
 export const Table = <RecordType extends unknown>(
@@ -160,6 +161,7 @@ export const Table = <RecordType extends unknown>(
       canExpand={typeof props.expandRowRender === "function"}
     >
       <div
+        id={props.id}
         ref={wrapRef}
         className={cn(
           "orderly-ui-table orderly-relative orderly-flex-col orderly-overflow-x-auto orderly-peer",

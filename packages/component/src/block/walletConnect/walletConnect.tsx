@@ -4,7 +4,12 @@ import { Switch } from "@/switch";
 import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./sections/step";
-import { useAccount, useMutation } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useCheckReferralCode,
+  useGetReferralCode,
+  useMutation,
+} from "@orderly.network/hooks";
 import Button from "@/button";
 import { toast } from "@/toast";
 import { RememberMe } from "./sections/rememberMe";
@@ -24,6 +29,7 @@ export interface WalletConnectProps {
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
   // const { status = AccountStatusEnum.NotConnected } = props;
   const {
+    account,
     state: { status, isNew },
   } = useAccount();
 
@@ -35,6 +41,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
     useMutation("/v1/referral/bind", "POST");
 
   const { referral } = useContext(OrderlyAppContext);
+  const { isExist } = useCheckReferralCode(refCode);
+
+  const { referral_code, isLoading: loadingReferralCode } = useGetReferralCode(account?.accountId);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -81,7 +90,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       .finally(() => {
         setHandleStep(0);
       });
-  }, []);
+  }, [refCode]);
 
   const onClick = useCallback(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -145,11 +154,15 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       </Paper>
 
-      <ReferralCode
-        className="orderly-pt-5"
-        refCode={refCode}
-        setRefCode={setRefCode}
-      />
+      {(referral_code?.length || 0) === 0 && loadingReferralCode === false && (
+        <ReferralCode
+          className="orderly-pt-5"
+          refCode={refCode}
+          setRefCode={setRefCode}
+          isExist={isExist}
+        />
+      )}
+
       <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>
@@ -162,9 +175,10 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       </div>
       <div>
         <Button
+          id="orderly-wallet-connector-button"
           className="orderly-text-xs orderly-text-base-contrast"
           fullWidth
-          disabled={handleStep > 0}
+          disabled={handleStep > 0 || (isExist !== true && (refCode?.length || 0) > 0)}
           onClick={onClick}
           loading={handleStep > 0}
         >

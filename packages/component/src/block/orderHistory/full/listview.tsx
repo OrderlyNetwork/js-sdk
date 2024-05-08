@@ -9,6 +9,8 @@ import { columnsBasis } from "@/block/orders/columnsUtil";
 import { OrderTrades } from "../orderTrades";
 import { PositionEmptyView } from "@/block/positions/full/positionEmptyView";
 import { NumeralWithCtx } from "@/text/numeralWithCtx";
+import { useTabContext } from "@/tab/tabContext";
+import { Numeral } from "@/text/numeral";
 
 interface Props {
   dataSource: API.OrderExt[];
@@ -21,6 +23,11 @@ interface Props {
 }
 
 export const Listview: FC<Props> = (props) => {
+  
+
+  const {data: { pnlNotionalDecimalPrecision },
+  } = useTabContext();
+
   const columns = useMemo(() => {
     const cols = columnsBasis({ onSymbolChange: props.onSymbolChange });
 
@@ -97,11 +104,11 @@ export const Listview: FC<Props> = (props) => {
         }
 
         return (
-          <NumeralWithCtx
+          <Numeral
             className={cn("orderly-font-semibold orderly-text-2xs", record.realized_pnl === 0 ? "" : (record.realized_pnl > 0
               ? "orderly-text-trade-profit"
               : "orderly-text-trade-loss"))}
-            tick="quote_dp"
+            precision={pnlNotionalDecimalPrecision}
             
             rule="price"
           >
@@ -110,19 +117,20 @@ export const Listview: FC<Props> = (props) => {
             record.realized_pnl === null
               ? "-"
               : `${record.realized_pnl}`}
-          </NumeralWithCtx>
+          </Numeral>
         );
       },
     });
 
     return cols;
-  }, []);
+  }, [pnlNotionalDecimalPrecision]);
 
   const divRef = useRef<HTMLDivElement>(null);
 
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <Table<API.AlgoOrder | API.Order>
+        id="orderly-desktop-order-history-content"
         bordered
         justified
         showMaskElement={props.loading}

@@ -27,6 +27,7 @@ export const ConnectorProvider = (
 
   const chains = useRef([mainnet, arbitrum, arbitrumGoerli]).current;
 
+  // @ts-ignore
   const [wagmiConfig, setWagmiConfig] = useState<Config>(() => {
     if (props.config) {
       return props.config;

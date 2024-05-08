@@ -8,7 +8,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
 import { PosterRef } from "../poster/poster";
-import { getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
+import { ReferralType, getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
 import {
   CarouselContent,
   CarouselItem,
@@ -24,7 +24,7 @@ export const MobileSharePnLContent: FC<{
   hide: any;
   baseDp?: number;
   quoteDp?: number;
-  refLink?: string;
+  referral?: ReferralType;
 }> = (props) => {
 
   const localPnlConfig = getPnlInfo();
@@ -58,7 +58,7 @@ export const MobileSharePnLContent: FC<{
     shareOption,
     props.baseDp,
     props.quoteDp,
-    props.refLink,
+    props.referral,
   );
   // console.log("pster data", posterData, props.position);
 

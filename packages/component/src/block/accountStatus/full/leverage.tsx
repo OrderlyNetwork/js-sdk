@@ -24,7 +24,7 @@ const LeverageAndMarginRatio = () => {
 
           <span className={"orderly-text-base-contrast-54"}>/</span>
           <LeverageDialog>
-            <button className="orderly-flex orderly-items-center orderly-gap-1">
+            <button id="orderly-leverage-button" className="orderly-flex orderly-items-center orderly-gap-1">
               <span>{`${maxLeverage ?? "-"}x`}</span>
               {typeof maxLeverage !== "undefined" && (
                 // @ts-ignore
