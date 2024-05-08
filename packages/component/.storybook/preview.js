@@ -141,6 +141,7 @@ const preview = {
             }}
             referral={{
               saveRefCode: true,
+              slogan: "Slogan is： NEWBE",
               onClickReferral: () => {
                 console.log("click referral");
               },
