@@ -123,7 +123,10 @@ export class OrderLineService {
       orderCombinationType === OrderCombinationType.STOP_BRACKET_LIMIT ||
       orderCombinationType === OrderCombinationType.STOP_BRACKET_MARKET
     ) {
-      return "Stop";
+      if (pendingOrder.type === OrderType.LIMIT) {
+        return `Stop Limit ${pendingOrder.price}`
+      }
+      return "Stop Market";
     }
     return "Limit";
   }
@@ -202,22 +205,26 @@ export class OrderLineService {
 
     orderLine
       .setText(text)
-      .setCancelButtonIconColor(color)
-      .setCancelButtonBorderColor(color)
-      .setBodyTextColor(textColor)
-      .setBodyBorderColor(color)
-      .setQuantityBorderColor(color)
+      .setCancelButtonIconColor(colorConfig.closeIcon!)
+      .setCancelButtonBorderColor(color!)
+      .setBodyTextColor(textColor!)
+      .setBodyBorderColor(color!)
+      .setQuantityBorderColor(color!)
+        .setQuantityTextColor(color!)
       // .setBodyBackgroundColor(color)
-      .setLineColor(color)
+      .setLineColor(color!)
       .setLineLength(lineLength)
       .setQuantity(quantity ?? '')
       .setPrice(price);
+
     if (this.broker.mode !== ChartMode.MOBILE) {
 
       orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+      this.applyEditOnMove(orderLine, pendingOrder);
+    } else {
+      orderLine.setEditable(false).setCancellable(false);
     }
 
-    this.applyEditOnMove(orderLine, pendingOrder);
 
     return orderLine;
   }

@@ -65,12 +65,16 @@ export default function useCreateRenderer(symbol: string, displayControlSetting?
                 if (order.algo_type === AlgoType.POSITIONAL_TP_SL ) {
                     for(const child_order of order.child_orders) {
                         child_order.root_algo_order_algo_type = order.algo_type;
-                        positionTpsl.push(child_order);
+                        if (child_order.trigger_price) {
+                            positionTpsl.push(child_order);
+                        }
                     }
                 } else if (order.algo_type === AlgoType.TP_SL) {
                     for(const child_order of order.child_orders) {
                         child_order.root_algo_order_algo_type = order.algo_type;
-                        tpslOrder.push(child_order);
+                        if (child_order.trigger_price) {
+                            tpslOrder.push(child_order);
+                        }
                     }
 
                 } else if (order.algo_type === AlgoType.STOP_LOSS || order.algo_type === AlgoType.TAKE_PROFIT) {

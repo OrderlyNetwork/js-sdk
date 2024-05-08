@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import { Datafeed } from "./tradingViewAdapter/datafeed/datafeed";
-import { ChartMode } from "./tradingViewAdapter/type";
+import { ChartMode, ColorConfigInterface } from "./tradingViewAdapter/type";
 import { Widget, WidgetProps } from "./tradingViewAdapter/widget";
 import { WebsocketService } from './tradingViewAdapter/datafeed/websocket.service';
 import { useLazyEffect } from './tradingViewAdapter/hooks/useLazyEffect';
@@ -12,7 +12,7 @@ import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 import { withExchangePrefix } from "./tradingViewAdapter/util";
 
-export { Datafeed }
+export { Datafeed}
 
 
 export interface TradingViewOptions {
@@ -55,7 +55,8 @@ export interface TradingViewPorps {
     topToolbarOpenSetting?: boolean;
     topToolbarOpenIndicators?: boolean;
     topToolbarLineType?: string;
-    displayControlSetting?:DisplayControlSettingInterface
+    displayControlSetting?:DisplayControlSettingInterface;
+    colorConfig?: ColorConfigInterface;
 }
 
 function Link(props: {
@@ -134,6 +135,7 @@ export function TradingView({
                                 topToolbarOpenIndicators,
     topToolbarLineType,
     displayControlSetting,
+    colorConfig: customerColorConfig,
 }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
@@ -144,7 +146,7 @@ export function TradingView({
     const ws = useWS();
     const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] = useState<boolean>(false);
 
-    const colorConfig = {
+    const defaultColorConfig: ColorConfigInterface = {
         upColor,
         downColor,
         chartBG,
@@ -154,7 +156,9 @@ export function TradingView({
         textColor,
         qtyTextColor,
         font,
+        closeIcon: 'rgba(255, 255, 255, 0.54)',
     }
+    const colorConfig = Object.assign({}, defaultColorConfig, customerColorConfig ?? {})
     const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast, mode });
     const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
