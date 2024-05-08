@@ -155,7 +155,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   if (!order) return null;
 
   return (
-    <div>
+    <div id="orderly-orders-editor-form">
       <div className="orderly-pb-3 orderly-pt-5 orderly-text-xs">
         <Text rule="symbol">{order.symbol}</Text>
       </div>

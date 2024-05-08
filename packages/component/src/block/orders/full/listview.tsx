@@ -222,6 +222,7 @@ export const Listview: FC<Props> = (props) => {
   return (
     <div ref={divRef} className="orderly-h-full orderly-overflow-y-auto">
       <Table<API.Order>
+        id={`orderly-desktop-orders-${props.status.toLocaleLowerCase()}-content`}
         bordered
         justified
         showMaskElement={false}

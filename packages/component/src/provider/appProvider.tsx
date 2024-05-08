@@ -61,6 +61,7 @@ export type ReferralProps = {
   onClickReferral?: () => void,
   onBoundRefCode?: (success: boolean, error: any) => void,
   refLink?: string,
+  slogan?: string,
 };
 
 export type CommonOrderlyAppState = {

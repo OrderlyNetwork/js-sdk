@@ -84,6 +84,7 @@ export const MSelect: FC<SelectProps> = ({
   return (
     <div className="orderly-relative" ref={containerRef}>
       <button
+        id={props.id}
         type="button"
         disabled={Boolean(disabled)}
         onClick={() => setOpen((open) => !open)}
@@ -124,6 +125,7 @@ export const MSelect: FC<SelectProps> = ({
           {props.options?.map((option, index) => {
             return (
               <SelectMenuItem
+                id={option.id}
                 value={option.value}
                 key={index}
                 className={cn(
@@ -158,6 +160,7 @@ interface SelectMenuItemProps {
   className?: string;
   //   onSelect?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onValueChange: (value: string | number) => void;
+  id?: string;
 }
 
 export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
@@ -167,6 +170,7 @@ export const SelectMenuItem: FC<PropsWithChildren<SelectMenuItemProps>> = (
   return (
     <div>
       <button
+        id={props.id}
         type="button"
         className={cn(
           "orderly-block orderly-p-2 orderly-text-inherit orderly-w-full orderly-h-full orderly-text-left orderly-text-3xs  desktop:orderly-text-xs",

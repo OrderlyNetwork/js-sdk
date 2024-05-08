@@ -2,6 +2,7 @@ import React, { type PropsWithChildren, FC } from "react";
 import { cn } from "@/utils/css";
 
 export type SegmentedItem = {
+  id?: string;
   label: string;
   value: string;
   disabled?: boolean;
@@ -15,6 +16,7 @@ export interface SegmentedButtonProps {
   value?: string;
   // onClick: (value: string, event: Event) => void;
   onChange?: (value: string) => void;
+  id?: string;
 }
 
 export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
@@ -30,10 +32,11 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
   }
 
   return (
-    <div className="orderly-flex orderly-flex-row orderly-gap-[36px]">
+    <div id={props.id}  className="orderly-flex orderly-flex-row orderly-gap-[36px]">
       {props.buttons.map((item, index) => {
         return (
           <_Button
+            id={item.id}
             label={item.label}
             value={item.value}
             key={index}
@@ -52,6 +55,7 @@ export const SegmentedButton: FC<PropsWithChildren<SegmentedButtonProps>> = (
 };
 
 const _Button = ({
+  id,
   label,
   value,
   isActive,
@@ -61,10 +65,11 @@ const _Button = ({
   disabled,
   activeClassName,
   disabledClassName,
-}: SegmentedItem & { index: number; isActive: boolean; onChange: any }) => {
+}: SegmentedItem & { index: number; isActive: boolean; onChange: any, id?: string, }) => {
   const isFirstChild = index === 0;
   return (
     <button
+      id={id}
       type="button"
       onClick={(event) => onChange(value)}
       disabled={disabled}

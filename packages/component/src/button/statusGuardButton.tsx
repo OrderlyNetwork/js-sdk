@@ -16,6 +16,7 @@ export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
   connected?: boolean;
   // onConnectWallet?: () => void;
+  id?: string;
 }
 
 export const StatusGuardButton: FC<
@@ -66,6 +67,7 @@ export const StatusGuardButton: FC<
     if (typeof props.placeholder === "undefined") {
       return (
         <Button
+          id={props.id}
           type="button"
           fullWidth
           onClick={() => onClick()}

@@ -139,7 +139,7 @@ export const TPSLForm: FC<Props> = (props) => {
   };
 
   return (
-    <div className={cn("orderly-space-y-4 orderly-text-3xs", props.className)}>
+    <div id="orderly-tp_sl-form" className={cn("orderly-space-y-4 orderly-text-3xs", props.className)}>
       {canModifyQty ? (
         <>
           <div>

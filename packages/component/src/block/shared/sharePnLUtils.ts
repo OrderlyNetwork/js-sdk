@@ -17,12 +17,22 @@
           { title: "Quantity", value: "0.123" },
         ],
       },
-      referralLink: "{baseUrl}?ref=AAAA"
+      referral: {
+        code: "WRECKED",
+        link: "https://woo.org?size=100",
+        slogan: "Try WOOFi Pro now with:",
+      }
     }
 */
 
 import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
+
+export type ReferralType = {
+  code?: string,
+  link?: string,
+  slogan?: string,
+};
 
 export function getPnLPosterData(
   position: any,
@@ -33,7 +43,7 @@ export function getPnLPosterData(
   options: Set<ShareOptions>,
   baseDp?: number,
   quoteDp?: number,
-  refCode?: string,
+  referral?: ReferralType,
 ) {
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
@@ -129,8 +139,8 @@ export function getPnLPosterData(
     data["message"] = message;
   }
 
-  if ((refCode?.length || 0) > 0) {
-    data["referralLink"] = refCode;
+  if (typeof referral !== 'undefined' && referral['code'] !== undefined) {
+    data["referral"] = referral;
   }
   
   return data;
