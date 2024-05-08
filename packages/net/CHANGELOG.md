@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.5.0-internal.2
+
+### Patch Changes
+
+- fix
+
 ## 1.5.0-internal.1
 
 ### Patch Changes
