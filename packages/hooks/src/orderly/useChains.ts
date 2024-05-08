@@ -329,9 +329,9 @@ export function formatChainInfos(
       },
       token_infos: [
         {
-          symbol: token_info.token_name,
-          address: token_info.contract_address,
-          decimals: token_info.decimals,
+          symbol: token_info?.token_name,
+          address: token_info?.contract_address,
+          decimals: token_info?.decimals,
         },
       ],
     };
