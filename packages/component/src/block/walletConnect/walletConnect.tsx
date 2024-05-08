@@ -29,6 +29,7 @@ export interface WalletConnectProps {
 export const WalletConnect: FC<WalletConnectProps> = (props) => {
   // const { status = AccountStatusEnum.NotConnected } = props;
   const {
+    account,
     state: { status, isNew },
   } = useAccount();
 
@@ -41,9 +42,8 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
 
   const { referral } = useContext(OrderlyAppContext);
   const { isExist } = useCheckReferralCode(refCode);
-  const account = useAccount();
 
-  const { referral_code, isLoading: loadingReferralCode } = useGetReferralCode(account.account.accountId);
+  const { referral_code, isLoading: loadingReferralCode } = useGetReferralCode(account?.accountId);
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -90,7 +90,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
       .finally(() => {
         setHandleStep(0);
       });
-  }, []);
+  }, [refCode]);
 
   const onClick = useCallback(() => {
     if (status < AccountStatusEnum.SignedIn) {

@@ -8,7 +8,7 @@ export const useGetReferralCode = (
     error: any;
     isLoading: boolean;
   } => {
-  if (typeof accountId === "undefined" || accountId.length === 0) {
+  if (typeof accountId === "undefined" ) {
     return {
       referral_code: undefined,
         error: "The account id is empty or undefined",
