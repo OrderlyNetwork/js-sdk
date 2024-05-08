@@ -1,5 +1,18 @@
 # @orderly.network/core
 
+## 1.5.0
+
+### Minor Changes
+
+- update
+
+### Patch Changes
+
+- update
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@1.5.0
+
 ## 1.4.3
 
 ### Patch Changes
