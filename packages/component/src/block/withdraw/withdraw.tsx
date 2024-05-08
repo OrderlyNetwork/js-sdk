@@ -43,12 +43,13 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
   }, [connectedChain, findByChainId]);
 
   const {
+    dst,
     maxAmount,
     availableBalance,
     availableWithdraw,
     unsettledPnL,
     withdraw,
-  } = useWithdraw();
+  } = useWithdraw({ srcChainId: currentChain?.id });
   const context = useContext(TradingPageContext);
   const symbol = context.symbol;
   const [data] = usePositionStream(symbol);
@@ -56,6 +57,7 @@ export const Withdraw: FC<WithdrawProps> = (props) => {
 
   return (
     <WithdrawForm
+      dst={dst}
       address={wallet?.accounts?.[0].address}
       chain={currentChain}
       // @ts-ignore

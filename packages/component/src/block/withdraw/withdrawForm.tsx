@@ -26,7 +26,15 @@ import { OrderlyAppContext } from "@/provider";
 import { Logo } from "@/logo";
 import { useQuery } from "@orderly.network/hooks";
 
+type DST = {
+  symbol: string;
+  address?: string;
+  decimals?: number;
+  chainId: number;
+  network: string;
+};
 export interface WithdrawProps {
+  dst: DST;
   status?: WithdrawStatus;
   chains: API.NetworkInfos[];
   chain: CurrentChain | null;
@@ -54,6 +62,7 @@ export interface WithdrawProps {
 const numberReg = /^([0-9]{1,}[.]?[0-9]*)/;
 
 export const WithdrawForm: FC<WithdrawProps> = ({
+  dst,
   status = WithdrawStatus.Normal,
   chains,
   chain,
@@ -336,10 +345,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         amount={quantity}
         fee={fee}
         needCalc
-        token={{
-          symbol: "USDC",
-          decimals: 6,
-        }}
+        token={dst}
+        // token={{
+        //   symbol: "USDC",
+        //   decimals: 6,
+        // }}
       />
 
       <Summary fee={fee} />
@@ -348,7 +358,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         chains={chains}
         chain={chain}
         onWithdraw={doWithdraw}
-        disabled={!quantity || Number(quantity) - fee <= 0 || Number(quantity) > maxAmount}
+        disabled={
+          !quantity ||
+          Number(quantity) - fee <= 0 ||
+          Number(quantity) > maxAmount
+        }
         switchChain={switchChain}
         quantity={quantity}
         loading={submitting}
