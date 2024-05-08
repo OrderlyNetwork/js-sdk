@@ -17,26 +17,26 @@ const DisplayControlMap: {
       label: "Position",
       id: "position",
     },
-    {
-      label: "Buy/Sell",
-      id: "buySell",
-    },
-  ],
-  [
+    // {
+    //   label: "Buy/Sell",
+    //   id: "buySell",
+    // },
     {
       label: "Limit Orders",
       id: "limitOrders",
     },
+  ],
+  [
     {
       label: "Stop orders",
       id: "stopOrders",
     },
-  ],
-  [
     {
       label: "TP/SL",
       id: "tpsl",
     },
+  ],
+  [
     {
       label: "Position TP/SL",
       id: "positionTpsl",

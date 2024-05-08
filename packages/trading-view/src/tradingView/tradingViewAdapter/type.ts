@@ -236,3 +236,18 @@ export interface OrderInterface {
     total_fee?: number;
     fee_asset?: string;
 }
+
+export interface ColorConfigInterface{
+    chartBG?: string;
+    upColor?: string;
+    downColor?: string,
+    pnlUpColor?: string;
+    pnlDownColor?: string;
+    pnlZoreColor?: string;
+    textColor?: string;
+    qtyTextColor?: string;
+    font?: string;
+    closeIcon?: string;
+}
+
+

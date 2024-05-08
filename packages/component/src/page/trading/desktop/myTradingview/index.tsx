@@ -13,6 +13,7 @@ import { OrderSide, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { Spinner } from "@/spinner";
 import TopBar from "@/page/trading/desktop/myTradingview/topBar";
+import { ColorConfigInterface } from "@/page/trading/types";
 
 interface IProps {
   symbol: string;
@@ -22,6 +23,7 @@ interface IProps {
     overrides?: Record<string, string>;
     studiesOverrides?: Record<string, string>;
     customCssUrl?: string;
+    colorConfig?: ColorConfigInterface;
   };
 }
 
@@ -161,6 +163,7 @@ export default function MyTradingView({ symbol, tradingViewConfig }: IProps) {
             loadingElement={<Spinner />}
             positionControlCallback={positionControlCallback}
             displayControlSetting={displayControlState}
+            colorConfig={tradingViewConfig?.colorConfig}
           />
           <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild>

@@ -19,10 +19,10 @@ const DisplayControlMap: {
     label: "Position",
     id: "position",
   },
-  {
-    label: "Buy/Sell",
-    id: "buySell",
-  },
+  // {
+  //   label: "Buy/Sell",
+  //   id: "buySell",
+  // },
   {
     label: "Limit Orders",
     id: "limitOrders",

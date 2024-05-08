@@ -9,6 +9,7 @@ import {
   ChartMode,
 } from "@orderly.network/trading-view";
 import TopBar from "./topBar";
+import { ColorConfigInterface } from "@/page/trading/types";
 
 interface IProps {
   symbol: string;
@@ -18,6 +19,7 @@ interface IProps {
     overrides?: Record<string, string>;
     studiesOverrides?: Record<string, string>;
     customCssUrl?: string;
+    colorConfig?: ColorConfigInterface;
   };
 }
 
@@ -87,6 +89,7 @@ export default function MyTradingView({ symbol, tradingViewConfig }: IProps) {
             onToast={toast}
             loadingElement={<Spinner />}
             displayControlSetting={displayControlState}
+            colorConfig={tradingViewConfig?.colorConfig}
           />
         </div>
       </SymbolProvider>

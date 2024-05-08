@@ -56,9 +56,8 @@ export const TabContent: FC<PropsWithChildren<TabContentProps>> = (props) => {
     >
       <div
         className={cn(
-          " orderly-relative",
-          mode === TabViewMode.Group && "orderly-grid",
-          !contentVisible && "orderly-overflow-hidden"
+          "orderly-overflow-hidden orderly-relative",
+          mode === TabViewMode.Group && "orderly-grid"
         )}
         style={
           mode === TabViewMode.Group

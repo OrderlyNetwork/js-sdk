@@ -3,7 +3,7 @@ import useCancelOrder from '../hooks/useCancelOrder';
 import useEditOrder from './useEditOrder';
 import useSenderOrder from './useSendOrder';
 import {useSymbolsInfo} from '@orderly.network/hooks';
-import { ChartMode } from '../type';
+import { ChartMode, ColorConfigInterface } from '../type';
 
 const useBroker = ({
                        closeConfirm,
@@ -13,18 +13,7 @@ const useBroker = ({
                    }: {
 
     closeConfirm: any;
-    colorConfig: {
-        chartBG: string;
-        upColor: string;
-        downColor: string,
-        pnlUpColor: string;
-        pnlDownColor: string;
-        pnlZoreColor: string;
-        textColor: string;
-        qtyTextColor: string;
-        font: string;
-
-    },
+    colorConfig: ColorConfigInterface,
     onToast?: any,
     mode?: ChartMode,
 },) => {
