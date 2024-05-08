@@ -155,7 +155,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
 
         if (dailyVolume && (dailyVolume.length) > 0) {
             const now = formatYMDTime(new Date().toLocaleDateString());
-            const index = dailyVolume.findIndex((item) => {
+            const index = dailyVolume.findIndex((item: any) => {
                 const itemDate = item.date;
                 return itemDate === now;
             });
