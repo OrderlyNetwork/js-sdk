@@ -150,7 +150,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-3xs"
           rule="price"
-          precision={quote_dp}
+          precision={2}
           label={
             <>
               <span className="orderly-text-base-contrast-36">
