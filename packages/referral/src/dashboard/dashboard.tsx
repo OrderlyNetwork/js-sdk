@@ -5,24 +5,25 @@ import { DashboardTab } from "./dashboardTab";
 import { Loader } from "../components/loader";
 
 export const Dashboard = () => {
+  const { isAffiliate, isTrader, splashPage, isLoading } =
+    useContext(ReferralContext);
 
-    const { isAffiliate, isTrader, splashPage, isLoading } = useContext(ReferralContext);
-
-    
-    if (isLoading && typeof splashPage !== 'undefined') {
-        return <div id="orderly-refferral-dashboard-loader" className="orderly-bg-base-900 orderly-flex orderly-items-center">
-            <Loader />
+  if (isLoading) {
+    return (
+      splashPage?.() || (
+        <div id="orderly-referral-dashboard-loader" className="orderly-w-full orderly-h-full orderly-items-center orderly-justify-center orderly-flex">
+          <Loader className="orderly-w-[40px] orderly-h-[40px]" />
         </div>
-        //  return splashPage?.();
-    }
-    
-    if (isAffiliate || isTrader) {
-        return (
-            <div className="orderly-referral-tab">
-                <DashboardTab />
-            </div>
-        );
-    }
-    return <Referral />;
+      )
+    );
+  }
 
-}
+  if (isAffiliate || isTrader) {
+    return (
+      <div className="orderly-referral-tab">
+        <DashboardTab />
+      </div>
+    );
+  }
+  return <Referral />;
+};
