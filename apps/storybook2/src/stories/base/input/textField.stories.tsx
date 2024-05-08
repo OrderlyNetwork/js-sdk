@@ -1,12 +1,12 @@
+import { useState } from 'react';
 import type {Meta, StoryObj} from '@storybook/react';
 import { fn } from '@storybook/test';
-import {Box, CheckCircleFill, Flex, Input, InputAdditional, inputFormatter} from '@orderly.network/ui';
-import { useState } from 'react';
+import {Box, CheckCircleFill, Flex,TextField, InputAdditional, inputFormatter} from '@orderly.network/ui';
 
 
 const meta = {
-    title: 'Base/input/Input',
-    component: Input,
+    title: 'Base/input/TextField',
+    component: TextField,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
         layout: 'centered',
@@ -41,37 +41,16 @@ const meta = {
     // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     args: {
       size:'default',
-      disabled:false,
-      fullWidth:false,
+      label:'Title',
+        helpText:'Help Text',
+    //   disabled:false,
+    //   fullWidth:false,
       onValueChange:fn()
     },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof TextField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Formatter:Story = {
-    render:(args)=>{
-        const [value,setValue] = useState('');
-        return <Input {...args} className='oui-w-60' value={value} placeholder='Only input number' onValueChange={(val)=>{
-            console.log(val)
-            setValue(val)
-        }} />
-    },
-    args:{
-        formatters:[inputFormatter.numberFormatter,inputFormatter.currencyFormatter]
-    }
-};
-
-export const Prefix:Story = {
-    render:(args)=>{
-return <Box width={'400px'}>
-    <Flex direction={'column'} gap={3}>
-    <Input {...args} prefix="Title" />
-    <Input {...args} prefix={<InputAdditional><CheckCircleFill/></InputAdditional>} />
-</Flex>
-</Box>
-    }
-}

@@ -128,8 +128,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     ...inputProps
   } = props;
 
-  console.log(props);
-
   const { input, box, additional } = inputs({
     size,
     disabled,

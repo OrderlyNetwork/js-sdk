@@ -11,3 +11,4 @@ export { CloseSquareFill } from "./closeSquareFill";
 export { CloseCircleFill } from "./closeCircleFill";
 export { CheckCircleFill } from "./checkCircleFill";
 export { CheckSquareFill } from "./checkSquareFill";
+export { CheckSquareEmpty } from "./checkSquareEmpty";
