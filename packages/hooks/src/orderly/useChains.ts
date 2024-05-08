@@ -71,7 +71,8 @@ export function useChains(
   options: UseChainsOptions = {}
 ) {
   const { pick: pickField, ...swrOptions } = options;
-  const { filteredChains: allowedChains } = useContext(OrderlyContext);
+  const { filteredChains: allowedChains, configStore } =
+    useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -88,48 +89,37 @@ export function useChains(
     dedupingInterval: 3_600_000,
     ...swrOptions,
   };
-
   // only prod env return mainnet chains info
   // TODO: remove https://api-evm.orderly.org api base
-  const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
-    "https://api-evm.orderly.org/v1/public/token",
-    { ...commonSwrOpts }
-  );
+  // const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
+  //   "https://api-evm.orderly.org/v1/public/token",
+  //   { ...commonSwrOpts }
+  // );
 
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
-    "/v1/public/chain_info",
+    `/v1/public/chain_info?brokder_id=${configStore.get("brokerId")}`,
     { ...commonSwrOpts }
   );
 
   const chains = useMemo(() => {
-    const orderlyChainsArr = fillChainsInfo(tokenChains, filterFun.current);
-
-    let testnetArr = [...TestnetChains] as API.Chain[];
-
-    orderlyChainsArr?.forEach((item) => {
-      const chainId = item.network_infos?.chain_id;
-      chainsMap.current.set(chainId, item);
-      updateTestnetInfo(testnetArr, chainId, item);
-    });
-
-    testnetArr.forEach((chain) => {
-      chainsMap.current.set(chain.network_infos?.chain_id, chain);
-    });
-
-    let mainnetArr: API.Chain[] = [];
-
-    // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
-    mainnetArr = updateOrderlyChains(
-      orderlyChainsArr,
-      chainInfos,
+    let mainnetArr: API.Chain[] = formatChainInfos(
+      chainInfos as any[],
       filterFun.current
     );
 
-    mainnetArr.forEach((item) => {
-      const chainId = item.network_infos?.chain_id;
-      chainsMap.current.set(chainId, item);
-      updateTestnetInfo(testnetArr, chainId, item);
+    mainnetArr.forEach((chain) => {
+      chainsMap.current.set(chain.network_infos?.chain_id, chain);
+    });
+
+    const env = configStore.get("env");
+
+    let testnetArr = (
+      env === "prod" ? [...TestnetChains] : [...mainnetArr]
+    ) as API.Chain[];
+
+    testnetArr.forEach((chain) => {
+      chainsMap.current.set(chain.network_infos?.chain_id, chain);
     });
 
     mainnetArr.sort((a, b) => {
@@ -162,7 +152,7 @@ export function useChains(
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [networkId, tokenChains, chainInfos, pickField, allowedChains]);
+  }, [networkId, chainInfos, pickField, allowedChains, configStore]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -191,7 +181,7 @@ export function useChains(
     chains,
     {
       findByChainId,
-      error: tokenError,
+      error: chainInfoErr,
     },
   ];
 }
@@ -306,4 +296,52 @@ export function filterByAllowedChains(
         allowedChain.id === parseInt(chain?.network_infos?.chain_id as any)
     )
   );
+}
+
+export function formatChainInfos(
+  chainInfos: any[],
+  filter?: (chain: any) => boolean
+) {
+  const chains: API.Chain[] = [];
+
+  chainInfos?.forEach((item) => {
+    const {
+      name,
+      chain_id,
+      public_rpc_url,
+      currency_symbol,
+      explorer_base_url,
+      token_info,
+    } = item;
+    const chain: any = {
+      network_infos: {
+        name,
+        shortName: name,
+        chain_id: Number(chain_id),
+        currency_symbol,
+        public_rpc_url,
+        explorer_base_url,
+        withdrawal_fee: token_info?.withdrawal_fee,
+        cross_chain_withdrawal_fee: token_info?.cross_chain_withdrawal_fee,
+        bridgeless: true,
+        bridge_enable: true,
+        mainnet: true,
+      },
+      token_infos: [
+        {
+          symbol: token_info.token_name,
+          address: token_info.contract_address,
+          decimals: token_info.decimals,
+        },
+      ],
+    };
+
+    if (typeof filter === "function") {
+      if (!filter(chain)) return;
+    }
+
+    chains.push(chain);
+  });
+
+  return chains;
 }
