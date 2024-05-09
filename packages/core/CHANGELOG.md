@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.1-internal.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.1-internal.8
+
 ## 1.5.1-internal.7
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # storybook
 
+## 1.3.1-internal.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-modal@1.5.1-internal.8
+  - @orderly.network/react@1.5.1-internal.8
+  - @orderly.network/web3-onboard@1.5.1-internal.8
+  - @orderly.network/hooks@1.5.1-internal.8
+  - @orderly.network/core@1.5.1-internal.8
+
 ## 1.3.1-internal.7
 
 ### Patch Changes
