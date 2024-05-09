@@ -43,7 +43,7 @@ export const usePoster = (
     if (target) {
       if (!painterRef.current) {
         painterRef.current = new PosterPainter(target, {
-          ratio: 1,
+          ratio: options?.ratio || 1,
           ...options,
         });
       }

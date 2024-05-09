@@ -134,6 +134,7 @@ export const MobileSharePnLContent: FC<{
                     ...resetOptions,
                     data: posterData,
                   }}
+                  ratio={3}
                   ref={posterRefs[index]}
                 />
               </CarouselItem>
