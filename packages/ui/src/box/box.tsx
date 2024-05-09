@@ -6,12 +6,14 @@ import { cn } from "../helpers/cn";
 import { parseSizeProps } from "../helpers/parse-props";
 import { tv, VariantProps } from "tailwind-variants";
 import { shadowVariants } from "../layout/shadow";
+import { decorationVariants } from "../layout/decoration";
 
 const baseBoxVariants = tv({
   base: ["oui-box oui-size"],
   variants: {
     ...layoutVariants.variants,
     ...shadowVariants.variants,
+    ...decorationVariants.variants,
   },
 });
 
@@ -39,7 +41,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     px,
     py,
     style,
-    elevation,
+    shadow,
+    border,
     ...rest
   } = parseSizeProps(props);
 
@@ -53,7 +56,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
         p,
         px,
         py,
-        elevation,
+        shadow,
+        border,
       })}
       {...rest}
       ref={forwardedRef}

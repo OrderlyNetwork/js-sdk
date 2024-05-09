@@ -1,1 +1,1 @@
-export type SizeType = "nano" | "mini" | "medium" | "default" | "large";
+export type SizeType = "xs" | "sm" | "md" | "default" | "lg";

@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-const CheckSquareEmpty = React.forwardRef<SVGSVGElement, BaseIconProps>(
+const CheckSquareEmptyIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { opacity = 0.54, ...rest } = props;
     return (
@@ -18,6 +18,6 @@ const CheckSquareEmpty = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-CheckSquareEmpty.displayName = "CheckSquareEmpty Icon";
+CheckSquareEmptyIcon.displayName = "CheckSquareEmpty Icon";
 
-export { CheckSquareEmpty };
+export { CheckSquareEmptyIcon };

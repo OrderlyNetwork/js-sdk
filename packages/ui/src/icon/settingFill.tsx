@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const SettingFill = React.forwardRef<SVGSVGElement, BaseIconProps>(
+export const SettingFillIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { opacity = 0.54, ...rest } = props;
     return (
@@ -16,4 +16,4 @@ export const SettingFill = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-SettingFill.displayName = "SettingFill Icon";
+SettingFillIcon.displayName = "SettingFill Icon";

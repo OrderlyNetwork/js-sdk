@@ -9,11 +9,11 @@ const spinnerVariants = tv({
   base: "oui-text-gray-200 oui-animate-spin dark:oui-text-gray-600 oui-fill-primary",
   variants: {
     size: {
-      nano: "oui-w-3 oui-h-3",
-      mini: "oui-w-4 oui-h-4",
-      medium: "oui-w-6 oui-h-6",
+      xs: "oui-w-3 oui-h-3",
+      sm: "oui-w-4 oui-h-4",
+      md: "oui-w-6 oui-h-6",
       default: "oui-w-8 oui-h-8",
-      large: "oui-w-12 oui-h-12",
+      lg: "oui-w-12 oui-h-12",
     },
     color: {
       primary: "oui-fill-primary",

@@ -22,11 +22,11 @@ const buttonVariants = tv({
       gradient: "oui-bg-gradient-to-r oui-from-slate-100 oui-to-slate-600",
     },
     size: {
-      nano: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"],
-      mini: ["oui-px-3", "oui-rounded", "oui-h-7", "oui-text-2xs"],
-      medium: ["oui-px-3", "oui-rounded-md", "oui-h-8", , "oui-text-sm"],
+      xs: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"],
+      sm: ["oui-px-3", "oui-rounded", "oui-h-7", "oui-text-2xs"],
+      md: ["oui-px-3", "oui-rounded-md", "oui-h-8", , "oui-text-sm"],
       default: ["oui-px-3", "oui-rounded-md", "oui-h-10", "oui-text-base"],
-      large: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"],
+      lg: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"],
     },
     color: {
       primary: ["hover:oui-bg-primary/70"],

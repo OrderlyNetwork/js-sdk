@@ -5,6 +5,7 @@ export { Text } from "./typography";
 export { Spinner } from "./spinner";
 export { Input, inputFormatter, InputAdditional, TextField } from "./input";
 export { Checkbox } from "./checkbox";
+export { Switch } from "./switch";
 
 export * from "./icon";
 

@@ -18,7 +18,7 @@ const iconVariants = tv({
     },
   },
   defaultVariants: {
-    color: "primary",
+    color: "black",
   },
 });
 

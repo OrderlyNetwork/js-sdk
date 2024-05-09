@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const ChevronLeft = React.forwardRef<SVGSVGElement, BaseIconProps>(
+export const ChevronLeftIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { opacity = 0.54, ...rest } = props;
     return (
@@ -16,4 +16,4 @@ export const ChevronLeft = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-ChevronLeft.displayName = "ChevronLeft Icon";
+ChevronLeftIcon.displayName = "ChevronLeft Icon";

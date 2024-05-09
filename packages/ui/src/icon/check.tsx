@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const Check = React.forwardRef<SVGSVGElement, BaseIconProps>(
+export const CheckIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { opacity = 0.54, ...rest } = props;
     return (
@@ -15,3 +15,5 @@ export const Check = React.forwardRef<SVGSVGElement, BaseIconProps>(
     );
   }
 );
+
+CheckIcon.displayName = "Check Icon";

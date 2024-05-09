@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const Close = React.forwardRef<SVGSVGElement, BaseIconProps>(
+export const CloseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { opacity = 0.54, ...rest } = props;
     return (
@@ -16,4 +16,4 @@ export const Close = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-Close.displayName = "Close Icon";
+CloseIcon.displayName = "Close Icon";
