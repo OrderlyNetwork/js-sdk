@@ -1,5 +1,5 @@
 //@ts-ignore
-import QRious from "qrious";
+import QRious from "./qrious";
 
 export const qrPaint = (
   ctx: CanvasRenderingContext2D,
@@ -16,9 +16,9 @@ export const qrPaint = (
 
   const qr = new QRious({
     value: data,
-    // size: 112,
-    padding: 6,
-    // level: "H",
+    size: 200,
+    padding: 5,
+    level: "L",
   });
 
   ctx.drawImage(qr.canvas, left, top, size, size);

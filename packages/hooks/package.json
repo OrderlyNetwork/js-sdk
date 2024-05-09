@@ -55,7 +55,6 @@
     "@orderly.network/perp": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "qrious": "^4.0.2",
     "ramda": "^0.29.0",
     "swr": "2.2.4",
     "use-constant": "^1.1.1",

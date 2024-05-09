@@ -549,7 +549,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             autoComplete="off"
             value={commify(formattedOrder.order_quantity || "")}
             onChange={(event) => {
-              props.onFieldChange("order_quantity", event.target.value);
+              const value = utils.formatNumber(event.target.value, symbolConfig?.base_tick) || event.target.value;
+              props.onFieldChange("order_quantity", value);
             }}
             onFocus={onFocus(InputType.QUANTITY)}
             onBlur={onBlur(InputType.QUANTITY)}

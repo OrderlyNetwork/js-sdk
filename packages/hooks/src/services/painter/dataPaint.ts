@@ -18,6 +18,8 @@ export class DataPaint extends BasePaint {
       Array.isArray(options.data?.position?.informations) &&
       (options.data?.position?.informations?.length ?? 0) > 0;
 
+    const hasReferral = this.hasReferral(options);
+
     // const hasMessage = !!options.data?.message;
     const hasMessage = true;
 
@@ -33,14 +35,20 @@ export class DataPaint extends BasePaint {
     }
 
     if (!!options.data?.position) {
-      this.drawPosition(options, needDrawDetails ? 0 : offsetTop);
+      this.drawPosition(
+        options,
+        needDrawDetails || hasReferral ? 0 : offsetTop
+      );
     }
 
     if (needDrawDetails) {
       this.drawInformations(options);
     }
 
-    this.drawUnrealizedPnL(options, needDrawDetails ? 0 : offsetTop);
+    this.drawUnrealizedPnL(
+      options,
+      needDrawDetails || hasReferral ? 0 : offsetTop
+    );
 
     if (!!options.data?.domain) {
       this.drawDomainUrl(options);
@@ -316,7 +324,7 @@ export class DataPaint extends BasePaint {
     this._drawText(
       !hasReferral
         ? options.data?.updateTime!
-        : `${options.data?.updateTime}   |`,
+        : `Share on ${options.data?.updateTime}   |`,
       {
         left,
         top: this._ratio(top),

@@ -14,8 +14,9 @@ export const ReferralCode: FC<{
   className?: string;
   refCode?: string;
   setRefCode: any;
+  isExist?: boolean;
 }> = (props) => {
-  const { className, refCode, setRefCode } = props;
+  const { className, refCode, setRefCode, isExist } = props;
 
   const { referral } = useContext(OrderlyAppContext);
 
@@ -33,11 +34,12 @@ export const ReferralCode: FC<{
     }
   }, [referral?.saveRefCode, refCode, inputRef]);
 
-  const { isExist } = useCheckReferralCode(refCode);
+  
 
   const errorInfo = useMemo(() => {
     const length = refCode?.length || 0;
-    if (length < 4 || length > 10) {
+    if (length === 0) return "";
+    if ((length < 4 || length > 10)) {
       return "The referral_code must be 4 to 10 characters long, only accept upper case roman characters and numbers";
     }
 
@@ -46,6 +48,7 @@ export const ReferralCode: FC<{
 
   const isError = useMemo(() => {
     const length = refCode?.length || 0;
+    if (length === 0) return false;
     if (length < 4 || length > 10) {
       return true;
     }
