@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.1-internal.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.1-internal.9
+  - @orderly.network/web3-onboard@1.5.1-internal.9
+  - @orderly.network/hooks@1.5.1-internal.9
+  - @orderly.network/core@1.5.1-internal.9
+
 ## 0.4.1-internal.8
 
 ### Patch Changes
