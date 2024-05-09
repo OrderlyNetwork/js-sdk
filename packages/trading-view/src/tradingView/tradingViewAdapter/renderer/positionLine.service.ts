@@ -69,9 +69,9 @@ export class PositionLineService{
             return `${text} 0`;
         }
         if (new Decimal(unrealPnl).greaterThan(0)) {
-            return `${text} +${pnl}`
+            return `${text} +${commify(pnl)}`
         }
-        return `${text} ${pnl}`
+        return `${text} ${commify(pnl)}`
 
     }
 
