@@ -118,6 +118,7 @@ export const DesktopSharePnLContent: FC<{
               ...resetOptions,
               data: posterData,
             }}
+            ratio={3}
             ref={posterRef}
           />
           <CarouselBackgroundImage
