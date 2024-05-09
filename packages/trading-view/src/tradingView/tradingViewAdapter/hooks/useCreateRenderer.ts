@@ -59,6 +59,9 @@ export default function useCreateRenderer(symbol: string, displayControlSetting?
         let stopOrder: any = [];
 
         pendingOrders?.forEach(order=> {
+            if (symbol !== order.symbol) {
+                return;
+            }
             if (!order.algo_order_id) {
                 limitOrder.push(order);
             }else if (order.algo_order_id) {

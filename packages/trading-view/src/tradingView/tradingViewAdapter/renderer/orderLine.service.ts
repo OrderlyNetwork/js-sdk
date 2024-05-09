@@ -1,6 +1,6 @@
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, commify } from "@orderly.network/utils";
 import { SideType, AlgoType, OrderCombinationType, OrderType, OrderInterface, ChartPosition, ChartMode } from "../type";
 import { TpslCalService } from "./tpslCal.service";
 import {getTpslTag, isActivatedPositionTpsl, isActivatedQuantityTpsl, isPositionTpsl, isTpslOrder } from "./tpsl.util";
@@ -173,11 +173,11 @@ export class OrderLineService {
         return '100%';
       }
       if (isActivatedQuantityTpsl(pendingOrder)) {
-        return new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString();
+        return commify(new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString());
       }
     }
-    return new Decimal(pendingOrder.quantity)
-        .toString();
+    return commify(new Decimal(pendingOrder.quantity)
+        .toString());
   }
 
   drawOrderLine(orderId: number, pendingOrder: any) {
