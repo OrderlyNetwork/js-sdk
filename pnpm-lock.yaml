@@ -850,6 +850,9 @@ importers:
 
   packages/hooks:
     dependencies:
+      '@akamfoad/qr':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../core
@@ -865,12 +868,6 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
-      qrcodejs2:
-        specifier: ^0.0.2
-        version: 0.0.2
-      qrious:
-        specifier: ^4.0.2
-        version: 4.0.2
       ramda:
         specifier: ^0.29.0
         version: 0.29.1
@@ -1334,6 +1331,11 @@ packages:
 
   /@adraffy/ens-normalize@1.9.2:
     resolution: {integrity: sha512-0h+FrQDqe2Wn+IIGFkTCd4aAwTJ+7834Ek1COohCyV26AXhwQ7WQaz+4F/nLOeVl/3BtWHOHLPsq46V8YB46Eg==}
+
+  /@akamfoad/qr@0.4.0:
+    resolution: {integrity: sha512-kkuVMHLZIXdJbno48tcZIIFHwmc8QPbq0872sPxPMXQxpOBN007viBesAoME3es5yQg9KPXMPROYGe+piqeTTA==}
+    engines: {node: '>=16'}
+    dev: false
 
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -25636,14 +25638,6 @@ packages:
       encode-utf8: 1.0.3
       pngjs: 5.0.0
       yargs: 15.4.1
-
-  /qrcodejs2@0.0.2:
-    resolution: {integrity: sha512-+Y4HA+cb6qUzdgvI3KML8GYpMFwB24dFwzMkS/yXq6hwtUGNUnZQdUnksrV1XGMc2mid5ROw5SAuY9XhI3ValA==}
-    dev: false
-
-  /qrious@4.0.2:
-    resolution: {integrity: sha512-xWPJIrK1zu5Ypn898fBp8RHkT/9ibquV2Kv24S/JY9VYEhMBMKur1gHVsOiNUh7PHP9uCgejjpZUHUIXXKoU/g==}
-    dev: false
 
   /qs@6.10.4:
     resolution: {integrity: sha512-OQiU+C+Ds5qiH91qh/mg0w+8nwQuLjM4F4M/PbmhDOoYehPh+Fb0bDjtR1sOvy7YKxvj28Y/M0PhP5uVX0kB+g==}
