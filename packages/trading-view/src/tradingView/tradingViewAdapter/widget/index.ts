@@ -246,6 +246,7 @@ export class Widget {
             favorites: {
                 intervals: [
                     "1",
+                    "3",
                     "5",
                     "15",
                     "30",

@@ -7,6 +7,10 @@ const timeIntervalMap = [
     label: "1m",
   },
   {
+    value: "3",
+    label: "3m",
+  },
+  {
     value: "5",
     label: "5m",
   },
@@ -27,6 +31,11 @@ const timeIntervalMap = [
   {
     value: "240",
     label: "4h",
+  },
+
+  {
+    value: "720",
+    label: "12h",
   },
   {
     value: "1D",

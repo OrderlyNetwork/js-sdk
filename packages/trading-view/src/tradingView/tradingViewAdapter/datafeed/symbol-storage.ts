@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { LibrarySymbolInfo, ResolutionString, SearchSymbolResultItem, VisiblePlotsSet } from '../type';
 import { getErrorMessage, logMessage } from './helpers';
-import { Requester } from './requester';
+import { IRequester } from './iRequester';
 
 interface SymbolInfoMap {
     [symbol: string]: LibrarySymbolInfo | undefined;
@@ -36,12 +36,8 @@ interface ExchangeDataResponseSymbolData {
 
     'has-intraday'?: boolean;
     'has-daily'?: boolean;
-    'daily-multipliers'?: string[];
-    'monthly-multipliers'?: string[];
     'has-weekly-and-monthly'?: boolean;
-    'weekly-multipliers': string[];
     'has-empty-bars'?: boolean;
-    'has-no-volume'?: boolean;
     'visible-plots-set'?: VisiblePlotsSet;
     'currency-code'?: string;
     'original-currency-code'?: string;
@@ -105,15 +101,15 @@ function symbolKey(symbol: string, currency?: string, unit?: string): string {
 }
 
 export class SymbolsStorage {
-    private readonly _exchangesList: string[] = ['Orderly'];
+    private readonly _exchangesList: string[] = ['WOO X'];
     private readonly _symbolsInfo: SymbolInfoMap = {};
     private readonly _symbolsList: string[] = [];
     private readonly _datafeedUrl: string;
     private readonly _readyPromise: Promise<void>;
     private readonly _datafeedSupportedResolutions: ResolutionString[];
-    private readonly _requester: Requester;
+    private readonly _requester: IRequester;
 
-    public constructor(datafeedUrl: string, datafeedSupportedResolutions: ResolutionString[], requester: Requester) {
+    public constructor(datafeedUrl: string, datafeedSupportedResolutions: ResolutionString[], requester: IRequester) {
         this._datafeedUrl = datafeedUrl;
         this._datafeedSupportedResolutions = datafeedSupportedResolutions;
         this._requester = requester;
@@ -232,8 +228,7 @@ export class SymbolsStorage {
                     try {
                         this._onExchangeDataReceived(exchange, response);
                     } catch (error) {
-                        // eslint-disable-next-line prefer-promise-reject-errors
-                        reject(error as any);
+                        reject(error instanceof Error ? error : new Error(`SymbolsStorage: Unexpected exception ${error}`));
                         return;
                     }
 
@@ -267,7 +262,6 @@ export class SymbolsStorage {
                     ticker: ticker,
                     name: symbolName,
                     base_name: [listedExchange + ':' + symbolName],
-                    full_name: fullName,
                     listed_exchange: listedExchange,
                     exchange: tradedExchange,
                     currency_code: currencyCode,
@@ -277,6 +271,7 @@ export class SymbolsStorage {
                     unit_conversion_types: extractField(data, 'unit-conversion-types', symbolIndex, true),
                     description: extractField(data, 'description', symbolIndex),
                     has_intraday: definedValueOrDefault(extractField(data, 'has-intraday', symbolIndex), false),
+                    // show volume at the bottom by default: https://github.com/tradingview/charting_library/issues/8306
                     visible_plots_set: definedValueOrDefault(extractField(data, 'visible-plots-set', symbolIndex), 'ohlcv'),
                     minmov: extractField(data, 'minmovement', symbolIndex) || extractField(data, 'minmov', symbolIndex) || 0,
                     minmove2: extractField(data, 'minmove2', symbolIndex) || extractField(data, 'minmov2', symbolIndex),
@@ -292,22 +287,14 @@ export class SymbolsStorage {
                         this._datafeedSupportedResolutions,
                     ),
                     has_daily: definedValueOrDefault(extractField(data, 'has-daily', symbolIndex), true),
-                    daily_multipliers: definedValueOrDefault(extractField(data, 'daily-multipliers', symbolIndex, true), ['1', '3']),
                     intraday_multipliers: definedValueOrDefault(extractField(data, 'intraday-multipliers', symbolIndex, true), [
                         '1',
-                        '3',
                         '5',
                         '15',
                         '30',
                         '60',
-                        '120',
-                        '240',
-                        '480',
-                        '720',
                     ]),
                     has_weekly_and_monthly: extractField(data, 'has-weekly-and-monthly', symbolIndex),
-                    weekly_multipliers: definedValueOrDefault(extractField(data, 'weekly-multipliers', symbolIndex, true), ['1']),
-                    monthly_multipliers: definedValueOrDefault(extractField(data, 'monthly-multipliers', symbolIndex, true), ['1']),
                     has_empty_bars: extractField(data, 'has-empty-bars', symbolIndex),
                     volume_precision: definedValueOrDefault(extractField(data, 'volume-precision', symbolIndex), 0),
                     format: 'price',
@@ -327,7 +314,7 @@ export class SymbolsStorage {
         } catch (error) {
             throw new Error(
                 `SymbolsStorage: API error when processing exchange ${exchange} symbol #${symbolIndex} (${data.symbol[symbolIndex]}): ${
-                    (error as any).message
+                    Object(error).message
                 }`,
             );
         }
