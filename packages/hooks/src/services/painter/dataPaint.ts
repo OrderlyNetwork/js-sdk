@@ -365,6 +365,7 @@ export class DataPaint extends BasePaint {
 
     qrPaint(this.ctx, {
       size: this._ratio(this.QRCODE_SIZE),
+      padding: this._ratio(2),
       left: this._ratio(position.left!),
       top: this._ratio(top - this.QRCODE_SIZE),
       data: `${url.toString()}`,

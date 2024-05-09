@@ -854,6 +854,9 @@ importers:
 
   packages/hooks:
     dependencies:
+      '@akamfoad/qr':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../core
@@ -1332,6 +1335,11 @@ packages:
 
   /@adraffy/ens-normalize@1.9.2:
     resolution: {integrity: sha512-0h+FrQDqe2Wn+IIGFkTCd4aAwTJ+7834Ek1COohCyV26AXhwQ7WQaz+4F/nLOeVl/3BtWHOHLPsq46V8YB46Eg==}
+
+  /@akamfoad/qr@0.4.0:
+    resolution: {integrity: sha512-kkuVMHLZIXdJbno48tcZIIFHwmc8QPbq0872sPxPMXQxpOBN007viBesAoME3es5yQg9KPXMPROYGe+piqeTTA==}
+    engines: {node: '>=16'}
+    dev: false
 
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
