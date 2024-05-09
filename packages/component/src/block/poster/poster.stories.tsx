@@ -179,7 +179,13 @@ export const Default: Story = {
     const posterRef = useRef<PosterRef | null>(null);
     return (
       <div>
-        <Poster width={500} height={300} data={args} ref={posterRef} />
+        <Poster
+          width={500}
+          height={300}
+          data={args}
+          ref={posterRef}
+          ratio={3}
+        />
         <div className="orderly-mt-3 orderly-flex orderly-gap-2">
           <Button
             size={"small"}
