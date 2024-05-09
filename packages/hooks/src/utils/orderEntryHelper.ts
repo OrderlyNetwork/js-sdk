@@ -315,23 +315,30 @@ export function formatNumber(
   if (typeof qty === "undefined") return qty;
   if (typeof dp === "undefined") return `${qty}`;
 
+  // console.log("qty", qty, "dp", dp);
+  
+  const _qty = `${qty}`.replace(/,/g, "");
+  
+  
   try {
     const _dp = new Decimal(dp);
-
+    
     if (_dp.lessThan(1)) {
+      if (`${_qty}`.endsWith(".")) return `${_qty}`;
+      
       const numStr = dp.toString();
       const decimalIndex = numStr.indexOf(".");
       const digitsAfterDecimal =
         decimalIndex === -1 ? 0 : numStr.length - decimalIndex - 1;
 
-      const result = new Decimal(qty)
+      const result = new Decimal(_qty)
         .toDecimalPlaces(digitsAfterDecimal, Decimal.ROUND_DOWN)
         .toString();
 
       return result;
     }
 
-    return new Decimal(qty)
+    return new Decimal(_qty)
       .dividedBy(_dp)
       .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .mul(dp)
