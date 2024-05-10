@@ -41,6 +41,8 @@ const DisplayControlMap: {
       label: "Position TP/SL",
       id: "positionTpsl",
     },
+    // @ts-ignore
+    {},
   ],
 ];
 
@@ -141,29 +143,33 @@ export default function DisplayControl({
           <div className="orderly-flex orderly-flex-col orderly-gap-3">
             {DisplayControlMap.map((row) => (
               <div className="orderly-flex orderly-flex-row orderly-gap-3">
-                {row.map((item) => (
-                  <div
-                    className={cn(
-                      "orderly-text-3xs orderly-relative orderly-flex orderly-items-center orderly-justify-center orderly-w-[50%] orderly-bg-base-600 orderly-h-8 orderly-text-base-contrast-36 orderly-rounded-md",
-                      displayControlState[item.id] &&
-                        "orderly-text-base-contrast orderly-border orderly-border-base-contrast"
-                    )}
-                    id={item.id}
-                    onClick={() => {
-                      changeDisplayControlState({
-                        ...displayControlState,
-                        [item.id]: !displayControlState[item.id],
-                      });
-                    }}
-                  >
-                    {displayControlState[item.id] && (
-                      <div className="orderly-absolute -orderly-top-[1px] -orderly-right-[1px]">
-                        <CheckSmallIcon size={12} />
-                      </div>
-                    )}
-                    <div>{item.label}</div>
-                  </div>
-                ))}
+                {row.map((item) =>
+                  item.id ? (
+                    <div
+                      className={cn(
+                        "orderly-text-3xs orderly-relative orderly-flex orderly-items-center orderly-justify-center orderly-w-[50%] orderly-bg-base-600 orderly-h-8 orderly-text-base-contrast-36 orderly-rounded-md",
+                        displayControlState[item.id] &&
+                          "orderly-text-base-contrast orderly-border orderly-border-base-contrast"
+                      )}
+                      id={item.id}
+                      onClick={() => {
+                        changeDisplayControlState({
+                          ...displayControlState,
+                          [item.id]: !displayControlState[item.id],
+                        });
+                      }}
+                    >
+                      {displayControlState[item.id] && (
+                        <div className="orderly-absolute -orderly-top-[1px] -orderly-right-[1px]">
+                          <CheckSmallIcon size={12} />
+                        </div>
+                      )}
+                      <div>{item.label}</div>
+                    </div>
+                  ) : (
+                    <div className="orderly-w-[50%]" />
+                  )
+                )}
               </div>
             ))}
           </div>

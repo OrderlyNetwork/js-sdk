@@ -82,13 +82,13 @@ export class OrderLineService {
       .activeChart()
       .createOrderLine()
       .setCancelTooltip("Cancel Order")
-      .setQuantityTextColor(colorConfig.qtyTextColor)
-      .setQuantityBackgroundColor(colorConfig.chartBG)
-        .setBodyBackgroundColor(colorConfig.chartBG)
-      .setCancelButtonBackgroundColor(colorConfig.chartBG)
+      .setQuantityTextColor(colorConfig.qtyTextColor!)
+      .setQuantityBackgroundColor(colorConfig.chartBG!)
+        .setBodyBackgroundColor(colorConfig.chartBG!)
+      .setCancelButtonBackgroundColor(colorConfig.chartBG!)
       .setLineStyle(1)
-      .setBodyFont(colorConfig.font)
-      .setQuantityFont(colorConfig.font)
+      .setBodyFont(colorConfig.font!)
+      .setQuantityFont(colorConfig.font!)
         ;
   }
 
@@ -124,7 +124,7 @@ export class OrderLineService {
       orderCombinationType === OrderCombinationType.STOP_BRACKET_MARKET
     ) {
       if (pendingOrder.type === OrderType.LIMIT) {
-        return `Stop Limit ${pendingOrder.price}`
+        return `Stop Limit ${commify(pendingOrder.price)}`
       }
       return "Stop Market";
     }

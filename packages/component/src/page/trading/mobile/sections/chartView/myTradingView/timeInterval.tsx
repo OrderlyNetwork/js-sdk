@@ -38,37 +38,9 @@ const timeIntervalMap = [
     },
     {
       value: "1M",
-      label: "M",
+      label: "1M",
     },
   ],
-];
-
-const defaultIntervalMap = [
-  {
-    value: "1",
-    label: "1m",
-  },
-  {
-    value: "15",
-    label: "15m",
-  },
-  {
-    value: "60",
-    label: "1h",
-  },
-  {
-    value: "240",
-    label: "4h",
-  },
-  {
-    value: "1D",
-    label: "D",
-  },
-
-  {
-    value: "1W",
-    label: "W",
-  },
 ];
 
 interface IProps {
@@ -144,37 +116,23 @@ export default function TimeInterval({
 
   return (
     <div ref={containerRef}>
-      <div className="orderly-text-2xs orderly-text-base-contrast-54 orderly-flex orderly-gap-[22px] orderly-items-center">
-        {defaultIntervalMap.map((item) => (
-          <div
-            className={cn(
-              "orderly-text-2xs orderly-cursor-pointer",
-              timeInterval === item.value && "orderly-text-base-contrast"
-            )}
-            id={item.value}
-            onClick={() => changeTimeInterval(item.value)}
-          >
-            {item.label}
-          </div>
-        ))}
-        <button
-          className={cn(
-            "orderly-flex orderly-items-center ",
-            (open || currentIntervalIsInExpand) && "orderly-text-base-contrast"
-          )}
-          onClick={() => setOpen((open) => !open)}
-        >
-          <div>{currentIntervalIsInExpand ?? "More"}</div>
+      <button
+        className={cn(
+          "orderly-flex orderly-items-center ",
+          (open || currentIntervalIsInExpand) && "orderly-text-base-contrast"
+        )}
+        onClick={() => setOpen((open) => !open)}
+      >
+        <div>{currentIntervalIsInExpand ?? "More"}</div>
 
-          <ExpandIcon
-            size={16}
-            className={cn(
-              "orderly-transition-transform",
-              open && "orderly-rotate-180"
-            )}
-          />
-        </button>
-      </div>
+        <ExpandIcon
+          size={16}
+          className={cn(
+            "orderly-transition-transform",
+            open && "orderly-rotate-180"
+          )}
+        />
+      </button>
 
       {open && (
         <div
