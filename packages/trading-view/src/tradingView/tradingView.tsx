@@ -213,6 +213,14 @@ export function TradingView({
 
         const defaultOverrides = getOveriides();
         const overrides = customerOverrides ? Object.assign({}, defaultOverrides.overrides, customerOverrides) : defaultOverrides.overrides;
+        if (mode === ChartMode.MOBILE) {
+            Object.assign(overrides, {
+               'paneProperties.legendProperties.showSeriesOHLC':false,
+                'paneProperties.legendProperties.showBarChange': false,
+            })
+
+        }
+        console.log('-- overrides', overrides);
         const studiesOverrides = customerStudiesOverrides ? Object.assign({}, defaultOverrides.studiesOverrides, customerStudiesOverrides) : defaultOverrides.studiesOverrides;
         if (chartRef.current) {
             const options: any = {
