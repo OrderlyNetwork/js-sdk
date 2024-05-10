@@ -213,7 +213,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
-      values.total = total.todp(2).toString();
+      values.total = total.todp(config.quoteDP).toString();
     } else {
       values.total = "";
     }
@@ -322,6 +322,7 @@ export function formatNumber(
   
   try {
     const _dp = new Decimal(dp);
+    const _qtyDecimal = new Decimal(_qty);
     
     if (_dp.lessThan(1)) {
       if (`${_qty}`.endsWith(".")) return `${_qty}`;
@@ -331,14 +332,18 @@ export function formatNumber(
       const digitsAfterDecimal =
         decimalIndex === -1 ? 0 : numStr.length - decimalIndex - 1;
 
-      const result = new Decimal(_qty)
+      const result = _qtyDecimal
         .toDecimalPlaces(digitsAfterDecimal, Decimal.ROUND_DOWN)
         .toString();
 
       return result;
     }
 
-    return new Decimal(_qty)
+    if (_qtyDecimal.lessThan(_dp)) {
+      return _qty;
+    }
+
+    return _qtyDecimal
       .dividedBy(_dp)
       .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .mul(dp)

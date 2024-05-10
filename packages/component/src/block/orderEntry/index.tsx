@@ -227,9 +227,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     // const isTable = useMediaQuery(MEDIA_TABLET);
 
     const formatQty = () => {
-      const dp = new Decimal(symbolConfig?.base_tick || "0").toNumber();
+      // const dp = new Decimal(symbolConfig?.base_tick || "0").toNumber();
       // TODO: optimization
-      if (dp < 1) return;
+      // if (dp < 1) return;
       const quantity = utils.formatNumber(
         formattedOrder?.order_quantity,
         new Decimal(symbolConfig?.base_tick || "0").toNumber()
@@ -549,8 +549,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             autoComplete="off"
             value={commify(formattedOrder.order_quantity || "")}
             onChange={(event) => {
-              const value = utils.formatNumber(event.target.value, symbolConfig?.base_tick) || event.target.value;
-              props.onFieldChange("order_quantity", value);
+              props.onFieldChange("order_quantity", event.target.value);
             }}
             onFocus={onFocus(InputType.QUANTITY)}
             onBlur={onBlur(InputType.QUANTITY)}
