@@ -70,6 +70,7 @@ export const ReferralCode: FC<{
       <div className="orderly-pt-3">
         <Input
           ref={inputRef}
+          tooltipClassName="orderly-max-w-[370px] desktop:orderly-max-w-[350px]"
           containerClassName="orderly-h-[40px] orderly-bg-base-700"
           value={refCode}
           onChange={(e) => {
