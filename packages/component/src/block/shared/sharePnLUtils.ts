@@ -179,6 +179,7 @@ function formatShareTime(input: number | Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    hourCycle: "h24",
   };
 
   const formatter = new Intl.DateTimeFormat("en-US", options);
