@@ -111,6 +111,7 @@ export const Listview: FC<Props> = (props) => {
             precision={pnlNotionalDecimalPrecision}
             
             rule="price"
+            prefix={record.realized_pnl > 0 ? '+' : ''}
           >
             {record.realized_pnl === 0 ||
             Number.isNaN(record.realized_pnl) ||
