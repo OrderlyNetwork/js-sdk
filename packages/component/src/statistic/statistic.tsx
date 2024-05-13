@@ -85,6 +85,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
             rule={rule}
             precision={props.precision}
             visible={props.visible}
+            prefix={props.prefix}
           >
             {props.value}
           </Numeral>
