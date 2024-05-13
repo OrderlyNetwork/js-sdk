@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.4.3"
   },
   "changesets": [
-    "clean-queens-fold"
+    "clean-queens-fold",
+    "grumpy-wolves-sort"
   ]
 }

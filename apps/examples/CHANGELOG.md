@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.0-alpha.1
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/react@1.5.0-alpha.1
+  - @orderly.network/web3-onboard@1.5.0-alpha.1
+  - @orderly.network/hooks@1.5.0-alpha.1
+  - @orderly.network/core@1.5.0-alpha.1
+
 ## 0.4.0-alpha.0
 
 ### Minor Changes
