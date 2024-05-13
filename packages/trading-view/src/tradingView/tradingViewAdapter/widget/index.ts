@@ -183,16 +183,22 @@ export class Widget {
     }
 
     private debounceSaveChart = debounce(() => {
-        this._instance?.save((chartProps) => {
-            if (!Object.is(this._savedData, chartProps)) {
-                this._savedData = chartProps;
-                saveChartData(
-                    this._chartKey,
-                    JSON.stringify(chartProps),
-                    this._isLoggedIn
-                );
-            }
-        });
+        try {
+
+            this._instance?.save((chartProps) => {
+                if (!Object.is(this._savedData, chartProps)) {
+                    this._savedData = chartProps;
+                    saveChartData(
+                        this._chartKey,
+                        JSON.stringify(chartProps),
+                        this._isLoggedIn
+                    );
+                }
+            });
+        } catch (e) {
+
+            console.log('e', e);
+        }
     }, DEBOUNCE_SAVE_TIME * 2);
 
     private debounceSaveChartAdapterSetting = debounce(() => {

@@ -11,6 +11,7 @@ import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
 import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
 import { withExchangePrefix } from "./tradingViewAdapter/util";
+import brokerHostHandler from "./tradingViewAdapter/renderer/brokerHostHandler";
 
 export { Datafeed}
 
@@ -163,14 +164,29 @@ export function TradingView({
     const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
 
+    const isLoggedIn = useMemo(() => {
+        if (accountState.status < AccountStatusEnum.EnableTrading) {
+            return false;
+        }
+        return true;
+
+    }, [accountState]);
+
     useEffect(() => {
         if (chart.current && chartMask.current) {
             chart.current.instance.onChartReady(() => {
                 console.log('-- chart ready');
                 chartMask.current?.style.setProperty('display', 'none');
+                if (isLoggedIn && chart.current.instance) {
+                    createRenderer(chart.current.instance,undefined, broker);
+
+                }
             })
         }
-    }, [chart.current]);
+        return () => {
+            removeRenderer();
+        }
+    }, [chart.current, isLoggedIn]);
 
     useEffect(() => {
         if (!tradingViewScriptSrc) {
@@ -198,13 +214,7 @@ export function TradingView({
     }
     const layoutId = 'TradingViewSDK';
 
-    const isLoggedIn = useMemo(() => {
-        if (accountState.status < AccountStatusEnum.EnableTrading) {
-            return false;
-        }
-        return true;
 
-    }, [accountState]);
 
     useLazyEffect(() => {
         if (!chartingLibrarySciprtReady || !tradingViewScriptSrc) {
@@ -245,8 +255,8 @@ export function TradingView({
                 },
                 getBroker: isLoggedIn  ?
                     (instance: any, host: any) => {
-                        createRenderer(instance, host, broker);
-                        console.log('-- create render');
+                        console.log('-- broker_factory');
+                        brokerHostHandler(instance, host);
                         return getBrokerAdapter(host, broker);
                     }
                     : undefined,
@@ -264,11 +274,11 @@ export function TradingView({
 
             chart.current = new Widget(chartProps);
 
+
         }
 
         return () => {
             chart.current?.remove();
-            removeRenderer();
         };
     }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
 
