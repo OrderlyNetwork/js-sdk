@@ -29,6 +29,7 @@ export interface StatisticProps
 
   // FormattedPrice
   // as?: "price" | "date";
+  id?: string;
 }
 
 const alignClasses: Record<string, string> = {
@@ -127,6 +128,7 @@ export const Statistic: FC<StatisticProps> = (props) => {
 
   return (
     <div
+      id={props.id}
       className={cn(
         alignClasses[align],
         props.className,

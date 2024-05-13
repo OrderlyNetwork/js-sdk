@@ -218,6 +218,7 @@ export const TPSLListView: FC<Props> = (props) => {
   return (
     <div className="orderly-h-full orderly-overflow-y-auto">
       <Table<API.AlgoOrderExt>
+        id="orderly-desktop-order-tp_sl-content"
         bordered
         justified
         headerClassName="orderly-text-2xs orderly-text-base-contrast-54 orderly-py-3 orderly-bg-base-900"

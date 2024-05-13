@@ -276,6 +276,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return modal.confirm({
               maxWidth: "sm",
               title: "Confirm Order",
+              okId: "orderly-confirm-order-dialog-confirm",
+              cancelId: "orderly-confirm-order-dialog-cancel",
               onCancel: () => {
                 return Promise.reject("cancel");
               },
@@ -598,7 +600,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 props.onFieldChange("order_quantity", maxQty);
               }}
             >
-              <span className="orderly-text-base-contrast-54">
+              <span id="orderly-order-entry-max-buy-or-sell-text" className="orderly-text-base-contrast-54">
                 {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
               </span>
               <Numeral precision={baseDP}>{maxQty}</Numeral>

@@ -40,6 +40,7 @@ export const WalletConnectButton: FC<Props> = (props) => {
   if (status === AccountStatusEnum.NotConnected) {
     return (
       <Button
+        id="orderly-top-nav-bar-not-connect"
         size={"small"}
         loading={props.loading}
         // variant={"gradient"}
