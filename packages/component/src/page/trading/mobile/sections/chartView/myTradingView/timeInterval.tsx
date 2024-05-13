@@ -82,12 +82,10 @@ export default function TimeInterval({
       setTimeout(() => {
         document.addEventListener("touchstart", onTouchStart, {
           capture: true,
-          once: true,
         });
 
         document.addEventListener("click", onClick, {
           capture: true,
-          once: true,
         });
       }, 100);
 
@@ -143,8 +141,11 @@ export default function TimeInterval({
           )}
         >
           <div className="orderly-flex orderly-flex-col orderly-gap-3">
-            {timeIntervalMap.map((row) => (
-              <div className="orderly-flex orderly-flex-row orderly-gap-3">
+            {timeIntervalMap.map((row, id) => (
+              <div
+                className="orderly-flex orderly-flex-row orderly-gap-3"
+                key={id}
+              >
                 {row.map((item) => (
                   <div
                     className={cn(
@@ -152,7 +153,7 @@ export default function TimeInterval({
                       item.value === timeInterval &&
                         "orderly-text-base-contrast orderly-border orderly-border-base-contrast"
                     )}
-                    id={item.value}
+                    key={item.value}
                     onClick={() => {
                       changeTimeInterval(item.value);
                     }}
