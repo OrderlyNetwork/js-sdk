@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- update
+
 ## 1.4.3
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 3.3.0-alpha.0
+
+### Minor Changes
+
+- update
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@1.5.0-alpha.0
+  - @orderly.network/utils@1.5.0-alpha.0
+
 ## 3.2.3
 
 ### Patch Changes
