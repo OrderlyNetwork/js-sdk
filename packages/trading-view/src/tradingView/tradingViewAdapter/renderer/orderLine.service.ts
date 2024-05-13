@@ -173,7 +173,9 @@ export class OrderLineService {
         return '100%';
       }
       if (isActivatedQuantityTpsl(pendingOrder)) {
-        return commify(new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0).toString());
+        const qty = new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0);
+        const per = qty.div(new Decimal(pendingOrder.position_qty!)).mul(100).todp(2).toNumber();
+        return `${Math.min(Math.abs(per), 100).toString()}%`;
       }
     }
     return commify(new Decimal(pendingOrder.quantity)

@@ -235,6 +235,7 @@ export interface OrderInterface {
     root_algo_order_price?: number;
     total_fee?: number;
     fee_asset?: string;
+    position_qty?: number;
 }
 
 export interface ColorConfigInterface{
