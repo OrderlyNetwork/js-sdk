@@ -27,7 +27,7 @@ export class DataPaint extends BasePaint {
 
     // If position details are not displayed, the position PNL information will be margin
     // const offsetTop = hasMessage ? 50 : 100;
-    const offsetTop = 100;
+    const offsetTop = 0; // 100;
     // const offsetMessage = hasMessage ? 0 : -50;
 
     if (!!options.data?.message) {
