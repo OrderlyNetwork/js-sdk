@@ -17,10 +17,7 @@ const DisplayControlMap: {
       label: "Position",
       id: "position",
     },
-    // {
-    //   label: "Buy/Sell",
-    //   id: "buySell",
-    // },
+
     {
       label: "Limit Orders",
       id: "limitOrders",
@@ -41,8 +38,10 @@ const DisplayControlMap: {
       label: "Position TP/SL",
       id: "positionTpsl",
     },
-    // @ts-ignore
-    {},
+    {
+      label: "Buy/Sell",
+      id: "buySell",
+    },
   ],
 ];
 
@@ -85,12 +84,10 @@ export default function DisplayControl({
       setTimeout(() => {
         document.addEventListener("touchstart", onTouchStart, {
           capture: true,
-          once: true,
         });
 
         document.addEventListener("click", onClick, {
           capture: true,
-          once: true,
         });
       }, 100);
 
@@ -141,17 +138,20 @@ export default function DisplayControl({
             Display settings
           </div>
           <div className="orderly-flex orderly-flex-col orderly-gap-3">
-            {DisplayControlMap.map((row) => (
-              <div className="orderly-flex orderly-flex-row orderly-gap-3">
+            {DisplayControlMap.map((row, index) => (
+              <div
+                className="orderly-flex orderly-flex-row orderly-gap-3"
+                key={index}
+              >
                 {row.map((item) =>
-                  item.id ? (
+                  item.id !== "buySell" ? (
                     <div
                       className={cn(
                         "orderly-text-3xs orderly-relative orderly-flex orderly-items-center orderly-justify-center orderly-w-[50%] orderly-bg-base-600 orderly-h-8 orderly-text-base-contrast-36 orderly-rounded-md",
                         displayControlState[item.id] &&
                           "orderly-text-base-contrast orderly-border orderly-border-base-contrast"
                       )}
-                      id={item.id}
+                      key={item.id}
                       onClick={() => {
                         changeDisplayControlState({
                           ...displayControlState,
@@ -167,7 +167,7 @@ export default function DisplayControl({
                       <div>{item.label}</div>
                     </div>
                   ) : (
-                    <div className="orderly-w-[50%]" />
+                    <div className="orderly-w-[50%]" key={item.id} />
                   )
                 )}
               </div>

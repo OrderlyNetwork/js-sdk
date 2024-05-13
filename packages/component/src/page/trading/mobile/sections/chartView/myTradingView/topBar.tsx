@@ -53,7 +53,7 @@ export default function TopBar({
             "orderly-text-2xs orderly-cursor-pointer",
             interval === item.value && "orderly-text-base-contrast"
           )}
-          id={item.value}
+          key={item.value}
           onClick={() => changeInterval(item.value)}
         >
           {item.label}

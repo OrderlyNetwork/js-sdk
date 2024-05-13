@@ -58,6 +58,7 @@ export default function useCreateRenderer(symbol: string, displayControlSetting?
         let limitOrder: any = [];
         let stopOrder: any = [];
 
+        const symbolPosition = ( positions ?? []).find(item => item.symbol === symbol);
         pendingOrders?.forEach(order=> {
             if (symbol !== order.symbol) {
                 return;
@@ -73,10 +74,13 @@ export default function useCreateRenderer(symbol: string, displayControlSetting?
                         }
                     }
                 } else if (order.algo_type === AlgoType.TP_SL) {
-                    for(const child_order of order.child_orders) {
-                        child_order.root_algo_order_algo_type = order.algo_type;
-                        if (child_order.trigger_price && child_order.status !== OrderStatus.FILLED) {
-                            tpslOrder.push(child_order);
+                    if (symbolPosition) {
+                        for(const child_order of order.child_orders) {
+                            child_order.root_algo_order_algo_type = order.algo_type;
+                            child_order.position_qty = symbolPosition.position_qty;
+                            if (child_order.trigger_price && child_order.status !== OrderStatus.FILLED) {
+                                tpslOrder.push(child_order);
+                            }
                         }
                     }
 
@@ -103,7 +107,7 @@ export default function useCreateRenderer(symbol: string, displayControlSetting?
 
         renderer?.renderPendingOrders(tpslOrder.concat(positionTpsl).concat(limitOrder).concat(stopOrder));
 
-    }, [renderer, pendingOrders, symbol, displayControlSetting]);
+    }, [renderer, pendingOrders, symbol, displayControlSetting, positions]);
 
     return [createRenderer.current, removeRenderer.current] as const;
 }
