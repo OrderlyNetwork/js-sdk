@@ -26,33 +26,35 @@ import { ReferralType } from "./sharePnLUtils";
 
 export const SharePoisitionView = create<{
   position: any;
+  leverage: any,
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
   const { position } = props;
   // const [leverage] = useLeverage();
   const symbolInfo = useSymbolsInfo();
-  const { data: info } = useAccountInfo();
+  // const { data: info } = useAccountInfo();
 
-  const maxAccountLeverage = info?.max_leverage;
+  // const maxAccountLeverage = info?.max_leverage;
 
-  const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
-    focusThrottleInterval: 1000 * 60 * 60 * 24,
-    dedupingInterval: 1000 * 60 * 60 * 24,
-    revalidateOnFocus: false,
-  });
+  // const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
+  //   focusThrottleInterval: 1000 * 60 * 60 * 24,
+  //   dedupingInterval: 1000 * 60 * 60 * 24,
+  //   revalidateOnFocus: false,
+  // });
 
-  const maxSymbolLeverage = useMemo(() => {
-    const base = res?.data?.base_imr;
-    if (base) return 1 / base;
-  }, [res]);
+  // const maxSymbolLeverage = useMemo(() => {
+  //   const base = res?.data?.base_imr;
+  //   if (base) return 1 / base;
+  // }, [res]);
 
-  const maxLeverage = useMemo(() => {
-    if (!maxAccountLeverage || !maxSymbolLeverage) {
-      return "-";
-    }
+  // const maxLeverage = useMemo(() => {
+  //   if (!maxAccountLeverage || !maxSymbolLeverage) {
+  //     return "-";
+  //   }
 
-    return Math.min(maxAccountLeverage, maxSymbolLeverage);
-  }, [maxAccountLeverage, maxSymbolLeverage]);
+  //   return Math.min(maxAccountLeverage, maxSymbolLeverage);
+  // }, [maxAccountLeverage, maxSymbolLeverage]);
+
 
   const { getFirstRefCode } = useReferralInfo();
 
@@ -79,7 +81,7 @@ export const SharePoisitionView = create<{
   return isTablet ? (
     <MobileSharePnL
       position={position}
-      leverage={maxLeverage}
+      leverage={props.leverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
       referral={referralInfo}
@@ -87,7 +89,7 @@ export const SharePoisitionView = create<{
   ) : (
     <DesktopSharePnL
       position={position}
-      leverage={maxLeverage}
+      leverage={props.leverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
       referral={referralInfo}
