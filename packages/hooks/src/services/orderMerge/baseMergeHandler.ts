@@ -14,6 +14,7 @@ export abstract class BaseMergeHandler<
   abstract get status(): string;
   abstract get orderId(): number;
   abstract pre(message: T, prevData?: API.OrderResponse[]): D;
+  abstract isFullFilled(): boolean;
 
   /**
    * format the order data;
@@ -80,10 +81,7 @@ export abstract class BaseMergeHandler<
             key.startsWith("orders:NEW")
           ) {
             // if fullfilled, remove from the list
-            if (
-              "total_executed_quantity" in this.data &&
-              this.data.total_executed_quantity === this.data.quantity
-            ) {
+            if (this.isFullFilled()) {
               return this.remove(prevData);
             }
 
