@@ -3,7 +3,6 @@ import { TabPane, Tabs } from "@/tab";
 import { TradeHistoryPane } from "./tradeHistory";
 import { FC, useState } from "react";
 import { TradeData } from "./tradeData";
-import { TradingView, TradingViewChartConfig } from "@/block/tradingView";
 import { ChevronDown } from "lucide-react";
 import {
   OrderlyContext,
@@ -12,13 +11,10 @@ import {
 } from "@orderly.network/hooks";
 import { SymbolProvider } from "@/provider";
 import { cn } from "@/utils/css";
+import MyTradingView from "@/page/trading/mobile/sections/chartView/myTradingView";
+import { TradingPageProps } from "@/page/trading/types";
 
-interface ChartViewProps {
-  symbol: string;
-  tradingViewConfig: TradingViewChartConfig;
-}
-
-export const ChartView: FC<ChartViewProps> = (props) => {
+export const ChartView: FC<TradingPageProps> = (props) => {
   const { symbol, tradingViewConfig } = props;
   const [activeTab, setActiveTab] = useState("tradingView");
   const apiBaseUrl = useConfig("apiBaseUrl");
@@ -62,13 +58,9 @@ export const ChartView: FC<ChartViewProps> = (props) => {
         }}
       >
         <TabPane title="Chart" value="tradingView">
-          <TradingView
-            theme={"dark"}
+          <MyTradingView
             symbol={symbol}
-            autosize={false}
-            // @ts-ignore
-            apiBaseUrl={apiBaseUrl}
-            {...tradingViewConfig}
+            tradingViewConfig={tradingViewConfig}
           />
         </TabPane>
         <TabPane title="Trade" value="tradeHistory">

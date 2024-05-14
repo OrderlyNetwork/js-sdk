@@ -1,5 +1,27 @@
 # tsconfig
 
+## 0.3.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+
+## 0.3.0-alpha.1
+
+### Patch Changes
+
+- fix bug;
+
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- update
+
 ## 0.2.5
 
 ### Patch Changes

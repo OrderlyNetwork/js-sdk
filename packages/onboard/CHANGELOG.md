@@ -1,5 +1,40 @@
 # @orderly.network/onboard
 
+## 1.5.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+- Updated dependencies [dd94bfa9]
+- Updated dependencies [6cb9c466]
+  - @orderly.network/hooks@1.5.0
+  - @orderly.network/types@1.5.0
+
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/hooks@1.5.0-alpha.1
+  - @orderly.network/types@1.5.0-alpha.1
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- update
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@1.5.0-alpha.0
+  - @orderly.network/types@1.5.0-alpha.0
+
 ## 1.4.3
 
 ### Patch Changes

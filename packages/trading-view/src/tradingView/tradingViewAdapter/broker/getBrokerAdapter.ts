@@ -1,6 +1,7 @@
 import {IBrokerConnectionAdapterHost} from '../type';
 import useBroker from '../hooks/useBroker';
 import { SideType, AlgoType, OrderCombinationType} from "../type";
+import { withoutExchangePrefix } from '../util';
 
 const getBrokerAdapter = (host: IBrokerConnectionAdapterHost, broker: ReturnType<typeof useBroker>) => {
     let symbol: string;
@@ -16,12 +17,8 @@ const getBrokerAdapter = (host: IBrokerConnectionAdapterHost, broker: ReturnType
     };
 
     return {
-        symbolInfo: async (newSymbol: string): Promise<any> => {
-            if (symbol !== newSymbol) {
-                symbol = newSymbol;
-            }
-
-            _symbolInfo = broker.getSymbolInfo(symbol);
+        symbolInfo: async (symbol: string): Promise<any> => {
+            _symbolInfo = broker.getSymbolInfo(withoutExchangePrefix(symbol));
 
             return {
                 qty: {

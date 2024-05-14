@@ -167,3 +167,88 @@ export enum OrderCombinationType {
     ADL_CLOSE = 'ADL_CLOSE',
     BLP_ASSIGNEE = 'BLP_ASSIGNEE',
 }
+
+export enum OrderTagType {
+    DEFAULT = 'default',
+    LOSS_AUTOSETTLE = 'LOSS_AUTOSETTLE',
+}
+
+export enum TriggerPriceType {
+    LAST_PRICE = 'MARKET_PRICE', // API Takes MARKET_PRICE
+    MARK_PRICE = 'MARK_PRICE',
+}
+
+export enum TriggerStatusType {
+    USELESS = 'USELESS',
+    TRIGGERING = 'TRIGGERING',
+    SUCCESS = 'SUCCESS',
+    FAILED = 'FAILED',
+}
+
+type OrderOverview = {
+    status: OrderStatus; // algo is rootAlgoStatus or ordinary is status
+    quantity: number; // oco by triggerStatus， if triggered is child quantity，otherwise is order quantity
+    executed: number;
+};
+export interface OrderInterface {
+    order_id: number;
+    algo_order_id: number; // Algo order root id (also the algo order first parent_order_id)
+    parent_algo_order_id?: number;
+    root_algo_order_id?: number;
+    root_algo_status: OrderStatus; // algo order only, is order overview status
+    symbol: string;
+    order_tag: OrderTagType;
+    algo_type: AlgoType;
+    side: SideType;
+    position_side?: PositionSide;
+    quantity: number;
+    is_triggered: boolean;
+    trigger_price: number; // trailing stop represents the activated_price
+    trigger_price_type: TriggerPriceType;
+    trigger_status: TriggerStatusType;
+    type: OrderType;
+    status: OrderStatus;
+    algo_status: OrderStatus;
+    price: number; // if oco, 1st leg
+    executed: number; // total executed quantity
+    avg_exec_price: number;
+    reduce_only: boolean;
+    create_time: string;
+    update_time: string;
+    visible_quantity?: number;
+    is_activated: boolean;
+    callback_rate?: number;
+    callback_value?: number;
+    extreme_price?: number;
+    activated_price?: number;
+    realized_pnl?: number;
+    child_orders?: OrderInterface[];
+    overview: OrderOverview;
+    // format data
+    visible?: boolean;
+    total?: number;
+    // ws data
+    executed_quantity?: number; // Only for the current push
+    root_algo_order_type?: OrderType;
+    root_algo_order_algo_type?: AlgoType;
+    root_algo_order_qty?: number;
+    root_algo_order_price?: number;
+    total_fee?: number;
+    fee_asset?: string;
+    position_qty?: number;
+}
+
+export interface ColorConfigInterface{
+    chartBG?: string;
+    upColor?: string;
+    downColor?: string,
+    pnlUpColor?: string;
+    pnlDownColor?: string;
+    pnlZoreColor?: string;
+    textColor?: string;
+    qtyTextColor?: string;
+    font?: string;
+    closeIcon?: string;
+}
+
+
