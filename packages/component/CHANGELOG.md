@@ -1,5 +1,23 @@
 # @orderly.network/react
 
+## 1.5.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+- Updated dependencies [dd94bfa9]
+- Updated dependencies [6cb9c466]
+  - @orderly.network/trading-view@1.5.0
+  - @orderly.network/core@1.5.0
+  - @orderly.network/hooks@1.5.0
+  - @orderly.network/net@1.5.0
+  - @orderly.network/types@1.5.0
+  - @orderly.network/utils@1.5.0
+
 ## 1.5.0-alpha.1
 
 ### Patch Changes

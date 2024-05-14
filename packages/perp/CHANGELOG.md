@@ -1,5 +1,19 @@
 # @orderly.network/futures
 
+## 3.3.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+- Updated dependencies [dd94bfa9]
+- Updated dependencies [6cb9c466]
+  - @orderly.network/types@1.5.0
+  - @orderly.network/utils@1.5.0
+
 ## 3.3.0-alpha.1
 
 ### Patch Changes
