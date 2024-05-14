@@ -336,7 +336,7 @@ export const ArbitrumGoerli = {
   minGasBalance: 0.0002,
   minCrossGasBalance: 0.002,
   maxPrepayCrossGas: 0.03,
-  blockExplorerName: "Base",
+  blockExplorerName: "Arbitrum Goerli",
   chainName: "Arbitrum Goerli",
   chainNameShort: "Arbitrum Goerli",
   requestRpc: "https://goerli-rollup.arbitrum.io/rpc",
@@ -360,7 +360,7 @@ export const ArbitrumSepolia = {
   minGasBalance: 0.0002,
   minCrossGasBalance: 0.002,
   maxPrepayCrossGas: 0.03,
-  blockExplorerName: "Arbitrum",
+  blockExplorerName: "Arbitrum Sepolia",
   chainName: "Arbitrum Sepolia",
   chainNameShort: "Arbitrum Sepolia",
   requestRpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
@@ -384,10 +384,106 @@ export const OptimismGoerli = {
   minGasBalance: 0.0002,
   minCrossGasBalance: 0.002,
   maxPrepayCrossGas: 0.03,
-  blockExplorerName: "Base",
+  blockExplorerName: "Optimism Goerli",
   chainName: "Optimism Goerli",
   chainNameShort: "Optimism Goerli",
   requestRpc: "https://optimism-goerli.gateway.tenderly.co",
+  chainLogo: "",
+};
+
+export const OptimismSepolia = {
+  id: 11155420,
+  chainInfo: {
+    chainId: `0x${(11155420).toString(16)}`,
+    chainName: "Optimism Sepolia",
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+      fix: 4,
+    },
+    rpcUrls: ["https://sepolia.optimism.io"],
+    blockExplorerUrls: ["https://sepolia-optimistic.etherscan.io"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Optimism Sepolia",
+  chainName: "Optimism Sepolia",
+  chainNameShort: "Optimism Sepolia",
+  requestRpc: "https://sepolia.optimism.io",
+  chainLogo: "",
+};
+
+export const BaseSepolia = {
+  id: 84532,
+  chainInfo: {
+    chainId: `0x${(84532).toString(16)}`,
+    chainName: "Base Sepolia",
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+      fix: 4,
+    },
+    rpcUrls: ["https://base-sepolia-rpc.publicnode.com"],
+    blockExplorerUrls: ["https://base-sepolia.blockscout.com/"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Base Sepolia",
+  chainName: "Base Sepolia",
+  chainNameShort: "Base Sepolia",
+  requestRpc: "https://base-sepolia-rpc.publicnode.com",
+  chainLogo: "",
+};
+
+export const MantleSepolia = {
+  id: 5003,
+  chainInfo: {
+    chainId: `0x${(5003).toString(16)}`,
+    chainName: "Mantle Sepolia",
+    nativeCurrency: {
+      name: "MNT",
+      symbol: "MNT",
+      decimals: 6,
+      fix: 4,
+    },
+    rpcUrls: ["https://rpc.sepolia.mantle.xyz/"],
+    blockExplorerUrls: ["https://sepolia.mantlescan.xyz/"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Mantle Sepolia",
+  chainName: "Mantle Sepolia",
+  chainNameShort: "Mantle Sepolia",
+  requestRpc: "https://rpc.sepolia.mantle.xyz/",
+  chainLogo: "",
+};
+
+export const PolygonAmoy = {
+  id: 80002,
+  chainInfo: {
+    chainId: `0x${(80002).toString(16)}`,
+    chainName: "Polygon Amoy",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 6,
+      fix: 4,
+    },
+    rpcUrls: ["https://rpc-amoy.polygon.technology/"],
+    blockExplorerUrls: ["https://www.oklink.com/amoy"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Polygon Amoy",
+  chainName: "Polygon Amoy",
+  chainNameShort: "Polygon Amoy",
+  requestRpc: "https://rpc-amoy.polygon.technology/",
   chainLogo: "",
 };
 
@@ -407,6 +503,10 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [ArbitrumGoerli.id, ArbitrumGoerli],
   [ArbitrumSepolia.id, ArbitrumSepolia],
   [OptimismGoerli.id, OptimismGoerli],
+  [OptimismSepolia.id, OptimismSepolia],
+  [BaseSepolia.id, BaseSepolia],
+  [MantleSepolia.id, MantleSepolia],
+  [PolygonAmoy.id, PolygonAmoy],
 ]);
 
 export const TestnetChains = [
