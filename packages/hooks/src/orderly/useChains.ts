@@ -71,7 +71,8 @@ export function useChains(
   options: UseChainsOptions = {}
 ) {
   const { pick: pickField, ...swrOptions } = options;
-  const { filteredChains: allowedChains } = useContext(OrderlyContext);
+  const { filteredChains: allowedChains, configStore } =
+    useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -96,9 +97,13 @@ export function useChains(
     { ...commonSwrOpts }
   );
 
+  const brokerId = configStore.get("brokerId");
+
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
-    "/v1/public/chain_info",
+    `/v1/public/chain_info${
+      brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+    }`,
     { ...commonSwrOpts }
   );
 
