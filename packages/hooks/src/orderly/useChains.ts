@@ -221,6 +221,7 @@ export function fillChainsInfo(
             symbol: item.token,
             address: chain.contract_address,
             decimals: chain.decimals,
+            display_name: chain.display_name,
           },
         ],
       };
