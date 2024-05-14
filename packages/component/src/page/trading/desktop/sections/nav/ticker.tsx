@@ -95,7 +95,7 @@ export const Ticker: FC<Props> = (props) => {
             label={"Mark"}
             value={
               <div id="orderly-top-nav-mark-price-value">
-                <NumeralWithCtx>{"222.22"}</NumeralWithCtx>
+                <NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>
               </div>
             }
             rule={"price"}
