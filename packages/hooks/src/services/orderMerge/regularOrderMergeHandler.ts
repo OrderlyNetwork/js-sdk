@@ -18,4 +18,10 @@ export class RegularOrderMergeHandler extends BaseMergeHandler<
   ): API.Order {
     return object2underscore(message) as unknown as API.Order;
   }
+  isFullFilled(): boolean {
+    return (
+      "total_executed_quantity" in this.data &&
+      this.data.total_executed_quantity === this.data.quantity
+    );
+  }
 }
