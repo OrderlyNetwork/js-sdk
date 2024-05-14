@@ -269,7 +269,14 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       </div>
       <QuantityInput
         tokens={tokens}
-        token={props.token}
+        // src token use display_name
+        // Mantle chain: USDC.e → USDC
+        token={
+          {
+            ...props.token,
+            symbol: props.token?.display_name || props.token?.symbol,
+          } as API.TokenInfo
+        }
         quantity={quantity}
         markPrice={1}
         maxAmount={Number(maxAmount)}
