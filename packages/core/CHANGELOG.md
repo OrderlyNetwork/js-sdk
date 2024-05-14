@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.2-mantle-usdce.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.2-mantle-usdce.1
+
 ## 1.5.2-mantle-usdce.0
 
 ### Patch Changes

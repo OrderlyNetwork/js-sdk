@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.2-mantle-usdce.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.2-mantle-usdce.1
+  - @orderly.network/utils@1.5.2-mantle-usdce.1
+
 ## 3.3.2-mantle-usdce.0
 
 ### Patch Changes
