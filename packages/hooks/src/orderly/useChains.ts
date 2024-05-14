@@ -92,7 +92,7 @@ export function useChains(
   // only prod env return mainnet chains info
   // TODO: remove https://api-evm.orderly.org api base
   const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
-    "https://api-evm.orderly.org/v1/public/token",
+    "/v1/public/token",
     { ...commonSwrOpts }
   );
 
