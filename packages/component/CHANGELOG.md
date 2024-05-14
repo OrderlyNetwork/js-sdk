@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 1.5.1-internal.17
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/trading-view@1.5.1-internal.17
+  - @orderly.network/hooks@1.5.1-internal.17
+  - @orderly.network/types@1.5.1-internal.17
+  - @orderly.network/utils@1.5.1-internal.17
+  - @orderly.network/core@1.5.1-internal.17
+  - @orderly.network/net@1.5.1-internal.17
+
 ## 1.5.1-internal.16
 
 ### Patch Changes
