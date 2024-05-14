@@ -39,12 +39,12 @@ module.exports = {
         "var(--orderly-font-size-4xl, calc(var(--orderly-font-size-base) + 20px))", // if base is 16px, it will be 36px
     },
     boxShadow: {
-      'sm': "var(--orderly-shadow-sm, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      sm: "var(--orderly-shadow-sm, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
       DEFAULT: "var(--orderly-shadow, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'md': "var(--orderly-shadow-md, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'lg': "var(--orderly-shadow-lg, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      'xl': "var(--orderly-shadow-xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
-      '2xl': "var(--orderly-shadow-2xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      md: "var(--orderly-shadow-md, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      lg: "var(--orderly-shadow-lg, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      xl: "var(--orderly-shadow-xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
+      "2xl": "var(--orderly-shadow-2xl, 0px 12px 20px 0px rgba(0, 0, 0, 0.3))",
     },
     extend: {
       fontFamily: {
@@ -94,6 +94,7 @@ module.exports = {
             36: "rgb(var(--orderly-color-base-foreground) / 0.36)",
             20: "rgb(var(--orderly-color-base-foreground) / 0.2)",
             12: "rgb(var(--orderly-color-base-foreground) / 0.12)",
+            8: "rgb(var(--orderly-color-base-foreground) / 0.08)",
           },
         },
 
@@ -126,10 +127,10 @@ module.exports = {
         },
         divider: {
           DEFAULT: "rgb(var(--orderly-color-divider) / <alpha-value>)",
-          "fill2": "rgb(var(--orderly-color-divider-fill) / 0.12)", 
-          "fill3": "rgb(var(--orderly-color-divider-fill) / 0.08)", 
-          "fill4": "rgb(var(--orderly-color-divider-fill) / 0.06)", 
-          "fill5": "rgb(var(--orderly-color-divider-fill) / 0.04)", 
+          fill2: "rgb(var(--orderly-color-divider-fill) / 0.12)",
+          fill3: "rgb(var(--orderly-color-divider-fill) / 0.08)",
+          fill4: "rgb(var(--orderly-color-divider-fill) / 0.06)",
+          fill5: "rgb(var(--orderly-color-divider-fill) / 0.04)",
         },
         // disable:'',
         trade: {

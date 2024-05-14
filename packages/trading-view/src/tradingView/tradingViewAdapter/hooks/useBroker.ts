@@ -3,26 +3,19 @@ import useCancelOrder from '../hooks/useCancelOrder';
 import useEditOrder from './useEditOrder';
 import useSenderOrder from './useSendOrder';
 import {useSymbolsInfo} from '@orderly.network/hooks';
+import { ChartMode, ColorConfigInterface } from '../type';
 
 const useBroker = ({
                        closeConfirm,
                        colorConfig,
     onToast,
+    mode,
                    }: {
 
     closeConfirm: any;
-    colorConfig: {
-        chartBG: string;
-        upColor: string;
-        downColor: string,
-        pnlUpColor: string;
-        pnlDownColor: string;
-        textColor: string;
-        qtyTextColor: string;
-        font: string;
-
-    },
+    colorConfig: ColorConfigInterface,
     onToast?: any,
+    mode?: ChartMode,
 },) => {
     const cancelOrder = useCancelOrder();
     const editOrder = useEditOrder(onToast);
@@ -49,6 +42,7 @@ const useBroker = ({
         colorConfig,
         sendLimitOrder,
         getSymbolInfo,
+        mode,
     });
 
 

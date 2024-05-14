@@ -6,7 +6,7 @@ import { MyOrderEntry } from "../mobile/sections/orderEntry";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
 import { MemoizedDataListView } from "./sections/datalist";
-import { MyTradingView } from "./myTradingview";
+import MyTradingView from "./myTradingview/index";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
@@ -125,7 +125,11 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 </div>
               </div>
               <div
-                style={{ minWidth: "300px", maxWidth: "800px", width: orderBookSplitSize }}
+                style={{
+                  minWidth: "300px",
+                  maxWidth: "800px",
+                  width: orderBookSplitSize,
+                }}
                 className="orderly-overflow-hidden"
               >
                 <MyOrderBookAndTrade symbol={props.symbol} />
