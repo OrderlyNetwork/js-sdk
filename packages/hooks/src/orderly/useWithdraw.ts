@@ -2,13 +2,27 @@ import { useCallback, useMemo, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
 import { useCollateral } from "./useCollateral";
 import { useAccount } from "../useAccount";
+import { useChains } from "./useChains";
+import {
+  API,
+  ARBITRUM_MAINNET_CHAINID,
+  ARBITRUM_TESTNET_CHAINID,
+} from "@orderly.network/types";
+import { useConfig } from "../useConfig";
+import { isTestnet } from "@orderly.network/utils";
 
-export const useWithdraw = () => {
+export type UseWithdrawOptions = { srcChainId?: number };
+
+export const useWithdraw = (options?: UseWithdrawOptions) => {
   const { account, state } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
+
+  const networkId = useConfig("networkId");
+
+  const [_, { findByChainId }] = useChains(undefined);
 
   // const withdrawQueue = useRef<number[]>([]);
 
@@ -75,7 +89,44 @@ export const useWithdraw = () => {
     }
   }, [freeCollateral, unsettledPnL]);
 
+  const targetChain = useMemo(() => {
+    let chain: API.Chain | undefined;
+
+    // Orderly testnet supported chain
+    if (networkId === "testnet") {
+      chain = findByChainId(
+        isTestnet(options?.srcChainId!)
+          ? options?.srcChainId!
+          : ARBITRUM_TESTNET_CHAINID
+      ) as API.Chain;
+    } else {
+      chain = findByChainId(options?.srcChainId!) as API.Chain;
+      // if is orderly un-supported chain
+      if (!chain?.network_infos?.bridgeless) {
+        // Orderly mainnet supported chain
+        chain = findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain;
+      }
+    }
+    return chain;
+  }, [networkId, findByChainId, options?.srcChainId]);
+
+  // Mantle chain: USDC → USDC.e
+  const dst = useMemo(() => {
+    const USDC = targetChain?.token_infos.find(
+      (token: API.TokenInfo) => token.symbol === "USDC"
+    );
+
+    return {
+      symbol: USDC?.display_name || "USDC",
+      decimals: USDC?.decimals || 6,
+      address: USDC?.address,
+      chainId: targetChain?.network_infos?.chain_id,
+      network: targetChain?.network_infos?.shortName,
+    };
+  }, [targetChain]);
+
   return {
+    dst,
     withdraw,
     isLoading,
     maxAmount,
