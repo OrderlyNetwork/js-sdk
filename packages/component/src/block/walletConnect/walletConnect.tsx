@@ -163,7 +163,7 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
         />
       )}
 
-      <div className="orderly-pt-5 orderly-pb-7 orderly-flex orderly-justify-between orderly-items-center">
+      <div className="orderly-py-4 orderly-flex orderly-justify-between orderly-items-center">
         <RememberMe />
         <div>
           <Switch
