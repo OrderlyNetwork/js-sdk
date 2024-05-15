@@ -7,8 +7,11 @@ export const useCheckReferralCode = (
     isExist?: boolean;
     error: any;
     isLoading: boolean;
-  } => {
-  
+  } => {  
+    const { data, error, isLoading } = useQuery<{exist?: boolean}>(
+      typeof code === "undefined" || (code?.length === 0) ? null : `/v1/public/referral/verify_ref_code?referral_code=${code}`
+    );
+
   if (typeof code === "undefined") {
     return {
         isExist: false,
@@ -16,11 +19,6 @@ export const useCheckReferralCode = (
         isLoading: false,
     };
   }
-
-  const { data, error, isLoading } = useQuery<{exist?: boolean}>(
-    `/v1/public/referral/verify_ref_code?referral_code=${code}`
-  );
-  
 
   return {
     isExist: data?.exist,
