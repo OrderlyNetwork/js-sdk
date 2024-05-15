@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.4.2-mantle-usdce.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.2-mantle-usdce.2
+  - @orderly.network/web3-onboard@1.5.2-mantle-usdce.2
+  - @orderly.network/hooks@1.5.2-mantle-usdce.2
+  - @orderly.network/types@1.5.2-mantle-usdce.2
+
 ## 0.4.2-mantle-usdce.1
 
 ### Patch Changes

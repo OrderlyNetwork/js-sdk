@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/net",
-  "version": "1.5.2-mantle-usdce.1",
+  "version": "1.5.2-mantle-usdce.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.2-mantle-usdce.2
+
+### Patch Changes
+
+- update
+
 ## 0.3.2-mantle-usdce.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.2-mantle-usdce.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.2-mantle-usdce.2
+  - @orderly.network/types@1.5.2-mantle-usdce.2
+
 ## 1.5.2-mantle-usdce.1
 
 ### Patch Changes

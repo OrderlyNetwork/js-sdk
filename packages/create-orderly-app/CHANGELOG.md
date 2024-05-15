@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.2-mantle-usdce.2
+
+### Patch Changes
+
+- update
+
 ## 1.5.2-mantle-usdce.1
 
 ### Patch Changes
