@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.1
+
+### Patch Changes
+
+- 34efc6c0: update
+- Updated dependencies [34efc6c0]
+  - @orderly.network/core@1.5.1
+
 ## 0.3.1-alpha.0
 
 ### Patch Changes

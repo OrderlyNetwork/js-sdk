@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.1
+
+### Patch Changes
+
+- 34efc6c0: update
+- Updated dependencies [34efc6c0]
+  - @orderly.network/hooks@1.5.1
+  - @orderly.network/types@1.5.1
+
 ## 1.5.1-alpha.0
 
 ### Patch Changes
