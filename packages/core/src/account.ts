@@ -346,7 +346,7 @@ export class Account {
       return Promise.reject("walletClient is undefined");
     }
 
-    const nonce = await this._getRegisterationNonce();
+    const { nonce, timestamp } = await this._getRegisterationNonce();
 
     const address = this.stateValue.address;
 
@@ -358,6 +358,7 @@ export class Account {
       registrationNonce: nonce,
       chainId: this.walletClient.chainId,
       brokerId: this.configStore.get("brokerId"),
+      timestamp,
     });
 
     const signatured = await this.signTypedData(toSignatureMessage);
@@ -592,7 +593,10 @@ export class Account {
     });
 
     if (res.success) {
-      return res.data?.registration_nonce;
+      return {
+        nonce: res.data?.registration_nonce,
+        timestamp: res.timestamp,
+      };
     } else {
       throw new Error(res.message);
     }
