@@ -310,7 +310,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         console.log("getDepositFee", fee);
       })
       .catch((error) => {
-        console.log("getDepositFee error", error);
+        console.error("getDepositFee", error);
       })
       .finally(() => {
         setDepositFeeRevalidating(false);
