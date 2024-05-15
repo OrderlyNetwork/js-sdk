@@ -91,8 +91,13 @@ export const Ticker: FC<Props> = (props) => {
             }
           />
           <Statistic
+            id="orderly-top-nav-mark-price"
             label={"Mark"}
-            value={<NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>}
+            value={
+              <div id="orderly-top-nav-mark-price-value">
+                <NumeralWithCtx>{data?.mark_price}</NumeralWithCtx>
+              </div>
+            }
             rule={"price"}
             hint="Price for the computation of unrealized PnL and liquidation."
           />
@@ -112,14 +117,26 @@ export const Ticker: FC<Props> = (props) => {
                 <div>24h volume</div>
               </div>
             }
-            value={<Numeral rule="human" unit={` ${quote}`}>{data?.["24h_amount"]}</Numeral>}
+            value={
+              <Numeral
+                className="orderly-whitespace-nowrap"
+                rule="human"
+                unit={` ${quote}`}
+              >
+                {data?.["24h_amount"]}
+              </Numeral>
+            }
           />
 
           <MemoizedCompnent symbol={props.symbol} />
           <Statistic
             label={"Open interest"}
             value={
-              <Numeral rule="human" unit={` ${quote}`}>
+              <Numeral
+                className="orderly-whitespace-nowrap"
+                rule="human"
+                unit={` ${quote}`}
+              >
                 {new Decimal(data?.open_interest ?? 0)
                   .mul(data?.index_price ?? 0)
                   .toDecimalPlaces(2)

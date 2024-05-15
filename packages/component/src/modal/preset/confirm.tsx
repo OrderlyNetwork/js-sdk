@@ -13,6 +13,8 @@ export interface ConfirmProps {
   contentClassName?: string;
   maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
   closeableSize?: number;
+  okId?: string;
+  cancelId?: string;
 }
 
 const ConfirmDialog = create<ConfirmProps>((props) => {
@@ -25,6 +27,8 @@ const ConfirmDialog = create<ConfirmProps>((props) => {
       maxWidth={props.maxWidth}
       closable
       closeableSize={props.closeableSize}
+      okId={props.okId}
+      cancelId={props.cancelId}
       onOpenChange={(open) => {
         if (!open) {
           reject();

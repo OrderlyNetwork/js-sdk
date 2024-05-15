@@ -50,7 +50,7 @@ export const DefaultLayoutConfig: PosterLayoutConfig = {
   updateTime: {
     fontSize: 10,
     color: "rgba(255,255,255,0.3)",
-    // textAlign: "end",
+    textAlign: "start",
     textBaseline: "bottom",
     position: {
       left: 20,

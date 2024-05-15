@@ -126,7 +126,7 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
-    // console.log("[updateOrder:]", key, value, order.quantity);
+    console.log("[updateOrder:]", key, value);
 
     setOrder((prev) => {
       const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
@@ -167,6 +167,7 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
+    // console.log("-------->>>>>", key, value);
     if (key === "quantity") {
       setOrder((prev) => ({ ...prev, quantity: value }));
 

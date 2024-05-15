@@ -53,8 +53,10 @@ const MenuItem = (props: {
   title: string;
   className?: string;
   onClick: () => void;
+  id?: string;
 }) => (
   <div
+    id={props.id}
     className={cn(
       "orderly-flex orderly-cursor-pointer orderly-items-center orderly-w-full orderly-fill-base-contrast-36 orderly-text-base-contrast-36 hover:orderly-fill-base-contrast hover:orderly-text-base-contrast orderly-py-4",
       props.className
@@ -210,6 +212,7 @@ export const DesktopWalletConnnectButton: FC<
         {customsMenuItems}
 
         <MenuItem
+          id="orderly-desktop-disconnect-wallet"
           icon={<DisconnectIcon size={24} />}
           title="Disconnect"
           className="hover:orderly-fill-danger-light hover:orderly-text-danger-light"

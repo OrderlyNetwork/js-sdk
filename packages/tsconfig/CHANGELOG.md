@@ -1,5 +1,17 @@
 # tsconfig
 
+## 0.3.1
+
+### Patch Changes
+
+- 34efc6c0: update
+
+## 0.3.1-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 0.3.0
 
 ### Minor Changes

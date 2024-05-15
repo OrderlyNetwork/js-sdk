@@ -50,3 +50,6 @@ export {
   useTPSLOrder,
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
+
+
+export { useSymbolLeverage } from "./useSymbolLeverage";

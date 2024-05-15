@@ -141,12 +141,14 @@ const preview = {
             }}
             referral={{
               saveRefCode: true,
+              slogan: "Slogan is： NEWBE",
               onClickReferral: () => {
                 console.log("click referral");
               },
               onBoundRefCode: (success, error) => {
                 console.log("onBoundRefCode", success, error);
               },
+              refLink: "https://orderly.netowork/referral?abc=123",
             }}
           >
             <Story />

@@ -11,18 +11,21 @@ export const OrderTypesCheckbox: FC<Props> = ({ value, onValueChange }) => {
   return (
     <div className="orderly-flex orderly-items-center orderly-space-x-3">
       <OrderTypeItem
+        id="orderly-order-entry-expand-content-post-only"
         active={value === OrderType.POST_ONLY}
         label="Post only"
         value={OrderType.POST_ONLY}
         onClick={onValueChange}
-      />
+        />
       <OrderTypeItem
+        id="orderly-order-entry-expand-content-ioc"
         active={value === OrderType.IOC}
         label="IOC"
         value={OrderType.IOC}
         onClick={onValueChange}
-      />
+        />
       <OrderTypeItem
+        id="orderly-order-entry-expand-content-fok"
         active={value === OrderType.FOK}
         label="FOK"
         value={OrderType.FOK}
@@ -33,6 +36,7 @@ export const OrderTypesCheckbox: FC<Props> = ({ value, onValueChange }) => {
 };
 
 const OrderTypeItem: FC<{
+  id?: string;
   active: boolean;
   label: string;
   value: OrderType;
@@ -47,6 +51,7 @@ const OrderTypeItem: FC<{
   }
   return (
     <div
+      id={props.id}
       className={clsName}
       onClick={() => {
         props.onClick(props.active ? "" : props.value);

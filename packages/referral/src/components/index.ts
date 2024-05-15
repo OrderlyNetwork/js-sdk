@@ -7,3 +7,5 @@ export {
     emptyDataSourceYAxis, 
     emptyDataSource 
 } from "./barChart";
+
+export { Loader } from "./loader";

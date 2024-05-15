@@ -285,7 +285,7 @@ const SmallCodeCell: FC<{
             <Divider className="orderly-my-3" />
             <div className="orderly-flex orderly-justify-between">
                 <div className="orderly-max-w-[94px] md:orderly-max-w-[140px]">
-                    <div className="orderly-text-3xs orderly-text-base-contrast-36">Referral Codes</div>
+                    <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-h-[36px] md:orderly-h-fit">Referral Codes</div>
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs orderly-flex orderly-gap-2">
                         <div className="orderly-text-ellipsis orderly-flex-1 orderly-overflow-hidden">{code}</div>
 
@@ -298,12 +298,12 @@ const SmallCodeCell: FC<{
                     </div>
                 </div>
                 <div className="orderly-text-right orderly-flex-1">
-                    <div className="orderly-text-3xs orderly-text-base-contrast-36">You / Referee</div>
+                    <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-h-[36px] md:orderly-h-fit">You / Referee</div>
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{rate}</div>
                 </div>
 
                 <div className="orderly-text-right orderly-flex-1">
-                    <div className="orderly-text-3xs orderly-text-base-contrast-36">Referees / Traders</div>
+                    <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-h-[36px] md:orderly-h-fit">Referees / Traders</div>
                     <div className="orderly-mt-1 orderly-text-2xs md:orderly-text-xs">{count}</div>
                 </div>
 
