@@ -10,12 +10,13 @@ import { SDKError } from "@orderly.network/types";
  * @example
  * ```tsx
  * const { ref, toDataURL, toBlob, download, copy } = usePoster({
- *  backgroundColor: "#0b8c70",
- * backgroundImg: "/images/poster_bg.png",
- * color: "rgba(255, 255, 255, 0.98)",
- * profitColor: "rgb(0,181,159)",
- * ...
+ *   backgroundColor: "#0b8c70",
+ *   backgroundImg: "/images/poster_bg.png",
+ *   color: "rgba(255, 255, 255, 0.98)",
+ *   profitColor: "rgb(0,181,159)",
+ *   // ...
  * });
+ * ```
  */
 export const usePoster = (
   /**
