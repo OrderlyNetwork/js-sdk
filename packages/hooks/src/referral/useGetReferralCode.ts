@@ -8,7 +8,7 @@ export const useGetReferralCode = (
   isLoading: boolean;
 } => {
   const { data, error, isLoading } = useQuery<{ referral_code?: string }>(
-    `/v1/public/referral/check_ref_code?account_id=${accountId}`
+    typeof accountId === "undefined" ? null : `/v1/public/referral/check_ref_code?account_id=${accountId}`
   );
 
   if (typeof accountId === "undefined") {
