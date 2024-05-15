@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 1.5.0
 
 ### Minor Changes
