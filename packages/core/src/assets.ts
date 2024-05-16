@@ -7,6 +7,7 @@ import { MessageFactor } from "./signer";
 import {
   SignatureDomain,
   formatByUnits,
+  getTimestamp,
   parseAccountId,
   parseBrokerHash,
   parseTokenHash,
@@ -81,7 +82,7 @@ export class Assets {
       };
     }
 
-    const signature = await this.account.signer.sign(payload);
+    const signature = await this.account.signer.sign(payload, getTimestamp());
 
     //
 

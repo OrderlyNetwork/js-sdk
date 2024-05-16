@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/core";
 import { useAccountInstance } from "./useAccountInstance";
 import { useConfig } from "./useConfig";
+import { getTimestamp } from "@orderly.network/utils/src/window";
 
 type HTTP_METHOD = "POST" | "PUT" | "DELETE";
 
@@ -106,7 +107,7 @@ export const useMutation = <T, E>(
       data,
     };
 
-    const signature = await signer.sign(payload);
+    const signature = await signer.sign(payload, getTimestamp());
 
     return trigger(
       {

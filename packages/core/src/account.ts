@@ -9,7 +9,7 @@ import {
 } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, isHex, parseAccountId } from "./utils";
+import { SignatureDomain, getTimestamp, isHex, parseAccountId } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
@@ -506,7 +506,7 @@ export class Account {
 
     //
 
-    const signature = await this.signer.sign(payload);
+    const signature = await this.signer.sign(payload, getTimestamp());
 
     const res = await this._simpleFetch(url, {
       method: "POST",

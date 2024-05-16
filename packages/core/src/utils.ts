@@ -79,3 +79,18 @@ export const getGlobalObject = () => {
   }
   throw new Error("cannot find the global object");
 };
+
+
+
+/// get timestamp
+export const getTimestamp = (): number => {
+
+  if (typeof window !== "undefined") {
+    // @ts-ignore
+    const timeOffset = getGlobalObject()?.__ORDERLY_timestamp_offset;
+    if (typeof timeOffset === 'number') {
+      return Date.now() + (timeOffset || 0);
+    }
+  }
+  return Date.now();
+}

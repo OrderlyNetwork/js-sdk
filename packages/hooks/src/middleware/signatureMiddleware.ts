@@ -1,6 +1,7 @@
 import { SWRHook, Middleware } from "swr";
 import { SimpleDI, Account, MessageFactor } from "@orderly.network/core";
 import { useConfig } from "../useConfig";
+import { getTimestamp } from "@orderly.network/utils";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
   const apiBaseUrl = useConfig("apiBaseUrl");
@@ -19,7 +20,7 @@ export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
           url,
         };
 
-        const signature = await signer.sign(payload);
+        const signature = await signer.sign(payload, getTimestamp());
 
         // @ts-ignore
         return fetcher(fullUrl, {
