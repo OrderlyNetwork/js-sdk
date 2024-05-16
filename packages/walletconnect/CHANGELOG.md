@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.5.3-mantle-usdce.0
+
+### Patch Changes
+
+- update
+
 ## 1.5.2
 
 ### Patch Changes
