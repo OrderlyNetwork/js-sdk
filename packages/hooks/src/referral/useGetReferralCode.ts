@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 
 export const useGetReferralCode = (
@@ -15,8 +14,8 @@ export const useGetReferralCode = (
   if (typeof accountId === "undefined") {
     return {
       referral_code: undefined,
-        error: "The account id is empty or undefined",
-        isLoading: false,
+      error: "The account id is empty or undefined",
+      isLoading: false,
     };
   }
 
