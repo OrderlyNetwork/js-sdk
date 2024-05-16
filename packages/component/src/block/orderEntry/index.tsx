@@ -39,7 +39,6 @@ import {
   OrderConfirmView,
 } from "./sections/orderConfirmView.new";
 import { toast } from "@/toast";
-import { StatusGuardButton } from "@/button/statusGuardButton";
 import { Decimal, commify, removeTrailingZeros } from "@orderly.network/utils";
 import { MSelect } from "@/select/mSelect";
 import { cn } from "@/utils/css";
@@ -47,6 +46,7 @@ import { convertValueToPercentage } from "@/slider/utils";
 import { FreeCollat } from "./sections/freeCollat";
 import { EstInfo } from "./sections/setInfo";
 import { ApiError } from "@orderly.network/types";
+import { StatusGuardButton } from "../accountStatus";
 
 export interface OrderEntryProps {
   onSubmit?: (data: any) => Promise<any>;
