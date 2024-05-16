@@ -25,7 +25,9 @@ export const ChainCell: FC<ChainCellProps> = (props) => {
     >
       <div className="orderly-flex-1 orderly-flex orderly-items-center orderly-space-x-3 orderly-text-3xs orderly-text-base-contrast-80 desktop:orderly-space-x-2">
         <NetworkImage type="chain" id={id} rounded />
-        <span className="orderly-chain-symbol-name">{name}</span>
+        <span className="orderly-chain-symbol-name orderly-whitespace-nowrap">
+          {name}
+        </span>
         {bridgeless && <Tag color="primary">Bridgeless</Tag>}
       </div>
       {selected && (
