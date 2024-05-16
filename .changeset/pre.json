@@ -22,6 +22,8 @@
     "@orderly.network/web3-modal": "1.5.2"
   },
   "changesets": [
-    "fair-dodos-jam"
+    "eleven-feet-lick",
+    "fair-dodos-jam",
+    "poor-apples-sort"
   ]
 }
