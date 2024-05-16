@@ -7,63 +7,92 @@ import {
   useLeverage,
   useMediaQuery,
   useQuery,
+  useReferralInfo,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { FC, PropsWithChildren, useEffect, useMemo, useState } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { MobileSharePnLContent } from "./mobileSharePnl";
+import { OrderlyAppContext } from "@/provider";
+import { ReferralType } from "./sharePnLUtils";
 
 export const SharePoisitionView = create<{
   position: any;
+  leverage: any,
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
   const { position } = props;
   // const [leverage] = useLeverage();
   const symbolInfo = useSymbolsInfo();
-  const { data: info } = useAccountInfo();
+  // const { data: info } = useAccountInfo();
 
-  const maxAccountLeverage = info?.max_leverage;
+  // const maxAccountLeverage = info?.max_leverage;
 
-  const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
-    focusThrottleInterval: 1000 * 60 * 60 * 24,
-    dedupingInterval: 1000 * 60 * 60 * 24,
-    revalidateOnFocus: false,
-  });
+  // const res = useQuery<any>(`/v1/public/info/${position.symbol}`, {
+  //   focusThrottleInterval: 1000 * 60 * 60 * 24,
+  //   dedupingInterval: 1000 * 60 * 60 * 24,
+  //   revalidateOnFocus: false,
+  // });
 
-  const maxSymbolLeverage = useMemo(() => {
-    const base = res?.data?.base_imr;
-    if (base) return 1 / base;
-  }, [res]);
+  // const maxSymbolLeverage = useMemo(() => {
+  //   const base = res?.data?.base_imr;
+  //   if (base) return 1 / base;
+  // }, [res]);
 
-  const maxLeverage = useMemo(() => {
-    if (!maxAccountLeverage || !maxSymbolLeverage) {
-      return "-";
-    }
+  // const maxLeverage = useMemo(() => {
+  //   if (!maxAccountLeverage || !maxSymbolLeverage) {
+  //     return "-";
+  //   }
 
-    return Math.min(maxAccountLeverage, maxSymbolLeverage);
-  }, [maxAccountLeverage, maxSymbolLeverage]);
+  //   return Math.min(maxAccountLeverage, maxSymbolLeverage);
+  // }, [maxAccountLeverage, maxSymbolLeverage]);
+
+
+  const { getFirstRefCode } = useReferralInfo();
 
   if (symbolInfo.isNil) return null;
 
-  
-
   const base_dp = symbolInfo[position.symbol]("base_dp");
   const quote_dp = symbolInfo[position.symbol]("quote_dp");
+  const { referral } = useContext(OrderlyAppContext);
+
+  const referralInfo = useMemo((): ReferralType | undefined => {
+    const code = getFirstRefCode()?.code;
+    const info = {
+      code,
+      slogan: referral?.slogan,
+      link: referral?.refLink,
+    }
+
+    return info;
+
+  }, [
+    getFirstRefCode, referral,
+  ]);
 
   return isTablet ? (
     <MobileSharePnL
       position={position}
-      leverage={maxLeverage}
+      leverage={props.leverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
+      referral={referralInfo}
     />
   ) : (
     <DesktopSharePnL
       position={position}
-      leverage={maxLeverage}
+      leverage={props.leverage}
       baseDp={base_dp}
       quoteDp={quote_dp}
+      referral={referralInfo}
     />
   );
 });
@@ -75,9 +104,10 @@ const MobileSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    referral?: ReferralType;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, referral } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   return (
@@ -100,6 +130,7 @@ const MobileSharePnL: FC<
           hide={hide}
           baseDp={baseDp}
           quoteDp={quoteDp}
+          referral={referral}
         />
       </SheetContent>
     </Sheet>
@@ -113,9 +144,10 @@ const DesktopSharePnL: FC<
     leverage: number | string;
     baseDp?: number;
     quoteDp?: number;
+    referral?: ReferralType;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp } = props;
+  const { leverage, position, baseDp, quoteDp, referral } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [viewportHeight, setViewportHeight] = useState(
@@ -153,6 +185,7 @@ const DesktopSharePnL: FC<
             hide={hide}
             baseDp={baseDp}
             quoteDp={quoteDp}
+            referral={referral}
           />
         </div>
       </DialogContent>

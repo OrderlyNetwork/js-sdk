@@ -138,7 +138,7 @@ export const TPSLEditor: FC<{
   }, []);
 
   return (
-    <>
+    <div id="orderly-tp_sl-order-edit-content">
       <TPSLForm
         className={open ? "orderly-hidden" : ""}
         maxQty={maxQty}
@@ -199,6 +199,6 @@ export const TPSLEditor: FC<{
           />
         </SimpleDialog>
       )}
-    </>
+    </div>
   );
 };

@@ -67,7 +67,7 @@ export const CommissionList: FC<{
                     }));
                 }}
                 initDate={pickDate}
-                triggerClassName="orderly-max-w-[196px] orderly-rounded-sm orderly-justify-between"
+                triggerClassName="orderly-rounded-sm orderly-justify-between orderly-w-fit"
                 numberOfMonths={isMD ? 1 : 2}
                 className="orderly-ml-4 lg:orderly-flex-row orderly-mt-3"
                 classNames={{

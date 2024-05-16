@@ -1,5 +1,37 @@
 # @orderly.network/cli
 
+## 0.3.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+- Updated dependencies [f7bfae80]
+  - @orderly.network/core@1.5.2
+
+## 0.3.2-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/core@1.5.2-alpha.0
+
+## 0.3.1
+
+### Patch Changes
+
+- 34efc6c0: update
+- Updated dependencies [34efc6c0]
+  - @orderly.network/core@1.5.1
+
+## 0.3.1-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@1.5.1-alpha.0
+
 ## 0.3.0
 
 ### Minor Changes

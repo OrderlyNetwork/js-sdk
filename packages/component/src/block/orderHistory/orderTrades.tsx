@@ -29,7 +29,9 @@ export const OrderTrades: FC<{
   // const symbolInfo = config ? config?.[record.symbol] : {};
   // const baseDp = symbolInfo?.("quote_dp") || 2;
   const symbolInfo = config[record.symbol];
-  const baseDp = symbolInfo("quote_dp", 2);
+  const quote_dp = symbolInfo("quote_dp", 2);
+  // const quoteDp = symbolInfo("base_dp", 2);
+  const base_dp = symbolInfo("base_dp", 2);
 
   const body = useMemo(() => {
     if (data === undefined) {
@@ -63,18 +65,19 @@ export const OrderTrades: FC<{
       const price = item.executed_price;
       const qty = item.executed_quantity;
       const total = new Decimal(price).mul(qty).toNumber();
+
       return (
         <tr className="orderly-text-base-contrast-54">
           <td className="orderly-py-1">{item.id}</td>
           <td className="orderly-py-1">{data}</td>
           <td className="orderly-py-1">
-            <Numeral precision={baseDp}>{price}</Numeral>
+            <Numeral precision={quote_dp}>{price}</Numeral>
           </td>
           <td className="orderly-py-1">
-            <Numeral precision={baseDp}>{qty}</Numeral>
+            <Numeral precision={base_dp}>{qty}</Numeral>
           </td>
           <td className="orderly-py-1">
-            <Numeral precision={baseDp}>{total}</Numeral>
+            <Numeral precision={quote_dp}>{total}</Numeral>
           </td>
         </tr>
       );

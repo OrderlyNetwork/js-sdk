@@ -1,5 +1,49 @@
 # examples
 
+## 0.4.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+- Updated dependencies [f7bfae80]
+  - @orderly.network/hooks@1.5.2
+  - @orderly.network/react@1.5.2
+  - @orderly.network/core@1.5.2
+  - @orderly.network/web3-onboard@1.5.2
+
+## 0.4.2-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/hooks@1.5.2-alpha.0
+  - @orderly.network/react@1.5.2-alpha.0
+  - @orderly.network/core@1.5.2-alpha.0
+  - @orderly.network/web3-onboard@1.5.2-alpha.0
+
+## 0.4.1
+
+### Patch Changes
+
+- 34efc6c0: update
+- Updated dependencies [34efc6c0]
+  - @orderly.network/react@1.5.1
+  - @orderly.network/hooks@1.5.1
+  - @orderly.network/core@1.5.1
+  - @orderly.network/web3-onboard@1.5.1
+
+## 0.4.1-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.1-alpha.0
+  - @orderly.network/hooks@1.5.1-alpha.0
+  - @orderly.network/core@1.5.1-alpha.0
+  - @orderly.network/web3-onboard@1.5.1-alpha.0
+
 ## 0.4.0
 
 ### Minor Changes

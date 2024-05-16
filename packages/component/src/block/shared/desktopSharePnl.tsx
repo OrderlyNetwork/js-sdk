@@ -13,7 +13,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Divider } from "@/divider";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
-import { getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
+import { ReferralType, getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
 import { PosterRef } from "../poster/poster";
 import { CarouselBackgroundImage} from "./desktop/carousel";
 import { PnlFormatView } from "./desktop/pnlFormat";
@@ -27,6 +27,7 @@ export const DesktopSharePnLContent: FC<{
   hide: any;
   baseDp?: number;
   quoteDp?: number;
+  referral?: ReferralType;
 }> = (props) => {
 
   const localPnlConfig = getPnlInfo();
@@ -62,7 +63,8 @@ export const DesktopSharePnLContent: FC<{
     pnlFormat,
     shareOption,
     props.baseDp,
-    props.quoteDp
+    props.quoteDp,
+    props.referral,
   );
 
   const onCopy = () => {
@@ -116,6 +118,7 @@ export const DesktopSharePnLContent: FC<{
               ...resetOptions,
               data: posterData,
             }}
+            ratio={3}
             ref={posterRef}
           />
           <CarouselBackgroundImage

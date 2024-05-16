@@ -8,7 +8,7 @@ import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
 import { PosterRef } from "../poster/poster";
-import { getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
+import { ReferralType, getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
 import {
   CarouselContent,
   CarouselItem,
@@ -24,6 +24,7 @@ export const MobileSharePnLContent: FC<{
   hide: any;
   baseDp?: number;
   quoteDp?: number;
+  referral?: ReferralType;
 }> = (props) => {
 
   const localPnlConfig = getPnlInfo();
@@ -56,7 +57,8 @@ export const MobileSharePnLContent: FC<{
     pnlFormat,
     shareOption,
     props.baseDp,
-    props.quoteDp
+    props.quoteDp,
+    props.referral,
   );
   // console.log("pster data", posterData, props.position);
 
@@ -108,6 +110,7 @@ export const MobileSharePnLContent: FC<{
 
   return (
     <div className="orderly-referral">
+      {/* <div>{`leverage: ${props.leverage}x`}</div> */}
       <div
         ref={carouselRef}
         className="orderly-w-full orderly-mt-4 orderly-overflow-hidden"
@@ -131,6 +134,7 @@ export const MobileSharePnLContent: FC<{
                     ...resetOptions,
                     data: posterData,
                   }}
+                  ratio={3}
                   ref={posterRefs[index]}
                 />
               </CarouselItem>

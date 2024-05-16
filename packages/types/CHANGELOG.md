@@ -1,5 +1,29 @@
 # @orderly.network/types
 
+## 1.5.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+
+## 1.5.2-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 1.5.1
+
+### Patch Changes
+
+- 34efc6c0: update
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 1.5.0
 
 ### Minor Changes
