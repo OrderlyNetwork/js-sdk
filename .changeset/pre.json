@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.5.2"
   },
   "changesets": [
+    "quick-zoos-act",
     "wicked-apples-beg"
   ]
 }
