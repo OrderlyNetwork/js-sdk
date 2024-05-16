@@ -84,7 +84,7 @@ export const NetworkImage: FC<NetworkImageProps> = memo((props) => {
       // setIsPlacholder(true);
       // setFailed(true);
       // setLoading(false);
-
+      setUrl("");
       stopLoading(true);
     };
 
