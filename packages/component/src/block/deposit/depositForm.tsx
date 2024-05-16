@@ -287,10 +287,12 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         // src token use display_name
         // Mantle chain: USDC.e → USDC
         token={
-          {
-            ...props.token,
-            symbol: props.token?.display_name || props.token?.symbol,
-          } as API.TokenInfo
+          props.token
+            ? ({
+                ...props.token,
+                symbol: props.token.display_name || props.token.symbol,
+              } as API.TokenInfo)
+            : props.token
         }
         quantity={quantity}
         markPrice={1}
