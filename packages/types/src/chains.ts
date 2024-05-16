@@ -544,9 +544,10 @@ export const TestnetChains = [
     },
     token_infos: [
       {
-        symbol: "USDC.e",
+        symbol: "USDC",
         address: "0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080",
         decimals: 6,
+        display_name: "USDC.e",
       },
     ],
   },
