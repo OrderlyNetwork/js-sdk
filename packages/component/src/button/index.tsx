@@ -1,7 +1,6 @@
 import { Button as BaseButton, buttonVariants, ButtonProps } from "./button";
 import { StatusGuardButton } from "./statusGuardButton";
 import { SegmentedButton, type SegmentedButtonProps } from "./segmented";
-import { SiginGuardButton } from "./siginGuardButton";
 
 type Button = typeof BaseButton & {
   buttonVariants: typeof buttonVariants;
@@ -16,8 +15,6 @@ const Button = BaseButton as Button;
 Button.buttonVariants = buttonVariants;
 Button.Segmented = SegmentedButton;
 Button.StatusGuardButton = StatusGuardButton;
-// Button.LoggedGuardButton = SiginGuardButton;
-// Button.IconButton = IconButton;
 
 export type { SegmentedButtonProps, ButtonProps };
 
