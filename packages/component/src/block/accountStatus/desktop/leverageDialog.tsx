@@ -73,15 +73,17 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
         </DialogBody>
         <DialogFooter>
           <Button
+            id="orderly-desktop-leverage-dialog-cancel"
             fullWidth
             color="tertiary"
             onClick={() => {
               setOpen(false);
             }}
-          >
+            >
             Cancel
+            
           </Button>
-          <Button fullWidth onClick={() => onSubmit()} loading={isMutating}>
+          <Button id="orderly-desktop-leverage-dialog-save" fullWidth onClick={() => onSubmit()} loading={isMutating}>
             Save
           </Button>
         </DialogFooter>

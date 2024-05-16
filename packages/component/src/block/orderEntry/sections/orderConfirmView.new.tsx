@@ -169,6 +169,7 @@ export const OrderConfirmFooter: FC<{
       </div>
       <div className="orderly-flex-1 orderly-flex orderly-gap-3 orderly-grid-cols-2">
         <Button
+          id="orderly-desktop-confirm-order-dialog-cancel"
           className="orderly-confirm-dialog-cancal-button orderly-h-[32px] orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
@@ -192,6 +193,7 @@ export const OrderConfirmFooter: FC<{
         </Button>
 
         <Button
+          id="orderly-desktop-confirm-order-dialog-confirm"
           className="orderly-confirm-dialog-ok-button orderly-h-[32px] orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="ok"
           type="button"

@@ -5,7 +5,7 @@ import Button from "@/button";
 import { API, AlgoOrderEntity, SDKError } from "@orderly.network/types";
 import { Numeral } from "@/text/numeral";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { commify } from "@orderly.network/utils";
+import { commify, todpIfNeed } from "@orderly.network/utils";
 import { Slider } from "@/slider";
 import { PnlInput } from "@/block/tp_sl/pnlInput";
 import { cn } from "@/utils";
@@ -139,7 +139,10 @@ export const TPSLForm: FC<Props> = (props) => {
   };
 
   return (
-    <div className={cn("orderly-space-y-4 orderly-text-3xs", props.className)}>
+    <div
+      id="orderly-tp_sl-form"
+      className={cn("orderly-space-y-4 orderly-text-3xs", props.className)}
+    >
       {canModifyQty ? (
         <>
           <div>
@@ -177,8 +180,15 @@ export const TPSLForm: FC<Props> = (props) => {
                 id="tpslOrderQuantity"
                 autoComplete={"off"}
                 data-testid="order-quantity"
-                onChange={(e) => {
-                  props.onChange("quantity", e.target.value);
+                thousandSeparator
+                // onChange={(e) => {
+                //   props.onChange("quantity", e.target.value.replace(/,/g, ""));
+                // }}
+                onValueChange={(value) => {
+                  props.onChange(
+                    "quantity",
+                    todpIfNeed(value, symbolInfo("base_dp"))
+                  );
                 }}
               />
               {!props.isEditing && (

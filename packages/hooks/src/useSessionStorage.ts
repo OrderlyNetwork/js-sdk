@@ -57,10 +57,10 @@ export function useSessionStorage<T>(
     if (typeof window == "undefined") {
       return;
     }
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener?.("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener?.("storage", handleStorageChange);
     };
   });
 

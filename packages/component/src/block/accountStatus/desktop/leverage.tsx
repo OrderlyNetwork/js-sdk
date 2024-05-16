@@ -72,7 +72,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           {isConnected ? marginRatioVal : "-"}
         </Numeral>
       </div>
-      <div className={"orderly-flex orderly-flex-col orderly-items-end"}>
+      <div id="orderly-desktop-max-leverage" className={"orderly-flex orderly-flex-col orderly-items-end"}>
         <Tooltip
           content={
             "Your actual Leverage of the whole account / Your max Leverage of the whole account"
@@ -101,7 +101,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           <span className={"orderly-text-base-contrast-54"}>/</span>
           {isConnected ? (
             <LeverageDialog>
-              <button className="orderly-flex orderly-items-center orderly-gap-1">
+              <button id="orderly-desktop-leverage-button" className="orderly-flex orderly-items-center orderly-gap-1">
                 <span>{`${maxLeverage ?? "-"}x`}</span>
                 {typeof maxLeverage !== "undefined" && (
                   // @ts-ignore

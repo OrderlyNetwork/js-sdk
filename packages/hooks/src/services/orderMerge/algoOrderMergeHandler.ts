@@ -34,6 +34,24 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     return AlgoOrderMergeHandler.groupOrders(message);
   }
 
+  isFullFilled(): boolean {
+    if (
+      "total_executed_quantity" in this.data &&
+      this.data.total_executed_quantity !== 0
+    ) {
+      return this.data.total_executed_quantity === this.data.quantity;
+    } else if (
+      "total_executed_quantity" in (this.data as API.AlgoOrder).child_orders[0]
+    ) {
+      return (
+        (this.data as API.AlgoOrder).child_orders[0].total_executed_quantity ===
+        (this.data as API.AlgoOrder).child_orders[0].quantity
+      );
+    }
+
+    return false;
+  }
+
   static groupOrders(orders: WSMessage.AlgoOrder[]): API.AlgoOrder {
     const rootOrderIndex = orders.findIndex(
       (order) =>

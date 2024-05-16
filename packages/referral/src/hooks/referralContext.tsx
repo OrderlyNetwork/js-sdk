@@ -74,6 +74,8 @@ export type ReferralContextProps = {
     chartConfig?: ChartConfig,
     //** overwrite refferal */
     overwrite?: Overwrite,
+    //** build a splash page, if not impletement, will be dispaly referral page */
+    splashPage?: () => ReactNode,
 }
 
 export type ReferralContextReturns = {
@@ -83,6 +85,7 @@ export type ReferralContextReturns = {
     mutate: any,
     userVolume?: UserVolumeType
     dailyVolume?: API.DayliVolume[],
+    isLoading: boolean,
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>({} as ReferralContextReturns);
@@ -113,11 +116,13 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
             defaultLocale: "en",
         },
         overwrite,
+        splashPage,
     } = props;
 
     const {
         data,
-        mutate: referralInfoMutate
+        mutate: referralInfoMutate,
+        isLoading,
     } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
         revalidateOnFocus: true,
     });
@@ -150,7 +155,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
 
         if (dailyVolume && (dailyVolume.length) > 0) {
             const now = formatYMDTime(new Date().toLocaleDateString());
-            const index = dailyVolume.findIndex((item) => {
+            const index = dailyVolume.findIndex((item: any) => {
                 const itemDate = item.date;
                 return itemDate === now;
             });
@@ -219,6 +224,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
                 onEnterAffiliatePage: enterAffiliatePage,
                 chartConfig,
                 overwrite,
+                splashPage,
+                isLoading,
             }}>
                 {props.children}
             </ReferralContext.Provider>

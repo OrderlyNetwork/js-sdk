@@ -56,6 +56,14 @@ export type AppLogos = Partial<{
   secondary: Logo;
 }>;
 
+export type ReferralProps = {
+  saveRefCode?: boolean,
+  onClickReferral?: () => void,
+  onBoundRefCode?: (success: boolean, error: any) => void,
+  refLink?: string,
+  slogan?: string,
+};
+
 export type CommonOrderlyAppState = {
   theme: any;
   brokerName?: string;
@@ -73,11 +81,7 @@ export type CommonOrderlyAppState = {
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 
-  referral?: {
-    saveRefCode?: boolean,
-    onClickReferral?: () => void,
-    onBoundRefCode?: (success: boolean, error: any) => void,
-  }
+  referral?: ReferralProps
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -98,11 +102,7 @@ type OrderlyAppProviderProps = CommonOrderlyAppState & {
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  referral?: {
-    saveRefCode?: boolean,
-    onClickReferral?: () => void,
-    onBoundRefCode?: (success: boolean, error: any) => void,
-  }
+  referral?: ReferralProps
 };
 
 export const OrderlyAppProvider: FC<

@@ -78,6 +78,7 @@ export interface InputProps
    * Whether to display the thousandth symbol
    */
   thousandSeparator?: boolean;
+  tooltipClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -253,7 +254,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Tooltip
-        className="orderly-text-base-contrast orderly-text-4xs"
+        className={cn("orderly-text-base-contrast orderly-text-4xs", props.tooltipClassName)}
         open={showTooltip}
         content={helpText ?? "input help text"}
         sideOffset={5}

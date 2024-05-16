@@ -56,8 +56,8 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
 
   /// local storage hidden check box
   const [visibleQuantity, setVisibleQuantity] = useLocalStorage(
-    "visible_quantity_key",
-    0
+    "visible_quantity",
+    1
   );
 
   /// session storage
@@ -92,6 +92,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
       order_price: "",
       order_quantity: "",
       trigger_price: "",
+      total: "",
       symbol,
     }));
 

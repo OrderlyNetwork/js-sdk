@@ -65,6 +65,7 @@ export const ChainIdSwtich: FC<Props> = (props) => {
 
   return (
     <div
+      id="orderly-chain-id-switch"
       className={cn(
         "orderly-bg-warning-darken orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-text-warning orderly-z-10 orderly-text-3xs orderly-font-semibold orderly-leading-[18px] orderly-p-[10px]",
         "desktop:orderly-h-[40px] desktop:orderly-text-sm desktop:orderly-flex desktop:orderly-items-center desktop:orderly-justify-center desktop:orderly-static"

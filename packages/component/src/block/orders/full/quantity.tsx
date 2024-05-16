@@ -288,7 +288,7 @@ const EditingState: FC<{
     >
       <div
         className={cn(
-          "orderly-flex orderly-min-w-[70px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
+          "orderly-flex orderly-min-w-[120px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold orderly-z-10",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,

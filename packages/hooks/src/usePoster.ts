@@ -10,12 +10,13 @@ import { SDKError } from "@orderly.network/types";
  * @example
  * ```tsx
  * const { ref, toDataURL, toBlob, download, copy } = usePoster({
- *  backgroundColor: "#0b8c70",
- * backgroundImg: "/images/poster_bg.png",
- * color: "rgba(255, 255, 255, 0.98)",
- * profitColor: "rgb(0,181,159)",
- * ...
+ *   backgroundColor: "#0b8c70",
+ *   backgroundImg: "/images/poster_bg.png",
+ *   color: "rgba(255, 255, 255, 0.98)",
+ *   profitColor: "rgb(0,181,159)",
+ *   // ...
  * });
+ * ```
  */
 export const usePoster = (
   /**
@@ -40,22 +41,14 @@ export const usePoster = (
 
   useEffect(() => {
     // Create the painter instance
-    if (target && !painterRef.current) {
-      painterRef.current = new PosterPainter(target, {
-        ratio: 1,
-        ...options,
-      });
-      painterRef.current.draw(
-        mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
-          { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
-          data
-        )
-      );
-    }
-  }, [target]);
+    if (target) {
+      if (!painterRef.current) {
+        painterRef.current = new PosterPainter(target, {
+          ratio: options?.ratio || 1,
+          ...options,
+        });
+      }
 
-  useEffect(() => {
-    if (painterRef.current) {
       painterRef.current.draw(
         mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
           { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
@@ -63,7 +56,18 @@ export const usePoster = (
         )
       );
     }
-  }, [data]);
+  }, [target, data]);
+
+  // useEffect(() => {
+  //   if (painterRef.current) {
+  //     painterRef.current.draw(
+  //       mergeDeepRight<Partial<DrawOptions>, DrawOptions>(
+  //         { layout: DefaultLayoutConfig, fontFamily: "Manrope" },
+  //         data
+  //       )
+  //     );
+  //   }
+  // }, [data]);
 
   const toDataURL = (type?: string, encoderOptions?: number) => {
     if (!target) {

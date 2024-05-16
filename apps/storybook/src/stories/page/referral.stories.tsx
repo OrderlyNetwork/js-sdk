@@ -52,6 +52,7 @@ export default {
             // messages,
           // }
         // }
+        splashPage={() => (<div style={{backgroundColor: "#FF0000"}}>df</div>)}
         overwrite={
           {
             ref: {

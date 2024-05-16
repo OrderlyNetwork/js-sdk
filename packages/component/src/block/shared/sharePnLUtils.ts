@@ -17,11 +17,22 @@
           { title: "Quantity", value: "0.123" },
         ],
       },
+      referral: {
+        code: "WRECKED",
+        link: "https://woo.org?size=100",
+        slogan: "Try WOOFi Pro now with:",
+      }
     }
 */
 
 import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
+
+export type ReferralType = {
+  code?: string,
+  link?: string,
+  slogan?: string,
+};
 
 export function getPnLPosterData(
   position: any,
@@ -31,7 +42,8 @@ export function getPnLPosterData(
   pnlType: PnLDisplayFormat,
   options: Set<ShareOptions>,
   baseDp?: number,
-  quoteDp?: number
+  quoteDp?: number,
+  referral?: ReferralType,
 ) {
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
@@ -127,6 +139,10 @@ export function getPnLPosterData(
     data["message"] = message;
   }
 
+  if (typeof referral !== 'undefined' && referral['code'] !== undefined) {
+    data["referral"] = referral;
+  }
+  
   return data;
 }
 
@@ -163,6 +179,7 @@ function formatShareTime(input: number | Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    hourCycle: "h24",
   };
 
   const formatter = new Intl.DateTimeFormat("en-US", options);

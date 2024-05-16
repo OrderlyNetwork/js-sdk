@@ -157,6 +157,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       {showGetTestUSDC && (
         <div className="orderly-mb-3 orderly-w-full">
           <Button
+            id="orderly-desktop-get-test-usdc"
             variant={"outlined"}
             fullWidth
             size={"small"}

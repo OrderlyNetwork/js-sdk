@@ -9,12 +9,7 @@ import {
 } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
-import {
-  SignatureDomain,
-  calculateStringHash,
-  isHex,
-  parseAccountId,
-} from "./utils";
+import { SignatureDomain, isHex, parseAccountId } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
@@ -335,10 +330,8 @@ export class Account {
   private async _checkAccountExist(
     address: string
   ): Promise<{ account_id: string; user_id: string } | null> {
-    const brokerId = this.configStore.get("brokerId");
-    const res = await this._simpleFetch(
-      `/v1/get_account?address=${address}&broker_id=${brokerId}`
-    );
+    // const brokerId = this.configStore.get("brokerId");
+    const res = await this._getAccountInfo();
 
     if (res.success) {
       return res.data;
@@ -423,12 +416,15 @@ export class Account {
     const keyPair = this.keyStore.generateKey();
     const publicKey = await keyPair.getPublicKey();
 
+    const timestamp = await this._getTimestampFromServer();
+
     const [message, toSignatureMessage] = generateAddOrderlyKeyMessage({
       publicKey,
       chainId: this.walletClient.chainId,
       primaryType,
       expiration,
       brokerId: this.configStore.get("brokerId"),
+      timestamp,
     });
 
     const address = this.stateValue.address;
@@ -600,6 +596,24 @@ export class Account {
     } else {
       throw new Error(res.message);
     }
+  }
+
+  private async _getTimestampFromServer() {
+    const res = await this._getAccountInfo();
+
+    if (res.success) {
+      return res.timestamp;
+    } else {
+      throw new SDKError("get timestamp error");
+    }
+  }
+
+  private async _getAccountInfo() {
+    const brokerId = this.configStore.get("brokerId");
+    const res = await this._simpleFetch(
+      `/v1/get_account?address=${this.address}&broker_id=${brokerId}`
+    );
+    return res;
   }
 
   private async _getSettleNonce() {
