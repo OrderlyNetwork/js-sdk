@@ -10,7 +10,7 @@ import {
 } from "@orderly.network/core";
 import { useAccountInstance } from "./useAccountInstance";
 import { useConfig } from "./useConfig";
-import { getTimestamp } from "@orderly.network/utils/src/window";
+import { getTimestamp } from "@orderly.network/utils";
 
 type HTTP_METHOD = "POST" | "PUT" | "DELETE";
 
