@@ -126,7 +126,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       switchChain?.({
         chainId: int2hex(Number(value.network_infos?.chain_id)),
       }).then(
-        () => {
+        (switched) => {
+          if (!switched) {
+            toast.error("Switch chain failed");
+            return;
+          }
           toast.success("Network switched");
           // clear data
           setQuantity("");

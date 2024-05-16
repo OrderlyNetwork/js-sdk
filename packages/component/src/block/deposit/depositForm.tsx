@@ -192,7 +192,11 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           // name: chain.network_infos?.name,
           label: value.network_infos?.name,
         })
-        .then(() => {
+        .then((switched) => {
+          if (!switched) {
+            toast.error("Switch chain failed");
+            return;
+          }
           // switch success，set tokens list
           setTokens(value?.token_infos ?? []);
 
