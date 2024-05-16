@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-custom",
-  "version": "0.3.3-mantle-usdce.1",
+  "version": "0.3.3-mantle-usdce.2",
   "main": "index.js",
   "license": "MIT",
   "private": true,

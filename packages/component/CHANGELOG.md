@@ -1,5 +1,20 @@
 # @orderly.network/react
 
+## 1.5.3-mantle-usdce.2
+
+### Patch Changes
+
+- update
+- 3a2dbd18: update
+- Updated dependencies
+- Updated dependencies [3a2dbd18]
+  - @orderly.network/trading-view@1.5.3-mantle-usdce.2
+  - @orderly.network/hooks@1.5.3-mantle-usdce.2
+  - @orderly.network/types@1.5.3-mantle-usdce.2
+  - @orderly.network/utils@1.5.3-mantle-usdce.2
+  - @orderly.network/core@1.5.3-mantle-usdce.2
+  - @orderly.network/net@1.5.3-mantle-usdce.2
+
 ## 1.5.3-mantle-usdce.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.3.3-mantle-usdce.2
+
+### Patch Changes
+
+- update
+- 3a2dbd18: update
+- Updated dependencies
+- Updated dependencies [3a2dbd18]
+  - @orderly.network/core@1.5.3-mantle-usdce.2
+
 ## 0.3.3-mantle-usdce.1
 
 ### Patch Changes

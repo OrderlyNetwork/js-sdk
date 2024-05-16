@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.3.3-mantle-usdce.2
+
+### Patch Changes
+
+- update
+- 3a2dbd18: update
+
 ## 0.3.3-mantle-usdce.1
 
 ### Patch Changes
