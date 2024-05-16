@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+- Updated dependencies [f7bfae80]
+  - @orderly.network/types@1.5.2
+  - @orderly.network/utils@1.5.2
+
 ## 3.3.2-alpha.0
 
 ### Patch Changes

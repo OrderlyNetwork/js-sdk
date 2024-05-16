@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+
 ## 0.3.2-alpha.0
 
 ### Patch Changes

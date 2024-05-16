@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+- Updated dependencies [f7bfae80]
+  - @orderly.network/types@1.5.2
+
 ## 1.5.2-alpha.0
 
 ### Patch Changes
