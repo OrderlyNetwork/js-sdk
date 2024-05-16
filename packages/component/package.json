@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "1.5.2-mantle-usdce.2",
+  "version": "1.5.2-mantle-usdce.3",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",

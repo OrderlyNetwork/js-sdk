@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.2-mantle-usdce.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.2-mantle-usdce.3
+  - @orderly.network/hooks@1.5.2-mantle-usdce.3
+  - @orderly.network/utils@1.5.2-mantle-usdce.3
+
 ## 1.5.2-mantle-usdce.2
 
 ### Patch Changes

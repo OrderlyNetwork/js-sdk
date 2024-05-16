@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "3.3.2-mantle-usdce.2",
+  "version": "3.3.2-mantle-usdce.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

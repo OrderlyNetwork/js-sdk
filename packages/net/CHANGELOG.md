@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.5.2-mantle-usdce.3
+
+### Patch Changes
+
+- update
+
 ## 1.5.2-mantle-usdce.2
 
 ### Patch Changes
