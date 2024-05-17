@@ -213,6 +213,7 @@ export const TPSLForm: FC<Props> = (props) => {
               )}
             </div>
             <Slider
+              id="orderly-tp_sl-slider"
               min={0}
               color={"primary"}
               max={maxQtyNumber}

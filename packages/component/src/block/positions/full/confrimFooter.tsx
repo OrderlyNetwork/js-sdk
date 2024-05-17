@@ -10,10 +10,10 @@ export const ConfirmFooter: FC<{
     <div id="orderly-positions-confrim-fotter" className="orderly-grid orderly-grid-cols-[1fr_2fr] orderly-mt-5">
       <div />
       <div className="orderly-flex orderly-gap-2">
-        <Button color={"tertiary"} fullWidth onClick={onCancel}>
+        <Button id="orderly-cancel-button" color={"tertiary"} fullWidth onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} fullWidth loading={submitting}>
+        <Button id="orderly-confirm-button" onClick={onConfirm} fullWidth loading={submitting}>
           Confirm
         </Button>
       </div>

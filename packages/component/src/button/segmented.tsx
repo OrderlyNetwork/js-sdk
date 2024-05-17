@@ -85,6 +85,7 @@ const _Button = ({
         isActive && activeClassName,
         disabled && disabledClassName
       )}
+      data-state={isActive ? "active" : "inactive"}
     >
       {label}
     </button>
