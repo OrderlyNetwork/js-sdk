@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+
 ## 1.5.3-alpha.0
 
 ### Patch Changes
