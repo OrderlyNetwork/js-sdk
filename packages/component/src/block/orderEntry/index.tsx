@@ -558,6 +558,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           />
 
           <Slider
+            id="orderly-order-entry-slider"
             color={side === OrderSide.BUY ? "buy" : "sell"}
             markLabelVisible={false}
             min={0}
