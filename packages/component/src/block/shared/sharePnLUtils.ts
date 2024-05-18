@@ -20,7 +20,7 @@
       referral: {
         code: "WRECKED",
         link: "https://woo.org?size=100",
-        slogan: "Try WOOFi Pro now with:",
+        slogan: "Try Orderly now with:",
       }
     }
 */
