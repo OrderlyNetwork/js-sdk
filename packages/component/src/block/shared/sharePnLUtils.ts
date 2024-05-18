@@ -1,10 +1,10 @@
 /*
 {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -19,7 +19,7 @@
       },
       referral: {
         code: "WRECKED",
-        link: "https://woo.org?size=100",
+        link: "https://orderly.network",
         slogan: "Try Orderly now with:",
       }
     }
