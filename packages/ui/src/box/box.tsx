@@ -2,7 +2,6 @@ import React from "react";
 
 import { layoutVariants } from "../layout/layout";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "../helpers/cn";
 import { parseSizeProps } from "../helpers/parse-props";
 import { tv, VariantProps } from "tailwind-variants";
 import { shadowVariants } from "../layout/shadow";

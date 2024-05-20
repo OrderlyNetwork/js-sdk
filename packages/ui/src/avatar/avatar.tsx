@@ -1,0 +1,105 @@
+import * as React from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { tv, type VariantProps } from "tailwind-variants";
+
+const avatarVariants = tv(
+  {
+    slots: {
+      root: "oui-relative oui-flex oui-shrink-0 oui-overflow-hidden oui-rounded-full",
+      image: "oui-aspect-square oui-h-full oui-w-full",
+      fallback:
+        "oui-flex oui-h-full oui-w-full oui-items-center oui-justify-center oui-rounded-full oui-bg-base-2",
+    },
+    variants: {
+      size: {
+        sm: {
+          root: "oui-w-6 oui-h-6",
+        },
+        md: {
+          root: "oui-w-8 oui-h-8",
+        },
+        lg: {
+          root: "oui-w-10 oui-h-10",
+        },
+      },
+    },
+    defaultVariants: {
+      size: "sm",
+    },
+  }
+  // {
+  //   twMerge: true,
+  // }
+);
+
+const AvatarBase = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &
+    VariantProps<typeof avatarVariants>
+>(({ className, size, ...props }, ref) => {
+  const { root } = avatarVariants({ size });
+  return (
+    <AvatarPrimitive.Root
+      ref={ref}
+      {...props}
+      className={root({ className })}
+    />
+  );
+});
+AvatarBase.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => {
+  const { image } = avatarVariants();
+  return (
+    <AvatarPrimitive.Image
+      ref={ref}
+      className={image({ className })}
+      {...props}
+    />
+  );
+});
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => {
+  const { fallback } = avatarVariants({ className });
+  return (
+    <AvatarPrimitive.Fallback ref={ref} className={fallback()} {...props} />
+  );
+});
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+type AvatarProps = React.ComponentProps<typeof AvatarBase> &
+  VariantProps<typeof avatarVariants> & {
+    src?: string;
+    alt?: string;
+    fallback?: React.ReactNode;
+    delayMs?: number;
+    onLoadingStatusChange?: AvatarPrimitive.AvatarImageProps["onLoadingStatusChange"];
+  };
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  AvatarProps
+>((props, ref) => {
+  const { size, src, fallback, delayMs, alt, onLoadingStatusChange, ...rest } =
+    props;
+  return (
+    <AvatarBase {...rest} ref={ref} size={size}>
+      <AvatarImage
+        src={src}
+        onLoadingStatusChange={onLoadingStatusChange}
+        alt={alt}
+      />
+      {typeof fallback !== "undefined" && (
+        <AvatarFallback delayMs={delayMs}>{fallback}</AvatarFallback>
+      )}
+    </AvatarBase>
+  );
+});
+
+export { AvatarBase, AvatarImage, AvatarFallback, Avatar };

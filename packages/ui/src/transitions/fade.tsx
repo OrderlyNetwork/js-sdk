@@ -1,6 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { FC, PropsWithChildren } from "react";
-import { cn, cnBase } from "tailwind-variants";
+import { cnBase } from "tailwind-variants";
 
 export interface FadeProps extends React.HTMLAttributes<HTMLDivElement> {
   in: boolean;

@@ -88,17 +88,17 @@ export const Sizes: Story = {
   },
 };
 
-export const IconButton: Story = {
-  render: (args) => {
-    return (
-      <Flex gap={2} itemAlign={"center"}>
-        <Button {...args} leading={<Close color="white" size={12} />}>
-          Left icon
-        </Button>
-        <Button {...args} trailing={<Close color="white" size={12} />}>
-          Right icon
-        </Button>
-      </Flex>
-    );
-  },
-};
+// export const IconButton: Story = {
+//   render: (args) => {
+//     return (
+//       <Flex gap={2} itemAlign={"center"}>
+//         <Button {...args} leading={<Close color="white" size={12} />}>
+//           Left icon
+//         </Button>
+//         <Button {...args} trailing={<Close color="white" size={12} />}>
+//           Right icon
+//         </Button>
+//       </Flex>
+//     );
+//   },
+// };

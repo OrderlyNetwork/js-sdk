@@ -16,7 +16,7 @@ const buttonVariants = tv({
   variants: {
     ...shadowVariants.variants,
     variant: {
-      // text: "oui-bg-transparent",
+      text: "oui-bg-transparent",
       outlined: "oui-border",
       contained: "oui-text-white",
       gradient: "oui-bg-gradient-to-r oui-from-slate-100 oui-to-slate-600",

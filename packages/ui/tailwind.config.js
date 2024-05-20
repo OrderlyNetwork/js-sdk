@@ -15,7 +15,7 @@ module.exports = withTV({
         ["var(--oui-font-size-3xs, 0.625rem)",'0.625rem'], // 10px
       "2xs":
         ["var(--oui-font-size-2xs, 0.75rem)",'1.125rem'], // 12px
-      xs: ["var(--oui-font-size-xs, calc(0.875rem - 3px))",'1.25rem'], // 13px
+      xs: ["var(--oui-font-size-xs, calc(0.875rem - 1px))",'1.25rem'], // 13px
       sm: ["var(--oui-font-size-sm, 	0.875rem)",'1.25rem'], // 14px
       base: ["var(--oui-font-size-base, 1rem)",'1.5rem'], // 16px
       lg: ["var(--oui-font-size-lg, 1.125rem)",'1.625rem'], // 18px
@@ -45,6 +45,9 @@ module.exports = withTV({
     extend: {
       spacing:{
         '13': '3.25rem',
+        'sm': '22.5rem',
+        'md': '26.5rem',
+        'lg': '33.75rem',
       },
       colors:{
         primary: {
@@ -107,6 +110,19 @@ module.exports = withTV({
             36: "rgb(var(--oui-color-base-foreground) / 0.36)",
             20: "rgb(var(--oui-color-base-foreground) / 0.2)",
             12: "rgb(var(--oui-color-base-foreground) / 0.12)",
+          },
+        },
+        trade: {
+          loss: {
+            DEFAULT: "rgb(var(--oui-color-trading-loss) / <alpha-value>)",
+            contrast:
+              "rgb(var(--oui-color-trading-loss-contrast) / <alpha-value>)",
+          },
+
+          profit: {
+            DEFAULT: "rgb(var(--oui-color-trading-profit) / <alpha-value>)",
+            contrast:
+              "rgb(var(--oui-color-trading-profit-contrast) / <alpha-value>)",
           },
         },
       }

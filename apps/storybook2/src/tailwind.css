@@ -49,9 +49,9 @@
 
     --oui-color-base-foreground: 255 255 255;
 
-    --oui-color-trading-loss: 255 103 194;
+    --oui-color-trading-loss: 217 45 107;
     --oui-color-trading-loss-contrast: 255 255 255;
-    --oui-color-trading-profit: 0 181 159;
+    --oui-color-trading-profit: 0 134 118;
     --oui-color-trading-profit-contrast: 255 255 255;
   }
 }

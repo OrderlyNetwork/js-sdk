@@ -4,7 +4,7 @@ import { Flex, Text } from '@orderly.network/ui';
 
 
 const meta = {
-    title: 'Base/Text',
+    title: 'Base/Typpography/Text',
     component: Text,
     parameters: {
       // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -21,11 +21,19 @@ const meta = {
             },
             options: ['3xs', '2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl'],
           },
+          color:{
+            control: {
+              type: "inline-radio",
+            },
+            options: ['primary', 'secondary', 'tertiary', 'warning', 'danger', 'success', 'buy', 'sell','neutral','profit','lose'],
+          },
+          
     },
     // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     args: { 
       size: 'base',
       weight:'regular',
+      color:'primary',
      },
   } satisfies Meta<typeof Text>;
   

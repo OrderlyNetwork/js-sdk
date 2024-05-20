@@ -24,24 +24,37 @@ const textVariants = tv({
       demi: ["oui-font-semibold"],
       bold: ["oui-font-bold"],
     },
-    color: {},
+    color: {
+      inherit: "oui-text-inherit",
+      neutral: "oui-text-base-contrast-54",
+      primary: "oui-text-primary",
+      secondary: "oui-text-secondary",
+      tertiary: "oui-text-tertiary",
+      // quaternary: "oui-text-gray-300",
+      warning: "oui-text-warning",
+      danger: "oui-text-danger",
+      success: "oui-text-success",
+      buy: "oui-text-trade-profit",
+      sell: "oui-text-trade-loss",
+      lose: "oui-text-trade-loss",
+      profit: "oui-text-trade-profit",
+    },
   },
-  //   compoundVariants: [
-  //     {
-  //       size: "3xs",
-  //       weight: "regular",
-  //       className: ["oui-text-3xs", "oui-font-normal"],
-  //     },
-  //   ],
+
   defaultVariants: {
     // size: "base",
     weight: "regular",
   },
 });
 
-type TextElement = React.ElementRef<"span">;
+export type TextElement = React.ElementRef<"span">;
 interface CommonTextProps extends VariantProps<typeof textVariants> {
   asChild?: boolean;
+  /**
+   * If true, the text will be copied when clicked.
+   * TODO: implement copy
+   */
+  copyable?: boolean;
 }
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<
   "span",

@@ -16,9 +16,9 @@ const inputs = tv({
       "placeholder:oui-text-base-contrast-20",
       "placeholder:oui-text-xs",
       "oui-tabular-nums",
-      "placeholder:oui-text-base-contrast-20",
       "oui-text-white",
       "autofill:oui-bg-transparent",
+      "oui-Input",
     ],
     box: [
       "oui-rounded",
@@ -29,6 +29,7 @@ const inputs = tv({
       "oui-outline-offset-0",
       "oui-outline-1",
       "focus-within:oui-outline-primary",
+      "oui-InputRoot",
     ],
     additional: [
       "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",
@@ -37,22 +38,22 @@ const inputs = tv({
   variants: {
     size: {
       mini: {
-        input: ["oui-h-7", "oui-text-2xs"],
+        input: ["oui-h-7", "oui-text-2xs", "placeholder:oui-text-2xs"],
         box: ["oui-h-7"],
         additional: ["oui-text-2xs"],
       },
       medium: {
-        input: ["oui-h-8", "oui-text-2xs"],
+        input: ["oui-h-8", "oui-text-2xs", "placeholder:oui-text-2xs"],
         box: ["oui-h-8"],
         additional: ["oui-text-sm"],
       },
       default: {
-        input: ["oui-h-10", "oui-text-sm"],
+        input: ["oui-h-10", "oui-text-sm", "placeholder:oui-text-sm"],
         box: ["oui-h-10 oui-rounded-md"],
         additional: ["oui-text-sm"],
       },
       large: {
-        input: ["oui-h-12", "oui-text-base"],
+        input: ["oui-h-12", "oui-text-base", "placeholder:oui-text-base"],
         box: ["oui-h-12 oui-rounded-md"],
         additional: ["oui-text-sm"],
       },

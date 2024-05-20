@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
 import {
-  BaseIcon,
+  Icon,
   Box,
   CheckIcon,
   CheckedCircleFillIcon,
@@ -19,8 +19,8 @@ import {
 } from "@orderly.network/ui";
 
 const meta = {
-  title: "Base/Icon",
-  component: BaseIcon,
+  title: "Base/Icon/Icons",
+  component: Icon,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
@@ -61,7 +61,7 @@ const meta = {
     opacity: 1,
     size: 24,
   },
-} satisfies Meta<typeof BaseIcon>;
+} satisfies Meta<typeof Icon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -88,3 +88,6 @@ export const Icons: Story = {
     );
   },
 };
+
+
+

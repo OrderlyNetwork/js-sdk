@@ -6,6 +6,15 @@ export { Spinner } from "./spinner";
 export { Input, inputFormatter, InputAdditional, TextField } from "./input";
 export { Checkbox } from "./checkbox";
 export { Switch } from "./switch";
+export * from "./tooltip";
+export * from "./table";
+export * from "./scrollarea";
+export * from "./dialog";
+export * from "./divider";
+export * from "./tabs";
+export * from "./select";
+export * from "./popover";
+export * from "./card";
 
 export * from "./icon";
 

@@ -1,4 +1,4 @@
-export { BaseIcon } from "./baseIcon";
+import { BaseIcon } from "./baseIcon";
 export { CloseIcon } from "./close";
 export { CheckIcon } from "./check";
 export { ChevronDownIcon } from "./chevronDown";
@@ -21,3 +21,19 @@ export { CircleOutlinedIcon } from "./circleOutlined";
 export { SquareOutlinedIcon } from "./squareOutlined";
 export { ExclamationFillIcon } from "./exclamationFill";
 export { QuestionFillIcon } from "./questionFill";
+
+export { CoinIcon } from "./coinIcon";
+export { ChainIcon } from "./chainIcon";
+export { WalletIcon } from "./walletIcon";
+import { CombineIcon } from "./combine";
+
+type IconType = typeof BaseIcon & {
+  combine: typeof CombineIcon;
+};
+
+const Icon = BaseIcon as IconType;
+Icon.combine = CombineIcon;
+
+export { Icon };
+
+export type { IconType };
