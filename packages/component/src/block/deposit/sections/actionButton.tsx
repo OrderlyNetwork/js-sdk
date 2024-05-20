@@ -1,5 +1,4 @@
 import Button from "@/button";
-import { StatusGuardButton } from "@/button/statusGuardButton";
 import { API, CurrentChain } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
 import { ApproveButton } from "./approveButton";
@@ -8,6 +7,7 @@ import { modal } from "@/modal";
 import { useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { DepositContext } from "../DepositProvider";
+import { StatusGuardButton } from "@/block/accountStatus";
 
 export interface ActionButtonProps {
   chains: API.NetworkInfos[];

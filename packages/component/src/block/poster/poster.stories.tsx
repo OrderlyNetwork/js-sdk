@@ -16,11 +16,11 @@ const POSTERS = [
     lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -44,11 +44,11 @@ const POSTERS = [
     lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -72,11 +72,11 @@ const POSTERS = [
     lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -100,11 +100,11 @@ const POSTERS = [
     lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -133,11 +133,11 @@ const meta: Meta = {
     lossColor: "rgb(255,103,194)",
     brandColor: "rgb(0,181,159)",
     data: {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -152,8 +152,8 @@ const meta: Meta = {
       },
       referral: {
         code: "WRECKED",
-        link: "https://woo.org?size=100",
-        slogan: "Try WOOFi Pro now with:",
+        link: "https://Orderly.org?size=100",
+        slogan: "Try Orderly now with:",
       },
     },
     layout: {},

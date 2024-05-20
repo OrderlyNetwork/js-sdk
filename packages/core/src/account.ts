@@ -9,7 +9,7 @@ import {
 } from "./wallet/adapter";
 import { Signer } from "./signer";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, isHex, parseAccountId } from "./utils";
+import { SignatureDomain, getTimestamp, isHex, parseAccountId } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
@@ -346,7 +346,7 @@ export class Account {
       return Promise.reject("walletClient is undefined");
     }
 
-    const nonce = await this._getRegisterationNonce();
+    const { nonce, timestamp } = await this._getRegisterationNonce();
 
     const address = this.stateValue.address;
 
@@ -358,6 +358,7 @@ export class Account {
       registrationNonce: nonce,
       chainId: this.walletClient.chainId,
       brokerId: this.configStore.get("brokerId"),
+      timestamp,
     });
 
     const signatured = await this.signTypedData(toSignatureMessage);
@@ -505,7 +506,7 @@ export class Account {
 
     //
 
-    const signature = await this.signer.sign(payload);
+    const signature = await this.signer.sign(payload, getTimestamp());
 
     const res = await this._simpleFetch(url, {
       method: "POST",
@@ -592,7 +593,10 @@ export class Account {
     });
 
     if (res.success) {
-      return res.data?.registration_nonce;
+      return {
+        nonce: res.data?.registration_nonce,
+        timestamp: res.timestamp,
+      };
     } else {
       throw new Error(res.message);
     }

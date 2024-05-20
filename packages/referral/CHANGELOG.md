@@ -1,5 +1,45 @@
 # @orderly.network/referral
 
+## 1.5.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+- Updated dependencies [e8bc10c4]
+  - @orderly.network/react@1.5.4
+  - @orderly.network/hooks@1.5.4
+  - @orderly.network/utils@1.5.4
+
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+- Updated dependencies
+  - @orderly.network/react@1.5.4-alpha.0
+  - @orderly.network/hooks@1.5.4-alpha.0
+  - @orderly.network/utils@1.5.4-alpha.0
+
+## 1.5.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+- Updated dependencies [77c9c09b]
+  - @orderly.network/react@1.5.3
+  - @orderly.network/hooks@1.5.3
+  - @orderly.network/utils@1.5.3
+
+## 1.5.3-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/react@1.5.3-alpha.0
+  - @orderly.network/hooks@1.5.3-alpha.0
+  - @orderly.network/utils@1.5.3-alpha.0
+
 ## 1.5.2
 
 ### Patch Changes

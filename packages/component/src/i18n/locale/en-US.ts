@@ -28,7 +28,9 @@ export const en = {
   
   "modal.title.getTestUSDC": "Get test USDC",
   "modal.content.getTestUSDC": "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
-  "modal.content.settlePnl": "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance."
+  "modal.content.settlePnl": "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
+
+  "ui.calendar.selecet-date": "select date"
 }
 
 export type EN = typeof en;

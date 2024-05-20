@@ -35,18 +35,20 @@ export type SignedMessagePayload = {
  *  ```
  */
 export interface Signer {
-  sign: (data: MessageFactor) => Promise<SignedMessagePayload>;
+  sign: (data: MessageFactor, timestamp?: number) => Promise<SignedMessagePayload>;
   signText: (text: string) => Promise<{ signature: string; publicKey: string }>;
 }
 
 export class BaseSigner implements Signer {
   constructor(private readonly keyStore: OrderlyKeyStore) {}
 
-  async sign(message: MessageFactor): Promise<SignedMessagePayload> {
-    const timestamp = Date.now().toString();
+  async sign(message: MessageFactor, timestamp = Date.now()): Promise<SignedMessagePayload> {
+    // const timestamp = Date.now().toString();
     // const url = message.url.split(message.baseUrl)[1];
 
-    let msgStr = [timestamp, message.method.toUpperCase(), message.url].join(
+    const _timestamp = (timestamp || Date.now()).toString();
+
+    let msgStr = [_timestamp, message.method.toUpperCase(), message.url].join(
       ""
     );
 
@@ -58,7 +60,7 @@ export class BaseSigner implements Signer {
 
     return {
       "orderly-key": publicKey,
-      "orderly-timestamp": timestamp,
+      "orderly-timestamp": _timestamp,
       "orderly-signature": signature,
     };
   }

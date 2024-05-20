@@ -1,5 +1,37 @@
 # @orderly.network/core
 
+## 1.5.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+- Updated dependencies [e8bc10c4]
+  - @orderly.network/types@1.5.4
+
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+- Updated dependencies
+  - @orderly.network/types@1.5.4-alpha.0
+
+## 1.5.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+- Updated dependencies [77c9c09b]
+  - @orderly.network/types@1.5.3
+
+## 1.5.3-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/types@1.5.3-alpha.0
+
 ## 1.5.2
 
 ### Patch Changes

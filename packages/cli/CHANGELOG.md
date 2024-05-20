@@ -1,5 +1,37 @@
 # @orderly.network/cli
 
+## 0.3.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+- Updated dependencies [e8bc10c4]
+  - @orderly.network/core@1.5.4
+
+## 0.3.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+- Updated dependencies
+  - @orderly.network/core@1.5.4-alpha.0
+
+## 0.3.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+- Updated dependencies [77c9c09b]
+  - @orderly.network/core@1.5.3
+
+## 0.3.3-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/core@1.5.3-alpha.0
+
 ## 0.3.2
 
 ### Patch Changes
