@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+
 ## 1.5.3
 
 ### Patch Changes

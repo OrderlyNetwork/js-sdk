@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+- Updated dependencies
+  - @orderly.network/types@1.5.4-alpha.0
+
 ## 1.5.3
 
 ### Patch Changes

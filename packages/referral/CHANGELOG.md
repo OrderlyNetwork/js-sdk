@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+- Updated dependencies
+  - @orderly.network/react@1.5.4-alpha.0
+  - @orderly.network/hooks@1.5.4-alpha.0
+  - @orderly.network/utils@1.5.4-alpha.0
+
 ## 1.5.3
 
 ### Patch Changes
