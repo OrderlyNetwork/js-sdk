@@ -1,5 +1,17 @@
 # storybook
 
+## 1.3.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+- Updated dependencies [e8bc10c4]
+  - @orderly.network/react@1.5.4
+  - @orderly.network/core@1.5.4
+  - @orderly.network/hooks@1.5.4
+  - @orderly.network/web3-onboard@1.5.4
+  - @orderly.network/web3-modal@1.5.4
+
 ## 1.3.4-alpha.0
 
 ### Patch Changes

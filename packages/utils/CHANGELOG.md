@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.5.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+
 ## 1.5.4-alpha.0
 
 ### Patch Changes

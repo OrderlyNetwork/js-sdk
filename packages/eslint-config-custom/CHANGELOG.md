@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+
 ## 0.3.4-alpha.0
 
 ### Patch Changes
