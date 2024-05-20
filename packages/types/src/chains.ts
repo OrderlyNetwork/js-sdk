@@ -530,27 +530,27 @@ export const TestnetChains = [
       },
     ],
   },
-  {
-    network_infos: {
-      name: "Mantle Sepolia",
-      shortName: "Mantle Sepolia",
-      public_rpc_url: "https://rpc.sepolia.mantle.xyz/",
-      chain_id: 5003,
-      currency_symbol: "MNT",
-      bridge_enable: true,
-      mainnet: false,
-      explorer_base_url: "https://sepolia.mantlescan.xyz/",
-      est_txn_mins: null,
-    },
-    token_infos: [
-      {
-        symbol: "USDC",
-        address: "0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080",
-        decimals: 6,
-        display_name: "USDC.e",
-      },
-    ],
-  },
+  // {
+  //   network_infos: {
+  //     name: "Mantle Sepolia",
+  //     shortName: "Mantle Sepolia",
+  //     public_rpc_url: "https://rpc.sepolia.mantle.xyz/",
+  //     chain_id: 5003,
+  //     currency_symbol: "MNT",
+  //     bridge_enable: true,
+  //     mainnet: false,
+  //     explorer_base_url: "https://sepolia.mantlescan.xyz/",
+  //     est_txn_mins: null,
+  //   },
+  //   token_infos: [
+  //     {
+  //       symbol: "USDC",
+  //       address: "0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080",
+  //       decimals: 6,
+  //       display_name: "USDC.e",
+  //     },
+  //   ],
+  // },
   // {
   //   network_infos: {
   //     name: "Arbitrum Goerli",
