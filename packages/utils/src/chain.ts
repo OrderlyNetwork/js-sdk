@@ -1,7 +1,4 @@
-import {
-  ARBITRUM_TESTNET_CHAINID,
-  MANTLE_TESTNET_CHAINID,
-} from "@orderly.network/types";
+import { ARBITRUM_TESTNET_CHAINID } from "@orderly.network/types";
 
 export const hex2int = (chainId: string): number => parseInt(chainId);
 export const int2hex = (chainId: number): string => `0x${chainId.toString(16)}`;
@@ -21,7 +18,7 @@ export const praseChainIdToNumber = (chainId: string | number): number => {
 };
 
 export const isTestnet = (chainId: number) => {
-  const testnetIds = [ARBITRUM_TESTNET_CHAINID, MANTLE_TESTNET_CHAINID];
+  const testnetIds = [ARBITRUM_TESTNET_CHAINID];
 
   return testnetIds.includes(chainId);
 };
