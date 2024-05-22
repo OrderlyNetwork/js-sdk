@@ -1,3 +1,4 @@
+import type { EIP1193Provider } from '@web3-onboard/common'
 import { createContext, useContext } from "react";
 
 export type ConnectedChain = {
@@ -13,7 +14,7 @@ export type WalletAccount = {
 export interface WalletState {
   label: string;
   icon: string;
-  provider: any;
+  provider: EIP1193Provider;
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;
@@ -26,7 +27,7 @@ export interface WalletConnectorContextState {
   setChain: (options: { chainId: string | number }) => Promise<any>;
   chains: any[];
   // switchChain: (options: { chainId: string }) => Promise<any>;
-  wallet: any;
+  wallet: WalletState;
   connectedChain: ConnectedChain | null;
 
   settingChain: boolean;
