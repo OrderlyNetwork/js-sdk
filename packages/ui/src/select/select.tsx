@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./selectPrimitive";
-import { type SizeType } from "../helpers/sizeType";
 
 export type SelectProps = SelectPrimitive.SelectProps & {
   size?: "md" | "sm" | "lg";

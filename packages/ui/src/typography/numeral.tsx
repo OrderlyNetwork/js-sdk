@@ -2,7 +2,6 @@ import React, { FC, useMemo } from "react";
 import { Text, TextProps } from "./text";
 import { RoundingMode, parseNumber } from "./utils";
 import { cnBase } from "tailwind-variants";
-import { Decimal } from "@orderly.network/utils";
 
 export type NumeralRule = "percentages" | "price" | "human";
 
@@ -153,7 +152,18 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return child;
     }
 
-    const surfixEle = surfix ? surfix : unit ? <span>{unit}</span> : undefined;
+    const surfixEle = surfix ? (
+      typeof surfix === "string" ? (
+        <span>{surfix}</span>
+      ) : (
+        surfix
+      )
+    ) : undefined;
+
+    const unitEle = unit ? (
+      <span className="orderly-numeral-unit">{unit}</span>
+    ) : undefined;
+
     const prefixEle = prefix ? (
       prefix
     ) : cureency ? (
@@ -165,6 +175,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
         {prefixEle}
         {icon}
         <span>{child}</span>
+        {unitEle}
         {surfixEle}
       </>
     );

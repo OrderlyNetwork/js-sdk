@@ -13,11 +13,14 @@
     "chromatic": "npx chromatic --project-token=chpt_0917a801a16d9f2"
   },
   "dependencies": {
+    "@orderly.network/chart": "workspace:^",
+    "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
-    "tailwind-variants": "^0.2.1"
+    "tailwind-variants": "^0.2.1",
+    "tsconfig": "workspace:^"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.3.3",

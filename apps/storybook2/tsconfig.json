@@ -21,7 +21,9 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@orderly.network/ui": ["../../packages/ui/src"],
-    },
+      "@orderly.network/portfolio": ["../../packages/portfolio/src"],
+      "@orderly.network/chart": ["../../packages/chart/src"],
+    }
   },
   "include": ["src"]
 }

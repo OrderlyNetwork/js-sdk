@@ -1,3 +1,5 @@
+export { Statistic, StatisticLabel, statisticVariants } from "./statistic";
+
 import { FormattedText } from "./formatted";
 import { Numeral } from "./numeral";
 

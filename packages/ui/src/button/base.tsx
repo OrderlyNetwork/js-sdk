@@ -17,6 +17,7 @@ export interface BaseButtonProps
   trailing?: React.ReactNode;
   asChild?: boolean;
   size: SizeType;
+  icon?: React.ReactElement;
   as?: "button" | "a";
 }
 
@@ -29,20 +30,44 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
       leading,
       trailing,
       size,
+      icon,
       ...rest
     } = props;
     const Comp = asChild ? Slot : "button";
 
+    const iconElement = useMemo(() => {
+      return icon
+        ? React.cloneElement(icon, {
+            size:
+              size === "xs"
+                ? 12
+                : size === "sm"
+                ? 12
+                : size === "md"
+                ? 14
+                : size === "lg"
+                ? 16
+                : size === "xl"
+                ? 18
+                : 12,
+            className: "oui-text-inherit",
+            opacity: loading ? 0 : 1,
+          })
+        : null;
+    }, [size, icon]);
+
     const content = useMemo(() => {
-      if (!leading && !trailing) return children;
+      if (!leading && !trailing && !iconElement) return children;
+
       return (
         <Flex as="span" itemAlign={"center"} className="oui-space-x-1">
           {leading}
+          {iconElement}
           <span>{children}</span>
           {trailing}
         </Flex>
       );
-    }, [children, leading, trailing]);
+    }, [children, leading, trailing, iconElement]);
 
     return (
       <Comp {...rest} ref={forwardedRef}>

@@ -22,11 +22,11 @@ const buttonVariants = tv({
       gradient: "oui-bg-gradient-to-r oui-from-slate-100 oui-to-slate-600",
     },
     size: {
-      xs: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"],
-      sm: ["oui-px-3", "oui-rounded", "oui-h-7", "oui-text-2xs"],
-      md: ["oui-px-3", "oui-rounded-md", "oui-h-8", , "oui-text-sm"],
-      default: ["oui-px-3", "oui-rounded-md", "oui-h-10", "oui-text-base"],
-      lg: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"],
+      xs: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"], //24px
+      sm: ["oui-px-3", "oui-rounded", "oui-h-7", "oui-text-2xs"], //28px
+      md: ["oui-px-3", "oui-rounded-md", "oui-h-8", , "oui-text-sm"], //32px
+      lg: ["oui-px-3", "oui-rounded-md", "oui-h-10", "oui-text-base"], //40px
+      xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
     },
     color: {
       primary: ["hover:oui-bg-primary/70"],
@@ -34,7 +34,6 @@ const buttonVariants = tv({
       danger: [],
       warning: [],
       gray: [],
-      darkGray: [],
     },
     fullWidth: {
       true: "oui-w-full",
@@ -70,11 +69,11 @@ const buttonVariants = tv({
       color: "gray",
       className: ["oui-bg-base-2", "oui-text-base-contrast"],
     },
-    {
-      variant: "contained",
-      color: "darkGray",
-      className: ["oui-bg-base-4", "oui-text-danger-contrast"],
-    },
+    // {
+    //   variant: "contained",
+    //   color: "darkGray",
+    //   className: ["oui-bg-base-4", "oui-text-danger-contrast"],
+    // },
     // outlined
     {
       variant: "outlined",
@@ -101,11 +100,11 @@ const buttonVariants = tv({
       color: "gray",
       className: ["oui-border-base-2", "oui-text-base"],
     },
-    {
-      variant: "outlined",
-      color: "darkGray",
-      className: ["oui-border-base-4", "oui-text-base"],
-    },
+    // {
+    //   variant: "outlined",
+    //   color: "darkGray",
+    //   className: ["oui-border-base-4", "oui-text-base"],
+    // },
     {
       variant: "contained",
       disabled: true,
@@ -113,7 +112,7 @@ const buttonVariants = tv({
     },
   ],
   defaultVariants: {
-    size: "default",
+    size: "lg",
     variant: "contained",
     color: "primary",
     // elevation: "none",

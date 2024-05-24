@@ -29,7 +29,7 @@ const inputs = tv({
       "oui-outline-offset-0",
       "oui-outline-1",
       "focus-within:oui-outline-primary",
-      "oui-InputRoot",
+      "orderly-input-root",
     ],
     additional: [
       "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",

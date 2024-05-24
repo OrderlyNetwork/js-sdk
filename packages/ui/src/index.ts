@@ -1,7 +1,8 @@
 export { Button } from "./button";
 export { Box } from "./box";
+export { Grid } from "./grid";
 export { Flex } from "./flex";
-export { Text } from "./typography";
+export { Text, Statistic, StatisticLabel } from "./typography";
 export { Spinner } from "./spinner";
 export { Input, inputFormatter, InputAdditional, TextField } from "./input";
 export { Checkbox } from "./checkbox";
@@ -15,6 +16,7 @@ export * from "./tabs";
 export * from "./select";
 export * from "./popover";
 export * from "./card";
+export * from "./pickers";
 
 export * from "./icon";
 

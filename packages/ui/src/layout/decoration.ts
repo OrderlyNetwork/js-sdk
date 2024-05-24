@@ -1,16 +1,36 @@
+export type Gradient = {
+  start: string;
+  end: string;
+  degree: number;
+  stops: number;
+};
+
 export const decorationVariants = {
   variants: {
     border: {
-      //   sm: "oui-shadow-sm",
-      //   base: "oui-shadow",
-      //   md: "oui-shadow-md",
-      //   lg: "oui-shadow-lg",
-      //   xl: "oui-shadow-xl",
-      //   "2xl": "oui-shadow-2xl",
-      //   inner: "oui-shadow-inner",
-      //   none: "oui-shadow-none",
       true: "oui-border",
       false: "oui-border-none",
+    },
+    r: {
+      none: "oui-rounded-none",
+      sm: "oui-rounded-sm",
+      base: "oui-rounded",
+      md: "oui-rounded-md",
+      lg: "oui-rounded-lg",
+      xl: "oui-rounded-xl",
+      "2xl": "oui-rounded-2xl",
+      full: "oui-rounded-full",
+    },
+
+    gradient: {
+      //   // brands:'',
+      // primary: "oui-from-primary-400 to-primary-900",
+      primary: "oui-gradient-primary",
+      brand: "oui-gradient-brand",
+      success: "oui-gradient-success",
+      warning: "oui-gradient-warning",
+      danger: "oui-gradient-danger",
+      neutral: "oui-gradient-neutral",
     },
   },
 };

@@ -1,8 +1,10 @@
 export {
-  Card,
+  CardBase,
   CardHeader,
   CardFooter,
   CardTitle,
   CardDescription,
   CardContent,
-} from "./card";
+} from "./cardBase";
+
+export { Card } from "./card";

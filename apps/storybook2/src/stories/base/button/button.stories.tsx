@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { Button, Close, Flex } from "@orderly.network/ui";
+import { Button,  Flex, ArrowUpSquareFillIcon,ArrowDownSquareFillIcon } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Button",
@@ -10,7 +10,7 @@ const meta = {
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ["autodocs"],
+  // tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     //   backgroundColor: { control: 'color' },
@@ -18,7 +18,7 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["xs", "sm", "md", "default", "lg"],
+      options: ["xs", "sm", "md", "lg", "xl"],
     },
     color: {
       control: {
@@ -47,7 +47,7 @@ const meta = {
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // args: { onClick: fn() },
   args: {
-    size: "default",
+    size: "lg",
     variant: "contained",
     color: "primary",
     children: "Button",
@@ -80,7 +80,7 @@ export const Sizes: Story = {
           Medium
         </Button>
         <Button {...rest}>Default</Button>
-        <Button {...rest} size="lg">
+        <Button {...rest} size="xl">
           Large
         </Button>
       </Flex>
@@ -88,17 +88,20 @@ export const Sizes: Story = {
   },
 };
 
-// export const IconButton: Story = {
-//   render: (args) => {
-//     return (
-//       <Flex gap={2} itemAlign={"center"}>
-//         <Button {...args} leading={<Close color="white" size={12} />}>
-//           Left icon
-//         </Button>
-//         <Button {...args} trailing={<Close color="white" size={12} />}>
-//           Right icon
-//         </Button>
-//       </Flex>
-//     );
-//   },
-// };
+export const IconButton: Story = {
+  render: (args) => {
+    return (
+      <Flex gap={2} itemAlign={"center"}>
+        <Button {...args} icon={<ArrowUpSquareFillIcon />}>
+          Icon
+        </Button>
+        <Button {...args} leading={<ArrowUpSquareFillIcon />}>
+          Leading element
+        </Button>
+        <Button {...args} trailing={<ArrowDownSquareFillIcon />}>
+        Trailing element
+        </Button>
+      </Flex>
+    );
+  },
+};

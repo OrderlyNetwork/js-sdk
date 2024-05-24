@@ -12,8 +12,8 @@ const spinnerVariants = tv({
       xs: "oui-w-3 oui-h-3",
       sm: "oui-w-4 oui-h-4",
       md: "oui-w-6 oui-h-6",
-      default: "oui-w-8 oui-h-8",
-      lg: "oui-w-12 oui-h-12",
+      lg: "oui-w-8 oui-h-8",
+      xl: "oui-w-10 oui-h-10",
     },
     color: {
       primary: "oui-fill-primary",
@@ -30,7 +30,7 @@ const spinnerVariants = tv({
   },
 
   defaultVariants: {
-    size: "default",
+    size: "lg",
     color: "primary",
   },
 });

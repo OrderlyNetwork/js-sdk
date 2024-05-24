@@ -1,128 +1,111 @@
-import * as React from "react";
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useEffect,
+  ReactNode,
+  useState,
+  useContext,
+  ReactElement,
+} from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { VariantProps, tv } from "tailwind-variants";
+import { TabsBase, TabsList, TabsContent, TabsTrigger } from "./tabsBase";
 
-const tabsVariants = tv({
-  slots: {
-    list: [
-      "oui-inline-flex",
-      //   "oui-h-9",
-      "oui-items-center",
-      "oui-p-1",
-      "oui-space-x-6",
-    ],
-    content: [
-      "oui-ring-offset-background",
-      "focus-visible:oui-outline-none",
-      "focus-visible:oui-ring-2",
-      "focus-visible:oui-ring-ring",
-      "focus-visible:oui-ring-offset-2",
-    ],
-    trigger: [
-      "oui-inline-flex",
-      "oui-items-center",
-      "oui-justify-center",
-      "oui-whitespace-nowrap",
-      //   "oui-px-3",
-      "oui-pb-2",
-      "oui-box-content",
-      "oui-font-medium",
-      "oui-relative",
-      "oui-text-base-contrast-36",
-      "oui-ring-offset-background",
-      "oui-transition-all",
-      "oui-space-x-1",
-      "focus-visible:oui-outline-none",
-      "focus-visible:oui-ring-2",
-      "focus-visible:oui-ring-ring",
-      "focus-visible:oui-ring-offset-2",
-      "disabled:oui-pointer-events-none",
-      "disabled:oui-opacity-50",
-      "data-[state=active]:oui-text-base-contrast",
-      "data-[state=active]:after:oui-content-['']",
-      "data-[state=active]:after:oui-block",
-      "data-[state=active]:after:oui-h-[3px]",
-      "data-[state=active]:after:oui-bg-white",
-      "data-[state=active]:after:oui-absolute",
-      "data-[state=active]:after:oui-rounded-full",
-      "data-[state=active]:after:-oui-bottom-0",
-      "data-[state=active]:after:oui-left-0",
-      "data-[state=active]:after:oui-right-0",
-    ],
-    icon: ["oui-text-inherit"],
-  },
-  variants: {
-    size: {
-      sm: {
-        trigger: ["oui-text-sm", "oui-h-5"],
-        icon: ["oui-w-[10px]", "oui-h-[10px]"],
-      },
-      md: {
-        trigger: ["oui-text-base", "oui-h-6"],
-        icon: ["oui-w-3", "oui-h-3"],
-      },
-      lg: {
-        trigger: ["oui-text-lg", "oui-h-7"],
-        icon: ["oui-w-4", "oui-h-4"],
-      },
-    },
-  },
-  defaultVariants: {
-    size: "sm",
-  },
-});
+type tabConfig = {
+  title: ReactNode;
+  icon?: ReactElement;
 
-const Tabs = TabsPrimitive.Root;
+  value: string;
+  content: ReactNode;
+};
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> &
-    VariantProps<typeof tabsVariants>
->(({ className, size, ...props }, ref) => {
-  const { list } = tabsVariants({ size });
+type TabsContextState = {
+  // tabs:React.ReactNode[];
+  registerTab: (tab: tabConfig) => void;
+};
+
+const TabsContext = createContext({} as TabsContextState);
+
+type TabsProps<T = string> = {
+  defaultValue?: T;
+  value?: T;
+  onChange?: (value: T) => void;
+} & TabsPrimitive.TabsProps;
+
+const Tabs: FC<TabsProps> = (props) => {
+  const { value, onChange, defaultValue } = props;
+  const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
+
+  const registerTab = (config: tabConfig) => {
+    console.log("registerTab", config);
+    setTabList((prev) => {
+      return {
+        ...prev,
+        [config.value]: config,
+      };
+    });
+  };
+
   return (
-    <TabsPrimitive.List ref={ref} className={list({ className })} {...props} />
-  );
-});
-TabsList.displayName = TabsPrimitive.List.displayName;
-
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
-    VariantProps<typeof tabsVariants> & {
-      icon?: React.ReactElement;
-    }
->(({ className, size, children, icon, ...props }, ref) => {
-  const { trigger, icon: iconClassName } = tabsVariants({ size });
-  return (
-    <TabsPrimitive.Trigger
-      ref={ref}
-      className={trigger({ className })}
-      {...props}
+    <TabsContext.Provider
+      value={{
+        registerTab,
+      }}
     >
-      {typeof icon !== "undefined"
-        ? React.cloneElement(icon, { className: iconClassName(), opacity: 1 })
-        : null}
-      <span>{children}</span>
-    </TabsPrimitive.Trigger>
+      {props.children}
+      <TabsBase
+        value={value}
+        onValueChange={onChange}
+        defaultValue={defaultValue}
+      >
+        <TabsList>
+          {Object.keys(tabList).map((key) => {
+            const tab = tabList[key];
+            return (
+              <TabsTrigger key={key} value={tab.value} icon={tab.icon}>
+                {tab.title}
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+        {Object.keys(tabList).map((key) => {
+          const tab = tabList[key];
+          return (
+            <TabsContent key={key} value={tab.value}>
+              {tab.content}
+            </TabsContent>
+          );
+        })}
+      </TabsBase>
+    </TabsContext.Provider>
   );
-});
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+};
 
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> &
-    VariantProps<typeof tabsVariants>
->(({ className, size, ...props }, ref) => {
-  const { content } = tabsVariants({ size });
-  return (
-    <TabsPrimitive.Content
-      ref={ref}
-      className={content({ className })}
-      {...props}
-    />
-  );
-});
-TabsContent.displayName = TabsPrimitive.Content.displayName;
+Tabs.displayName = "Tabs";
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+type TabPanelProps = {
+  value: any;
+  title: string | React.ReactNode;
+  icon?: React.ReactElement;
+};
+
+const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
+  const { title, value, icon } = props;
+  const { registerTab } = useContext(TabsContext);
+
+  useEffect(() => {
+    const tabConfig = {
+      title,
+      value,
+      icon,
+      content: props.children,
+    };
+    registerTab(tabConfig);
+  }, [props.children, title, value]);
+
+  return null;
+};
+
+TabPanel.displayName = "TabPanel";
+
+export { Tabs, TabPanel };

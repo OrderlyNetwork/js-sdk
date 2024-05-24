@@ -1,38 +1,99 @@
-import React, { ReactNode } from "react";
-import { tv, type VariantProps } from "tailwind-variants";
+import React, {
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+} from "react";
+import { type VariantProps, cnBase } from "tailwind-variants";
+import { tv } from "../utils/tv";
+import { Numeral, NumeralProps } from "./numeral";
 
 const statisticVariants = tv({
   slots: {
-    root: "oui-text-base oui-flex",
+    root: "oui-text-base oui-flex oui-flex-col",
+    label: "oui-text-xs oui-text-base-contrast-36",
+    value: "",
   },
   variants: {
     align: {
-      start: {
-        root: "oui-text-left",
+      left: {
+        root: "oui-items-start",
       },
-      center: {
-        root: "oui-text-center",
-      },
-      end: {
-        root: "oui-text-right",
+
+      right: {
+        root: "oui-items-end",
       },
     },
-    color: {},
+    // color: {},
+  },
+  defaultVariants: {
+    align: "left",
+    // color: "default",
   },
 });
 
-type StatisticProps = VariantProps<typeof statisticVariants> & {
-  label: string | ReactNode;
-  value: string | number | ReactNode;
-  coloring?: boolean;
-};
+type StatisticLabelProps = VariantProps<typeof statisticVariants> &
+  HTMLAttributes<HTMLDivElement> & {
+    // label: string | ReactNode;
+  };
 
-const Statistic = React.forwardRef<React.Ref<HTMLDivElement>, StatisticProps>(
+const StatisticLabel = React.forwardRef<HTMLDivElement, StatisticLabelProps>(
   (props, ref) => {
-    const {} = props;
-    const { root } = statisticVariants({});
-    return <div className={root()}></div>;
+    // const { label } = props;
+    const { label: labelClassName } = statisticVariants({});
+    return (
+      <div ref={ref} className={labelClassName()}>
+        {props.children}
+      </div>
+    );
   }
 );
 
-export { Statistic, statisticVariants };
+StatisticLabel.displayName = "StatisticLabel";
+
+type DivElement = React.ElementRef<"div">;
+
+type StatisticProps = VariantProps<typeof statisticVariants> &
+  HTMLAttributes<HTMLDivElement> & {
+    label: string | ReactNode;
+    valueProps?: NumeralProps;
+  };
+
+const Statistic = React.forwardRef<
+  DivElement,
+  PropsWithChildren<StatisticProps>
+>((props, ref) => {
+  const { label, valueProps, align, className, children, ...rest } = props;
+  const { root, value: valueClassName } = statisticVariants({ align });
+
+  const value = useMemo(() => {
+    if (typeof children === "string") {
+      const { className: valueClass, ...restValueProps } = valueProps ?? {};
+      return (
+        <Numeral
+          children={children}
+          {...restValueProps}
+          className={cnBase(
+            valueClassName({
+              className: valueClass,
+            }),
+            "oui-font-semibold",
+            !valueProps?.coloring && "oui-text-base-contrast-80"
+          )}
+        />
+      );
+    }
+    return children;
+  }, [children, valueProps]);
+
+  return (
+    <div {...rest} className={root({ className })} ref={ref}>
+      <StatisticLabel>{label}</StatisticLabel>
+      {value}
+    </div>
+  );
+});
+
+Statistic.displayName = "Statistic";
+
+export { Statistic, StatisticLabel, statisticVariants };

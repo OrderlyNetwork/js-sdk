@@ -3,8 +3,32 @@
   "version": "1.0.0",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-axis": "^3.0.6",
+    "@types/d3-scale": "^4.0.8",
+    "@types/d3-selection": "^3.0.10",
+    "@types/d3-shape": "^3.1.6",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0",
+    "tsconfig": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "d3-array": "^3.2.4",
+    "d3-axis": "^3.0.0",
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.2.0"
+  }
 }

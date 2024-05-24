@@ -53,5 +53,24 @@
     --oui-color-trading-loss-contrast: 255 255 255;
     --oui-color-trading-profit: 0 134 118;
     --oui-color-trading-profit-contrast: 255 255 255;
+
+    /* gradients */
+    --oui-gradient-primary-start: 96 140 255;
+    --oui-gradient-primary-end: 24 40 195;
+
+    --oui-gradient-success-start: 0 180 158;
+    --oui-gradient-success-end: 0 90 79;
+
+    --oui-gradient-danger-start: 255 68 124;
+    --oui-gradient-danger-end: 121 20 56;
+
+    --oui-gradient-warning-start: 255 182 93;
+    --oui-gradient-warning-end: 121 46 0;
+
+    --oui-gradient-neutral-start: 38 41 46;
+    --oui-gradient-neutral-end: 27 29 34;
+
+    --oui-gradient-brand-start: 38 254 255;
+    --oui-gradient-brand-end: 89 176 254;
   }
 }

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Flex } from "@orderly.network/ui";
 
 const meta = {
-  title: "Base/Flex",
+  title: "Base/Layout/Flex",
   component: Flex,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

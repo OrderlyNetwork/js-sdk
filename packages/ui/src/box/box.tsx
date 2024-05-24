@@ -3,9 +3,10 @@ import React from "react";
 import { layoutVariants } from "../layout/layout";
 import { Slot } from "@radix-ui/react-slot";
 import { parseSizeProps } from "../helpers/parse-props";
-import { tv, VariantProps } from "tailwind-variants";
+import { VariantProps } from "tailwind-variants";
 import { shadowVariants } from "../layout/shadow";
 import { decorationVariants } from "../layout/decoration";
+import { tv } from "../utils/tv";
 
 const baseBoxVariants = tv({
   base: ["oui-box oui-size"],
@@ -29,6 +30,10 @@ interface BoxProps
   as?: "div" | "span";
   width?: string | number;
   height?: string | number;
+  /**
+   * Angle of the gradient
+   */
+  angle?: number;
 }
 
 const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
@@ -42,6 +47,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     style,
     shadow,
     border,
+    gradient,
+    r,
     ...rest
   } = parseSizeProps(props);
 
@@ -53,10 +60,12 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
       className={boxVariants({
         className,
         p,
+        r,
         px,
         py,
         shadow,
         border,
+        gradient,
       })}
       {...rest}
       ref={forwardedRef}

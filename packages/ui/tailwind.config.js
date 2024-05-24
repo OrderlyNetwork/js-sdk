@@ -1,6 +1,7 @@
 const { withTV } = require('tailwind-variants/transformer');
 
 const {sizePlugin} = require('./src/tailwind/size')
+const {gradientPlugin} = require('./src/tailwind/gradient')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -125,10 +126,13 @@ module.exports = withTV({
               "rgb(var(--oui-color-trading-profit-contrast) / <alpha-value>)",
           },
         },
+        // gradient: {
+        //   success: 'linear-gradient(var(--oui-linear-degree, 90deg), var(--oui-color-success) 0%, var(--oui-color-success-darken) 100%)',
+        // }
       }
     },
     
   },
-  plugins: [sizePlugin(),require("tailwindcss-animate"),],
+  plugins: [sizePlugin(),gradientPlugin(),require("tailwindcss-animate"),],
 });
 

@@ -21,10 +21,18 @@ export { CircleOutlinedIcon } from "./circleOutlined";
 export { SquareOutlinedIcon } from "./squareOutlined";
 export { ExclamationFillIcon } from "./exclamationFill";
 export { QuestionFillIcon } from "./questionFill";
+export { ArrowLeftRightIcon } from "./arrowLeftRight";
+export { ArrowDownUpIcon } from "./arrowDownUp";
+export { ArrowUpSquareFillIcon } from "./arrowUpSquareFill";
+export { ArrowDownSquareFillIcon } from "./arrowDownSquareFill";
+export { FeeTierIcon } from "./feeTier";
+export { EditIcon } from "./edit";
 
 export { CoinIcon } from "./coinIcon";
 export { ChainIcon } from "./chainIcon";
 export { WalletIcon } from "./walletIcon";
+export { CalendarIcon } from "./calendar";
+
 import { CombineIcon } from "./combine";
 
 type IconType = typeof BaseIcon & {
