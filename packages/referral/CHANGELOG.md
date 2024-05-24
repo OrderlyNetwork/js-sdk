@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.5
+
+### Patch Changes
+
+- 68236fb3: fix bugs;
+- Updated dependencies [68236fb3]
+  - @orderly.network/react@1.5.5
+  - @orderly.network/hooks@1.5.5
+  - @orderly.network/utils@1.5.5
+
 ## 1.5.5-alpha.0
 
 ### Patch Changes

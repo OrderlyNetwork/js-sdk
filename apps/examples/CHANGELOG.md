@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.5
+
+### Patch Changes
+
+- 68236fb3: fix bugs;
+- Updated dependencies [68236fb3]
+  - @orderly.network/react@1.5.5
+  - @orderly.network/hooks@1.5.5
+  - @orderly.network/core@1.5.5
+  - @orderly.network/web3-onboard@1.5.5
+
 ## 0.4.5-alpha.0
 
 ### Patch Changes

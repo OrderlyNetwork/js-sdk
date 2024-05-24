@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.5.5
+
+### Patch Changes
+
+- 68236fb3: fix bugs;
+
 ## 1.5.5-alpha.0
 
 ### Patch Changes
