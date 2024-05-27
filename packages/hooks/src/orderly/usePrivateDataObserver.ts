@@ -1,13 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useWS } from "../useWS";
 import { mutate } from "swr";
-import { WSMessage, API } from "@orderly.network/types";
+import { WSMessage } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
-import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../useEventEmitter";
 import { getKeyFunction } from "../dataProvider";
-import { parseJSON } from "../utils/json";
 import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { object2underscore } from "../utils/ws";
@@ -25,7 +23,10 @@ export const usePrivateDataObserver = (options: {
   // TODO: remove this when the WS service provides the correct data
   // const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
 
-  const [subOrder, setSubOrder] = useLocalStorage("orderly_subscribe_order", true);
+  const [subOrder, setSubOrder] = useLocalStorage(
+    "orderly_subscribe_order",
+    true
+  );
 
   const updateOrders = (
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
@@ -113,8 +114,6 @@ export const usePrivateDataObserver = (options: {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
         const { positions: nextPostions } = data;
 
-        // console.log("ws----- positions data-----", data);
-
         // updatePositions();
 
         mutate(
@@ -122,38 +121,39 @@ export const usePrivateDataObserver = (options: {
           (prevPositions: any) => {
             // return nextPostions;
             if (!!prevPositions) {
-              return {
+              const newPostions = {
                 ...prevPositions,
                 rows: prevPositions.rows.map((row: any) => {
-                  const item = nextPostions.find(
+                  const itemIndex = nextPostions.findIndex(
                     (item) => item.symbol === row.symbol
                   );
-                  if (item) {
-                    return {
-                      symbol: item.symbol,
-                      position_qty: item.positionQty,
-                      cost_position: item.costPosition,
-                      last_sum_unitary_funding: item.lastSumUnitaryFunding,
-                      pending_long_qty: item.pendingLongQty,
-                      pending_short_qty: item.pendingShortQty,
-                      settle_price: item.settlePrice,
-                      average_open_price: item.averageOpenPrice,
-                      unsettled_pnl: item.unsettledPnl,
-                      mark_price: item.markPrice,
-                      est_liq_price: item.estLiqPrice,
-                      timestamp: Date.now(),
-                      imr: item.imr,
-                      mmr: item.mmr,
-                      IMR_withdraw_orders: item.imrwithOrders,
-                      MMR_with_orders: item.mmrwithOrders,
-                      pnl_24_h: item.pnl24H,
-                      fee_24_h: item.fee24H,
-                    };
+
+                  // const item = nextPostions.find(
+                  //   (item) => item.symbol === row.symbol
+                  // );
+
+                  if (itemIndex >= 0) {
+                    const itemArr = nextPostions.splice(itemIndex, 1);
+
+                    const item = itemArr[0];
+
+                    return object2underscore(item);
                   }
 
                   return row;
                 }),
               };
+
+              if (nextPostions.length > 0) {
+                newPostions.rows = [
+                  ...newPostions.rows,
+                  ...nextPostions.map((item) => {
+                    return object2underscore(item);
+                  }),
+                ];
+              }
+
+              return newPostions;
             }
           },
           {
@@ -166,17 +166,4 @@ export const usePrivateDataObserver = (options: {
       unsubscribe?.();
     };
   }, [state.accountId]);
-
-  // cache algo orders
-  // useEffect(() => {
-  //   const handler = (data: API.AlgoOrder) => {
-  //     algoOrderCacheQuneue.current.push(data);
-  //   };
-
-  //   ee.on("algoOrder:cache", handler);
-
-  //   return () => {
-  //     ee.off("algoOrder:cache", handler);
-  //   };
-  // }, []);
 };
