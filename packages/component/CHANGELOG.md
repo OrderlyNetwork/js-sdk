@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 1.5.6
+
+### Patch Changes
+
+- 8a8f3bff: fix bug;
+- Updated dependencies [8a8f3bff]
+  - @orderly.network/hooks@1.5.6
+  - @orderly.network/core@1.5.6
+  - @orderly.network/net@1.5.6
+  - @orderly.network/trading-view@1.5.6
+  - @orderly.network/types@1.5.6
+  - @orderly.network/utils@1.5.6
+
 ## 1.5.6-alpha.0
 
 ### Patch Changes
