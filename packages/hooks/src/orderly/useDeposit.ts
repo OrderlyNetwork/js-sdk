@@ -6,11 +6,10 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   AccountStatusEnum,
   DEPOSIT_FEE_RATE,
-  MaxUint256,
   NetworkId,
   isNativeTokenChecker,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useChains } from "./useChains";
 import { useConfig } from "../useConfig";
 import { useDebouncedCallback } from "use-debounce";
@@ -49,7 +48,11 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     // Orderly testnet supported chain
     if (networkId === "testnet") {
-      chain = findByChainId(ARBITRUM_TESTNET_CHAINID) as API.Chain;
+      chain = findByChainId(
+        isTestnet(options?.srcChainId!)
+          ? options?.srcChainId!
+          : ARBITRUM_TESTNET_CHAINID
+      ) as API.Chain;
     } else {
       chain = findByChainId(options?.srcChainId!) as API.Chain;
       // if is orderly un-supported chain
@@ -307,7 +310,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         console.log("getDepositFee", fee);
       })
       .catch((error) => {
-        console.log("getDepositFee error", error);
+        console.error("getDepositFee", error);
       })
       .finally(() => {
         setDepositFeeRevalidating(false);

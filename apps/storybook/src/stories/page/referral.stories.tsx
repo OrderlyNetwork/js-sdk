@@ -24,7 +24,7 @@ export default {
       <ReferralProvider
         // becomeAnAffiliateUrl="https://orderly.network"
         // learnAffiliateUrl="https://orderly.network"
-        // referralLinkUrl="https://dex.woo.org/en/trade"
+        // referralLinkUrl="https://ordely.network"
         showReferralPage={() => {
           console.log("show referral page");
 
@@ -52,6 +52,7 @@ export default {
             // messages,
           // }
         // }
+        splashPage={() => (<div style={{backgroundColor: "#FF0000"}}>df</div>)}
         overwrite={
           {
             ref: {

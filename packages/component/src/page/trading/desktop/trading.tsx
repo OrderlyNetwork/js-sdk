@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import Split from "@uiw/react-split";
 import { AccountInfoElement } from "./elements/accountInfo";
 import { TradingPageProps } from "../types";
@@ -6,7 +6,7 @@ import { MyOrderEntry } from "../mobile/sections/orderEntry";
 import { TopNav } from "./sections/nav/topNav";
 import { MyOrderBookAndTrade } from "./sections/orderbook_trade";
 import { MemoizedDataListView } from "./sections/datalist";
-import { MyTradingView } from "./myTradingview";
+import MyTradingView from "./myTradingview/index";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
@@ -17,6 +17,9 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
   const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
     useContext(LayoutContext);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [entryMaxWidth, setEntryMaxWidth] = useState(500);
 
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
     "mainSplitSize",
@@ -54,8 +57,26 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
     );
   }, [cssVariable]);
 
+  useEffect(() => {
+
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const { width, height } = entry.contentRect;
+        setEntryMaxWidth(Math.min(width - 768, 500));
+      }
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [containerRef]);
+
   return (
-    <div className="orderly-tabular-nums">
+    <div ref={containerRef} className="orderly-tabular-nums">
       {/* @ts-ignore */}
       <Split
         lineBar
@@ -104,7 +125,11 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
                 </div>
               </div>
               <div
-                style={{ minWidth: "300px", maxWidth: "800px", width: orderBookSplitSize }}
+                style={{
+                  minWidth: "300px",
+                  maxWidth: "800px",
+                  width: orderBookSplitSize,
+                }}
                 className="orderly-overflow-hidden"
               >
                 <MyOrderBookAndTrade symbol={props.symbol} />
@@ -119,7 +144,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
         <div
           style={{
             minWidth: "300px",
-            maxWidth: "500px",
+            maxWidth: `${entryMaxWidth}px`,
             minHeight: "990px",
             width: mainSplitSize,
           }}

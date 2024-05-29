@@ -23,7 +23,10 @@ interface OrderOptionsProps {
 
 export const OrderOptions: FC<OrderOptionsProps> = (props) => {
   const { reduceOnly, formattedOrder, onFieldChange } = props;
-  const [optionsOpen, setOptionsOpen] = useLocalStorage("order_entry_options_open", false);
+  const [optionsOpen, setOptionsOpen] = useLocalStorage(
+    "order_entry_options_open",
+    false
+  );
   const [open, setOpen] = useState<boolean>(optionsOpen);
   // const { control, getValues, setValue } = useFormContext();
 
@@ -51,6 +54,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
         </div>
 
         <button
+          id="orderly-order-entry-expand-icon"
           type="button"
           className="orderly-w-[18px] orderly-h-[18px] orderly-px-5 orderly-text-base-contrast/60"
           onClick={() => {
@@ -70,7 +74,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
       </div>
       <Collapsible open={open}>
         <CollapsibleContent>
-          <div className="orderly-pb-2 orderly-space-y-4">
+          <div
+            id="orderly-order-entry-expand-content"
+            className="orderly-pb-2 orderly-space-y-4"
+          >
             {order_type === OrderType.LIMIT && (
               <OrderTypesCheckbox
                 value={formattedOrder.order_type_ext}
@@ -81,7 +88,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
               />
             )}
             <div className="orderly-flex orderly-gap-5">
-              <div className="orderly-flex orderly-gap-1 first-letter:orderly-items-center">
+              <div
+                id="orderly-order-entry-expand-content-order-confirm"
+                className="orderly-flex orderly-gap-1 first-letter:orderly-items-center"
+              >
                 <Checkbox
                   id="orderConfirm"
                   checked={props.showConfirm}
@@ -96,7 +106,10 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                   Order confirm
                 </Label>
               </div>
-              <div className="orderly-flex orderly-gap-1 orderly-items-center">
+              <div
+                id="orderly-order-entry-expand-content-hidden"
+                className="orderly-flex orderly-gap-1 orderly-items-center"
+              >
                 <Checkbox
                   id="hidden"
                   checked={formattedOrder.visible_quantity === 0}

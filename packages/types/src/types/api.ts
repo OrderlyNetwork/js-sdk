@@ -295,6 +295,7 @@ export declare namespace API {
     address: string;
     symbol: string;
     decimals: number;
+    display_name: string;
     // precision: number;
   }
 

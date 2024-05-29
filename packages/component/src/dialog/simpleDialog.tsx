@@ -22,6 +22,8 @@ export interface BaseDialogProps {
   onOpenChange?(open: boolean): void;
   contentClassName?: string;
   maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
+  okId?: string;
+  cancelId?: string;
 }
 
 export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
@@ -39,6 +41,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onCancel === "function") {
       buttons.push(
         <Button
+          id={props.cancelId}
           className="orderly-confirm-dialog-cancal-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
@@ -56,6 +59,7 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
     if (typeof props.onOk === "function") {
       buttons.push(
         <Button
+          id={props.okId}
           className="orderly-confirm-dialog-ok-button orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="ok"
           type="button"
@@ -92,9 +96,11 @@ export const SimpleDialog: FC<PropsWithChildren<BaseDialogProps>> = (props) => {
         className={cn("orderly-confirm-dialog", props.contentClassName)}
         maxWidth={props.maxWidth}
       >
-        {props.title && <DialogHeader>
-          <DialogTitle>{props.title}</DialogTitle>
-        </DialogHeader>}
+        {props.title && (
+          <DialogHeader>
+            <DialogTitle>{props.title}</DialogTitle>
+          </DialogHeader>
+        )}
         {props.children}
         {actions}
       </DialogContent>

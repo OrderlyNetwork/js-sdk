@@ -91,15 +91,15 @@ export class WS {
 
   private bindEvents() {
     if (typeof document !== "undefined") {
-      document.addEventListener(
+      document.addEventListener?.(
         "visibilitychange",
         this.onVisibilityChange.bind(this)
       );
     }
 
     if (typeof window !== "undefined") {
-      window.addEventListener("online", this.onNetworkStatusChange.bind(this));
-      // window.addEventListener("offline", this.onNetworkStatusChange);
+      window.addEventListener?.("online", this.onNetworkStatusChange.bind(this));
+      // window.addEventListener?.("offline", this.onNetworkStatusChange);
     }
   }
 

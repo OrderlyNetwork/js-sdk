@@ -1,5 +1,99 @@
 # tsconfig
 
+## 0.3.6
+
+### Patch Changes
+
+- 8a8f3bff: fix bug;
+
+## 0.3.6-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 0.3.5
+
+### Patch Changes
+
+- 68236fb3: fix bugs;
+
+## 0.3.5-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.3.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+
+## 0.3.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+
+## 0.3.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+
+## 0.3.3-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 0.3.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+
+## 0.3.2-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 0.3.1
+
+### Patch Changes
+
+- 34efc6c0: update
+
+## 0.3.1-alpha.0
+
+### Patch Changes
+
+- update
+
+## 0.3.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+
+## 0.3.0-alpha.1
+
+### Patch Changes
+
+- fix bug;
+
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- update
+
 ## 0.2.5
 
 ### Patch Changes

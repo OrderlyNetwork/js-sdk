@@ -192,9 +192,20 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           // name: chain.network_infos?.name,
           label: value.network_infos?.name,
         })
-        .then(() => {
+        .then((switched) => {
+          if (!switched) {
+            toast.error("Switch chain failed");
+            return;
+          }
           // switch success，set tokens list
           setTokens(value?.token_infos ?? []);
+
+          // switch chain need to update chain token
+          const token = getTokenByTokenList(value?.token_infos);
+          if (token) {
+            props.switchToken?.(token);
+          }
+
           toast.success("Network switched");
           cleanData();
         })
@@ -202,21 +213,25 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
           toast.error(`Switch chain failed: ${error.message}`);
         });
     },
-    [props.switchChain, chain]
+    [props.switchChain, chain, props.token?.symbol]
   );
+
+  const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
+    const tokenObj = tokens.reduce((acc, item) => {
+      acc[item.symbol] = item;
+      return acc;
+    }, {} as any);
+
+    const token = tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
+    return token;
+  };
 
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
     (chain: API.Chain) => {
       if (chain && chain.token_infos?.length > 0) {
         const tokens = chain.token_infos;
-
-        const tokenObj = tokens.reduce((acc, item) => {
-          acc[item.symbol] = item;
-          return acc;
-        }, {} as any);
-
-        const token = tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
+        const token = getTokenByTokenList(tokens);
 
         if (!token || props.token?.symbol === token.symbol) return;
 
@@ -269,7 +284,16 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
       </div>
       <QuantityInput
         tokens={tokens}
-        token={props.token}
+        // src token use display_name
+        // Mantle chain: USDC.e → USDC
+        token={
+          props.token
+            ? ({
+                ...props.token,
+                symbol: props.token.display_name || props.token.symbol,
+              } as API.TokenInfo)
+            : props.token
+        }
         quantity={quantity}
         markPrice={1}
         maxAmount={Number(maxAmount)}

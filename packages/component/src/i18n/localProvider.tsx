@@ -3,11 +3,12 @@ import { IntlProvider, IntlConfig } from "react-intl";
 import { en, EN } from "./locale/en-US";
 
 type LocalState = Partial<
-  Pick<IntlConfig, "locale" | "messages" | "defaultLocale">
+  Pick<IntlConfig, "messages">
 >;
 
 export const LocalProvider: FC<LocalState & PropsWithChildren> = (props) => {
-  const { messages, locale = "en", defaultLocale = "en" } = props;
+  const { messages } = props;
+  const locale = "en", defaultLocale = "en";
 
   const mergeMsgs: EN = useMemo(() => {
     return {

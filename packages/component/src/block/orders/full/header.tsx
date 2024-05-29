@@ -29,6 +29,8 @@ export const Header: FC<Props> = (props) => {
     modal
       .confirm({
         title: "Cancel all orders",
+        okId: "orderly-desktop-cancel-all-orders-ok",
+        cancelId: "orderly-desktop-cancel-all-orders-cancel",
         content: (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
             {props.orderType === AlgoOrderRootType.TP_SL
@@ -93,6 +95,7 @@ export const Header: FC<Props> = (props) => {
       {(props.status === "INCOMPLETE" ||
         props.orderType === AlgoOrderRootType.TP_SL) && (
         <Button
+          id="orderly-desktop-cancel-all-orders"
           size={"small"}
           variant={"outlined"}
           disabled={props.count <= 0}

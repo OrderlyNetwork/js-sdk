@@ -26,6 +26,7 @@ export type SelectOption = {
   label: string;
   className?: string;
   activeClassName?: string;
+  id?: string;
 };
 
 const selectVariants = cva(

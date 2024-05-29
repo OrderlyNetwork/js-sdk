@@ -5,6 +5,7 @@ import { CalendarIcon } from "./sections/calendarIcon";
 import { Calendar, CalendarProps } from "./calendar";
 import { format, addDays, subDays } from "date-fns";
 import { ArrowDown } from "./sections/arrowIcon";
+import { useTranslation } from "@/i18n";
 
 export type DateRange = {
   from?: Date,
@@ -32,6 +33,8 @@ export const DatePicker: React.FC<{
     to: new Date(),
   });
 
+  const t = useTranslation();
+  
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -45,9 +48,9 @@ export const DatePicker: React.FC<{
     if (typeof date?.from !== 'undefined') {
       return `${format(date.from, "yyyy/MM/dd")}${` - ${format(date.to || date.from, "yyyy/MM/dd")}`}`;
     }
-    return 'select date';
+    return t("ui.calendar.selecet-date");
 
-  }, [date]);
+  }, [date, t]);
 
   const triggerView = React.useMemo((): React.ReactNode => {
 

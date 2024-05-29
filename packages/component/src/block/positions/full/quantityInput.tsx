@@ -48,6 +48,7 @@ export const QuantityInput = () => {
           <div className="orderly-flex-1 orderly-min-w-0">
             <div className="orderly-h-[26px]">
               <Slider
+                id="orderly-positions-quantity-full-slider"
                 color={side === OrderSide.BUY ? "buy" : "sell"}
                 step={base_tick}
                 min={0}

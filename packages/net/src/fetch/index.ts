@@ -127,4 +127,4 @@ async function mutate(url: string, init: RequestInit) {
   return res;
 }
 
-export { get, post, del, put, mutate };
+export { get, post, del, put, mutate, request };

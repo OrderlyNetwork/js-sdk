@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "1.4.3",
+  "version": "1.5.6",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -58,7 +58,6 @@
     "cypress": "^13.6.6",
     "deep-diff": "^1.0.2",
     "eslint-config-custom": "workspace:*",
-    "ethers": "^6.7.1",
     "postcss": "^8.4.26",
     "postcss-import": "^15.1.0",
     "postcss-js": "^4.0.1",

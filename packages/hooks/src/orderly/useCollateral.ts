@@ -34,9 +34,13 @@ export const useCollateral = (
   } = { dp: 6 }
 ): CollateralOutputs => {
   const { dp } = options;
-  const positions = usePositionStream();
+  const positions = usePositionStream(undefined, {
+    includedPendingOrder: true,
+  });
 
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  // console.log("positions", positions);
+
+  // const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
@@ -47,8 +51,8 @@ export const useCollateral = (
 
   const { usdc } = useHoldingStream();
 
-  const filterAlgoOrders =
-    orders?.filter((item) => item.algo_order_id === undefined) ?? [];
+  // const filterAlgoOrders =
+  //   orders?.filter((item) => item.algo_order_id === undefined) ?? [];
 
   // const { data: holding } = usePrivateQuery<API.Holding[]>(
   //   "/v1/client/holding",
@@ -71,15 +75,20 @@ export const useCollateral = (
       return 0;
     }
 
-    return account.totalInitialMarginWithOrders({
+    return account.totalInitialMarginWithQty({
       positions: positionsPath(positions),
-      orders: filterAlgoOrders,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverage: accountInfo.max_leverage,
       symbolInfo,
     });
-  }, [positions, filterAlgoOrders, markPrices, accountInfo, symbolInfo]);
+  }, [
+    positions,
+    // filterAlgoOrders,
+    markPrices,
+    accountInfo,
+    symbolInfo,
+  ]);
 
   const freeCollateral = useMemo(() => {
     return account.freeCollateral({

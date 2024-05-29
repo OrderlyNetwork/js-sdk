@@ -28,7 +28,7 @@ const needNumberOnlyFields: (keyof OrderEntity)[] = [
 /// only save number
 export const cleanStringStyle = (str: string | number): string => {
   if (typeof str !== "string") {
-    str = str.toString();
+    str = `${str}`;
   }
   str = str.replace(/,/g, "");
   // clear extra character expect number and .
@@ -213,7 +213,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
-      values.total = total.todp(2).toString();
+      values.total = total.todp(config.quoteDP).toString();
     } else {
       values.total = "";
     }
@@ -306,3 +306,49 @@ export const getCalculateHandler = (
       return otherInputHandle;
   }
 };
+
+//** format number */
+export function formatNumber(
+  qty?: string | number,
+  dp?: number | string
+): string | undefined {
+  if (typeof qty === "undefined") return qty;
+  if (typeof dp === "undefined") return `${qty}`;
+
+  // console.log("qty", qty, "dp", dp);
+  
+  const _qty = `${qty}`.replace(/,/g, "");
+  
+  
+  try {
+    const _dp = new Decimal(dp);
+    const _qtyDecimal = new Decimal(_qty);
+    
+    if (_dp.lessThan(1)) {
+      if (`${_qty}`.endsWith(".")) return `${_qty}`;
+      
+      const numStr = dp.toString();
+      const decimalIndex = numStr.indexOf(".");
+      const digitsAfterDecimal =
+        decimalIndex === -1 ? 0 : numStr.length - decimalIndex - 1;
+
+      const result = _qtyDecimal
+        .toDecimalPlaces(digitsAfterDecimal, Decimal.ROUND_DOWN)
+        .toString();
+
+      return result;
+    }
+
+    if (_qtyDecimal.lessThan(_dp)) {
+      return _qty;
+    }
+
+    return _qtyDecimal
+      .dividedBy(_dp)
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .mul(dp)
+      .toString();
+  } catch (e) {    
+    return undefined;
+  }
+}

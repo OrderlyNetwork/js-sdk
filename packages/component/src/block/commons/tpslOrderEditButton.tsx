@@ -39,6 +39,7 @@ export const TPSLOrderEditButton: FC<{
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <Button
+          id="orderly-tp_sl-order-edit-button"
           size="small"
           variant={"outlined"}
           color={"tertiary"}

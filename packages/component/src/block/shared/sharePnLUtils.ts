@@ -1,10 +1,10 @@
 /*
 {
-      message: "I am the WOO KING.",
-      domain: "dex.woo.org",
+      message: "I am the Orderly KING.",
+      domain: "ordely.network",
       updateTime: "2022-JAN-01 23:23",
       position: {
-        symbol: "WOO-PERP",
+        symbol: "BTC-PERP",
         currency: "USDC",
         side: "LONG",
         leverage: 20,
@@ -17,11 +17,22 @@
           { title: "Quantity", value: "0.123" },
         ],
       },
+      referral: {
+        code: "WRECKED",
+        link: "https://orderly.network",
+        slogan: "Try Orderly now with:",
+      }
     }
 */
 
 import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareOptions } from "./type";
+
+export type ReferralType = {
+  code?: string,
+  link?: string,
+  slogan?: string,
+};
 
 export function getPnLPosterData(
   position: any,
@@ -31,7 +42,8 @@ export function getPnLPosterData(
   pnlType: PnLDisplayFormat,
   options: Set<ShareOptions>,
   baseDp?: number,
-  quoteDp?: number
+  quoteDp?: number,
+  referral?: ReferralType,
 ) {
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
@@ -127,6 +139,10 @@ export function getPnLPosterData(
     data["message"] = message;
   }
 
+  if (typeof referral !== 'undefined' && referral['code'] !== undefined) {
+    data["referral"] = referral;
+  }
+  
   return data;
 }
 
@@ -163,6 +179,7 @@ function formatShareTime(input: number | Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    hourCycle: "h24",
   };
 
   const formatter = new Intl.DateTimeFormat("en-US", options);

@@ -1,5 +1,99 @@
 # @orderly.network/net
 
+## 1.5.6
+
+### Patch Changes
+
+- 8a8f3bff: fix bug;
+
+## 1.5.6-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 1.5.5
+
+### Patch Changes
+
+- 68236fb3: fix bugs;
+
+## 1.5.5-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
+## 1.5.4
+
+### Patch Changes
+
+- e8bc10c4: add IDs;
+
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- add IDs;
+
+## 1.5.3
+
+### Patch Changes
+
+- 77c9c09b: fix bug;
+
+## 1.5.3-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 1.5.2
+
+### Patch Changes
+
+- f7bfae80: fix bug;
+
+## 1.5.2-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
+## 1.5.1
+
+### Patch Changes
+
+- 34efc6c0: update
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- update
+
+## 1.5.0
+
+### Minor Changes
+
+- dd94bfa9: update
+
+### Patch Changes
+
+- 6cb9c466: fix bug;
+
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- fix bug;
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- update
+
 ## 1.4.3
 
 ### Patch Changes

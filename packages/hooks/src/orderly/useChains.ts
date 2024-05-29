@@ -71,7 +71,8 @@ export function useChains(
   options: UseChainsOptions = {}
 ) {
   const { pick: pickField, ...swrOptions } = options;
-  const { filteredChains: allowedChains } = useContext(OrderlyContext);
+  const { filteredChains: allowedChains, configStore } =
+    useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -90,15 +91,18 @@ export function useChains(
   };
 
   // only prod env return mainnet chains info
-  // TODO: remove https://api-evm.orderly.org api base
   const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
     "https://api-evm.orderly.org/v1/public/token",
     { ...commonSwrOpts }
   );
 
+  const brokerId = configStore.get("brokerId");
+
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
-    "/v1/public/chain_info",
+    `/v1/public/chain_info${
+      brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+    }`,
     { ...commonSwrOpts }
   );
 
@@ -221,6 +225,7 @@ export function fillChainsInfo(
             symbol: item.token,
             address: chain.contract_address,
             decimals: chain.decimals,
+            display_name: chain.display_name,
           },
         ],
       };
