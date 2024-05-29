@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { tv, type VariantProps } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
+import { tv } from "../utils/tv";
 
 import { CaretUpIcon, CaretDownIcon, CheckIcon } from "../icon";
 
@@ -17,7 +18,7 @@ const selectVariants = tv({
       "oui-rounded-md",
       "oui-px-2",
       // "oui-py-2",
-      "oui-border",
+
       "oui-space-x-2",
       // "oui-text-sm",
       "oui-shadow-sm",
@@ -34,7 +35,8 @@ const selectVariants = tv({
     ],
     scrollUpButton:
       "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
-    scrollDownButton: "flex cursor-default items-center justify-center py-1",
+    scrollDownButton:
+      "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
     content: [
       "oui-relative",
       "oui-z-50",
@@ -42,6 +44,8 @@ const selectVariants = tv({
       "oui-min-w-[8rem]",
       "oui-overflow-hidden",
       "oui-rounded-md",
+      "oui-bg-base-8",
+      "oui-text-base-contrast",
       // "oui-bg-popover",
       // "oui-text-popover-foreground",
       "oui-shadow-md",
@@ -59,6 +63,7 @@ const selectVariants = tv({
     viewport: ["oui-p-1"],
     label: "oui-px-2 oui-py-1.5 oui-text-sm oui-font-semibold",
     item: [
+      "orderly-option-item",
       "oui-relative",
       "oui-flex",
       "oui-w-full",
@@ -71,6 +76,7 @@ const selectVariants = tv({
       "oui-pr-8",
       "oui-text-sm",
       "oui-outline-none",
+      "hover:oui-bg-base-6",
       "focus:oui-bg-accent",
       "focus:oui-text-accent-foreground",
       "data-[disabled]:oui-pointer-events-none",
@@ -79,6 +85,15 @@ const selectVariants = tv({
     separator: "-oui-mx-1 oui-my-1 oui-h-px oui-bg-muted",
   },
   variants: {
+    variant: {
+      outlined: {
+        trigger: ["oui-border"],
+      },
+      contained: {
+        trigger: ["oui-bg-base-4"],
+      },
+      // text
+    },
     position: {
       popper: {
         content: [
@@ -98,12 +113,19 @@ const selectVariants = tv({
     size: {
       sm: {
         trigger: ["oui-h-5", "oui-text-2xs"],
+        item: ["oui-h-6", "oui-text-2xs"],
       },
       md: {
         trigger: ["oui-h-6", "oui-text-2xs"],
+        item: ["oui-h-7", "oui-text-2xs"],
       },
       lg: {
         trigger: ["oui-h-8", "oui-text-xs"],
+        item: ["oui-h-8", "oui-text-xs"],
+      },
+      xl: {
+        trigger: ["oui-h-8", "oui-text-sm"],
+        item: ["oui-h-12", "oui-text-base"],
       },
     },
     error: {
@@ -118,6 +140,7 @@ const selectVariants = tv({
   },
   defaultVariants: {
     size: "md",
+    variant: "outlined",
   },
 });
 
@@ -131,15 +154,29 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
     VariantProps<typeof selectVariants>
->(({ className, children, size, error, ...props }, ref) => {
-  const { trigger } = selectVariants({ size, error });
+>(({ className, children, size, error, variant, asChild, ...props }, ref) => {
+  const { trigger } = selectVariants({ size, error, variant });
+  if (asChild) {
+    return (
+      <SelectPrimitive.Trigger
+        ref={ref}
+        className={trigger({ className })}
+        asChild={asChild}
+        {...props}
+      >
+        {children}
+      </SelectPrimitive.Trigger>
+    );
+  }
   return (
     <SelectPrimitive.Trigger
       ref={ref}
       className={trigger({ className })}
+      asChild={asChild}
       {...props}
     >
       {children}
+
       <SelectPrimitive.Icon
         asChild
         className="oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
@@ -227,16 +264,18 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => {
-  const { item } = selectVariants();
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+    size?: VariantProps<typeof selectVariants>["size"];
+  }
+>(({ className, children, size, ...props }, ref) => {
+  const { item } = selectVariants({ size });
   return (
     <SelectPrimitive.Item ref={ref} className={item({ className })} {...props}>
-      <span className="oui-absolute oui-right-2 oui-flex vh-3.5 oui-w-3.5 oui-items-center oui-justify-center">
+      {/* <span className="oui-absolute oui-right-2 oui-flex vh-3.5 oui-w-3.5 oui-items-center oui-justify-center">
         <SelectPrimitive.ItemIndicator>
           <CheckIcon size={16} />
         </SelectPrimitive.ItemIndicator>
-      </span>
+      </span> */}
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   );

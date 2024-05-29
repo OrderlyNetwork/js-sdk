@@ -10,8 +10,8 @@
   "keywords": [],
   "dependencies": {
     "@orderly.network/chart": "workspace:*",
-    "@orderly.network/react": "workspace:*",
-    "@orderly.network/ui": "workspace:*"
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/hooks": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

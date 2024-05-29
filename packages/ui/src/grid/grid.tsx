@@ -2,8 +2,10 @@ import React from "react";
 import { tv } from "../utils/tv";
 import { VariantProps } from "tailwind-variants";
 import { type BoxProps, Box } from "../box";
+import { gapVariants } from "../layout/gap";
 
 const gridVariants = tv({
+  extend: gapVariants,
   base: ["oui-grid"],
   variants: {
     // inline: {

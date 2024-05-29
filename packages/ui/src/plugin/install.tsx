@@ -1,0 +1,79 @@
+// interface PluginRegistry {}
+
+import { ReactElement, ReactNode } from "react";
+import { ExtensionProvider } from "./pluginContext";
+import { ExtensionPosition } from "./types";
+import { OrderlyExtensionRegistry } from "./registry";
+
+/**
+ * @name ExtensionOptions
+ * @description Extension meta data
+ */
+export type ExtensionOptions<Props> = {
+  name: string;
+  /**
+   * which ctx data the extension available to use
+   */
+  scope?: string[];
+  /**
+   * @description define the extension require @orderly.network/hook version, optional
+   * @default "*"
+   */
+  engines?: string; //
+  positions: ExtensionPosition[];
+  builder?: () => Props;
+  __isInternal?: boolean;
+  entry?: string[];
+  // dependencies?: string[]; // define the extension require other extensions, optional
+  // lifecycle hooks
+  /**
+   * fire when the extension is installed
+   * @returns
+   */
+  installed?: () => Promise<void>;
+  onInit?: () => void;
+  activate?: () => Promise<void>;
+  deactivate?: () => Promise<void>;
+};
+
+type ExtensionRenderComponentType<Props> =
+  | ReactElement
+  | ((props: Props) => ReactElement);
+
+// type ExtensionRenderComponent = (
+//   component: ExtensionRenderComponentType<Props>
+// ) => void;
+
+export const installExtension = <Props extends unknown = {}>(
+  options: ExtensionOptions<Props>
+): ((component: ExtensionRenderComponentType<Props>) => void) => {
+  return (component) => {
+    const registry = OrderlyExtensionRegistry.getInstance();
+
+    registry.register<Props>({
+      name: options.name,
+      positions: options.positions,
+      __isInternal: !!options.__isInternal,
+      builder: options.builder,
+
+      render: (props) => {
+        console.log("[plugin] render:", options.name);
+        const children =
+          typeof component === "function" ? component(props) : component;
+
+        return <ExtensionProvider>{children}</ExtensionProvider>;
+      },
+    });
+  };
+};
+
+/**
+ * update the extension builder function
+ */
+export const setExtensionBuilder = <Props extends unknown = {}>(
+  position: ExtensionPosition,
+  builder: () => Props
+) => {
+  const registry = OrderlyExtensionRegistry.getInstance();
+  registry.setBuilder(position, builder);
+};

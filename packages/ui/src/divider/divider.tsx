@@ -1,5 +1,6 @@
+import { tv } from "../utils/tv";
 import React from "react";
-import { VariantProps, tv } from "tailwind-variants";
+import { VariantProps } from "tailwind-variants";
 
 const dividerVariants = tv({
   base: [],
@@ -32,9 +33,9 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
       ref={ref}
       {...rest}
       className={dividerVariants({
-        className,
         direction,
         highlight,
+        className,
       })}
     />
   );

@@ -92,6 +92,10 @@ const config: StorybookConfig = {
         //   "../../../packages/component/src"
         // ),
         "@orderly.network/ui": resolve(__dirname, "../../../packages/ui/src"),
+        "@orderly.network/react": resolve(
+          __dirname,
+          "../../../packages/component/src"
+        ),
       };
 
       // if (config.module) {

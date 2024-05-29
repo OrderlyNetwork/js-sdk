@@ -23,6 +23,7 @@
       "@orderly.network/ui": ["../../packages/ui/src"],
       "@orderly.network/portfolio": ["../../packages/portfolio/src"],
       "@orderly.network/chart": ["../../packages/chart/src"],
+      "@orderly.network/react": ["../../packages/component/src"]
     }
   },
   "include": ["src"]

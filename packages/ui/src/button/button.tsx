@@ -30,6 +30,7 @@ const buttonVariants = tv({
     },
     color: {
       primary: ["hover:oui-bg-primary/70"],
+      secondary: "",
       success: [],
       danger: [],
       warning: [],
@@ -48,6 +49,11 @@ const buttonVariants = tv({
       variant: "contained",
       color: "primary",
       className: ["oui-bg-primary", "oui-text-primary-contrast"],
+    },
+    {
+      variant: "contained",
+      color: "secondary",
+      className: ["oui-bg-base-4", "oui-text-primary-contrast"],
     },
     {
       variant: "contained",

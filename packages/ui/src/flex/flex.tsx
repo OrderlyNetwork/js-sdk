@@ -1,10 +1,10 @@
 import { ElementRef, forwardRef } from "react";
 import { layoutVariants } from "../layout/layout";
 import { gapVariants } from "../layout/gap";
-import { parseSizeProps } from "../helpers/parse-props";
-import { Slot } from "@radix-ui/react-slot";
-import { tv, VariantProps } from "tailwind-variants";
+import { VariantProps } from "tailwind-variants";
 import { positionVariants } from "../layout/position";
+import { tv } from "../utils/tv";
+import { Box, BoxProps } from "../box";
 
 type FlexElement = ElementRef<"div">;
 
@@ -16,8 +16,8 @@ type FlexElement = ElementRef<"div">;
 const flexBaseVariant = tv({
   variants: {
     ...gapVariants.variants,
-    ...layoutVariants.variants,
-    ...positionVariants.variants,
+    // ...layoutVariants.variants,
+    // ...positionVariants.variants,
   },
 });
 
@@ -71,64 +71,49 @@ const flexVariant = tv(
   },
   {
     responsiveVariants: true,
-    // twMerge: true,
-    // twMergeConfig: {
-    //   prefix: "oui-",
-    // },
   }
 );
 
 // const flexVariant = compose(layoutVariants, gapVariants, flexBaseVariant);
-interface FlexProps
-  extends React.ButtonHTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof flexVariant> {
-  asChild?: boolean;
-  as?: "div" | "span";
-  width?: string | number;
-  height?: string | number;
+interface FlexProps extends BoxProps, VariantProps<typeof flexVariant> {
+  // asChild?: boolean;
+  // as?: "div" | "span";
+  // width?: string | number;
+  // height?: string | number;
 }
 
-const Flex = forwardRef<FlexElement, FlexProps>((props, forwardedRef) => {
+const Flex = forwardRef<FlexElement, FlexProps>((props, ref) => {
   const {
-    asChild = false,
-    as: TAG = "div",
     className,
-    p,
-    px,
-    py,
-    direction,
-    itemAlign,
-    justify,
+    display,
     gap,
     gapX,
     gapY,
-    style,
     wrap,
-    position,
+    justify,
+    itemAlign,
+    direction,
     ...rest
-  } = parseSizeProps(props);
-
-  const Comp = asChild ? Slot : TAG;
+  } = props;
+  // const Comp = asChild ? Slot : TAG;
+  //
+  console.log("==========", rest);
 
   return (
-    <Comp
-      style={style}
+    <Box
+      ref={ref}
       className={flexVariant({
         className,
-        p,
-        px,
-        py,
+        display,
         gap,
         gapX,
         gapY,
-        direction,
+        wrap,
         justify,
         itemAlign,
-        wrap,
-        position,
+        direction,
       })}
       {...rest}
-      ref={forwardedRef}
     />
   );
 });

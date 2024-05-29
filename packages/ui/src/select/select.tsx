@@ -11,14 +11,15 @@ import {
 export type SelectProps = SelectPrimitive.SelectProps & {
   size?: "md" | "sm" | "lg";
   error?: boolean;
+  placeholder?: React.ReactNode;
 };
 
 export const Select: FC<PropsWithChildren<SelectProps>> = (props) => {
-  const { children, size, error, ...rest } = props;
+  const { children, size, error, placeholder, ...rest } = props;
   return (
     <SelectRoot {...rest}>
       <SelectTrigger size={size} error={error}>
-        <SelectValue placeholder="Select a fruit" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>{children}</SelectContent>
     </SelectRoot>

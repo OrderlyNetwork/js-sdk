@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 import { Select, SelectItem } from "@orderly.network/ui";
 
 const meta = {
@@ -25,6 +25,7 @@ const meta = {
     size: "md",
     error: false,
     disabled: false,
+    onValueChange: fn(),
   },
 };
 
@@ -41,5 +42,26 @@ export const Default: Story = {
         <SelectItem value="grapes">Grapes</SelectItem>
       </>
     ),
+    value: "apple",
+  },
+};
+
+export const Chains: Story = {
+  render: (args) => {
+    return <Select.chains {...args} />;
+  },
+  args: {
+    size: "md",
+    error: false,
+    currentChain: {
+      name: "ETH",
+      id: 1,
+    },
+    chains: [
+      {
+        name: "ETH",
+        id: 1,
+      },
+    ],
   },
 };

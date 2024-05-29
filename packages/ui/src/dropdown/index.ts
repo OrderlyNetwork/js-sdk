@@ -1,5 +1,5 @@
 export {
-  DropdownMenu,
+  DropdownMenu as DropdownMenuRoot,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,

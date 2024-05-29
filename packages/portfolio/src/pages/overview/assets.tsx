@@ -15,7 +15,7 @@ export const Assets = () => {
       <Statistic label="Portfolio value">
         <Text.numeral className="oui-text-2xl">123424.22</Text.numeral>
       </Statistic>
-      <Divider />
+      <Divider className="oui-mt-4 oui-mb-4" highlight={3} />
       <Grid cols={3}>
         <Statistic
           label="Unreal. PnL"

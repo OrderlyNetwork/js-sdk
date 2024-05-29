@@ -74,10 +74,10 @@ export type CommonOrderlyAppState = {
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 
   referral?: {
-    saveRefCode?: boolean,
-    onClickReferral?: () => void,
-    onBoundRefCode?: (success: boolean, error: any) => void,
-  }
+    saveRefCode?: boolean;
+    onClickReferral?: () => void;
+    onBoundRefCode?: (success: boolean, error: any) => void;
+  };
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -99,10 +99,10 @@ type OrderlyAppProviderProps = CommonOrderlyAppState & {
    */
   includeTestnet?: boolean;
   referral?: {
-    saveRefCode?: boolean,
-    onClickReferral?: () => void,
-    onBoundRefCode?: (success: boolean, error: any) => void,
-  }
+    saveRefCode?: boolean;
+    onClickReferral?: () => void;
+    onBoundRefCode?: (success: boolean, error: any) => void;
+  };
 };
 
 export const OrderlyAppProvider: FC<
@@ -391,11 +391,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get('ref');
+    const refCode = searchParams.get("ref");
     if (refCode) {
-        localStorage.setItem("referral_code", refCode);
+      localStorage.setItem("referral_code", refCode);
     }
-}, []);
+  }, []);
 
   return (
     <OrderlyAppContext.Provider

@@ -7,6 +7,7 @@ export { Spinner } from "./spinner";
 export { Input, inputFormatter, InputAdditional, TextField } from "./input";
 export { Checkbox } from "./checkbox";
 export { Switch } from "./switch";
+export { Badge } from "./badge/badge";
 export * from "./tooltip";
 export * from "./table";
 export * from "./scrollarea";
@@ -26,3 +27,6 @@ export type { FlexProps } from "./flex";
 export type { TextProps } from "./typography";
 export type { InputProps, TextFieldProps } from "./input";
 export type { SpinnerProps } from "./spinner";
+
+export { OrderlyAppProvider } from "./provider/orderlyProvider";
+export * from "./plugin";

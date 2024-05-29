@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactNode, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useMemo } from "react";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
 
@@ -11,6 +11,16 @@ interface Props {
 export const ExtensionSlot: FC<Props> = (props) => {
   const { position, scope, ...rest } = props;
   // const [component, setComponent] = useState<ReactNode | null>(null);
+  //
+  const plugin = useMemo(() => {
+    const registry = OrderlyExtensionRegistry.getInstance();
+    const plugin = registry.getPluginsByPosition(position);
+    return plugin;
+  }, []);
+
+  const _innerProps = plugin?.builder?.() || rest;
+
+  console.log("plugin", plugin, _innerProps);
 
   const Ele = useMemo(() => {
     const registry = OrderlyExtensionRegistry.getInstance();

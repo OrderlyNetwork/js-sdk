@@ -1,6 +1,6 @@
 // interface PluginRegistry {}
 
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import { ExtensionProvider } from "./pluginContext";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
@@ -25,15 +25,16 @@ export type ExtensionOptions = {
 };
 
 type ExtensionRenderComponentType<Props> =
-  | ReactNode
-  | ((props: Props) => ReactNode);
+  | ReactElement
+  | ((props: Props) => ReactElement);
 
 // type ExtensionRenderComponent = (
 //   component: ExtensionRenderComponentType<Props>
 // ) => void;
 
 export const installExtension = <Props extends unknown = {}>(
-  options: ExtensionOptions
+  options: ExtensionOptions,
+  builder?: () => Props
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
   return (component) => {
     const registry = OrderlyExtensionRegistry.getInstance();
@@ -42,6 +43,7 @@ export const installExtension = <Props extends unknown = {}>(
       name: options.name,
       positions: options.positions,
       __isInternal: !!options.__isInternal,
+      builder,
 
       render: (props) => {
         console.log("[plugin] render:", options.name);

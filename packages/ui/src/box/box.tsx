@@ -8,7 +8,7 @@ import { shadowVariants } from "../layout/shadow";
 import { decorationVariants } from "../layout/decoration";
 import { tv } from "../utils/tv";
 
-const baseBoxVariants = tv({
+export const baseBoxVariants = tv({
   base: ["oui-box oui-size"],
   variants: {
     ...layoutVariants.variants,
@@ -53,6 +53,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
   } = parseSizeProps(props);
 
   const Comp = asChild ? Slot : TAG;
+
+  console.log("????", style);
 
   return (
     <Comp
