@@ -1,5 +1,17 @@
 # storybook
 
+## 1.3.7
+
+### Patch Changes
+
+- 14b58ba3: fix bugs;
+- Updated dependencies [14b58ba3]
+  - @orderly.network/react@1.5.7
+  - @orderly.network/core@1.5.7
+  - @orderly.network/hooks@1.5.7
+  - @orderly.network/web3-onboard@1.5.7
+  - @orderly.network/web3-modal@1.5.7
+
 ## 1.3.7-alpha.0
 
 ### Patch Changes
