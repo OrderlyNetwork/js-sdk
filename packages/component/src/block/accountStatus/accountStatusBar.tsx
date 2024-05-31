@@ -98,7 +98,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
                 // variant={"gradient"}
                 className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
                 loading={props.loading}
-                disabled={props.loading || errors?.ChainNetworkNotSupport}
+                disabled={props.loading}
               >
                 {buttonLabel}
               </Button>
