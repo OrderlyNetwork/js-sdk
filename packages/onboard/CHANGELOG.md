@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.8-internal.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.8-internal.1
+  - @orderly.network/types@1.5.8-internal.1
+
 ## 1.5.8-internal.0
 
 ### Patch Changes
