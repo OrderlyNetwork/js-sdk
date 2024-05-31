@@ -1,7 +1,8 @@
 import { ComponentPropsWithout, RemovedProps } from "@/helpers/component-props";
+import { tv } from "../utils/tv";
 import { Slot } from "@radix-ui/react-slot";
 import React from "react";
-import { tv, type VariantProps } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
 
 const textVariants = tv({
   variants: {
@@ -38,12 +39,28 @@ const textVariants = tv({
       sell: "oui-text-trade-loss",
       lose: "oui-text-trade-loss",
       profit: "oui-text-trade-profit",
+      // gradient
+    },
+    neutral: {
+      12: "oui-text-base-contrast-12",
+      20: "oui-text-base-contrast-20",
+      36: "oui-text-base-contrast-36",
+      54: "oui-text-base-contrast-54",
+      80: "oui-text-base-contrast-80",
+      98: "oui-text-base-contrast",
     },
   },
+  // compoundVariants:[
+  //   {
+  //     color:'neutral',
+
+  //   }
+  // ],
 
   defaultVariants: {
     // size: "base",
     weight: "regular",
+    neutral: 98,
   },
 });
 
@@ -78,6 +95,7 @@ const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
     color,
     size,
     weight,
+    neutral,
     ...textProps
   } = props;
   return (
@@ -90,6 +108,7 @@ const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
         color,
         size,
         weight,
+        neutral,
       })}
     >
       {asChild ? children : <Tag>{children}</Tag>}

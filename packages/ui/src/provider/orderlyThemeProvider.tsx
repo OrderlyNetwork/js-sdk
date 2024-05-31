@@ -2,14 +2,14 @@ import { ComponentType, FC, PropsWithChildren } from "react";
 import { ExtensionPosition } from "../plugin/types";
 import { ComponentsProvider } from "./componentProvider";
 
-export type OrderlyAppProviderProps = {
+export type OrderlyThemeProviderProps = {
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };
 };
 
-export const OrderlyAppProvider: FC<
-  PropsWithChildren<OrderlyAppProviderProps>
+export const OrderlyThemeProvider: FC<
+  PropsWithChildren<OrderlyThemeProviderProps>
 > = (props) => {
   return (
     <ComponentsProvider components={props.components}>

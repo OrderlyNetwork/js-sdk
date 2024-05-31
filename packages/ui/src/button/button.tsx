@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import { BaseButton, BaseButtonProps } from "./base";
 import { shadowVariants } from "../layout/shadow";
+import { parseAngleProps } from "../helpers/parse-props";
 
 const buttonVariants = tv({
   base: [
@@ -19,7 +20,7 @@ const buttonVariants = tv({
       text: "oui-bg-transparent",
       outlined: "oui-border",
       contained: "oui-text-white",
-      gradient: "oui-bg-gradient-to-r oui-from-slate-100 oui-to-slate-600",
+      gradient: "oui-gradient-brand",
     },
     size: {
       xs: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"], //24px
@@ -75,6 +76,12 @@ const buttonVariants = tv({
       color: "gray",
       className: ["oui-bg-base-2", "oui-text-base-contrast"],
     },
+    {
+      variant: "contained",
+      disabled: true,
+      className: ["oui-bg-base-3", "oui-text-base-contrast"],
+    },
+    // contained end
     // {
     //   variant: "contained",
     //   color: "darkGray",
@@ -106,15 +113,42 @@ const buttonVariants = tv({
       color: "gray",
       className: ["oui-border-base-2", "oui-text-base"],
     },
+    // outlined end
     // {
     //   variant: "outlined",
     //   color: "darkGray",
     //   className: ["oui-border-base-4", "oui-text-base"],
     // },
+    // text
     {
-      variant: "contained",
-      disabled: true,
-      className: ["oui-bg-base-3", "oui-text-base-contrast"],
+      variant: "text",
+      color: "primary",
+      className: ["oui-text-primary hover:oui-bg-primary/10"],
+    },
+    {
+      variant: "text",
+      color: "success",
+      className: ["oui-text-success hover:oui-bg-success/10"],
+    },
+    {
+      variant: "text",
+      color: "warning",
+      className: ["oui-text-warning hover:oui-bg-warning/10"],
+    },
+    {
+      variant: "text",
+      color: "danger",
+      className: ["oui-text-danger hover:oui-bg-danger/10"],
+    },
+    {
+      variant: "text",
+      color: "gray",
+      className: ["oui-text-base hover:oui-bg-base-2/10"],
+    },
+    {
+      variant: "text",
+      color: "secondary",
+      className: ["oui-text-base-contrast-36 hover:oui-bg-base-2/10"],
     },
   ],
   defaultVariants: {
@@ -127,30 +161,49 @@ const buttonVariants = tv({
 
 interface ButtonProps
   extends Omit<BaseButtonProps, "size">,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  angle?: number;
+}
 
 const Button = React.forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ButtonProps>
->(({ className, variant, size, color, fullWidth, shadow, ...props }, ref) => {
-  // const Comp = asChild ? Slot : "button";
-  return (
-    <BaseButton
-      className={buttonVariants({
-        variant,
-        size,
-        color,
-        className,
-        disabled: props.disabled,
-        fullWidth,
-        shadow,
-      })}
-      size={size}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+>(
+  (
+    {
+      className,
+      variant,
+      size,
+      color,
+      fullWidth,
+      shadow,
+      angle,
+      style,
+      ...props
+    },
+    ref
+  ) => {
+    // const Comp = asChild ? Slot : "button";
+    const angleStyle = parseAngleProps({ angle });
+    return (
+      <BaseButton
+        className={buttonVariants({
+          variant,
+          size,
+          color,
+          className,
+          disabled: props.disabled,
+          fullWidth,
+          shadow,
+        })}
+        size={size}
+        ref={ref}
+        style={{ ...style, ...angleStyle }}
+        {...props}
+      />
+    );
+  }
+);
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

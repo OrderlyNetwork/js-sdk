@@ -6,11 +6,11 @@ const dividerVariants = tv({
   base: [],
   variants: {
     highlight: {
-      1: "oui-border-[rgba(255,255,255,0.04)]", // 16% opacity
-      2: "oui-border-[rgba(255,255,255,0.06)]",
-      3: "oui-border-[rgba(255,255,255,0.08)]",
-      4: "oui-border-[rgba(255,255,255,0.12)]",
-      5: "oui-border-[rgba(255,255,255,0.16)]",
+      1: "oui-border-line-4",
+      2: "oui-border-line-6",
+      3: "oui-border-line-8",
+      4: "oui-border-line-12",
+      5: "oui-border-line-16",
     },
     direction: {
       horizontal: ["oui-w-full", "oui-border-b"],

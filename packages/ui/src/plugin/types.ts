@@ -21,6 +21,8 @@ export enum ExtensionPositionEnum {
   DepositForm = "depositForm",
   WithdrawForm = "withdrawForm",
   ListEmpty = "listEmpty",
+  MainNav = "mainNav",
+  SideNav = "sideNav",
   /**
    * Wallet button
    */

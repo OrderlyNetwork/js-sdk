@@ -6,7 +6,7 @@
   :root {
     /* colors */
     --oui-color-primary: 51 95 252;
-    --oui-color-primary-light: 208 140 255;
+    --oui-color-primary-light: 96 140 255;
     --oui-color-primary-darken: 152 62 214;
     --oui-color-primary-contrast: 255 255 255;
 
@@ -48,6 +48,7 @@
     --oui-color-base-10: 32 39 55;
 
     --oui-color-base-foreground: 255 255 255;
+    --oui-color-line: 255 255 255;
 
     --oui-color-trading-loss: 217 45 107;
     --oui-color-trading-loss-contrast: 255 255 255;

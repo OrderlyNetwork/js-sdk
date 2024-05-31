@@ -7,13 +7,27 @@ import { VariantProps } from "tailwind-variants";
 import { shadowVariants } from "../layout/shadow";
 import { decorationVariants } from "../layout/decoration";
 import { tv } from "../utils/tv";
+import { positionVariants } from "../layout/position";
+import { visibleVariants } from "../layout/visible";
 
 export const baseBoxVariants = tv({
-  base: ["oui-box oui-size"],
+  base: ["oui-box"],
   variants: {
     ...layoutVariants.variants,
     ...shadowVariants.variants,
     ...decorationVariants.variants,
+    ...positionVariants.variants,
+    ...visibleVariants.variants,
+    __position: {
+      true: "oui-position",
+    },
+    __size: {
+      true: "oui-size",
+    },
+  },
+  defaultVariants: {
+    __position: false,
+    __size: false,
   },
 });
 
@@ -25,11 +39,23 @@ type BoxElement = React.ElementRef<"div">;
 
 interface BoxProps
   extends React.ButtonHTMLAttributes<HTMLDivElement | HTMLSpanElement>,
-    VariantProps<typeof boxVariants> {
+    Omit<VariantProps<typeof boxVariants>, "__position" | "__size"> {
   asChild?: boolean;
-  as?: "div" | "span";
+  as?:
+    | "div"
+    | "span"
+    | "nav"
+    | "section"
+    | "article"
+    | "aside"
+    | "header"
+    | "footer";
   width?: string | number;
   height?: string | number;
+  left?: string | number;
+  right?: string | number;
+  top?: string | number;
+  bottom?: string | number;
   /**
    * Angle of the gradient
    */
@@ -49,12 +75,12 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     border,
     gradient,
     r,
+    invisible,
+    position,
     ...rest
   } = parseSizeProps(props);
 
   const Comp = asChild ? Slot : TAG;
-
-  console.log("????", style);
 
   return (
     <Comp
@@ -68,6 +94,12 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
         shadow,
         border,
         gradient,
+        position,
+        invisible,
+        __position: typeof position !== "undefined",
+        __size:
+          typeof props.width !== "undefined" ||
+          typeof props.height !== "undefined",
       })}
       {...rest}
       ref={forwardedRef}

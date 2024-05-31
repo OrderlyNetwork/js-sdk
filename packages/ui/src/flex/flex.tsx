@@ -64,6 +64,7 @@ const flexVariant = tv(
       itemAlign: "start",
       justify: "start",
       wrap: "noWrap",
+      gap: 4,
       // gap: 0,
       // gapX: 0,
       // gapY: 0,
@@ -97,7 +98,6 @@ const Flex = forwardRef<FlexElement, FlexProps>((props, ref) => {
   } = props;
   // const Comp = asChild ? Slot : TAG;
   //
-  console.log("==========", rest);
 
   return (
     <Box

@@ -8,8 +8,8 @@ export type Gradient = {
 export const decorationVariants = {
   variants: {
     border: {
-      true: "oui-border",
-      false: "oui-border-none",
+      true: "oui-border oui-border-line",
+      // false: "oui-border-none",
     },
     r: {
       none: "oui-rounded-none",

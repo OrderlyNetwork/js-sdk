@@ -1,4 +1,4 @@
-import { ExtensionPosition } from "@/plugin/types";
+import { ExtensionPosition, ExtensionPositionEnum } from "../../types";
 import { installExtension } from "../../install";
 import Comp from "./comp";
 
@@ -9,7 +9,7 @@ installExtension<{
 }>({
   name: "swap-deposit",
   scope: ["*"],
-  positions: [ExtensionPosition.DepositForm],
+  positions: [ExtensionPositionEnum.DepositForm],
 })((props) => {
   console.log(props);
   return <Comp />;

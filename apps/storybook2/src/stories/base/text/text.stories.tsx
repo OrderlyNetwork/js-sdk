@@ -67,3 +67,26 @@ return <Flex direction="column">
      
     }
   }
+
+  export const Gradient:Story = {
+    render: (args) => {
+      return <Text.gradient {...args}>One DEX to rule all chains</Text.gradient>
+    },
+    args:{
+      angle: 90,
+    },
+    argTypes:{
+      color:{
+        control: {
+          type: "inline-radio",
+        },
+        options: ['primary', 'brand', 'neutral', 'warning', 'danger', 'success',],
+      },
+      angle:{
+        control: {
+          type: "inline-radio",
+        },
+        options: ['0', '45', '90', '135', '180',],
+      },
+    }
+  }

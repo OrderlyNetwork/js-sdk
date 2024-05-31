@@ -1,7 +1,8 @@
-const { withTV } = require('tailwind-variants/transformer');
+const { withTV } = require("tailwind-variants/transformer");
 
-const {sizePlugin} = require('./src/tailwind/size')
-const {gradientPlugin} = require('./src/tailwind/gradient')
+const { sizePlugin } = require("./src/tailwind/size");
+const { gradientPlugin } = require("./src/tailwind/gradient");
+const { positionPlugin } = require("./src/tailwind/position");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -12,51 +13,44 @@ module.exports = withTV({
 
   theme: {
     fontSize: {
-      "3xs":
-        ["var(--oui-font-size-3xs, 0.625rem)",'0.625rem'], // 10px
-      "2xs":
-        ["var(--oui-font-size-2xs, 0.75rem)",'1.125rem'], // 12px
-      xs: ["var(--oui-font-size-xs, calc(0.875rem - 1px))",'1.25rem'], // 13px
-      sm: ["var(--oui-font-size-sm, 	0.875rem)",'1.25rem'], // 14px
-      base: ["var(--oui-font-size-base, 1rem)",'1.5rem'], // 16px
-      lg: ["var(--oui-font-size-lg, 1.125rem)",'1.625rem'], // 18px
-      xl: ["var(--oui-font-size-xl, 1.25rem)",'1.75rem'], // 20px
-      "2xl":
-        ["var(--oui-font-size-2xl, 1.5rem)",'2rem'], // 24px
-      "3xl":
-        ["var(--oui-font-size-3xl, 1.75rem)",'2.25rem'], // 28px
-      "4xl":
-        ["var(--oui-font-size-4xl, 1.875rem)",'2.375rem'], // 30px
-      "5xl":
-        ["var(--oui-font-size-5xl, 2.25rem)",'2.75rem'], // 36px
-      "6xl":
-        ["var(--oui-font-size-6xl, 3rem)",'3rem'], // 48px
+      "3xs": ["var(--oui-font-size-3xs, 0.625rem)", "0.625rem"], // 10px
+      "2xs": ["var(--oui-font-size-2xs, 0.75rem)", "1.125rem"], // 12px
+      xs: ["var(--oui-font-size-xs, calc(0.875rem - 1px))", "1.25rem"], // 13px
+      sm: ["var(--oui-font-size-sm, 	0.875rem)", "1.25rem"], // 14px
+      base: ["var(--oui-font-size-base, 1rem)", "1.5rem"], // 16px
+      lg: ["var(--oui-font-size-lg, 1.125rem)", "1.625rem"], // 18px
+      xl: ["var(--oui-font-size-xl, 1.25rem)", "1.75rem"], // 20px
+      "2xl": ["var(--oui-font-size-2xl, 1.5rem)", "2rem"], // 24px
+      "3xl": ["var(--oui-font-size-3xl, 1.75rem)", "2.25rem"], // 28px
+      "4xl": ["var(--oui-font-size-4xl, 1.875rem)", "2.375rem"], // 30px
+      "5xl": ["var(--oui-font-size-5xl, 2.25rem)", "2.75rem"], // 36px
+      "6xl": ["var(--oui-font-size-6xl, 3rem)", "3rem"], // 48px
     },
-    lineHeight:{
-      '3xs': '0.625rem',
+    lineHeight: {
+      "3xs": "0.625rem",
     },
     boxShadow: {
-      'sm': "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
-      DEFAULT: "var(--oui-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))",
-      'md': "var(--oui-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))",
-      'lg': "var(--oui-shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1))",
-      'xl': "var(--oui-shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1))",
-      '2xl': "var(--oui-shadow-2xl, 0 25px 50px -12px rgb(0 0 0 / 0.25))",
+      sm: "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
+      DEFAULT:
+        "var(--oui-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))",
+      md: "var(--oui-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))",
+      lg: "var(--oui-shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1))",
+      xl: "var(--oui-shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1))",
+      "2xl": "var(--oui-shadow-2xl, 0 25px 50px -12px rgb(0 0 0 / 0.25))",
     },
     extend: {
-      spacing:{
-        '13': '3.25rem',
-        'sm': '22.5rem',
-        'md': '26.5rem',
-        'lg': '33.75rem',
+      spacing: {
+        13: "3.25rem",
+        sm: "22.5rem",
+        md: "26.5rem",
+        lg: "33.75rem",
       },
-      colors:{
+      colors: {
         primary: {
           DEFAULT: "rgb(var(--oui-color-primary) / <alpha-value>)",
-          // light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
+          light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
           // darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
-          contrast:
-            "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
+          contrast: "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "rgb(var(--oui-color-secondary) / <alpha-value>)",
@@ -64,7 +58,7 @@ module.exports = withTV({
         tertiary: {
           DEFAULT: "rgb(var(--oui-color-tertiary) / <alpha-value>)",
         },
-        
+
         quaternary: {
           DEFAULT: "rgb(var(--oui-color-quaternary) / <alpha-value>)",
         },
@@ -82,15 +76,13 @@ module.exports = withTV({
           DEFAULT: "rgb(var(--oui-color-warning) / <alpha-value>)",
           light: "rgb(var(--oui-color-warning-light) / <alpha-value>)",
           darken: "rgb(var(--oui-color-warning-darken) / <alpha-value>)",
-          contrast:
-            "rgb(var(--oui-color-warning-contrast) / <alpha-value>)",
+          contrast: "rgb(var(--oui-color-warning-contrast) / <alpha-value>)",
         },
         success: {
           DEFAULT: "rgb(var(--oui-color-success) / <alpha-value>)",
           light: "rgb(var(--oui-color-success-light) / <alpha-value>)",
           darken: "rgb(var(--oui-color-success-darken) / <alpha-value>)",
-          contrast:
-            "rgb(var(--oui-color-success-contrast) / <alpha-value>)",
+          contrast: "rgb(var(--oui-color-success-contrast) / <alpha-value>)",
         },
         base: {
           1: "rgb(var(--oui-color-base-1) / <alpha-value>)",
@@ -113,6 +105,13 @@ module.exports = withTV({
             12: "rgb(var(--oui-color-base-foreground) / 0.12)",
           },
         },
+        line: {
+          4: "rgb(var(--oui-color-line, 255 255 255) / 0.04)",
+          6: "rgb(var(--oui-color-line, 255 255 255) / 0.06)",
+          DEFAULT: "rgb(var(--oui-color-line, 255 255 255) / 0.08)",
+          12: "rgb(var(--oui-color-line, 255 255 255) / 0.12)",
+          416: "rgb(var(--oui-color-line, 255 255 255) / 0.16)",
+        },
         trade: {
           loss: {
             DEFAULT: "rgb(var(--oui-color-trading-loss) / <alpha-value>)",
@@ -129,10 +128,13 @@ module.exports = withTV({
         // gradient: {
         //   success: 'linear-gradient(var(--oui-linear-degree, 90deg), var(--oui-color-success) 0%, var(--oui-color-success-darken) 100%)',
         // }
-      }
+      },
     },
-    
   },
-  plugins: [sizePlugin(),gradientPlugin(),require("tailwindcss-animate"),],
+  plugins: [
+    sizePlugin(),
+    gradientPlugin(),
+    positionPlugin(),
+    require("tailwindcss-animate"),
+  ],
 });
-

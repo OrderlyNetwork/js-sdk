@@ -27,6 +27,8 @@ export { ArrowUpSquareFillIcon } from "./arrowUpSquareFill";
 export { ArrowDownSquareFillIcon } from "./arrowDownSquareFill";
 export { FeeTierIcon } from "./feeTier";
 export { EditIcon } from "./edit";
+export { EyeIcon } from "./eye";
+export { EyeCloseIcon } from "./eyeClose";
 
 export { CoinIcon } from "./coinIcon";
 export { ChainIcon } from "./chainIcon";

@@ -2,6 +2,8 @@ import { FC, Fragment, useMemo } from "react";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
 import { useExtensionBuilder } from "./useExtensionBuilder";
+import { Slot } from "@radix-ui/react-slot";
+import { NotFound } from "./notFound";
 
 interface Props {
   position: ExtensionPosition;
@@ -22,11 +24,12 @@ export const ExtensionSlot: FC<Props> = (props) => {
     const registry = OrderlyExtensionRegistry.getInstance();
     const plugin = registry.getPluginsByPosition(position);
 
-    // if (plugin) {
-    //   setComponent(plugin.render({}));
-    // }
-    return plugin?.render;
+    return plugin?.render ?? NotFound;
   }, []);
 
-  return <Fragment>{Ele ? <Ele {...rest} /> : null}</Fragment>;
+  return (
+    <Slot {...(elementProps as any)}>
+      <Ele />
+    </Slot>
+  );
 };

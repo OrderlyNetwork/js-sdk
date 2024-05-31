@@ -1,6 +1,4 @@
-// interface PluginRegistry {}
-
-import { ReactElement, ReactNode } from "react";
+import { ReactElement } from "react";
 import { ExtensionProvider } from "./pluginContext";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";

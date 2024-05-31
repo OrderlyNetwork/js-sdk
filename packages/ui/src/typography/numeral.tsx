@@ -36,6 +36,8 @@ export type NumeralProps = TextProps & {
 
   className?: string;
 
+  unitClassName?: string;
+
   coloring?: boolean;
 
   loading?: boolean;
@@ -86,6 +88,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     showIdentifier = false,
     identifiers,
     className,
+    unitClassName,
     ...rest
   } = props;
   // TODO: check precision
@@ -161,7 +164,9 @@ export const Numeral: FC<NumeralProps> = (props) => {
     ) : undefined;
 
     const unitEle = unit ? (
-      <span className="orderly-numeral-unit">{unit}</span>
+      <span className={cnBase("orderly-numeral-unit", unitClassName)}>
+        {unit}
+      </span>
     ) : undefined;
 
     const prefixEle = prefix ? (

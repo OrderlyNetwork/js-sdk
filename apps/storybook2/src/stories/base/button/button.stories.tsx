@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { Button,  Flex, ArrowUpSquareFillIcon,ArrowDownSquareFillIcon } from "@orderly.network/ui";
+import {
+  Button,
+  Flex,
+  ArrowUpSquareFillIcon,
+  ArrowDownSquareFillIcon,
+} from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Button",
@@ -36,6 +41,12 @@ const meta = {
         type: "inline-radio",
       },
       options: ["contained", "outlined", "gradient"],
+    },
+    angle: {
+      control: {
+        type: "inline-radio",
+      },
+      options: ["0", "45", "90", "135", "180"],
     },
     shadow: {
       control: {
@@ -99,7 +110,7 @@ export const IconButton: Story = {
           Leading element
         </Button>
         <Button {...args} trailing={<ArrowDownSquareFillIcon />}>
-        Trailing element
+          Trailing element
         </Button>
       </Flex>
     );
