@@ -22,6 +22,7 @@
     "@orderly.network/web3-modal": "1.5.7"
   },
   "changesets": [
+    "angry-timers-add",
     "happy-dots-agree",
     "quiet-tools-breathe",
     "sour-boxes-taste"
