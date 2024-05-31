@@ -65,7 +65,7 @@ export const WalletConnectButton: FC<Props> = (props) => {
         props.className
       )}
       loading={props.loading}
-      disabled={props.loading || errors?.ChainNetworkNotSupport}
+      disabled={props.loading}
     >
       {buttonLabel}
     </Button>
