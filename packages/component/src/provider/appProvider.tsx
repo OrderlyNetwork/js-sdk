@@ -319,6 +319,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
   // current connected chain id
   const currentChainId = useMemo<number | null>(() => {
     if (!currentWallet) {
+      setErrors((errors: any) => ({ ...errors, ChainNetworkNotSupport: false }));
       return null;
     }
     const id = currentWallet.chains[0].id;
