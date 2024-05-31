@@ -51,6 +51,8 @@ export const Chains: FC<ChainsProps> = (props) => {
       : ARBITRUM_TESTNET_CHAINID_HEX
   );
 
+  const [chains] = useChains();
+
   const [testChains] = useChains("testnet", {
     pick: "network_infos",
     filter: (item: API.Chain) => isTestnet(item.network_infos?.chain_id),
@@ -79,12 +81,22 @@ export const Chains: FC<ChainsProps> = (props) => {
   }, [defaultChain]);
 
   const chainName = useMemo(() => {
+    let chainId = defaultChain;
+
+    const chainList = networkId === "mainnet" ? chains.mainnet : chains.testnet;
+    const index = chainList.findIndex((item) => {
+      return item.network_infos.chain_id === Number.parseInt(chainId, 16);
+    });
+    
+    if (index === -1 && chainList.length > 0) {
+      chainId = `0x${chainList[0].network_infos.chain_id.toString(16)}`;
+    }
     const chain = findByChainId(
       // @ts-ignore
-      parseInt(connectedChain?.id || defaultChain),
+      parseInt(connectedChain?.id || chainId),
       "network_infos"
     );
-
+    
     if (!chain) return <span>Unknown</span>;
 
     // @ts-ignore
@@ -94,7 +106,7 @@ export const Chains: FC<ChainsProps> = (props) => {
 
     // @ts-ignore
     return <NetworkImage id={chain.chain_id} type="chain" size={16} />;
-  }, [connectedChain, findByChainId, defaultChain]);
+  }, [connectedChain, findByChainId, defaultChain, chains, networkId]);
 
   const switchDomain = (chainId: number) => {
     // const domain = configStore.get("domain");
