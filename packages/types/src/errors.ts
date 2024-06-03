@@ -6,7 +6,7 @@ export class ApiError extends Error {
 }
 
 export class SDKError extends Error {
-  constructor(message: string) {
+  constructor(message: string, private readonly payload?: any) {
     super(`[ORDERLY SDK ERROR]:${message}`);
     this.name = "SDKError";
   }

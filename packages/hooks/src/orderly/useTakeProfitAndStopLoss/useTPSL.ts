@@ -126,7 +126,7 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
-    console.log("[updateOrder:]", key, value);
+    // console.log("[updateOrder:]", key, value);
 
     setOrder((prev) => {
       const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
@@ -173,13 +173,15 @@ export const useTaskProfitAndStopLossInternal = (
 
       if (typeof order.sl_trigger_price !== "undefined") {
         _setOrderValue("sl_trigger_price", order.sl_trigger_price, {
-          ignoreValidate: true,
+          // ignoreValidate: true,
+          ignoreValidate: options?.ignoreValidate,
         });
       }
 
       if (typeof order.tp_trigger_price !== "undefined") {
         _setOrderValue("tp_trigger_price", order.tp_trigger_price, {
-          ignoreValidate: true,
+          // ignoreValidate: true,
+          ignoreValidate: options?.ignoreValidate,
         });
       }
 
@@ -277,6 +279,10 @@ export const useTaskProfitAndStopLossInternal = (
     const defaultOrder = options?.defaultOrder;
     const orderId = defaultOrder?.algo_order_id;
     const algoType = defaultOrder?.algo_type;
+
+    if (errors) {
+      throw new SDKError("Invalid order", errors);
+    }
 
     // if algo_order_id is not existed, create new order
     if (!orderId) {
