@@ -8,7 +8,7 @@ const dividerVariants = tv({
     highlight: {
       1: "oui-border-line-4",
       2: "oui-border-line-6",
-      3: "oui-border-line-8",
+      3: "oui-border-line",
       4: "oui-border-line-12",
       5: "oui-border-line-16",
     },

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ElementType, ReactElement } from "react";
 import { ExtensionProvider } from "./pluginContext";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
@@ -35,14 +35,14 @@ export type ExtensionOptions<Props> = {
 };
 
 type ExtensionRenderComponentType<Props> =
-  | ReactElement
+  | ElementType<Props>
   | ((props: Props) => ReactElement);
 
 // type ExtensionRenderComponent = (
 //   component: ExtensionRenderComponentType<Props>
 // ) => void;
 
-export const installExtension = <Props extends unknown = {}>(
+export const installExtension = <Props,>(
   options: ExtensionOptions<Props>
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
   return (component) => {
@@ -54,13 +54,14 @@ export const installExtension = <Props extends unknown = {}>(
       __isInternal: !!options.__isInternal,
       builder: options.builder,
 
-      render: (props) => {
-        console.log("[plugin] render:", options.name);
-        const children =
-          typeof component === "function" ? component(props) : component;
+      // render: (props) => {
+      //   console.log("[plugin] render:", options.name);
+      //   const children =
+      //     typeof component === "function" ? component(props) : component;
 
-        return <ExtensionProvider>{children}</ExtensionProvider>;
-      },
+      //   return <ExtensionProvider>{children}</ExtensionProvider>;
+      // },
+      render: component,
     });
   };
 };

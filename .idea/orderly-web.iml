@@ -12,6 +12,7 @@
     <content url="file://$MODULE_DIR$/packages/component" />
     <content url="file://$MODULE_DIR$/packages/hooks" />
     <content url="file://$MODULE_DIR$/packages/net" />
+    <content url="file://$MODULE_DIR$/packages/portfolio" />
     <content url="file://$MODULE_DIR$/packages/ui" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

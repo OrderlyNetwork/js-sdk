@@ -1,6 +1,8 @@
-import { ReactNode } from "react";
+import { ElementType, ReactElement, ReactNode } from "react";
 
-export type ExtensionBuilder<Props = any> = () => Props;
+export type ExtensionBuilder<Props = any> = (
+  props?: Partial<Props> & Record<string, any>
+) => Props;
 
 export type ExtensionPosition = ExtensionPositionEnum | string;
 
@@ -14,7 +16,8 @@ export interface Extension<Props extends any = {}> {
 
   builder: ExtensionBuilder<Props>;
 
-  render(ctx: any): ReactNode;
+  // render(ctx: any): ReactNode;
+  render: ElementType<Props> | ((props: Props) => ReactElement);
 }
 
 export enum ExtensionPositionEnum {

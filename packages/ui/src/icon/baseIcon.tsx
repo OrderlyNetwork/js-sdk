@@ -13,6 +13,7 @@ const iconVariants = tv({
       //   tertiary: "oui-text-tertiary",
       white: "oui-text-white",
       black: "oui-text-black",
+      inherit: "oui-text-inherit",
       //   gray: "oui-text-gray",
       //   darkGray: "oui-text-darkGray",
     },

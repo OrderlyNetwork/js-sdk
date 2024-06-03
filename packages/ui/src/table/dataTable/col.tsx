@@ -7,6 +7,14 @@ export type ColumnFixed = "left" | "right";
 
 export type SortOrder = "asc" | "desc";
 
+export type TableCellFormatter<T> =
+  | string
+  | ((value: any, record: T, index: number) => any);
+
+export type TableCellRenderer<T> =
+  | string
+  | ((value: any, record: T, index: number) => React.ReactNode);
+
 export type Column<RecordType extends unknown = any> = {
   title: string;
   hint?: ReactNode;
@@ -19,8 +27,8 @@ export type Column<RecordType extends unknown = any> = {
   onSort?:
     | boolean
     | ((r1: RecordType, r2: RecordType, sortOrder: SortOrder) => number);
-  formatter?: (value: any, record: RecordType, index: number) => any;
-  render?: (value: any, record: RecordType, index: number) => React.ReactNode;
+  formatter?: TableCellFormatter<RecordType>;
+  render?: TableCellRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;
 };
 
@@ -40,10 +48,10 @@ export const ColItem: FC<ColProps> = (props) => {
     const { col } = props;
     const { dataIndex, formatter, render } = col;
     let value = props.record[dataIndex];
-    if (formatter) {
+    if (typeof formatter === "function") {
       value = formatter(value, props.record, props.index);
     }
-    if (render) {
+    if (typeof render === "function") {
       return render(value, props.record, props.index);
     }
     return value;
@@ -59,7 +67,7 @@ export const ColItem: FC<ColProps> = (props) => {
       )}
       style={{
         backgroundColor: col.fixed
-          ? "var(--table-background-color)"
+          ? "var(--oui-table-background-color)"
           : "transparent",
         ...style,
       }}

@@ -1,14 +1,25 @@
 import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { LayoutProvider } from "./context";
 
-export const PortfolioLayout = () => {
+export type PortfolioLayoutProps = {
+  // sideOpen?: boolean;
+};
+
+export const PortfolioLayout = (props: PortfolioLayoutProps) => {
   return (
-    <div>
-      <ExtensionSlot position={ExtensionPositionEnum.MainNav} />
-      <ExtensionSlot position={ExtensionPositionEnum.Logo} />
-
-      <Box p={4} className="oui-bg-base-9">
-        <ExtensionSlot position={ExtensionPositionEnum.SideNav} />
-      </Box>
-    </div>
+    <LayoutProvider>
+      <div className="oui-h-dvh">
+        <ExtensionSlot position={ExtensionPositionEnum.MainNav} />
+        <div
+          className="oui-grid oui-h-full"
+          style={{ gridAutoColumns: "160px 1fr" }}
+        >
+          <Box p={4} className="oui-bg-base-9 oui-rounded-2xl">
+            <ExtensionSlot position={ExtensionPositionEnum.SideNav} />
+          </Box>
+          <div></div>
+        </div>
+      </div>
+    </LayoutProvider>
   );
 };

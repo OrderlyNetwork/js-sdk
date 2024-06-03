@@ -51,5 +51,6 @@ export {
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
 
-
 export { useSymbolLeverage } from "./useSymbolLeverage";
+
+export { useAssetsHistory } from "./statistics/useAssetHistory";

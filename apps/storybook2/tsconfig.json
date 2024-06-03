@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -13,18 +16,31 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "esModuleInterop": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@orderly.network/ui": ["../../packages/ui/src"],
-      "@orderly.network/portfolio": ["../../packages/portfolio/src"],
-      "@orderly.network/chart": ["../../packages/chart/src"],
-      "@orderly.network/react": ["../../packages/component/src"]
+      "@orderly.network/ui": [
+        "../../packages/ui/src"
+      ],
+      "@orderly.network/portfolio": [
+        "../../packages/portfolio/src"
+      ],
+      "@orderly.network/chart": [
+        "../../packages/chart/src"
+      ],
+      "@orderly.network/react": [
+        "../../packages/component/src"
+      ],
+      "@orderly.network/hooks": [
+        "../../packages/hooks/src"
+      ]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

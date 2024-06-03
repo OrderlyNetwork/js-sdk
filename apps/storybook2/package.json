@@ -14,9 +14,12 @@
   },
   "dependencies": {
     "@orderly.network/chart": "workspace:^",
+    "@orderly.network/hooks": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
     "@orderly.network/react": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/web3-onboard": "workspace:*",
+    "@web3-onboard/injected-wallets": "^2.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
@@ -35,7 +38,7 @@
     "@storybook/blocks": "^8.0.9",
     "@storybook/react": "^8.0.9",
     "@storybook/react-dom-shim": "^8.0.9",
-    "@storybook/react-vite": "^7.6.7",
+    "@storybook/react-vite": "^7.6.19",
     "@storybook/react-webpack5": "^8.0.9",
     "@storybook/test": "^8.0.0",
     "@types/react": "^18.2.66",
@@ -58,5 +61,19 @@
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

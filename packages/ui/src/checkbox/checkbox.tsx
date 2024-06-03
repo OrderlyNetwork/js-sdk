@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { tv, cnBase } from "tailwind-variants";
-import { Check } from "../icon/check";
+import { CheckIcon } from "../icon/check";
 
 const checkboxVariants = tv({
   base: [
@@ -38,7 +38,7 @@ const Checkbox = React.forwardRef<
         "oui-flex oui-items-center oui-justify-center oui-text-current"
       )}
     >
-      <Check />
+      <CheckIcon />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

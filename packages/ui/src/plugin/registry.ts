@@ -24,6 +24,7 @@ export class OrderlyExtensionRegistry {
     // return OrderlyExtensionRegistry._instance;
   }
   private extensionMap: Map<ExtensionPosition, Extension<unknown>> = new Map();
+  // private formatterMap: Map<string, Function> = new Map();
 
   register<Props>(
     plugin: Omit<Extension<Props>, "builder"> & { builder?: () => Props }
@@ -80,6 +81,14 @@ export class OrderlyExtensionRegistry {
   }
 
   getPluginsByPosition(position: ExtensionPosition) {
+    return this.extensionMap.get(position);
+  }
+
+  /**
+   * get the registered formatter by position
+   * @param position
+   */
+  getFormatterByPosition(position: ExtensionPosition) {
     return this.extensionMap.get(position);
   }
 }

@@ -1,7 +1,8 @@
 // import type { StorybookConfig } from "@storybook/react-vite";
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 
-import type { StorybookConfig } from "@storybook/react-webpack5";
+// import type { StorybookConfig } from "@storybook/react-webpack5";
+import { StorybookConfig } from "@storybook/react-vite";
 
 import { join, dirname, resolve } from "path";
 
@@ -12,6 +13,7 @@ import { join, dirname, resolve } from "path";
 function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, "package.json")));
 }
+
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
@@ -20,7 +22,7 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-essentials"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-interactions"),
-    "@storybook/addon-webpack5-compiler-swc",
+    // "@storybook/addon-webpack5-compiler-swc",
     // "@storybook/addon-styling-webpack",
     {
       name: "@storybook/addon-styling-webpack",
@@ -48,28 +50,32 @@ const config: StorybookConfig = {
     "@storybook/addon-themes",
   ],
   // framework: "@storybook/react-webpack5",
-  // framework: {
-  //   name: getAbsolutePath("@storybook/react-vite"),
-  //   options: {},
-  // },
   framework: {
-    name: "@storybook/react-webpack5",
+    name: "@storybook/react-vite",
     options: {
-      builder: {
-        useSWC: true,
-      },
+      // builder: {
+      //   viteConfigPath: resolve(__dirname, "../vite.config.ts"),
+      // },
     },
   },
-  swc: (config) => ({
-    ...config,
-    jsc: {
-      transform: {
-        react: {
-          runtime: "automatic",
-        },
-      },
-    },
-  }),
+  // framework: {
+  //   name: "@storybook/react-webpack5",
+  //   options: {
+  //     builder: {
+  //       useSWC: true,
+  //     },
+  //   },
+  // },
+  // swc: (config) => ({
+  //   ...config,
+  //   jsc: {
+  //     transform: {
+  //       react: {
+  //         runtime: "automatic",
+  //       },
+  //     },
+  //   },
+  // }),
   docs: {
     autodocs: "tag",
   },
@@ -97,28 +103,6 @@ const config: StorybookConfig = {
           "../../../packages/component/src"
         ),
       };
-
-      // if (config.module) {
-      //   config.module.rules.push({
-      //     test: /\.css$/,
-      //     use: [
-      //       'style-loader',
-      //       'css-loader',
-      //       {
-      //         loader: 'postcss-loader',
-      //         options: {
-      //           postcssOptions: {
-      //             ident: 'postcss',
-      //             plugin: [
-      //               require('tailwindcss'),
-      //               require('autoprefixer'),
-      //             ]
-      //           }
-      //         }
-      //       }
-      //     ]
-      //   });
-      // }
     }
     return config;
   },

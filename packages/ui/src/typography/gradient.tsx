@@ -33,13 +33,14 @@ const GradientText = React.forwardRef<
   React.ElementRef<"span">,
   GradientTextProps
 >((props, ref) => {
-  const { color, angle, ...rest } = props;
+  const { color, className, angle, ...rest } = props;
   const style = parseAngleProps({ angle });
+
   return (
     <Text
       {...rest}
       ref={ref}
-      className={gradientTextVariants({ color })}
+      className={gradientTextVariants({ color, className })}
       style={style as CSSProperties}
     />
   );

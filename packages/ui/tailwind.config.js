@@ -3,6 +3,7 @@ const { withTV } = require("tailwind-variants/transformer");
 const { sizePlugin } = require("./src/tailwind/size");
 const { gradientPlugin } = require("./src/tailwind/gradient");
 const { positionPlugin } = require("./src/tailwind/position");
+const { basePlugin } = require("./src/tailwind/base");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -110,7 +111,7 @@ module.exports = withTV({
           6: "rgb(var(--oui-color-line, 255 255 255) / 0.06)",
           DEFAULT: "rgb(var(--oui-color-line, 255 255 255) / 0.08)",
           12: "rgb(var(--oui-color-line, 255 255 255) / 0.12)",
-          416: "rgb(var(--oui-color-line, 255 255 255) / 0.16)",
+          16: "rgb(var(--oui-color-line, 255 255 255) / 0.16)",
         },
         trade: {
           loss: {
@@ -132,6 +133,7 @@ module.exports = withTV({
     },
   },
   plugins: [
+    basePlugin(),
     sizePlugin(),
     gradientPlugin(),
     positionPlugin(),

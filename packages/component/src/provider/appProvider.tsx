@@ -57,15 +57,15 @@ export type AppLogos = Partial<{
 }>;
 
 export type ReferralProps = {
-  saveRefCode?: boolean,
-  onClickReferral?: () => void,
-  onBoundRefCode?: (success: boolean, error: any) => void,
-  refLink?: string,
-  slogan?: string,
+  saveRefCode?: boolean;
+  onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
+  refLink?: string;
+  slogan?: string;
 };
 
 export type CommonOrderlyAppState = {
-  theme: any;
+  theme?: any;
   brokerName?: string;
   shareOptions: ShareConfigProps;
   /** custom chains  */
@@ -81,7 +81,7 @@ export type CommonOrderlyAppState = {
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 
-  referral?: ReferralProps
+  referral?: ReferralProps;
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -102,7 +102,7 @@ type OrderlyAppProviderProps = CommonOrderlyAppState & {
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  referral?: ReferralProps
+  referral?: ReferralProps;
 };
 
 export const OrderlyAppProvider: FC<
@@ -391,11 +391,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get('ref');
+    const refCode = searchParams.get("ref");
     if (refCode) {
-        localStorage.setItem("referral_code", refCode);
+      localStorage.setItem("referral_code", refCode);
     }
-}, []);
+  }, []);
 
   return (
     <OrderlyAppContext.Provider
