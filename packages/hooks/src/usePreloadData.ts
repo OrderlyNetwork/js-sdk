@@ -40,10 +40,10 @@ export const usePreLoadData = () => {
     getGlobalObject().__ORDERLY_timestamp_offset = sd - ld;
   }
 
-  // @ts-ignore
   console.log(
     "systemInfo",
     systemInfo,
+    // @ts-ignore
     getGlobalObject().__ORDERLY_timestamp_offset
   );
 
