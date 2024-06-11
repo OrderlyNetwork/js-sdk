@@ -1,6 +1,9 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["src", "src/provider"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ],
   "exclude": [
     "dist",
     "build",
@@ -20,7 +23,7 @@
     "outDir": "dist",
     "declarationDir": "types",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,   
+    "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types", "./src/@types"]
   }
 }
