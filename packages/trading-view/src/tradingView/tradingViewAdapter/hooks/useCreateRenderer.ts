@@ -4,7 +4,7 @@ import {useOrderStream, usePositionStream} from '@orderly.network/hooks';
 import {OrderStatus} from "@orderly.network/types";
 import { TpslAlgoType } from '../renderer/tpsl.util';
 import { AlgoType } from '../type';
-import { DisplayControlSettingInterface } from '@/tradingView/tradingView';
+import { DisplayControlSettingInterface } from '../../tradingView';
 
 export default function useCreateRenderer(symbol: string, displayControlSetting?: DisplayControlSettingInterface) {
     const [renderer, setRenderer] = useState<Renderer>();
