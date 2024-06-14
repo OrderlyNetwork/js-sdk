@@ -61,6 +61,7 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
           event.preventDefault();
           event.stopPropagation();
         }}
+        bordered={bordered}
         {...rest}
       >
         {cols}

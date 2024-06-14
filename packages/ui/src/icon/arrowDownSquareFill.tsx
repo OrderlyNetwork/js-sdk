@@ -17,4 +17,4 @@ export const ArrowDownSquareFillIcon = React.forwardRef<
   );
 });
 
-ArrowDownSquareFillIcon.displayName = "ArrowDownSquareFillIcon Icon";
+ArrowDownSquareFillIcon.displayName = "ArrowDownSquareFillIconIcon";

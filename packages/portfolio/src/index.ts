@@ -1,3 +1,3 @@
 import "./install";
 
-export { OverviewPage } from "./pages/overview";
+export * as OverviewModule from "./pages/overview";

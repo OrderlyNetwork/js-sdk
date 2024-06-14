@@ -5,7 +5,13 @@ import { tv } from "../utils/tv";
 
 const tabsVariants = tv({
   slots: {
-    list: ["oui-inline-flex", "oui-items-center", "oui-px-1", "oui-space-x-6"],
+    list: [
+      "oui-header-list",
+      "oui-inline-flex",
+      "oui-items-center",
+      "oui-px-1",
+      "oui-space-x-6",
+    ],
     content: [
       "oui-ring-offset-background",
       "focus-visible:oui-outline-none",
@@ -14,6 +20,7 @@ const tabsVariants = tv({
       "focus-visible:oui-ring-offset-2",
     ],
     trigger: [
+      "oui-tab-trigger",
       "oui-inline-flex",
       "oui-items-center",
       "oui-justify-center",

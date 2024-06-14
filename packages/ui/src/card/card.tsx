@@ -1,19 +1,24 @@
-import { PropsWithChildren, ReactElement, forwardRef } from "react";
 import {
+  PropsWithChildren,
+  ReactElement,
+  forwardRef,
+  ElementType,
+} from "react";
+import {
+  BaseCardProps,
   CardBase,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "./cardBase";
-import type { ComponentPropsWithout } from "../helpers/component-props";
 
 type CardProps = {
-  title?: string | ReactElement;
+  title?: string | ElementType;
   footer?: ReactElement;
   footerClassName?: string;
   // color?: number;
-} & ComponentPropsWithout<"div", "title" | "color">;
+} & BaseCardProps;
 
 const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
   (props, ref) => {

@@ -17,4 +17,4 @@ export const CloseCircleFillIcon = React.forwardRef<
   );
 });
 
-CloseCircleFillIcon.displayName = "CloseCircleFill Icon";
+CloseCircleFillIcon.displayName = "CloseCircleFillIcon";

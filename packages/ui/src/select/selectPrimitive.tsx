@@ -4,7 +4,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { type VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
 
-import { CaretUpIcon, CaretDownIcon, CheckIcon } from "../icon";
+import { CaretDownIcon } from "../icon";
 
 const selectVariants = tv({
   slots: {
@@ -63,7 +63,7 @@ const selectVariants = tv({
     viewport: ["oui-p-1"],
     label: "oui-px-2 oui-py-1.5 oui-text-sm oui-font-semibold",
     item: [
-      "orderly-option-item",
+      "oui-option-item",
       "oui-relative",
       "oui-flex",
       "oui-w-full",
@@ -87,7 +87,7 @@ const selectVariants = tv({
   variants: {
     variant: {
       outlined: {
-        trigger: ["oui-border"],
+        trigger: ["oui-border oui-border-line-6 oui-bg-line-4"],
       },
       contained: {
         trigger: ["oui-bg-base-4"],
@@ -111,20 +111,24 @@ const selectVariants = tv({
       },
     },
     size: {
-      sm: {
-        trigger: ["oui-h-5", "oui-text-2xs"],
+      xs: {
+        trigger: ["oui-h-6", "oui-text-2xs"],
         item: ["oui-h-6", "oui-text-2xs"],
       },
+      sm: {
+        trigger: ["oui-h-7", "oui-text-2xs"],
+        item: ["oui-h-7", "oui-text-2xs"],
+      },
       md: {
-        trigger: ["oui-h-6", "oui-text-2xs"],
+        trigger: ["oui-h-8", "oui-text-2xs"],
         item: ["oui-h-7", "oui-text-2xs"],
       },
       lg: {
-        trigger: ["oui-h-8", "oui-text-xs"],
+        trigger: ["oui-h-10", "oui-text-sm", "oui-px-3"],
         item: ["oui-h-8", "oui-text-xs"],
       },
       xl: {
-        trigger: ["oui-h-8", "oui-text-sm"],
+        trigger: ["oui-h-12", "oui-text-sm", "oui-px-3"],
         item: ["oui-h-12", "oui-text-base"],
       },
     },
@@ -139,7 +143,7 @@ const selectVariants = tv({
     },
   },
   defaultVariants: {
-    size: "md",
+    size: "lg",
     variant: "outlined",
   },
 });
@@ -181,7 +185,7 @@ const SelectTrigger = React.forwardRef<
         asChild
         className="oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
       >
-        <CaretUpIcon size={12} className="oui-text-inherit" opacity={1} />
+        <CaretDownIcon size={12} className="oui-text-inherit" opacity={1} />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -199,7 +203,7 @@ const SelectScrollUpButton = React.forwardRef<
       className={scrollUpButton({ className })}
       {...props}
     >
-      <CaretUpIcon size={16} />
+      <CaretDownIcon size={16} />
     </SelectPrimitive.ScrollUpButton>
   );
 });

@@ -1,5 +1,5 @@
 import { Card } from "@orderly.network/ui";
-import { AssetsChartHeader } from "./assetsChartHeader";
+import { AssetsChartHeader } from "./assets/assetsChartHeader";
 
 export const AssetsChart = () => {
   return (

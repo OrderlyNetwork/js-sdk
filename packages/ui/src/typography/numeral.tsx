@@ -5,6 +5,10 @@ import { cnBase } from "tailwind-variants";
 
 export type NumeralRule = "percentages" | "price" | "human";
 
+export const isNumeralRule = (rule: string): rule is NumeralRule => {
+  return ["percentages", "price", "human"].includes(rule);
+};
+
 export type NumeralProps = TextProps & {
   rule?: NumeralRule;
 
@@ -184,7 +188,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
         {surfixEle}
       </>
     );
-  }, [child, surfix, unit, prefix, icon]);
+  }, [child, surfix, unit, prefix, icon, unitClassName]);
 
   return (
     <Text

@@ -16,4 +16,4 @@ export const EditIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-EditIcon.displayName = "EditIcon Icon";
+EditIcon.displayName = "EditIconIcon";

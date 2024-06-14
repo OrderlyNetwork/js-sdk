@@ -17,4 +17,4 @@ export const CircleOutlinedIcon = React.forwardRef<
   );
 });
 
-CircleOutlinedIcon.displayName = "CircleOutlined Icon";
+CircleOutlinedIcon.displayName = "CircleOutlinedIcon";

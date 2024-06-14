@@ -18,6 +18,6 @@ const CheckSquareEmptyIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-CheckSquareEmptyIcon.displayName = "CheckSquareEmpty Icon";
+CheckSquareEmptyIcon.displayName = "CheckSquareEmptyIcon";
 
 export { CheckSquareEmptyIcon };

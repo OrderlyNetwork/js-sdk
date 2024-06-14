@@ -7,7 +7,7 @@ import { get } from "@orderly.network/net";
 import { useAccount } from "./useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
 
-export const usePrivateInfiniteQuery = (
+export const usePrivateInfiniteQuery = <T>(
   getKey: SWRInfiniteKeyLoader,
   options?: SWRInfiniteConfiguration & {
     formatter?: (data: any) => any;
@@ -20,7 +20,7 @@ export const usePrivateInfiniteQuery = (
     ? restOptions?.use ?? []
     : [];
 
-  const result = useSWRInfinite(
+  const result = useSWRInfinite<T>(
     (pageIndex: number, previousPageData) => {
       const queryKey = getKey(pageIndex, previousPageData);
       if (account.state.status < AccountStatusEnum.EnableTrading || !queryKey) {

@@ -16,14 +16,13 @@ function getAbsolutePath(value: string): any {
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+
   addons: [
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-interactions"),
-    // "@storybook/addon-webpack5-compiler-swc",
-    // "@storybook/addon-styling-webpack",
     {
       name: "@storybook/addon-styling-webpack",
       options: {
@@ -47,64 +46,25 @@ const config: StorybookConfig = {
         ],
       },
     },
-    "@storybook/addon-themes",
+    getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("@storybook/addon-mdx-gfm"),
+    /**
+     * custom addon
+     */
+    // resolve(__dirname, "./addons/manager.ts"),
+    "./addons/manager.ts",
   ],
+
   // framework: "@storybook/react-webpack5",
   framework: {
-    name: "@storybook/react-vite",
-    options: {
-      // builder: {
-      //   viteConfigPath: resolve(__dirname, "../vite.config.ts"),
-      // },
-    },
+    name: getAbsolutePath("@storybook/react-vite"),
+    options: {},
   },
-  // framework: {
-  //   name: "@storybook/react-webpack5",
-  //   options: {
-  //     builder: {
-  //       useSWC: true,
-  //     },
-  //   },
-  // },
-  // swc: (config) => ({
-  //   ...config,
-  //   jsc: {
-  //     transform: {
-  //       react: {
-  //         runtime: "automatic",
-  //       },
-  //     },
-  //   },
-  // }),
-  docs: {
-    autodocs: "tag",
-  },
-  webpackFinal: async (config) => {
-    if (config.resolve) {
-      config.resolve.plugins = [
-        ...(config.resolve.plugins || []),
-        new TsconfigPathsPlugin({
-          extensions: config.resolve.extensions,
-          // custom tsconfig
-          configFile: resolve(__dirname, "../tsconfig.json"),
-        }),
-      ];
 
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // "@orderly.network/hooks": path.resolve(__dirname, "../../../packages/hooks/src"),
-        // "@orderly.network/react": path.resolve(
-        //   __dirname,
-        //   "../../../packages/component/src"
-        // ),
-        "@orderly.network/ui": resolve(__dirname, "../../../packages/ui/src"),
-        "@orderly.network/react": resolve(
-          __dirname,
-          "../../../packages/component/src"
-        ),
-      };
-    }
-    return config;
+  docs: {},
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
   },
 };
 export default config;

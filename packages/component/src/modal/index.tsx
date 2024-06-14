@@ -6,7 +6,7 @@ import { alert } from "./preset/alert";
 import { dialog } from "./preset/dialog";
 
 import { confirm } from "./preset/confirm";
-import { actionSheet } from "@/modal/preset/actionSheet";
+import { actionSheet } from "./preset/actionSheet";
 
 export type { ModalHocProps } from "./types";
 

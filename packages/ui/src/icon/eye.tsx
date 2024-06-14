@@ -16,4 +16,4 @@ export const EyeIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-EyeIcon.displayName = "Eye Icon";
+EyeIcon.displayName = "EyeIcon";

@@ -1,4 +1,12 @@
-import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
 
@@ -9,9 +17,43 @@ import { TableProvider } from "./tableContext";
 import { FixedDivide } from "./fixedDivide";
 import { TBody, TBodyProps } from "./tbody";
 // import { EndReachedBox } from "@/listView/endReachedBox";
-import { EmptyView } from "../../empty/empty";
 import { Table } from "../table";
-import { type VariantProps, tv } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
+import { tv } from "../../utils/tv";
+import { TablePlaceholder } from "./tablePlaceholder";
+
+// interface DataTableFilter {
+//   options: {
+//     label: string;
+//     value: string;
+//   }[];
+// }
+
+type DataTableFilter = {
+  column: string;
+  value: string;
+};
+
+export interface DataTableProps<RecordType>
+  extends TBodyProps<RecordType>,
+    VariantProps<typeof dataTableVariants> {
+  columns: Column<RecordType>[];
+  dataSource?: RecordType[] | null;
+  /**
+   * @description loading state
+   * @default false
+   */
+  loading?: boolean;
+  className?: string;
+  headerClassName?: string;
+  showMaskElement?: boolean;
+  bordered?: boolean;
+  loadMore?: () => void;
+  // onFilter?: (filter: DataTableFilter) => void;
+  id?: string;
+  header?: ReactElement;
+  footer?: ReactElement;
+}
 
 const dataTableVariants = tv({
   slots: {
@@ -28,23 +70,6 @@ const dataTableVariants = tv({
     },
   },
 });
-
-export interface DataTableProps<RecordType>
-  extends TBodyProps<RecordType>,
-    VariantProps<typeof dataTableVariants> {
-  columns: Column<RecordType>[];
-  dataSource?: RecordType[] | null;
-  /**
-   * @description loading state
-   * @default false
-   */
-  loading?: boolean;
-  className?: string;
-  headerClassName?: string;
-  showMaskElement?: boolean;
-  loadMore?: () => void;
-  id?: string;
-}
 
 export const DataTable = <RecordType extends unknown>(
   props: DataTableProps<RecordType>
@@ -209,21 +234,21 @@ export const DataTable = <RecordType extends unknown>(
             // }
           }}
         > */}
-        <Table>
-          <ColGroup columns={props.columns} />
-          <TBody {...rest} />
-        </Table>
-        {/* <table
-            className={cn(
-              "oui-table-fixed oui-border-collapse oui-w-full"
-            )}
-          >
+        <div className="oui-relative oui-w-full oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
+          <Table className="oui-table-fixed oui-border-collapse">
             <ColGroup columns={props.columns} />
             <TBody {...rest} />
-          </table> */}
+          </Table>
+          <TablePlaceholder
+            visible={dataSource?.length === 0 || loading}
+            loading={loading}
+          />
+        </div>
+
         {/* </EndReachedBox> */}
         {/* {showMaskElement && maskElement} */}
       </div>
+
       <FixedDivide />
     </TableProvider>
   );

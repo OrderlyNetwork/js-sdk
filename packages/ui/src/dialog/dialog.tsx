@@ -6,6 +6,7 @@ import { CloseIcon } from "../icon/close";
 const dialogVariants = tv({
   slots: {
     overlay: [
+      "oui-dialog-overlay",
       "oui-fixed",
       "oui-inset-0",
       "oui-z-50",
@@ -16,17 +17,18 @@ const dialogVariants = tv({
       "data-[state=open]:oui-fade-in-0",
     ],
     content: [
+      "oui-dialog-content",
       "oui-fixed",
       "oui-left-[50%]",
       "oui-top-[50%]",
       "oui-z-50",
-      "oui-grid",
+      // "oui-grid",
       "oui-w-full",
       "oui-max-w-lg",
       "oui-translate-x-[-50%]",
       "oui-translate-y-[-50%]",
       // "oui-gap-4",
-      "oui-bg-base-8",
+      // "oui-bg-base-8",
       "oui-text-base-contrast-54",
       // "oui-py-4",
       "oui-px-5",
@@ -43,10 +45,11 @@ const dialogVariants = tv({
       "data-[state=closed]:oui-slide-out-to-top-[48%]",
       "data-[state=open]:oui-slide-in-from-left-1/2",
       "data-[state=open]:oui-slide-in-from-top-[48%]",
-      "sm:oui-rounded-lg",
+      "sm:oui-rounded-xl",
     ],
-    body: ["oui-py-5", "oui-text-xs"],
+    body: ["oui-dialog-body", "oui-py-5", "oui-text-xs"],
     close: [
+      "oui-dialog-close-btn",
       "oui-absolute",
       "oui-right-4",
       "oui-top-4",
@@ -54,36 +57,47 @@ const dialogVariants = tv({
       "oui-ring-offset-background",
       "oui-transition-opacity",
       "hover:oui-opacity-100",
-      "focus:oui-outline-none",
-      "focus:oui-ring-2",
-      "focus:oui-ring-ring",
-      "focus:oui-ring-offset-2",
+
       "disabled:oui-pointer-events-none",
-      "data-[state=open]:oui-bg-accent",
-      "data-[state=open]:oui-text-muted-foreground",
+      // "data-[state=open]:oui-bg-accent",
+      // "data-[state=open]:oui-text-muted-foreground",
     ],
     header: [
+      "oui-dialog-header",
       "oui-flex",
       "oui-flex-col",
       // "oui-pb-4"
     ],
     footer: [
+      "oui-dialog-footer",
       "oui-flex",
       "oui-flex-row",
       "oui-justify-end",
       "oui-space-x-2",
+      "oui-pb-5",
+      "oui-pt-3",
       // "has-[&>*:nth-child(1)]:oui-bg-red-400",
       // "oui-has-[:checked]:oui-bg-indigo-50",
-      "has-[button]:oui-bg-red-50",
+      // "has-[button]:oui-bg-red-50",
     ],
-    title: ["oui-text-base", "oui-py-4"],
+    title: [
+      "oui-dialog-title",
+      "oui-text-base",
+      // "oui-pt-3",
+      // "oui-pb-2",
+      "oui-min-h-11",
+      "oui-flex",
+      "oui-items-center",
+      "oui-text-base-contrast",
+    ],
     desc: [
+      "oui-dialog-desc",
       "oui-text-xs",
       "oui-text-warning",
       "oui-pt-2",
       "oui-text-center",
       "oui-pb-3",
-      "has-[&_+_div]:oui-pb-3",
+      // "has-[&_+_div]:oui-pb-3",
     ],
   },
   variants: {
@@ -98,6 +112,38 @@ const dialogVariants = tv({
         // content: ["oui-max-w-2xl"],
       },
     },
+    intensity: {
+      100: {
+        content: ["oui-bg-base-1"],
+      },
+      200: {
+        content: ["oui-bg-base-2"],
+      },
+      300: {
+        content: ["oui-bg-base-3"],
+      },
+      400: {
+        content: ["oui-bg-base-4"],
+      },
+      500: {
+        content: ["oui-bg-base-5"],
+      },
+      600: {
+        content: ["oui-bg-base-6"],
+      },
+      700: {
+        content: ["oui-bg-base-7"],
+      },
+      800: {
+        content: ["oui-bg-base-8"],
+      },
+      900: {
+        content: ["oui-bg-base-9"],
+      },
+    },
+  },
+  defaultVariants: {
+    intensity: 800,
   },
 });
 
@@ -130,27 +176,32 @@ const DialogContent = React.forwardRef<
     VariantProps<typeof dialogVariants> & {
       closable?: boolean;
     }
->(({ className, children, size, closable = true, ...props }, ref) => {
-  const { content, close } = dialogVariants({ className, size });
-  return (
-    <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Content
-        ref={ref}
-        className={content({ className })}
-        {...props}
-      >
-        {children}
-        {closable && (
-          <DialogPrimitive.Close className={close()}>
-            <CloseIcon size={16} color="white" />
-            <span className="oui-sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  );
-});
+>(
+  (
+    { className, children, size, closable = true, intensity, ...props },
+    ref
+  ) => {
+    const { content, close } = dialogVariants({ className, size, intensity });
+    return (
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogPrimitive.Content
+          ref={ref}
+          className={content({ className })}
+          {...props}
+        >
+          {children}
+          {closable && (
+            <DialogPrimitive.Close className={close()}>
+              <CloseIcon size={16} color="white" />
+              <span className="oui-sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    );
+  }
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({

@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react";
 import { withThemeByClassName } from "@storybook/addon-themes";
 
 import "../src/tailwind.css";
+import { withWalletConnect } from "./addons/withWalletConnect";
 
 export const decorators = [
   withThemeByClassName({
@@ -11,6 +12,7 @@ export const decorators = [
     },
     defaultTheme: "light",
   }),
+  withWalletConnect,
 ];
 
 const preview: Preview = {

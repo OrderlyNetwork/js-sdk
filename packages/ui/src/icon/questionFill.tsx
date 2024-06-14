@@ -16,4 +16,4 @@ export const QuestionFillIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-QuestionFillIcon.displayName = "ExclamationFill Icon";
+QuestionFillIcon.displayName = "ExclamationFillIcon";

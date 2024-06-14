@@ -16,4 +16,4 @@ export const CaretUpIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-CaretUpIcon.displayName = "CaretUp Icon";
+CaretUpIcon.displayName = "CaretUpIcon";

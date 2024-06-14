@@ -16,4 +16,4 @@ export const FeeTierIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-FeeTierIcon.displayName = "FeeTierIcon Icon";
+FeeTierIcon.displayName = "FeeTierIconIcon";

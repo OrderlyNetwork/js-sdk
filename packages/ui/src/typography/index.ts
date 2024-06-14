@@ -1,7 +1,7 @@
 export { Statistic, StatisticLabel, statisticVariants } from "./statistic";
 
 import { FormattedText } from "./formatted";
-import { GradientText } from "./gradient";
+import { GradientText, gradientTextVariants } from "./gradient";
 import { Numeral } from "./numeral";
 
 import { Text as BaseText, textVariants } from "./text";
@@ -18,5 +18,5 @@ Text.formatted = FormattedText;
 Text.numeral = Numeral;
 Text.gradient = GradientText;
 
-export { Text, textVariants };
+export { Text, textVariants, gradientTextVariants };
 export type { TextProps };

@@ -21,6 +21,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
       )}
     >
       <ColGroup columns={props.columns} />
+
       <thead
         className={cnBase("oui-sticky oui-top-0 oui-z-0", props.className)}
       >

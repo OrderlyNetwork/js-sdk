@@ -1,7 +1,19 @@
-import { CSSProperties, FC, ReactNode, useContext, useMemo } from "react";
+import { CSSProperties, FC, ReactNode, useMemo } from "react";
 import { TableCell } from "../table";
 import { cnBase } from "tailwind-variants";
 import { withFixedStyle } from "./colHOC";
+import {
+  FormattedTextProps,
+  isTextRule,
+  type TextRule,
+} from "../../typography/formatted";
+import { FormattedText } from "../../typography/formatted";
+import {
+  Numeral,
+  NumeralProps,
+  isNumeralRule,
+  type NumeralRule,
+} from "../../typography/numeral";
 
 export type ColumnFixed = "left" | "right";
 
@@ -30,6 +42,16 @@ export type Column<RecordType extends unknown = any> = {
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;
+
+  /**
+   * text rule for formatted text, if provided, the text will be rendered as formatted text component;
+   */
+  rule?: TextRule & NumeralRule;
+  numeralProps?: Omit<NumeralProps, "children" | "as" | "rule">;
+  /**
+   * text props for formatted text
+   */
+  textProps?: Omit<FormattedTextProps, "children" | "as" | "rule">;
 };
 
 export interface ColProps {
@@ -54,14 +76,44 @@ export const ColItem: FC<ColProps> = (props) => {
     if (typeof render === "function") {
       return render(value, props.record, props.index);
     }
+
+    if (typeof col.rule !== "undefined") {
+      if (isTextRule(col.rule)) {
+        return (
+          <FormattedText
+            rule={col.rule}
+            {...col.textProps}
+            // copyable={col.copyable}
+          >
+            {value}
+          </FormattedText>
+        );
+      }
+
+      if (isNumeralRule(col.rule)) {
+        return (
+          <Numeral rule={col.rule} {...col.numeralProps}>
+            {value}
+          </Numeral>
+        );
+      }
+    }
+
     return value;
   }, [col, record]);
+
+  const colClassName = useMemo(() => {
+    if (typeof col.className === "function") {
+      return col.className(record, index);
+    }
+    return col.className;
+  }, [col, record, index]);
 
   return (
     <TableCell
       className={cnBase(
         props.justified && "first:oui-pl-0 last:oui-pr-0",
-        // col.className,
+        colClassName,
         align === "right" && "oui-text-right",
         col.fixed && "oui-sticky oui-z-10"
       )}

@@ -17,4 +17,4 @@ export const SquareOutlinedIcon = React.forwardRef<
   );
 });
 
-SquareOutlinedIcon.displayName = "SquareOutlined Icon";
+SquareOutlinedIcon.displayName = "SquareOutlinedIcon";

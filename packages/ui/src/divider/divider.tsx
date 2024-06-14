@@ -3,9 +3,9 @@ import React from "react";
 import { VariantProps } from "tailwind-variants";
 
 const dividerVariants = tv({
-  base: [],
+  base: ["oui-pointer-events-none"],
   variants: {
-    highlight: {
+    intensity: {
       1: "oui-border-line-4",
       2: "oui-border-line-6",
       3: "oui-border-line",
@@ -16,10 +16,15 @@ const dividerVariants = tv({
       horizontal: ["oui-w-full", "oui-border-b"],
       vertical: ["oui-h-full", "oui-border-l"],
     },
+    lineStyle: {
+      // solid: "oui-border-solid",
+      dashed: "oui-border-dashed",
+      dotted: "oui-border-dotted",
+    },
   },
   defaultVariants: {
     direction: "horizontal",
-    highlight: 1,
+    intensity: 1,
   },
 });
 
@@ -27,15 +32,16 @@ type DividerProps = VariantProps<typeof dividerVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
-  const { className, highlight, direction, ...rest } = props;
+  const { className, intensity, direction, lineStyle, ...rest } = props;
   return (
     <div
       ref={ref}
       {...rest}
       className={dividerVariants({
         direction,
-        highlight,
+        intensity,
         className,
+        lineStyle,
       })}
     />
   );

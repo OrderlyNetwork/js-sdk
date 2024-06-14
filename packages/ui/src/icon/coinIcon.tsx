@@ -2,7 +2,7 @@ import { Avatar } from "../avatar/avatar";
 import { FC, useMemo } from "react";
 
 export type CoinIconProps = {
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   name: string;
   className?: string;
 };

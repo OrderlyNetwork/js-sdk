@@ -19,7 +19,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cnBase("oui-p-3 oui-bg-slate-50", className)}
+      className={cnBase("oui-p-3 oui-bg-base-7", className)}
       classNames={{
         months:
           "oui-flex oui-flex-col sm:oui-flex-row oui-space-y-4 sm:oui-space-x-4 sm:oui-space-y-0",

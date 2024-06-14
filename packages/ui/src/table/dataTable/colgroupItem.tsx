@@ -12,6 +12,8 @@ export const ColGroupItem = (props: { col: Column; index: number }) => {
 
     if (item.width) {
       styles["width"] = `${item.width}px`;
+    } else {
+      styles["width"] = "auto";
     }
 
     return styles;

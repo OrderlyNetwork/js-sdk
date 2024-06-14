@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, ReactElement } from "react";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
 
-type SelectOption = {
+export type SelectOption = {
   label: string;
   value: string;
 };

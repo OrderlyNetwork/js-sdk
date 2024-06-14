@@ -14,6 +14,9 @@ import {
   CloseCircleFillIcon,
   CloseSquareFillIcon,
   Flex,
+  ArrowDownUpIcon,
+  CaretDownIcon,
+  CaretUpIcon,
   SettingIcon,
   SettingFillIcon,
 } from "@orderly.network/ui";
@@ -83,6 +86,9 @@ export const Icons: Story = {
           <ChevronRightIcon {...args} />
           <SettingIcon {...args} />
           <SettingFillIcon {...args} />
+          <ArrowDownUpIcon {...args} />
+          <CaretDownIcon {...args} />
+          <CaretUpIcon {...args} />
         </Flex>
       </Box>
     );

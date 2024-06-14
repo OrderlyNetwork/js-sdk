@@ -5,15 +5,15 @@ export const basePlugin = () =>
     addBase({
       html: {
         // fontSize: "var(--orderly-font-size-base)",
-        backgroundColor: "rgb(var(--orderly-color-base-9))",
-        color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
-        fontFamily: "var(--orderly-font-family)",
+        backgroundColor: "rgb(var(--oui-color-base-10))",
+        color: "rgb(var(--oui-color-base-foreground) / 0.98)",
+        fontFamily: "var(--oui-font-family)",
       },
       body: {
-        // fontSize: "var(--orderly-font-size-base)",
-        backgroundColor: "rgb(var(--orderly-color-base-9))",
-        color: "rgb(var(--orderly-color-base-foreground) / 0.98)",
-        fontFamily: "var(--orderly-font-family)",
+        // fontSize: "var(--oui-font-size-base)",
+        backgroundColor: "rgb(var(--oui-color-base-10))",
+        color: "rgb(var(--oui-color-base-foreground) / 0.98)",
+        fontFamily: "var(--oui-font-family)",
       },
     });
   });

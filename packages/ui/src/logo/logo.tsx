@@ -22,7 +22,7 @@ const Logo = React.forwardRef<Elment, LogoProps>(({ src, alt, href }, ref) => {
   );
 });
 
-Logo.displayName = "Logo element";
+Logo.displayName = "LogoElement";
 
 export { Logo };
 export type { LogoProps };

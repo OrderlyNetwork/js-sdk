@@ -16,4 +16,4 @@ export const CheckIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-CheckIcon.displayName = "Check Icon";
+CheckIcon.displayName = "CheckIcon";

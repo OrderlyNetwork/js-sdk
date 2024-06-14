@@ -38,10 +38,12 @@ const textVariants = tv({
       buy: "oui-text-trade-profit",
       sell: "oui-text-trade-loss",
       lose: "oui-text-trade-loss",
+      withdraw: "oui-text-trade-loss",
       profit: "oui-text-trade-profit",
+      deposit: "oui-text-trade-profit",
       // gradient
     },
-    neutral: {
+    intensity: {
       12: "oui-text-base-contrast-12",
       20: "oui-text-base-contrast-20",
       36: "oui-text-base-contrast-36",
@@ -57,14 +59,13 @@ const textVariants = tv({
   //   }
   // ],
 
-  defaultVariants: {
-    // size: "base",
-    weight: "regular",
-    neutral: 98,
-  },
+  // defaultVariants: {
+
+  // },
 });
 
 export type TextElement = React.ElementRef<"span">;
+
 interface CommonTextProps extends VariantProps<typeof textVariants> {
   asChild?: boolean;
   /**
@@ -73,6 +74,7 @@ interface CommonTextProps extends VariantProps<typeof textVariants> {
    */
   copyable?: boolean;
 }
+
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<
   "span",
   RemovedProps
@@ -95,7 +97,7 @@ const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
     color,
     size,
     weight,
-    neutral,
+    intensity,
     ...textProps
   } = props;
   return (
@@ -108,7 +110,7 @@ const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
         color,
         size,
         weight,
-        neutral,
+        intensity,
       })}
     >
       {asChild ? children : <Tag>{children}</Tag>}

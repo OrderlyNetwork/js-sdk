@@ -16,4 +16,4 @@ export const EyeCloseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-EyeCloseIcon.displayName = "EyeClose Icon";
+EyeCloseIcon.displayName = "EyeCloseIcon";

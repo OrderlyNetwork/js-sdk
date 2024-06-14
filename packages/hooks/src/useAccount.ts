@@ -25,16 +25,6 @@ export const useAccount = () => {
 
   const [state, setState] = useState<AccountState>(account.stateValue);
 
-  // const { data: userInfo } =
-  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
-
-  // console.log("userInfo", userInfo);
-
-  // const state = useObservable<AccountState>(
-  //   () => account.state$,
-  //   account.stateValue
-  // );
-
   const statusChangeHandler = (nextState: AccountState) => {
     //
     setState(() => nextState);
@@ -47,13 +37,6 @@ export const useAccount = () => {
       account.off("change:status", statusChangeHandler);
     };
   }, []);
-
-  // const login = useCallback(
-  //   (address: string) => {
-  //     account.login(address);
-  //   },
-  //   [account]
-  // );
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {

@@ -32,8 +32,11 @@
       "@orderly.network/chart": [
         "../../packages/chart/src"
       ],
-      "@orderly.network/react": [
-        "../../packages/component/src"
+      "@orderly.network/ui-connector": [
+        "../../packages/ui-connector/src"
+      ],
+      "@orderly.network/react-app": [
+        "../../packages/app/src"
       ],
       "@orderly.network/hooks": [
         "../../packages/hooks/src"

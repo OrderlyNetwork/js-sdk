@@ -25,12 +25,12 @@ export const MainNav: FC<MainNavProps> = (props) => {
       px={3}
       className={`orderly-main-nav ${className}`}
     >
-      <Flex itemAlign={"center"}>
+      <Flex itemAlign={"center"} gap={4}>
         <Logo {...logo} />
         <ProductsMenu {...products} />
         <MainNavItems {...props} />
       </Flex>
-      <Flex itemAlign={"center"}>
+      <Flex itemAlign={"center"} gap={4}>
         <TotalValue />
         <ChainSelect
           size="lg"

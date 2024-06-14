@@ -7,17 +7,23 @@ export interface AlertDialogProps {
   title?: string;
   message?: ReactNode;
   open?: boolean;
-  onOk?: () => Promise<any>;
+  onOpenChange?: (open: boolean) => void;
+  onOk?: () => Promise<boolean>;
   onCancel?: () => void;
   okLabel?: string;
   cancelLabel?: string;
+  closeable?: boolean;
 }
 
+/**
+ * Generic alert dialog, often used for confirmation/alert/information dialogs.
+ */
 export const AlertDialog: FC<AlertDialogProps> = (props) => {
   const {
     title,
     message,
     open,
+    onOpenChange,
     onOk,
     onCancel,
     okLabel = "OK",
@@ -41,10 +47,18 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
         onClick: onOk,
       };
     }
+
+    return actions;
   }, [onOk, onCancel, okLabel, cancelLabel]);
 
   return (
-    <SimpleDialog open={open} title={title} size={"sm"} actions={actions}>
+    <SimpleDialog
+      open={open}
+      title={title}
+      size={"sm"}
+      actions={actions}
+      onOpenChange={onOpenChange}
+    >
       {message}
     </SimpleDialog>
   );

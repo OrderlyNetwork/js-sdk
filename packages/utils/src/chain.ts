@@ -17,6 +17,8 @@ export const praseChainIdToNumber = (chainId: string | number): number => {
   return chainId as number;
 };
 
+export const parseChainIdToNumber = praseChainIdToNumber;
+
 export const isTestnet = (chainId: number) => {
   const testnetIds = [ARBITRUM_TESTNET_CHAINID];
 

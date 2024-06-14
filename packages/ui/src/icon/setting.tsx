@@ -16,4 +16,4 @@ export const SettingIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-SettingIcon.displayName = "Setting Icon";
+SettingIcon.displayName = "SettingIcon";

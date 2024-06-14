@@ -22,6 +22,9 @@ const avatarVariants = tv(
         lg: {
           root: "oui-w-10 oui-h-10",
         },
+        xl: {
+          root: "oui-w-12 oui-h-12",
+        },
       },
     },
     defaultVariants: {

@@ -13,6 +13,9 @@ const buttonVariants = tv({
     "oui-whitespace-nowrap",
     "oui-transition-colors",
     "disabled:oui-cursor-not-allowed",
+    "disabled:oui-bg-base-3",
+    "disabled:oui-text-base-contrast-36",
+    "disabled:hover:oui-bg-base-3",
   ],
   variants: {
     ...shadowVariants.variants,
@@ -30,19 +33,19 @@ const buttonVariants = tv({
       xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
     },
     color: {
-      primary: ["hover:oui-bg-primary/70"],
-      secondary: "",
-      success: [],
-      danger: [],
-      warning: [],
-      gray: [],
+      primary: ["hover:oui-bg-primary/70 active:oui-bg-primary/50"],
+      secondary: "hover:oui-bg-base-4/70 active:oui-bg-base-4/50",
+      success: "hover:oui-bg-success/70 active:oui-bg-success/50",
+      danger: "hover:oui-bg-danger/70 active:oui-bg-danger/50",
+      warning: "hover:oui-bg-warning/70 active:oui-bg-warning/50",
+      gray: "hover:oui-bg-base-2/70 active:oui-bg-base-2/50",
     },
     fullWidth: {
       true: "oui-w-full",
     },
-    disabled: {
-      true: "",
-    },
+    // disabled: {
+    //   true: "oui-bg-base-3 oui-text-base-contrast-36",
+    // },
   },
   compoundVariants: [
     // contained
@@ -76,11 +79,7 @@ const buttonVariants = tv({
       color: "gray",
       className: ["oui-bg-base-2", "oui-text-base-contrast"],
     },
-    {
-      variant: "contained",
-      disabled: true,
-      className: ["oui-bg-base-3", "oui-text-base-contrast"],
-    },
+
     // contained end
     // {
     //   variant: "contained",
@@ -192,7 +191,6 @@ const Button = React.forwardRef<
           size,
           color,
           className,
-          disabled: props.disabled,
           fullWidth,
           shadow,
         })}

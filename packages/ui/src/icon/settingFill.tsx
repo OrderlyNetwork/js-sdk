@@ -16,4 +16,4 @@ export const SettingFillIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-SettingFillIcon.displayName = "SettingFill Icon";
+SettingFillIcon.displayName = "SettingFillIcon";

@@ -24,6 +24,7 @@ export { parseJSON } from "./utils/json";
 export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
+export { useKeyStore } from "./useKeyStore";
 
 export * from "./orderlyContext";
 export * from "./statusProvider";
@@ -72,6 +73,5 @@ export { checkNotional } from "./utils/createOrder";
 export * as utils from "./utils";
 
 export type { WalletAdapter } from "@orderly.network/core";
-
 
 export * from "./referral";

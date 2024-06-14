@@ -1,8 +1,6 @@
 import { ElementRef, forwardRef } from "react";
-import { layoutVariants } from "../layout/layout";
 import { gapVariants } from "../layout/gap";
 import { VariantProps } from "tailwind-variants";
-import { positionVariants } from "../layout/position";
 import { tv } from "../utils/tv";
 import { Box, BoxProps } from "../box";
 
@@ -61,10 +59,10 @@ const flexVariant = tv(
     defaultVariants: {
       display: "flex",
       direction: "row",
-      itemAlign: "start",
+      itemAlign: "center",
       justify: "start",
       wrap: "noWrap",
-      gap: 4,
+      // gap: 4,
       // gap: 0,
       // gapX: 0,
       // gapY: 0,

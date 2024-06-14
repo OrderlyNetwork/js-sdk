@@ -19,4 +19,4 @@ export const CheckedSquareFillIcon = React.forwardRef<
   );
 });
 
-CheckedSquareFillIcon.displayName = "CheckSquareFill Icon";
+CheckedSquareFillIcon.displayName = "CheckSquareFillIcon";

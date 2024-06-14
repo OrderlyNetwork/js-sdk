@@ -17,4 +17,4 @@ export const CloseSquareFillIcon = React.forwardRef<
   );
 });
 
-CloseSquareFillIcon.displayName = "CloseSquareFill Icon";
+CloseSquareFillIcon.displayName = "CloseSquareFillIcon";

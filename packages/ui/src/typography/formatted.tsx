@@ -1,9 +1,14 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { format as formatDate, isValid } from "date-fns";
 import { TextProps, Text, TextElement } from "./text";
+import { CopyIcon } from "../icon/copy";
 
-export type TextRule = "date" | "address" | "symbol" | "status";
+export type TextRule = "date" | "address" | "symbol" | "status" | "txId";
+
+export const isTextRule = (rule: string): rule is TextRule => {
+  return ["date", "address", "symbol", "status", "txId"].includes(rule);
+};
 
 type DateText = {
   rule: "date";
@@ -31,6 +36,11 @@ type BaseText = {
   capitalize?: boolean;
 };
 
+type TxIDText = {
+  rule: "txId";
+  range?: [number, number];
+};
+
 type SymbolText = {
   rule: "symbol";
   // symbolElement?: "base" | "quote";
@@ -51,14 +61,14 @@ export type FormattedTextProps = TextProps & {
 
   surfix?: React.ReactNode;
   prefix?: React.ReactNode;
-} & (BaseText | DateText | AddressText | SymbolText);
+} & (BaseText | DateText | AddressText | SymbolText | TxIDText);
 
 export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
   (props, ref) => {
     const {
       rule,
       children,
-      surfix,
+
       prefix,
       // @ts-ignore
       symbolElement,
@@ -68,22 +78,40 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       range,
       // @ts-ignore
       capitalize,
+      copyable,
       ...rest
     } = props;
     // const Comp = asChildren ? Slot : "span";
 
+    const surfix = useMemo(() => {
+      if (typeof props.surfix !== "undefined") return props.surfix;
+
+      if (copyable) {
+        return (
+          <button
+            className="oui-cursor-pointer oui-text-sm"
+            onClick={() => {
+              navigator.clipboard.writeText(children as string);
+            }}
+          >
+            <CopyIcon size={12} color="white" />
+          </button>
+        );
+      }
+    }, [props.surfix, copyable]);
+
     const content = useMemo(() => {
       if (typeof children === "undefined") return "--";
       if (typeof rule === "undefined") return children;
-      if (rule === "address") {
+      if (rule === "address" || rule === "txId") {
         const address = children as string;
-        const [start, end] = range ?? [6, 4];
+        const [start, end] = range ?? (rule === "address" ? [6, 4] : [6, 6]);
         const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
         return `${address.replace(reg, "$1...$3")}`;
       }
       if (rule === "date") {
         // return new Date(children as string).toLocaleString();
-        const date = new Date((children as string).trim());
+        const date = new Date(children as string | number | Date);
         if (!isValid(date)) {
           return "Error: Invalid Date";
         }
@@ -132,7 +160,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       if (typeof surfix === "undefined" && typeof prefix === "undefined")
         return content;
       return (
-        <span className="oui-flex oui-gap-1">
+        <span className="oui-flex oui-gap-1 oui-items-center">
           {prefix}
           {content}
           {surfix}

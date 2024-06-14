@@ -14,9 +14,7 @@ export interface WalletConnectorProviderProps {
 export const ConnectorProvider = (
   props: PropsWithChildren<WalletConnectorProviderProps>
 ) => {
-  const [initialized, setInitialized] = useState(
-    !!props.skipInit
-  );
+  const [initialized, setInitialized] = useState(!!props.skipInit);
 
   useEffect(() => {
     document.body.style.setProperty("--onboard-modal-z-index", "88");
@@ -26,9 +24,8 @@ export const ConnectorProvider = (
     if (props.skipInit) {
       return;
     }
-    initConfig(props.apiKey, props.options).then(() => {
-      setInitialized(true);
-    });
+    initConfig(props.apiKey, props.options);
+    setInitialized(true);
   }, []);
 
   if (!initialized) return null;

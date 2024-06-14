@@ -69,6 +69,17 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
       );
     }, [children, leading, trailing, iconElement]);
 
+    const spinnerSize = useMemo(() => {
+      switch (size) {
+        case "xl":
+          return "md";
+        case "lg":
+          return "sm";
+        default:
+          return size;
+      }
+    }, [size]);
+
     return (
       <Comp {...rest} ref={forwardedRef}>
         {loading ? (
@@ -80,7 +91,7 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
               position={"absolute"}
               as="span"
             >
-              <Spinner size={size} />
+              <Spinner size={spinnerSize} />
             </Flex>
           </>
         ) : (

@@ -16,4 +16,4 @@ export const ChevronRightIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-ChevronRightIcon.displayName = "ChevronRight Icon";
+ChevronRightIcon.displayName = "ChevronRightIcon";

@@ -21,7 +21,6 @@ export const decorationVariants = {
       "2xl": "oui-rounded-2xl",
       full: "oui-rounded-full",
     },
-
     gradient: {
       //   // brands:'',
       // primary: "oui-from-primary-400 to-primary-900",
@@ -31,6 +30,17 @@ export const decorationVariants = {
       warning: "oui-gradient-warning",
       danger: "oui-gradient-danger",
       neutral: "oui-gradient-neutral",
+    },
+    intensity: {
+      100: "oui-bg-base-1",
+      200: "oui-bg-base-2",
+      300: "oui-bg-base-3",
+      400: "oui-bg-base-4",
+      500: "oui-bg-base-5",
+      600: "oui-bg-base-6",
+      700: "oui-bg-base-7",
+      800: "oui-bg-base-8",
+      900: "oui-bg-base-9",
     },
   },
 };

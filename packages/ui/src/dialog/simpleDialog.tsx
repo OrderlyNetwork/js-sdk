@@ -23,6 +23,9 @@ type SimpleDialogProps = {
   // footer?: ReactNode;
 } & SimpleDialogFooterProps;
 
+/**
+ * Simplified dialog component.
+ */
 const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>

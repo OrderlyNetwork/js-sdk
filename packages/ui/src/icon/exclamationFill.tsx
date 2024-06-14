@@ -17,4 +17,4 @@ export const ExclamationFillIcon = React.forwardRef<
   );
 });
 
-ExclamationFillIcon.displayName = "ExclamationFill Icon";
+ExclamationFillIcon.displayName = "ExclamationFillIcon";

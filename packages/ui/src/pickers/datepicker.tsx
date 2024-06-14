@@ -3,7 +3,8 @@ import { Popover } from "../popover/popover";
 import { Calendar } from "./date/calendar";
 import { selectVariants } from "../select/selectPrimitive";
 import { CalendarIcon } from "../icon/calendar";
-import { CaretUpIcon } from "../icon/caretUp";
+import { CaretDownIcon } from "../icon/caretDown";
+import type { SizeType } from "../helpers/sizeType";
 
 export type DatePickerProps = {
   onChange?: (date: Date) => void;
@@ -11,12 +12,14 @@ export type DatePickerProps = {
   placholder?: string;
   value?: Date;
   dateFormat?: string;
+  size?: SizeType;
+  className?: string;
 };
 
 const DatePicker: FC<DatePickerProps> = (props) => {
-  const { placholder, dateFormat, onChange, value } = props;
+  const { placholder, dateFormat, onChange, value, size, className } = props;
 
-  const { trigger } = selectVariants();
+  const { trigger } = selectVariants({ size, className });
 
   const foramttedValue = useMemo(() => {
     if (typeof value === "undefined") {
@@ -45,7 +48,7 @@ const DatePicker: FC<DatePickerProps> = (props) => {
           <CalendarIcon size={14} className="oui-text-inherit" opacity={1} />
         </span>
         <span>{foramttedValue}</span>
-        <CaretUpIcon
+        <CaretDownIcon
           size={12}
           className="orderly-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
           opacity={1}

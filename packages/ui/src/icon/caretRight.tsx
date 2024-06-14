@@ -16,4 +16,4 @@ export const CaretRightIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   }
 );
 
-CaretRightIcon.displayName = "CaretRight Icon";
+CaretRightIcon.displayName = "CaretRightIcon";

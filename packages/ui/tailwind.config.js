@@ -4,6 +4,7 @@ const { sizePlugin } = require("./src/tailwind/size");
 const { gradientPlugin } = require("./src/tailwind/gradient");
 const { positionPlugin } = require("./src/tailwind/position");
 const { basePlugin } = require("./src/tailwind/base");
+const { componentsPlugin } = require("./src/tailwind/components");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -43,7 +44,7 @@ module.exports = withTV({
       spacing: {
         13: "3.25rem",
         sm: "22.5rem",
-        md: "26.5rem",
+        md: "26.25rem",
         lg: "33.75rem",
       },
       colors: {
@@ -137,6 +138,7 @@ module.exports = withTV({
     sizePlugin(),
     gradientPlugin(),
     positionPlugin(),
+    componentsPlugin(),
     require("tailwindcss-animate"),
   ],
 });

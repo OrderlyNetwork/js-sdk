@@ -16,7 +16,7 @@ const meta = {
   argTypes: {
     //   backgroundColor: { control: 'color' },
     size: {
-      options: ["sm", "md", "lg"],
+      options: ["sm", "md", "lg", "xl"],
       control: { type: "inline-radio" },
     },
   },
