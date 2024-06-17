@@ -1,5 +1,53 @@
 # @orderly.network/core
 
+## 1.5.8-internal.5
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.5
+
+## 1.5.8-internal.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.4
+
+## 1.5.8-internal.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.3
+
+## 1.5.8-internal.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.2
+
+## 1.5.8-internal.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.1
+
+## 1.5.8-internal.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.8-internal.0
+
 ## 1.5.7
 
 ### Patch Changes

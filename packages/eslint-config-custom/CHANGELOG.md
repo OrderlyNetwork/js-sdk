@@ -1,5 +1,41 @@
 # eslint-config-custom
 
+## 0.3.8-internal.5
+
+### Patch Changes
+
+- update
+
+## 0.3.8-internal.4
+
+### Patch Changes
+
+- update
+
+## 0.3.8-internal.3
+
+### Patch Changes
+
+- update
+
+## 0.3.8-internal.2
+
+### Patch Changes
+
+- update
+
+## 0.3.8-internal.1
+
+### Patch Changes
+
+- update
+
+## 0.3.8-internal.0
+
+### Patch Changes
+
+- update
+
 ## 0.3.7
 
 ### Patch Changes
