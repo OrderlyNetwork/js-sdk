@@ -2,10 +2,11 @@ import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
 import { getChainsArray } from "./chains";
+import { ConnectorInitOptions } from "./provider";
 
 export const initConfig: (
   apiKey?: string,
-  options?: InitOptions
+  options?: ConnectorInitOptions
 ) => Promise<OnboardAPI> = (apiKey, options) => {
   return Promise.resolve().then(() =>
     init({

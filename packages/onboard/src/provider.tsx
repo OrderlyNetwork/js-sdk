@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
+import { Optional } from "@orderly.network/types";
 
 import type { InitOptions } from "@web3-onboard/core";
 import { initConfig } from "./config";
@@ -6,10 +7,12 @@ import { Main } from "./main";
 
 export interface WalletConnectorProviderProps {
   apiKey?: string;
-  options?: InitOptions;
+  options?: ConnectorInitOptions;
   // skip board configuration if already initialized
   skipInit?: boolean;
 }
+
+export type ConnectorInitOptions = Optional<InitOptions, 'apiKey' | 'connect' | 'wallets' | 'chains'| 'appMetadata' | 'accountCenter' | 'theme'>
 
 export const ConnectorProvider = (
   props: PropsWithChildren<WalletConnectorProviderProps>
