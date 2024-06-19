@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.8
+
+### Patch Changes
+
+- 48517528: fix bugs;
+- Updated dependencies [48517528]
+  - @orderly.network/react@1.5.8
+  - @orderly.network/hooks@1.5.8
+  - @orderly.network/utils@1.5.8
+
 ## 1.5.8-alpha.0
 
 ### Patch Changes

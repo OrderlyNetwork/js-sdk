@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.8
+
+### Patch Changes
+
+- 48517528: fix bugs;
+- Updated dependencies [48517528]
+  - @orderly.network/core@1.5.8
+
 ## 0.3.8-alpha.0
 
 ### Patch Changes
