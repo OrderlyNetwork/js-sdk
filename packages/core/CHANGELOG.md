@@ -1,5 +1,21 @@
 # @orderly.network/core
 
+## 1.5.8
+
+### Patch Changes
+
+- 48517528: fix bugs;
+- Updated dependencies [48517528]
+  - @orderly.network/types@1.5.8
+
+## 1.5.8-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.5.8-alpha.0
+
 ## 1.5.7
 
 ### Patch Changes

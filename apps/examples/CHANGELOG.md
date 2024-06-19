@@ -1,5 +1,27 @@
 # examples
 
+## 0.4.8
+
+### Patch Changes
+
+- 48517528: fix bugs;
+- Updated dependencies [48517528]
+  - @orderly.network/react@1.5.8
+  - @orderly.network/core@1.5.8
+  - @orderly.network/hooks@1.5.8
+  - @orderly.network/web3-onboard@1.5.8
+
+## 0.4.8-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.5.8-alpha.0
+  - @orderly.network/core@1.5.8-alpha.0
+  - @orderly.network/hooks@1.5.8-alpha.0
+  - @orderly.network/web3-onboard@1.5.8-alpha.0
+
 ## 0.4.7
 
 ### Patch Changes
