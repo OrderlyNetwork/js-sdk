@@ -63,7 +63,6 @@ export const TopNavbar: FC = (props) => {
             <AccountStatus
               status={state.status}
               address={state.address}
-              chains={[]}
               accountInfo={undefined}
               className="orderly-mr-3"
               onConnect={onConnect}
