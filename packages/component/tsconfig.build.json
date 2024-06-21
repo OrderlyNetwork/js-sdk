@@ -20,6 +20,7 @@
     "module": "esnext",
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
       "@/*": ["./src/*"]

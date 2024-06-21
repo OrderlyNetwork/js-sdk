@@ -104,8 +104,8 @@ export const CodeList: FC<{
     const clsName = "orderly-px-3 orderly-overflow-y-auto orderly-max-h-[469px] md:orderly-max-h-[531px] lg:orderly-max-h-[350px] xl:orderly-max-h-[320px] 2xl:orderly-max-h-[340px]";
 
     const getRate = (item: API.ReferralCode) => {
-        const refereeRate = new Decimal((item.referee_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
-        const referralRate = new Decimal((item.referrer_rebate_rate * 100)).toFixed(1, Decimal.ROUND_DOWN);
+        const refereeRate = new Decimal(item.referee_rebate_rate).mul(100).toFixed(1, Decimal.ROUND_DOWN).toString();
+        const referralRate = new Decimal(item.referrer_rebate_rate).mul(100).toFixed(1, Decimal.ROUND_DOWN).toString();
         return `${referralRate}% / ${refereeRate}%`;
     }
 

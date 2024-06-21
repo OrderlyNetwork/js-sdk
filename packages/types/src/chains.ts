@@ -319,6 +319,30 @@ export const Base = {
   chainLogo: "",
 };
 
+export const Mantle = {
+  id: 5000,
+  chainInfo: {
+    chainId: `0x${(5000).toString(16)}`,
+    chainName: "Mantle",
+    nativeCurrency: {
+      name: "MNT",
+      symbol: "MNT",
+      decimals: 6,
+      fix: 4,
+    },
+    rpcUrls: ["https://rpc.mantle.xyz/"],
+    blockExplorerUrls: ["https://mantlescan.xyz/"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Mantle",
+  chainName: "Mantle",
+  chainNameShort: "Mantle",
+  requestRpc: "https://rpc.mantle.xyz/",
+  chainLogo: "",
+};
+
 export const ArbitrumGoerli = {
   id: 421613,
   chainInfo: {
@@ -500,6 +524,7 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [PolygonzkEVM.id, PolygonzkEVM],
   [Linea.id, Linea],
   [Base.id, Base],
+  [Mantle.id, Mantle],
   [ArbitrumGoerli.id, ArbitrumGoerli],
   [ArbitrumSepolia.id, ArbitrumSepolia],
   [OptimismGoerli.id, OptimismGoerli],

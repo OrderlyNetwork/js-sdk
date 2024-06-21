@@ -79,7 +79,7 @@ export const Summary: FC<SummaryProps> = memo((props) => {
     <div className="orderly-flex-1 orderly-text-4xs orderly-text-base-contrast-36 desktop:orderly-text-3xs">
       <div className="orderly-flex orderly-items-center orderly-justify-between">
         <div>
-          {`1 ${props.src?.symbol || "USDC"} = ${
+          {`1 ${props.src?.display_name || props.src?.symbol || "USDC"} = ${
             props.price
               ? parseNumber(props.price, {
                   precision: 3,
