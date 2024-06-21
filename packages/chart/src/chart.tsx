@@ -29,7 +29,7 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
     if (!wrapperRef.current || !!size) return;
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        // console.log(entry);
+        console.log(entry);
         if (entry.contentRect) {
           setSize({
             width: entry.contentRect.width,
@@ -42,12 +42,13 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
     resizeObserver.observe(wrapperRef.current);
 
     return () => {
+      if (!wrapperRef.current || !resizeObserver) return;
       resizeObserver.unobserve(wrapperRef.current);
     };
   }, []);
 
   return (
-    <div ref={wrapperRef} style={{ width: "100%", height: "100%" }}>
+    <div ref={wrapperRef}>
       <ChartContext.Provider
         value={{
           margin,

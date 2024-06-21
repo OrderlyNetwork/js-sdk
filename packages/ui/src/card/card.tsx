@@ -3,6 +3,7 @@ import {
   ReactElement,
   forwardRef,
   ElementType,
+  ReactNode,
 } from "react";
 import {
   BaseCardProps,
@@ -14,7 +15,7 @@ import {
 } from "./cardBase";
 
 type CardProps = {
-  title?: string | ElementType;
+  title?: ReactElement | string;
   footer?: ReactElement;
   footerClassName?: string;
   // color?: number;

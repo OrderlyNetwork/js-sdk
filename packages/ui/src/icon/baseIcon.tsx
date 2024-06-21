@@ -1,4 +1,7 @@
-import { ComponentPropsWithout, RemovedProps } from "@/helpers/component-props";
+import {
+  ComponentPropsWithout,
+  RemovedProps,
+} from "../helpers/component-props";
 import React from "react";
 import { type VariantProps, tv } from "tailwind-variants";
 

@@ -9,3 +9,5 @@ export {
 } from "./component/walletConnector";
 
 export { useWalletConnectorBuilder } from "./component/useWalletConnectorBuilder";
+
+export { AuthGuard } from "./component/authGuard";

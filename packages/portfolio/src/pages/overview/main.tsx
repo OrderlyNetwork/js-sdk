@@ -1,16 +1,16 @@
 import { Grid } from "@orderly.network/ui";
-import { Performance } from "./performance";
-import { AssetsChart } from "./assetsChart";
+import { PerformanceWidget } from "./performance";
+import { AssetsChartWidget } from "./assetChart/assetsChart.widget";
 import { HistoryDataPanel } from "./historyDataPanel";
-import { Assets } from "./assets";
+import { AssetWidget } from "./assets/assets.widget";
 
 export const OverviewPage = () => {
   return (
     <Grid cols={2}>
-      <Assets />
-      <AssetsChart />
+      <AssetWidget />
+      <AssetsChartWidget />
       <Grid.span colSpan={2}>
-        <Performance />
+        <PerformanceWidget />
       </Grid.span>
       <Grid.span colSpan={2}>
         <HistoryDataPanel />

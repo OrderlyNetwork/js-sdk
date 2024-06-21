@@ -1,9 +1,9 @@
 import { FC, PropsWithChildren, cloneElement, useMemo } from "react";
 import { ChainIcon, ChainIconProps } from "./chainIcon";
-import { CoinIcon, CoinIconProps } from "./coinIcon";
+import { TokenIcon, TokenIconProps } from "./tokenIcon";
 
 export type CombineIconProps = {
-  secondary: ChainIconProps | CoinIconProps;
+  secondary: ChainIconProps | TokenIconProps;
 };
 
 export const CombineIcon: FC<PropsWithChildren<CombineIconProps>> = (props) => {
@@ -13,7 +13,7 @@ export const CombineIcon: FC<PropsWithChildren<CombineIconProps>> = (props) => {
     if ("chainId" in props.secondary) {
       return <ChainIcon {...props.secondary} className={className} />;
     } else {
-      return <CoinIcon {...props.secondary} className={className} />;
+      return <TokenIcon {...props.secondary} className={className} />;
     }
   }, [props.secondary]);
 

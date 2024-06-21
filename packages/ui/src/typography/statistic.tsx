@@ -67,7 +67,7 @@ const Statistic = React.forwardRef<
   const { root, value: valueClassName } = statisticVariants({ align });
 
   const value = useMemo(() => {
-    if (typeof children === "string") {
+    if (typeof children === "string" || typeof children === "number") {
       const { className: valueClass, ...restValueProps } = valueProps ?? {};
       return (
         <Numeral

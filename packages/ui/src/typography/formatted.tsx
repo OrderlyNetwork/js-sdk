@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { format as formatDate, isValid } from "date-fns";
-import { TextProps, Text, TextElement } from "./text";
+import { Text, TextElement, TextProps } from "./text";
 import { CopyIcon } from "../icon/copy";
 
 export type TextRule = "date" | "address" | "symbol" | "status" | "txId";
@@ -49,6 +49,7 @@ type SymbolText = {
    * @default base-quote
    */
   formatString?: string;
+  showIcon?: boolean;
 };
 
 const DEFAULT_SYMBOL_FORMAT = "base-quote";
@@ -59,8 +60,8 @@ export type FormattedTextProps = TextProps & {
   // rule?: Omit<TextRule, "status"|'address'|'date'>;
   loading?: boolean;
 
-  surfix?: React.ReactNode;
-  prefix?: React.ReactNode;
+  suffix?: React.ReactElement;
+  prefix?: React.ReactElement;
 } & (BaseText | DateText | AddressText | SymbolText | TxIDText);
 
 export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
@@ -79,12 +80,14 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       // @ts-ignore
       capitalize,
       copyable,
+      //@ts-ignore
+      isIcon,
       ...rest
     } = props;
     // const Comp = asChildren ? Slot : "span";
 
-    const surfix = useMemo(() => {
-      if (typeof props.surfix !== "undefined") return props.surfix;
+    const suffix = useMemo(() => {
+      if (typeof props.suffix !== "undefined") return props.suffix;
 
       if (copyable) {
         return (
@@ -98,7 +101,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
           </button>
         );
       }
-    }, [props.surfix, copyable]);
+    }, [props.suffix, copyable]);
 
     const content = useMemo(() => {
       if (typeof children === "undefined") return "--";
@@ -133,14 +136,6 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
           .replace("type", type)
           .replace("base", base)
           .replace("quote", quote);
-
-        // if (typeof symbolElement !== "undefined") {
-        //   if (symbolElement === "base") {
-        //     return arr[1];
-        //   }
-        //   return arr[2];
-        // }
-        // return `${arr[1]}-${arr[0]}`;
       }
 
       // if (rule === "status") {
@@ -157,16 +152,16 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
     }, [children, rule, formatString, range, symbolElement]);
 
     const contentWithSurfix = useMemo(() => {
-      if (typeof surfix === "undefined" && typeof prefix === "undefined")
+      if (typeof suffix === "undefined" && typeof prefix === "undefined")
         return content;
       return (
         <span className="oui-flex oui-gap-1 oui-items-center">
           {prefix}
           {content}
-          {surfix}
+          {suffix}
         </span>
       );
-    }, [content, surfix]);
+    }, [content, suffix]);
 
     return <Text {...rest} ref={ref} children={contentWithSurfix} />;
   }

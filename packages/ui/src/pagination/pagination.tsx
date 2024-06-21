@@ -1,21 +1,24 @@
 import * as React from "react";
-// import {
-//   ChevronLeftIcon,
-//   ChevronRightIcon,
-//   DotsHorizontalIcon,
-// } from "@radix-ui/react-icons"
-//
-import { CaretLeftIcon, CaretRightIcon } from "../icon";
+import { Text } from "../typography/text";
+
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "../icon";
 
 import { ButtonProps, buttonVariants } from "../button";
 import { cnBase } from "tailwind-variants";
+import { Select } from "../select";
+import { Flex } from "../flex";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"
     aria-label="pagination"
     className={cnBase(
-      "oui-mx-auto oui-flex oui-w-full oui-justify-center",
+      "oui-mx-auto oui-flex oui-w-full oui-justify-center oui-text-xs oui-items-center",
       className
     )}
     {...props}
@@ -60,8 +63,10 @@ const PaginationLink = ({
   <a
     aria-current={isActive ? "page" : undefined}
     className={cnBase(
+      "oui-min-w-6",
       buttonVariants({
-        variant: isActive ? "outlined" : "text",
+        size: "xs",
+        variant: isActive ? "contained" : "text",
         // size,
       })
       // className
@@ -77,12 +82,10 @@ const PaginationPrevious = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to previous page"
-    size="default"
     className={cnBase("oui-gap-1 oui-pl-2.5", className)}
     {...props}
   >
-    <CaretLeftIcon className="oui-h-4 oui-w-4" />
-    <span>Previous</span>
+    <ChevronLeftIcon className="oui-h-4 oui-w-4" color="white" />
   </PaginationLink>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
@@ -93,12 +96,10 @@ const PaginationNext = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to next page"
-    size="default"
     className={cnBase("oui-gap-1 oui-pr-2.5", className)}
     {...props}
   >
-    <span>Next</span>
-    <CaretRightIcon className="oui-h-4 oui-w-4" />
+    <ChevronRightIcon className="oui-h-4 oui-w-4" color="white" />
   </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
@@ -121,7 +122,61 @@ const PaginationEllipsis = ({
 );
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
+const Paginations = (props: {
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: string) => void;
+  pageSize?: number;
+  page: number;
+  count: number;
+}) => {
+  const pages = Array.from({ length: props.count }, (_, i) => i + 1);
+
+  return (
+    <Pagination>
+      <Flex mr={4}>
+        <Text
+          as="div"
+          className="oui-text-nowrap oui-mr-2 oui-text-base-contrast-54"
+        >
+          Rows per page
+        </Text>
+        <div className={"oui-w-16"}>
+          <Select.options
+            options={[
+              { value: "5", label: "5" },
+              { value: "10", label: "10" },
+            ]}
+            value="5"
+            size="xs"
+            onValueChange={props.onPageSizeChange}
+          />
+        </div>
+      </Flex>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+        {pages.map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink isActive={page === props.page} href="#" key={page}>
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {/* <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem> */}
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+};
+
 export {
+  Paginations,
   Pagination,
   PaginationContent,
   PaginationLink,

@@ -1,5 +1,5 @@
 import { Card, TabPanel, Tabs } from "@orderly.network/ui";
-import { AssetHistory } from "./assetHistory";
+import { AssetHistory, AssetHistoryWidget } from "./assetHistory";
 import { ArrowLeftRightIcon } from "@orderly.network/ui";
 
 export const HistoryDataPanel = () => {
@@ -11,7 +11,7 @@ export const HistoryDataPanel = () => {
           icon={<ArrowLeftRightIcon />}
           value={"deposit"}
         >
-          <AssetHistory />
+          <AssetHistoryWidget />
         </TabPanel>
         <TabPanel
           title={"Funding"}

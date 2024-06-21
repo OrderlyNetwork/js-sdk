@@ -15,10 +15,10 @@ import {
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { ConnectorProvider } from "../../../../../../packages/onboard/src";
 
 const meta = {
-  title: "Widget/Connector",
+  title: "Package/Connector",
   component: WalletConnectContent,
   // subComponents: { Logo },
   parameters: {

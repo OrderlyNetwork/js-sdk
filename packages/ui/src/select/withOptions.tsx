@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactElement } from "react";
+import React, { FC, PropsWithChildren, ReactElement } from "react";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
 
@@ -28,8 +28,11 @@ export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
   return (
     <Select {...rest}>
       <SelectGroup>
-        {options.map((option) => {
-          return optionRenderer(option);
+        {options.map((option, index) => {
+          return React.cloneElement(optionRenderer(option), {
+            size: props.size,
+            key: index,
+          });
         })}
       </SelectGroup>
     </Select>

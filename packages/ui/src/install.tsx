@@ -3,8 +3,8 @@ import { useMainNavBuilder } from "./nav/main/widgetBuilder";
 import { SideBar } from "./nav/sidebar";
 import { useSideNavBuilder } from "./nav/sidebar/builders/useSideNavBuilder";
 import { SideBarProps } from "./nav/sidebar/sidebar";
-import { installExtension } from "./plugin/install";
-import { ExtensionPositionEnum } from "./plugin/types";
+import { installExtension } from "./plugin";
+import { ExtensionPositionEnum } from "./plugin";
 
 installExtension<MainNavProps>({
   name: "main-navbar",

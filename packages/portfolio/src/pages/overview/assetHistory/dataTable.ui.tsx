@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { DataTable } from "@orderly.network/ui";
+import { DataGrid, DataTable } from "@orderly.network/ui";
 import { useAssetHistoryColumns } from "./column";
 
 type AssetHistoryProps = {
@@ -14,11 +14,11 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   const columns = useAssetHistoryColumns();
 
   return (
-    <DataTable
+    <DataGrid
       bordered
       headerClassName="oui-text-xs oui-text-base-contrast-36"
       columns={columns}
-      dataSource={dataSource?.[page - 1]}
+      dataSource={dataSource}
     />
   );
 };

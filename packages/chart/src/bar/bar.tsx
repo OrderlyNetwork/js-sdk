@@ -19,12 +19,12 @@ export const Bar: FC<BarProps> = (props) => {
     if (!data || !size) return;
 
     const y0 = max([
-      Math.abs(min(data, (d) => d.close)),
-      Math.abs(max(data, (d) => d.close)),
+      Math.abs(min(data, (d) => d.pnl)),
+      Math.abs(max(data, (d) => d.pnl)),
     ]);
 
     const y = scaleLinear()
-      //   .domain([min(data, (d) => d.close), max(data, (d) => d.close)])
+      //   .domain([min(data, (d) => d.pnl), max(data, (d) => d.pnl)])
       .domain([-y0, y0])
       .range([size.height - margin.bottom - margin.top, 0])
       .nice();
@@ -43,17 +43,21 @@ export const Bar: FC<BarProps> = (props) => {
   useEffect(() => {
     if (!scale || !gRef.current) return;
 
-    select(gRef.current)
+    const u = select(gRef.current)
       .attr("transform", `translate(0, ${margin.top})`)
       .selectAll()
-      .data(data)
-      .join("rect")
+      .data(data);
+
+    u.join("rect")
+      // .transition()
       .attr("fill", props.color || "steelblue")
       .attr("rx", 2)
       .attr("x", (d) => scale.x(new Date(d.date)))
-      .attr("y", (d) => scale.y(Math.max(0, d.close)))
-      .attr("height", (d) => Math.abs(scale.y(d.close) - scale.y(0)))
+      .attr("y", (d) => scale.y(Math.max(0, d.pnl)))
+      .attr("height", (d) => Math.abs(scale.y(d.pnl) - scale.y(0)))
       .attr("width", scale.x.bandwidth());
+
+    u.exit().remove();
   }, [data, scale]);
 
   return <g ref={gRef}></g>;

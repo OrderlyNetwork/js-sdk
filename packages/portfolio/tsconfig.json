@@ -1,6 +1,8 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "exclude": [
     "dist",
     "build",
@@ -23,13 +25,29 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
     "paths": {
-      "@orderly.network/react": ["../component/src"],
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/chart": ["../chart/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/types": ["../types/src"]
+      "@orderly.network/react": [
+        "../component/src"
+      ],
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/chart": [
+        "../chart/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ]
     }
   }
 }

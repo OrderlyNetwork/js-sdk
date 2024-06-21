@@ -6,6 +6,7 @@ import { select } from "d3-selection";
 export type AxisProps = {
   // direction?: "x" | "y";
   orientation?: "top" | "bottom" | "left" | "right";
+  tickValues?: any[];
 };
 
 export const Axis: FC<AxisProps> = (props) => {
@@ -22,19 +23,36 @@ export const Axis: FC<AxisProps> = (props) => {
       case "left":
         translate = `translate(${margin.left}, ${margin.top})`;
         axis = axisLeft(scale.y)
-          .ticks(8)
+          .ticks(6)
           .tickSizeInner(-(size.width - margin.left - margin.right))
           .tickSizeOuter(5)
+
           .tickPadding(10);
+
         break;
 
       default:
         translate = `translate(${margin.left}, ${size.height - margin.bottom})`;
-        axis = axisBottom(scale.x);
+        axis = axisBottom(scale.x).ticks(2);
+        if (typeof props.tickValues !== "undefined") {
+          axis.tickValues(props.tickValues);
+        }
     }
 
-    select(gRef.current).attr("transform", translate).call(axis);
+    select(gRef.current)
+      .attr("transform", translate)
+      .call(axis)
+      .call((g) => g.select(".domain").remove())
+      .call((g) =>
+        g.selectAll(".tick line").attr("stroke", "rgba(255,255,255,0.08)")
+      )
+      .call((g) =>
+        g
+          .selectAll(".tick text")
+          .attr("fill", "rgba(255,255,255,0.54)")
+          .attr("font-size", 10)
+      );
   }, [scale, orientation]);
 
-  return <g ref={gRef}></g>;
+  return <g ref={gRef} className="oui-chart-axis"></g>;
 };

@@ -13,6 +13,9 @@ const avatarVariants = tv(
     },
     variants: {
       size: {
+        xs: {
+          root: "oui-w-5 oui-h-5",
+        },
         sm: {
           root: "oui-w-6 oui-h-6",
         },

@@ -1,30 +1,41 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { line, curveBasis } from "d3-shape";
 import { scaleLinear, scaleUtc } from "d3-scale";
-import { max, extent } from "d3-array";
+import { max, extent, min } from "d3-array";
 import { useChartContext } from "../hooks/chartContext";
 
 export type LineProps = {
   color?: string;
   symbol?: string;
+  dataKey: string;
+  dataTransform?: (data: any) => any;
 };
 
 export const Line: FC<LineProps> = (props) => {
-  const { color, symbol } = props;
+  const { symbol, color, dataKey } = props;
   const { data, scale, size, margin, registerScale } = useChartContext();
   // const [path, setPath] = useState<string | undefined>();
+  //
 
   useEffect(() => {
     if (!size || !data) return;
 
+    const transform =
+      typeof props.dataTransform === "function"
+        ? props.dataTransform
+        : (d: any) => d;
+
+    const _data = transform(data);
+
     const x = scaleUtc(
-      extent(data, (d) => new Date(d.date)),
+      extent(_data, (d) => new Date(d.date)),
       [0, size.width - margin.right - margin.left]
     );
 
     const y = scaleLinear(
-      [0, max(data, (d) => d.close)],
-      [size.height - margin.bottom - margin.top, margin.top]
+      [min(_data, (d) => d[dataKey]), max(_data, (d) => d[dataKey])],
+      // [size.height - margin.bottom - margin.top, margin.top]
+      [size.height - margin.bottom - margin.top, 0]
     ).nice();
 
     registerScale({ x, y });
@@ -34,7 +45,7 @@ export const Line: FC<LineProps> = (props) => {
     if (!scale) return () => undefined;
     return line()
       .x((d) => scale.x(new Date(d.date)))
-      .y((d) => scale.y(d.close))
+      .y((d) => scale.y(d[dataKey]))
       .curve(curveBasis);
   }, [scale]);
 
@@ -47,7 +58,7 @@ export const Line: FC<LineProps> = (props) => {
 
   return (
     <g transform={`translate(${margin.left}, ${margin.top})`}>
-      <path d={d} fill="none" stroke={"white"} />
+      <path d={d} fill="none" stroke={color ?? "white"} strokeWidth={2} />
     </g>
   );
 };

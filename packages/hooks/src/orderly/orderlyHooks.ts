@@ -53,4 +53,9 @@ export {
 
 export { useSymbolLeverage } from "./useSymbolLeverage";
 
-export { useAssetsHistory } from "./statistics/useAssetHistory";
+export {
+  useAssetsHistory,
+  AssetHistoryStatusEnum,
+} from "./statistics/useAssetHistory";
+
+export { useStatisticsDaily } from "./statistics/useStatisticsDaily";

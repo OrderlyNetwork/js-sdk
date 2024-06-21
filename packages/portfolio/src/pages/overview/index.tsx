@@ -1,6 +1,5 @@
-export { AssetsWidget, Assets } from "./assets";
-export { Performance } from "./performance";
-export { AssetsChart } from "./assetsChart";
+export { AssetWidget, AssetsUI } from "./assets";
+export { AssetsChartWidget } from "./assetChart/assetsChart.widget";
 export { HistoryDataPanel } from "./historyDataPanel";
 
 export {
@@ -9,5 +8,7 @@ export {
   useAssetHistoryHook,
   useAssetHistoryColumns,
 } from "./assetHistory";
+
+export { PerformanceUI, PerformanceWidget } from "./performance";
 
 export { OverviewPage } from "./main";

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import {DataTable} from '@orderly.network/ui';
+import { Card, DataTable, Filter } from '@orderly.network/ui';
+import { OverviewModule } from '@orderly.network/portfolio';
+import { OrderlyApp } from '@orderly.network/react-app';
 
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -8,17 +10,19 @@ const meta = {
   title: 'Base/Table/DataTable',
   component: DataTable,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     // layout: 'centered',
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+  decorators: [
+    (Story) => (
+      <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}><Card><Story /></Card></OrderlyApp>)
+  ],
   tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     // backgroundColor: { control: 'color' },
   },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: { },
+  args: {
+    bordered: true,
+  },
 } satisfies Meta<typeof DataTable>;
 
 export default meta;
@@ -26,14 +30,25 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
-args: {
-  columns:[
-    {title:'Symbol', dataIndex:'symbol'},
-  ],
-  dataSource:[
-    {
-      symbol:'ETH',
-    }
-  ]
-},
+  args: {
+    columns: [
+      { title: 'Symbol', dataIndex: 'symbol' },
+    ],
+    dataSource: [
+      {
+        symbol: 'ETH',
+      }
+    ]
+  },
 };
+
+
+export const DataFilter: Story = {
+  render: (args) => {
+    const columns = OverviewModule.useAssetHistoryColumns();
+    const { dataSource, onSearch } = OverviewModule.useAssetHistoryHook();
+    return <DataTable {...args} columns={columns} dataSource={dataSource}>
+
+    </DataTable>
+  }
+}

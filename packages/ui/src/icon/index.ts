@@ -1,4 +1,5 @@
 import { BaseIcon } from "./baseIcon";
+
 export { CloseIcon } from "./close";
 export { CheckIcon } from "./check";
 export { ChevronDownIcon } from "./chevronDown";
@@ -30,7 +31,7 @@ export { EditIcon } from "./edit";
 export { EyeIcon } from "./eye";
 export { EyeCloseIcon } from "./eyeClose";
 
-export { CoinIcon } from "./coinIcon";
+export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";
 export { WalletIcon } from "./walletIcon";
 export { CalendarIcon } from "./calendar";

@@ -1,3 +1,3 @@
-export { useAssetsBuilder } from "./useBuilder.script";
-export { AssetsWidget } from "./assets.widget";
-export { Assets } from "./assets";
+export { useAssetScript } from "./useBuilder.script";
+export { AssetsUI } from "./assets.ui";
+export { AssetWidget } from "./assets.widget";

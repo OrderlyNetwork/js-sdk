@@ -331,6 +331,7 @@ export declare namespace WSMessage {
     amount: number;
     count: number;
   }
+
   export interface MarkPrice {
     symbol: string;
     price: number;
@@ -466,5 +467,13 @@ export declare namespace WSMessage {
     status: string;
     created_time: number;
     updated_time: number;
+  }
+
+  export interface DailyRow {
+    account_value: number;
+    broker_id: string;
+    date: string;
+    perp_volume: number;
+    pnl: number;
   }
 }

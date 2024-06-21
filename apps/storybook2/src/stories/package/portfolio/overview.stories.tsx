@@ -8,10 +8,10 @@ import {fn} from "@storybook/test";
 import {ConnectorProvider} from "@orderly.network/web3-onboard";
 
 const meta = {
-    title: "Page/Portfolio/OverviewPage",
+    title: "Package/Portfolio/OverviewPage",
     component: OverviewModule.OverviewPage,
     subcomponents: {
-        Assets: OverviewModule.Assets,
+        Assets: OverviewModule.AssetWidget,
         DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
     },
     decorators: [
@@ -55,7 +55,7 @@ export const Page: Story = {};
 
 export const Assets: Story = {
     render: (args) => {
-        return <OverviewModule.Assets {...args} />;
+        return <OverviewModule.AssetWidget {...args} />;
     },
     args: {
         // connected: false,
@@ -85,5 +85,33 @@ export const AssetHistory: Story = {
             </Card>
         ),
     ],
-    
+
+}
+
+export const Performance: Story = {
+    render: (args) => {
+        return <OverviewModule.PerformanceWidget></OverviewModule.PerformanceWidget>
+    },
+
+    decorators: [
+        (Story) => (
+            <Box width={'880px'}>
+                <Story/>
+            </Box>
+        ),
+    ],
+}
+
+export const AssetHistoryChart: Story = {
+    render: (args) => {
+        return <OverviewModule.AssetsChartWidget></OverviewModule.AssetsChartWidget>
+    },
+
+    decorators: [
+        (Story) => (
+            <Box width={'580px'}>
+                <Story/>
+            </Box>
+        ),
+    ],
 }

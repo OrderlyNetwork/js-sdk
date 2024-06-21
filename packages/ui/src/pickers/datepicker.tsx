@@ -1,43 +1,65 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { Popover } from "../popover/popover";
-import { Calendar } from "./date/calendar";
+import { Calendar, CalendarProps } from "./date/calendar";
 import { selectVariants } from "../select/selectPrimitive";
 import { CalendarIcon } from "../icon/calendar";
 import { CaretDownIcon } from "../icon/caretDown";
 import type { SizeType } from "../helpers/sizeType";
+import { ActiveModifiers } from "react-day-picker";
 
 export type DatePickerProps = {
   onChange?: (date: Date) => void;
   // selected: Date;
-  placholder?: string;
+  placeholder?: string;
   value?: Date;
   dateFormat?: string;
   size?: SizeType;
   className?: string;
-};
+} & CalendarProps;
 
 const DatePicker: FC<DatePickerProps> = (props) => {
-  const { placholder, dateFormat, onChange, value, size, className } = props;
+  const {
+    placeholder,
+    dateFormat,
+    onChange,
+    value,
+    size,
+    className,
+    ...calendarProps
+  } = props;
 
   const { trigger } = selectVariants({ size, className });
 
-  const foramttedValue = useMemo(() => {
+  const [open, setOpen] = useState(false);
+
+  const formattedValue = useMemo(() => {
     if (typeof value === "undefined") {
-      return placholder ?? "Select Date";
+      return placeholder ?? "Select Date";
     }
-  }, [value, placholder]);
+  }, [value, placeholder]);
+
+  const onSelect = (
+    day: Date | undefined,
+    selectedDay: Date,
+    activeModifiers: ActiveModifiers,
+    e: MouseEvent
+  ) => {
+    calendarProps.onSelect?.(day, selectedDay, activeModifiers, e);
+
+    if (day) {
+      onChange?.(day);
+      setOpen(false);
+    }
+  };
 
   return (
     <Popover
+      open={open}
+      onOpenChange={setOpen}
       contentProps={{
         className: "oui-w-auto oui-p-0",
       }}
-      content={
-        <Calendar
-          onSelect={(date) => console.log(date)}
-          selected={new Date()}
-        />
-      }
+      content={<Calendar onSelect={onSelect} {...calendarProps} />}
     >
       <button
         className={trigger({
@@ -47,7 +69,7 @@ const DatePicker: FC<DatePickerProps> = (props) => {
         <span className="orderly-datepicker-trigger-icon">
           <CalendarIcon size={14} className="oui-text-inherit" opacity={1} />
         </span>
-        <span>{foramttedValue}</span>
+        <span>{formattedValue}</span>
         <CaretDownIcon
           size={12}
           className="orderly-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"

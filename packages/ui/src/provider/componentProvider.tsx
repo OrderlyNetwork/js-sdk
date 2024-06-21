@@ -1,4 +1,4 @@
-import { ExtensionPosition } from "../plugin/types";
+import { ExtensionPosition } from "../plugin";
 import { ComponentType, FC, PropsWithChildren, useEffect } from "react";
 
 const ComponentsProvider: FC<

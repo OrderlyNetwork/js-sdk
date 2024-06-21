@@ -1,8 +1,11 @@
-import { ComponentPropsWithout, RemovedProps } from "@/helpers/component-props";
 import { tv } from "../utils/tv";
 import { Slot } from "@radix-ui/react-slot";
 import React from "react";
 import { type VariantProps } from "tailwind-variants";
+import {
+  ComponentPropsWithout,
+  RemovedProps,
+} from "../helpers/component-props";
 
 const textVariants = tv({
   variants: {
@@ -52,16 +55,6 @@ const textVariants = tv({
       98: "oui-text-base-contrast",
     },
   },
-  // compoundVariants:[
-  //   {
-  //     color:'neutral',
-
-  //   }
-  // ],
-
-  // defaultVariants: {
-
-  // },
 });
 
 export type TextElement = React.ElementRef<"span">;

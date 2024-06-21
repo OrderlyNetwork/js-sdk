@@ -7,7 +7,7 @@ import {
   selectVariants,
 } from "./selectPrimitive";
 import { VariantProps, cnBase } from "tailwind-variants";
-import { CoinIcon, ChainIcon } from "../icon";
+import { TokenIcon, ChainIcon } from "../icon";
 import { Flex } from "../flex";
 
 type ChainItem = {
@@ -29,7 +29,7 @@ const ChainSelect: FC<ChainSelectProps> = (props) => {
     <SelectRoot value={currentChain.id}>
       <SelectTrigger size={size} error={error} variant="contained" asChild>
         <button className="oui-relative oui-px-3 oui-box-border">
-          <CoinIcon name={currentChain.name} size={size} />
+          <TokenIcon name={currentChain.name} size={size} />
           <svg
             width="10"
             height="10"

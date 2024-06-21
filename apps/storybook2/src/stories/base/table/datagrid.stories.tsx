@@ -3,6 +3,7 @@ import {fn} from '@storybook/test';
 import {Card, DataGrid} from '@orderly.network/ui';
 
 import {OverviewModule} from '@orderly.network/portfolio';
+import {OrderlyApp} from "@orderly.network/react-app";
 
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
@@ -17,7 +18,8 @@ const meta = {
     // tags: ['autodocs'],
     // More on argTypes: https://storybook.js.org/docs/api/argtypes
     decorators: [
-        (Story) => (<Card><Story/></Card>)
+        (Story) => (
+            <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}><Card><Story/></Card></OrderlyApp>)
     ],
     argTypes: {
         // backgroundColor: { control: 'color' },
@@ -34,10 +36,9 @@ export const Default: Story = {
     render: (args) => {
         const columns = OverviewModule.useAssetHistoryColumns();
 
-        return <DataGrid columns={columns} filter={{
+        return <DataGrid bordered columns={columns} filter={{
             onFilter: fn(),
             items: [
-
                 {
                     type: 'select',
                     name: 'state',
@@ -49,18 +50,56 @@ export const Default: Story = {
                         {label: 'Inactive', value: 'inactive'},
                     ]
                 },
-                'date',
+                {
+                    type: 'date',
+                    name: 'date'
+                },
+                {
+                    type: 'range',
+                    name: 'range'
+                }
             ]
         }}/>;
     }
-    // args: {
-    //   // columns: [
-    //   //   { title: 'Symbol', dataIndex: 'symbol' },
-    //   // ],
-    //   // dataSource: [
-    //   //   {
-    //   //     symbol: 'ETH',
-    //   //   }
-    //   // ]
-    // },
 };
+
+export const Filter: Story = {
+    render: (args) => {
+        const columns = OverviewModule.useAssetHistoryColumns();
+        const {dataSource, onSearch} = OverviewModule.useAssetHistoryHook();
+
+        // console.log(dataSource);
+
+        return <DataGrid columns={columns} bordered dataSource={dataSource} filter={{
+            onFilter: (filter) => {
+                if (filter.name === 'range') {
+                    onSearch({
+                        startTime: new Date(filter.value.from).getTime().toString(),
+                        endTime: new Date(filter.value.to).getTime().toString(),
+                    });
+                }
+            },
+            items: [
+                {
+                    type: 'select',
+                    name: 'state',
+                    value: 'all',
+                    defaultValue: 'all',
+                    options: [
+                        {label: 'All', value: 'all'},
+                        {label: 'Active', value: 'active'},
+                        {label: 'Inactive', value: 'inactive'},
+                    ]
+                },
+                // {
+                //     type: 'date',
+                //     name: 'date'
+                // },
+                {
+                    type: 'range',
+                    name: 'range'
+                }
+            ]
+        }}/>;
+    }
+}

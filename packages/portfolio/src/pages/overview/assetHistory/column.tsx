@@ -1,5 +1,12 @@
 import { useMemo } from "react";
-import { capitalizeFirstLetter, Text, type Column } from "@orderly.network/ui";
+import {
+  capitalizeFirstLetter,
+  Text,
+  type Column,
+  Box,
+  Flex,
+  TokenIcon,
+} from "@orderly.network/ui";
 
 export const useAssetHistoryColumns = () => {
   const columns = useMemo<Column[]>(() => {
@@ -8,6 +15,14 @@ export const useAssetHistoryColumns = () => {
         title: "Token",
         dataIndex: "token",
         width: 80,
+        render: (value) => {
+          return (
+            <Flex gapX={1}>
+              <TokenIcon name={value} size="xs" />
+              <span>{value}</span>
+            </Flex>
+          );
+        },
       },
       {
         title: "Time",

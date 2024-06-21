@@ -1,5 +1,6 @@
 import {
   FC,
+  PropsWithChildren,
   ReactElement,
   ReactNode,
   useEffect,
@@ -21,18 +22,6 @@ import { Table } from "../table";
 import { type VariantProps } from "tailwind-variants";
 import { tv } from "../../utils/tv";
 import { TablePlaceholder } from "./tablePlaceholder";
-
-// interface DataTableFilter {
-//   options: {
-//     label: string;
-//     value: string;
-//   }[];
-// }
-
-type DataTableFilter = {
-  column: string;
-  value: string;
-};
 
 export interface DataTableProps<RecordType>
   extends TBodyProps<RecordType>,
@@ -72,7 +61,7 @@ const dataTableVariants = tv({
 });
 
 export const DataTable = <RecordType extends unknown>(
-  props: DataTableProps<RecordType>
+  props: PropsWithChildren<DataTableProps<RecordType>>
 ) => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const {
@@ -86,119 +75,11 @@ export const DataTable = <RecordType extends unknown>(
     loading,
   });
 
-  // const [maskLayout, setMaskLayout] = useState({
-  //   left: 0,
-  //   right: 0,
-  //   top: 44.5,
-  //   bottom: 0,
-  // });
-
-  // const maskElement = useMemo(() => {
-  //   if (Array.isArray(props.dataSource) && props.dataSource?.length > 0) {
-  //     return null;
-  //   }
-
-  //   let content: ReactNode = <Spinner />;
-  //   if (props.dataSource?.length === 0 && !props.loading) {
-  //     content = <EmptyView />;
-  //   }
-  //   return (
-  //     <div
-  //       className="oui-absolute oui-flex oui-z-20 oui-flex-col oui-justify-center oui-items-center oui-bg-base-900/30 oui-backdrop-blur-sm"
-  //       style={{
-  //         ...maskLayout,
-  //       }}
-  //     >
-  //       {content}
-  //     </div>
-  //   );
-  // }, [props.dataSource, props.loading, maskLayout]);
-
   const needFixed = useMemo(() => {
     return props.columns.some(
       (col) => col.fixed === "left" || col.fixed === "right"
     );
   }, [props.columns]);
-
-  // const onScroll = useDebouncedCallback((scrollLeft: number) => {
-  //   // console.log(scrollLeft);
-  //   if (!wrapRef.current || !needFixed) {
-  //     return;
-  //   }
-
-  //   if (scrollLeft > 0) {
-  //     // setLeftFixed(true);
-  //     wrapRef.current?.setAttribute("data-left", "fixed");
-  //   } else {
-  //     wrapRef.current?.setAttribute("data-left", "free");
-  //   }
-
-  //   if (
-  //     wrapRef.current.scrollLeft + wrapRef.current.clientWidth >=
-  //     wrapRef.current.scrollWidth
-  //   ) {
-  //     wrapRef.current.setAttribute("data-right", "free");
-  //   } else {
-  //     wrapRef.current.setAttribute("data-right", "fixed");
-  //   }
-  // }, 50);
-
-  // const onMaskResize = useDebouncedCallback((entry: ResizeObserverEntry) => {
-  //   // console.log("mask resize", entry);
-  //   const leftDivide = entry.target.parentElement?.querySelector(
-  //     ".table-left-fixed-divide"
-  //   );
-  //   const rightDivide = entry.target.parentElement?.querySelector(
-  //     ".table-right-fixed-divide"
-  //   );
-
-  //   const tableHeader = wrapRef.current?.querySelector(
-  //     ".oui-ui-table-thead"
-  //   );
-
-  //   if (leftDivide) {
-  //     const left = leftDivide.getBoundingClientRect();
-  //     // console.log("leftDivide", left);
-  //     // setMaskLayout((layout) => ({ ...layout, left }));
-  //   }
-
-  //   if (rightDivide) {
-  //     const right = rightDivide.getBoundingClientRect();
-
-  //     const r = right.right > 0 ? entry.contentRect.right - right.right : 0;
-  //     setMaskLayout((layout) => ({
-  //       ...layout,
-  //       right: r,
-  //     }));
-  //   }
-
-  //   if (tableHeader) {
-  //     const top = tableHeader.getBoundingClientRect();
-
-  //     setMaskLayout((layout) => ({ ...layout, top: top.height }));
-  //   }
-  // }, 200);
-
-  // useEffect(() => {
-  //   if (!wrapRef.current) {
-  //     return;
-  //   }
-
-  //   onScroll(0);
-  //   // use ResizeObserver observe wrapRef
-  //   const resizeObserver = new ResizeObserver((entries) => {
-  //     for (const entry of entries) {
-  //       onScroll(entry.target.scrollLeft);
-  //       onMaskResize(entry);
-  //     }
-  //   });
-
-  //   resizeObserver.observe(wrapRef.current!);
-
-  //   return () => {
-  //     resizeObserver.disconnect();
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (!wrapRef.current) return;
@@ -247,6 +128,7 @@ export const DataTable = <RecordType extends unknown>(
 
         {/* </EndReachedBox> */}
         {/* {showMaskElement && maskElement} */}
+        {props.children}
       </div>
 
       <FixedDivide />

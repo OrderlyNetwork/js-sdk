@@ -1,14 +1,18 @@
-import { FC } from "react";
-import { DateRangePicker } from "../../pickers/dateRangePicker";
+import { FC, useState } from "react";
+import {
+  DateRangePicker,
+  DateRangePickerProps,
+} from "../../pickers/dateRangePicker";
 import { Box } from "../../box";
 import { Flex } from "../../flex";
 import {
   SelectWithOptions,
   type SelectWithOptionsProps,
 } from "../../select/withOptions";
-import { DatePicker } from "../../pickers/datepicker";
+import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
+// import { DateRange } from "react-day-picker";
 
-type FilterType = "select" | "input" | "date" | "custom";
+type FilterType = "select" | "input" | "date" | "range" | "custom";
 
 type SelectFilter = {
   name: string;
@@ -16,20 +20,54 @@ type SelectFilter = {
   // options: DataFilterOption[];
 } & SelectWithOptionsProps;
 
-type DateFilterMode = "range" | "single";
+// type DateFilterMode = "range" | "single";
 
 type DateFilter = {
   name: string;
   type: "date";
   // range?: DataFilterDateRange;
-  mode?: DateFilterMode;
-};
+  // mode?: DateFilterMode;
+} & DatePickerProps;
 
-type DataFilterItems = (string | SelectFilter | DateFilter)[];
+type DateRangeFilter = {
+  name: string;
+  type: "range";
+} & DateRangePickerProps;
+
+type DataFilterItems = (SelectFilter | DateFilter | DateRangeFilter)[];
 
 export type DataFilterProps = {
   items: DataFilterItems;
-  onFilter: (filter: { name: string; value: string }) => void;
+  onFilter: (filter: { name: string; value: any }) => void;
+};
+
+const FilterDatePicker = (props: DatePickerProps) => {
+  return (
+    <div>
+      <DatePicker
+        size="xs"
+        {...props}
+        mode={"single"}
+        onChange={(date) => {
+          console.log(date);
+        }}
+      />
+    </div>
+  );
+};
+
+const FilterDateRangePicker = (props: DateRangePickerProps) => {
+  return (
+    <div className={"oui-min-w-[180px]"}>
+      <DateRangePicker
+        size="xs"
+        {...props}
+        // onChange={(range) => {
+        //   console.log(range);
+        // }}
+      />
+    </div>
+  );
 };
 
 export const DataFilterRenderer: FC<{
@@ -38,10 +76,11 @@ export const DataFilterRenderer: FC<{
   [key: string]: any;
 }> = (props) => {
   const { onChange, type, ...rest } = props;
+
   switch (type) {
     case "select":
       return (
-        <div className="oui-min-w-32">
+        <div className="oui-min-w-28">
           <SelectWithOptions
             size="xs"
             {...(rest as SelectWithOptionsProps)}
@@ -50,10 +89,13 @@ export const DataFilterRenderer: FC<{
         </div>
       );
     case "date":
+      return <FilterDatePicker {...(rest as DatePickerProps)} />;
+    case "range":
       return (
-        <div>
-          <DatePicker onChange={onChange} size="xs" />
-        </div>
+        <FilterDateRangePicker
+          {...(rest as DateRangePickerProps)}
+          onChange={onChange}
+        />
       );
     case "input":
     default:
@@ -75,6 +117,10 @@ export const DataTableFilter = (props: DataFilterProps) => {
       {props.items.map((item, index: number) => {
         const props =
           typeof item === "string" ? { type: item as FilterType } : item;
+
+        if (props.type === "date" && typeof item === "string") {
+          (props as DatePickerProps).mode = "range";
+        }
 
         return (
           <DataFilterRenderer

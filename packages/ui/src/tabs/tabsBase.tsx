@@ -7,10 +7,12 @@ const tabsVariants = tv({
   slots: {
     list: [
       "oui-header-list",
-      "oui-inline-flex",
+      // "oui-inline-flex",
       "oui-items-center",
       "oui-px-1",
       "oui-space-x-6",
+      "oui-border-b",
+      "oui-border-line-6",
     ],
     content: [
       "oui-ring-offset-background",

@@ -22,8 +22,11 @@ export const baseBoxVariants = tv({
     __position: {
       true: "oui-position",
     },
-    __size: {
-      true: "oui-size",
+    __size_width: {
+      true: "oui-size-width",
+    },
+    __size_height: {
+      true: "oui-size-height",
     },
   },
   defaultVariants: {
@@ -40,7 +43,10 @@ type BoxElement = React.ElementRef<"div">;
 
 interface BoxProps
   extends React.ButtonHTMLAttributes<HTMLDivElement | HTMLSpanElement>,
-    Omit<VariantProps<typeof boxVariants>, "__position" | "__size"> {
+    Omit<
+      VariantProps<typeof boxVariants>,
+      "__position" | "__size_width" | "__size_height"
+    > {
   asChild?: boolean;
   as?:
     | "div"
@@ -124,9 +130,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
         intensity,
         invisible,
         __position: typeof position !== "undefined",
-        __size:
-          typeof props.width !== "undefined" ||
-          typeof props.height !== "undefined",
+        __size_width: typeof props.width !== "undefined",
+        __size_height: typeof props.height !== "undefined",
       })}
       {...rest}
       ref={forwardedRef}

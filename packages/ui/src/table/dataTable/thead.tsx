@@ -16,7 +16,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
   return (
     <table
       className={cnBase(
-        "oui-border-collapse oui-w-full oui-table-fixed oui-sticky oui-top-0 oui-z-20 oui-DataTableHeader",
+        "oui-border-collapse oui-w-full oui-text-xs oui-table-fixed oui-sticky oui-top-0 oui-z-20 oui-DataTableHeader",
         props.containerClassName
       )}
     >

@@ -1,8 +1,9 @@
 import { ComponentType, FC, PropsWithChildren } from "react";
-import { ExtensionPosition } from "../plugin/types";
+import { ExtensionPosition } from "../plugin";
 import { ComponentsProvider } from "./componentProvider";
 
 export type OrderlyThemeProviderProps = {
+  dateFormatting?: string;
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };

@@ -1,8 +1,15 @@
 import { createContext, PropsWithChildren, useContext } from "react";
 import { DataFilterProps } from "./dataFilter";
 
-type DataGridContextState = {
+export type PaginationOptions = {
+  page: number;
+  pageSize: number;
+  count: number;
+};
+
+export type DataGridContextState = {
   filter?: DataFilterProps;
+  pagination?: PaginationOptions;
 };
 
 export const DataGridContext = createContext<DataGridContextState>(
@@ -14,12 +21,16 @@ export const useDataGridContext = () => {
 };
 
 export const DataGridProvider = (
-  props: PropsWithChildren<{ filter?: DataFilterProps }>
+  props: PropsWithChildren<{
+    filter?: DataFilterProps;
+    pagination: PaginationOptions;
+  }>
 ) => {
   return (
     <DataGridContext.Provider
       value={{
         filter: props.filter,
+        pagination: props.pagination,
       }}
     >
       {props.children}

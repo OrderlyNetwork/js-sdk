@@ -9,8 +9,10 @@ import {
   useState,
 } from "react";
 import { Column, SortOrder } from "./col";
+import { DataGridContextState } from "../dataGrid/dataGridContext";
+import { DataFilterProps } from "../dataGrid/dataFilter";
 
-export interface TableContextState {
+export type TableContextState = {
   columns: Column[];
   dataSource: any[];
   sortKey?: string;
@@ -23,7 +25,7 @@ export interface TableContextState {
   getRightFixedColumnsWidth: (index: number) => number;
   getLeftFixedColumnsPosition: () => number;
   getRightFixedColumnsPosition: () => number;
-}
+} & DataGridContextState;
 
 export const TableContext = createContext<TableContextState>(
   {} as TableContextState
@@ -150,6 +152,8 @@ export const TableProvider: FC<
       return [key, "desc" as SortOrder];
     });
   };
+
+  const registerFilter = useCallback((props: DataFilterProps) => {}, []);
 
   return (
     <TableContext.Provider

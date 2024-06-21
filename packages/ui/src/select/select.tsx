@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren } from "react";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import {

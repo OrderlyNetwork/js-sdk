@@ -6,3 +6,4 @@ export { DataGrid } from "./dataGrid/dataGrid";
 export { DataGridFilterBar } from "./dataGrid/dataGridFilterBar";
 
 export { EmptyDataState } from "./dataTable/emptyDataState";
+export { Filter } from "./dataGrid/filter";

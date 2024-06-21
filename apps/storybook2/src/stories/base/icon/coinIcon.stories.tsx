@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { CoinIcon, Icon, Flex } from "@orderly.network/ui";
+import { TokenIcon, Icon, Flex } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Icon/CoinIcon",
-  component: CoinIcon,
+  component: TokenIcon,
   //   subcomponents: { SelectItem },
   parameters: {
     layout: "centered",
@@ -35,11 +35,11 @@ export const CoinIcons: Story = {
   render: (args) => {
     return (
       <Flex gap={2}>
-        <CoinIcon {...args} name="BTC" />
-        <CoinIcon {...args} name="ETH" />
-        <CoinIcon {...args} name="USDT" />
-        <CoinIcon {...args} name="USDC" />
-        <CoinIcon {...args} name="DAI" />
+        <TokenIcon {...args} name="BTC" />
+        <TokenIcon {...args} name="ETH" />
+        <TokenIcon {...args} name="USDT" />
+        <TokenIcon {...args} name="USDC" />
+        <TokenIcon {...args} name="DAI" />
       </Flex>
     );
   },
@@ -54,7 +54,7 @@ export const CombineIcon: Story = {
             name: "ETH",
           }}
         >
-          <CoinIcon {...args} name="BTC" />
+          <TokenIcon {...args} name="BTC" />
         </Icon.combine>
       </Flex>
     );
