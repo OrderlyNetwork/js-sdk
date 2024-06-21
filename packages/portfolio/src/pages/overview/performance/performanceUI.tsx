@@ -1,9 +1,17 @@
-import { Card, Grid, Box, Statistic } from "@orderly.network/ui";
+import {
+  Card,
+  Grid,
+  Box,
+  Statistic,
+  CardTitle,
+  Flex,
+  Text,
+} from "@orderly.network/ui";
 import { PerformancePnL } from "./performancePnL";
 
 export const Performance = () => {
   return (
-    <Card title="Performance" id="portfolio-overview-performance">
+    <Card title={<Title />} id="portfolio-overview-performance">
       <Grid cols={3}>
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
@@ -35,5 +43,17 @@ export const Performance = () => {
         <PerformancePnL />
       </Grid>
     </Card>
+  );
+};
+
+const Title = () => {
+  return (
+    <Flex justify={"between"}>
+      <CardTitle>Performance</CardTitle>
+
+      <Flex>
+        <Text>Updated daily at 00:00 UTC</Text>
+      </Flex>
+    </Flex>
   );
 };
