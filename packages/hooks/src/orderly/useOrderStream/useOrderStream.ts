@@ -118,7 +118,7 @@ export const useOrderStream = (
     if (!ordersResponse.data) {
       return null;
     }
-    let orders = ordersResponse.data?.map((item) => item.rows)?.flat();
+    let orders = ordersResponse.data?.map((item: any) => item.rows)?.flat();
 
     // return ordersResponse.data?.map((item) => item.rows)?.flat();
 

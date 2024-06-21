@@ -12,7 +12,16 @@ export interface WalletConnectorProviderProps {
   skipInit?: boolean;
 }
 
-export type ConnectorInitOptions = Optional<InitOptions, 'apiKey' | 'connect' | 'wallets' | 'chains'| 'appMetadata' | 'accountCenter' | 'theme'>
+export type ConnectorInitOptions = Optional<
+  InitOptions,
+  | "apiKey"
+  | "connect"
+  | "wallets"
+  | "chains"
+  | "appMetadata"
+  | "accountCenter"
+  | "theme"
+>;
 
 export const ConnectorProvider = (
   props: PropsWithChildren<WalletConnectorProviderProps>
@@ -27,7 +36,7 @@ export const ConnectorProvider = (
     if (props.skipInit) {
       return;
     }
-    initConfig(props.apiKey, props.options);
+    initConfig(props.apiKey, props.options as InitOptions);
     setInitialized(true);
   }, []);
 

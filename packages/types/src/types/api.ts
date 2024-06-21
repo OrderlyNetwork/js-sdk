@@ -318,6 +318,54 @@ export declare namespace API {
     decimals: number;
     withdrawal_fee: number;
   }
+
+  export interface AssetHistory {
+    meta: RecordsMeta;
+    rows: AssetHistoryRow[];
+  }
+
+  export interface RecordsMeta {
+    total: number;
+    recordsPerPage: number;
+    currentPage: number;
+  }
+
+  export interface AssetHistoryRow {
+    id: string;
+    tx_id: string;
+    side: string;
+    token: string;
+    amount: number;
+    fee: number;
+    trans_status: string;
+    created_time: number;
+    updated_time: number;
+    chain_id: string;
+  }
+
+  export interface FundingFeeHistory {
+    meta: RecordsMeta;
+    rows: FundingFeeRow[];
+  }
+
+  export interface FundingFeeRow {
+    symbol: string;
+    funding_rate: number;
+    mark_price: number;
+    funding_fee: number;
+    payment_type: string;
+    status: string;
+    created_time: number;
+    updated_time: number;
+  }
+
+  export interface DailyRow {
+    account_value: number;
+    broker_id: string;
+    date: string;
+    perp_volume: number;
+    pnl: number;
+  }
 }
 
 export declare namespace WSMessage {
@@ -421,59 +469,5 @@ export declare namespace WSMessage {
     maker: boolean;
     rootAlgoStatus: string;
     algoStatus: string;
-  }
-
-  export interface AssetHistory {
-    meta: RecordsMeta;
-    rows: AssetHistoryRow[];
-  }
-
-  export interface RecordsMeta {
-    total: number;
-    recordsPerPage: number;
-    currentPage: number;
-  }
-
-  // export interface AssetHistoryMeta {
-  //   total: number;
-  //   records_per_page: number;
-  //   current_page: number;
-  // }
-
-  export interface AssetHistoryRow {
-    id: string;
-    tx_id: string;
-    side: string;
-    token: string;
-    amount: number;
-    fee: number;
-    trans_status: string;
-    created_time: number;
-    updated_time: number;
-    chain_id: string;
-  }
-
-  export interface FundingFeeHistory {
-    meta: RecordsMeta;
-    rows: FundingFeeRow[];
-  }
-
-  export interface FundingFeeRow {
-    symbol: string;
-    funding_rate: number;
-    mark_price: number;
-    funding_fee: number;
-    payment_type: string;
-    status: string;
-    created_time: number;
-    updated_time: number;
-  }
-
-  export interface DailyRow {
-    account_value: number;
-    broker_id: string;
-    date: string;
-    perp_volume: number;
-    pnl: number;
   }
 }

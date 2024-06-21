@@ -61,7 +61,7 @@ export const useStatisticsDaily = (params: QueryParams) => {
         pnl = pnl.add(d.pnl);
       });
 
-      roi = pnl.div(prevDate.account_value);
+      roi = pnl.div(prevDate!.account_value);
     }
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };

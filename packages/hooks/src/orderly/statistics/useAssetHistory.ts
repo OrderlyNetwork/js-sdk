@@ -1,9 +1,6 @@
-import { useMemo } from "react";
-
 import { API } from "@orderly.network/types";
 import { SWRInfiniteResponse } from "swr/infinite";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
-import { usePrivateQuery } from "../../usePrivateQuery";
 
 export enum AssetHistoryStatusEnum {
   NEW = "new",
@@ -25,7 +22,7 @@ const useAssetsHistory = (options: {
 }): [
   API.AssetHistoryRow[],
   {
-    meta?: API.AssetHistoryMeta;
+    meta?: API.RecordsMeta;
   } & Pick<SWRInfiniteResponse, "size" | "setSize" | "isLoading">
 ] => {
   const { page = 1, pageSize = 10 } = options;
