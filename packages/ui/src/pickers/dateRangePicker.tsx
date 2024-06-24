@@ -12,6 +12,7 @@ export type DateRangePickerProps = {
   // selected: Date;
   placeholder?: string;
   value?: DateRange;
+  initialValue?: DateRange;
   dateFormat?: string;
   size?: SizeType;
   className?: string;
@@ -23,12 +24,15 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     dateFormat,
     onChange,
     value,
+    initialValue,
     size,
     className,
     ...calendarProps
   } = props;
   const [open, setOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange | null>(value);
+  const [dateRange, setDateRange] = useState<DateRange | null>(
+    value || initialValue || null
+  );
 
   const { trigger } = selectVariants({ size, className });
 

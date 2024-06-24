@@ -1,12 +1,11 @@
-import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useMemo } from "react";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
-type FundingSearchParams = {
+type DistributionSearchParams = {
   /**
-   * Data range for the funding fee history
+   * Data range for the distribution history
    * noted that the time stamp is a 13-digits timestamp
    * the first element is the start date and the second element is the end date
    * @default [Now subtract 3 months, Now]
@@ -17,7 +16,7 @@ type FundingSearchParams = {
   pageSize?: number;
 };
 
-export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
+export const useDistributionHistory = (parmas: DistributionSearchParams) => {
   let { symbol, dataRange } = parmas;
 
   const infos = useSymbolsInfo();
@@ -35,7 +34,7 @@ export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
     //   search.set("end", dataRange[1].toString());
     // }
 
-    return `/v1/funding_fee/history?${search.toString()}`;
+    return `/v1/client/distribution_history?${search.toString()}`;
   };
   const { data, isLoading } = usePrivateQuery<API.FundingFeeHistory>(getKey(), {
     // initialSize: 1,
@@ -71,6 +70,6 @@ export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
   ] as const;
 };
 
-export type UseFundingFeeHistoryReturn = ReturnType<
-  typeof useFundingFeeHistory
+export type UseDistributionHistoryReturn = ReturnType<
+  typeof useDistributionHistory
 >;

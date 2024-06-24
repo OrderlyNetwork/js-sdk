@@ -131,7 +131,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     return "profit";
   }, [coloring, num, rest.color, props.visible]);
 
-  const icon = useMemo(() => {
+  const identifier = useMemo(() => {
     if (!showIdentifier || Number.isNaN(num) || num === 0) return null;
     if (typeof visible !== "undefined" && !visible) return null;
 
@@ -182,13 +182,19 @@ export const Numeral: FC<NumeralProps> = (props) => {
     return (
       <>
         {prefixEle}
-        {icon}
-        <span>{child}</span>
+        {typeof identifier !== "undefined" ? (
+          <span>
+            {identifier}
+            <span>{child}</span>
+          </span>
+        ) : (
+          <span>{child}</span>
+        )}
         {unitEle}
         {surfixEle}
       </>
     );
-  }, [child, surfix, unit, prefix, icon, unitClassName]);
+  }, [child, surfix, unit, prefix, identifier, unitClassName]);
 
   return (
     <Text

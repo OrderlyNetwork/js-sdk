@@ -26,9 +26,9 @@ const useAssetHistoryHook = () => {
 
   return {
     dataSource: data,
-    page: meta?.current_page,
+    page: meta?.currentPage,
     total: meta?.total,
-    pageSize: meta.records_per_page,
+    // pageSize: meta.,
     onSearch,
   };
 };

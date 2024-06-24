@@ -117,13 +117,14 @@ export const AssetStatistic = (props: StatisticProps) => {
     <Grid cols={3}>
       <Statistic label="Unreal. PnL">
         <Flex>
-          <Text.numeral coloring size="lg">
+          <Text.numeral coloring size="lg" weight="demi">
             {props.unrealPnL}
           </Text.numeral>
           <Text.numeral
             coloring
             rule="percentages"
             size="sm"
+            weight="demi"
             prefix={"("}
             surfix=")"
           >

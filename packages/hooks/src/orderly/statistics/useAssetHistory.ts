@@ -1,6 +1,7 @@
 import { API } from "@orderly.network/types";
 import { SWRInfiniteResponse } from "swr/infinite";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
+import { usePrivateQuery } from "../../usePrivateQuery";
 
 export enum AssetHistoryStatusEnum {
   NEW = "new",
@@ -19,19 +20,14 @@ const useAssetsHistory = (options: {
   endTime?: string;
   page?: number;
   pageSize?: number;
-}): [
-  API.AssetHistoryRow[],
-  {
-    meta?: API.RecordsMeta;
-  } & Pick<SWRInfiniteResponse, "size" | "setSize" | "isLoading">
-] => {
+}) => {
   const { page = 1, pageSize = 10 } = options;
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
-    if (previousPageData && !previousPageData.length) return null;
+  const getKey = () => {
+    // if (previousPageData && !previousPageData.length) return null;
     const searchParams = new URLSearchParams();
 
-    searchParams.set("page", (pageIndex + 1).toString());
+    searchParams.set("page", page.toString());
     searchParams.set("size", pageSize.toString());
 
     if (options.token) searchParams.set("token", options.token);
@@ -43,24 +39,19 @@ const useAssetsHistory = (options: {
     return `/v1/asset/history?${searchParams.toString()}`;
   };
 
-  const { data, setSize, size, isLoading } = usePrivateInfiniteQuery<any>(
-    getKey,
-    {
-      formatter: (data) => data,
-    }
-  );
-
-  const rows = data?.map((d) => d.rows) || [];
+  const { data, isLoading } = usePrivateQuery<API.AssetHistory>(getKey(), {
+    formatter: (data) => data,
+  });
 
   return [
-    rows.length ? rows[size - 1] : [],
+    data?.rows || [],
     {
-      meta: (data as any)?.[0]?.["meta"] || {},
+      meta: data?.meta,
       isLoading,
-      size,
-      setSize,
     },
-  ];
+  ] as const;
 };
 
 export { useAssetsHistory };
+
+export type UseAssetsHistory = ReturnType<typeof useAssetsHistory>;

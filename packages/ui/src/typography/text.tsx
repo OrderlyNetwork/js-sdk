@@ -63,9 +63,12 @@ interface CommonTextProps extends VariantProps<typeof textVariants> {
   asChild?: boolean;
   /**
    * If true, the text will be copied when clicked.
-   * TODO: implement copy
    */
   copyable?: boolean;
+  /**
+   * Callback when the text is copied.
+   */
+  onCopy?: () => void;
 }
 
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<

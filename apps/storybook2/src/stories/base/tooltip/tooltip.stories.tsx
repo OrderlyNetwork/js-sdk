@@ -40,6 +40,7 @@ export const Default: Story = {
   },
   args: {
     defaultOpen: true,
+    // open: true,
     content: "Hello, World!",
   },
 };

@@ -13,7 +13,7 @@ const tooltipVariants = tv({
     "oui-z-50",
     "oui-overflow-hidden",
     "oui-rounded-md",
-    "oui-bg-base-5",
+    "oui-bg-base-8",
     "oui-px-2",
     "oui-py-1",
     "oui-text-xs",
@@ -91,7 +91,7 @@ const Tooltip = React.forwardRef<
             width={12}
             height={6}
             {...arrow}
-            className="oui-text-base-5"
+            className="oui-fill-base-8"
           />
         </TooltipContent>
       </TooltipPrimitive.Root>

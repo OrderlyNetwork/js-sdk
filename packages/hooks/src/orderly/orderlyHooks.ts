@@ -59,3 +59,5 @@ export {
 } from "./statistics/useAssetHistory";
 
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
+export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
+export { useDistributionHistory } from "./statistics/useDistributionHistory";

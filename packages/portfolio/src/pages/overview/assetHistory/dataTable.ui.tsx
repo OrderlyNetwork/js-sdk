@@ -16,7 +16,9 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   return (
     <DataGrid
       bordered
-      headerClassName="oui-text-xs oui-text-base-contrast-36"
+      className="oui-font-semibold"
+      headerClassName="oui-text-base-contrast-36"
+      bodyClassName="oui-text-base-contrast-80"
       columns={columns}
       dataSource={dataSource}
     />

@@ -7,10 +7,8 @@ const meta = {
   component: Select,
   subcomponents: { SelectItem },
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
@@ -20,7 +18,6 @@ const meta = {
       control: { type: "inline-radio" },
     },
   },
-  // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
     size: "md",
     error: false,
@@ -43,6 +40,35 @@ export const Default: Story = {
         <SelectItem value="grapes">Grapes</SelectItem>
       </>
     ),
+    value: "apple",
+  },
+};
+
+export const WithOptions: Story = {
+  render: (args) => {
+    return <Select.options {...args} />;
+  },
+  args: {
+    options: [
+      { label: "Apple", value: "apple" },
+      { label: "Banana", value: "banana" },
+      { label: "Blueberry", value: "blueberry" },
+      { label: "Grapes", value: "grapes" },
+    ],
+    value: "apple",
+  },
+};
+export const Filter: Story = {
+  render: (args) => {
+    return <Select.combine {...args} />;
+  },
+  args: {
+    options: [
+      { label: "Apple", value: "apple" },
+      { label: "Banana", value: "banana" },
+      { label: "Blueberry", value: "blueberry" },
+      { label: "Grapes", value: "grapes" },
+    ],
     value: "apple",
   },
 };

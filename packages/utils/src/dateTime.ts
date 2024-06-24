@@ -18,3 +18,13 @@ export const timestampToString = (timestamp: number): string => {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
+
+export function subtractDaysFromCurrentDate(
+  days: number,
+  startDate?: Date
+): Date {
+  const currentDate = startDate || new Date();
+  const resultDate = new Date(currentDate);
+  resultDate.setDate(currentDate.getDate() - days);
+  return resultDate;
+}

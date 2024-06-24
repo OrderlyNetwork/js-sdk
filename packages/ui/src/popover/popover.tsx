@@ -1,36 +1,30 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { tv, type VariantProps } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
+import { tv } from "../utils/tv";
 
-const popoverVariants = tv(
-  {
-    base: [
-      "oui-z-50",
-      "oui-w-72",
-      "oui-rounded-md",
-      "oui-bg-popover",
-      "oui-p-4",
-      "oui-text-popover-foreground",
-      "oui-shadow-md",
-      "oui-outline-none",
-      "data-[state=open]:oui-animate-in",
-      "data-[state=closed]:oui-animate-out",
-      "data-[state=closed]:oui-fade-out-0",
-      "data-[state=open]:oui-fade-in-0",
-      "data-[state=closed]:oui-zoom-out-95",
-      "data-[state=open]:oui-zoom-in-95",
-      "data-[side=bottom]:oui-slide-in-from-top-2",
-      "data-[side=left]:oui-slide-in-from-right-2",
-      "data-[side=right]:oui-slide-in-from-left-2",
-      "data-[side=top]:oui-slide-in-from-bottom-2",
-    ],
-  },
-  {
-    twMergeConfig: {
-      prefix: "oui-",
-    },
-  }
-);
+const popoverVariants = tv({
+  base: [
+    "oui-z-50",
+    "oui-w-72",
+    "oui-rounded-md",
+    // "oui-bg-popover",
+    "oui-p-4",
+    // "oui-text-popover-foreground",
+    "oui-shadow-md",
+    "oui-outline-none",
+    "data-[state=open]:oui-animate-in",
+    "data-[state=closed]:oui-animate-out",
+    "data-[state=closed]:oui-fade-out-0",
+    "data-[state=open]:oui-fade-in-0",
+    "data-[state=closed]:oui-zoom-out-95",
+    "data-[state=open]:oui-zoom-in-95",
+    "data-[side=bottom]:oui-slide-in-from-top-2",
+    "data-[side=left]:oui-slide-in-from-right-2",
+    "data-[side=right]:oui-slide-in-from-left-2",
+    "data-[side=top]:oui-slide-in-from-bottom-2",
+  ],
+});
 
 const PopoverBase = PopoverPrimitive.Root;
 

@@ -80,6 +80,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       // @ts-ignore
       capitalize,
       copyable,
+      onCopy,
       //@ts-ignore
       isIcon,
       ...rest
@@ -95,6 +96,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
             className="oui-cursor-pointer oui-text-sm"
             onClick={() => {
               navigator.clipboard.writeText(children as string);
+              onCopy?.();
             }}
           >
             <CopyIcon size={12} color="white" />

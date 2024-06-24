@@ -46,7 +46,7 @@ export type Column<RecordType extends unknown = any> = {
   /**
    * text rule for formatted text, if provided, the text will be rendered as formatted text component;
    */
-  rule?: TextRule & NumeralRule;
+  rule?: TextRule | NumeralRule;
   numeralProps?: Omit<NumeralProps, "children" | "as" | "rule">;
   /**
    * text props for formatted text

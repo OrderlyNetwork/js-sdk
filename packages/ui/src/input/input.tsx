@@ -4,7 +4,7 @@ import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
 
-const inputs = tv({
+const inputVariants = tv({
   slots: {
     input: [
       "oui-w-full oui-bg-transparent",
@@ -28,6 +28,7 @@ const inputs = tv({
       "oui-outline",
       "oui-outline-offset-0",
       "oui-outline-1",
+      "oui-outline-transparent",
       "focus-within:oui-outline-primary",
       "oui-input-root",
     ],
@@ -37,22 +38,27 @@ const inputs = tv({
   },
   variants: {
     size: {
-      mini: {
+      xs: {
+        input: ["oui-h-6", "oui-text-2xs", "placeholder:oui-text-2xs"],
+        box: ["oui-h-6"],
+        additional: ["oui-text-2xs"],
+      },
+      sm: {
         input: ["oui-h-7", "oui-text-2xs", "placeholder:oui-text-2xs"],
         box: ["oui-h-7"],
         additional: ["oui-text-2xs"],
       },
-      medium: {
+      md: {
         input: ["oui-h-8", "oui-text-2xs", "placeholder:oui-text-2xs"],
         box: ["oui-h-8"],
         additional: ["oui-text-sm"],
       },
-      default: {
+      lg: {
         input: ["oui-h-10", "oui-text-sm", "placeholder:oui-text-sm"],
         box: ["oui-h-10 oui-rounded-md"],
         additional: ["oui-text-sm"],
       },
-      large: {
+      xl: {
         input: ["oui-h-12", "oui-text-base", "placeholder:oui-text-base"],
         box: ["oui-h-12 oui-rounded-md"],
         additional: ["oui-text-sm"],
@@ -102,13 +108,13 @@ const inputs = tv({
   },
   //   compoundVariants: [{ size: "default", className: ["oui-bg-transparent"] }],
   defaultVariants: {
-    size: "default",
+    size: "lg",
   },
 });
 
 interface InputProps<T = string>
   extends BaseInputProps<T>,
-    VariantProps<typeof inputs> {
+    VariantProps<typeof inputVariants> {
   prefix?: string | React.ReactNode;
   suffix?: string | React.ReactNode;
   fullWidth?: boolean;
@@ -129,7 +135,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     ...inputProps
   } = props;
 
-  const { input, box, additional } = inputs({
+  const { input, box, additional } = inputVariants({
     size,
     disabled,
     color,
@@ -140,7 +146,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   });
   const cid = useId();
   return (
-    <div className={box()}>
+    <div className={box({ className })}>
       <InputPrefix id={id || cid} prefix={prefix} className={additional()} />
       <BaseInput
         {...inputProps}
@@ -154,6 +160,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   );
 });
 
-export { Input, inputs };
+export { Input, inputVariants };
 
 export type { InputProps };

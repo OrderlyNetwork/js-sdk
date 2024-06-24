@@ -1,4 +1,4 @@
-export { Input, inputs } from "./input";
+export { Input, inputVariants } from "./input";
 
 export { InputAdditional } from "./inputAdditional";
 

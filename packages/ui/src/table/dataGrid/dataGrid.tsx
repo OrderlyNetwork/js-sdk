@@ -26,7 +26,9 @@ export const DataGrid = <T,>(props: DataGridProps<T>) => {
     <DataGridProvider filter={filter} pagination={props.pagination}>
       <Box>
         {HeaderElement}
-        <DataTable {...dataTableProps} />
+        <div>
+          <DataTable {...dataTableProps} />
+        </div>
         {FooterElement}
       </Box>
     </DataGridProvider>

@@ -19,7 +19,7 @@ import { FixedDivide } from "./fixedDivide";
 import { TBody, TBodyProps } from "./tbody";
 // import { EndReachedBox } from "@/listView/endReachedBox";
 import { Table } from "../table";
-import { type VariantProps } from "tailwind-variants";
+import { cnBase, type VariantProps } from "tailwind-variants";
 import { tv } from "../../utils/tv";
 import { TablePlaceholder } from "./tablePlaceholder";
 
@@ -35,6 +35,7 @@ export interface DataTableProps<RecordType>
   loading?: boolean;
   className?: string;
   headerClassName?: string;
+  bodyClassName?: string;
   showMaskElement?: boolean;
   bordered?: boolean;
   loadMore?: () => void;
@@ -69,6 +70,8 @@ export const DataTable = <RecordType extends unknown>(
     loading,
     columns,
     showMaskElement = true,
+    className,
+    bodyClassName,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -98,7 +101,7 @@ export const DataTable = <RecordType extends unknown>(
       <div
         id={props.id}
         ref={wrapRef}
-        className={root()}
+        className={root({ className })}
         style={{ height: "calc(100% - 2px)" }}
         // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
       >
@@ -115,8 +118,13 @@ export const DataTable = <RecordType extends unknown>(
             // }
           }}
         > */}
-        <div className="oui-relative oui-w-full oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
-          <Table className="oui-table-fixed oui-border-collapse">
+        <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
+          <Table
+            className={cnBase(
+              "oui-table-fixed oui-border-collapse",
+              bodyClassName
+            )}
+          >
             <ColGroup columns={props.columns} />
             <TBody {...rest} />
           </Table>

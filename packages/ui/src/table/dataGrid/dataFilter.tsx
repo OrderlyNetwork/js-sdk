@@ -1,18 +1,20 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
   DateRangePicker,
   DateRangePickerProps,
 } from "../../pickers/dateRangePicker";
-import { Box } from "../../box";
 import { Flex } from "../../flex";
 import {
   SelectWithOptions,
   type SelectWithOptionsProps,
 } from "../../select/withOptions";
 import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
-// import { DateRange } from "react-day-picker";
 
 type FilterType = "select" | "input" | "date" | "range" | "custom";
+
+type DataFilterGeneral = {
+  // initialValue?: any;
+};
 
 type SelectFilter = {
   name: string;
@@ -34,7 +36,8 @@ type DateRangeFilter = {
   type: "range";
 } & DateRangePickerProps;
 
-type DataFilterItems = (SelectFilter | DateFilter | DateRangeFilter)[];
+type DataFilterItems = (DataFilterGeneral &
+  (SelectFilter | DateFilter | DateRangeFilter))[];
 
 export type DataFilterProps = {
   items: DataFilterItems;
@@ -59,13 +62,7 @@ const FilterDatePicker = (props: DatePickerProps) => {
 const FilterDateRangePicker = (props: DateRangePickerProps) => {
   return (
     <div className={"oui-min-w-[180px]"}>
-      <DateRangePicker
-        size="xs"
-        {...props}
-        // onChange={(range) => {
-        //   console.log(range);
-        // }}
-      />
+      <DateRangePicker size="xs" {...props} />
     </div>
   );
 };

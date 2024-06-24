@@ -10,5 +10,11 @@ export {
 } from "./assetHistory";
 
 export { PerformanceUI, PerformanceWidget } from "./performance";
+export { FundingHistoryWidget } from "./funding";
+
+export {
+  DistributionHistoryWidget,
+  DistributionHistoryUI,
+} from "./distribution";
 
 export { OverviewPage } from "./main";

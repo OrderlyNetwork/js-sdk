@@ -12,7 +12,7 @@ export type SelectWithOptionsProps = SelectProps & {
   optionRenderer?: (option: SelectOption) => ReactElement;
 };
 
-const defaultOptionRenderer = (option: SelectOption) => (
+export const defaultOptionRenderer = (option: SelectOption) => (
   <SelectItem key={option.value} value={option.value}>
     {option.label}
   </SelectItem>

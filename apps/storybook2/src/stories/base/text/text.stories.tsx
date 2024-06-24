@@ -68,6 +68,20 @@ return <Flex direction="column">
     }
   }
 
+  export const Intensity: Story = {
+    render: (args) => {
+        return <Flex gapX={2} direction={'column'}>
+            <Text {...args} intensity={12}>Orderly network</Text>
+            <Text {...args} intensity={20}>Orderly network</Text>
+            <Text {...args} intensity={36}>Orderly network</Text>
+            <Text {...args} intensity={54}>Orderly network</Text>
+            <Text {...args} intensity={80}>Orderly network</Text>
+            <Text {...args} intensity={98}>Orderly network</Text>
+        </Flex>
+    }
+}
+
+
   export const Gradient:Story = {
     render: (args) => {
       return <Text.gradient {...args}>One DEX to rule all chains</Text.gradient>

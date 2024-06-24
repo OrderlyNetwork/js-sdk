@@ -5,8 +5,10 @@ import { PropsWithChildren, ReactElement } from "react";
 
 type AuthGuardProps = {
   fallback?: ReactElement;
+  indicator?: ReactElement;
   /**
    * Required state to be satisfied
+   * @default AccountStatusEnum.EnableTrading
    */
   status?: AccountStatusEnum;
 };

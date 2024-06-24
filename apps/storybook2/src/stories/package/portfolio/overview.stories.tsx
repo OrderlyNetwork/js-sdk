@@ -24,7 +24,6 @@ const meta = {
         ),
     ],
     parameters: {
-        // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
         layout: "centered",
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
@@ -115,3 +114,43 @@ export const AssetHistoryChart: Story = {
         ),
     ],
 }
+
+export const FundingHistory: Story = {
+    render: (args) => {
+        return <OverviewModule.FundingHistoryWidget></OverviewModule.FundingHistoryWidget>
+    },
+    decorators: [
+        (Story) => (
+            <Box height={'550px'} className="oui-bg-base-9">
+                <Story/>
+            </Box>
+        ),
+    ],
+}
+
+export const DistributionHistory: Story = {
+    render: (args) => {
+        return <OverviewModule.DistributionHistoryWidget></OverviewModule.DistributionHistoryWidget>
+    },
+    decorators: [
+        (Story) => (
+            <Box height={'550px'} className="oui-bg-base-9">
+                <Story/>
+            </Box>
+        ),
+    ],
+}
+
+
+// export const FundingHistoryDataGrid: Story = {
+//     render: (args) => {
+//         return <OverviewModule.FundingHistoryWidget></OverviewModule.FundingHistoryWidget>
+//     },
+//     decorators: [
+//         (Story) => (
+//             <Box height={'550px'} className="oui-bg-base-9" >
+//                 <Story/>
+//             </Box>
+//         ),
+//     ],
+// }
