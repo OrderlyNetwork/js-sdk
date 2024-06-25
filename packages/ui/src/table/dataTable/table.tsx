@@ -1,17 +1,13 @@
 import {
-  FC,
   PropsWithChildren,
   ReactElement,
-  ReactNode,
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
 
-import { Spinner } from "../../spinner";
 import { ColGroup } from "./colgroup";
 import { TableProvider } from "./tableContext";
 // import { useDebouncedCallback } from "@orderly.network/hooks";

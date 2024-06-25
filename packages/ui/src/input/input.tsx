@@ -1,8 +1,9 @@
 import React, { type InputHTMLAttributes, useId } from "react";
-import { tv, type VariantProps } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
 import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
+import { tv } from "../utils/tv";
 
 const inputVariants = tv({
   slots: {

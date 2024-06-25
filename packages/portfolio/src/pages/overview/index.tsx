@@ -1,6 +1,6 @@
 export { AssetWidget, AssetsUI } from "./assets";
 export { AssetsChartWidget } from "./assetChart/assetsChart.widget";
-export { HistoryDataPanel } from "./historyDataPanel";
+export { HistoryDataGroupWidget } from "./historyDataGroup";
 
 export {
   AssetHistory,

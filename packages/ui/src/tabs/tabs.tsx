@@ -1,4 +1,4 @@
-import {
+import React, {
   FC,
   PropsWithChildren,
   createContext,
@@ -29,15 +29,14 @@ const TabsContext = createContext({} as TabsContextState);
 type TabsProps<T = string> = {
   defaultValue?: T;
   value?: T;
-  onChange?: (value: T) => void;
+  // onChange?: (value: T) => void;
 } & TabsPrimitive.TabsProps;
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { value, onChange, defaultValue } = props;
+  // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
   const registerTab = (config: tabConfig) => {
-    console.log("registerTab", config);
     setTabList((prev) => {
       return {
         ...prev,
@@ -54,9 +53,10 @@ const Tabs: FC<TabsProps> = (props) => {
     >
       {props.children}
       <TabsBase
-        value={value}
-        onValueChange={onChange}
-        defaultValue={defaultValue}
+        {...props}
+        // value={value}
+        // onValueChange={onChange}
+        // defaultValue={defaultValue}
       >
         <TabsList>
           {Object.keys(tabList).map((key) => {

@@ -33,7 +33,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
   render: (args) => {
     return (
@@ -85,13 +84,13 @@ export const Simple: Story = {
           title="Deposits & Withdrawals"
           icon={<ArrowLeftRightIcon />}
         >
-          Account
+          Deposits & Withdrawals
         </TabPanel>
         <TabPanel value="password" title="Funding" icon={<FeeTierIcon />}>
-          Password
+          Funding
         </TabPanel>
         <TabPanel value="destribution" title="Distribution">
-          Password
+          Distribution
         </TabPanel>
       </Tabs>
     );

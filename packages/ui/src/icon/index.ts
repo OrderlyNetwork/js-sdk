@@ -36,6 +36,7 @@ export { ChainIcon } from "./chainIcon";
 export { WalletIcon } from "./walletIcon";
 export { CalendarIcon } from "./calendar";
 export { CopyIcon } from "./copy";
+export { ServerFillIcon } from "./serverFill";
 
 import { CombineIcon } from "./combine";
 

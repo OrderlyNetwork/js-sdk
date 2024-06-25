@@ -92,3 +92,18 @@ export const Chains: Story = {
     ],
   },
 };
+
+export const Combine: Story = {
+  render: (args) => {
+    return <Select.combine {...args} />;
+  },
+  args: {
+    options: [
+      { label: "Apple", value: "apple" },
+      { label: "Banana", value: "banana" },
+      { label: "Blueberry", value: "blueberry" },
+      { label: "Grapes", value: "grapes" },
+    ],
+    value: "apple",
+  },
+};

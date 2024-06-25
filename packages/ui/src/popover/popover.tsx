@@ -10,6 +10,7 @@ const popoverVariants = tv({
     "oui-rounded-md",
     // "oui-bg-popover",
     "oui-p-4",
+    "oui-bg-base-8",
     // "oui-text-popover-foreground",
     "oui-shadow-md",
     "oui-outline-none",

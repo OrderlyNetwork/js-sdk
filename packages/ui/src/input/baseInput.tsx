@@ -149,20 +149,21 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
       setCursor(event.target.selectionStart);
     };
 
-    const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-      // setShowTooltip(!!error);
-    };
-
-    const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      // setShowTooltip(false);
-    };
+    // const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    //   // setShowTooltip(!!error);
+    //   //   props.onFocus?.();
+    // };
+    //
+    // const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    //   // setShowTooltip(false);
+    // };
     return (
       <input
         type="text"
         {...inputProps}
         ref={innerInputRef}
-        onBlur={onInputBlur}
-        onFocus={onInputFocus}
+        // onBlur={onInputBlur}
+        // onFocus={onInputFocus}
         onChange={onInputChange}
         value={formattedValue}
         id={id}
