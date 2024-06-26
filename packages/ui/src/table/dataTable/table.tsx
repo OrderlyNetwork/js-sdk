@@ -99,7 +99,7 @@ export const DataTable = <RecordType extends unknown>(
       <div
         id={props.id}
         ref={wrapRef}
-        className={root({ className: cnBase(className, classNames.root) })}
+        className={root({ className: cnBase(className, classNames?.root) })}
         style={{ height: "calc(100% - 2px)" }}
         // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
       >
