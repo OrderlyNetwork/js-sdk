@@ -151,12 +151,16 @@ export class EtherAdapter implements IWalletAdapter {
     // tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
 
     try {
-      await this.estimateGas(tx);
+      console.info("sendTransaction tx =>", tx);
+
+      const gas = await this.provider!.estimateGas(tx);
+      console.info("estimateGas =>", gas);
+
       const result = await singer.sendTransaction(tx);
 
       return result;
     } catch (error) {
-      console.error(error);
+      console.error("sendTransaction error =>", error);
       const parsedEthersError = getParsedEthersError(error as EthersError);
 
       throw parsedEthersError;
