@@ -151,10 +151,12 @@ export class EtherAdapter implements IWalletAdapter {
     // tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
 
     try {
+      await this.estimateGas(tx);
       const result = await singer.sendTransaction(tx);
 
       return result;
     } catch (error) {
+      console.error(error);
       const parsedEthersError = getParsedEthersError(error as EthersError);
 
       throw parsedEthersError;
@@ -162,12 +164,15 @@ export class EtherAdapter implements IWalletAdapter {
   }
 
   async getTransactionRecipect(txHash: string) {
-
     await this.provider!.getTransactionReceipt(txHash);
-
   }
 
-  async pollTransactionReceiptWithBackoff(txHash: string, baseInterval = 1000, maxInterval = 6000, maxRetries= 30) {
+  async pollTransactionReceiptWithBackoff(
+    txHash: string,
+    baseInterval = 1000,
+    maxInterval = 6000,
+    maxRetries = 30
+  ) {
     let interval = baseInterval;
     let retries = 0;
 
@@ -188,7 +193,7 @@ export class EtherAdapter implements IWalletAdapter {
       retries++;
     }
 
-    throw new Error('Transaction did not complete after maximum retries.');
+    throw new Error("Transaction did not complete after maximum retries.");
   }
 
   private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {
