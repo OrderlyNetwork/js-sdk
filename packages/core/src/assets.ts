@@ -249,9 +249,9 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
-        typeof amount !== "undefined" && amount !== ""
-            ? this.account.walletClient.parseUnits(amount)
-            : MaxUint256.toString();
+      typeof amount !== "undefined" && amount !== ""
+        ? this.account.walletClient.parseUnits(amount)
+        : MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
@@ -316,6 +316,11 @@ export class Assets {
     const depositData = this.getDepositData(amount);
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
+
+    console.info("getDepositFee =>", [
+      this.account.stateValue.address,
+      depositData,
+    ]);
 
     return await this.account.walletClient.callOnChain(
       chain,
