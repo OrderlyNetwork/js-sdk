@@ -1,7 +1,8 @@
 import { Box } from "@orderly.network/ui";
+import { TitleWidget } from "./title/title.widget";
 
 export const OverviewPage = () => {
-  return <Box px={3} py={6}>
-    fghjkl
-  </Box>;
+  return <div className="oui-h-lvw oui-w-lvw">
+    <TitleWidget />
+  </div>;
 };
