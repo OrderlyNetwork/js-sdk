@@ -65,7 +65,6 @@ export interface WidgetOptions {
 
 export interface WidgetProps {
     options: WidgetOptions;
-    layoutId: string;
     chartKey?: string;
     mode?: ChartMode;
     onClick?: (e: any) => void;
@@ -227,7 +226,6 @@ export class Widget {
 
     private async _create({
                               options,
-                              layoutId: chartId,
                               chartKey,
                               mode,
                               onClick,
