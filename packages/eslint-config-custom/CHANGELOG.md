@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.9-dmm.1
+
+### Patch Changes
+
+- update
+
 ## 0.3.9-dmm.0
 
 ### Patch Changes

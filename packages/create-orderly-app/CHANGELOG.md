@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.9-dmm.1
+
+### Patch Changes
+
+- update
+
 ## 1.5.9-dmm.0
 
 ### Patch Changes

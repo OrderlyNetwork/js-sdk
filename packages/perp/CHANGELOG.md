@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.9-dmm.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.9-dmm.1
+  - @orderly.network/utils@1.5.9-dmm.1
+
 ## 3.3.9-dmm.0
 
 ### Patch Changes
