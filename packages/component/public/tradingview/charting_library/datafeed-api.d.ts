@@ -387,10 +387,12 @@ export interface LibrarySubsessionInfo {
 }
 export interface LibrarySymbolInfo {
 	/**
-	 * Symbol Name
-	 * It's the name of the symbol. It is a string that your users will be able to see.
-	 * Also, it will be used for data requests if you are not using tickers.
-	 * It should not contain the exchange name.
+	 * It is a symbol name within an exchange, such as `AAPL` or `9988` (Hong Kong).
+	 * Note that it should not contain the exchange name.
+	 * This symbol name is visible to users and can be repeated.
+	 *
+	 * By default, `name` is used to resolve symbols in the [Datafeed API](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Datafeed-API.md).
+	 * If you use {@link LibrarySymbolInfo.ticker}, the library will use the ticker for Datafeed API requests.
 	 */
 	name: string;
 	/**
@@ -401,10 +403,10 @@ export interface LibrarySymbolInfo {
 		string
 	];
 	/**
-	 * Unique symbol id
-	 * It's an unique identifier for this particular symbol in your symbology.
-	 * If you specify this property then its value will be used for all data requests for this symbol. ticker will be treated the same as {@link LibrarySymbolInfo.name} if not specified explicitly.
-	 * It should not contain the exchange name.
+	 * It is an unique identifier for a particular symbol in your [symbology](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology.md).
+	 * If you specify this property, its value will be used for all data requests for this symbol.
+	 * `ticker` will be treated the same as {@link LibrarySymbolInfo.name} if not specified explicitly.
+	 * Note that it should not contain the exchange name.
 	 */
 	ticker?: string;
 	/**
@@ -424,7 +426,7 @@ export interface LibrarySymbolInfo {
 	 */
 	type: string;
 	/**
-	 * Trading hours for this symbol. See the [Trading Sessions article](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Trading-Sessions) to learn more details.
+	 * Trading hours for this symbol. See the [Trading sessions](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Trading-Sessions.md) article to learn more details.
 	 * @example "1700-0200"
 	 */
 	session: string;
@@ -433,16 +435,23 @@ export interface LibrarySymbolInfo {
 	 */
 	session_display?: string;
 	/**
-	 * List of holidays for this symbol. These dates are not displayed on the chart.
-	 * It's a string in the following format: `YYYYMMDD[,YYYYMMDD]`.
+	 * A string that contains a list of non-trading holidays for the symbol.
+	 * Holiday dates should be in the `YYYYMMDD` format.
+	 * These dates are not displayed on the chart.
+	 *
+	 * You can specify a correction for a holiday using {@link LibrarySymbolInfo.corrections}.
 	 * @example "20181105,20181107,20181112"
 	 */
 	session_holidays?: string;
 	/**
-	 * List of corrections for this symbol. Corrections are days with specific trading sessions. They can be applied to holidays as well.
+	 * List of corrections for a symbol. The corrections are days when the trading session differs from the default one set in {@link LibrarySymbolInfo.session}.
+	 * The `corrections` value is a string in the following format: `SESSION:YYYYMMDD`.
+	 * For more information, refer to [corrections](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology.md#corrections).
 	 *
-	 * It's a string in the following format: `SESSION:YYYYMMDD[,YYYYMMDD][;SESSION:YYYYMMDD[,YYYYMMDD]]`
-	 * Where SESSION has the same format as [Trading Sessions](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Trading-Sessions).
+	 * The string below specifies corrections for two trading days:
+	 *
+	 * - November 13, 2018. This trading day is split into two sessions. The first session starts at 19:00 four days before (November 9, 2018) and ends at 23:50 four days before. The second session starts at 10:00 and ends at 18:45.
+	 * - November 14, 2018. The session starts at 10:00 and ends at 14:00.
 	 *
 	 * @example "1900F4-2350F4,1000-1845:20181113;1000-1400:20181114"
 	 */
@@ -469,7 +478,7 @@ export interface LibrarySymbolInfo {
 	/**
 	 * Format of displaying labels on the price scale:
 	 *
-	 * `price` - formats decimal or fractional numbers based on `minmov`, `pricescale`, `minmove2`, `fractional` and `variableMinTick` values. See [Price Formatting](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology#price-format) for more details
+	 * `price` - formats decimal or fractional numbers based on `minmov`, `pricescale`, `minmove2`, `fractional` and `variableMinTick` values. See [Price format](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology.md#price-format) for more details.
 	 * `volume` - formats decimal numbers in thousands, millions, billions or trillions
 	 */
 	format: SeriesFormat;
@@ -527,7 +536,7 @@ export interface LibrarySymbolInfo {
 	 * If it's `false` then all buttons for intraday resolutions will be disabled for this particular symbol.
 	 * If it is set to `true`, all intradays resolutions that are supplied directly by the datafeed must be provided in `intraday_multipliers` array.
 	 *
-	 * **WARNING** Any daily, weekly or monthly resolutions cannot be inferred from intraday resolutions!
+	 * **WARNING** Any daily, weekly or monthly resolutions cannot be inferred from intraday resolutions.
 	 *
 	 * `false` if DWM only
 	 * @default false
@@ -621,7 +630,7 @@ export interface LibrarySymbolInfo {
 	 */
 	has_weekly_and_monthly?: boolean;
 	/**
-	 * Array (of strings) containing the [resolutions](https://www.tradingview.com/charting-library-docs/latest/core_concepts/Resolution#weeks) (in weeks - without the suffix) supported by the data feed. {@link ResolutionString}
+	 * Array (of strings) containing the [resolutions](https://www.tradingview.com/charting-library-docs/latest/core_concepts/Resolution.md#resolution-in-weeks--months) (in weeks - without the suffix) supported by the data feed. {@link ResolutionString}
 	 *
 	 * For example it could be something like
 	 *
@@ -632,7 +641,7 @@ export interface LibrarySymbolInfo {
 	 */
 	weekly_multipliers?: string[];
 	/**
-	 * Array (of strings) containing the [resolutions](https://www.tradingview.com/charting-library-docs/latest/core_concepts/Resolution#months) (in months - without the suffix) supported by the data feed. {@link ResolutionString}
+	 * Array (of strings) containing the [resolutions](https://www.tradingview.com/charting-library-docs/latest/core_concepts/Resolution.md#resolution-in-weeks--months) (in months - without the suffix) supported by the data feed. {@link ResolutionString}
 	 *
 	 * For example it could be something like
 	 *
@@ -654,9 +663,9 @@ export interface LibrarySymbolInfo {
 	/**
 	 * Represents what values are supported by the symbol. Possible values:
 	 *
-	 * - `ohlcv` - the symbol supports open, high, low, close and has volume
-	 * - `ohlc` - the symbol supports open, high, low, close, but doesn't have volume
-	 * - `c` - the symbol supports only close, it's displayed on the chart using line-based styles only
+	 * - `ohlcv` — the symbol supports open, high, low, close prices and has volume.
+	 * - `ohlc` — the symbol supports open, high, low, close, prices but doesn't have volume.
+	 * - `c` — the symbol supports only close price. This makes the chart show the symbol data using only line-based styles.
 	 * @default 'ohlcv'
 	 */
 	visible_plots_set?: VisiblePlotsSet;
@@ -669,7 +678,9 @@ export interface LibrarySymbolInfo {
 	volume_precision?: number;
 	/**
 	 * The status code of a series with this symbol.
-	 * This could be represented as an icon in the legend, next to the market status icon for `delayed_streaming` & `endofday` type of data.
+	 * For `delayed_streaming` and `endofday` type of data, the status is displayed as an icon and the *Data is delayed* section in the [_Legend_](https://www.tradingview.com/charting-library-docs/latest/ui_elements/Legend.md#display-delayed-data-information), next to the market status icon.
+	 * Note that you should also enable the [`display_data_mode`](https://www.tradingview.com/charting-library-docs/latest/customization/Featuresets.md#display_data_mode) featureset.
+	 *
 	 * When declaring `delayed_streaming` you also have to specify its {@link LibrarySymbolInfo.delay} in seconds.
 	 */
 	data_status?: "streaming" | "endofday" | "delayed_streaming";
@@ -715,11 +726,13 @@ export interface LibrarySymbolInfo {
 	 */
 	unit_conversion_types?: string[];
 	/**
-	 * Subsession ID. Must match the `id` property of one of the subsessions.
+	 * An ID of a subsession specified in {@link subsessions}. The value must match the subsession that is currently displayed on the chart.
+	 * For more information, refer to the [Extended sessions](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology.md#extended-sessions) section.
 	 */
 	subsession_id?: string;
 	/**
-	 * Subsessions definitions.
+	 * An array of objects that contain information about certain subsessions within the extended session.
+	 * For more information, refer to the [Extended sessions](https://www.tradingview.com/charting-library-docs/latest/connecting_data/Symbology.md#extended-sessions) section.
 	 */
 	subsessions?: LibrarySubsessionInfo[];
 	/**
@@ -948,7 +961,7 @@ export interface SymbolResolveExtension {
 	/**
 	 * Indicates the currency for conversions if `currency_codes` configuration field is set,
 	 * and `currency_code` is provided in the original symbol information ({@link LibrarySymbolInfo}).
-	 * Read more about [currency conversion](https://www.tradingview.com/charting-library-docs/latest/ui_elements/Price-Scale#currency-conversion).
+	 * Read more about [currency conversion](https://www.tradingview.com/charting-library-docs/latest/ui_elements/Price-Scale.md#currency-conversion).
 	 */
 	currencyCode?: string;
 	/**
@@ -957,7 +970,7 @@ export interface SymbolResolveExtension {
 	 */
 	unitId?: string;
 	/**
-	 * Trading session string
+	 * Trading session type, such as `"regular"` or `"extended"`, that the chart should currently display.
 	 */
 	session?: string;
 }

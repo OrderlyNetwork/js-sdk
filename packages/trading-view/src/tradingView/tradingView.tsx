@@ -1,19 +1,19 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
-import { Datafeed } from "./tradingViewAdapter/datafeed/datafeed";
-import { ChartMode, ColorConfigInterface } from "./tradingViewAdapter/type";
-import { Widget, WidgetProps } from "./tradingViewAdapter/widget";
-import { WebsocketService } from './tradingViewAdapter/datafeed/websocket.service';
-import { useLazyEffect } from './tradingViewAdapter/hooks/useLazyEffect';
-import { useWS, useConfig, useAccount, useMediaQuery } from "@orderly.network/hooks";
-import { WS } from "@orderly.network/net";
+import React, {useRef, useEffect, useState, useMemo} from "react";
+import {Datafeed} from "./tradingViewAdapter/datafeed/datafeed";
+import {ChartMode, ColorConfigInterface} from "./tradingViewAdapter/type";
+import {Widget, WidgetProps} from "./tradingViewAdapter/widget";
+import {WebsocketService} from './tradingViewAdapter/datafeed/websocket.service';
+import {useLazyEffect} from './tradingViewAdapter/hooks/useLazyEffect';
+import {useWS, useConfig, useAccount, useMediaQuery} from "@orderly.network/hooks";
+import {WS} from "@orderly.network/net";
 import useBroker from './tradingViewAdapter/hooks/useBroker';
 import useCreateRenderer from './tradingViewAdapter/hooks/useCreateRenderer';
 import getBrokerAdapter from './tradingViewAdapter/broker/getBrokerAdapter';
-import { AccountStatusEnum, MEDIA_TABLET } from '@orderly.network/types';
-import { withExchangePrefix } from "./tradingViewAdapter/util";
+import {AccountStatusEnum, MEDIA_TABLET} from '@orderly.network/types';
+import {withExchangePrefix} from "./tradingViewAdapter/util";
 import brokerHostHandler from "./tradingViewAdapter/renderer/brokerHostHandler";
 
-export { Datafeed}
+export {Datafeed}
 
 
 export interface TradingViewOptions {
@@ -26,7 +26,6 @@ export const TradingViewSDKLocalstorageKey = {
     lineType: "TradingviewSDK.lastUsedStyle",
     displayControlSetting: "TradingviewSDK.displaySetting",
 };
-
 
 
 export interface DisplayControlSettingInterface {
@@ -56,7 +55,7 @@ export interface TradingViewPorps {
     topToolbarOpenSetting?: boolean;
     topToolbarOpenIndicators?: boolean;
     topToolbarLineType?: string;
-    displayControlSetting?:DisplayControlSettingInterface;
+    displayControlSetting?: DisplayControlSettingInterface;
     colorConfig?: ColorConfigInterface;
 }
 
@@ -117,31 +116,31 @@ const getOveriides = () => {
 }
 
 export function TradingView({
-    symbol,
-    mode = ChartMode.UNLIMITED,
-    libraryPath,
-    tradingViewScriptSrc,
-    tradingViewCustomCssUrl,
-    interval,
-    overrides: customerOverrides,
-    theme,
-    studiesOverrides: customerStudiesOverrides,
-    fullscreen,
-    closePositionConfirmCallback,
-    onToast,
-    loadingElement,
+                                symbol,
+                                mode = ChartMode.UNLIMITED,
+                                libraryPath,
+                                tradingViewScriptSrc,
+                                tradingViewCustomCssUrl,
+                                interval,
+                                overrides: customerOverrides,
+                                theme,
+                                studiesOverrides: customerStudiesOverrides,
+                                fullscreen,
+                                closePositionConfirmCallback,
+                                onToast,
+                                loadingElement,
 
                                 positionControlCallback,
                                 topToolbarOpenSetting,
                                 topToolbarOpenIndicators,
-    topToolbarLineType,
-    displayControlSetting,
-    colorConfig: customerColorConfig,
-}: TradingViewPorps) {
+                                topToolbarLineType,
+                                displayControlSetting,
+                                colorConfig: customerColorConfig,
+                            }: TradingViewPorps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chart = useRef<any>();
     const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
-    const { state: accountState } = useAccount();
+    const {state: accountState} = useAccount();
     const isMobile = useMediaQuery(MEDIA_TABLET);
 
     const ws = useWS();
@@ -160,8 +159,8 @@ export function TradingView({
         closeIcon: 'rgba(255, 255, 255, 0.54)',
     }
     const colorConfig = Object.assign({}, defaultColorConfig, customerColorConfig ?? {})
-    const broker = useBroker({ closeConfirm: closePositionConfirmCallback, colorConfig, onToast, mode });
-    const [ createRenderer, removeRenderer] = useCreateRenderer(symbol!,displayControlSetting);
+    const broker = useBroker({closeConfirm: closePositionConfirmCallback, colorConfig, onToast, mode});
+    const [createRenderer, removeRenderer] = useCreateRenderer(symbol!, displayControlSetting);
     const chartMask = useRef<HTMLDivElement>(null);
 
     const isLoggedIn = useMemo(() => {
@@ -178,7 +177,7 @@ export function TradingView({
                 console.log('-- chart ready');
                 chartMask.current?.style.setProperty('display', 'none');
                 if (isLoggedIn && chart.current.instance) {
-                    createRenderer(chart.current.instance,undefined, broker);
+                    createRenderer(chart.current.instance, undefined, broker);
 
                 }
             })
@@ -212,8 +211,7 @@ export function TradingView({
 
     const onChartClick = () => {
     }
-    const layoutId = 'TradingViewSDK';
-
+    const chartKey = 'SDK_Tradingview';
 
 
     useLazyEffect(() => {
@@ -223,13 +221,7 @@ export function TradingView({
 
         const defaultOverrides = getOveriides();
         const overrides = customerOverrides ? Object.assign({}, defaultOverrides.overrides, customerOverrides) : defaultOverrides.overrides;
-        if (mode === ChartMode.MOBILE) {
-            Object.assign(overrides, {
-               'paneProperties.legendProperties.showSeriesOHLC':false,
-                'paneProperties.legendProperties.showBarChange': false,
-            })
 
-        }
         console.log('-- overrides', overrides);
         const studiesOverrides = customerStudiesOverrides ? Object.assign({}, defaultOverrides.studiesOverrides, customerStudiesOverrides) : defaultOverrides.studiesOverrides;
         if (chartRef.current) {
@@ -253,7 +245,7 @@ export function TradingView({
                         return defaultItems;
                     },
                 },
-                getBroker: isLoggedIn  ?
+                getBroker: isLoggedIn ?
                     (instance: any, host: any) => {
                         console.log('-- broker_factory');
                         brokerHostHandler(instance, host);
@@ -266,8 +258,7 @@ export function TradingView({
 
             const chartProps: WidgetProps = {
                 options,
-                layoutId,
-                chartKey: layoutId,
+                chartKey: chartKey,
                 mode,
                 onClick: onChartClick,
             };
@@ -333,58 +324,58 @@ export function TradingView({
             {
                 tradingViewScriptSrc &&
 
-            <div style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                background: '#16141c',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-
-            }} ref={chartMask}>
-                {loadingElement ?? <div>laoding</div>}
-            </div>
-
-            }
-        <div style={{
-            height: '100%', width: '100%', margin: '0 auto'
-        }} ref={chartRef}>
-            {(!tradingViewScriptSrc) &&
                 <div style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    background: '#16141c',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                }}>
 
-                    <div style={{
-                        color: 'rgb(var(--orderly-color-base-foreground) / 0.98)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'left',
-                        height: '100%',
-                        padding: '20px',
-                        fontSize: '14px',
-                        lineHeight: '1.3rem',
-                        margin: '0 auto',
-                    }}>
-                        <p style={{
-                            marginBottom: '24px',
-                        }}>Due to TradingView's policy, you will need to apply for your own license.</p>
-
-                        <p style={{
-                            marginBottom: '12px',
-                        }}>1.&nbsp;Please apply for your TradingView license <Link url=''>here</Link>.</p>
-                        <p>2.&nbsp;Follow the instructions on <Link url=''>sdk.orderly.network</Link> to set up.</p>
-                    </div>
+                }} ref={chartMask}>
+                    {loadingElement ?? <div>laoding</div>}
                 </div>
+
             }
-        </div>
+            <div style={{
+                height: '100%', width: '100%', margin: '0 auto'
+            }} ref={chartRef}>
+                {(!tradingViewScriptSrc) &&
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}>
+
+                        <div style={{
+                            color: 'rgb(var(--orderly-color-base-foreground) / 0.98)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'left',
+                            height: '100%',
+                            padding: '20px',
+                            fontSize: '14px',
+                            lineHeight: '1.3rem',
+                            margin: '0 auto',
+                        }}>
+                            <p style={{
+                                marginBottom: '24px',
+                            }}>Due to TradingView's policy, you will need to apply for your own license.</p>
+
+                            <p style={{
+                                marginBottom: '12px',
+                            }}>1.&nbsp;Please apply for your TradingView license <Link url=''>here</Link>.</p>
+                            <p>2.&nbsp;Follow the instructions on <Link url=''>sdk.orderly.network</Link> to set up.</p>
+                        </div>
+                    </div>
+                }
+            </div>
 
         </div>
     );
