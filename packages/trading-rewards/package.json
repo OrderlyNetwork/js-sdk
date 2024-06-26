@@ -1,0 +1,29 @@
+{
+  "name": "@orderly.network/trading-rewards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0",
+    "tsconfig": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0"
+  }
+}

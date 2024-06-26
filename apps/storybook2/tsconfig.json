@@ -40,7 +40,10 @@
       ],
       "@orderly.network/hooks": [
         "../../packages/hooks/src"
-      ]
+      ],
+      "@orderly.network/trading-rewards": [
+        "../../packages/trading-rewards/src"
+      ],
     }
   },
   "include": [
