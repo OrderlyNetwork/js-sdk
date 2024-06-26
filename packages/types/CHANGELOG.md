@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.9-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
 ## 1.5.8
 
 ### Patch Changes
