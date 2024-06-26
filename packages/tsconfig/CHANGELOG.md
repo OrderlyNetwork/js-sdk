@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.9-dmm.0
+
+### Patch Changes
+
+- update
+
 ## 0.3.8
 
 ### Patch Changes
