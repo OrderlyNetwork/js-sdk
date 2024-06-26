@@ -34,6 +34,7 @@ export enum ExtensionPositionEnum {
   Toast = "toast",
   /// Layout components
   PortfolioLayout = "portfolioLayout",
+  TradingRewardsLayout = "tradingRewardsLayout",
 }
 
 export type DepositProps = {
