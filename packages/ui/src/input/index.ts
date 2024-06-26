@@ -1,4 +1,5 @@
-export { Input, inputVariants } from "./input";
+import { QuantityInput } from "./extends/quantity";
+import { Input as InputBase, inputVariants } from "./input";
 
 export { InputAdditional } from "./inputAdditional";
 
@@ -12,3 +13,12 @@ export { type TextFieldProps } from "./textField";
 
 export { InputHelpText } from "./inputHelpText";
 export type { InputHelpTextProps } from "./inputHelpText";
+
+type InputType = typeof InputBase & {
+  token: typeof QuantityInput;
+};
+
+const Input = InputBase as InputType;
+Input.token = QuantityInput;
+
+export { Input, inputVariants };

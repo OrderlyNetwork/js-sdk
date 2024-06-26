@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  ReactElement,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { PropsWithChildren, ReactElement, useEffect, useRef } from "react";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
 
@@ -30,8 +24,14 @@ export interface DataTableProps<RecordType>
    */
   loading?: boolean;
   className?: string;
-  headerClassName?: string;
-  bodyClassName?: string;
+  // headerClassName?: string;
+  // bodyClassName?: string;
+  classNames?: {
+    root?: string;
+    header?: string;
+    body?: string;
+    footer?: string;
+  };
   showMaskElement?: boolean;
   bordered?: boolean;
   loadMore?: () => void;
@@ -67,18 +67,20 @@ export const DataTable = <RecordType extends unknown>(
     columns,
     showMaskElement = true,
     className,
-    bodyClassName,
+
+    // bodyClassName,
+    classNames,
     ...rest
   } = props;
   const { root } = dataTableVariants({
     loading,
   });
 
-  const needFixed = useMemo(() => {
-    return props.columns.some(
-      (col) => col.fixed === "left" || col.fixed === "right"
-    );
-  }, [props.columns]);
+  // const needFixed = useMemo(() => {
+  //   return props.columns.some(
+  //     (col) => col.fixed === "left" || col.fixed === "right"
+  //   );
+  // }, [props.columns]);
 
   useEffect(() => {
     if (!wrapRef.current) return;
@@ -97,13 +99,13 @@ export const DataTable = <RecordType extends unknown>(
       <div
         id={props.id}
         ref={wrapRef}
-        className={root({ className })}
+        className={root({ className: cnBase(className, classNames.root) })}
         style={{ height: "calc(100% - 2px)" }}
         // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
       >
         <TableHeader
           columns={props.columns}
-          className={props.headerClassName}
+          className={classNames?.header}
           bordered={props.bordered}
           justified={props.justified}
         />
@@ -118,7 +120,7 @@ export const DataTable = <RecordType extends unknown>(
           <Table
             className={cnBase(
               "oui-table-fixed oui-border-collapse",
-              bodyClassName
+              classNames?.body
             )}
           >
             <ColGroup columns={props.columns} />

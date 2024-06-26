@@ -1,5 +1,5 @@
 export {
-  DropdownMenu as DropdownMenuRoot,
+  DropdownMenuRoot,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -14,4 +14,4 @@ export {
   //   DropdownMenuSubContent,
   //   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
-} from "./dropdownMenu";
+} from "./dropdown";

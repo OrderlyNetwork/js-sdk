@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren, ReactElement } from "react";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import {
@@ -6,24 +6,54 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValue,
+  selectVariants,
 } from "./selectPrimitive";
 
-import type { SizeType } from "../helpers/sizeType";
+import { VariantProps } from "tailwind-variants";
 
-export type SelectProps = SelectPrimitive.SelectProps & {
-  size?: SizeType;
-  error?: boolean;
-  placeholder?: React.ReactNode;
-};
+export type SelectProps<T> = SelectPrimitive.SelectProps & {
+  placeholder?: string;
+  valueRenderer?: (
+    value: T,
+    options: {
+      placeholder?: string;
+    }
+  ) => ReactElement;
+  contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
+  showCaret?: boolean;
+} & VariantProps<typeof selectVariants>;
 
-export const Select: FC<PropsWithChildren<SelectProps>> = (props) => {
-  const { children, size, error, placeholder, ...rest } = props;
+export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
+  const {
+    children,
+    size,
+    error,
+    placeholder,
+    variant,
+    contentProps,
+    valueRenderer,
+    showCaret,
+    ...rest
+  } = props;
+
   return (
     <SelectRoot {...rest}>
-      <SelectTrigger size={size} error={error}>
-        <SelectValue placeholder={placeholder} />
+      <SelectTrigger
+        size={size}
+        error={error}
+        variant={variant}
+        showCaret={showCaret}
+        className="oui-font-semibold"
+      >
+        {typeof valueRenderer === "function" ? (
+          valueRenderer((props.value || props.defaultValue) as T, {
+            placeholder,
+          })
+        ) : (
+          <SelectValue placeholder={placeholder} />
+        )}
       </SelectTrigger>
-      <SelectContent>{children}</SelectContent>
+      <SelectContent {...contentProps}>{children}</SelectContent>
     </SelectRoot>
   );
 };

@@ -9,6 +9,7 @@ import {
   inputFormatter,
 } from "@orderly.network/ui";
 import { useState } from "react";
+import { useArgs } from "@storybook/preview-api";
 
 const meta = {
   title: "Base/input/Input",
@@ -31,7 +32,7 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["mini", "medium", "default", "large"],
+      options: ["xs", "sm", "md", "lg", "xl"],
     },
     disabled: {
       control: {
@@ -49,7 +50,9 @@ const meta = {
     size: "default",
     disabled: false,
     fullWidth: false,
+    placeholder: "text",
     onValueChange: fn(),
+    onClear: fn(),
   },
 };
 
@@ -57,6 +60,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Clearable: Story = {
+  render: (args) => {
+    const [{ value }, updateArgs] = useArgs();
+    return (
+      <Input
+        {...args}
+        value={value}
+        className="oui-w-60"
+        onChange={(event) => {
+          updateArgs({ value: event.target.value });
+        }}
+        onClear={() => {
+          updateArgs({ value: "" });
+        }}
+      />
+    );
+  },
+};
 
 export const Formatter: Story = {
   render: (args) => {

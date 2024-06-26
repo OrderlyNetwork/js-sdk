@@ -25,7 +25,7 @@ const textVariants = tv({
     },
     weight: {
       regular: ["oui-font-normal"],
-      demi: ["oui-font-semibold"],
+      semibold: ["oui-font-semibold"],
       bold: ["oui-font-bold"],
     },
     color: {

@@ -6,7 +6,7 @@ const {formatted: FormattedText} = Text;
 
 
 const meta = {
-    title: 'Base/Typpography/Formatted',
+    title: 'Base/Typography/Formatted',
     component: FormattedText,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -81,11 +81,11 @@ export const SymbolText: Story = {
 }
 
 export const Copyable: Story = {
-    args:{
+    args: {
         rule: 'address',
         children: '0x7c3409F33545E069083B4F7386b966d997488Dc1',
         range: [6, 6],
         copyable: true,
-        
+
     }
 }

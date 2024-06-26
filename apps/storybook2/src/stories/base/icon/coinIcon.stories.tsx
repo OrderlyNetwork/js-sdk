@@ -31,7 +31,7 @@ export const Default: Story = {
   },
 };
 
-export const CoinIcons: Story = {
+export const TokenIcons: Story = {
   render: (args) => {
     return (
       <Flex gap={2}>

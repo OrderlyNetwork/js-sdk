@@ -15,7 +15,7 @@ import {
 const { numeral: Numeral } = Text;
 
 const meta = {
-  title: "Base/Typpography/Numeral",
+  title: "Base/Typography/Numeral",
   component: Numeral,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

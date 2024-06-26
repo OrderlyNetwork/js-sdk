@@ -17,11 +17,16 @@ const meta = {
       options: ["xs", "sm", "md", "lg", "xl"],
       control: { type: "inline-radio" },
     },
+    variant: {
+      options: ["contained", "outlined", "text"],
+      control: { type: "inline-radio" },
+    },
   },
   args: {
     size: "md",
     error: false,
     disabled: false,
+    variant: "outlined",
     // open: true,
     onValueChange: fn(),
   },
@@ -105,5 +110,25 @@ export const Combine: Story = {
       { label: "Grapes", value: "grapes" },
     ],
     value: "apple",
+  },
+};
+
+export const Tokens: Story = {
+  render: (args) => {
+    return <Select.tokens {...args} />;
+  },
+  args: {
+    size: "md",
+    error: false,
+    value: "ETH",
+    className: "oui-min-w-40",
+    tokens: [
+      {
+        name: "BTC",
+      },
+      {
+        name: "ETH",
+      },
+    ],
   },
 };

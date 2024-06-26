@@ -83,6 +83,7 @@ const selectVariants = tv({
       "data-[disabled]:oui-opacity-50",
     ],
     separator: "-oui-mx-1 oui-my-1 oui-h-px oui-bg-muted",
+    icon: "",
   },
   variants: {
     variant: {
@@ -91,6 +92,9 @@ const selectVariants = tv({
       },
       contained: {
         trigger: ["oui-bg-base-4"],
+      },
+      text: {
+        trigger: [],
       },
       // text
     },
@@ -114,22 +118,27 @@ const selectVariants = tv({
       xs: {
         trigger: ["oui-h-6", "oui-text-2xs"],
         item: ["oui-h-6", "oui-text-2xs"],
+        icon: ["oui-w-3", "oui-h-3"],
       },
       sm: {
         trigger: ["oui-h-7", "oui-text-2xs"],
         item: ["oui-h-7", "oui-text-2xs"],
+        icon: ["oui-w-4", "oui-h-4"],
       },
       md: {
         trigger: ["oui-h-8", "oui-text-2xs"],
         item: ["oui-h-7", "oui-text-2xs"],
+        icon: ["oui-w-4", "oui-h-4"],
       },
       lg: {
-        trigger: ["oui-h-10", "oui-text-2xs", "oui-px-3"],
+        trigger: ["oui-h-10", "oui-text-sm", "oui-px-3"],
         item: ["oui-h-8", "oui-text-2xs"],
+        icon: ["oui-w-5", "oui-h-5"],
       },
       xl: {
         trigger: ["oui-h-12", "oui-text-2xs", "oui-px-3"],
         item: ["oui-h-12", "oui-text-2xs"],
+        icon: ["oui-w-6", "oui-h-6"],
       },
     },
     error: {
@@ -157,10 +166,36 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    VariantProps<typeof selectVariants>
->(({ className, children, size, error, variant, asChild, ...props }, ref) => {
-  const { trigger } = selectVariants({ size, error, variant });
-  if (asChild) {
+    VariantProps<typeof selectVariants> & {
+      showCaret?: boolean;
+    }
+>(
+  (
+    {
+      className,
+      children,
+      size,
+      error,
+      variant,
+      asChild,
+      showCaret = true,
+      ...props
+    },
+    ref
+  ) => {
+    const { trigger } = selectVariants({ size, error, variant });
+    if (asChild) {
+      return (
+        <SelectPrimitive.Trigger
+          ref={ref}
+          className={trigger({ className })}
+          asChild={asChild}
+          {...props}
+        >
+          {children}
+        </SelectPrimitive.Trigger>
+      );
+    }
     return (
       <SelectPrimitive.Trigger
         ref={ref}
@@ -169,27 +204,25 @@ const SelectTrigger = React.forwardRef<
         {...props}
       >
         {children}
+
+        <>
+          {showCaret && (
+            <SelectPrimitive.Icon
+              asChild
+              className="oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
+            >
+              <CaretDownIcon
+                size={12}
+                className="oui-text-inherit"
+                opacity={1}
+              />
+            </SelectPrimitive.Icon>
+          )}
+        </>
       </SelectPrimitive.Trigger>
     );
   }
-  return (
-    <SelectPrimitive.Trigger
-      ref={ref}
-      className={trigger({ className })}
-      asChild={asChild}
-      {...props}
-    >
-      {children}
-
-      <SelectPrimitive.Icon
-        asChild
-        className="oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
-      >
-        <CaretDownIcon size={12} className="oui-text-inherit" opacity={1} />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
-  );
-});
+);
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<

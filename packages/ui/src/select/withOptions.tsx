@@ -1,4 +1,5 @@
-import React, { FC, PropsWithChildren, ReactElement } from "react";
+import React, { FC, ReactElement } from "react";
+import { SizeType } from "../helpers/sizeType";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
 
@@ -7,9 +8,14 @@ export type SelectOption = {
   value: string;
 };
 
-export type SelectWithOptionsProps = SelectProps & {
+export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
   options: SelectOption[];
-  optionRenderer?: (option: SelectOption) => ReactElement;
+  optionRenderer?: (
+    option: SelectOption & {
+      size: SizeType;
+      index: number;
+    }
+  ) => ReactElement;
 };
 
 export const defaultOptionRenderer = (option: SelectOption) => (
@@ -25,6 +31,7 @@ export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
     optionRenderer = defaultOptionRenderer,
     ...rest
   } = props;
+
   return (
     <Select {...rest}>
       <SelectGroup>
@@ -32,6 +39,7 @@ export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
           return React.cloneElement(optionRenderer(option), {
             size: props.size,
             key: index,
+            index,
           });
         })}
       </SelectGroup>
