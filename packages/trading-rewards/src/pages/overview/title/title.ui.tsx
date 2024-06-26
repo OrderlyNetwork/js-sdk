@@ -25,7 +25,14 @@ export const TitleUI: FC<{
     },
   } = props;
   return (
-    <Flex p={6} direction={"column"} itemAlign={"start"} gap={4}>
+    <Flex
+      p={6}
+      direction={"column"}
+      itemAlign={"start"}
+      gap={4}
+      className="oui-bg-base-9"
+      r={"2xl"}
+    >
       {title || <Text size="lg">Trading Rewards</Text>}
       <Divider />
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
