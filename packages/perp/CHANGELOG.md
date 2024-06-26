@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.9
+
+### Patch Changes
+
+- 187dd07b: fix bugs;
+- Updated dependencies [187dd07b]
+  - @orderly.network/types@1.5.9
+  - @orderly.network/utils@1.5.9
+
 ## 3.3.9-alpha.0
 
 ### Patch Changes
