@@ -32,6 +32,7 @@ export const TitleUI: FC<{
       gap={4}
       className="oui-bg-base-9"
       r={"2xl"}
+      width={"100%"}
     >
       {title || <Text size="lg">Trading Rewards</Text>}
       <Divider />
@@ -68,7 +69,7 @@ const MultiLineText: FC<{
       return (
         <span
           key={index}
-          className={`${item.isLink ? "oui-text-primary-light" : ""}`}
+          className={`${item.isLink ? "oui-text-primary-light oui-cursor-pointer" : ""}`}
           dangerouslySetInnerHTML={{ __html: item.content }}
           onClick={() => [
             window.open(

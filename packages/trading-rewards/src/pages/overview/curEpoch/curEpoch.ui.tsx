@@ -17,6 +17,12 @@ export const CurEpochUI: FC = (props) => {
             <Text>7 Mar.20 - mar.27</Text>
           </Flex>
         </Flex>
+        <Flex gradient="brand" direction={"column"} gap={3} py={4} width={"100%"} r="2xl">
+            <Text>My est. rewards</Text>
+            <Flex direction={"row"} gap={1}>
+            12,322.12
+            </Flex>
+        </Flex>
       </Flex>
     </Box>
   );
@@ -71,7 +77,7 @@ const Countdown: FC<{
 
   return (
     <Box
-      className="oui-rounded-2xl oui-text-base-contrast-54 oui-font-semibold"
+      className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
       gradient="neutral"
       width={"full"}
     >
@@ -80,8 +86,7 @@ const Countdown: FC<{
         itemAlign={"center"}
         justify={"center"}
         gap={1}
-        className="oui-text-2xs md:oui-text-xs lg:oui-text-sm"
-        py={4}
+        className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
       >
         <span>Countdown:</span>
         {num(`${timeLeft.days}`.padStart(2, "0"))}
