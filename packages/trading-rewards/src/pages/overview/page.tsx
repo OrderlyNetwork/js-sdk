@@ -1,6 +1,8 @@
 import { Flex, cn } from "@orderly.network/ui";
 import { TitleWidget } from "./title/title.widget";
 import { CurEpochWidget } from "./curEpoch";
+import { AvailableToClaimWidget } from "./availableToClaim";
+import { StakeBoosterWidget } from "./stakeBooster";
 
 export const OverviewPage = () => {
   return (
@@ -15,6 +17,8 @@ export const OverviewPage = () => {
     >
       <TitleWidget />
       <CurEpochWidget />
+      <AvailableToClaimWidget />
+      <StakeBoosterWidget />
     </Flex>
   );
 };

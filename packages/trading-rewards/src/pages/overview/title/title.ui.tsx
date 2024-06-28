@@ -30,7 +30,7 @@ export const TitleUI: FC<{
       direction={"column"}
       itemAlign={"start"}
       gap={4}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-font-semibold"
       r={"2xl"}
       width={"100%"}
     >
