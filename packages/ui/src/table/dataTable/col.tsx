@@ -115,6 +115,7 @@ export const ColItem: FC<ColProps> = (props) => {
         props.justified && "first:oui-pl-0 last:oui-pr-0",
         colClassName,
         align === "right" && "oui-text-right",
+        align === "center" && "oui-text-center",
         col.fixed && "oui-sticky oui-z-10"
       )}
       style={{
