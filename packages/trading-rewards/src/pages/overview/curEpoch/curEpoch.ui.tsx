@@ -1,30 +1,90 @@
 import { Box, Flex, Text, cn } from "@orderly.network/ui";
 
 import { useState, useEffect, FC } from "react";
+import { OrderlyIcon } from "../components/orderlyIcon";
 
 export const CurEpochUI: FC = (props) => {
   return (
-    <Box r={"2xl"} className="oui-bg-base-9" width={"100%"}>
+    <Box r={"2xl"} className="oui-bg-base-9 oui-font-semibold" width={"100%"}>
       <Countdown />
       <Flex p={6} direction={"column"} gap={4}>
-        <Flex direction={"row"} gap={3}>
-          <Flex px={4} py={2} justify={"between"} direction={"column"}>
-            <Text>Epoch</Text>
-            <Text>7 Mar.20 - mar.27</Text>
-          </Flex>
-          <Flex px={4} py={2} justify={"between"} direction={"column"}>
-            <Text className="oui-text-base-contrast-54 oui-text-xs md:oui-text-sm">Epoch rewards</Text>
-            <Text>7 Mar.20 - mar.27</Text>
-          </Flex>
+        <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
+          <Statics title="Epoch" highLight="7" text="Mar.5 - mar.27" />
+          <Statics title="Epoch rewards" highLight="1,000,00" text="ORDER" />
         </Flex>
-        <Flex gradient="brand" direction={"column"} gap={3} py={4} width={"100%"} r="2xl">
-            <Text>My est. rewards</Text>
-            <Flex direction={"row"} gap={1}>
-            12,322.12
-            </Flex>
-        </Flex>
+        <EstRewards />
       </Flex>
     </Box>
+  );
+};
+
+const EstRewards = () => {
+    return (
+        <Flex
+          direction={"column"}
+          gap={2}
+          py={4}
+          width={"100%"}
+          r="2xl"
+          style={{
+            background:
+              "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
+          }}
+        >
+          <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">My est. rewards</Text>
+          <Flex direction={"row"} gap={1}>
+            <OrderlyIcon />
+            <Text> ORDER </Text>
+          </Flex>
+        </Flex>
+    );
+};
+
+const Statics: FC<{
+  title: string;
+  highLight?: string;
+  text?: string;
+}> = (props) => {
+  const { title, highLight, text } = props;
+  return (
+    <Flex
+      px={4}
+      py={2}
+      justify={"between"}
+      direction={"column"}
+      className="flex-1"
+      gap={2}
+    >
+      <Text
+        className={cn(
+          "oui-text-base-contrast-54",
+          // font size
+          "oui-text-xs md:oui-text-sm xl:oui-text-base",
+          /// leading
+          "oui-leading-[20px] xl:oui-leading-[24px]"
+        )}
+      >
+        {title}
+      </Text>
+      <Flex
+        direction={"row"}
+        gap={1}
+        itemAlign={"end"}
+        justify={"center"}
+        className="oui-leading-[24px] md:oui-leading-[26px] lg:oui-leading-[28px] xl:oui-leading-[32px]"
+      >
+        <Text.gradient
+          color="brand"
+          angle={90}
+          className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl"
+        >
+          {highLight}
+        </Text.gradient>
+        <Text className="oui-text-base-contrast-80 oui-text-2xs md:oui-text-xs xl:oui-text-sm ">
+          {text}
+        </Text>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -79,6 +139,7 @@ const Countdown: FC<{
     <Box
       className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
       gradient="neutral"
+      angle={180}
       width={"full"}
     >
       <Flex
