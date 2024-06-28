@@ -1,10 +1,16 @@
-import { useEffect } from "react";
-import { DataFilterProps } from "./dataFilter";
+import { DataFilterProps, DataTableFilter } from "./dataFilter";
+import { useTable } from "../dataTable/tableContext";
 
 export const Filter = (props: DataFilterProps) => {
-  useEffect(() => {
-    console.log("----- data filter ------");
-  }, []);
+  const { meta } = useTable();
 
-  return null;
+  if (!meta) {
+    throw new Error(
+      "Filter component should be used inside `DataTable` component"
+    );
+  }
+
+  return <DataTableFilter {...props} />;
 };
+
+Filter.displayName = "DataFilter";

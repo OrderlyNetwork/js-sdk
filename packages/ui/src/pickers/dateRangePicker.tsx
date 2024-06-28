@@ -37,7 +37,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
   const { trigger } = selectVariants({ size, className });
 
   const formattedValue = useMemo(() => {
-    console.log("dateRange", dateRange);
+    // console.log("dateRange", dateRange);
     if (!dateRange || !dateRange.from || !dateRange.to) {
       return placeholder ?? "Select Date";
     }

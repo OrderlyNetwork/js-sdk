@@ -1,7 +1,6 @@
-import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
 type FundingSearchParams = {
@@ -18,22 +17,25 @@ type FundingSearchParams = {
 };
 
 export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
-  let { symbol, dataRange } = parmas;
+  let { symbol, dataRange, page = 1, pageSize = 10 } = parmas;
 
   const infos = useSymbolsInfo();
 
   const getKey = () => {
+    // console.log("symbol", symbol, dataRange);
+
     const search = new URLSearchParams();
 
-    if (typeof symbol !== "undefined") {
+    if (typeof symbol !== "undefined" && symbol !== "All") {
       search.set("symbol", symbol);
     }
-    search.set("page", "1");
+    search.set("page", `${page}`);
+    search.set("size", `${pageSize}`);
 
-    // if (dataRange) {
-    //   search.set("start", dataRange[0].toString());
-    //   search.set("end", dataRange[1].toString());
-    // }
+    if (dataRange) {
+      search.set("start_t", dataRange[0].toString());
+      search.set("end_t", dataRange[1].toString());
+    }
 
     return `/v1/funding_fee/history?${search.toString()}`;
   };
@@ -65,7 +67,7 @@ export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
   return [
     parsedData,
     {
-      meta: data?.meta || {},
+      meta: data?.meta,
       isLoading,
     },
   ] as const;

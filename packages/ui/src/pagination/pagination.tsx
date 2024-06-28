@@ -12,13 +12,14 @@ import { ButtonProps, buttonVariants } from "../button";
 import { cnBase } from "tailwind-variants";
 import { Select } from "../select";
 import { Flex } from "../flex";
+import { useMemo } from "react";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"
     aria-label="pagination"
     className={cnBase(
-      "oui-mx-auto oui-flex oui-w-full oui-justify-center oui-text-xs oui-items-center",
+      " oui-flex oui-justify-center oui-text-xs oui-items-center",
       className
     )}
     {...props}
@@ -62,15 +63,15 @@ const PaginationLink = ({
 }: PaginationLinkProps) => (
   <a
     aria-current={isActive ? "page" : undefined}
-    className={cnBase(
-      "oui-min-w-6",
-      buttonVariants({
-        size: "xs",
-        variant: isActive ? "contained" : "text",
-        // size,
-      })
-      // className
-    )}
+    data-active={isActive}
+    className={buttonVariants({
+      size: "xs",
+      // color:'white',
+      variant: isActive ? "contained" : "text",
+      className:
+        "oui-min-w-6 oui-text-base-contrast-80 oui-font-semibold data-[active=false]:hover:oui-bg-base-6",
+      // size,
+    })}
     {...props}
   />
 );
@@ -78,6 +79,7 @@ PaginationLink.displayName = "PaginationLink";
 
 const PaginationPrevious = ({
   className,
+
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
@@ -122,53 +124,147 @@ const PaginationEllipsis = ({
 );
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
-const Paginations = (props: {
+export type PaginationProps = {
   onPageChange?: (page: number) => void;
-  onPageSizeChange?: (pageSize: string) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   pageSize?: number;
   page: number;
   count: number;
-}) => {
-  const pages = Array.from({ length: props.count }, (_, i) => i + 1);
+  pageTotal: number;
+  className?: string;
+  classNames?: {
+    pagination?: string;
+    paginationContent?: string;
+    paginationItem?: string;
+    paginationLink?: string;
+    paginationPrevious?: string;
+    paginationNext?: string;
+    paginationEllipsis?: string;
+  };
+};
+
+const Paginations = (props: PaginationProps) => {
+  const {
+    classNames,
+    className,
+    pageTotal: totalPages,
+    page: currentPage,
+  } = props;
+
+  const pageNumbers = useMemo(() => {
+    const pageNumbers = [];
+    const ellipsis = "...";
+
+    if (totalPages <= 10) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = 5;
+      } else if (currentPage >= totalPages - 2) {
+        startPage = totalPages - 4;
+        endPage = totalPages;
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+
+      if (startPage > 1) {
+        pageNumbers.unshift(ellipsis);
+        pageNumbers.unshift(1);
+      }
+
+      if (endPage < totalPages) {
+        pageNumbers.push(ellipsis);
+        pageNumbers.push(totalPages);
+      }
+    }
+
+    return pageNumbers;
+  }, [currentPage, totalPages]);
 
   return (
-    <Pagination>
+    <Pagination className={cnBase(classNames?.pagination, className)}>
       <Flex mr={4}>
         <Text
           as="div"
-          className="oui-text-nowrap oui-mr-2 oui-text-base-contrast-54"
+          size="2xs"
+          intensity={54}
+          className="oui-text-nowrap oui-mr-2"
         >
           Rows per page
         </Text>
-        <div className={"oui-w-16"}>
+        <div className={"oui-w-14"}>
           <Select.options
             options={[
               { value: "5", label: "5" },
               { value: "10", label: "10" },
+              { value: "20", label: "20" },
             ]}
-            value="5"
+            value={`${props.pageSize ?? 5}`}
             size="xs"
-            onValueChange={props.onPageSizeChange}
+            onValueChange={(value) => props.onPageSizeChange?.(parseInt(value))}
           />
         </div>
       </Flex>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            href="#"
+            disabled={props.page === 1}
+            onClick={(event) => {
+              event.preventDefault();
+              props.onPageChange?.(props.page - 1);
+            }}
+          />
         </PaginationItem>
-        {pages.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink isActive={page === props.page} href="#" key={page}>
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        {pageNumbers.map((page, index) => {
+          // if (page === "...") {
+          //   return (
+          //     <PaginationItem key={page}>
+          //       <PaginationEllipsis />
+          //     </PaginationItem>
+          //   );
+          // }
+          return (
+            <PaginationItem key={index}>
+              <PaginationLink
+                isActive={page === props.page}
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (page !== "...") {
+                    props.onPageChange?.(Number(page));
+                  } else {
+                    props.onPageChange?.(
+                      Number((pageNumbers[index + 1] as number) - 1)
+                    );
+                  }
+                }}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        })}
 
         {/* <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem> */}
         <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            href="#"
+            onClick={(event) => {
+              event.preventDefault();
+              props.onPageChange?.(props.page + 1);
+            }}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

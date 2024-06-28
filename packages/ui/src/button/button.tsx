@@ -3,6 +3,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 import { BaseButton, BaseButtonProps } from "./base";
 import { shadowVariants } from "../layout/shadow";
 import { parseAngleProps } from "../helpers/parse-props";
+import { SizeType } from "../helpers/sizeType";
 
 const buttonVariants = tv({
   base: [
@@ -194,7 +195,7 @@ const Button = React.forwardRef<
           fullWidth,
           shadow,
         })}
-        size={size}
+        size={size as SizeType}
         ref={ref}
         style={{ ...style, ...angleStyle }}
         {...props}

@@ -4,7 +4,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { type VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
 
-import { CaretDownIcon } from "../icon";
+import { CaretDownIcon, CaretUpIcon } from "../icon";
 
 const selectVariants = tv({
   slots: {
@@ -236,7 +236,7 @@ const SelectScrollUpButton = React.forwardRef<
       className={scrollUpButton({ className })}
       {...props}
     >
-      <CaretDownIcon size={16} />
+      <CaretUpIcon size={16} color={"white"} />
     </SelectPrimitive.ScrollUpButton>
   );
 });
@@ -253,7 +253,7 @@ const SelectScrollDownButton = React.forwardRef<
       className={scrollDownButton({ className })}
       {...props}
     >
-      <CaretDownIcon size={16} />
+      <CaretDownIcon size={16} color={"white"} />
     </SelectPrimitive.ScrollDownButton>
   );
 });
@@ -273,11 +273,11 @@ const SelectContent = React.forwardRef<
         position={position}
         {...props}
       >
-        <SelectScrollUpButton />
+        {/* <SelectScrollUpButton /> */}
         <SelectPrimitive.Viewport className={viewport()}>
           {children}
         </SelectPrimitive.Viewport>
-        <SelectScrollDownButton />
+        {/* <SelectScrollDownButton /> */}
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   );

@@ -1,5 +1,5 @@
 import { DataTable } from "@orderly.network/ui";
-import { useColumns } from "./column";
+import { useFundingHistoryColumns } from "./column";
 import { FC } from "react";
 
 type FundingHistoryProps = {
@@ -9,7 +9,7 @@ type FundingHistoryProps = {
 
 export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
   const { dataSource, isLoading } = props;
-  const columns = useColumns();
+  const columns = useFundingHistoryColumns();
 
   return (
     <DataTable
@@ -18,8 +18,10 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
       dataSource={dataSource}
       loading={isLoading}
       className="oui-font-semibold"
-      headerClassName="oui-text-base-contrast-36"
-      bodyClassName="oui-text-base-contrast-80"
+      classNames={{
+        header: "oui-text-base-contrast-36",
+        body: "oui-text-base-contrast-80",
+      }}
     />
   );
 };

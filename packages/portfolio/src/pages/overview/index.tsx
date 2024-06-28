@@ -10,7 +10,11 @@ export {
 } from "./assetHistory";
 
 export { PerformanceUI, PerformanceWidget } from "./performance";
-export { FundingHistoryWidget } from "./funding";
+export {
+  FundingHistoryWidget,
+  useFundingHistoryColumns,
+  useFundingHistoryHook,
+} from "./funding";
 
 export {
   DistributionHistoryWidget,

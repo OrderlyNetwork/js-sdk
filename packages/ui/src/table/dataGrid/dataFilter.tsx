@@ -10,14 +10,15 @@ import {
 } from "../../select/withOptions";
 import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
 
-type FilterType = "select" | "input" | "date" | "range" | "custom";
+type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol";
 
 type DataFilterGeneral = {
   // initialValue?: any;
+  name: string;
+  type: FilterType;
 };
 
 type SelectFilter = {
-  name: string;
   type: "select";
   // options: DataFilterOption[];
 } & SelectWithOptionsProps;
@@ -25,19 +26,21 @@ type SelectFilter = {
 // type DateFilterMode = "range" | "single";
 
 type DateFilter = {
-  name: string;
   type: "date";
   // range?: DataFilterDateRange;
   // mode?: DateFilterMode;
 } & DatePickerProps;
 
 type DateRangeFilter = {
-  name: string;
   type: "range";
 } & DateRangePickerProps;
 
+type SymbolFilter = {
+  type: "symbol";
+};
+
 type DataFilterItems = (DataFilterGeneral &
-  (SelectFilter | DateFilter | DateRangeFilter))[];
+  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter))[];
 
 export type DataFilterProps = {
   items: DataFilterItems;
@@ -94,6 +97,8 @@ export const DataFilterRenderer: FC<{
           onChange={onChange}
         />
       );
+    case "symbol":
+      return <div></div>;
     case "input":
     default:
       return <div>No Component</div>;
@@ -101,9 +106,6 @@ export const DataFilterRenderer: FC<{
 };
 
 export const DataTableFilter = (props: DataFilterProps) => {
-  const onChange = (key: string, value: any) => {
-    props.onFilter({ name: key, value });
-  };
   return (
     <Flex
       justify={"start"}
@@ -112,19 +114,17 @@ export const DataTableFilter = (props: DataFilterProps) => {
       className="oui-datagrid-filter-bar oui-border-b oui-border-line"
     >
       {props.items.map((item, index: number) => {
-        const props =
-          typeof item === "string" ? { type: item as FilterType } : item;
-
-        if (props.type === "date" && typeof item === "string") {
-          (props as DatePickerProps).mode = "range";
+        if (item.type === "date") {
+          (item as DatePickerProps).mode = "range";
         }
 
         return (
           <DataFilterRenderer
             key={index}
-            {...props}
+            {...item}
             onChange={(value: any) => {
-              onChange((props as any).name ?? props.type, value);
+              // onChange(item.name ?? item.type, value);
+              props.onFilter({ name: item.name ?? item.type, value });
             }}
           />
         );

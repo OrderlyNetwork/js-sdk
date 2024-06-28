@@ -1,4 +1,14 @@
-import { PropsWithChildren, ReactElement, useEffect, useRef } from "react";
+import {
+  Children,
+  isValidElement,
+  memo,
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Column } from "./col";
 import { TableHeader } from "./thead";
 
@@ -12,6 +22,8 @@ import { Table } from "../table";
 import { cnBase, type VariantProps } from "tailwind-variants";
 import { tv } from "../../utils/tv";
 import { TablePlaceholder } from "./tablePlaceholder";
+import { useTableSize } from "./useTableSize";
+import { Box } from "../../box";
 
 export interface DataTableProps<RecordType>
   extends TBodyProps<RecordType>,
@@ -37,8 +49,19 @@ export interface DataTableProps<RecordType>
   loadMore?: () => void;
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
-  header?: ReactElement;
-  footer?: ReactElement;
+  // header?: ReactElement;
+  // footer?: ReactElement;
+
+  /**
+   * if you want to fixed the table header or column, you need to set the height/width of the table;
+   */
+  scroll?: {
+    /**
+     * the width of the table
+     */
+    x?: number;
+    y?: number;
+  };
 }
 
 const dataTableVariants = tv({
@@ -57,6 +80,8 @@ const dataTableVariants = tv({
   },
 });
 
+// const TableElement = () => {};
+
 export const DataTable = <RecordType extends unknown>(
   props: PropsWithChildren<DataTableProps<RecordType>>
 ) => {
@@ -67,20 +92,44 @@ export const DataTable = <RecordType extends unknown>(
     columns,
     showMaskElement = true,
     className,
-
-    // bodyClassName,
     classNames,
+    scroll,
     ...rest
   } = props;
   const { root } = dataTableVariants({
     loading,
   });
 
+  const [filterEle, setFilterEle] = useState<ReactElement | null>(null);
+  const [paginationEle, setPaginationEle] = useState<ReactElement | null>(null);
+
   // const needFixed = useMemo(() => {
   //   return props.columns.some(
   //     (col) => col.fixed === "left" || col.fixed === "right"
   //   );
   // }, [props.columns]);
+  //
+  useLayoutEffect(() => {
+    const children = props.children;
+
+    Children.forEach(children, (child) => {
+      // console.log("check filter element", child);
+      if (isValidElement(child)) {
+        if (child.type?.displayName === "DataFilter") {
+          setFilterEle(child);
+        }
+
+        if (child.type?.displayName === "TablePagination") {
+          setPaginationEle(child);
+        }
+      }
+    });
+
+    // if (isValidElement(props.children)) {
+    //   // console.log("******children", children, children.type?.displayName);
+
+    // }
+  }, [props.children]);
 
   useEffect(() => {
     if (!wrapRef.current) return;
@@ -90,54 +139,78 @@ export const DataTable = <RecordType extends unknown>(
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
   }, []);
 
-  return (
-    <TableProvider
-      columns={props.columns}
-      dataSource={props.dataSource}
-      canExpand={typeof props.expandRowRender === "function"}
+  const tableSize = useTableSize(scroll);
+
+  let childElement = (
+    // <TableProvider
+    //   columns={props.columns}
+    //   dataSource={props.dataSource}
+    //   canExpand={typeof props.expandRowRender === "function"}
+    // >
+
+    <div
+      id={props.id}
+      ref={wrapRef}
+      className={root({ className: cnBase(className, classNames?.root) })}
+      style={{ ...tableSize }}
+      // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
-      <div
-        id={props.id}
-        ref={wrapRef}
-        className={root({ className: cnBase(className, classNames?.root) })}
-        style={{ height: "calc(100% - 2px)" }}
-        // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
-      >
-        <TableHeader
-          columns={props.columns}
-          className={classNames?.header}
-          bordered={props.bordered}
-          justified={props.justified}
-        />
-        {/* <EndReachedBox
+      <TableHeader
+        columns={props.columns}
+        className={classNames?.header}
+        bordered={props.bordered}
+        justified={props.justified}
+      />
+      {/* <EndReachedBox
           onEndReached={() => {
             // if (!props.loading) {
             props.loadMore?.();
             // }
           }}
         > */}
-        <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
-          <Table
-            className={cnBase(
-              "oui-table-fixed oui-border-collapse",
-              classNames?.body
-            )}
-          >
-            <ColGroup columns={props.columns} />
-            <TBody {...rest} />
-          </Table>
-          <TablePlaceholder
-            visible={dataSource?.length === 0 || loading}
-            loading={loading}
-          />
-        </div>
 
-        {/* </EndReachedBox> */}
-        {/* {showMaskElement && maskElement} */}
-        {props.children}
+      <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
+        <Table
+          className={cnBase(
+            "oui-table-fixed oui-border-collapse",
+            classNames?.body
+          )}
+        >
+          <ColGroup columns={props.columns} />
+          <TBody {...rest} />
+        </Table>
+        <TablePlaceholder
+          visible={dataSource?.length === 0 || loading}
+          loading={loading}
+        />
       </div>
 
-      <FixedDivide />
+      {/* </EndReachedBox> */}
+      {/* {showMaskElement && maskElement} */}
+      {/* {props.children} */}
+    </div>
+  );
+  // {/* <FixedDivide /> */}
+
+  if (filterEle) {
+    childElement = (
+      <>
+        {filterEle}
+        <Box px={3}>{childElement}</Box>
+        {paginationEle}
+      </>
+    );
+  }
+
+  return (
+    <TableProvider
+      columns={props.columns}
+      dataSource={props.dataSource}
+      canExpand={typeof props.expandRowRender === "function"}
+    >
+      {childElement}
     </TableProvider>
   );
 };
+
+// const TableElement = memo(Component)

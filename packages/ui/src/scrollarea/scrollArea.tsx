@@ -1,7 +1,8 @@
 import React from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
-import { tv, type VariantProps } from "tailwind-variants";
+import { type VariantProps } from "tailwind-variants";
+import { tv } from "../utils/tv";
 
 const scrollAreaVariants = tv({
   slots: {

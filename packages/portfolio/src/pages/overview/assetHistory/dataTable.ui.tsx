@@ -14,11 +14,13 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   const columns = useAssetHistoryColumns();
 
   return (
-    <DataGrid
+    <DataTable
       bordered
       className="oui-font-semibold"
-      headerClassName="oui-text-base-contrast-36"
-      bodyClassName="oui-text-base-contrast-80"
+      classNames={{
+        header: "oui-text-base-contrast-36",
+        body: "oui-text-base-contrast-80",
+      }}
       columns={columns}
       dataSource={dataSource}
     />

@@ -326,8 +326,8 @@ export declare namespace API {
 
   export interface RecordsMeta {
     total: number;
-    recordsPerPage: number;
-    currentPage: number;
+    records_per_page: number;
+    current_page: number;
   }
 
   export interface AssetHistoryRow {

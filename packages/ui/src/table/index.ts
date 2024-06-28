@@ -7,3 +7,5 @@ export { DataGridFilterBar } from "./dataGrid/dataGridFilterBar";
 
 export { EmptyDataState } from "./dataTable/emptyDataState";
 export { Filter } from "./dataGrid/filter";
+export { Pagination } from "./dataTable/pagination";
+export { usePagination } from "./dataTable/usePagination";

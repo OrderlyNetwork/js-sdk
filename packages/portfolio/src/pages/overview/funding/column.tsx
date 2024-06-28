@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Flex, type Column, Text } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 
-export const useColumns = () => {
+export const useFundingHistoryColumns = () => {
   const columns = useMemo<
     Column<API.FundingFeeRow & { annual_rate: number }>[]
   >(() => {

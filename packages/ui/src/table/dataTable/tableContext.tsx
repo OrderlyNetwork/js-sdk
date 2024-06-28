@@ -12,9 +12,16 @@ import { Column, SortOrder } from "./col";
 import { DataGridContextState } from "../dataGrid/dataGridContext";
 import { DataFilterProps } from "../dataGrid/dataFilter";
 
+export type DataMetaData = {
+  count: number;
+  page: number;
+  pageSize: number;
+};
+
 export type TableContextState = {
   columns: Column[];
   dataSource: any[];
+  meta: DataMetaData;
   sortKey?: string;
   sortOrder?: SortOrder;
   expandedRowKeys?: string[];
@@ -53,6 +60,7 @@ export const TableProvider: FC<
     dataSource?: any[] | null;
     canExpand?: boolean;
     multiExpand?: boolean;
+    meta?: DataMetaData;
   }>
 > = (props) => {
   const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>();
@@ -153,13 +161,22 @@ export const TableProvider: FC<
     });
   };
 
-  const registerFilter = useCallback((props: DataFilterProps) => {}, []);
+  const meta = useMemo(() => {
+    return (
+      props.meta || {
+        count: dataSource.length,
+        page: 1,
+        pageSize: dataSource.length,
+      }
+    );
+  }, [props.meta, dataSource]);
 
   return (
     <TableContext.Provider
       value={{
         columns: props.columns,
         dataSource: dataSource,
+        meta,
         sortKey: sortKey?.[0],
         sortOrder: sortKey?.[1],
         canExpand: props.canExpand,
