@@ -14,6 +14,15 @@ module.exports = withTV({
   prefix: "oui-",
 
   theme: {
+    screens: {
+      "sm": "375px",
+      "md": "480px",
+      "lg": "768px",
+      "xl": "1024px",
+      "2xl": "1280px",
+      "3xl": "1440px",
+      "4xl": "1920px",
+    },
     fontSize: {
       "3xs": ["var(--oui-font-size-3xs, 0.625rem)", "0.625rem"], // 10px
       "2xs": ["var(--oui-font-size-2xs, 0.75rem)", "1.125rem"], // 12px
