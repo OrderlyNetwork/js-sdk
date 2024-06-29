@@ -1,4 +1,4 @@
-import { Flex, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@orderly.network/ui";
 import { TitleWidget } from "./title/title.widget";
 import { CurEpochWidget } from "./curEpoch";
 import { AvailableToClaimWidget } from "./availableToClaim";
@@ -16,9 +16,15 @@ export const OverviewPage = () => {
       gap={4}
     >
       <TitleWidget />
-      <CurEpochWidget />
-      <AvailableToClaimWidget />
-      <StakeBoosterWidget />
+      <Flex className="oui-flex oui-flex-col 2xl:oui-flex-row 2xl:oui-items-stretch oui-gap-4 oui-w-full oui-h-full">
+        <Box className="2xl:oui-flex-1 2xl:oui-h-auto oui-w-full 2xl:oui-w-auto">
+          <CurEpochWidget />
+        </Box>
+        <Flex className="2xl:oui-flex-1 oui-flex oui-flex-col lg:oui-flex-row oui-gap-4 2xl:oui-flex-col oui-w-full">
+          <AvailableToClaimWidget />
+          <StakeBoosterWidget />
+        </Flex>
+      </Flex>
     </Flex>
   );
 };

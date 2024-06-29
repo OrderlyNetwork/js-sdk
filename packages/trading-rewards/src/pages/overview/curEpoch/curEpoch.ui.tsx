@@ -5,39 +5,51 @@ import { OrderlyIcon } from "../components/orderlyIcon";
 
 export const CurEpochUI: FC = (props) => {
   return (
-    <Box r={"2xl"} className="oui-bg-base-9 oui-font-semibold" width={"100%"}>
+    <Flex
+      r={"2xl"}
+      className="oui-bg-base-9 oui-font-semibold"
+      width={"100%"}
+      height={"100%"}
+
+      direction={"column"}
+    //   justify={"stretch"}
+      itemAlign={"stretch"}
+    >
       <Countdown />
-      <Flex p={6} direction={"column"} gap={4}>
+      <Flex p={6} direction={"column"} gap={4} className="oui-h-full" >
         <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
           <Statics title="Epoch" highLight="7" text="Mar.5 - mar.27" />
           <Statics title="Epoch rewards" highLight="1,000,00" text="ORDER" />
         </Flex>
         <EstRewards />
       </Flex>
-    </Box>
+    </Flex>
   );
 };
 
 const EstRewards = () => {
-    return (
-        <Flex
-          direction={"column"}
-          gap={2}
-          py={4}
-          width={"100%"}
-          r="2xl"
-          style={{
-            background:
-              "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
-          }}
-        >
-          <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">My est. rewards</Text>
-          <Flex direction={"row"} gap={1}>
-            <OrderlyIcon />
-            <Text> ORDER </Text>
-          </Flex>
-        </Flex>
-    );
+  return (
+    <Flex
+      direction={"column"}
+      gap={2}
+      py={4}
+      width={"100%"}
+      r="2xl"
+      itemAlign={"center"} justify={"center"}
+      style={{
+        background: "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
+      }}
+      className="oui-flex-1 oui-h-full"
+    >
+      <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">
+        My est. rewards
+      </Text>
+      <Flex direction={"row"} gap={1}>
+        <OrderlyIcon />
+        <Text> ORDER </Text>
+      </Flex>
+    </Flex>
+  );
 };
 
 const Statics: FC<{
