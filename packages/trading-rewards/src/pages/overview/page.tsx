@@ -3,6 +3,7 @@ import { TitleWidget } from "./title/title.widget";
 import { CurEpochWidget } from "./curEpoch";
 import { AvailableToClaimWidget } from "./availableToClaim";
 import { StakeBoosterWidget } from "./stakeBooster";
+import { RewardsHistoryWidget } from "./rewardsHistory";
 
 export const OverviewPage = () => {
   return (
@@ -25,6 +26,7 @@ export const OverviewPage = () => {
           <StakeBoosterWidget />
         </Flex>
       </Flex>
+      <RewardsHistoryWidget />
     </Flex>
   );
 };
