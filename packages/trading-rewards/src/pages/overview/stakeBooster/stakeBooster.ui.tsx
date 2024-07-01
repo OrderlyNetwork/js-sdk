@@ -1,11 +1,27 @@
 import { Flex, Text } from "@orderly.network/ui";
 import { JumpIcon } from "../components/jumpIcon";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { RocketIcon } from "../components/rocket";
+import { StakeBoosterReturns } from "./stakeBooster.script";
+import { Decimal, commify } from "@orderly.network/utils";
 
-export const StakeBoosterUI = () => {
+export const StakeBoosterUI: FC<StakeBoosterReturns> = (props) => {
+  const booster = useMemo(() => {
+    const estStakeBoost = props.curEpochEstimate?.est_stake_boost;
+    if (typeof estStakeBoost === "undefined" || estStakeBoost === null) {
+      return undefined;
+    }
+
+    if (estStakeBoost === 0) return estStakeBoost;
+
+    return new Decimal(estStakeBoost)
+      .div(new Decimal(10).pow(0.2))
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toString();
+  }, [props.curEpochEstimate?.est_stake_boost]);
+
   return (
     <Flex
       p={6}
@@ -20,7 +36,7 @@ export const StakeBoosterUI = () => {
         <Flex
           direction={"row"}
           gap={1}
-          onClick={() => {}}
+          onClick={props.stakeNow}
           className="oui-cursor-pointer"
         >
           <Text color="primary" size="sm">
@@ -32,7 +48,7 @@ export const StakeBoosterUI = () => {
       <Flex direction={"row"} gap={3} width={"100%"}>
         <Statics
           title="avg. staked amount"
-          value="243.346"
+          value={props.curEpochEstimate?.est_avg_stake}
           icon={
             <div className="oui-flex oui-w-[32px] oui-h-[20px] oui-relative">
               <div className="oui-absolute oui-right-0 oui-top-0">
@@ -44,7 +60,12 @@ export const StakeBoosterUI = () => {
             </div>
           }
         />
-        <Statics title="Booster" value="243.346" icon={<RocketIcon />} gradient/>
+        <Statics
+          title="Booster"
+          value={booster}
+          icon={<RocketIcon />}
+          gradient
+        />
       </Flex>
     </Flex>
   );
@@ -53,7 +74,7 @@ export const StakeBoosterUI = () => {
 const Statics: FC<{
   title: string;
   icon: ReactNode;
-  value: string;
+  value?: number | string;
   gradient?: boolean;
 }> = (props) => {
   return (
@@ -74,10 +95,15 @@ const Statics: FC<{
             color="brand"
             angle={90}
           >
-            {props.value}
+            {commify(props.value || "--", 2)}
           </Text.gradient>
         ) : (
-          <Text className="oui-text-sm xl:oui-text-base">{props.value}</Text>
+          <Text.formatted
+            rule={"human"}
+            className="oui-text-sm xl:oui-text-base"
+          >
+            {props.value}
+          </Text.formatted>
         )}
       </Flex>
     </Flex>

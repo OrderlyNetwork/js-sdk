@@ -1,4 +1,4 @@
-import { useWalletRewardsHistory } from "@orderly.network/hooks";
+import { ENVType, useGetEnv, useWalletRewardsHistory } from "@orderly.network/hooks";
 import { useTradingRewardsContext } from "../provider";
 import { useMemo } from "react";
 
@@ -15,7 +15,11 @@ export const useAvailableScript = (): AvailableReturns => {
   const { data } = useWalletRewardsHistory(type);
   const totalGetReward = data?.wallet_lifetime_trading_rewards_order;
 
-  const goToClaim = (e: any) => {};
+  const env = useGetEnv();
+  const goToClaim = (e: any) => {
+    const url = `https://${env !== ENVType.prod ? `${env}-` : ""}app.orderly.network/tradingRewards`;
+    window.open(url, "_blank");
+  };
 
   const availableOrder = useMemo(() => {
     if (

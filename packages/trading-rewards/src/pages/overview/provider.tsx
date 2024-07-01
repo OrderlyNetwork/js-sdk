@@ -6,6 +6,8 @@ import {
   useAllBrokers,
   useGetClaimed,
   DistributionId,
+  useCurEpochEstimate,
+  CurrentEpochEstimate,
 } from "@orderly.network/hooks";
 
 export type TradingRewardsState = {
@@ -13,6 +15,7 @@ export type TradingRewardsState = {
   epochList: EpochInfoType;
   totalOrderClaimedReward: { data: number | undefined; refresh: () => void };
   totalEsOrderClaimedReward: { data: number | undefined; refresh: () => void };
+  curEpochEstimate?: CurrentEpochEstimate;
 };
 
 export const TradingRewardsContext = createContext<TradingRewardsState>({
@@ -46,6 +49,8 @@ export const TradingRewardsProvider = (
 
   const brokers = useAllBrokers();
 
+  const { data: curEpochEstimate } = useCurEpochEstimate(type);
+
   console.log("brokers", brokers);
 
   const epochList = useEpochInfo(type as TWType);
@@ -58,6 +63,7 @@ export const TradingRewardsProvider = (
         // totalOrderClaimedReward: 2000,
         // totalEsOrderClaimedReward: 0,
         epochList,
+        curEpochEstimate,
       }}
     >
       {/* <PageLoading loading={epochList.data === undefined}> */}

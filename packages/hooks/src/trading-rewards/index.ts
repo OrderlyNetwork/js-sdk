@@ -14,4 +14,7 @@ export type {
   WalletRewardsItem,
 } from "./useWalletRewardsHistory";
 
+
+export { useGetEnv, ENVType }from "./useGetEnv";
+
 export { TWType } from "./types";

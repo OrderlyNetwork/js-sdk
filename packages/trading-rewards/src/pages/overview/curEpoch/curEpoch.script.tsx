@@ -16,7 +16,7 @@ export type CurEpochReturns = {
   connect: () => Promise<any>
 };
 export const useCurEpochScript = () => {
-  const { epochList, type } = useTradingRewardsContext();
+  const { epochList, curEpochEstimate: estimate } = useTradingRewardsContext();
   const { connect } = useWalletConnector();
   const { state } = useAccount();
 
@@ -26,6 +26,6 @@ export const useCurEpochScript = () => {
     state,
   ]);
 
-  const { data: estimate } = useCurEpochEstimate(type);
+  
   return { epochList, estimate, notConnected, connect };
 };
