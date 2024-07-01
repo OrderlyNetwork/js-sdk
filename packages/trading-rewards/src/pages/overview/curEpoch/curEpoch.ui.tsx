@@ -2,32 +2,52 @@ import { Box, Flex, Text, cn } from "@orderly.network/ui";
 
 import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
+import { CurEpochReturns } from "./curEpoch.script";
+import { commify } from "@orderly.network/utils";
 
-export const CurEpochUI: FC = (props) => {
+export const CurEpochUI: FC<CurEpochReturns> = (props) => {
+  const state = props;
+  const startTime = state.epochList?.curEpochInfo?.start_time;
+  const endTime = state.epochList?.curEpochInfo?.end_time;
+  const curEpochId = state.epochList?.curEpochInfo?.epoch_id;
+  const max_reward_amount = state.epochList?.curEpochInfo?.max_reward_amount;
   return (
     <Flex
       r={"2xl"}
       className="oui-bg-base-9 oui-font-semibold"
       width={"100%"}
       height={"100%"}
-
       direction={"column"}
-    //   justify={"stretch"}
+      //   justify={"stretch"}
       itemAlign={"stretch"}
     >
-      <Countdown />
-      <Flex p={6} direction={"column"} gap={4} className="oui-h-full" >
+      <Countdown targetTimestamp={endTime} />
+      <Flex p={6} direction={"column"} gap={4} className="oui-h-full">
         <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
-          <Statics title="Epoch" highLight="7" text="Mar.5 - mar.27" />
-          <Statics title="Epoch rewards" highLight="1,000,00" text="ORDER" />
+          <Statics
+            title="Epoch"
+            highLight={curEpochId ? `${curEpochId}` : "-"}
+            text={
+              startTime && endTime
+                ? `${getDate(startTime)} - ${getDate(endTime)}`
+                : ""
+            }
+          />
+          <Statics
+            title="Epoch rewards"
+            highLight={max_reward_amount ? commify(max_reward_amount) : "-"}
+            text="ORDER"
+          />
         </Flex>
-        <EstRewards />
+        <EstRewards estRewards={props.estimate?.est_r_wallet}/>
       </Flex>
     </Flex>
   );
 };
 
-const EstRewards = () => {
+const EstRewards: FC<{
+  estRewards?: number | string;
+}> = (props) => {
   return (
     <Flex
       direction={"column"}
@@ -35,7 +55,8 @@ const EstRewards = () => {
       py={4}
       width={"100%"}
       r="2xl"
-      itemAlign={"center"} justify={"center"}
+      itemAlign={"center"}
+      justify={"center"}
       style={{
         background: "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
       }}
@@ -46,7 +67,7 @@ const EstRewards = () => {
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text> ORDER </Text>
+        <Text.formatted rule={"human"}> {props.estRewards} </Text.formatted>
       </Flex>
     </Flex>
   );
@@ -173,4 +194,26 @@ const Countdown: FC<{
       </Flex>
     </Box>
   );
+};
+
+const getDate = (timestamp?: number): string => {
+  if (!timestamp) return "";
+  const date = new Date(timestamp);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  return `${month}. ${day}`;
 };

@@ -4,6 +4,7 @@ import {TradingRewards} from "@orderly.network/trading-rewards";
 
 import {OrderlyApp} from "@orderly.network/react-app";
 import {ConnectorProvider} from "@orderly.network/web3-onboard";
+import { CustomConfigStore } from "../CustomConfigStore";
 
 const meta = {
     title: "Package/TradingRewards/OverviewPage",
@@ -13,13 +14,25 @@ const meta = {
     //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
     // },
     decorators: [
-        (Story: any) => (
-            <ConnectorProvider>
-                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-                    <Story/>
+        (Story: any) => {
+
+// const networkId = localStorage.getItem("preview-orderly-networkId");
+      // const networkId = "mainnet";
+      const networkId = "testnet";
+      const configStore = new CustomConfigStore({ networkId, env: "qa" });
+            return (
+                <ConnectorProvider>
+                    <OrderlyApp 
+                    brokerId={"orderly"} 
+                    brokerName={"Orderly"} 
+                    networkId={networkId} 
+                    configStore={configStore}
+                >
+                     <Story/>
                 </OrderlyApp>
-            </ConnectorProvider>
-        ),
+                </ConnectorProvider>
+            );
+        },
     ],
     parameters: {
         layout: "centered",

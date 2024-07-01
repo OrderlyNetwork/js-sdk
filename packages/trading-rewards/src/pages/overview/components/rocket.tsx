@@ -20,8 +20,8 @@ export const RocketIcon = () => {
           y2="8.99996"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#59B0FE" />
-          <stop offset="1" stop-color="#26FEFE" />
+          <stop stopColor="#59B0FE" />
+          <stop offset="1" stopColor="#26FEFE" />
         </linearGradient>
       </defs>
     </svg>
