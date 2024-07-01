@@ -1,6 +1,7 @@
+import { useAvailableScript } from "./availableToClaim.script";
 import { AvailableToClaimUI } from "./availableToClaim.ui";
 
 export const AvailableToClaimWidget = () => {
-
-    return <AvailableToClaimUI />
+    const state = useAvailableScript();
+    return <AvailableToClaimUI {...state}/>
 };

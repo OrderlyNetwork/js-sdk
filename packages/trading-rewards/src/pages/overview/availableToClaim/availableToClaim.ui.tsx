@@ -3,8 +3,9 @@ import { JumpIcon } from "../components/jumpIcon";
 import { FC } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
+import { AvailableReturns } from "./availableToClaim.script";
 
-export const AvailableToClaimUI = () => {
+export const AvailableToClaimUI: FC<AvailableReturns> = (props) => {
   return (
     <Flex
       p={6}
@@ -19,7 +20,7 @@ export const AvailableToClaimUI = () => {
         <Flex
           direction={"row"}
           gap={1}
-          onClick={() => {}}
+          onClick={props.goToClaim}
           className="oui-cursor-pointer"
         >
           <Text color="primary" size="sm">
@@ -29,8 +30,8 @@ export const AvailableToClaimUI = () => {
         </Flex>
       </Flex>
       <Flex direction={"row"} gap={3} width={"100%"}>
-        <Statics title="ORDER" value="243.346" />
-        <Statics title="esORDER" value="243.346" isEsOrder />
+        <Statics title="ORDER" value={props.order} />
+        <Statics title="esORDER" value={props.esorder} isEsOrder />
       </Flex>
     </Flex>
   );
@@ -39,14 +40,23 @@ export const AvailableToClaimUI = () => {
 const Statics: FC<{
   title: string;
   isEsOrder?: boolean;
-  value: string;
+  value?: number;
 }> = (props) => {
   return (
-    <Flex className="oui-flex-1 oui-bg-base-8 oui-py-[11px]" direction={"column"} gap={2} r="2xl" >
-      <Text className="oui-text-xs xl:oui-text-sm oui-text-base-contrast-54">{props.title}</Text>
+    <Flex
+      className="oui-flex-1 oui-bg-base-8 oui-py-[11px]"
+      direction={"column"}
+      gap={2}
+      r="2xl"
+    >
+      <Text className="oui-text-xs xl:oui-text-sm oui-text-base-contrast-54">
+        {props.title}
+      </Text>
       <Flex direction={"row"} gap={1}>
         {props.isEsOrder ? <EsOrderlyIcon /> : <OrderlyIcon />}
-        <Text className="oui-text-sm xl:oui-text-base">{props.value}</Text>
+        <Text.formatted rule={"human"} className="oui-text-sm xl:oui-text-base">
+          {props.value}
+        </Text.formatted>
       </Flex>
     </Flex>
   );
