@@ -1,4 +1,4 @@
-import { Box, Flex, Text, cn } from "@orderly.network/ui";
+import { Box, Button, Flex, Text, cn } from "@orderly.network/ui";
 
 import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
@@ -39,7 +39,19 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
             text="ORDER"
           />
         </Flex>
-        <EstRewards estRewards={props.estimate?.est_r_wallet}/>
+        <EstRewards estRewards={props.estimate?.est_r_wallet} />
+        {state.notConnected && (
+          <Button
+            variant="gradient"
+            fullWidth
+            onClick={(e) => {
+              e.stopPropagation();
+              state.connect();
+            }}
+          >
+            Connect wallet
+          </Button>
+        )}
       </Flex>
     </Flex>
   );
