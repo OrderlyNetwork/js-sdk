@@ -23,7 +23,7 @@ export const RewardsHistoryUI: FC<RewardsHistoryReturns> = (props) => {
       gap={2}
       itemAlign={"start"}
       r="2xl"
-      className="oui-bg-base-9 oui-w-full oui-font-semibold"
+      className="oui-bg-base-9 oui-w-full oui-font-semibold oui-tabular-nums"
     >
       <Text className="oui-text-lg oui-px-3">Reward History</Text>
       <div className="oui-border-t-2 oui-border-line-4 oui-w-full">
@@ -102,9 +102,9 @@ const MobileCell: FC<{
           itemAlign={"start"}
         >
           <Text className="oui-text-base-contrast-36 oui-text-2xs">Start</Text>
-          <Flex direction={"row"} gap={1}>
+          <Flex direction={"row"} >
             <Text className="oui-text-sm">
-              {formatTimestamp(data.start_time).firstPart}
+              {formatTimestamp(data.start_time).firstPart}&nbsp;
             </Text>
             <Text className="oui-text-2xs oui-text-base-contrast-36">
               {formatTimestamp(data.start_time).secondPart}
@@ -119,9 +119,9 @@ const MobileCell: FC<{
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
             End date
           </Text>
-          <Flex direction={"row"} gap={1}>
+          <Flex direction={"row"}>
             <Text className="oui-text-sm">
-              {formatTimestamp(data.end_time).firstPart}
+              {formatTimestamp(data.end_time).firstPart}&nbsp;
             </Text>
             <Text className="oui-text-2xs oui-text-base-contrast-36">
               {formatTimestamp(data.end_time).secondPart}
