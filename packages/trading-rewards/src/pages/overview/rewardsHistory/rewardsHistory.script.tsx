@@ -95,9 +95,6 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     
   });
 
-  console.log("meta", meta);
-  
-
   return {
     data: newData,
     meta: meta,
