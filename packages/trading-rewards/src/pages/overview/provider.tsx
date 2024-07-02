@@ -66,7 +66,7 @@ export const TradingRewardsProvider = (
 
   
   const epochList = useEpochInfo(type as TWType);
-  console.log("epochList", epochList);
+
   return (
     <TradingRewardsContext.Provider
       value={{

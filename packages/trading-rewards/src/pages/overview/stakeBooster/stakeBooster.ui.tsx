@@ -77,6 +77,7 @@ const Statics: FC<{
   value?: number | string;
   gradient?: boolean;
 }> = (props) => {
+  const calcValue = commify(props.value || "--", 2);
   return (
     <Flex
       className="oui-flex-1 oui-bg-base-8 oui-py-[11px]"
@@ -94,8 +95,9 @@ const Statics: FC<{
             className="oui-text-sm xl:oui-text-base"
             color="brand"
             angle={90}
+            
           >
-            {commify(props.value || "--", 2)}
+            {calcValue + (calcValue === '--' ? '' : 'x')}
           </Text.gradient>
         ) : (
           <Text.numeral

@@ -4,6 +4,7 @@ import {
   DataTable,
   Divider,
   Flex,
+  Pagination,
   ScrollArea,
   Text,
 } from "@orderly.network/ui";
@@ -26,15 +27,13 @@ export const RewardsHistoryUI: FC<RewardsHistoryReturns> = (props) => {
     >
       <Text className="oui-text-lg oui-px-3">Reward History</Text>
       <div className="oui-border-t-2 oui-border-line-4 oui-w-full">
-        <List data={props.data} />
+        <List {...props} />
       </div>
     </Flex>
   );
 };
 
-const List: FC<{
-  data: ListType[];
-}> = (props) => {
+const List: FC<RewardsHistoryReturns> = (props) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   return isMobile ? (
@@ -44,7 +43,7 @@ const List: FC<{
       })}
     </ScrollArea>
   ) : (
-    <DesktopList data={props.data} />
+    <DesktopList {...props} />
   );
 };
 
@@ -135,11 +134,9 @@ const MobileCell: FC<{
   );
 };
 
-const DesktopList: FC<{
-  data: ListType[];
-}> = (props) => {
+const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   const { data } = props;
-  let columns: Column[] = [
+  const columns: Column<ListType>[] = [
     {
       title: "Epoch",
       dataIndex: "epoch_id",
@@ -211,15 +208,21 @@ const DesktopList: FC<{
   ];
 
   return (
-    <Box className="oui-h-[448px] oui-text-base-contrast-80">
-      <DataTable<ListType>
-        columns={columns}
-        dataSource={data}
-        classNames={{
-          header: "oui-text-base-contrast-36",
-        }}
-      />
-    </Box>
+    <DataTable<ListType>
+      columns={columns}
+      dataSource={data}
+      scroll={{ y: 448 }}
+      classNames={{
+        header: "oui-text-base-contrast-36",
+        body: "oui-text-base-contrast-80",
+      }}
+    >
+       <Pagination
+          {...props.meta}
+          onPageChange={props.onPageChange}
+          onPageSizeChange={props.onPageSizeChange}
+        />
+    </DataTable>
   );
 };
 

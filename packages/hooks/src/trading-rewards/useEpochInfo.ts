@@ -36,7 +36,6 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
   const { data: epochInfo, error, mutate: refresh } = useQuery(path, {
     formatter: (res) => {
 
-      console.log("formatter res", res);
       
 
       if (
