@@ -32,7 +32,6 @@ export const useCurEpochEstimate = (type: TWType) => {
   const isNotSupportChain = false;
 
   const address = account.address;
-  console.log("address is", address);
 
 
 

@@ -39,7 +39,16 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
             text="ORDER"
           />
         </Flex>
-        <EstRewards estRewards={props.estimate?.est_r_wallet} />
+        <EstRewards
+          direction={state.notConnected ? "row" : "column"}
+          justify={state.notConnected ? "between" : "center"}
+          estRewards={state.notConnected ? "--" : props.estimate?.est_r_wallet}
+          background={
+            state.notConnected
+              ? "linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%)"
+              : "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)"
+          }
+        />
         {state.notConnected && (
           <Button
             variant="gradient"
@@ -59,18 +68,22 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
 
 const EstRewards: FC<{
   estRewards?: number | string;
+  direction: "row" | "column";
+  justify: "center" | "between";
+  background: string;
 }> = (props) => {
   return (
     <Flex
-      direction={"column"}
+      direction={props.direction}
       gap={2}
       py={4}
+      px={6}
       width={"100%"}
       r="2xl"
       itemAlign={"center"}
-      justify={"center"}
+      justify={props.justify}
       style={{
-        background: "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
+        background: props.background,
       }}
       className="oui-flex-1 oui-h-full"
     >
