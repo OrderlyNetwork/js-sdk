@@ -37,12 +37,18 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
   args: {
-    columns: [{ title: "Symbol", dataIndex: "symbol" }],
-    dataSource: [
+    columns: [
       {
-        symbol: "ETH",
+        title: "Symbol",
+        dataIndex: "symbol",
+        render: (value) => <div className="oui-h-[80px]">{value}</div>,
       },
     ],
+    dataSource: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(
+      () => ({
+        symbol: "ETH",
+      })
+    ),
   },
 };
 

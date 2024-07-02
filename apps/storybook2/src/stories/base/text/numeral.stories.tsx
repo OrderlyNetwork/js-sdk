@@ -80,6 +80,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: 2323.023,
+    rule: "price",
+    dp: 4,
+    copyable: false
   },
 };
 

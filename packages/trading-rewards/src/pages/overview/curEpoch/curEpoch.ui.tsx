@@ -1,30 +1,139 @@
-import { Box, Flex, Text, cn } from "@orderly.network/ui";
+import { Box, Button, Flex, Text, cn } from "@orderly.network/ui";
 
 import { useState, useEffect, FC } from "react";
+import { OrderlyIcon } from "../components/orderlyIcon";
+import { CurEpochReturns } from "./curEpoch.script";
+import { commify } from "@orderly.network/utils";
 
-export const CurEpochUI: FC = (props) => {
+export const CurEpochUI: FC<CurEpochReturns> = (props) => {
+  const state = props;
+  const startTime = state.epochList?.curEpochInfo?.start_time;
+  const endTime = state.epochList?.curEpochInfo?.end_time;
+  const curEpochId = state.epochList?.curEpochInfo?.epoch_id;
+  const max_reward_amount = state.epochList?.curEpochInfo?.max_reward_amount;
   return (
-    <Box r={"2xl"} className="oui-bg-base-9" width={"100%"}>
-      <Countdown />
-      <Flex p={6} direction={"column"} gap={4}>
-        <Flex direction={"row"} gap={3}>
-          <Flex px={4} py={2} justify={"between"} direction={"column"}>
-            <Text>Epoch</Text>
-            <Text>7 Mar.20 - mar.27</Text>
-          </Flex>
-          <Flex px={4} py={2} justify={"between"} direction={"column"}>
-            <Text className="oui-text-base-contrast-54 oui-text-xs md:oui-text-sm">Epoch rewards</Text>
-            <Text>7 Mar.20 - mar.27</Text>
-          </Flex>
+    <Flex
+      r={"2xl"}
+      className="oui-bg-base-9 oui-font-semibold"
+      width={"100%"}
+      height={"100%"}
+      direction={"column"}
+      //   justify={"stretch"}
+      itemAlign={"stretch"}
+    >
+      <Countdown targetTimestamp={endTime} />
+      <Flex p={6} direction={"column"} gap={4} className="oui-h-full">
+        <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
+          <Statics
+            title="Epoch"
+            highLight={curEpochId ? `${curEpochId}` : "-"}
+            text={
+              startTime && endTime
+                ? `${getDate(startTime)} - ${getDate(endTime)}`
+                : ""
+            }
+          />
+          <Statics
+            title="Epoch rewards"
+            highLight={max_reward_amount ? commify(max_reward_amount) : "-"}
+            text="ORDER"
+          />
         </Flex>
-        <Flex gradient="brand" direction={"column"} gap={3} py={4} width={"100%"} r="2xl">
-            <Text>My est. rewards</Text>
-            <Flex direction={"row"} gap={1}>
-            12,322.12
-            </Flex>
-        </Flex>
+        <EstRewards estRewards={props.estimate?.est_r_wallet} />
+        {state.notConnected && (
+          <Button
+            variant="gradient"
+            fullWidth
+            onClick={(e) => {
+              e.stopPropagation();
+              state.connect();
+            }}
+          >
+            Connect wallet
+          </Button>
+        )}
       </Flex>
-    </Box>
+    </Flex>
+  );
+};
+
+const EstRewards: FC<{
+  estRewards?: number | string;
+}> = (props) => {
+  return (
+    <Flex
+      direction={"column"}
+      gap={2}
+      py={4}
+      width={"100%"}
+      r="2xl"
+      itemAlign={"center"}
+      justify={"center"}
+      style={{
+        background: "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)",
+      }}
+      className="oui-flex-1 oui-h-full"
+    >
+      <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">
+        My est. rewards
+      </Text>
+      <Flex direction={"row"} gap={1}>
+        <OrderlyIcon />
+        <Text.numeral
+          rule={"human"}
+          dp={2}
+          children={props.estRewards || "-"}
+        />
+      </Flex>
+    </Flex>
+  );
+};
+
+const Statics: FC<{
+  title: string;
+  highLight?: string;
+  text?: string;
+}> = (props) => {
+  const { title, highLight, text } = props;
+  return (
+    <Flex
+      px={4}
+      py={2}
+      justify={"between"}
+      direction={"column"}
+      className="flex-1"
+      gap={2}
+    >
+      <Text
+        className={cn(
+          "oui-text-base-contrast-54",
+          // font size
+          "oui-text-xs md:oui-text-sm xl:oui-text-base",
+          /// leading
+          "oui-leading-[20px] xl:oui-leading-[24px]"
+        )}
+      >
+        {title}
+      </Text>
+      <Flex
+        direction={"row"}
+        gap={1}
+        itemAlign={"end"}
+        justify={"center"}
+        className="oui-leading-[24px] md:oui-leading-[26px] lg:oui-leading-[28px] xl:oui-leading-[32px]"
+      >
+        <Text.gradient
+          color="brand"
+          angle={90}
+          className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl"
+        >
+          {highLight}
+        </Text.gradient>
+        <Text className="oui-text-base-contrast-80 oui-text-2xs md:oui-text-xs xl:oui-text-sm ">
+          {text}
+        </Text>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -79,6 +188,7 @@ const Countdown: FC<{
     <Box
       className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
       gradient="neutral"
+      angle={180}
       width={"full"}
     >
       <Flex
@@ -100,4 +210,26 @@ const Countdown: FC<{
       </Flex>
     </Box>
   );
+};
+
+const getDate = (timestamp?: number): string => {
+  if (!timestamp) return "";
+  const date = new Date(timestamp);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  return `${month}. ${day}`;
 };
