@@ -98,12 +98,13 @@ const Statics: FC<{
             {commify(props.value || "--", 2)}
           </Text.gradient>
         ) : (
-          <Text.formatted
+          <Text.numeral
             rule={"human"}
             className="oui-text-sm xl:oui-text-base"
+            dp={2}
           >
-            {props.value}
-          </Text.formatted>
+            {props.value || "-"}
+          </Text.numeral>
         )}
       </Flex>
     </Flex>

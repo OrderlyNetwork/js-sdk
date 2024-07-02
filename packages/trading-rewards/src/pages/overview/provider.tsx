@@ -8,6 +8,8 @@ import {
   DistributionId,
   useCurEpochEstimate,
   CurrentEpochEstimate,
+  useWalletRewardsHistory,
+  WalletRewards,
 } from "@orderly.network/hooks";
 
 export type TradingRewardsState = {
@@ -16,6 +18,11 @@ export type TradingRewardsState = {
   totalOrderClaimedReward: { data: number | undefined; refresh: () => void };
   totalEsOrderClaimedReward: { data: number | undefined; refresh: () => void };
   curEpochEstimate?: CurrentEpochEstimate;
+  walletRewardsHistory: {
+    data: WalletRewards | undefined;
+    refresh: () => void;
+    error?: any;
+  };
 };
 
 export const TradingRewardsContext = createContext<TradingRewardsState>({
@@ -28,6 +35,10 @@ export const TradingRewardsContext = createContext<TradingRewardsState>({
     isUnstart: false,
     refresh: () => {},
   },
+  walletRewardsHistory: {
+    data: undefined,
+    refresh: () => {}
+  }
 });
 
 export const TradingRewardsProvider = (
@@ -51,19 +62,22 @@ export const TradingRewardsProvider = (
 
   const { data: curEpochEstimate } = useCurEpochEstimate(type);
 
-  console.log("brokers", brokers);
+  const walletRewardsHistory = useWalletRewardsHistory(type);
 
+  
   const epochList = useEpochInfo(type as TWType);
+  console.log("epochList", epochList);
   return (
     <TradingRewardsContext.Provider
       value={{
         type: type as TWType,
-          totalOrderClaimedReward,
-          totalEsOrderClaimedReward,
+        totalOrderClaimedReward,
+        totalEsOrderClaimedReward,
         // totalOrderClaimedReward: 2000,
         // totalEsOrderClaimedReward: 0,
         epochList,
         curEpochEstimate,
+        walletRewardsHistory,
       }}
     >
       {/* <PageLoading loading={epochList.data === undefined}> */}

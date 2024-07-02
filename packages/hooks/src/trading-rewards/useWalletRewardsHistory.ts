@@ -43,7 +43,7 @@ export const useWalletRewardsHistory = (type: TWType) => {
           ...item,
           r_wallet: item?.total_reward || item?.r_wallet,
         })),
-      };
+      } as WalletRewards;
     },
   });
   return { data, refresh, error };

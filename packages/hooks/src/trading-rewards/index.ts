@@ -1,5 +1,5 @@
 export { useEpochInfo } from "./useEpochInfo";
-export type { EpochInfoType } from "./useEpochInfo";
+export type { EpochInfoType, EpochInfoItem } from "./useEpochInfo";
 
 export { useAllBrokers } from "./useAllBrokers";
 

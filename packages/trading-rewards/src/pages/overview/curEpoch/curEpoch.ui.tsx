@@ -79,7 +79,11 @@ const EstRewards: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text.formatted rule={"human"}> {props.estRewards} </Text.formatted>
+        <Text.numeral
+          rule={"human"}
+          dp={2}
+          children={props.estRewards || "-"}
+        />
       </Flex>
     </Flex>
   );

@@ -24,7 +24,7 @@ export type EpochInfoType = {
 };
 
 export const useEpochInfo = (type: TWType): EpochInfoType => {
-  const [data, setData] = useState<EpochInfoItem[] | undefined>(undefined);
+  // const [data, setData] = useState<EpochInfoItem[] | undefined>(undefined);
   const [curEpochInfo, setCurEpochInfo] = useState<EpochInfoItem | undefined>(
     undefined
   );
@@ -33,37 +33,43 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     type === TWType.normal
       ? "/v1/public/trading_rewards/epoch_info"
       : "/v1/public/market_making_rewards/epoch_info";
-  const { data: epochInfo, error, mutate: refresh } = useQuery(path);
+  const { data: epochInfo, error, mutate: refresh } = useQuery(path, {
+    formatter: (res) => {
 
-  useEffect(() => {
-    if (
-      typeof epochInfo === "object" &&
-      "rows" in epochInfo! &&
-      "current_epoch" in epochInfo
-    ) {
-      const { rows, current_epoch } = epochInfo;
-      if (Array.isArray(rows)) {
-        const list: EpochInfoItem[] = rows.map((e: any) => e as EpochInfoItem);
-        list.sort((a, b) => b.end_time - a.end_time);
-        const curEpochIndex = list?.findIndex(
-          (item: any) => item.epoch_id === current_epoch
-        );
+      console.log("formatter res", res);
+      
 
-        const epochOne = list.find((item) => item.epoch_id === 1);
-
-        if (epochOne && epochOne?.start_time > Date.now()) {
-          // not start
-          setCurEpochInfo(epochOne);
-        } else {
-          setCurEpochInfo(
-            curEpochIndex !== -1 ? list?.[curEpochIndex] : undefined
+      if (
+        typeof res === "object" &&
+        "rows" in res! &&
+        "current_epoch" in res
+      ) {
+        const { rows, current_epoch } = res;
+        if (Array.isArray(rows)) {
+          const list: EpochInfoItem[] = rows.map((e: any) => e as EpochInfoItem);
+          list.sort((a, b) => b.end_time - a.end_time);
+          const curEpochIndex = list?.findIndex(
+            (item: any) => item.epoch_id === current_epoch
           );
+  
+          const epochOne = list.find((item) => item.epoch_id === 1);
+  
+          if (epochOne && epochOne?.start_time > Date.now()) {
+            // not start
+            setCurEpochInfo(epochOne);
+          } else {
+            setCurEpochInfo(
+              curEpochIndex !== -1 ? list?.[curEpochIndex] : undefined
+            );
+          }
+  
+          return list
         }
-
-        setData(list);
       }
+      return [];
     }
-  }, [epochInfo]);
+  });
+
 
   const isUnstart = useMemo(() => {
     // if (curEpochInfo) {
@@ -71,12 +77,12 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     // }
     // return true;
 
-    const epochOne = data?.find((item) => item.epoch_id === 1);
+    const epochOne = epochInfo?.find((item) => item.epoch_id === 1);
     if (epochOne) {
       return epochOne.start_time > Date.now();
     }
     return true;
-  }, [data]);
+  }, [epochInfo]);
 
-  return { data, curEpochInfo, isUnstart, refresh };
+  return { data: epochInfo, curEpochInfo, isUnstart, refresh };
 };

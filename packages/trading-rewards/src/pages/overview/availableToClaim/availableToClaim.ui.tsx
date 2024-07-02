@@ -54,9 +54,12 @@ const Statics: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         {props.isEsOrder ? <EsOrderlyIcon /> : <OrderlyIcon />}
-        <Text.formatted rule={"human"} className="oui-text-sm xl:oui-text-base">
-          {props.value}
-        </Text.formatted>
+        <Text.numeral
+          rule={"price"}
+          className="oui-text-sm xl:oui-text-base"
+          children={props.value || "-"}
+          dp={2}
+        />
       </Flex>
     </Flex>
   );

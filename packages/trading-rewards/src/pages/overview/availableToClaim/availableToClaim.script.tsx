@@ -9,10 +9,10 @@ export type AvailableReturns = {
 };
 
 export const useAvailableScript = (): AvailableReturns => {
-  const { type, totalOrderClaimedReward } = useTradingRewardsContext();
+  const { totalOrderClaimedReward, walletRewardsHistory } = useTradingRewardsContext();
   const { data: totalClaimedReward } = totalOrderClaimedReward;
 
-  const { data } = useWalletRewardsHistory(type);
+  const { data } = walletRewardsHistory;
   const totalGetReward = data?.wallet_lifetime_trading_rewards_order;
 
   const env = useGetEnv();
