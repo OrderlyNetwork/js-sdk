@@ -192,7 +192,7 @@ export const DataTable = <RecordType extends unknown>(
   );
   // {/* <FixedDivide /> */}
 
-  if (filterEle) {
+  if (filterEle || paginationEle) {
     childElement = (
       <>
         {filterEle}

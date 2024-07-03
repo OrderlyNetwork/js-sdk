@@ -10,10 +10,12 @@ const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
   useBootstrap();
   return (
     <OrderlyThemeProvider>
-      <OrderlyConfigProvider networkId={networkId} brokerId={brokerId}>
-        <AppStateProvider>
-          <ModalProvider>{props.children}</ModalProvider>
-        </AppStateProvider>
+      <OrderlyConfigProvider
+        networkId={networkId}
+        brokerId={brokerId}
+        configStore={props.configStore}
+      >
+        <AppStateProvider>{props.children}</AppStateProvider>
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>
   );

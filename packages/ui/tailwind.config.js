@@ -15,10 +15,10 @@ module.exports = withTV({
 
   theme: {
     screens: {
-      "sm": "375px",
-      "md": "480px",
-      "lg": "768px",
-      "xl": "1024px",
+      sm: "375px",
+      md: "480px",
+      lg: "768px",
+      xl: "1024px",
       "2xl": "1280px",
       "3xl": "1440px",
       "4xl": "1920px",

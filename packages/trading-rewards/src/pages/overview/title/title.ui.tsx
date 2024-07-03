@@ -30,8 +30,9 @@ export const TitleUI: FC<{
       direction={"column"}
       itemAlign={"start"}
       gap={4}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-font-semibold"
       r={"2xl"}
+      width={"100%"}
     >
       {title || <Text size="lg">Trading Rewards</Text>}
       <Divider />
@@ -68,7 +69,7 @@ const MultiLineText: FC<{
       return (
         <span
           key={index}
-          className={`${item.isLink ? "oui-text-primary-light" : ""}`}
+          className={`${item.isLink ? "oui-text-primary-light oui-cursor-pointer" : ""}`}
           dangerouslySetInnerHTML={{ __html: item.content }}
           onClick={() => [
             window.open(
@@ -83,7 +84,7 @@ const MultiLineText: FC<{
   };
 
   return (
-    <div className="oui-text-sm oui-text-base-contrast-54">{renderText()}</div>
+    <div className="oui-text-sm oui-text-base-contrast-54 oui-font-normal">{renderText()}</div>
   );
 };
 

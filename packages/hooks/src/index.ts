@@ -75,3 +75,5 @@ export * as utils from "./utils";
 export type { WalletAdapter } from "@orderly.network/core";
 
 export * from "./referral";
+
+export * from "./trading-rewards";

@@ -3,6 +3,7 @@ import { withThemeByClassName } from "@storybook/addon-themes";
 
 import "../src/tailwind.css";
 import { withWalletConnect } from "./addons/withWalletConnect";
+import { customViewports } from "./screenSizes";
 
 export const decorators = [
   withThemeByClassName({
@@ -27,6 +28,14 @@ const preview: Preview = {
       storySort: {
         order: ["Design Tokens", "Base"],
       },
+    },
+    viewport: {
+      viewports: {
+        // ...INITIAL_VIEWPORTS,
+        // ...MINIMAL_VIEWPORTS,
+        ...customViewports,
+      },
+      // defaultViewport: 'iphone6 PRO',
     },
   },
 };

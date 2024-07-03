@@ -1,0 +1,1 @@
+export { FeeTierPage } from "./page";
