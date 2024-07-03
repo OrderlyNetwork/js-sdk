@@ -36,3 +36,4 @@ export { Select };
 
 export type { SelectProps } from "./select";
 export type { SelectWithOptionsProps } from "./withOptions";
+export type { ChainSelectProps } from "./chains";

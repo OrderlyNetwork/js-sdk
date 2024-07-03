@@ -15,3 +15,5 @@ export {
   //   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 } from "./dropdown";
+
+export { SimpleDropdownMenu } from "./menu";

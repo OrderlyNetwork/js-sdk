@@ -75,3 +75,9 @@ export const useAssetHistoryColumns = () => {
 
   return columns;
 };
+
+export const SIDES = [
+  { label: "All", value: "All" },
+  { label: "Deposit", value: "DEPOSIT" },
+  { label: "Withdrawal", value: "WITHDRAW" },
+];

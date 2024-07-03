@@ -66,7 +66,7 @@ const selectVariants = tv({
       "oui-option-item",
       "oui-relative",
       "oui-flex",
-      "oui-w-full",
+      // "oui-w-full",
       "oui-cursor-default",
       "oui-select-none",
       "oui-items-center",

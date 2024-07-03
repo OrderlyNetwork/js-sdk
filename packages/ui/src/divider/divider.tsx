@@ -3,18 +3,18 @@ import React from "react";
 import { VariantProps } from "tailwind-variants";
 
 const dividerVariants = tv({
-  base: ["oui-pointer-events-none"],
+  base: ["oui-pointer-events-none oui-box-content"],
   variants: {
     intensity: {
-      1: "oui-border-line-4",
-      2: "oui-border-line-6",
-      3: "oui-border-line",
-      4: "oui-border-line-12",
-      5: "oui-border-line-16",
+      4: "oui-border-line-4",
+      6: "oui-border-line-6",
+      8: "oui-border-line",
+      12: "oui-border-line-12",
+      16: "oui-border-line-16",
     },
     direction: {
-      horizontal: ["oui-w-full", "oui-border-b"],
-      vertical: ["oui-h-full", "oui-border-l"],
+      horizontal: ["oui-border-b"],
+      vertical: ["oui-border-l"],
     },
     lineStyle: {
       // solid: "oui-border-solid",
@@ -24,7 +24,7 @@ const dividerVariants = tv({
   },
   defaultVariants: {
     direction: "horizontal",
-    intensity: 1,
+    intensity: 4,
   },
 });
 

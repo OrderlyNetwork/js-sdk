@@ -179,18 +179,25 @@ export const Numeral: FC<NumeralProps> = (props) => {
       <span>{cureency}</span>
     ) : undefined;
 
+    const child_unit = (
+      <>
+        {child}
+        {unitEle}
+      </>
+    );
+
     return (
       <>
         {prefixEle}
         {typeof identifier !== "undefined" ? (
           <span>
             {identifier}
-            <span>{child}</span>
+            <span>{child_unit}</span>
           </span>
         ) : (
-          <span>{child}</span>
+          <span>{child_unit}</span>
         )}
-        {unitEle}
+        {/*{unitEle}*/}
         {surfixEle}
       </>
     );
@@ -201,7 +208,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
       {...rest}
       color={colorName}
       children={childWithUnit}
-      className={cnBase("oui-tabular-nums", "oui-space-x-1", className)}
+      className={cnBase("oui-tabular-nums", className)}
     />
   );
 };

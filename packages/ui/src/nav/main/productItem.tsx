@@ -18,6 +18,7 @@ export const ProductItem: FC<{
       color="secondary"
       size="md"
       angle={45}
+      className={active ? "oui-text-[rgba(0_,_0_,_0_,_0.88)]" : ""}
       onClick={() => {
         onClick?.(item);
       }}

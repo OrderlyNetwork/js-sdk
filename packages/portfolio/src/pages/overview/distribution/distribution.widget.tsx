@@ -1,7 +1,7 @@
 import { DistributionHistoryUI } from "./distribution.ui";
-import { useDataSource } from "./userDataSource.script";
+import { useDistributionHistoryHook } from "./useDataSource.script";
 
 export const DistributionHistoryWidget = () => {
-  const state = useDataSource({});
+  const state = useDistributionHistoryHook();
   return <DistributionHistoryUI {...state} />;
 };

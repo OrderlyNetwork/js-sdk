@@ -71,4 +71,11 @@ export const Default: Story = {
       current: "swap",
     },
   },
+  decorators: [
+    (Story) => (
+      <Box intensity={900}>
+        <Story />
+      </Box>
+    ),
+  ],
 };

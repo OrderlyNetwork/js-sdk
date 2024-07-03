@@ -1,15 +1,22 @@
-import { DataTable } from "@orderly.network/ui";
-import { useColumns } from "./column";
+import { DataTable, Filter, Pagination } from "@orderly.network/ui";
+import { TYPES, useColumns } from "./column";
 import { FC } from "react";
+import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
 
-type FundingHistoryProps = {
-  dataSource: any;
-  isLoading: boolean;
-};
+type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
 export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
-  const { dataSource, isLoading } = props;
+  const {
+    dataSource,
+    queryParameter,
+    onFilter,
+    isLoading,
+    meta,
+    setPage,
+    setPageSize,
+  } = props;
   const columns = useColumns();
+  const { type, dateRange } = queryParameter;
 
   return (
     <DataTable
@@ -18,8 +25,33 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
       dataSource={dataSource}
       loading={isLoading}
       className="oui-font-semibold"
-      headerClassName="oui-text-base-contrast-36"
-      bodyClassName="oui-text-base-contrast-80"
-    />
+    >
+      <Filter
+        items={[
+          {
+            type: "select",
+            name: "type",
+            options: TYPES,
+            value: type,
+          },
+          {
+            type: "range",
+            name: "dateRange",
+            value: {
+              from: dateRange[0],
+              to: dateRange[1],
+            },
+          },
+        ]}
+        onFilter={(value) => {
+          onFilter(value);
+        }}
+      />
+      <Pagination
+        {...meta}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
+    </DataTable>
   );
 };

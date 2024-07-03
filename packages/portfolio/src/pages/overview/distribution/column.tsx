@@ -63,3 +63,10 @@ export const useColumns = () => {
 
   return columns;
 };
+
+export const TYPES = [
+  { label: "All", value: "All" },
+  { label: "Referral commision", value: "REFEREE_REBATE" },
+  { label: "Referee rebate", value: "REFERRER_REBATE" },
+  { label: "Broker fee", value: "BROKER_FEE" },
+];

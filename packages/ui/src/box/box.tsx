@@ -88,6 +88,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     mt,
     mb,
     ml,
+    grow,
     zIndex,
     style,
     shadow,
@@ -97,6 +98,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     invisible,
     intensity,
     position,
+    borderColor,
     ...rest
   } = parseSizeProps(props);
 
@@ -129,6 +131,8 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
         position,
         intensity,
         invisible,
+        grow,
+        borderColor,
         __position: typeof position !== "undefined",
         __size_width: typeof props.width !== "undefined",
         __size_height: typeof props.height !== "undefined",

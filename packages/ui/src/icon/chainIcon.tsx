@@ -1,5 +1,6 @@
 import { useMemo, type FC } from "react";
-import { Avatar } from "../avatar/avatar";
+import { Avatar } from "../avatar";
+
 export type ChainIconProps = {
   size?: "sm" | "md" | "lg";
   chainId: string | number;

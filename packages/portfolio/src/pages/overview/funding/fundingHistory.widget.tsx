@@ -1,7 +1,7 @@
 import { FundingHistoryUI } from "./fundingHistory.ui";
-import { useFundingHistoryHook } from "./userDataSource.script";
+import { useFundingHistoryHook } from "./useDataSource.script";
 
 export const FundingHistoryWidget = () => {
-  const state = useFundingHistoryHook({});
+  const state = useFundingHistoryHook();
   return <FundingHistoryUI {...state} />;
 };

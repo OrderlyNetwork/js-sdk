@@ -86,6 +86,7 @@ const TheadColItem = (
       className={cnBase(
         "oui-px-1 oui-py-[3px] oui-h-10",
         column.align === "right" && "oui-text-right",
+        column.align === "center" && "oui-text-center",
         props.justified && "first:oui-pl-0 last:oui-pr-0",
         props.bordered && "oui-border-b oui-border-line",
         column.fixed && "oui-sticky oui-bg-base-900",

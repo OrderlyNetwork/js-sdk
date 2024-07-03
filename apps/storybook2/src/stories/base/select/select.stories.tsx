@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Select, SelectItem } from "@orderly.network/ui";
+import { useArgs } from "@storybook/preview-api";
 
 const meta = {
   title: "Base/Select",
@@ -85,22 +86,42 @@ export const Chains: Story = {
   args: {
     size: "md",
     error: false,
-    currentChain: {
+    variant: "contained",
+    value: {
       name: "ETH",
       id: 1,
     },
-    chains: [
-      {
-        name: "ETH",
-        id: 1,
-      },
-    ],
+    chains: {
+      mainnet: [
+        {
+          name: "ETH",
+          id: 1,
+        },
+        {
+          name: "Avalanche",
+          id: 43114,
+        },
+      ],
+      testnet: [
+        {
+          name: "Arbitrum",
+          id: 42161,
+        },
+      ],
+    },
   },
 };
 
 export const Combine: Story = {
   render: (args) => {
-    return <Select.combine {...args} />;
+    const [{ value }, updateArgs] = useArgs();
+    return (
+      <Select.combine
+        {...args}
+        value={value}
+        onValueChange={(value) => updateArgs({ value })}
+      />
+    );
   },
   args: {
     options: [

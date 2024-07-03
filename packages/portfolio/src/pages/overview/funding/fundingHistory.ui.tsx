@@ -1,15 +1,25 @@
-import { DataTable } from "@orderly.network/ui";
+import { DataTable, Filter, Pagination } from "@orderly.network/ui";
 import { useFundingHistoryColumns } from "./column";
 import { FC } from "react";
+import { useSymbolsInfo } from "@orderly.network/hooks";
+import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
-type FundingHistoryProps = {
-  dataSource: any;
-  isLoading: boolean;
-};
+type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
 export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
-  const { dataSource, isLoading } = props;
+  const {
+    dataSource,
+    queryParameter,
+    onFilter,
+    isLoading,
+    meta,
+    setPage,
+    setPageSize,
+  } = props;
   const columns = useFundingHistoryColumns();
+  const symbols = useSymbolsInfo();
+
+  const { symbol, dateRange } = queryParameter;
 
   return (
     <DataTable
@@ -17,11 +27,50 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
       columns={columns}
       dataSource={dataSource}
       loading={isLoading}
-      className="oui-font-semibold"
       classNames={{
         header: "oui-text-base-contrast-36",
         body: "oui-text-base-contrast-80",
       }}
-    />
+    >
+      <Filter
+        items={[
+          {
+            type: "select",
+            name: "symbol",
+            isCombine: true,
+            options: [
+              {
+                label: "All",
+                value: "All",
+              },
+              ...Object.keys(symbols).map((symbol) => {
+                // const s = transSymbolformString(symbol);
+                return {
+                  label: symbol,
+                  value: symbol,
+                };
+              }),
+            ],
+            value: symbol,
+          },
+          {
+            type: "range",
+            name: "dateRange",
+            value: {
+              from: dateRange[0],
+              to: dateRange[1],
+            },
+          },
+        ]}
+        onFilter={(value) => {
+          onFilter(value);
+        }}
+      />
+      <Pagination
+        {...meta}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
+    </DataTable>
   );
 };

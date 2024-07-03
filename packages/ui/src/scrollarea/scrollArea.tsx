@@ -19,11 +19,11 @@ const scrollAreaVariants = tv({
   variants: {
     orientation: {
       vertical: {
-        bar: "oui-h-full oui-w-2.5 oui-border-l oui-border-l-transparent oui-p-[1px]",
+        bar: "oui-h-full oui-w-2 oui-border-l oui-border-l-transparent oui-p-[1px]",
       },
 
       horizontal: {
-        bar: "oui-h-2.5 oui-flex-col oui-border-t oui-border-t-transparent oui-p-[1px]",
+        bar: "oui-h-2 oui-flex-col oui-border-t oui-border-t-transparent oui-p-[1px]",
       },
     },
   },

@@ -79,7 +79,7 @@ export const AssetsUI = (props: Props) => {
           </Text.numeral>
         </Either>
       </Statistic>
-      <Divider className="oui-mt-4" intensity={3} />
+      <Divider className="oui-mt-4" intensity={8} />
     </Card>
   );
 };

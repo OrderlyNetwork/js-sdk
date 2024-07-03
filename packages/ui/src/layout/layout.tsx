@@ -182,5 +182,8 @@ export const layoutVariants = {
       9: "oui-mr-9",
       10: "oui-mr-10",
     },
+    grow: {
+      true: "oui-grow",
+    },
   },
 };

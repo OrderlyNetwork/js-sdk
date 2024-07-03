@@ -2,42 +2,39 @@ import * as React from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { type VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
+import makeBlockie from "ethereum-blockies-base64";
+import { useMemo } from "react";
 
-const avatarVariants = tv(
-  {
-    slots: {
-      root: "oui-relative oui-flex oui-shrink-0 oui-overflow-hidden oui-rounded-full",
-      image: "oui-aspect-square oui-h-full oui-w-full",
-      fallback:
-        "oui-flex oui-h-full oui-w-full oui-items-center oui-justify-center oui-rounded-full oui-bg-base-2",
-    },
-    variants: {
-      size: {
-        xs: {
-          root: "oui-w-5 oui-h-5",
-        },
-        sm: {
-          root: "oui-w-6 oui-h-6",
-        },
-        md: {
-          root: "oui-w-8 oui-h-8",
-        },
-        lg: {
-          root: "oui-w-10 oui-h-10",
-        },
-        xl: {
-          root: "oui-w-12 oui-h-12",
-        },
+const avatarVariants = tv({
+  slots: {
+    root: "oui-relative oui-flex oui-shrink-0 oui-overflow-hidden oui-rounded-full",
+    image: "oui-aspect-square oui-h-full oui-w-full",
+    fallback:
+      "oui-flex oui-h-full oui-w-full oui-items-center oui-justify-center oui-rounded-full oui-bg-base-2",
+  },
+  variants: {
+    size: {
+      xs: {
+        root: "oui-w-5 oui-h-5",
+      },
+      sm: {
+        root: "oui-w-6 oui-h-6",
+      },
+      md: {
+        root: "oui-w-8 oui-h-8",
+      },
+      lg: {
+        root: "oui-w-10 oui-h-10",
+      },
+      xl: {
+        root: "oui-w-12 oui-h-12",
       },
     },
-    defaultVariants: {
-      size: "sm",
-    },
-  }
-  // {
-  //   twMerge: true,
-  // }
-);
+  },
+  defaultVariants: {
+    size: "sm",
+  },
+});
 
 const AvatarBase = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -109,4 +106,15 @@ const Avatar = React.forwardRef<
   );
 });
 
-export { AvatarBase, AvatarImage, AvatarFallback, Avatar };
+const EVMAvatar = React.forwardRef<
+  React.ElementRef<typeof Avatar>,
+  AvatarProps & {
+    address: string;
+  }
+>((props, ref) => {
+  const { address, ...rest } = props;
+  const src = useMemo(() => makeBlockie(address), [props.address]);
+  return <Avatar {...rest} src={src} />;
+});
+
+export { AvatarBase, AvatarImage, AvatarFallback, Avatar, EVMAvatar };

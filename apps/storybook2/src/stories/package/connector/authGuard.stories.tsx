@@ -4,7 +4,7 @@ import { ModalProvider } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 
 const meta = {
-  title: "Package/Connector/AuthGuard",
+  title: "Package/ui-connector/AuthGuard",
   component: AuthGuard,
   // subComponents: { Logo },
   parameters: {

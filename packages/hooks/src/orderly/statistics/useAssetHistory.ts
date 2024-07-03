@@ -13,9 +13,9 @@ export enum AssetHistoryStatusEnum {
 }
 
 const useAssetsHistory = (options: {
-  token?: string;
+  // token?: string;
   side?: string;
-  status?: AssetHistoryStatusEnum;
+  // status?: AssetHistoryStatusEnum;
   startTime?: string;
   endTime?: string;
   page?: number;
@@ -30,9 +30,10 @@ const useAssetsHistory = (options: {
     searchParams.set("page", page.toString());
     searchParams.set("size", pageSize.toString());
 
-    if (options.token) searchParams.set("token", options.token);
-    if (options.side) searchParams.set("side", options.side);
-    if (options.status) searchParams.set("status", options.status);
+    // if (options.token) searchParams.set("token", options.token);
+    if (options.side && options.side !== "All")
+      searchParams.set("side", options.side);
+    // if (options.status) searchParams.set("status", options.status);
     if (options.startTime) searchParams.set("start_t", options.startTime);
     if (options.endTime) searchParams.set("end_t", options.endTime);
 
@@ -53,5 +54,3 @@ const useAssetsHistory = (options: {
 };
 
 export { useAssetsHistory };
-
-export type UseAssetsHistory = ReturnType<typeof useAssetsHistory>;

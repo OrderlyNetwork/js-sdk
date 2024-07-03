@@ -15,6 +15,7 @@
     <content url="file://$MODULE_DIR$/packages/net" />
     <content url="file://$MODULE_DIR$/packages/portfolio" />
     <content url="file://$MODULE_DIR$/packages/ui" />
+    <content url="file://$MODULE_DIR$/packages/ui-scaffold" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

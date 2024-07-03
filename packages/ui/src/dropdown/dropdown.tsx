@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { tv } from "tailwind-variants";
+import { tv, VariantProps } from "tailwind-variants";
+import { SizeType } from "../helpers/sizeType";
 
 const DropdownMenuRoot = DropdownMenuPrimitive.Root;
 
@@ -20,8 +21,8 @@ const dropdownMenuVariants = tv({
       "oui-z-50",
       "oui-min-w-[8rem]",
       "oui-overflow-hidden",
-      "oui-rounded-md",
-      "oui-border",
+      "oui-rounded-xl",
+      // "oui-border",
       "oui-p-1",
       "oui-bg-base-8",
       "oui-text-base-contrast",
@@ -45,7 +46,7 @@ const dropdownMenuVariants = tv({
       "oui-cursor-default",
       "oui-select-none",
       "oui-items-center",
-      "oui-rounded-sm",
+      // "oui-rounded-lg",
       "oui-px-2",
       "oui-py-1.5",
       "oui-text-sm",
@@ -62,6 +63,34 @@ const dropdownMenuVariants = tv({
     shortcut: "oui-ml-auto oui-text-xs oui-tracking-widest oui-opacity-60",
   },
   variants: {
+    size: {
+      xs: {
+        content: "oui-rounded",
+        item: ["oui-px-2", "oui-py-1.5", "oui-h-6", "oui-rounded"],
+      },
+      sm: {
+        content: "oui-rounded",
+        item: ["oui-px-2", "oui-py-1.5", "oui-h-6", "oui-rounded"],
+      },
+      md: {
+        content: "oui-rounded-md",
+        item: ["oui-px-4", "oui-py-3", "oui-h-6", "oui-rounded"],
+      },
+      lg: {
+        content: "oui-rounded-lg",
+        item: ["oui-px-4", "oui-py-3", "oui-h-6", "oui-rounded-md"],
+      },
+      xl: {
+        content: "oui-rounded-xl",
+        item: [
+          "oui-px-4",
+          "oui-py-3",
+          "oui-h-10",
+          "oui-rounded-lg",
+          "oui-text-base",
+        ],
+      },
+    },
     inset: {
       true: {
         item: ["oui-pl-8"],
@@ -71,6 +100,7 @@ const dropdownMenuVariants = tv({
   },
   defaultVariants: {
     inset: false,
+    size: "lg",
   },
 });
 
@@ -114,9 +144,10 @@ const dropdownMenuVariants = tv({
 
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => {
-  const { content } = dropdownMenuVariants();
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> &
+    VariantProps<typeof dropdownMenuVariants>
+>(({ className, sideOffset = 4, size, ...props }, ref) => {
+  const { content } = dropdownMenuVariants({ size });
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
@@ -134,9 +165,10 @@ const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
     inset?: boolean;
+    size?: SizeType;
   }
->(({ className, inset, ...props }, ref) => {
-  const { item } = dropdownMenuVariants();
+>(({ className, inset, size, ...props }, ref) => {
+  const { item } = dropdownMenuVariants({ size });
   return (
     <DropdownMenuPrimitive.Item
       ref={ref}

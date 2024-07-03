@@ -1,39 +1,27 @@
-import {
-  useFundingFeeHistory,
-  useQuery,
-  useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { useDistributionHistory } from "@orderly.network/hooks";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useState } from "react";
+import { usePagination } from "@orderly.network/ui";
 
-// type FundingSearchParams = {
-//   dataRange?: Date[];
-// };
-
-export const useFundingHistoryHook = () => {
+export const useDistributionHistoryHook = () => {
   const [dateRange, setDateRange] = useState<Date[]>([
     subtractDaysFromCurrentDate(90),
     new Date(),
   ]);
-  const [symbol, setSymbol] = useState<string>("All");
+  const [type, setType] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, { isLoading, meta }] = useFundingFeeHistory({
+  const [data, { isLoading, meta }] = useDistributionHistory({
     dataRange: dateRange.map((date) => date.getTime()),
-    symbol,
-    page,
     pageSize,
+    page,
   });
 
-  //
-  const onDateRangeChange = (dateRange: Date[]) => {
-    setDateRange(dateRange);
-  };
+  // const res = useQuery("v1/public/info/funding_period");
 
   const onFilter = (filter: { name: string; value: any }) => {
-    if (filter.name === "symbol") {
-      setSymbol(filter.value);
+    if (filter.name === "type") {
+      setType(filter.value);
     }
 
     if (filter.name === "dateRange") {
@@ -45,9 +33,9 @@ export const useFundingHistoryHook = () => {
     dataSource: data,
     meta: parseMeta(meta),
     isLoading,
-    onDateRangeChange,
+    // onDateRangeChange,
     queryParameter: {
-      symbol,
+      type,
       dateRange,
     },
     onFilter,
@@ -56,4 +44,6 @@ export const useFundingHistoryHook = () => {
   } as const;
 };
 
-export type UseFundingHistoryReturn = ReturnType<typeof useFundingHistoryHook>;
+export type useDistributionHistoryHookReturn = ReturnType<
+  typeof useDistributionHistoryHook
+>;

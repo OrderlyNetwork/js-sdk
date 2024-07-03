@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { OrderlyAppConfig } from "./types";
-import { OrderlyThemeProvider } from "@orderly.network/ui";
+import { ModalProvider, OrderlyThemeProvider } from "@orderly.network/ui";
 import { useBootstrap } from "./hooks/useBootstrap";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider } from "./provider/appContext";
@@ -11,7 +11,9 @@ const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
   return (
     <OrderlyThemeProvider>
       <OrderlyConfigProvider networkId={networkId} brokerId={brokerId}>
-        <AppStateProvider>{props.children}</AppStateProvider>
+        <AppStateProvider>
+          <ModalProvider>{props.children}</ModalProvider>
+        </AppStateProvider>
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>
   );

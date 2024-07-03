@@ -9,6 +9,7 @@ import {
   type SelectWithOptionsProps,
 } from "../../select/withOptions";
 import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
+import { CombineSelect } from "../../select/combine";
 
 type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol";
 
@@ -20,6 +21,7 @@ type DataFilterGeneral = {
 
 type SelectFilter = {
   type: "select";
+  isCombine?: boolean;
   // options: DataFilterOption[];
 } & SelectWithOptionsProps;
 
@@ -75,17 +77,25 @@ export const DataFilterRenderer: FC<{
   onChange?: (value: any) => void;
   [key: string]: any;
 }> = (props) => {
-  const { onChange, type, ...rest } = props;
+  const { onChange, type, isCombine, ...rest } = props;
 
   switch (type) {
     case "select":
       return (
         <div className="oui-min-w-28">
-          <SelectWithOptions
-            size="xs"
-            {...(rest as SelectWithOptionsProps)}
-            onValueChange={onChange}
-          />
+          {isCombine ? (
+            <CombineSelect
+              size="xs"
+              {...(rest as SelectWithOptionsProps)}
+              onValueChange={onChange}
+            />
+          ) : (
+            <SelectWithOptions
+              size="xs"
+              {...(rest as SelectWithOptionsProps)}
+              onValueChange={onChange}
+            />
+          )}
         </div>
       );
     case "date":

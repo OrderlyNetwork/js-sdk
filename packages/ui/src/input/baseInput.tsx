@@ -52,7 +52,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     const prevInputValue = useRef<string | null>(null);
 
     const innerFormatters = useMemo<InputFormatter[]>(() => {
-      return formatters;
+      return formatters ?? [];
     }, [formatters]);
 
     useEffect(() => {

@@ -16,7 +16,7 @@ export const ProductsMenu: FC<ProductsProps> = (props) => {
     return products?.[0]?.id;
   }, [current, products]);
   return (
-    <Flex gap={0} border r="md" className="oui-p-[1px]">
+    <Flex gap={0} border r="md" className="oui-p-[1px]" borderColor={12}>
       {products?.map((product, index) => {
         return (
           <ProductItem

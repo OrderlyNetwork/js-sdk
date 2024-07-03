@@ -1,21 +1,22 @@
+import { FC, PropsWithoutRef, useCallback, useEffect } from "react";
 import { Flex } from "../../flex";
-import { FC, useCallback, useEffect } from "react";
 import { MainNavItems, MainNavItemsProps } from "./mainNavItems";
 import { Button } from "../../button";
-import { ChainSelect } from "../../select/chains";
+import { ChainSelect, type ChainSelectProps } from "../../select/chains";
 import { Text } from "../../typography";
 import { TotalValue } from "./totalValue";
-import { Logo, LogoProps } from "../../logo/logo";
+import { Logo, type LogoProps } from "../../logo/logo";
 import { ProductsMenu, ProductsProps } from "./products";
 
 export type MainNavProps = MainNavItemsProps & {
   className?: string;
   logo: LogoProps;
   products: ProductsProps;
+  chainsProps: ChainSelectProps;
 };
 
 export const MainNav: FC<MainNavProps> = (props) => {
-  const { className, logo, products } = props;
+  const { className, logo, products, chainsProps } = props;
   return (
     <Flex
       as="header"
@@ -32,18 +33,7 @@ export const MainNav: FC<MainNavProps> = (props) => {
       </Flex>
       <Flex itemAlign={"center"} gap={4}>
         <TotalValue />
-        <ChainSelect
-          size="lg"
-          currentChain={{
-            name: "",
-            id: "",
-            bridgeless: false,
-          }}
-          onChange={function (chain: string): void {
-            throw new Error("Function not implemented.");
-          }}
-          chains={[]}
-        />
+        <ChainSelect {...chainsProps} />
         <Button
           size="md"
           variant="gradient"

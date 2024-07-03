@@ -21,7 +21,14 @@ export const parseNumber = (
     abs?: boolean;
   } = {}
 ): string => {
-  let { rule, dp, tick, rm = Decimal.ROUND_HALF_EVEN, padding, abs } = options;
+  let {
+    rule,
+    dp,
+    tick,
+    rm = Decimal.ROUND_HALF_EVEN,
+    padding = true,
+    abs,
+  } = options;
 
   if (Number.isNaN(value)) {
     return "--";

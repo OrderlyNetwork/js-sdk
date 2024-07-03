@@ -10,7 +10,7 @@ type LogoProps = HTMLAttributes<Elment> & {
 
 const Logo = React.forwardRef<Elment, LogoProps>(({ src, alt, href }, ref) => {
   return (
-    <div className="logo" ref={ref}>
+    <div className="logo oui-px-3" ref={ref}>
       <a href={href ?? "/"}>
         <img
           src={src}

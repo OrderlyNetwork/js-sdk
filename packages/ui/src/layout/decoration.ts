@@ -11,6 +11,7 @@ export const decorationVariants = {
       true: "oui-border oui-border-line",
       // false: "oui-border-none",
     },
+    // borderTop
     r: {
       none: "oui-rounded-none",
       sm: "oui-rounded-sm",
@@ -41,6 +42,13 @@ export const decorationVariants = {
       700: "oui-bg-base-7",
       800: "oui-bg-base-8",
       900: "oui-bg-base-9",
+    },
+    borderColor: {
+      4: "oui-border-line-4",
+      6: "oui-border-line-6",
+      8: "oui-border-line",
+      12: "oui-border-line-12",
+      16: "oui-border-line-16",
     },
   },
 };

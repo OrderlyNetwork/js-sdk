@@ -27,6 +27,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-connector/src"
       ),
+      "@orderly.network/ui-scaffold": resolve(
+        __dirname,
+        "../../packages/ui-scaffold/src"
+      ),
+      "@orderly.network/ui-leverage": resolve(
+        __dirname,
+        "../../packages/ui-leverage/src"
+      ),
     },
   },
 });

@@ -1,7 +1,8 @@
 import { ElementType } from "react";
 import { useModal, modal } from "../modal";
 import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
-import type { ModalArgs } from "@/modal/types";
+import { ModalArgs } from "../modal/types";
+
 
 function createDialogComponent<P extends Partial<SimpleDialogProps>>(
   Comp: ElementType

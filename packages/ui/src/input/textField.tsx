@@ -39,7 +39,7 @@ export type TextFieldProps = InputProps & {
 export const TextField: React.FC<TextFieldProps> = React.forwardRef<
   HTMLDivElement,
   TextFieldProps
->((props) => {
+>((props, ref) => {
   const { label, helpText, direction, className, ...inputProps } = props;
   const { root, label: labelClassName } = textFieldVariants({ direction });
 

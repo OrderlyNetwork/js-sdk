@@ -17,11 +17,11 @@ type DropdownMenuProps = {
   render?: (item: Menu, index: number) => React.ReactNode;
 };
 
-const DropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
+const SimpleDropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
   const items = useMemo(() => {
-    if (typeof props.render !== "undefined") {
+    if (typeof props.render === "function") {
       return props.menu.map((item, index) => {
-        return props.render(item, index);
+        return props.render?.(item, index);
       });
     }
 
@@ -41,4 +41,4 @@ const DropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
   );
 };
 
-export { DropdownMenu };
+export { SimpleDropdownMenu };

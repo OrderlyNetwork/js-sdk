@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { Select, SelectItem, Popover, Button } from "@orderly.network/ui";
+import { Popover, Button } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Popover",

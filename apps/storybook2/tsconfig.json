@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -23,30 +19,18 @@
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@orderly.network/ui": [
-        "../../packages/ui/src"
-      ],
-      "@orderly.network/portfolio": [
-        "../../packages/portfolio/src"
-      ],
-      "@orderly.network/chart": [
-        "../../packages/chart/src"
-      ],
-      "@orderly.network/ui-connector": [
-        "../../packages/ui-connector/src"
-      ],
-      "@orderly.network/react-app": [
-        "../../packages/app/src"
-      ],
-      "@orderly.network/hooks": [
-        "../../packages/hooks/src"
-      ],
+      "@orderly.network/ui": ["../../packages/ui/src"],
+      "@orderly.network/portfolio": ["../../packages/portfolio/src"],
+      "@orderly.network/chart": ["../../packages/chart/src"],
+      "@orderly.network/ui-connector": ["../../packages/ui-connector/src"],
+      "@orderly.network/react-app": ["../../packages/app/src"],
+      "@orderly.network/hooks": ["../../packages/hooks/src"],
       "@orderly.network/trading-rewards": [
         "../../packages/trading-rewards/src"
       ],
+      "@orderly.network/ui-scaffold": ["../../packages/ui-scaffold/src"],
+      "@orderly.network/ui-leverage": ["../../packages/ui-leverage/src"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -1,4 +1,4 @@
-import { DropdownMenu } from "./menu";
+import { SimpleDropdownMenu } from "./menu";
 
 type CheckBoxMenuProps = {
   items: string[];
@@ -7,5 +7,5 @@ type CheckBoxMenuProps = {
 };
 
 export const CheckBoxMenu = (props: CheckBoxMenuProps) => {
-  return <DropdownMenu />;
+  // return <DropdownMenu  />;
 };

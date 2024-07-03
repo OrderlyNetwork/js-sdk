@@ -29,7 +29,7 @@ const buttonVariants = tv({
     size: {
       xs: ["oui-px-1", "oui-rounded", "oui-h-6", "oui-text-2xs"], //24px
       sm: ["oui-px-3", "oui-rounded", "oui-h-7", "oui-text-2xs"], //28px
-      md: ["oui-px-3", "oui-rounded-md", "oui-h-8", , "oui-text-sm"], //32px
+      md: ["oui-px-3", "oui-rounded-md", "oui-h-8", "oui-text-sm"], //32px
       lg: ["oui-px-3", "oui-rounded-md", "oui-h-10", "oui-text-base"], //40px
       xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
     },
