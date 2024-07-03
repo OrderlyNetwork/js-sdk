@@ -17,6 +17,7 @@
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/trading-rewards": "workspace:*",
+    "@orderly.network/affiliate": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",
     "@orderly.network/types": "workspace:*",

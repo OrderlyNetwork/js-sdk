@@ -16,6 +16,10 @@ export default defineConfig({
         __dirname,
         "../../packages/trading-rewards/src"
       ),
+      "@orderly.network/affiliate": resolve(
+        __dirname,
+        "../../packages/affiliate/src"
+      ),
       "@orderly.network/ui": resolve(__dirname, "../../packages/ui/src"),
       "@orderly.network/hooks": resolve(__dirname, "../../packages/hooks/src"),
       "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
