@@ -10,6 +10,7 @@
   "keywords": [],
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",

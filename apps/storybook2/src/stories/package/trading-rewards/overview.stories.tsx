@@ -1,10 +1,11 @@
 import type {Meta, StoryObj} from "@storybook/react";
 // import { fn } from '@storybook/test';
-import {TradingRewards} from "@orderly.network/trading-rewards";
+import {TradingRewards, TradingRewardsLayoutWidget} from "@orderly.network/trading-rewards";
 
 import {OrderlyApp} from "@orderly.network/react-app";
 import {ConnectorProvider} from "@orderly.network/web3-onboard";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const meta = {
     title: "Package/TradingRewards/OverviewPage",
@@ -35,7 +36,7 @@ const meta = {
         },
     ],
     parameters: {
-        layout: "centered",
+        layout: "fullscreen",
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     // tags: ['autodocs'],
@@ -63,3 +64,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
 
+
+  export const LayoutPage: Story = {
+    render: (args) => {
+      return <TradingRewardsLayoutWidget>
+        <TradingRewards.OverviewPage />
+      </TradingRewardsLayoutWidget>
+    },
+  }

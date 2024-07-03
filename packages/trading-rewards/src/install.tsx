@@ -1,5 +1,5 @@
 import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
-import { TradingRewardsLayout, TradingRewardsLayoutProps } from "./layout/layout";
+import { TradingRewardsLayout, TradingRewardsLayoutProps } from "./layout/layout.ui";
 import { layoutBuilder } from "./layout/layoutBuilder";
 
 installExtension<TradingRewardsLayoutProps>({
