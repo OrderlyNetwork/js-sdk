@@ -16,14 +16,6 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
 
   const [scale, setScale] = useState<ChartScale | undefined>();
 
-  // const { scale } = useChartState({
-  //   data: props.data,
-  //   size,
-  //   margin,
-  //   x: props.x,
-  //   y: props.y,
-  // });
-
   // set width and height
   useLayoutEffect(() => {
     if (!wrapperRef.current || !!size) return;

@@ -62,14 +62,14 @@ const MenuItem: FC<
     onClick?: (item: SideMenuItem) => void;
   } & VariantProps<typeof menuItemVariants>
 > = memo((props) => {
-  const { item, mode } = props;
+  const { item, mode, open, onClick, actived, ...rest } = props;
   const { button } = menuItemVariants({
     mode,
     actived: props.actived,
     open: props.open,
   });
   return (
-    <li>
+    <li className="oui-min-w-[120px]">
       <button
         data-actived={props.actived}
         disabled={item.disabled}
@@ -84,7 +84,7 @@ const MenuItem: FC<
             <Text.gradient
               color={props.actived ? "brand" : "inherit"}
               angle={45}
-              className="group-data-[state=closed]/bar:oui-opacity-0 oui-transition-opacity"
+              className="oui-animate-in oui-fade-in"
             >
               {item.name}
             </Text.gradient>
