@@ -3,9 +3,9 @@ import { MainNavWidget } from "./main/mainNav.widget";
 import { PropsWithChildren } from "react";
 import { SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar/sidebar.ui";
-import { createContext } from "react";
-import { useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useMemo } from "react";
+import { ExpandableContext } from "./scaffoldContext";
 
 export type routerAdapter = {
   navigate: (path: string) => void;
@@ -22,6 +22,7 @@ export type LayoutProps = {
    * Props for the left sidebar, if passed, the layout will use the default sidebar component
    */
   gap?: number;
+  maxWidth?: number;
   bodyPadding?: SizeType;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
@@ -39,28 +40,25 @@ export type LayoutProps = {
   };
 };
 
-export type ExpandableState = {
-  // defaultExpanded?: boolean;
-  expanded?: boolean;
-  toggleExpanded?: () => void;
-};
-
-const ExpandableContext = createContext<ExpandableState>({} as ExpandableState);
-
 export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   const { classNames } = props;
-  const [expand, setExpand] = useLocalStorage("expand", true);
-  const leftSidebar = props.leftSidebar || (
-    <SideNavbarWidget {...props.leftSideProps} />
+  const [expand, setExpand] = useLocalStorage(
+    "orderly_scaffold_expanded",
+    true
   );
+  // const leftSidebar = props.leftSidebar || (
+  //   <SideNavbarWidget {...props.leftSideProps} />
+  // );
 
-  const onToggleExpanded = () => {
-    setExpand(!expand);
+  const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
+
+  const onExpandChange = (expand: boolean) => {
+    setExpand(expand);
   };
 
   return (
     <ExpandableContext.Provider
-      value={{ expanded: expand, toggleExpanded: onToggleExpanded }}
+      value={{ expanded: expand, setExpand: onExpandChange }}
     >
       {/* Top main nav */}
       <Box
@@ -70,14 +68,20 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
       </Box>
       {/*--------- body start ------ */}
       <Grid
-        className={cn()}
+        className={cn("oui-box-content oui-transition-all")}
         style={{
-          gridTemplateColumns: `${expand ? "240px" : "60px"} 1fr`,
+          gridTemplateColumns: `${
+            expand ? sideBarDefaultWidth + "px" : "98px"
+          } 1fr`,
           gridTemplateRows: "auto 1fr auto",
           gridTemplateAreas: `"left main" "left main" "left main"`,
         }}
       >
-        <Box>{leftSidebar}</Box>
+        <div>
+          {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
+
+          {/* <SideNavbarWidget {...props.leftSideProps} /> */}
+        </div>
         <Box>{props.children}</Box>
       </Grid>
       {/* <Flex
@@ -88,7 +92,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
       </Flex> */}
       {/*--------- body end ------ */}
-      {/* <Flex grow></Flex> */}
       {/* Footer */}
       <Box className={cn(classNames?.footer)}>{props.footer}</Box>
     </ExpandableContext.Provider>

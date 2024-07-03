@@ -25,7 +25,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
       }
       id="portfolio-overview-performance"
     >
-      <Grid cols={3}>
+      <Grid cols={3} gap={4}>
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             label={`${period} ROI`}

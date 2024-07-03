@@ -29,7 +29,7 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
     if (!wrapperRef.current || !!size) return;
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        console.log(entry);
+        // console.log(entry);
         if (entry.contentRect) {
           setSize({
             width: entry.contentRect.width,

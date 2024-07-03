@@ -4,5 +4,6 @@ import { useLayoutBuilder } from "./useLayoutBuilder.script";
 
 export const PortfolioLayoutWidget = (props: PropsWithChildren) => {
   const state = useLayoutBuilder();
+  console.log("PortfolioLayoutWidget ---->>>>>>", state);
   return <PortfolioLayout {...state} children={props.children} />;
 };

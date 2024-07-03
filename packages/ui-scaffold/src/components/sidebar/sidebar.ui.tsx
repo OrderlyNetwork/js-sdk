@@ -80,13 +80,15 @@ const MenuItem: FC<
       >
         <Flex itemAlign={"center"} gap={2} as="span">
           {item.icon}
-          <Text.gradient
-            color={props.actived ? "brand" : "inherit"}
-            angle={45}
-            className="group-data-[state=closed]/bar:oui-opacity-0 oui-transition-opacity"
-          >
-            {item.name}
-          </Text.gradient>
+          {props.open && (
+            <Text.gradient
+              color={props.actived ? "brand" : "inherit"}
+              angle={45}
+              className="group-data-[state=closed]/bar:oui-opacity-0 oui-transition-opacity"
+            >
+              {item.name}
+            </Text.gradient>
+          )}
         </Flex>
       </button>
     </li>
@@ -147,8 +149,16 @@ type SideBarHeaderProps = {
 
 const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
   return (
-    <Flex justify={props.open ? "between" : "center"} itemAlign={"center"}>
-      {props.open ? <Text intensity={54}>Portfolio</Text> : null}
+    <Flex
+      justify={props.open ? "between" : "center"}
+      itemAlign={"center"}
+      className="oui-h-6"
+    >
+      {props.open ? (
+        <Text intensity={54} size="xs">
+          Portfolio
+        </Text>
+      ) : null}
 
       <button
         onClick={() => {
@@ -193,6 +203,7 @@ const SideBar = (props: SideBarProps) => {
       <SideBarHeader
         open={open}
         onToggle={() => {
+          console.log("toggle....", props.onOpenChange);
           props.onOpenChange?.(!open);
         }}
       />

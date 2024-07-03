@@ -1,10 +1,11 @@
 import React from "react";
 import { useMemo, useState } from "react";
 import { SideBarProps } from "./sidebar.ui";
+import { useScaffoldContext } from "../scaffoldContext";
 
 export const useSideNavBuilder = (): SideBarProps => {
   const [current, setCurrent] = useState("/");
-  // const [sideOpen, setSideOpen] = useState(true);
+  const { expanded, setExpand } = useScaffoldContext();
 
   const items = useMemo(() => {
     return [
@@ -142,10 +143,10 @@ export const useSideNavBuilder = (): SideBarProps => {
   return {
     items,
     current,
-    // open: sideOpen,
-    // onOpenChange(open) {
-    //   setSideOpen(open);
-    // },
+    open: expanded,
+    onOpenChange: (open) => {
+      setExpand?.(open);
+    },
     onItemSelect: (item) => {
       setCurrent(item.href);
     },

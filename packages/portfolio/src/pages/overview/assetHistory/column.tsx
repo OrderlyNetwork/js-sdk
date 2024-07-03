@@ -39,7 +39,7 @@ export const useAssetHistoryColumns = () => {
         textProps: {
           copyable: true,
           className:
-            "oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-red-500",
+            "oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16",
         },
       },
       {

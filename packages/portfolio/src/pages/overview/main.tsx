@@ -6,7 +6,7 @@ import { HistoryDataGroupWidget } from "./historyDataGroup";
 
 export const OverviewPage = () => {
   return (
-    <Grid cols={2}>
+    <Grid cols={2} gap={4}>
       <AssetWidget />
       <AssetsChartWidget />
       <Grid.span colSpan={2}>

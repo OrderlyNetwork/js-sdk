@@ -70,7 +70,7 @@ const gridVariants = tv({
   defaultVariants: {
     // cols: "1",
     // rows: "1",
-    gap: 4,
+    // gap: 4,
     // autoFlow: "row",
   },
 });

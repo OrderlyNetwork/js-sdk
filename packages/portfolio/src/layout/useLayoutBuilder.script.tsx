@@ -1,10 +1,13 @@
 import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import React from "react";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
+
+import {
+  ExpandableContext,
+  useScaffoldContext,
+} from "@orderly.network/ui-scaffold";
 
 export const useLayoutBuilder = (): SideBarProps => {
   const [current, setCurrent] = useState("/");
-  // const [sideOpen, setSideOpen] = useState(true);
 
   const items = useMemo(() => {
     return [
@@ -142,12 +145,24 @@ export const useLayoutBuilder = (): SideBarProps => {
   return {
     items,
     current,
-    // open: sideOpen,
-    // onOpenChange(open) {
-    //   setSideOpen(open);
-    // },
+
     onItemSelect: (item) => {
-      setCurrent(item.href);
+      // setCurrent(item.href);
+    },
+  };
+};
+
+export const useCustomSidebarHook = () => {
+  const { expanded, setExpand } = useScaffoldContext();
+  const context = useContext(ExpandableContext);
+
+  console.log("*****", expanded, setExpand, context);
+
+  return {
+    open: expanded,
+    onOpenChange: (open: boolean) => {
+      console.log("open", open, setExpand);
+      setExpand(open);
     },
   };
 };
