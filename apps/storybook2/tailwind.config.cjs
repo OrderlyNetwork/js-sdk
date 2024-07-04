@@ -9,6 +9,7 @@ module.exports = {
     "../../packages/trading-rewards/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/portfolio/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-scaffold/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),

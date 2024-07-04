@@ -1,5 +1,7 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
 import { TradingRewardsProvider } from "./provider";
+import { TitleWidget } from "./title";
+import { SubtitleWidget } from "./subtitle";
 
 export const OverviewPage = () => {
   return (
@@ -13,7 +15,8 @@ export const OverviewPage = () => {
         direction={"column"}
         gap={4}
       >
-       
+       <TitleWidget />
+       <SubtitleWidget />
       </Flex>
     </TradingRewardsProvider>
   );
