@@ -73,5 +73,5 @@ export const useGetClaimed = (
     refresh();
   }, [rpc.current, id, address]);
 
-  return [data,{ refresh }] as const;
+  return [data,{ refresh }];
 };

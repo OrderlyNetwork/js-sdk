@@ -58,5 +58,5 @@ export const useWalletRewardsHistory = (type: TWType): WalletRewardsHisotryRetur
       } as WalletRewards;
     },
   });
-  return [data, { refresh, error }] as const;
+  return [data, { refresh, error }];
 };

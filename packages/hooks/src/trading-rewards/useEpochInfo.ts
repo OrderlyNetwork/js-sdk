@@ -83,5 +83,5 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     return true;
   }, [epochInfo]);
 
-  return [epochInfo, { curEpochInfo, isUnstart, refresh }] as const;
+  return [epochInfo, { curEpochInfo, isUnstart, refresh }];
 };
