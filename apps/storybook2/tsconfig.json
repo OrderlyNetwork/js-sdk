@@ -28,6 +28,9 @@
       "@orderly.network/trading-rewards": [
         "../../packages/trading-rewards/src"
       ],
+      "@orderly.network/affiliate": [
+        "../../packages/affiliate/src"
+      ],
       "@orderly.network/ui-scaffold": ["../../packages/ui-scaffold/src"],
       "@orderly.network/ui-leverage": ["../../packages/ui-leverage/src"]
     }
