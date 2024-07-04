@@ -10,35 +10,40 @@ import {
   CurrentEpochEstimate,
   useWalletRewardsHistory,
   WalletRewards,
+  WalletRewardsHisotryReturns,
 } from "@orderly.network/hooks";
 
 export type TradingRewardsState = {
   type: TWType;
   epochList: EpochInfoType;
-  totalOrderClaimedReward: { data: number | undefined; refresh: () => void };
-  totalEsOrderClaimedReward: { data: number | undefined; refresh: () => void };
+  totalOrderClaimedReward: [data: number | undefined, { refresh: () => void }];
+  totalEsOrderClaimedReward: [
+    data: number | undefined,
+    { refresh: () => void }
+  ];
   curEpochEstimate?: CurrentEpochEstimate;
-  walletRewardsHistory: {
-    data: WalletRewards | undefined;
-    refresh: () => void;
-    error?: any;
-  };
+  walletRewardsHistory: WalletRewardsHisotryReturns;
 };
 
 export const TradingRewardsContext = createContext<TradingRewardsState>({
   type: TWType.normal,
-  totalOrderClaimedReward: { data: undefined, refresh: () => {} },
-  totalEsOrderClaimedReward: { data: undefined, refresh: () => {} },
-  epochList: {
-    data: undefined,
-    curEpochInfo: undefined,
-    isUnstart: false,
-    refresh: () => {},
-  },
-  walletRewardsHistory: {
-    data: undefined,
-    refresh: () => {}
-  }
+  totalOrderClaimedReward: [undefined, { refresh: () => {} }],
+  totalEsOrderClaimedReward: [undefined, { refresh: () => {} }],
+  epochList: [
+    undefined,
+    {
+      curEpochInfo: undefined,
+      isUnstart: false,
+      refresh: () => {},
+    },
+  ],
+  walletRewardsHistory: [
+    undefined,
+    {
+      refresh: () => {},
+      error: undefined,
+    },
+  ],
 });
 
 export const TradingRewardsProvider = (
@@ -58,13 +63,12 @@ export const TradingRewardsProvider = (
     type === TWType.mm ? DistributionId.mmEsOrder : DistributionId.esORder
   );
 
-  const brokers = useAllBrokers();
+  const [brokers] = useAllBrokers();
 
-  const { data: curEpochEstimate } = useCurEpochEstimate(type);
+  const [curEpochEstimate] = useCurEpochEstimate(type);
 
   const walletRewardsHistory = useWalletRewardsHistory(type);
 
-  
   const epochList = useEpochInfo(type as TWType);
 
   return (

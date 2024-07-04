@@ -69,5 +69,5 @@ export const useCurEpochEstimate = (type: TWType) => {
     return data;
   }, [estimateData, brokers]);
 
-  return { data: reuslt };
+  return [reuslt] as const;
 };

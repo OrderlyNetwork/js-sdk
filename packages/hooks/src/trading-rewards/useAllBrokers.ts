@@ -12,5 +12,5 @@ export const useAllBrokers = () => {
     },
   });
 
-  return data;
+  return [data] as const;
 };

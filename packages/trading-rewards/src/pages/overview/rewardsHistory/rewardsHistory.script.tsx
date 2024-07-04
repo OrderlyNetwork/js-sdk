@@ -23,8 +23,9 @@ export type RewardsHistoryReturns = {
 export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
   const { epochList, walletRewardsHistory, totalOrderClaimedReward } =
     useTradingRewardsContext();
-  const { data: epochInfos, isUnstart } = epochList;
-  const { data: history } = walletRewardsHistory;
+  const epochInfos = epochList?.[0];
+  const { isUnstart } = epochList?.[1];
+  const [history] = walletRewardsHistory;
 
   const data = useMemo(() => {
     if (isUnstart) return [];
@@ -45,7 +46,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
       } as ListType;
     });
     combineData.sort((a, b) => a.epoch_id - b.epoch_id); // asc
-    let { data: claimedReward } = totalOrderClaimedReward;
+    let [claimedReward] = totalOrderClaimedReward;
     if (typeof claimedReward !== "undefined") {
       for (let i = 0; i < combineData.length; i++) {
         const element = combineData[i];
@@ -92,7 +93,6 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     total: totalCount,
     current_page: page,
     records_per_page: pageSize,
-    
   });
 
   return {
