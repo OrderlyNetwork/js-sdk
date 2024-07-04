@@ -12,21 +12,21 @@ import {
   WalletRewards,
 } from "@orderly.network/hooks";
 
-export type TradingRewardsState = {
+export type AffiliateState = {
   
 };
 
-export const TradingRewardsContext = createContext<TradingRewardsState>({
+export const AffiliateContext = createContext<AffiliateState>({
   
 });
 
-export const TradingRewardsProvider = (
+export const AffiliateProvider = (
   props: PropsWithChildren
 ) => {
   
 
   return (
-    <TradingRewardsContext.Provider
+    <AffiliateContext.Provider
       value={{
        
       }}
@@ -34,10 +34,10 @@ export const TradingRewardsProvider = (
       {/* <PageLoading loading={epochList.data === undefined}> */}
       {props.children}
       {/* </PageLoading> */}
-    </TradingRewardsContext.Provider>
+    </AffiliateContext.Provider>
   );
 };
 
 export function useTradingRewardsContext() {
-  return useContext(TradingRewardsContext);
+  return useContext(AffiliateContext);
 }

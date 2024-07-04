@@ -1,5 +1,5 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { TradingRewardsProvider } from "./provider";
+import { AffiliateProvider } from "./provider";
 import { TitleWidget } from "./title";
 import { SubtitleWidget } from "./subtitle";
 import { AsAnAffiliateWidget } from "./asAnAffilate";
@@ -8,7 +8,7 @@ import { BecomeAffiliateWidget } from "./becomeAffiliate";
 
 export const OverviewPage = () => {
   return (
-    <TradingRewardsProvider>
+    <AffiliateProvider>
       <Flex
         className={cn(
           "oui-h-lvw oui-w-lvw",
@@ -27,6 +27,6 @@ export const OverviewPage = () => {
         </Flex>
         <BecomeAffiliateWidget />
       </Flex>
-    </TradingRewardsProvider>
+    </AffiliateProvider>
   );
 };
