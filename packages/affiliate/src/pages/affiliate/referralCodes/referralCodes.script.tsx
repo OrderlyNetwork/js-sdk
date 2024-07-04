@@ -2,7 +2,7 @@ export type ReferralCodesReturns = {
 
 };
 
-export const useReferralCodesScript = () => {
+export const useReferralCodesScript = (): ReferralCodesReturns => {
 
     return {};
 };

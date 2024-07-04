@@ -2,7 +2,7 @@ export type ReferralLinkReturns = {
 
 };
 
-export const useReferralLinkScript = () => {
+export const useReferralLinkScript = (): ReferralLinkReturns => {
 
     return {};
 };
