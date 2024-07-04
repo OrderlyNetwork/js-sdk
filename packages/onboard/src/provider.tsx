@@ -40,6 +40,8 @@ export const ConnectorProvider = (
     setInitialized(true);
   }, []);
 
+  console.log("******* initialized *******", initialized);
+
   if (!initialized) return null;
 
   return <Main>{props.children}</Main>;

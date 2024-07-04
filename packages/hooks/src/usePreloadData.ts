@@ -40,12 +40,12 @@ export const usePreLoadData = () => {
     getGlobalObject().__ORDERLY_timestamp_offset = sd - ld;
   }
 
-  console.log(
-    "systemInfo",
-    systemInfo,
-    // @ts-ignore
-    getGlobalObject().__ORDERLY_timestamp_offset
-  );
+  // console.log(
+  //   "systemInfo",
+  //   systemInfo,
+  //   // @ts-ignore
+  //   getGlobalObject().__ORDERLY_timestamp_offset
+  // );
 
   const isDone = useMemo(() => {
     return !!tokenData;

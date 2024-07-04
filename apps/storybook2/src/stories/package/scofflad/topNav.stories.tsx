@@ -7,6 +7,7 @@ import {
   AccountSummaryWidget,
   ChainMenuWidget,
 } from "@orderly.network/ui-scaffold";
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 const meta = {
   title: "Package/ui-scaffold/MainNav",
@@ -18,15 +19,15 @@ const meta = {
   },
   decorators: [
     (Story: any) => (
-      // <ConnectorProvider>
-      <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-        <ModalProvider>
-          <Box intensity={900}>
-            <Story />
-          </Box>
-        </ModalProvider>
-      </OrderlyApp>
-      // </ConnectorProvider>
+      <ConnectorProvider>
+        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+          <ModalProvider>
+            <Box intensity={900}>
+              <Story />
+            </Box>
+          </ModalProvider>
+        </OrderlyApp>
+      </ConnectorProvider>
     ),
   ],
   argTypes: {},

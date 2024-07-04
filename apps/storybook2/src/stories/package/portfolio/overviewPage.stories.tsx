@@ -3,13 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OverviewModule, PortfolioLayoutWidget, } from "@orderly.network/portfolio";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Card } from "@orderly.network/ui";
-import { fn } from "@storybook/test";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const meta = {
-  title: "Package/Portfolio/Overview",
+  title: "Package/Portfolio",
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,

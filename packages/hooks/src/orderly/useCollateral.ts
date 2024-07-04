@@ -6,12 +6,11 @@ import {
 } from "./usePositionStream/usePositionStream";
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
-import { type API, OrderStatus } from "@orderly.network/types";
+import { type API } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { zero } from "@orderly.network/utils";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useHoldingStream } from "./useHoldingStream";
-import { useOrderStream } from "./useOrderStream/useOrderStream";
 
 export type CollateralOutputs = {
   totalCollateral: number;

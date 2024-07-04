@@ -63,7 +63,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
 };
 
 export const PerformancePnL = (props: { data: any[] }) => {
-  console.log(props.data);
+  // console.log(props.data);
   const tickValues = useMemo(() => {
     if (!Array.isArray(props.data) || !props.data.length) return;
     return [props.data[0].date, props.data[props.data?.length - 1].date];

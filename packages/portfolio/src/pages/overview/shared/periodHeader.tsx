@@ -8,7 +8,7 @@ export const PeriodTitle = (props: {
 }) => {
   return (
     <Flex justify={"between"}>
-      <CardTitle>Performance</CardTitle>
+      <CardTitle>Assets</CardTitle>
 
       <Flex gapX={2}>
         <Text intensity={36} size={"2xs"}>

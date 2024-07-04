@@ -9,7 +9,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const meta = {
-  title: "Package/Portfolio/OverviewPage",
+  title: "Package/Portfolio/Page",
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,
@@ -53,13 +53,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
 
-export const Layout_Page: Story = {
-  render: (args) => {
-    return <Scaffold>
-      <OverviewModule.OverviewPage />
-    </Scaffold>
-  },
-}
 
 export const Assets: Story = {
   render: (args) => {

@@ -20,21 +20,22 @@ export const ExtensionSlot: FC<Props> = (props) => {
 
   const elementProps = useExtensionBuilder(position, rest);
 
-  // console.log("👉elementProps", elementProps);
-
   const Ele = useMemo<ElementType>(() => {
     const registry = OrderlyExtensionRegistry.getInstance();
+
     const plugin = registry.getPluginsByPosition(position);
 
-    if (isValidElement(plugin?.render)) {
-      return plugin?.render;
-    }
+    // if (isValidElement(plugin?.render)) {
+    //   return plugin?.render;
+    // }
 
-    if (isValidElement(defaultValue)) {
-      return defaultValue;
-    }
+    // if (isValidElement(defaultValue)) {
+    //   return defaultValue;
+    // }
 
-    return NotFound;
+    // console.log("plugin", plugin, isValidElement(plugin?.render));
+
+    return plugin?.render ?? defaultValue ?? NotFound;
   }, []);
 
   return (

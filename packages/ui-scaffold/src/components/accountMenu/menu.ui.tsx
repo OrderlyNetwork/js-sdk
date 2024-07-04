@@ -20,7 +20,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
   const { address } = props;
   return (
     <DropdownMenuRoot>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button
           size="md"
           variant="gradient"

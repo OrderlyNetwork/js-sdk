@@ -6,7 +6,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { Button, modal } from "@orderly.network/ui";
 
 const meta = {
-  title: "Package/ui-leverage",
+  title: "Package/ui-leverage/LeverageEditor",
   component: LeverageEditor,
   // subcomponents: {
   //     Assets: OverviewModule.AssetWidget,

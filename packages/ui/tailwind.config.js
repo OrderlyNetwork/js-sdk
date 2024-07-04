@@ -5,6 +5,7 @@ const { gradientPlugin } = require("./src/tailwind/gradient");
 const { positionPlugin } = require("./src/tailwind/position");
 const { basePlugin } = require("./src/tailwind/base");
 const { componentsPlugin } = require("./src/tailwind/components");
+const {themePlugin} = require("./src/tailwind/theme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -143,6 +144,7 @@ module.exports = withTV({
     },
   },
   plugins: [
+    themePlugin(),
     basePlugin(),
     sizePlugin(),
     gradientPlugin(),
