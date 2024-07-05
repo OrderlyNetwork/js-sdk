@@ -14,6 +14,7 @@ import {
   EditIcon,
 } from "@orderly.network/ui";
 import { AssetsHeader } from "./assetsHeader";
+import { AuthGuard } from "@orderly.network/ui-connector";
 
 type Props = {
   connected?: boolean;
@@ -41,18 +42,28 @@ export const AssetsUI = (props: Props) => {
           onWithdraw={props.onWithdraw}
         />
       }
+      // footer={
+      //   <Either
+      //     value={props.connected ?? false}
+      //     left={<NotConnected onConnectWallet={props.onConnectWallet} />}
+      //   >
+      //     <AssetStatistic
+      //       unrealROI={props.unrealROI}
+      //       unrealPnL={props.unrealPnL}
+      //       freeCollateral={props.freeCollateral}
+      //       currentLeverage={props.currentLeverage}
+      //     />
+      //   </Either>
+      // }
       footer={
-        <Either
-          value={props.connected ?? false}
-          left={<NotConnected onConnectWallet={props.onConnectWallet} />}
-        >
+        <AuthGuard>
           <AssetStatistic
             unrealROI={props.unrealROI}
             unrealPnL={props.unrealPnL}
             freeCollateral={props.freeCollateral}
             currentLeverage={props.currentLeverage}
           />
-        </Either>
+        </AuthGuard>
       }
     >
       <Statistic

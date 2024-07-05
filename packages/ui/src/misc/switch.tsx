@@ -1,14 +1,16 @@
 import { ReactElement } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { ComponentPropsWithout } from "@/helpers/component-props";
+import { ComponentPropsWithout } from "../helpers/component-props";
 
-type CaseProps<Props = {}> = { [key: string]: ReactElement<Props> };
+type CaseProps<Props = {}> =
+  | { [key: string | number]: ReactElement<Props> }
+  | ((value: any) => ReactElement<Props>);
 type ValueTypes = string | number | (() => any);
 
 type Props<Props = {}> = {
   value: ValueTypes;
   case: CaseProps<Props>;
-  default?: ReactElement;
+  default: ReactElement;
 } & Props &
   ComponentPropsWithout<"div", "value" | "case" | "default">;
 
@@ -17,7 +19,36 @@ export const Match = <T,>(props: Props<T>) => {
 
   const _value = typeof value === "function" ? value() : value;
 
-  const Element = Case[_value] || Default || "div";
+  if (typeof Case === "function") {
+    const Comp = Case(_value);
 
-  return <Slot children={Element} {...rest} />;
+    if (Comp) {
+      return <Slot children={Comp} {...rest} />;
+    }
+
+    if (typeof Default === "undefined") {
+      // console.warn('')
+      return;
+    }
+
+    return <Slot children={Default} {...rest} />;
+  }
+
+  const keys = Object.keys(Case);
+
+  while (keys.length) {
+    const key = keys.pop();
+    if (key === _value.toString()) {
+      return <Slot children={Case[key!]} {...rest} />;
+    }
+  }
+  return <Slot children={Default} {...rest} />;
+
+  // if (!keys.includes(_value.toString()) && !Default) {
+  //   throw new Error(`Match: missing case for value: ${_value}`);
+  // }
+
+  // const Element = Case[_value] || Default || "div";
+
+  // return <Slot children={Element} {...rest} />;
 };

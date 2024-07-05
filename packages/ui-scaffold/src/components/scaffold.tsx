@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { ExpandableContext } from "./scaffoldContext";
 
 export type routerAdapter = {
-  navigate: (path: string) => void;
+  onRouteChange: (path: string) => void;
   currentPath: string;
 };
 

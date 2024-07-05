@@ -15,6 +15,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

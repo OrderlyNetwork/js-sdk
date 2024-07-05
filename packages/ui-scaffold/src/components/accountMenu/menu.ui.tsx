@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
   EVMAvatar,
   Flex,
+  Match,
   Text,
 } from "@orderly.network/ui";
 
@@ -25,6 +26,7 @@ export type AccountMenuProps = {
 
 export const AccountMenu = (props: AccountMenuProps) => {
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
+
   if (state.status <= AccountStatusEnum.NotConnected) {
     return (
       <Button

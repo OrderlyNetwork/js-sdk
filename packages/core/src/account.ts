@@ -30,6 +30,7 @@ export interface AccountState {
    * whether the account is validating
    */
   validating: boolean;
+  // revalidating?: boolean;
 
   accountId?: string;
   userId?: string;
@@ -69,14 +70,7 @@ export class Account {
 
   assetsManager: Assets;
 
-  private _state: AccountState = {
-    status: AccountStatusEnum.NotConnected,
-    // balance: "",
-    // checking: false,
-    validating: false,
-    // leverage: Number.NaN,
-    isNew: false,
-  };
+  private _state!: AccountState;
 
   private readonly contractManger;
 
@@ -105,6 +99,8 @@ export class Account {
     }
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
+
+    this._initState();
 
     this._bindEvents();
   }
@@ -158,6 +154,7 @@ export class Account {
         chainId: wallet.chain.id,
       },
       validating: true,
+      // revalidating: this._state.validating,
     };
 
     this._ee.emit("change:status", nextState);
@@ -587,6 +584,19 @@ export class Account {
 
   get wallet() {
     return this.walletClient;
+  }
+
+  private _initState() {
+    const address = this.keyStore.getAddress();
+
+    this._state = {
+      status: AccountStatusEnum.NotConnected,
+      // balance: "",
+      // checking: false,
+      validating: typeof address !== "undefined", // if address is exist, validating is available
+      // leverage: Number.NaN,
+      isNew: false,
+    };
   }
 
   private async _getRegisterationNonce() {

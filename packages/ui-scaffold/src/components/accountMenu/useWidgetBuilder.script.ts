@@ -11,23 +11,7 @@ export const useAccountMenu = () => {
   const { disconnect, connect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
 
-  const [chains, { findByChainId }] = useChains(undefined, {
-    // pick: "network_infos",
-  });
-
-  console.log("_____chains___", chains);
-
-  // const chains = useMemo(() => {
-  //   if (Array.isArray(allChains)) return allChains;
-  //   if (allChains === undefined) return [];
-
-  //   // @ts-ignore
-  //   if (connectedChain && isTestnet(parseInt(connectedChain.id))) {
-  //     return allChains.testnet ?? [];
-  //   }
-
-  //   return allChains.mainnet;
-  // }, [allChains]);
+  const [_, { findByChainId }] = useChains();
 
   const onCrateAccount = async () => {
     modal.show(WalletConnectorModalId).then(
@@ -54,10 +38,11 @@ export const useAccountMenu = () => {
   };
 
   const onOpenExplorer = useCallback(() => {
-    console.log("onOpenExploer::", connectedChain);
     if (!connectedChain) return;
-    const chainInfo = findByChainId(connectedChain!.id as number);
-    console.log("chainInfo::", chainInfo);
+    const chainInfo = findByChainId(
+      connectedChain!.id as number,
+      "network_infos"
+    );
 
     if (chainInfo) {
       // @ts-ignore

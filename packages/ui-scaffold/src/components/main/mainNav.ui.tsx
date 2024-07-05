@@ -33,19 +33,8 @@ export const MainNav: FC<MainNavProps> = (props) => {
       </Flex>
       <Flex itemAlign={"center"} gap={4}>
         <AccountSummaryWidget />
-        {/*<Select.chains {...chainsProps} />*/}
         <ChainMenuWidget />
         <AccountMenuWidget />
-        {/*<Button*/}
-        {/*  size="md"*/}
-        {/*  variant="gradient"*/}
-        {/*  angle={45}*/}
-        {/*  className="wallet-connect-button"*/}
-        {/*>*/}
-        {/*  <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">*/}
-        {/*    0x7fB3d51911AeF5c651355EBAa51393217e062Ec0*/}
-        {/*  </Text.formatted>*/}
-        {/*</Button>*/}
       </Flex>
     </Flex>
   );
