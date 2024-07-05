@@ -8,12 +8,12 @@ import {
 import { Panel } from "./panel";
 
 addons.register(WalletConnectAddonId, () => {
-  addons.add(WalletConnectToolId, {
-    type: types.TOOL,
-    title: "Wallet Connect",
-    // match: ({viewMode}) => viewMode === "story",
-    render: WalletConnectTool,
-  });
+  // addons.add(WalletConnectToolId, {
+  //   type: types.TOOL,
+  //   title: "Wallet Connect",
+  //   // match: ({viewMode}) => viewMode === "story",
+  //   render: WalletConnectTool,
+  // });
 
   addons.add(WalletConnectPanelId, {
     type: types.PANEL,

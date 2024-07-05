@@ -6,10 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Orderly"],
+  "keywords": [
+    "Orderly"
+  ],
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui": "workspace:*"
   },
   "devDependencies": {

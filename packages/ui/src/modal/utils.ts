@@ -1,5 +1,3 @@
-import { FC } from "react";
-
 const symModalId = Symbol("modalId");
 
 let uidSeed = 0;

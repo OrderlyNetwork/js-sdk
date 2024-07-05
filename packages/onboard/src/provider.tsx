@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { Optional } from "@orderly.network/types";
-
-import type { InitOptions } from "@web3-onboard/core";
+import { useSimpleDI } from "@orderly.network/hooks";
+import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
 import { initConfig } from "./config";
 import { Main } from "./main";
 
@@ -28,6 +28,8 @@ export const ConnectorProvider = (
 ) => {
   const [initialized, setInitialized] = useState(!!props.skipInit);
 
+  const { get, register } = useSimpleDI();
+
   useEffect(() => {
     document.body.style.setProperty("--onboard-modal-z-index", "88");
   }, []);
@@ -36,7 +38,17 @@ export const ConnectorProvider = (
     if (props.skipInit) {
       return;
     }
-    initConfig(props.apiKey, props.options as InitOptions);
+
+    let onboardAPI = get("onboardAPI") as OnboardAPI;
+
+    if (onboardAPI) {
+      console.log("[Orderly SDK]:onboardAPI already initialized");
+      setInitialized(true);
+      return;
+    }
+
+    onboardAPI = initConfig(props.apiKey, props.options as InitOptions);
+    register("onboardAPI", onboardAPI);
     setInitialized(true);
   }, []);
 

@@ -1,3 +1,4 @@
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
   Divider,
@@ -13,20 +14,87 @@ import {
 } from "@orderly.network/ui";
 
 export type AccountMenuProps = {
-  address: string;
+  accountState: AccountState;
+  address?: string;
+  onDisconnect: () => void;
+  onConnectWallet: () => Promise<void>;
+  onCrateAccount: () => Promise<void>;
+  onCreateOrderlyKey: () => Promise<void>;
 };
 
 export const AccountMenu = (props: AccountMenuProps) => {
-  const { address } = props;
+  const { accountState: state, onDisconnect } = props;
+  if (state.status <= AccountStatusEnum.NotConnected) {
+    return (
+      <Button
+        size="md"
+        variant="gradient"
+        angle={45}
+        className="wallet-connect-button"
+        onClick={() => {
+          props
+            .onConnectWallet()
+            .then((r) => {
+              console.log("*****", r);
+            })
+            .catch((e) => console.error(e));
+        }}
+      >
+        Connect wallet
+      </Button>
+    );
+  }
+
+  if (state.status <= AccountStatusEnum.NotSignedIn) {
+    return <Button size="md">Sign in</Button>;
+  }
+
+  if (state.status <= AccountStatusEnum.DisabledTrading) {
+    return (
+      <Button
+        size="md"
+        onClick={() => {
+          props
+            .onCreateOrderlyKey()
+            .then((r) => console.log(r))
+            .catch((e) => console.error(e));
+        }}
+      >
+        Enable trading
+      </Button>
+    );
+  }
+
+  if (state.status === AccountStatusEnum.EnableTrading) {
+    return <WalletMenu address={state.address!} onDisconnect={onDisconnect} />;
+  }
+};
+
+export type AccountState = {
+  status: AccountStatusEnum;
+
+  /**
+   * whether the account is validating
+   */
+  validating: boolean;
+
+  accountId?: string;
+  userId?: string;
+  address?: string;
+  isNew?: boolean;
+
+  connectWallet?: {
+    name: string;
+    chainId: number;
+  };
+};
+
+const WalletMenu = (props: { address: string; onDisconnect: () => void }) => {
+  const { address, onDisconnect } = props;
   return (
     <DropdownMenuRoot>
-      <DropdownMenuTrigger>
-        <Button
-          size="md"
-          variant="gradient"
-          angle={45}
-          className="wallet-connect-button"
-        >
+      <DropdownMenuTrigger asChild>
+        <Button size="md" variant="gradient" angle={45}>
           <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
             {address}
           </Text.formatted>
@@ -126,8 +194,14 @@ export const AccountMenu = (props: AccountMenuProps) => {
           </DropdownMenuGroup>
           <Divider className={"oui-mx-4 oui-my-3"} intensity={8} />
           <DropdownMenuGroup>
-            <DropdownMenuItem size={"xl"}>
-              <Flex gap={2}>
+            <DropdownMenuItem
+              size={"xl"}
+              onSelect={(event) => {
+                event.preventDefault();
+                onDisconnect();
+              }}
+            >
+              <Flex gap={2} className={"oui-text-danger-light"}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -139,10 +213,10 @@ export const AccountMenu = (props: AccountMenuProps) => {
                     fillRule="evenodd"
                     clipRule="evenodd"
                     d="M3.97 14.03a.75.75 0 0 1 0-1.06l.262-.263C2.594 12.354 1.5 11.108 1.5 9.06c0-2.447 1.563-3.75 3.75-3.75H6a.75.75 0 0 1 0 1.5h-.75C3.837 6.81 3 7.508 3 9.06s.837 2.25 2.25 2.25h.38l1.188-1.188a.75.75 0 0 1-.068-.312v-.75c0-1.162.381-2.19 1.172-2.883.645-.565 1.512-.867 2.578-.867h1.13l1.34-1.34a.75.75 0 0 1 1.061 1.06l-9 9a.75.75 0 0 1-1.06 0m6.14-7.2L8.27 8.668c.065-.583.281-1.056.635-1.367.289-.253.684-.419 1.205-.473M7.825 12.8l3.414-3.415c-.126 2.12-1.496 3.297-3.414 3.415m7.705-6.58a.75.75 0 0 0-1.06 1.06c.508.509.53 1.202.53 1.72 0 .739-.014 1.203-.53 1.72-.165.164-.455.307-.825.405a3.8 3.8 0 0 1-.895.125H12a.75.75 0 0 0 0 1.5h.75c.31 0 .787-.045 1.28-.175.48-.127 1.065-.36 1.5-.795.97-.97.97-1.991.97-2.75v-.06c0-.51.002-1.778-.97-2.75"
-                    fill="#FF447C"
+                    fill="currentcolor"
                   />
                 </svg>
-                <span className={"oui-text-danger-light"}>Disconnect</span>
+                <span>Disconnect</span>
               </Flex>
             </DropdownMenuItem>
           </DropdownMenuGroup>

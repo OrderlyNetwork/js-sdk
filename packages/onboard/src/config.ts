@@ -11,7 +11,8 @@ export const initConfig: (
   return init({
     apiKey,
     connect: {
-      autoConnectAllPreviousWallet: true,
+      // autoConnectAllPreviousWallet: true,
+      autoConnectLastWallet: true,
     },
     //@ts-ignore
     wallets: [injectedModule()],

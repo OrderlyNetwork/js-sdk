@@ -1,5 +1,4 @@
-import React, { FC, ReactElement, useMemo, useState } from "react";
-import { SizeType } from "../helpers/sizeType";
+import React, { FC, ReactElement } from "react";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
 

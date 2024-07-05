@@ -18,7 +18,7 @@ function createDialogComponent<P extends Partial<SimpleDialogProps>>(
         size={size}
         title={title}
       >
-        <Comp {...rest} />
+        <Comp {...rest} close={hide}/>
       </SimpleDialog>
     );
   });

@@ -1,4 +1,4 @@
-import type { EIP1193Provider } from '@web3-onboard/common'
+import type { EIP1193Provider } from "@web3-onboard/common";
 import { createContext, useContext } from "react";
 
 export type ConnectedChain = {
@@ -21,7 +21,7 @@ export interface WalletState {
 }
 
 export interface WalletConnectorContextState {
-  connect: () => Promise<WalletState[]>;
+  connect: (options?: any) => Promise<WalletState[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
   setChain: (options: { chainId: string | number }) => Promise<any>;

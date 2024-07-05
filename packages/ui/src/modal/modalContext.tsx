@@ -90,6 +90,7 @@ function setModalStates(
 
 const reducer = (state: ModalStore, action: ModalAction) => {
   const { id, args } = action.payload;
+  console.log("reducer action", action);
   switch (action.type) {
     case "SHOW_MODAL": {
       return {
@@ -154,17 +155,13 @@ const ModalContainer: FC = () => {
       };
     });
 
+  // console.log("components", components, modals);
+
   return (
     <>
       {components.map((component) => {
-        // return (
-        //   <Slot
-        //     key={component.id}
-        //     id={component.id}
-        //     {...component.props}
-        //     children={component.comp}
-        //   />
-        // );
+        // console.log("component", component,);
+
         const Comp: ElementType = component.comp;
         return (
           <Comp key={component.id} id={component.id} {...component.props} />

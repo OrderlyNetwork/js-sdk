@@ -17,7 +17,7 @@ export * from "./scrollarea";
 export * from "./dialog";
 export * from "./divider";
 export * from "./tabs";
-export { Select } from "./select";
+export { Select, SelectItem } from "./select";
 export * from "./popover";
 export * from "./card";
 export * from "./pickers";

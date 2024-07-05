@@ -39,6 +39,7 @@ export interface AccountState {
 
   connectWallet?: {
     name: string;
+    chainId: number;
   };
 
   // balance: string;
@@ -151,7 +152,11 @@ export class Account {
       status: AccountStatusEnum.Connected,
       address,
       accountId: undefined, // if address change, accountId should be reset
-      connectWallet: wallet?.wallet,
+      connectWallet: {
+        // ...wallet?.wallet,
+        name: wallet.wallet?.name || "unknown",
+        chainId: wallet.chain.id,
+      },
       validating: true,
     };
 
@@ -529,10 +534,9 @@ export class Account {
   }
 
   async disconnect(): Promise<void> {
-    // TODO: confirm with PM, should clean all key when disconnect ?
-    // if (!!this.stateValue.address) {
-    //   this.keyStore.cleanAllKey(this.stateValue.address);
-    // }
+    if (!!this.stateValue.address) {
+      this.keyStore.cleanAllKey(this.stateValue.address);
+    }
 
     const nextState = {
       ...this.stateValue,

@@ -13,7 +13,7 @@ export const decorators = [
     },
     defaultTheme: "light",
   }),
-  withWalletConnect,
+  // withWalletConnect,
 ];
 
 const preview: Preview = {
@@ -26,7 +26,13 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["Design Tokens", "Base"],
+        order: [
+          "Design Tokens",
+          "Base",
+          ["Overview"],
+          "Package",
+          ["Overview", "ui-connector", "ui-leverage", "ui-scaffold"],
+        ],
       },
     },
     viewport: {

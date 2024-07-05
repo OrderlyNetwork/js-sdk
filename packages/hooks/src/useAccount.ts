@@ -49,8 +49,6 @@ export const useAccount = () => {
     return account.createAccount();
   }, [account]);
 
-  // console.log("--------", state);
-
   return {
     account,
     state,

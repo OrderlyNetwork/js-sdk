@@ -2,7 +2,7 @@ import { Box, Flex, Select } from "@orderly.network/ui";
 
 type ChainItem = {
   name: string;
-  id: string;
+  id: number;
   lowestFee?: boolean;
 };
 
@@ -11,6 +11,7 @@ export const ChainMenu = (props: {
     mainnet: ChainItem[];
     testnet: ChainItem[];
   };
+  onChange?: (chain: ChainItem) => void;
   currentChain: ChainItem;
 }) => {
   return (
@@ -19,6 +20,8 @@ export const ChainMenu = (props: {
         chains={props.chains}
         size="md"
         value={props.currentChain}
+        variant="contained"
+        onChange={props.onChange}
       />
     </Flex>
   );

@@ -25,6 +25,7 @@ export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
 export { useConfig } from "./useConfig";
 export { useKeyStore } from "./useKeyStore";
+export { useSimpleDI } from "./useSimpleDI";
 
 export * from "./orderlyContext";
 export * from "./statusProvider";

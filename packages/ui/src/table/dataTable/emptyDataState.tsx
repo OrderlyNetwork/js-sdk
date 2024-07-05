@@ -17,7 +17,7 @@ export const EmptyDataState = (props: { title?: string }) => {
   );
 };
 
-installExtension({
+installExtension<{ title?: string }>({
   name: "emptyDataState",
   positions: ["emptyDataState"],
 })(EmptyDataState);

@@ -1,12 +1,13 @@
-import { FC, PropsWithoutRef, useMemo, useState } from "react";
+import { PropsWithoutRef, useEffect, useState } from "react";
 import { selectVariants } from "./selectPrimitive";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { VariantProps, cnBase } from "tailwind-variants";
-import { TokenIcon, ChainIcon } from "../icon";
+import { VariantProps } from "tailwind-variants";
+import { ChainIcon } from "../icon";
 import { Flex } from "../flex";
 import { tv } from "../utils/tv";
 import { Box } from "../box";
 import { Either } from "../misc/either";
+import { Text } from "../typography";
 
 const chainSelectVariants = tv({
   extend: selectVariants,
@@ -44,7 +45,7 @@ const chainSelectVariants = tv({
 
 type ChainItem = {
   name: string;
-  id: string;
+  id: number;
   lowestFee?: boolean;
 };
 
@@ -64,17 +65,20 @@ function ChainSelectItem(props: {
   itemClassName: string;
   iconClassName: string;
   feeClassName: string;
+  lowestFee?: boolean;
 }) {
   return (
     <SelectPrimitive.SelectItem
-      value={props.chain.id}
+      value={`${props.chain.id}`}
       className={props.itemClassName}
     >
       <Flex itemAlign={"center"} justify={"between"} width={"100%"}>
         <Flex gap={2} itemAlign={"center"}>
           <ChainIcon chainId={props.chain.id} className={props.iconClassName} />
-          <span>{props.chain.name}</span>
-          <span className={props.feeClassName}>lowest fee</span>
+          <Text size="2xs">{props.chain.name}</Text>
+          {props.lowestFee && (
+            <span className={props.feeClassName}>lowest fee</span>
+          )}
         </Flex>
         <SelectPrimitive.ItemIndicator>
           <Box width={"4px"} height={"4px"} gradient={"brand"} r={"full"} />
@@ -99,6 +103,8 @@ const ChainSelect = (props: ChainSelectProps) => {
     ...rest
   } = props;
 
+  // console.log("ChainSelectItem", props);
+
   const { trigger, icon, content, item, itemSize, viewport, tag } =
     chainSelectVariants({
       size,
@@ -110,9 +116,15 @@ const ChainSelect = (props: ChainSelectProps) => {
     props.value
   );
 
+  useEffect(() => {
+    if (props.value?.id !== currentChain?.id) {
+      setCurrentChain(props.value);
+    }
+  }, [props.value?.id]);
+
   const onChange = (value: any) => {
     if (!chains || !Array.isArray(chains.mainnet)) return;
-    const current = chains.mainnet.find((chain) => chain.id === value);
+    const current = chains.mainnet.find((chain) => chain.id === Number(value));
     setCurrentChain(current);
     if (!current) return;
     props.onChange?.(current);
@@ -121,7 +133,7 @@ const ChainSelect = (props: ChainSelectProps) => {
   return (
     <SelectPrimitive.Root
       {...rest}
-      value={currentChain?.id}
+      value={`${currentChain?.id}`}
       onValueChange={onChange}
     >
       <SelectPrimitive.Trigger className={trigger()} asChild>
@@ -159,7 +171,7 @@ const ChainSelect = (props: ChainSelectProps) => {
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
           position={"popper"}
-          className={content({ className: "oui-w-[250px]" })}
+          className={content({ className: "oui-w-[260px]" })}
           align={"end"}
           sideOffset={12}
           {...contentProps}
@@ -187,6 +199,7 @@ const ChainSelect = (props: ChainSelectProps) => {
                       itemClassName={item({
                         className: "oui-rounded-lg",
                       })}
+                      lowestFee={chain.lowestFee}
                       iconClassName={itemSize()}
                       feeClassName={tag()}
                     />

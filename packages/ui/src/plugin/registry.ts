@@ -30,6 +30,7 @@ export class OrderlyExtensionRegistry {
     plugin: Omit<Extension<Props>, "builder"> & { builder?: () => Props }
   ) {
     // this.pluginMap.set(plugin.name, plugin);
+
     for (let index = 0; index < plugin.positions.length; index++) {
       if (typeof plugin.builder !== "function") {
         // get exsiting builder

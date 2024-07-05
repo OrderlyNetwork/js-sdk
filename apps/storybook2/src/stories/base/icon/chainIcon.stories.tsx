@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { ChainIcon, Flex, SelectItem } from "@orderly.network/ui";
+import { ChainIcon, Flex } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Icon/ChainIcon",
   component: ChainIcon,
-  //   subcomponents: { SelectItem },
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",

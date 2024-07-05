@@ -1,4 +1,3 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Dialog,
@@ -16,8 +15,6 @@ import {
   TabsTrigger,
   ExclamationFillIcon,
 } from "@orderly.network/ui";
-
-import { Icon as IconTabs } from "../tabs/tabs.stories";
 
 const meta: Meta<typeof Dialog> = {
   title: "Base/Dialog/Dialog",

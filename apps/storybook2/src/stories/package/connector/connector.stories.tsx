@@ -28,9 +28,7 @@ const meta = {
     (Story: any) => (
       // <ConnectorProvider>
       <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-        <ModalProvider>
-          <Story />
-        </ModalProvider>
+        <Story />
       </OrderlyApp>
       // </ConnectorProvider>
     ),

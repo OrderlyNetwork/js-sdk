@@ -7,7 +7,7 @@ import {
 import { parseChainIdToNumber } from "@orderly.network/utils";
 
 export const useWalletStateHandle = () => {
-  const { wallet: connectedWallet } = useWalletConnector();
+  const { wallet: connectedWallet, connect } = useWalletConnector();
   const { account, state } = useAccount();
   const keyStore = useKeyStore();
 
@@ -39,36 +39,18 @@ export const useWalletStateHandle = () => {
     /**
      * if locale address is exist, resotre account state
      */
-    if (
-      localAddress &&
-      account.address !== localAddress &&
-      typeof (window as any).ethereum !== "undefined"
-    ) {
-      /**
-       * get chainId from ethereum provider
-       */
-      window.ethereum
-        .request({
-          method: "eth_chainId",
-          params: [],
-        })
-        .then(
-          (chainId: string) => {
-            console.log("chainId", chainId, parseChainIdToNumber(chainId));
-            account.setAddress(localAddress, {
-              provider: (window as any).ethereum,
-              chain: {
-                id: parseChainIdToNumber(chainId),
-              },
-              wallet: {
-                name: "MetaMask",
-              },
-            });
-          },
-          (error: any) => {
-            console.error("request chainId failed:", error);
-          }
-        );
+    if (localAddress && account.address !== localAddress) {
+      connect({
+        autoSelect: {
+          label: "MetaMask",
+          disableModals: true,
+        },
+      }).then(
+        (res) => {
+          console.log("silent connect wallet successed", res);
+        },
+        (error) => console.log("connect error", error)
+      );
     }
   }, [localAddress]);
 
@@ -76,12 +58,12 @@ export const useWalletStateHandle = () => {
    * handle wallet connection
    */
   useEffect(() => {
-    if (!connectedWallet || currentWalletAddress === localAddress) return;
+    // if (!connectedWallet || currentWalletAddress === localAddress) return;
 
     /**
      * switch account
      */
-    if (currentWalletAddress && currentWalletAddress !== account.address) {
+    if (!!currentWalletAddress && currentWalletAddress !== account.address) {
       account.setAddress(currentWalletAddress, {
         provider: connectedWallet?.provider,
         chain: {
