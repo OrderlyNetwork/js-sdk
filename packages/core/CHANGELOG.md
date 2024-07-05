@@ -1,5 +1,21 @@
 # @orderly.network/core
 
+## 1.5.9
+
+### Patch Changes
+
+- 187dd07b: fix bugs;
+- Updated dependencies [187dd07b]
+  - @orderly.network/types@1.5.9
+
+## 1.5.9-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.5.9-alpha.0
+
 ## 1.5.8
 
 ### Patch Changes

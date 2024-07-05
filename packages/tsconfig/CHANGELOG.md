@@ -1,5 +1,17 @@
 # tsconfig
 
+## 0.3.9
+
+### Patch Changes
+
+- 187dd07b: fix bugs;
+
+## 0.3.9-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.3.8
 
 ### Patch Changes
