@@ -15,7 +15,9 @@ const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
         brokerId={brokerId}
         configStore={props.configStore}
       >
-        <AppStateProvider>{props.children}</AppStateProvider>
+        <ModalProvider>
+          <AppStateProvider>{props.children}</AppStateProvider>
+        </ModalProvider>
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>
   );

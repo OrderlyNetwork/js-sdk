@@ -18,15 +18,13 @@ export type LayoutProps = {
    * if provided, the layout will use this component over the default sidebar component
    */
   leftSidebar?: React.ReactNode;
-  /**
-   * Props for the left sidebar, if passed, the layout will use the default sidebar component
-   */
   gap?: number;
   maxWidth?: number;
   bodyPadding?: SizeType;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
   topbar?: React.ReactNode;
+  // topBarProps?:
   footer?: React.ReactNode;
   routerAdapter?: routerAdapter;
   footerHeight?: number;
@@ -64,7 +62,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
       <Box
         className={cn("oui-border-b oui-border-line-12", classNames?.topNavbar)}
       >
-        <MainNavWidget />
+        {props.topbar ?? <MainNavWidget />}
       </Box>
       {/*--------- body start ------ */}
       <Grid

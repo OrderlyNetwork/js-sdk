@@ -534,10 +534,9 @@ export class Account {
   }
 
   async disconnect(): Promise<void> {
-    // TODO: confirm with PM, should clean all key when disconnect ?
-    // if (!!this.stateValue.address) {
-    //   this.keyStore.cleanAllKey(this.stateValue.address);
-    // }
+    if (!!this.stateValue.address) {
+      this.keyStore.cleanAllKey(this.stateValue.address);
+    }
 
     const nextState = {
       ...this.stateValue,

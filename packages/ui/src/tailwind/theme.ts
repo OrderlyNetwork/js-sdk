@@ -20,8 +20,8 @@ export const themePlugin = () =>
         "--oui-color-quaternary": "218 218 218",
 
         "--oui-color-danger": "217 45 107",
-        "--oui-color-danger-light": "255 103 191",
-        "--oui-color-danger-darken": "199 68 146",
+        "--oui-color-danger-light": "255 68 124",
+        "--oui-color-danger-darken": "157 32 77,",
         "--oui-color-danger-contrast": "255 255 255",
 
         "--oui-color-success": "0 134 118",

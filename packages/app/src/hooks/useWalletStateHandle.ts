@@ -51,31 +51,6 @@ export const useWalletStateHandle = () => {
         },
         (error) => console.log("connect error", error)
       );
-      /**
-       * get chainId from ethereum provider
-       */
-      // window.ethereum
-      //   .request({
-      //     method: "eth_chainId",
-      //     params: [],
-      //   })
-      //   .then(
-      //     (chainId: string) => {
-      //       console.log("chainId", chainId, parseChainIdToNumber(chainId));
-      //       account.setAddress(localAddress, {
-      //         provider: (window as any).ethereum,
-      //         chain: {
-      //           id: parseChainIdToNumber(chainId),
-      //         },
-      //         wallet: {
-      //           name: "MetaMask",
-      //         },
-      //       });
-      //     },
-      //     (error: any) => {
-      //       console.error("request chainId failed:", error);
-      //     }
-      //   );
     }
   }, [localAddress]);
 

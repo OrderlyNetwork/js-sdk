@@ -16,23 +16,23 @@ export class SimpleDI {
   }
 
   static register(...serviceClasses: any[]): void {
-    this.getContainer().register(...serviceClasses);
+    SimpleDI.getContainer().register(...serviceClasses);
   }
 
   static registerByName(name: string, serviceClass: any): void {
-    this.getContainer().registerByName(name, serviceClass);
+    SimpleDI.getContainer().registerByName(name, serviceClass);
   }
 
   // static addInjectProperty(target: any, propertyKey: string, serviceName: string = propertyKey): void {
-  //     this.getContainer().addInjectProperty(target, propertyKey, serviceName);
+  //     SimpleDI.getContainer().addInjectProperty(target, propertyKey, serviceName);
   // }
 
   static get<T = any>(name: string): T {
-    return this.getContainer().get<T>(name);
+    return SimpleDI.getContainer().get<T>(name);
   }
 
   static getOr<T = any>(name: string, instance: T): T {
-    const s = this.getContainer().get<T>(name);
+    const s = SimpleDI.getContainer().get<T>(name);
     if (!s) {
       SimpleDI.registerByName(name, instance);
     }
@@ -40,11 +40,11 @@ export class SimpleDI {
   }
 
   // static getByType<T>(c: new (...args: any[]) => T): T {
-  //     return this.getContainer().getByType(c);
+  //     return SimpleDI.getContainer().getByType(c);
   // }
 
   static getAll(): { [name: string]: any } {
-    return this.getContainer().getAll();
+    return SimpleDI.getContainer().getAll();
   }
 
   private constructor() {}

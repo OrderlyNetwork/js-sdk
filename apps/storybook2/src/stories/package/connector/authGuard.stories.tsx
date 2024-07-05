@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ModalProvider } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 
 const meta = {
@@ -14,9 +13,7 @@ const meta = {
     (Story: any) => (
       // <ConnectorProvider>
       <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-        <ModalProvider>
-          <Story />
-        </ModalProvider>
+        <Story />
       </OrderlyApp>
       // </ConnectorProvider>
     ),

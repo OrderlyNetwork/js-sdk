@@ -16,6 +16,7 @@ export type WalletConnectContentProps = {
   signIn: () => Promise<any>;
   enableTrading: (remember: boolean) => Promise<any>;
   onCompleted?: () => void;
+  close?: () => void;
 };
 
 export const WalletConnectContent = (props: WalletConnectContentProps) => {
@@ -54,14 +55,18 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       console.log(res);
       setLoading(false);
       setActiveStep((step) => step + 1);
-      props.onCompleted?.();
+      if (typeof props.onCompleted === "function") {
+        props.onCompleted();
+      } else if (typeof props.close === "function") {
+        props.close();
+      }
+      // props.onCompleted?.();
     });
   };
 
   const onSignIn = () => {
     setLoading(true);
     return props.signIn().then((res) => {
-      console.log(res);
       setActiveStep((step) => step + 1);
       return onEnableTrading();
     });

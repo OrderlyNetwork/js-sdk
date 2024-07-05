@@ -13,7 +13,7 @@ export const decorators = [
     },
     defaultTheme: "light",
   }),
-  withWalletConnect,
+  // withWalletConnect,
 ];
 
 const preview: Preview = {
