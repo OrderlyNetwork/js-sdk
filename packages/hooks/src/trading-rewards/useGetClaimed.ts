@@ -18,10 +18,12 @@ export enum DistributionId {
 
 export const useGetClaimed = (
   id: DistributionId
-): {
-  data: number | undefined;
-  refresh: () => void;
-} => {
+): [
+  data: number | undefined,
+  {
+    refresh: () => void;
+  }
+] => {
   const [data, setData] = useState<number | undefined>(0);
   const { account } = useAccount();
   const address =  account.address;
@@ -71,5 +73,5 @@ export const useGetClaimed = (
     refresh();
   }, [rpc.current, id, address]);
 
-  return { data, refresh };
+  return [data,{ refresh }];
 };

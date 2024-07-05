@@ -17,7 +17,15 @@ export type WalletRewards = {
   rows: WalletRewardsItem[];
 };
 
-export const useWalletRewardsHistory = (type: TWType) => {
+export type WalletRewardsHisotryReturns = [
+  WalletRewards | undefined,
+  {
+    refresh: () => void;
+    error?: any;
+  }
+];
+
+export const useWalletRewardsHistory = (type: TWType): WalletRewardsHisotryReturns => {
   const { account } = useAccount();
 
   const address = account.address;
@@ -28,7 +36,11 @@ export const useWalletRewardsHistory = (type: TWType) => {
       ? `/v1/public/trading_rewards/wallet_rewards_history?address=${address}`
       : `/v1/public/market_making_rewards/group_rewards_history?address=${address}`;
 
-  const { data, mutate: refresh, error } = useQuery(address !== undefined ? path : "", {
+  const {
+    data,
+    mutate: refresh,
+    error,
+  } = useQuery(address !== undefined ? path : "", {
     formatter: (res) => {
       return {
         wallet_lifetime_trading_rewards_order:
@@ -46,5 +58,5 @@ export const useWalletRewardsHistory = (type: TWType) => {
       } as WalletRewards;
     },
   });
-  return { data, refresh, error };
+  return [data, { refresh, error }];
 };

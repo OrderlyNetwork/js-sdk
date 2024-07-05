@@ -16,12 +16,14 @@ export type EpochInfoItem = {
   // k_constant_alts: number;
 };
 
-export type EpochInfoType = {
-  data: EpochInfoItem[] | undefined;
-  curEpochInfo: EpochInfoItem | undefined;
-  isUnstart: boolean;
-  refresh: () => void;
-};
+export type EpochInfoType = [
+  data: EpochInfoItem[] | undefined,
+  {
+    curEpochInfo: EpochInfoItem | undefined;
+    isUnstart: boolean;
+    refresh: () => void;
+  }
+];
 
 export const useEpochInfo = (type: TWType): EpochInfoType => {
   // const [data, setData] = useState<EpochInfoItem[] | undefined>(undefined);
@@ -33,26 +35,25 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     type === TWType.normal
       ? "/v1/public/trading_rewards/epoch_info"
       : "/v1/public/market_making_rewards/epoch_info";
-  const { data: epochInfo, error, mutate: refresh } = useQuery(path, {
+  const {
+    data: epochInfo,
+    error,
+    mutate: refresh,
+  } = useQuery(path, {
     formatter: (res) => {
-
-      
-
-      if (
-        typeof res === "object" &&
-        "rows" in res! &&
-        "current_epoch" in res
-      ) {
+      if (typeof res === "object" && "rows" in res! && "current_epoch" in res) {
         const { rows, current_epoch } = res;
         if (Array.isArray(rows)) {
-          const list: EpochInfoItem[] = rows.map((e: any) => e as EpochInfoItem);
+          const list: EpochInfoItem[] = rows.map(
+            (e: any) => e as EpochInfoItem
+          );
           list.sort((a, b) => b.end_time - a.end_time);
           const curEpochIndex = list?.findIndex(
             (item: any) => item.epoch_id === current_epoch
           );
-  
+
           const epochOne = list.find((item) => item.epoch_id === 1);
-  
+
           if (epochOne && epochOne?.start_time > Date.now()) {
             // not start
             setCurEpochInfo(epochOne);
@@ -61,14 +62,13 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
               curEpochIndex !== -1 ? list?.[curEpochIndex] : undefined
             );
           }
-  
-          return list
+
+          return list;
         }
       }
       return [];
-    }
+    },
   });
-
 
   const isUnstart = useMemo(() => {
     // if (curEpochInfo) {
@@ -83,5 +83,5 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     return true;
   }, [epochInfo]);
 
-  return { data: epochInfo, curEpochInfo, isUnstart, refresh };
+  return [epochInfo, { curEpochInfo, isUnstart, refresh }];
 };

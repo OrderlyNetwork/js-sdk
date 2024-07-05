@@ -7,10 +7,11 @@ import { commify } from "@orderly.network/utils";
 
 export const CurEpochUI: FC<CurEpochReturns> = (props) => {
   const state = props;
-  const startTime = state.epochList?.curEpochInfo?.start_time;
-  const endTime = state.epochList?.curEpochInfo?.end_time;
-  const curEpochId = state.epochList?.curEpochInfo?.epoch_id;
-  const max_reward_amount = state.epochList?.curEpochInfo?.max_reward_amount;
+  const curEpochInfo = state.epochList?.[1].curEpochInfo;
+  const startTime = curEpochInfo?.start_time;
+  const endTime = curEpochInfo?.end_time;
+  const curEpochId = curEpochInfo?.epoch_id;
+  const max_reward_amount = curEpochInfo?.max_reward_amount;
   return (
     <Flex
       r={"2xl"}

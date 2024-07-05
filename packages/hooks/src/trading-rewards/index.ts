@@ -12,6 +12,7 @@ export { useWalletRewardsHistory } from "./useWalletRewardsHistory";
 export type {
   WalletRewards,
   WalletRewardsItem,
+  WalletRewardsHisotryReturns,
 } from "./useWalletRewardsHistory";
 
 
