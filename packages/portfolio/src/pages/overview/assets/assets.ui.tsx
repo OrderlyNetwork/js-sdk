@@ -42,19 +42,6 @@ export const AssetsUI = (props: Props) => {
           onWithdraw={props.onWithdraw}
         />
       }
-      // footer={
-      //   <Either
-      //     value={props.connected ?? false}
-      //     left={<NotConnected onConnectWallet={props.onConnectWallet} />}
-      //   >
-      //     <AssetStatistic
-      //       unrealROI={props.unrealROI}
-      //       unrealPnL={props.unrealPnL}
-      //       freeCollateral={props.freeCollateral}
-      //       currentLeverage={props.currentLeverage}
-      //     />
-      //   </Either>
-      // }
       footer={
         <AuthGuard>
           <AssetStatistic

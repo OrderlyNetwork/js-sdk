@@ -1,4 +1,4 @@
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
@@ -23,7 +23,6 @@ type AuthGuardProps = {
   status?: AccountStatusEnum;
 
   buttonProps?: ButtonProps;
-  onConnect: () => Promise<any>;
 
   // validatingIndicator?: ReactElement;
 };
@@ -80,11 +79,22 @@ const DefaultFallback = (props: {
   status: AccountStatusEnum;
   buttonProps?: ButtonProps;
 }) => {
-  const onConnect = () => {
+  const { connect } = useWalletConnector();
+  const onConnectOrderly = () => {
     modal.show(WalletConnectorModalId).then(
       (r) => console.log(r),
       (error) => console.log(error)
     );
+  };
+
+  const onConnectWallet = async () => {
+    const wallets = await connect();
+
+    console.log("wallets::", wallets);
+    if (Array.isArray(wallets) && wallets.length > 0) {
+      // await account.connect(wallets[0]);
+      onConnectOrderly();
+    }
   };
 
   return (
@@ -96,7 +106,7 @@ const DefaultFallback = (props: {
             <Button
               size="md"
               onClick={() => {
-                onConnect();
+                onConnectWallet();
               }}
               fullWidth
               variant={"gradient"}
@@ -112,7 +122,7 @@ const DefaultFallback = (props: {
             <Button
               size="md"
               onClick={() => {
-                onConnect();
+                onConnectOrderly();
               }}
               fullWidth
               angle={45}
@@ -128,7 +138,7 @@ const DefaultFallback = (props: {
           size="md"
           fullWidth
           {...props.buttonProps}
-          onClick={() => onConnect()}
+          onClick={() => onConnectOrderly()}
         >
           Enable trading
         </Button>
