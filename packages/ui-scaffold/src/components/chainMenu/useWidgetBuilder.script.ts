@@ -10,7 +10,8 @@ export const useChainMenuBuilderScript = () => {
   const { setChain } = useWalletConnector();
   const { state } = useAccount();
 
-  // console.log("wallet *****", account, state);
+  // console.log("chains::", chains);
+
   const currentChain = useMemo(() => {
     const chainId = state.connectWallet?.chainId;
 
