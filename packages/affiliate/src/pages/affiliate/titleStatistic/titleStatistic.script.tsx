@@ -2,7 +2,7 @@ export type TitleStatisticReturns = {
 
 };
 
-export const useTitleStatisticScript = () => {
+export const useTitleStatisticScript = (): TitleStatisticReturns => {
 
     return {};
 };

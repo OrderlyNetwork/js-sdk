@@ -2,7 +2,7 @@ export type CommissionAndRefereesReturns = {
 
 };
 
-export const useCommissionAndRefereesScript = () => {
+export const useCommissionAndRefereesScript = (): CommissionAndRefereesReturns => {
 
     return {};
 };
