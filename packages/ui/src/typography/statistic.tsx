@@ -16,18 +16,18 @@ const statisticVariants = tv({
   },
   variants: {
     align: {
-      left: {
+      start: {
         root: "oui-items-start",
       },
 
-      right: {
+      end: {
         root: "oui-items-end",
       },
     },
     // color: {},
   },
   defaultVariants: {
-    align: "left",
+    align: "start",
     // color: "default",
   },
 });
