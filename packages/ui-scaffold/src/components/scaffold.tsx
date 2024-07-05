@@ -44,9 +44,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     "orderly_scaffold_expanded",
     true
   );
-  // const leftSidebar = props.leftSidebar || (
-  //   <SideNavbarWidget {...props.leftSideProps} />
-  // );
 
   const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
 

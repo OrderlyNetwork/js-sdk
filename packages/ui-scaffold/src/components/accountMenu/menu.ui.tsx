@@ -20,10 +20,11 @@ export type AccountMenuProps = {
   onConnectWallet: () => Promise<void>;
   onCrateAccount: () => Promise<void>;
   onCreateOrderlyKey: () => Promise<void>;
+  onOpenExplorer: () => void;
 };
 
 export const AccountMenu = (props: AccountMenuProps) => {
-  const { accountState: state, onDisconnect } = props;
+  const { accountState: state, onDisconnect, onOpenExplorer } = props;
   if (state.status <= AccountStatusEnum.NotConnected) {
     return (
       <Button
@@ -66,7 +67,13 @@ export const AccountMenu = (props: AccountMenuProps) => {
   }
 
   if (state.status === AccountStatusEnum.EnableTrading) {
-    return <WalletMenu address={state.address!} onDisconnect={onDisconnect} />;
+    return (
+      <WalletMenu
+        address={state.address!}
+        onDisconnect={onDisconnect}
+        onOpenExplorer={onOpenExplorer}
+      />
+    );
   }
 };
 
@@ -89,8 +96,13 @@ export type AccountState = {
   };
 };
 
-const WalletMenu = (props: { address: string; onDisconnect: () => void }) => {
+const WalletMenu = (props: {
+  address: string;
+  onDisconnect: () => void;
+  onOpenExplorer: () => void;
+}) => {
   const { address, onDisconnect } = props;
+
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>
@@ -118,35 +130,38 @@ const WalletMenu = (props: { address: string; onDisconnect: () => void }) => {
                 </Text.formatted>
               </Flex>
               <Flex gap={2}>
-                <button>
+                <button
+                  onClick={async () => {
+                    // copy
+                    await navigator.clipboard.writeText(address);
+                  }}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
                     viewBox="0 0 18 18"
-                    fill="none"
+                    // fill="none"
+                    className="oui-fill-[rgba(255,255,255,0.36)] hover:oui-fill-primary"
                   >
                     <path
                       d="M5.249 2.243a3 3 0 0 0-3 3v4.5a3 3 0 0 0 3 3 3 3 0 0 0 3 3h4.5a3 3 0 0 0 3-3v-4.5a3 3 0 0 0-3-3 3 3 0 0 0-3-3zm7.5 4.5a1.5 1.5 0 0 1 1.5 1.5v4.5a1.5 1.5 0 0 1-1.5 1.5h-4.5a1.5 1.5 0 0 1-1.5-1.5h3a3 3 0 0 0 3-3z"
-                      fill="#fff"
-                      fillOpacity=".36"
+                      // fill="currentcolor"
+                      // fillOpacity=".36"
+
                       // className={''}
                     />
                   </svg>
                 </button>
-                <button>
+                <button onClick={() => props.onOpenExplorer()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
                     viewBox="0 0 18 18"
-                    fill="none"
+                    className="oui-fill-[rgba(255,255,255,0.36)] hover:oui-fill-primary"
                   >
-                    <path
-                      d="M12.7432 15.7432C14.3999 15.7432 15.7432 14.3999 15.7432 12.7432V5.24316C15.7432 3.58641 14.3999 2.24316 12.7432 2.24316H5.24316C3.58641 2.24316 2.24316 3.58641 2.24316 5.24316V12.7432C2.24316 14.3999 3.58641 15.7432 5.24316 15.7432H12.7432ZM6.74316 11.9932C6.55116 11.9932 6.35092 11.9287 6.20392 11.7824C5.91142 11.4892 5.91142 10.9972 6.20392 10.7039L9.20392 7.70392L7.49316 5.99316H11.9932V10.4932L10.2824 8.78241L7.28241 11.7824C7.13616 11.9287 6.93516 11.9932 6.74316 11.9932Z"
-                      fill="white"
-                      fillOpacity="0.36"
-                    />
+                    <path d="M12.7432 15.7432C14.3999 15.7432 15.7432 14.3999 15.7432 12.7432V5.24316C15.7432 3.58641 14.3999 2.24316 12.7432 2.24316H5.24316C3.58641 2.24316 2.24316 3.58641 2.24316 5.24316V12.7432C2.24316 14.3999 3.58641 15.7432 5.24316 15.7432H12.7432ZM6.74316 11.9932C6.55116 11.9932 6.35092 11.9287 6.20392 11.7824C5.91142 11.4892 5.91142 10.9972 6.20392 10.7039L9.20392 7.70392L7.49316 5.99316H11.9932V10.4932L10.2824 8.78241L7.28241 11.7824C7.13616 11.9287 6.93516 11.9932 6.74316 11.9932Z" />
                   </svg>
                 </button>
               </Flex>
