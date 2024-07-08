@@ -6,7 +6,7 @@ import { AsAnAffiliateWidget } from "./asAnAffilate";
 import { AsATraderWidget } from "./asATrader";
 import { BecomeAffiliateWidget } from "./becomeAffiliate";
 
-export const OverviewPage = () => {
+export const IndexPage = () => {
   return (
     <AffiliateProvider>
       <Flex
