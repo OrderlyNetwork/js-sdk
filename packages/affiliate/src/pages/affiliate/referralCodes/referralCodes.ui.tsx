@@ -68,7 +68,7 @@ const MobileCellItem: FC<{
   return (
     <Statistic
       className={cn("oui-flex-1", className)}
-      label={title}
+      label={<Text className="oui-text-base-contrast-36 oui-text-2xs">{title}</Text>}
       align={align}
       children={
         <Text.formatted
@@ -76,7 +76,7 @@ const MobileCellItem: FC<{
           onCopy={() => {
             console.log("xxx copy finished");
           }}
-          className="oui-text-base-contrast-80"
+          className="oui-text-base-contrast-80 oui-text-sm oui-mt-[6px]"
         >
           {value}
         </Text.formatted>
@@ -135,13 +135,13 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       {
         title: "Referral Codes",
         dataIndex: "code",
-        width: moreColumn ? 237 : 150,
+        width: moreColumn ? 80 : 120,
         render: (value) => "CODE",
       },
       {
         title: "You / Referree",
         dataIndex: "dffd",
-        width: moreColumn ? 237 : 150,
+        width: moreColumn ? 80 : 120,
         render: (value) => "YOU/REFERREE",
       },
     ];
@@ -164,7 +164,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       cols.push({
         title: "Referees / Traders ",
         dataIndex: "abc",
-        width: 150,
+        width: 120,
         fixed: "left",
         render: (value) => "REFEREES",
       });
@@ -192,7 +192,12 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
     <DataTable
       columns={columns}
       dataSource={[1, 2, 3, 4, 5, 6, 7, 8]}
-      
+      scroll={{ y: 264}}
+      classNames={{
+        header: "oui-text-xs oui-text-base-contrast-36",
+        body: "oui-text-xs oui-text-base-contrast-80",
+
+      }}
     ></DataTable>
   );
 };
