@@ -1,5 +1,8 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
 import { AffiliateProvider } from "../overview/provider";
+import { SummaryWidget } from "./summary";
+import { TitleStatisticWidget } from "./titleStatistic";
+import { RebatesWidget } from "./rebates";
 export const TraderPage = () => {
   return (
     <AffiliateProvider>
@@ -13,7 +16,15 @@ export const TraderPage = () => {
         direction={"column"}
         gap={4}
       >
-       
+        <Flex
+          width={"100%"}
+          gap={4}
+          className="oui-flex oui-flex-col xl:oui-flex-row"
+        >
+          <SummaryWidget />
+          <TitleStatisticWidget />
+        </Flex>
+        <RebatesWidget />
       </Flex>
     </AffiliateProvider>
   );
