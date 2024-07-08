@@ -10,26 +10,40 @@ export const useChainMenuBuilderScript = () => {
   const { setChain } = useWalletConnector();
   const { state } = useAccount();
 
-  // console.log("chains::", chains);
-
   const currentChain = useMemo(() => {
     const chainId = state.connectWallet?.chainId;
+    let chain;
 
-    if (!chainId) return null;
+    if (chainId) {
+      chain = findByChainId(chainId);
+    }
 
-    const chain = findByChainId(chainId);
+    if (chain) {
+      return {
+        name: chain.network_infos.name,
+        id: chainId,
+        lowestFee: chain.network_infos.bridgeless,
+      };
+    }
 
-    if (!chain) return null;
+    // if (!chain) return null;
+    // if chain is null then return the first chain
+    const firstChain = chains.mainnet?.[0]?.network_infos;
+
+    if (!firstChain) return null;
 
     return {
-      name: chain.network_infos.name,
-      id: chainId,
-      lowestFee: chain.network_infos.bridgeless,
+      name: firstChain.name,
+      id: firstChain.chain_id,
+      lowestFee: firstChain.bridgeless,
     };
-  }, [state]);
+  }, [state, chains]);
 
-  const onChainChange = (chain) => {
+  // console.log("currentChain::", currentChain);
+
+  const onChainChange = (chain: { id: number }) => {
     // console.log("onChainChange", chain);
+    if (!state.connectWallet) return;
     setChain({
       chainId: chain.id,
     });
@@ -50,6 +64,7 @@ export const useChainMenuBuilderScript = () => {
     },
     currentChain,
     onChange: onChainChange,
+    isSupported: false,
   };
 };
 

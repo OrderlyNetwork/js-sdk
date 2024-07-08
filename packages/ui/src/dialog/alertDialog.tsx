@@ -33,7 +33,7 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
   const actions = useMemo(() => {
     if (typeof onOk !== "function" && typeof onCancel !== "function")
       return undefined;
-    const actions = {};
+    const actions: any = {};
     if (typeof onCancel === "function") {
       actions["secondary"] = {
         label: cancelLabel,

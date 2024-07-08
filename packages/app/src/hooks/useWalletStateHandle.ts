@@ -25,16 +25,6 @@ export const useWalletStateHandle = () => {
     return parseChainIdToNumber(id);
   }, [connectedWallet]);
 
-  // useEffect(() => {
-  //   account.on("change:status", (state) => {
-  //     console.info("account status changed", state);
-  //   });
-
-  //   return () => {
-  //     account.off("change:status");
-  //   };
-  // }, [account]);
-
   useEffect(() => {
     /**
      * if locale address is exist, resotre account state
@@ -88,4 +78,7 @@ export const useWalletStateHandle = () => {
     account.address,
     account.chainId,
   ]);
+
+  // Check whether ChainId supports it
+  useEffect(() => {}, [currentChainId]);
 };

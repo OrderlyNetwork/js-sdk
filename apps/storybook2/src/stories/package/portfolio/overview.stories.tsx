@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { OverviewModule, } from "@orderly.network/portfolio";
+import { OverviewModule, PortfolioLayoutWidget, } from "@orderly.network/portfolio";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Card } from "@orderly.network/ui";
+import { Box, Card, Flex } from "@orderly.network/ui";
 import { fn } from "@storybook/test";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const meta = {
-  title: "Package/Portfolio/Page",
+  title: "Package/Portfolio/Overview",
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,
     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   },
   decorators: [
-    (Story: any) => (
+    (Story) => (
       <ConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
           <Story />
@@ -25,7 +25,7 @@ const meta = {
     ),
   ],
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   // tags: ['autodocs'],
@@ -51,7 +51,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Page: Story = {};
+// export const Page: Story = {};
 
 
 export const Assets: Story = {
@@ -67,15 +67,15 @@ export const Assets: Story = {
   },
   decorators: [
     (Story) => (
-      <Box width={"500px"}>
+      <Flex justify={'center'} itemAlign={'center'} className="oui-w-full oui-h-full">
         <Story />
-      </Box>
+      </Flex>
     ),
   ],
 };
 
 export const AssetHistory: Story = {
-  render: (args) => {
+  render: () => {
     return <OverviewModule.AssetHistoryWidget></OverviewModule.AssetHistoryWidget>
   },
 
@@ -156,3 +156,12 @@ export const DistributionHistory: Story = {
 //         ),
 //     ],
 // }
+
+
+export const Page: Story = {
+  render: () => {
+    return <PortfolioLayoutWidget>
+      <OverviewModule.OverviewPage />
+    </PortfolioLayoutWidget>
+  },
+}

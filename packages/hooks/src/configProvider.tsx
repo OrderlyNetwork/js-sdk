@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from "react";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
@@ -104,7 +104,7 @@ export const OrderlyConfigProvider = (
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let account = SimpleDI.get<Account>(Account.instanceName);
 
     if (!account) {

@@ -35,6 +35,8 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   } = props;
   const { state } = useAccount();
 
+  // console.log("!!!state::", state);
+
   // return Match(state.status)
   //   .with(AccountStatusEnum.EnableTrading, () => props.children)
   //   .with(AccountStatusEnum.DisableTrading, () => props.fallback)
@@ -58,6 +60,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
           angle={45}
           fullWidth
           disabled
+          loading
           {...buttonProps}
         >
           Connect wallet

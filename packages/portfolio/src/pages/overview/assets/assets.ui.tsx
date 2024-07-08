@@ -33,6 +33,7 @@ type StatisticProps = {
 };
 
 export const AssetsUI = (props: Props) => {
+  console.log("props", props);
   return (
     <Card
       title={

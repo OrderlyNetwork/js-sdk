@@ -70,7 +70,14 @@ export class Account {
 
   assetsManager: Assets;
 
-  private _state!: AccountState;
+  private _state: AccountState = {
+    status: AccountStatusEnum.NotConnected,
+    // balance: "",
+    // checking: false,
+    validating: true, // if address is exist, validating is available
+    // leverage: Number.NaN,
+    isNew: false,
+  };
 
   private readonly contractManger;
 
@@ -92,6 +99,8 @@ export class Account {
       contracts: IContract;
     }>
   ) {
+    this._initState();
+
     if (options?.contracts) {
       this.contractManger = options.contracts;
     } else {
@@ -99,8 +108,6 @@ export class Account {
     }
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
-
-    this._initState();
 
     this._bindEvents();
   }
@@ -593,7 +600,7 @@ export class Account {
       status: AccountStatusEnum.NotConnected,
       // balance: "",
       // checking: false,
-      validating: typeof address !== "undefined", // if address is exist, validating is available
+      validating: !!address, // if address is exist, validating is available
       // leverage: Number.NaN,
       isNew: false,
     };

@@ -39,6 +39,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-leverage/src"
       ),
+      "@orderly.network/ui-positions": resolve(
+        __dirname,
+        "../../packages/ui-positions/src"
+      ),
+      "@orderly.network/ui-orders": resolve(
+        __dirname,
+        "../../packages/ui-orders/src"
+      ),
     },
   },
 });
