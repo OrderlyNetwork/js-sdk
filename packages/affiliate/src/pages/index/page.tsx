@@ -21,7 +21,7 @@ export const IndexPage = () => {
       >
         <TitleWidget />
         <SubtitleWidget />
-        <Flex className="oui-flex oui-flex-col xl:oui-flex-row oui-gap-6 xl:oui-gap-[36px] oui-w-full">
+        <Flex className="oui-flex oui-flex-col xl:oui-flex-row oui-gap-6 xl:oui-gap-[36px] oui-w-full oui-items-stretch">
           <AsAnAffiliateWidget />
           <AsATraderWidget />
         </Flex>
