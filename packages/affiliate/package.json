@@ -9,12 +9,13 @@
   },
   "keywords": [],
   "dependencies": {
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "react-intl": "^6.4.4"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
