@@ -9,6 +9,7 @@ export const SummaryUI: FC<SummaryReturns> = (props) => {
       r={"2xl"}
       p={6}
       width={"100%"}
+      height={"100%"}
       gap={4}
       direction={"column"}
       className="oui-bg-base-9"
