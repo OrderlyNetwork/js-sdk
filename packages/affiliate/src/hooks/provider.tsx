@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, createContext, useEffect, useMemo } from "react";
+import { FC, PropsWithChildren, ReactNode, createContext, useContext, useEffect, useMemo } from "react";
 // import { XAxis, YAxis, BarStyle } from "../components";
 import { formatYMDTime } from "../utils/utils";
 import { IntlProvider, MessageFormatElement } from "react-intl";
@@ -241,4 +241,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
             </ReferralContext.Provider>
         </IntlProvider>
     );
+}
+
+export function useReferralContext() {
+    return useContext(ReferralContext);
 }
