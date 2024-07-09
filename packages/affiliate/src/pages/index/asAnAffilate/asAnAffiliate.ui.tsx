@@ -106,7 +106,16 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
             </Flex>
           </Flex>
 
-          <Flex direction={"row"} gap={1} justify={"end"} itemAlign={"center"}>
+          <Flex
+            direction={"row"}
+            gap={1}
+            justify={"end"}
+            itemAlign={"center"}
+            className="oui-cursor-pointer"
+            onClick={(e) => {
+              props.onEnterAffiliatePage?.(props.referralInfo);
+            }}
+          >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
               Enter
             </Text>
@@ -118,7 +127,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
 
     return (
       <>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={props.becomeAnAffiliate}>
           Become an affiliate
         </Button>
         <Flex

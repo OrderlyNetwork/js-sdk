@@ -4,6 +4,7 @@ import { InputHelpText } from "./inputHelpText";
 import { tv } from "../utils/tv";
 import { VariantProps } from "tailwind-variants";
 import { Slot } from "@radix-ui/react-slot";
+import { cn } from "..";
 
 const textFieldVariants = tv({
   slots: {
@@ -45,10 +46,10 @@ export const TextField: React.FC<TextFieldProps> = React.forwardRef<
 
   return (
     <div className={root({ className, direction })}>
-      <InputLabel className={labelClassName()}>{label}</InputLabel>
+      <InputLabel className={cn(props.classNames?.label) || labelClassName()}>{label}</InputLabel>
       <div>
         <Input {...inputProps} />
-        <InputHelpText color={inputProps.color}>{helpText}</InputHelpText>
+        {(helpText?.length || 0 > 0) && <InputHelpText color={inputProps.color}>{helpText}</InputHelpText>}
       </div>
     </div>
   );
