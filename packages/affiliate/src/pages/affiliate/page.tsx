@@ -1,5 +1,4 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { AffiliateProvider } from "../index/provider";
 import { SummaryWidget } from "./summary";
 import { ReferralLinkWidget } from "./referralLink";
 import { TitleStatisticWidget } from "./titleStatistic";
@@ -10,7 +9,7 @@ export const AffiliatePage = () => {
   return (
     <Flex
         className={cn(
-          "oui-h-lvw oui-w-lvw",
+          "oui-h-lvw",
           // padding
           "oui-p-4 lg:oui-p-6 xl:oui-p-3",
           "oui-font-semibold"
