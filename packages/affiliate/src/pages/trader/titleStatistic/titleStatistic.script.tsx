@@ -24,7 +24,7 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   const [volType, setVolType] = useState("rebate");
   const volTypes = [
     { label: "Rebate", value: "rebate" },
-    { label: "Referral vol.", value: "ref" },
+    { label: "Volume", value: "volume" },
   ];
 
   const onVolTypeChange = (item: string) => {
