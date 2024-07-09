@@ -15,6 +15,7 @@ import {
   inputFormatter,
   Text,
   TextField,
+  Tooltip,
 } from "@orderly.network/ui";
 import { AsATraderReturns } from "./asATrader.script";
 import { USDCIcon } from "../../../components/usdcIcon";
@@ -164,16 +165,14 @@ const Bottom: FC<AsATraderReturns> = (props) => {
   };
 
   return (
-    <AuthGuard>
-      <Flex
-        direction={"row"}
-        justify={"between"}
-        width={"100%"}
-        itemAlign={"end"}
-      >
-        {content()}
-      </Flex>
-    </AuthGuard>
+    <Flex
+      direction={"row"}
+      justify={"between"}
+      width={"100%"}
+      itemAlign={"end"}
+    >
+      {content()}
+    </Flex>
   );
 };
 
@@ -227,9 +226,15 @@ const EntryCode: FC<AsATraderReturns> = (props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant="contained" color="secondary">
-          Enter code
-        </Button>
+        <Tooltip content={"Please connect your wallet to use this function"}>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={!props.isSignIn}
+          >
+            Enter code
+          </Button>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent className="oui-w-[320px] oui-font-semibold">
         <DialogHeader>

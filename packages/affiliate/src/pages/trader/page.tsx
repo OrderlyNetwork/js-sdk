@@ -1,12 +1,10 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { AffiliateProvider } from "../index/provider";
 import { SummaryWidget } from "./summary";
 import { TitleStatisticWidget } from "./titleStatistic";
 import { RebatesWidget } from "./rebates";
 export const TraderPage = () => {
   return (
-    <AffiliateProvider>
-      <Flex
+    <Flex
         className={cn(
           "oui-h-lvw oui-w-lvw",
           // padding
@@ -26,6 +24,5 @@ export const TraderPage = () => {
         </Flex>
         <RebatesWidget />
       </Flex>
-    </AffiliateProvider>
   );
 };

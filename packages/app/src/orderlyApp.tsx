@@ -1,6 +1,10 @@
 import { PropsWithChildren } from "react";
 import { OrderlyAppConfig } from "./types";
-import { ModalProvider, OrderlyThemeProvider } from "@orderly.network/ui";
+import {
+  ModalProvider,
+  OrderlyThemeProvider,
+  TooltipProvider,
+} from "@orderly.network/ui";
 import { useBootstrap } from "./hooks/useBootstrap";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider } from "./provider/appContext";
@@ -16,7 +20,9 @@ const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
         configStore={props.configStore}
       >
         <ModalProvider>
-          <AppStateProvider>{props.children}</AppStateProvider>
+          <AppStateProvider>
+            <TooltipProvider>{props.children}</TooltipProvider>
+          </AppStateProvider>
         </ModalProvider>
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>

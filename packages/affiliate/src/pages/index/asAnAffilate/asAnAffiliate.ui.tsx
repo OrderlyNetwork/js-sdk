@@ -1,7 +1,14 @@
 import { FC } from "react";
-import { Button, cn, Flex, Text } from "@orderly.network/ui";
+import {
+  Button,
+  cn,
+  Flex,
+  Text,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@orderly.network/ui";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
-import { AuthGuard } from "@orderly.network/ui-connector";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 
@@ -127,9 +134,16 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
 
     return (
       <>
-        <Button variant="contained" color="secondary" onClick={props.becomeAnAffiliate}>
-          Become an affiliate
-        </Button>
+        <Tooltip content={"Please connect your wallet to use this function"}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={props.becomeAnAffiliate}
+            disabled={!props.isSignIn}
+          >
+            Become an affiliate
+          </Button>
+        </Tooltip>
         <Flex
           direction={"column"}
           justify={"between"}
@@ -148,15 +162,13 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
   };
 
   return (
-    <AuthGuard>
-      <Flex
-        direction={"row"}
-        justify={"between"}
-        width={"100%"}
-        itemAlign={"end"}
-      >
-        {content()}
-      </Flex>
-    </AuthGuard>
+    <Flex
+      direction={"row"}
+      justify={"between"}
+      width={"100%"}
+      itemAlign={"end"}
+    >
+      {content()}
+    </Flex>
   );
 };

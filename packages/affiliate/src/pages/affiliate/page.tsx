@@ -8,8 +8,7 @@ import { CommissionAndRefereesWidget } from "./commissionAndReferees";
 import { useMediaQuery } from "@orderly.network/hooks";
 export const AffiliatePage = () => {
   return (
-    <AffiliateProvider>
-      <Flex
+    <Flex
         className={cn(
           "oui-h-lvw oui-w-lvw",
           // padding
@@ -22,7 +21,6 @@ export const AffiliatePage = () => {
         <Layout />
         <CommissionAndRefereesWidget />
       </Flex>
-    </AffiliateProvider>
   );
 };
 

@@ -1,6 +1,7 @@
-import { RefferalAPI as API } from "@orderly.network/hooks";
+import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
 import { useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export type AsATraderReturns = {
   isTrader: boolean;
@@ -13,6 +14,7 @@ export type AsATraderReturns = {
     hide: any,
     queryParams: any
   ) => void;
+  isSignIn: boolean;
 };
 
 export const useAsATraderScript = (): AsATraderReturns => {
@@ -24,7 +26,11 @@ export const useAsATraderScript = (): AsATraderReturns => {
     bindReferralCodeState,
   } = useReferralContext();
 
+  const { state } = useAccount();
+  const isSignIn = state.status === AccountStatusEnum.EnableTrading;
+
   return {
+    isSignIn,
     isTrader,
     isLoading,
     referralInfo,
