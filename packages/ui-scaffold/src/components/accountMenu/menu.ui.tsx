@@ -12,6 +12,7 @@ import {
   Flex,
   Match,
   Text,
+  Tooltip,
 } from "@orderly.network/ui";
 
 export type AccountMenuProps = {
@@ -49,22 +50,38 @@ export const AccountMenu = (props: AccountMenuProps) => {
   }
 
   if (state.status <= AccountStatusEnum.NotSignedIn) {
-    return <Button size="md">Sign in</Button>;
+    return (
+      <Tooltip
+        open
+        content={"Please sign in before starting to trade"}
+        align={"end"}
+      >
+        <Button size="md" onClick={() => props.onCrateAccount()}>
+          Sign in
+        </Button>
+      </Tooltip>
+    );
   }
 
   if (state.status <= AccountStatusEnum.DisabledTrading) {
     return (
-      <Button
-        size="md"
-        onClick={() => {
-          props
-            .onCreateOrderlyKey()
-            .then((r) => console.log(r))
-            .catch((e) => console.error(e));
-        }}
+      <Tooltip
+        open
+        content={"Please Enable trading before starting to trade"}
+        align={"end"}
       >
-        Enable trading
-      </Button>
+        <Button
+          size="md"
+          onClick={() => {
+            props
+              .onCreateOrderlyKey()
+              .then((r) => console.log(r))
+              .catch((e) => console.error(e));
+          }}
+        >
+          Enable trading
+        </Button>
+      </Tooltip>
     );
   }
 

@@ -74,7 +74,7 @@ export class Account {
     status: AccountStatusEnum.NotConnected,
     // balance: "",
     // checking: false,
-    validating: true, // if address is exist, validating is available
+    validating: false, // if address is exist, validating is available
     // leverage: Number.NaN,
     isNew: false,
   };
@@ -99,7 +99,7 @@ export class Account {
       contracts: IContract;
     }>
   ) {
-    this._initState();
+    // this._initState();
 
     if (options?.contracts) {
       this.contractManger = options.contracts;

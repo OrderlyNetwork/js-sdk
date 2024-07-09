@@ -6,6 +6,7 @@ import {
   modal,
   Select,
   Text,
+  Tooltip,
   TriggerDialog,
 } from "@orderly.network/ui";
 import { useState } from "react";
@@ -23,27 +24,33 @@ export const ChainMenu = (props: {
   };
   onChange?: (chain: ChainItem) => Promise<any>;
   currentChain: ChainItem;
-  isSupported: boolean;
+  isUnsupported: boolean;
+  isConnected: boolean;
 }) => {
-  if (!props.isSupported) {
+  if (props.isUnsupported && props.isConnected) {
     return (
-      <Button
-        color="warning"
-        size="md"
-        onClick={() => {
-          modal
-            .show("SwitchChain", {
-              chains: props.chains,
-              onChange: props.onChange,
-            })
-            .then(
-              (r) => console.log(r),
-              (error) => console.log(error)
-            );
-        }}
+      <Tooltip
+        open
+        content={"Please switch to a supported network to continue."}
       >
-        Wrong network
-      </Button>
+        <Button
+          color="warning"
+          size="md"
+          onClick={() => {
+            modal
+              .show("SwitchChain", {
+                chains: props.chains,
+                onChange: props.onChange,
+              })
+              .then(
+                (r) => console.log(r),
+                (error) => console.log(error)
+              );
+          }}
+        >
+          Wrong network
+        </Button>
+      </Tooltip>
     );
   }
 
@@ -140,13 +147,24 @@ const ChainItem = (props: {
         });
       }}
     >
-      <Flex itemAlign={"center"} width={"100%"} py={3} px={4} gap={2}>
-        <ChainIcon chainId={props.id} />
-        <Text size="2xs">{props.name}</Text>
-        {props.lowestFee && (
-          <div className="oui-text-success oui-px-2 oui-bg-success/10 oui-rounded oui-text-2xs">
-            lowest fee
-          </div>
+      <Flex justify={"between"}>
+        <Flex itemAlign={"center"} width={"100%"} py={3} px={4} gap={2}>
+          <ChainIcon chainId={props.id} />
+          <Text size="2xs">{props.name}</Text>
+          {props.lowestFee && (
+            <div className="oui-text-success oui-px-2 oui-bg-success/10 oui-rounded oui-text-2xs">
+              lowest fee
+            </div>
+          )}
+        </Flex>
+        {props.selected && (
+          <Box
+            gradient={"brand"}
+            r={"full"}
+            width={"6px"}
+            height={"6px"}
+            mr={4}
+          />
         )}
       </Flex>
     </button>

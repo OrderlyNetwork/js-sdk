@@ -7,13 +7,13 @@ import {
 
 import { useContext, useEffect, useMemo, useState } from "react";
 import { checkChainSupport } from "../../utils/chain";
+import { useScaffoldContext } from "../scaffoldContext";
 
 export const useChainMenuBuilderScript = () => {
   const [chains, { findByChainId }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
   const { state } = useAccount();
-  const { networkId } = useContext<any>(OrderlyContext);
-  const [unsupported, setUnsupported] = useState(true);
+  const { unsupported } = useScaffoldContext();
 
   const currentChain = useMemo(() => {
     const chainId = state.connectWallet?.chainId;
@@ -46,20 +46,9 @@ export const useChainMenuBuilderScript = () => {
 
   // console.log("currentChain::", currentChain);
   //
-  useEffect(() => {
-    if (!connectedChain) return;
-
-    let isSupported = checkChainSupport(
-      connectedChain.id,
-      networkId === "testnet" ? chains.testnet : chains.mainnet
-    );
-
-    setUnsupported(isSupported);
-  }, [connectedChain?.id, chains]);
 
   const onChainChange = (chain: { id: number }) => {
-    // console.log("onChainChange", chain);
-    if (!state.connectWallet) return;
+    if (!connectedChain) return;
     return setChain({
       chainId: chain.id,
     });
@@ -80,7 +69,8 @@ export const useChainMenuBuilderScript = () => {
     },
     currentChain,
     onChange: onChainChange,
-    isSupported: unsupported,
+    isConnected: !!connectedChain,
+    isUnsupported: unsupported,
   };
 };
 

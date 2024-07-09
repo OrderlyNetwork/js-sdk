@@ -30,7 +30,7 @@ export const useWalletStateHandle = () => {
   const [chains] = useChains();
   const [unsupported, setUnsupported] = useState(true);
 
-  const localAddress = useMemo(() => keyStore.getAddress(), []);
+  const localAddress = useMemo<string>(() => keyStore.getAddress(), []);
 
   // current connected wallet address
   const currentWalletAddress = useMemo<string | undefined>(() => {
@@ -80,8 +80,7 @@ export const useWalletStateHandle = () => {
    * handle wallet connection
    */
   useEffect(() => {
-    console.log("是否不支持的链", unsupported);
-
+    //
     if (unsupported) return;
     /**
      * switch account

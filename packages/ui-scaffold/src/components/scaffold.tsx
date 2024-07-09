@@ -1,11 +1,17 @@
 import { Box, cn, Flex, Grid, type SizeType } from "@orderly.network/ui";
 import { MainNavWidget } from "./main/mainNav.widget";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar/sidebar.ui";
-import { useLocalStorage } from "@orderly.network/hooks";
+import {
+  OrderlyContext,
+  useChains,
+  useLocalStorage,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { useMemo } from "react";
 import { ExpandableContext } from "./scaffoldContext";
+import { checkChainSupport } from "../utils/chain";
 
 export type routerAdapter = {
   onRouteChange: (path: string) => void;
@@ -44,8 +50,27 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     "orderly_scaffold_expanded",
     true
   );
+  const { connectedChain } = useWalletConnector();
+  const [unsupported, setUnsupported] = useState(true);
+  const [chains] = useChains();
 
   const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
+  const { networkId } = useContext<any>(OrderlyContext);
+
+  const checkChainSupportHandle = (chainId: number | string) => {
+    return checkChainSupport(
+      chainId,
+      networkId === "testnet" ? chains.testnet : chains.mainnet
+    );
+  };
+
+  useEffect(() => {
+    if (!connectedChain) return;
+
+    let isSupported = checkChainSupportHandle(connectedChain.id);
+
+    setUnsupported(!isSupported);
+  }, [connectedChain?.id, chains]);
 
   const onExpandChange = (expand: boolean) => {
     setExpand(expand);
@@ -53,7 +78,12 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
   return (
     <ExpandableContext.Provider
-      value={{ expanded: expand, setExpand: onExpandChange }}
+      value={{
+        expanded: expand,
+        setExpand: onExpandChange,
+        unsupported,
+        checkChainSupport: checkChainSupportHandle,
+      }}
     >
       {/* Top main nav */}
       <Box

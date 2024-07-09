@@ -190,13 +190,28 @@ export function useChains(
     [chains, chainsMap]
   );
 
+  const checkChainSupport = useCallback((chainId: number | string) => {
+    console.log(chainsMap.current);
+    return true;
+  }, []);
+
   return [
     chains,
     {
       findByChainId,
+      // checkChainSupport,
       error: tokenError,
     },
   ];
+}
+
+function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
+  if (typeof chainId === "string") {
+    chainId = parseInt(chainId);
+  }
+  return chains.some((chain) => {
+    return chain.network_infos.chain_id === chainId;
+  });
 }
 
 /** orderly chains array form (/v1/public/token) api */

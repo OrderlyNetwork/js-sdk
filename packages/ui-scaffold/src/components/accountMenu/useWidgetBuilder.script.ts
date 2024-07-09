@@ -6,10 +6,12 @@ import {
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { modal } from "@orderly.network/ui";
 import { useCallback, useMemo } from "react";
+import { useScaffoldContext } from "../scaffoldContext";
 
 export const useAccountMenu = (): any => {
   const { disconnect, connect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
+  const { unsupported, checkChainSupport } = useScaffoldContext();
 
   const [_, { findByChainId }] = useChains();
 
@@ -31,7 +33,7 @@ export const useAccountMenu = (): any => {
     const wallets = await connect();
 
     if (Array.isArray(wallets) && wallets.length > 0) {
-      // await account.connect(wallets[0]);
+      if (!checkChainSupport(wallets[0]!.chains[0]!.id)) return;
       onCrateAccount();
     }
   };
