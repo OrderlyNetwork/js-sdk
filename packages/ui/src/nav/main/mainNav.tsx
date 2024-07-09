@@ -33,6 +33,7 @@ export const MainNav: FC<MainNavProps> = (props) => {
       </Flex>
       <Flex itemAlign={"center"} gap={4}>
         <TotalValue />
+        {/* @ts-ignore */}
         <ChainSelect {...chainsProps} />
         <Button
           size="md"

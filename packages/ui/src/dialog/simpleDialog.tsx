@@ -14,7 +14,7 @@ import {
 } from "./simpleDialogFooter";
 
 type SimpleDialogProps = {
-  open: boolean;
+  open?: boolean;
   onOpenChange?: (open: boolean) => void;
   size?: "sm" | "md" | "lg";
   closable?: boolean;

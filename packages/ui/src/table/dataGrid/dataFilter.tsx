@@ -52,6 +52,7 @@ export type DataFilterProps = {
 const FilterDatePicker = (props: DatePickerProps) => {
   return (
     <div>
+      {/* @ts-ignore */}
       <DatePicker
         size="xs"
         {...props}

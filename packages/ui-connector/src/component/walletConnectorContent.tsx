@@ -109,7 +109,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             <Divider
               lineStyle={"dashed"}
               direction={"vertical"}
-              intensity={5}
+              intensity={16}
             />
           </Box>
         )}

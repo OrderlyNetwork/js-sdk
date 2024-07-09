@@ -7,7 +7,7 @@ import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { modal } from "@orderly.network/ui";
 import { useCallback, useMemo } from "react";
 
-export const useAccountMenu = () => {
+export const useAccountMenu = (): any => {
   const { disconnect, connect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
 
@@ -70,7 +70,7 @@ export const useAccountMenu = () => {
       });
       await account.disconnect();
     },
-  };
+  } as const;
 };
 
 export type AccountMenuProps = ReturnType<typeof useAccountMenu>;

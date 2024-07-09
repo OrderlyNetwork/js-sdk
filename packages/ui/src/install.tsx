@@ -10,9 +10,10 @@ installExtension<MainNavProps>({
   name: "main-navbar",
   scope: ["*"],
   positions: [ExtensionPositionEnum.MainNav],
+  // @ts-ignore
   builder: useMainNavBuilder,
   __isInternal: true,
-})((props) => {
+})((props: any) => {
   return <MainNav {...props} />;
 });
 

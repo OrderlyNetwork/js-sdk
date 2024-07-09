@@ -19,7 +19,7 @@ export const ExtensionSlot: FC<Props> = (props) => {
   //
 
   const elementProps = useExtensionBuilder(position, rest);
-
+  // @ts-ignore
   const Ele = useMemo<ElementType>(() => {
     const registry = OrderlyExtensionRegistry.getInstance();
 
@@ -39,6 +39,7 @@ export const ExtensionSlot: FC<Props> = (props) => {
   }, []);
 
   return (
+    // @ts-ignore
     <ErrorBoundary
       fallback={<div>{`Component: [${position}] went wrong`}</div>}
     >

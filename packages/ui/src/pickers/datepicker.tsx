@@ -44,6 +44,7 @@ const DatePicker: FC<DatePickerProps> = (props) => {
     activeModifiers: ActiveModifiers,
     e: MouseEvent
   ) => {
+    //@ts-ignore
     calendarProps.onSelect?.(day, selectedDay, activeModifiers, e);
 
     if (day) {
@@ -59,6 +60,7 @@ const DatePicker: FC<DatePickerProps> = (props) => {
       contentProps={{
         className: "oui-w-auto oui-p-0",
       }}
+      // @ts-ignore
       content={<Calendar onSelect={onSelect} {...calendarProps} />}
     >
       <button

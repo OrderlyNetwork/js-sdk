@@ -9,7 +9,7 @@ export type ProductItem = {
 export const ProductItem: FC<{
   item: ProductItem;
   active?: boolean;
-  onClick: (product: ProductItem) => void;
+  onClick?: (product: ProductItem) => void;
 }> = (props) => {
   const { active, item, onClick } = props;
   return (

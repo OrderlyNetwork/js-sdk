@@ -11,7 +11,7 @@ export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
   tsconfig: "tsconfig.build.json",
-  external: ["react", "react-dom", "@orderly.network/ui"],
+  external: ["react", "react-dom"],
   esbuildOptions(esOptions, context) {
     if (!options.watch) {
       esOptions.drop = ["console", "debugger"];

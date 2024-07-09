@@ -73,6 +73,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         }}
       >
         <div>
+          {/* @ts-ignore */}
           {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
 
           {/* <SideNavbarWidget {...props.leftSideProps} /> */}

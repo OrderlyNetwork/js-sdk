@@ -24,16 +24,23 @@ export const ChainMenu = (props: {
   currentChain: ChainItem;
   isSupported: boolean;
 }) => {
+  console.log("_________________", props);
+
   if (!props.isSupported) {
     return (
       <Button
         color="warning"
         size="md"
         onClick={() => {
-          modal.show("SwitchChain", {
-            chains: props.chains,
-            onChange: props.onChange,
-          });
+          modal
+            .show("SwitchChain", {
+              chains: props.chains,
+              onChange: props.onChange,
+            })
+            .then(
+              (r) => console.log(r),
+              (error) => console.log(error)
+            );
         }}
       >
         Wrong network
@@ -64,8 +71,14 @@ export const NotSupportedDialog = (props: {
   return (
     <>
       <Box intensity={900} r="2xl" p={1}>
+        {/* <Text as="div" className="oui-px-4">
+          mainnet
+        </Text> */}
         {props.chains.mainnet.map((item, index) => {
           return <ChainItem key={index} {...item} onClick={props.onChange} />;
+        })}
+        {props.chains.testnet.map((item, index) => {
+          return <ChainItem key={item.id} {...item} onClick={props.onChange} />;
         })}
       </Box>
       <Box pt={5} pb={4} className="oui-text-center">

@@ -37,11 +37,11 @@ interface SpanProps extends BoxProps, VariantProps<typeof gridSpanVariants> {}
 
 const Span = (props: SpanProps) => {
   const { colSpan, rowSpan, className, ...rest } = props;
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ref.current) {
-      const parent: HTMLElement = ref.current.parentElement;
+      const parent: HTMLElement = ref.current!.parentElement!;
 
       if (!parent || !parent.classList.contains("oui-grid")) {
         console.warn("Span component must be a child of a Grid component");
@@ -62,4 +62,4 @@ const Span = (props: SpanProps) => {
   );
 };
 
-export { Span, SpanProps, gridSpanVariants };
+export { Span, type SpanProps, gridSpanVariants };

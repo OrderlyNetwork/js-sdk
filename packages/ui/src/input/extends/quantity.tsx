@@ -21,6 +21,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <Input
         ref={(node) => {
+          // @ts-ignore
           inputRef.current = node;
           if (ref) {
             if (typeof ref === "function") {
@@ -47,7 +48,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
                 align: "end",
                 onCloseAutoFocus: (event) => {
                   event.preventDefault();
-                  inputRef.current.focus();
+                  inputRef.current?.focus();
                 },
               }}
             />

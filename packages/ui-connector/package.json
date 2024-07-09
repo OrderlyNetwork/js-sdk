@@ -4,20 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsup & pnpm build:css",
+    "build:css": "tailwindcss build src/tailwind.css -o dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Orderly","UI","Exchange","DApp"],
+  "keywords": [
+    "Orderly",
+    "UI",
+    "Exchange",
+    "DApp"
+  ],
   "dependencies": {
-    "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "tsconfig": "workspace:*"
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.3.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

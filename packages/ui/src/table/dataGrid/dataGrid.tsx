@@ -23,6 +23,7 @@ export const DataGrid = <T,>(props: DataGridProps<T>) => {
   const HeaderElement: ReactElement = header ?? <DataGridFilterBar />;
   const FooterElement: ReactElement = footer ?? <DataGridFooter />;
   return (
+    // @ts-ignore
     <DataGridProvider filter={filter} pagination={props.pagination}>
       <Box>
         {HeaderElement}

@@ -37,6 +37,7 @@ const GradientText = React.forwardRef<
   const style = parseAngleProps({ angle });
 
   return (
+    // @ts-ignore
     <Text
       {...rest}
       ref={ref}

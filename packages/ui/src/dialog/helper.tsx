@@ -31,5 +31,6 @@ export const registerSimpleDialog = <Props = {},>(
   comp: ElementType<Props>,
   props?: Partial<ModalArgs<Props>>
 ) => {
+  // @ts-ignore
   modal.register(id, createDialogComponent(comp), props);
 };

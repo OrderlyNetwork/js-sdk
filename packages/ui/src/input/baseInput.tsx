@@ -65,7 +65,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     }, [innerInputRef, ref]);
 
     const formatToRender = useCallback(
-      (value) => {
+      (value: string) => {
         if (!Array.isArray(innerFormatters) || innerFormatters.length === 0)
           return value;
         if (value === null || value === undefined) return "";
@@ -82,7 +82,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     );
 
     const formatToChange = useCallback(
-      (value) => {
+      (value: string) => {
         if (!Array.isArray(innerFormatters) || innerFormatters.length === 0)
           return value;
         if (value === null || value === undefined) return "";
@@ -99,7 +99,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
 
     const formattedValue = useMemo(() => {
       if (typeof value === "undefined") return value;
-      return formatToRender(value);
+      return formatToRender(value as string);
     }, [value]);
 
     // fix cursor pointer jump to end;
@@ -122,6 +122,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
         );
 
         if (diffIndex > -1) {
+          // @ts-ignore
           const diffStr = `${props.value}`.at(diffIndex);
           if (diffStr === ",") {
             event.target.value = `${event.target.value.substring(

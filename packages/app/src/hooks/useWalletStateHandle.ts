@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useKeyStore,
@@ -80,5 +80,7 @@ export const useWalletStateHandle = () => {
   ]);
 
   // Check whether ChainId supports it
-  useEffect(() => {}, [currentChainId]);
+  useEffect(() => {
+    if (!currentChainId) return;
+  }, [currentChainId]);
 };

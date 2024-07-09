@@ -4,6 +4,7 @@
   "description": "Create React App with Orderly Network components",
   "main": "index.js",
   "scripts": {
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -13,7 +14,6 @@
     "DApp"
   ],
   "dependencies": {
-    "@orderly.network/chart": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/utils": "workspace:*",
@@ -24,7 +24,9 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "tailwindcss": "^3.4.4",
+    "tsup": "^7.3.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

@@ -28,7 +28,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           key="secondary"
           color="gray"
           onClick={() => {
-            actions.secondary.onClick();
+            actions.secondary?.onClick();
           }}
         >
           {actions.secondary.label}
@@ -41,7 +41,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
         <Button
           key="primary"
           onClick={() => {
-            actions.primary.onClick();
+            actions.primary?.onClick();
           }}
         >
           {actions.primary.label}

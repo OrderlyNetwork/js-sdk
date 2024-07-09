@@ -115,10 +115,12 @@ export const DataTable = <RecordType extends unknown>(
     Children.forEach(children, (child) => {
       // console.log("check filter element", child);
       if (isValidElement(child)) {
+        // @ts-ignore
         if (child.type?.displayName === "DataFilter") {
           setFilterEle(child);
         }
 
+        // @ts-ignore
         if (child.type?.displayName === "TablePagination") {
           setPaginationEle(child);
         }

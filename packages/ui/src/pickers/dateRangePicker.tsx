@@ -68,7 +68,9 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
           {...calendarProps}
           mode={"range"}
           numberOfMonths={2}
+          // @ts-ignore
           selected={dateRange}
+          // @ts-ignore
           onSelect={setDateRange}
         />
       }

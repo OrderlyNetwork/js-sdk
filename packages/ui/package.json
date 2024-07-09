@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
+    "build":"tsup & pnpm build:css",
+    "build:css": "npx tailwindcss -o ./dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {

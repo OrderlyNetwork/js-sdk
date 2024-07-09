@@ -151,7 +151,7 @@ type SideBarHeaderProps = {
 const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
   return (
     <Flex justify={props.open ? "between" : "center"} itemAlign={"center"}>
-      {props.open ? <Text neutral={54}>Portfolio</Text> : null}
+      {props.open ? <Text intensity={54}>Portfolio</Text> : null}
 
       <button
         onClick={() => {

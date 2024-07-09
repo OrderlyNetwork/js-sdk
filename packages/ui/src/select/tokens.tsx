@@ -38,6 +38,7 @@ export const TokenSelect = (props: TokenSelect) => {
       showCaret={options.length > 1}
       options={options}
       optionRenderer={(option) => {
+        // @ts-ignore
         return <Option {...option} />;
       }}
       valueRenderer={

@@ -217,6 +217,7 @@ const Paginations = (props: PaginationProps) => {
         <PaginationItem>
           <PaginationPrevious
             href="#"
+            // @ts-ignore
             disabled={props.page === 1}
             onClick={(event) => {
               event.preventDefault();

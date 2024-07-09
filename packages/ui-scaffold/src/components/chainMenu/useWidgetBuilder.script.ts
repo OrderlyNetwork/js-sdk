@@ -1,14 +1,29 @@
 import {
+  OrderlyContext,
   useAccount,
   useChains,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { useMemo } from "react";
+import { API } from "@orderly.network/types";
+import { useContext, useEffect, useMemo, useState } from "react";
+
+function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
+  if (typeof chainId === "string") {
+    chainId = parseInt(chainId);
+  }
+  return chains.some((chain) => {
+    console.log(chain.network_infos, chainId);
+
+    return chain.network_infos.chain_id === chainId;
+  });
+}
 
 export const useChainMenuBuilderScript = () => {
   const [chains, { findByChainId }] = useChains();
-  const { setChain } = useWalletConnector();
+  const { setChain, connectedChain } = useWalletConnector();
   const { state } = useAccount();
+  const { networkId } = useContext<any>(OrderlyContext);
+  const [unsupported, setUnsupported] = useState(true);
 
   const currentChain = useMemo(() => {
     const chainId = state.connectWallet?.chainId;
@@ -40,6 +55,18 @@ export const useChainMenuBuilderScript = () => {
   }, [state, chains]);
 
   // console.log("currentChain::", currentChain);
+  //
+  useEffect(() => {
+    console.log("---->connectedChain check:::", connectedChain, networkId);
+    if (!connectedChain) return;
+
+    let isSupported = checkChainSupport(
+      connectedChain.id,
+      networkId === "testnet" ? chains.testnet : chains.mainnet
+    );
+
+    setUnsupported(isSupported);
+  }, [connectedChain?.id, chains]);
 
   const onChainChange = (chain: { id: number }) => {
     // console.log("onChainChange", chain);
@@ -64,7 +91,7 @@ export const useChainMenuBuilderScript = () => {
     },
     currentChain,
     onChange: onChainChange,
-    isSupported: false,
+    isSupported: unsupported,
   };
 };
 

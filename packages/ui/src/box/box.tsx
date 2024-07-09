@@ -10,7 +10,7 @@ import { tv } from "../utils/tv";
 import { positionVariants } from "../layout/position";
 import { visibleVariants } from "../layout/visible";
 
-export const baseBoxVariants = tv({
+const boxVariants = tv({
   base: ["oui-box"],
   variants: {
     ...layoutVariants.variants,
@@ -35,9 +35,10 @@ export const baseBoxVariants = tv({
   },
 });
 
-const boxVariants = tv({
-  extend: baseBoxVariants,
-});
+// // @ts-ignore
+// const boxVariants = tv({
+//   extend: baseBoxVariants,
+// });
 
 type BoxElement = React.ElementRef<"div">;
 
