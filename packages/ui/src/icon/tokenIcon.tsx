@@ -4,14 +4,21 @@ import { ExcludeXsSizeType, SizeType } from "../helpers/sizeType";
 
 export type TokenIconProps = {
   size?: SizeType;
-  name: string;
+  name?: string;
+  symbol?: string;
   className?: string;
 };
 
 export const TokenIcon: FC<TokenIconProps> = (props) => {
   const url = useMemo(() => {
-    return `https://oss.orderly.network/static/symbol_logo/${props.name}.png`;
-  }, [props.name]);
+    let name = props.name;
+    if (typeof props.symbol === "string") {
+      const arr = props.symbol?.split("_");
+      name = arr[1];
+    }
+    return `https://oss.orderly.network/static/symbol_logo/${name}.png`;
+  }, [props.name, props.symbol]);
+
   return (
     <Avatar
       size={props.size}
