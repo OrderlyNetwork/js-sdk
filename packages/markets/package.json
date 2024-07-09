@@ -3,17 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "watch": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "tsup --tsconfig tsconfig.build.json"
+    "build": "tsup"
   },
   "keywords": [],
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "embla-carousel-react": "8.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
