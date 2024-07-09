@@ -43,11 +43,12 @@ export class CustomConfigStore implements ConfigStore {
 
   constructor(init: Partial<Record<ConfigKey, any>>) {
     const networkId = init?.networkId || "mainnet";
+    const brokerId = init?.brokerId || "orderly";
     const env = (init?.env as ENV_NAME) || "prod";
     const urls = API_URLS[env];
 
     this.map = new Map<ConfigKey, any>([
-      ["brokerId", "orderly"],
+      ["brokerId", brokerId],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],

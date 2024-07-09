@@ -1,9 +1,27 @@
-import { FC } from "react";
-import { Button, cn, Flex, Text } from "@orderly.network/ui";
+import { FC, useState } from "react";
+import {
+  Button,
+  cn,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Divider,
+  Flex,
+  Input,
+  inputFormatter,
+  Text,
+  TextField,
+  Tooltip,
+} from "@orderly.network/ui";
 import { AsATraderReturns } from "./asATrader.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { useCheckReferralCode, useMutation } from "@orderly.network/hooks";
 
 export const AsATraderUI: FC<AsATraderReturns> = (props) => {
   return (
@@ -87,7 +105,8 @@ const Bottom: FC<AsATraderReturns> = (props) => {
     }
 
     if (props.isTrader) {
-      const totalReferrerRebate = props.referralInfo?.referee_info?.total_referee_rebate;
+      const totalReferrerRebate =
+        props.referralInfo?.referee_info?.total_referee_rebate;
 
       return (
         <>
@@ -106,7 +125,16 @@ const Bottom: FC<AsATraderReturns> = (props) => {
             </Flex>
           </Flex>
 
-          <Flex direction={"row"} gap={1} justify={"end"} itemAlign={"center"}>
+          <Flex
+            direction={"row"}
+            gap={1}
+            justify={"end"}
+            itemAlign={"center"}
+            className="oui-cursor-pointer"
+            onClick={(e) => {
+              props?.onEnterTraderPage?.(props.referralInfo);
+            }}
+          >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
               Enter
             </Text>
@@ -118,9 +146,7 @@ const Bottom: FC<AsATraderReturns> = (props) => {
 
     return (
       <>
-        <Button variant="contained" color="secondary">
-          Enter code
-        </Button>
+        <EntryCode {...props} />
         <Flex
           direction={"column"}
           justify={"between"}
@@ -139,15 +165,131 @@ const Bottom: FC<AsATraderReturns> = (props) => {
   };
 
   return (
-    <AuthGuard>
-      <Flex
-        direction={"row"}
-        justify={"between"}
-        width={"100%"}
-        itemAlign={"end"}
-      >
-        {content()}
-      </Flex>
-    </AuthGuard>
+    <Flex
+      direction={"row"}
+      justify={"between"}
+      width={"100%"}
+      itemAlign={"end"}
+    >
+      {content()}
+    </Flex>
+  );
+};
+
+const EntryCode: FC<AsATraderReturns> = (props) => {
+  const [code, setCode] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const {
+    isExist,
+    error: checkCodeError,
+    isLoading,
+  } = useCheckReferralCode(code);
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const [bindCode, { error, isMutating }] = useMutation(
+    "/v1/referral/bind",
+    "POST"
+  );
+
+  const onClickConfirm = async () => {
+    try {
+      await bindCode({ referral_code: code });
+      // toast.success("Referral code bound");
+      // mutate();
+      if (props.bindReferralCodeState) {
+        props.bindReferralCodeState(true, null, hide, { tab: 1 });
+      } else {
+        hide();
+      }
+    } catch (e: any) {
+      let errorText = `${e}`;
+      if ("message" in e) {
+        errorText = e.message;
+      }
+
+      if ("referral code not exist" === errorText) {
+        errorText = "This referral code does not exist";
+      }
+
+      if (props.bindReferralCodeState) {
+        // toast.error(errorText);
+        props.bindReferralCodeState(false, e, hide, {});
+      } else {
+        // toast.error(errorText);
+      }
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <Tooltip content={"Please connect your wallet to use this function"}>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={!props.isSignIn}
+          >
+            Enter code
+          </Button>
+        </Tooltip>
+      </DialogTrigger>
+      <DialogContent className="oui-w-[320px] oui-font-semibold">
+        <DialogHeader>
+          <DialogTitle>Share link</DialogTitle>
+        </DialogHeader>
+        <Divider />
+        <DialogBody>
+          <Text size="sm" intensity={54}>
+            Bind a referral code to earn trading fee rebates.
+          </Text>
+
+          <TextField
+            className="oui-w-full oui-mt-4"
+            placeholder="Referral code"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+            }}
+            formatters={[
+              inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
+            ]}
+            onClean={() => {
+              setCode("");
+            }}
+            label={"Enter referral code"}
+            classNames={{
+              label: "oui-text-2xs oui-text-base-contrast-54",
+            }}
+            helpText={!isExist && !isLoading ? "This code is exist" : undefined}
+            color="danger"
+          />
+
+          <Flex
+            itemAlign={"center"}
+            width={"100%"}
+            direction={"row"}
+            justify={"center"}
+            mt={6}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size="md"
+              className="oui-px-[40px]"
+              disabled={code.length < 4 || !isExist}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickConfirm();
+              }}
+            >
+              Confirm
+            </Button>
+          </Flex>
+        </DialogBody>
+      </DialogContent>
+    </Dialog>
   );
 };

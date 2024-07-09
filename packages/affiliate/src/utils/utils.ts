@@ -1,4 +1,4 @@
-import { toast } from "@orderly.network/react";
+// import { toast } from "@orderly.network/react";
 
 export function addQueryParam(url: string, paramName: string, paramValue: string): string {
   const urlObj = new URL(url);
@@ -14,9 +14,9 @@ export function addQueryParam(url: string, paramName: string, paramValue: string
 export async function copyText(content: string) {
   try {
     await navigator.clipboard.writeText(content);
-    toast.success("Copy success");
+    // toast.success("Copy success");
   } catch (error) {
-    toast.success("Copy failed");
+    // toast.success("Copy failed");
   }
 }
 

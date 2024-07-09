@@ -2,7 +2,8 @@ import { FC } from "react";
 import { SubtitleReturns } from "./subtitle.script";
 import { Flex, Text } from "@orderly.network/ui";
 
-export const SubtitleUI: FC<SubtitleReturns> = () => {
+export const SubtitleUI: FC<SubtitleReturns> = (props) => {
+  
   return (
     <Flex
       direction={"column"}
@@ -14,6 +15,13 @@ export const SubtitleUI: FC<SubtitleReturns> = () => {
         direction={"row"}
         gap={1}
         className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
+        onClick={(e) => {
+          if (props.onLearnAffiliate) {
+            props.onLearnAffiliate?.();
+          } else if (props.learnAffiliateUrl) {
+            window.open(props.learnAffiliateUrl, '_blank');
+          }
+        }}
       >
         <Text children="Learn how it works" />
         <svg

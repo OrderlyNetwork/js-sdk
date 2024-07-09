@@ -2,7 +2,11 @@ import { FC, ReactNode } from "react";
 import { Flex, Text, cn } from "@orderly.network/ui";
 import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
 
-export const BecomeAffiliateUI: FC<BecomeAffiliateReturns> = () => {
+export const BecomeAffiliateUI: FC<BecomeAffiliateReturns> = (props) => {
+
+  if (typeof props.overwrite === "function") {
+    return props.overwrite?.(props.state);
+  }
   return (
     <Flex
       direction={"column"}

@@ -19,7 +19,7 @@ const meta = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -65,7 +65,7 @@ const meta = {
                   ref: {
                     // gradientTitle: "Mark",
                     // top: (state) =>  (<div>ASD</div>),
-                    // card: (state) => (<div>GFHJK</div>)
+                    // card: (state) => (<div>GFHJK</div>),
                     // card: {
                     // refClassName: "orderly-text-red-900",
                     // refIcon: (<div className="orderly-bg-white orderly-h-full">DDS</div>),
