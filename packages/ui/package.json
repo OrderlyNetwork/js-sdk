@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup & pnpm build:css",
+    "build": "tsup",
     "build:css": "npx tailwindcss -o ./dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

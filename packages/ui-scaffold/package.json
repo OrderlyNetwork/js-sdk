@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsup & pnpm build:css",
-    "build:css":"tailwindcss build src/tailwind.css -o dist/styles.css --minify",
+    "build": "tsup",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
