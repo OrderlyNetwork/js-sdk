@@ -263,7 +263,7 @@ const EntryCode: FC<AsATraderReturns> = (props) => {
             classNames={{
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
-            helpText={!isExist && !isLoading ? "This code is exist" : undefined}
+            helpText={!isExist && !isLoading ? "This referral code does not exist." : undefined}
             color="danger"
           />
 
