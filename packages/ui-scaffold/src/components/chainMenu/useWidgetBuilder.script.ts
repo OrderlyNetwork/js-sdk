@@ -4,19 +4,9 @@ import {
   useChains,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+
 import { useContext, useEffect, useMemo, useState } from "react";
-
-function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
-  if (typeof chainId === "string") {
-    chainId = parseInt(chainId);
-  }
-  return chains.some((chain) => {
-    console.log(chain.network_infos, chainId);
-
-    return chain.network_infos.chain_id === chainId;
-  });
-}
+import { checkChainSupport } from "../../utils/chain";
 
 export const useChainMenuBuilderScript = () => {
   const [chains, { findByChainId }] = useChains();
@@ -57,7 +47,6 @@ export const useChainMenuBuilderScript = () => {
   // console.log("currentChain::", currentChain);
   //
   useEffect(() => {
-    console.log("---->connectedChain check:::", connectedChain, networkId);
     if (!connectedChain) return;
 
     let isSupported = checkChainSupport(
@@ -71,7 +60,7 @@ export const useChainMenuBuilderScript = () => {
   const onChainChange = (chain: { id: number }) => {
     // console.log("onChainChange", chain);
     if (!state.connectWallet) return;
-    setChain({
+    return setChain({
       chainId: chain.id,
     });
   };

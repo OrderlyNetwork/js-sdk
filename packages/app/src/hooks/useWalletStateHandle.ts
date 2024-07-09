@@ -1,15 +1,34 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
+  OrderlyContext,
   useAccount,
+  useChains,
   useKeyStore,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { parseChainIdToNumber } from "@orderly.network/utils";
+import { API } from "@orderly.network/types";
+
+function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
+  if (typeof chainId === "string") {
+    chainId = parseInt(chainId);
+  }
+  return chains.some((chain) => {
+    return chain.network_infos.chain_id === chainId;
+  });
+}
 
 export const useWalletStateHandle = () => {
-  const { wallet: connectedWallet, connect } = useWalletConnector();
+  const {
+    wallet: connectedWallet,
+    connect,
+    connectedChain,
+  } = useWalletConnector();
   const { account, state } = useAccount();
   const keyStore = useKeyStore();
+  const { networkId } = useContext<any>(OrderlyContext);
+  const [chains] = useChains();
+  const [unsupported, setUnsupported] = useState(true);
 
   const localAddress = useMemo(() => keyStore.getAddress(), []);
 
@@ -26,8 +45,21 @@ export const useWalletStateHandle = () => {
   }, [connectedWallet]);
 
   useEffect(() => {
+    if (!connectedChain) return;
+
+    let isSupported = checkChainSupport(
+      connectedChain.id,
+      networkId === "testnet" ? chains.testnet : chains.mainnet
+    );
+
+    setUnsupported(!isSupported);
+  }, [connectedChain?.id, chains]);
+
+  useEffect(() => {
+    if (unsupported) return;
+
     /**
-     * if locale address is exist, resotre account state
+     * if locale address is exist, restore account state
      */
     if (localAddress && account.address !== localAddress) {
       connect({
@@ -42,14 +74,15 @@ export const useWalletStateHandle = () => {
         (error) => console.log("connect error", error)
       );
     }
-  }, [localAddress]);
+  }, [localAddress, unsupported]);
 
   /**
    * handle wallet connection
    */
   useEffect(() => {
-    // if (!connectedWallet || currentWalletAddress === localAddress) return;
+    console.log("是否不支持的链", unsupported);
 
+    if (unsupported) return;
     /**
      * switch account
      */
@@ -73,14 +106,11 @@ export const useWalletStateHandle = () => {
     }
   }, [
     connectedWallet,
+    connectedChain,
     currentWalletAddress,
     currentChainId,
     account.address,
     account.chainId,
+    unsupported,
   ]);
-
-  // Check whether ChainId supports it
-  useEffect(() => {
-    if (!currentChainId) return;
-  }, [currentChainId]);
 };

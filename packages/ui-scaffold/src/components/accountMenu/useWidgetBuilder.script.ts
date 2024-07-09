@@ -30,7 +30,6 @@ export const useAccountMenu = (): any => {
   const onConnectWallet = async () => {
     const wallets = await connect();
 
-    console.log("wallets::", wallets);
     if (Array.isArray(wallets) && wallets.length > 0) {
       // await account.connect(wallets[0]);
       onCrateAccount();

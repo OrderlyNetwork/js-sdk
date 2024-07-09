@@ -8,6 +8,7 @@ import {
   Text,
   TriggerDialog,
 } from "@orderly.network/ui";
+import { useState } from "react";
 
 type ChainItem = {
   name: string;
@@ -24,8 +25,6 @@ export const ChainMenu = (props: {
   currentChain: ChainItem;
   isSupported: boolean;
 }) => {
-  console.log("_________________", props);
-
   if (!props.isSupported) {
     return (
       <Button
@@ -50,6 +49,7 @@ export const ChainMenu = (props: {
 
   return (
     <Flex justify={"center"}>
+      {/* @ts-ignore */}
       <Select.chains
         chains={props.chains}
         size="md"
@@ -66,19 +66,48 @@ export const NotSupportedDialog = (props: {
     mainnet: ChainItem[];
     testnet: ChainItem[];
   };
-  onChange?: (chain: ChainItem) => void;
+  onChange?: (chain: ChainItem) => Promise<any>;
+  close: () => void;
 }) => {
+  const [select, setSelect] = useState<number | undefined>();
+  const onChange = async (chain: ChainItem) => {
+    setSelect(chain.id);
+    const complete = await props.onChange?.(chain);
+    if (complete) {
+      props.close();
+    } else {
+      setSelect(undefined);
+    }
+  };
+
   return (
     <>
       <Box intensity={900} r="2xl" p={1}>
-        {/* <Text as="div" className="oui-px-4">
+        <Text as="div" className="oui-px-4 oui-pt-2" intensity={54}>
           mainnet
-        </Text> */}
+        </Text>
         {props.chains.mainnet.map((item, index) => {
-          return <ChainItem key={index} {...item} onClick={props.onChange} />;
+          return (
+            <ChainItem
+              key={index}
+              selected={select === item.id}
+              {...item}
+              onClick={(chain: ChainItem) => onChange(chain)}
+            />
+          );
         })}
+        <Text as="div" className="oui-px-4" intensity={54}>
+          testnet
+        </Text>
         {props.chains.testnet.map((item, index) => {
-          return <ChainItem key={item.id} {...item} onClick={props.onChange} />;
+          return (
+            <ChainItem
+              key={item.id}
+              selected={select === item.id}
+              {...item}
+              onClick={(chain: ChainItem) => onChange(chain)}
+            />
+          );
         })}
       </Box>
       <Box pt={5} pb={4} className="oui-text-center">
@@ -94,11 +123,16 @@ const ChainItem = (props: {
   id: number;
   name: string;
   lowestFee?: boolean;
+  selected: boolean;
   onClick?: (chain: ChainItem) => void;
 }) => {
   return (
     <button
-      className="oui-w-full"
+      className={
+        props.selected
+          ? "oui-w-full oui-bg-base-6 oui-rounded-lg hover:oui-bg-base-6"
+          : "oui-w-full oui-rounded-lg hover:oui-bg-base-6 "
+      }
       onClick={() => {
         props.onClick?.({
           id: props.id,

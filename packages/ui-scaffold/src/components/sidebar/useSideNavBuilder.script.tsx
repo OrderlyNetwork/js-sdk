@@ -148,7 +148,9 @@ export const useSideNavBuilder = (): SideBarProps => {
       setExpand?.(open);
     },
     onItemSelect: (item) => {
-      setCurrent(item.href);
+      if (item.href) {
+        setCurrent(item.href);
+      }
     },
   };
 };
