@@ -12,26 +12,22 @@ export type UserVolumeType = {
     "all_volume"?: number,
 }
 
-export type OverwiteCard = {
-    ref?: BuildNode,
-    refClassName?: string,
-    refIcon?: ReactNode,
+// export type OverwiteCard = {
+//     ref?: BuildNode,
+//     refClassName?: string,
+//     refIcon?: ReactNode,
 
-    trader?: BuildNode,
-    traderClassName?: string,
-    traderIcon?: ReactNode,
-}
+//     trader?: BuildNode,
+//     traderClassName?: string,
+//     traderIcon?: ReactNode,
+// }
 
 export type Overwrite = {
     ref?: {
         gradientTitle?: string,
         top?: BuildNode,
-        card?: ReactNode | OverwiteCard,
-        step?: BuildNode | {
-            applyIcon?: ReactNode,
-            shareIcon?: ReactNode,
-            earnIcon?: ReactNode,
-        },
+        card?: BuildNode,
+        step?: BuildNode,
 
     }
 };

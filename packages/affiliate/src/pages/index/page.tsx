@@ -1,9 +1,7 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { AffiliateProvider } from "./provider";
-import { AsAnAffiliateWidget } from "./asAnAffilate";
-import { AsATraderWidget } from "./asATrader";
 import { BecomeAffiliateWidget } from "./becomeAffiliate";
 import { TopWidget } from "./top";
+import { CardWidget } from "./card";
 
 export const IndexPage = () => {
   return (
@@ -18,10 +16,7 @@ export const IndexPage = () => {
       gap={4}
     >
       <TopWidget />
-      <Flex className="oui-flex oui-flex-col xl:oui-flex-row oui-gap-6 xl:oui-gap-[36px] oui-w-full oui-items-stretch">
-        <AsAnAffiliateWidget />
-        <AsATraderWidget />
-      </Flex>
+      <CardWidget />
       <BecomeAffiliateWidget />
     </Flex>
   );

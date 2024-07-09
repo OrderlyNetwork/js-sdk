@@ -4,16 +4,16 @@ import {
   useReferralContext,
 } from "../../../hooks";
 
-export type TopReturns = {
+export type CardReturns = {
   state: ReferralContextReturns;
-  overwriteTop?: BuildNode;
+  overwrite?: BuildNode;
 };
 
-export const useTopScript = (): TopReturns => {
+export const useCardScript = (): CardReturns => {
   const state = useReferralContext();
 
   return {
-    overwriteTop: state.overwrite?.ref?.top,
+    overwrite: state.overwrite?.ref?.card,
     state,
   };
 };

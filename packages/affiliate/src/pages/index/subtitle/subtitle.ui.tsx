@@ -3,9 +3,7 @@ import { SubtitleReturns } from "./subtitle.script";
 import { Flex, Text } from "@orderly.network/ui";
 
 export const SubtitleUI: FC<SubtitleReturns> = (props) => {
-  if (props.overwrite !== undefined) {
-    return props.overwrite!();
-  }
+  
   return (
     <Flex
       direction={"column"}
