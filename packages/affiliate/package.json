@@ -16,6 +16,7 @@
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3",
     "react-intl": "^6.4.4"
   },
   "devDependencies": {

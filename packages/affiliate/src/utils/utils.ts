@@ -1,6 +1,12 @@
 // import { toast } from "@orderly.network/react";
+import { format, toDate } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
-export function addQueryParam(url: string, paramName: string, paramValue: string): string {
+export function addQueryParam(
+  url: string,
+  paramName: string,
+  paramValue: string
+): string {
   const urlObj = new URL(url);
   const searchParams = new URLSearchParams(urlObj.search);
 
@@ -22,7 +28,7 @@ export async function copyText(content: string) {
 
 export function parseTime(time?: number | string): Date | null {
   if (!time) return null;
-  const timestamp = typeof time === 'number' ? time : Date.parse(time);
+  const timestamp = typeof time === "number" ? time : Date.parse(time);
 
   if (!isNaN(timestamp)) {
     return new Date(timestamp);
@@ -32,67 +38,53 @@ export function parseTime(time?: number | string): Date | null {
 }
 
 //** will be return YYYY-MM-ddThh:mm:ssZ */
-export function formatTime(time?: number | string): string | undefined {
-  const date = parseTime(time);
-  if (!date) return undefined;
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const hours = String(date.getUTCHours()).padStart(2, '0');
-  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-
-  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes} UTC`;
-  return formattedTime;
+function formatDateTimeToUTC(input?: number | string): string {
+  if (input === undefined) return '';
+  const date = toDate(input);
+  const utcDate = toZonedTime(date, "UTC");
+  return format(utcDate, "yyyy-MM-dd HH:mm:ss 'UTC'");
 }
 
 //** will return yyyy-MM-dd */
 export function formatYMDTime(time?: number | string): string | undefined {
-  const date = parseTime(time);
-  if (!date) return undefined;
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-
-  const formattedTime = `${year}-${month}-${day}`;
-  return formattedTime;
+  if (time === undefined) return undefined;
+  const date = toDate(time);
+  const utcDate = toZonedTime(date, "UTC");
+  return format(utcDate, "yyyy-MM-dd");
 }
 
 //** will return hh:mm */
 export function formatHMTime(time?: number | string): string | undefined {
-  const date = parseTime(time);
-  if (!date) return undefined;
-  const hours = String(date.getUTCHours()).padStart(2, '0');
-  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-
-  const formattedTime = `${hours}:${minutes}`;
-  return formattedTime;
+  if (time === undefined) return undefined;
+  const date = toDate(time);
+  const utcDate = toZonedTime(date, "UTC");
+  return format(utcDate, "hh:mm");
 }
 
-
-//** will return MM:dd */
+//** will return MM-dd */
 export function formatMdTime(time?: number | string): string | undefined {
-  const date = parseTime(time);
-  if (!date) return undefined;
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-
-  const formattedTime = `${month}-${day}`;
-  return formattedTime;
+  if (time === undefined) return undefined;
+  const date = toDate(time);
+  const utcDate = toZonedTime(date, "UTC");
+  return format(utcDate, "MM-dd");
 }
-
 
 //** compare two date, yyyy-mm-dd */
 export function compareDate(d1?: Date, d2?: Date) {
-  const isEqual = d1 && d2 &&
+  const isEqual =
+    d1 &&
+    d2 &&
     d1.toISOString().substring(0, 10) === d2.toISOString().substring(0, 10);
-
 
   return isEqual;
 }
 
-
-
-export function generateData(itemCount: number, data: any[] | null | undefined, timeKey: string, valueKey: string): [string, number][] {
+export function generateData(
+  itemCount: number,
+  data: any[] | null | undefined,
+  timeKey: string,
+  valueKey: string
+): [string, number][] {
   const result: [string, number][] = [];
 
   for (let i = 0; i < itemCount; i++) {
@@ -100,7 +92,7 @@ export function generateData(itemCount: number, data: any[] | null | undefined, 
     currentDate.setDate(currentDate.getDate() - i - 1);
     const currentDateStr = currentDate.toISOString().substring(0, 10);
 
-    const matchedData = data?.find(item => {
+    const matchedData = data?.find((item) => {
       const itemDate = parseTime(item[timeKey]);
       if (!itemDate) return false;
       return itemDate.toISOString().substring(0, 10) === currentDateStr;
