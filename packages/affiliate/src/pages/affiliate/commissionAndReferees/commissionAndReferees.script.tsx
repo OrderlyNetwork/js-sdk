@@ -1,9 +1,6 @@
 import { useState } from "react";
+import { DateRange } from "../../../utils/types";
 
-export type DateRange = {
-  from: Date | undefined;
-  to?: Date | undefined;
-};
 export type CommissionAndRefereesReturns = {
   commissionRange?: DateRange;
   setCommissionRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>

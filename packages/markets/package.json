@@ -1,29 +1,31 @@
 {
-  "name": "@orderly.network/affiliate",
+  "name": "@orderly.network/markets",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "tsup --watch --tsconfig tsconfig.build.json",
+    "build": "tsup --tsconfig tsconfig.build.json"
   },
   "keywords": [],
   "dependencies": {
+    "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/ui-scaffold": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "date-fns": "^3.6.0",
-    "react-intl": "^6.4.4"
+    "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "react": "^18.3.1",

@@ -1,2 +1,0 @@
-
-export { OverviewPage } from "./page";

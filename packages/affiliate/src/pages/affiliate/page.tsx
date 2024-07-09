@@ -1,5 +1,5 @@
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { AffiliateProvider } from "../overview/provider";
+import { AffiliateProvider } from "../index/provider";
 import { SummaryWidget } from "./summary";
 import { ReferralLinkWidget } from "./referralLink";
 import { TitleStatisticWidget } from "./titleStatistic";

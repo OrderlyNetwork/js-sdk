@@ -1,0 +1,128 @@
+import { FC } from "react";
+import { Button, Flex, Select, Text } from "@orderly.network/ui";
+import { SummaryReturns } from "./summary.script";
+import { USDCIcon } from "../../../components/usdcIcon";
+
+export const SummaryUI: FC<SummaryReturns> = (props) => {
+  return (
+    <Flex
+      r={"2xl"}
+      p={6}
+      width={"100%"}
+      height={"100%"}
+      gap={4}
+      direction={"column"}
+      className="oui-bg-base-9"
+    >
+      <Title {...props} />
+      <Rebate className="md:oui-hidden" {...props} />
+      <Flex direction={"column"} gap={3} width={"100%"} className="md:oui-mt-3">
+        <SummaryFilter {...props} />
+        <CommissionData {...props} />
+      </Flex>
+      <Row title="Trading vol. (USDC)" {...props} />
+    </Flex>
+  );
+};
+const Title: FC<SummaryReturns> = (props) => {
+  return (
+    <Flex direction={"row"} width={"100%"} gap={3}>
+      <Flex direction={"row"} gap={3} className="oui-flex-1">
+        <Text className="oui-text-lg">Your referrer</Text>
+        <Button
+          color="secondary"
+          size="sm"
+          className="oui-text-primary-light oui-text-2xs md:oui-text-xs 2xl:oui-text-sm"
+        >
+          Carbo-9225
+        </Button>
+      </Flex>
+      <Rebate
+        className="oui-hidden md:oui-flex md:oui-flex-shrink md:oui-w-fit"
+        {...props}
+      />
+    </Flex>
+  );
+};
+
+const Rebate: FC<SummaryReturns & { className?: string }> = (props) => {
+  return (
+    <Flex direction={"row"} width={"100%"} gap={2} className={props.className}>
+      <Text
+        intensity={54}
+        className="oui-text-sm md:oui-text-base 2xl:oui-text-lg"
+      >
+        Rebate:
+      </Text>
+      <Text.gradient
+        color="brand"
+        className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
+      >
+        20%
+      </Text.gradient>
+    </Flex>
+  );
+};
+
+const SummaryFilter: FC<SummaryReturns> = (props) => {
+  return (
+    <Flex direction={"row"} width={"100%"} justify={"between"} gap={3}>
+      <Text className="oui-text-sm">Summary</Text>
+      <div>
+        <Select.options
+          size={"xs"}
+          value={props.period}
+          onValueChange={props.onPeriodChange}
+          options={props.periodTypes}
+        />
+      </div>
+    </Flex>
+  );
+};
+
+const CommissionData: FC<SummaryReturns> = (props) => {
+  return (
+    <Flex
+      gradient="success"
+      angle={180}
+      r="2xl"
+      py={4}
+      px={6}
+      width={"100%"}
+      direction={"column"}
+      gap={3}
+    >
+      <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
+        Commission (USDC)
+      </Text>
+      <Flex
+        direction={"row"}
+        gap={3}
+        className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
+      >
+        <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
+        <Text>12,322.12</Text>
+      </Flex>
+    </Flex>
+  );
+};
+
+const Row: FC<
+  SummaryReturns & {
+    title: string;
+  }
+> = (props) => {
+  return (
+    <Flex direction={"row"} justify={"between"} width={"100%"}>
+      <Text
+        intensity={54}
+        className="oui-text-2xs md:oui-text-xs xl:oui-text-sm"
+      >
+        {props.title}
+      </Text>
+      <Text className="oui-text-xs md:oui-text-sm xl:oui-text-base">
+        12,1222.1
+      </Text>
+    </Flex>
+  );
+};

@@ -32,7 +32,8 @@
       "@orderly.network/ui-scaffold": ["../../packages/ui-scaffold/src"],
       "@orderly.network/ui-leverage": ["../../packages/ui-leverage/src"],
       "@orderly.network/ui-positions": ["../../packages/ui-positions/src"],
-      "@orderly.network/ui-orders": ["../../packages/ui-orders/src"]
+      "@orderly.network/ui-orders": ["../../packages/ui-orders/src"],
+      "@orderly.network/markets": ["../../packages/markets/src"],
     }
   },
   "include": ["src"]

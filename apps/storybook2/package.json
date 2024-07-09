@@ -28,6 +28,7 @@
     "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",
+    "@orderly.network/markets": "workspace:*",
     "@storybook/components": "^8.1.5",
     "@storybook/manager-api": "^8.1.5",
     "@storybook/preview-api": "^8.1.5",

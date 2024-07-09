@@ -6,7 +6,7 @@ import { AsAnAffiliateWidget } from "./asAnAffilate";
 import { AsATraderWidget } from "./asATrader";
 import { BecomeAffiliateWidget } from "./becomeAffiliate";
 
-export const OverviewPage = () => {
+export const IndexPage = () => {
   return (
     <AffiliateProvider>
       <Flex
@@ -21,7 +21,7 @@ export const OverviewPage = () => {
       >
         <TitleWidget />
         <SubtitleWidget />
-        <Flex className="oui-flex oui-flex-col xl:oui-flex-row oui-gap-6 xl:oui-gap-[36px] oui-w-full">
+        <Flex className="oui-flex oui-flex-col xl:oui-flex-row oui-gap-6 xl:oui-gap-[36px] oui-w-full oui-items-stretch">
           <AsAnAffiliateWidget />
           <AsATraderWidget />
         </Flex>
