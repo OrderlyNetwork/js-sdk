@@ -19,8 +19,8 @@
     "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest",
     "build": "rimraf -rf dist esm lib && pnpm build:swc:esm && pnpm build:swc:cjs",
-    "build:swc:esm": "pnpm generateType:esm && swc src -d esm --strip-leading-paths",
-    "build:swc:cjs": "pnpm generateType:cjs && swc src -d lib --config module.type=commonjs --strip-leading-paths",
+    "build:swc:esm": "pnpm generateType:esm && swc src -d esm --strip-leading-paths --copy-files",
+    "build:swc:cjs": "pnpm generateType:cjs && swc src -d lib --config module.type=commonjs --strip-leading-paths --copy-files",
     "generateType:esm": "tsc --emitDeclarationOnly --project tsconfig.build.json --outDir esm",
     "generateType:cjs": "tsc --emitDeclarationOnly --project tsconfig.build.json --module commonjs --outDir lib"
   },
