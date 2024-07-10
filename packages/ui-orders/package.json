@@ -1,12 +1,16 @@
 {
   "name": "@orderly.network/ui-orders",
-  "version": "1.0.0",
+  "version": "1.0.1-internal.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Orderly", "Exchange", "DeFi"],
+  "keywords": [
+    "Orderly",
+    "Exchange",
+    "DeFi"
+  ],
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
