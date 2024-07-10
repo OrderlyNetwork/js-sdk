@@ -3,7 +3,6 @@
   "version": "1.0.1-sdk-v2.1",
   "description": "",
   "main": "dist/index.js",
-  "private": true,
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
