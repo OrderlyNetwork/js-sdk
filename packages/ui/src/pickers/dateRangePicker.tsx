@@ -16,6 +16,7 @@ export type DateRangePickerProps = {
   dateFormat?: string;
   size?: SizeType;
   className?: string;
+  formatStr?: string;
 } & Omit<DayPickerRangeProps, "mode">;
 
 const DateRangePicker: FC<DateRangePickerProps> = (props) => {
@@ -77,16 +78,16 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     >
       <button
         className={trigger({
-          className: "orderly-datepicker-trigger oui-group",
+          className: "oui-datepicker-trigger oui-group",
         })}
       >
-        <span className="orderly-datepicker-trigger-icon">
+        <span className="oui-datepicker-trigger-icon">
           <CalendarIcon size={14} className="oui-text-inherit" opacity={1} />
         </span>
         <span>{formattedValue}</span>
         <CaretDownIcon
           size={12}
-          className="orderly-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
+          className="oui-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
           opacity={1}
         />
       </button>

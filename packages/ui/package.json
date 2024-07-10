@@ -1,12 +1,12 @@
 {
   "name": "@orderly.network/ui",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && pnpm run build:css",
     "build:css": "npx tailwindcss -o ./dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

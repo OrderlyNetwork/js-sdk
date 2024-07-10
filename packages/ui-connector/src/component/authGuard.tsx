@@ -95,7 +95,6 @@ const DefaultFallback = (props: {
 
     console.log("wallets::", wallets);
     if (Array.isArray(wallets) && wallets.length > 0) {
-      // await account.connect(wallets[0]);
       onConnectOrderly();
     }
   };

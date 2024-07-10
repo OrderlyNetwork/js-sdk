@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import {fn} from '@storybook/test';
-import { Card, DataTable, Filter, Pagination } from "@orderly.network/ui";
+import { Box, Card, DataTable, Filter, Pagination } from "@orderly.network/ui";
 import { OverviewModule } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { useSymbolsInfo } from "@orderly.network/hooks";
@@ -123,3 +123,13 @@ export const DataFilter: Story = {
     );
   },
 };
+
+// export const FixedColumns: Story = {
+//   decorators: [
+//     (Story) => (
+//       <Box width={"500px"}>
+//         <Story />
+//       </Box>
+//     ),
+//   ],
+// };
