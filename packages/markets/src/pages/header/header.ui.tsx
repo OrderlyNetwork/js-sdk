@@ -7,6 +7,7 @@ const data: any = {
   price: 2115,
   change: 0.04,
   precision: 2,
+  "24h_volume": 413241234,
   openInterest: 123432443,
   assets: 123432443,
 };
@@ -14,6 +15,7 @@ const data: any = {
 const list = [data, data, data, data, data];
 
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
+  const { emblaRef, emblaApi, scrollIndex } = props;
   const cls =
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
 
@@ -22,7 +24,8 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
       <Text size="2xl" weight="semibold">
         Markets
       </Text>
-      <div className="oui-overflow-hidden" ref={props.emblaRef}>
+
+      <div className="oui-overflow-hidden" ref={emblaRef}>
         <Flex width="100%" gapX={4} mt={4}>
           <BlockList data={data} className={cls} />
           <CardItem
@@ -41,7 +44,12 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
             className={cls}
           />
         </Flex>
-        <ScrollIndicator scrollIndex={props.scrollIndex} />
+
+        <ScrollIndicator
+          scrollIndex={scrollIndex}
+          scrollPrev={emblaApi?.scrollPrev}
+          scrollNext={emblaApi?.scrollNext}
+        />
       </div>
     </div>
   );
@@ -197,10 +205,12 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
 
 interface ScrollIndicatorProps {
   scrollIndex: number;
+  scrollPrev?: () => void;
+  scrollNext?: () => void;
 }
 
 const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
-  const { scrollIndex } = props;
+  const { scrollIndex, scrollPrev, scrollNext } = props;
 
   return (
     <Flex gapX={1} mt={2} justify="center" className="3xl:hidden">
@@ -211,11 +221,14 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
           height={4}
           r="full"
           className={cn(
-            "oui-transition-all oui-duration-300",
+            "oui-transition-all oui-duration-300 oui-cursor-pointer",
             scrollIndex === index
               ? "oui-bg-base-contrast-36 oui-w-4"
               : "oui-bg-base-contrast-20"
           )}
+          onClick={() => {
+            item === 1 ? scrollNext?.() : scrollPrev?.();
+          }}
         />
       ))}
     </Flex>

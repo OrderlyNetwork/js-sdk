@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
+
+export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
+
+export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;
 
 export type HeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 
@@ -24,5 +28,6 @@ export const useMarketsHeaderScript = () => {
     scrollIndex,
     setScrollIndex,
     emblaRef,
+    emblaApi: emblaApi as TEmblaApi,
   };
 };
