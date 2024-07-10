@@ -1,5 +1,11 @@
 # @orderly.network/chart
 
+## 1.0.1-sdk-v2.5
+
+### Patch Changes
+
+- update
+
 ## 1.0.1-sdk-v2.4
 
 ### Patch Changes
