@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/affiliate",
-  "version": "1.0.1-sdk-v2.5",
+  "version": "1.0.1-sdk-v2.6",
   "description": "",
   "main": "dist/index.js",
   "private": true,
