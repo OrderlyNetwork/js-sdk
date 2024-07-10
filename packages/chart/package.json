@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/chart",
-  "version": "1.0.1-internal.0",
+  "version": "1.0.1-sdk-v2.1",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "private": true,
