@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useScaffoldContext } from "../scaffoldContext";
+import { useWalletConnector } from "@orderly.network/hooks";
 
 type MainNavItem = {
   name: string;
@@ -7,6 +9,8 @@ type MainNavItem = {
 
 export const useMainNavBuilder = () => {
   const [current, setCurrent] = useState("/");
+  const { unsupported } = useScaffoldContext();
+  const { connectedChain } = useWalletConnector();
   return {
     logo: {
       src: "https://testnet-dex-evm.woo.org/images/woofipro.svg",
@@ -27,6 +31,8 @@ export const useMainNavBuilder = () => {
     onItemClick: (item: MainNavItem) => {
       setCurrent(item.href);
     },
+    isUnsupported: unsupported,
+    isConnected: !!connectedChain,
   };
 };
 

@@ -1,8 +1,13 @@
 import { Box, cn, Flex, Grid, type SizeType } from "@orderly.network/ui";
 import { MainNavWidget } from "./main/mainNav.widget";
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { SideNavbarWidget } from "./sidebar";
-import { SideBarProps } from "./sidebar/sidebar.ui";
+import { SideBarProps } from "./sidebar";
 import {
   OrderlyContext,
   useChains,

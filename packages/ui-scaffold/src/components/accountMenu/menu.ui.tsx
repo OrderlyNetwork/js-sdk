@@ -28,13 +28,15 @@ export type AccountMenuProps = {
 export const AccountMenu = (props: AccountMenuProps) => {
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
 
-  if (state.status <= AccountStatusEnum.NotConnected) {
+  if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
       <Button
         size="md"
         variant="gradient"
         angle={45}
         className="wallet-connect-button"
+        loading={state.validating}
+        disabled={state.validating}
         onClick={() => {
           props
             .onConnectWallet()

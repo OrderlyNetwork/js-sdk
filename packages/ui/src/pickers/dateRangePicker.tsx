@@ -5,6 +5,7 @@ import { selectVariants } from "../select/selectPrimitive";
 import { CalendarIcon } from "../icon/calendar";
 import { CaretDownIcon } from "../icon/caretDown";
 import type { SizeType } from "../helpers/sizeType";
+import { format } from "date-fns";
 import { DateRange, DayPickerRangeProps } from "react-day-picker";
 
 export type DateRangePickerProps = {
@@ -16,8 +17,10 @@ export type DateRangePickerProps = {
   dateFormat?: string;
   size?: SizeType;
   className?: string;
-  formatStr?: string;
+  formatString?: string;
 } & Omit<DayPickerRangeProps, "mode">;
+
+const DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
 
 const DateRangePicker: FC<DateRangePickerProps> = (props) => {
   const {
@@ -28,6 +31,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     initialValue,
     size,
     className,
+    formatString = DEFAULT_DATE_FORMAT,
     ...calendarProps
   } = props;
   const [open, setOpen] = useState(false);
@@ -43,8 +47,8 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
       return placeholder ?? "Select Date";
     }
     const arr = [];
-    if (dateRange.from) arr.push(dateRange.from.toLocaleDateString());
-    if (dateRange.to) arr.push(dateRange.to.toLocaleDateString());
+    if (dateRange.from) arr.push(format(dateRange.from, formatString));
+    if (dateRange.to) arr.push(format(dateRange.to, formatString));
 
     return `${arr.join(" - ")}`;
   }, [dateRange, placeholder]);

@@ -12,6 +12,8 @@ export type MainNavProps = MainNavItemsProps & {
   className?: string;
   logo: LogoProps;
   products: ProductsProps;
+  isUnsupported: boolean;
+  isConnected: boolean;
   // chainsProps: ChainSelectProps;
 };
 
@@ -34,7 +36,9 @@ export const MainNav: FC<MainNavProps> = (props) => {
       <Flex itemAlign={"center"} gap={4}>
         <AccountSummaryWidget />
         <ChainMenuWidget />
-        <AccountMenuWidget />
+        {props.isUnsupported && props.isConnected ? null : (
+          <AccountMenuWidget />
+        )}
       </Flex>
     </Flex>
   );
