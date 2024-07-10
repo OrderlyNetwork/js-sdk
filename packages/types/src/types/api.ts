@@ -31,7 +31,12 @@ export declare namespace API {
     "24h_close": number;
     "24h_high": number;
     "24h_low": number;
+    /**
+     * @deprecated
+     * spelling mistake, use 24h_volume to instead, will be remove next version
+     */
     "24h_volumn": number;
+    "24h_volume": number;
     "24h_amount": number;
   }
 

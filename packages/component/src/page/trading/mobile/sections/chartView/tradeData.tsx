@@ -42,7 +42,7 @@ export const TradeData: FC<Props> = (props) => {
               rule="human"
               precision={2}
               price={ticker?.["24h_close"]}
-              quantity={ticker?.["24h_volumn"]}
+              quantity={ticker?.["24h_volume"]}
             />
             <Text
               rule="symbol"

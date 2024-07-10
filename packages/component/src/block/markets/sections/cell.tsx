@@ -32,7 +32,7 @@ export const Cell: FC<MarketCellProps> = (props) => {
             rule="human"
             className="orderly-text-base-contrast-54"
             price={item["24h_close"]}
-            quantity={item["24h_volumn"]}
+            quantity={item["24h_volume"]}
           /> */}
           <Numeral rule="human" className="orderly-text-base-contrast-54">
             {item?.["24h_amount"]}
