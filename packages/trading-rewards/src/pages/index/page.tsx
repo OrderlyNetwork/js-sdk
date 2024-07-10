@@ -6,12 +6,12 @@ import { StakeBoosterWidget } from "./stakeBooster";
 import { RewardsHistoryWidget } from "./rewardsHistory";
 import { TradingRewardsProvider } from "./provider";
 
-export const OverviewPage = () => {
+export const IndexPage = () => {
   return (
     <TradingRewardsProvider>
       <Flex
         className={cn(
-          "oui-h-lvw oui-w-lvw",
+          "oui-h-lvw oui-w-full",
           // padding
           "oui-p-4 lg:oui-p-6 xl:oui-p-3"
         )}
