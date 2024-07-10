@@ -36,6 +36,7 @@
     "@orderly.network/web3-modal": "1.5.10-internal.0"
   },
   "changesets": [
+    "clean-rings-judge",
     "fair-trees-give",
     "happy-lamps-guess",
     "sharp-suns-stare"
