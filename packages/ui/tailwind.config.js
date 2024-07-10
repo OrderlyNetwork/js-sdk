@@ -5,7 +5,7 @@ const { gradientPlugin } = require("./src/tailwind/gradient");
 const { positionPlugin } = require("./src/tailwind/position");
 const { basePlugin } = require("./src/tailwind/base");
 const { componentsPlugin } = require("./src/tailwind/components");
-const {themePlugin} = require("./src/tailwind/theme");
+const { themePlugin } = require("./src/tailwind/theme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -140,6 +140,16 @@ module.exports = withTV({
         // gradient: {
         //   success: 'linear-gradient(var(--oui-linear-degree, 90deg), var(--oui-color-success) 0%, var(--oui-color-success-darken) 100%)',
         // }
+      },
+      animation: {
+        'rotate-360': 'rotate 1s linear infinite',
+      },
+      keyframes: {
+        rotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(240deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
     },
   },
