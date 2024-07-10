@@ -38,6 +38,8 @@ export { CalendarIcon } from "./calendar";
 export { CopyIcon } from "./copy";
 export { ServerFillIcon } from "./serverFill";
 
+export { OrderlyNetworkTextIcon } from "./orderlyNetworkTextIcon";
+
 import { CombineIcon } from "./combine";
 
 type IconType = typeof BaseIcon & {
