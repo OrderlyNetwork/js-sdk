@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Column, DataTable, DatePicker, Flex, Text } from "@orderly.network/ui";
-import { RebatesReturns } from "./rebates.script";
+import { RebatesItem, RebatesReturns } from "./rebates.script";
 
 export const RebatesUI: FC<RebatesReturns> = (props) => {
   return (
@@ -38,32 +38,38 @@ export const RebatesUI: FC<RebatesReturns> = (props) => {
 const Title: FC<RebatesReturns> = (props) => {
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">TitleStatistic</Text>
+      <Text className="oui-text-lg">My rebates</Text>
       <Text intensity={36} className="oui-text-2xs">
-        2024-03-02 00:00 UTC
+        {props.displayDate}
       </Text>
     </Flex>
   );
 };
 
 const List: FC<RebatesReturns> = (props) => {
-  const columns: Column[] = [
+  const columns: Column<RebatesItem>[] = [
     {
       title: "Rebates (USDC)",
-      dataIndex: "rebates",
-      render: (value) => "$0.048",
+      dataIndex: "referee_rebate",
+      render: (value) => (
+        <Text.numeral dp={6} prefix={"$"}>
+          {value || "-"}
+        </Text.numeral>
+      ),
       width: 127,
     },
     {
       title: "Trading vol. (USDC)",
-      dataIndex: "trading-vol",
+      dataIndex: "vol",
       render: (value) => "232.22",
       width: 127,
     },
     {
       title: "Date",
-      dataIndex: "trading-vol",
-      render: (value) => "2023-11-27",
+      dataIndex: "date",
+      render: (value) => (
+        <Text.formatted formatString="yyyy-MM-dd">{value}</Text.formatted>
+      ),
       width: 127,
     },
   ];
@@ -71,7 +77,7 @@ const List: FC<RebatesReturns> = (props) => {
   return (
     <DataTable
       columns={columns}
-      dataSource={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+      dataSource={props.dataSource}
       scroll={{ y: 240 }}
       classNames={{
         header: "oui-text-xs oui-text-base-contrast-36",

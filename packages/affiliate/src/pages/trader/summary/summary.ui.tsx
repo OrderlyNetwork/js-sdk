@@ -34,7 +34,7 @@ const Title: FC<SummaryReturns> = (props) => {
           size="sm"
           className="oui-text-primary-light oui-text-2xs md:oui-text-xs 2xl:oui-text-sm"
         >
-          Carbo-9225
+          {props.code}
         </Button>
       </Flex>
       <Rebate
@@ -58,7 +58,7 @@ const Rebate: FC<SummaryReturns & { className?: string }> = (props) => {
         color="brand"
         className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
       >
-        20%
+        {props.rebateText}
       </Text.gradient>
     </Flex>
   );
@@ -101,7 +101,9 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text>12,322.12</Text>
+        <Text.numeral rule="human" dp={2}>
+          {props.rebates}
+        </Text.numeral>
       </Flex>
     </Flex>
   );
@@ -120,9 +122,12 @@ const Row: FC<
       >
         {props.title}
       </Text>
-      <Text className="oui-text-xs md:oui-text-sm xl:oui-text-base">
-        12,1222.1
-      </Text>
+      <Text.numeral
+        dp={2}
+        className="oui-text-xs md:oui-text-sm xl:oui-text-base"
+      >
+        {props.vol || "--"}
+      </Text.numeral>
     </Flex>
   );
 };
