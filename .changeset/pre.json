@@ -37,6 +37,7 @@
   },
   "changesets": [
     "clean-rings-judge",
+    "dirty-swans-explode",
     "fair-trees-give",
     "happy-lamps-guess",
     "sharp-suns-stare"
