@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-orders",
-  "version": "1.0.1-sdk-v2.1",
+  "version": "1.0.1-sdk-v2.2",
   "description": "",
   "main": "index.js",
   "scripts": {
