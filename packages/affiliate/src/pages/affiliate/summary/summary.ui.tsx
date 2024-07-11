@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
+import { Decimal } from "@orderly.network/utils";
 
 export const SummaryUI: FC<SummaryReturns> = (props) => {
   return (
@@ -17,9 +18,9 @@ export const SummaryUI: FC<SummaryReturns> = (props) => {
       <Title {...props} />
       <CommissionData {...props} />
       <Flex direction={"column"} width={"100%"} gap={2}>
-        <Row title="Referral vol. (USDC)" {...props} />
-        <Row title="Referees" {...props} />
-        <Row title="Referees that traded" {...props} />
+        <Row title="Referral vol. (USDC)" value={props.referralVol} dp={2} {...props} />
+        <Row title="Referees" value={props.referees} dp={0} {...props} />
+        <Row title="Referees that traded" value={props.refereesTades} dp={0} {...props} />
       </Flex>
     </Flex>
   );
@@ -62,7 +63,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] "/>
-        <Text>12,322.12</Text>
+        <Text.numeral dp={2}>{props.commission}</Text.numeral>
       </Flex>
     </Flex>
   );
@@ -71,6 +72,8 @@ const CommissionData: FC<SummaryReturns> = (props) => {
 const Row: FC<
   SummaryReturns & {
     title: string;
+    value: number;
+    dp: number;
   }
 > = (props) => {
   return (
@@ -81,9 +84,9 @@ const Row: FC<
       >
         {props.title}
       </Text>
-      <Text className="oui-text-xs md:oui-text-sm xl:oui-text-base">
-        12,1222.1
-      </Text>
+      <Text.numeral dp={props.dp} className="oui-text-xs md:oui-text-sm xl:oui-text-base">
+        {props.value}
+      </Text.numeral>
     </Flex>
   );
 };
