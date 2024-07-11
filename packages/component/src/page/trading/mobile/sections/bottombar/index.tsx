@@ -16,6 +16,7 @@ import {
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
+import TopTips from "@/block/accountStatus/sections/topTips";
 
 interface BottomNavBarProps {}
 
@@ -58,13 +59,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = (props) => {
 
   return (
     <>
-      {wsStatus === WsNetworkStatus.Unstable ? (
-        <WsStatus />
-      ) : (
-        errors?.ChainNetworkNotSupport && (
-          <ChainIdSwtich onSetChain={onSetChain} />
-        )
-      )}
+      <TopTips />
 
       {showGetTestUSDC && <GetTestUSDC />}
       <div

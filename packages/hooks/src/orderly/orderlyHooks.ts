@@ -38,6 +38,7 @@ export type {
 export { useChain } from "./useChain";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
+export { useMaintenanceStatus } from "./useMaintenanceStatus";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
@@ -50,6 +51,5 @@ export {
   useTPSLOrder,
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
-
 
 export { useSymbolLeverage } from "./useSymbolLeverage";

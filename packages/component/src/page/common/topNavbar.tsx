@@ -1,8 +1,16 @@
-import { FC, ReactNode, useCallback, useContext } from "react";
+import {
+  FC,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   StatusContext,
   WsNetworkStatus,
   useAccount,
+  useMaintenanceStatus,
 } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -11,6 +19,7 @@ import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { Logo } from "@/logo";
 import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
+import TopTips from "@/block/accountStatus/sections/topTips";
 
 export type TopNavbarProps = {
   left?: ReactNode;
@@ -74,15 +83,7 @@ export const TopNavbar: FC = (props) => {
         </div>
       )}
 
-      <div>
-        {wsStatus === WsNetworkStatus.Unstable ? (
-          <WsStatus />
-        ) : (
-          errors?.ChainNetworkNotSupport && (
-            <ChainIdSwtich onSetChain={onSetChain} />
-          )
-        )}
-      </div>
+      <TopTips />
     </>
   );
 };

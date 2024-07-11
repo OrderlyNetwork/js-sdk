@@ -98,6 +98,7 @@
     "vite": "^5.1.6"
   },
   "dependencies": {
+    "@date-fns/utc": "1.2.0",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/net": "workspace:*",

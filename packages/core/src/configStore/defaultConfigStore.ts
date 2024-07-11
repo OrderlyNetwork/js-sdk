@@ -22,7 +22,13 @@ const API_URLS: { [key: string]: URLS } = {
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: "https://testnet-operator-evm.orderly.org",
   },
-  //   dev: {},
+    dev: {
+    apiBaseUrl: "https://dev-api-v2.orderly.org",
+    publicWsUrl: "wss://dev-ws-v2.orderly.org",
+    privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
+    operatorUrl: "https://dev-operator-v2.orderly.network",
+
+    },
 };
 
 export class DefaultConfigStore implements ConfigStore {
@@ -35,6 +41,7 @@ export class DefaultConfigStore implements ConfigStore {
 
     this.map = new Map<ConfigKey, any>([
       ["brokerId", init.brokerId],
+      ['brokerName', init.brokerName ?? 'Orderly network'],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
