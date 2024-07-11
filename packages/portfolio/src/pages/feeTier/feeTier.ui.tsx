@@ -1,29 +1,37 @@
 import { Box, Card, Divider } from "@orderly.network/ui";
 import { Flex, Text } from "@orderly.network/ui";
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { dataSource } from "./dataSource";
 import { FC } from "react";
-import { DataGrid, DataTable } from "@orderly.network/ui";
+import { DataTable } from "@orderly.network/ui";
 import { useFeeTierColumns } from "./column";
+import { useFeeTierScriptReturn } from "./feeTier.script";
 
-export const FeeTier = () => {
+export type FeeTierProps = useFeeTierScriptReturn;
+
+export const FeeTier: React.FC<FeeTierProps> = (props) => {
+  const { tier } = props;
   return (
     <Card title="Fee tier" className="w-full" id="oui-portfolio-fee-tier">
       <Divider />
-      <FeeTierHeader />
-      <FeeTierTable dataSource={dataSource} />
+      <FeeTierHeader tier={tier} />
+      <FeeTierTable dataSource={dataSource} tier={tier} />
     </Card>
   );
 };
 
-export const FeeTierHeader: React.FC<FeeTierHeaderItemProps> = (props) => {
+export type FeeTierHeaderProps = {
+  tier?: number;
+};
+
+export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   return (
     <Flex direction="row" gapX={4} my={4}>
       <FeeTierHeaderItem
         label="Your Tier"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
-            2
+            {props.tier || "--"}
           </Text.gradient>
         }
       />
@@ -69,56 +77,39 @@ type FeeTierTableProps = {
   page?: number;
   pageSize?: number;
   dataCount?: number;
+  tier?: number;
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
-  const { dataSource } = props;
   const columns = useFeeTierColumns();
 
+  const onRow = useCallback(
+    (record: any, index: number) => {
+      if (index + 1 == props.tier) {
+        return {
+          className:
+            "oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-rounded-[6px] oui-text-[rgba(0,0,0,0.88)]",
+        };
+      }
+
+      return { className: "oui-h-12" };
+    },
+    [props.tier]
+  );
+
   return (
-    <DataGrid
-      bordered
-      className="oui-font-semibold"
-      classNames={{
-        header: "oui-text-base-contrast-36",
-        body: "oui-text-base-contrast-80",
-      }}
-      onRow={(record, index) => {
-        if (index == 1) {
-          return {
-            className:
-              "oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-rounded-md oui-text-[rgba(0,0,0,0.88)]",
-          };
-        }
-        if (index === dataSource!.length - 1) {
-          return { className: "!oui-border-b" };
-        }
-        return { className: "oui-h-12" };
-      }}
-      columns={columns}
-      dataSource={dataSource}
-    />
+    <div className="oui-border-b oui-border-line-4">
+      <DataTable
+        bordered
+        className="oui-font-semibold"
+        classNames={{
+          header: "oui-text-base-contrast-36",
+          body: "oui-text-base-contrast-80",
+        }}
+        onRow={onRow}
+        columns={columns}
+        dataSource={props.dataSource}
+      />
+    </div>
   );
 };
-
-/* Table / Row  */
-
-// /* Auto layout */
-// display: flex;
-// flex-direction: column;
-// justify-content: center;
-// align-items: flex-start;
-// padding: 0px 12px;
-
-// width: 1652px;
-// height: 48px;
-
-// /* Gradients/🏈 WOOFi */
-// background: linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%);
-// border-radius: 4px;
-
-// /* Inside auto layout */
-// flex: none;
-// order: 2;
-// align-self: stretch;
-// flex-grow: 0;
