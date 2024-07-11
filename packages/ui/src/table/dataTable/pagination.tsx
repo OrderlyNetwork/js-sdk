@@ -18,9 +18,9 @@ export const Pagination = (props: Omit<PaginationProps, "classNames">) => {
       justify={"end"}
       py={2}
       mx={3}
-      className="oui-h-10 oui-border-t oui-border-line"
+      className="oui-h-10 oui-border-t oui-border-line oui-w-full"
     >
-      <Paginations {...props} className="oui-table-pagination" />
+      <Paginations {...props} className="oui-table-pagination oui-justify-between oui-w-full" />
     </Flex>
   );
 };
