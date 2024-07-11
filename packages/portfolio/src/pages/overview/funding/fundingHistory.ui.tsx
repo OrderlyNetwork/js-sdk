@@ -27,6 +27,7 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
       columns={columns}
       dataSource={dataSource}
       loading={isLoading}
+      generatedRowKey={(record) => `${record.updated_time}`}
       classNames={{
         header: "oui-text-base-contrast-36",
         body: "oui-text-base-contrast-80",

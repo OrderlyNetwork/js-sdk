@@ -1,5 +1,3 @@
-import { FC, useMemo } from "react";
-import { getThemeColors } from "../utils/theme";
 import { useColors } from "./useColors";
 import {
   BarChart,
@@ -13,6 +11,10 @@ import {
   ReferenceLine,
   Cross,
 } from "recharts";
+import type { TooltipProps } from "recharts";
+import { OrderlyChartTooltip } from "./customTooltip";
+import { Box } from "@orderly.network/ui";
+import { Flex } from "@orderly.network/ui";
 
 export type PnLChartDataItem = {
   date: string;
@@ -47,17 +49,13 @@ const RoundedRectangle = (props: any) => {
 
 const CustomizedCross = (props: any) => {
   const { width, height, stroke, fill } = props;
-  // console.log(props);
-  // get first series in chart
-  // const firstSeries = formattedGraphicalItems[0];
-  // // get any point at any index in chart
-  // const secondPoint = firstSeries?.props?.points[1];
 
-  // render custom content using points from the graph
   return (
+    // @ts-ignore
     <Cross
-      y={props.y + props.top}
+      // y={props.y + props.top}
       x={props.x + props.width / 2}
+      top={props.top}
       height={height}
       width={1}
       stroke={"rgba(255,255,255,0.16)"}
@@ -67,69 +65,111 @@ const CustomizedCross = (props: any) => {
   );
 };
 
-export const PnLBarChart: FC<PnLChartProps> = (props) => {
+const CustomTooltip = (props: TooltipProps<any, any>) => {
+  const { active, payload, label } = props;
+
+  if (active && payload && payload.length) {
+    return (
+      <OrderlyChartTooltip label={label} value={payload[0].value} coloring />
+    );
+  }
+
+  return null;
+};
+
+export const PnLBarChart = (props: PnLChartProps) => {
   const colors = useColors(props.colors);
 
-  // const data = useMemo(
-  //   () => props.data.map((item) => ({ ...item, date: new Date(item.date) })),
-  //   [props.data]
-  // );
-
   return (
-    <ResponsiveContainer>
-      <BarChart
-        data={props.data}
-        margin={{ left: 0, top: 20, right: 10, bottom: 25 }}
+    // @ts-ignore
+    <Box className="oui-h-full">
+      <Flex
+        className="oui-text-2xs oui-font-semibold"
+        gap={3}
+        px={3}
+        pt={3}
+        pb={2}
       >
-        <Tooltip cursor={{ fillOpacity: 0.1 }} />
-        <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
-        <ReferenceLine y={0} stroke="#000" />
-        <Bar dataKey="pnl" shape={<RoundedRectangle />}>
-          {props.data.map((entry, index) => {
-            return (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.pnl > 0 ? colors.profit : colors.loss}
-              />
-            );
-          })}
-        </Bar>
-
-        <YAxis
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-          tickLine={false}
-          axisLine={false}
-          dataKey={"pnl"}
-        />
-        <XAxis
-          dataKey="date"
-          // axisLine={false}
-          tickLine={false}
-          interval={props.data.length - 2}
-          // tick={renderQuarterTick}
-          height={1}
-          // scale="time"
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-          stroke="#FFFFFF"
-          strokeOpacity={0.04}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+        <Flex style={{ color: colors.profit }} gap={1}>
+          <svg
+            width="6"
+            height="6"
+            viewBox="0 0 6 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="3" cy="3" r="3" fill={colors.profit} />
+          </svg>
+          <span>Profits</span>
+        </Flex>{" "}
+        <Flex style={{ color: colors.loss }} gap={1}>
+          <svg
+            width="6"
+            height="6"
+            viewBox="0 0 6 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="3" cy="3" r="3" fill={colors.loss} />
+          </svg>
+          <span>Losses</span>
+        </Flex>
+      </Flex>
+      <div style={{ height: "calc(100% - 38px)" }}>
+        {/* @ts-ignore */}
+        <ResponsiveContainer>
+          {/* @ts-ignore */}
+          <BarChart
+            data={props.data}
+            margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
+          >
+            {/* @ts-ignore */}
+            <Tooltip
+              // cursor={{ fillOpacity: 0.1 }}
+              cursor={<CustomizedCross />}
+              content={<CustomTooltip />}
+            />
+            <CartesianGrid
+              vertical={false}
+              stroke="#FFFFFF"
+              strokeOpacity={0.04}
+            />
+            <ReferenceLine y={0} stroke="#000" />
+            {/* @ts-ignore */}
+            <Bar dataKey="pnl" shape={<RoundedRectangle />}>
+              {props.data.map((entry, index) => {
+                return (
+                  // @ts-ignore
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.pnl > 0 ? colors.profit : colors.loss}
+                  />
+                );
+              })}
+            </Bar>
+            {/* @ts-ignore */}
+            <YAxis
+              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+              tickLine={false}
+              axisLine={false}
+              dataKey={"pnl"}
+            />
+            {/* @ts-ignore */}
+            <XAxis
+              dataKey="date"
+              // axisLine={false}
+              tickLine={false}
+              interval={props.data.length - 2}
+              // tick={renderQuarterTick}
+              height={1}
+              // scale="time"
+              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+              stroke="#FFFFFF"
+              strokeOpacity={0.04}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </Box>
   );
-
-  // return (
-  //   <>
-  //     <Bar color={(d) => (d.pnl > 0 ? colors.profit : colors.loss)} />
-  //     <Legend>
-  //       <circle cx={3} cy={-5} r="3" fill={colors.profit} />
-  //       <text fontSize={12} x={10} fill={colors.profit}>
-  //         Profits
-  //       </text>
-  //       <circle cx={63} cy={-5} r="3" fill={colors.loss} />
-  //       <text x={70} fontSize={12} fill={colors.loss}>
-  //         Losses
-  //       </text>
-  //     </Legend>
-  //   </>
-  // );
 };

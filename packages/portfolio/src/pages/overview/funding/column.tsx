@@ -13,6 +13,9 @@ export const useFundingHistoryColumns = () => {
         dataIndex: "symbol",
         width: 80,
         rule: "symbol",
+        textProps: {
+          showIcon: true,
+        },
       },
       {
         title: "Time",

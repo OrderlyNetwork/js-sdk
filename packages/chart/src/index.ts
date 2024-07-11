@@ -7,3 +7,5 @@ export { PnlLineChart } from "./orderly/pnlLine";
 export { AssetLineChart } from "./orderly/assetLine";
 // export { Legend } from "./common/legend";
 // export { Tooltip } from "./common/tooltip";
+
+export { chartPlugin } from "./tailwindcss/theme";

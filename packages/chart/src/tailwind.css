@@ -1,0 +1,10 @@
+@tailwind components;
+@tailwind utilities;
+
+/* @layer components {
+  .chart
+    .recharts-cartesian-axis-ticks
+    .recharts-cartesian-axis-tick:first-child {
+    text-anchor: start;
+  }
+} */

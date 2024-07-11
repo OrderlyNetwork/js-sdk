@@ -1,4 +1,6 @@
 const path = require("path");
+// const { chartPlugin } = require("@orderly.network/chart");
+import { chartPlugin } from "@orderly.network/chart";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -11,8 +13,10 @@ module.exports = {
     "../../packages/ui-scaffold/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
+  plugins: [chartPlugin()],
 };

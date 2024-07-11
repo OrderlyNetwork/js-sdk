@@ -1,6 +1,8 @@
 import { ExtensionPosition } from "../plugin";
 import { ComponentType, FC, PropsWithChildren, useEffect } from "react";
 
+/// layout cache: size, position
+
 const ComponentsProvider: FC<
   PropsWithChildren<{
     components?: { [position in ExtensionPosition]: ComponentType };
