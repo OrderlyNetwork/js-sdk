@@ -11,7 +11,7 @@ export const EditIcon: FC<IconProps> = (props) => {
       viewBox="0 0 17 16"
       xmlns="http://www.w3.org/2000/svg"
       fill="white"
-      fill-opacity="0.36"
+      fillOpacity="0.36"
       className={className}
       {...rest}
     >

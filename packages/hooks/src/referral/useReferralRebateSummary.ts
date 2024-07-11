@@ -12,10 +12,11 @@ type Params = {
   endDate?: string;
   //** default is 1 */
   initialSize?: number;
+  page?: number,
 };
 
 export const useReferralRebateSummary = (params: Params) => {
-  const { size = 10, startDate, endDate, initialSize } = params;
+  const { size = 10, startDate, endDate, initialSize, page, } = params;
 
   const response = usePrivateInfiniteQuery<any>(
     generateKeyFun({
@@ -23,6 +24,7 @@ export const useReferralRebateSummary = (params: Params) => {
       size,
       startDate,
       endDate,
+      page,
     }),
     {
       initialSize: initialSize,
@@ -38,10 +40,24 @@ export const useReferralRebateSummary = (params: Params) => {
   const loadMore = () => {
     response.setSize(response.size + 1);
   };
+  
+  const setPageSize = (page: number) => {
+    response.setSize(page);
+  };
+
+  const meta = useMemo(():
+    | {
+        total: number;
+        records_per_page: number;
+        current_page: number;
+      }
+    | undefined => {
+    return response.data?.[0]?.meta;
+  }, [response.data]);
 
   const total = useMemo(() => {
-    return response.data?.[0]?.meta?.total || 0;
-  }, [response.data?.[0]?.meta?.total]);
+    return meta?.total || 0;
+  }, [meta]);
 
   const flattenOrders = useMemo(():
     | RefferalAPI.ReferralRebateSummary[]
@@ -60,6 +76,8 @@ export const useReferralRebateSummary = (params: Params) => {
       isLoading: response.isLoading,
       refresh: response.mutate,
       loadMore,
+      meta,
+      setPageSize,
     },
-  ];
+  ] as const;
 };
