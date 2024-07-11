@@ -213,24 +213,33 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
   const { scrollIndex, scrollPrev, scrollNext } = props;
 
   return (
-    <Flex gapX={1} mt={2} justify="center" className="3xl:hidden">
-      {[1, 2].map((item, index) => (
-        <Box
-          key={item}
-          width={4}
-          height={4}
-          r="full"
-          className={cn(
-            "oui-transition-all oui-duration-300 oui-cursor-pointer",
-            scrollIndex === index
-              ? "oui-bg-base-contrast-36 oui-w-4"
-              : "oui-bg-base-contrast-20"
-          )}
-          onClick={() => {
-            item === 1 ? scrollNext?.() : scrollPrev?.();
-          }}
-        />
-      ))}
+    <Flex gapX={1} mt={1} mb={3} justify="center" className="3xl:hidden">
+      {[0, 1].map((item) => {
+        return (
+          <Box
+            py={1}
+            pl={item === 0 ? 1 : 0}
+            pr={item === 1 ? 1 : 0}
+            onClick={() => {
+              scrollIndex === 0 ? scrollNext?.() : scrollPrev?.();
+            }}
+            className="oui-cursor-pointer"
+          >
+            <Box
+              key={item}
+              width={8}
+              height={4}
+              r="full"
+              className={cn(
+                "oui-transition-all oui-duration-300",
+                scrollIndex === item
+                  ? "oui-bg-base-contrast-36 oui-w-4"
+                  : "oui-bg-base-contrast-20"
+              )}
+            />
+          </Box>
+        );
+      })}
     </Flex>
   );
 };
