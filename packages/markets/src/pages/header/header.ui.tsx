@@ -20,37 +20,31 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
 
   return (
-    <div className="" id="oui-markets-header">
-      <Text size="2xl" weight="semibold">
-        Markets
-      </Text>
-
-      <div className="oui-overflow-hidden" ref={emblaRef}>
-        <Flex width="100%" gapX={4} mt={4}>
-          <BlockList data={data} className={cls} />
-          <CardItem
-            data={list}
-            title={<Text.gradient color="brand">New listings</Text.gradient>}
-            className={cls}
-          />
-          <CardItem
-            data={list}
-            title={<Text className="oui-text-success-light">Top gainers</Text>}
-            className={cls}
-          />
-          <CardItem
-            data={list}
-            title={<Text className="oui-text-danger-light">Top losers</Text>}
-            className={cls}
-          />
-        </Flex>
-
-        <ScrollIndicator
-          scrollIndex={scrollIndex}
-          scrollPrev={emblaApi?.scrollPrev}
-          scrollNext={emblaApi?.scrollNext}
+    <div className="oui-overflow-hidden" ref={emblaRef}>
+      <Flex width="100%" gapX={4} mt={4}>
+        <BlockList data={data} className={cls} />
+        <CardItem
+          data={list}
+          title={<Text.gradient color="brand">New listings</Text.gradient>}
+          className={cls}
         />
-      </div>
+        <CardItem
+          data={list}
+          title={<Text className="oui-text-success-light">Top gainers</Text>}
+          className={cls}
+        />
+        <CardItem
+          data={list}
+          title={<Text className="oui-text-danger-light">Top losers</Text>}
+          className={cls}
+        />
+      </Flex>
+
+      <ScrollIndicator
+        scrollIndex={scrollIndex}
+        scrollPrev={emblaApi?.scrollPrev}
+        scrollNext={emblaApi?.scrollNext}
+      />
     </div>
   );
 };
