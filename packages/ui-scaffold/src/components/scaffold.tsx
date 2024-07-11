@@ -17,6 +17,7 @@ import {
 import { useMemo } from "react";
 import { ExpandableContext } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
+import { FooterWidget } from "./footer";
 
 export type routerAdapter = {
   onRouteChange: (path: string) => void;
@@ -98,7 +99,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
       </Box>
       {/*--------- body start ------ */}
       <Grid
-        className={cn("oui-box-content oui-transition-all")}
+        className={cn("oui-box-content oui-transition-all oui-h-[calc(100%-29px)]")}
         style={{
           gridTemplateColumns: `${
             expand ? sideBarDefaultWidth + "px" : "98px"
@@ -107,7 +108,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           gridTemplateAreas: `"left main" "left main" "left main"`,
         }}
       >
-        <div>
+        <div className="oui-h-[calc(100% - 29px)">
           {/* @ts-ignore */}
           {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
 
@@ -124,7 +125,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
       </Flex> */}
       {/*--------- body end ------ */}
       {/* Footer */}
-      <Box className={cn(classNames?.footer)}>{props.footer}</Box>
+      <Box className={cn(classNames?.footer)}>{props.footer || (<FooterWidget />)}</Box>
     </ExpandableContext.Provider>
   );
 };

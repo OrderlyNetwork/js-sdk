@@ -22,6 +22,7 @@ export * from "./popover";
 export * from "./card";
 export * from "./pickers";
 export * from "./slider";
+export * from "./toast";
 
 export * from "./dropdown";
 

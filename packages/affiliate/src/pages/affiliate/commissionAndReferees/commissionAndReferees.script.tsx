@@ -1,23 +1,84 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "../../../utils/types";
+import { format, subDays } from "date-fns";
+import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import { usePagination } from "@orderly.network/ui";
+
+export interface ListReturns<T> {
+  data: T;
+  meta: {
+    count: number;
+    page: number;
+    pageSize: number;
+    pageTotal: number;
+  };
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
+  dateRange?: DateRange;
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+}
 
 export type CommissionAndRefereesReturns = {
-  commissionRange?: DateRange;
-  setCommissionRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>
-  refereesRange?: DateRange;
-  setRefereesRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>
+  commission: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
+  referees: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
 };
 
 export const useCommissionAndRefereesScript =
   (): CommissionAndRefereesReturns => {
-    const [commissionRange, setCommissionRange] = useState<
-      DateRange | undefined
-    >();
-    const [refereesRange, setRefereesRange] = useState<DateRange | undefined>();
+    const commission = useCommissionDataScript();
+    const referees = useCommissionDataScript();
+
     return {
-      commissionRange,
-      setCommissionRange,
-      refereesRange,
-      setRefereesRange,
+      commission,
+      referees,
     };
   };
+
+const useCommissionDataScript = (): ListReturns<
+  RefferalAPI.ReferralRebateSummary[] | undefined
+> => {
+  const [commissionRange, setCommissionRange] = useState<DateRange | undefined>(
+    {
+      from: subDays(new Date(), 80),
+      to: new Date(),
+    }
+  );
+
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+
+  const [commissionData, { refresh, isLoading, loadMore, meta }] =
+    useReferralRebateSummary({
+      startDate:
+        commissionRange?.from !== undefined
+          ? format(commissionRange.from, "yyyy-MM-dd")
+          : undefined,
+      endDate:
+        commissionRange?.to !== undefined
+          ? format(commissionRange.to, "yyyy-MM-dd")
+          : undefined,
+      size: pageSize,
+      page: page,
+    });
+
+  useEffect(() => {
+    refresh();
+  }, [commissionRange]);
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
+  };
+
+
+  return {
+    data: commissionData || undefined,
+    meta: parseMeta(meta),
+    onPageChange,
+    onPageSizeChange,
+    dateRange: commissionRange,
+    setDateRange: setCommissionRange,
+  };
+};

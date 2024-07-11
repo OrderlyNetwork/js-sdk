@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import { format, subDays } from "date-fns";
+import { useMemo, useState } from "react";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -7,6 +9,10 @@ export type TitleStatisticReturns = {
   volType: string;
   volTypes: { label: string; value: string }[];
   onVolTypeChange: (item: string) => void;
+  dataSource?: {
+    date: string;
+    vol: number;
+  }[];
 };
 
 export const useTitleStatisticScript = (): TitleStatisticReturns => {
@@ -31,6 +37,42 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     setVolType(item);
   };
 
+  const dateRange = useMemo((): {
+    startDate: Date;
+    endDate: Date;
+  } => {
+    if (period === "30") {
+      return {
+        startDate: subDays(new Date(), 31),
+        endDate: subDays(new Date(), 1),
+      };
+    } else if (period === "90") {
+      return {
+        startDate: subDays(new Date(), 91),
+        endDate: subDays(new Date(), 1),
+      };
+    } else {
+      return {
+        startDate: subDays(new Date(), 8),
+        endDate: subDays(new Date(), 1),
+      };
+    }
+  }, [period]);
+
+  const [rebateSummary] = useReferralRebateSummary({
+    startDate: format(dateRange.startDate, "yyyy-MM-dd"),
+    endDate: format(dateRange.endDate, "yyyy-MM-dd"),
+  });
+
+  const dataSource = useMemo(() => {
+    return (rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
+      (e) => ({
+        date: e.date,
+        vol: period === "Commssion" ? e.referral_rebate : e.volume,
+      })
+    );
+  }, [rebateSummary, period]);
+
   return {
     period,
     periodTypes,
@@ -38,5 +80,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     volType,
     volTypes,
     onVolTypeChange,
+    dataSource,
   };
 };

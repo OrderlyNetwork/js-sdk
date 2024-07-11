@@ -7,17 +7,18 @@ export const generateKeyFun =
         //** YYYY-MM-dd */
         endDate?: string;
         //** default is 100 */
-        size?: number
+        size?: number;
+        page?: number;
     }) =>
         (pageIndex: number, previousPageData: any): string | null => {
             // reached the end
             if (previousPageData && !previousPageData.rows?.length) return null;
 
-            const { path, startDate, endDate, size = 100 } = args;
+            const { path, startDate, endDate, size = 100, page, } = args;
 
             const search = new URLSearchParams([
                 ["size", size.toString()],
-                ["page", `${pageIndex + 1}`],
+                ["page", `${page || (pageIndex + 1)}`],
             ]);
 
             if (startDate) {

@@ -19,7 +19,7 @@ const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
     role="navigation"
     aria-label="pagination"
     className={cnBase(
-      " oui-flex oui-justify-center oui-text-xs oui-items-center",
+      "oui-flex oui-justify-between oui-items-center oui-w-full oui-text-xs",
       className
     )}
     {...props}

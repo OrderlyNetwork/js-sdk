@@ -3,6 +3,7 @@ import { OrderlyAppConfig } from "./types";
 import {
   ModalProvider,
   OrderlyThemeProvider,
+  Toaster,
   TooltipProvider,
 } from "@orderly.network/ui";
 import { useBootstrap } from "./hooks/useBootstrap";
@@ -24,6 +25,7 @@ const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
             <TooltipProvider>{props.children}</TooltipProvider>
           </AppStateProvider>
         </ModalProvider>
+        <Toaster/>
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>
   );

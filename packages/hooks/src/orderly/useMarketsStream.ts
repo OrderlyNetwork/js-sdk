@@ -48,7 +48,13 @@ export const useMarketsStream = () => {
           ...item,
           ["24h_close"]: ticker.close,
           ["24h_open"]: ticker.open,
+          /**
+           * @deprecated
+           * spelling mistake, use 24h_volume to instead, will be remove next version
+           */
           ["24h_volumn"]: ticker.volume,
+          ["24h_volume"]: ticker.volume,
+          ["24h_amount"]: ticker.amount,
           change: 0,
         };
 

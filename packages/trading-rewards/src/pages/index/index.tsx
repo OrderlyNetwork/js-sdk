@@ -2,4 +2,4 @@
 export { TitleUI, TitleWidget } from "./title";
 export { CurEpochUI, CurEpochWidget } from "./curEpoch";
 
-export { OverviewPage } from "./page";
+export { IndexPage } from "./page";

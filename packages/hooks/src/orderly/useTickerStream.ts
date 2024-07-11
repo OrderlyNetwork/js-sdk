@@ -92,6 +92,7 @@ export const useTickerStream = (symbol: string) => {
 
     if (ticker.volume !== undefined) {
       config["24h_volumn"] = ticker.volume;
+      config["24h_volume"] = ticker.volume;
     }
 
     if (ticker.close !== undefined && ticker.open !== undefined) {

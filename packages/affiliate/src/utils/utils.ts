@@ -1,4 +1,5 @@
 // import { toast } from "@orderly.network/react";
+import { toast } from "@orderly.network/ui";
 import { format, toDate } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
@@ -20,9 +21,9 @@ export function addQueryParam(
 export async function copyText(content: string) {
   try {
     await navigator.clipboard.writeText(content);
-    // toast.success("Copy success");
+    toast.success("Copy success");
   } catch (error) {
-    // toast.success("Copy failed");
+    toast.success("Copy failed");
   }
 }
 
@@ -38,7 +39,7 @@ export function parseTime(time?: number | string): Date | null {
 }
 
 //** will be return YYYY-MM-ddThh:mm:ssZ */
-function formatDateTimeToUTC(input?: number | string): string {
+export function formatDateTimeToUTC(input?: number | string): string {
   if (input === undefined) return '';
   const date = toDate(input);
   const utcDate = toZonedTime(date, "UTC");

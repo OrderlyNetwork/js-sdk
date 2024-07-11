@@ -3,7 +3,7 @@ import { RebateList } from "./rebateList";
 import { FC, useContext, useMemo, useState } from "react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { compareDate, formatTime } from "../../utils/utils";
-import { useMediaQuery, ReferralAPI as API, useRefereeRebateSummary  } from "@orderly.network/hooks";
+import { useMediaQuery, RefferalAPI as API, useRefereeRebateSummary  } from "@orderly.network/hooks";
 
 export type RebatesItem = API.RefereeRebateSummary & {
     vol?: number

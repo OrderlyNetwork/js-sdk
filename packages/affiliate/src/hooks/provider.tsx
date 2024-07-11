@@ -4,6 +4,7 @@ import { formatYMDTime } from "../utils/utils";
 import { IntlProvider, MessageFormatElement } from "react-intl";
 import { en } from "../locale/en-US";
 import { RefferalAPI as API, usePrivateQuery, useDaily } from "@orderly.network/hooks";
+import { subDays } from "date-fns";
 
 export type UserVolumeType = {
     "1d_volume"?: number,
@@ -137,7 +138,12 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps & {
     const {
         data: dailyVolume,
         mutate: dailyVolumeMutate
-    } = useDaily();
+    } = useDaily(
+        {
+            startDate: subDays(new Date(), 1),
+            endDate: subDays(new Date(), 90),
+        }
+    );
 
     const {
         data: volumeStatistics,
