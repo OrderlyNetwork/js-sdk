@@ -1,5 +1,6 @@
 import { BaseIcon } from "./baseIcon";
 
+export type { BaseIconProps } from "./baseIcon";
 export { CloseIcon } from "./close";
 export { CheckIcon } from "./check";
 export { ChevronDownIcon } from "./chevronDown";

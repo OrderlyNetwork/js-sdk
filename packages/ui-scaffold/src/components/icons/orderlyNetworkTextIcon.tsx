@@ -1,8 +1,9 @@
+import { BaseIconProps } from "@orderly.network/ui";
 import React from "react";
 
 export const OrderlyNetworkTextIcon = React.forwardRef<
   SVGSVGElement,
-  {opacity?: number,}
+  BaseIconProps
 >((props, ref) => {
   const { opacity = 0.54, ...rest } = props;
   return (

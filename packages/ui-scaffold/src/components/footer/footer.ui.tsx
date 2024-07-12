@@ -1,15 +1,18 @@
 import { FC, useMemo } from "react";
 import {
   cn,
-  CommuntiyDiscordIcon,
-  CommuntiyTelegramIcon,
-  CommuntiyXIcon,
+  
   Divider,
   Flex,
-  OrderlyNetworkTextIcon,
-  SignalIcon,
+  
   Text,
 } from "@orderly.network/ui";
+
+import {CommuntiyDiscordIcon,
+    CommuntiyTelegramIcon,
+    CommuntiyXIcon,OrderlyNetworkTextIcon,
+    SignalIcon,} from "../icons/index";
+
 import { FooterReturns } from "./footer.script";
 import { BaseIcon, BaseIconProps } from "@orderly.network/ui/src/icon/baseIcon";
 import { WsNetworkStatus } from "@orderly.network/hooks";

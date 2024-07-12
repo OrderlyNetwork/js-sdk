@@ -1,7 +1,8 @@
+import { BaseIconProps } from "@orderly.network/ui";
 import React from "react";
 // import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const SignalIcon = React.forwardRef<SVGSVGElement, { size?: number }>(
+export const SignalIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
     const { size = 18, ...rest } = props;
     return (

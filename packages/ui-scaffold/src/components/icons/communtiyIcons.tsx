@@ -1,8 +1,9 @@
+import { BaseIconProps } from "@orderly.network/ui";
 import React from "react";
 
 export const CommuntiyTelegramIcon = React.forwardRef<
   SVGSVGElement,
-  { size?: number }
+  BaseIconProps
 >((props, ref) => {
   const { size = 20, ...rest } = props;
   return (
@@ -22,7 +23,7 @@ export const CommuntiyTelegramIcon = React.forwardRef<
 });
 export const CommuntiyDiscordIcon = React.forwardRef<
   SVGSVGElement,
-  { size?: number }
+  BaseIconProps
 >((props, ref) => {
   const { size = 20, ...rest } = props;
   return (
@@ -42,7 +43,7 @@ export const CommuntiyDiscordIcon = React.forwardRef<
 });
 export const CommuntiyXIcon = React.forwardRef<
   SVGSVGElement,
-  { size?: number }
+  BaseIconProps
 >((props, ref) => {
   const { size = 20, ...rest } = props;
   return (
