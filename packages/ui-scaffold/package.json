@@ -2,7 +2,8 @@
   "name": "@orderly.network/ui-scaffold",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
@@ -32,6 +33,7 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@orderly.network/ui": "workspace:*"
   }
 }
