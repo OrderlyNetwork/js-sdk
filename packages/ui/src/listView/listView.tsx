@@ -50,6 +50,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
             height={"100%"}
             itemAlign={"center"}
             justify={"center"}
+            mt={3}
           >
             <EmptyDataState />
           </Flex>

@@ -122,8 +122,8 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
           RefferalAPI.ReferralRebateSummary[]
         >
         className="oui-w-full oui-max-h-[200px]"
-          // dataSource={props.commission.data}
-          dataSource={[]}
+          dataSource={props.commission.data}
+          // dataSource={[]}
           loadMore={props.commission.loadMore}
           isLoading={props.commission.isLoading}
           renderItem={(e, index) => {
