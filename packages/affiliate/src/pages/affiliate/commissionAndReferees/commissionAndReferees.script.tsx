@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "../../../utils/types";
 import { format, subDays } from "date-fns";
-import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import { RefferalAPI, useMediaQuery, useReferralRebateSummary } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 
 export interface ListReturns<T> {
@@ -46,9 +46,11 @@ const useCommissionDataScript = (): ListReturns<
     }
   );
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const isLG = useMediaQuery("(max-width: 767px)");
 
-  const [commissionData, { refresh, isLoading,  meta }] =
+  const { page, pageSize, setPage, setPageSize,  parseMeta } = usePagination();
+
+  const [commissionData, { refresh, isLoading, loadMore, meta }] =
     useReferralRebateSummary({
       startDate:
         commissionRange?.from !== undefined
@@ -59,7 +61,7 @@ const useCommissionDataScript = (): ListReturns<
           ? format(commissionRange.to, "yyyy-MM-dd")
           : undefined,
       size: pageSize,
-      page: page,
+      page: !isLG ? page : undefined,
     });
 
   useEffect(() => {
@@ -74,9 +76,9 @@ const useCommissionDataScript = (): ListReturns<
     setPageSize(pageSize);
   };
 
-  const loadMore = () => {
-    setPage(page + 1);
-  };
+  // const loadMore = () => {
+  //   setPage(page + 1);
+  // };
 
   return {
     data: commissionData || undefined,
