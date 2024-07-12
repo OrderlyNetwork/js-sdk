@@ -11,21 +11,17 @@ import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider } from "./provider/appContext";
 
 const OrderlyApp = (props: PropsWithChildren<OrderlyAppConfig>) => {
-  const { brokerId, brokerName, networkId } = props;
+  // const { brokerId, brokerName, networkId } = props;
   useBootstrap();
   return (
     <OrderlyThemeProvider>
-      <OrderlyConfigProvider
-        networkId={networkId}
-        brokerId={brokerId}
-        configStore={props.configStore}
-      >
+      <OrderlyConfigProvider {...props}>
         <ModalProvider>
           <AppStateProvider>
             <TooltipProvider>{props.children}</TooltipProvider>
           </AppStateProvider>
         </ModalProvider>
-        <Toaster/>
+        <Toaster />
       </OrderlyConfigProvider>
     </OrderlyThemeProvider>
   );

@@ -50,7 +50,7 @@ type ChainItem = {
 };
 
 type ChainSelectProps = {
-  value: ChainItem;
+  value?: ChainItem;
   onChange?: (chain: ChainItem) => void;
   chains: {
     mainnet: ChainItem[];
