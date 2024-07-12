@@ -82,7 +82,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     <div
       style={props.style}
       ref={containerRef}
-      className={cn("oui-relative oui-min-h-[180px] oui-overflow-auto", props.className)}
+      className={cn("oui-relative oui-min-h-[180px] oui-scrollbar-vertical oui-overflow-auto", props.className)}
     >
       <div
         className={cn(
