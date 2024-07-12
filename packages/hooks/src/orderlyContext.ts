@@ -7,6 +7,7 @@ import {
 } from "@orderly.network/core";
 
 import { Chain, NetworkId } from "@orderly.network/types";
+import { Chains } from "./orderly/useChains";
 
 export type filteredChains = {
   mainnet?: Chain[];
@@ -32,6 +33,7 @@ export interface OrderlyConfigContextState {
   onlyTestnet?: boolean;
   // extraApis:ExtraAPIs
   filteredChains?: filteredChains | null;
+  customChains?: Chains<undefined, undefined>;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

@@ -23,7 +23,7 @@ export const ChainMenu = (props: {
     testnet: ChainItem[];
   };
   onChange?: (chain: ChainItem) => Promise<any>;
-  currentChain: ChainItem;
+  currentChain?: ChainItem;
   isUnsupported: boolean;
   isConnected: boolean;
 }) => {
@@ -68,6 +68,7 @@ export const ChainMenu = (props: {
   );
 };
 
+// ------------------ NotSupportedDialog start ------------------
 export const NotSupportedDialog = (props: {
   chains: {
     mainnet: ChainItem[];
@@ -126,6 +127,7 @@ export const NotSupportedDialog = (props: {
   );
 };
 
+// ------------------ ChainItem start ------------------
 const ChainItem = (props: {
   id: number;
   name: string;
