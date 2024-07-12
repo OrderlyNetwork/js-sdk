@@ -38,6 +38,8 @@ export const useReferralRebateSummary = (params: Params) => {
   );
 
   const loadMore = () => {
+    console.log("xxxxxxx response.size", response.size);
+    
     response.setSize(response.size + 1);
   };
   

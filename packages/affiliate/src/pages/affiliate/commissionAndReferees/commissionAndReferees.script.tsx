@@ -16,6 +16,8 @@ export interface ListReturns<T> {
   onPageSizeChange: (pageSize: number) => void;
   dateRange?: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+  isLoading?: boolean;
+  loadMore?: () => void;
 }
 
 export type CommissionAndRefereesReturns = {
@@ -46,7 +48,7 @@ const useCommissionDataScript = (): ListReturns<
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [commissionData, { refresh, isLoading, loadMore, meta }] =
+  const [commissionData, { refresh, isLoading,  meta }] =
     useReferralRebateSummary({
       startDate:
         commissionRange?.from !== undefined
@@ -72,6 +74,9 @@ const useCommissionDataScript = (): ListReturns<
     setPageSize(pageSize);
   };
 
+  const loadMore = () => {
+    setPage(page + 1);
+  };
 
   return {
     data: commissionData || undefined,
@@ -80,5 +85,7 @@ const useCommissionDataScript = (): ListReturns<
     onPageSizeChange,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
+    isLoading,
+    loadMore,
   };
 };
