@@ -57,7 +57,7 @@ export const LoadMore: Story = {
           className="oui-min-h-[50px] oui-max-h-[300px]"
           renderItem={function (item: number): ReactNode {
             return (
-              <div className="oui-w-full oui-m-1 oui-bg-slate-500 oui-p-5">
+              <div className="oui-w-full oui-mt-1 oui-bg-slate-500 oui-p-5">
                 {item}
               </div>
             );

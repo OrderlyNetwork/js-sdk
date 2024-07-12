@@ -2,7 +2,8 @@
   "name": "@orderly.network/react-app",
   "version": "1.0.0",
   "description": "Create React App with Orderly Network components",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"

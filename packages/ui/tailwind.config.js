@@ -6,6 +6,7 @@ const { positionPlugin } = require("./src/tailwind/position");
 const { basePlugin } = require("./src/tailwind/base");
 const { componentsPlugin } = require("./src/tailwind/components");
 const { themePlugin } = require("./src/tailwind/theme");
+const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -160,6 +161,7 @@ module.exports = withTV({
     gradientPlugin(),
     positionPlugin(),
     componentsPlugin(),
+    scrollBarPlugin(),
     require("tailwindcss-animate"),
   ],
 });

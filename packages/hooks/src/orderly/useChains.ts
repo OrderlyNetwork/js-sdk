@@ -36,6 +36,8 @@ export type Chains<
 export type UseChainsOptions = {
   filter?: (item: API.Chain) => boolean;
   pick?: "dexs" | "network_infos" | "token_infos";
+  // Whether to force the use of data returned by the API, ignoring the customChains.
+  forceAPI?: boolean;
 } & SWRConfiguration;
 
 export type UseChainsReturnObject = {
@@ -71,8 +73,11 @@ export function useChains(
   options: UseChainsOptions = {}
 ) {
   const { pick: pickField, ...swrOptions } = options;
-  const { filteredChains: allowedChains, configStore } =
-    useContext(OrderlyContext);
+  const {
+    filteredChains: allowedChains,
+    configStore,
+    customChains,
+  } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
   filterFun.current = options?.filter;
@@ -98,18 +103,26 @@ export function useChains(
 
   const brokerId = configStore.get("brokerId");
 
+  const needFetchFromAPI = options.forceAPI || !customChains;
+
+  console.log("--------", needFetchFromAPI, customChains);
+
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
-    `https://api-evm.orderly.org/v1/public/chain_info${
-      brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
-    }`,
+    needFetchFromAPI
+      ? `https://api-evm.orderly.org/v1/public/chain_info${
+          brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+        }`
+      : null,
     { ...commonSwrOpts }
   );
 
   const chains = useMemo(() => {
     const tokenChains = fillChainsInfo(tokenChainsRes, filterFun.current);
 
-    let testnetArr = [...TestnetChains] as API.Chain[];
+    let testnetArr = needFetchFromAPI
+      ? ([...TestnetChains] as API.Chain[])
+      : customChains?.testnet;
 
     tokenChains?.forEach((item) => {
       const chainId = item.network_infos?.chain_id;
@@ -123,9 +136,12 @@ export function useChains(
 
     let mainnetArr: API.Chain[] = [];
 
+    const mainnetChains = needFetchFromAPI ? chainInfos : customChains?.mainnet;
+
     mainnetArr = filterAndUpdateChains(
       tokenChains,
-      chainInfos,
+      // chainInfos,
+      mainnetChains,
       filterFun.current
     );
 
@@ -165,7 +181,14 @@ export function useChains(
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [networkId, tokenChainsRes, chainInfos, pickField, allowedChains]);
+  }, [
+    networkId,
+    tokenChainsRes,
+    chainInfos,
+    customChains,
+    pickField,
+    allowedChains,
+  ]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -190,10 +213,10 @@ export function useChains(
     [chains, chainsMap]
   );
 
-  const checkChainSupport = useCallback((chainId: number | string) => {
-    console.log(chainsMap.current);
-    return true;
-  }, []);
+  // const checkChainSupport = useCallback((chainId: number | string) => {
+  //   console.log(chainsMap.current);
+  //   return true;
+  // }, []);
 
   return [
     chains,
