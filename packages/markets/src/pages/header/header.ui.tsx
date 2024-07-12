@@ -14,6 +14,13 @@ const data: any = {
 
 const list = [data, data, data, data, data];
 
+type TBlockData = {
+  "24h_volume": number;
+  openInterest: number;
+  assets: number;
+};
+
+/** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
   const { emblaRef, emblaApi, scrollIndex } = props;
   const cls =
@@ -48,19 +55,15 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     </div>
   );
 };
+/** -----------MarketsHeader end ------------ */
 
-type TBlockData = {
-  "24h_volume": number;
-  openInterest: number;
-  assets: number;
-};
-
-export type BlockListProps = {
+type BlockListProps = {
   data: TBlockData;
   className?: string;
 };
 
-export const BlockList: React.FC<BlockListProps> = (props) => {
+/** -----------MarketsHeader start ------------ */
+const BlockList: React.FC<BlockListProps> = (props) => {
   const { data } = props;
 
   const list = useMemo(() => {
@@ -93,13 +96,14 @@ export const BlockList: React.FC<BlockListProps> = (props) => {
     </Flex>
   );
 };
+/** -----------MarketsHeader start ------------ */
 
-export type BlockItemProps = {
+type BlockItemProps = {
   label: string;
   value: number;
 };
 
-export const BlockItem: React.FC<BlockItemProps> = (props) => {
+const BlockItem: React.FC<BlockItemProps> = (props) => {
   return (
     <Box intensity={900} r="lg" px={4} py={3} width="100%">
       <Text as="div" intensity={36} size="xs" weight="semibold">
@@ -113,13 +117,13 @@ export const BlockItem: React.FC<BlockItemProps> = (props) => {
   );
 };
 
-export type CardItemProps = {
+type CardItemProps = {
   data?: TListItem[];
   title: ReactNode;
   className?: string;
 };
 
-export const CardItem: React.FC<CardItemProps> = (props) => {
+const CardItem: React.FC<CardItemProps> = (props) => {
   return (
     <Box
       intensity={900}
@@ -150,22 +154,23 @@ type TListItem = {
   [x: string]: any;
 };
 
-export type ListItemProps = {
+type ListItemProps = {
   item: TListItem;
   className?: string;
 };
 
-export const ListItem: React.FC<ListItemProps> = (props) => {
+const ListItem: React.FC<ListItemProps> = (props) => {
   const { item } = props;
   return (
     <Flex width="100%" gapX={3} py={2} className={props.className}>
       <Flex width="100%" gapX={1}>
-        <TokenIcon symbol={item.symbol} size="xs" />
+        {/* <TokenIcon symbol={item.symbol} size="xs" /> */}
         <Text.formatted
           rule="symbol"
           formatString="base"
           size="xs"
           weight="semibold"
+          showIcon
         >
           {item.symbol}
         </Text.formatted>

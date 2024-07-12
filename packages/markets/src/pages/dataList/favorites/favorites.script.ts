@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react";
 import {
-  MarketListType,
+  MarketsType,
   useFundingRates,
-  useMarketsList,
+  useMarkets,
   useMarketsStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
@@ -13,9 +13,7 @@ export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
-  const [data] = useMarketsList(MarketListType.FAVORITES);
-
-  console.log("useMarketsList", data);
+  const [data, favorite] = useMarkets(MarketsType.FAVORITES);
 
   const dataSource = useDataSource();
 
@@ -44,7 +42,8 @@ export const useFavoritesScript = () => {
     meta,
     setPage,
     setPageSize,
-  };
+    favorite,
+  } as any;
 };
 
 export function getPageData(list: any[], pageSize: number, pageIndex: number) {
@@ -74,14 +73,14 @@ function get8hFunding(est_funding_rate: number, funding_period: number) {
 }
 
 export function useDataSource() {
-  // const { data: volumeData } = useQuery("/v1/public/volume/stats");
   const symbolsInfo = useSymbolsInfo();
   const fundingRates = useFundingRates();
   const { data: futures } = useMarketsStream();
-  console.log("futures", futures);
 
   return useMemo(() => {
-    const list = futures?.map((item) => {
+    const list = futures?.map((item: any) => {
+      const { open_interest = 0, index_price = 0 } = item;
+
       const info = symbolsInfo[item.symbol];
       const rate = fundingRates[item.symbol];
       const est_funding_rate = rate("est_funding_rate", 0);
@@ -92,6 +91,7 @@ export function useDataSource() {
         "8h_funding": get8hFunding(est_funding_rate, funding_period),
         quote_dp: info("quote_dp"),
         created_time: info("created_time"),
+        openInterest: new Decimal(open_interest).mul(index_price).toNumber(),
       };
     });
     return list || [];

@@ -1,6 +1,6 @@
 import { Text } from "@orderly.network/ui";
 import { MarketsDataListWidget } from "./dataList";
-import { MarketsHeaderWidget } from "./header/header.widget";
+import { MarketsHeaderWidget } from "./header/widget";
 
 export const MarketsPage = () => {
   return (

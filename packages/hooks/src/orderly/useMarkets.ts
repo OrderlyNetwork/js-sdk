@@ -3,6 +3,8 @@ import { useMarketsStream } from "./useMarketsStream";
 import { OrderlyContext } from "../orderlyContext";
 import { API } from "@orderly.network/types";
 import { useSymbolsInfo } from "./useSymbolsInfo";
+import { useFundingRates } from "./useFundingRates";
+import { Decimal } from "@orderly.network/utils";
 
 export enum MarketsType {
   FAVORITES,
@@ -45,12 +47,14 @@ export interface Recent {
 
 export const useMarkets = (type: MarketsType) => {
   const marketsKey = "markets";
+  const symbolsInfo = useSymbolsInfo();
 
-  const { data } = useMarketsStream();
+  const fundingRates = useFundingRates();
+
+  const { data: futures } = useMarketsStream();
   const { configStore } = useContext(OrderlyContext);
 
   // {"PERP_ETH_USDC": {}, ...}
-  const publicInfo = useSymbolsInfo();
 
   if (!configStore.get(marketsKey)) {
     const jsonStr = localStorage.getItem(marketsKey);
@@ -65,7 +69,7 @@ export const useMarkets = (type: MarketsType) => {
           { name: "PERP_BTC_USDC", tabs: [{ ...defaultTab }] },
         ],
         favoriteTabs: [{ ...defaultTab }],
-        lastSelectFavoriteTab: { ...defaultTab },
+        lastSelectedFavoriteTab: { ...defaultTab },
       });
     }
   }
@@ -216,6 +220,26 @@ export const useMarkets = (type: MarketsType) => {
     setFavorites(() => curData);
   };
 
+  const marketsList = useMemo(() => {
+    const list = futures?.map((item: any) => {
+      const { open_interest = 0, index_price = 0 } = item;
+
+      const info = symbolsInfo[item.symbol];
+      const rate = fundingRates[item.symbol];
+      const est_funding_rate = rate("est_funding_rate", 0);
+      const funding_period = info("funding_period");
+
+      return {
+        ...item,
+        "8h_funding": get8hFunding(est_funding_rate, funding_period),
+        quote_dp: info("quote_dp"),
+        created_time: info("created_time"),
+        openInterest: new Decimal(open_interest).mul(index_price).toNumber(),
+      };
+    });
+    return list || [];
+  }, [symbolsInfo, futures, fundingRates]);
+
   const getData = (type: MarketsType) => {
     // get data
     const localData =
@@ -224,8 +248,8 @@ export const useMarkets = (type: MarketsType) => {
     const keys = localData.map((item) => item.name);
     const filter =
       type == MarketsType.ALL
-        ? data
-        : data?.filter((item) => keys.includes(item.symbol));
+        ? marketsList
+        : marketsList?.filter((item) => keys.includes(item.symbol));
 
     const favoritesData = [...favorites];
     const favoriteKeys = favoritesData.map((item) => item.name);
@@ -243,8 +267,8 @@ export const useMarkets = (type: MarketsType) => {
         const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
 
         let imr = undefined;
-        if (publicInfo) {
-          imr = publicInfo?.[element.symbol]("base_imr");
+        if (symbolsInfo) {
+          imr = symbolsInfo?.[element.symbol]("base_imr");
         }
 
         filter[index] = {
@@ -323,3 +347,16 @@ export const useMarkets = (type: MarketsType) => {
     },
   ] as const;
 };
+
+function get8hFunding(est_funding_rate: number, funding_period: number) {
+  let funding8h = 0;
+
+  if (funding_period) {
+    funding8h = new Decimal(est_funding_rate)
+      .mul(funding_period)
+      .div(8)
+      .toNumber();
+  }
+
+  return funding8h;
+}
