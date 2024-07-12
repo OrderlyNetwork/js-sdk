@@ -9,4 +9,6 @@ export {
   ExpandableContext,
 } from "./components/scaffoldContext";
 
+export * from "./components/footer";
+
 export type { SideBarProps, SideMenuItem } from "./components/sidebar";
