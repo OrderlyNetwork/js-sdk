@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.5.10-sdk-v2.7
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-sdk-v2.6
 
 ### Patch Changes
