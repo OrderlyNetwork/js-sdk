@@ -36,7 +36,7 @@ export default function TopTips() {
         }
       }
     }
-  }, [startTime]);
+  }, [startTime, status]);
 
   if (showMaintenanceTips) {
     return (

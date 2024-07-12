@@ -39,12 +39,13 @@ export function MaintenanceStatusTips({
         "orderly-bg-warning-darken orderly-text-warning orderly-text-2xs orderly-font-semibold orderly-leading-[18px]",
         "orderly-fixed orderly-left-0 orderly-right-0 orderly-z-[30]",
         "orderly-flex orderly-gap-2 orderly-items-start orderly-bottom-[64px] orderly-p-[10px] orderly-pr-[44px]",
-        "desktop:orderly-flex desktop:orderly-gap-1 desktop:orderly-items-center desktop:orderly-justify-center desktop:orderly-static desktop:orderly-h-[40px] desktop:orderly-text-xs desktop:orderly-bottom-0 desktop:orderly-pr-0"
+        "orderly-font-semibold",
+        "desktop:!orderly-flex desktop:!orderly-gap-1 desktop:!orderly-items-center desktop:!orderly-justify-center desktop:!orderly-static desktop:!orderly-h-[40px] desktop:!orderly-text-xs desktop:!orderly-bottom-0 desktop:!orderly-pr-0"
       )}
     >
       <InfoIcon
         size={20}
-        className="orderly-flex-shrink-0 orderly-w-4 orderly-h-4 desktop:orderly-w-5 desktop:orderly-h-5"
+        className="orderly-flex-shrink-0 orderly-w-4 orderly-h-4 desktop:!orderly-w-5 desktop:!orderly-h-5"
       />
       <div>
         {brokerName} will be temporarily unavailable for a scheduled upgrade
