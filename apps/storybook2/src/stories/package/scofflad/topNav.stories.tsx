@@ -1,18 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { useMemo } from "react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Flex, ModalProvider } from "@orderly.network/ui";
+import { Box, Flex } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
   MainNavWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
+  ChainMenu,
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { useChains } from "@orderly.network/hooks";
 
 const meta = {
   title: "Package/ui-scaffold/MainNav",
   component: MainNavWidget,
-  subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
+  subComponents: {
+    AccountMenuWidget,
+    AccountSummaryWidget,
+    ChainMenuWidget,
+    // ChainMenu,
+  },
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
@@ -21,11 +29,9 @@ const meta = {
     (Story: any) => (
       <ConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <ModalProvider>
-            <Box intensity={900}>
-              <Story />
-            </Box>
-          </ModalProvider>
+          <Box intensity={900}>
+            <Story />
+          </Box>
         </OrderlyApp>
       </ConnectorProvider>
     ),
@@ -69,7 +75,7 @@ export const AccountSummary: Story = {
   ],
 };
 
-export const ChainMenu: Story = {
+export const ChainMenuComponent: Story = {
   render: () => {
     return <ChainMenuWidget />;
   },
@@ -79,6 +85,85 @@ export const ChainMenu: Story = {
       <Flex justify={"center"} itemAlign={"center"} p={3}>
         <Story />
       </Flex>
+    ),
+  ],
+};
+
+export const CustomChainsMenu: Story = {
+  render: () => {
+    const [chains] = useChains();
+    console.log("chains", chains);
+    const formattedChains = useMemo(() => {
+      return {
+        mainnet: chains.mainnet.map((chain) => ({
+          name: chain.network_infos.name,
+          id: chain.network_infos.chain_id,
+          lowestFee: chain.network_infos.bridgeless,
+        })),
+        testnet: chains.testnet.map((chain) => ({
+          name: chain.network_infos.name,
+          id: chain.network_infos.chain_id,
+          lowestFee: chain.network_infos.bridgeless,
+        })),
+      };
+    }, [chains]);
+    return (
+      <ChainMenu
+        chains={formattedChains}
+        isUnsupported={false}
+        isConnected
+        currentChain={formattedChains.mainnet[0]}
+      />
+    );
+  },
+
+  decorators: [
+    (Story) => (
+      <OrderlyApp
+        brokerId={"orderly"}
+        brokerName={""}
+        networkId={"testnet"}
+        customChains={{
+          mainnet: [
+            {
+              chain_id: 1,
+              name: "Ethereum",
+              network_infos: {
+                chain_id: 1,
+                name: "Ethereum",
+                bridgeless: false,
+              },
+            },
+          ],
+          testnet: [
+            {
+              network_infos: {
+                name: "Arbitrum Sepolia",
+                shortName: "Arbitrum Sepolia",
+                public_rpc_url:
+                  "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+                chain_id: 421614,
+                currency_symbol: "ETH",
+                bridge_enable: true,
+                mainnet: false,
+                explorer_base_url: "https://sepolia.arbiscan.io",
+                est_txn_mins: null,
+              },
+              token_infos: [
+                {
+                  symbol: "USDC",
+                  address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+                  decimals: 6,
+                },
+              ],
+            },
+          ],
+        }}
+      >
+        <Flex justify={"center"} itemAlign={"center"} p={3}>
+          <Story />
+        </Flex>
+      </OrderlyApp>
     ),
   ],
 };

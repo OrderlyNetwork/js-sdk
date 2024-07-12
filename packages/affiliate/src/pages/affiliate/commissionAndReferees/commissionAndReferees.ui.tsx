@@ -5,6 +5,8 @@ import {
   DatePicker,
   Divider,
   Flex,
+  ListView,
+  Pagination,
   ScrollArea,
   Statistic,
   TabPanel,
@@ -13,11 +15,10 @@ import {
   Text,
   cn,
 } from "@orderly.network/ui";
-import {
-  CommissionAndRefereesReturns,
-  DateRange,
-} from "./commissionAndReferees.script";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
+import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
+import { DateRange } from "../../../utils/types";
+import { formatYMDTime } from "../../../utils/utils";
 
 export const CommissionAndRefereesUI: FC<CommissionAndRefereesReturns> = (
   props
@@ -50,8 +51,9 @@ const MobileCellItem: FC<{
   className?: string;
   rule?: "address" | "date";
   formatString?: string;
+  prefix?: string;
 }> = (props) => {
-  const { title, value, align, className, rule, formatString } = props;
+  const { title, value, align, className, rule, formatString, prefix } = props;
   return (
     <Statistic
       className={cn("oui-flex-1", className)}
@@ -62,7 +64,10 @@ const MobileCellItem: FC<{
       children={
         <Text.formatted
           rule={rule || ""}
+          // @ts-ignore
           formatString={formatString}
+          // @ts-ignore
+          prefix={prefix}
           className="oui-text-base-contrast-80 oui-text-sm oui-mt-[6px]"
         >
           {value}
@@ -73,25 +78,35 @@ const MobileCellItem: FC<{
 };
 
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
+  console.log("commission data", props.commission);
+
   const isLG = useMediaQuery("(max-width: 767px)");
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
         title: "Commission (USDC)",
-        dataIndex: "commission",
-        render: (value) => "$123,22.21",
+        dataIndex: "referral_rebate",
+        render: (value) => (
+          <Text.numeral dp={6} prefix={"$"}>
+            {value || "-"}
+          </Text.numeral>
+        ),
         width: 216,
       },
       {
         title: "Referral vol. (USDC)",
-        dataIndex: "referral_vol",
-        render: (value) => "$123,22.21",
+        dataIndex: "volume",
+        render: (value) => (
+          <Text.numeral dp={6} prefix={"$"}>
+            {value || "-"}
+          </Text.numeral>
+        ),
         width: 216,
       },
       {
         title: "Date",
-        dataIndex: "commission",
-        render: (value) => "$123,22.21",
+        dataIndex: "date",
+        render: (value) => formatYMDTime(value),
         width: 216,
       },
     ];
@@ -99,38 +114,49 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     return cols;
   }, []);
 
-  const mCell = useCallback(() => {
-    return (
-      <Flex direction={"row"} pt={3} width={"100%"}>
-        <MobileCellItem title="Commission" value="$222.222" />
-        <MobileCellItem title="Referral vol." value="$222.222" />
-        <MobileCellItem title="Date" value="$222.222" align="end" />
-      </Flex>
-    );
-  }, [isLG]);
-
   const body = useMemo(() => {
     if (isLG) {
       return (
-        <ScrollArea className="oui-w-full">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
-            return <>{mCell()}</>;
-          })}
-        </ScrollArea>
+        <ListView<
+          RefferalAPI.ReferralRebateSummary,
+          RefferalAPI.ReferralRebateSummary[]
+        >
+        className="oui-w-full oui-max-h-[200px]"
+          // dataSource={props.commission.data}
+          dataSource={[]}
+          loadMore={props.commission.loadMore}
+          isLoading={props.commission.isLoading}
+          renderItem={(e, index) => {
+            return (
+              <Flex  direction={"row"} pt={3} width={"100%"}>
+                <MobileCellItem title="Commission" value={e.referral_rebate} prefix="$"/>
+                <MobileCellItem title="Referral vol." value={e.volume} prefix="$"/>
+                <MobileCellItem title="Date" value={e.date} rule="date" formatString="yyyy-MM-dd" align="end" />
+              </Flex>
+            );
+          }}
+        />
       );
     }
 
     return (
       <DataTable
+        bordered
         columns={columns}
-        dataSource={[1, 2, 3, 4, 5, 6, 7, 8]}
+        dataSource={props.commission.data}
         classNames={{
           header: "oui-text-xs oui-text-base-contrast-36",
-          body: "oui-text-xs oui-text-base-contrast-80",
+          body: "oui-text-xs oui-text-base-contrast-80 oui-max-h-[200px]",
         }}
-      />
+      >
+        <Pagination
+          {...props.commission.meta}
+          onPageChange={props.commission.onPageChange}
+          onPageSizeChange={props.commission.onPageSizeChange}
+        />
+      </DataTable>
     );
-  }, [isLG]);
+  }, [isLG, props.commission]);
 
   return (
     <Flex
@@ -140,8 +166,8 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
       itemAlign={"start"}
     >
       <DateFiler
-        value={props.commissionRange}
-        setValue={props.setCommissionRange}
+        value={props.commission.dateRange}
+        setValue={props.commission.setDateRange}
       />
       {body}
     </Flex>
@@ -230,11 +256,22 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const body = useMemo(() => {
     if (isLG) {
       return (
-        <ScrollArea className="oui-w-full">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
-            return <>{mCell()}</>;
-          })}
-        </ScrollArea>
+        // <ScrollArea className="oui-w-full">
+        //   {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
+        //     return <>{mCell()}</>;
+        //   })}
+        // </ScrollArea>
+        <ListView<
+          RefferalAPI.ReferralRebateSummary,
+          RefferalAPI.ReferralRebateSummary[]
+        >
+          dataSource={props.commission.data}
+          loadMore={props.commission.loadMore}
+          isLoading={props.commission.isLoading}
+          renderItem={(e, index) => {
+            return mCell();
+          }}
+        />
       );
     }
 
@@ -260,8 +297,8 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       itemAlign={"start"}
     >
       <DateFiler
-        value={props.commissionRange}
-        setValue={props.setCommissionRange}
+        value={props.referees.dateRange}
+        setValue={props.referees.setDateRange}
       />
       {body}
     </Flex>

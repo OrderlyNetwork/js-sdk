@@ -2,7 +2,8 @@
   "name": "@orderly.network/react-app",
   "version": "1.0.1-sdk-v2.6",
   "description": "Create React App with Orderly Network components",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +18,8 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

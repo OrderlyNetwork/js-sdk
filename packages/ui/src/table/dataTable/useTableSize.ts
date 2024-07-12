@@ -1,5 +1,12 @@
-export const useTableSize = (scroll?: { x?: number; y?: number }) => {
+import { useState } from "react";
+
+export const useTableSize = (options: {
+  minHeight?: number;
+  scroll?: { x?: number; y?: number };
+}) => {
+  const { scroll } = options;
   let width: string, height: string;
+  const [minHeight, setMinHeight] = useState(options.minHeight || 240);
 
   if (typeof scroll?.x === "number") {
     width = `${scroll.x}px`;

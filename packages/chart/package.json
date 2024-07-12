@@ -3,8 +3,11 @@
   "version": "1.0.1-sdk-v2.6",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "private": true,
   "scripts": {
+    "build": "tsup",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,17 +21,25 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "tsconfig": "workspace:*"
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^8.1.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@orderly.network/ui": "workspace:*",
     "d3-array": "^3.2.4",
     "d3-axis": "^3.0.0",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
-    "d3-shape": "^3.2.0"
+    "d3-shape": "^3.2.0",
+    "recharts": "^2.12.7"
+  },
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.2.0"
   }
 }

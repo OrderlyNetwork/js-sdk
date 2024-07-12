@@ -1,7 +1,7 @@
 import { Card, Grid, Box, Statistic, Text } from "@orderly.network/ui";
 
 import { UsePerformanceScriptReturn } from "./performance.script";
-import { Axis, Chart, PnLChart, PnlLineChart } from "@orderly.network/chart";
+import { Axis, Chart, PnLBarChart, PnlLineChart } from "@orderly.network/chart";
 import { PeriodTitle } from "../shared/periodHeader";
 import { useMemo } from "react";
 
@@ -54,7 +54,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           </Statistic>
         </Box>
       </Grid>
-      <Grid cols={2}>
+      <Grid cols={2} gap={4}>
         <PerformancePnL data={props.data} />
         <CumulativePnlChart data={props.data} />
       </Grid>
@@ -74,12 +74,8 @@ export const PerformancePnL = (props: { data: any[] }) => {
       <Text as="div" size="sm" className="oui-mb-3">
         Performance PnL
       </Text>
-      <Box r="md" className="oui-border oui-border-line-4">
-        <Chart data={props.data} x={"date"} y={"pnl"}>
-          <Axis orientation="left" />
-          <Axis orientation="bottom" tickValues={tickValues} />
-          <PnLChart />
-        </Chart>
+      <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
+        <PnLBarChart data={props.data} />
       </Box>
     </Box>
   );
@@ -91,12 +87,11 @@ export const CumulativePnlChart = (props: { data: any[] }) => {
       <Text as="div" size="sm" className="oui-mb-3">
         Cumulative PnL
       </Text>
-      <Box r="md" className="oui-border oui-border-line-4">
-        <Chart data={props.data} x={"date"} y={"pnl"}>
-          <PnlLineChart />
+      <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
+        <PnlLineChart data={props.data} />
+        {/* <Chart data={props.data} x={"date"} y={"pnl"}>
           <Axis orientation="left" />
-          {/* <Line /> */}
-        </Chart>
+        </Chart> */}
       </Box>
     </Box>
   );

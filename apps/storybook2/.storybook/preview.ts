@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react";
 import { withThemeByClassName } from "@storybook/addon-themes";
 
 import "../src/tailwind.css";
+// import "@orderly.network/chart/dist/styles.css";
 import { withWalletConnect } from "./addons/withWalletConnect";
 import { customViewports } from "./screenSizes";
 

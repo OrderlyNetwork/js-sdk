@@ -67,7 +67,7 @@ export const AssetsUI = (props: Props) => {
           <Text.numeral
             unit="USDC"
             style={{ "--oui-gradient-angle": "45deg" }}
-            unitClassName="oui-text-base oui-text-base-contrast-80 oui-h-9"
+            unitClassName="oui-text-base oui-text-base-contrast-80 oui-h-9 oui-ml-1"
             className={gradientTextVariants({
               className: "oui-font-bold oui-text-3xl",
               color: "brand",

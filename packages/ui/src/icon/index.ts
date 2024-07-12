@@ -1,5 +1,6 @@
 import { BaseIcon } from "./baseIcon";
 
+export type { BaseIconProps } from "./baseIcon";
 export { CloseIcon } from "./close";
 export { CheckIcon } from "./check";
 export { ChevronDownIcon } from "./chevronDown";
@@ -37,8 +38,6 @@ export { WalletIcon } from "./walletIcon";
 export { CalendarIcon } from "./calendar";
 export { CopyIcon } from "./copy";
 export { ServerFillIcon } from "./serverFill";
-
-export { OrderlyNetworkTextIcon } from "./orderlyNetworkTextIcon";
 
 import { CombineIcon } from "./combine";
 

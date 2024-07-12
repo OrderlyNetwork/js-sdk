@@ -126,11 +126,6 @@ export const DataTable = <RecordType extends unknown>(
         }
       }
     });
-
-    // if (isValidElement(props.children)) {
-    //   // console.log("******children", children, children.type?.displayName);
-
-    // }
   }, [props.children]);
 
   useEffect(() => {
@@ -141,7 +136,7 @@ export const DataTable = <RecordType extends unknown>(
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
   }, []);
 
-  const tableSize = useTableSize(scroll);
+  const { width, height } = useTableSize({ scroll });
 
   let childElement = (
     // <TableProvider
@@ -154,7 +149,7 @@ export const DataTable = <RecordType extends unknown>(
       id={props.id}
       ref={wrapRef}
       className={root({ className: cnBase(className, classNames?.root) })}
-      style={{ ...tableSize }}
+      style={{ width, height }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
       <TableHeader

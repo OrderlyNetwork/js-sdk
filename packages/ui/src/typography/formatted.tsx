@@ -1,8 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { format as formatDate, isValid } from "date-fns";
 import { Text, TextElement, TextProps } from "./text";
 import { CopyIcon } from "../icon/copy";
+import { TokenIcon } from "../icon";
+import { SizeType } from "../helpers/sizeType";
 
 export type TextRule = "date" | "address" | "symbol" | "status" | "txId";
 
@@ -50,6 +52,7 @@ type SymbolText = {
    */
   formatString?: string;
   showIcon?: boolean;
+  iconSize?: SizeType;
 };
 
 const DEFAULT_SYMBOL_FORMAT = "base-quote";
@@ -62,6 +65,7 @@ export type FormattedTextProps = TextProps & {
 
   suffix?: React.ReactElement;
   prefix?: React.ReactElement;
+  // showIcon?: boolean;
 } & (BaseText | DateText | AddressText | SymbolText | TxIDText);
 
 export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
@@ -82,10 +86,22 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       copyable,
       onCopy,
       //@ts-ignore
+      showIcon,
+      //@ts-ignore
+      iconSize = "xs",
+      //@ts-ignore
       isIcon,
       ...rest
     } = props;
     // const Comp = asChildren ? Slot : "span";
+    //
+    const prefixElement = useMemo(() => {
+      if (rule === "symbol" && showIcon) {
+        return <TokenIcon symbol={children as string} size={iconSize} />;
+      }
+
+      return prefix;
+    }, [prefix]);
 
     const suffix = useMemo(() => {
       if (typeof props.suffix !== "undefined") return props.suffix;
@@ -153,18 +169,18 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       return children;
     }, [children, rule, formatString, range, symbolElement]);
 
-    const contentWithSurfix = useMemo(() => {
-      if (typeof suffix === "undefined" && typeof prefix === "undefined")
+    const contentWithFix = useMemo(() => {
+      if (typeof suffix === "undefined" && typeof prefixElement === "undefined")
         return content;
       return (
         <span className="oui-flex oui-gap-1 oui-items-center">
-          {prefix}
+          {prefixElement}
           {content}
           {suffix}
         </span>
       );
     }, [content, suffix]);
 
-    return <Text {...rest} ref={ref} children={contentWithSurfix} />;
+    return <Text {...rest} ref={ref} children={contentWithFix} />;
   }
 );

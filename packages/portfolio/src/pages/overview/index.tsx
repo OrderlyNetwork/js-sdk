@@ -1,5 +1,6 @@
 export { AssetWidget, AssetsUI } from "./assets";
 export { AssetsChartWidget } from "./assetChart/assetsChart.widget";
+export { useAssetsLineChartScript } from "./assetChart/assetsChart.script";
 export { HistoryDataGroupWidget } from "./historyDataGroup";
 
 export {

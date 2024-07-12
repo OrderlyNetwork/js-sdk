@@ -45,7 +45,7 @@ export const Default: Story = {
         "24h_close": 1811.0,
         "24h_high": 1811.0,
         "24h_low": 1811.0,
-        "24h_volumn": 1.1,
+        "24h_volume": 1.1,
         "24h_amount": 1992.1,
       },
       {
@@ -61,7 +61,7 @@ export const Default: Story = {
         "24h_close": 1.3574,
         "24h_high": 1.3574,
         "24h_low": 1.3574,
-        "24h_volumn": 253.7,
+        "24h_volume": 253.7,
         "24h_amount": 344.3724,
       },
     ],

@@ -1,4 +1,4 @@
-import "./install";
+// import "./install";
 
 export * as TradingRewards from "./pages/index";
 
