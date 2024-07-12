@@ -17,7 +17,7 @@ import {
 import { useMemo } from "react";
 import { ExpandableContext } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
-import { FooterWidget } from "./footer";
+import { FooterConfig, FooterWidget } from "./footer";
 
 export type routerAdapter = {
   onRouteChange: (path: string) => void;
@@ -41,6 +41,7 @@ export type LayoutProps = {
   routerAdapter?: routerAdapter;
   footerHeight?: number;
   footerIsSticky?: boolean;
+  footerConfig?: FooterConfig;
   classNames?: {
     cotent?: string;
     body?: string;
@@ -51,7 +52,7 @@ export type LayoutProps = {
 };
 
 export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
-  const { classNames } = props;
+  const { classNames, footerConfig } = props;
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
     true
@@ -89,6 +90,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         setExpand: onExpandChange,
         unsupported,
         checkChainSupport: checkChainSupportHandle,
+        footerConfig
       }}
     >
       {/* Top main nav */}
