@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { tv } from "tailwind-variants";
+import { cnBase, tv } from "tailwind-variants";
 
 const TooltipProvider = TooltipPrimitive.Provider;
 
@@ -91,7 +91,7 @@ const Tooltip = React.forwardRef<
             width={12}
             height={6}
             {...arrow}
-            className="oui-fill-base-8"
+            className={cnBase("oui-fill-base-8", arrow?.className)}
           />
         </TooltipContent>
       </TooltipPrimitive.Root>

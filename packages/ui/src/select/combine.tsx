@@ -136,7 +136,7 @@ const SelectItem = (props: {
   return (
     <button
       className={item({
-        className: `oui-text-base-contrast-54 ${
+        className: `oui-text-base-contrast-54 oui-w-full ${
           props.activated ? "oui-bg-base-7" : ""
         }`,
       })}
