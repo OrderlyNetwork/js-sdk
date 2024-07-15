@@ -4,7 +4,6 @@
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "private": true,
   "scripts": {
     "build": "tsup",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css",
