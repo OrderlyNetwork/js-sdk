@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { SideNavbarWidget } from "./sidebar";
+import { SideMenuItem, SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar";
 import {
   OrderlyContext,
@@ -15,14 +15,9 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useMemo } from "react";
-import { ExpandableContext } from "./scaffoldContext";
+import { ExpandableContext, routerAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
-
-export type routerAdapter = {
-  onRouteChange: (path: string) => void;
-  currentPath: string;
-};
 
 export type LayoutProps = {
   /**
@@ -43,7 +38,7 @@ export type LayoutProps = {
   footerIsSticky?: boolean;
   footerConfig?: FooterConfig;
   classNames?: {
-    cotent?: string;
+    content?: string;
     body?: string;
     leftSidebar?: string;
     topNavbar?: string;
@@ -52,7 +47,7 @@ export type LayoutProps = {
 };
 
 export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
-  const { classNames, footerConfig } = props;
+  const { classNames, footerConfig, routerAdapter } = props;
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
     true
@@ -86,11 +81,12 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   return (
     <ExpandableContext.Provider
       value={{
+        routerAdapter,
         expanded: expand,
         setExpand: onExpandChange,
         unsupported,
         checkChainSupport: checkChainSupportHandle,
-        footerConfig
+        footerConfig,
       }}
     >
       {/* Top main nav */}
@@ -101,7 +97,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
       </Box>
       {/*--------- body start ------ */}
       <Grid
-        className={cn("oui-box-content oui-transition-all oui-h-[calc(100%-29px)]")}
+        className={cn(
+          "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]"
+        )}
         style={{
           gridTemplateColumns: `${
             expand ? sideBarDefaultWidth + "px" : "98px"
@@ -118,16 +116,10 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         </div>
         <Box>{props.children}</Box>
       </Grid>
-      {/* <Flex
-        itemAlign={"start"}
-        gap={{ initial: props.gap ?? 0 }}
-        className={cn(classNames?.body)}
-      >
 
-      </Flex> */}
-      {/*--------- body end ------ */}
-      {/* Footer */}
-      <Box className={cn(classNames?.footer)}>{props.footer || (<FooterWidget />)}</Box>
+      <Box className={cn(classNames?.footer)}>
+        {props.footer || <FooterWidget />}
+      </Box>
     </ExpandableContext.Provider>
   );
 };

@@ -166,7 +166,7 @@ export const DataTable = <RecordType extends unknown>(
           }}
         > */}
 
-      <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-overflow-auto oui-TableRoot oui-min-h-[280px]">
+      <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot oui-min-h-[280px]">
         <Table
           className={cnBase(
             "oui-table-fixed oui-border-collapse",

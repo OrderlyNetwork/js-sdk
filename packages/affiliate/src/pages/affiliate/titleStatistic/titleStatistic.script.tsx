@@ -11,7 +11,7 @@ export type TitleStatisticReturns = {
   onVolTypeChange: (item: string) => void;
   dataSource?: {
     date: string;
-    vol: number;
+    volume: number;
   }[];
 };
 
@@ -62,16 +62,20 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   const [rebateSummary] = useReferralRebateSummary({
     startDate: format(dateRange.startDate, "yyyy-MM-dd"),
     endDate: format(dateRange.endDate, "yyyy-MM-dd"),
+    size: Number(period),
   });
 
   const dataSource = useMemo(() => {
     return (rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
       (e) => ({
         date: e.date,
-        vol: period === "Commssion" ? e.referral_rebate : e.volume,
+        volume: volType === "Commission" ? e.referral_rebate : e.volume,
       })
-    );
-  }, [rebateSummary, period]);
+    ) || [];
+  }, [rebateSummary, volType  ]);
+
+  console.log("dataSource", dateRange, volType, rebateSummary?.[0], dataSource?.[0]);
+  
 
   return {
     period,

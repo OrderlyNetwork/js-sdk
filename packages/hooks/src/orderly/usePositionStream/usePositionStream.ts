@@ -68,6 +68,8 @@ export const usePositionStream = (
   const {
     data,
     error,
+    isLoading,
+    isValidating,
     mutate: refreshPositions,
   } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
     // revalidateOnFocus: false,
@@ -340,8 +342,12 @@ export const usePositionStream = (
     },
     positionInfoGetter,
     {
-      // close: onClosePosition,
-      loading: false,
+      /**
+       * @deprecated use `isLoading` instead
+       */
+      loading: isLoading,
+      isLoading,
+      isValidating,
       // showSymbol,
       error,
       // loadMore: () => {},

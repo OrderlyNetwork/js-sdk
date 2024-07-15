@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Flex, Select, Text } from "@orderly.network/ui";
+import { VolBarChart } from "@orderly.network/chart";
 import { TitleStatisticReturns } from "./titleStatistic.script";
 
 export const TitleStatisticUI: FC<TitleStatisticReturns> = (props) => {
@@ -13,7 +14,13 @@ export const TitleStatisticUI: FC<TitleStatisticReturns> = (props) => {
       className="oui-bg-base-9"
     >
       <Title {...props} />
-      <Flex className="oui-h-[170px] 2xl:oui-h-[196px]"></Flex>
+      <Flex className="oui-h-[170px] 2xl:oui-h-[196px] oui-w-full">
+        <VolBarChart
+          data={props.dataSource}
+          colors={{ fill: "rgba(0, 180, 158, 1)" }}
+          className="oui-w-full"
+        />
+      </Flex>
     </Flex>
   );
 };

@@ -11,6 +11,10 @@ export type TitleStatisticReturns = {
   volType: string;
   volTypes: { label: string; value: string }[];
   onVolTypeChange: (item: string) => void;
+  dataSource: {
+    date: string;
+    volume: number;
+  }[];
 };
 
 export const useTitleStatisticScript = (): TitleStatisticReturns => {
@@ -36,8 +40,8 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   };
 
   const dateRange = useMemo((): {
-    startDate?: Date,
-    endDate?: Date,
+    startDate?: Date;
+    endDate?: Date;
   } => {
     if (period === "7") {
       return {
@@ -66,23 +70,25 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   const { dailyVolume, chartConfig } = useReferralContext();
 
   const dataSource = useMemo(() => {
-    if (volType === "Rebate") {
-        let newData = distributionData || [];
-        return newData.map((e) => ({
-          "date": e.date,
-          "referee_rabate": e.referee_rebate,
-        }));
-        // return generateData(maxCount, newData, "date", "referee_rebate");
-    } else if (volType === "Volume") {
-      return dailyVolume?.map((e) => ({
-        "date": e.date,
-        "perp_volume": e.perp_volume,
+    if (volType === "rebate") {
+      let newData = distributionData || [];
+      return newData.map((e) => ({
+        date: e.date,
+        volume: e.referee_rebate,
       }));
-        // return generateData(maxCount, dailyVolume || [], "date", "perp_volume");
+    } else if (volType === "volume") {
+      return dailyVolume?.map((e) => ({
+        date: e.date,
+        volume: e.perp_volume,
+      })) || [];
     } else {
-        return undefined;
+      return [];
     }
-}, [distributionData, volType]);
+  }, [distributionData, dailyVolume, volType]);
+
+  console.log("datasouce", distributionData, dailyVolume, volType, dataSource);
+  
+
 
   return {
     period,
@@ -91,5 +97,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     volType,
     volTypes,
     onVolTypeChange,
+    dataSource,
   };
 };

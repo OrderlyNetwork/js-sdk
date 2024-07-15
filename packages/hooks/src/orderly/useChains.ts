@@ -105,8 +105,6 @@ export function useChains(
 
   const needFetchFromAPI = options.forceAPI || !customChains;
 
-  console.log("--------", needFetchFromAPI, customChains);
-
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     needFetchFromAPI

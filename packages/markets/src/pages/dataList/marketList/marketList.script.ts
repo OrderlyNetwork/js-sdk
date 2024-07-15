@@ -86,11 +86,9 @@ function get8hFunding(est_funding_rate: number, funding_period: number) {
 }
 
 export function useDataSource() {
-  // const { data: volumeData } = useQuery("/v1/public/volume/stats");
   const symbolsInfo = useSymbolsInfo();
   const fundingRates = useFundingRates();
   const { data: futures } = useMarketsStream();
-  console.log("futures", futures);
 
   return useMemo(() => {
     const list = futures?.map((item) => {

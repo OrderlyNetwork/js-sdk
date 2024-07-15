@@ -41,7 +41,7 @@ const menuItemVariants = tv({
         icon: "w-6 h-6",
       },
     },
-    actived: {
+    active: {
       true: {
         button: "oui-bg-base-5 hover:oui-bg-base-5",
       },
@@ -57,21 +57,21 @@ const menuItemVariants = tv({
 const MenuItem: FC<
   {
     item: SideMenuItem;
-    actived?: boolean;
+    active?: boolean;
     open?: boolean;
     onClick?: (item: SideMenuItem) => void;
   } & VariantProps<typeof menuItemVariants>
 > = memo((props) => {
-  const { item, mode, open, onClick, actived, ...rest } = props;
+  const { item, mode, open, onClick, active, ...rest } = props;
   const { button } = menuItemVariants({
     mode,
-    actived: props.actived,
+    active: props.active,
     open: props.open,
   });
   return (
     <li className="oui-min-w-[120px]">
       <button
-        data-actived={props.actived}
+        data-actived={props.active}
         disabled={item.disabled}
         className={button()}
         onClick={() => {
@@ -82,7 +82,7 @@ const MenuItem: FC<
           {item.icon}
           {props.open && (
             <Text.gradient
-              color={props.actived ? "brand" : "inherit"}
+              color={props.active ? "brand" : "inherit"}
               angle={45}
               size="base"
               className="oui-animate-in oui-fade-in"
@@ -133,7 +133,7 @@ const SideMenus: FC<{
               key={index}
               item={item}
               open={props.open}
-              actived={item.href === props.current}
+              active={item.href === props.current}
               onClick={props.onItemSelect}
             />
           );
@@ -204,7 +204,6 @@ const SideBar = (props: SideBarProps) => {
       <SideBarHeader
         open={open}
         onToggle={() => {
-          console.log("toggle....", props.onOpenChange);
           props.onOpenChange?.(!open);
         }}
       />

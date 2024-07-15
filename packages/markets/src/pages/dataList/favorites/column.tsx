@@ -1,10 +1,21 @@
 import { useMemo } from "react";
-import { type Column, Flex, TokenIcon, Text } from "@orderly.network/ui";
+import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { FavoritesIcon, UnFavoritesIcon } from "../../icons";
 
 export const useFavoritesColumns = () => {
   const columns = useMemo<Column[]>(() => {
     return [
+      {
+        title: <UnFavoritesIcon className="oui-ml-1" />,
+        dataIndex: "isFavorite",
+        width: 30,
+        render: (value) => (
+          <Box className="oui-text-base-contrast-36">
+            {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
+          </Box>
+        ),
+      },
       {
         title: "Market",
         dataIndex: "symbol",
@@ -68,16 +79,13 @@ export const useFavoritesColumns = () => {
       },
       {
         title: "Open interest",
-        dataIndex: "",
+        dataIndex: "openInterest",
         width: 100,
         align: "right",
-        render: (value, record) => {
-          const { open_interest = 0, index_price = 0 } = record;
-          const num = new Decimal(open_interest).mul(index_price).toNumber();
-
+        render: (value) => {
           return (
             <Text.numeral dp={0} rm={Decimal.ROUND_DOWN}>
-              {num}
+              {value}
             </Text.numeral>
           );
         },

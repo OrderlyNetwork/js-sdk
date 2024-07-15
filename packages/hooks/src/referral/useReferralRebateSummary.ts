@@ -38,15 +38,9 @@ export const useReferralRebateSummary = (params: Params) => {
   );
 
   const loadMore = () => {
-    console.log("xxxxxxx response.size", response.size);
-    
     response.setSize(response.size + 1);
   };
   
-  const setPageSize = (page: number) => {
-    response.setSize(page);
-  };
-
   const meta = useMemo(():
     | {
         total: number;
@@ -78,8 +72,7 @@ export const useReferralRebateSummary = (params: Params) => {
       isLoading: response.isLoading,
       refresh: response.mutate,
       loadMore,
-      meta,
-      setPageSize,
+      meta
     },
   ] as const;
 };

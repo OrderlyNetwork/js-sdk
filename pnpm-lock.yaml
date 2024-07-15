@@ -528,6 +528,9 @@ importers:
 
   packages/affiliate:
     dependencies:
+      '@orderly.network/chart':
+        specifier: workspace:*
+        version: link:../chart
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -1222,9 +1225,6 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui

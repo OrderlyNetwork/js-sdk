@@ -57,9 +57,10 @@ const MobileLayout: FC<ReferralCodesReturns> = (props) => {
   return (
     <ScrollArea>
       <div className="oui-max-h-[240px]">
-        {props.codes?.map((e) => {
+        {props.codes?.map((e, index) => {
           return (
             <MobileCell
+              key={index}
               data={e}
               editRate={props.editRate}
               copyLink={props.copyLink}
@@ -74,17 +75,20 @@ const MobileLayout: FC<ReferralCodesReturns> = (props) => {
 };
 
 const MobileCellItem: FC<{
+  // key: string;
   title: string;
   value: string | ReactNode;
   copyable?: boolean;
   align?: "start" | "end" | undefined;
   className?: string;
   editRate?: () => void;
-  onCopy?: () =>  void;
+  onCopy?: () => void;
 }> = (props) => {
-  const { title, copyable, value, align, className, editRate, onCopy } = props;
+  const { key, title, copyable, value, align, className, editRate, onCopy } =
+    props;
   return (
     <Statistic
+      key={key}
       className={cn("oui-flex-1", className)}
       label={
         <Text className="oui-text-base-contrast-36 oui-text-2xs">{title}</Text>
@@ -122,14 +126,10 @@ const MobileCell: FC<{
   editRate: (code: ReferralCodeType) => void;
 }> = (props) => {
   const { data, setPinCode, copyLink, copyCode, editRate } = props;
-  
 
-  console.log("code", data.code, "pin", data.isPined);
-  
   return (
     <Flex
       key={data.code}
-      
       pt={3}
       gap={3}
       direction={"column"}
@@ -141,9 +141,14 @@ const MobileCell: FC<{
         itemAlign={"stretch"}
         width={"100%"}
       >
-        <MobileCellItem title="Referral code" value={data.code} copyable onCopy={() => {
-          props.copyCode?.(data.code);
-        }}/>
+        <MobileCellItem
+          title="Referral code"
+          value={data.code}
+          copyable
+          onCopy={() => {
+            props.copyCode?.(data.code);
+          }}
+        />
         <MobileCellItem
           title="You / Referee"
           value={getRate(data)}
@@ -275,7 +280,6 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
     ></DataTable>
   );
 };
-
 
 const getRate = (item: ReferralCodeType) => {
   const refereeRate = new Decimal(item.referee_rebate_rate)

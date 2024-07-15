@@ -1,5 +1,6 @@
 import { Column, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
+import { TPSLButton } from "./tpsl/tpsl.ui";
 
 export const useColumn = () => {
   const column = useMemo<Column[]>(
@@ -33,6 +34,11 @@ export const useColumn = () => {
         dataIndex: "position_qty",
         onSort: true,
         width: 100,
+        rule: "price",
+        numeralProps: {
+          coloring: true,
+          // tick: "base_dp",
+        },
         // render: (value: string) => (
         //   <NumeralWithCtx
         //     coloring
@@ -87,6 +93,11 @@ export const useColumn = () => {
         dataIndex: "unrealized_pnl",
         width: 150,
         onSort: true,
+        rule: "price",
+        numeralProps: {
+          coloring: true,
+          // tick: "base_dp",
+        },
         // hint: (
         //   <UnrealizedPnLPopoverCard
         //     unPnlPriceBasis={props.unPnlPriceBasis}
@@ -186,14 +197,14 @@ export const useColumn = () => {
         align: "right",
         width: 160,
         fixed: "right",
-        // render: (value: string) => {
-        //   return (
-        //     <div className="orderly-flex orderly-space-x-2">
-        //       <CloseButton />
-        //       <TPSLButton />
-        //     </div>
-        //   );
-        // },
+        render: (value: string) => {
+          return (
+            <div className="orderly-flex orderly-space-x-2">
+              {/* <CloseButton /> */}
+              <TPSLButton />
+            </div>
+          );
+        },
       },
     ],
     []

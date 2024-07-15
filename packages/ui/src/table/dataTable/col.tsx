@@ -28,7 +28,7 @@ export type TableCellRenderer<T> =
   | ((value: any, record: T, index: number) => React.ReactNode);
 
 export type Column<RecordType extends unknown = any> = {
-  title: string;
+  title: ReactNode;
   hint?: ReactNode;
   hintClassName?: string;
   width?: number;
