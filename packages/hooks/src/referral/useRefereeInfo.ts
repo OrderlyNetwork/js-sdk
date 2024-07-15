@@ -13,10 +13,11 @@ type Params = {
   endDate?: string;
   //** default is 1 */
   initialSize?: number;
+  page?: number;
 };
 
 export const useRefereeInfo = (params: Params): any[] => {
-  const { size = 10, startDate, endDate, initialSize } = params;
+  const { size = 10, startDate, endDate, initialSize, page } = params;
 
   const response = usePrivateInfiniteQuery<any>(
     generateKeyFun({
@@ -24,6 +25,7 @@ export const useRefereeInfo = (params: Params): any[] => {
       size,
       startDate,
       endDate,
+      page,
     }),
     {
       initialSize: initialSize,
@@ -40,9 +42,19 @@ export const useRefereeInfo = (params: Params): any[] => {
     response.setSize(response.size + 1);
   };
 
-  const total = useMemo(() => {
-    return response.data?.[0]?.meta?.total || 0;
-  }, [response.data?.[0]?.meta?.total]);
+  const meta = useMemo(():
+  | {
+      total: number;
+      records_per_page: number;
+      current_page: number;
+    }
+  | undefined => {
+  return response.data?.[0]?.meta;
+}, [response.data]);
+
+const total = useMemo(() => {
+  return meta?.total || 0;
+}, [meta]);
 
   const flattenOrders = useMemo((): RefferalAPI.RefereeInfoItem[] | null => {
     if (!response.data) {
@@ -59,6 +71,7 @@ export const useRefereeInfo = (params: Params): any[] => {
       isLoading: response.isLoading,
       refresh: response.mutate,
       loadMore,
+      meta,
     },
-  ];
+  ] as const;
 };
