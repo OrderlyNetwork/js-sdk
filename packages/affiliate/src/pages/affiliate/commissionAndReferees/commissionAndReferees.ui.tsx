@@ -5,6 +5,7 @@ import {
   DatePicker,
   Divider,
   Flex,
+  ListView,
   Pagination,
   ScrollArea,
   Statistic,
@@ -15,7 +16,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 
@@ -50,8 +51,9 @@ const MobileCellItem: FC<{
   className?: string;
   rule?: "address" | "date";
   formatString?: string;
+  prefix?: string;
 }> = (props) => {
-  const { title, value, align, className, rule, formatString } = props;
+  const { title, value, align, className, rule, formatString, prefix } = props;
   return (
     <Statistic
       className={cn("oui-flex-1", className)}
@@ -64,6 +66,8 @@ const MobileCellItem: FC<{
           rule={rule || ""}
           // @ts-ignore
           formatString={formatString}
+          // @ts-ignore
+          prefix={prefix}
           className="oui-text-base-contrast-80 oui-text-sm oui-mt-[6px]"
         >
           {value}
@@ -74,8 +78,6 @@ const MobileCellItem: FC<{
 };
 
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
-  console.log("commission data", props.commission);
-
   const isLG = useMediaQuery("(max-width: 767px)");
   const columns = useMemo(() => {
     const cols: Column[] = [
@@ -110,24 +112,42 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     return cols;
   }, []);
 
-  const mCell = useCallback(() => {
-    return (
-      <Flex direction={"row"} pt={3} width={"100%"}>
-        <MobileCellItem title="Commission" value="$222.222" />
-        <MobileCellItem title="Referral vol." value="$222.222" />
-        <MobileCellItem title="Date" value="$222.222" align="end" />
-      </Flex>
-    );
-  }, [isLG]);
-
   const body = useMemo(() => {
     if (isLG) {
       return (
-        <ScrollArea className="oui-w-full">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
-            return <>{mCell()}</>;
-          })}
-        </ScrollArea>
+        <ListView<
+          RefferalAPI.ReferralRebateSummary,
+          RefferalAPI.ReferralRebateSummary[]
+        >
+          className="oui-w-full oui-max-h-[200px]"
+          dataSource={props.commission.data}
+          // dataSource={[]}
+          loadMore={props.commission.loadMore}
+          isLoading={props.commission.isLoading}
+          renderItem={(e, index) => {
+            return (
+              <Flex direction={"row"} pt={3} width={"100%"}>
+                <MobileCellItem
+                  title="Commission"
+                  value={e.referral_rebate}
+                  prefix="$"
+                />
+                <MobileCellItem
+                  title="Referral vol."
+                  value={e.volume}
+                  prefix="$"
+                />
+                <MobileCellItem
+                  title="Date"
+                  value={e.date}
+                  rule="date"
+                  formatString="yyyy-MM-dd"
+                  align="end"
+                />
+              </Flex>
+            );
+          }}
+        />
       );
     }
 
@@ -168,44 +188,46 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
 
 const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
+  console.log("referees", props.referees);
+  
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
         title: "Referee address ",
-        dataIndex: "address",
+        dataIndex: "user_address",
         render: (value) => (
           <Text.formatted rule={"address"}>
-            0x7c3409f33545e069083b4f7386b966d997488dc1
+            {value}
           </Text.formatted>
         ),
         className: "oui-w-1/5",
       },
       {
         title: "Referral code ",
-        dataIndex: "code",
-        render: (value) => "$123,22.21",
+        dataIndex: "referral_code",
+        // render: (value) => value,
         className: "oui-w-1/5",
       },
       {
         title: "Total commission (USDC) ",
-        dataIndex: "total_commission",
-        render: (value) => "$123,22.21",
+        dataIndex: "referral_rebate",
+        render: (value) => (<Text.numeral dp={6}>{value || "-"}</Text.numeral>),
         className: "oui-w-1/5",
       },
       {
         title: "Total vol (USDC) ",
-        dataIndex: "total_vol",
-        render: (value) => "$123,22.21",
+        dataIndex: "volume",
+        render: (value) => (<Text.numeral dp={2}>{value || "-"}</Text.numeral>),
         className: "oui-w-1/5",
       },
       {
         title: "Invacation time",
-        dataIndex: "time",
+        dataIndex: "code_binding_time",
         render: (value) => (
           <Text.formatted
             rule={"date"}
             formatString="yyyy-MM-dd"
-            children={"2024-08-09"}
+            children={value}
           />
         ),
         className: "oui-w-1/5",
@@ -215,60 +237,74 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
     return cols;
   }, []);
 
-  const mCell = useCallback(() => {
-    return (
-      <Flex direction={"column"} gap={3}>
-        <Flex direction={"row"} pt={3} width={"100%"}>
-          <MobileCellItem title="Referral code " value="$222.222" />
-          <MobileCellItem
-            title="Total commission"
-            value="$222.222"
-            className="oui-min-w-[102px]"
-          />
-          <MobileCellItem title="Total vol." value="$222.222" align="end" />
-        </Flex>
-        <Flex direction={"row"} pt={3} gap={3} width={"100%"}>
-          <MobileCellItem
-            title="Referee address "
-            value="0x7c3409f33545e069083b4f7386b966d997488dc1"
-            rule="address"
-          />
-          <MobileCellItem
-            title="Invitation Time "
-            value="2024-08-07"
-            align="end"
-            rule="date"
-            formatString="yyyy-MM-dd"
-          />
-        </Flex>
-      </Flex>
-    );
-  }, [isLG]);
-
   const body = useMemo(() => {
     if (isLG) {
       return (
-        <ScrollArea className="oui-w-full">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
-            return <>{mCell()}</>;
-          })}
-        </ScrollArea>
+        <ListView<RefferalAPI.RefereeInfoItem, RefferalAPI.RefereeInfoItem[]>
+          className="oui-w-full oui-max-h-[200px]"
+          dataSource={props.referees.data}
+          loadMore={props.referees.loadMore}
+          isLoading={props.referees.isLoading}
+          
+          renderItem={(e, index) => {
+            return (
+              <Flex key={index} direction={"column"} gap={3}  className="oui-border-b-2 oui-border-line-6 oui-pb-3">
+                <Flex direction={"row"} width={"100%"}>
+                  <MobileCellItem
+                    title="Referral code "
+                    value={e.referral_code}
+                  />
+                  <MobileCellItem
+                    title="Total commission"
+                    value={e.referral_rebate}
+                    className="oui-min-w-[102px]"
+                  />
+                  <MobileCellItem
+                    title="Total vol."
+                    value={e.volume}
+                    align="end"
+                  />
+                </Flex>
+                <Flex direction={"row"} pt={3} gap={3} width={"100%"}>
+                  <MobileCellItem
+                    title="Referee address "
+                    value={e.user_address}
+                    rule="address"
+                  />
+                  <MobileCellItem
+                    title="Invitation Time "
+                    value={e.code_binding_time}
+                    align="end"
+                    rule="date"
+                    formatString="yyyy-MM-dd"
+                  />
+                </Flex>
+                {/* <Divider /> */}
+              </Flex>
+            );
+          }}
+        />
       );
     }
 
     return (
       <DataTable
+        bordered
         columns={columns}
-        dataSource={[1, 2, 3, 4, 5, 6, 7, 8]}
-        // scroll={{x: 856}}
-        // className="oui-min-w-[856px]"
+        dataSource={props.referees.data}
         classNames={{
           header: "oui-text-xs oui-text-base-contrast-36",
-          body: "oui-text-xs oui-text-base-contrast-80",
+          body: "oui-text-xs oui-text-base-contrast-80 oui-max-h-[200px]",
         }}
-      />
+      >
+        <Pagination
+          {...props.referees.meta}
+          onPageChange={props.referees.onPageChange}
+          onPageSizeChange={props.referees.onPageSizeChange}
+        />
+      </DataTable>
     );
-  }, [isLG]);
+  }, [isLG, props.referees]);
 
   return (
     <Flex

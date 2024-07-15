@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "private": true,
+  "module": "dist/index.mjs",
   "scripts": {
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,10 +26,14 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
-    "tsconfig": "workspace:*"
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*"
   }
 }

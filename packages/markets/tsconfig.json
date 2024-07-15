@@ -4,7 +4,6 @@
     "paths": {
       "@orderly.network/ui": ["../ui/src"],
       "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/types": ["../types/src"],
       "@orderly.network/utils": ["../utils/src"]
     }
   }

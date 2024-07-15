@@ -2,7 +2,8 @@ import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { useMemo, useRef } from "react";
 import { useEndReached } from "./useEndReached";
 import { Spinner } from "../spinner";
-import { cn } from "..";
+import { cn, EmptyDataState, Flex } from "..";
+import { EmptyView } from "../empty";
 
 export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;
@@ -42,8 +43,19 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     }
 
     if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
-      // @ts-ignore
-      return props.emptyView || <EmptyView visible />;
+      return (
+        props.emptyView || (
+          <Flex
+            direction={"column"}
+            height={"100%"}
+            itemAlign={"center"}
+            justify={"center"}
+            mt={3}
+          >
+            <EmptyDataState />
+          </Flex>
+        )
+      );
     }
 
     return props.dataSource.map((item, index) => (
@@ -82,14 +94,12 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     <div
       style={props.style}
       ref={containerRef}
-      className={cn("oui-relative oui-min-h-[180px] oui-overflow-auto", props.className)}
+      className={cn(
+        "oui-relative oui-min-h-[180px] oui-scrollbar-vertical oui-overflow-auto",
+        props.className
+      )}
     >
-      <div
-        className={cn(
-          "oui-space-y-3",
-          props.contentClassName
-        )}
-      >
+      <div className={cn("oui-space-y-3 oui-h-full", props.contentClassName)}>
         {listViewElement}
       </div>
       <div

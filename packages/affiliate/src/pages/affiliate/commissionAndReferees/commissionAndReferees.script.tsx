@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "../../../utils/types";
 import { format, subDays } from "date-fns";
-import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import {
+  RefferalAPI,
+  useMediaQuery,
+  useRefereeInfo,
+  useReferralRebateSummary,
+} from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 
 export interface ListReturns<T> {
@@ -16,17 +21,19 @@ export interface ListReturns<T> {
   onPageSizeChange: (pageSize: number) => void;
   dateRange?: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+  isLoading?: boolean;
+  loadMore?: () => void;
 }
 
 export type CommissionAndRefereesReturns = {
   commission: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
-  referees: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
+  referees: ListReturns<RefferalAPI.RefereeInfoItem[] | undefined>;
 };
 
 export const useCommissionAndRefereesScript =
   (): CommissionAndRefereesReturns => {
     const commission = useCommissionDataScript();
-    const referees = useCommissionDataScript();
+    const referees = useRefereesDataScript();
 
     return {
       commission,
@@ -44,6 +51,8 @@ const useCommissionDataScript = (): ListReturns<
     }
   );
 
+  const isLG = useMediaQuery("(max-width: 767px)");
+
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [commissionData, { refresh, isLoading, loadMore, meta }] =
@@ -57,7 +66,7 @@ const useCommissionDataScript = (): ListReturns<
           ? format(commissionRange.to, "yyyy-MM-dd")
           : undefined,
       size: pageSize,
-      page: page,
+      page: !isLG ? page : undefined,
     });
 
   useEffect(() => {
@@ -72,6 +81,9 @@ const useCommissionDataScript = (): ListReturns<
     setPageSize(pageSize);
   };
 
+  // const loadMore = () => {
+  //   setPage(page + 1);
+  // };
 
   return {
     data: commissionData || undefined,
@@ -80,5 +92,63 @@ const useCommissionDataScript = (): ListReturns<
     onPageSizeChange,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
+    isLoading,
+    loadMore,
+  };
+};
+
+const useRefereesDataScript = (): ListReturns<
+  RefferalAPI.RefereeInfoItem[] | undefined
+> => {
+  const [commissionRange, setCommissionRange] = useState<DateRange | undefined>(
+    {
+      from: subDays(new Date(), 80),
+      to: new Date(),
+    }
+  );
+
+  const isLG = useMediaQuery("(max-width: 767px)");
+
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+
+  const [commissionData, { refresh, isLoading, loadMore, meta }] =
+    useRefereeInfo({
+      startDate:
+        commissionRange?.from !== undefined
+          ? format(commissionRange.from, "yyyy-MM-dd")
+          : undefined,
+      endDate:
+        commissionRange?.to !== undefined
+          ? format(commissionRange.to, "yyyy-MM-dd")
+          : undefined,
+      size: pageSize,
+      page: !isLG ? page : undefined,
+    });
+
+  useEffect(() => {
+    refresh();
+  }, [commissionRange]);
+
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
+  };
+
+  // const loadMore = () => {
+  //   setPage(page + 1);
+  // };
+
+  return {
+    data: commissionData || undefined,
+    meta: parseMeta(meta),
+    onPageChange,
+    onPageSizeChange,
+    dateRange: commissionRange,
+    setDateRange: setCommissionRange,
+    isLoading,
+    loadMore,
   };
 };

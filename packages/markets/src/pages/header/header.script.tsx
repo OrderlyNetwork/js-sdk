@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
 
-export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
-
-export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;
+// export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
+// export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;
+// use UseEmblaCarouselType will bring type error
+export type TEmblaApi = {
+  scrollPrev: (jump?: boolean) => void;
+  scrollNext: (jump?: boolean) => void;
+};
 
 export type HeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 
