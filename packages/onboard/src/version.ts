@@ -8,7 +8,7 @@ declare global {
 }
 if(typeof window !== 'undefined') {
     window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-    window.__ORDERLY_VERSION__["@orderly.network/web3-onboard"] = "1.5.10-sdk-v2.8";
+    window.__ORDERLY_VERSION__["@orderly.network/web3-onboard"] = "1.5.10-sdk-v2.9";
 };
 
-export default "1.5.10-sdk-v2.8";
+export default "1.5.10-sdk-v2.9";
