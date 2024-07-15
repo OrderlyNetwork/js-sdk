@@ -2,7 +2,7 @@ import { Blockie } from "@/avatar";
 import Button, { IconButton } from "@/button";
 import React, { FC, useCallback, useContext, useMemo } from "react";
 import { Text } from "@/text";
-import { useAccount, useMutation, useConfig, usePrivateQuery, OrderlyContext } from "@orderly.network/hooks";
+import { useAccount, useMutation, useConfig, usePrivateQuery, OrderlyContext, useCurEpochEstimate, TWType } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { modal } from "@/modal";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -97,6 +97,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         </div>
       </div>
       <ReferralInfo />
+      <TradingRewardsInfo />
+      
       {props.showGetTestUSDC ? (
         <div className="orderly-py-4 orderly-grid orderly-grid-cols-2 orderly-gap-3">
           <Button
@@ -202,6 +204,65 @@ const ReferralInfo = () => {
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="30d vol."
           value={(vol)}
+          precision={2}
+          rule="price"
+        />
+      </div>
+    </div>
+  );
+}
+
+
+
+
+const TradingRewardsInfo = () => {
+
+  const [curEpochEstimate] = useCurEpochEstimate(TWType.normal);
+
+  const estRewards = useMemo(() => {
+    if (typeof curEpochEstimate?.est_r_wallet === 'undefined') {
+      return "-"
+    }
+    return commify(curEpochEstimate?.est_r_wallet);
+  }, [curEpochEstimate]);
+
+  const vol = useMemo(() => {
+    if (typeof curEpochEstimate?.est_trading_volume === 'undefined') {
+      return "-"
+    }
+    return commify(curEpochEstimate?.est_trading_volume);
+  }, [curEpochEstimate]);
+
+  const clickReferral = useCallback(() => {
+    window.open("https://app.orderly.network/tradingRewards", "_blank");
+  }, []);
+
+
+
+  return (
+    <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3 orderly-mb-3 orderly-mt-4">
+      <div className="orderly-flex orderly-items-center orderly-cursor-pointer" onClick={clickReferral}>
+        <div className="orderly-flex-1 orderly-flex orderly-gap-1"  >
+          <span>Trading rewards</span>
+          <span className="orderly-text-base-contrast-54">{`(epoch ${1})`}</span>
+        </div>
+        <ArrowRightIcon size={14} fillOpacity={1} className="orderly-fill-primary" />
+      </div>
+      <Divider className="orderly-py-3" />
+      <div className="orderly-grid orderly-grid-cols-2">
+        <Statistic
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-mt-1 orderly-text-[16px]"
+          label="Trading volume"
+          value={(vol)}
+          precision={2}
+          rule="price"
+        />
+        <Statistic
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-mt-1 orderly-text-[16px]"
+          label="Est.rewards"
+          value={estRewards}
           precision={2}
           rule="price"
         />
