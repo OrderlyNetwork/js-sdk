@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-scaffold",
-  "version": "1.0.1-sdk-v2.12",
+  "version": "1.0.1-sdk-v2.13",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
