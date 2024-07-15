@@ -16,7 +16,7 @@ type Params = {
   page?: number;
 };
 
-export const useRefereeInfo = (params: Params): any[] => {
+export const useRefereeInfo = (params: Params) => {
   const { size = 10, startDate, endDate, initialSize, page } = params;
 
   const response = usePrivateInfiniteQuery<any>(
