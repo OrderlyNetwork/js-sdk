@@ -41,7 +41,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
   const dataTransfer = (data: any[]) => {
     const series: any[] = [];
 
-    data.reduce((acc, item) => {
+    data?.reduce((acc, item) => {
       acc += item.pnl;
       series.push({
         ...item,

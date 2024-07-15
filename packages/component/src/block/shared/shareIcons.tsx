@@ -57,20 +57,20 @@ export const ShareRadditIcon: FC<IconProps> = (props) => {
             <path d="M22.6786 18.0002C22.2971 18.0002 21.9243 18.1134 21.6071 18.3253C21.29 18.5372 21.0428 18.8384 20.8968 19.1908C20.7508 19.5432 20.7126 19.931 20.7871 20.3051C20.8615 20.6792 21.0452 21.0228 21.3149 21.2925C21.5846 21.5622 21.9282 21.7459 22.3023 21.8203C22.6764 21.8947 23.0642 21.8565 23.4166 21.7106C23.769 21.5646 24.0702 21.3174 24.2821 21.0003C24.494 20.6831 24.6071 20.3102 24.6071 19.9288C24.606 19.4177 24.4025 18.9278 24.041 18.5664C23.6796 18.2049 23.1897 18.0014 22.6786 18.0002Z" fill="url(#paint3_linear_8289_72938)" />
             <defs>
                 <linearGradient id="paint0_linear_8289_72938" x1="18.3377" y1="24.1055" x2="18.3377" y2="26.3555" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#FF7B13" />
-                    <stop offset="1" stop-color="#F1161A" />
+                    <stop stopColor="#FF7B13" />
+                    <stop offset="1" stopColor="#F1161A" />
                 </linearGradient>
                 <linearGradient id="paint1_linear_8289_72938" x1="14.3246" y1="18.0002" x2="14.3246" y2="21.8574" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#FF7B13" />
-                    <stop offset="1" stop-color="#F1161A" />
+                    <stop stopColor="#FF7B13" />
+                    <stop offset="1" stopColor="#F1161A" />
                 </linearGradient>
                 <linearGradient id="paint2_linear_8289_72938" x1="18.5" y1="0" x2="18.5" y2="36" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#FF7B13" />
-                    <stop offset="1" stop-color="#F1161A" />
+                    <stop stopColor="#FF7B13" />
+                    <stop offset="1" stopColor="#F1161A" />
                 </linearGradient>
                 <linearGradient id="paint3_linear_8289_72938" x1="22.6786" y1="18.0002" x2="22.6786" y2="21.8574" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#FF7B13" />
-                    <stop offset="1" stop-color="#F1161A" />
+                    <stop stopColor="#FF7B13" />
+                    <stop offset="1" stopColor="#F1161A" />
                 </linearGradient>
             </defs>
         </svg>
