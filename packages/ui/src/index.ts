@@ -32,8 +32,8 @@ export * from "./modal";
 export { EVMAvatar, Avatar } from "./avatar";
 
 ///// Widgets
-export { MainNav } from "./nav/main/mainNav";
-export { SideBar } from "./nav/sidebar";
+// export { MainNav } from "./nav/main/mainNav";
+// export { SideBar } from "./nav/sidebar";
 ///========
 
 export type { ButtonProps } from "./button";

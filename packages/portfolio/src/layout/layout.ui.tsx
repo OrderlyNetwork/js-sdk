@@ -14,12 +14,12 @@ export type PortfolioLayoutProps = {
 export const PortfolioLayout = (
   props: PropsWithChildren<PortfolioLayoutProps>
 ) => {
-  const { ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <Scaffold leftSidebar={<LeftSidebar {...rest} />}>
       <Box mx={3} my={6}>
-        {props.children}
+        {children}
       </Box>
     </Scaffold>
   );

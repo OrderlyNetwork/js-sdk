@@ -14,9 +14,9 @@ const tableVariants = tv({
     tbody: "[&_tr:last-child]:oui-border-0 oui-TableBody",
     tfooter:
       "oui-border-t oui-font-medium [&>tr]:oui-last:border-b-0 oui-TableFooter",
-    tr: "oui-transition-colors oui-TableTr hover:oui-bg-base-1/20",
+    tr: "oui-transition-colors oui-TableTr hover:oui-bg-base-9 oui-group",
     th: "oui-h-10 oui-px-2 oui-text-left oui-align-middle oui-font-medium oui-text-muted-foreground [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTh",
-    td: "oui-h-10 oui-p-2 oui-align-middle [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTd",
+    td: "oui-h-10 oui-p-2 oui-align-middle [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTd group-hover:!oui-bg-base-9",
     caption: "oui-mt-4 oui-text-xs oui-text-muted-foreground oui-TableCaption",
   },
   variants: {

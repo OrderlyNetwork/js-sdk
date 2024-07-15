@@ -16,17 +16,14 @@ export const TableHeader: FC<THeadProps> = (props) => {
   return (
     <table
       className={cnBase(
-        "oui-border-collapse oui-w-full oui-text-xs oui-table-fixed oui-sticky oui-top-0 oui-z-20 oui-DataTableHeader",
+        "oui-border-collapse oui-w-full oui-text-xs oui-table-fixed oui-sticky oui-top-0 oui-z-20 oui-datatable-header",
         props.containerClassName
       )}
     >
       <ColGroup columns={props.columns} />
 
       <thead
-        className={cnBase(
-          "oui-sticky oui-top-0 oui-z-0 oui-bg-base-9",
-          props.className
-        )}
+        className={cnBase("oui-sticky oui-top-0 oui-z-0", props.className)}
       >
         <tr>
           {props.columns.map((column, index) => {

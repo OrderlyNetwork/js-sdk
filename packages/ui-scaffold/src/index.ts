@@ -4,6 +4,7 @@ export { AccountSummaryWidget } from "./components/accountSummary";
 export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
 export { Scaffold } from "./components/scaffold";
+export type { LayoutProps } from "./components/scaffold";
 export {
   useScaffoldContext,
   ExpandableContext,

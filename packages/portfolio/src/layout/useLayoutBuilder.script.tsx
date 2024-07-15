@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 
 export const useLayoutBuilder = (): SideBarProps => {
-  const [current, setCurrent] = useState("/");
+  const { routerAdapter } = useScaffoldContext();
+  const [current, setCurrent] = useState(routerAdapter?.currentPath ?? "/");
 
   const items = useMemo(() => {
     return [
@@ -62,26 +63,6 @@ export const useLayoutBuilder = (): SideBarProps => {
           </svg>
         ),
       },
-      // {
-      //   name: "Affiliate",
-      //   href: "/affiliate",
-      //   icon: (
-      //     <svg
-      //       width="18"
-      //       height="18"
-      //       viewBox="0 0 18 18"
-      //       fill="none"
-      //       xmlns="http://www.w3.org/2000/svg"
-      //     >
-      //       <path
-      //         fillRule="evenodd"
-      //         clipRule="evenodd"
-      //         d="M5.625 4.95C5.625 4.20441 6.22941 3.6 6.975 3.6H11.025C11.7706 3.6 12.375 4.20441 12.375 4.95V10.3198L9.2504 12.75H8.74951L5.625 10.3199V4.95ZM13.725 9.2698L14.3488 8.78461L14.4 8.73375C14.4 8.28238 14.1744 7.86087 13.7988 7.61049L13.725 7.56126V9.2698ZM3.6 8.74486L4.275 9.26986V7.56126L4.20115 7.61049C3.82558 7.86087 3.6 8.28238 3.6 8.73375V8.74486ZM4.275 5.93876V4.95C4.275 3.45883 5.48383 2.25 6.975 2.25H11.025C12.5162 2.25 13.725 3.45883 13.725 4.95V5.93876L14.5477 6.48722C15.2988 6.98798 15.75 7.831 15.75 8.73375V13.05C15.75 14.5412 14.5412 15.75 13.05 15.75H4.95C3.45883 15.75 2.25 14.5412 2.25 13.05V8.73375C2.25 7.831 2.70117 6.98798 3.45231 6.48722L4.275 5.93876ZM8.99951 6.08865L9.11125 5.971L9.11613 5.96588C9.55336 5.50958 10.2614 5.51163 10.6967 5.97049C11.1344 6.4319 11.1344 7.17722 10.6967 7.63813L9.18055 9.25819L9.17713 9.26177C9.07709 9.36408 8.91704 9.36255 8.81895 9.25819L7.30328 7.63813C6.86557 7.17671 6.86557 6.43139 7.30328 5.97049L7.30719 5.96639C7.74442 5.50958 8.45248 5.51163 8.88776 5.97049L8.99951 6.08865Z"
-      //         className="oui-fill-current group-data-[actived=true]:oui-fill-[url(#side-menu-gradient)]"
-      //       />
-      //     </svg>
-      //   ),
-      // },
       {
         name: "Fee tier",
         href: "/fee",
@@ -144,7 +125,16 @@ export const useLayoutBuilder = (): SideBarProps => {
     current,
 
     onItemSelect: (item) => {
+      // console.log("item", item);
+      if (typeof item.href === "undefined") {
+        console.warn("Item href is not defined");
+        return;
+      }
       setCurrent(item.href!);
+      routerAdapter?.onRouteChange({
+        href: item.href,
+        name: item.name,
+      });
     },
   };
 };

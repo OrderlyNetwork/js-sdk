@@ -38,6 +38,7 @@ const preview: Preview = {
             "ui-leverage",
             "ui-scaffold",
             "ui-positions",
+            "ui-orders",
           ],
         ],
       },

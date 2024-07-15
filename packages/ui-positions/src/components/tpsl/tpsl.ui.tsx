@@ -11,3 +11,11 @@ export const TPSL = () => {
     </div>
   );
 };
+
+export const TPSLButton = () => {
+  return (
+    <Button variant="outlined" size="sm" color="secondary">
+      TPSL
+    </Button>
+  );
+};
