@@ -20,11 +20,10 @@ export const TradingRewardsLayout = (
     <Scaffold
       leftSidebar={props.hideSideBar ? undefined : <LeftSidebar {...rest} />}
       routerAdapter={{
-        onRouteChange: (path: string) => {
-          console.log("on route change", path);
+        onRouteChange: (options) => {
           
         },
-        currentPath: "trading",
+        currentPath: "trading"
       }}
     >
       <Box mx={3} my={6}>
