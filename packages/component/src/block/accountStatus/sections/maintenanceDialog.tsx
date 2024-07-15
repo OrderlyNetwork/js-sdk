@@ -42,7 +42,7 @@ export function MaintenanceDialog({
         <DialogBody>
           <div className="orderly-flex orderly-gap-1 orderly-font-semibold orderly-text-base-contrast-54 orderly-pt-5 orderly-text-2xs desktop:!orderly-text-xs">
             Sorry, {brokerName} is temporarily unavailable due to a scheduled
-            upgrade. The service is expected to be back by {endDate}
+            upgrade. The service is expected to be back by {endDate}.
           </div>
         </DialogBody>
       </DialogContent>
