@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "1.0.1-sdk-v2.11",
+  "version": "1.0.1-sdk-v2.12",
   "description": "",
   "main": "index.js",
   "scripts": {

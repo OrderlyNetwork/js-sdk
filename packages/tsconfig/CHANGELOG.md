@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.10-sdk-v2.12
+
+### Patch Changes
+
+- update
+
 ## 0.3.10-sdk-v2.11
 
 ### Patch Changes
