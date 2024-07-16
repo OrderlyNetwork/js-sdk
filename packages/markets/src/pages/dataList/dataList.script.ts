@@ -7,10 +7,10 @@ export type UseMarketsDataListScript = ReturnType<
 >;
 
 export const useMarketsDataListScript = () => {
-  const [active, setActive] = useState<TabName>("favorites");
+  const [activeTab, setActiveTab] = useState<TabName>("favorites");
 
   return {
-    active,
-    onTabChange: (value: string) => setActive(value as TabName),
+    activeTab,
+    onTabChange: (value: string) => setActiveTab(value as TabName),
   };
 };

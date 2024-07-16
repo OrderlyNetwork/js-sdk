@@ -90,8 +90,8 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       height="236px"
       className={props.className}
     >
-      {list?.map((item) => (
-        <BlockItem key={item.label} {...item} />
+      {list?.map((item, index) => (
+        <BlockItem key={index} {...item} />
       ))}
     </Flex>
   );
@@ -138,8 +138,8 @@ const CardItem: React.FC<CardItemProps> = (props) => {
       </Text.gradient>
 
       <Flex direction="column" itemAlign="start" mt={2}>
-        {props.data?.map((item) => (
-          <ListItem key={item.symbol} item={item} />
+        {props.data?.map((item, index) => (
+          <ListItem key={index} item={item} />
         ))}
       </Flex>
     </Box>
@@ -191,9 +191,9 @@ const ListItem: React.FC<ListItemProps> = (props) => {
         <Text.numeral
           rule="percentages"
           coloring
-          currency={item.change > 0 ? "+" : "-"}
           size="xs"
           weight="semibold"
+          showIdentifier
         >
           {item.change}
         </Text.numeral>
@@ -216,6 +216,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
       {[0, 1].map((item) => {
         return (
           <Box
+            key={item}
             py={1}
             pl={item === 0 ? 1 : 0}
             pr={item === 1 ? 1 : 0}

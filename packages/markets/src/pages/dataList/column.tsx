@@ -1,20 +1,48 @@
 import { useMemo } from "react";
 import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { FavoritesIcon, UnFavoritesIcon } from "../../icons";
+import { FavoritesIcon, UnFavoritesIcon } from "../icons";
+import { FavoritesDropdownMenu } from "./dataList.ui";
+import { TFavorite } from "./marketList/marketList.script";
 
-export const useFavoritesColumns = () => {
+export const useDataListColumns = (
+  favorite: TFavorite,
+  isFavoriteList = false
+) => {
   const columns = useMemo<Column[]>(() => {
     return [
       {
-        title: <UnFavoritesIcon className="oui-ml-1" />,
+        title: <UnFavoritesIcon className="oui-ml-1 oui-cursor-pointer" />,
         dataIndex: "isFavorite",
         width: 30,
-        render: (value) => (
-          <Box className="oui-text-base-contrast-36">
-            {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
-          </Box>
-        ),
+        render: (value, record) => {
+          const onDelSymbol = () => {
+            favorite.updateSymbolFavoriteState(record, favorite.curTab, true);
+          };
+
+          const button = (
+            <Box
+              className="oui-text-base-contrast-36"
+              onClick={isFavoriteList ? onDelSymbol : undefined}
+            >
+              {value ? (
+                <FavoritesIcon className="oui-cursor-pointer" />
+              ) : (
+                <UnFavoritesIcon className="oui-cursor-pointer" />
+              )}
+            </Box>
+          );
+
+          if (isFavoriteList) {
+            return button;
+          }
+
+          return (
+            <FavoritesDropdownMenu row={record} favorite={favorite}>
+              {button}
+            </FavoritesDropdownMenu>
+          );
+        },
       },
       {
         title: "Market",
@@ -41,7 +69,7 @@ export const useFavoritesColumns = () => {
         dataIndex: "24h_close",
         width: 100,
         align: "right",
-        // onSort: true,
+        // onSort: (r1, r2, sortOrder: SortOrder),
         render: (value, record) => {
           return <Text.numeral dp={record.quote_dp || 2}>{value}</Text.numeral>;
         },
@@ -56,8 +84,8 @@ export const useFavoritesColumns = () => {
             <Text.numeral
               rule="percentages"
               coloring
-              currency={value > 0 ? "+" : "-"}
               rm={Decimal.ROUND_DOWN}
+              showIdentifier
             >
               {value}
             </Text.numeral>
@@ -110,7 +138,7 @@ export const useFavoritesColumns = () => {
         },
       },
     ];
-  }, []);
+  }, [favorite, isFavoriteList]);
 
   return columns;
 };

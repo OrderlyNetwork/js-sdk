@@ -4,7 +4,7 @@ import { MarketsHeaderWidget } from "./header/widget";
 
 export const MarketsPage = () => {
   return (
-    <div className="" id="oui-markets-header">
+    <div id="oui-markets-header" className="oui-font-semibold">
       <Text size="2xl" weight="semibold">
         Markets
       </Text>

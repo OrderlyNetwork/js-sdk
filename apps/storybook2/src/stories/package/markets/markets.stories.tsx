@@ -3,9 +3,14 @@ import {OrderlyApp} from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { MarketsPage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget } from '@orderly.network/markets';
 import { Box } from "@orderly.network/ui";
+import { CustomConfigStore } from "../CustomConfigStore";
+
+const networkId = "testnet";
+const configStore = new CustomConfigStore({ networkId, env: "staging" });
+
 
 const meta = {
-    title: "Package/Markets/Header",
+    title: "Package/Markets",
     component: MarketsPage,
     subcomponents: {
        
@@ -13,7 +18,7 @@ const meta = {
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"} configStore={configStore}>
                     <Story/>
                 </OrderlyApp>
             </ConnectorProvider>

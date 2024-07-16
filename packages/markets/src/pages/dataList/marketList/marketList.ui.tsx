@@ -1,13 +1,13 @@
 import { FC } from "react";
 import { DataTable, Pagination } from "@orderly.network/ui";
-import { useMarketListColumns } from "./column";
 import { type UseMarketListReturn } from "./marketList.script";
+import { useDataListColumns } from "../column";
 
-type MarketListProps = {} & UseMarketListReturn;
+type MarketListProps = UseMarketListReturn;
 
 export const MarketList: FC<MarketListProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize } = props;
-  const columns = useMarketListColumns();
+  const { dataSource, meta, setPage, setPageSize, favorite } = props;
+  const columns = useDataListColumns(favorite, false);
 
   return (
     <DataTable
@@ -22,6 +22,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
       onRow={(record, index) => {
         return { className: "oui-h-[55px] oui-border-line-12" };
       }}
+      generatedRowKey={(record) => record.symbol}
     >
       <Pagination
         {...meta}

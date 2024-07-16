@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MarketsType,
   useFundingRates,
@@ -8,24 +8,49 @@ import {
 } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { FavoriteTab } from "@orderly.network/hooks";
 
 export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
+
+export type MarketsFavorite = ReturnType<typeof useMarkets>[1];
+
+export type TFavorite = MarketsFavorite & {
+  curTab: FavoriteTab;
+  setCurTab: (tab: FavoriteTab) => void;
+};
 
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
 
-  const dataSource = useDataSource();
+  const { favorites, favoriteTabs, getLastSelFavTab } = favorite || {};
+
+  const [curTab, setCurTab] = useState(getLastSelFavTab() || favoriteTabs[0]);
+
+  const filterData = useMemo(() => {
+    return favorites
+      ?.filter(
+        (item) => item.tabs?.findIndex((tab) => tab.id === curTab.id) !== -1
+      )
+      ?.map((fav) => {
+        const index = data?.findIndex((item) => item.symbol === fav.name);
+        if (index !== -1) {
+          return data[index];
+        }
+        return null;
+      })
+      ?.filter((item) => item);
+  }, [data, curTab, favorites]);
 
   const pageData = useMemo(() => {
-    const list = [...data];
+    const list = [...filterData];
     return getPageData(list, pageSize, page);
-  }, [dataSource, pageSize, page]);
+  }, [filterData, pageSize, page]);
 
   const meta = useMemo(
     () =>
       parseMeta({
-        total: dataSource?.length,
+        total: data?.length,
         current_page: page,
         records_per_page: pageSize,
       }),
@@ -42,8 +67,12 @@ export const useFavoritesScript = () => {
     meta,
     setPage,
     setPageSize,
-    favorite,
-  } as any;
+    favorite: {
+      ...favorite,
+      curTab,
+      setCurTab,
+    } as TFavorite,
+  };
 };
 
 export function getPageData(list: any[], pageSize: number, pageIndex: number) {

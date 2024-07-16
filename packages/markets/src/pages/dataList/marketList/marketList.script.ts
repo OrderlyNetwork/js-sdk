@@ -1,12 +1,15 @@
 import { useEffect, useMemo } from "react";
 import {
+  MarketsType,
   useFundingRates,
+  useMarkets,
   useMarketsStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { MarketListWidgetProps } from "./widget";
+import { TFavorite } from "../favorites/favorites.script";
 
 export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
@@ -17,8 +20,10 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
 
   const dataSource = useDataSource();
 
+  const [data, favorite] = useMarkets(MarketsType.ALL);
+
   const pageData = useMemo(() => {
-    const list = [...dataSource];
+    const list = [...data];
     if (type === "all") {
       // 24h_amount 倒序，0 排最后面
       list.sort((a: any, b: any) => {
@@ -34,16 +39,16 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     }
 
     return getPageData(list, pageSize, page);
-  }, [dataSource, pageSize, page, type]);
+  }, [data, pageSize, page, type]);
 
   const meta = useMemo(
     () =>
       parseMeta({
-        total: dataSource?.length,
+        total: data?.length,
         current_page: page,
         records_per_page: pageSize,
       }),
-    [dataSource, page, pageSize]
+    [data, page, pageSize]
   );
 
   useEffect(() => {
@@ -56,6 +61,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     meta,
     setPage,
     setPageSize,
+    favorite: favorite as TFavorite,
   };
 };
 
