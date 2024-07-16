@@ -1,7 +1,12 @@
 import { Label } from "@/label";
 import { modal } from "@/modal";
 import { FC, useCallback, useState } from "react";
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 export const MobileReduceOnlyLabel: FC = () => {
   const showReduceOnlyHint = useCallback(() => {
@@ -17,43 +22,46 @@ export const MobileReduceOnlyLabel: FC = () => {
     });
   }, []);
 
-  return (<>
-    <Label
-      className="orderly-text-base-contrast-54"
-      onClick={() => {
-        showReduceOnlyHint();
-      }}
-    >
-      Reduce only
-    </Label>
-  </>);
-}
+  return (
+    <>
+      <button
+        className="orderly-text-base-contrast-54"
+        type="button"
+        onClick={() => {
+          showReduceOnlyHint();
+        }}
+      >
+        Reduce only
+      </button>
+    </>
+  );
+};
 
 export const DesktopReduceOnlyLabel: FC = () => {
   const [open, setOpen] = useState(false);
 
-  return (<>
-    <Tooltip>
-      <TooltipTrigger>
-        <Label
-          className="orderly-text-base-contrast-54"
+  return (
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button className="orderly-text-base-contrast-54" type="button">
+            Reduce only
+          </button>
+        </TooltipTrigger>
+        <TooltipContent
+          align="center"
+          className="orderly-max-w-[300px] orderly-z-20 orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-p-3 orderly-text-4xs"
         >
-          Reduce only
-        </Label>
-      </TooltipTrigger>
-      <TooltipContent
-        align="center"
-        className="orderly-max-w-[300px] orderly-z-20 orderly-text-base-contrast orderly-select-none orderly-rounded orderly-bg-base-400 orderly-p-3 orderly-text-4xs"
-      >
-        <div>
-          <span className="orderly-text-3xs">
-            Reduce only ensures that you can only reduce or close a current
-            position so that your position size will not be increased
-            unintentionally.
-          </span>
-        </div>
-        <TooltipArrow className="orderly-fill-base-400" />
-      </TooltipContent>
-    </Tooltip>
-  </>);
+          <div>
+            <span className="orderly-text-3xs">
+              Reduce only ensures that you can only reduce or close a current
+              position so that your position size will not be increased
+              unintentionally.
+            </span>
+          </div>
+          <TooltipArrow className="orderly-fill-base-400" />
+        </TooltipContent>
+      </Tooltip>
+    </>
+  );
 };
