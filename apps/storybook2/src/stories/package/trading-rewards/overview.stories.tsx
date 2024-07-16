@@ -6,6 +6,7 @@ import {OrderlyApp} from "@orderly.network/react-app";
 import {ConnectorProvider} from "@orderly.network/web3-onboard";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { Scaffold } from "@orderly.network/ui-scaffold";
+import { useState } from "react";
 
 const meta = {
     title: "Package/TradingRewards/IndexPage",
@@ -67,7 +68,20 @@ export const Page: Story = {};
 
   export const LayoutPage: Story = {
     render: (args) => {
-      return <TradingRewardsLayoutWidget>
+        const [currentPath, setCurrentPath] = useState("trading");
+      return <TradingRewardsLayoutWidget 
+      routerAdapter={{
+        onRouteChange: (options) => {
+            console.log("options", options);
+            
+        },
+        currentPath: currentPath,
+      }}
+      onClickMenuItem={(item) => {
+        console.log("onItemSelect", item);
+
+      }}
+      >
         <TradingRewards.IndexPage />
       </TradingRewardsLayoutWidget>
     },
