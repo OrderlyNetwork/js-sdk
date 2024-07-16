@@ -1,10 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import {fn} from '@storybook/test';
-import { Box, Card, DataTable, Filter, Pagination } from "@orderly.network/ui";
+import { fn } from "@storybook/test";
+import {
+  Box,
+  Card,
+  DataTable,
+  Filter,
+  Flex,
+  Pagination,
+  Text,
+} from "@orderly.network/ui";
 import { OverviewModule } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { transSymbolformString } from "@orderly.network/utils";
+import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -15,11 +24,13 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-        <Card>
-          <Story />
-        </Card>
-      </OrderlyApp>
+      <ConnectorProvider>
+        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+          <Card>
+            <Story />
+          </Card>
+        </OrderlyApp>
+      </ConnectorProvider>
     ),
   ],
   tags: ["autodocs"],
@@ -28,6 +39,69 @@ const meta = {
   },
   args: {
     bordered: true,
+    columns: [
+      {
+        title: "Instrument",
+        dataIndex: "symbol",
+        width: 80,
+        rule: "symbol",
+        textProps: {
+          showIcon: true,
+        },
+      },
+      {
+        title: "Time",
+        dataIndex: "created_time",
+        width: 120,
+        rule: "date",
+        onSort: true,
+      },
+      {
+        title: "Funding rate / Annual rate",
+        dataIndex: "funding_rate",
+        width: 80,
+        render: (value: any, record) => {
+          return (
+            <Flex gap={1}>
+              <Text.numeral rule={"percentages"}>
+                {record.funding_rate}
+              </Text.numeral>
+              <span>/</span>
+              <Text.numeral rule={"percentages"}>
+                {record.annual_rate}
+              </Text.numeral>
+            </Flex>
+          );
+        },
+      },
+      {
+        title: "Payment type",
+        dataIndex: "payment_type",
+        width: 80,
+        render: (value: any) => {
+          switch (value) {
+            case "Pay":
+              return "Paid";
+            case "Receive":
+              return "Received";
+            default:
+              return value;
+          }
+        },
+      },
+      {
+        title: "Funding fee (USDC)",
+        dataIndex: "funding_fee",
+        width: 80,
+        rule: "price",
+        onSort: true,
+        align: "right",
+        numeralProps: {
+          coloring: true,
+          showIdentifier: true,
+        },
+      },
+    ],
   },
 };
 
@@ -121,6 +195,54 @@ export const DataFilter: Story = {
         />
       </DataTable>
     );
+  },
+};
+
+export const Sortable: Story = {
+  render: (args) => {
+    const {
+      dataSource,
+      queryParameter,
+      onFilter,
+      isLoading,
+      meta,
+      setPage,
+      setPageSize,
+    } = OverviewModule.useFundingHistoryHook();
+
+    return (
+      <DataTable
+        {...args}
+        columns={args.columns}
+        dataSource={dataSource}
+        loading={isLoading}
+      />
+    );
+  },
+};
+export const SortableByBackend: Story = {
+  render: (args) => {
+    const {
+      dataSource,
+      queryParameter,
+      onFilter,
+      isLoading,
+      meta,
+      setPage,
+      setPageSize,
+    } = OverviewModule.useFundingHistoryHook();
+
+    return (
+      <DataTable
+        {...args}
+        columns={args.columns}
+        dataSource={dataSource}
+        loading={isLoading}
+      />
+    );
+  },
+  args: {
+    onSort: fn(),
   },
 };
 

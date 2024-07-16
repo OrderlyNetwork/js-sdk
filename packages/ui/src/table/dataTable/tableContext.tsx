@@ -42,7 +42,7 @@ export const useTable = () => {
   return useContext(TableContext);
 };
 
-export const defaultSortter = (
+export const defaultSorter = (
   r1: any,
   r2: any,
   sortOrder: SortOrder,
@@ -61,6 +61,7 @@ export const TableProvider: FC<
     canExpand?: boolean;
     multiExpand?: boolean;
     meta?: DataMetaData;
+    onSort?: (sortKey: string, sort: SortOrder) => void;
   }>
 > = (props) => {
   const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>();
@@ -120,14 +121,22 @@ export const TableProvider: FC<
     if (!sortKey || !sortKey[0]) {
       return props.dataSource || [];
     }
+
+    /**
+     * if onSort is not provided, return the original dataSource, ignore the internal sort
+     */
+    if (typeof props.onSort === "function") {
+      return props.dataSource;
+    }
+
     // sort by onSort function
     return [...props.dataSource].sort((r1, r2) => {
       if (typeof sortKey[0] === "string") {
         const col = props.columns.find((col) => col.dataIndex === sortKey[0]);
-        let sorttor =
-          typeof col?.onSort === "function" ? col.onSort : defaultSortter;
+        let sorter =
+          typeof col?.onSort === "function" ? col.onSort : defaultSorter;
 
-        return sorttor(r1, r2, sortKey[1], sortKey[0]);
+        return sorter(r1, r2, sortKey[1], sortKey[0]);
       }
       return 0;
     });
@@ -159,6 +168,12 @@ export const TableProvider: FC<
 
       return [key, "desc" as SortOrder];
     });
+
+    if (typeof props.onSort === "function" && sortKey?.length === 2) {
+      setTimeout(() => {
+        props.onSort!(sortKey[0], sortKey[1]);
+      }, 0);
+    }
   };
 
   const meta = useMemo(() => {

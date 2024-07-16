@@ -38,6 +38,10 @@ export { WalletIcon } from "./walletIcon";
 export { CalendarIcon } from "./calendar";
 export { CopyIcon } from "./copy";
 export { ServerFillIcon } from "./serverFill";
+export { SortingAscIcon } from "./sortingASCIcon";
+export { SortingDescIcon } from "./sortingDESCIcon";
+
+export { SortingIcon } from "./sortingIcon";
 
 import { CombineIcon } from "./combine";
 

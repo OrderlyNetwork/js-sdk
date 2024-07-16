@@ -12,7 +12,7 @@ const tableVariants = tv({
     table: "oui-w-full oui-caption-bottom oui-text-xs oui-TableRootTable",
     thead: "[&_tr]:oui-border-b oui-TableHead",
     tbody: "[&_tr:last-child]:oui-border-0 oui-TableBody",
-    tfooter:
+    tfoot:
       "oui-border-t oui-font-medium [&>tr]:oui-last:border-b-0 oui-TableFooter",
     tr: "oui-transition-colors oui-TableTr hover:oui-bg-base-9 oui-group",
     th: "oui-h-10 oui-px-2 oui-text-left oui-align-middle oui-font-medium oui-text-muted-foreground [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTh",
@@ -70,8 +70,8 @@ const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => {
-  const { tfooter } = tableVariants();
-  return <tfoot ref={ref} className={tfooter({ className })} {...props} />;
+  const { tfoot } = tableVariants();
+  return <tfoot ref={ref} className={tfoot({ className })} {...props} />;
 });
 TableFooter.displayName = "TableFooter";
 

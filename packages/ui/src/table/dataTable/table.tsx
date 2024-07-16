@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { Column } from "./col";
+import { Column, SortOrder } from "./col";
 import { TableHeader } from "./thead";
 
 import { ColGroup } from "./colgroup";
@@ -47,6 +47,7 @@ export interface DataTableProps<RecordType>
   showMaskElement?: boolean;
   bordered?: boolean;
   loadMore?: () => void;
+  onSort?: (sortKey: string, sort: SortOrder) => void;
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
   // header?: ReactElement;
@@ -148,7 +149,9 @@ export const DataTable = <RecordType extends unknown>(
     <div
       id={props.id}
       ref={wrapRef}
-      className={root({ className: cnBase(className, classNames?.root) })}
+      className={root({
+        className: cnBase("oui-table-root", className, classNames?.root),
+      })}
       style={{ width, height }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
@@ -180,14 +183,14 @@ export const DataTable = <RecordType extends unknown>(
           visible={dataSource?.length === 0 || loading}
           loading={loading}
         />
+        <FixedDivide />
       </div>
 
+      {/* {props.children} */}
       {/* </EndReachedBox> */}
       {/* {showMaskElement && maskElement} */}
-      {/* {props.children} */}
     </div>
   );
-  // {/* <FixedDivide /> */}
 
   if (filterEle || paginationEle) {
     childElement = (
@@ -204,6 +207,7 @@ export const DataTable = <RecordType extends unknown>(
       columns={props.columns}
       dataSource={props.dataSource}
       canExpand={typeof props.expandRowRender === "function"}
+      onSort={props.onSort}
     >
       {childElement}
     </TableProvider>

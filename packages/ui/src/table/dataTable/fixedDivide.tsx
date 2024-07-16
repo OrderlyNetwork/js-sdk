@@ -9,24 +9,24 @@ export const FixedDivide: FC = () => {
   const right = useMemo(() => getRightFixedColumnsPosition(), [columns]);
 
   const classNames =
-    "orderly-absolute orderly-top-0 orderly-bottom-0 orderly-w-[1px] orderly-bg-divider orderly-z-30 orderly-pointer-events-none orderly-hidden";
+    "oui-absolute oui-top-0 oui-bottom-0 oui-w-[1px] oui-bg-line-6 oui-z-30 oui-pointer-events-none oui-hidden";
 
   return (
     <>
       {left > 0 ? (
         <div
           id="table_left_fixed_divide"
-          className={`${classNames} peer-data-[left=fixed]:orderly-block table-left-fixed-divide`}
+          className={`${classNames} peer-data-[left=fixed]:oui-block oui-table-left-fixed-divide`}
           style={{ left: `${left}px` }}
-        ></div>
+        />
       ) : null}
 
       {right > 0 ? (
         <div
           id="table_right_fixed_divide"
-          className={`${classNames} peer-data-[right=fixed]:orderly-block table-right-fixed-divide`}
+          className={`${classNames} peer-data-[right=fixed]:oui-block oui-table-right-fixed-divide`}
           style={{ right: `${right}px` }}
-        ></div>
+        />
       ) : null}
     </>
   );

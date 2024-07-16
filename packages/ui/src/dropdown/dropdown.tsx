@@ -22,13 +22,12 @@ const dropdownMenuVariants = tv({
       "oui-min-w-[8rem]",
       "oui-overflow-hidden",
       "oui-rounded-xl",
-      // "oui-border",
       "oui-p-1",
       "oui-bg-base-8",
       "oui-text-base-contrast",
-      // "oui-bg-popover",
-      // "oui-text-popover-foreground",
       "oui-shadow-md",
+      "oui-border",
+      "oui-border-line-6",
       "data-[state=open]:oui-animate-in",
       "data-[state=closed]:oui-animate-out",
       "data-[state=closed]:oui-fade-out-0",
@@ -66,11 +65,23 @@ const dropdownMenuVariants = tv({
     size: {
       xs: {
         content: "oui-rounded",
-        item: ["oui-px-2", "oui-py-1.5", "oui-h-6", "oui-rounded"],
+        item: [
+          "oui-px-2",
+          "oui-py-1.5",
+          "oui-h-6",
+          "oui-rounded",
+          "oui-text-2xs",
+        ],
       },
       sm: {
         content: "oui-rounded",
-        item: ["oui-px-2", "oui-py-1.5", "oui-h-6", "oui-rounded"],
+        item: [
+          "oui-px-2",
+          "oui-py-1.5",
+          "oui-h-6",
+          "oui-rounded",
+          "oui-text-2xs",
+        ],
       },
       md: {
         content: "oui-rounded-md",

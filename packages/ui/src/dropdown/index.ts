@@ -16,4 +16,5 @@ export {
   DropdownMenuRadioGroup,
 } from "./dropdown";
 
-export { SimpleDropdownMenu } from "./menu";
+export { SimpleDropdownMenu } from "./menuItem";
+export type { MenuItem } from "./menuItem";
