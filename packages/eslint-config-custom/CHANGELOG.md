@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+
 ## 0.3.9
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.5.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+- Updated dependencies
+  - @orderly.network/types@1.5.10-alpha.0
+  - @orderly.network/core@1.5.10-alpha.0
+  - @orderly.network/net@1.5.10-alpha.0
+  - @orderly.network/perp@3.3.10-alpha.0
+  - @orderly.network/utils@1.5.10-alpha.0
+
 ## 1.5.9
 
 ### Patch Changes

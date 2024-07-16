@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+- Updated dependencies
+  - @orderly.network/types@1.5.10-alpha.0
+
 ## 1.5.9
 
 ### Patch Changes
