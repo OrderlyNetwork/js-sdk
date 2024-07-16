@@ -127,7 +127,7 @@ const meta: Meta = {
   component: Poster,
   args: {
     // backgroundColor: "#0b8c70",
-    backgroundImg: "/images/poster_bg_3.png",
+    backgroundImg: "/images/poster_bg_2.png",
     color: "rgba(255, 255, 255, 0.98)",
     profitColor: "rgb(0,181,159)",
     lossColor: "rgb(255,103,194)",
