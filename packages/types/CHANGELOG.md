@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.10-sdk-v2.14
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-sdk-v2.13
 
 ### Patch Changes

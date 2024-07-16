@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.10-sdk-v2.14
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.10-sdk-v2.14
+  - @orderly.network/types@1.5.10-sdk-v2.14
+
 ## 1.5.10-sdk-v2.13
 
 ### Patch Changes
