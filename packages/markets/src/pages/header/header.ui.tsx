@@ -110,7 +110,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral size="base" cureency="$" className="">
+      <Text.numeral size="base" currency="$" className="">
         {props.value}
       </Text.numeral>
     </Box>
@@ -178,7 +178,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
 
       <Flex width="100%" justify="end">
         <Text.numeral
-          cureency="$"
+          currency="$"
           size="xs"
           weight="semibold"
           dp={item.precision}
@@ -191,7 +191,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
         <Text.numeral
           rule="percentages"
           coloring
-          cureency={item.change > 0 ? "+" : "-"}
+          currency={item.change > 0 ? "+" : "-"}
           size="xs"
           weight="semibold"
         >
