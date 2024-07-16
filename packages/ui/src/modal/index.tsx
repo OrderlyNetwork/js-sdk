@@ -7,8 +7,9 @@ export { ModalProvider } from "./modalContext";
 import { alert } from "./preset/alert";
 import { dialog } from "./preset/dialog";
 
-// import { confirm } from "./preset/confirm";
+import { confirm } from "./preset/confirm";
 // import { actionSheet } from "@/modal/preset/actionSheet";
+export { ConfirmDialog } from "./preset/confirm";
 
 export type { ModalHocProps } from "./types";
 
@@ -22,7 +23,7 @@ export const modal = {
 
   ...modalActions,
   // actionSheet,
-  // confirm,
+  confirm,
   alert,
   // sheet,
   dialog,

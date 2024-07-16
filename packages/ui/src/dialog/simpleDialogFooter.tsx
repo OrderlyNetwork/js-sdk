@@ -4,9 +4,13 @@ import { Button } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
+<<<<<<< Updated upstream
   onClick: () => Promise<T> | T;
   className?: string;
   disabled?: boolean;
+=======
+  onClick?: () => Promise<T> | T;
+>>>>>>> Stashed changes
 };
 
 export type SimpleDialogFooterProps = {
@@ -32,7 +36,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           key="secondary"
           color="gray"
           onClick={() => {
-            actions.secondary?.onClick();
+            actions.secondary?.onClick?.();
           }}
           className={actions.secondary.className}
           disabled={actions.secondary.disabled}
