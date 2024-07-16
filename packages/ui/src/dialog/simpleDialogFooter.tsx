@@ -4,13 +4,9 @@ import { Button } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
-<<<<<<< Updated upstream
   onClick: () => Promise<T> | T;
   className?: string;
   disabled?: boolean;
-=======
-  onClick?: () => Promise<T> | T;
->>>>>>> Stashed changes
 };
 
 export type SimpleDialogFooterProps = {
