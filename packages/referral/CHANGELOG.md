@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+- Updated dependencies [e5a88d5f3]
+  - @orderly.network/react@1.5.10
+  - @orderly.network/hooks@1.5.10
+  - @orderly.network/utils@1.5.10
+
 ## 1.5.10-alpha.0
 
 ### Patch Changes

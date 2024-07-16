@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+
 ## 1.5.10-alpha.0
 
 ### Patch Changes
