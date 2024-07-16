@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-leverage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -8,7 +8,10 @@
     "tsup": "tsup --tsconfig tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Orderly", "Leverage"],
+  "keywords": [
+    "Orderly",
+    "Leverage"
+  ],
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
