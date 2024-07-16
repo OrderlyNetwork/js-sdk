@@ -12,10 +12,6 @@ export const useFooterScript = (): FooterReturns => {
     const wsStatus = useWsStatus();
     const { footerConfig } = useScaffoldContext();
 
-    console.log("footer config", footerConfig);
-    
-
-
     return {
         wsStatus,
         config: footerConfig,
