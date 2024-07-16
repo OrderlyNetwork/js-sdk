@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-rewards",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,6 +17,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "date-fns": "^3.6.0"
+   
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
