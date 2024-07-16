@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   MarketsType,
   useFundingRates,
@@ -6,7 +6,7 @@ import {
   useMarketsStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { SortOrder, usePagination } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { MarketListWidgetProps } from "./widget";
 import { TFavorite } from "../favorites/favorites.script";
@@ -14,32 +14,59 @@ import { TFavorite } from "../favorites/favorites.script";
 export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
 
-export const useMarketListScript = (options: UseMarketListScriptOptions) => {
-  const { type = "all" } = options || {};
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+export function useSort(defaultSortKey?: string, defaultSortOrder?: SortOrder) {
+  const [key, setKey] = useState<string>();
+  const [order, setOrder] = useState<SortOrder>();
 
-  const dataSource = useDataSource();
+  const onSort = useCallback((sortKey: string, sort: SortOrder) => {
+    setKey(sortKey);
+    setOrder(sort);
+  }, []);
+
+  const sortKey = key || defaultSortKey;
+  const sortOrder = order || defaultSortOrder;
+
+  const getSortedList = useCallback(
+    (list: any[]) => {
+      const sortedList = [...list];
+      if (sortKey && sortOrder) {
+        // sort list
+        sortedList.sort((a: any, b: any) => {
+          const val1 = a[sortKey];
+          const val2 = b[sortKey];
+
+          if (val1 === 0) return 1;
+          if (val2 === 0) return -1;
+
+          if (sortOrder === "desc") {
+            return val2 - val1;
+          }
+
+          return val1 - val2;
+        });
+      }
+      return sortedList;
+    },
+    [sortKey, sortOrder]
+  );
+
+  return { onSort, getSortedList, sortKey, sortOrder };
+}
+
+export const useMarketListScript = (options: UseMarketListScriptOptions) => {
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [data, favorite] = useMarkets(MarketsType.ALL);
 
+  const { onSort, getSortedList } = useSort(
+    options?.sortKey,
+    options?.sortOrder
+  );
+
   const pageData = useMemo(() => {
-    const list = [...data];
-    if (type === "all") {
-      // 24h_amount 倒序，0 排最后面
-      list.sort((a: any, b: any) => {
-        const a_vol = a["24h_amount"];
-        const b_vol = b["24h_amount"];
-
-        if (a_vol === 0) return 1;
-        if (b_vol === 0) return -1;
-        return b_vol - a_vol;
-      });
-    } else {
-      list.sort((a, b) => b.created_time - a.created_time);
-    }
-
+    const list = getSortedList(data);
     return getPageData(list, pageSize, page);
-  }, [data, pageSize, page, type]);
+  }, [data, pageSize, page, getSortedList]);
 
   const meta = useMemo(
     () =>
@@ -62,6 +89,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     setPage,
     setPageSize,
     favorite: favorite as TFavorite,
+    onSort,
   };
 };
 

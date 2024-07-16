@@ -3,7 +3,7 @@ import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { FavoritesIcon, UnFavoritesIcon } from "../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
-import { TFavorite } from "./marketList/marketList.script";
+import { TFavorite } from "./favorites/favorites.script";
 
 export const useDataListColumns = (
   favorite: TFavorite,
@@ -69,7 +69,7 @@ export const useDataListColumns = (
         dataIndex: "24h_close",
         width: 100,
         align: "right",
-        // onSort: (r1, r2, sortOrder: SortOrder),
+        onSort: true,
         render: (value, record) => {
           return <Text.numeral dp={record.quote_dp || 2}>{value}</Text.numeral>;
         },
@@ -79,6 +79,7 @@ export const useDataListColumns = (
         dataIndex: "change",
         width: 100,
         align: "right",
+        onSort: true,
         render: (value) => {
           return (
             <Text.numeral
@@ -97,6 +98,7 @@ export const useDataListColumns = (
         dataIndex: "24h_amount",
         width: 100,
         align: "right",
+        onSort: true,
         render: (value) => {
           return (
             <Text.numeral dp={0} rm={Decimal.ROUND_DOWN}>
@@ -110,6 +112,7 @@ export const useDataListColumns = (
         dataIndex: "openInterest",
         width: 100,
         align: "right",
+        onSort: true,
         render: (value) => {
           return (
             <Text.numeral dp={0} rm={Decimal.ROUND_DOWN}>
@@ -123,14 +126,15 @@ export const useDataListColumns = (
         dataIndex: "8h_funding",
         width: 100,
         align: "right",
-        render: (value, record) => {
+        onSort: true,
+        render: (value) => {
           return (
             <Text.numeral
               rule="percentages"
               coloring
-              currency={value > 0 ? "+" : "-"}
               dp={4}
               rm={Decimal.ROUND_DOWN}
+              showIdentifier
             >
               {value}
             </Text.numeral>

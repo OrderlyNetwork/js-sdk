@@ -6,7 +6,7 @@ import { useDataListColumns } from "../column";
 type MarketListProps = UseMarketListReturn;
 
 export const MarketList: FC<MarketListProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite } = props;
+  const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
   const columns = useDataListColumns(favorite, false);
 
   return (
@@ -23,6 +23,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
         return { className: "oui-h-[55px] oui-border-line-12" };
       }}
       generatedRowKey={(record) => record.symbol}
+      onSort={onSort}
     >
       <Pagination
         {...meta}

@@ -62,7 +62,7 @@ export const Favorites: Story = {
 
 export const AllMarkets: Story = {
   render: (args) => {
-    return <MarketListWidget  />
+    return <MarketListWidget sortKey="24h_amount" sortOrder="desc" />
   },
 
   decorators: [
@@ -76,7 +76,7 @@ export const AllMarkets: Story = {
   
 export const NewListings: Story = {
     render: (args) => {
-      return <MarketListWidget type="new"/>
+      return <MarketListWidget sortKey="created_time" sortOrder="desc" />
     },
   
     decorators: [
@@ -91,7 +91,7 @@ export const NewListings: Story = {
   
 export const DataList: Story = {
   render: (args) => {
-    return <MarketsDataListWidget />
+    return <MarketsDataListWidget  />
   },
 
   decorators: [

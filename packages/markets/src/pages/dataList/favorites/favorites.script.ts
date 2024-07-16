@@ -9,6 +9,7 @@ import {
 import { usePagination } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { FavoriteTab } from "@orderly.network/hooks";
+import { useSort } from "../marketList/marketList.script";
 
 export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 
@@ -27,6 +28,8 @@ export const useFavoritesScript = () => {
 
   const [curTab, setCurTab] = useState(getLastSelFavTab() || favoriteTabs[0]);
 
+  const { onSort, getSortedList } = useSort();
+
   const filterData = useMemo(() => {
     return favorites
       ?.filter(
@@ -43,9 +46,9 @@ export const useFavoritesScript = () => {
   }, [data, curTab, favorites]);
 
   const pageData = useMemo(() => {
-    const list = [...filterData];
+    const list = getSortedList(data);
     return getPageData(list, pageSize, page);
-  }, [filterData, pageSize, page]);
+  }, [filterData, pageSize, page, getSortedList]);
 
   const meta = useMemo(
     () =>
@@ -72,6 +75,7 @@ export const useFavoritesScript = () => {
       curTab,
       setCurTab,
     } as TFavorite,
+    onSort,
   };
 };
 

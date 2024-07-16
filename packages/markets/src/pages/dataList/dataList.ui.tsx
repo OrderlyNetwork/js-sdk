@@ -6,7 +6,6 @@ import {
   CheckSquareEmptyIcon,
   CloseCircleFillIcon,
   CloseIcon,
-  cn,
   Divider,
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -42,10 +41,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <FavoritesWidget />
         </TabPanel>
         <TabPanel title="All Markets" icon={<AllMarketsIcon />} value="all">
-          <MarketListWidget />
+          <MarketListWidget sortKey="24h_amount" sortOrder="desc" />
         </TabPanel>
         <TabPanel title="New listings" icon={<NewListingsIcon />} value="new">
-          <MarketListWidget type="new" />
+          <MarketListWidget sortKey="created_time" sortOrder="desc" />
         </TabPanel>
       </Tabs>
     </Card>
