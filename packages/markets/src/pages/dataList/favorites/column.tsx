@@ -56,7 +56,7 @@ export const useFavoritesColumns = () => {
             <Text.numeral
               rule="percentages"
               coloring
-              cureency={value > 0 ? "+" : "-"}
+              currency={value > 0 ? "+" : "-"}
               rm={Decimal.ROUND_DOWN}
             >
               {value}
@@ -100,7 +100,7 @@ export const useFavoritesColumns = () => {
             <Text.numeral
               rule="percentages"
               coloring
-              cureency={value > 0 ? "+" : "-"}
+              currency={value > 0 ? "+" : "-"}
               dp={4}
               rm={Decimal.ROUND_DOWN}
             >

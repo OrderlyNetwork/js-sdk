@@ -25,7 +25,7 @@ export const TableHeader: FC<THeadProps> = (props) => {
       <thead
         className={cnBase("oui-sticky oui-top-0 oui-z-0", props.className)}
       >
-        <tr>
+        <tr style={{ backgroundColor: "var(--table-background-color)" }}>
           {props.columns.map((column, index) => {
             return (
               <TheadCol

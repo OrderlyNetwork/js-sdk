@@ -124,7 +124,7 @@ export const AssetStatistic = (props: StatisticProps) => {
             size="sm"
             weight="semibold"
             prefix={"("}
-            surfix=")"
+            suffix=")"
           >
             {props.unrealROI}
           </Text.numeral>

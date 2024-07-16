@@ -217,8 +217,8 @@ const UnrealPnL: FC<{
         coloring
         showIdentifier
         weight={"semibold"}
-        surfix={
-          <Text.numeral coloring prefix={"("} surfix={")"} rule={"percentages"}>
+        suffix={
+          <Text.numeral coloring prefix={"("} suffix={")"} rule={"percentages"}>
             {props.unrealized_pnl_ROI ?? 0}
           </Text.numeral>
         }
@@ -288,11 +288,11 @@ const AccountInfoPopover = (props: {
         <Text.numeral
           coloring
           showIdentifier
-          surfix={
+          suffix={
             <Text.numeral
               coloring
               prefix={"("}
-              surfix={")"}
+              suffix={")"}
               rule={"percentages"}
             >
               {props.unrealized_pnl_ROI}

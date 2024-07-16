@@ -63,7 +63,7 @@ export interface ColProps {
 }
 
 export const ColItem: FC<ColProps> = (props) => {
-  const { col, record, index, style } = props;
+  const { col, record, index, style, ...rest } = props;
   const { align } = col;
 
   const content = useMemo(() => {
@@ -124,6 +124,7 @@ export const ColItem: FC<ColProps> = (props) => {
           : "transparent",
         ...style,
       }}
+      {...rest}
     >
       {content}
     </TableCell>

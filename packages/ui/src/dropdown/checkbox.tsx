@@ -1,4 +1,4 @@
-import { SimpleDropdownMenu } from "./menu";
+import { SimpleDropdownMenu } from "./menuItem";
 
 type CheckBoxMenuProps = {
   items: string[];

@@ -32,6 +32,7 @@ const textVariants = tv({
       inherit: "oui-text-inherit",
       neutral: "oui-text-base-contrast-54",
       primary: "oui-text-primary",
+      primaryLight: "oui-text-primary-light",
       secondary: "oui-text-secondary",
       tertiary: "oui-text-tertiary",
       // quaternary: "oui-text-gray-300",
