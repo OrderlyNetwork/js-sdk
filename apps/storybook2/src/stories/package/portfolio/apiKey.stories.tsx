@@ -6,7 +6,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 const meta = {
   title: "Package/Portfolio/APIKey",
-  component: APIManagerModule.APIManagerWidget,
+  component: APIManagerModule.ApiManagerPage,
   subcomponents: {},
   decorators: [
     (Story: any) => (

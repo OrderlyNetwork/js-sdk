@@ -1,5 +1,8 @@
 import { APIManager } from "./apiManager.ui";
+import { useApiManagerScript } from "./apiManager.script";
+
 
 export const APIManagerWidget = () => {
-  return <APIManager />;
+  const state = useApiManagerScript();
+  return <APIManager {...state} />;
 };

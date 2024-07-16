@@ -80,7 +80,7 @@ const List: FC<RebatesReturns> = (props) => {
       dataSource={props.dataSource}
       scroll={{ y: 240 }}
       classNames={{
-        header: "oui-text-xs oui-text-base-contrast-36",
+        header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-xs oui-text-base-contrast-80",
       }}
     ></DataTable>
