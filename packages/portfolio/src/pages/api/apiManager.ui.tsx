@@ -12,6 +12,9 @@ import { ApiManagerScriptReturns } from "./apiManager.script";
 import { FC } from "react";
 import { Column } from "@orderly.network/ui";
 import { CreateAPIKeyDialog } from "./dialog/createApiKey";
+import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
+import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
+import { EditAPIKeyDialog } from "./dialog/editApiKey";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   return (
@@ -25,6 +28,9 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
         <Subtitle {...props} />
         <KeyList {...props} />
         <CreateAPIKeyDialog {...props}/>
+        <CreatedAPIKeyDialog {...props}/>
+        <DeleteAPIKeyDialog {...props}/>
+        <EditAPIKeyDialog {...props}/>
       </Flex>
     </Card>
   );
