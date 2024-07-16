@@ -4,6 +4,7 @@ import {
   Card,
   DataTable,
   Divider,
+  EmptyDataState,
   Flex,
   PlusIcon,
   Text,
@@ -15,6 +16,8 @@ import { CreateAPIKeyDialog } from "./dialog/createApiKey";
 import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
 import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { AuthGuard, AuthGuardEmpty } from "@orderly.network/ui-connector";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   return (
@@ -27,10 +30,10 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
         <AccountInfo {...props} />
         <Subtitle {...props} />
         <KeyList {...props} />
-        <CreateAPIKeyDialog {...props}/>
-        <CreatedAPIKeyDialog {...props}/>
-        <DeleteAPIKeyDialog {...props}/>
-        <EditAPIKeyDialog {...props}/>
+        <CreateAPIKeyDialog {...props} />
+        <CreatedAPIKeyDialog {...props} />
+        <DeleteAPIKeyDialog {...props} />
+        <EditAPIKeyDialog {...props} />
       </Flex>
     </Card>
   );
@@ -119,6 +122,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         variant="contained"
         color="primary"
         onClick={props.onCreateApiKey}
+        disabled={!props.canCreateApiKey}
       >
         Create API key
       </Button>
@@ -149,17 +153,42 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       dataIndex: "action",
       width: 120,
       render: (_) => {
-
         return (
           <Flex direction={"row"} gap={2}>
-            <Button size="xs" color="primary" variant="contained">Edit</Button>
-            <Button size="xs" color="gray" variant="contained">Delete</Button>
+            <Button size="xs" color="primary" variant="contained">
+              Edit
+            </Button>
+            <Button size="xs" color="gray" variant="contained">
+              Delete
+            </Button>
           </Flex>
         );
-      }
+      },
     },
   ];
   return (
-      <DataTable bordered columns={columns} dataSource={[1,2,3,4,5,6,7,8,9]} scroll={{y: 300}}/>
+    <DataTable
+      bordered
+      columns={columns}
+      dataSource={[]}
+      scroll={{ y: 300 }}
+      emptyView={<AuthGuardEmpty />}
+      classNames={{
+        header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36"
+      }}
+    />
   );
+};
+
+const EmptyView: FC<ApiManagerScriptReturns> = (props) => {
+  // switch (props.status) {
+  //   case AccountStatusEnum.NotConnected:
+      return (
+        <AuthGuard>
+          <EmptyDataState />
+        </AuthGuard>
+      );
+
+  //     default: return undefined;
+  // }
 };

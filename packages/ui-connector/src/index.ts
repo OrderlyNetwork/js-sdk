@@ -11,3 +11,4 @@ export {
 export { useWalletConnectorBuilder } from "./component/useWalletConnectorBuilder";
 
 export { AuthGuard } from "./component/authGuard";
+export { AuthGuardEmpty } from "./component/authGuardEmpty";

@@ -1,3 +1,5 @@
+import { useAccount } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { useState } from "react";
 
@@ -19,13 +21,18 @@ export type ApiManagerScriptReturns = {
   showEditDialog: boolean;
   hideEditDialog?: () => void;
   doEdit: () => Promise<void>;
+  canCreateApiKey: boolean;
+  status: AccountStatusEnum;
 };
 
 export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatdeDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showEditDialog, setShowEditDialog] = useState(true);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+
+  const { state } = useAccount();
+  const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
 
   const onCreateApiKey = () => {
     setShowCreateDialog(true);
@@ -83,5 +90,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     showEditDialog,
     hideEditDialog,
     doEdit,
+    canCreateApiKey,
+    status: state.status,
   };
 };
