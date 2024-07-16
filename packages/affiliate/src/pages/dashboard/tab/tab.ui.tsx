@@ -3,6 +3,7 @@ import {
   Button,
   cn,
   Flex,
+  Spinner,
   TabsBase,
   TabsContent,
   TabsList,
@@ -14,6 +15,7 @@ import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
+import { IndexPage } from "../../index";
 
 export const TabUI: FC<TabReturns> = (props) => {
   const extendNode = () => {
@@ -52,6 +54,17 @@ export const TabUI: FC<TabReturns> = (props) => {
 
     return undefined;
   };
+
+  if (props.isLoading) {
+    return <Spinner />;
+  }
+
+
+  if (!props.isAffiliate && !props.isTrader) {
+    return (
+      <IndexPage />
+    );
+  }
 
   return (
     <TabsBase

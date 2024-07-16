@@ -79,47 +79,52 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   };
 
   return (
-    <ExpandableContext.Provider
-      value={{
-        routerAdapter,
-        expanded: expand,
-        setExpand: onExpandChange,
-        unsupported,
-        checkChainSupport: checkChainSupportHandle,
-        footerConfig,
-      }}
-    >
-      {/* Top main nav */}
-      <Box
-        className={cn("oui-border-b oui-border-line-12", classNames?.topNavbar)}
-      >
-        {props.topbar ?? <MainNavWidget />}
-      </Box>
-      {/*--------- body start ------ */}
-      <Grid
-        className={cn(
-          "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]"
-        )}
-        style={{
-          gridTemplateColumns: `${
-            expand ? sideBarDefaultWidth + "px" : "98px"
-          } 1fr`,
-          gridTemplateRows: "auto 1fr auto",
-          gridTemplateAreas: `"left main" "left main" "left main"`,
+    <div className="oui-relative oui-h-screen">
+      <ExpandableContext.Provider
+        value={{
+          routerAdapter,
+          expanded: expand,
+          setExpand: onExpandChange,
+          unsupported,
+          checkChainSupport: checkChainSupportHandle,
+          footerConfig,
         }}
       >
-        <div className="oui-h-[calc(100% - 29px)">
-          {/* @ts-ignore */}
-          {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
+        {/* Top main nav */}
+        <Box
+          className={cn(
+            "oui-border-b oui-border-line-12",
+            classNames?.topNavbar
+          )}
+        >
+          {props.topbar ?? <MainNavWidget />}
+        </Box>
+        {/*--------- body start ------ */}
+        <Grid
+          className={cn(
+            "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]"
+          )}
+          style={{
+            gridTemplateColumns: `${
+              expand ? sideBarDefaultWidth + "px" : "98px"
+            } 1fr`,
+            gridTemplateRows: "auto 1fr auto",
+            gridTemplateAreas: `"left main" "left main" "left main"`,
+          }}
+        >
+          <div className="oui-h-[calc(100% - 29px)">
+            {/* @ts-ignore */}
+            {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
 
-          {/* <SideNavbarWidget {...props.leftSideProps} /> */}
-        </div>
-        <Box>{props.children}</Box>
-      </Grid>
+            {/* <SideNavbarWidget {...props.leftSideProps} /> */}
+          </div>
+          <Box>{props.children}</Box>
+        </Grid>
 
-      <Box className={cn(classNames?.footer)}>
-        {props.footer || <FooterWidget />}
-      </Box>
-    </ExpandableContext.Provider>
+        <Box className={cn("oui-fixed oui-bottom-0 oui-w-full", classNames?.footer)}>
+          {props.footer || <FooterWidget />}
+        </Box>
+      </ExpandableContext.Provider>
+    </div>
   );
 };

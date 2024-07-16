@@ -1,7 +1,8 @@
 // import { toast } from "@orderly.network/react";
 import { toast } from "@orderly.network/ui";
 import { format, toDate } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+// import { toZonedTime } from "date-fns-tz";
+// const { toZonedTime } = require("date-fns-tz");
 
 export function addQueryParam(
   url: string,
@@ -42,7 +43,7 @@ export function parseTime(time?: number | string): Date | null {
 export function formatDateTimeToUTC(input?: number | string): string {
   if (input === undefined) return '';
   const date = toDate(input);
-  const utcDate = toZonedTime(date, "UTC");
+  const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd HH:mm:ss 'UTC'");
 }
 
@@ -50,7 +51,7 @@ export function formatDateTimeToUTC(input?: number | string): string {
 export function formatYMDTime(time?: number | string): string | undefined {
   if (time === undefined) return undefined;
   const date = toDate(time);
-  const utcDate = toZonedTime(date, "UTC");
+  const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd");
 }
 
@@ -58,7 +59,7 @@ export function formatYMDTime(time?: number | string): string | undefined {
 export function formatHMTime(time?: number | string): string | undefined {
   if (time === undefined) return undefined;
   const date = toDate(time);
-  const utcDate = toZonedTime(date, "UTC");
+  const utcDate = toUTCDate(date);
   return format(utcDate, "hh:mm");
 }
 
@@ -66,7 +67,7 @@ export function formatHMTime(time?: number | string): string | undefined {
 export function formatMdTime(time?: number | string): string | undefined {
   if (time === undefined) return undefined;
   const date = toDate(time);
-  const utcDate = toZonedTime(date, "UTC");
+  const utcDate = toUTCDate(date);
   return format(utcDate, "MM-dd");
 }
 
@@ -107,4 +108,8 @@ export function generateData(
   }
 
   return result.reverse();
+}
+
+function toUTCDate(date: Date): Date {
+  return new Date(date.toUTCString());
 }
