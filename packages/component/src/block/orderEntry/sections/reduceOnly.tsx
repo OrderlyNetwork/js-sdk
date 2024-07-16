@@ -44,7 +44,10 @@ export const DesktopReduceOnlyLabel: FC = () => {
     <>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="orderly-text-base-contrast-54" type="button">
+          <button
+            className="orderly-text-base-contrast-54 orderly-cursor-default"
+            type="button"
+          >
             Reduce only
           </button>
         </TooltipTrigger>
