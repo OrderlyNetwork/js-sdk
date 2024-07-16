@@ -10,18 +10,21 @@ import {
 } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "./apiManager.script";
 import { FC } from "react";
+import { Column } from "@orderly.network/ui";
+import { CreateAPIKeyDialog } from "./dialog/createApiKey";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   return (
     <Card
       title={"API keys"}
       id="portfolio-apikey-manager"
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-font-semibold"
     >
       <Flex direction={"column"} gap={4} width={"100%"}>
         <AccountInfo {...props} />
         <Subtitle {...props} />
         <KeyList {...props} />
+        <CreateAPIKeyDialog {...props}/>
       </Flex>
     </Card>
   );
@@ -118,7 +121,39 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
+  const columns: Column[] = [
+    {
+      title: "API key",
+      dataIndex: "api_key",
+    },
+    {
+      title: "Permission type",
+      dataIndex: "permission_type",
+    },
+    {
+      title: "Restricted IP",
+      dataIndex: "Restricted",
+    },
+    {
+      title: "Expiration date",
+      dataIndex: "Expiration",
+    },
+    {
+      title: "",
+      dataIndex: "action",
+      width: 120,
+      render: (_) => {
+
+        return (
+          <Flex direction={"row"} gap={2}>
+            <Button size="xs" color="primary" variant="contained">Edit</Button>
+            <Button size="xs" color="gray" variant="contained">Delete</Button>
+          </Flex>
+        );
+      }
+    },
+  ];
   return (
-      <DataTable />
+      <DataTable bordered columns={columns} dataSource={[1,2,3,4,5,6,7,8,9]} scroll={{y: 300}}/>
   );
 };
