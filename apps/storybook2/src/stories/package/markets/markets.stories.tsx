@@ -1,25 +1,30 @@
 import type {Meta, StoryObj} from "@storybook/react";
 import {OrderlyApp} from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { MarketsPage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget } from '@orderly.network/markets';
+import { MarketsHomePage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget, MarketsProvider } from '@orderly.network/markets';
 import { Box } from "@orderly.network/ui";
+import { CustomConfigStore } from "../CustomConfigStore";
+
+const networkId = "testnet";
+const configStore = new CustomConfigStore({ networkId, env: "staging" });
+
 
 const meta = {
-    title: "Package/Markets/Header",
-    component: MarketsPage,
+    title: "Package/Markets",
+    component: MarketsHomePage,
     subcomponents: {
        
     },
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"} configStore={configStore}>
                     <Story/>
                 </OrderlyApp>
             </ConnectorProvider>
         ),
     ],   
-} satisfies Meta<typeof MarketsPage>;
+} satisfies Meta<typeof MarketsHomePage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -57,7 +62,7 @@ export const Favorites: Story = {
 
 export const AllMarkets: Story = {
   render: (args) => {
-    return <MarketListWidget  />
+    return <MarketListWidget sortKey="24h_amount" sortOrder="desc" />
   },
 
   decorators: [
@@ -71,7 +76,7 @@ export const AllMarkets: Story = {
   
 export const NewListings: Story = {
     render: (args) => {
-      return <MarketListWidget type="new"/>
+      return <MarketListWidget sortKey="created_time" sortOrder="desc" />
     },
   
     decorators: [
@@ -86,7 +91,7 @@ export const NewListings: Story = {
   
 export const DataList: Story = {
   render: (args) => {
-    return <MarketsDataListWidget />
+    return <MarketsProvider><MarketsDataListWidget /></MarketsProvider> 
   },
 
   decorators: [

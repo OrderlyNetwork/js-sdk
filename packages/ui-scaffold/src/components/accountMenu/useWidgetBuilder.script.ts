@@ -5,8 +5,9 @@ import {
 } from "@orderly.network/hooks";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { modal } from "@orderly.network/ui";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export const useAccountMenu = (): any => {
   const { disconnect, connect, connectedChain } = useWalletConnector();
@@ -30,13 +31,34 @@ export const useAccountMenu = (): any => {
   };
 
   const onConnectWallet = async () => {
-    const wallets = await connect();
+    return await connect();
 
-    if (Array.isArray(wallets) && wallets.length > 0) {
-      if (!checkChainSupport(wallets[0]!.chains[0]!.id)) return;
+    // if (Array.isArray(wallets) && wallets.length > 0) {
+    //   if (!checkChainSupport(wallets[0]!.chains[0]!.id)) return;
+    //   onCrateAccount();
+    // }
+  };
+
+  const statusChangeHandler = (nextState: any) => {
+    // console.log("statusChangeHandler", nextState);
+    if (nextState.validating || nextState.status <= AccountStatusEnum.Connected)
+      return;
+
+    if (nextState.status < AccountStatusEnum.SignedIn) {
       onCrateAccount();
     }
+    if (nextState.status < AccountStatusEnum.EnableTrading) {
+      onCreateOrderlyKey();
+    }
   };
+
+  useEffect(() => {
+    account.on("change:status", statusChangeHandler);
+
+    return () => {
+      account.off("change:status", statusChangeHandler);
+    };
+  }, []);
 
   const onOpenExplorer = useCallback(() => {
     if (!connectedChain) return;

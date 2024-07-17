@@ -1,10 +1,12 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
 import { Button } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
   onClick: () => Promise<T> | T;
+  className?: string;
+  disabled?: boolean;
 };
 
 export type SimpleDialogFooterProps = {
@@ -12,10 +14,12 @@ export type SimpleDialogFooterProps = {
     primary?: DialogAction;
     secondary?: DialogAction;
   };
+  className?: string;
 };
 
 export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
   const { actions } = props;
+  const [primaryLoading, setPrimaryLoading] = useState(false);
 
   if (!actions) return null;
 
@@ -28,8 +32,10 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           key="secondary"
           color="gray"
           onClick={() => {
-            actions.secondary?.onClick();
+            actions.secondary?.onClick?.();
           }}
+          className={actions.secondary.className}
+          disabled={actions.secondary.disabled}
         >
           {actions.secondary.label}
         </Button>
@@ -40,9 +46,18 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
       buttons.push(
         <Button
           key="primary"
-          onClick={() => {
-            actions.primary?.onClick();
+          onClick={async () => {
+            try {
+              setPrimaryLoading(true);
+              await actions.primary?.onClick();
+            } catch (e) {
+            } finally {
+              setPrimaryLoading(false);
+            }
           }}
+          className={actions.primary.className}
+          disabled={actions.primary.disabled || primaryLoading}
+          loading={primaryLoading}
         >
           {actions.primary.label}
         </Button>
@@ -50,7 +65,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     }
 
     return buttons;
-  }, [actions]);
+  }, [actions, primaryLoading]);
 
-  return <DialogFooter>{buttons}</DialogFooter>;
+  return <DialogFooter className={props.className}>{buttons}</DialogFooter>;
 };

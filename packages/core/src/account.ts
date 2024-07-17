@@ -413,13 +413,23 @@ export class Account {
     );
   }
 
-  async createOrderlyKey(expiration?: number): Promise<any> {
+  async createOrderlyKey(
+    expiration?: number,
+    options?: {
+      tag?: string;
+      scope?: string;
+    }
+  ): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }
 
     if (!this.walletClient) {
       throw new Error("walletClient is undefined");
+    }
+
+    if (typeof expiration !== 'number') {
+      throw new Error("the 'expiration' must be valid number");
     }
 
     const primaryType = "AddOrderlyKey";
@@ -435,6 +445,8 @@ export class Account {
       expiration,
       brokerId: this.configStore.get("brokerId"),
       timestamp,
+      scope: options?.scope,
+      tag: options?.tag
     });
 
     const address = this.stateValue.address;
@@ -537,9 +549,23 @@ export class Account {
     }
   }
 
+  async destoryOrderlyKey(): Promise<void> {
+    if (!!this.stateValue.address) {
+      // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
+      this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
+    }
+
+    const nextState = {
+      ...this.stateValue,
+      status: AccountStatusEnum.DisabledTrading,
+    };
+    this._ee.emit("change:status", nextState);
+  }
+
   async disconnect(): Promise<void> {
     if (!!this.stateValue.address) {
-      this.keyStore.cleanAllKey(this.stateValue.address);
+      // this.keyStore.cleanAllKey(this.stateValue.address);
+      this.keyStore.removeAddress();
     }
 
     const nextState = {

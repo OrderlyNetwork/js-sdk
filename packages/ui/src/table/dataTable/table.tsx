@@ -4,12 +4,13 @@ import {
   memo,
   PropsWithChildren,
   ReactElement,
+  ReactNode,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import type { Column } from "./col";
+import { Column, SortOrder } from "./col";
 import { TableHeader } from "./thead";
 
 import { ColGroup } from "./colgroup";
@@ -45,8 +46,10 @@ export interface DataTableProps<RecordType>
     footer?: string;
   };
   showMaskElement?: boolean;
+  emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
+  onSort?: (sortKey: string, sort: SortOrder) => void;
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
   // header?: ReactElement;
@@ -94,6 +97,7 @@ export const DataTable = <RecordType extends unknown>(
     className,
     classNames,
     scroll,
+    emptyView,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -138,6 +142,8 @@ export const DataTable = <RecordType extends unknown>(
 
   const { width, height } = useTableSize({ scroll });
 
+  // const body
+
   let childElement = (
     // <TableProvider
     //   columns={props.columns}
@@ -148,7 +154,9 @@ export const DataTable = <RecordType extends unknown>(
     <div
       id={props.id}
       ref={wrapRef}
-      className={root({ className: cnBase(className, classNames?.root) })}
+      className={root({
+        className: cnBase("oui-table-root", className, classNames?.root),
+      })}
       style={{ width, height }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
@@ -179,15 +187,16 @@ export const DataTable = <RecordType extends unknown>(
         <TablePlaceholder
           visible={dataSource?.length === 0 || loading}
           loading={loading}
+          emptyView={emptyView}
         />
+        <FixedDivide />
       </div>
 
+      {/* {props.children} */}
       {/* </EndReachedBox> */}
       {/* {showMaskElement && maskElement} */}
-      {/* {props.children} */}
     </div>
   );
-  // {/* <FixedDivide /> */}
 
   if (filterEle || paginationEle) {
     childElement = (
@@ -204,6 +213,7 @@ export const DataTable = <RecordType extends unknown>(
       columns={props.columns}
       dataSource={props.dataSource}
       canExpand={typeof props.expandRowRender === "function"}
+      onSort={props.onSort}
     >
       {childElement}
     </TableProvider>

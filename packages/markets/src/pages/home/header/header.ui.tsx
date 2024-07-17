@@ -1,87 +1,88 @@
 import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
-import { Box, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
-
-const data: any = {
-  symbol: "PERP_ETH_USDC",
-  price: 2115,
-  change: 0.04,
-  precision: 2,
-  "24h_volume": 413241234,
-  openInterest: 123432443,
-  assets: 123432443,
-};
-
-const list = [data, data, data, data, data];
-
-type TBlockData = {
-  "24h_volume": number;
-  openInterest: number;
-  assets: number;
-};
+import { Box, cn, Flex, Text } from "@orderly.network/ui";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
-  const { emblaRef, emblaApi, scrollIndex } = props;
+  const {
+    emblaRef,
+    emblaApi,
+    scrollIndex,
+    news,
+    gainers,
+    losers,
+    total24Amount,
+    totalOpenInterest,
+  } = props;
   const cls =
-    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
+    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_32px)_/_4)] oui-min-w-0 oui-select-none oui-cursor-pointer";
 
   return (
-    <div className="oui-overflow-hidden" ref={emblaRef}>
+    <div
+      className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
+      ref={emblaRef}
+    >
       <Flex width="100%" gapX={4} mt={4}>
-        <BlockList data={data} className={cls} />
+        <BlockList
+          total24Amount={total24Amount}
+          totalOpenInterest={totalOpenInterest}
+          className={cls}
+        />
         <CardItem
-          data={list}
+          data={news}
           title={<Text.gradient color="brand">New listings</Text.gradient>}
           className={cls}
         />
         <CardItem
-          data={list}
+          data={gainers}
           title={<Text className="oui-text-success-light">Top gainers</Text>}
           className={cls}
         />
         <CardItem
-          data={list}
+          data={losers}
           title={<Text className="oui-text-danger-light">Top losers</Text>}
           className={cls}
         />
       </Flex>
-
-      <ScrollIndicator
-        scrollIndex={scrollIndex}
-        scrollPrev={emblaApi?.scrollPrev}
-        scrollNext={emblaApi?.scrollNext}
-      />
+      <Box mt={1} mb={3}>
+        <ScrollIndicator
+          scrollIndex={scrollIndex}
+          scrollPrev={emblaApi?.scrollPrev}
+          scrollNext={emblaApi?.scrollNext}
+        />
+      </Box>
     </div>
   );
 };
 /** -----------MarketsHeader end ------------ */
 
 type BlockListProps = {
-  data: TBlockData;
   className?: string;
+  total24Amount?: number;
+  totalOpenInterest?: number;
+  assets?: number;
 };
 
 /** -----------MarketsHeader start ------------ */
 const BlockList: React.FC<BlockListProps> = (props) => {
-  const { data } = props;
+  const { total24Amount, totalOpenInterest, assets } = props;
 
   const list = useMemo(() => {
     return [
       {
         label: "24h volume",
-        value: data["24h_volume"],
+        value: total24Amount,
       },
       {
         label: "Open interest",
-        value: data.openInterest,
+        value: totalOpenInterest,
       },
       {
         label: "Assets (TVL)",
-        value: data.assets,
+        value: assets,
       },
     ];
-  }, [data]);
+  }, [total24Amount, totalOpenInterest, assets]);
   return (
     <Flex
       direction="column"
@@ -90,8 +91,8 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       height="236px"
       className={props.className}
     >
-      {list?.map((item) => (
-        <BlockItem key={item.label} {...item} />
+      {list?.map((item, index) => (
+        <BlockItem key={index} {...item} />
       ))}
     </Flex>
   );
@@ -100,7 +101,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
 
 type BlockItemProps = {
   label: string;
-  value: number;
+  value?: number;
 };
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
@@ -110,8 +111,8 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral size="base" cureency="$" className="">
-        {props.value}
+      <Text.numeral size="base" currency="$" className="">
+        {props.value!}
       </Text.numeral>
     </Box>
   );
@@ -138,8 +139,8 @@ const CardItem: React.FC<CardItemProps> = (props) => {
       </Text.gradient>
 
       <Flex direction="column" itemAlign="start" mt={2}>
-        {props.data?.map((item) => (
-          <ListItem key={item.symbol} item={item} />
+        {props.data?.map((item, index) => (
+          <ListItem key={index} item={item} />
         ))}
       </Flex>
     </Box>
@@ -178,12 +179,12 @@ const ListItem: React.FC<ListItemProps> = (props) => {
 
       <Flex width="100%" justify="end">
         <Text.numeral
-          cureency="$"
+          currency="$"
           size="xs"
           weight="semibold"
-          dp={item.precision}
+          dp={item.quote_dp}
         >
-          {item.price}
+          {item["24h_close"]}
         </Text.numeral>
       </Flex>
 
@@ -191,9 +192,9 @@ const ListItem: React.FC<ListItemProps> = (props) => {
         <Text.numeral
           rule="percentages"
           coloring
-          cureency={item.change > 0 ? "+" : "-"}
           size="xs"
           weight="semibold"
+          showIdentifier
         >
           {item.change}
         </Text.numeral>
@@ -212,15 +213,20 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
   const { scrollIndex, scrollPrev, scrollNext } = props;
 
   return (
-    <Flex gapX={1} mt={1} mb={3} justify="center" className="3xl:hidden">
+    <Flex gapX={1} justify="center" className="3xl:oui-hidden">
       {[0, 1].map((item) => {
         return (
           <Box
+            key={item}
             py={1}
             pl={item === 0 ? 1 : 0}
             pr={item === 1 ? 1 : 0}
             onClick={() => {
-              scrollIndex === 0 ? scrollNext?.() : scrollPrev?.();
+              if (scrollIndex === 0 && item === 1) {
+                scrollNext?.();
+              } else if (scrollIndex === 1 && item === 0) {
+                scrollPrev?.();
+              }
             }}
             className="oui-cursor-pointer"
           >

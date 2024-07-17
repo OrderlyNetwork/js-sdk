@@ -6,6 +6,7 @@ export interface OrderlyKeyStore {
   setAccountId: (address: string, accountId: string) => void;
   getAddress: () => string | undefined | null;
   setAddress: (address: string) => void;
+  removeAddress: () => void;
   generateKey: () => OrderlyKeyPair;
   cleanKey: (address: string, key: string) => void;
   cleanAllKey: (address: string) => void;
@@ -21,6 +22,7 @@ export abstract class BaseKeyStore implements OrderlyKeyStore {
   abstract setAccountId(address: string, accountId: string): void;
   abstract getAddress(): string | undefined | null;
   abstract setAddress(address: string): void;
+  abstract removeAddress(): void;
   abstract generateKey(): OrderlyKeyPair;
   abstract setKey(orderlyKey: string, secretKey: OrderlyKeyPair): void;
   abstract cleanAllKey(address: string): void;
@@ -68,6 +70,9 @@ export class LocalStorageStore extends BaseKeyStore {
   setAddress(address: string) {
     localStorage.setItem(`${this.keyPrefix}address`, address);
     // this.setItem(address, { address });
+  }
+  removeAddress() {
+    localStorage.removeItem(`${this.keyPrefix}address`);
   }
 
   generateKey() {
@@ -130,6 +135,7 @@ export class LocalStorageStore extends BaseKeyStore {
 // for readux manage state
 export class MockKeyStore implements OrderlyKeyStore {
   constructor(private readonly secretKey: string) {}
+
   generateKey() {
     return new BaseOrderlyKeyPair(this.secretKey);
   }
@@ -149,6 +155,8 @@ export class MockKeyStore implements OrderlyKeyStore {
   }
 
   setAddress(address: string) {}
+
+  removeAddress() {}
 
   setKey(orderlyKey: string, secretKey: OrderlyKeyPair): void {}
 

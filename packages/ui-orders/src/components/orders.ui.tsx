@@ -14,6 +14,7 @@ export const Orders = (props: OrdersBuilderState) => {
     />
   );
 };
+// ----------------- Orders ui component end -----------------
 
 type OrderTableProps = {
   status: OrderStatus;
@@ -21,6 +22,7 @@ type OrderTableProps = {
   isLoading?: boolean;
 };
 
+// ----------------- OrderTable start -----------------
 const OrderTable = (props: OrderTableProps) => {
   const colums = useOrderColumn(props.status);
 
@@ -32,3 +34,4 @@ const OrderTable = (props: OrderTableProps) => {
     />
   );
 };
+// ----------------- OrderTable end -----------------

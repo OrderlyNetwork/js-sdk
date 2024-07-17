@@ -24,7 +24,7 @@ const checkboxVariants = tv({
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {size?: number, indicatorClassName?: string}
 >(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
@@ -33,10 +33,11 @@ const Checkbox = React.forwardRef<
   >
     <CheckboxPrimitive.Indicator
       className={cnBase(
-        "oui-flex oui-items-center oui-justify-center oui-text-current"
+        "oui-flex oui-items-center oui-justify-center oui-text-current",
+        props.indicatorClassName,
       )}
     >
-      <CheckIcon />
+      <CheckIcon size={props.size} />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

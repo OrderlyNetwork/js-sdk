@@ -59,7 +59,7 @@ const inputVariants = tv({
       md: {
         input: ["oui-h-8", "oui-text-2xs", "placeholder:oui-text-2xs"],
         box: ["oui-h-8"],
-        additional: ["oui-text-sm"],
+        additional: ["oui-text-2xs"],
       },
       lg: {
         input: ["oui-h-10", "oui-text-sm", "placeholder:oui-text-sm"],
