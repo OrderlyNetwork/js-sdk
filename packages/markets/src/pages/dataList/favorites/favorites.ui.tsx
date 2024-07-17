@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { FC } from "react";
 import {
   Box,
   cn,
@@ -8,14 +8,16 @@ import {
   Text,
   Tooltip,
   Input,
+  modal,
 } from "@orderly.network/ui";
-import { useDataListColumns } from "../column";
-import { type UseFavoritesReturn } from "./favorites.script";
-import { modal } from "@orderly.network/ui";
-import { EditIcon, TrashIcon, AddIcon } from "../../icons";
 import { FavoriteTab } from "@orderly.network/hooks";
+import { useDataListColumns } from "../column";
+import { EditIcon, TrashIcon, AddIcon } from "../../icons";
+import { TFavorite } from "../../../type";
+import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 
 type FavoritesProps = {} & UseFavoritesReturn;
+
 export const Favorites: FC<FavoritesProps> = (props) => {
   const { dataSource, meta, setPage, setPageSize, favorite } = props;
   const columns = useDataListColumns(favorite, true);
@@ -49,85 +51,33 @@ export const Favorites: FC<FavoritesProps> = (props) => {
   );
 };
 
-type FavoritesTabProps = Pick<FavoritesProps, "favorite">;
+type FavoritesTabProps = {
+  favorite: TFavorite;
+};
 
 const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
+  const { curTab, favoriteTabs } = props.favorite;
+
   const {
-    favorites,
-    favoriteTabs,
-    updateFavoriteTabs,
-    updateSelectedFavoriteTab,
-    updateSymbolFavoriteState,
-    curTab,
-    setCurTab,
-  } = props.favorite || {};
+    inputRef,
+    editing,
+    value,
+    onValueChange,
+    onBlur,
+    onEdit,
+    onAdd,
+    addTab,
+    delTab,
+  } = useFavoritesTabScript(props.favorite);
 
-  const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState("test");
-  const input = useRef<HTMLInputElement>(null);
-
-  const addTab = () => {
-    const newTab = {
-      name: `WatchList_${favoriteTabs.length}`,
-      id: Date.now(),
-    };
-    updateFavoriteTabs(newTab, { add: true });
-    setCurTab(newTab);
-    updateSelectedFavoriteTab(newTab);
-  };
-
-  const onBlur = () => {
-    updateFavoriteTabs(
-      {
-        ...curTab,
-        name: value,
-      },
-      { update: true }
-    );
-    setEditing(false);
-  };
-
-  const onEdit = (item: any) => () => {
-    setEditing(true);
-    setValue(item.name);
-    setTimeout(() => {
-      input.current?.focus();
-      input.current?.setSelectionRange(-1, -1);
-    }, 0);
-  };
-
-  const doDel = (selectedTab: any) => {
-    updateFavoriteTabs(selectedTab, { delete: true });
-
-    setTimeout(() => {
-      // remove all symbol favorite in this tab
-      favorites.forEach((item) => {
-        const find = item.tabs?.find((tab) => tab.id === selectedTab.id);
-        if (find) {
-          updateSymbolFavoriteState(
-            { symbol: item.name } as any,
-            selectedTab,
-            true
-          );
-        }
-      });
-
-      // auto selected last tab
-      const tabs = favoriteTabs.filter((item) => item.id !== selectedTab.id);
-      const tab = tabs?.[tabs?.length - 1] || tabs?.[0];
-      setCurTab(tab);
-      updateSelectedFavoriteTab(tab);
-    }, 0);
-  };
-
-  const onDel = (item: any) => () => {
+  const onDel = (item: any) => {
     modal.confirm({
       title: "Delete list",
       content: (
         <Text size="sm">{`Are you sure you want to delete ${item.name}?`}</Text>
       ),
       onOk() {
-        doDel(item);
+        delTab(item);
         return Promise.resolve();
       },
     });
@@ -139,7 +89,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       // DOTO: text move follow cursor
       return (
         <Input
-          ref={input}
+          ref={inputRef}
           value={value}
           style={{
             // @ts-ignore
@@ -148,7 +98,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             WebkitTextFillColor: "transparent",
             WebkitBackgroundClip: "text",
           }}
-          onValueChange={setValue}
+          onValueChange={onValueChange}
           onBlur={onBlur}
           classNames={{
             root: cn(
@@ -171,7 +121,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           angle={270}
           weight="semibold"
           size="2xs"
-          className=" oui-leading-[18px] "
+          className="oui-leading-[18px]"
           as="div"
         >
           {item.name}
@@ -202,8 +152,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
         onClick={() => {
-          setCurTab(item);
-          updateSelectedFavoriteTab(item);
+          onAdd(item);
         }}
       >
         {content}
@@ -224,11 +173,15 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
               <Flex gapX={2} itemAlign="center" px={2} py={1}>
                 <EditIcon
                   className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
-                  onClick={onEdit(item)}
+                  onClick={() => {
+                    onEdit(item);
+                  }}
                 />
                 <TrashIcon
                   className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
-                  onClick={onDel(item)}
+                  onClick={() => {
+                    onDel(item);
+                  }}
                 />
               </Flex>
             }

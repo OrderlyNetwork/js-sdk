@@ -1,47 +1,42 @@
 import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
-import { Box, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
-
-const data: any = {
-  symbol: "PERP_ETH_USDC",
-  price: 2115,
-  change: 0.04,
-  precision: 2,
-  "24h_volume": 413241234,
-  openInterest: 123432443,
-  assets: 123432443,
-};
-
-const list = [data, data, data, data, data];
-
-type TBlockData = {
-  "24h_volume": number;
-  openInterest: number;
-  assets: number;
-};
+import { Box, cn, Flex, Text } from "@orderly.network/ui";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
-  const { emblaRef, emblaApi, scrollIndex } = props;
+  const {
+    emblaRef,
+    emblaApi,
+    scrollIndex,
+    news,
+    gainers,
+    losers,
+    total24Amount,
+    totalOpenInterest,
+  } = props;
   const cls =
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
 
   return (
     <div className="oui-overflow-hidden" ref={emblaRef}>
       <Flex width="100%" gapX={4} mt={4}>
-        <BlockList data={data} className={cls} />
+        <BlockList
+          total24Amount={total24Amount}
+          totalOpenInterest={totalOpenInterest}
+          className={cls}
+        />
         <CardItem
-          data={list}
+          data={news}
           title={<Text.gradient color="brand">New listings</Text.gradient>}
           className={cls}
         />
         <CardItem
-          data={list}
+          data={gainers}
           title={<Text className="oui-text-success-light">Top gainers</Text>}
           className={cls}
         />
         <CardItem
-          data={list}
+          data={losers}
           title={<Text className="oui-text-danger-light">Top losers</Text>}
           className={cls}
         />
@@ -58,30 +53,32 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
 /** -----------MarketsHeader end ------------ */
 
 type BlockListProps = {
-  data: TBlockData;
   className?: string;
+  total24Amount?: number;
+  totalOpenInterest?: number;
+  assets?: number;
 };
 
 /** -----------MarketsHeader start ------------ */
 const BlockList: React.FC<BlockListProps> = (props) => {
-  const { data } = props;
+  const { total24Amount, totalOpenInterest, assets } = props;
 
   const list = useMemo(() => {
     return [
       {
         label: "24h volume",
-        value: data["24h_volume"],
+        value: total24Amount,
       },
       {
         label: "Open interest",
-        value: data.openInterest,
+        value: totalOpenInterest,
       },
       {
         label: "Assets (TVL)",
-        value: data.assets,
+        value: assets,
       },
     ];
-  }, [data]);
+  }, [total24Amount, totalOpenInterest, assets]);
   return (
     <Flex
       direction="column"
@@ -100,7 +97,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
 
 type BlockItemProps = {
   label: string;
-  value: number;
+  value?: number;
 };
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
@@ -111,7 +108,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
       </Text>
 
       <Text.numeral size="base" currency="$" className="">
-        {props.value}
+        {props.value!}
       </Text.numeral>
     </Box>
   );
@@ -181,9 +178,9 @@ const ListItem: React.FC<ListItemProps> = (props) => {
           currency="$"
           size="xs"
           weight="semibold"
-          dp={item.precision}
+          dp={item.quote_dp}
         >
-          {item.price}
+          {item["24h_close"]}
         </Text.numeral>
       </Flex>
 

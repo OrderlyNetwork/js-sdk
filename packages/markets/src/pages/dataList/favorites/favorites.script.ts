@@ -1,31 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  MarketsType,
-  useFundingRates,
-  useMarkets,
-  useMarketsStream,
-  useSymbolsInfo,
-} from "@orderly.network/hooks";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
-import { FavoriteTab } from "@orderly.network/hooks";
+import { getPageData, useSort } from "../../../utils";
+import { TFavorite } from "../../../type";
 
 export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
-
-export type MarketsFavorite = ReturnType<typeof useMarkets>[1];
-
-export type TFavorite = MarketsFavorite & {
-  curTab: FavoriteTab;
-  setCurTab: (tab: FavoriteTab) => void;
-};
 
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
 
-  const { favorites, favoriteTabs, getLastSelFavTab } = favorite || {};
+  const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
 
   const [curTab, setCurTab] = useState(getLastSelFavTab() || favoriteTabs[0]);
+
+  const { onSort, getSortedList } = useSort();
 
   const filterData = useMemo(() => {
     return favorites
@@ -43,9 +32,9 @@ export const useFavoritesScript = () => {
   }, [data, curTab, favorites]);
 
   const pageData = useMemo(() => {
-    const list = [...filterData];
+    const list = getSortedList(filterData);
     return getPageData(list, pageSize, page);
-  }, [filterData, pageSize, page]);
+  }, [filterData, pageSize, page, getSortedList]);
 
   const meta = useMemo(
     () =>
@@ -72,57 +61,93 @@ export const useFavoritesScript = () => {
       curTab,
       setCurTab,
     } as TFavorite,
+    onSort,
   };
 };
 
-export function getPageData(list: any[], pageSize: number, pageIndex: number) {
-  const pageData = [];
-  let rows = [];
-  for (let i = 0; i < list.length; i++) {
-    rows.push(list[i]);
-    if ((i + 1) % pageSize === 0 || i === list.length - 1) {
-      pageData.push(rows);
-      rows = [];
-    }
-  }
-  return pageData[pageIndex - 1] || [];
-}
+export function useFavoritesTabScript(favorite: TFavorite) {
+  const {
+    favorites,
+    favoriteTabs,
+    updateFavoriteTabs,
+    updateSelectedFavoriteTab,
+    updateSymbolFavoriteState,
+    curTab,
+    setCurTab,
+  } = favorite;
 
-function get8hFunding(est_funding_rate: number, funding_period: number) {
-  let funding8h = 0;
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  if (funding_period) {
-    funding8h = new Decimal(est_funding_rate)
-      .mul(funding_period)
-      .div(8)
-      .toNumber();
-  }
+  const onBlur = () => {
+    updateFavoriteTabs(
+      {
+        ...curTab,
+        name: value,
+      },
+      { update: true }
+    );
+    setEditing(false);
+  };
 
-  return funding8h;
-}
+  const onEdit = (item: any) => {
+    setEditing(true);
+    setValue(item.name);
+    setTimeout(() => {
+      inputRef.current?.focus();
+      inputRef.current?.setSelectionRange(-1, -1);
+    }, 0);
+  };
 
-export function useDataSource() {
-  const symbolsInfo = useSymbolsInfo();
-  const fundingRates = useFundingRates();
-  const { data: futures } = useMarketsStream();
+  const onAdd = (item: any) => {
+    setCurTab(item);
+    updateSelectedFavoriteTab(item);
+  };
 
-  return useMemo(() => {
-    const list = futures?.map((item: any) => {
-      const { open_interest = 0, index_price = 0 } = item;
+  const addTab = () => {
+    const newTab = {
+      name: `WatchList_${favoriteTabs.length}`,
+      id: Date.now(),
+    };
+    updateFavoriteTabs(newTab, { add: true });
+    setCurTab(newTab);
+    updateSelectedFavoriteTab(newTab);
+  };
 
-      const info = symbolsInfo[item.symbol];
-      const rate = fundingRates[item.symbol];
-      const est_funding_rate = rate("est_funding_rate", 0);
-      const funding_period = info("funding_period");
+  const delTab = (selectedTab: any) => {
+    updateFavoriteTabs(selectedTab, { delete: true });
 
-      return {
-        ...item,
-        "8h_funding": get8hFunding(est_funding_rate, funding_period),
-        quote_dp: info("quote_dp"),
-        created_time: info("created_time"),
-        openInterest: new Decimal(open_interest).mul(index_price).toNumber(),
-      };
-    });
-    return list || [];
-  }, [symbolsInfo, futures, fundingRates]);
+    setTimeout(() => {
+      // remove all symbol favorite in this tab
+      favorites.forEach((item) => {
+        const find = item.tabs?.find((tab) => tab.id === selectedTab.id);
+        if (find) {
+          updateSymbolFavoriteState(
+            { symbol: item.name } as any,
+            selectedTab,
+            true
+          );
+        }
+      });
+
+      // auto selected last tab
+      const tabs = favoriteTabs.filter((item) => item.id !== selectedTab.id);
+      const tab = tabs?.[tabs?.length - 1] || tabs?.[0];
+      setCurTab(tab);
+      updateSelectedFavoriteTab(tab);
+    }, 0);
+  };
+
+  return {
+    inputRef,
+    editing,
+    value,
+    onValueChange: setValue,
+    onBlur,
+    onEdit,
+    onAdd,
+    addTab,
+    delTab,
+  };
 }
