@@ -33,7 +33,7 @@ const PNLMenus = (props: {
       menu={props.modes}
       align={"end"}
       size={"xs"}
-      // onSelect={props.onModeChange}
+      onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
       <button className={"oui-p-2"}>
         <CaretDownIcon size={12} color={"white"} />

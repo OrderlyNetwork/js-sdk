@@ -539,7 +539,8 @@ export class Account {
 
   async disconnect(): Promise<void> {
     if (!!this.stateValue.address) {
-      this.keyStore.cleanAllKey(this.stateValue.address);
+      // this.keyStore.cleanAllKey(this.stateValue.address);
+      this.keyStore.removeAddress();
     }
 
     const nextState = {

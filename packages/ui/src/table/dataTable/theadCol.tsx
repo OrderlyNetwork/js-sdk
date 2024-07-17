@@ -34,16 +34,15 @@ const TheadColItem = (
       >
         <span>{column.title}</span>
 
-        {column.onSort &&
-          (sortKey === column.dataIndex ? (
-            sortOrder === "asc" ? (
-              <SortingAscIcon size={14} color={"white"} />
-            ) : (
-              <SortingDescIcon size={14} color={"white"} />
-            )
+        {sortKey === column.dataIndex ? (
+          sortOrder === "asc" ? (
+            <SortingAscIcon size={12} color={"white"} />
+          ) : sortOrder === "desc" ? (
+            <SortingDescIcon size={12} color={"white"} />
           ) : (
-            <SortingIcon size={14} color={"white"} />
-          ))}
+            <SortingIcon size={12} color={"white"} />
+          )
+        ) : null}
 
         {/*/!* sort indicator *!/*/}
         {/*<CaretDownIcon*/}
