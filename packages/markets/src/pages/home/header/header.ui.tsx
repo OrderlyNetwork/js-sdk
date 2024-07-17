@@ -1,6 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
@@ -8,19 +9,21 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     emblaRef,
     emblaApi,
     scrollIndex,
+    enableScroll,
     news,
     gainers,
     losers,
     total24Amount,
     totalOpenInterest,
   } = props;
-  const cls =
-    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_32px)_/_4)] oui-min-w-0 oui-select-none oui-cursor-pointer";
-
+  const cls = cn(
+    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
+    enableScroll && "oui-select-none oui-cursor-pointer"
+  );
   return (
     <div
       className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
-      ref={emblaRef}
+      ref={enableScroll ? emblaRef : undefined}
     >
       <Flex width="100%" gapX={4} mt={4}>
         <BlockList
@@ -111,7 +114,13 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral size="base" currency="$" className="">
+      <Text.numeral
+        size="base"
+        currency="$"
+        className=""
+        dp={0}
+        rm={Decimal.ROUND_DOWN}
+      >
         {props.value!}
       </Text.numeral>
     </Box>
