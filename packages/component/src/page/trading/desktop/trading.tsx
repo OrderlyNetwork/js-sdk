@@ -14,6 +14,7 @@ import { useTradingPageContext } from "../context/tradingPageContext";
 import { useSplitPersistent } from "./useSplitPersistent";
 import SwitchMarginModulePlace from "@/page/trading/desktop/elements/switchMarginModulePlace";
 import { Divider } from "@/divider";
+import { cn } from "@/utils";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
@@ -148,6 +149,11 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
         </div>
 
         <div
+          className={cn(
+            "orderly-flex orderly-flex-col orderly-justify-start",
+            marginModulePosition === "bottom" &&
+              "orderly-flex-col-reverse orderly-justify-end"
+          )}
           style={{
             minWidth: "300px",
             maxWidth: `${entryMaxWidth}px`,
@@ -157,23 +163,13 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           }}
         >
           <AssetsProvider>
-            {marginModulePosition === "top" && (
-              <>
-                <AccountInfoElement />
-                <Divider className="orderly-my-4" />
-              </>
-            )}
+            <AccountInfoElement />
 
-            <div className="orderly-px-3 orderly-mt-3 orderly-z-30">
+            <Divider className="orderly-mt-3" />
+            <div className="orderly-px-3 orderly-mt-4 orderly-z-30">
               <MyOrderEntry symbol={props.symbol} />
             </div>
           </AssetsProvider>
-          {marginModulePosition === "bottom" && (
-            <>
-              <Divider className="orderly-mt-3" />
-              <AccountInfoElement />
-            </>
-          )}
         </div>
         {/* order entry end */}
       </Split>
