@@ -132,6 +132,8 @@ const Slider = React.forwardRef<
 
         return marks;
       }
+
+      return [];
     }, [marks, markCount, props.max]);
 
     const onValueChangeInner = (value: number[]) => {
@@ -165,8 +167,8 @@ const Slider = React.forwardRef<
             color={color}
             marks={innerMasks}
             isInnerMask={!Array.isArray(marks) || marks.length === 0}
-            min={props.min}
-            max={props.max}
+            // min={props.min}
+            // max={props.max}
             markLabelVisible={markLabelVisible}
             disabled={props.disabled}
             className={mark()}
