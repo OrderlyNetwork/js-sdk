@@ -150,6 +150,9 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         className={cn(
           "oui-cursor-pointer oui-select-none",
           isActive
+            ? "oui-markets-favorites-active-tab-item"
+            : "oui-markets-favorites-tab-item",
+          isActive
             ? "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
@@ -188,7 +191,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
               </Flex>
             }
             delayDuration={0}
-            className="oui-bg-base-5"
+            className={cn("oui-bg-base-5")}
             arrow={{
               className: "oui-fill-base-5",
             }}

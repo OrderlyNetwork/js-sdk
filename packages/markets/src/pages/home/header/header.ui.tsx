@@ -15,10 +15,13 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     totalOpenInterest,
   } = props;
   const cls =
-    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
+    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_32px)_/_4)] oui-min-w-0 oui-select-none oui-cursor-pointer";
 
   return (
-    <div className="oui-overflow-hidden" ref={emblaRef}>
+    <div
+      className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
+      ref={emblaRef}
+    >
       <Flex width="100%" gapX={4} mt={4}>
         <BlockList
           total24Amount={total24Amount}
@@ -41,12 +44,13 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           className={cls}
         />
       </Flex>
-
-      <ScrollIndicator
-        scrollIndex={scrollIndex}
-        scrollPrev={emblaApi?.scrollPrev}
-        scrollNext={emblaApi?.scrollNext}
-      />
+      <Box mt={1} mb={3}>
+        <ScrollIndicator
+          scrollIndex={scrollIndex}
+          scrollPrev={emblaApi?.scrollPrev}
+          scrollNext={emblaApi?.scrollNext}
+        />
+      </Box>
     </div>
   );
 };
@@ -209,7 +213,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
   const { scrollIndex, scrollPrev, scrollNext } = props;
 
   return (
-    <Flex gapX={1} mt={1} mb={3} justify="center" className="3xl:hidden">
+    <Flex gapX={1} justify="center" className="3xl:oui-hidden">
       {[0, 1].map((item) => {
         return (
           <Box
@@ -218,7 +222,11 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
             pl={item === 0 ? 1 : 0}
             pr={item === 1 ? 1 : 0}
             onClick={() => {
-              scrollIndex === 0 ? scrollNext?.() : scrollPrev?.();
+              if (scrollIndex === 0 && item === 1) {
+                scrollNext?.();
+              } else if (scrollIndex === 1 && item === 0) {
+                scrollPrev?.();
+              }
             }}
             className="oui-cursor-pointer"
           >
