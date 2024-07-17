@@ -10,24 +10,6 @@ export type routerAdapter = {
   currentPath: string;
 };
 
-export type MainNavItem = {
-  name: string;
-  href: string;
-};
-
-export type MainNavProps = {
-  logo: {
-    src: string;
-    alt: string;
-  };
-  mainMenus: MainNavItem[];
-
-  products: MainNavItem[];
-
-  initialProduct: string;
-  initialMenu: string;
-};
-
 export type ExpandableState = {
   routerAdapter?: routerAdapter;
   expanded?: boolean;
@@ -35,8 +17,6 @@ export type ExpandableState = {
   unsupported: boolean;
   checkChainSupport: (chainId: number | string) => boolean;
   footerConfig?: FooterConfig;
-  // ---------- main nav props ------------
-  mainNavProps?: MainNavProps;
 };
 
 export const ExpandableContext = createContext<ExpandableState>(

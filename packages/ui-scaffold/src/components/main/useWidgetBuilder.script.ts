@@ -1,21 +1,35 @@
 import { useMemo, useState } from "react";
-import {
-  MainNavItem,
-  MainNavProps,
-  useScaffoldContext,
-} from "../scaffoldContext";
+import { useScaffoldContext } from "../scaffoldContext";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
+// import { MainNavProps } from "./mainNav.ui";
 
-export const useMainNavBuilder = () => {
-  const { unsupported, routerAdapter, mainNavProps } = useScaffoldContext();
+export type MainNavItem = {
+  name: string;
+  href: string;
+};
+
+export type MainNavProps = {
+  logo: {
+    src: string;
+    alt: string;
+  };
+  mainMenus: MainNavItem[];
+
+  products: MainNavItem[];
+
+  initialProduct: string;
+  initialMenu: string;
+};
+
+export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
+  const { unsupported, routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
   const [current, setCurrent] = useState(
-    () => mainNavProps?.initialMenu ?? mainNavProps?.mainMenus[0].href ?? "/"
+    () => props?.initialMenu ?? props?.mainMenus?.[0].href ?? "/"
   );
   const [currentProduct, setCurrentProduct] = useState(
-    () =>
-      mainNavProps?.initialProduct ?? mainNavProps?.products[0].href ?? "/swap"
+    () => props?.initialProduct ?? props?.products?.[0].href ?? "/swap"
   );
 
   const mainNavConfig = useMemo(() => {
@@ -33,9 +47,9 @@ export const useMainNavBuilder = () => {
         { name: "Swap", href: "/swap" },
         { name: "Trade", href: "/trade" },
       ],
-      ...mainNavProps,
+      ...props,
     };
-  }, [mainNavProps]);
+  }, [props]);
 
   return {
     // ...mainNavConfig,

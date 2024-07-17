@@ -17,11 +17,12 @@ import {
 import { useMemo } from "react";
 import {
   ExpandableContext,
-  MainNavProps,
+  // MainNavProps,
   routerAdapter,
 } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
+import { MainNavProps } from "./main/useWidgetBuilder.script";
 
 export type LayoutProps = {
   /**
@@ -93,7 +94,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           unsupported,
           checkChainSupport: checkChainSupportHandle,
           footerConfig,
-          mainNavProps: props.mainNavProps,
+          // mainNavProps: props.mainNavProps,
         }}
       >
         {/* Top main nav */}
@@ -103,7 +104,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             classNames?.topNavbar
           )}
         >
-          {props.topbar ?? <MainNavWidget />}
+          {props.topbar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
         {/*--------- body start ------ */}
         <Grid
