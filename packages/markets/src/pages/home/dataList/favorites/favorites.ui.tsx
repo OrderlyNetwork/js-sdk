@@ -60,6 +60,8 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
 
   const {
     inputRef,
+    inputWidth,
+    spanRef,
     editing,
     value,
     onValueChange,
@@ -86,7 +88,6 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const renderContent = (item: FavoriteTab, isActive: boolean) => {
     let content;
     if (editing && isActive) {
-      // DOTO: text move follow cursor
       return (
         <Input
           ref={inputRef}
@@ -97,19 +98,20 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
             WebkitBackgroundClip: "text",
+            width: inputWidth,
           }}
           onValueChange={onValueChange}
           onBlur={onBlur}
           classNames={{
             root: cn(
-              "oui-padding-0 oui-h-[18px] oui-rounded",
+              "oui-padding-0 oui-h-[18px] oui-rounded oui-px-2",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
               isActive &&
                 "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
             ),
             input: cn(
-              "oui-w-[50px] oui-text-2xs oui-font-semibold oui-text-transparent oui-caret-[rgba(217,217,217,1)]",
-              "oui-gradient-brand"
+              "oui-text-2xs oui-font-semibold oui-text-transparent",
+              "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]"
             ),
           }}
         />
@@ -206,6 +208,9 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       >
         <AddIcon className="oui-w-4 oui-h-4" />
       </Flex>
+      <Text size="xs" ref={spanRef} className="oui-invisible">
+        {value}
+      </Text>
     </Flex>
   );
 };
