@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { type FavoritesDropdownMenuProps } from "./dataList.ui";
+import { useMarketsContext } from "../provider";
 
 export type TabName = "favorites" | "all" | "new";
 
@@ -10,6 +11,11 @@ export type UseMarketsDataListScript = ReturnType<
 
 export function useMarketsDataListScript() {
   const [activeTab, setActiveTab] = useState<TabName>("favorites");
+  const { clearSearchValue } = useMarketsContext();
+
+  useEffect(() => {
+    clearSearchValue?.();
+  }, [activeTab]);
 
   return {
     activeTab,

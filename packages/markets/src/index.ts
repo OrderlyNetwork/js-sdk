@@ -4,3 +4,4 @@ export * from "./pages/home/dataList/favorites";
 export * from "./pages/home/dataList";
 
 export { MarketsHomePage } from "./pages/home/page";
+export { MarketsProvider } from "./pages/home/provider";

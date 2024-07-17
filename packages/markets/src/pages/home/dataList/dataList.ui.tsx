@@ -32,14 +32,21 @@ import {
   SearchIcon,
 } from "../../../icons";
 import { TFavorite } from "../../../type";
+import { useMarketsContext } from "../provider";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   const { activeTab, onTabChange } = props;
 
+  const { searchValue, onSearchValueChange, clearSearchValue } =
+    useMarketsContext();
+
   const search = (
     <Input
+      value={searchValue}
+      onValueChange={onSearchValueChange}
+      placeholder="Search market"
       className="oui-w-[240px]"
       size="sm"
       prefix={
@@ -52,6 +59,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <CloseCircleFillIcon
             size={14}
             className="oui-text-base-contrast-36 oui-cursor-pointer"
+            onClick={clearSearchValue}
           />
         </Box>
       }

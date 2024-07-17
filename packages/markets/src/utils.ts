@@ -55,3 +55,8 @@ export function useSort(defaultSortKey?: string, defaultSortOrder?: SortOrder) {
 
   return { onSort, getSortedList, sortKey, sortOrder };
 }
+
+export function searchBySymbol(list: any[], searchValue = "") {
+  const reg = new RegExp(searchValue, "i");
+  return list?.filter((item) => reg.test(item.symbol));
+}
