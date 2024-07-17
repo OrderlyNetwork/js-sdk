@@ -13,11 +13,17 @@ import { LayoutContext } from "@/layout/layoutContext";
 import { useTradingPageContext } from "../context/tradingPageContext";
 import { useSplitPersistent } from "./useSplitPersistent";
 import SwitchMarginModulePlace from "@/page/trading/desktop/elements/switchMarginModulePlace";
+import { Divider } from "@/divider";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
-  const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
-    useContext(LayoutContext);
+  const {
+    siderWidth,
+    pageHeaderHeight,
+    headerHeight,
+    footerHeight,
+    marginModulePosition,
+  } = useContext(LayoutContext);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [entryMaxWidth, setEntryMaxWidth] = useState(500);
@@ -151,13 +157,23 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           }}
         >
           <AssetsProvider>
-            <SwitchMarginModulePlace />
-            <AccountInfoElement />
+            {marginModulePosition === "top" && (
+              <>
+                <AccountInfoElement />
+                <Divider className="orderly-my-4" />
+              </>
+            )}
 
             <div className="orderly-px-3 orderly-mt-3 orderly-z-30">
               <MyOrderEntry symbol={props.symbol} />
             </div>
           </AssetsProvider>
+          {marginModulePosition === "bottom" && (
+            <>
+              <Divider className="orderly-mt-3" />
+              <AccountInfoElement />
+            </>
+          )}
         </div>
         {/* order entry end */}
       </Split>

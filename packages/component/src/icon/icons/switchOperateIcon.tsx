@@ -13,33 +13,9 @@ export const SwitchOperateIcon: FC<IconProps> = (props) => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <rect
-        x="2"
-        y="2"
-        width="6"
-        height="2"
-        rx="1"
-        fill="white"
-        fillOpacity="0.54"
-      />
-      <rect
-        x="2"
-        y="7"
-        width="6"
-        height="2"
-        rx="1"
-        fill="white"
-        fillOpacity="0.54"
-      />
-      <rect
-        x="2"
-        y="12"
-        width="6"
-        height="2"
-        rx="1"
-        fill="white"
-        fillOpacity="0.54"
-      />
+      <rect x="2" y="2" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="2" y="7" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="2" y="12" width="6" height="2" rx="1" fill="currentColor" />
     </svg>
   );
 };
