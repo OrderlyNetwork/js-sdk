@@ -49,7 +49,9 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   const { state, account } = useAccount();
   const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
-  const { data } = useQuery(
+  const { data } = useQuery<undefined | {
+    user_id: number,
+  }>(
     `/v1/get_account?address=${account.address}&broker_id=${brokerId}`
   );
 
@@ -177,7 +179,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   return {
     address: account.address,
-    uid: data?.user_id || "-",
+    uid: `${data?.user_id || "-"}`,
     onCreateApiKey,
     onReadApiGuide,
     showCreateDialog,

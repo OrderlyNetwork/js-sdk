@@ -169,6 +169,6 @@ const DefaultFallback = (props: {
   );
 };
 
-AuthGuardEmpty.displayName = "AuthGuard";
+AuthGuardEmpty.displayName = "AuthGuardEmpty";
 
 export { AuthGuardEmpty };
