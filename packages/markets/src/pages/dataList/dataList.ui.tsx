@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import {
   Box,
   Button,
@@ -17,7 +18,10 @@ import {
   Tabs,
   Text,
 } from "@orderly.network/ui";
-import { UseMarketsDataListScript } from "./dataList.script";
+import {
+  useFavoritesDropdownMenuScript,
+  UseMarketsDataListScript,
+} from "./dataList.script";
 import { FavoritesWidget } from "./favorites";
 import { MarketListWidget } from "./marketList";
 import {
@@ -26,9 +30,7 @@ import {
   FavoritesIcon,
   NewListingsIcon,
 } from "../icons";
-import { PropsWithChildren, useEffect, useState } from "react";
-import { FavoriteTab } from "@orderly.network/hooks";
-import { TFavorite } from "./favorites/favorites.script";
+import { TFavorite } from "../../type";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 
@@ -52,83 +54,30 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
 };
 
 export type FavoritesDropdownMenuProps = PropsWithChildren<{
-  favorite: TFavorite;
   row: any;
+  favorite: TFavorite;
 }>;
 
 export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
   props
 ) => {
   const { symbol } = props.row || {};
+  const { favoriteTabs } = props.favorite;
+
   const {
-    favorites,
-    favoriteTabs,
-    updateFavoriteTabs,
-    updateSymbolFavoriteState,
-  } = props.favorite;
-  const [open, setOpen] = useState(false);
-  const [inputVisible, setInputVisible] = useState(false);
-  const [value, setValue] = useState("");
-  const [selectedTabs, setSelectedTabs] = useState([] as FavoriteTab[]);
-
-  const hide = () => {
-    setOpen(false);
-  };
-
-  const showInput = () => {
-    setInputVisible(true);
-  };
-
-  const hideInput = () => {
-    setInputVisible(false);
-  };
-
-  const clearState = () => {
-    setValue("");
-    hideInput();
-    setSelectedTabs([]);
-  };
-
-  const onAdd = () => {
-    const newTab = {
-      name: value || `WatchList_${favoriteTabs.length}`,
-      id: Date.now(),
-    };
-    updateFavoriteTabs(newTab, { add: true });
-    clearState();
-  };
-
-  const onCheck = (item: FavoriteTab, checked: boolean) => {
-    if (checked) {
-      setSelectedTabs(selectedTabs?.filter((tab) => tab.id !== item.id));
-    } else {
-      setSelectedTabs([...selectedTabs, item]);
-    }
-  };
-
-  const onConfirm = () => {
-    // if tab is arrary, the del params is not work
-    // if tab is empty array, will be delete, otherwise will be override
-    updateSymbolFavoriteState(props.row, selectedTabs, false);
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const find = favorites?.find((item) => item.name === symbol);
-    if (find?.tabs?.length) {
-      setSelectedTabs(find?.tabs);
-    }
-  }, [open, favorites, favoriteTabs, symbol]);
-
-  useEffect(() => {
-    if (!open) {
-      clearState();
-    }
-  }, [open]);
+    open,
+    onOpenChange,
+    inputVisible,
+    selectedTabs,
+    value,
+    onValueChange,
+    hide,
+    hideInput,
+    showInput,
+    onCheck,
+    addTab,
+    confirm,
+  } = useFavoritesDropdownMenuScript(props);
 
   const renderInput = () => {
     if (inputVisible) {
@@ -136,7 +85,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         <Input
           autoFocus
           value={value}
-          onValueChange={setValue}
+          onValueChange={onValueChange}
           classNames={{
             root: "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
           }}
@@ -146,7 +95,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
                 className={
                   "oui-text-base-contrast-54 hover:oui-text-base-contrast"
                 }
-                onClick={onAdd}
+                onClick={addTab}
               >
                 Add
               </Text>
@@ -243,18 +192,13 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         Cancel
       </Button>
 
-      <Button
-        key="primary"
-        onClick={onConfirm}
-        fullWidth
-        className="oui-text-sm"
-      >
+      <Button key="primary" onClick={confirm} fullWidth className="oui-text-sm">
         Confirm
       </Button>
     </Flex>
   );
   return (
-    <DropdownMenuRoot open={open} onOpenChange={setOpen}>
+    <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent

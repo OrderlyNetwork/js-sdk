@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/react";
 import {OrderlyApp} from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { MarketsPage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget } from '@orderly.network/markets';
+import { MarketsHomePage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget } from '@orderly.network/markets';
 import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
@@ -11,7 +11,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 const meta = {
     title: "Package/Markets",
-    component: MarketsPage,
+    component: MarketsHomePage,
     subcomponents: {
        
     },
@@ -24,7 +24,7 @@ const meta = {
             </ConnectorProvider>
         ),
     ],   
-} satisfies Meta<typeof MarketsPage>;
+} satisfies Meta<typeof MarketsHomePage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -3,7 +3,7 @@ import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { FavoritesIcon, UnFavoritesIcon } from "../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
-import { TFavorite } from "./favorites/favorites.script";
+import { TFavorite } from "../../type";
 
 export const useDataListColumns = (
   favorite: TFavorite,
@@ -22,7 +22,7 @@ export const useDataListColumns = (
 
           const button = (
             <Box
-              className="oui-text-base-contrast-36"
+              className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
               onClick={isFavoriteList ? onDelSymbol : undefined}
             >
               {value ? (
