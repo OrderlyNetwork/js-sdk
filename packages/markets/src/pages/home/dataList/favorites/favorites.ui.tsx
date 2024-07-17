@@ -12,8 +12,8 @@ import {
 } from "@orderly.network/ui";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { useDataListColumns } from "../column";
-import { EditIcon, TrashIcon, AddIcon } from "../../icons";
-import { TFavorite } from "../../../type";
+import { EditIcon, TrashIcon, AddIcon } from "../../../../icons";
+import { TFavorite } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 
 type FavoritesProps = {} & UseFavoritesReturn;

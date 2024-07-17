@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsStream, useSymbolsInfo } from "@orderly.network/hooks";
-import { sortList } from "../../utils";
+import { sortList } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
 // export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;

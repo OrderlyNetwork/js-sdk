@@ -29,16 +29,38 @@ import {
   CirclePlusIcon,
   FavoritesIcon,
   NewListingsIcon,
-} from "../icons";
-import { TFavorite } from "../../type";
+  SearchIcon,
+} from "../../../icons";
+import { TFavorite } from "../../../type";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   const { activeTab, onTabChange } = props;
+
+  const search = (
+    <Input
+      className="oui-w-[240px]"
+      size="sm"
+      prefix={
+        <Box pl={3} pr={1}>
+          <SearchIcon className="oui-text-base-contrast-36" />
+        </Box>
+      }
+      suffix={
+        <Box mr={2}>
+          <CloseCircleFillIcon
+            size={14}
+            className="oui-text-base-contrast-36 oui-cursor-pointer"
+          />
+        </Box>
+      }
+    />
+  );
+
   return (
     <Card>
-      <Tabs value={activeTab} onValueChange={onTabChange}>
+      <Tabs value={activeTab} onValueChange={onTabChange} trailing={search}>
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <FavoritesWidget />
         </TabPanel>

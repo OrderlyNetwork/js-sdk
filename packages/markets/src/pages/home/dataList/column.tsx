@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { FavoritesIcon, UnFavoritesIcon } from "../icons";
+import { FavoritesIcon, UnFavoritesIcon } from "../../../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
-import { TFavorite } from "../../type";
+import { TFavorite } from "../../../type";
 
 export const useDataListColumns = (
   favorite: TFavorite,

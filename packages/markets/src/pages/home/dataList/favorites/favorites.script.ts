@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { getPageData, useSort } from "../../../utils";
-import { TFavorite } from "../../../type";
+import { getPageData, useSort } from "../../../../utils";
+import { TFavorite } from "../../../../type";
 
 export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 

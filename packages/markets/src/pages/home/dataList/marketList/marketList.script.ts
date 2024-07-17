@@ -2,8 +2,8 @@ import { useEffect, useMemo } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { SortOrder, usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
-import { getPageData, useSort } from "../../../utils";
-import { TFavorite } from "../../../type";
+import { getPageData, useSort } from "../../../../utils";
+import { TFavorite } from "../../../../type";
 
 export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
