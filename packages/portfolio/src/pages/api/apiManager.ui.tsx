@@ -9,8 +9,11 @@ import {
   PlusIcon,
   Text,
 } from "@orderly.network/ui";
-import { ApiManagerScriptReturns } from "./apiManager.script";
-import { FC } from "react";
+import {
+  ApiManagerScriptReturns,
+  capitalizeFirstChar,
+} from "./apiManager.script";
+import { FC, useState } from "react";
 import { Column } from "@orderly.network/ui";
 import { CreateAPIKeyDialog } from "./dialog/createApiKey";
 import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
@@ -18,6 +21,7 @@ import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { AuthGuard, AuthGuardEmpty } from "@orderly.network/ui-connector";
+import { APIKeyItem } from "@orderly.network/hooks";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   return (
@@ -26,14 +30,12 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >
-      <Flex direction={"column"} gap={4} width={"100%"}>
+      <Flex direction={"column"} gap={4} width={"100%"} className="oui-font-semibold">
         <AccountInfo {...props} />
         <Subtitle {...props} />
         <KeyList {...props} />
         <CreateAPIKeyDialog {...props} />
         <CreatedAPIKeyDialog {...props} />
-        <DeleteAPIKeyDialog {...props} />
-        <EditAPIKeyDialog {...props} />
       </Flex>
     </Card>
   );
@@ -131,36 +133,56 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
-  const columns: Column[] = [
+  const columns: Column<APIKeyItem>[] = [
     {
       title: "API key",
-      dataIndex: "api_key",
+      dataIndex: "orderly_key",
+      render: (value) => {
+        return (
+          <Text.formatted rule={""} copyable>
+            {formatKey(value)}
+          </Text.formatted>
+        );
+      },
     },
     {
       title: "Permission type",
-      dataIndex: "permission_type",
+      dataIndex: "scope",
+      render: (value) =>
+        value
+          ?.split(",")
+          .map((e: any) => capitalizeFirstChar(`${e}`))
+          .join(","),
     },
     {
       title: "Restricted IP",
-      dataIndex: "Restricted",
+      dataIndex: "ip_restriction_list",
+      render: (value) => {
+        let ip = value.join(",");
+        if (ip.length === 0) {
+          ip = "-";
+        }
+        return <Text className="oui-text-ellipsis">{ip}</Text>;
+      },
     },
     {
       title: "Expiration date",
-      dataIndex: "Expiration",
+      dataIndex: "expiration",
+      render: (value) => (
+        <Text.formatted rule={"date"} formatString="yyyy-MM-dd">
+          {value}
+        </Text.formatted>
+      ),
     },
     {
       title: "",
       dataIndex: "action",
       width: 120,
-      render: (_) => {
+      render: (_, item) => {
         return (
           <Flex direction={"row"} gap={2}>
-            <Button size="xs" color="primary" variant="contained">
-              Edit
-            </Button>
-            <Button size="xs" color="gray" variant="contained">
-              Delete
-            </Button>
+            <EditButton item={item} onUpdate={props.doEdit} />
+            <DeleteButton item={item} onDelete={props.doDelete} />
           </Flex>
         );
       },
@@ -170,25 +192,79 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     <DataTable
       bordered
       columns={columns}
-      dataSource={[]}
+      dataSource={props.keys}
       scroll={{ y: 300 }}
       emptyView={<AuthGuardEmpty />}
       classNames={{
-        header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36"
+        header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
+        body: "oui-text-xs oui-text-base-contrast-80"
       }}
     />
   );
 };
 
-const EmptyView: FC<ApiManagerScriptReturns> = (props) => {
-  // switch (props.status) {
-  //   case AccountStatusEnum.NotConnected:
-      return (
-        <AuthGuard>
-          <EmptyDataState />
-        </AuthGuard>
-      );
+const EditButton: FC<{
+  item: APIKeyItem;
+  onUpdate: (item: APIKeyItem, ip?: string) => Promise<void>;
+}> = (props) => {
+  const { item, onUpdate } = props;
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        size="xs"
+        color="primary"
+        variant="contained"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        Edit
+      </Button>
 
-  //     default: return undefined;
-  // }
+      <EditAPIKeyDialog
+        item={item}
+        open={open}
+        setOpen={setOpen}
+        onUpdate={onUpdate}
+      />
+    </>
+  );
 };
+
+const DeleteButton: FC<{
+  item: APIKeyItem;
+  onDelete: (item: APIKeyItem) => Promise<void>;
+}> = (props) => {
+  const { item, onDelete } = props;
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        size="xs"
+        color="gray"
+        variant="contained"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        Delete
+      </Button>
+
+      <DeleteAPIKeyDialog
+        item={item}
+        open={open}
+        setOpen={setOpen}
+        onDelete={onDelete}
+      />
+    </>
+  );
+};
+
+export function formatKey(value: string): string {
+  if (typeof value === "undefined") return "-";
+  const key = `${value}`.replace("ed25519:", "").slice(0, 6);
+  return `${key}*****`;
+}

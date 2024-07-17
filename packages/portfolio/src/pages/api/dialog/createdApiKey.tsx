@@ -14,7 +14,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
     <SimpleDialog
       open={props.showCreatedDialog}
       onOpenChange={(open) => {
-        props.hideCreateDialog?.();
+        props.hideCreatedDialog?.();
       }}
       title="API key created"
       actions={{
@@ -29,7 +29,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "Copy API info",
           className: "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
           onClick: async () => {
-            return props.doCreate();
+            return props.onCopyApiKeyInfo();
           },
         },
       }}
@@ -38,23 +38,23 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
     >
       <Flex direction={"column"} gap={4} itemAlign={"start"}>
         <Statistic label="API key">
-          <Text.formatted size="sm" intensity={80} copyable>
-            {"654f703f-65b5-4d29-8c0e-fdf63ca0cf2b"}
+          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+            {props.generateKey?.key}
           </Text.formatted>
         </Statistic>
         <Statistic label="Secret key">
-          <Text.formatted size="sm" intensity={80} copyable>
-            {"654f703f-65b5-4d29-8c0e-fdf63ca0cf2b"}
+          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+            {props.generateKey?.screctKey}
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label="IP">
-          <Text.formatted size="sm" intensity={80} copyable>
-            {"654f703f-65b5-4d29-8c0e-fdf63ca0cf2b"}
+          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+            {props.generateKey?.ip || "-"}
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label="Permissions">
           <Text size="sm" intensity={80}>
-            Read
+            {props.generateKey?.permissions}
           </Text>
         </Statistic>
         <div></div>

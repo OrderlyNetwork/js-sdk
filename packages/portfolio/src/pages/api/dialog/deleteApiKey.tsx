@@ -8,30 +8,36 @@ import {
   TextField,
 } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
+import { APIKeyItem } from "@orderly.network/hooks";
+import { formatKey } from "../apiManager.ui";
 
-export const DeleteAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
-  
+export const DeleteAPIKeyDialog: FC<{
+  item: APIKeyItem,
+  open: boolean;
+  setOpen?: any,
+  onDelete?: (item: APIKeyItem) => Promise<void>
+}> = (props) => {
+  const { item, open, setOpen, onDelete} = props;
   
   return (
     <SimpleDialog
-      open={props.showDeleteDialog}
-      onOpenChange={(open) => {
-        props.hideDeleteDialog?.();
-      }}
+      open={open}
+      onOpenChange={setOpen}
       title="API key created"
       actions={{
         primary: {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
-            return props.doCreate();
+            await props.onDelete?.(item);
+            setOpen(false);
           },
         },
         secondary: {
           label:"Cancel",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
-            props.hideDeleteDialog();
+            setOpen(false);
           }
         }
       }}
@@ -39,7 +45,7 @@ export const DeleteAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       contentClassName="oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold"
     >
      
-        <Text  size="xs">{`Delete your API key ${"asdfsdf"}`}</Text>
+        <Text  size="xs">{`Delete your API key ${formatKey(item?.orderly_key)}`}</Text>
     </SimpleDialog>
   );
 };

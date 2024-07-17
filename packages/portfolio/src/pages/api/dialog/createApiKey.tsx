@@ -32,9 +32,16 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
-            return props.doCreate();
+            const scopes: string[] = [];
+            if (read) {
+              scopes.push("read");
+            }
+            if (trade) {
+              scopes.push("trading");
+            }
+            await props.doCreate(ipText,scopes.join(","));
           },
-          disabled: ipText.length <= 0,
+          disabled: (!trade && !read),
         },
       }}
       footerClassName="oui-justify-center"

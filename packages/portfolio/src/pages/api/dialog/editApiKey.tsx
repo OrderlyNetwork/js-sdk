@@ -7,34 +7,49 @@ import {
   Text,
   TextField,
 } from "@orderly.network/ui";
-import { ApiManagerScriptReturns } from "../apiManager.script";
+import { APIKeyItem } from "@orderly.network/hooks";
 
-export const EditAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
-  const [ipText, setIpText] = useState("");
+export const EditAPIKeyDialog: FC<{
+  item: APIKeyItem;
+  open: boolean;
+  setOpen?: any;
+  onUpdate?: (item: APIKeyItem, ip?: string) => Promise<void>;
+}> = (props) => {
+  
+  const { item, open, setOpen, onUpdate } = props;
+  console.log("edit dialog", item.ip_restriction_list.join(","));
+  const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
+
   useEffect(() => {
-    if (!props.showCreateDialog) {
-      setIpText("");
-      setRead(true);
-      setTrade(true);
-    }
-  }, [props.showCreateDialog]);
+
+    setIpText(item.ip_restriction_list.join(","));
+    setRead(item.scope?.toLocaleLowerCase().includes("read") || false);
+    setTrade(item.scope?.toLocaleLowerCase().includes("trading") || false);
+
+  }, [item]);
+
+  // useEffect(() => {
+  //   if (open) return;
+  //   setIpText("");
+  //   setRead(true);
+  //   setTrade(true);
+  // }, [open]);
   return (
     <SimpleDialog
-      open={props.showEditDialog}
-      onOpenChange={(open) => {
-        props.hideEditDialog?.();
-      }}
+      open={open}
+      onOpenChange={setOpen}
       title="Edit API key"
       actions={{
         primary: {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
-            return props.doCreate();
+            await props.onUpdate?.(item, ipText);
+            setOpen(false);
           },
-          disabled: ipText.length <= 0,
+          disabled: item.ip_restriction_list.join(",") === ipText,
         },
       }}
       footerClassName="oui-justify-center"
@@ -78,6 +93,7 @@ export const EditAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
                 size={14}
                 checked={read}
                 onCheckedChange={(e) => setRead(e as boolean)}
+                disabled
               />
               <Text intensity={54} size="sm">
                 Read
@@ -89,6 +105,7 @@ export const EditAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
                 size={14}
                 checked={trade}
                 onCheckedChange={(e) => setTrade(e as boolean)}
+                disabled
               />
               <Text intensity={54} size="sm">
                 Trade
