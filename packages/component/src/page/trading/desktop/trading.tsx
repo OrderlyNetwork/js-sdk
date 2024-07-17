@@ -12,6 +12,7 @@ import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
 import { useTradingPageContext } from "../context/tradingPageContext";
 import { useSplitPersistent } from "./useSplitPersistent";
+import SwitchMarginModulePlace from "@/page/trading/desktop/elements/switchMarginModulePlace";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
@@ -58,8 +59,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   }, [cssVariable]);
 
   useEffect(() => {
-
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
         setEntryMaxWidth(Math.min(width - 768, 500));
@@ -147,9 +147,11 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
             maxWidth: `${entryMaxWidth}px`,
             minHeight: "990px",
             width: mainSplitSize,
+            position: "relative",
           }}
         >
           <AssetsProvider>
+            <SwitchMarginModulePlace />
             <AccountInfoElement />
 
             <div className="orderly-px-3 orderly-mt-3 orderly-z-30">
