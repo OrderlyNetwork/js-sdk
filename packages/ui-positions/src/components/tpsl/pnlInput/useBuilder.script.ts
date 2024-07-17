@@ -40,7 +40,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   return {
     mode,
     modes,
-    onModeChange: (mode: PnLMode) => setMode(mode),
+    onModeChange: (mode: PnLMode) => {
+      setMode(mode);
+    },
   };
 };
 

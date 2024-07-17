@@ -43,14 +43,14 @@ const TPSLQuantity = () => {
         </Button>
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
-        <Slider />
+        <Slider markCount={5} color="primaryLight" />
       </Flex>
       <Flex justify={"between"}>
         <Text.numeral rule={"percentages"} color={"primaryLight"} size={"2xs"}>
           0
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
-          <button className={"oui-leading-none"}>
+          <button className={"oui-leading-none"} style={{ lineHeight: 0 }}>
             <Text color={"primaryLight"} size={"2xs"}>
               Max
             </Text>

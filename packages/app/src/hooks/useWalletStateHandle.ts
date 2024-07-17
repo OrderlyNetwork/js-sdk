@@ -30,7 +30,10 @@ export const useWalletStateHandle = () => {
   const [chains] = useChains();
   const [unsupported, setUnsupported] = useState(true);
 
-  const localAddress = useMemo<string>(() => keyStore.getAddress(), []);
+  const localAddress = useMemo<string | undefined | null>(
+    () => keyStore.getAddress(),
+    []
+  );
 
   // current connected wallet address
   const currentWalletAddress = useMemo<string | undefined>(() => {

@@ -25,7 +25,7 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["primary", 'sell', 'buy'],
+      options: ["primary","primaryLight", 'sell', 'buy'],
     },
     step: {
       control: {
@@ -52,3 +52,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Marks: Story = {
+  args:{
+    markCount: 5,
+  }
+}

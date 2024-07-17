@@ -8,10 +8,12 @@ import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 
-export type MainNavProps = MainNavItemsProps & {
+export type MainNavProps = {
   className?: string;
   logo: LogoProps;
   products: ProductsProps;
+  mainMenus: MainNavItemsProps;
+  // currentProduct: string;
   isUnsupported: boolean;
   isConnected: boolean;
   // chainsProps: ChainSelectProps;
@@ -31,7 +33,7 @@ export const MainNav: FC<MainNavProps> = (props) => {
       <Flex itemAlign={"center"} gap={4}>
         <Logo {...logo} />
         <ProductsMenu {...products} />
-        <MainNavItems {...props} />
+        <MainNavItems {...props.mainMenus} />
       </Flex>
       <Flex itemAlign={"center"} gap={4}>
         <AccountSummaryWidget />

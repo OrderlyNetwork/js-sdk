@@ -15,7 +15,11 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useMemo } from "react";
-import { ExpandableContext, routerAdapter } from "./scaffoldContext";
+import {
+  ExpandableContext,
+  MainNavProps,
+  routerAdapter,
+} from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
 
@@ -32,6 +36,7 @@ export type LayoutProps = {
   rightSidebar?: React.ReactNode;
   topbar?: React.ReactNode;
   // topBarProps?:
+  mainNavProps?: MainNavProps;
   footer?: React.ReactNode;
   routerAdapter?: routerAdapter;
   footerHeight?: number;
@@ -88,6 +93,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           unsupported,
           checkChainSupport: checkChainSupportHandle,
           footerConfig,
+          mainNavProps: props.mainNavProps,
         }}
       >
         {/* Top main nav */}
@@ -121,7 +127,12 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           <Box>{props.children}</Box>
         </Grid>
 
-        <Box className={cn("oui-fixed oui-bottom-0 oui-w-full", classNames?.footer)}>
+        <Box
+          className={cn(
+            "oui-fixed oui-bottom-0 oui-w-full",
+            classNames?.footer
+          )}
+        >
           {props.footer || <FooterWidget />}
         </Box>
       </ExpandableContext.Provider>

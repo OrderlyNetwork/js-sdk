@@ -3,13 +3,13 @@ import { FC } from "react";
 
 export type ProductItem = {
   name: string;
-  id: string;
+  href: string;
 };
 
 export const ProductItem: FC<{
   item: ProductItem;
   active?: boolean;
-  onClick: (product: ProductItem) => void;
+  onClick?: (product: ProductItem) => void;
 }> = (props) => {
   const { active, item, onClick } = props;
   return (
