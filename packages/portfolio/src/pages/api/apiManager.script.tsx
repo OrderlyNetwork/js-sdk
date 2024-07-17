@@ -1,12 +1,15 @@
 import {
   APIKeyItem,
+  OrderlyContext,
+  ScopeType,
   useAccount,
   useAccountInfo,
   useApiKeyManager,
+  useQuery,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export type GenerateKeyInfo = {
   key: string;
@@ -23,7 +26,7 @@ export type ApiManagerScriptReturns = {
   showCreateDialog: boolean;
   hideCreateDialog?: () => void;
   /** ipRestriction: "192.168.1.1,192.168.1.2" scope: 'read' or 'read,trading' or 'trading' */
-  doCreate: (ipRestriction?: string, scope?: string) => Promise<number>;
+  doCreate: (ipRestriction?: string, scope?: ScopeType) => Promise<number>;
   showCreatedDialog: boolean;
   hideCreatedDialog?: () => void;
   onCopyApiKeyInfo: () => void;
@@ -41,10 +44,14 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatedDialog] = useState(false);
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
-  const { data } = useAccountInfo();
+  const { configStore } = useContext(OrderlyContext);
+  const brokerId = configStore.get("brokerId");
 
   const { state, account } = useAccount();
   const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
+  const { data } = useQuery(
+    `/v1/get_account?address=${account.address}&broker_id=${brokerId}`
+  );
 
   const [
     keys,
@@ -74,7 +81,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   const doCreate = async (
     ipRestriction?: string,
-    scope?: string
+    scope?: ScopeType
   ): Promise<number> => {
     try {
       const createdSuccess = (res: any, ip?: string) => {
@@ -134,9 +141,17 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     return new Promise(async (resolve) => {
       await removeOrderkyKey(item.orderly_key)
         .then(
-          (data) => {
+          async (data) => {
             if (data?.success) {
               toast.success("API key deleted");
+              refresh();
+              // delete current api key, wiil disconnect
+              const curKey = await account.keyStore
+                .getOrderlyKey()
+                ?.getPublicKey();
+              if (item.orderly_key === curKey) {
+                account.destoryOrderlyKey();
+              }
             }
             resolve(1);
           },
@@ -162,7 +177,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   return {
     address: account.address,
-    uid: "111",
+    uid: data?.user_id || "-",
     onCreateApiKey,
     onReadApiGuide,
     showCreateDialog,

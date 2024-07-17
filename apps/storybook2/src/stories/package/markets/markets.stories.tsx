@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/react";
 import {OrderlyApp} from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { MarketsHomePage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget } from '@orderly.network/markets';
+import { MarketsHomePage,MarketsHeaderWidget,MarketListWidget, FavoritesWidget,MarketsDataListWidget, MarketsProvider } from '@orderly.network/markets';
 import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
@@ -91,7 +91,7 @@ export const NewListings: Story = {
   
 export const DataList: Story = {
   render: (args) => {
-    return <MarketsDataListWidget  />
+    return <MarketsProvider><MarketsDataListWidget /></MarketsProvider> 
   },
 
   decorators: [
