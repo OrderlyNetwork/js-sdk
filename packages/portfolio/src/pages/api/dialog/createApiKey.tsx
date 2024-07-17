@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
+import { ScopeType } from "@orderly.network/hooks";
 
 export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const [ipText, setIpText] = useState("");
@@ -39,7 +40,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             if (trade) {
               scopes.push("trading");
             }
-            await props.doCreate(ipText,scopes.join(","));
+            await props.doCreate(ipText,scopes.join(",") as ScopeType);
           },
           disabled: (!trade && !read),
         },

@@ -13,6 +13,12 @@ export type APIKeyItem = {
   scope?: string;
 };
 
+export enum ScopeType {
+    trade = 'trade',
+    trading = 'trading',
+    tradeAndTrading = 'trade,trading'
+};
+
 export const useApiKeyManager = () => {
   const { account } = useAccount();
 
@@ -50,7 +56,7 @@ export const useApiKeyManager = () => {
     });
   }, []);
 
-  const generateOrderlyKey = (scope?: string): Promise<any> => {
+  const generateOrderlyKey = (scope?: ScopeType): Promise<any> => {
     return account?.createOrderlyKey(365, {
         tag: "manualCreated",
         scope

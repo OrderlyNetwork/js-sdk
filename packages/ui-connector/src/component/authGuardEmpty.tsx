@@ -57,7 +57,7 @@ const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
 
     if (state.validating) {
       return (
-        <Flex>
+        <Flex direction={"column"} gap={4}>
           <Button
             size="md"
             onClick={() => {

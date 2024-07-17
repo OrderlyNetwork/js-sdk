@@ -549,6 +549,19 @@ export class Account {
     }
   }
 
+  async destoryOrderlyKey(): Promise<void> {
+    if (!!this.stateValue.address) {
+      // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
+      this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
+    }
+
+    const nextState = {
+      ...this.stateValue,
+      status: AccountStatusEnum.DisabledTrading,
+    };
+    this._ee.emit("change:status", nextState);
+  }
+
   async disconnect(): Promise<void> {
     if (!!this.stateValue.address) {
       this.keyStore.cleanAllKey(this.stateValue.address);
