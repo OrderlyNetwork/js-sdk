@@ -102,7 +102,7 @@ const MobileCell: FC<{
           itemAlign={"start"}
         >
           <Text className="oui-text-base-contrast-36 oui-text-2xs">Start</Text>
-          <Flex direction={"row"} >
+          <Flex direction={"row"}>
             <Text className="oui-text-sm">
               {formatTimestamp(data.start_time).firstPart}&nbsp;
             </Text>
@@ -213,15 +213,15 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
       dataSource={data}
       scroll={{ y: 448 }}
       classNames={{
-        header: "oui-text-base-contrast-36",
+        header: "oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-base-contrast-80",
       }}
     >
-       <Pagination
-          {...props.meta}
-          onPageChange={props.onPageChange}
-          onPageSizeChange={props.onPageSizeChange}
-        />
+      <Pagination
+        {...props.meta}
+        onPageChange={props.onPageChange}
+        onPageSizeChange={props.onPageSizeChange}
+      />
     </DataTable>
   );
 };

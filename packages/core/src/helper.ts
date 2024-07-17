@@ -86,6 +86,8 @@ export function generateAddOrderlyKeyMessage(inputs: {
   primaryType: keyof typeof definedTypes;
   expiration?: number;
   timestamp?: number;
+  scope?: string;
+  tag?: string;
 }) {
   const {
     publicKey,
@@ -94,16 +96,19 @@ export function generateAddOrderlyKeyMessage(inputs: {
     brokerId,
     expiration = 365,
     timestamp = Date.now(),
+    scope,
+    tag,
   } = inputs;
   // const now = Date.now();
   // message;
   const message = {
     brokerId,
     orderlyKey: publicKey,
-    scope: "read,trading",
+    scope: scope || "read,trading",
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
+    ...( typeof tag !== 'undefined' ? {tag} : {})
   };
 
   const typeDefinition = {

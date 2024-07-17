@@ -155,3 +155,42 @@ export const UnFavoritesIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     </g>
   </svg>
 );
+
+export const CirclePlusIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <mask
+      id="a"
+      style={{ maskType: "alpha" }}
+      maskUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width="18"
+      height="18"
+    >
+      <path fill="#D9D9D9" d="M0 0h18v18H0z" />
+    </mask>
+    <g mask="url(#a)">
+      <path d="M8.325 12.6h1.35V9.675H12.6v-1.35H9.675V5.4h-1.35v2.925H5.4v1.35h2.925zm.68 3.6a7 7 0 0 1-2.799-.562A7.3 7.3 0 0 1 3.91 14.09a7.3 7.3 0 0 1-1.546-2.296A7 7 0 0 1 1.8 8.99q0-1.49.563-2.794a7.26 7.26 0 0 1 3.843-3.834A7 7 0 0 1 9.009 1.8q1.49 0 2.794.562 1.303.563 2.288 1.547a7.3 7.3 0 0 1 1.547 2.292q.561 1.308.562 2.794a7 7 0 0 1-.562 2.799 7.3 7.3 0 0 1-1.547 2.297 7.3 7.3 0 0 1-2.292 1.547 7 7 0 0 1-2.794.562M9 14.85q2.437 0 4.144-1.706Q14.85 11.437 14.85 9t-1.706-4.144Q11.437 3.15 9 3.15T4.856 4.856 3.15 9t1.706 4.144Q6.563 14.85 9 14.85" />
+    </g>
+  </svg>
+);
+
+export const SearchIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M5.841 1.14a4.667 4.667 0 0 0 0 9.333 4.74 4.74 0 0 0 2.875-.975l2.54 2.56a.6.6 0 0 0 .838 0 .6.6 0 0 0 0-.838L9.537 8.677a4.72 4.72 0 0 0 .971-2.871 4.667 4.667 0 0 0-4.667-4.667m0 1.166a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7" />
+  </svg>
+);

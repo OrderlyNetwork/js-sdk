@@ -1,12 +1,14 @@
 import { ExtensionSlot } from "../../plugin/slot";
 import { Box } from "../../box";
 import { Spinner } from "../../spinner/spinner";
+import { ReactNode } from "react";
 
 export const TablePlaceholder = (props: {
   visible?: boolean;
   loading?: boolean;
+  emptyView?: ReactNode;
 }) => {
-  const { visible, loading } = props;
+  const { visible, loading, emptyView } = props;
 
   if (!visible) return null;
 
@@ -20,7 +22,7 @@ export const TablePlaceholder = (props: {
       bottom={0}
       className="oui-backdrop-blur-md oui-flex oui-justify-center oui-items-center"
     >
-      {loading ? <Spinner /> : <ExtensionSlot position={"emptyDataState"} />}
+      {loading ? <Spinner /> :  (emptyView || <ExtensionSlot position={"emptyDataState"} />)}
     </Box>
   );
 };

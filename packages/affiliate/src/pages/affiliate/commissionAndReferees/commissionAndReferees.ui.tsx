@@ -157,7 +157,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         columns={columns}
         dataSource={props.commission.data}
         classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36",
+          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
           body: "oui-text-xs oui-text-base-contrast-80 oui-max-h-[200px]",
         }}
       >
@@ -293,7 +293,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         columns={columns}
         dataSource={props.referees.data}
         classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36",
+          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
           body: "oui-text-xs oui-text-base-contrast-80 oui-max-h-[200px]",
         }}
       >

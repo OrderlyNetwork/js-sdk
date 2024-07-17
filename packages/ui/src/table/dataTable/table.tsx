@@ -4,6 +4,7 @@ import {
   memo,
   PropsWithChildren,
   ReactElement,
+  ReactNode,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -45,6 +46,7 @@ export interface DataTableProps<RecordType>
     footer?: string;
   };
   showMaskElement?: boolean;
+  emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
   onSort?: (sortKey: string, sort: SortOrder) => void;
@@ -95,6 +97,7 @@ export const DataTable = <RecordType extends unknown>(
     className,
     classNames,
     scroll,
+    emptyView,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -139,6 +142,8 @@ export const DataTable = <RecordType extends unknown>(
 
   const { width, height } = useTableSize({ scroll });
 
+  // const body
+
   let childElement = (
     // <TableProvider
     //   columns={props.columns}
@@ -182,6 +187,7 @@ export const DataTable = <RecordType extends unknown>(
         <TablePlaceholder
           visible={dataSource?.length === 0 || loading}
           loading={loading}
+          emptyView={emptyView}
         />
         <FixedDivide />
       </div>
