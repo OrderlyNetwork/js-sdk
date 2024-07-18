@@ -19,7 +19,7 @@ import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 type FavoritesProps = {} & UseFavoritesReturn;
 
 export const Favorites: FC<FavoritesProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite } = props;
+  const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
   const columns = useDataListColumns(favorite, true);
 
   return (
@@ -40,6 +40,7 @@ export const Favorites: FC<FavoritesProps> = (props) => {
           };
         }}
         generatedRowKey={(record) => record.symbol}
+        onSort={onSort}
       >
         <Pagination
           {...meta}

@@ -1,5 +1,6 @@
 import { SortOrder } from "@orderly.network/ui";
 import { useCallback, useEffect, useState } from "react";
+import { TInitialSort } from "./type";
 
 /** get page data */
 export function getPageData(list: any[], pageSize: number, pageIndex: number) {
@@ -40,9 +41,9 @@ export function useSort(defaultSortKey?: string, defaultSortOrder?: SortOrder) {
   const [key, setKey] = useState<string>();
   const [order, setOrder] = useState<SortOrder>();
 
-  const onSort = useCallback((sortKey: string, sort: SortOrder) => {
-    setKey(sortKey);
-    setOrder(sort);
+  const onSort = useCallback((options?: TInitialSort) => {
+    setKey(options?.sortKey);
+    setOrder(options?.sort);
   }, []);
 
   const sortKey = key || defaultSortKey;

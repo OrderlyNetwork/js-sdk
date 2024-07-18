@@ -14,12 +14,14 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
 
   const [data, favorite] = useMarkets(MarketsType.ALL);
 
-  const { onSort, getSortedList } = useSort(
+  const isAllList = options?.sortKey === "24h_amount";
+
+  const { searchValue } = useMarketsContext();
+
+  const { onSort, getSortedList, sortKey, sortOrder } = useSort(
     options?.sortKey,
     options?.sortOrder
   );
-
-  const { searchValue } = useMarketsContext();
 
   const pageData = useMemo(() => {
     const list = getSortedList(data);
