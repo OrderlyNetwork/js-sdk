@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { SortOrder, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
 import { getPageData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
@@ -13,8 +13,6 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [data, favorite] = useMarkets(MarketsType.ALL);
-
-  const isAllList = options?.sortKey === "24h_amount";
 
   const { searchValue } = useMarketsContext();
 
@@ -43,6 +41,13 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     // 切换页面大小时，重置页码
     setPage(1);
   }, [pageSize]);
+
+  useEffect(() => {
+    // Only all markets store sort
+    if (options.type === "all") {
+      favorite.updateTabsSortState("all", sortKey!, sortOrder!);
+    }
+  }, [sortKey, sortOrder, favorite, options.type]);
 
   return {
     dataSource: pageData,

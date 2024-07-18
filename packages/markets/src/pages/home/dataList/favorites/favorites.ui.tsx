@@ -36,7 +36,10 @@ export const Favorites: FC<FavoritesProps> = (props) => {
         dataSource={dataSource}
         onRow={(record, index) => {
           return {
-            className: "oui-h-[55px] oui-border-line-12",
+            className: cn(
+              "group",
+              "oui-h-[55px] oui-border-line-4 oui-cursor-pointer"
+            ),
           };
         }}
         generatedRowKey={(record) => record.symbol}
