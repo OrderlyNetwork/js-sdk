@@ -42,6 +42,7 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
       mainMenus: [
         { name: "Trading", href: "/" },
         { name: "Portfolio", href: "/portfolio" },
+        { name: "Markets", href: "/markets" },
       ],
       products: [
         { name: "Swap", href: "/swap" },
