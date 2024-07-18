@@ -11,13 +11,14 @@ export interface ConfirmProps {
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
-  // maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
+  size?: "sm" | "md" | "lg";
   // closeableSize?: number;
   // okId?: string;
   // cancelId?: string;
 }
 
 export const ConfirmDialog = create<ConfirmProps>((props) => {
+  const { size = "sm" } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
     <SimpleDialog
@@ -27,7 +28,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
           {props.title}
         </Text>
       }
-      size="sm"
+      size={size}
       contentClassName={props.contentClassName}
       // maxWidth={props.maxWidth}
       closable
@@ -60,7 +61,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         },
         secondary: {
           label: "Cancel",
-          className: " oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
+          className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           onClick: () => {
             return Promise.resolve()
               .then(() => {
