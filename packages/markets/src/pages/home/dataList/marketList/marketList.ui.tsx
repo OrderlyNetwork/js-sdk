@@ -29,7 +29,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
-      onSort={onSort}
+      // onSort={onSort}
     >
       <Pagination
         {...meta}
