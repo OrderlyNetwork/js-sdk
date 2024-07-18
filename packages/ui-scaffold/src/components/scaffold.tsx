@@ -100,7 +100,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         {/* Top main nav */}
         <Box
           className={cn(
-            "oui-border-b oui-border-line-12",
+            "oui-hidden xl:oui-block oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
         >
