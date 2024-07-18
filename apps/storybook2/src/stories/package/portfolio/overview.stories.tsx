@@ -160,7 +160,11 @@ export const DistributionHistory: Story = {
 
 export const Page: Story = {
   render: () => {
-    return <PortfolioLayoutWidget>
+    return <PortfolioLayoutWidget routerAdapter={{
+      onRouteChange: (op) => {
+        console.log("router adapter", op);
+      }
+    }}>
       <OverviewModule.OverviewPage />
     </PortfolioLayoutWidget>
   },

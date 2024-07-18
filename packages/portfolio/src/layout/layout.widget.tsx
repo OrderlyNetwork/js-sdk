@@ -7,5 +7,5 @@ export const PortfolioLayoutWidget = (
   props: PropsWithChildren<LayoutProps>
 ) => {
   const state = useLayoutBuilder();
-  return <PortfolioLayout {...state} children={props.children} />;
+  return <PortfolioLayout {...state} {...props} children={props.children} />;
 };
