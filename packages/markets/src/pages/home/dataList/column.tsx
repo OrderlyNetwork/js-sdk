@@ -108,7 +108,7 @@ export const useDataListColumns = (
         onSort: true,
         render: (value) => {
           return (
-            <Text.numeral dp={0} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
               {value}
             </Text.numeral>
           );

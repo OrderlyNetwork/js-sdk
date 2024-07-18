@@ -31,11 +31,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
       dataSource={dataSource}
       onRow={(record, index) => {
         return {
-          className: cn(
-            "group",
-            "oui-h-[55px] oui-border-line-4 oui-cursor-pointer",
-            "oui-bg-base-9 hover:oui-bg-base-8"
-          ),
+          className: cn("oui-h-[55px] oui-border-line-4 oui-cursor-pointer"),
         };
       }}
       generatedRowKey={(record) => record.symbol}
@@ -46,7 +42,6 @@ export const MarketList: FC<MarketListProps> = (props) => {
         {...meta}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
-        // className="oui-flex oui-justify-between"
       />
     </DataTable>
   );
