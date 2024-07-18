@@ -35,6 +35,7 @@ type StatisticProps = {
 export const AssetsUI = (props: Props) => {
   return (
     <Card
+      // @ts-ignore
       title={
         <AssetsHeader
           disabled={!props.connected}
@@ -66,6 +67,7 @@ export const AssetsUI = (props: Props) => {
         <Either value={props.connected ?? false} left={<NoValue />}>
           <Text.numeral
             unit="USDC"
+            // @ts-ignore
             style={{ "--oui-gradient-angle": "45deg" }}
             unitClassName="oui-text-base oui-text-base-contrast-80 oui-h-9 oui-ml-1"
             className={gradientTextVariants({
@@ -134,6 +136,7 @@ export const AssetStatistic = (props: StatisticProps) => {
         <Flex itemAlign={"center"}>
           <span className="oui-text-lg">{props.currentLeverage}</span>
           <span>x</span>
+          {/* @ts-ignore */}
           <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()}>
             <EditIcon color={"white"} size={18} />
           </button>
@@ -141,7 +144,9 @@ export const AssetStatistic = (props: StatisticProps) => {
       </Statistic>
       <Statistic
         label="Available to withdraw"
+        // @ts-ignore
         align="right"
+        // @ts-ignore
         valueProps={{ size: "lg" }}
       >
         {props.freeCollateral}
