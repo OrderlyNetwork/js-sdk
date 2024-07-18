@@ -49,7 +49,8 @@ export interface DataTableProps<RecordType>
   emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
-  onSort?: (sortKey: string, sort: SortOrder) => void;
+  onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
+  initialSort?: { sortKey: string; sort: SortOrder };
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
   // header?: ReactElement;
@@ -214,6 +215,7 @@ export const DataTable = <RecordType extends unknown>(
       dataSource={props.dataSource}
       canExpand={typeof props.expandRowRender === "function"}
       onSort={props.onSort}
+      initialSort={props.initialSort}
     >
       {childElement}
     </TableProvider>

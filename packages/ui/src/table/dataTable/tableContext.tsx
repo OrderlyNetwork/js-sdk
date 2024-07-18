@@ -61,10 +61,16 @@ export const TableProvider: FC<
     canExpand?: boolean;
     multiExpand?: boolean;
     meta?: DataMetaData;
-    onSort?: (sortKey: string, sort: SortOrder) => void;
+
+    onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
+    initialSort?: { sortKey: string; sort: SortOrder };
   }>
 > = (props) => {
-  const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>();
+  const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>(
+    props.initialSort
+      ? [props.initialSort.sortKey, props.initialSort.sort]
+      : undefined
+  );
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
   // const [sortOrder, setSortOrder] = useState<SortOrder>();
 
@@ -169,9 +175,16 @@ export const TableProvider: FC<
       return [key, "desc" as SortOrder];
     });
 
-    if (typeof props.onSort === "function" && sortKey?.length === 2) {
+    if (typeof props.onSort === "function") {
       setTimeout(() => {
-        props.onSort!(sortKey[0], sortKey[1]);
+        if (Array.isArray(sortKey) && (sortKey?.length ?? 0) > 1) {
+          props.onSort!({
+            sortKey: sortKey[0],
+            sort: sortKey[1],
+          });
+        } else {
+          props.onSort!();
+        }
       }, 0);
     }
   };
