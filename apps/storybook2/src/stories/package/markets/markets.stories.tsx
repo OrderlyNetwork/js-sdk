@@ -10,7 +10,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const meta = {
-    title: "Package/Markets",
+    title: "Package/Markets/HomePage",
     component: MarketsHomePage,
     subcomponents: {
        
