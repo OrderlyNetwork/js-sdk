@@ -1,5 +1,6 @@
 import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
 import {
+  LayoutProps,
   Scaffold,
   SideBar,
   SideBarProps,
@@ -25,7 +26,7 @@ export const PortfolioLayout = (
   );
 };
 
-const LeftSidebar = (props: SideBarProps) => {
+const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   return (
@@ -34,6 +35,13 @@ const LeftSidebar = (props: SideBarProps) => {
         {...props}
         open={expanded}
         onOpenChange={(open) => setExpand(open)}
+        onItemSelect={(e) => {
+          props.onItemSelect?.(e);
+          props.routerAdapter?.onRouteChange?.({
+            href: e.href || "" ,
+            name: e.name,
+          });
+        }}
       />
     </Box>
   );
