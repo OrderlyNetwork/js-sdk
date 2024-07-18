@@ -135,7 +135,9 @@ export const DataTable = <RecordType extends unknown>(
 
   useEffect(() => {
     if (!wrapRef.current) return;
-    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor;
+    const bodyBgColor = window.getComputedStyle(
+      wrapRef.current
+    ).backgroundColor;
 
     // body.style.setProperty("--table-header-height", "48px");
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
@@ -143,20 +145,20 @@ export const DataTable = <RecordType extends unknown>(
 
   const { width, height } = useTableSize({ scroll });
 
+  // console.log("data source", props.dataSource);
+
   // const body
 
   let childElement = (
-    // <TableProvider
-    //   columns={props.columns}
-    //   dataSource={props.dataSource}
-    //   canExpand={typeof props.expandRowRender === "function"}
-    // >
-
     <div
       id={props.id}
       ref={wrapRef}
       className={root({
-        className: cnBase("oui-table-root", className, classNames?.root),
+        className: cnBase(
+          "oui-table-root oui-bg-base-9",
+          className,
+          classNames?.root
+        ),
       })}
       style={{ width, height }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
