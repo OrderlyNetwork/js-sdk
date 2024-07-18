@@ -27,6 +27,7 @@ export const useSettingScript = (): SettingScriptReturns => {
   const [checked, setChecked] = useState(false);
   const value = useDebounce(checked, 300);
   useEffect(() => {
+    if (value === data?.maintenance_cancel_orders) return;
     update({
       maintenance_cancel_order_flag: value,
     }).then((data) => {
@@ -36,7 +37,7 @@ export const useSettingScript = (): SettingScriptReturns => {
       }
     });
     
-  }, [value]);
+  }, [value, data]);
   const setMaintainConfig = (maintenance_cancel_order_flag: boolean) => {
     
     setChecked(maintenance_cancel_order_flag);
