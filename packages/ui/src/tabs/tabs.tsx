@@ -61,10 +61,15 @@ const Tabs: FC<TabsProps> = (props) => {
         // onValueChange={onChange}
         // defaultValue={defaultValue}
       >
-        <Flex justify="between">
+        <Flex
+          justify="between"
+          itemAlign="center"
+          width="100%"
+          className=" oui-border-b oui-border-b-line-6"
+        >
           <Flex>
             {props.leading}
-            <TabsList>
+            <TabsList className="oui-border-b-0 ">
               {Object.keys(tabList).map((key) => {
                 const tab = tabList[key];
                 return (

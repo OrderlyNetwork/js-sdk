@@ -2,6 +2,8 @@ import { create } from "../modalHelper";
 import { useModal } from "../useModal";
 import { DialogBody, SimpleDialog } from "../../dialog";
 import { modalActions } from "../modalContext";
+import { Text } from "../../typography";
+
 export interface ConfirmProps {
   title?: string;
   content?: React.ReactNode;
@@ -20,7 +22,12 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
   return (
     <SimpleDialog
       open={visible}
-      title={props.title}
+      title={
+        <Text size="base" weight="semibold">
+          {props.title}
+        </Text>
+      }
+      size="sm"
       contentClassName={props.contentClassName}
       // maxWidth={props.maxWidth}
       closable
@@ -36,6 +43,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
       actions={{
         primary: {
           label: "Confirm",
+          className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           onClick: () => {
             return Promise.resolve()
               .then(() => {
@@ -52,6 +60,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         },
         secondary: {
           label: "Cancel",
+          className: " oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           onClick: () => {
             return Promise.resolve()
               .then(() => {
@@ -68,9 +77,9 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         },
       }}
     >
-      <DialogBody>
-        <div className="orderly-py-5 orderly-text-xs">{props.content}</div>
-      </DialogBody>
+      <Text className="" size="sm">
+        {props.content}
+      </Text>
     </SimpleDialog>
   );
 });

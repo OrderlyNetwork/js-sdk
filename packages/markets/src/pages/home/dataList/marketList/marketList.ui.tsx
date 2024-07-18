@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { DataTable, Pagination } from "@orderly.network/ui";
+import { cn, DataTable, Pagination } from "@orderly.network/ui";
 import { type UseMarketListReturn } from "./marketList.script";
 import { useDataListColumns } from "../column";
 
@@ -20,7 +20,13 @@ export const MarketList: FC<MarketListProps> = (props) => {
       columns={columns}
       dataSource={dataSource}
       onRow={(record, index) => {
-        return { className: "oui-h-[55px] oui-border-line-12" };
+        return {
+          className: cn(
+            "group",
+            "oui-h-[55px] oui-border-line-4 oui-cursor-pointer",
+            "oui-bg-base-9 hover:oui-bg-base-8"
+          ),
+        };
       }}
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}

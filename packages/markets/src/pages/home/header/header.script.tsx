@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsStream, useSymbolsInfo } from "@orderly.network/hooks";
-import { sortList } from "../../../utils";
+import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
 // export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;
@@ -17,6 +17,8 @@ export type HeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 export const useMarketsHeaderScript = () => {
   const [scrollIndex, setScrollIndex] = useState(0);
   const data = useDataSource();
+
+  const { width } = useSize();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -35,6 +37,7 @@ export const useMarketsHeaderScript = () => {
     setScrollIndex,
     emblaRef,
     emblaApi: emblaApi as TEmblaApi,
+    enableScroll: width < 1440,
     ...data,
   };
 };
