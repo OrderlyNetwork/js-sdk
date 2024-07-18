@@ -167,3 +167,19 @@ export const CustomChainsMenu: Story = {
     ),
   ],
 };
+
+export const CustomMainNav: Story = {
+  args: {
+    mainMenus: [
+      { name: "Trading", href: "/" },
+      { name: "Reward", href: "/rewards" },
+      { name: "Markets", href: "/markets" },
+    ],
+    products: [
+      { name: "Swap", href: "/swap" },
+      { name: "Trade", href: "/trade" },
+    ],
+    initialMenu: "/rewards",
+    initialProduct: "/trade",
+  },
+};

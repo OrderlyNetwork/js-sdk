@@ -4,12 +4,13 @@ import {
   memo,
   PropsWithChildren,
   ReactElement,
+  ReactNode,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import type { Column } from "./col";
+import { Column, SortOrder } from "./col";
 import { TableHeader } from "./thead";
 
 import { ColGroup } from "./colgroup";
@@ -45,8 +46,11 @@ export interface DataTableProps<RecordType>
     footer?: string;
   };
   showMaskElement?: boolean;
+  emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
+  onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
+  initialSort?: { sortKey: string; sort: SortOrder };
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
   // header?: ReactElement;
@@ -94,6 +98,7 @@ export const DataTable = <RecordType extends unknown>(
     className,
     classNames,
     scroll,
+    emptyView,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -130,7 +135,9 @@ export const DataTable = <RecordType extends unknown>(
 
   useEffect(() => {
     if (!wrapRef.current) return;
-    const bodyBgColor = window.getComputedStyle(document.body).backgroundColor;
+    const bodyBgColor = window.getComputedStyle(
+      wrapRef.current
+    ).backgroundColor;
 
     // body.style.setProperty("--table-header-height", "48px");
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
@@ -138,17 +145,21 @@ export const DataTable = <RecordType extends unknown>(
 
   const { width, height } = useTableSize({ scroll });
 
-  let childElement = (
-    // <TableProvider
-    //   columns={props.columns}
-    //   dataSource={props.dataSource}
-    //   canExpand={typeof props.expandRowRender === "function"}
-    // >
+  // console.log("data source", props.dataSource);
 
+  // const body
+
+  let childElement = (
     <div
       id={props.id}
       ref={wrapRef}
-      className={root({ className: cnBase(className, classNames?.root) })}
+      className={root({
+        className: cnBase(
+          "oui-table-root oui-bg-base-9",
+          className,
+          classNames?.root
+        ),
+      })}
       style={{ width, height }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
@@ -179,15 +190,16 @@ export const DataTable = <RecordType extends unknown>(
         <TablePlaceholder
           visible={dataSource?.length === 0 || loading}
           loading={loading}
+          emptyView={emptyView}
         />
+        <FixedDivide />
       </div>
 
+      {/* {props.children} */}
       {/* </EndReachedBox> */}
       {/* {showMaskElement && maskElement} */}
-      {/* {props.children} */}
     </div>
   );
-  // {/* <FixedDivide /> */}
 
   if (filterEle || paginationEle) {
     childElement = (
@@ -204,6 +216,8 @@ export const DataTable = <RecordType extends unknown>(
       columns={props.columns}
       dataSource={props.dataSource}
       canExpand={typeof props.expandRowRender === "function"}
+      onSort={props.onSort}
+      initialSort={props.initialSort}
     >
       {childElement}
     </TableProvider>

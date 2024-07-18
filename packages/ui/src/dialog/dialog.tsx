@@ -175,6 +175,7 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
     VariantProps<typeof dialogVariants> & {
       closable?: boolean;
+      onClose?: () => void;
     }
 >(
   (

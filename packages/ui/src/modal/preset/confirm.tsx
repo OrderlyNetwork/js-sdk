@@ -1,9 +1,9 @@
-import { FC } from "react";
-import { SimpleDialog } from "@/dialog/simpleDialog";
-import { useModal } from "@/modal";
-import { create } from "@/modal/modalHelper";
-import { modalActions } from "@/modal/modalContext";
-import { DialogBody } from "@/dialog";
+import { create } from "../modalHelper";
+import { useModal } from "../useModal";
+import { DialogBody, SimpleDialog } from "../../dialog";
+import { modalActions } from "../modalContext";
+import { Text } from "../../typography";
+
 export interface ConfirmProps {
   title?: string;
   content?: React.ReactNode;
@@ -11,63 +11,76 @@ export interface ConfirmProps {
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
-  maxWidth?: "xs" | "sm" | "lg" | "xl" | null | undefined;
-  closeableSize?: number;
-  okId?: string;
-  cancelId?: string;
+  size?: "sm" | "md" | "lg";
+  // closeableSize?: number;
+  // okId?: string;
+  // cancelId?: string;
 }
 
-const ConfirmDialog = create<ConfirmProps>((props) => {
+export const ConfirmDialog = create<ConfirmProps>((props) => {
+  const { size = "sm" } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
     <SimpleDialog
       open={visible}
-      title={props.title}
+      title={
+        <Text size="base" weight="semibold">
+          {props.title}
+        </Text>
+      }
+      size={size}
       contentClassName={props.contentClassName}
-      maxWidth={props.maxWidth}
+      // maxWidth={props.maxWidth}
       closable
-      closeableSize={props.closeableSize}
-      okId={props.okId}
-      cancelId={props.cancelId}
+      // closeableSize={props.closeableSize}
+      // okId={props.okId}
+      // cancelId={props.cancelId}
       onOpenChange={(open) => {
         if (!open) {
           reject();
         }
         onOpenChange(open);
       }}
-      onOk={() => {
-        return Promise.resolve()
-          .then(() => {
-            if (typeof props.onOk === "function") {
-              return props.onOk();
-            }
-            return true;
-          })
-          .then((data?: any) => {
-            resolve(data);
-            hide();
-          });
+      actions={{
+        primary: {
+          label: "Confirm",
+          className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
+          onClick: () => {
+            return Promise.resolve()
+              .then(() => {
+                if (typeof props.onOk === "function") {
+                  return props.onOk();
+                }
+                return true;
+              })
+              .then((data?: any) => {
+                resolve(data);
+                hide();
+              });
+          },
+        },
+        secondary: {
+          label: "Cancel",
+          className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
+          onClick: () => {
+            return Promise.resolve()
+              .then(() => {
+                if (typeof props.onCancel === "function") {
+                  return props.onCancel();
+                }
+                return true;
+              })
+              .then((data?: any) => {
+                resolve(data);
+                hide();
+              });
+          },
+        },
       }}
-      onCancel={
-        typeof props.onCancel !== "undefined"
-          ? () => {
-              return props
-                .onCancel?.()
-                .then(
-                  (data) => data,
-                  (reason?: any) => {
-                    reject(reason);
-                  }
-                )
-                .finally(() => hide());
-            }
-          : undefined
-      }
-      footer={props.footer}
     >
-      <DialogBody>
-        <div className="orderly-py-5 orderly-text-xs">{props.content}</div>
-      </DialogBody>
+      <Text className="" size="sm">
+        {props.content}
+      </Text>
     </SimpleDialog>
   );
 });

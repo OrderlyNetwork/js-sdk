@@ -46,11 +46,11 @@ export type NumeralProps = TextProps & {
 
   loading?: boolean;
 
-  surfix?: React.ReactNode;
+  suffix?: React.ReactNode;
   prefix?: React.ReactNode;
 
   unit?: string;
-  cureency?: string;
+  currency?: string;
 
   /**
    * Whether to display as *****
@@ -82,11 +82,11 @@ export const Numeral: FC<NumeralProps> = (props) => {
     coloring,
     dp,
     tick,
-    surfix,
+    suffix,
     prefix,
     visible,
     unit,
-    cureency,
+    currency,
     rm,
     padding = true,
     showIdentifier = false,
@@ -112,7 +112,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
       padding,
       abs: showIdentifier,
     });
-  }, [num, visible]);
+  }, [num, visible, tick, dp]);
 
   const defaultColor = rest.color || "inherit";
 
@@ -150,20 +150,20 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
   const childWithUnit = useMemo(() => {
     if (
-      typeof surfix === "undefined" &&
+      typeof suffix === "undefined" &&
       typeof prefix === "undefined" &&
       typeof unit === "undefined" &&
-      typeof cureency === "undefined" &&
+      typeof currency === "undefined" &&
       !showIdentifier
     ) {
       return child;
     }
 
-    const surfixEle = surfix ? (
-      typeof surfix === "string" ? (
-        <span>{surfix}</span>
+    const surfixEle = suffix ? (
+      typeof suffix === "string" ? (
+        <span>{suffix}</span>
       ) : (
-        surfix
+        suffix
       )
     ) : undefined;
 
@@ -175,8 +175,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     const prefixEle = prefix ? (
       prefix
-    ) : cureency ? (
-      <span>{cureency}</span>
+    ) : currency ? (
+      <span>{currency}</span>
     ) : undefined;
 
     const child_unit = (
@@ -201,7 +201,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
         {surfixEle}
       </>
     );
-  }, [child, surfix, unit, prefix, identifier, unitClassName]);
+  }, [child, suffix, unit, prefix, identifier, unitClassName]);
 
   return (
     <Text

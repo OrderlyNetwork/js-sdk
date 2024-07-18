@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccountInfo } from "@orderly.network/hooks";
+import { useAccountInfo, usePrivateDataObserver, usePrivateQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { dataSource } from "./dataSource";
 
@@ -8,6 +8,12 @@ export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 export function useFeeTierScript() {
   const [tier, setTier] = useState<number>();
   const { data } = useAccountInfo();
+  const { data: volumeStatistics } = usePrivateQuery<{
+    perp_volume_last_30_days: number
+  } | undefined>('/v1/volume/user/stats');
+  
+  console.log("volumeStatistics", volumeStatistics);
+  
 
   const getFuturesCurrentTier = (
     feeList: typeof dataSource,
@@ -32,5 +38,5 @@ export function useFeeTierScript() {
     setTier(tier!);
   }, [data]);
 
-  return { tier };
+  return { tier, vol: volumeStatistics?.perp_volume_last_30_days };
 }

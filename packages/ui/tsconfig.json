@@ -1,18 +1,9 @@
 {
-  "extends": "./tsconfig.build.json",  
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "moduleResolution":"node",
-    // "paths": {
-    //   "@/*": ["./src/*"],
-    //   "@orderly.network/core": ["../core/src"],
-    //   "@orderly.network/hooks": ["../hooks/src"],
-    //   "@orderly.network/net": ["../net/src"],
-    //   "@orderly.network/web3-onboard": ["../onboard/src"],
-    //   "@orderly.network/perp": ["../perp/src"],
-    //   "@orderly.network/trading-view": ["../trading-view/src"],
-    //   "@orderly.network/types": ["../types/src"],
-    //   "@orderly.network/utils": ["../utils/src"],
-    //   "@orderly.network/web3-modal": ["../walletconnect/src"],
-    // },
+    "moduleResolution": "node",
+    "paths": {
+      "@orderly.network/utils": ["../utils/src"],
+    },
   }
 }

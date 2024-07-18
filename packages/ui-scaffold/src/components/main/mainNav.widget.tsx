@@ -1,6 +1,6 @@
 import { registerSimpleDialog } from "@orderly.network/ui";
 import { MainNav } from "./mainNav.ui";
-import { useMainNavBuilder } from "./useWidgetBuilder.script";
+import { MainNavProps, useMainNavBuilder } from "./useWidgetBuilder.script";
 import { NotSupportedDialog } from "../chainMenu/chainMenu.ui";
 
 registerSimpleDialog("SwitchChain", NotSupportedDialog, {
@@ -9,7 +9,7 @@ registerSimpleDialog("SwitchChain", NotSupportedDialog, {
   // message: "This feature is not supported on this chain.",
 });
 
-export const MainNavWidget = () => {
-  const state = useMainNavBuilder();
+export const MainNavWidget = (props: Partial<MainNavProps>) => {
+  const state = useMainNavBuilder(props);
   return <MainNav {...state} />;
 };

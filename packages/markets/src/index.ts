@@ -1,6 +1,7 @@
-export * from "./pages/header";
-export * from "./pages/dataList/marketList";
-export * from "./pages/dataList/favorites";
-export * from "./pages/dataList";
+export * from "./pages/home/header";
+export * from "./pages/home/dataList/marketList";
+export * from "./pages/home/dataList/favorites";
+export * from "./pages/home/dataList";
 
-export { MarketsPage } from "./pages/page";
+export { MarketsHomePage } from "./pages/home/page";
+export { MarketsProvider } from "./pages/home/provider";

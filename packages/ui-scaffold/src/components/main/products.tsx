@@ -4,27 +4,27 @@ import { ProductItem } from "./productItem";
 import { Flex } from "@orderly.network/ui";
 
 export type ProductsProps = {
-  products?: ProductItem[];
+  items?: ProductItem[];
   current?: string;
   onItemClick?: (product: ProductItem) => void;
 };
 
 export const ProductsMenu: FC<ProductsProps> = (props) => {
-  const { products, onItemClick, current } = props;
+  const { items, onItemClick, current } = props;
   const currentItem = useMemo(() => {
     if (typeof current !== "undefined") return current;
 
-    return products?.[0]?.id;
-  }, [current, products]);
+    return items?.[0]?.href;
+  }, [current, items]);
   return (
     <Flex gap={0} border r="md" className="oui-p-[1px]" borderColor={12}>
-      {products?.map((product, index) => {
+      {items?.map((product, index) => {
         return (
           <ProductItem
             key={index}
             item={product}
             onClick={onItemClick}
-            active={currentItem == product.id}
+            active={currentItem == product.href}
           />
         );
       })}

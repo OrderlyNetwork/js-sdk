@@ -21,6 +21,20 @@ const dividerVariants = tv({
       dashed: "oui-border-dashed",
       dotted: "oui-border-dotted",
     },
+    mx: {
+      2: "oui-mx-2",
+      4: "oui-mx-4",
+      6: "oui-mx-6",
+      8: "oui-mx-8",
+      10: "oui-mx-10",
+    },
+    my: {
+      2: "oui-my-2",
+      4: "oui-my-4",
+      6: "oui-my-6",
+      8: "oui-my-8",
+      10: "oui-my-10",
+    },
   },
   defaultVariants: {
     direction: "horizontal",
@@ -32,7 +46,7 @@ type DividerProps = VariantProps<typeof dividerVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
-  const { className, intensity, direction, lineStyle, ...rest } = props;
+  const { className, intensity, direction, lineStyle, mx, my, ...rest } = props;
   return (
     <div
       ref={ref}
@@ -42,6 +56,8 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
         intensity,
         className,
         lineStyle,
+        mx,
+        my,
       })}
     />
   );

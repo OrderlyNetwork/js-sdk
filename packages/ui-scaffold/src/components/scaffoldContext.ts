@@ -2,7 +2,11 @@ import { createContext, useContext } from "react";
 import { FooterConfig } from "./footer";
 
 export type routerAdapter = {
-  onRouteChange: (options: { href: string; name: string }) => void;
+  onRouteChange: (options: {
+    href: string;
+    name: string;
+    scope?: string;
+  }) => void;
   currentPath: string;
 };
 

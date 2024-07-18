@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { TabsBase, TabsList, TabsContent, TabsTrigger } from "./tabsBase";
+import { Flex } from "../flex";
 
 type tabConfig = {
   title: ReactNode;
@@ -30,6 +31,8 @@ type TabsProps<T = string> = {
   defaultValue?: T;
   value?: T;
   // onChange?: (value: T) => void;
+  leading?: ReactNode;
+  trailing?: ReactNode;
 } & TabsPrimitive.TabsProps;
 
 const Tabs: FC<TabsProps> = (props) => {
@@ -58,16 +61,28 @@ const Tabs: FC<TabsProps> = (props) => {
         // onValueChange={onChange}
         // defaultValue={defaultValue}
       >
-        <TabsList>
-          {Object.keys(tabList).map((key) => {
-            const tab = tabList[key];
-            return (
-              <TabsTrigger key={key} value={tab.value} icon={tab.icon}>
-                {tab.title}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+        <Flex
+          justify="between"
+          itemAlign="center"
+          width="100%"
+          className=" oui-border-b oui-border-b-line-6"
+        >
+          <Flex>
+            {props.leading}
+            <TabsList className="oui-border-b-0 ">
+              {Object.keys(tabList).map((key) => {
+                const tab = tabList[key];
+                return (
+                  <TabsTrigger key={key} value={tab.value} icon={tab.icon}>
+                    {tab.title}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </Flex>
+          {props.trailing}
+        </Flex>
+
         {Object.keys(tabList).map((key) => {
           const tab = tabList[key];
           return (
