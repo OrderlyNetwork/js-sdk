@@ -1,7 +1,7 @@
 import { Card, Grid, Box, Statistic, Text } from "@orderly.network/ui";
 
 import { UsePerformanceScriptReturn } from "./performance.script";
-import { Axis, Chart, PnLBarChart, PnlLineChart } from "@orderly.network/chart";
+import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
 import { PeriodTitle } from "../shared/periodHeader";
 import { useMemo } from "react";
 
@@ -16,6 +16,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
 
   return (
     <Card
+    // @ts-ignore
       title={
         <PeriodTitle
           onPeriodChange={onPeriodChange}
@@ -29,6 +30,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             label={`${period} ROI`}
+            // @ts-ignore
             valueProps={{
               rule: "percentages",
               coloring: true,
@@ -40,6 +42,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             label={`${period} PnL`}
+            // @ts-ignore
             valueProps={{
               coloring: true,
               showIdentifier: true,
