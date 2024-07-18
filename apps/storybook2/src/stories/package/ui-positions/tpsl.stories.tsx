@@ -10,10 +10,6 @@ import {Box} from "@orderly.network/ui";
 const meta = {
     title: "Package/ui-positions/tpsl",
     component: TPSLWidget,
-    // subcomponents: {
-    //     Assets: OverviewModule.AssetWidget,
-    //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-    // },
     decorators: [
         (Story) => (
             <ConnectorProvider>
@@ -28,7 +24,29 @@ const meta = {
     },
 
     // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-    args: {},
+    args: {
+symbol: 'PERP_BTC_USDC',
+position:{
+    "symbol": "PERP_BTC_USDC",
+    "position_qty": 0.01129,
+    "cost_position": 786.620603,
+    "last_sum_unitary_funding": 14680.7,
+    "pending_long_qty": 0,
+    "pending_short_qty": 0,
+    "settle_price": 69674.10124004,
+    "average_open_price": 68400.7,
+    "unsettled_pnl": -247.497136,
+    "mark_price": 64064.8,
+    "est_liq_price": 0,
+    "timestamp": 1717147723392,
+    "mmr": 0.012,
+    "imr": 0.1,
+    "IMR_withdraw_orders": 0.1,
+    "MMR_with_orders": 0.012,
+    "pnl_24_h": 0,
+    "fee_24_h": 0
+},
+    },
 } satisfies Meta<typeof TPSLWidget>;
 
 export default meta;

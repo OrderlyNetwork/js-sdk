@@ -1,7 +1,14 @@
 import { useMemo } from "react";
-import { type Column, Flex, TokenIcon, Text, Box } from "@orderly.network/ui";
+import {
+  type Column,
+  Flex,
+  TokenIcon,
+  Text,
+  Box,
+  Tooltip,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { FavoritesIcon, UnFavoritesIcon } from "../../../icons";
+import { FavoritesIcon, MoveToTopIcon, UnFavoritesIcon } from "../../../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
 import { TFavorite } from "../../../type";
 
@@ -139,6 +146,30 @@ export const useDataListColumns = (
               {value}
             </Text.numeral>
           );
+        },
+      },
+      {
+        title: "",
+        dataIndex: "",
+        width: 40,
+        render: (value, record) => {
+          if (isFavoriteList) {
+            return (
+              <Flex justify="end" mr={4}>
+                <Tooltip content="Move to top" align="center" delayDuration={0}>
+                  <Box
+                    className="oui-hidden group-hover:oui-block oui-cursor-pointer"
+                    onClick={() => {
+                      favorite.pinToTop(record);
+                    }}
+                  >
+                    <MoveToTopIcon className="oui-text-base-contrast-20 hover:oui-text-base-contrast" />
+                  </Box>
+                </Tooltip>
+              </Flex>
+            );
+          }
+          return null;
         },
       },
     ];

@@ -1,6 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
@@ -8,17 +9,22 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     emblaRef,
     emblaApi,
     scrollIndex,
+    enableScroll,
     news,
     gainers,
     losers,
     total24Amount,
     totalOpenInterest,
   } = props;
-  const cls =
-    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] oui-min-w-0 oui-select-none oui-cursor-pointer";
-
+  const cls = cn(
+    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
+    enableScroll && "oui-select-none oui-cursor-pointer"
+  );
   return (
-    <div className="oui-overflow-hidden" ref={emblaRef}>
+    <div
+      className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
+      ref={enableScroll ? emblaRef : undefined}
+    >
       <Flex width="100%" gapX={4} mt={4}>
         <BlockList
           total24Amount={total24Amount}
@@ -41,12 +47,13 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           className={cls}
         />
       </Flex>
-
-      <ScrollIndicator
-        scrollIndex={scrollIndex}
-        scrollPrev={emblaApi?.scrollPrev}
-        scrollNext={emblaApi?.scrollNext}
-      />
+      <Box mt={1} mb={3}>
+        <ScrollIndicator
+          scrollIndex={scrollIndex}
+          scrollPrev={emblaApi?.scrollPrev}
+          scrollNext={emblaApi?.scrollNext}
+        />
+      </Box>
     </div>
   );
 };
@@ -107,7 +114,13 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral size="base" currency="$" className="">
+      <Text.numeral
+        size="base"
+        currency="$"
+        className=""
+        dp={0}
+        rm={Decimal.ROUND_DOWN}
+      >
         {props.value!}
       </Text.numeral>
     </Box>
@@ -209,7 +222,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
   const { scrollIndex, scrollPrev, scrollNext } = props;
 
   return (
-    <Flex gapX={1} mt={1} mb={3} justify="center" className="3xl:hidden">
+    <Flex gapX={1} justify="center" className="3xl:oui-hidden">
       {[0, 1].map((item) => {
         return (
           <Box
@@ -218,7 +231,11 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
             pl={item === 0 ? 1 : 0}
             pr={item === 1 ? 1 : 0}
             onClick={() => {
-              scrollIndex === 0 ? scrollNext?.() : scrollPrev?.();
+              if (scrollIndex === 0 && item === 1) {
+                scrollNext?.();
+              } else if (scrollIndex === 1 && item === 0) {
+                scrollPrev?.();
+              }
             }}
             className="oui-cursor-pointer"
           >

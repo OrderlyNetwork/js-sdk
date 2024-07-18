@@ -84,6 +84,8 @@ export function useFavoritesTabScript(favorite: TFavorite) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const [inputWidth, setInputWidth] = useState(50);
 
   const onBlur = () => {
     updateFavoriteTabs(
@@ -144,8 +146,21 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     }, 0);
   };
 
+  useEffect(() => {
+    if (value) {
+      const rect = spanRef.current?.getBoundingClientRect();
+      console.log("rect", rect);
+      setInputWidth(Math.max(rect?.width || 0, 50));
+      // if (inputRef.current) {
+      //   inputRef.current.style.width = `${Math.max(rect?.width || 0, 50)}.px`;
+      // }
+    }
+  }, [value]);
+
   return {
     inputRef,
+    inputWidth,
+    spanRef,
     editing,
     value,
     onValueChange: setValue,

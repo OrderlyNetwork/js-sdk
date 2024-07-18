@@ -112,7 +112,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
       padding,
       abs: showIdentifier,
     });
-  }, [num, visible]);
+  }, [num, visible, tick, dp]);
 
   const defaultColor = rest.color || "inherit";
 
