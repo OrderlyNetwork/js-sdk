@@ -4,7 +4,7 @@ import { withFixedStyle } from "./colHOC";
 
 import { TableContext } from "./tableContext";
 import { cnBase } from "tailwind-variants";
-import { SortingAscIcon, SortingDescIcon, SortingIcon } from "../../icon";
+import { AscendingIcon, DescendingIcon, SortingIcon } from "./icons";
 
 const TheadColItem = (
   props: ColProps & {
@@ -36,24 +36,13 @@ const TheadColItem = (
 
         {sortKey === column.dataIndex ? (
           sortOrder === "asc" ? (
-            <SortingAscIcon size={12} color={"white"} />
-          ) : sortOrder === "desc" ? (
-            <SortingDescIcon size={12} color={"white"} />
+            <AscendingIcon />
           ) : (
-            <SortingIcon size={12} color={"white"} />
+            <DescendingIcon />
           )
-        ) : null}
-
-        {/*/!* sort indicator *!/*/}
-        {/*<CaretDownIcon*/}
-        {/*  className={cnBase(*/}
-        {/*    "oui-transition-all oui-duration-200 oui-hidden",*/}
-        {/*    sortKey === column.dataIndex && "oui-block",*/}
-        {/*    sortOrder === "asc" && "oui-rotate-180",*/}
-        {/*    sortOrder === "desc" && "oui-rotate-0"*/}
-        {/*  )}*/}
-        {/*  size={10}*/}
-        {/*/>*/}
+        ) : (
+          <SortingIcon />
+        )}
       </button>
     );
   }

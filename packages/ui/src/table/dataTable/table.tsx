@@ -49,7 +49,7 @@ export interface DataTableProps<RecordType>
   emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
-  onSort?: (sortKey: string, sort: SortOrder) => void;
+  onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
   // onFilter?: (filter: DataTableFilter) => void;
   id?: string;
   // header?: ReactElement;

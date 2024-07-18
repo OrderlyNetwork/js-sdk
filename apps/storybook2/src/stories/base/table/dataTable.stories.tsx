@@ -115,7 +115,7 @@ export const Default: Story = {
       {
         title: "Symbol",
         dataIndex: "symbol",
-        render: (value) => <div className="oui-h-[80px]">{value}</div>,
+        render: (value) => <div>{value}</div>,
       },
     ],
     dataSource: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(
