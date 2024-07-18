@@ -10,7 +10,7 @@ import {
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export type SettingScriptReturns = {
   maintenance_cancel_orders?: boolean;
@@ -24,23 +24,50 @@ export const useSettingScript = (): SettingScriptReturns => {
   const [update, {
     isMutating
   }] = useMutation("/v1/client/maintenance_config");
-  const setMaintainConfig = (maintenance_cancel_order_flag: boolean) => {
-    
+  const [checked, setChecked] = useState(false);
+  const value = useDebounce(checked, 300);
+  useEffect(() => {
     update({
-      maintenance_cancel_order_flag,
+      maintenance_cancel_order_flag: value,
     }).then((data) => {
       if (data.success) {
-        toast.success("success");
+        toast.success(value ? "Opened" : "Closed");
         refresh();
       }
     });
+    
+  }, [value]);
+  const setMaintainConfig = (maintenance_cancel_order_flag: boolean) => {
+    
+    setChecked(maintenance_cancel_order_flag);
   };
   const { state } = useAccount();
   
   return {
-    maintenance_cancel_orders: data?.maintenance_cancel_orders,
+    maintenance_cancel_orders: checked,//data?.maintenance_cancel_orders,
     setMaintainConfig,
-    isSetting: isMutating,
+    isSetting: false,
     canTouch: state.status === AccountStatusEnum.EnableTrading
   };
 };
+
+
+
+
+export function useDebounce(value: any, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export default useDebounce;
