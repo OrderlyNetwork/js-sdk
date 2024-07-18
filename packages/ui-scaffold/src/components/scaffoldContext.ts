@@ -7,7 +7,7 @@ export type routerAdapter = {
     name: string;
     scope?: string;
   }) => void;
-  currentPath: string;
+  currentPath?: string;
 };
 
 export type ExpandableState = {
