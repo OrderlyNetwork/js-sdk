@@ -107,26 +107,44 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           {props.topbar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
         {/*--------- body start ------ */}
-        <Grid
-          className={cn(
-            "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]"
-          )}
-          style={{
-            gridTemplateColumns: `${
-              expand ? sideBarDefaultWidth + "px" : "98px"
-            } 1fr`,
-            gridTemplateRows: "auto 1fr auto",
-            gridTemplateAreas: `"left main" "left main" "left main"`,
-          }}
-        >
-          <div className="oui-h-[calc(100% - 29px)">
-            {/* @ts-ignore */}
-            {props.leftSidebar || <SideNavbarWidget {...props.leftSideProps} />}
+        {props.leftSidebar === null ? (
+          // ----------No leftSidebar layout start ---------
+          <Box className={classNames?.content}>{props.children}</Box>
+        ) : (
+          // ----------No leftSidebar layout end ---------
+          // ---------- left & body layout start ---------
+          <Grid
+            className={cn(
+              "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]",
+              classNames?.body
+            )}
+            style={{
+              gridTemplateColumns: `${
+                expand ? sideBarDefaultWidth + "px" : "98px"
+              } 1fr`,
+              gridTemplateRows: "auto 1fr auto",
+              gridTemplateAreas: `"left main" "left main" "left main"`,
+            }}
+          >
+            <div
+              className={cn(
+                "oui-h-[calc(100% - 29px)",
+                classNames?.leftSidebar
+              )}
+            >
+              {/* @ts-ignore */}
+              {typeof props.leftSidebar !== "undefined" ? (
+                props.leftSidebar
+              ) : (
+                <SideNavbarWidget {...props.leftSideProps} />
+              )}
 
-            {/* <SideNavbarWidget {...props.leftSideProps} /> */}
-          </div>
-          <Box>{props.children}</Box>
-        </Grid>
+              {/* <SideNavbarWidget {...props.leftSideProps} /> */}
+            </div>
+            <Box className={classNames?.content}>{props.children}</Box>
+          </Grid>
+          // ---------- left & body layout end ---------
+        )}
 
         <Box
           className={cn(

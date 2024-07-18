@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react";
-import { Box, Flex, tv, VariantProps, Text } from "@orderly.network/ui";
+import { Box, Flex, tv, VariantProps, Text, cn } from "@orderly.network/ui";
 
 type SideMenuItem = {
   name: string;
@@ -146,20 +146,28 @@ const SideMenus: FC<{
 type SideBarHeaderProps = {
   onToggle?: () => void;
   open?: boolean;
+  title?: React.ReactNode;
 };
 
 const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
+  const { title } = props;
+
+  const titleElemet =
+    typeof title === "string" ? (
+      <Text intensity={54} size="xs">
+        {title}
+      </Text>
+    ) : (
+      title
+    );
+
   return (
     <Flex
       justify={props.open ? "between" : "center"}
       itemAlign={"center"}
       className="oui-h-6"
     >
-      {props.open ? (
-        <Text intensity={54} size="xs">
-          Portfolio
-        </Text>
-      ) : null}
+      {props.open ? titleElemet : null}
 
       <button
         onClick={() => {
@@ -186,6 +194,7 @@ const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
 };
 
 type SideBarProps = {
+  title?: React.ReactNode;
   items: SideMenuItem[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -194,15 +203,21 @@ type SideBarProps = {
   className?: string;
   maxWidth?: number;
   minWidth?: number;
+  style?: React.CSSProperties;
 };
 
 const SideBar = (props: SideBarProps) => {
   const { open = true, items, current, onItemSelect } = props;
 
   return (
-    <Box data-state={open ? "opened" : "closed"} className="oui-group/bar">
+    <Box
+      data-state={open ? "opened" : "closed"}
+      className={cn("oui-group/bar", props.className)}
+      style={props.style}
+    >
       <SideBarHeader
         open={open}
+        title="Portfolio"
         onToggle={() => {
           props.onOpenChange?.(!open);
         }}

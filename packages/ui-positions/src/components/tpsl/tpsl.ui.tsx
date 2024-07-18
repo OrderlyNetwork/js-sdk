@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Divider,
   Flex,
@@ -10,11 +9,18 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
+import { TPSLBuilderState } from "./useTPSL.script";
 
-export const TPSL = () => {
+export const TPSL = (props: TPSLBuilderState) => {
   return (
     <div id="orderly-tp_sl-order-edit-content">
-      <TPSLQuantity />
+      {!props.isEditing && (
+        <TPSLQuantity
+          maxQty={props.maxQty}
+          tick={props.symbolInfo("base_tick")}
+        />
+      )}
+
       <Divider my={4} intensity={8} />
       <TPSLPrice />
       <Grid cols={2} gap={3} mt={4}>
@@ -27,12 +33,17 @@ export const TPSL = () => {
   );
 };
 
-const TPSLQuantity = () => {
+const TPSLQuantity = (props: { maxQty: number; tick: number }) => {
   return (
     <>
       <Flex gap={2}>
         <div className={"oui-flex-1"}>
-          <Input prefix={"Quantity"} size={"md"} />
+          <Input
+            prefix={"Quantity"}
+            size={"md"}
+            align="right"
+            autoComplete="off"
+          />
         </div>
         <Button
           variant={"outlined"}
@@ -43,7 +54,15 @@ const TPSLQuantity = () => {
         </Button>
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
-        <Slider markCount={5} color="primaryLight" />
+        <Slider
+          markCount={5}
+          color="primaryLight"
+          max={props.maxQty}
+          min={0}
+          onValueChange={(value) => {
+            console.log(value);
+          }}
+        />
       </Flex>
       <Flex justify={"between"}>
         <Text.numeral rule={"percentages"} color={"primaryLight"} size={"2xs"}>
@@ -55,8 +74,13 @@ const TPSLQuantity = () => {
               Max
             </Text>
           </button>
-          <Text.numeral rule={"price"} size={"2xs"} intensity={54}>
-            4.25
+          <Text.numeral
+            rule={"price"}
+            size={"2xs"}
+            intensity={54}
+            tick={props.tick}
+          >
+            {props.maxQty}
           </Text.numeral>
         </Flex>
       </Flex>
