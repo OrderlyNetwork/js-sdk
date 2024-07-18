@@ -9,5 +9,10 @@ export type MarketListWidgetProps = {
 
 export const MarketListWidget: React.FC<MarketListWidgetProps> = (props) => {
   const state = useMarketListScript(props);
-  return <MarketList {...state} />;
+  return (
+    <MarketList
+      {...state}
+      initialSort={{ sortKey: props.sortKey, sort: props.sortOrder }}
+    />
+  );
 };

@@ -23,7 +23,7 @@ export const TradingRewardsLayout = (
 
   return (
     <Scaffold
-      leftSidebar={props.hideSideBar ? undefined : <LeftSidebar {...rest} />}
+      leftSidebar={props.hideSideBar ? (<></>) : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
     >
       <Box mx={3} my={6}>

@@ -2,18 +2,28 @@ import { FC } from "react";
 import { cn, DataTable, Pagination } from "@orderly.network/ui";
 import { type UseMarketListReturn } from "./marketList.script";
 import { useDataListColumns } from "../column";
+import { TInitialSort } from "../../../../type";
 
-type MarketListProps = UseMarketListReturn;
+type MarketListProps = UseMarketListReturn & {
+  initialSort: TInitialSort;
+};
 
 export const MarketList: FC<MarketListProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
+  const {
+    dataSource,
+    meta,
+    setPage,
+    setPageSize,
+    favorite,
+    onSort,
+    initialSort,
+  } = props;
   const columns = useDataListColumns(favorite, false);
 
   return (
     <DataTable
       bordered
       classNames={{
-        // root: "oui-bg-base-900",
         header: "oui-text-base-contrast-36",
         body: "oui-text-base-contrast-80",
       }}
@@ -29,7 +39,8 @@ export const MarketList: FC<MarketListProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
-      // onSort={onSort}
+      onSort={onSort}
+      initialSort={initialSort}
     >
       <Pagination
         {...meta}

@@ -115,7 +115,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           // ---------- left & body layout start ---------
           <Grid
             className={cn(
-              "oui-box-content oui-transition-all oui-h-[calc(100%-29px)]",
+              "oui-box-content oui-transition-all oui-h-[calc(100%-29px)] oui-flex xl:oui-grid",
               classNames?.body
             )}
             style={{
@@ -141,7 +141,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
               {/* <SideNavbarWidget {...props.leftSideProps} /> */}
             </div>
-            <Box className={classNames?.content}>{props.children}</Box>
+            <Box width={"100%"} className={classNames?.content}>{props.children}</Box>
           </Grid>
           // ---------- left & body layout end ---------
         )}
