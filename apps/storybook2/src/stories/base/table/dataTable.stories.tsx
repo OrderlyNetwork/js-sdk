@@ -243,6 +243,10 @@ export const SortableByBackend: Story = {
   },
   args: {
     onSort: fn(),
+    initialSort: {
+      sortKey: "created_time",
+      sort: "asc",
+    },
   },
 };
 

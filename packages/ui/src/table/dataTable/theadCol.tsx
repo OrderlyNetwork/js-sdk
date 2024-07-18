@@ -21,8 +21,8 @@ const TheadColItem = (
     content = (
       <button
         className={cnBase(
-          "hover:oui-text-base-contrast oui-inline-flex oui-gap-1 oui-items-center",
-          sortKey === column.dataIndex && "oui-text-base-contrast"
+          "hover:oui-text-base-contrast oui-inline-flex oui-gap-1 oui-items-center oui-text-base-contrast-36"
+          // sortKey === column.dataIndex && "oui-text-base-contrast"
         )}
         onClick={(e) => {
           e.stopPropagation();
@@ -81,7 +81,7 @@ const TheadColItem = (
   return (
     <td
       className={cnBase(
-        "oui-px-1 oui-py-[3px] oui-h-10",
+        "oui-px-1 oui-py-[3px] oui-h-10 oui-text-base-contrast-36",
         column.align === "right" && "oui-text-right",
         column.align === "center" && "oui-text-center",
         props.justified && "first:oui-pl-0 last:oui-pr-0",
