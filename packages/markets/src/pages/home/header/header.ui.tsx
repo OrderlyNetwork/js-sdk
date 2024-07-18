@@ -22,6 +22,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
   );
   return (
     <div
+      id="oui-markets-header"
       className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
       ref={enableScroll ? emblaRef : undefined}
     >

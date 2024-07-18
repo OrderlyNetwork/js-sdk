@@ -79,6 +79,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const onDel = (item: any) => {
     modal.confirm({
       title: "Delete list",
+      contentClassName: "oui-markets-home-page",
       content: (
         <Text size="sm">{`Are you sure you want to delete ${item.name}?`}</Text>
       ),
