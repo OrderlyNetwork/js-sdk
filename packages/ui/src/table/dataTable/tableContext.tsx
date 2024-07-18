@@ -63,9 +63,14 @@ export const TableProvider: FC<
     meta?: DataMetaData;
 
     onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
+    initialSort?: { sortKey: string; sort: SortOrder };
   }>
 > = (props) => {
-  const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>();
+  const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>(
+    props.initialSort
+      ? [props.initialSort.sortKey, props.initialSort.sort]
+      : undefined
+  );
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
   // const [sortOrder, setSortOrder] = useState<SortOrder>();
 

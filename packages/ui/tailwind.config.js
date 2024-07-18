@@ -29,7 +29,7 @@ module.exports = withTV({
       "3xs": ["var(--oui-font-size-3xs, 0.625rem)", "0.625rem"], // 10px
       "2xs": ["var(--oui-font-size-2xs, 0.75rem)", "1.125rem"], // 12px
       xs: ["var(--oui-font-size-xs, calc(0.875rem - 1px))", "1.25rem"], // 13px
-      sm: ["var(--oui-font-size-sm, 	0.875rem)", "1.25rem"], // 14px
+      sm: ["var(--oui-font-size-sm,0.875rem)", "1.25rem"], // 14px
       base: ["var(--oui-font-size-base, 1rem)", "1.5rem"], // 16px
       lg: ["var(--oui-font-size-lg, 1.125rem)", "1.625rem"], // 18px
       xl: ["var(--oui-font-size-xl, 1.25rem)", "1.75rem"], // 20px
@@ -143,13 +143,13 @@ module.exports = withTV({
         // }
       },
       animation: {
-        'rotate-360': 'rotate 1s linear infinite',
+        "rotate-360": "rotate 1s linear infinite",
       },
       keyframes: {
         rotate: {
-          '0%': { transform: 'rotate(0deg)' },
-          '50%': { transform: 'rotate(240deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+          "0%": { transform: "rotate(0deg)" },
+          "50%": { transform: "rotate(240deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
       },
     },
