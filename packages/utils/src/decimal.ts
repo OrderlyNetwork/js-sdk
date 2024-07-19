@@ -10,6 +10,12 @@ export const cutNumber = (num: number | string, lenght: number) => {};
 
 export const zero = new Decimal(0);
 
+/** if num is undefined, returns '-', otherwise it formats */
+export const commifyOptional = (num?: number | string, fix?: number): string => {
+  if (typeof num === 'undefined') return "-";
+  return commify(num, fix);
+}
+
 export const commify = (num: number | string, fix?: number): string => {
   const str = `${num}`;
   var parts = str.split(".");

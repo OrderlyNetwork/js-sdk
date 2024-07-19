@@ -3,7 +3,7 @@ import { Box, Button, Flex, Text, cn } from "@orderly.network/ui";
 import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";
-import { commify } from "@orderly.network/utils";
+import { commify, commifyOptional } from "@orderly.network/utils";
 
 export const CurEpochUI: FC<CurEpochReturns> = (props) => {
   const state = props;
@@ -12,6 +12,7 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
   const endTime = curEpochInfo?.end_time;
   const curEpochId = curEpochInfo?.epoch_id;
   const max_reward_amount = curEpochInfo?.max_reward_amount;
+  const token = curEpochInfo?.epoch_token;
   return (
     <Flex
       r={"2xl"}
@@ -37,7 +38,7 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
           <Statics
             title="Epoch rewards"
             highLight={max_reward_amount ? commify(max_reward_amount) : "-"}
-            text="ORDER"
+            text={token}
           />
         </Flex>
         <EstRewards
@@ -93,11 +94,7 @@ const EstRewards: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text.numeral
-          rule={"human"}
-          dp={2}
-          children={props.estRewards || "-"}
-        />
+        <Text children={commifyOptional(props.estRewards, 2)} />
       </Flex>
     </Flex>
   );
@@ -129,13 +126,7 @@ const Statics: FC<{
       >
         {title}
       </Text>
-      <Flex
-        direction={"row"}
-        gap={1}
-        itemAlign={"end"}
-        justify={"center"}
-        className="oui-leading-[24px] md:oui-leading-[26px] lg:oui-leading-[28px] xl:oui-leading-[32px]"
-      >
+      <Flex direction={"row"} gap={1} itemAlign={"end"} justify={"center"}>
         <Text.gradient
           color="brand"
           angle={90}
@@ -143,7 +134,10 @@ const Statics: FC<{
         >
           {highLight}
         </Text.gradient>
-        <Text className="oui-text-base-contrast-80 oui-text-2xs md:oui-text-xs xl:oui-text-sm ">
+        <Text
+          intensity={80}
+          className="oui-text-2xs md:oui-text-xs xl:oui-text-sm oui-mb-[3px]"
+        >
           {text}
         </Text>
       </Flex>

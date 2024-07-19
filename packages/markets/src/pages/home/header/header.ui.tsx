@@ -2,6 +2,7 @@ import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useMarketsContext } from "../provider";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
@@ -15,6 +16,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     losers,
     total24Amount,
     totalOpenInterest,
+    tvl,
   } = props;
   const cls = cn(
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
@@ -23,13 +25,14 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
   return (
     <div
       id="oui-markets-header"
-      className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
+      className="oui-overflow-hidden"
       ref={enableScroll ? emblaRef : undefined}
     >
       <Flex width="100%" gapX={4} mt={4}>
         <BlockList
           total24Amount={total24Amount}
           totalOpenInterest={totalOpenInterest}
+          tvl={tvl}
           className={cls}
         />
         <CardItem
@@ -64,12 +67,12 @@ type BlockListProps = {
   className?: string;
   total24Amount?: number;
   totalOpenInterest?: number;
-  assets?: number;
+  tvl?: number;
 };
 
 /** -----------MarketsHeader start ------------ */
 const BlockList: React.FC<BlockListProps> = (props) => {
-  const { total24Amount, totalOpenInterest, assets } = props;
+  const { total24Amount, totalOpenInterest, tvl } = props;
 
   const list = useMemo(() => {
     return [
@@ -83,10 +86,10 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       },
       {
         label: "Assets (TVL)",
-        value: assets,
+        value: tvl,
       },
     ];
-  }, [total24Amount, totalOpenInterest, assets]);
+  }, [total24Amount, totalOpenInterest, tvl]);
   return (
     <Flex
       direction="column"
@@ -115,13 +118,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral
-        size="base"
-        currency="$"
-        className=""
-        dp={0}
-        rm={Decimal.ROUND_DOWN}
-      >
+      <Text.numeral size="base" currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
         {props.value!}
       </Text.numeral>
     </Box>
@@ -139,14 +136,16 @@ const CardItem: React.FC<CardItemProps> = (props) => {
     <Box
       intensity={900}
       r="lg"
-      p={4}
+      py={4}
       pb={2}
       // width="100%"
       className={props.className}
     >
-      <Text.gradient color="brand" size="sm" weight="semibold">
-        {props.title}
-      </Text.gradient>
+      <Box px={4}>
+        <Text.gradient color="brand" size="sm" weight="semibold">
+          {props.title}
+        </Text.gradient>
+      </Box>
 
       <Flex direction="column" itemAlign="start" mt={2}>
         {props.data?.map((item, index) => (
@@ -172,8 +171,20 @@ type ListItemProps = {
 
 const ListItem: React.FC<ListItemProps> = (props) => {
   const { item } = props;
+
+  const { onSymbolChange } = useMarketsContext();
+
   return (
-    <Flex width="100%" gapX={3} py={2} className={props.className}>
+    <Flex
+      width="100%"
+      gapX={3}
+      py={2}
+      px={4}
+      className={cn("hover:oui-bg-base-8 oui-cursor-pointer", props.className)}
+      onClick={() => {
+        onSymbolChange?.(item as any);
+      }}
+    >
       <Flex width="100%" gapX={1}>
         {/* <TokenIcon symbol={item.symbol} size="xs" /> */}
         <Text.formatted

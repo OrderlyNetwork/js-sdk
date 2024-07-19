@@ -5,10 +5,14 @@ import { AvailableToClaimWidget } from "./availableToClaim";
 import { StakeBoosterWidget } from "./stakeBooster";
 import { RewardsHistoryWidget } from "./rewardsHistory";
 import { TradingRewardsProvider } from "./provider";
+import { FC } from "react";
+import { TitleConfig } from "./title/title.script";
 
-export const IndexPage = () => {
+export const IndexPage: FC<{
+  titleConfig?: TitleConfig
+}> = (props) => {
   return (
-    <TradingRewardsProvider>
+    <TradingRewardsProvider titleConfig={props.titleConfig}>
       <Flex
         className={cn(
           "oui-h-lvw oui-w-full",

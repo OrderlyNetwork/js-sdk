@@ -1,11 +1,14 @@
+import { FC } from "react";
 import { Box, Text } from "@orderly.network/ui";
 import { MarketsDataListWidget } from "./dataList";
 import { MarketsHeaderWidget } from "./header/widget";
-import { MarketsProvider } from "./provider";
+import { MarketsProvider, MarketsProviderProps } from "./provider";
 
-export const MarketsHomePage = () => {
+export type MarketsHomePageProps = MarketsProviderProps;
+
+export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
   return (
-    <MarketsProvider>
+    <MarketsProvider onSymbolChange={props.onSymbolChange}>
       <Box id="oui-markets-home-page" className="oui-font-semibold" p={6}>
         <Text size="2xl" weight="semibold">
           Markets

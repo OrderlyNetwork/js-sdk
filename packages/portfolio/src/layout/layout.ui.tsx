@@ -37,6 +37,7 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   return (
     <Box p={4} m={3} border borderColor={8} r={"xl"} height={"100%"}>
       <SideBar
+        title="Portfolio"
         {...props}
         open={expanded}
         onOpenChange={(open) => setExpand(open)}
