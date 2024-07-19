@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "1.5.10-sdk-v2.21",
+  "version": "1.5.10-sdk-v2.22",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",
