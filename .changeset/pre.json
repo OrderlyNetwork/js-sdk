@@ -36,6 +36,7 @@
     "@orderly.network/web3-modal": "1.5.10-internal.0"
   },
   "changesets": [
+    "beige-horses-judge",
     "brown-pears-rescue",
     "clean-rings-judge",
     "curly-otters-cheer",
