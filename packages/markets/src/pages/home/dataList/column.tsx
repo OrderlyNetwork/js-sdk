@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { MouseEventHandler, useMemo } from "react";
 import {
   type Column,
   Flex,
@@ -23,13 +23,18 @@ export const useDataListColumns = (
         dataIndex: "isFavorite",
         width: 30,
         render: (value, record) => {
-          const onDelSymbol = () => {
+          const onDelSymbol: MouseEventHandler = (e) => {
             favorite.updateSymbolFavoriteState(record, favorite.curTab, true);
+            e.stopPropagation();
           };
 
           const button = (
-            <Box
+            <Flex
+              width="100%"
+              height="100%"
               className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
+              justify="center"
+              itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}
             >
               {value ? (
@@ -37,7 +42,7 @@ export const useDataListColumns = (
               ) : (
                 <UnFavoritesIcon className="oui-cursor-pointer" />
               )}
-            </Box>
+            </Flex>
           );
 
           if (isFavoriteList) {
