@@ -1,5 +1,13 @@
 # @orderly.network/chart
 
+## 1.0.1-sdk-v2.23
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui@1.0.1-sdk-v2.23
+
 ## 1.0.1-sdk-v2.22
 
 ### Patch Changes
