@@ -1,6 +1,6 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["src", "tsup.config.ts"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "exclude": [
     "dist",
     "build",
@@ -16,7 +16,7 @@
   "compilerOptions": {
     // "rootDir": "./src",
     "jsx": "react-jsx",
-    "sourceMap": true,
+    "sourceMap": false,
     "module": "esnext",
     "outDir": "dist",
     "declarationDir": "types",
@@ -24,16 +24,5 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/@types"],
-    "paths": {
-      "@orderly.network/react": ["../component/src"],
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/chart": ["../chart/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/types": ["../types/src"],
-      "@orderly.network/ui-connector": ["../ui-connector/src"],
-      "@orderly.network/ui-positions": ["../ui-positions/src"],
-      "@orderly.network/ui-scaffold": ["../ui-scaffold/src"]
-    }
   }
 }

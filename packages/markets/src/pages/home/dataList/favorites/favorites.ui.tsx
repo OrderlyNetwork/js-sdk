@@ -15,11 +15,15 @@ import { useDataListColumns } from "../column";
 import { EditIcon, TrashIcon, AddIcon } from "../../../../icons";
 import { TFavorite } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
+import { useMarketsContext } from "../../provider";
 
 type FavoritesProps = {} & UseFavoritesReturn;
 
 export const Favorites: FC<FavoritesProps> = (props) => {
   const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
+
+  const { onSymbolChange } = useMarketsContext();
+
   const columns = useDataListColumns(favorite, true);
 
   return (
@@ -36,7 +40,13 @@ export const Favorites: FC<FavoritesProps> = (props) => {
         dataSource={dataSource}
         onRow={(record, index) => {
           return {
-            className: "oui-h-[55px] oui-border-line-12",
+            className: cn(
+              "group",
+              "oui-h-[55px] oui-border-line-4 oui-cursor-pointer"
+            ),
+            onClick: () => {
+              onSymbolChange?.(record);
+            },
           };
         }}
         generatedRowKey={(record) => record.symbol}

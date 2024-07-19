@@ -6,14 +6,14 @@ import { useMemo, useState } from "react";
 export const useLayoutBuilder = (): SideBarProps & {
   hideSideBar: boolean;
 } => {
-  const [current, setCurrent] = useState("/");
+  const [current, setCurrent] = useState("/rewards");
   // const [sideOpen, setSideOpen] = useState(true);
 
   const items = useMemo(() => {
     return [
       {
         name: "Trading",
-        href: "/",
+        href: "/rewards",
         icon: (
           <svg
             width="18"
@@ -45,7 +45,7 @@ export const useLayoutBuilder = (): SideBarProps & {
       },
       {
         name: "Affiliate",
-        href: "/affiliate",
+        href: "/rewards/affiliate",
         icon: (
           <svg
             width="18"

@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Decimal } from "@orderly.network/utils";
-import { useMarketsStream, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useMarketsStream,
+  useSymbolsInfo,
+  useQuery,
+} from "@orderly.network/hooks";
 import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
@@ -45,6 +49,7 @@ export const useMarketsHeaderScript = () => {
 export function useDataSource() {
   const symbolsInfo = useSymbolsInfo();
   const { data: futures } = useMarketsStream();
+  const { data: balance } = useQuery("/v1/public/balance/stats");
 
   const markets = useMemo(() => {
     const list = futures?.map((item: any) => {
@@ -92,6 +97,15 @@ export function useDataSource() {
     [markets]
   );
 
+  const tvl = useMemo(() => {
+    if (balance) {
+      const { total_holding = 0, total_unsettled_balance = 0 } = balance as any;
+      return new Decimal(total_holding)
+        .plus(total_unsettled_balance)
+        .toNumber();
+    }
+  }, [balance]);
+
   return {
     markets,
     news,
@@ -99,5 +113,6 @@ export function useDataSource() {
     losers,
     total24Amount: total24Amount.toNumber(),
     totalOpenInterest: totalOpenInterest.toNumber(),
+    tvl,
   };
 }

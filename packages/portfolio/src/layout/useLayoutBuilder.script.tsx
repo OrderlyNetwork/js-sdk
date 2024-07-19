@@ -2,16 +2,19 @@ import type { SideBarProps } from "@orderly.network/ui-scaffold";
 import { useMemo, useState } from "react";
 
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useMediaQuery } from "@orderly.network/hooks";
 
-export const useLayoutBuilder = (): SideBarProps => {
+export const useLayoutBuilder = (): SideBarProps & {
+  hideSideBar: boolean;
+} => {
   const { routerAdapter } = useScaffoldContext();
-  const [current, setCurrent] = useState(routerAdapter?.currentPath ?? "/");
+  const [current, setCurrent] = useState(routerAdapter?.currentPath ?? "/portfolio");
 
   const items = useMemo(() => {
     return [
       {
         name: "Overview",
-        href: "/",
+        href: "/portfolio",
         icon: (
           <svg
             width="18"
@@ -29,7 +32,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "Positions",
-        href: "/positions",
+        href: "/portfolio/positions",
         icon: (
           <svg
             width="18"
@@ -47,7 +50,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "Orders",
-        href: "/orders",
+        href: "/portfolio/orders",
         icon: (
           <svg
             width="18"
@@ -65,7 +68,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "Fee tier",
-        href: "/fee",
+        href: "/portfolio/feeTier",
         icon: (
           <svg
             width="18"
@@ -83,7 +86,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "API key",
-        href: "/api",
+        href: "/portfolio/apiKey",
         icon: (
           <svg
             width="18"
@@ -101,7 +104,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "Setting",
-        href: "/setting",
+        href: "/portfolio/setting",
         icon: (
           <svg
             width="18"
@@ -120,10 +123,12 @@ export const useLayoutBuilder = (): SideBarProps => {
     ];
   }, []);
 
+  const hideSideBar = useMediaQuery("(max-width: 768px)");
+
   return {
     items,
     current,
-
+    hideSideBar,
     onItemSelect: (item) => {
       // console.log("item", item);
       if (typeof item.href === "undefined") {

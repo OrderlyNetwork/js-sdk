@@ -10,7 +10,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const meta = {
-    title: "Package/Markets",
+    title: "Package/Markets/HomePage",
     component: MarketsHomePage,
     subcomponents: {
        
@@ -62,7 +62,7 @@ export const Favorites: Story = {
 
 export const AllMarkets: Story = {
   render: (args) => {
-    return <MarketListWidget sortKey="24h_amount" sortOrder="desc" />
+    return <MarketListWidget type="all"  sortKey="24h_amount" sortOrder="desc" />
   },
 
   decorators: [
@@ -76,7 +76,7 @@ export const AllMarkets: Story = {
   
 export const NewListings: Story = {
     render: (args) => {
-      return <MarketListWidget sortKey="created_time" sortOrder="desc" />
+      return <MarketListWidget type="new"  sortKey="created_time" sortOrder="desc" />
     },
   
     decorators: [

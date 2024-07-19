@@ -66,7 +66,7 @@ export const useFundingHistoryColumns = () => {
           showIdentifier: true,
         },
       },
-    ];
+    ] as Column<API.FundingFeeRow & { annual_rate: number }>[];
   }, []);
 
   return columns;

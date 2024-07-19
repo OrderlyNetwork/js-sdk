@@ -67,8 +67,6 @@ export function useSize() {
   const [height, setHeight] = useState<number>(0);
 
   useEffect(() => {
-    // window.innerWidth包含滚动条的宽度，document.body.clientWidth不包含滚动条宽度
-    // css媒体查询使用的是包含滚动条的宽度，所以这里用window.innerWidth
     setWidth(window.innerWidth);
     setHeight(window.innerHeight);
 

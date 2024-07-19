@@ -45,6 +45,11 @@ export interface Recent {
   name: string;
 }
 
+export interface TabSort {
+  sortKey: string;
+  sortOrder: string;
+}
+
 export const useMarkets = (type: MarketsType) => {
   const marketsKey = "markets";
   const symbolsInfo = useSymbolsInfo();
@@ -53,6 +58,17 @@ export const useMarkets = (type: MarketsType) => {
 
   const { data: futures } = useMarketsStream();
   const { configStore } = useContext(OrderlyContext);
+
+  const updateStore = (data: Record<string, any>) => {
+    configStore.set(marketsKey, {
+      ...configStore.getOr(marketsKey, {}),
+      ...data,
+    });
+  };
+
+  const getStore = <T>(key: string, defaultValue: T) => {
+    return (configStore.get(marketsKey)[key as any] as T) || defaultValue;
+  };
 
   // {"PERP_ETH_USDC": {}, ...}
 
@@ -113,6 +129,9 @@ export const useMarkets = (type: MarketsType) => {
   const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
   const [favorites, setFavorites] = useState(getFavorites);
   const [recent, setRecent] = useState(getRecent);
+  const [tabSort, setTabSort] = useState(
+    getStore<Record<string, TabSort>>("tabSort", {})
+  );
 
   const updateFavoriteTabs = (
     tab: FavoriteTab | FavoriteTab[],
@@ -331,19 +350,36 @@ export const useMarkets = (type: MarketsType) => {
     });
   };
 
+  const updateTabsSortState = (
+    tabId: string,
+    sortKey: string,
+    sortOrder: "desc" | "asc"
+  ) => {
+    const map = getStore<Record<string, TabSort>>("tabSort", {});
+
+    map[tabId] = {
+      sortKey,
+      sortOrder,
+    };
+
+    updateStore({ tabSort: map });
+    setTabSort(map);
+  };
+
   return [
     markets || [],
     {
       favoriteTabs: tabs,
       favorites,
       recent,
+      tabSort,
       addToHistory,
-      // updateFavoriteTabs("tab", operator: {add/update/delete})
       updateFavoriteTabs,
       updateSymbolFavoriteState,
       pinToTop,
       getLastSelFavTab,
       updateSelectedFavoriteTab,
+      updateTabsSortState,
     },
   ] as const;
 };

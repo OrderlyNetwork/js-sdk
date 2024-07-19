@@ -3,6 +3,7 @@ import { cn, DataTable, Pagination } from "@orderly.network/ui";
 import { type UseMarketListReturn } from "./marketList.script";
 import { useDataListColumns } from "../column";
 import { TInitialSort } from "../../../../type";
+import { useMarketsContext } from "../../provider";
 
 type MarketListProps = UseMarketListReturn & {
   initialSort: TInitialSort;
@@ -18,6 +19,9 @@ export const MarketList: FC<MarketListProps> = (props) => {
     onSort,
     initialSort,
   } = props;
+
+  const { onSymbolChange } = useMarketsContext();
+
   const columns = useDataListColumns(favorite, false);
 
   return (
@@ -31,11 +35,10 @@ export const MarketList: FC<MarketListProps> = (props) => {
       dataSource={dataSource}
       onRow={(record, index) => {
         return {
-          className: cn(
-            "group",
-            "oui-h-[55px] oui-border-line-4 oui-cursor-pointer",
-            "oui-bg-base-9 hover:oui-bg-base-8"
-          ),
+          className: cn("oui-h-[55px] oui-border-line-4 oui-cursor-pointer"),
+          onClick: () => {
+            onSymbolChange?.(record);
+          },
         };
       }}
       generatedRowKey={(record) => record.symbol}
@@ -46,7 +49,6 @@ export const MarketList: FC<MarketListProps> = (props) => {
         {...meta}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
-        // className="oui-flex oui-justify-between"
       />
     </DataTable>
   );
