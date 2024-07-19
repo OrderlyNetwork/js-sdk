@@ -12,9 +12,19 @@ const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
 module.exports = withTV({
   mode: "jit",
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,js,tsx,jsx}"],
+  content: [
+    "./src/**/*.{ts,js,tsx,jsx}",
+    "../ui-connector/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-orders/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-positions/src/**/*.{ts,js,tsx,jsx}",
+    "../trading-rewards/src/**/*.{ts,js,tsx,jsx}",
+    "../portfolio/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-scaffold/src/**/*.{ts,js,tsx,jsx}",
+    "../affiliate/src/**/*.{ts,js,tsx,jsx}",
+    "../markets/src/**/*.{ts,js,tsx,jsx}",
+    "../chart/src/**/*.{ts,js,tsx,jsx}",
+  ],
   prefix: "oui-",
-
   theme: {
     screens: {
       sm: "375px",
