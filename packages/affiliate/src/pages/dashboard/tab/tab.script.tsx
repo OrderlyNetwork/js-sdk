@@ -53,12 +53,12 @@ export const useTabScript = (): TabReturns => {
 
   return {
     setTab,
-    // tab: tableValue,
-    // isAffiliate,
-    // isTrader,
-    tab: TabTypes.trader,
-    isAffiliate: false,
-    isTrader: true,
+    tab: tableValue,
+    isAffiliate,
+    isTrader,
+    // tab: TabTypes.trader,
+    // isAffiliate: false,
+    // isTrader: true,
     isLoading,
     anAnAffiliate,
     anATrader,
