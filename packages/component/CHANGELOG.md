@@ -1,5 +1,18 @@
 # @orderly.network/react
 
+## 1.5.10-sdk-v2.25
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/trading-view@1.5.10-sdk-v2.25
+  - @orderly.network/hooks@1.5.10-sdk-v2.25
+  - @orderly.network/types@1.5.10-sdk-v2.25
+  - @orderly.network/utils@1.5.10-sdk-v2.25
+  - @orderly.network/core@1.5.10-sdk-v2.25
+  - @orderly.network/net@1.5.10-sdk-v2.25
+
 ## 1.5.10-sdk-v2.24
 
 ### Patch Changes
