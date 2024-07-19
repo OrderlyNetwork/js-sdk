@@ -3,7 +3,7 @@ import { BecomeAffiliateWidget } from "./becomeAffiliate";
 import { TopWidget } from "./top";
 import { CardWidget } from "./card";
 
-export const IndexPage = () => {
+export const HomePage = () => {
   return (
     <Flex
       className={cn(

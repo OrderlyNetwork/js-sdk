@@ -15,7 +15,7 @@ import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
-import { IndexPage } from "../../index";
+import { HomePage } from "../../home";
 
 export const TabUI: FC<TabReturns> = (props) => {
   const extendNode = () => {
@@ -55,14 +55,10 @@ export const TabUI: FC<TabReturns> = (props) => {
     return undefined;
   };
 
-  if (props.isLoading) {
-    return <Spinner />;
-  }
 
-
-  if (!props.isAffiliate && !props.isTrader) {
+  if ((!props.isAffiliate && !props.isTrader) || props.isLoading) {
     return (
-      <IndexPage />
+      <HomePage />
     );
   }
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 
 export type TabReturns = {
@@ -9,6 +9,7 @@ export type TabReturns = {
   isLoading: boolean;
   anAnAffiliate: () => void;
   anATrader: () => void;
+  splashPage?: () => ReactNode | undefined;
 };
 
 export enum TabTypes {
@@ -24,8 +25,15 @@ export const useTabScript = (): TabReturns => {
     becomeAnAffiliateUrl,
     onBecomeAnAffiliate,
     showReferralPage,
+    splashPage
+    
   } = useReferralContext();
   const [tab, setTab] = useState<TabTypes>(TabTypes.trader);
+  const [showHome, setShowHome] = useState(isLoading);
+
+  useEffect(() => {
+    setShowHome(true);
+  }, [isLoading]);
 
   const tableValue = useMemo((): TabTypes => {
     if (isAffiliate && isTrader) {
@@ -53,14 +61,16 @@ export const useTabScript = (): TabReturns => {
 
   return {
     setTab,
-    tab: tableValue,
-    isAffiliate,
-    isTrader,
-    // tab: TabTypes.trader,
-    // isAffiliate: false,
-    // isTrader: true,
-    isLoading,
+    // tab: tableValue,
+    // isAffiliate,
+    // isTrader,
+    // isLoading,
     anAnAffiliate,
     anATrader,
+    splashPage,
+    tab: TabTypes.trader,
+    isAffiliate: false,
+    isTrader: true,
+    isLoading: false,
   };
 };
