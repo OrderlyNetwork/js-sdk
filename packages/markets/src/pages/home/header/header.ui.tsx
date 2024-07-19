@@ -15,6 +15,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     losers,
     total24Amount,
     totalOpenInterest,
+    tvl,
   } = props;
   const cls = cn(
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
@@ -30,6 +31,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
         <BlockList
           total24Amount={total24Amount}
           totalOpenInterest={totalOpenInterest}
+          tvl={tvl}
           className={cls}
         />
         <CardItem
@@ -64,12 +66,12 @@ type BlockListProps = {
   className?: string;
   total24Amount?: number;
   totalOpenInterest?: number;
-  assets?: number;
+  tvl?: number;
 };
 
 /** -----------MarketsHeader start ------------ */
 const BlockList: React.FC<BlockListProps> = (props) => {
-  const { total24Amount, totalOpenInterest, assets } = props;
+  const { total24Amount, totalOpenInterest, tvl } = props;
 
   const list = useMemo(() => {
     return [
@@ -83,10 +85,10 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       },
       {
         label: "Assets (TVL)",
-        value: assets,
+        value: tvl,
       },
     ];
-  }, [total24Amount, totalOpenInterest, assets]);
+  }, [total24Amount, totalOpenInterest, tvl]);
   return (
     <Flex
       direction="column"
@@ -115,13 +117,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral
-        size="base"
-        currency="$"
-        className=""
-        dp={0}
-        rm={Decimal.ROUND_DOWN}
-      >
+      <Text.numeral size="base" currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
         {props.value!}
       </Text.numeral>
     </Box>
