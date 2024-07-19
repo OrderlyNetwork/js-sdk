@@ -65,7 +65,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "Fee tier",
-        href: "/fee",
+        href: "/feeTier",
         icon: (
           <svg
             width="18"
@@ -83,7 +83,7 @@ export const useLayoutBuilder = (): SideBarProps => {
       },
       {
         name: "API key",
-        href: "/api",
+        href: "/apiKey",
         icon: (
           <svg
             width="18"
