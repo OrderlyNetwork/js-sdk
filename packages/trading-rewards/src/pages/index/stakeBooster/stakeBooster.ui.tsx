@@ -5,7 +5,7 @@ import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { RocketIcon } from "../components/rocket";
 import { StakeBoosterReturns } from "./stakeBooster.script";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal, commify, commifyOptional } from "@orderly.network/utils";
 
 export const StakeBoosterUI: FC<StakeBoosterReturns> = (props) => {
   const booster = useMemo(() => {
@@ -40,14 +40,14 @@ export const StakeBoosterUI: FC<StakeBoosterReturns> = (props) => {
           className="oui-cursor-pointer"
         >
           <Text color="primary" size="sm">
-            Stake now
+            Stake
           </Text>
           <JumpIcon />
         </Flex>
       </Flex>
       <Flex direction={"row"} gap={3} width={"100%"}>
         <Statics
-          title="avg. staked amount"
+          title="Avg. staked amount"
           value={props.curEpochEstimate?.est_avg_stake}
           icon={
             <div className="oui-flex oui-w-[32px] oui-h-[20px] oui-relative">
@@ -100,13 +100,11 @@ const Statics: FC<{
             {calcValue + (calcValue === '--' ? '' : 'x')}
           </Text.gradient>
         ) : (
-          <Text.numeral
-            rule={"human"}
+          <Text
             className="oui-text-sm xl:oui-text-base"
-            dp={2}
           >
-            {props.value || "-"}
-          </Text.numeral>
+            {commifyOptional(props.value)}
+          </Text>
         )}
       </Flex>
     </Flex>

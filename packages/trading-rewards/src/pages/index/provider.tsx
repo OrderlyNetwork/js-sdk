@@ -12,6 +12,7 @@ import {
   WalletRewards,
   WalletRewardsHisotryReturns,
 } from "@orderly.network/hooks";
+import { TitleConfig } from "./title/title.script";
 
 export type TradingRewardsState = {
   type: TWType;
@@ -23,39 +24,32 @@ export type TradingRewardsState = {
   ];
   curEpochEstimate?: CurrentEpochEstimate;
   walletRewardsHistory: WalletRewardsHisotryReturns;
+  titleConfig: TitleConfig;
 };
 
-export const TradingRewardsContext = createContext<TradingRewardsState>({
-  type: TWType.normal,
-  totalOrderClaimedReward: [undefined, { refresh: () => {} }],
-  totalEsOrderClaimedReward: [undefined, { refresh: () => {} }],
-  epochList: [
-    undefined,
-    {
-      curEpochInfo: undefined,
-      isUnstart: false,
-      refresh: () => {},
-    },
-  ],
-  walletRewardsHistory: [
-    undefined,
-    {
-      refresh: () => {},
-      error: undefined,
-    },
-  ],
-});
+export const TradingRewardsContext = createContext<TradingRewardsState>(
+  {} as TradingRewardsState
+);
 
 export const TradingRewardsProvider = (
   props: PropsWithChildren<{
     /// default is TWType.normal
     type?: TWType;
+    titleConfig?: TitleConfig;
   }>
 ) => {
   // const searchParams = useSearchParams();
   // let type = parseToTWType(searchParams.get("type"));
 
-  const { type = TWType.normal } = props;
+  const {
+    type = TWType.normal,
+    titleConfig = {
+      docOpenOptions: {
+        url: "https://orderly.network/docs/introduction/tokenomics/trading-rewards",
+        target: "_blank",
+      },
+    },
+  } = props;
   const totalOrderClaimedReward = useGetClaimed(
     type === TWType.mm ? DistributionId.mmOrder : DistributionId.order
   );
@@ -82,6 +76,7 @@ export const TradingRewardsProvider = (
         epochList,
         curEpochEstimate,
         walletRewardsHistory,
+        titleConfig,
       }}
     >
       {/* <PageLoading loading={epochList.data === undefined}> */}

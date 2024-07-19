@@ -1,31 +1,17 @@
-import { Box, Card, Divider, Flex, Text } from "@orderly.network/ui";
-import { FC, ReactNode } from "react";
+import { Divider, Flex, Text } from "@orderly.network/ui";
+import { FC } from "react";
+import { TitleConfig } from "./title.script";
 
-export const TitleUI: FC<{
-  /// default is `Trading Rewards`
-  title?: string | ReactNode;
-  /// default is `Trade with Orderly’s brokers to earn rewards.`
-  subtitle?: string | ReactNode;
-  /// default is `Learn more about Orderly Trading Rewards Program in Trading Rewards Docs`
-  content?: string | ReactNode;
-  /// default is { url: 'https://orderly.network/docs/introduction/tokenomics/trading-rewards', target: "_blank"}
-  docOpenOptions?: {
-    url?: string;
-    target?: string;
-    features?: string;
-  };
-}> = (props) => {
+export const Title: FC<TitleConfig> = (props) => {
   const {
     title,
     subtitle,
     content,
-    docOpenOptions = {
-      url: "https://orderly.network/docs/introduction/tokenomics/trading-rewards",
-      target: "_blank",
-    },
+    docOpenOptions,
   } = props;
   return (
     <Flex
+      id="oui-trading-rewards-home-title"
       p={6}
       direction={"column"}
       itemAlign={"start"}
@@ -38,7 +24,7 @@ export const TitleUI: FC<{
       <Divider />
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (
-          <Text size="base">Trade with Orderly’s brokers to earn rewards.</Text>
+          <Text size="base">{`Trade with ${props.brokerName} to earn rewards.`}</Text>
         )}
 
         {content || <MultiLineText docOpenOptions={docOpenOptions} />}
@@ -48,7 +34,7 @@ export const TitleUI: FC<{
 };
 
 const MultiLineText: FC<{
-  docOpenOptions: {
+  docOpenOptions?: {
     url?: string;
     target?: string;
     features?: string;
@@ -56,13 +42,17 @@ const MultiLineText: FC<{
 }> = (props) => {
   const clickableParts = [
     {
-      content: "Learn more about Orderly Trading Rewards Program in ",
-      isLink: false,
-    },
-    {
-      content: "Trading Rewards Docs",
+      content: "Learn more here",
       isLink: true,
     },
+    // {
+    //   content: "about Orderly Trading Rewards Program.",
+    //   isLink: false,
+    // },
+    // {
+    //   content: "Trading Rewards Docs",
+    //   isLink: true,
+    // },
   ];
   const renderText = () => {
     return clickableParts.map((item, index) => {
@@ -73,9 +63,9 @@ const MultiLineText: FC<{
           dangerouslySetInnerHTML={{ __html: item.content }}
           onClick={() => [
             window.open(
-              props.docOpenOptions.url,
-              props.docOpenOptions.target,
-              props.docOpenOptions.features
+              props.docOpenOptions?.url,
+              props.docOpenOptions?.target,
+              props.docOpenOptions?.features
             ),
           ]}
         />

@@ -4,6 +4,7 @@ import { FC } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { AvailableReturns } from "./availableToClaim.script";
+import { commify, commifyOptional } from "@orderly.network/utils";
 
 export const AvailableToClaimUI: FC<AvailableReturns> = (props) => {
   return (
@@ -24,7 +25,7 @@ export const AvailableToClaimUI: FC<AvailableReturns> = (props) => {
           className="oui-cursor-pointer"
         >
           <Text color="primary" size="sm">
-            Go to Claim
+            Claim
           </Text>
           <JumpIcon />
         </Flex>
@@ -42,6 +43,7 @@ const Statics: FC<{
   isEsOrder?: boolean;
   value?: number;
 }> = (props) => {
+  const { value } = props;
   return (
     <Flex
       className="oui-flex-1 oui-bg-base-8 oui-py-[11px]"
@@ -54,11 +56,9 @@ const Statics: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         {props.isEsOrder ? <EsOrderlyIcon /> : <OrderlyIcon />}
-        <Text.numeral
-          rule={"price"}
+        <Text
           className="oui-text-sm xl:oui-text-base"
-          children={props.value || "-"}
-          dp={2}
+          children={commifyOptional(value, 2)}
         />
       </Flex>
     </Flex>
