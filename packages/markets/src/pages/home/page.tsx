@@ -6,11 +6,7 @@ import { MarketsProvider } from "./provider";
 export const MarketsHomePage = () => {
   return (
     <MarketsProvider>
-      <Box
-        id="oui-markets-home-page"
-        className="oui-markets-home-page oui-font-semibold"
-        p={6}
-      >
+      <Box id="oui-markets-home-page" className="oui-font-semibold" p={6}>
         <Text size="2xl" weight="semibold">
           Markets
         </Text>

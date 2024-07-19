@@ -6,5 +6,4 @@ module.exports = {
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
-  important: ".oui-markets-home-page",
 };

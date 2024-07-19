@@ -52,7 +52,7 @@ export const TradingRewardsLayout = (
 const LeftSidebar = (props: SideBarProps & {
   onClickMenuItem?: (item: SideMenuItem) => void;
 
-}) => {
+} & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   console.log("sidebar", props.onItemSelect);
@@ -66,7 +66,11 @@ const LeftSidebar = (props: SideBarProps & {
         onItemSelect={(a) => {
           console.log("xxxxxxx a,",a);
           props.onItemSelect?.(a);
-          props.onClickMenuItem?.(a);
+          // props.onClickMenuItem?.(a);
+          props.routerAdapter?.onRouteChange?.({
+            href: a.href || "" ,
+            name: a.name,
+          });
         }}
       />
     </div>

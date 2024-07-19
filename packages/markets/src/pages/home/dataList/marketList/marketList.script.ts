@@ -38,7 +38,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   );
 
   useEffect(() => {
-    // 切换页面大小时，重置页码
+    // reset page when size change
     setPage(1);
   }, [pageSize]);
 
