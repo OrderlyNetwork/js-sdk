@@ -101,7 +101,7 @@ export const useMarkets = (type: MarketsType) => {
     const curData = (configStore.get(marketsKey)["favorites"] ||
       []) as Favorite[];
     const tabs = getFavoriteTabs;
-    const result = [];
+    const result = [] as Favorite[];
     for (let index = 0; index < curData.length; index++) {
       const favData = curData[index];
       var favTabs = favData.tabs.filter(
@@ -168,6 +168,13 @@ export const useMarkets = (type: MarketsType) => {
       }
     }
     saveTabs(tabs);
+  };
+
+  const updateFavorites = (favorites: Favorite[]) => {
+    updateStore({
+      favorites,
+    });
+    setFavorites(favorites);
   };
 
   const setRecentData = (symbol: API.MarketInfoExt) => {
@@ -333,10 +340,6 @@ export const useMarkets = (type: MarketsType) => {
     }
   };
 
-  const tabs = useMemo(() => {
-    return favoriteTabs;
-  }, [favoriteTabs]);
-
   const getLastSelFavTab = () => {
     // @ts-ignore
     const curData = configStore.get(marketsKey)["lastSelectedFavoriteTab"];
@@ -369,7 +372,7 @@ export const useMarkets = (type: MarketsType) => {
   return [
     markets || [],
     {
-      favoriteTabs: tabs,
+      favoriteTabs,
       favorites,
       recent,
       tabSort,
@@ -380,6 +383,7 @@ export const useMarkets = (type: MarketsType) => {
       getLastSelFavTab,
       updateSelectedFavoriteTab,
       updateTabsSortState,
+      updateFavorites,
     },
   ] as const;
 };

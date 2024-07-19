@@ -77,6 +77,7 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     updateFavoriteTabs,
     updateSelectedFavoriteTab,
     updateSymbolFavoriteState,
+    updateFavorites,
     curTab,
     setCurTab,
   } = favorite;
@@ -127,16 +128,12 @@ export function useFavoritesTabScript(favorite: TFavorite) {
 
     setTimeout(() => {
       // remove all symbol favorite in this tab
-      favorites.forEach((item) => {
-        const find = item.tabs?.find((tab) => tab.id === selectedTab.id);
-        if (find) {
-          updateSymbolFavoriteState(
-            { symbol: item.name } as any,
-            selectedTab,
-            true
-          );
-        }
-      });
+      const _favorites = favorites.map((item) => ({
+        ...item,
+        tabs: item.tabs?.filter((tab) => tab.id !== selectedTab.id),
+      }));
+
+      updateFavorites(_favorites);
 
       // auto selected last tab
       const tabs = favoriteTabs.filter((item) => item.id !== selectedTab.id);
