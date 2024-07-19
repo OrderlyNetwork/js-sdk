@@ -1,5 +1,29 @@
 # storybook
 
+## 1.3.10-sdk-v2.23
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-modal@1.5.10-sdk-v2.23
+  - @orderly.network/react@1.5.10-sdk-v2.23
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.23
+  - @orderly.network/hooks@1.5.10-sdk-v2.23
+  - @orderly.network/core@1.5.10-sdk-v2.23
+
+## 1.3.10-sdk-v2.22
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-modal@1.5.10-sdk-v2.22
+  - @orderly.network/react@1.5.10-sdk-v2.22
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.22
+  - @orderly.network/hooks@1.5.10-sdk-v2.22
+  - @orderly.network/core@1.5.10-sdk-v2.22
+
 ## 1.3.10-sdk-v2.21
 
 ### Patch Changes
