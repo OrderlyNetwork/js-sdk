@@ -19,14 +19,14 @@ export enum DistributionId {
 export const useGetClaimed = (
   id: DistributionId
 ): [
-  data: number | undefined,
+  number | undefined,
   {
     refresh: () => void;
   }
 ] => {
   const [data, setData] = useState<number | undefined>(0);
   const { account } = useAccount();
-  const address =  account.address;
+  const address = account.address;
   const rpc = useRef<string | undefined>(undefined);
   const provider = useRef<ethers.AbstractProvider | undefined>(undefined);
   const contract = useRef<ethers.Contract | undefined>(undefined);
@@ -52,7 +52,7 @@ export const useGetClaimed = (
     )
       return;
 
-      console.log(`get claimed(${id})`, [id, address]);
+    console.log(`get claimed(${id})`, [id, address]);
 
     contract.current["getClaimed"]
       .apply(null, [id, address])
@@ -73,5 +73,5 @@ export const useGetClaimed = (
     refresh();
   }, [rpc.current, id, address]);
 
-  return [data,{ refresh }];
+  return [data, { refresh }];
 };
