@@ -180,10 +180,6 @@ export const Assets: FC<AssetsProps> = (props) => {
       )}
       <Divider className="orderly-pb-4" />
 
-      <CollapsibleContent>
-        <MemorizedAssetsDetail />
-      </CollapsibleContent>
-
       <div className={"orderly-pb-4"}>
         <Progress
           value={marginRatioVal * 100}
