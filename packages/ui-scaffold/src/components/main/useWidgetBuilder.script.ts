@@ -26,7 +26,7 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
   const { unsupported, routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
   const [current, setCurrent] = useState(
-    () => props?.initialMenu ?? props?.mainMenus?.[0].href ?? "/"
+    () => props?.initialMenu ?? props?.mainMenus?.[0].href ?? "/trading"
   );
   const [currentProduct, setCurrentProduct] = useState(
     () => props?.initialProduct ?? props?.products?.[0].href ?? "/swap"
@@ -40,9 +40,10 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
         alt: "woofipro",
       },
       mainMenus: [
-        { name: "Trading", href: "/" },
+        { name: "Trading", href: "/trading" },
         { name: "Portfolio", href: "/portfolio" },
         { name: "Markets", href: "/markets" },
+        { name: "Rewards", href: "/rewards" },
       ],
       products: [
         { name: "Swap", href: "/swap" },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMemo, useState } from "react";
 import { SideBarProps } from "./sidebar.ui";
 import { useScaffoldContext } from "../scaffoldContext";
@@ -6,7 +6,7 @@ import { useScaffoldContext } from "../scaffoldContext";
 export const useSideNavBuilder = (
   props?: Partial<SideBarProps>
 ): SideBarProps => {
-  const [current, setCurrent] = useState("/");
+  const [current, setCurrent] = useState(props?.items?.[0].href || "/");
   const { expanded, setExpand } = useScaffoldContext();
 
   if (typeof setExpand === "undefined") {

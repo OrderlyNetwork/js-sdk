@@ -9,8 +9,9 @@ import {
 import { PropsWithChildren } from "react";
 
 export type PortfolioLayoutProps = {
-  // sideOpen?: boolean;
-} & SideBarProps;
+  hideSideBar?: boolean;
+} & SideBarProps &
+  LayoutProps;
 
 export const PortfolioLayout = (
   props: PropsWithChildren<PortfolioLayoutProps>
@@ -18,7 +19,11 @@ export const PortfolioLayout = (
   const { children, ...rest } = props;
 
   return (
-    <Scaffold leftSidebar={<LeftSidebar {...rest} />}>
+    <Scaffold
+      leftSidebar={props.hideSideBar ? <></> : <LeftSidebar {...rest} />}
+      routerAdapter={props.routerAdapter}
+      {...props}
+    >
       <Box mx={3} my={6}>
         {children}
       </Box>
@@ -38,7 +43,7 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
         onItemSelect={(e) => {
           props.onItemSelect?.(e);
           props.routerAdapter?.onRouteChange?.({
-            href: e.href || "" ,
+            href: e.href || "",
             name: e.name,
           });
         }}

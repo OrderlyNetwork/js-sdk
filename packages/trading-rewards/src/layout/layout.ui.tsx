@@ -12,41 +12,25 @@ import { LayoutProps } from "@orderly.network/ui-scaffold";
 
 export type TradingRewardsLayoutProps = {
   hideSideBar?: boolean;
-  onClickMenuItem?: (item: SideMenuItem) => void;
 } & SideBarProps &
   LayoutProps;
 
 export const TradingRewardsLayout = (
   props: PropsWithChildren<TradingRewardsLayoutProps>
 ) => {
-  const { ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <Scaffold
       leftSidebar={props.hideSideBar ? (<></>) : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
+      {...props}
     >
       <Box mx={3} my={6}>
         {props.children}
       </Box>
     </Scaffold>
   );
-  // return (
-  //   <LayoutProvider>
-  //     <div className="oui-h-dvh">
-  //       <ExtensionSlot position={ExtensionPositionEnum.MainNav} />
-  //       <div
-  //         className="oui-grid oui-h-full"
-  //         style={{ gridAutoColumns: "160px 1fr" }}
-  //       >
-  //         <Box p={4} className="oui-bg-base-9 oui-rounded-2xl">
-  //           <ExtensionSlot position={ExtensionPositionEnum.SideNav} />
-  //         </Box>
-  //         <div></div>
-  //       </div>
-  //     </div>
-  //   </LayoutProvider>
-  // );
 };
 
 const LeftSidebar = (props: SideBarProps & {
@@ -66,7 +50,6 @@ const LeftSidebar = (props: SideBarProps & {
         onItemSelect={(a) => {
           console.log("xxxxxxx a,",a);
           props.onItemSelect?.(a);
-          // props.onClickMenuItem?.(a);
           props.routerAdapter?.onRouteChange?.({
             href: a.href || "" ,
             name: a.name,

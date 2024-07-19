@@ -248,9 +248,9 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
           onCloseAutoFocus={(e) => e.preventDefault()}
           align="start"
           sideOffset={20}
-          className="oui-markets-favorite-dropdown-menu-content"
+          className="oui-markets-favorite-dropdown-menu-content oui-bg-base-8"
         >
-          <Box px={5} pb={5} intensity={800} width={360}>
+          <Box px={5} pb={5} width={360}>
             <Text as="div" size="sm" weight="semibold">
               {header}
               <Divider />

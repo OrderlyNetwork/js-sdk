@@ -33,7 +33,7 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
         pt={4}
         className="oui-font-semibold oui-border-t-2 oui-border-line-6"
       >
-        <Flex direction={"column"} itemAlign={"start"}>
+        <Flex direction={"column"} itemAlign={"start"} className="oui-flex-1">
           <Text intensity={80} size="base">
             Cancel open orders during system upgrade
           </Text>
