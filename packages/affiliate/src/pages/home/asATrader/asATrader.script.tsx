@@ -22,13 +22,15 @@ export const useAsATraderScript = (): AsATraderReturns => {
     isTrader,
     isLoading,
     referralInfo,
-    onEnterTraderPage,
+    setShowHome,
     bindReferralCodeState,
   } = useReferralContext();
 
   const { state } = useAccount();
   const isSignIn = state.status === AccountStatusEnum.EnableTrading;
-
+  const onEnterTraderPage = () => {
+    setShowHome(false);
+  };
   return {
     isSignIn,
     isTrader,

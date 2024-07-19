@@ -1,5 +1,6 @@
 import { FC } from "react";
 import {
+  Box,
   Button,
   cn,
   Flex,
@@ -56,9 +57,14 @@ export const TabUI: FC<TabReturns> = (props) => {
   };
 
 
-  if ((!props.isAffiliate && !props.isTrader) || props.isLoading) {
+  console.log("props", props);
+  
+
+  if ((!props.isAffiliate && !props.isTrader) || props.isLoading || props.showHome) {
     return (
-      <HomePage />
+      <div className="oui-max-w-[960px]">
+        <HomePage />
+      </div>
     );
   }
 
@@ -113,12 +119,12 @@ export const TabUI: FC<TabReturns> = (props) => {
         {extendNode()}
       </TabsList>
       {props.isAffiliate && (
-        <TabsContent value={TabTypes.affiliate} className="oui-w-full">
+        <TabsContent value={TabTypes.affiliate} >
           <AffiliatePage />
         </TabsContent>
       )}
       {props.isTrader && (
-        <TabsContent value={TabTypes.trader}>
+        <TabsContent value={TabTypes.trader} >
           <TraderPage />
         </TabsContent>
       )}

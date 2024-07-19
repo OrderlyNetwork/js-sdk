@@ -17,8 +17,8 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     isAffiliate,
     isLoading,
     referralInfo,
-    onEnterAffiliatePage,
     becomeAnAffiliateUrl,
+    setShowHome
   } = useReferralContext();
 
   const { state } = useAccount();
@@ -26,6 +26,10 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
 
   const becomeAnAffiliate = () => {
     window.open(becomeAnAffiliateUrl, "_blank");
+  };
+
+  const onEnterAffiliatePage = () => {
+    setShowHome(false);
   };
 
   return {

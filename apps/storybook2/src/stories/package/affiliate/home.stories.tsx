@@ -37,14 +37,14 @@ const meta = {
                 console.log("show referral page");
 
               }}
-              onEnterAffiliatePage={() => {
-                console.log("show affiliate page");
-              }}
+              // onEnterAffiliatePage={() => {
+              //   console.log("show affiliate page");
+              // }}
 
-              onEnterTraderPage={() => {
-                console.log("show trader page");
+              // onEnterTraderPage={() => {
+              //   console.log("show trader page");
 
-              }}
+              // }}
               // chartConfig={
               //   {
               //     trader: { 

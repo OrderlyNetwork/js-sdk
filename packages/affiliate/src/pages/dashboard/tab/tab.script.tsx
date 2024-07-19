@@ -10,6 +10,8 @@ export type TabReturns = {
   anAnAffiliate: () => void;
   anATrader: () => void;
   splashPage?: () => ReactNode | undefined;
+  showHome: boolean,
+  setShowHome: (value: boolean) => void;
 };
 
 export enum TabTypes {
@@ -25,15 +27,11 @@ export const useTabScript = (): TabReturns => {
     becomeAnAffiliateUrl,
     onBecomeAnAffiliate,
     showReferralPage,
-    splashPage
-    
+    splashPage,
+    showHome,
+    setShowHome,
   } = useReferralContext();
   const [tab, setTab] = useState<TabTypes>(TabTypes.trader);
-  const [showHome, setShowHome] = useState(isLoading);
-
-  useEffect(() => {
-    setShowHome(true);
-  }, [isLoading]);
 
   const tableValue = useMemo((): TabTypes => {
     if (isAffiliate && isTrader) {
@@ -48,29 +46,33 @@ export const useTabScript = (): TabReturns => {
   }, [tab, isAffiliate, isTrader]);
 
   const anAnAffiliate = () => {
-    if (becomeAnAffiliateUrl !== undefined) {
-      window.open(becomeAnAffiliateUrl, "_blank");
-    } else if (onBecomeAnAffiliate !== undefined) {
-      onBecomeAnAffiliate?.();
-    }
+    // if (becomeAnAffiliateUrl !== undefined) {
+    //   window.open(becomeAnAffiliateUrl, "_blank");
+    // } else if (onBecomeAnAffiliate !== undefined) {
+    //   onBecomeAnAffiliate?.();
+    // }
+    setShowHome(true);
   };
 
   const anATrader = () => {
-    showReferralPage?.();
+    setShowHome(true);
+    // showReferralPage?.();
   };
 
   return {
     setTab,
-    // tab: tableValue,
-    // isAffiliate,
-    // isTrader,
-    // isLoading,
+    tab: tableValue,
+    isAffiliate,
+    isTrader,
+    isLoading,
     anAnAffiliate,
     anATrader,
     splashPage,
-    tab: TabTypes.trader,
-    isAffiliate: false,
-    isTrader: true,
-    isLoading: false,
+    showHome,
+    setShowHome,
+    // tab: TabTypes.affiliate,
+    // isAffiliate: false,
+    // isTrader: false,
+    // isLoading: false,
   };
 };
