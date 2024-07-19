@@ -179,7 +179,7 @@ export const CustomMainNav: Story = {
       { name: "Swap", href: "/swap" },
       { name: "Trade", href: "/trade" },
     ],
-    initialMenu: "/rewards",
+    initialMenu: "/markets",
     initialProduct: "/trade",
   },
 };

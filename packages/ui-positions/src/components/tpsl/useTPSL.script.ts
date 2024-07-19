@@ -34,13 +34,33 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     }
   );
 
-  //   console.log("tpslOrder", tpslOrder, errors);
+  const setQuantity = (value: number | string) => {
+    setValue("quantity", value);
+  };
+
+  const setOrderPrice = (
+    name: "tp_trigger_price" | "sl_trigger_price",
+    value: number | string
+  ) => {
+    setValue(name, value);
+  };
+
+  const setPnL = (type: string, value: number | string) => {
+    setValue(type, value);
+  };
 
   return {
-    // quoteDp: symbolInfo[symbol]("quote_dp"),
     isEditing,
     symbolInfo: symbolInfo[symbol],
     maxQty: position.position_qty,
+    setQuantity,
+    orderQuantity: tpslOrder.quantity,
+    isPosition: tpslOrder.quantity === position.position_qty,
+
+    TPSL_OrderEntity: tpslOrder,
+    setOrderValue: setValue,
+    setPnL,
+    setOrderPrice,
   } as const;
 };
 

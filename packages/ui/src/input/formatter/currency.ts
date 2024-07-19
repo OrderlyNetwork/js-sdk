@@ -15,10 +15,6 @@ export const currencyFormatter: InputFormatter = {
   ): string {
     if (value === null || value === undefined) return "";
 
-    if (typeof value === "number") {
-      value = `${value}`;
-    }
-
     value = value.replace(/,/g, "");
 
     return value;

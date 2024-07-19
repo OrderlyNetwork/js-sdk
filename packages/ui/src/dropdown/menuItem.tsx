@@ -12,6 +12,7 @@ import { SizeType } from "../helpers/sizeType";
 export type MenuItem = {
   label: string;
   value: string;
+  testId?: string;
 };
 
 type DropdownMenuProps = {
@@ -39,6 +40,7 @@ const SimpleDropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
           props.onSelect?.(item);
         }}
         size={size}
+        data-testid={item.testId}
       >
         {item.label}
       </DropdownMenuItem>

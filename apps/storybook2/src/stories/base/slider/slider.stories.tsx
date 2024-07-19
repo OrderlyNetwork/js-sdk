@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // import { fn } from '@storybook/test';
 import { Slider } from '@orderly.network/ui';
+import { fn } from '@storybook/test';
 
 
 const meta = {
@@ -45,6 +46,7 @@ const meta = {
     // size:'default'
     color: 'primary',
     step: 10,
+    onValueChange: fn(),
   },
 } satisfies Meta<typeof Slider>;
 
