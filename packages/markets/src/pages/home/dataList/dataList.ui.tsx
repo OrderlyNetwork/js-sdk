@@ -69,7 +69,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   );
 
   return (
-    <Box intensity={900} p={6} r="2xl">
+    <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
       <Tabs value={activeTab} onValueChange={onTabChange} trailing={search}>
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <FavoritesWidget />
@@ -129,7 +129,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
             <Flex itemAlign="center" gapX={2} mr={2}>
               <Text
                 className={
-                  "oui-text-base-contrast-54 hover:oui-text-base-contrast"
+                  "oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
                 }
                 onClick={addTab}
               >
@@ -137,7 +137,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               </Text>
               <CloseCircleFillIcon
                 size={20}
-                className="oui-text-base-contrast-20 hover:oui-text-base-contrast"
+                className="oui-text-base-contrast-20 hover:oui-text-base-contrast oui-cursor-pointer"
                 onClick={hideInput}
               />
             </Flex>
@@ -154,7 +154,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         onClick={showInput}
       >
         <CirclePlusIcon />
-        <Text>Add a new watchlist</Text>
+        <Text size="sm">Add a new watchlist</Text>
       </Flex>
     );
   };
@@ -167,7 +167,6 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
           rule="symbol"
           formatString="base-type"
           size="base"
-          weight="semibold"
           showIcon
         >
           {symbol}
@@ -186,7 +185,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       {favoriteTabs?.map((item) => {
         const checked = !!selectedTabs.find((tab) => tab.id === item.id);
         return (
-          <Box key={item.id} className="oui-cursor-pointer oui-text-sm">
+          <Box key={item.id} className="oui-cursor-pointer">
             <Flex
               className="oui-gap-x-[6px] hover:oui-bg-base-6"
               p={2}
@@ -198,7 +197,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               {checked ? (
                 <CheckedSquareFillIcon
                   size={18}
-                  className=" oui-text-base-contrast-80"
+                  className="oui-text-base-contrast-80"
                 />
               ) : (
                 <CheckSquareEmptyIcon
@@ -224,15 +223,23 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         onClick={hide}
         fullWidth
         className="oui-text-sm"
+        size="md"
       >
         Cancel
       </Button>
 
-      <Button key="primary" onClick={confirm} fullWidth className="oui-text-sm">
+      <Button
+        key="primary"
+        onClick={confirm}
+        fullWidth
+        className="oui-text-sm"
+        size="md"
+      >
         Confirm
       </Button>
     </Flex>
   );
+
   return (
     <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger>{props.children}</DropdownMenuTrigger>
@@ -241,12 +248,16 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
           onCloseAutoFocus={(e) => e.preventDefault()}
           align="start"
           sideOffset={20}
-          className="oui-bg-base-8 oui-w-[360px] oui-px-[20px] oui-pb-[20px] oui-font-semibold"
+          className="oui-markets-home-page oui-markets-favorite-dropdown-menu-content"
         >
-          {header}
-          <Divider />
-          {content}
-          {footer}
+          <Box px={5} pb={5} intensity={800} width={360}>
+            <Text as="div" size="sm" weight="semibold">
+              {header}
+              <Divider />
+              {content}
+              {footer}
+            </Text>
+          </Box>
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
