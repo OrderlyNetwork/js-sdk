@@ -99,18 +99,9 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [state]);
 
-  const [{ aggregated }, positionsInfo] = usePositionStream();
   const { marginRatio, mmr } = useMarginRatio();
 
-  const marginRatioVal = useMemo(() => {
-    return Math.min(
-      10,
-      aggregated.notional === 0
-        ? // @ts-ignore
-          positionsInfo["margin_ratio"](10)
-        : marginRatio
-    );
-  }, [marginRatio, aggregated]);
+  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
 
   const isConnected = state.status >= AccountStatusEnum.Connected;
 
@@ -179,10 +170,6 @@ export const Assets: FC<AssetsProps> = (props) => {
         </div>
       )}
       <Divider className="orderly-pb-4" />
-
-      <CollapsibleContent>
-        <MemorizedAssetsDetail />
-      </CollapsibleContent>
 
       <div className={"orderly-pb-4"}>
         <Progress
