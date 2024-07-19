@@ -2,6 +2,7 @@ import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useMarketsContext } from "../provider";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
@@ -24,7 +25,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
   return (
     <div
       id="oui-markets-header"
-      className="oui-overflow-hidden" // 3xl:oui-pointer-events-none
+      className="oui-overflow-hidden"
       ref={enableScroll ? emblaRef : undefined}
     >
       <Flex width="100%" gapX={4} mt={4}>
@@ -135,14 +136,16 @@ const CardItem: React.FC<CardItemProps> = (props) => {
     <Box
       intensity={900}
       r="lg"
-      p={4}
+      py={4}
       pb={2}
       // width="100%"
       className={props.className}
     >
-      <Text.gradient color="brand" size="sm" weight="semibold">
-        {props.title}
-      </Text.gradient>
+      <Box px={4}>
+        <Text.gradient color="brand" size="sm" weight="semibold">
+          {props.title}
+        </Text.gradient>
+      </Box>
 
       <Flex direction="column" itemAlign="start" mt={2}>
         {props.data?.map((item, index) => (
@@ -168,8 +171,20 @@ type ListItemProps = {
 
 const ListItem: React.FC<ListItemProps> = (props) => {
   const { item } = props;
+
+  const { onSymbolChange } = useMarketsContext();
+
   return (
-    <Flex width="100%" gapX={3} py={2} className={props.className}>
+    <Flex
+      width="100%"
+      gapX={3}
+      py={2}
+      px={4}
+      className={cn("hover:oui-bg-base-8 oui-cursor-pointer", props.className)}
+      onClick={() => {
+        onSymbolChange?.(item as any);
+      }}
+    >
       <Flex width="100%" gapX={1}>
         {/* <TokenIcon symbol={item.symbol} size="xs" /> */}
         <Text.formatted
