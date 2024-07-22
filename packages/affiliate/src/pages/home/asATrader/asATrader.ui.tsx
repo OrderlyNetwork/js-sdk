@@ -229,7 +229,7 @@ const EntryCode: FC<AsATraderReturns> = (props) => {
         <Tooltip content={"Please connect your wallet to use this function"}>
           <Button
             variant="contained"
-            color="secondary"
+            color="light"
             disabled={!props.isSignIn}
           >
             Enter code
