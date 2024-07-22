@@ -125,7 +125,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       >
         <div className={"orderly-flex-1"}>
           <div className={"orderly-text-3xs orderly-text-base-contrast-54"}>
-            Total balance
+            Total value
           </div>
           <div>
             <Numeral
