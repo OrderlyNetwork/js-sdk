@@ -1,5 +1,6 @@
 import { FC } from "react";
 import {
+  Box,
   Button,
   cn,
   Flex,
@@ -10,12 +11,13 @@ import {
   TabsTrigger,
   Text,
 } from "@orderly.network/ui";
-import { TabReturns, TabTypes } from "./tab.script";
+import { TabReturns } from "./tab.script";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
-import { IndexPage } from "../../index";
+import { HomePage } from "../../home";
+import { TabTypes } from "../../../hooks";
 
 export const TabUI: FC<TabReturns> = (props) => {
   const extendNode = () => {
@@ -55,14 +57,15 @@ export const TabUI: FC<TabReturns> = (props) => {
     return undefined;
   };
 
-  if (props.isLoading) {
-    return <Spinner />;
-  }
 
+  console.log("props", props);
+  
 
-  if (!props.isAffiliate && !props.isTrader) {
+  if ((!props.isAffiliate && !props.isTrader) || props.isLoading || props.showHome) {
     return (
-      <IndexPage />
+      <div className="oui-max-w-[960px]">
+        <HomePage />
+      </div>
     );
   }
 
@@ -117,12 +120,12 @@ export const TabUI: FC<TabReturns> = (props) => {
         {extendNode()}
       </TabsList>
       {props.isAffiliate && (
-        <TabsContent value={TabTypes.affiliate} className="oui-w-full">
+        <TabsContent value={TabTypes.affiliate} >
           <AffiliatePage />
         </TabsContent>
       )}
       {props.isTrader && (
-        <TabsContent value={TabTypes.trader}>
+        <TabsContent value={TabTypes.trader} >
           <TraderPage />
         </TabsContent>
       )}

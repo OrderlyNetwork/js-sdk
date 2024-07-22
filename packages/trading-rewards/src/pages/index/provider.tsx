@@ -17,9 +17,9 @@ import { TitleConfig } from "./title/title.script";
 export type TradingRewardsState = {
   type: TWType;
   epochList: EpochInfoType;
-  totalOrderClaimedReward: [data: number | undefined, { refresh: () => void }];
+  totalOrderClaimedReward: [number | undefined, { refresh: () => void }];
   totalEsOrderClaimedReward: [
-    data: number | undefined,
+    number | undefined,
     { refresh: () => void }
   ];
   curEpochEstimate?: CurrentEpochEstimate;

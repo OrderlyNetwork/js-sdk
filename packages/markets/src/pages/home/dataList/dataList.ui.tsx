@@ -245,7 +245,10 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       <DropdownMenuTrigger>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+          onClick={(e) => e.stopPropagation()}
           align="start"
           sideOffset={20}
           className="oui-markets-favorite-dropdown-menu-content oui-bg-base-8"

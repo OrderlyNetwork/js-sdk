@@ -8,12 +8,13 @@ import { TradingRewardsProvider } from "./provider";
 import { FC } from "react";
 import { TitleConfig } from "./title/title.script";
 
-export const IndexPage: FC<{
-  titleConfig?: TitleConfig
+export const HomePage: FC<{
+  titleConfig?: TitleConfig;
 }> = (props) => {
   return (
     <TradingRewardsProvider titleConfig={props.titleConfig}>
       <Flex
+        id="oui-trading-rewards-home-page"
         className={cn(
           "oui-h-lvw oui-w-full",
           // padding

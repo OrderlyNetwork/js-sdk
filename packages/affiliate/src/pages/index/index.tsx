@@ -1,2 +1,0 @@
-
-export { IndexPage } from "./page";
