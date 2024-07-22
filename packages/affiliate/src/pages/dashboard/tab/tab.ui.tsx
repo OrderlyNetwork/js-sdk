@@ -27,7 +27,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="success"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anATrader();
           }}
@@ -43,7 +49,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="primary"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anAnAffiliate();
           }}
@@ -79,7 +91,7 @@ export const TabUI: FC<TabReturns> = (props) => {
     >
       <TabsList
         className={cn(
-          "oui-mx-3 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
+          "oui-px-6 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
           "oui-text-base md:oui-text-lg",
           "oui-rounded-xl oui-bg-base-9",
           props.isAffiliate && props.isTrader && "oui-justify-center"
