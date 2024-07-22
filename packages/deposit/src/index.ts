@@ -1,1 +1,1 @@
-export * from "./components/deposit";
+export * from "./components/depositForm";
