@@ -101,9 +101,13 @@ export const Assets: FC<AssetsProps> = (props) => {
 
   const { marginRatio, mmr } = useMarginRatio();
 
-  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
-
   const isConnected = state.status >= AccountStatusEnum.Connected;
+  const marginRatioVal = useMemo(() => {
+    if (!isConnected) {
+      return 0;
+    }
+    return marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+  }, [isConnected, marginRatio]);
 
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
@@ -171,6 +175,9 @@ export const Assets: FC<AssetsProps> = (props) => {
       )}
       <Divider className="orderly-pb-4" />
 
+      <CollapsibleContent>
+        <MemorizedAssetsDetail />
+      </CollapsibleContent>
       <div className={"orderly-pb-4"}>
         <Progress
           value={marginRatioVal * 100}
