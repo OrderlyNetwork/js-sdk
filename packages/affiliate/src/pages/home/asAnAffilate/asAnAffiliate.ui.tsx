@@ -137,7 +137,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
         <Tooltip content={"Please connect your wallet to use this function"}>
           <Button
             variant="contained"
-            color="secondary"
+            color="light"
             onClick={props.becomeAnAffiliate}
             disabled={!props.isSignIn}
           >

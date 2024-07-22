@@ -40,6 +40,7 @@ const buttonVariants = tv({
       danger: "hover:oui-bg-danger/70 active:oui-bg-danger/50",
       warning: "hover:oui-bg-warning/70 active:oui-bg-warning/50",
       gray: "hover:oui-bg-base-2/70 active:oui-bg-base-2/50",
+      light: "hover:oui-bg-white/70 active:oui-bg-white/50 disable:oui-bg-white/20"
     },
     fullWidth: {
       true: "oui-w-full",
@@ -79,6 +80,11 @@ const buttonVariants = tv({
       variant: "contained",
       color: "gray",
       className: ["oui-bg-base-2", "oui-text-base-contrast"],
+    },
+    {
+      variant: "contained",
+      color: "light",
+      className: ["oui-bg-white", "oui-text-black/[.88]", "disabled:oui-bg-white/30 hover:disabled:oui-bg-white/30 disabled:oui-text-black/[.36]",],
     },
 
     {

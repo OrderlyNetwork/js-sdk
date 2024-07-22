@@ -212,42 +212,76 @@ const MobileCell: FC<{
 const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   const moreColumn = useMediaQuery("(min-width: 1024px)");
 
+
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
         title: "Referral Codes",
         dataIndex: "code",
         width: moreColumn ? 80 : 120,
-        render: (value) => "CODE",
+        render: (value, data) => {
+          return (
+            <Flex direction={"row"} itemAlign={"center"} gap={1}>
+              <PinBtn
+                size={14}
+                pinned={data.isPined || false}
+                onClick={(e) => {
+                  props.setPinCode(data.code, !e);
+                }}
+              />
+              <Text.formatted
+                // rule={""}
+                copyable
+                onCopy={() => {
+                  props.copyCode?.(data.code);
+                }}
+              >
+                {value}
+              </Text.formatted>
+            </Flex>
+          );
+        },
       },
       {
         title: "You / Referree",
         dataIndex: "dffd",
         width: moreColumn ? 80 : 120,
-        render: (value) => "YOU/REFERREE",
+        render: (value, data) => {
+          return (
+            <Flex direction={"row"} itemAlign={"center"} gap={1}>
+              {getRate(data)}
+              <EditIcon
+                className=" oui-fill-white/[.36] hover:oui-fill-white/80 oui-cursor-pointer oui-mt-[1px]"
+                fillOpacity={1}
+                fill="currentColor"
+                onClick={(e) => props.editRate?.(data)}
+              />
+            </Flex>
+          );
+        },
       },
     ];
 
     if (moreColumn) {
       cols.push({
         title: "Referees",
-        dataIndex: "1",
+        dataIndex: "referee_rebate_rate",
         width: 80,
-        render: (value) => "98",
+        render: (value, data) => getRate(data).split("/")[0],
       });
       cols.push({
         title: "Traders",
-        dataIndex: "2",
+        dataIndex: "referrer_rebate_rate",
         width: 80,
-        render: (value) => "98",
+        render: (value, data) => getRate(data).split("/")[1],
       });
     } else {
       cols.push({
         title: "Referees / Traders ",
-        dataIndex: "abc",
+        dataIndex: "total_invites/total_traded",
         width: 120,
         fixed: "left",
-        render: (value) => "REFEREES",
+        render: (value, data) => getCount(data),
       });
     }
 
@@ -256,8 +290,15 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       dataIndex: "",
       align: "right",
       width: 74,
-      render: (value) => (
-        <Button variant="outlined" size="sm" className="oui-px-5">
+      render: (value, data) => (
+        <Button
+          variant="outlined"
+          size="sm"
+          className="oui-px-5"
+          onClick={(e) => {
+            props?.copyLink?.(data.code);
+          }}
+        >
           Copy link
         </Button>
       ),
@@ -271,7 +312,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   return (
     <DataTable
       columns={columns}
-      dataSource={[1, 2, 3, 4, 5, 6, 7, 8]}
+      dataSource={props.codes}
       scroll={{ y: 264 }}
       classNames={{
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
