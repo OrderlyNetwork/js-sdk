@@ -12,7 +12,7 @@ export const SummaryUI: FC<SummaryReturns> = (props) => {
       height={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 xl:oui-flex-1"
     >
       <Title {...props} />
       <Rebate className="md:oui-hidden" {...props} />

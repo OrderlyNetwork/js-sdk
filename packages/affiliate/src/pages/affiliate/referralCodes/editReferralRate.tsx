@@ -119,7 +119,7 @@ export const EditReferralRate = modal.create<{
               }
             }}
             suffix={
-              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-[16px]">
+              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-base">
                 %
               </div>
             }
@@ -151,7 +151,7 @@ export const EditReferralRate = modal.create<{
               }
             }}
             suffix={
-              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-[16px]">
+              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-base">
                 %
               </div>
             }

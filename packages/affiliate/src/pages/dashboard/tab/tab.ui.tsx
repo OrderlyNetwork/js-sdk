@@ -63,7 +63,7 @@ export const TabUI: FC<TabReturns> = (props) => {
 
   if ((!props.isAffiliate && !props.isTrader) || props.isLoading || props.showHome) {
     return (
-      <div className="oui-max-w-[960px]">
+      <div className="oui-max-w-[960px] oui-py-0 lg:oui-py-4">
         <HomePage />
       </div>
     );
@@ -75,7 +75,7 @@ export const TabUI: FC<TabReturns> = (props) => {
       onValueChange={(e) => {
         props.setTab(e as TabTypes);
       }}
-      className="oui-w-full oui-mt-6"
+      className="oui-w-full"
     >
       <TabsList
         className={cn(
