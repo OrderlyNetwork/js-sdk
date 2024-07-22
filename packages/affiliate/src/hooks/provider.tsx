@@ -19,6 +19,11 @@ import {
 } from "@orderly.network/hooks";
 import { subDays } from "date-fns";
 
+export enum TabTypes {
+  affiliate = "affiliate",
+  trader = "trader",
+}
+
 export type UserVolumeType = {
   "1d_volume"?: number;
   "7d_volume"?: number;
@@ -110,6 +115,8 @@ export type ReferralContextReturns = {
   isLoading: boolean;
   showHome: boolean;
   setShowHome: (value: boolean) => void;
+  tab: TabTypes,
+  setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
@@ -206,6 +213,12 @@ export const ReferralProvider: FC<
     return volume;
   }, [dailyVolume, volumeStatistics]);
 
+  useEffect(() => {
+    if (isAffiliate || isTrader) {
+      setShowHome(false);
+    }
+  }, [isAffiliate, isTrader]);
+
   const mutate = () => {
     volumeStatisticsMutate();
     dailyVolumeMutate();
@@ -222,6 +235,8 @@ export const ReferralProvider: FC<
 
   const { messages, locale, defaultLocale } = intl;
 
+  const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
+
   return (
     <IntlProvider
       messages={messages}
@@ -235,7 +250,7 @@ export const ReferralProvider: FC<
           referralInfo: data,
           isAffiliate: isAffiliate,
           isTrader: isTrader,
-          // isAffiliate: false,
+          // isAffiliate: true,
           // isTrader: false,
           mutate,
           onBecomeAnAffiliate: becomeAnAffiliate,
@@ -251,6 +266,7 @@ export const ReferralProvider: FC<
           overwrite,
           splashPage,
           isLoading,
+          tab,setTab
         }}
       >
         {props.children}

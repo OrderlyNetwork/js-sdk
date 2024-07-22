@@ -11,12 +11,13 @@ import {
   TabsTrigger,
   Text,
 } from "@orderly.network/ui";
-import { TabReturns, TabTypes } from "./tab.script";
+import { TabReturns } from "./tab.script";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
 import { HomePage } from "../../home";
+import { TabTypes } from "../../../hooks";
 
 export const TabUI: FC<TabReturns> = (props) => {
   const extendNode = () => {

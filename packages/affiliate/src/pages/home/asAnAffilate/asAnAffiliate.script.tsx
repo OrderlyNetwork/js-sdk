@@ -1,5 +1,5 @@
 import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
-import { useReferralContext } from "../../../hooks";
+import { TabTypes, useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
 import { AccountStatusEnum } from "@orderly.network/types";
 
@@ -18,7 +18,8 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     isLoading,
     referralInfo,
     becomeAnAffiliateUrl,
-    setShowHome
+    setShowHome,
+    setTab,
   } = useReferralContext();
 
   const { state } = useAccount();
@@ -29,6 +30,7 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
   };
 
   const onEnterAffiliatePage = () => {
+    setTab(TabTypes.affiliate);
     setShowHome(false);
   };
 
