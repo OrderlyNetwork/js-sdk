@@ -1,7 +1,7 @@
 {
   "name": "storybook2",
   "private": true,
-  "version": "0.0.1-sdk-v2.26",
+  "version": "0.0.1-sdk-v2.27",
   "type": "module",
   "scripts": {
     "dev": "vite",
