@@ -1,5 +1,17 @@
 # storybook
 
+## 1.3.10-sdk-v2.28
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-modal@1.5.10-sdk-v2.28
+  - @orderly.network/react@1.5.10-sdk-v2.28
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.28
+  - @orderly.network/hooks@1.5.10-sdk-v2.28
+  - @orderly.network/core@1.5.10-sdk-v2.28
+
 ## 1.3.10-sdk-v2.27
 
 ### Patch Changes

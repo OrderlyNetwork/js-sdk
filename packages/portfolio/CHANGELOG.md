@@ -1,5 +1,20 @@
 # @orderly.network/portfolio
 
+## 1.0.1-sdk-v2.28
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-sdk-v2.28
+  - @orderly.network/ui-positions@1.0.1-sdk-v2.28
+  - @orderly.network/ui-scaffold@1.0.1-sdk-v2.28
+  - @orderly.network/chart@1.0.1-sdk-v2.28
+  - @orderly.network/hooks@1.5.10-sdk-v2.28
+  - @orderly.network/types@1.5.10-sdk-v2.28
+  - @orderly.network/utils@1.5.10-sdk-v2.28
+  - @orderly.network/ui@1.0.1-sdk-v2.28
+
 ## 1.0.1-sdk-v2.27
 
 ### Patch Changes

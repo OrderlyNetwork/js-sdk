@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-view",
-  "version": "1.5.10-sdk-v2.27",
+  "version": "1.5.10-sdk-v2.28",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "files": [

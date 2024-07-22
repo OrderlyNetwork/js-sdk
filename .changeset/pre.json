@@ -33,10 +33,13 @@
     "@orderly.network/ui-positions": "1.0.1-internal.0",
     "@orderly.network/ui-scaffold": "1.0.1-internal.0",
     "@orderly.network/utils": "1.5.10-internal.0",
-    "@orderly.network/web3-modal": "1.5.10-internal.0"
+    "@orderly.network/web3-modal": "1.5.10-internal.0",
+    "@orderly.network/deposit": "1.0.0",
+    "@orderly.network/withdraw": "1.0.0"
   },
   "changesets": [
     "beige-horses-judge",
+    "big-camels-chew",
     "brown-pears-rescue",
     "clean-rings-judge",
     "cold-houses-shake",
