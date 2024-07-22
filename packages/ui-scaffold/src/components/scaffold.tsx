@@ -129,7 +129,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           >
             <div
               className={cn(
-                "oui-h-[calc(100% - 29px)",
                 classNames?.leftSidebar
               )}
             >

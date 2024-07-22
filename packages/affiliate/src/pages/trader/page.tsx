@@ -8,7 +8,7 @@ export const TraderPage = () => {
         className={cn(
           "oui-h-lvw",
           // padding
-          "oui-p-4 lg:oui-p-6 xl:oui-p-3",
+          // "oui-p-4 lg:oui-p-6 xl:oui-p-3",
           "oui-font-semibold"
         )}
         direction={"column"}
@@ -17,7 +17,7 @@ export const TraderPage = () => {
         <Flex
           width={"100%"}
           gap={4}
-          className="oui-flex oui-flex-col xl:oui-flex-row"
+          className="oui-flex oui-flex-col xl:oui-flex-row xl:oui-items-stretch"
         >
           <SummaryWidget />
           <TitleStatisticWidget />

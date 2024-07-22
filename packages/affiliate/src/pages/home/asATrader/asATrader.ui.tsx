@@ -49,7 +49,7 @@ export const AsATraderUI: FC<AsATraderReturns> = (props) => {
           justify={"between"}
           className="oui-h-full"
         >
-          <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-[28px]">
+          <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-3xl">
             {props.isTrader ? "Trader" : "As a Trader"}
           </Text>
           <Text

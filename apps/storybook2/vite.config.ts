@@ -51,6 +51,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-orders/src"
       ),
+      "@orderly.network/deposit": resolve(
+        __dirname,
+        "../../packages/deposit/src"
+      ),
+      "@orderly.network/withdraw": resolve(
+        __dirname,
+        "../../packages/withdraw/src"
+      ),
     },
   },
 });
