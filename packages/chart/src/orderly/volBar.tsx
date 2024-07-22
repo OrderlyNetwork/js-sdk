@@ -94,7 +94,7 @@ export const VolBarChart = (props: VolChartProps) => {
 
   return (
     // @ts-ignore
-    <Box className={cn("oui-h-full", props.className)}>
+    <Box className={cn(props.className)}>
        {/* @ts-ignore */}
        <ResponsiveContainer>
           {/* @ts-ignore */}

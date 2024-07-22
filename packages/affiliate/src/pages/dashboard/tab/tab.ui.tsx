@@ -86,7 +86,7 @@ export const TabUI: FC<TabReturns> = (props) => {
         )}
       >
         {props.isAffiliate && (
-          <TabsTrigger value={TabTypes.affiliate} className=" ">
+          <TabsTrigger value={TabTypes.affiliate}>
             <Flex direction={"row"} gap={1}>
               <AffiliateIcon
                 fillOpacity={1}
@@ -120,12 +120,12 @@ export const TabUI: FC<TabReturns> = (props) => {
         {extendNode()}
       </TabsList>
       {props.isAffiliate && (
-        <TabsContent value={TabTypes.affiliate} >
+        <TabsContent value={TabTypes.affiliate} className="oui-mt-4">
           <AffiliatePage />
         </TabsContent>
       )}
       {props.isTrader && (
-        <TabsContent value={TabTypes.trader} >
+        <TabsContent value={TabTypes.trader} className="oui-mt-4" >
           <TraderPage />
         </TabsContent>
       )}
