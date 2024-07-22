@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.11-internal.5
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.11-internal.5
+  - @orderly.network/utils@1.5.11-internal.5
+
 ## 3.3.11-internal.4
 
 ### Patch Changes
