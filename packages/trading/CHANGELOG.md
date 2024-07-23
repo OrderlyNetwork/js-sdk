@@ -1,5 +1,15 @@
 # @orderly.network/trading
 
+## 1.0.1-sdk-v2.29
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/chart@1.0.1-sdk-v2.29
+  - @orderly.network/hooks@1.5.10-sdk-v2.29
+  - @orderly.network/ui@1.0.1-sdk-v2.29
+
 ## 1.0.1-sdk-v2.28
 
 ### Patch Changes
