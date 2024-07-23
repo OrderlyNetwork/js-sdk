@@ -428,7 +428,7 @@ export class Account {
       throw new Error("walletClient is undefined");
     }
 
-    if (typeof expiration !== 'number') {
+    if (typeof expiration !== "number") {
       throw new Error("the 'expiration' must be valid number");
     }
 
@@ -446,7 +446,7 @@ export class Account {
       brokerId: this.configStore.get("brokerId"),
       timestamp,
       scope: options?.scope,
-      tag: options?.tag
+      tag: options?.tag,
     });
 
     const address = this.stateValue.address;
@@ -580,9 +580,22 @@ export class Account {
 
   switchChainId(chainId: number | string) {
     chainId = this.parseChainId(chainId);
+
+    const nextState: AccountState = {
+      ...this.stateValue,
+      connectWallet: {
+        // ...wallet?.wallet,
+        ...this.stateValue.connectWallet!,
+        chainId: chainId,
+      },
+      // revalidating: this._state.validating,
+    };
+
     if (this.walletClient) {
       this.walletClient.chainId = chainId as number;
     }
+
+    this._ee.emit("change:status", nextState);
   }
 
   private parseChainId(chainId: string | number): number {

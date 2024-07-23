@@ -10,7 +10,7 @@ import {
   StatusContext,
   WsNetworkStatus,
   useAccount,
-  useMaintenanceStatus,
+  // useMaintenanceStatus,
 } from "@orderly.network/hooks";
 import { AccountStatus } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { AccountStatusEnum } from "@orderly.network/types";

@@ -6,7 +6,7 @@ import {
   useKeyStore,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { parseChainIdToNumber } from "@orderly.network/utils";
+import { isTestnet, parseChainIdToNumber } from "@orderly.network/utils";
 import { API } from "@orderly.network/types";
 
 function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
@@ -18,12 +18,15 @@ function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
   });
 }
 
-export const useWalletStateHandle = () => {
+export const useWalletStateHandle = (options: {
+  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+}) => {
   const {
     wallet: connectedWallet,
     connect,
     connectedChain,
   } = useWalletConnector();
+
   const { account, state } = useAccount();
   const keyStore = useKeyStore();
   const { networkId } = useContext<any>(OrderlyContext);
@@ -46,6 +49,13 @@ export const useWalletStateHandle = () => {
     if (typeof id === "undefined") return id;
     return parseChainIdToNumber(id);
   }, [connectedWallet]);
+
+  console.log(
+    "[useWalletStateHandle]:connectedChain",
+    connectedChain,
+    currentChainId,
+    unsupported
+  );
 
   useEffect(() => {
     if (!connectedChain) return;
@@ -105,6 +115,9 @@ export const useWalletStateHandle = () => {
      */
     if (currentChainId !== account.chainId) {
       account.switchChainId(currentChainId!);
+
+      // emit chain changed event
+      options.onChainChanged?.(currentChainId!, isTestnet(networkId));
     }
   }, [
     connectedWallet,

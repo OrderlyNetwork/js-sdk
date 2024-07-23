@@ -59,6 +59,10 @@ export default defineConfig({
         __dirname,
         "../../packages/withdraw/src"
       ),
+      "@orderly.network/trading": resolve(
+        __dirname,
+        "../../packages/trading/src"
+      ),
     },
   },
 });

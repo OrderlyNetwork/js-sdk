@@ -90,7 +90,7 @@ function setModalStates(
 
 const reducer = (state: ModalStore, action: ModalAction) => {
   const { id, args } = action.payload;
-  console.log("reducer action", action);
+  // console.log("reducer action", action);
   switch (action.type) {
     case "SHOW_MODAL": {
       return {
