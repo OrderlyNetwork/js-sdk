@@ -149,7 +149,7 @@ const CardItem: React.FC<CardItemProps> = (props) => {
 
       <Flex direction="column" itemAlign="start" mt={2}>
         {props.data?.map((item, index) => (
-          <ListItem key={index} item={item} />
+          <ListItem key={item.symbol} item={item} />
         ))}
       </Flex>
     </Box>

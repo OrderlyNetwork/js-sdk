@@ -242,7 +242,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
 
   return (
     <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
-      <DropdownMenuTrigger>{props.children}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
           onCloseAutoFocus={(e) => {
