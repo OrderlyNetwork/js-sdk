@@ -1,5 +1,17 @@
 # tsconfig
 
+## 0.3.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+
+## 0.3.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+
 ## 0.3.9
 
 ### Patch Changes

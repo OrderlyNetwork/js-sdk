@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+- Updated dependencies [e5a88d5f3]
+  - @orderly.network/core@1.5.10
+
+## 0.3.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+- Updated dependencies
+  - @orderly.network/core@1.5.10-alpha.0
+
 ## 0.3.9
 
 ### Patch Changes

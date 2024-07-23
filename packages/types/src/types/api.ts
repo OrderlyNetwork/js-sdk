@@ -301,7 +301,7 @@ export declare namespace API {
     symbol: string;
     decimals: number;
     display_name: string;
-    // precision: number;
+    precision: number;
   }
 
   export interface Chain {
