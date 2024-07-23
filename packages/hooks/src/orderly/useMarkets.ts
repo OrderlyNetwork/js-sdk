@@ -230,14 +230,12 @@ export const useMarkets = (type: MarketsType) => {
   };
 
   const marketsList = useMemo(() => {
-    console.log("fundingRates", fundingRates);
     const list = futures?.map((item: any) => {
       const { open_interest = 0, index_price = 0 } = item;
 
       const info = symbolsInfo[item.symbol];
       const rate = fundingRates[item.symbol];
       const est_funding_rate = rate("est_funding_rate") || null;
-      console.log("est_funding_rate", rate, est_funding_rate);
 
       const funding_period = info("funding_period");
 
