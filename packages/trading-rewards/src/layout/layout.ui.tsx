@@ -26,7 +26,7 @@ export const TradingRewardsLayout = (
       routerAdapter={props.routerAdapter}
       {...props}
     >
-      <Box mx={3} my={6}>
+      <Box className="oui-flex oui-justify-center oui-py-4">
         {props.children}
       </Box>
     </Scaffold>
@@ -44,6 +44,7 @@ const LeftSidebar = (props: SideBarProps & {
   return (
     <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-h-[calc(100%-29px)]">
       <SideBar
+        title={"Rewards"}
         {...props}
         open={expanded}
         onOpenChange={(open) => setExpand(open)}

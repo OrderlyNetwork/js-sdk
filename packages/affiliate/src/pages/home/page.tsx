@@ -3,11 +3,11 @@ import { BecomeAffiliateWidget } from "./becomeAffiliate";
 import { TopWidget } from "./top";
 import { CardWidget } from "./card";
 
-export const IndexPage = () => {
+export const HomePage = () => {
   return (
     <Flex
       className={cn(
-        "oui-h-lvw",
+        "oui-h-lvw ",
         // padding
         "oui-p-4 lg:oui-p-6 xl:oui-p-3",
         "oui-font-semibold"

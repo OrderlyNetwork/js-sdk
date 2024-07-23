@@ -11,14 +11,14 @@ export const TitleStatisticUI: FC<TitleStatisticReturns> = (props) => {
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 xl:oui-flex-1"
     >
       <Title {...props} />
-      <Flex className="oui-h-[170px] 2xl:oui-h-[196px] oui-w-full">
+      <Flex className="oui-min-h-[170px] oui-h-full oui-w-full oui-flex oui-flex-row oui-items-stretch">
         <VolBarChart
           data={props.dataSource}
           colors={{ fill: "rgba(0, 180, 158, 1)" }}
-          className="oui-w-full"
+          className="oui-w-full oui-flex-1"
         />
       </Flex>
     </Flex>

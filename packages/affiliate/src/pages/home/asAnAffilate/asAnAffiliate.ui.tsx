@@ -38,7 +38,7 @@ export const AsAnAffiliateUI: FC<AsAnAffiliateReturns> = (props) => {
           justify={"between"}
           className="oui-h-full"
         >
-          <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-[28px]">
+          <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-3xl">
             {props.isAffiliate ? "Affiliate" : "As an affiliate"}
           </Text>
           <Text
@@ -137,7 +137,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
         <Tooltip content={"Please connect your wallet to use this function"}>
           <Button
             variant="contained"
-            color="secondary"
+            color="light"
             onClick={props.becomeAnAffiliate}
             disabled={!props.isSignIn}
           >

@@ -100,7 +100,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         {/* Top main nav */}
         <Box
           className={cn(
-            // "oui-hidden xl:oui-block",
+            "oui-hidden xl:oui-block",
             "oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
@@ -129,7 +129,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           >
             <div
               className={cn(
-                "oui-h-[calc(100% - 29px)",
                 classNames?.leftSidebar
               )}
             >

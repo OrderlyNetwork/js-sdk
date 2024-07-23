@@ -1,5 +1,6 @@
 import { FC } from "react";
 import {
+  Box,
   Button,
   cn,
   Flex,
@@ -10,12 +11,13 @@ import {
   TabsTrigger,
   Text,
 } from "@orderly.network/ui";
-import { TabReturns, TabTypes } from "./tab.script";
+import { TabReturns } from "./tab.script";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
-import { IndexPage } from "../../index";
+import { HomePage } from "../../home";
+import { TabTypes } from "../../../hooks";
 
 export const TabUI: FC<TabReturns> = (props) => {
   const extendNode = () => {
@@ -25,7 +27,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="success"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anATrader();
           }}
@@ -41,7 +49,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="primary"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anAnAffiliate();
           }}
@@ -55,14 +69,15 @@ export const TabUI: FC<TabReturns> = (props) => {
     return undefined;
   };
 
-  if (props.isLoading) {
-    return <Spinner />;
-  }
 
+  console.log("props", props);
+  
 
-  if (!props.isAffiliate && !props.isTrader) {
+  if ((!props.isAffiliate && !props.isTrader) || props.isLoading || props.showHome) {
     return (
-      <IndexPage />
+      <div className="oui-max-w-[960px] oui-py-0 lg:oui-py-4">
+        <HomePage />
+      </div>
     );
   }
 
@@ -72,18 +87,18 @@ export const TabUI: FC<TabReturns> = (props) => {
       onValueChange={(e) => {
         props.setTab(e as TabTypes);
       }}
-      className="oui-w-full oui-mt-6"
+      className="oui-w-full"
     >
       <TabsList
         className={cn(
-          "oui-mx-3 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
+          "oui-px-6 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
           "oui-text-base md:oui-text-lg",
           "oui-rounded-xl oui-bg-base-9",
           props.isAffiliate && props.isTrader && "oui-justify-center"
         )}
       >
         {props.isAffiliate && (
-          <TabsTrigger value={TabTypes.affiliate} className=" ">
+          <TabsTrigger value={TabTypes.affiliate}>
             <Flex direction={"row"} gap={1}>
               <AffiliateIcon
                 fillOpacity={1}
@@ -117,12 +132,12 @@ export const TabUI: FC<TabReturns> = (props) => {
         {extendNode()}
       </TabsList>
       {props.isAffiliate && (
-        <TabsContent value={TabTypes.affiliate} className="oui-w-full">
+        <TabsContent value={TabTypes.affiliate} className="oui-mt-4">
           <AffiliatePage />
         </TabsContent>
       )}
       {props.isTrader && (
-        <TabsContent value={TabTypes.trader}>
+        <TabsContent value={TabTypes.trader} className="oui-mt-4" >
           <TraderPage />
         </TabsContent>
       )}

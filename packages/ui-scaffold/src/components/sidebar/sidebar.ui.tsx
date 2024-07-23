@@ -217,7 +217,7 @@ const SideBar = (props: SideBarProps) => {
     >
       <SideBarHeader
         open={open}
-        title="Portfolio"
+        title={props.title}
         onToggle={() => {
           props.onOpenChange?.(!open);
         }}

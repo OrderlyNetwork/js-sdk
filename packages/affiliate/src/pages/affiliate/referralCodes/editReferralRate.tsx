@@ -75,9 +75,9 @@ export const EditReferralRate = modal.create<{
         className="oui-px-6 oui-max-w-[320px] oui-bg-base-8 oui-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
         closable
       >
-        <DialogTitle className="oui-text-[20px]">
-          <div className="oui-mb-3">Settings</div>
-          <Divider />
+        <DialogTitle >
+          <div className="oui-my-3">Settings</div>
+          <Divider  />
         </DialogTitle>
 
         <div className="oui-mt-3 oui-h-full oui-flex oui-flex-col oui-justify-end">
@@ -119,7 +119,7 @@ export const EditReferralRate = modal.create<{
               }
             }}
             suffix={
-              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-[16px]">
+              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-base">
                 %
               </div>
             }
@@ -151,7 +151,7 @@ export const EditReferralRate = modal.create<{
               }
             }}
             suffix={
-              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-[16px]">
+              <div className="oui-px-3 oui-text-base-contrast-54 oui-text-base">
                 %
               </div>
             }

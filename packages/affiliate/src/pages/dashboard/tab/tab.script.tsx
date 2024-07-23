@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useReferralContext } from "../../../hooks";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+import { TabTypes, useReferralContext } from "../../../hooks";
 
 export type TabReturns = {
   tab: string;
@@ -9,12 +9,12 @@ export type TabReturns = {
   isLoading: boolean;
   anAnAffiliate: () => void;
   anATrader: () => void;
+  splashPage?: () => ReactNode | undefined;
+  showHome: boolean,
+  setShowHome: (value: boolean) => void;
 };
 
-export enum TabTypes {
-  affiliate = "affiliate",
-  trader = "trader",
-}
+
 
 export const useTabScript = (): TabReturns => {
   const {
@@ -24,8 +24,13 @@ export const useTabScript = (): TabReturns => {
     becomeAnAffiliateUrl,
     onBecomeAnAffiliate,
     showReferralPage,
+    splashPage,
+    showHome,
+    setShowHome,
+    tab,
+    setTab,
   } = useReferralContext();
-  const [tab, setTab] = useState<TabTypes>(TabTypes.trader);
+
 
   const tableValue = useMemo((): TabTypes => {
     if (isAffiliate && isTrader) {
@@ -39,16 +44,21 @@ export const useTabScript = (): TabReturns => {
     }
   }, [tab, isAffiliate, isTrader]);
 
+  console.log(" tab", tab, tableValue);
+  
+
   const anAnAffiliate = () => {
-    if (becomeAnAffiliateUrl !== undefined) {
-      window.open(becomeAnAffiliateUrl, "_blank");
-    } else if (onBecomeAnAffiliate !== undefined) {
-      onBecomeAnAffiliate?.();
-    }
+    // if (becomeAnAffiliateUrl !== undefined) {
+    //   window.open(becomeAnAffiliateUrl, "_blank");
+    // } else if (onBecomeAnAffiliate !== undefined) {
+    //   onBecomeAnAffiliate?.();
+    // }
+    setShowHome(true);
   };
 
   const anATrader = () => {
-    showReferralPage?.();
+    setShowHome(true);
+    // showReferralPage?.();
   };
 
   return {
@@ -56,11 +66,15 @@ export const useTabScript = (): TabReturns => {
     tab: tableValue,
     isAffiliate,
     isTrader,
-    // tab: TabTypes.trader,
-    // isAffiliate: false,
-    // isTrader: true,
     isLoading,
     anAnAffiliate,
     anATrader,
+    splashPage,
+    showHome,
+    setShowHome,
+    // tab: TabTypes.affiliate,
+    // isAffiliate: false,
+    // isTrader: false,
+    // isLoading: false,
   };
 };

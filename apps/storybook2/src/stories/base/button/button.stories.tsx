@@ -29,7 +29,7 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["primary", "success", "danger", "warning", "gray", "darkGray"],
+      options: ["primary", "success", "danger", "warning", "gray", "darkGray", "light"],
     },
     loading: {
       control: {
@@ -73,7 +73,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Variants: Story = {
-  args: {},
+  args: {
+    color: "danger"
+  },
 };
 
 export const Sizes: Story = {

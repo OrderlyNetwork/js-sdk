@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { Dashboard, AffiliateLayoutWidget, ReferralProvider } from "@orderly.network/affiliate";
+import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 
 const meta = {
     title: "Package/Affiliate/Dashboard",
@@ -36,14 +37,14 @@ const meta = {
                                 console.log("show referral page");
 
                             }}
-                            onEnterAffiliatePage={() => {
-                                console.log("show affiliate page");
-                            }}
+                            // onEnterAffiliatePage={() => {
+                            //     console.log("show affiliate page");
+                            // }}
 
-                            onEnterTraderPage={() => {
-                                console.log("show trader page");
+                            // onEnterTraderPage={() => {
+                            //     console.log("show trader page");
 
-                            }}
+                            // }}
                             // chartConfig={
                             //   {
                             //     trader: { 
@@ -63,7 +64,7 @@ const meta = {
                             overwrite={
                                 {
                                     ref: {
-                                        // gradientTitle: "Mark",
+                                        gradientTitle: "Mark",
                                         // top: (state) =>  (<div>ASD</div>),
                                         // card: (state) => (<div>GFHJK</div>)
                                         // card: {
@@ -124,9 +125,9 @@ export const Page: Story = {};
 
 
 export const LayoutPage: Story = {
-    render: (args) => {
-        return <AffiliateLayoutWidget>
+    render: () => {
+        return <TradingRewardsLayoutWidget>
             <Dashboard.DashboardPage />
-        </AffiliateLayoutWidget>
+        </TradingRewardsLayoutWidget>
     },
 }

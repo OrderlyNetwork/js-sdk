@@ -24,6 +24,7 @@ module.exports = withTV({
     "../affiliate/src/**/*.{ts,js,tsx,jsx}",
     "../markets/src/**/*.{ts,js,tsx,jsx}",
     "../chart/src/**/*.{ts,js,tsx,jsx}",
+    "../deposit/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {

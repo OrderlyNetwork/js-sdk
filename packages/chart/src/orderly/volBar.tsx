@@ -94,10 +94,9 @@ export const VolBarChart = (props: VolChartProps) => {
 
   return (
     // @ts-ignore
-    <Box className={cn("oui-h-full", props.className)}>
-      <div style={{ height: "calc(100% - 38px)" }}>
-        {/* @ts-ignore */}
-        <ResponsiveContainer>
+    <Box className={cn(props.className)}>
+       {/* @ts-ignore */}
+       <ResponsiveContainer>
           {/* @ts-ignore */}
           <BarChart
             data={props.data}
@@ -149,7 +148,6 @@ export const VolBarChart = (props: VolChartProps) => {
             />
           </BarChart>
         </ResponsiveContainer>
-      </div>
     </Box>
   );
 };

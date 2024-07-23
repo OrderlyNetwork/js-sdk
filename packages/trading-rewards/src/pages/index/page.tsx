@@ -5,15 +5,20 @@ import { AvailableToClaimWidget } from "./availableToClaim";
 import { StakeBoosterWidget } from "./stakeBooster";
 import { RewardsHistoryWidget } from "./rewardsHistory";
 import { TradingRewardsProvider } from "./provider";
+import { FC } from "react";
+import { TitleConfig } from "./title/title.script";
 
-export const IndexPage = () => {
+export const HomePage: FC<{
+  titleConfig?: TitleConfig;
+}> = (props) => {
   return (
-    <TradingRewardsProvider>
+    <TradingRewardsProvider titleConfig={props.titleConfig}>
       <Flex
+        id="oui-trading-rewards-home-page"
         className={cn(
           "oui-h-lvw oui-w-full",
           // padding
-          "oui-p-4 lg:oui-p-6 xl:oui-p-3"
+          // "oui-p-4 lg:oui-p-6 xl:oui-p-3 oui-my-4"
         )}
         direction={"column"}
         gap={4}

@@ -13,6 +13,7 @@ import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
 import { FC } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const RewardsHistoryUI: FC<RewardsHistoryReturns> = (props) => {
   return (
@@ -34,7 +35,7 @@ export const RewardsHistoryUI: FC<RewardsHistoryReturns> = (props) => {
 };
 
 const List: FC<RewardsHistoryReturns> = (props) => {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   return isMobile ? (
     <ScrollArea className="oui-h-[356px]" orientation="vertical">
@@ -78,9 +79,9 @@ const MobileCell: FC<{
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
             Epoch rewards{" "}
           </Text>
-          <Text.numeral rule={"human"} className="oui-text-sm" dp={2}>
-            {data.max_reward_amount}
-          </Text.numeral>
+          <Text className="oui-text-sm" >
+            {commifyOptional(data.max_reward_amount, 2)}
+          </Text>
         </Flex>
         <Flex
           direction={"column"}
@@ -90,9 +91,9 @@ const MobileCell: FC<{
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
             Rewards earned{" "}
           </Text>
-          <Text.numeral rule={"human"} className="oui-text-sm" dp={2}>
-            {data.info?.r_wallet || "-"}
-          </Text.numeral>
+          <Text className="oui-text-sm">
+            {commifyOptional(data.info?.r_wallet)}
+          </Text>
         </Flex>
       </Flex>
       <Flex direction={"row"} width={"100%"}>
@@ -184,7 +185,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text.numeral dp={2}>{value || "-"}</Text.numeral>
+            <Text>{commifyOptional(value)}</Text>
           </Flex>
         );
       },
@@ -200,7 +201,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text.numeral dp={2}>{record.info?.r_wallet || "-"}</Text.numeral>
+            <Text>{commifyOptional(record.info?.r_wallet)}</Text>
           </Flex>
         );
       },

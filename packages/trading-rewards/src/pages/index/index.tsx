@@ -1,5 +1,5 @@
 
-export { TitleUI, TitleWidget } from "./title";
+export { Title, TitleWidget } from "./title";
 export { CurEpochUI, CurEpochWidget } from "./curEpoch";
-
-export { IndexPage } from "./page";
+export { TradingRewardsProvider} from "./provider";
+export { HomePage } from "./page";
