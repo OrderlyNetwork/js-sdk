@@ -1,7 +1,11 @@
 import { useMemo, useRef } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { InputFormatter, MenuItem } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { MenuItem } from "@orderly.network/ui";
+import { commify, Decimal } from "@orderly.network/utils";
+import type {
+  InputFormatter,
+  InputFormatterOptions,
+} from "@orderly.network/ui";
 
 export enum PnLMode {
   PnL = "PnL",
@@ -9,21 +13,23 @@ export enum PnLMode {
   PERCENTAGE = "Offset%",
 }
 
+export type PNL_Values = {
+  PnL: string;
+  Offset: string;
+  "Offset%": string;
+};
+
 export type BuilderProps = {
   type: "TP" | "SL";
 
   quote_dp?: number;
   onChange: (key: string, value: number | string) => void;
-  // testId?: string;
-  // values: {
-  //   PnL: string;
-  //   Offset: string;
-  //   "Offset%": string;
-  // };
+
+  values: PNL_Values;
 };
 
 export const usePNLInputBuilder = (props: BuilderProps) => {
-  const { type } = props;
+  const { type, values } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
@@ -39,6 +45,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         return `${type.toLowerCase()}_pnl`;
     }
   }, [mode]);
+
+  const value = useMemo(() => {
+    return values[mode as keyof PNL_Values];
+  }, [values]);
 
   const modes = useMemo<MenuItem[]>(() => {
     return [
@@ -59,15 +69,6 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
-    // if (mode === PnLMode.PERCENTAGE) {
-    //   if (value !== "") {
-    //     percentageSuffix.current = value.endsWith(".") ? "." : "";
-    //     value = new Decimal(value).div(100).todp(4, 4).toString();
-    //   }
-    // } else {
-    //   // value = todpIfNeed(value, quote_dp);
-    // }
-
     props.onChange(key, value);
   };
 
@@ -77,12 +78,34 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   }): InputFormatter => {
     const { dp = 2 } = options;
     return {
-      onRenderBefore: (value: string | number) => {
-        console.log(options);
-        return value.toString();
+      onRenderBefore: (
+        value: string | number,
+        options: InputFormatterOptions
+      ) => {
+        if (value === "") return value;
+
+        if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
+          return commify(value);
+        }
+
+        if (mode === PnLMode.PERCENTAGE) {
+          return `${new Decimal(value).mul(100).todp(2, 4).toString()}${
+            percentageSuffix.current
+          }`;
+          // return (Number(value) * 100).toFixed(2);
+        }
+
+        return `${value}`;
       },
       onSendBefore: (value: string) => {
-        console.log(options);
+        if (mode === PnLMode.PERCENTAGE) {
+          if (value !== "") {
+            percentageSuffix.current = value.endsWith(".") ? "." : "";
+            value = new Decimal(value).div(100).todp(4, 4).toString();
+          }
+        } else {
+          // value = todpIfNeed(value, quote_dp);
+        }
         return value;
       },
     };
@@ -95,6 +118,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     onModeChange: (mode: PnLMode) => {
       setMode(mode);
     },
+    value,
     onValueChange,
     quote_db: props.quote_dp,
   };

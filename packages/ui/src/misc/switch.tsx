@@ -43,12 +43,4 @@ export const Match = <T,>(props: Props<T>) => {
     }
   }
   return <Slot children={Default} {...rest} />;
-
-  // if (!keys.includes(_value.toString()) && !Default) {
-  //   throw new Error(`Match: missing case for value: ${_value}`);
-  // }
-
-  // const Element = Case[_value] || Default || "div";
-
-  // return <Slot children={Element} {...rest} />;
 };

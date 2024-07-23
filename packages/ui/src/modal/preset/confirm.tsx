@@ -4,11 +4,11 @@ import { DialogBody, SimpleDialog } from "../../dialog";
 import { modalActions } from "../modalContext";
 import { Text } from "../../typography";
 
-export interface ConfirmProps {
+export interface ConfirmProps<T> {
   title?: string;
   content?: React.ReactNode;
   footer?: React.ReactNode;
-  onOk?: () => Promise<any>;
+  onOk?: () => Promise<T>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
   size?: "sm" | "md" | "lg";
@@ -17,7 +17,7 @@ export interface ConfirmProps {
   // cancelId?: string;
 }
 
-export const ConfirmDialog = create<ConfirmProps>((props) => {
+export const ConfirmDialog = create<ConfirmProps<boolean>>((props) => {
   const { size = "sm" } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   return (
@@ -85,6 +85,6 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
   );
 });
 
-export const confirm = (props: ConfirmProps) => {
-  return modalActions.show(ConfirmDialog, props);
+export const confirm = (props: ConfirmProps<boolean>) => {
+  return modalActions.show<boolean>(ConfirmDialog, props);
 };

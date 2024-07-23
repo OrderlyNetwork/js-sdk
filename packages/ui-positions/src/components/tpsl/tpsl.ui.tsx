@@ -1,4 +1,7 @@
+import { useRef } from "react";
 import {
+  Badge,
+  Box,
   Button,
   Divider,
   Flex,
@@ -6,16 +9,23 @@ import {
   Input,
   Slider,
   Text,
+  textVariants,
   cn,
   inputFormatter,
+  Checkbox,
 } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
-import { useRef } from "react";
 
-export const TPSL = (props: TPSLBuilderState) => {
-  // console.log("TPSL", props);
-  const { TPSL_OrderEntity, symbolInfo } = props;
+import { PNL_Values } from "./pnlInput/useBuilder.script";
+
+export type TPSLProps = {
+  onCancel?: () => void;
+  onComplete?: () => void;
+};
+
+export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
+  const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete } = props;
   return (
     <div id="orderly-tp_sl-order-edit-content">
       {!props.isEditing && (
@@ -34,12 +44,46 @@ export const TPSL = (props: TPSLBuilderState) => {
         tp_pnl={TPSL_OrderEntity.tp_pnl}
         quote={symbolInfo("quote")}
         quote_db={symbolInfo("quote_dp")}
+        onPriceChange={props.setOrderPrice}
+        onPnLChange={props.setPnL}
+        tp_values={{
+          PnL: `${TPSL_OrderEntity.tp_pnl ?? ""}`,
+          Offset: `${TPSL_OrderEntity.tp_offset ?? ""}`,
+          "Offset%": `${TPSL_OrderEntity.tp_offset_percentage ?? ""}`,
+        }}
+        sl_values={{
+          PnL: `${TPSL_OrderEntity.sl_pnl ?? ""}`,
+          Offset: `${TPSL_OrderEntity.sl_offset ?? ""}`,
+          "Offset%": `${TPSL_OrderEntity.sl_offset_percentage ?? ""}`,
+        }}
+        tp_trigger_price={TPSL_OrderEntity.tp_trigger_price ?? ""}
+        sl_trigger_price={TPSL_OrderEntity.sl_trigger_price ?? ""}
       />
       <Grid cols={2} gap={3} mt={4}>
-        <Button size={"md"} color={"secondary"}>
+        <Button
+          size={"md"}
+          color={"secondary"}
+          data-testid={"tpsl-cancel"}
+          onClick={() => {
+            onCancel?.();
+          }}
+        >
           Cancel
         </Button>
-        <Button size={"md"}>Confirm</Button>
+        <Button
+          size={"md"}
+          data-testid={"tpsl-confirm"}
+          disabled={!props.valid}
+          onClick={() => {
+            // if (props.needConfirm) {
+            //   //show confirm dialog
+            // } else {
+            props.onSubmit();
+            // }
+          }}
+        >
+          Confirm
+        </Button>
       </Grid>
     </div>
   );
@@ -172,9 +216,16 @@ const TPSLPrice = (props: {
   sl_pnl?: number;
   quote: string;
   quote_db?: number;
+  onPriceChange: TPSLBuilderState["setOrderPrice"];
+  onPnLChange: TPSLBuilderState["setPnL"];
+  tp_values: PNL_Values;
+  sl_values: PNL_Values;
+  tp_trigger_price?: number | string;
+  sl_trigger_price?: number | string;
 }) => {
   const onPnLChange = (key: string, value: number | string) => {
-    console.log(key, value);
+    // console.log(key, value);
+    props.onPnLChange(key, value);
   };
   return (
     <>
@@ -191,12 +242,19 @@ const TPSLPrice = (props: {
           </Flex>
         </Flex>
         <Grid cols={2} gap={2} pt={2} pb={4}>
-          <PriceInput type={"TP"} />
+          <PriceInput
+            type={"TP"}
+            value={props.tp_trigger_price}
+            onValueChange={(value) => {
+              props.onPriceChange("tp_trigger_price", value);
+            }}
+          />
           <PnlInputWidget
             type={"TP"}
             onChange={onPnLChange}
             quote={props.quote}
             quote_dp={props.quote_db}
+            values={props.tp_values}
           />
         </Grid>
       </div>
@@ -213,12 +271,19 @@ const TPSLPrice = (props: {
           </Flex>
         </Flex>
         <Grid cols={2} gap={2} pt={2} pb={4}>
-          <PriceInput type={"SL"} />
+          <PriceInput
+            type={"SL"}
+            value={props.sl_trigger_price}
+            onValueChange={(value) => {
+              props.onPriceChange("sl_trigger_price", value);
+            }}
+          />
           <PnlInputWidget
             type={"SL"}
             onChange={onPnLChange}
             quote={props.quote}
             quote_dp={props.quote_db}
+            values={props.sl_values}
           />
         </Grid>
       </div>
@@ -227,7 +292,11 @@ const TPSLPrice = (props: {
 };
 // ------------ TP/SL Price and PNL input end------------
 // ------------ TP/SL Price input start------------
-const PriceInput = (props: { type: string }) => {
+const PriceInput = (props: {
+  type: string;
+  value?: string | number;
+  onValueChange: (value: string) => void;
+}) => {
   return (
     <Input
       prefix={`${props.type} price`}
@@ -235,6 +304,12 @@ const PriceInput = (props: { type: string }) => {
       placeholder={"USDC"}
       align={"right"}
       autoComplete={"off"}
+      value={props.value}
+      onValueChange={props.onValueChange}
+      formatters={[
+        inputFormatter.numberFormatter,
+        inputFormatter.currencyFormatter,
+      ]}
     />
   );
 };
@@ -247,3 +322,103 @@ export const TPSLButton = () => {
     </Button>
   );
 };
+
+export type PositionTPSLConfirmProps = {
+  symbol: string;
+  isPosition: boolean;
+  qty: number;
+  tpPrice?: number;
+  slPrice?: number;
+  // type
+};
+
+// ------------ Position TP/SL Confirm dialog start------------
+export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
+  const { symbol, tpPrice, slPrice, qty } = props;
+  const textClassName = textVariants({
+    size: "xs",
+    intensity: 54,
+  });
+  return (
+    <>
+      <Flex pt={5} pb={4}>
+        <Box grow>
+          <Text.formatted rule={"symbol"} size="base" showIcon as="div">
+            {symbol}
+          </Text.formatted>
+        </Box>
+        <Flex gap={1}>
+          <Badge size="xs" color={"primaryLight"}>
+            Position
+          </Badge>
+          <Badge size="xs" color="neutural">
+            TP/SL
+          </Badge>
+        </Flex>
+      </Flex>
+      <Divider />
+      <Flex
+        direction={"column"}
+        itemAlign={"stretch"}
+        gapY={1}
+        pt={4}
+        pb={5}
+        className={textClassName}
+      >
+        <Flex>
+          <Box grow>Qty.</Box>
+
+          <div>Entire position</div>
+        </Flex>
+        {typeof tpPrice === "number" ? (
+          <Flex>
+            <Box grow>TP Price</Box>
+            <Text.numeral
+              as={"div"}
+              coloring
+              unit={"USDC"}
+              size={"sm"}
+              unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
+            >
+              52.32
+            </Text.numeral>
+          </Flex>
+        ) : null}
+
+        <Flex>
+          <Box grow>SL Price</Box>
+          <Text.numeral
+            as={"div"}
+            coloring
+            unit={"USDC"}
+            size={"sm"}
+            unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
+          >
+            52.32
+          </Text.numeral>
+        </Flex>
+        <Flex>
+          <Box grow>Price</Box>
+          <div>Market</div>
+        </Flex>
+      </Flex>
+      <Box py={2}>
+        <Flex gap={1}>
+          <Checkbox id="disabledConfirm" />
+          <label
+            htmlFor="disabledConfirm"
+            className={textVariants({
+              size: "xs",
+              intensity: 54,
+              className: "oui-ml-1",
+            })}
+          >
+            Disable order confirmation
+          </label>
+        </Flex>
+      </Box>
+    </>
+  );
+};
+
+//------------- Position TP/SL Confirm dialog end------------

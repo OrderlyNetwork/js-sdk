@@ -1,9 +1,10 @@
-import { TPSL } from "./tpsl.ui";
+import { TPSL, TPSLProps } from "./tpsl.ui";
 import { TPSLBuilderOptions, useTPSLBuilder } from "./useTPSL.script";
 
-type Props = {} & TPSLBuilderOptions;
+export type TPSLWidgetProps = {} & TPSLBuilderOptions & TPSLProps;
 
-export const TPSLWidget = (props: Props) => {
-  const state = useTPSLBuilder(props);
-  return <TPSL {...state} />;
+export const TPSLWidget = (props: TPSLWidgetProps) => {
+  const { onCancel, ...rest } = props;
+  const state = useTPSLBuilder(rest);
+  return <TPSL {...state} onCancel={onCancel} />;
 };

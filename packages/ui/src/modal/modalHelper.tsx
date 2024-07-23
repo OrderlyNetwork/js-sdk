@@ -33,9 +33,9 @@ export const create = <P extends {}>(
       ALREADY_MOUNTED[id] = true;
 
       return () => {
-        // if(!keepMounted){
-        delete ALREADY_MOUNTED[id];
-        // }
+        if (!keepMounted) {
+          delete ALREADY_MOUNTED[id];
+        }
       };
     }, [id, show, defaultVisible]);
 

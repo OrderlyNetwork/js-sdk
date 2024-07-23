@@ -40,7 +40,12 @@ export type { ButtonProps } from "./button";
 export type { BoxProps } from "./box";
 export type { FlexProps } from "./flex";
 export type { TextProps } from "./typography";
-export type { InputProps, TextFieldProps, InputFormatter } from "./input";
+export type {
+  InputProps,
+  TextFieldProps,
+  InputFormatter,
+  InputFormatterOptions,
+} from "./input";
 export type { SpinnerProps } from "./spinner";
 export type { ChainSelectProps, SelectProps } from "./select";
 export type { SizeType } from "./helpers/sizeType";

@@ -7,6 +7,7 @@ const { basePlugin } = require("./src/tailwind/base");
 const { componentsPlugin } = require("./src/tailwind/components");
 const { themePlugin } = require("./src/tailwind/theme");
 const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
+const {chartPlugin} = require("./src/tailwind/chart");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -168,6 +169,7 @@ module.exports = withTV({
     themePlugin(),
     basePlugin(),
     sizePlugin(),
+    chartPlugin(),
     gradientPlugin(),
     positionPlugin(),
     componentsPlugin(),
