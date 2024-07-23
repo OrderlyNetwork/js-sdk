@@ -95,7 +95,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       direction="column"
       justify="between"
       width="100%"
-      height="236px"
+      height={236}
       className={props.className}
     >
       {list?.map((item, index) => (
@@ -138,7 +138,7 @@ const CardItem: React.FC<CardItemProps> = (props) => {
       r="lg"
       py={4}
       pb={2}
-      // width="100%"
+      height={236}
       className={props.className}
     >
       <Box px={4}>
