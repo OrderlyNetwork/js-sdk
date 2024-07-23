@@ -27,7 +27,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="success"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anATrader();
           }}
@@ -43,7 +49,13 @@ export const TabUI: FC<TabReturns> = (props) => {
           variant="contained"
           color="primary"
           size="sm"
-          className="oui-px-2 oui-flex oui-gap-1 oui-absolute oui-right-0 oui-top-2"
+          className="oui-px-2 oui-flex oui-gap-1"
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "24px",
+            transform: "translateY(-50%)"
+          }}
           onClick={(e) => {
             props.anAnAffiliate();
           }}
@@ -79,14 +91,14 @@ export const TabUI: FC<TabReturns> = (props) => {
     >
       <TabsList
         className={cn(
-          "oui-mx-3 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
+          "oui-px-6 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
           "oui-text-base md:oui-text-lg",
           "oui-rounded-xl oui-bg-base-9",
           props.isAffiliate && props.isTrader && "oui-justify-center"
         )}
       >
         {props.isAffiliate && (
-          <TabsTrigger value={TabTypes.affiliate} className=" ">
+          <TabsTrigger value={TabTypes.affiliate}>
             <Flex direction={"row"} gap={1}>
               <AffiliateIcon
                 fillOpacity={1}
@@ -120,12 +132,12 @@ export const TabUI: FC<TabReturns> = (props) => {
         {extendNode()}
       </TabsList>
       {props.isAffiliate && (
-        <TabsContent value={TabTypes.affiliate} >
+        <TabsContent value={TabTypes.affiliate} className="oui-mt-4">
           <AffiliatePage />
         </TabsContent>
       )}
       {props.isTrader && (
-        <TabsContent value={TabTypes.trader} >
+        <TabsContent value={TabTypes.trader} className="oui-mt-4" >
           <TraderPage />
         </TabsContent>
       )}
