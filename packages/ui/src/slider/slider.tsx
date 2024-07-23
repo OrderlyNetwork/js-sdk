@@ -4,6 +4,7 @@ import { cnBase, VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
 import { Fragment, useMemo } from "react";
 import { convertValueToPercentage, getThumbInBoundsOffset } from "./utils";
+import { cn } from "..";
 
 const sliderVariants = tv({
   slots: {
@@ -57,7 +58,7 @@ const sliderVariants = tv({
   },
 });
 
-type SliderMarks = { value: number; label: string }[];
+export type SliderMarks = { value: number; label: string }[];
 
 type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
   VariantProps<typeof sliderVariants> & {
@@ -72,6 +73,7 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
       track?: string;
       range?: string;
     };
+    initialValue?: number[];
   };
 
 const BaseSlider = React.forwardRef<
@@ -89,6 +91,7 @@ const BaseSlider = React.forwardRef<
       showTip,
       onValueChange,
       value: __propsValue,
+      initialValue,
       ...props
     },
     ref
@@ -97,7 +100,7 @@ const BaseSlider = React.forwardRef<
       color,
     });
 
-    const [innerValue, setInvalue] = React.useState(__propsValue);
+    const [innerValue, setInvalue] = React.useState(initialValue || __propsValue);
 
     // console.log("********innerValue", innerValue, __propsValue);
 
@@ -113,13 +116,13 @@ const BaseSlider = React.forwardRef<
     }, [__propsValue]);
 
     const innerMasks = useMemo<SliderMarks>(() => {
+      if (Array.isArray(marks) && marks.length > 0) {
+        return marks;
+      }
+
       let _max = props.max;
       if (!_max) {
         _max = 100;
-      }
-
-      if (Array.isArray(marks) && marks.length > 0) {
-        return marks;
       }
 
       if (typeof markCount !== "undefined") {
@@ -188,7 +191,7 @@ const BaseSlider = React.forwardRef<
         )}
         <SliderPrimitive.Thumb
           className={thumb({
-            className: classNames?.thumb,
+            className: classNames?.thumb + "oui-opacity-30",
           })}
         />
       </SliderPrimitive.Root>
@@ -227,6 +230,7 @@ const Marks = (props: SliderMarksProps) => {
       {marks?.map((mark, index) => {
         // const percent = convertValueToPercentage(mark.value, props.min, _max);
         const percent = convertValueToPercentage(index, 0, marks.length - 1);
+        // const percent = ((100 - 2 * 6) / (marks.length - 1)) * index;
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
         const __value = isInnerMask ? mark.value : index;
@@ -242,7 +246,7 @@ const Marks = (props: SliderMarksProps) => {
               : color === "primaryLight"
               ? "oui-border-primary-light oui-bg-primary-light"
               : ""
-            : "";
+            : "";            
 
         return (
           <Fragment key={index}>
@@ -250,14 +254,16 @@ const Marks = (props: SliderMarksProps) => {
               className={cnBase(className, classNames)}
               style={{
                 left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
+                // opacity: '0.3'
                 // top: "7px",
               }}
             />
-            {/* {!props.disabled && markLabelVisible && (
+            {!props.disabled && markLabelVisible && (
               <span
                 key={index}
                 className={cn(
-                  "oui-absolute oui-top-[20px] oui-text-2xs oui-text-base-contrast/50 oui-pointer-events-none oui-translate-x-[-50%] desktop:oui-text-xs"
+                  "oui-absolute oui-top-[12px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
+                  // classNames
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
@@ -265,7 +271,7 @@ const Marks = (props: SliderMarksProps) => {
               >
                 {mark.label}
               </span>
-            )} */}
+            )}
           </Fragment>
         );
       })}

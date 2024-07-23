@@ -6,6 +6,7 @@ export const AssetWidget = () => {
     connected,
     connect: connectWallet,
     portfolioValue,
+    onLeverageEdit,
     ...rest
   } = useAssetScript();
   return (
@@ -13,6 +14,7 @@ export const AssetWidget = () => {
       onConnectWallet={connectWallet}
       connected={connected}
       portfolioValue={portfolioValue}
+      onLeverageEdit={onLeverageEdit}
       {...rest}
     />
   );

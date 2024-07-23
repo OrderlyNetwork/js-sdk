@@ -50,6 +50,7 @@ export const AssetsUI = (props: Props) => {
             unrealPnL={props.unrealPnL}
             freeCollateral={props.freeCollateral}
             currentLeverage={props.currentLeverage}
+            onLeverageEdit={props.onLeverageEdit}
           />
         </AuthGuard>
       }
@@ -112,7 +113,7 @@ const NotConnected: FC<{
   );
 };
 
-export const AssetStatistic = (props: StatisticProps) => {
+export const AssetStatistic = (props: StatisticProps & {onLeverageEdit?: () => void;}) => {
   return (
     <Grid cols={3}>
       <Statistic label="Unreal. PnL">
@@ -136,7 +137,6 @@ export const AssetStatistic = (props: StatisticProps) => {
         <Flex itemAlign={"center"}>
           <span className="oui-text-lg">{props.currentLeverage}</span>
           <span>x</span>
-          {/* @ts-ignore */}
           <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()}>
             <EditIcon color={"white"} size={18} />
           </button>
