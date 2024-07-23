@@ -2,11 +2,15 @@ import { FC, useMemo, useState } from "react";
 import {
   Box,
   Button,
+  cn,
   Divider,
   Flex,
+  Input,
+  inputFormatter,
   Match,
   Switch,
   Text,
+  TextField,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
@@ -15,8 +19,13 @@ export type WalletConnectContentProps = {
   initAccountState: AccountStatusEnum;
   signIn: () => Promise<any>;
   enableTrading: (remember: boolean) => Promise<any>;
+  enableTradingComplted?: () => Promise<void>;
   onCompleted?: () => void;
   close?: () => void;
+  refCode: string;
+  setRefCode: React.Dispatch<React.SetStateAction<string>>;
+  helpText?: string;
+  showRefCodeInput: boolean;
 };
 
 export const WalletConnectContent = (props: WalletConnectContentProps) => {
@@ -51,10 +60,13 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
 
   const onEnableTrading = () => {
     setLoading(true);
-    return props.enableTrading(remember).then((res) => {
+    return props.enableTrading(remember).then(async (res) => {
       console.log(res);
       setLoading(false);
       setActiveStep((step) => step + 1);
+      try {
+        await props.enableTradingComplted?.();
+      } catch (e) {}
       if (typeof props.onCompleted === "function") {
         props.onCompleted();
       } else if (typeof props.close === "function") {
@@ -114,6 +126,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           </Box>
         )}
       </Box>
+      {props.showRefCodeInput && <ReferralCode {...props} />}
       <Flex justify={"between"} itemAlign={"center"}>
         <Text
           intensity={54}
@@ -178,6 +191,33 @@ const ActionButton: FC<{
           </Button>
         ),
       }}
+    />
+  );
+};
+
+const ReferralCode: FC<WalletConnectContentProps> = (props) => {
+  return (
+    <TextField
+      placeholder="Referral cdoe"
+      fullWidth
+      label={"Referral code (optional)"}
+      value={props.refCode}
+      onChange={(e) => {
+        props.setRefCode(e.target.value);
+      }}
+      classNames={{
+        label: "oui-text-base-contrast-54 oui-text-xs"
+      }}
+      formatters={[
+        inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
+      ]}
+      onClear={() => {
+        props.setRefCode("");
+      }}
+      autoComplete="off"
+      helpText={props.helpText}
+      className="oui-mb-4"
+      color="danger"
     />
   );
 };
