@@ -1,6 +1,6 @@
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { timeConvertString } from "@orderly.network/utils";
 
 export const useFundingRate = (symbol: string) => {
@@ -42,9 +42,21 @@ export const useFundingRate = (symbol: string) => {
     };
   }, [data]);
 
+  const est_funding_rate = useMemo(() => {
+    if (!data) return;
+
+    const { next_funding_time, est_funding_rate = 0 } = data;
+
+    if (Date.now() > next_funding_time) {
+      return null;
+    }
+
+    return (Number(est_funding_rate) * 100).toFixed(4);
+  }, [data]);
+
   return {
     ...data,
-    est_funding_rate: (Number(data?.est_funding_rate ?? 0) * 100).toFixed(4),
+    est_funding_rate,
     countDown,
   };
 };

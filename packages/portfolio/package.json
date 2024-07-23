@@ -20,6 +20,7 @@
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
+    "@orderly.network/ui-leverage": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
