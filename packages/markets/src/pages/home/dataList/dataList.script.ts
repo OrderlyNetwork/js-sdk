@@ -10,7 +10,7 @@ export type UseMarketsDataListScript = ReturnType<
 >;
 
 export function useMarketsDataListScript() {
-  const [activeTab, setActiveTab] = useState<TabName>("favorites");
+  const [activeTab, setActiveTab] = useState<TabName>("all");
   const { clearSearchValue } = useMarketsContext();
 
   useEffect(() => {
