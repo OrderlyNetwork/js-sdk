@@ -44,7 +44,6 @@ export const useChainMenuBuilderScript = () => {
     };
   }, [state, chains]);
 
-  // console.log("currentChain::", currentChain);
   //
 
   const onChainChange = (chain: { id: number }) => {

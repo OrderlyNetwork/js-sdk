@@ -66,7 +66,6 @@ const MobileCellItem: FC<{
           rule={rule || ""}
           // @ts-ignore
           formatString={formatString}
-          // @ts-ignore
           prefix={prefix}
           className="oui-text-base-contrast-80 oui-text-sm oui-mt-[6px]"
         >
@@ -189,16 +188,14 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
 const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
   console.log("referees", props.referees);
-  
+
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
         title: "Referee address ",
         dataIndex: "user_address",
         render: (value) => (
-          <Text.formatted rule={"address"}>
-            {value}
-          </Text.formatted>
+          <Text.formatted rule={"address"}>{value}</Text.formatted>
         ),
         className: "oui-w-1/5",
       },
@@ -211,13 +208,13 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       {
         title: "Total commission (USDC) ",
         dataIndex: "referral_rebate",
-        render: (value) => (<Text.numeral dp={6}>{value || "-"}</Text.numeral>),
+        render: (value) => <Text.numeral dp={6}>{value || "-"}</Text.numeral>,
         className: "oui-w-1/5",
       },
       {
         title: "Total vol (USDC) ",
         dataIndex: "volume",
-        render: (value) => (<Text.numeral dp={2}>{value || "-"}</Text.numeral>),
+        render: (value) => <Text.numeral dp={2}>{value || "-"}</Text.numeral>,
         className: "oui-w-1/5",
       },
       {
@@ -245,10 +242,14 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
           dataSource={props.referees.data}
           loadMore={props.referees.loadMore}
           isLoading={props.referees.isLoading}
-          
           renderItem={(e, index) => {
             return (
-              <Flex key={index} direction={"column"} gap={3}  className="oui-border-b-2 oui-border-line-6 oui-pb-3">
+              <Flex
+                key={index}
+                direction={"column"}
+                gap={3}
+                className="oui-border-b-2 oui-border-line-6 oui-pb-3"
+              >
                 <Flex direction={"row"} width={"100%"}>
                   <MobileCellItem
                     title="Referral code "

@@ -3,6 +3,7 @@ import { BaseTradingPage } from "./page";
 import { MobileTradingPage } from "./mobile/trading";
 
 export { DataListView } from "./desktop";
+export type { TradingPageProps } from "./types";
 
 type TradingPage = typeof BaseTradingPage & {
   mobile: typeof MobileTradingPage;

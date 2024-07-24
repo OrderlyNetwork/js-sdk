@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 // import { fn } from '@storybook/test';
 import { Slider } from '@orderly.network/ui';
+import { fn } from '@storybook/test';
 
 
 const meta = {
@@ -45,6 +46,7 @@ const meta = {
     // size:'default'
     color: 'primary',
     step: 10,
+    onValueChange: fn(),
   },
 } satisfies Meta<typeof Slider>;
 
@@ -53,8 +55,57 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Marks: Story = {
+export const MarksCount: Story = {
   args:{
     markCount: 5,
+  }
+}
+
+export const MarksItems: Story = {
+  args:{
+    markLabelVisible: true,
+    color: "primary",
+    marks: [
+      {
+        label: "1x",
+        value: 1,
+      },
+      {
+        label: "2x",
+        value: 2,
+      },
+      {
+        label: "3x",
+        value: 3,
+      },
+      {
+        label: "4x",
+        value: 4,
+      },
+      {
+        label: "5x",
+        value: 5,
+      },
+      {
+        label: "10x",
+        value: 10,
+      },
+      {
+        label: "20x",
+        value: 20,
+      },
+      {
+        label: "30x",
+        value: 30,
+      },
+      {
+        label: "40x",
+        value: 40,
+      },
+      {
+        label: "50x",
+        value: 50,
+      },
+    ]
   }
 }

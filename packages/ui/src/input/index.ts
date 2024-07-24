@@ -7,6 +7,11 @@ export type { InputProps } from "./input";
 
 export * as inputFormatter from "./formatter";
 
+export type {
+  InputFormatter,
+  InputFormatterOptions,
+} from "./formatter/inputFormatter";
+
 export { TextField } from "./textField";
 
 export { type TextFieldProps } from "./textField";

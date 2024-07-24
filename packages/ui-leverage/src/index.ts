@@ -7,7 +7,7 @@ export { LeverageEditor } from "./leverage.widget";
 export { Leverage } from "./leverage.ui";
 
 registerSimpleDialog(LeverageWidgetId, LeverageEditor, {
-  title: "Leverage Editor",
+  title: "Max account leverage",
   size: "md",
 });
 

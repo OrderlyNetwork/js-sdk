@@ -6,15 +6,15 @@ import { CheckIcon } from "../icon/check";
 const checkboxVariants = tv({
   base: [
     "peer",
-    "oui-h-6",
-    "oui-w-6",
+    "oui-h-3",
+    "oui-w-3",
     "oui-shrink-0",
     "oui-rounded-sm",
     "oui-border",
     "oui-border-primary",
     "focus-visible:oui-outline-none",
-    "focus-visible:oui-ring-1",
-    "focus-visible:oui-ring-ring",
+    // "focus-visible:oui-ring-1",
+    // "focus-visible:oui-ring-ring",
     "disabled:oui-cursor-not-allowed",
     "disabled:oui-opacity-50",
     "data-[state=checked]:oui-bg-primary",
@@ -24,7 +24,10 @@ const checkboxVariants = tv({
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {size?: number, indicatorClassName?: string}
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
+    size?: number;
+    indicatorClassName?: string;
+  }
 >(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
@@ -34,10 +37,10 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Indicator
       className={cnBase(
         "oui-flex oui-items-center oui-justify-center oui-text-current",
-        props.indicatorClassName,
+        props.indicatorClassName
       )}
     >
-      <CheckIcon size={props.size} />
+      <CheckIcon size={12} color="white" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

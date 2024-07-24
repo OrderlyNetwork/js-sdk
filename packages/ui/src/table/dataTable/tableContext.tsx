@@ -163,29 +163,48 @@ export const TableProvider: FC<
   }, []);
 
   const onSort = (key: string) => {
-    setSortKey((prev) => {
-      if (prev?.[0] === key) {
-        if (prev?.[1] === "asc") {
-          return undefined;
-        }
+    let _key: string, _order: SortOrder;
+    const [prevKey, prevOrder] = sortKey || [];
 
-        return [key, "asc" as SortOrder];
+    if (prevKey === key) {
+      if (prevOrder === "desc") {
+        _key = key;
+        _order = "asc";
       }
+    } else {
+      _key = key;
+      _order = "desc";
+    }
 
-      return [key, "desc" as SortOrder];
-    });
+    // @ts-ignore
+    setSortKey(typeof _key === "undefined" ? undefined : [_key!, _order!]);
+
+    // setSortKey((prev) => {
+    //   if (prev?.[0] === key) {
+    //     if (prev?.[1] === "asc") {
+    //       return undefined;
+    //     }
+    //     _key = key;
+    //     _order = "asc";
+    //     return [key, "asc" as SortOrder];
+    //   }
+    //
+    //   _key = key;
+    //   _order = "desc";
+    //
+    //   return [key, "desc" as SortOrder];
+    // });
 
     if (typeof props.onSort === "function") {
-      setTimeout(() => {
-        if (Array.isArray(sortKey) && (sortKey?.length ?? 0) > 1) {
-          props.onSort!({
-            sortKey: sortKey[0],
-            sort: sortKey[1],
-          });
-        } else {
-          props.onSort!();
-        }
-      }, 0);
+      // @ts-ignore
+      if (!!_key && !!_order) {
+        props.onSort!({
+          sortKey: key,
+          sort: _order,
+        });
+      } else {
+        props.onSort!();
+      }
     }
   };
 

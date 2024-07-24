@@ -7,6 +7,8 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
+import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 
 export const useAssetScript = () => {
   const { connect, chains } = useWalletConnector();
@@ -19,6 +21,10 @@ export const useAssetScript = () => {
     return state.status === AccountStatusEnum.EnableTrading;
   }, [state]);
 
+  const onLeverageEdit = () => {
+    modal.show(LeverageWidgetId);
+  };
+
   return {
     connected,
     connect,
@@ -27,6 +33,7 @@ export const useAssetScript = () => {
     unrealPnL: data.aggregated.unrealPnL,
     unrealROI: data.totalUnrealizedROI,
     currentLeverage,
+    onLeverageEdit,
   } as const;
 };
 

@@ -4,6 +4,7 @@ import { cnBase, VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
 import { Fragment, useMemo } from "react";
 import { convertValueToPercentage, getThumbInBoundsOffset } from "./utils";
+import { cn } from "..";
 
 const sliderVariants = tv({
   slots: {
@@ -57,24 +58,27 @@ const sliderVariants = tv({
   },
 });
 
-type SliderMarks = { value: number; label: string }[];
+export type SliderMarks = { value: number; label: string }[];
 
-const Slider = React.forwardRef<
+type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
+  VariantProps<typeof sliderVariants> & {
+    // showMarks?: boolean;
+    marks?: SliderMarks;
+    markCount?: number;
+    markLabelVisible?: boolean;
+    showTip?: boolean;
+    classNames?: {
+      root?: string;
+      thumb?: string;
+      track?: string;
+      range?: string;
+    };
+    initialValue?: number[];
+  };
+
+const BaseSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
-    VariantProps<typeof sliderVariants> & {
-      // showMarks?: boolean;
-      marks?: SliderMarks;
-      markCount?: number;
-      markLabelVisible?: boolean;
-      showTip?: boolean;
-      classNames?: {
-        root?: string;
-        thumb?: string;
-        track?: string;
-        range?: string;
-      };
-    }
+  SliderProps
 >(
   (
     {
@@ -87,6 +91,7 @@ const Slider = React.forwardRef<
       showTip,
       onValueChange,
       value: __propsValue,
+      initialValue,
       ...props
     },
     ref
@@ -95,16 +100,29 @@ const Slider = React.forwardRef<
       color,
     });
 
-    const [innerValue, setInvalue] = React.useState(__propsValue);
+    const [innerValue, setInvalue] = React.useState(initialValue || __propsValue);
+
+    // console.log("********innerValue", innerValue, __propsValue);
+
+    React.useEffect(() => {
+      setInvalue((prev: any) => {
+        if (!prev) return __propsValue;
+        if (__propsValue?.some((v, i) => v !== prev[i])) {
+          return __propsValue;
+        }
+
+        return prev;
+      });
+    }, [__propsValue]);
 
     const innerMasks = useMemo<SliderMarks>(() => {
+      if (Array.isArray(marks) && marks.length > 0) {
+        return marks;
+      }
+
       let _max = props.max;
       if (!_max) {
         _max = 100;
-      }
-
-      if (Array.isArray(marks) && marks.length > 0) {
-        return marks;
       }
 
       if (typeof markCount !== "undefined") {
@@ -137,9 +155,6 @@ const Slider = React.forwardRef<
     }, [marks, markCount, props.max]);
 
     const onValueChangeInner = (value: number[]) => {
-      // onValueChange?.(value);
-
-      // console.log("value", value);
       setInvalue(value);
 
       onValueChange?.(value);
@@ -149,8 +164,8 @@ const Slider = React.forwardRef<
       <SliderPrimitive.Root
         ref={ref}
         className={root({ className })}
-        value={innerValue}
-        onValueChange={onValueChangeInner}
+        value={onValueChange ? __propsValue : innerValue}
+        onValueChange={onValueChange ? onValueChange : onValueChangeInner}
         {...props}
       >
         <SliderPrimitive.Track
@@ -176,7 +191,7 @@ const Slider = React.forwardRef<
         )}
         <SliderPrimitive.Thumb
           className={thumb({
-            className: classNames?.thumb,
+            className: classNames?.thumb + "oui-opacity-30",
           })}
         />
       </SliderPrimitive.Root>
@@ -184,7 +199,7 @@ const Slider = React.forwardRef<
   }
 );
 
-Slider.displayName = SliderPrimitive.Root.displayName;
+BaseSlider.displayName = SliderPrimitive.Root.displayName;
 
 export type SliderMarksProps = {
   value?: number[];
@@ -215,6 +230,7 @@ const Marks = (props: SliderMarksProps) => {
       {marks?.map((mark, index) => {
         // const percent = convertValueToPercentage(mark.value, props.min, _max);
         const percent = convertValueToPercentage(index, 0, marks.length - 1);
+        // const percent = ((100 - 2 * 6) / (marks.length - 1)) * index;
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
         const __value = isInnerMask ? mark.value : index;
@@ -230,7 +246,7 @@ const Marks = (props: SliderMarksProps) => {
               : color === "primaryLight"
               ? "oui-border-primary-light oui-bg-primary-light"
               : ""
-            : "";
+            : "";            
 
         return (
           <Fragment key={index}>
@@ -238,14 +254,16 @@ const Marks = (props: SliderMarksProps) => {
               className={cnBase(className, classNames)}
               style={{
                 left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
+                // opacity: '0.3'
                 // top: "7px",
               }}
             />
-            {/* {!props.disabled && markLabelVisible && (
+            {!props.disabled && markLabelVisible && (
               <span
                 key={index}
                 className={cn(
-                  "oui-absolute oui-top-[20px] oui-text-2xs oui-text-base-contrast/50 oui-pointer-events-none oui-translate-x-[-50%] desktop:oui-text-xs"
+                  "oui-absolute oui-top-[12px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
+                  // classNames
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
@@ -253,7 +271,7 @@ const Marks = (props: SliderMarksProps) => {
               >
                 {mark.label}
               </span>
-            )} */}
+            )}
           </Fragment>
         );
       })}
@@ -261,8 +279,45 @@ const Marks = (props: SliderMarksProps) => {
   );
 };
 
-const Mark = () => {
-  return <div />;
+const SingleSlider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  Omit<SliderProps, "value" | "onValueChange" | "onValueCommit"> & {
+    value: number;
+    onValueChange?: (value: number) => void;
+    onValueCommit?: (value: number) => void;
+  }
+>((props, ref) => {
+  const _value = useMemo(() => [props.value], [props.value]);
+
+  return (
+    <BaseSlider
+      {...props}
+      value={_value}
+      ref={ref}
+      onValueChange={
+        typeof props.onValueChange === "function"
+          ? (values: number[]) => {
+              props.onValueChange!(values[0]);
+            }
+          : undefined
+      }
+      onValueCommit={
+        typeof props.onValueCommit === "function"
+          ? (values: number[]) => {
+              props.onValueCommit!(values[0]);
+            }
+          : undefined
+      }
+    />
+  );
+});
+
+type SliderType = typeof BaseSlider & {
+  signle: typeof SingleSlider;
 };
+
+const Slider = BaseSlider as SliderType;
+
+Slider.signle = SingleSlider;
 
 export { Slider };

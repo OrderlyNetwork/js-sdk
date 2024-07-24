@@ -19,7 +19,7 @@ export const useDataListColumns = (
   const columns = useMemo<Column[]>(() => {
     return [
       {
-        title: <UnFavoritesIcon className="oui-ml-1 oui-cursor-pointer" />,
+        title: <UnFavoritesIcon className="oui-ml-1 oui-cursor-auto" />,
         dataIndex: "isFavorite",
         width: 30,
         render: (value, record) => {
@@ -32,16 +32,12 @@ export const useDataListColumns = (
             <Flex
               width="100%"
               height="100%"
-              className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
+              className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-auto"
               justify="center"
               itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}
             >
-              {value ? (
-                <FavoritesIcon className="oui-cursor-pointer" />
-              ) : (
-                <UnFavoritesIcon className="oui-cursor-pointer" />
-              )}
+              {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
             </Flex>
           );
 
@@ -127,7 +123,7 @@ export const useDataListColumns = (
         onSort: true,
         render: (value) => {
           return (
-            <Text.numeral dp={0} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
               {value}
             </Text.numeral>
           );
@@ -140,6 +136,9 @@ export const useDataListColumns = (
         align: "right",
         onSort: true,
         render: (value) => {
+          if (value === null) {
+            return "--";
+          }
           return (
             <Text.numeral
               rule="percentages"

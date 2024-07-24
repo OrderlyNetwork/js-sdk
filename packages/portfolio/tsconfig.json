@@ -33,7 +33,8 @@
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/ui-connector": ["../ui-connector/src"],
       "@orderly.network/ui-positions": ["../ui-positions/src"],
-      "@orderly.network/ui-scaffold": ["../ui-scaffold/src"]
+      "@orderly.network/ui-scaffold": ["../ui-scaffold/src"],
+      "@orderly.network/ui-leverage": ["../ui-leverage/src"]
     }
   }
 }

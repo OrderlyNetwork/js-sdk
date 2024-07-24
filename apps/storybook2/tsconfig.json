@@ -36,6 +36,7 @@
       "@orderly.network/markets": ["../../packages/markets/src"],
       "@orderly.network/deposit": ["../../packages/deposit/src"],
       "@orderly.network/withdraw": ["../../packages/withdraw/src"],
+      "@orderly.network/trading": ["../../packages/trading/src"]
     }
   },
   "include": ["src"]

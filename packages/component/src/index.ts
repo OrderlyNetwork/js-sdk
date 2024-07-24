@@ -78,6 +78,7 @@ export {
 
 // ==================== page component ====================
 export * from "./page";
+export type { TradingPageProps } from "./page";
 
 export { Page, Layout } from "./layout";
 

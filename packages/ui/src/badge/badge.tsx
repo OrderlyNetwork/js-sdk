@@ -16,16 +16,18 @@ const badgeVariants = tv({
     },
     color: {
       primary: "",
+      primaryLight: "",
       secondary: "",
       danger: "",
       success: "",
       warning: "",
+      neutural: "",
     },
     size: {
-      // xs: "oui-px-1.5 oui-py-0.5 oui-text-xxs",
-      sm: "oui-px-2 oui-py-0.5 oui-text-2xs",
+      xs: "oui-px-2 oui-py-0.5 oui-text-3xs oui-rounded oui-h-[18px]",
+      sm: "oui-px-2 oui-py-0.5 oui-text-2xs oui-rounded",
       md: "oui-px-2 oui-py-0.5 oui-text-sm",
-      lg: "oui-px-2 oui-py-0.5 oui-text-base",
+      lg: "oui-px-2 oui-py-1 oui-text-base",
       // xl: "oui-px-4 oui-py-1.5 oui-text-sm",
     },
     // dot:{
@@ -41,6 +43,11 @@ const badgeVariants = tv({
     },
     {
       variant: "contained",
+      color: "primaryLight",
+      className: ["oui-bg-primary-light/15", "oui-text-primary-light"],
+    },
+    {
+      variant: "contained",
       color: "danger",
       className: ["oui-bg-danger/15", "oui-text-danger"],
     },
@@ -53,6 +60,11 @@ const badgeVariants = tv({
       variant: "contained",
       color: "warning",
       className: ["oui-bg-warning/15", "oui-text-warning"],
+    },
+    {
+      variant: "contained",
+      color: "neutural",
+      className: ["oui-bg-line", "oui-text-base-contrast-36"],
     },
     {
       variant: "text",
@@ -73,6 +85,11 @@ const badgeVariants = tv({
       variant: "text",
       color: "warning",
       className: ["oui-text-warning"],
+    },
+    {
+      variant: "text",
+      color: "neutural",
+      className: ["oui-text-base-contrast-36"],
     },
   ],
   defaultVariants: {

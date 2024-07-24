@@ -2,13 +2,14 @@
   "name": "@orderly.network/trading",
   "version": "1.0.1-sdk-v2.29",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "dependencies": {
-    "@orderly.network/chart": "workspace:*",
+    "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*"
   },

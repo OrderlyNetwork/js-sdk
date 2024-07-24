@@ -86,6 +86,7 @@ const preview = {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
+      // const networkId = "dev";
       const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
       const searchParams = new URLSearchParams(window.location.search);

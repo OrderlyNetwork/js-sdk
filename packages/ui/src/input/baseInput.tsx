@@ -26,6 +26,9 @@ export interface BaseInputProps<T = string>
 
   formatters?: InputFormatter[];
 
+  // dp?: number;
+  // tick?: number;
+
   onValueChange?: (value: T) => void;
 }
 

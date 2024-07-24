@@ -45,7 +45,8 @@ const meta = {
         helpText:'Help Text',
     //   disabled:false,
     //   fullWidth:false,
-      onValueChange:fn()
+      onValueChange:fn(),
+      onClear: fn()
     },
 } satisfies Meta<typeof TextField>;
 

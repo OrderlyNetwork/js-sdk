@@ -80,6 +80,7 @@ export const useTaskProfitAndStopLossInternal = (
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
     >;
+    isCreateMutating: boolean;
   }
 ] => {
   const [order, setOrder] = useState<
@@ -98,7 +99,8 @@ export const useTaskProfitAndStopLossInternal = (
   const symbolInfo = useSymbolsInfo()[position.symbol!]();
   const { data: markPrice } = useMarkPrice(order.symbol!);
 
-  const [doCreateOrder] = useMutation("/v1/algo/order");
+  const [doCreateOrder, { isMutating: isCreateMutating }] =
+    useMutation("/v1/algo/order");
   const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
@@ -126,7 +128,7 @@ export const useTaskProfitAndStopLossInternal = (
       ignoreValidate?: boolean;
     }
   ) => {
-    console.log("[updateOrder:]", key, value);
+    // console.log("[updateOrder:]", key, value);
 
     setOrder((prev) => {
       const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
@@ -369,6 +371,7 @@ export const useTaskProfitAndStopLossInternal = (
       // createTPSL: submit,
       validate,
       errors,
+      isCreateMutating,
     },
   ];
 };

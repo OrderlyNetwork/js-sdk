@@ -7,6 +7,7 @@ const { basePlugin } = require("./src/tailwind/base");
 const { componentsPlugin } = require("./src/tailwind/components");
 const { themePlugin } = require("./src/tailwind/theme");
 const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
+const {chartPlugin} = require("./src/tailwind/chart");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -17,6 +18,7 @@ module.exports = withTV({
     "../ui-connector/src/**/*.{ts,js,tsx,jsx}",
     "../ui-orders/src/**/*.{ts,js,tsx,jsx}",
     "../ui-positions/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-leverage/src/**/*.{ts,js,tsx,jsx}",
     "../trading-rewards/src/**/*.{ts,js,tsx,jsx}",
     "../portfolio/src/**/*.{ts,js,tsx,jsx}",
     "../ui-scaffold/src/**/*.{ts,js,tsx,jsx}",
@@ -169,6 +171,7 @@ module.exports = withTV({
     themePlugin(),
     basePlugin(),
     sizePlugin(),
+    chartPlugin(),
     gradientPlugin(),
     positionPlugin(),
     componentsPlugin(),
