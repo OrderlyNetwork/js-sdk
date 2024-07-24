@@ -1,3 +1,3 @@
 
 export { AvailableToClaimWidget } from "./availableToClaim.widget";
-export { AvailableToClaimUI } from "./availableToClaim.ui";
+export { AvailableToClaim } from "./availableToClaim.ui";

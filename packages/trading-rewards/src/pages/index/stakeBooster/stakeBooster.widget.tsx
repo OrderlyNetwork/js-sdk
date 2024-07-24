@@ -1,7 +1,7 @@
 import { useStakeBoosterScript } from "./stakeBooster.script";
-import { StakeBoosterUI } from "./stakeBooster.ui";
+import { StakeBooster } from "./stakeBooster.ui";
 
 export const StakeBoosterWidget = () => {
     const state = useStakeBoosterScript();
-    return <StakeBoosterUI {...state} />
+    return <StakeBooster {...state} />
 };

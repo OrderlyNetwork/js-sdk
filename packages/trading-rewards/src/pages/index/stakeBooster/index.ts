@@ -1,3 +1,3 @@
 
 export { StakeBoosterWidget } from "./stakeBooster.widget";
-export { StakeBoosterUI } from "./stakeBooster.ui";
+export { StakeBooster } from "./stakeBooster.ui";

@@ -3,7 +3,7 @@ import { TitleWidget } from "./title/title.widget";
 import { CurEpochWidget } from "./curEpoch";
 import { AvailableToClaimWidget } from "./availableToClaim";
 import { StakeBoosterWidget } from "./stakeBooster";
-import { RewardsHistoryWidget } from "./rewardsHistory";
+import { RewardsHistoryWidget } from "./rewardHistory";
 import { TradingRewardsProvider } from "./provider";
 import { FC } from "react";
 import { TitleConfig } from "./title/title.script";
@@ -14,7 +14,7 @@ export const HomePage: FC<{
   return (
     <TradingRewardsProvider titleConfig={props.titleConfig}>
       <Flex
-        id="oui-trading-rewards-home-page"
+        id="oui-tradingRewards-home-page"
         className={cn(
           "oui-h-lvw oui-w-full",
           // padding
