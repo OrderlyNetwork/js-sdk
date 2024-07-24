@@ -214,7 +214,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         className: "oui-w-1/5",
       },
       {
-        title: "Total vol (USDC) ",
+        title: "Total vol. (USDC) ",
         dataIndex: "volume",
         render: (value) => <Text.numeral dp={2}>{value || "-"}</Text.numeral>,
         className: "oui-w-1/5",

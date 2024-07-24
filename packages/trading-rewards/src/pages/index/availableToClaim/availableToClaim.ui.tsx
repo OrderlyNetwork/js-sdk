@@ -59,7 +59,7 @@ const Statics: FC<{
         {props.isEsOrder ? <EsOrderlyIcon /> : <OrderlyIcon />}
         <Text
           className="oui-text-sm xl:oui-text-base"
-          children={commifyOptional(value, 2)}
+          children={commifyOptional(value, { fix: 2 })}
         />
       </Flex>
     </Flex>
