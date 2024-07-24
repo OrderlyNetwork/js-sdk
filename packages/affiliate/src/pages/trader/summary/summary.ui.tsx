@@ -3,9 +3,10 @@ import { Button, Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 
-export const SummaryUI: FC<SummaryReturns> = (props) => {
+export const Summary: FC<SummaryReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-trader-summary"
       r={"2xl"}
       p={6}
       width={"100%"}

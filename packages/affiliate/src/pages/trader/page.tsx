@@ -5,6 +5,7 @@ import { RebatesWidget } from "./rebates";
 export const TraderPage = () => {
   return (
     <Flex
+        id="oui-affiliate-trader-page"
         className={cn(
           "oui-h-lvw",
           // padding
