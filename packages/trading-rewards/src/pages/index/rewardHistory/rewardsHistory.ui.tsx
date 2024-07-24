@@ -81,7 +81,7 @@ const MobileCell: FC<{
             Epoch rewards{" "}
           </Text>
           <Text className="oui-text-sm" >
-            {commifyOptional(data.max_reward_amount, 2)}
+            {commifyOptional(data.max_reward_amount, { fix : 2 })}
           </Text>
         </Flex>
         <Flex

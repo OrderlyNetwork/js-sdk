@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
-import { Decimal } from "@orderly.network/utils";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
 
 export const Summary: FC<SummaryReturns> = (props) => {
   return (
@@ -74,7 +74,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text.numeral dp={2}>{props.commission}</Text.numeral>
+        <Text>{commifyOptional(props.commission, { fix : 2, fallback: '0'})}</Text>
       </Flex>
     </Flex>
   );
@@ -95,12 +95,11 @@ const Row: FC<
       >
         {props.title}
       </Text>
-      <Text.numeral
-        dp={props.dp}
+      <Text
         className="oui-text-xs md:oui-text-sm xl:oui-text-base"
       >
-        {props.value}
-      </Text.numeral>
+        {commifyOptional(props.value, { fix: props.dp, fallback: "0"})}
+      </Text>
     </Flex>
   );
 };

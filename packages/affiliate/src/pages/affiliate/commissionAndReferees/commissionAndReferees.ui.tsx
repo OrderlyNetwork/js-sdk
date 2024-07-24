@@ -19,18 +19,20 @@ import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
 import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
 ) => {
   return (
     <Flex
+      id="oui-affiliate-affiliate-commissionAndReferees"
       r={"2xl"}
       p={6}
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-tabular-nums"
     >
       <Tabs defaultValue="account" className="oui-w-full">
         <TabPanel value="account" title="Commission">
@@ -84,9 +86,9 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         title: "Commission (USDC)",
         dataIndex: "referral_rebate",
         render: (value) => (
-          <Text.numeral dp={6} prefix={"$"}>
-            {value || "-"}
-          </Text.numeral>
+          <Text>
+            {commifyOptional(value, {fix: 6, fallback: "0", padEnd: true, prefix: '$'})}
+          </Text>
         ),
         width: 216,
       },
@@ -94,9 +96,9 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         title: "Referral vol. (USDC)",
         dataIndex: "volume",
         render: (value) => (
-          <Text.numeral dp={6} prefix={"$"}>
-            {value || "-"}
-          </Text.numeral>
+          <Text>
+            {commifyOptional(value, {fix: 6, fallback: "0", padEnd: true, prefix: '$'})}
+          </Text>
         ),
         width: 216,
       },
@@ -128,12 +130,12 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
               <Flex direction={"row"} pt={3} width={"100%"}>
                 <MobileCellItem
                   title="Commission"
-                  value={e.referral_rebate}
+                  value={commifyOptional(e.referral_rebate, { fix: 6, fallback: "0", padEnd: true })}
                   prefix="$"
                 />
                 <MobileCellItem
                   title="Referral vol."
-                  value={e.volume}
+                  value={commifyOptional(e.volume, { fix: 6, fallback: "0", padEnd: true })}
                   prefix="$"
                 />
                 <MobileCellItem
