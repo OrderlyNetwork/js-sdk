@@ -99,20 +99,15 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [state]);
 
-  const [{ aggregated }, positionsInfo] = usePositionStream();
   const { marginRatio, mmr } = useMarginRatio();
 
-  const marginRatioVal = useMemo(() => {
-    return Math.min(
-      10,
-      aggregated.notional === 0
-        ? // @ts-ignore
-          positionsInfo["margin_ratio"](10)
-        : marginRatio
-    );
-  }, [marginRatio, aggregated]);
-
   const isConnected = state.status >= AccountStatusEnum.Connected;
+  const marginRatioVal = useMemo(() => {
+    if (!isConnected) {
+      return 0;
+    }
+    return marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+  }, [isConnected, marginRatio]);
 
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
@@ -130,7 +125,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       >
         <div className={"orderly-flex-1"}>
           <div className={"orderly-text-3xs orderly-text-base-contrast-54"}>
-            Total balance
+            Total value
           </div>
           <div>
             <Numeral
@@ -183,7 +178,6 @@ export const Assets: FC<AssetsProps> = (props) => {
       <CollapsibleContent>
         <MemorizedAssetsDetail />
       </CollapsibleContent>
-
       <div className={"orderly-pb-4"}>
         <Progress
           value={marginRatioVal * 100}
