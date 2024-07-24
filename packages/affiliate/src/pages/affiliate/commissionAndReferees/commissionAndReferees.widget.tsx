@@ -1,9 +1,7 @@
 import { useCommissionAndRefereesScript } from "./commissionAndReferees.script";
-import { CommissionAndRefereesUI } from "./commissionAndReferees.ui";
+import { CommissionAndReferees } from "./commissionAndReferees.ui";
 
 export const CommissionAndRefereesWidget = () => {
-    const state = useCommissionAndRefereesScript();
-    return (
-        <CommissionAndRefereesUI {...state}/>
-    );
+  const state = useCommissionAndRefereesScript();
+  return <CommissionAndReferees {...state} />;
 };

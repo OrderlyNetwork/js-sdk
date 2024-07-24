@@ -4,9 +4,10 @@ import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { Decimal } from "@orderly.network/utils";
 
-export const SummaryUI: FC<SummaryReturns> = (props) => {
+export const Summary: FC<SummaryReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-affiliate-summary"
       r={"2xl"}
       p={6}
       width={"100%"}
@@ -18,9 +19,19 @@ export const SummaryUI: FC<SummaryReturns> = (props) => {
       <Title {...props} />
       <CommissionData {...props} />
       <Flex direction={"column"} width={"100%"} gap={2}>
-        <Row title="Referral vol. (USDC)" value={props.referralVol} dp={2} {...props} />
+        <Row
+          title="Referral vol. (USDC)"
+          value={props.referralVol}
+          dp={2}
+          {...props}
+        />
         <Row title="Referees" value={props.referees} dp={0} {...props} />
-        <Row title="Referees that traded" value={props.refereesTades} dp={0} {...props} />
+        <Row
+          title="Referees that traded"
+          value={props.refereesTades}
+          dp={0}
+          {...props}
+        />
       </Flex>
     </Flex>
   );
@@ -62,7 +73,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         gap={3}
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
-        <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] "/>
+        <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
         <Text.numeral dp={2}>{props.commission}</Text.numeral>
       </Flex>
     </Flex>
@@ -84,7 +95,10 @@ const Row: FC<
       >
         {props.title}
       </Text>
-      <Text.numeral dp={props.dp} className="oui-text-xs md:oui-text-sm xl:oui-text-base">
+      <Text.numeral
+        dp={props.dp}
+        className="oui-text-xs md:oui-text-sm xl:oui-text-base"
+      >
         {props.value}
       </Text.numeral>
     </Flex>

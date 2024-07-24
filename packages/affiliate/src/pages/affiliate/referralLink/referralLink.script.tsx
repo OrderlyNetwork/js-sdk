@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 import { addQueryParam } from "../../../utils/utils";
 import { Decimal } from "@orderly.network/utils";
+import { toast } from "@orderly.network/ui";
 
 export type ReferralLinkReturns = {
 
@@ -15,9 +16,9 @@ export type ReferralLinkReturns = {
 
 export const useReferralLinkScript = (): ReferralLinkReturns => {
 
-    const onCopy = (value: string) => {};
-    const [refLink, setRefLink] = useState('"http://localhost:6006/?path=/story/package-affiliate-affiliate--page&globals=viewport:ipad"');
-    const [refCode, setRefCode] = useState('ASFDSSD');
+    const onCopy = (value: string) => {
+        toast.success("Copied");
+    };
 
 
     const { referralInfo, referralLinkUrl } = useReferralContext();

@@ -20,7 +20,7 @@ import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 
-export const CommissionAndRefereesUI: FC<CommissionAndRefereesReturns> = (
+export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
 ) => {
   return (
