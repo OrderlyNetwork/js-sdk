@@ -1,9 +1,7 @@
 import { useTitleScript } from "./title.script";
-import { TitleUI } from "./title.ui";
+import { Title } from "./title.ui";
 
 export const TitleWidget = () => {
-    const state = useTitleScript();
-    return (
-        <TitleUI {...state}/>
-    );
+  const state = useTitleScript();
+  return <Title {...state} />;
 };

@@ -2,10 +2,11 @@ import { FC } from "react";
 import { SubtitleReturns } from "./subtitle.script";
 import { Flex, Text } from "@orderly.network/ui";
 
-export const SubtitleUI: FC<SubtitleReturns> = (props) => {
+export const Subtitle: FC<SubtitleReturns> = (props) => {
   
   return (
     <Flex
+      id="oui-affiliate-home-subtitle"
       direction={"column"}
       className="oui-text-sm md:oui-text-base xl:oui-text-lg oui-text-base-contrast-80 oui-text-center"
       gap={3}

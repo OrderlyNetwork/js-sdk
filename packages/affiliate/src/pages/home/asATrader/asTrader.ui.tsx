@@ -17,15 +17,16 @@ import {
   TextField,
   Tooltip,
 } from "@orderly.network/ui";
-import { AsATraderReturns } from "./asATrader.script";
+import { AsTraderReturns } from "./asTrader.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { useCheckReferralCode, useMutation } from "@orderly.network/hooks";
 
-export const AsATraderUI: FC<AsATraderReturns> = (props) => {
+export const AsTrader: FC<AsTraderReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-home-asTrader"
       gradient="success"
       r={"2xl"}
       p={6}
@@ -98,7 +99,7 @@ const Icon = () => {
   );
 };
 
-const Bottom: FC<AsATraderReturns> = (props) => {
+const Bottom: FC<AsTraderReturns> = (props) => {
   const content = () => {
     if (props.isLoading) {
       return <></>;
@@ -176,7 +177,7 @@ const Bottom: FC<AsATraderReturns> = (props) => {
   );
 };
 
-const EntryCode: FC<AsATraderReturns> = (props) => {
+const EntryCode: FC<AsTraderReturns> = (props) => {
   const [code, setCode] = useState("");
   const [open, setOpen] = useState(false);
 

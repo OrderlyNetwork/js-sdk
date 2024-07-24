@@ -1,2 +1,3 @@
-export { AsATraderUI } from "./asATrader.ui";
-export { AsATraderWidget } from "./asATrader.widget";
+export { AsTrader } from "./asTrader.ui";
+export { AsTraderWidget } from "./asTrader.widget";
+export { useAsTraderScript } from "./asTrader.script";
