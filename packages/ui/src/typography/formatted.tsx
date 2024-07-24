@@ -66,7 +66,14 @@ export type FormattedTextProps = TextProps & {
   suffix?: React.ReactNode;
   prefix?: React.ReactNode;
   // showIcon?: boolean;
-} & (BaseText | DateText | AddressText | SymbolText | TxIDText);
+} & (
+    | BaseText
+    | DateText
+    | AddressText
+    | SymbolText
+    | TxIDText
+    | { rule?: string }
+  );
 
 export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
   (props, ref) => {
