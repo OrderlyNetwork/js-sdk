@@ -60,7 +60,9 @@ export function useDataSource() {
         ...item,
         quote_dp: info("quote_dp"),
         created_time: info("created_time"),
-        openInterest: new Decimal(open_interest).mul(index_price).toNumber(),
+        openInterest: new Decimal(open_interest || 0)
+          .mul(index_price || 0)
+          .toNumber(),
       };
     });
     return list || [];
@@ -84,7 +86,7 @@ export function useDataSource() {
   const total24Amount = useMemo(
     () =>
       markets?.reduce((prevValue: Decimal, curValue: any) => {
-        return prevValue.add(curValue["24h_amount"]);
+        return prevValue.add(curValue["24h_amount"] || 0);
       }, new Decimal(0)) || new Decimal(0),
     [markets]
   );
@@ -92,7 +94,7 @@ export function useDataSource() {
   const totalOpenInterest = useMemo(
     () =>
       markets?.reduce((prevValue: Decimal, curValue: any) => {
-        return prevValue.add(curValue["openInterest"]);
+        return prevValue.add(curValue["openInterest"] || 0);
       }, new Decimal(0)) || new Decimal(0),
     [markets]
   );

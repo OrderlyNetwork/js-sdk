@@ -1,5 +1,5 @@
 import { Leverage } from "./leverage.ui";
-import { useLeverageScript } from "./useBuilder.script";
+import { useLeverageScript } from "./leverage.script";
 
 export const LeverageEditor = () => {
   const state = useLeverageScript();
