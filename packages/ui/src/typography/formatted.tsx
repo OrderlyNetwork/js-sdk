@@ -63,8 +63,8 @@ export type FormattedTextProps = TextProps & {
   // rule?: Omit<TextRule, "status"|'address'|'date'>;
   loading?: boolean;
 
-  suffix?: React.ReactElement;
-  prefix?: React.ReactElement;
+  suffix?: React.ReactNode;
+  prefix?: React.ReactNode;
   // showIcon?: boolean;
 } & (BaseText | DateText | AddressText | SymbolText | TxIDText);
 
