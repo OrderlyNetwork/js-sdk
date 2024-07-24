@@ -1,11 +1,5 @@
 import { ExtensionPosition } from "@orderly.network/ui";
-import {
-  ComponentType,
-  createContext,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-} from "react";
+import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
 import { AppLogos } from "../types";
 
 export type ThemeContextState = {

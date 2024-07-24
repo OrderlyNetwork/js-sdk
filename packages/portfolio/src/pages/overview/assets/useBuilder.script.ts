@@ -3,6 +3,7 @@ import {
   useAccount,
   useCollateral,
   useLeverage,
+  useLocalStorage,
   usePositionStream,
   useWalletConnector,
 } from "@orderly.network/hooks";
@@ -16,6 +17,7 @@ export const useAssetScript = () => {
   const { totalValue, freeCollateral } = useCollateral();
   const [data] = usePositionStream();
   const [currentLeverage] = useLeverage();
+  const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
   const connected = useMemo(() => {
     return state.status === AccountStatusEnum.EnableTrading;
@@ -34,6 +36,8 @@ export const useAssetScript = () => {
     unrealROI: data.totalUnrealizedROI,
     currentLeverage,
     onLeverageEdit,
+    visible,
+    toggleVisible: () => setVisible(!visible),
   } as const;
 };
 

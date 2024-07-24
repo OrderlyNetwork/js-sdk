@@ -1,2 +1,2 @@
 export { OrderlyApp } from "./orderlyApp";
-export { useAppConfig } from "./provider/themeContext";
+export { useAppConfig } from "./provider/configContext";

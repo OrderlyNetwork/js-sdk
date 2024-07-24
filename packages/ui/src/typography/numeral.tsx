@@ -159,7 +159,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
       return child;
     }
 
-    const surfixEle = suffix ? (
+    const suffixEle = suffix ? (
       typeof suffix === "string" ? (
         <span>{suffix}</span>
       ) : (
@@ -198,7 +198,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
           <span>{child_unit}</span>
         )}
         {/*{unitEle}*/}
-        {surfixEle}
+        {suffixEle}
       </>
     );
   }, [child, suffix, unit, prefix, identifier, unitClassName]);

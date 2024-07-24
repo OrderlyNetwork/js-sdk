@@ -66,6 +66,7 @@ export const AccountSummary = (props: AccountSummaryUi) => {
           unrealPnL={props.unrealPnL ?? 0}
           type={props.type}
           onTypeChange={props.onTypeChange}
+          visible={props.visible}
         />
       }
       contentProps={{
@@ -112,6 +113,7 @@ const TotalValue: FC<{
         <Text intensity={54}>≈</Text>
       </Flex>
       <Text.numeral
+        visible={props.visible}
         unit="USDC"
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
         as="div"
@@ -238,6 +240,7 @@ const AccountInfoPopover = (props: {
   unrealPnL: number;
   unrealized_pnl_ROI: number;
   type: AccountSummaryType;
+  visible?: boolean;
   onTypeChange: (type: AccountSummaryType) => void;
 }) => {
   const { totalValue } = props;
@@ -256,6 +259,7 @@ const AccountInfoPopover = (props: {
           <span>Total Value</span>
         </Flex>
         <Text.numeral
+          visible={props.visible}
           unit="USDC"
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >

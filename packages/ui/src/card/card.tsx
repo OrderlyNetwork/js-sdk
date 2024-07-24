@@ -18,7 +18,7 @@ type CardProps = {
   title?: ReactElement | string;
   footer?: ReactElement;
   // footerClassName?: string;
-  classes?: {
+  classNames?: {
     root?: string;
     header?: string;
     content?: string;
@@ -29,19 +29,19 @@ type CardProps = {
 
 const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
   (props, ref) => {
-    const { title, children, footer, classes, ...rest } = props;
+    const { title, children, footer, classNames, ...rest } = props;
     return (
-      <CardBase {...rest} className={classes?.root} ref={ref}>
-        <CardHeader className={classes?.header}>
+      <CardBase {...rest} className={classNames?.root} ref={ref}>
+        <CardHeader className={classNames?.header}>
           {typeof props.title === "string" ? (
             <CardTitle>{title}</CardTitle>
           ) : (
             title
           )}
         </CardHeader>
-        <CardContent className={classes?.content}>{children}</CardContent>
+        <CardContent className={classNames?.content}>{children}</CardContent>
         {footer && (
-          <CardFooter className={classes?.footer}>{footer}</CardFooter>
+          <CardFooter className={classNames?.footer}>{footer}</CardFooter>
         )}
       </CardBase>
     );

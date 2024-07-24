@@ -18,10 +18,11 @@ export const useTotalValueBuilderScript = () => {
     "accountSummaryType",
     "totalValue"
   );
-  const { totalCollateral, freeCollateral, totalValue, availableBalance } =
-    useCollateral({
-      dp: 2,
-    });
+  const { freeCollateral, totalValue, availableBalance } = useCollateral({
+    dp: 2,
+  });
+
+  const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
   const [{ aggregated, totalUnrealizedROI }] = usePositionStream();
 
@@ -42,8 +43,8 @@ export const useTotalValueBuilderScript = () => {
     unrealized_pnl_ROI: totalUnrealizedROI,
     type,
     onTypeChange,
-    // visible?: boolean;
-    // onToggleVisibility?: () => void;
+    visible,
+    onToggleVisibility: () => setVisible(!visible),
   };
 };
 
