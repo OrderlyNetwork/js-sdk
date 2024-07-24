@@ -1,9 +1,32 @@
-import { Box, Flex } from "@orderly.network/ui";
+import {
+  Box,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  Divider,
+  Flex,
+} from "@orderly.network/ui";
 import { CloseIcon, InfoIcon } from "../icons";
 import { MaintenanceTipInterface } from "./script";
 
 export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
-  const { showTips, tipsContent, closeTips } = props;
+  const { showTips, showDialog, tipsContent, closeTips, dialogContent } = props;
+  if (showDialog) {
+    return (
+      <Dialog open={true}>
+        <DialogContent closable={false}>
+          <DialogHeader>
+            <DialogTitle>System upgrade in progress</DialogTitle>
+          </DialogHeader>
+          <Divider />
+          <DialogBody>{dialogContent}</DialogBody>
+        </DialogContent>
+      </Dialog>
+    );
+  }
   if (!showTips) {
     return <></>;
   }

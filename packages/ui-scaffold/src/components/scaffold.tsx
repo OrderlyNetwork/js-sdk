@@ -23,6 +23,7 @@ import {
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
 import { MainNavProps } from "./main/useWidgetBuilder.script";
+import { MaintenanceTipsWidget } from "./maintenanceTips";
 
 export type LayoutProps = {
   /**
@@ -107,6 +108,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.topbar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
+        <MaintenanceTipsWidget />
         {/*--------- body start ------ */}
         {props.leftSidebar === null ? (
           // ----------No leftSidebar layout start ---------
@@ -127,11 +129,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
               gridTemplateAreas: `"left main" "left main" "left main"`,
             }}
           >
-            <div
-              className={cn(
-                classNames?.leftSidebar
-              )}
-            >
+            <div className={cn(classNames?.leftSidebar)}>
               {/* @ts-ignore */}
               {typeof props.leftSidebar !== "undefined" ? (
                 props.leftSidebar
@@ -141,7 +139,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
               {/* <SideNavbarWidget {...props.leftSideProps} /> */}
             </div>
-            <Box width={"100%"} className={classNames?.content}>{props.children}</Box>
+            <Box width={"100%"} className={classNames?.content}>
+              {props.children}
+            </Box>
           </Grid>
           // ---------- left & body layout end ---------
         )}

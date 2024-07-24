@@ -48,6 +48,7 @@ export class CustomConfigStore implements ConfigStore {
 
     this.map = new Map<ConfigKey, any>([
       ["brokerId", "orderly"],
+      ["brokerName", "Orderly"],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
@@ -82,7 +83,7 @@ export class CustomConfigStore implements ConfigStore {
     if (key === Markets_key) {
       const jsonStr = JSON.stringify(value);
       localStorage.setItem(Markets_key, jsonStr);
-  }
+    }
     this.map.set(key, value);
   }
   clear(): void {
