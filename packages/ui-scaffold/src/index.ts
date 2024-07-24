@@ -10,6 +10,7 @@ export {
 } from "./components/scaffoldContext";
 
 export * from "./components/footer";
+export * from "./components/maintenanceTips";
 
 export type { SideBarProps, SideMenuItem } from "./components/sidebar";
 
