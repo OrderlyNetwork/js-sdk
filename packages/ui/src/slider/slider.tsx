@@ -73,7 +73,6 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
       track?: string;
       range?: string;
     };
-    initialValue?: number[];
   };
 
 const BaseSlider = React.forwardRef<
@@ -91,7 +90,6 @@ const BaseSlider = React.forwardRef<
       showTip,
       onValueChange,
       value: __propsValue,
-      initialValue,
       ...props
     },
     ref
@@ -100,7 +98,7 @@ const BaseSlider = React.forwardRef<
       color,
     });
 
-    const [innerValue, setInvalue] = React.useState(initialValue || __propsValue);
+    const [innerValue, setInvalue] = React.useState(__propsValue);
 
     // console.log("********innerValue", innerValue, __propsValue);
 
@@ -187,11 +185,12 @@ const BaseSlider = React.forwardRef<
             markLabelVisible={markLabelVisible}
             disabled={props.disabled}
             className={mark()}
+            step={props.step}
           />
         )}
         <SliderPrimitive.Thumb
           className={thumb({
-            className: classNames?.thumb + "oui-opacity-30",
+            className: classNames?.thumb,
           })}
         />
       </SliderPrimitive.Root>
@@ -213,6 +212,7 @@ export type SliderMarksProps = {
   markLabelVisible?: boolean;
   isInnerMask?: boolean;
   className?: string;
+  step?: number;
 };
 
 const Marks = (props: SliderMarksProps) => {
@@ -225,6 +225,14 @@ const Marks = (props: SliderMarksProps) => {
     color = "primary",
   } = props;
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
+  const selIndex = useMemo(() => {
+    if (typeof props.step === 'undefined') return undefined;
+    return Math.floor(_value / props.step);
+  }, [
+    _value, props.step
+  ]);
+  
+
   return (
     <>
       {marks?.map((mark, index) => {
@@ -234,19 +242,36 @@ const Marks = (props: SliderMarksProps) => {
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
         const __value = isInnerMask ? mark.value : index;
+        console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
 
-        const classNames =
-          _value >= __value && _value > 0 && !props.disabled
-            ? color === "primary"
-              ? "oui-border-primary oui-bg-primary"
-              : color === "buy"
-              ? "oui-border-trade-profit oui-bg-trade-profit"
-              : color === "sell"
-              ? "oui-border-trade-loss oui-bg-trade-loss"
-              : color === "primaryLight"
-              ? "oui-border-primary-light oui-bg-primary-light"
-              : ""
-            : "";            
+        const colorCls = useMemo(() => {
+          switch (color) {
+            case "primary":
+              return "oui-border-primary oui-bg-primary";
+            case "buy":
+              return "oui-border-trade-profit oui-bg-trade-profit";
+            case "sell":
+              return "oui-border-trade-loss oui-bg-trade-loss";
+            case "primaryLight":
+              return "oui-border-primary-light oui-bg-primary-light";
+          }
+        }, [color]);
+
+        const textCls = useMemo(() => {
+          switch (color) {
+            case "primary":
+              return "oui-text-primary";
+            case "buy":
+              return "oui-texttrade-profit";
+            case "sell":
+              return "oui-text-trade-loss";
+            case "primaryLight":
+              return "oui-text-primary-light";
+          }
+        }, [color]);
+        const active = _value >= __value * 10 && _value >= 0 && !props.disabled;
+
+        const classNames = active ? colorCls : "";
 
         return (
           <Fragment key={index}>
@@ -263,7 +288,7 @@ const Marks = (props: SliderMarksProps) => {
                 key={index}
                 className={cn(
                   "oui-absolute oui-top-[12px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
-                  // classNames
+                  (selIndex === index) && textCls
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
