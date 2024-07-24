@@ -47,7 +47,7 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
       ],
       products: [
         { name: "Swap", href: "/swap" },
-        { name: "Trade", href: "/trade" },
+        { name: "Perps", href: "/perps" },
       ],
       ...props,
     };

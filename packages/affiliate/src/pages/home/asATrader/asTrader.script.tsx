@@ -3,7 +3,7 @@ import { TabTypes, useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
 import { AccountStatusEnum } from "@orderly.network/types";
 
-export type AsATraderReturns = {
+export type AsTraderReturns = {
   isTrader: boolean;
   isLoading: boolean;
   referralInfo?: API.ReferralInfo;
@@ -17,7 +17,7 @@ export type AsATraderReturns = {
   isSignIn: boolean;
 };
 
-export const useAsATraderScript = (): AsATraderReturns => {
+export const useAsTraderScript = (): AsTraderReturns => {
   const {
     isTrader,
     isLoading,

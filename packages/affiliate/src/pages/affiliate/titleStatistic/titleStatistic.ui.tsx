@@ -3,9 +3,10 @@ import { Flex, Select, Text } from "@orderly.network/ui";
 import { VolBarChart } from "@orderly.network/chart";
 import { TitleStatisticReturns } from "./titleStatistic.script";
 
-export const TitleStatisticUI: FC<TitleStatisticReturns> = (props) => {
+export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-affiliate-titleStatistic"
       r={"2xl"}
       p={6}
       width={"100%"}

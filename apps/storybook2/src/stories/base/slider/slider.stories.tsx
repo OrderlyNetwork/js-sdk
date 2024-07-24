@@ -46,7 +46,7 @@ const meta = {
     // size:'default'
     color: 'primary',
     step: 10,
-    onValueChange: fn(),
+    // onValueChange: fn(),
   },
 } satisfies Meta<typeof Slider>;
 
@@ -63,6 +63,7 @@ export const MarksCount: Story = {
 
 export const MarksItems: Story = {
   args:{
+    step: 11.1,
     markLabelVisible: true,
     color: "primary",
     marks: [

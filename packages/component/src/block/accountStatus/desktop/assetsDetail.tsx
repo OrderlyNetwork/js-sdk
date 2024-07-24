@@ -51,40 +51,15 @@ const AssetsDetail = () => {
           title="Free collateral"
           className="orderly-text-xs"
         />
-        <Numeral
-          surfix={<span className={"orderly-text-base-contrast-36"}>USDC</span>}
-        >
-          {freeCollateral}
-        </Numeral>
-      </div>
-      <div className={"orderly-flex orderly-justify-between"}>
-        <Tooltip
-          content={
-            "Settling PnL moves the profit or loss from a perpetual market into the USDC balance."
-          }
-          className="orderly-max-w-[270px]"
-        >
-          <span
-            className={"orderly-text-base-contrast-54 orderly-cursor-pointer"}
+        <div className="orderly-flex orderly-justify-end orderly-gap-1">
+          <Numeral
+            surfix={
+              <span className={"orderly-text-base-contrast-36"}>USDC</span>
+            }
           >
-            Unsettled PnL
-          </span>
-        </Tooltip>
-        <Numeral
-          coloring
-          prefix={
-            <button
-              className={"orderly-text-primary-light"}
-              onClick={onSettleClick}
-            >
-              {/*@ts-ignore*/}
-              <RefreshCcw size={14} />
-            </button>
-          }
-          surfix={<span className={"orderly-text-base-contrast-36"}>USDC</span>}
-        >
-          {aggregated?.unsettledPnL ?? 0}
-        </Numeral>
+            {freeCollateral}
+          </Numeral>
+        </div>
       </div>
     </div>
   );

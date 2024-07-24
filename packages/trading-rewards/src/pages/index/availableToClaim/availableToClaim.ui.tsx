@@ -6,9 +6,10 @@ import { OrderlyIcon } from "../components/orderlyIcon";
 import { AvailableReturns } from "./availableToClaim.script";
 import { commify, commifyOptional } from "@orderly.network/utils";
 
-export const AvailableToClaimUI: FC<AvailableReturns> = (props) => {
+export const AvailableToClaim: FC<AvailableReturns> = (props) => {
   return (
     <Flex
+      id="oui-tradingRewards-home-availableToClaim"
       p={6}
       r="2xl"
       direction={"column"}

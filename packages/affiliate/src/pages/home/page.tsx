@@ -6,6 +6,7 @@ import { CardWidget } from "./card";
 export const HomePage = () => {
   return (
     <Flex
+      id="oui-affiliate-home-page"
       className={cn(
         "oui-h-lvw ",
         // padding

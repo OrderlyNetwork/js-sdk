@@ -9,24 +9,35 @@ import {
 import { useBootstrap } from "./hooks/useBootstrap";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
+import { AppConfigProvider } from "./provider/themeContext";
 
 const OrderlyApp = (
   props: PropsWithChildren<OrderlyAppConfig & AppStateProviderProps>
 ) => {
-  const { onChainChanged, ...configProps } = props;
-  // const { brokerId, brokerName, networkId } = props;
+  const {
+    onChainChanged,
+    dateFormatting,
+    components,
+    appIcons,
+    ...configProps
+  } = props;
   useBootstrap();
   return (
-    <OrderlyThemeProvider>
-      <OrderlyConfigProvider {...configProps}>
-        <ModalProvider>
-          <AppStateProvider onChainChanged={onChainChanged}>
-            <TooltipProvider>{props.children}</TooltipProvider>
-          </AppStateProvider>
-        </ModalProvider>
-        <Toaster />
-      </OrderlyConfigProvider>
-    </OrderlyThemeProvider>
+    <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>
+      <OrderlyThemeProvider
+        dateFormatting={dateFormatting}
+        components={components}
+      >
+        <OrderlyConfigProvider {...configProps}>
+          <ModalProvider>
+            <AppStateProvider onChainChanged={onChainChanged}>
+              <TooltipProvider>{props.children}</TooltipProvider>
+            </AppStateProvider>
+          </ModalProvider>
+          <Toaster />
+        </OrderlyConfigProvider>
+      </OrderlyThemeProvider>
+    </AppConfigProvider>
   );
 };
 

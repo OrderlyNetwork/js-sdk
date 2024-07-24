@@ -1,5 +1,5 @@
 import { Box, CloseIcon, Flex, Slider, Text } from "@orderly.network/ui";
-import { LeverageScriptReturns } from "./useBuilder.script";
+import { LeverageScriptReturns } from "./leverage.script";
 
 export const Leverage = (props: LeverageScriptReturns) => {
   const { currentLeverage = 0 } = props;
@@ -23,13 +23,20 @@ export const Leverage = (props: LeverageScriptReturns) => {
 };
 
 const LeverageSlider = (props: LeverageScriptReturns) => {
+  console.log("params", {
+    step: props.step,
+    markLabelVisible: true,
+    marks: props.marks,
+    value: [props.value],
+  });
+  
   return (
     <Box pt={3} width={"100%"}>
       <Slider
-        initialValue={[props.initialValue || 0]}
-        step={100 / ((props.marks?.length || 0) - 1)}
+        step={props.step}
         markLabelVisible={true}
         marks={props.marks}
+        value={[props.value]}
         onValueChange={(e) => {
           const value = props.marks?.[e[0] / 10]?.value;
           if (typeof value !== "undefined") props.onLeverageChange(value);

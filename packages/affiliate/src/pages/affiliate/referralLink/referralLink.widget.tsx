@@ -1,9 +1,7 @@
 import { useReferralLinkScript } from "./referralLink.script";
-import { ReferralLinkUI } from "./referralLink.ui";
+import { ReferralLink } from "./referralLink.ui";
 
 export const ReferralLinkWidget = () => {
-    const state = useReferralLinkScript();
-    return (
-        <ReferralLinkUI {...state}/>
-    );
+  const state = useReferralLinkScript();
+  return <ReferralLink {...state} />;
 };

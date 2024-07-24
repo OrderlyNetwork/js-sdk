@@ -1,2 +1,2 @@
 export { CurEpochWidget } from "./curEpoch.widget";
-export { CurEpochUI } from "./curEpoch.ui";
+export { CurEpoch } from "./curEpoch.ui";

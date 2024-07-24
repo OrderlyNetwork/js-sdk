@@ -1,6 +1,5 @@
 import {
   PropsWithChildren,
-  ReactElement,
   forwardRef,
   ElementType,
   ReactNode,
@@ -15,8 +14,8 @@ import {
 } from "./cardBase";
 
 type CardProps = {
-  title?: ReactElement | string;
-  footer?: ReactElement;
+  title?: ReactNode;
+  footer?: ReactNode;
   // footerClassName?: string;
   classes?: {
     root?: string;

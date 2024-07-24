@@ -2,9 +2,10 @@ import { FC } from "react";
 import { Column, DataTable, DatePicker, Flex, Text } from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 
-export const RebatesUI: FC<RebatesReturns> = (props) => {
+export const Rebates: FC<RebatesReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-trader-rebates"
       r={"2xl"}
       p={6}
       width={"100%"}
