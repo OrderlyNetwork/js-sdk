@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.10-sdk-v2.30
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-sdk-v2.30
+
 ## 1.5.10-sdk-v2.29
 
 ### Patch Changes
