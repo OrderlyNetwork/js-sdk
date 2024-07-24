@@ -13,10 +13,12 @@
     "Orderly"
   ],
   "dependencies": {
+    "@date-fns/utc": "1.2.0",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*"
+    "@orderly.network/ui-connector": "workspace:*",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

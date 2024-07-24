@@ -29,6 +29,12 @@ export function useMaintenanceStatus() {
     if (brokerName) {
       setBrokerName(brokerName);
     }
+    // systemInfo.data.status = 2;
+    // systemInfo.data.scheduled_maintenance = {
+    //   start_time: new Date("2024-07-24").getTime(),
+    //   end_time: new Date("2024-07-25").getTime(),
+    // };
+    console.log("--systemInfo", systemInfo, brokerName);
     if (systemInfo.data.scheduled_maintenance) {
       setStartTime(systemInfo.data.scheduled_maintenance.start_time);
       setEndTime(systemInfo.data.scheduled_maintenance.end_time);
