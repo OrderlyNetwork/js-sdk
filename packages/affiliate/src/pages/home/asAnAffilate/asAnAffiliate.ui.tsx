@@ -5,16 +5,15 @@ import {
   Flex,
   Text,
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
 } from "@orderly.network/ui";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 
-export const AsAnAffiliateUI: FC<AsAnAffiliateReturns> = (props) => {
+export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-home-asAnAffiliate"
       gradient="primary"
       r={"2xl"}
       p={6}

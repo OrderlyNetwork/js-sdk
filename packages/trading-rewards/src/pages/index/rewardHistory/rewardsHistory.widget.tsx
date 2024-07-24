@@ -1,7 +1,7 @@
 import { useRewardsHistoryScript } from "./rewardsHistory.script";
-import { RewardsHistoryUI } from "./rewardsHistory.ui";
+import { RewardHistory } from "./rewardsHistory.ui";
 
 export const RewardsHistoryWidget = () => {
   const state = useRewardsHistoryScript();
-  return <RewardsHistoryUI {...state} />;
+  return <RewardHistory {...state} />;
 };

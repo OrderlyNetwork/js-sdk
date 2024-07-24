@@ -1,9 +1,7 @@
 import { useTabScript } from "./tab.script";
-import { TabUI } from "./tab.ui";
+import { Tab } from "./tab.ui";
 
 export const TabWidget = () => {
-    const state = useTabScript();
-    return (
-        <TabUI {...state}/>
-    );
+  const state = useTabScript();
+  return <Tab {...state} />;
 };

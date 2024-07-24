@@ -39,7 +39,6 @@ export type {
 export { useChain } from "./useChain";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
-export { useMaintenanceStatus } from "./useMaintenanceStatus";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
@@ -63,3 +62,5 @@ export {
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
+
+export { useMaintenanceStatus } from "./useMaintenanceStatus";

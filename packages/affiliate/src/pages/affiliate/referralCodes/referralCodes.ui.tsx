@@ -18,7 +18,7 @@ import { useMediaQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { EditIcon } from "../../../components/editIcon";
 
-export const ReferralCodesUI: FC<ReferralCodesReturns> = (props) => {
+export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
   const isTablet = useMediaQuery("(max-width: 767px)");
   return (
     <Flex
@@ -84,11 +84,10 @@ const MobileCellItem: FC<{
   editRate?: () => void;
   onCopy?: () => void;
 }> = (props) => {
-  const { key, title, copyable, value, align, className, editRate, onCopy } =
-    props;
+  const { title, copyable, value, align, className, editRate, onCopy } = props;
   return (
     <Statistic
-      key={key}
+      id="oui-affiliate-affiliate-referralCodes"
       className={cn("oui-flex-1", className)}
       label={
         <Text className="oui-text-base-contrast-36 oui-text-2xs">{title}</Text>
@@ -211,7 +210,6 @@ const MobileCell: FC<{
 
 const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   const moreColumn = useMediaQuery("(min-width: 1024px)");
-
 
   const columns = useMemo(() => {
     const cols: Column[] = [

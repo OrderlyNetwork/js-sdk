@@ -1,9 +1,9 @@
 import { useTopScript } from "./top.script";
-import { TopUI } from "./top.ui";
+import { Top } from "./top.ui";
 
 export const TopWidget = () => {
     const state = useTopScript();
     return (
-        <TopUI {...state}/>
+        <Top {...state}/>
     );
 };

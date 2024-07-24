@@ -63,10 +63,17 @@ export type FormattedTextProps = TextProps & {
   // rule?: Omit<TextRule, "status"|'address'|'date'>;
   loading?: boolean;
 
-  suffix?: React.ReactElement;
-  prefix?: React.ReactElement;
+  suffix?: React.ReactNode;
+  prefix?: React.ReactNode;
   // showIcon?: boolean;
-} & (BaseText | DateText | AddressText | SymbolText | TxIDText);
+} & (
+    | BaseText
+    | DateText
+    | AddressText
+    | SymbolText
+    | TxIDText
+    | { rule?: string }
+  );
 
 export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
   (props, ref) => {

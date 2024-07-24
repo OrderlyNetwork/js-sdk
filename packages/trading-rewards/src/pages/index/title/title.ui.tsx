@@ -11,7 +11,7 @@ export const Title: FC<TitleConfig> = (props) => {
   } = props;
   return (
     <Flex
-      id="oui-trading-rewards-home-title"
+      id="oui-tradingRewards-home-title"
       p={6}
       direction={"column"}
       itemAlign={"start"}

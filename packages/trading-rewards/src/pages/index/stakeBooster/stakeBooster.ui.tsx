@@ -7,7 +7,7 @@ import { RocketIcon } from "../components/rocket";
 import { StakeBoosterReturns } from "./stakeBooster.script";
 import { Decimal, commify, commifyOptional } from "@orderly.network/utils";
 
-export const StakeBoosterUI: FC<StakeBoosterReturns> = (props) => {
+export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
   const booster = useMemo(() => {
     const estStakeBoost = props.curEpochEstimate?.est_stake_boost;
     if (typeof estStakeBoost === "undefined" || estStakeBoost === null) {
@@ -24,6 +24,7 @@ export const StakeBoosterUI: FC<StakeBoosterReturns> = (props) => {
 
   return (
     <Flex
+      id="oui-tradingRewards-home-stakeBooster"
       p={6}
       r="2xl"
       direction={"column"}

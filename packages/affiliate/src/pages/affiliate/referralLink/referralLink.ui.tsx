@@ -1,7 +1,5 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC } from "react";
 import {
-  Button,
-  Card,
   CopyIcon,
   Flex,
   modal,
@@ -13,9 +11,10 @@ import { InfoIcon } from "../../../components/infoIcon";
 import { AutoHideText } from "../../../components/autoHideText";
 import { GradientText } from "../../../components/gradientText";
 
-export const ReferralLinkUI: FC<ReferralLinkReturns> = (props) => {
+export const ReferralLink: FC<ReferralLinkReturns> = (props) => {
   return (
     <Flex
+      id="oui-affiliate-affiliate-referralLink"
       r={"2xl"}
       p={6}
       width={"100%"}

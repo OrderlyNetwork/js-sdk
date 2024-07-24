@@ -5,7 +5,7 @@ import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";
 import { commify, commifyOptional } from "@orderly.network/utils";
 
-export const CurEpochUI: FC<CurEpochReturns> = (props) => {
+export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const state = props;
   const curEpochInfo = state.epochList?.[1].curEpochInfo;
   const startTime = curEpochInfo?.start_time;
@@ -15,6 +15,7 @@ export const CurEpochUI: FC<CurEpochReturns> = (props) => {
   const token = curEpochInfo?.epoch_token;
   return (
     <Flex
+      id="oui-tradingRewards-home-currentEpoch"
       r={"2xl"}
       className="oui-bg-base-9 oui-font-semibold"
       width={"100%"}

@@ -15,9 +15,10 @@ import { FC } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
 
-export const RewardsHistoryUI: FC<RewardsHistoryReturns> = (props) => {
+export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   return (
     <Flex
+      id="oui-tradingRewards-home-rewardHistory"
       py={4}
       px={3}
       direction={"column"}
