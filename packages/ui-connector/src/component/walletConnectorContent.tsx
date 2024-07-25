@@ -73,6 +73,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         props.close();
       }
       // props.onCompleted?.();
+    }, (reject) => {
+      setLoading(false);
+    }).catch((e) => {
+      setLoading(false);
     });
   };
 
@@ -81,6 +85,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     return props.signIn().then((res) => {
       setActiveStep((step) => step + 1);
       return onEnableTrading();
+    }, (reject) => {
+      setLoading(false);
+    }).catch((e) => {
+      setLoading(false);
     });
   };
 
@@ -217,7 +225,7 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
       autoComplete="off"
       helpText={props.helpText}
       className="oui-mb-4"
-      color="danger"
+      color={props.helpText ? "danger" : undefined}
     />
   );
 };
