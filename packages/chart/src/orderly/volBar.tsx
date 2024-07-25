@@ -120,10 +120,8 @@ export const VolBarChart = (props: VolChartProps) => {
           {/* @ts-ignore */}
           <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
             {props.data.map((entry, index) => {
-              {
-                /* @ts-ignore */
-              }
               return (
+                // @ts-ignore
                 <Cell
                   key={`cell-${index}`}
                   fill={entry.volume > 0 ? colors.profit : colors.loss}
