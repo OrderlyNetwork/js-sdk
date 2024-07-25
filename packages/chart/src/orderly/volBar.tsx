@@ -120,6 +120,9 @@ export const VolBarChart = (props: VolChartProps) => {
           {/* @ts-ignore */}
           <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
             {props.data.map((entry, index) => {
+              {
+                /* @ts-ignore */
+              }
               return (
                 <Cell
                   key={`cell-${index}`}
@@ -129,7 +132,7 @@ export const VolBarChart = (props: VolChartProps) => {
               );
             })}
           </Bar>
-
+          {/* @ts-ignore */}
           <YAxis
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
             tickLine={false}
