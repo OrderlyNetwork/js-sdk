@@ -7,7 +7,6 @@ import {
 } from "@orderly.network/hooks";
 import { API, Chain, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-// import { OrderlyAppContext } from "@orderly.network/react";
 import { toast } from "@orderly.network/ui";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
@@ -195,7 +194,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       if (value.network_infos?.chain_id === currentChain?.id)
         return Promise.resolve();
 
-      switchChain?.({
+      return switchChain?.({
         chainId: int2hex(Number(value.network_infos?.chain_id)),
         // @ts-ignore
         rpcUrl: value.network_infos?.public_rpc_url,

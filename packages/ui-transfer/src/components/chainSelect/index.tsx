@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   ChainIcon,
@@ -12,13 +13,15 @@ import {
 import { ExchangeIcon } from "../../icons";
 import { API, CurrentChain } from "@orderly.network/types";
 
-type NetworkSelectProps = {
+type ChainSelectProps = {
   chains: API.NetworkInfos[];
-  currentChain: CurrentChain;
+  value: CurrentChain;
+  onValueChange: (chain: API.Chain) => void;
 };
 
-export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
-  const { chains, currentChain } = props;
+export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
+  const { chains, value } = props;
+  const [open, setOpen] = useState(false);
 
   const trigger = (
     <Flex
@@ -37,10 +40,10 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
         <Flex gapX={1} className="oui-mt-[2px]">
           <ChainIcon
             className="oui-w-[18px] oui-h-[18px]"
-            chainId={currentChain?.id}
+            chainId={value?.id}
           />
           <Text size="sm" intensity={80}>
-            {currentChain?.info?.network_infos?.name}
+            {value?.info?.network_infos?.name}
           </Text>
         </Flex>
       </div>
@@ -49,7 +52,7 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
   );
 
   const content = chains.map((chain) => {
-    const isActive = chain.chain_id === currentChain?.id;
+    const isActive = chain.chain_id === value?.id;
     return (
       <Flex
         px={2}
@@ -60,6 +63,10 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
         )}
         r="md"
         justify="between"
+        onClick={async () => {
+          setOpen(false);
+          await props.onValueChange({ network_infos: chain } as API.Chain);
+        }}
       >
         <Flex gapX={1} itemAlign="center">
           <ChainIcon
@@ -97,7 +104,7 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
   });
 
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
@@ -106,13 +113,12 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
           sideOffset={2}
           className={cn(
             "oui-deposit-token-select-dropdown-menu-content",
+            "oui-bg-base-8 oui-p-1",
             "oui-w-[var(--radix-dropdown-menu-trigger-width)]",
             "oui-rounded-md oui-select-none"
           )}
         >
-          <Box p={1} intensity={800}>
-            {content}
-          </Box>
+          {content}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>

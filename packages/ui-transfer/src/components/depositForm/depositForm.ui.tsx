@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { TokenInput } from "../tokenInput";
-import { NetworkSelect } from "../networkSelect";
+import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Web3Wallet } from "../web3Wallet";
 import { BrokerWallet } from "../brokerWallet";
@@ -35,7 +35,11 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <Web3Wallet name={walletName} address={address} />
 
       <Box my={3}>
-        <NetworkSelect chains={chains} currentChain={currentChain!} />
+        <ChainSelect
+          chains={chains}
+          value={currentChain!}
+          onValueChange={onChainChange}
+        />
         <TokenInput
           tokens={tokens.map((item) => item.symbol)}
           classNames={{
