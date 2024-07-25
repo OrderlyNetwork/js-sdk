@@ -1,7 +1,7 @@
 {
-  "name": "@orderly.network/deposit",
+  "name": "@orderly.network/ui-transfer",
   "version": "1.0.0",
-  "description": "",
+  "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
