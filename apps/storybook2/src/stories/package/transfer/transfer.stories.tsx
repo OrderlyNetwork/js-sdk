@@ -10,7 +10,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const meta = {
-    title: "Package/Deposit",
+    title: "Package/ui-transfer",
     component: DepositFormWidget,
     subcomponents: {
 
