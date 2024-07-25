@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   Text,
+  cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
 import { API, CurrentChain } from "@orderly.network/types";
@@ -28,11 +29,12 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
       justify="between"
       itemAlign="center"
     >
-      <Box>
+      <div className="oui-leading-0">
         <Text size="2xs" intensity={54}>
           Network
         </Text>
-        <Flex gapX={1}>
+
+        <Flex gapX={1} className="oui-mt-[2px]">
           <ChainIcon
             className="oui-w-[18px] oui-h-[18px]"
             chainId={currentChain?.id}
@@ -41,16 +43,21 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
             {currentChain?.info?.network_infos?.name}
           </Text>
         </Flex>
-      </Box>
+      </div>
       <ExchangeIcon className="oui-text-base-contrast-54" />
     </Flex>
   );
 
   const content = chains.map((chain) => {
+    const isActive = chain.chain_id === currentChain?.id;
     return (
       <Flex
         px={2}
-        className="hover:oui-bg-base-5 oui-h-[30px]"
+        className={cn(
+          "oui-deposit-network-select-item",
+          "hover:oui-bg-base-5 oui-h-[30px]",
+          isActive && "oui-bg-base-5"
+        )}
         r="md"
         justify="between"
       >
@@ -77,10 +84,14 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
             </Flex>
           )}
         </Flex>
-        <Text.gradient
-          color="brand"
-          className="oui-w-1 oui-h-1"
-        ></Text.gradient>
+        {isActive && (
+          <Box
+            width={4}
+            height={4}
+            r="full"
+            className="oui-deposit-network-select-active-dot oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)]"
+          />
+        )}
       </Flex>
     );
   });
@@ -93,7 +104,11 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
           onCloseAutoFocus={(e) => e.preventDefault()}
           align="start"
           sideOffset={2}
-          className="oui-deposit-token-select-dropdown-menu-content oui-w-[var(--radix-dropdown-menu-trigger-width)] oui-rounded-md"
+          className={cn(
+            "oui-deposit-token-select-dropdown-menu-content",
+            "oui-w-[var(--radix-dropdown-menu-trigger-width)]",
+            "oui-rounded-md oui-select-none"
+          )}
         >
           <Box p={1} intensity={800}>
             {content}
