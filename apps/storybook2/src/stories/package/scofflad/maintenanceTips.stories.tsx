@@ -6,6 +6,7 @@ import {
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
+  Scaffold,
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
@@ -61,19 +62,6 @@ export const Default: Story = {
 
 export const SystemMaintenanceStatus: Story = {
   render: () => {
-    const [currentPath, setCurrentPath] = useState("trading");
-
-    return (
-      <TradingRewardsLayoutWidget
-        routerAdapter={{
-          onRouteChange: (options) => {
-            console.log("options", options);
-          },
-          currentPath: currentPath,
-        }}
-      >
-        <TradingRewards.HomePage />
-      </TradingRewardsLayoutWidget>
-    );
+    return <Scaffold></Scaffold>;
   },
 };

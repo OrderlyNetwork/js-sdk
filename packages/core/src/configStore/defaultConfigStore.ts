@@ -16,19 +16,12 @@ const API_URLS: { [key: string]: URLS } = {
     privateWsUrl: "wss://ws-private-evm.orderly.org",
     operatorUrl: "https://operator-evm.orderly.org",
   },
-  testnetbak: {
+  testnet: {
     apiBaseUrl: "https://testnet-api-evm.orderly.org",
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: "https://testnet-operator-evm.orderly.org",
   },
-    testnet: {
-    apiBaseUrl: "https://dev-api-v2.orderly.org",
-    publicWsUrl: "wss://dev-ws-v2.orderly.org",
-    privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
-    operatorUrl: "https://dev-operator-v2.orderly.network",
-
-    },
 };
 
 export class DefaultConfigStore implements ConfigStore {
