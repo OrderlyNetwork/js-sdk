@@ -1,4 +1,11 @@
-import { Box, CloseIcon, Flex, Slider, Text } from "@orderly.network/ui";
+import {
+  Box,
+  CloseIcon,
+  Button,
+  Flex,
+  Slider,
+  Text,
+} from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
 
 export const Leverage = (props: LeverageScriptReturns) => {
@@ -6,30 +13,38 @@ export const Leverage = (props: LeverageScriptReturns) => {
   return (
     <Flex itemAlign={"start"} direction={"column"} mb={4}>
       <Flex justify={"between"} width={"100%"}>
-        <Text size={"xs"} intensity={54}>
-          Current leverage
+        <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
+          Max account leverage
         </Text>
-        <Text.numeral unit="x" size={"xs"} intensity={80}>
-          {currentLeverage}
-        </Text.numeral>
+        <Flex direction={"row"} gap={1}>
+          <Text size={"sm"} intensity={54}>
+            Current:
+          </Text>
+          <Text.numeral unit="x" size={"sm"} intensity={80}>
+            {currentLeverage}
+          </Text.numeral>
+        </Flex>
       </Flex>
 
-      <Text as="div" size={"xs"} intensity={54} className="oui-mt-2">
-        Max account leverage
-      </Text>
       <LeverageSlider {...props} />
+      <Flex direction={"row"} gap={2} width={"100%"} mt={8} pt={4}>
+        <Button
+          variant="contained"
+          color="gray"
+          fullWidth
+          onClick={props.onCancel}
+        >
+          Cancel
+        </Button>
+        <Button fullWidth onClick={props.onSave}>
+          Save
+        </Button>
+      </Flex>
     </Flex>
   );
 };
 
 const LeverageSlider = (props: LeverageScriptReturns) => {
-  console.log("params", {
-    step: props.step,
-    markLabelVisible: true,
-    marks: props.marks,
-    value: [props.value],
-  });
-  
   return (
     <Box pt={3} width={"100%"}>
       <Slider
