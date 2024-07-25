@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   ChainIcon,
@@ -7,17 +8,20 @@ import {
   DropdownMenuTrigger,
   Flex,
   Text,
+  cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
 import { API, CurrentChain } from "@orderly.network/types";
 
-type NetworkSelectProps = {
+type ChainSelectProps = {
   chains: API.NetworkInfos[];
-  currentChain: CurrentChain;
+  value: CurrentChain;
+  onValueChange: (chain: API.Chain) => void;
 };
 
-export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
-  const { chains, currentChain } = props;
+export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
+  const { chains, value } = props;
+  const [open, setOpen] = useState(false);
 
   const trigger = (
     <Flex
@@ -28,31 +32,41 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
       justify="between"
       itemAlign="center"
     >
-      <Box>
+      <div className="oui-leading-0">
         <Text size="2xs" intensity={54}>
           Network
         </Text>
-        <Flex gapX={1}>
+
+        <Flex gapX={1} className="oui-mt-[2px]">
           <ChainIcon
             className="oui-w-[18px] oui-h-[18px]"
-            chainId={currentChain?.id}
+            chainId={value?.id}
           />
           <Text size="sm" intensity={80}>
-            {currentChain?.info?.network_infos?.name}
+            {value?.info?.network_infos?.name}
           </Text>
         </Flex>
-      </Box>
+      </div>
       <ExchangeIcon className="oui-text-base-contrast-54" />
     </Flex>
   );
 
   const content = chains.map((chain) => {
+    const isActive = chain.chain_id === value?.id;
     return (
       <Flex
         px={2}
-        className="hover:oui-bg-base-5 oui-h-[30px]"
+        className={cn(
+          "oui-deposit-network-select-item",
+          "hover:oui-bg-base-5 oui-h-[30px]",
+          isActive && "oui-bg-base-5"
+        )}
         r="md"
         justify="between"
+        onClick={async () => {
+          setOpen(false);
+          await props.onValueChange({ network_infos: chain } as API.Chain);
+        }}
       >
         <Flex gapX={1} itemAlign="center">
           <ChainIcon
@@ -77,27 +91,34 @@ export const NetworkSelect: React.FC<NetworkSelectProps> = (props) => {
             </Flex>
           )}
         </Flex>
-        <Text.gradient
-          color="brand"
-          className="oui-w-1 oui-h-1"
-        ></Text.gradient>
+        {isActive && (
+          <Box
+            width={4}
+            height={4}
+            r="full"
+            className="oui-deposit-network-select-active-dot oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)]"
+          />
+        )}
       </Flex>
     );
   });
 
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
           onCloseAutoFocus={(e) => e.preventDefault()}
           align="start"
           sideOffset={2}
-          className="oui-deposit-token-select-dropdown-menu-content oui-w-[var(--radix-dropdown-menu-trigger-width)] oui-rounded-md"
+          className={cn(
+            "oui-deposit-token-select-dropdown-menu-content",
+            "oui-bg-base-8 oui-p-1",
+            "oui-w-[var(--radix-dropdown-menu-trigger-width)]",
+            "oui-rounded-md oui-select-none"
+          )}
         >
-          <Box p={1} intensity={800}>
-            {content}
-          </Box>
+          {content}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>

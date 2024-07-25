@@ -15,7 +15,7 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
-    "noUnusedParameters":false,
+    "noUnusedParameters": false,
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
@@ -34,7 +34,7 @@
       "@orderly.network/ui-positions": ["../../packages/ui-positions/src"],
       "@orderly.network/ui-orders": ["../../packages/ui-orders/src"],
       "@orderly.network/markets": ["../../packages/markets/src"],
-      "@orderly.network/deposit": ["../../packages/deposit/src"],
+      "@orderly.network/ui-transfer": ["../../packages/ui-transfer/src"],
       "@orderly.network/withdraw": ["../../packages/withdraw/src"],
       "@orderly.network/trading": ["../../packages/trading/src"]
     }

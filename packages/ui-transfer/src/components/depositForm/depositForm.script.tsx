@@ -7,7 +7,6 @@ import {
 } from "@orderly.network/hooks";
 import { API, Chain, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-// import { OrderlyAppContext } from "@orderly.network/react";
 import { toast } from "@orderly.network/ui";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
@@ -29,14 +28,13 @@ export type CurrentChain = {
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const config = useConfig();
 
-  const [chains, { findByChainId }] = useChains(
-    config.get("networkId") as NetworkId,
-    {
-      pick: "network_infos",
-      filter: (chain: any) =>
-        chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-    }
-  );
+  const networkId = config.get("networkId") as NetworkId;
+
+  const [chains, { findByChainId }] = useChains(networkId, {
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
 
   const {
     connectedChain,
@@ -60,11 +58,13 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     };
   }, [connectedChain, findByChainId]);
 
-  const address = useMemo(() => {
-    const add = wallet?.accounts?.[0].address;
-    if (!add) return "--";
-    return add.replace(/^(.{6})(.*)(.{4})$/, "$1......$3");
-  }, [wallet]);
+  const { walletName, address } = useMemo(
+    () => ({
+      walletName: wallet?.label,
+      address: wallet?.accounts?.[0].address,
+    }),
+    [wallet]
+  );
 
   const {
     dst,
@@ -194,7 +194,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       if (value.network_infos?.chain_id === currentChain?.id)
         return Promise.resolve();
 
-      switchChain?.({
+      return switchChain?.({
         chainId: int2hex(Number(value.network_infos?.chain_id)),
         // @ts-ignore
         rpcUrl: value.network_infos?.public_rpc_url,
@@ -280,14 +280,15 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   }, [maxAmount]);
 
   return {
-    walletName: wallet?.label,
+    walletName,
     address,
     token,
     tokens,
     brokerId: config.get("brokerId"),
-    brokerName: config.get("brokerName"),
+    brokerName: config.get("brokerName") || "",
     chains,
     currentChain,
     maxAmount,
+    onChainChange,
   };
 };
