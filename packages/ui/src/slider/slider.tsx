@@ -287,7 +287,7 @@ const Marks = (props: SliderMarksProps) => {
               <span
                 key={index}
                 className={cn(
-                  "oui-absolute oui-top-[12px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
+                  "oui-absolute oui-top-[16px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
                   (selIndex === index) && textCls
                 )}
                 style={{
