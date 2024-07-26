@@ -6,8 +6,7 @@ export const useChainSelectorBuilder = () => {
 
   const onChainChange = (chain: { id: number }) => {
     if (!connectedChain) {
-      console.warn("No connected chain");
-      return;
+      return Promise.reject("No connected chain");
     }
     return setChain({
       chainId: chain.id,
