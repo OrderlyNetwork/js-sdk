@@ -1,4 +1,4 @@
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
@@ -10,6 +10,7 @@ import {
 import { useAppContext } from "@orderly.network/react-app";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { WalletConnectorModalId } from "./walletConnector";
+import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 
 type AuthGuardProps = {
   fallback?: (props: {
@@ -37,9 +38,6 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
-  // const [_,{checkChainSupport}] = useChains();
-
-  // console.log("!!!state::", state);
 
   // return Match(state.status)
   //   .with(AccountStatusEnum.EnableTrading, () => props.children)
@@ -60,7 +58,6 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     if (state.validating) {
       return (
         <Button
-          size="md"
           // variant={"gradient"}
           angle={45}
           fullWidth
@@ -73,7 +70,13 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
       );
     }
 
-    return <DefaultFallback status={state.status} buttonProps={buttonProps} />;
+    return (
+      <DefaultFallback
+        status={state.status}
+        buttonProps={buttonProps}
+        wrongNetwork={wrongNetwork}
+      />
+    );
   }, [state.status, state.validating]);
 
   return (
@@ -85,9 +88,12 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
 
 const DefaultFallback = (props: {
   status: AccountStatusEnum;
+  wrongNetwork: boolean;
   buttonProps?: ButtonProps;
 }) => {
-  const { connect } = useWalletConnector();
+  const { buttonProps } = props;
+  const { connectWallet } = useAppContext();
+  // const { connect } = useWalletConnector();
   const onConnectOrderly = () => {
     modal.show(WalletConnectorModalId).then(
       (r) => console.log(r),
@@ -96,13 +102,37 @@ const DefaultFallback = (props: {
   };
 
   const onConnectWallet = async () => {
-    const wallets = await connect();
+    const res = await connectWallet();
 
-    console.log("wallets::", wallets);
-    if (Array.isArray(wallets) && wallets.length > 0) {
+    if (!res) return;
+
+    if (res?.status < AccountStatusEnum.EnableTrading) {
       onConnectOrderly();
     }
   };
+
+  const switchChain = () => {
+    modal.show(ChainSelectorId).then(
+      (r) => console.log(r),
+      (error) => console.log(error)
+    );
+  };
+
+  if (props.wrongNetwork) {
+    return (
+      <Button
+        color="warning"
+        // size="md"
+        fullWidth
+        onClick={() => {
+          switchChain();
+        }}
+        {...buttonProps}
+      >
+        Wrong network
+      </Button>
+    );
+  }
 
   return (
     <Match
@@ -111,14 +141,13 @@ const DefaultFallback = (props: {
         if (value <= AccountStatusEnum.NotConnected) {
           return (
             <Button
-              size="md"
               onClick={() => {
                 onConnectWallet();
               }}
               fullWidth
               variant={"gradient"}
               angle={45}
-              {...props.buttonProps}
+              {...buttonProps}
             >
               Connect wallet
             </Button>
@@ -127,13 +156,13 @@ const DefaultFallback = (props: {
         if (value <= AccountStatusEnum.NotSignedIn) {
           return (
             <Button
-              size="md"
+              size="lg"
               onClick={() => {
                 onConnectOrderly();
               }}
               fullWidth
               angle={45}
-              {...props.buttonProps}
+              {...buttonProps}
             >
               Sigin
             </Button>
@@ -142,9 +171,9 @@ const DefaultFallback = (props: {
       }}
       default={
         <Button
-          size="md"
+          size="lg"
           fullWidth
-          {...props.buttonProps}
+          {...buttonProps}
           onClick={() => onConnectOrderly()}
         >
           Enable trading

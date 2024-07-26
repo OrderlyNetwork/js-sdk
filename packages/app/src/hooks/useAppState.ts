@@ -1,5 +1,10 @@
 import { useMemo } from "react";
-import { useAccount, useConfig, useChains } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useConfig,
+  useChains,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
   NetworkId,
@@ -14,23 +19,20 @@ export const useAppState = (): {
   const config = useConfig();
   const networkId = config.get("networkId");
   const [_, { checkChainSupport }] = useChains();
-  const { account, state } = useAccount();
+
+  const { connectedChain } = useWalletConnector();
   // restore account state
   // useEffect(() => {
   //   console.log("current address:", keyStore.getAddress());
   // }, []);
 
   const networkStatus = useMemo(() => {
-    if (
-      state.status < AccountStatusEnum.Connected ||
-      typeof account.chainId !== "number"
-    )
-      return NetworkStatusEnum.unknown;
+    if (!connectedChain) return NetworkStatusEnum.unknown;
 
-    return checkChainSupport(account.chainId, networkId as NetworkId)
+    return checkChainSupport(connectedChain.id, networkId as NetworkId)
       ? NetworkStatusEnum.supported
       : NetworkStatusEnum.unsupported;
-  }, [networkId, state.status]);
+  }, [networkId, connectedChain]);
 
   return {
     wrongNetwork: networkStatus === NetworkStatusEnum.unsupported,

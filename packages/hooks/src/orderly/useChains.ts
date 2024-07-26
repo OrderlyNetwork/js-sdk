@@ -43,7 +43,10 @@ export type UseChainsOptions = {
 
 export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
-  checkChainSupport: (chainId: number, networkId: NetworkId) => boolean;
+  checkChainSupport: (
+    chainId: number | string,
+    networkId: NetworkId
+  ) => boolean;
   error: any;
 };
 

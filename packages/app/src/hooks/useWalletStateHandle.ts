@@ -32,7 +32,7 @@ export const useWalletStateHandle = (options: {
     connectedChain,
   } = useWalletConnector();
 
-  console.log("🔗 wallet state handle", connectedWallet);
+  // console.log("🔗 wallet state handle", connectedWallet);
 
   const isManualConnect = useRef<boolean>(false);
 
@@ -95,7 +95,7 @@ export const useWalletStateHandle = (options: {
    * handle wallet connection
    */
   useEffect(() => {
-    console.log("🔗 wallet state changed", connectedWallet);
+    // console.log("🔗 wallet state changed", connectedWallet);
     //
     if (unsupported) return;
     if (isManualConnect.current) return;

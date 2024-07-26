@@ -1,39 +1,35 @@
 {
-  "name": "@orderly.network/ui-connector",
+  "name": "@orderly.network/ui-chain-selector",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "build": "tsup && pnpm run build:css",
-    "build:css": "tailwindcss build src/tailwind.css -o dist/styles.css --minify",
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "Orderly",
-    "UI",
-    "Exchange",
-    "DApp"
+    "Orderly"
   ],
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/ui-chain-selector": "workspace:*"
+    "@orderly.network/react-app": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.4",
     "tsconfig": "workspace:*",
-    "tsup": "^7.3.0"
+    "tsup": "^7.1.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.2.0",
-    "@orderly.network/ui": "workspace:*"
+    "react-dom": "^18.2.0"
   }
 }

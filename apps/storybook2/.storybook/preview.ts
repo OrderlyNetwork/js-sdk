@@ -39,6 +39,7 @@ const preview: Preview = {
             "ui-scaffold",
             "ui-positions",
             "ui-orders",
+            "ui-chain-selector",
           ],
         ],
       },
