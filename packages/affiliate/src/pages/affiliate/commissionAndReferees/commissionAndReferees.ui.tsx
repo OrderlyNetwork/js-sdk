@@ -20,6 +20,7 @@ import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 import { commifyOptional } from "@orderly.network/utils";
+import { addDays } from "date-fns";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
@@ -337,6 +338,10 @@ const DateFiler: FC<{
           value={props.value}
           onChange={(range) => {
             props.setValue(range);
+          }}
+          max={90}
+          disabled={{
+            after: new Date(),
           }}
         />
       </div>
