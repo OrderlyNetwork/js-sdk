@@ -41,7 +41,7 @@ export function parseTime(time?: number | string): Date | null {
 
 //** will be return YYYY-MM-ddThh:mm:ssZ */
 export function formatDateTimeToUTC(input?: number | string): string {
-  if (input === undefined) return '';
+  if (input === undefined) return "";
   const date = toDate(input);
   const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd HH:mm:ss 'UTC'");
@@ -112,4 +112,14 @@ export function generateData(
 
 function toUTCDate(date: Date): Date {
   return new Date(date.toUTCString());
+}
+
+export function fillData(
+  count: number,
+  origin?: {
+    date: string;
+    volume: number;
+  }[],
+): { date: string; volume: number }[] {
+    return [];
 }
