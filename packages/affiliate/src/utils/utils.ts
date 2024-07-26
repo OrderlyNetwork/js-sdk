@@ -113,13 +113,3 @@ export function generateData(
 function toUTCDate(date: Date): Date {
   return new Date(date.toUTCString());
 }
-
-export function fillData(
-  count: number,
-  origin?: {
-    date: string;
-    volume: number;
-  }[],
-): { date: string; volume: number }[] {
-    return [];
-}
