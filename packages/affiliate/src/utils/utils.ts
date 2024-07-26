@@ -22,7 +22,7 @@ export function addQueryParam(
 export async function copyText(content: string) {
   try {
     await navigator.clipboard.writeText(content);
-    toast.success("Copy success");
+    toast.success("Copied");
   } catch (error) {
     toast.success("Copy failed");
   }

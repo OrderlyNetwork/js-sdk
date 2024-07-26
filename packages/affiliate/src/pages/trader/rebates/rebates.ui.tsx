@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Column, DataTable, DatePicker, Flex, Text } from "@orderly.network/ui";
+import { Column, DataTable, DatePicker, Flex, Pagination, Text } from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
 
@@ -96,6 +96,12 @@ const List: FC<RebatesReturns> = (props) => {
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-xs oui-text-base-contrast-80",
       }}
-    ></DataTable>
+    >
+      <Pagination
+        {...props.meta}
+        onPageChange={props.onPageChange}
+        onPageSizeChange={props.onPageSizeChange}
+      />
+    </DataTable>
   );
 };

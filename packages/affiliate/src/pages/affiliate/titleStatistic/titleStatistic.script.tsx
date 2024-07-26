@@ -66,12 +66,12 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   });
 
   const dataSource = useMemo(() => {
-    return (rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
+    return ((rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
       (e) => ({
         date: e.date,
         volume: volType === "Commission" ? e.referral_rebate : e.volume,
       })
-    ) || [];
+    ) || []).reverse();
   }, [rebateSummary, volType  ]);
 
   console.log("dataSource", dateRange, volType, rebateSummary?.[0], dataSource?.[0]);

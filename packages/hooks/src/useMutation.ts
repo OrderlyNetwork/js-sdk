@@ -12,7 +12,7 @@ import { useAccountInstance } from "./useAccountInstance";
 import { useConfig } from "./useConfig";
 import { getTimestamp } from "@orderly.network/utils";
 
-type HTTP_METHOD = "POST" | "PUT" | "DELETE";
+type HTTP_METHOD = "POST" | "PUT" | "DELETE" | "GET";
 
 const fetcher = (
   url: string,
@@ -76,7 +76,7 @@ export const useMutation = <T, E>(
   }
 
   const account = useAccountInstance();
-  const signer = account.signer;
+
   const { trigger, data, error, reset, isMutating } = useSWRMutation(
     fullUrl,
     // method === "POST" ? fetcher : deleteFetcher,
@@ -107,7 +107,13 @@ export const useMutation = <T, E>(
       data,
     };
 
-    const signature = await signer.sign(payload, getTimestamp());
+    let signature: any;
+    try {
+      const signer = account.signer;
+      signature = await signer.sign(payload, getTimestamp());
+    } catch (e) {
+      console.log("catch signer error", e);
+    }
 
     return trigger(
       {

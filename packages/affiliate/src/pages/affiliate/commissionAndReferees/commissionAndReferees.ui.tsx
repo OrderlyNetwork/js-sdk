@@ -220,7 +220,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         className: "oui-w-1/5",
       },
       {
-        title: "Invacation time",
+        title: "Invication time",
         dataIndex: "code_binding_time",
         render: (value) => (
           <Text.formatted

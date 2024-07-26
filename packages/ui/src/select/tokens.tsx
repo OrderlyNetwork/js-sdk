@@ -41,6 +41,7 @@ export const TokenSelect = (props: TokenSelect) => {
         // @ts-ignore
         return <Option {...option} />;
       }}
+      open={options.length > 1 ? undefined : false}
       valueRenderer={
         showIcon
           ? (value) => {
@@ -50,7 +51,9 @@ export const TokenSelect = (props: TokenSelect) => {
                     name={value}
                     className={icon({ size: props.size })}
                   />
-                  <Text weight="semibold">{value}</Text>
+                  <Text weight="semibold" intensity={54}>
+                    {value}
+                  </Text>
                 </Flex>
               );
             }

@@ -4,12 +4,21 @@ import { useRefereeRebateSummary, RefferalAPI } from "@orderly.network/hooks";
 import { useReferralContext } from "../../../hooks";
 import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
 import { subDays } from "date-fns";
+import { usePagination } from "@orderly.network/ui";
 
 export type RebatesReturns = {
   dateRange?: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   displayDate?: string;
-  dataSource: RebatesItem[] | undefined;
+  dataSource: RebatesItem[];
+  meta: {
+    count: number;
+    page: number;
+    pageSize: number;
+    pageTotal: number;
+  };
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
 };
 
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
@@ -27,7 +36,7 @@ export const useRebatesScript = (): RebatesReturns => {
 });
 const { dailyVolume } = useReferralContext();
 
-const dataSource = useMemo((): RebatesItem[] | undefined => {
+const dataSource = useMemo((): RebatesItem[] => {
     if (typeof distributionData === 'undefined') return [];
 
     return distributionData
@@ -54,10 +63,38 @@ if ((dataSource?.length || 0) > 0) {
     displayDate = formatDateTimeToUTC(dataSource?.[0].date);
 }
 
+
+const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+
+  const totalCount = useMemo(() => dataSource.length, [dataSource]);
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
+  };
+
+  const newData = useMemo(() => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return dataSource.slice(startIndex, endIndex);
+  }, [dataSource, page, pageSize]);
+
+  const meta = parseMeta({
+    total: totalCount,
+    current_page: page,
+    records_per_page: pageSize,
+  });
+
+
   return {
     dateRange,
     setDateRange,
     displayDate,
-    dataSource,
+    dataSource: newData,
+    meta,
+    onPageChange,
+    onPageSizeChange,
   };
 };

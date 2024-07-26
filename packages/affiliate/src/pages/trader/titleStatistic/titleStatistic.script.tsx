@@ -1,5 +1,5 @@
 import { useRefereeRebateSummary } from "@orderly.network/hooks";
-import { subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 import { BarDayFilter } from "../../../utils/types";
@@ -72,23 +72,31 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   const dataSource = useMemo(() => {
     if (volType === "rebate") {
       let newData = distributionData || [];
-      return newData.map((e) => ({
-        date: e.date,
-        volume: e.referee_rebate,
-      }));
+      return newData
+        .map((e) => ({
+          date: e.date,
+          volume: e.referee_rebate,
+        }))
+        .reverse();
     } else if (volType === "volume") {
-      return dailyVolume?.map((e) => ({
-        date: e.date,
-        volume: e.perp_volume,
-      })) || [];
+      return (
+        dailyVolume
+          ?.filter((e) => {
+            return (
+              e.date > format(subDays(Date(), Number(period) + 1), "yyyy-MM-dd")
+            );
+          })
+          .map((e) => ({
+            date: e.date,
+            volume: e.perp_volume,
+          })) || []
+      );
     } else {
       return [];
     }
   }, [distributionData, dailyVolume, volType]);
 
   console.log("datasouce", distributionData, dailyVolume, volType, dataSource);
-  
-
 
   return {
     period,

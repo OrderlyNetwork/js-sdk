@@ -1,7 +1,7 @@
 {
-  "name": "@orderly.network/deposit",
+  "name": "@orderly.network/ui-transfer",
   "version": "1.0.0",
-  "description": "",
+  "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -14,7 +14,9 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/react-app": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

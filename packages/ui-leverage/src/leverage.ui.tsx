@@ -11,7 +11,7 @@ import { LeverageScriptReturns } from "./leverage.script";
 export const Leverage = (props: LeverageScriptReturns) => {
   const { currentLeverage = 0 } = props;
   return (
-    <Flex itemAlign={"start"} direction={"column"} mb={4}>
+    <Flex itemAlign={"start"} direction={"column"} mb={0}>
       <Flex justify={"between"} width={"100%"}>
         <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
           Max account leverage
@@ -27,7 +27,7 @@ export const Leverage = (props: LeverageScriptReturns) => {
       </Flex>
 
       <LeverageSlider {...props} />
-      <Flex direction={"row"} gap={2} width={"100%"} mt={8} pt={4}>
+      <Flex direction={"row"} gap={2} width={"100%"} mt={8} pt={5}>
         <Button
           variant="contained"
           color="gray"

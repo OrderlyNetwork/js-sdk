@@ -18,6 +18,7 @@ import { Box, cn } from "@orderly.network/ui";
 export type VolChartDataItem = {
   date: string;
   volume: number;
+  opacity?: string | number;
 };
 
 export type VolChartProps = {
@@ -30,8 +31,7 @@ export type VolChartProps = {
 };
 
 const RoundedRectangle = (props: any) => {
-  const { fill, x, y, width, height } = props;
-
+  const { fill, x, y, width, height, opacity } = props;
   const absHeight = Math.abs(height);
 
   return (
@@ -43,6 +43,7 @@ const RoundedRectangle = (props: any) => {
       height={absHeight}
       stroke="none"
       fill={fill}
+      opacity={opacity}
     />
   );
 };
@@ -92,62 +93,69 @@ export const VolBarChart = (props: VolChartProps) => {
       : undefined
   );
 
+  const isEmpty = props.data.reduce((a, b) => a + b.volume, 0) === 0;
+
   return (
     // @ts-ignore
     <Box className={cn(props.className)}>
-       {/* @ts-ignore */}
-       <ResponsiveContainer>
+      {/* @ts-ignore */}
+      <ResponsiveContainer>
+        {/* @ts-ignore */}
+        <BarChart
+          data={props.data}
+          margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
+        >
           {/* @ts-ignore */}
-          <BarChart
-            data={props.data}
-            margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
-          >
-            {/* @ts-ignore */}
-            <Tooltip
-              // cursor={{ fillOpacity: 0.1 }}
-              cursor={<CustomizedCross />}
-              content={<CustomTooltip />}
-            />
-            <CartesianGrid
-              vertical={false}
-              stroke="#FFFFFF"
-              strokeOpacity={0.04}
-            />
-            <ReferenceLine y={0} stroke="#000" />
-            {/* @ts-ignore */}
-            <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
-              {props.data.map((entry, index) => {
-                return (
-                  // @ts-ignore
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.volume > 0 ? colors.profit : colors.loss}
-                  />
-                );
-              })}
-            </Bar>
-            {/* @ts-ignore */}
-            <YAxis
-              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-              tickLine={false}
-              axisLine={false}
-              dataKey={"volume"}
-            />
-            {/* @ts-ignore */}
-            <XAxis
-              dataKey="date"
-              // axisLine={false}
-              tickLine={false}
-              interval={props.data.length - 2}
-              // tick={renderQuarterTick}
-              height={1}
-              // scale="time"
-              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-              stroke="#FFFFFF"
-              strokeOpacity={0.04}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+          <Tooltip
+            // cursor={{ fillOpacity: 0.1 }}
+            cursor={<CustomizedCross />}
+            content={<CustomTooltip />}
+          />
+          <CartesianGrid
+            vertical={false}
+            stroke="#FFFFFF"
+            strokeOpacity={0.04}
+          />
+          <ReferenceLine y={0} stroke="#000" />
+          {/* @ts-ignore */}
+          <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
+            {props.data.map((entry, index) => {
+              return (
+                // @ts-ignore
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.volume > 0 ? colors.profit : colors.loss}
+                  opacity={entry.opacity}
+                />
+              );
+            })}
+          </Bar>
+          {/* @ts-ignore */}
+          <YAxis
+            tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+            tickLine={false}
+            axisLine={false}
+            dataKey={"volume"}
+            tickFormatter={(value, index) => {
+              if (isEmpty) return value === 0 ? "0" : "";
+              return value;
+            }}
+          />
+          {/* @ts-ignore */}
+          <XAxis
+            dataKey="date"
+            // axisLine={false}
+            tickLine={false}
+            interval={props.data.length - 2}
+            // tick={renderQuarterTick}
+            height={1}
+            // scale="time"
+            tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+            stroke="#FFFFFF"
+            strokeOpacity={0.04}
+          />
+        </BarChart>
+      </ResponsiveContainer>
     </Box>
   );
 };
