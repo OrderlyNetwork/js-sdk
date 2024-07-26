@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Flex } from "@orderly.network/ui";
+import { Box, Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
   MainNavWidget,
@@ -181,5 +181,11 @@ export const CustomMainNav: Story = {
     ],
     initialMenu: "/markets",
     initialProduct: "/trade",
+  },
+};
+
+export const CustomChildren: Story = {
+  args: {
+    children: <div className={"oui-bg-primary oui-px-2"}>Custom Element</div>,
   },
 };

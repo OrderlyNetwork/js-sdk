@@ -3,6 +3,7 @@ export { MainNavWidget } from "./components/main/mainNav.widget";
 export { AccountSummaryWidget } from "./components/accountSummary";
 export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
+export { ProductsMenu } from "./components/main/products";
 export type { LayoutProps } from "./components/scaffold";
 export {
   useScaffoldContext,

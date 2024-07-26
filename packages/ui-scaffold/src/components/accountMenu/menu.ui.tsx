@@ -19,7 +19,7 @@ export type AccountMenuProps = {
   accountState: AccountState;
   address?: string;
   onDisconnect: () => void;
-  onConnectWallet: () => Promise<void>;
+  connect: () => Promise<void>;
   onCrateAccount: () => Promise<void>;
   onCreateOrderlyKey: () => Promise<void>;
   onOpenExplorer: () => void;
@@ -39,7 +39,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
         disabled={state.validating}
         onClick={() => {
           props
-            .onConnectWallet()
+            .connect()
             .then((r) => {
               console.log("*****", r);
             })

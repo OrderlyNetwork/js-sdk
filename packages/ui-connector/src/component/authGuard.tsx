@@ -7,6 +7,7 @@ import {
   modal,
   type ButtonProps,
 } from "@orderly.network/ui";
+import { useAppContext } from "@orderly.network/react-app";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { WalletConnectorModalId } from "./walletConnector";
 
@@ -14,6 +15,7 @@ type AuthGuardProps = {
   fallback?: (props: {
     validating: boolean;
     status: AccountStatusEnum;
+    wrongNetwork: boolean;
   }) => ReactElement;
   // indicator?: ReactElement;
   /**
@@ -34,6 +36,8 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     fallback,
   } = props;
   const { state } = useAccount();
+  const { wrongNetwork } = useAppContext();
+  // const [_,{checkChainSupport}] = useChains();
 
   // console.log("!!!state::", state);
 
@@ -49,6 +53,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
       return fallback({
         validating: state.validating,
         status: state.status,
+        wrongNetwork,
       });
     }
 

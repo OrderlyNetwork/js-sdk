@@ -16,6 +16,9 @@ export const ProductsMenu: FC<ProductsProps> = (props) => {
 
     return items?.[0]?.href;
   }, [current, items]);
+
+  if (!Array.isArray(items) || items.length === 0) return null;
+
   return (
     <Flex gap={0} border r="md" className="oui-p-[1px]" borderColor={12}>
       {items?.map((product, index) => {

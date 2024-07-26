@@ -19,7 +19,17 @@ export const useDataListColumns = (
   const columns = useMemo<Column[]>(() => {
     return [
       {
-        title: <UnFavoritesIcon className="oui-ml-1 oui-cursor-auto" />,
+        title: (
+          <Flex
+            width="100%"
+            height="100%"
+            justify="center"
+            itemAlign="center"
+            mr={3}
+          >
+            <UnFavoritesIcon />
+          </Flex>
+        ),
         dataIndex: "isFavorite",
         width: 30,
         render: (value, record) => {
@@ -33,6 +43,7 @@ export const useDataListColumns = (
               width="100%"
               height="100%"
               className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-auto"
+              mr={3}
               justify="center"
               itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}

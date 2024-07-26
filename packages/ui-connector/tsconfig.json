@@ -1,17 +1,13 @@
 {
   "extends": "./tsconfig.build.json",
-  
+
   "compilerOptions": {
-
     "paths": {
+      "@orderly.network/ui": ["../ui/src"],
 
-      "@orderly.network/ui": [
-        "../ui/src"
-      ],
+      "@orderly.network/hooks": ["../hooks/src"],
 
-      "@orderly.network/hooks": [
-        "../hooks/src"
-      ]
+      "@orderly.network/react-app": ["../app/src"]
     }
   }
 }

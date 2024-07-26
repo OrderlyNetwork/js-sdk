@@ -7,7 +7,7 @@ import {
   useMemo,
 } from "react";
 import { Button } from "@/button/button";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyAppContext } from "@/provider";
 import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
@@ -24,19 +24,21 @@ export const StatusGuardButton: FC<
 > = (props) => {
   const { state } = useAccount();
   const { onWalletConnect } = useContext(OrderlyAppContext);
+  const { connect } = useWalletConnector();
 
   const onClick = useCallback(async () => {
     if (state.status === AccountStatusEnum.NotConnected) {
       try {
-        const result = await onWalletConnect();
+        return await connect();
+        // const result = await onWalletConnect();
 
-        if (result && result.status < AccountStatusEnum.EnableTrading) {
-          return await showAccountConnectorModal({
-            status: result.status,
-          });
-        } else {
-          return result;
-        }
+        // if (result && result.status < AccountStatusEnum.EnableTrading) {
+        //   return await showAccountConnectorModal({
+        //     status: result.status,
+        //   });
+        // } else {
+        //   return result;
+        // }
       } catch (e) {}
     } else if (state.status < AccountStatusEnum.EnableTrading) {
       try {
