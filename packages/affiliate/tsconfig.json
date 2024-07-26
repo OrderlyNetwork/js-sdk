@@ -45,6 +45,9 @@
       "@orderly.network/hooks": [
         "../hooks/src"
       ],
+      "@orderly.network/chart": [
+        "../chart/src"
+      ],
       "@orderly.network/utils": [
         "../utils/src"
       ],

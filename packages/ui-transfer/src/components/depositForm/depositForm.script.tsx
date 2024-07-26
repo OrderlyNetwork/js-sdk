@@ -1,11 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useChains,
   useConfig,
   useDeposit,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { API, Chain, NetworkId } from "@orderly.network/types";
+import { API, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { toast } from "@orderly.network/ui";
 
@@ -17,17 +17,17 @@ export type UseDepositFormScriptReturn = ReturnType<
 
 export type UseDepositFormScriptOptions = {
   onCancel?: () => void;
-  onOk?: () => void;
-};
-
-export type CurrentChain = {
-  id: number;
-  info: Chain;
+  onOk?: (data: any) => void;
 };
 
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
-  const config = useConfig();
+  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
+  const [hintMessage, setHintMessage] = useState<string>();
+  const [submitting, setSubmitting] = useState(false);
+  const [token, setToken] = useState<API.TokenInfo>();
+  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
+  const config = useConfig();
   const networkId = config.get("networkId") as NetworkId;
 
   const [chains, { findByChainId }] = useChains(networkId, {
@@ -42,8 +42,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     setChain: switchChain,
     settingChain,
   } = useWalletConnector();
-
-  const [token, setToken] = useState<API.TokenInfo>();
 
   const currentChain = useMemo(() => {
     if (!connectedChain) return null;
@@ -86,14 +84,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     srcToken: token?.symbol,
   });
 
-  // const { errors, brokerName, customChains } = useContext(OrderlyAppContext);
-
-  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
-  const [hintMessage, setHintMessage] = useState<string>();
-  const [submitting, setSubmitting] = useState(false);
-
-  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
-
   const cleanData = () => {
     setQuantity("");
   };
@@ -103,7 +93,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       .then((res: any) => {
         setQuantity("");
         toast.success("Deposit requested");
-        // @ts-ignore
         options?.onOk?.(res);
       })
       .catch((error) => {
@@ -141,90 +130,39 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     return approve(quantity);
   }, [quantity, approve]);
 
-  const onValueChange = useCallback(
-    (value: string) => {
-      if (value === ".") {
-        setQuantity("0.");
-        return;
-      }
-
-      const NumberReg = /^([0-9]{1,}[.]?[0-9]*)/;
-      const result = value.match(NumberReg);
-
-      if (Array.isArray(result)) {
-        value = result[0];
-        if (isNaN(parseFloat(value))) {
-          setQuantity("");
-        } else {
-          let d = new Decimal(value);
-          if (d.dp() > dst.decimals!) {
-            setQuantity(d.todp(Math.min(dst.decimals!, 8)).toString());
-          } else {
-            setQuantity(value);
-          }
-
-          if (d.gt(maxAmount)) {
-            setInputStatus("error");
-            setHintMessage("Insufficient balance");
-          } else {
-            // reset input status
-            setInputStatus("default");
-            setHintMessage("");
-          }
-        }
-      } else {
-        setQuantity("");
-        // reset input status when value is empty
-        setInputStatus("default");
-        setHintMessage("");
-      }
-    },
-    [dst.decimals, maxAmount]
-  );
-
   const onTokenChange = (token: API.TokenInfo) => {
     cleanData();
     setToken(token);
-    // props.switchToken?.(token);
   };
 
   const onChainChange = useCallback(
-    (value: API.Chain) => {
-      if (!value) return;
-      if (value.network_infos?.chain_id === currentChain?.id)
+    async (chain: API.NetworkInfos) => {
+      const chainInfo = findByChainId(chain.chain_id);
+
+      if (
+        !chainInfo ||
+        chainInfo.network_infos?.chain_id === currentChain?.id
+      ) {
         return Promise.resolve();
+      }
 
       return switchChain?.({
-        chainId: int2hex(Number(value.network_infos?.chain_id)),
-        // switch chain not need other params
-        // rpcUrl: value.network_infos?.public_rpc_url,
-        // token: value.network_infos?.currency_symbol,
-        // name: chain.network_infos?.name,
-        // label: value.network_infos?.name,
+        chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
       })
         .then((switched) => {
-          if (!switched) {
+          if (switched) {
+            toast.success("Network switched");
+            // clean input value
+            cleanData();
+          } else {
             toast.error("Switch chain failed");
-            return;
           }
-          // switch success，set tokens list
-          setTokens(value?.token_infos ?? []);
-
-          // switch chain need to update chain token
-          const token = getTokenByTokenList(value?.token_infos);
-          if (token) {
-            setToken(token);
-            // props.switchToken?.(token);
-          }
-
-          toast.success("Network switched");
-          cleanData();
         })
         .catch((error) => {
           toast.error(`Switch chain failed: ${error.message}`);
         });
     },
-    [switchChain, currentChain, token?.symbol]
+    [currentChain, switchChain, findByChainId]
   );
 
   const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
@@ -238,35 +176,32 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
-    (chain: API.Chain) => {
-      if (chain && chain.token_infos?.length > 0) {
-        const tokens = chain.token_infos;
-        const _token = getTokenByTokenList(tokens);
-
-        if (!_token || _token.symbol === token?.symbol) return;
-
+    (chainInfo?: API.Chain) => {
+      if (chainInfo && chainInfo?.token_infos?.length > 0) {
+        const tokens = chainInfo.token_infos;
         setTokens(tokens);
 
-        if (!_token) return;
+        const newToken = getTokenByTokenList(tokens);
 
-        setToken(_token);
-        // props.switchToken?.(token);
+        if (!newToken || newToken.symbol === token?.symbol) return;
+
+        setToken(newToken);
       }
     },
     [token?.symbol]
   );
 
   useEffect(() => {
-    if (!currentChain) {
-      return;
-    }
-    const chainInfo = findByChainId(currentChain.id);
-    onChainInited(chainInfo!);
-  }, [currentChain, findByChainId]);
+    onChainInited(currentChain?.info);
+  }, [currentChain, token?.symbol]);
 
   useEffect(() => {
-    // check quantity
-    if (isNaN(Number(quantity)) || !quantity) return;
+    if (!quantity) {
+      // reset input status when value is empty
+      setInputStatus("default");
+      setHintMessage("");
+      return;
+    }
 
     const d = new Decimal(quantity);
 
@@ -274,10 +209,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       setInputStatus("error");
       setHintMessage("Insufficient balance");
     } else {
+      // reset input status
       setInputStatus("default");
       setHintMessage("");
     }
-  }, [maxAmount]);
+  }, [quantity, maxAmount]);
 
   const disabled =
     !quantity || inputStatus === "error" || depositFeeRevalidating!;
@@ -294,11 +230,13 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     maxAmount,
     onChainChange,
     quantity,
-    setQuantity,
-    onValueChange,
+    onQuantityChange: setQuantity,
     hintMessage,
     inputStatus,
     disabled,
     onTokenChange,
+    onDeposit,
+    onApprove,
+    dst,
   };
 };

@@ -49,11 +49,12 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   const { state, account } = useAccount();
   const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
-  const { data } = useQuery<undefined | {
-    user_id: number,
-  }>(
-    `/v1/get_account?address=${account.address}&broker_id=${brokerId}`
-  );
+  const { data } = useQuery<
+    | undefined
+    | {
+        user_id: number;
+      }
+  >(`/v1/get_account?address=${account.address}&broker_id=${brokerId}`);
 
   const [
     keys,
@@ -86,9 +87,14 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     scope?: ScopeType
   ): Promise<number> => {
     try {
-      const createdSuccess = (res: any, ip?: string) => {
-        const key = res.data.orderly_key;
-        const secretKey = account?.keyStore?.getOrderlyKey()?.secretKey || "";
+      const createdSuccess = (
+        res: {
+          key: string;
+          secretKey: string;
+        },
+        ip?: string
+      ) => {
+        const { key, secretKey } = res;
         hideCreateDialog();
         setGenerateKey({
           key: key,
@@ -102,19 +108,11 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
         setShowCreatedDialog(true);
       };
 
-      const generateKeyRes = await generateOrderlyKey(scope).then(
-        (data) => data
-      );
-      if (generateKeyRes.success !== true) {
-        return Promise.resolve(0);
-      }
+      const generateKeyRes = await generateOrderlyKey(scope);
 
       toast.success("API key created");
       if ((ipRestriction?.length || 0) > 0) {
-        const res = await setIPRestriction(
-          generateKeyRes.orderly_key,
-          ipRestriction!
-        );
+        const res = await setIPRestriction(generateKeyRes.key, ipRestriction!);
         if (res.success) {
           createdSuccess(generateKeyRes, ipRestriction);
         }
@@ -193,8 +191,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: (keys || []).filter((e) => e.tag === "manualCreated"),
-    // keys: keys || [],
+    keys: (keys || []).filter((e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"),
     generateKey,
   };
 };

@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
 import {
-  Checkbox,
   Flex,
   SimpleDialog,
   Statistic,
@@ -8,6 +7,7 @@ import {
   TextField,
 } from "@orderly.network/ui";
 import { APIKeyItem } from "@orderly.network/hooks";
+import { Checkbox } from "./createApiKey";
 
 export const EditAPIKeyDialog: FC<{
   item: APIKeyItem;
@@ -89,8 +89,8 @@ export const EditAPIKeyDialog: FC<{
           >
             <Flex direction={"row"} gap={2}>
               <Checkbox
-                className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={14}
+                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
+                size={18}
                 checked={read}
                 onCheckedChange={(e) => setRead(e as boolean)}
                 disabled
@@ -101,8 +101,8 @@ export const EditAPIKeyDialog: FC<{
             </Flex>
             <Flex direction={"row"} gap={2}>
               <Checkbox
-                className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={14}
+                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
+                size={18}
                 checked={trade}
                 onCheckedChange={(e) => setTrade(e as boolean)}
                 disabled

@@ -413,6 +413,28 @@ export class Account {
     );
   }
 
+  async createApiKey(
+    expiration?: number,
+    options?: {
+      tag?: string;
+      scope?: string;
+    }
+  ): Promise<{
+    key: string;
+    secretKey: string;
+  }> {
+    const { res, keyPair } = await this.generateAPiKey(expiration, options);
+    if (res.success) {
+      const key = await keyPair.getPublicKey();
+      return {
+        key,
+        secretKey: keyPair.secretKey?.replace("ed25519:", ""),
+      };
+    }
+
+    throw new Error("create api key failed");
+  }
+
   async createOrderlyKey(
     expiration?: number,
     options?: {
@@ -420,6 +442,34 @@ export class Account {
       scope?: string;
     }
   ): Promise<any> {
+    const { res, address, keyPair } = await this.generateAPiKey(
+      expiration,
+      options
+    );
+    if (res.success) {
+      this.keyStore.setKey(address, keyPair);
+      const nextState = {
+        ...this.stateValue,
+        status: AccountStatusEnum.EnableTrading,
+        // accountId: res.data.account_id,
+        // userId: res.data.user_id,
+      };
+
+      this._ee.emit("change:status", nextState);
+
+      return res;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  private async generateAPiKey(
+    expiration?: number,
+    options?: {
+      tag?: string;
+      scope?: string;
+    }
+  ) {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }
@@ -473,23 +523,7 @@ export class Account {
       },
     });
 
-    //
-
-    if (res.success) {
-      this.keyStore.setKey(address, keyPair);
-      const nextState = {
-        ...this.stateValue,
-        status: AccountStatusEnum.EnableTrading,
-        // accountId: res.data.account_id,
-        // userId: res.data.user_id,
-      };
-
-      this._ee.emit("change:status", nextState);
-
-      return res;
-    } else {
-      throw new Error(res.message);
-    }
+    return { res, address, keyPair };
   }
 
   async settle(): Promise<any> {

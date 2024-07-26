@@ -1,7 +1,15 @@
 import { FC } from "react";
-import { Column, DataTable, DatePicker, Flex, Pagination, Text } from "@orderly.network/ui";
+import {
+  Column,
+  DataTable,
+  DatePicker,
+  Flex,
+  Pagination,
+  Text,
+} from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
+import { subDays } from "date-fns";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -28,6 +36,10 @@ export const Rebates: FC<RebatesReturns> = (props) => {
             value={props.dateRange}
             onChange={(range) => {
               props.setDateRange(range);
+            }}
+            max={90}
+            disabled={{
+              after: new Date(),
             }}
           />
         </div>
