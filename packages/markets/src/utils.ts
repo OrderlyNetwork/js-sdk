@@ -24,9 +24,6 @@ export function sortList(list: any[], sortKey?: string, sortOrder?: SortOrder) {
       const val1 = a[sortKey];
       const val2 = b[sortKey];
 
-      if (val1 === 0) return 1;
-      if (val2 === 0) return -1;
-
       if (sortOrder === "desc") {
         return val2 - val1;
       }
