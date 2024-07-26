@@ -9,6 +9,7 @@ import {
 import { API, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { toast } from "@orderly.network/ui";
+import { ActionType } from "../actionButton";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -25,6 +26,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
+
   const [token, setToken] = useState<API.TokenInfo>();
   const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
@@ -67,7 +69,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     dst,
-    balance: maxAmount,
+    balance: maxQuantity,
     allowance,
     depositFeeRevalidating,
     depositFee,
@@ -128,8 +130,22 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   }, [quantity, submitting, token, onDirectDeposit]);
 
   const onApprove = useCallback(async () => {
-    return approve(quantity);
-  }, [quantity, approve]);
+    if (submitting) return;
+    setSubmitting(true);
+
+    return approve()
+      .then((res: any) => {
+        toast.success("Approve success");
+      })
+      .catch((error) => {
+        console.log("approve error", error);
+        toast.error(error?.errorCode || "Approve failed");
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+    // whether approve is depends on quantity and allowance
+  }, [quantity, submitting, allowance, approve]);
 
   const onTokenChange = (token: API.TokenInfo) => {
     cleanData();
@@ -194,7 +210,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
     const d = new Decimal(quantity);
 
-    if (d.gt(maxAmount)) {
+    if (d.gt(maxQuantity)) {
       setInputStatus("error");
       setHintMessage("Insufficient balance");
     } else {
@@ -202,7 +218,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       setInputStatus("default");
       setHintMessage("");
     }
-  }, [quantity, maxAmount]);
+  }, [quantity, maxQuantity]);
 
   const disabled =
     !quantity || inputStatus === "error" || depositFeeRevalidating!;
@@ -221,8 +237,24 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     );
   }, [quantity, markPrice]);
 
-  const nativeToken = currentChain?.info?.nativeToken;
+  const actionType = useMemo(() => {
+    const allowanceNum = isNativeToken ? Number.MAX_VALUE : Number(allowance);
 
+    if (allowanceNum <= 0) {
+      return ActionType.Approve;
+    }
+
+    const qty = Number(quantity);
+    const maxQty = Number(maxQuantity);
+
+    if (allowanceNum < qty && qty <= maxQty) {
+      return ActionType.Increase;
+    }
+
+    return ActionType.Deposit;
+  }, [isNativeToken, allowance]);
+
+  const nativeToken = currentChain?.info?.nativeToken;
   const fee = useDepositFee({ nativeToken, depositFee });
 
   return {
@@ -235,7 +267,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     chains,
     currentChain,
     amount,
-    maxAmount,
+    maxQuantity,
     onChainChange,
     quantity,
     onQuantityChange: setQuantity,
@@ -251,6 +283,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     fee,
     nativeToken,
     loading,
+    actionType,
   };
 };
 

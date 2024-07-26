@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { UseDepositFormScriptReturn } from "./depositForm.script";
-import { Box, Flex, textVariants, Button } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { QuantityInput } from "../quantityInput";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
@@ -10,6 +9,7 @@ import { BrokerWallet } from "../brokerWallet";
 import { AvailableQuantity } from "../availableQuantity";
 import { CoinExchange } from "../coinExchange";
 import { Fee } from "../fee";
+import { ActionButton } from "../actionButton";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
@@ -20,7 +20,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     brokerName,
     chains,
     currentChain,
-    maxAmount,
+    maxQuantity,
     amount,
     onChainChange,
     quantity,
@@ -36,7 +36,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fee,
     nativeToken,
     loading,
+    actionType,
   } = props;
+
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Web3Wallet name={walletName} address={address} />
@@ -65,9 +67,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <AvailableQuantity
         token={token}
         amount={amount}
-        maxAmount={maxAmount}
+        maxQuantity={maxQuantity}
         onClick={() => {
-          onQuantityChange(maxAmount);
+          onQuantityChange(maxQuantity);
         }}
       />
 
@@ -91,18 +93,14 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       </Flex>
 
       <Flex justify="center" mt={8}>
-        <Box width={184}>
-          <AuthGuard>
-            <Button
-              fullWidth
-              disabled={disabled}
-              onClick={onDeposit}
-              loading={loading}
-            >
-              Deposit
-            </Button>
-          </AuthGuard>
-        </Box>
+        <ActionButton
+          actionType={actionType}
+          symbol={token?.symbol}
+          disabled={disabled}
+          loading={loading}
+          onDeposit={onDeposit}
+          onApprove={onApprove}
+        />
       </Flex>
     </Box>
   );

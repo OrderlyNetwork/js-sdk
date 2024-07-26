@@ -5,12 +5,12 @@ import { API } from "@orderly.network/types";
 export type AvailableQuantityProps = {
   token?: API.TokenInfo;
   amount?: string;
-  maxAmount?: string;
+  maxQuantity?: string;
   onClick?: () => void;
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
-  const { amount, maxAmount, token } = props;
+  const { amount, maxQuantity, token } = props;
 
   const name = token?.display_name || token?.symbol || "";
 
@@ -22,7 +22,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
 
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
-          Available: {maxAmount} {name}
+          Available: {maxQuantity} {name}
         </Text>
 
         <Text
