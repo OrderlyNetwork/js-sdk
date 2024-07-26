@@ -31,10 +31,12 @@ export class DefaultConfigStore implements ConfigStore {
     const env = init.env || "prod";
     const networkId = init.networkId || "mainnet";
     const urls = API_URLS[networkId];
+    const brokerId = init?.brokerId || "orderly";
+    const brokerName = init?.brokerName || "Orderly";
 
     this.map = new Map<ConfigKey, any>([
-      ["brokerId", init.brokerId],
-      ['brokerName', init.brokerName ?? 'Orderly network'],
+      ["brokerId", brokerId],
+      ["brokerName", brokerName],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],

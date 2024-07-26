@@ -138,7 +138,6 @@ export const OrderlyAppProvider: FC<
       keyStore={keyStore}
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
-      // @ts-ignore
       brokerName={brokerName}
       networkId={networkId}
       contracts={contracts}
