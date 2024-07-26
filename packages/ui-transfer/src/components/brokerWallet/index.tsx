@@ -10,15 +10,16 @@ export const BrokerWallet: FC<BrokerWalletProps> = (props) => {
   const { appIcons } = useAppConfig();
 
   const icon = useMemo(() => {
-    if (!appIcons?.secondary?.img && !appIcons?.secondary?.component)
-      return null;
+    const { secondary } = appIcons || {};
 
-    if (appIcons?.secondary?.img) {
-      return <img src={appIcons?.secondary?.img} className="oui-w-5 oui-h-5" />;
+    if (!secondary?.img && secondary?.component) return null;
+
+    if (secondary?.img) {
+      return <img src={secondary?.img} className="oui-w-5 oui-h-5" />;
     }
 
-    if (appIcons?.secondary?.component) {
-      return <>{appIcons.secondary.component}</>;
+    if (secondary?.component) {
+      return <>{secondary.component}</>;
     }
   }, [appIcons]);
 

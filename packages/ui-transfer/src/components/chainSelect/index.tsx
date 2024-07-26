@@ -16,7 +16,7 @@ import { API, CurrentChain } from "@orderly.network/types";
 type ChainSelectProps = {
   chains: API.NetworkInfos[];
   value: CurrentChain;
-  onValueChange: (chain: API.Chain) => void;
+  onValueChange: (chain: API.NetworkInfos) => Promise<void>;
 };
 
 export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
@@ -66,7 +66,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
         justify="between"
         onClick={async () => {
           setOpen(false);
-          await props.onValueChange({ network_infos: chain } as API.Chain);
+          await props.onValueChange(chain);
         }}
       >
         <Flex gapX={1} itemAlign="center">

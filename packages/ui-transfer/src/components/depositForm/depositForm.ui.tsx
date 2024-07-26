@@ -29,12 +29,14 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     maxAmount,
     onChainChange,
     quantity,
-    setQuantity,
-    onValueChange,
+    onQuantityChange,
     inputStatus,
     hintMessage,
     disabled,
     onTokenChange,
+    onDeposit,
+    onApprove,
+    dst,
   } = props;
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
@@ -52,17 +54,18 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           }}
           value={quantity}
           tokens={tokens}
-          onValueChange={onValueChange}
+          onValueChange={onQuantityChange}
           status={inputStatus}
           hintMessage={hintMessage}
           onTokenChange={onTokenChange}
+          precision={dst?.decimals}
         />
       </Box>
 
       <AvailableQuantity
         maxAmount={maxAmount}
         onClick={() => {
-          onValueChange(maxAmount);
+          onQuantityChange(maxAmount);
         }}
       />
 
@@ -70,7 +73,11 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <BrokerWallet name={brokerName} />
 
-      <QuantityInput tokens={tokens} classNames={{ root: "oui-mt-3" }} />
+      <QuantityInput
+        tokens={tokens}
+        classNames={{ root: "oui-mt-3" }}
+        precision={dst?.decimals}
+      />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
         <CoinExchange />
@@ -80,7 +87,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <Flex justify="center" mt={8}>
         <Box width={184}>
           <AuthGuard>
-            <Button fullWidth disabled={disabled}>
+            <Button fullWidth disabled={disabled} onClick={onDeposit}>
               Deposit
             </Button>
           </AuthGuard>
