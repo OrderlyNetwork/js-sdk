@@ -23,7 +23,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     address,
     token,
     tokens,
-    brokerId,
     brokerName,
     chains,
     currentChain,
@@ -69,10 +68,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <ExchangeDivider />
 
-      <BrokerWallet
-        name={brokerName}
-        // icon={<WalletIcon name={walletName} />}
-      />
+      <BrokerWallet name={brokerName} />
 
       <QuantityInput tokens={tokens} classNames={{ root: "oui-mt-3" }} />
 

@@ -6,7 +6,7 @@ import { Box, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "mainnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging" });
+const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: 'Orderly', brokerId: 'orderly' });
 
 
 const meta = {
@@ -18,7 +18,14 @@ const meta = {
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId="mainnet" configStore={configStore} >
+                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId="mainnet" configStore={configStore} appIcons={{
+                    main: {
+                        img: "/orderly-logo.svg",
+                    },
+                    secondary: {
+                        img: "/orderly-logo-secondary.svg",
+                    },
+                }}>
                     <Story />
                 </OrderlyApp>
             </ConnectorProvider>
