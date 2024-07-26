@@ -3,12 +3,12 @@ import { Flex, Text } from "@orderly.network/ui";
 
 export type AvailableQuantityProps = {
   maxAmount?: string;
-  onMax?: () => void;
+  onClick?: () => void;
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   return (
-    <Flex justify="between">
+    <Flex justify="between" px={2}>
       <Text size="2xs" intensity={36}>
         $0
       </Text>
@@ -21,8 +21,8 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
         <Text
           size="2xs"
           color="primaryLight"
-          className="oui-cursor-pointer"
-          onClick={props.onMax}
+          className="oui-cursor-pointer oui-select-none"
+          onClick={props.onClick}
         >
           Max
         </Text>

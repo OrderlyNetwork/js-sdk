@@ -32,12 +32,13 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       justify="between"
       itemAlign="center"
     >
-      <div className="oui-leading-0">
-        <Text size="2xs" intensity={54}>
-          Network
-        </Text>
-
-        <Flex gapX={1} className="oui-mt-[2px]">
+      <div>
+        <Flex>
+          <Text size="2xs" intensity={54}>
+            Network
+          </Text>
+        </Flex>
+        <Flex gapX={1}>
           <ChainIcon
             className="oui-w-[18px] oui-h-[18px]"
             chainId={value?.id}
