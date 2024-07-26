@@ -2,6 +2,7 @@ import { FC, ReactNode, useCallback, useMemo } from "react";
 
 //   import { useModal } from "@/modal";
 import { SimpleDialog } from "./simpleDialog";
+import { DialogAction } from "./simpleDialogFooter";
 
 export interface AlertDialogProps {
   title?: string;
@@ -38,14 +39,16 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["secondary"] = {
         label: cancelLabel,
         onClick: onCancel,
-      };
+      } as DialogAction;
     }
 
     if (typeof onOk === "function") {
       actions["primary"] = {
         label: okLabel,
+        size: "md",
+        className: "oui-w-[154px]",
         onClick: onOk,
-      };
+      } as DialogAction;
     }
 
     return actions;
@@ -58,6 +61,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       size={"sm"}
       actions={actions}
       onOpenChange={onOpenChange}
+      contentClassName="oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6"
+      footerClassName="oui-justify-center"
     >
       {message}
     </SimpleDialog>

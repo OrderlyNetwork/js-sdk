@@ -1,13 +1,11 @@
 import { FC, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
-import { Button } from "../button";
+import { Button, ButtonProps } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
   onClick: () => Promise<T> | T;
-  className?: string;
-  disabled?: boolean;
-};
+} & Pick<ButtonProps, "size" | "disabled" | "className">;
 
 export type SimpleDialogFooterProps = {
   actions?: {
@@ -36,6 +34,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           }}
           className={actions.secondary.className}
           disabled={actions.secondary.disabled}
+          size={actions.secondary.size}
         >
           {actions.secondary.label}
         </Button>
@@ -58,6 +57,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           className={actions.primary.className}
           disabled={actions.primary.disabled || primaryLoading}
           loading={primaryLoading}
+          size={actions.primary.size}
         >
           {actions.primary.label}
         </Button>
