@@ -8,7 +8,7 @@ import {
   Button,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { TokenInput } from "../tokenInput";
+import { QuantityInput } from "../quantityInput";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Web3Wallet } from "../web3Wallet";
@@ -29,35 +29,52 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     currentChain,
     maxAmount,
     onChainChange,
+    quantity,
+    setQuantity,
+    onValueChange,
+    inputStatus,
+    hintMessage,
+    disabled,
+    onTokenChange,
   } = props;
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Web3Wallet name={walletName} address={address} />
 
-      <Box my={3}>
+      <Box mt={3} mb={1}>
         <ChainSelect
           chains={chains}
           value={currentChain!}
           onValueChange={onChainChange}
         />
-        <TokenInput
-          tokens={tokens.map((item) => item.symbol)}
+        <QuantityInput
           classNames={{
             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
           }}
+          value={quantity}
+          tokens={tokens}
+          onValueChange={onValueChange}
+          status={inputStatus}
+          hintMessage={hintMessage}
+          onTokenChange={onTokenChange}
         />
       </Box>
 
-      <AvailableQuantity maxAmount={maxAmount} />
+      <AvailableQuantity
+        maxAmount={maxAmount}
+        onClick={() => {
+          onValueChange(maxAmount);
+        }}
+      />
 
       <ExchangeDivider />
 
-      <BrokerWallet name={brokerName} icon={<WalletIcon name={walletName} />} />
-
-      <TokenInput
-        tokens={tokens.map((item) => item.symbol)}
-        classNames={{ root: "oui-mt-3" }}
+      <BrokerWallet
+        name={brokerName}
+        // icon={<WalletIcon name={walletName} />}
       />
+
+      <QuantityInput tokens={tokens} classNames={{ root: "oui-mt-3" }} />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
         <CoinExchange />
@@ -67,7 +84,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <Flex justify="center" mt={8}>
         <Box width={184}>
           <AuthGuard>
-            <Button fullWidth>Deposit</Button>
+            <Button fullWidth disabled={disabled}>
+              Deposit
+            </Button>
           </AuthGuard>
         </Box>
       </Flex>

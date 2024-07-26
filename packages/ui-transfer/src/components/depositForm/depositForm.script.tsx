@@ -142,14 +142,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   }, [quantity, approve]);
 
   const onValueChange = useCallback(
-    (value: any) => {
-      if (value.value === ".") {
+    (value: string) => {
+      if (value === ".") {
         setQuantity("0.");
         return;
       }
 
       const NumberReg = /^([0-9]{1,}[.]?[0-9]*)/;
-      const result = (value.value as string).match(NumberReg);
+      const result = value.match(NumberReg);
 
       if (Array.isArray(result)) {
         value = result[0];
@@ -196,11 +196,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
       return switchChain?.({
         chainId: int2hex(Number(value.network_infos?.chain_id)),
-        // @ts-ignore
-        rpcUrl: value.network_infos?.public_rpc_url,
-        token: value.network_infos?.currency_symbol,
+        // switch chain not need other params
+        // rpcUrl: value.network_infos?.public_rpc_url,
+        // token: value.network_infos?.currency_symbol,
         // name: chain.network_infos?.name,
-        label: value.network_infos?.name,
+        // label: value.network_infos?.name,
       })
         .then((switched) => {
           if (!switched) {
@@ -279,6 +279,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     }
   }, [maxAmount]);
 
+  const disabled =
+    !quantity || inputStatus === "error" || depositFeeRevalidating!;
+
   return {
     walletName,
     address,
@@ -290,5 +293,12 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     currentChain,
     maxAmount,
     onChainChange,
+    quantity,
+    setQuantity,
+    onValueChange,
+    hintMessage,
+    inputStatus,
+    disabled,
+    onTokenChange,
   };
 };
