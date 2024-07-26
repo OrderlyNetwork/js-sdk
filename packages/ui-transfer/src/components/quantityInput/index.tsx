@@ -73,8 +73,11 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           onValueChange={onTokenChange}
           showIcon
           contentProps={{
-            align: "end",
             onCloseAutoFocus: (event) => {
+              event.preventDefault();
+              inputRef.current?.focus();
+            },
+            onClick: (event) => {
               event.preventDefault();
               inputRef.current?.focus();
             },
@@ -109,17 +112,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <>
         <Input
-          ref={(node) => {
-            // @ts-ignore
-            inputRef.current = node;
-            if (ref) {
-              if (typeof ref === "function") {
-                ref(node);
-              } else {
-                ref.current = node;
-              }
-            }
-          }}
+          ref={inputRef}
           autoComplete="off"
           placeholder="0"
           prefix={prefix}

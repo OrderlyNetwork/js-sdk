@@ -43,7 +43,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
         error={error}
         variant={variant}
         showCaret={showCaret}
-        className="oui-font-semibold"
+        className="oui-font-semibold focus:oui-ring-transparent"
       >
         {typeof valueRenderer === "function" ? (
           valueRenderer((props.value || props.defaultValue) as T, {

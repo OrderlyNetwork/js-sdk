@@ -24,6 +24,7 @@ export type TokenSelect = {
 export const TokenSelect = (props: TokenSelect) => {
   const { tokens, showIcon = true, ...rest } = props;
   const { icon } = selectVariants();
+
   const options = useMemo(() => {
     return tokens.map((token) => {
       return {
@@ -32,16 +33,19 @@ export const TokenSelect = (props: TokenSelect) => {
       };
     });
   }, [tokens]);
+
+  const selectable = options.length > 1;
+
   return (
     <SelectWithOptions
       {...rest}
-      showCaret={options.length > 1}
+      showCaret={selectable}
       options={options}
       optionRenderer={(option) => {
         // @ts-ignore
         return <Option {...option} />;
       }}
-      open={options.length > 1 ? undefined : false}
+      open={selectable ? undefined : false}
       valueRenderer={
         showIcon
           ? (value) => {
