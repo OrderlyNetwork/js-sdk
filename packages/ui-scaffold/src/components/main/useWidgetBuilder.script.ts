@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
-// import { MainNavProps } from "./mainNav.ui";
 
 export type MainNavItem = {
   name: string;
@@ -40,14 +39,14 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
         alt: "woofipro",
       },
       mainMenus: [
-        { name: "Trading", href: "/trading" },
-        { name: "Portfolio", href: "/portfolio" },
-        { name: "Markets", href: "/markets" },
-        { name: "Rewards", href: "/rewards" },
+        // { name: "Trading", href: "/trading" },
+        // { name: "Portfolio", href: "/portfolio" },
+        // { name: "Markets", href: "/markets" },
+        // { name: "Rewards", href: "/rewards" },
       ],
       products: [
-        { name: "Swap", href: "/swap" },
-        { name: "Perps", href: "/perps" },
+        // { name: "Swap", href: "/swap" },
+        // { name: "Perps", href: "/perps" },
       ],
       ...props,
     };

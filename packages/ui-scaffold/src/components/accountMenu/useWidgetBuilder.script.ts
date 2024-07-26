@@ -8,11 +8,13 @@ import { modal } from "@orderly.network/ui";
 import { useCallback, useEffect, useMemo } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const useAccountMenu = (): any => {
-  const { disconnect, connect, connectedChain } = useWalletConnector();
+  const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
   const { unsupported, checkChainSupport } = useScaffoldContext();
+  const { connectWallet } = useAppContext();
 
   const [_, { findByChainId }] = useChains();
 
@@ -30,13 +32,12 @@ export const useAccountMenu = (): any => {
     );
   };
 
-  const onConnectWallet = async () => {
-    return await connect();
+  const connect = async () => {
+    const res = await connectWallet();
 
-    // if (Array.isArray(wallets) && wallets.length > 0) {
-    //   if (!checkChainSupport(wallets[0]!.chains[0]!.id)) return;
-    //   onCrateAccount();
-    // }
+    if (res) {
+      statusChangeHandler(res);
+    }
   };
 
   const statusChangeHandler = (nextState: any) => {
@@ -52,13 +53,13 @@ export const useAccountMenu = (): any => {
     }
   };
 
-  useEffect(() => {
-    account.on("change:status", statusChangeHandler);
+  // useEffect(() => {
+  //   account.on("change:status", statusChangeHandler);
 
-    return () => {
-      account.off("change:status", statusChangeHandler);
-    };
-  }, []);
+  //   return () => {
+  //     account.off("change:status", statusChangeHandler);
+  //   };
+  // }, []);
 
   const onOpenExplorer = useCallback(() => {
     if (!connectedChain) return;
@@ -83,7 +84,7 @@ export const useAccountMenu = (): any => {
   return {
     address: state.address,
     accountState: state,
-    onConnectWallet,
+    connect,
     onCrateAccount,
     onCreateOrderlyKey,
     onOpenExplorer,

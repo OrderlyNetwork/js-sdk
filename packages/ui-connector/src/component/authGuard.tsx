@@ -14,6 +14,7 @@ type AuthGuardProps = {
   fallback?: (props: {
     validating: boolean;
     status: AccountStatusEnum;
+    wrongNetwork: boolean;
   }) => ReactElement;
   // indicator?: ReactElement;
   /**

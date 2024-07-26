@@ -36,9 +36,5 @@
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.2.0",
     "recharts": "^2.12.7"
-  },
-  "resolutions": {
-    "react": "18.3.1",
-    "react-dom": "18.2.0"
   }
 }

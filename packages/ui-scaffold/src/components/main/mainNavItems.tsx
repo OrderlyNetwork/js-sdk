@@ -9,13 +9,17 @@ export type MainNavItemsProps = {
 };
 
 export const MainNavItems: FC<MainNavItemsProps> = (props) => {
+  const { items } = props;
+
+  if (!Array.isArray(items) || items.length === 0) return null;
+
   return (
     <Flex gap={2}>
-      {props.items?.map((item, index) => (
+      {items?.map((item, index) => (
         <NavItem
           key={index}
           item={item}
-          actived={item.href === props.current}
+          active={item.href === props.current}
           onClick={props.onItemClick}
         />
       ))}
