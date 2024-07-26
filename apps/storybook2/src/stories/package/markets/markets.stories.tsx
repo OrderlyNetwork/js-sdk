@@ -6,7 +6,7 @@ import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "qa" });
+const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const meta = {
