@@ -3,6 +3,7 @@ import {
   useChains,
   useConfig,
   useDeposit,
+  useIndexPrice,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { API, NetworkId } from "@orderly.network/types";
@@ -124,7 +125,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
     setSubmitting(true);
     onDirectDeposit();
-  }, [quantity, submitting, onDirectDeposit]);
+  }, [quantity, submitting, token, onDirectDeposit]);
 
   const onApprove = useCallback(async () => {
     return approve(quantity);
@@ -165,35 +166,23 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     [currentChain, switchChain, findByChainId]
   );
 
-  const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
-    const tokenObj = tokens.reduce((acc, item) => {
-      acc[item.symbol] = item;
-      return acc;
-    }, {} as any);
-
-    return tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
-  };
-
   // when chain changed and chain data ready then call this function
-  const onChainInited = useCallback(
-    (chainInfo?: API.Chain) => {
-      if (chainInfo && chainInfo?.token_infos?.length > 0) {
-        const tokens = chainInfo.token_infos;
-        setTokens(tokens);
+  const onChainInited = useCallback((chainInfo?: API.Chain) => {
+    if (chainInfo && chainInfo?.token_infos?.length > 0) {
+      const tokens = chainInfo.token_infos;
+      setTokens(tokens);
 
-        const newToken = getTokenByTokenList(tokens);
+      const newToken = getTokenByTokenList(tokens);
 
-        if (!newToken || newToken.symbol === token?.symbol) return;
+      if (!newToken) return;
 
-        setToken(newToken);
-      }
-    },
-    [token?.symbol]
-  );
+      setToken(newToken);
+    }
+  }, []);
 
   useEffect(() => {
     onChainInited(currentChain?.info);
-  }, [currentChain, token?.symbol]);
+  }, [currentChain]);
 
   useEffect(() => {
     if (!quantity) {
@@ -218,6 +207,24 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const disabled =
     !quantity || inputStatus === "error" || depositFeeRevalidating!;
 
+  const loading = submitting || depositFeeRevalidating!;
+
+  const markPrice = 1;
+
+  const amount = useMemo(() => {
+    return (
+      new Decimal(quantity || 0)
+        .mul(markPrice)
+        // .todp(props.decimals)
+        .todp(Math.abs(2 - 5))
+        .toString()
+    );
+  }, [quantity, markPrice]);
+
+  const nativeToken = currentChain?.info?.nativeToken;
+
+  const fee = useDepositFee({ nativeToken, depositFee });
+
   return {
     walletName,
     address,
@@ -227,6 +234,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     brokerName: config.get("brokerName") || "",
     chains,
     currentChain,
+    amount,
     maxAmount,
     onChainChange,
     quantity,
@@ -238,5 +246,54 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     onDeposit,
     onApprove,
     dst,
+    depositFee,
+    price: 1,
+    fee,
+    nativeToken,
+    loading,
   };
+};
+
+export type UseFeeReturn = ReturnType<typeof useDepositFee>;
+
+export function useDepositFee(options: {
+  nativeToken?: API.TokenInfo;
+  depositFee?: bigint;
+}) {
+  const { nativeToken, depositFee = 0 } = options;
+
+  const { data: symbolPrice } = useIndexPrice(
+    `SPOT_${nativeToken?.symbol}_USDC`
+  );
+
+  const fee = useMemo(() => {
+    const dstGasFee = new Decimal(depositFee.toString()).div(
+      new Decimal(10).pow(18)
+    );
+
+    const quantity = dstGasFee.toFixed(feeDecimalsOffset(4), Decimal.ROUND_UP);
+
+    const total = dstGasFee.mul(symbolPrice || 0).toFixed(3, Decimal.ROUND_UP);
+
+    return {
+      dstGasFee: dstGasFee?.toNumber(),
+      quantity,
+      total,
+    };
+  }, [depositFee, symbolPrice]);
+
+  return fee;
+}
+
+export const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
+  const tokenObj = tokens.reduce((acc, item) => {
+    acc[item.symbol] = item;
+    return acc;
+  }, {} as any);
+
+  return tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
+};
+
+export const feeDecimalsOffset = (origin?: number): number => {
+  return (origin ?? 2) + 3;
 };

@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useMemo, useRef } from "react";
 import {
   Input,
   Select,
@@ -14,6 +14,7 @@ import { API } from "@orderly.network/types";
 export type InputStatus = "error" | "warning" | "success" | "default";
 
 export type QuantityInputProps = {
+  token?: API.TokenInfo;
   tokens: API.TokenInfo[];
   label?: string;
   status?: InputStatus;
@@ -26,6 +27,7 @@ export type QuantityInputProps = {
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
   (props, ref) => {
     const {
+      token,
       tokens,
       classNames,
       label,
@@ -37,24 +39,17 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       ...rest
     } = props;
 
-    const [token, setToken] = useState<API.TokenInfo>();
-
-    useEffect(() => {
-      setToken(tokens[0]);
-    }, [tokens]);
-
     const tokenOptions = useMemo(() => {
       return props.tokens.map((token) => ({
-        name: token.symbol,
+        name: token.display_name || token.symbol,
       }));
     }, [props.tokens]);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
     const onTokenChange = (value: string) => {
-      const find = props.tokens.find((token) => token.symbol === value);
+      const find = props.tokens.find((item) => item.symbol === value);
       if (find) {
-        setToken(find);
         props.onTokenChange?.(find);
       }
     };
@@ -73,7 +68,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           disabled={rest.disabled}
           variant="text"
           tokens={tokenOptions}
-          value={token?.symbol}
+          value={token?.display_name || token?.symbol}
           size={rest.size}
           onValueChange={onTokenChange}
           showIcon
@@ -135,6 +130,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
+            inputFormatter.currencyFormatter,
             // inputFormatter.dpFormatter({ dp: precision ?? 8 }),
           ]}
           {...rest}

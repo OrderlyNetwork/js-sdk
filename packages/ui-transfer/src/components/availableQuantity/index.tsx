@@ -1,21 +1,28 @@
 import { FC } from "react";
 import { Flex, Text } from "@orderly.network/ui";
+import { API } from "@orderly.network/types";
 
 export type AvailableQuantityProps = {
+  token?: API.TokenInfo;
+  amount?: string;
   maxAmount?: string;
   onClick?: () => void;
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
+  const { amount, maxAmount, token } = props;
+
+  const name = token?.display_name || token?.symbol || "";
+
   return (
     <Flex justify="between" px={2}>
       <Text size="2xs" intensity={36}>
-        $0
+        ${amount}
       </Text>
 
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
-          Available: {props.maxAmount} USDC
+          Available: {maxAmount} {name}
         </Text>
 
         <Text

@@ -1,12 +1,6 @@
 import { FC } from "react";
 import { UseDepositFormScriptReturn } from "./depositForm.script";
-import {
-  Box,
-  Flex,
-  textVariants,
-  WalletIcon,
-  Button,
-} from "@orderly.network/ui";
+import { Box, Flex, textVariants, Button } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { QuantityInput } from "../quantityInput";
 import { ChainSelect } from "../chainSelect";
@@ -27,6 +21,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     chains,
     currentChain,
     maxAmount,
+    amount,
     onChainChange,
     quantity,
     onQuantityChange,
@@ -37,6 +32,10 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     onDeposit,
     onApprove,
     dst,
+    price,
+    fee,
+    nativeToken,
+    loading,
   } = props;
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
@@ -53,6 +52,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
           }}
           value={quantity}
+          token={token}
           tokens={tokens}
           onValueChange={onQuantityChange}
           status={inputStatus}
@@ -63,6 +63,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       </Box>
 
       <AvailableQuantity
+        token={token}
+        amount={amount}
         maxAmount={maxAmount}
         onClick={() => {
           onQuantityChange(maxAmount);
@@ -75,19 +77,28 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <QuantityInput
         tokens={tokens}
-        classNames={{ root: "oui-mt-3" }}
+        value={quantity}
+        classNames={{
+          root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
+        }}
         precision={dst?.decimals}
+        readOnly
       />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <CoinExchange />
-        <Fee />
+        <CoinExchange token={token} dstSymbol={dst?.symbol} price={price} />
+        <Fee fee={fee} nativeToken={nativeToken} />
       </Flex>
 
       <Flex justify="center" mt={8}>
         <Box width={184}>
           <AuthGuard>
-            <Button fullWidth disabled={disabled} onClick={onDeposit}>
+            <Button
+              fullWidth
+              disabled={disabled}
+              onClick={onDeposit}
+              loading={loading}
+            >
               Deposit
             </Button>
           </AuthGuard>

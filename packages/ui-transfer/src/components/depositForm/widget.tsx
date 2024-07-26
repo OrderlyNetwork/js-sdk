@@ -8,6 +8,5 @@ export const DepositFormWidget: React.FC<UseDepositFormScriptOptions> = (
   props
 ) => {
   const state = useDepositFormScript(props);
-  console.log("state", state);
   return <DepositForm {...state} />;
 };

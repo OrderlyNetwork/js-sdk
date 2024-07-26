@@ -56,6 +56,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
     const isActive = chain.chain_id === value?.id;
     return (
       <Flex
+        key={chain.chain_id}
         px={2}
         className={cn(
           "oui-deposit-network-select-item",
