@@ -43,7 +43,7 @@ export type UseChainsOptions = {
 
 export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
-  checkSupportedChain: (chainId: number, networkId: NetworkId) => boolean;
+  checkChainSupport: (chainId: number, networkId: NetworkId) => boolean;
   error: any;
 };
 
@@ -72,7 +72,7 @@ export function useChains<
 export function useChains(
   networkId?: NetworkId,
   options: UseChainsOptions = {}
-) {
+): [any, any] {
   const { pick: pickField, ...swrOptions } = options;
   const {
     filteredChains: allowedChains,

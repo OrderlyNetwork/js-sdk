@@ -13,7 +13,7 @@ export const useAppState = (): {
   // const keyStore = useKeyStore();
   const config = useConfig();
   const networkId = config.get("networkId");
-  const [_, { checkSupportedChain }] = useChains();
+  const [_, { checkChainSupport }] = useChains();
   const { account, state } = useAccount();
   // restore account state
   // useEffect(() => {
@@ -27,7 +27,7 @@ export const useAppState = (): {
     )
       return NetworkStatusEnum.unknown;
 
-    return checkSupportedChain(account.chainId, networkId as NetworkId)
+    return checkChainSupport(account.chainId, networkId as NetworkId)
       ? NetworkStatusEnum.supported
       : NetworkStatusEnum.unsupported;
   }, [networkId, state.status]);
