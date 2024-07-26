@@ -7,6 +7,7 @@ import {
   Box,
   Text,
   Flex,
+  inputFormatter,
 } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 
@@ -17,6 +18,7 @@ export type QuantityInputProps = {
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
+  precision?: number;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: API.TokenInfo) => void;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
@@ -31,6 +33,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       hintMessage,
       onValueChange,
       value,
+      precision,
       ...rest
     } = props;
 
@@ -130,6 +133,10 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           onValueChange={(value) => {
             props.onValueChange?.(value);
           }}
+          formatters={[
+            inputFormatter.numberFormatter,
+            // inputFormatter.dpFormatter({ dp: precision ?? 8 }),
+          ]}
           {...rest}
           classNames={{
             ...classNames,
