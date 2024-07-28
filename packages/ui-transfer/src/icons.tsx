@@ -38,3 +38,29 @@ export const SelectArrowDownIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     <path d="M2.503 3.332a.412.412 0 0 0-.326.664l2.5 3.333a.414.414 0 0 0 .664 0l2.5-3.333a.417.417 0 0 0-.338-.664z" />
   </svg>
 );
+
+export const DepositIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M3.496 1.495a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2zm2.5 2a.5.5 0 0 1 .5.5v2.5h1.5l-2 2-2-2h1.5v-2.5a.5.5 0 0 1 .5-.5" />
+  </svg>
+);
+
+export const WithdrawIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M3.495 10.495a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2zm2.5-2a.5.5 0 0 0 .5-.5v-2.5h1.5l-2-2-2 2h1.5v2.5a.5.5 0 0 0 .5.5" />
+  </svg>
+);
