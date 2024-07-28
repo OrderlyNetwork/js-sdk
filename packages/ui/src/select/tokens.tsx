@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { ReactElement, useMemo } from "react";
 import { SelectOption, SelectWithOptions } from "./withOptions";
 import { SelectProps } from "./select";
 import { selectVariants } from "./selectPrimitive";
@@ -14,11 +14,13 @@ import { Flex } from "../flex";
 
 type TokenItem = {
   name: string;
+  [x: string]: any;
 };
 
 export type TokenSelect = {
   tokens: TokenItem[];
   showIcon?: boolean;
+  optionRenderer?: (option: SelectOption) => ReactElement;
 } & SelectProps<string>;
 
 export const TokenSelect = (props: TokenSelect) => {
@@ -28,49 +30,50 @@ export const TokenSelect = (props: TokenSelect) => {
   const options = useMemo(() => {
     return tokens.map((token) => {
       return {
+        ...token,
         label: token.name,
         value: token.name,
       };
     });
   }, [tokens]);
 
-  const selectable = options.length > 1;
+  const valueRenderer = (value: string) => {
+    if (typeof props.valueRenderer === "function") {
+      return props.valueRenderer(value, {});
+    }
+
+    return (
+      <Flex gapX={1}>
+        <TokenIcon name={value} className={icon({ size: props.size })} />
+        <Text weight="semibold" intensity={54}>
+          {value}
+        </Text>
+      </Flex>
+    );
+  };
+
+  const optionRenderer = (option: SelectOption) => {
+    if (typeof props.optionRenderer === "function") {
+      return props.optionRenderer(option);
+    }
+    return <Option {...option} />;
+  };
 
   return (
     <SelectWithOptions
       {...rest}
-      showCaret={selectable}
+      showCaret={options.length > 1}
       options={options}
-      optionRenderer={(option) => {
-        // @ts-ignore
-        return <Option {...option} />;
-      }}
-      open={selectable ? undefined : false}
-      valueRenderer={
-        showIcon
-          ? (value) => {
-              return (
-                <Flex gapX={1}>
-                  <TokenIcon
-                    name={value}
-                    className={icon({ size: props.size })}
-                  />
-                  <Text weight="semibold" intensity={54}>
-                    {value}
-                  </Text>
-                </Flex>
-              );
-            }
-          : undefined
-      }
+      valueRenderer={showIcon ? valueRenderer : undefined}
+      optionRenderer={optionRenderer}
     />
   );
 };
 
 const Option = (
   props: SelectOption & {
-    size: SizeType;
-    index: number;
+    size?: SizeType;
+    index?: number;
   }
 ) => {
   const { size, label, value } = props;

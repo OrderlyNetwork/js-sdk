@@ -37,6 +37,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     nativeToken,
     loading,
     actionType,
+    fetchBalance,
+    balanceRevalidating,
   } = props;
 
   return (
@@ -54,13 +56,14 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
           }}
           value={quantity}
-          token={token}
-          tokens={tokens}
           onValueChange={onQuantityChange}
+          tokens={tokens}
+          token={token}
+          onTokenChange={onTokenChange}
           status={inputStatus}
           hintMessage={hintMessage}
-          onTokenChange={onTokenChange}
           precision={dst?.decimals}
+          fetchBalance={fetchBalance}
         />
       </Box>
 
@@ -68,6 +71,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         token={token}
         amount={amount}
         maxQuantity={maxQuantity}
+        precision={dst.decimals!}
+        loading={balanceRevalidating}
         onClick={() => {
           onQuantityChange(maxQuantity);
         }}
@@ -78,6 +83,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <BrokerWallet name={brokerName} />
 
       <QuantityInput
+        token={token}
         tokens={tokens}
         value={quantity}
         classNames={{

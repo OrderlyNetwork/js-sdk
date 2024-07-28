@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Input,
   Select,
@@ -10,6 +10,7 @@ import {
   inputFormatter,
 } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
+import { TokenOption } from "./tokenOption";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -22,6 +23,7 @@ export type QuantityInputProps = {
   precision?: number;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: API.TokenInfo) => void;
+  fetchBalance?: (token: string, decimals: number) => Promise<any>;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -39,13 +41,21 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       ...rest
     } = props;
 
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [open, setOpen] = useState(false);
+    const [width, setWidth] = useState(0);
+
     const tokenOptions = useMemo(() => {
       return props.tokens.map((token) => ({
+        ...token,
         name: token.display_name || token.symbol,
       }));
     }, [props.tokens]);
 
-    const inputRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+      const rect = inputRef?.current?.getBoundingClientRect();
+      setWidth(rect?.width || 0);
+    }, [inputRef]);
 
     const onTokenChange = (value: string) => {
       const find = props.tokens.find((item) => item.symbol === value);
@@ -54,17 +64,36 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       }
     };
 
+    const optionRenderer = (item: any) => {
+      const isActive = item.symbol === props.token?.symbol;
+      return (
+        <TokenOption
+          token={item}
+          fetchBalance={props.fetchBalance}
+          onTokenChange={(item) => {
+            props.onTokenChange?.(item);
+            setOpen(false);
+          }}
+          isActive={isActive}
+        />
+      );
+    };
+
     const prefix = (
       <Box className=" oui-absolute oui-top-0">
-        <Text size="2xs" intensity={54}>
+        <Text size="2xs" intensity={36}>
           {label || "Quantity"}
         </Text>
       </Box>
     );
 
+    const hideOptions = tokens.length <= 1;
+
     const suffix = (
-      <div className="oui-max-w-fit oui-absolute oui-right-0">
+      <div className="oui-absolute oui-right-0">
         <Select.tokens
+          open={hideOptions ? false : open}
+          onOpenChange={setOpen}
           disabled={rest.disabled}
           variant="text"
           tokens={tokenOptions}
@@ -72,6 +101,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           size={rest.size}
           onValueChange={onTokenChange}
           showIcon
+          optionRenderer={optionRenderer}
           contentProps={{
             onCloseAutoFocus: (event) => {
               event.preventDefault();
@@ -81,6 +111,10 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
               event.preventDefault();
               inputRef.current?.focus();
             },
+            style: { width },
+            align: "end",
+            sideOffset: 5,
+            className: "oui-border oui-border-line-6",
           }}
         />
       </div>
@@ -135,7 +169,6 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
               "oui-border oui-border-line",
               status === "error" && "focus-within:oui-outline-danger-light",
               status === "warning" && "focus-within:oui-outline-warning-light",
-
               classNames?.root
             ),
             input: cn("oui-absolute oui-bottom-0", classNames?.input),

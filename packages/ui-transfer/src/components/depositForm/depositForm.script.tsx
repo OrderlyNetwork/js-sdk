@@ -284,6 +284,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     nativeToken,
     loading,
     actionType,
+    fetchBalance,
+    balanceRevalidating
   };
 };
 
