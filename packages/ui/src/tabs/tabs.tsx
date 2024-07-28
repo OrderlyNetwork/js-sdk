@@ -11,6 +11,7 @@ import React, {
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { TabsBase, TabsList, TabsContent, TabsTrigger } from "./tabsBase";
 import { Flex } from "../flex";
+import { cnBase } from "tailwind-variants";
 
 type tabConfig = {
   title: ReactNode;
@@ -33,6 +34,10 @@ type TabsProps<T = string> = {
   // onChange?: (value: T) => void;
   leading?: ReactNode;
   trailing?: ReactNode;
+  classNames?: {
+    tabsList?: string;
+    tabsContent?: string;
+  };
 } & TabsPrimitive.TabsProps;
 
 const Tabs: FC<TabsProps> = (props) => {
@@ -69,7 +74,9 @@ const Tabs: FC<TabsProps> = (props) => {
         >
           <Flex>
             {props.leading}
-            <TabsList className="oui-border-b-0 ">
+            <TabsList
+              className={cnBase("oui-border-b-0", props.classNames?.tabsList)}
+            >
               {Object.keys(tabList).map((key) => {
                 const tab = tabList[key];
                 return (
@@ -86,7 +93,11 @@ const Tabs: FC<TabsProps> = (props) => {
         {Object.keys(tabList).map((key) => {
           const tab = tabList[key];
           return (
-            <TabsContent key={key} value={tab.value}>
+            <TabsContent
+              key={key}
+              value={tab.value}
+              className={props.classNames?.tabsContent}
+            >
               {tab.content}
             </TabsContent>
           );
