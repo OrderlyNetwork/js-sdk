@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { DepositFormWidget } from '@orderly.network/ui-transfer';
+import {DepositFormWidget, WithdrawFormWidget} from '@orderly.network/ui-transfer';
 import { Box, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
@@ -47,3 +47,13 @@ export const DepositForm: Story = {
         ),
     ],
 };
+
+export const WithdrawForm: Story = {
+    render: () => {
+        return <Flex justify='center' mt={10}>
+            <Box width={420} intensity={800} p={5} r="lg">
+                <WithdrawFormWidget/>
+            </Box>
+        </Flex>
+    }
+}
