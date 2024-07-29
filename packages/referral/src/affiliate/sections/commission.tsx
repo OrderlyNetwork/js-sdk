@@ -13,7 +13,7 @@ export const CommissionList: FC<{
 }> = (props) => {
     const { dateText, setDateText } = props;
 
-    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 91), to: subDays(new Date(), 1) });
+    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 90), to: subDays(new Date(), 1) });
     const [data, { refresh, isLoading, loadMore }] = useReferralRebateSummary({
         startDate: pickDate?.from !== undefined ? format(pickDate.from, 'yyyy-MM-dd') : undefined,
         endDate: pickDate?.to !== undefined ? format(pickDate.to, 'yyyy-MM-dd') : undefined,
@@ -77,7 +77,7 @@ export const CommissionList: FC<{
                     after: subDays(new Date(), 1)
                 }}
                 required
-                max={90}
+                max={89}
             />
     {isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :

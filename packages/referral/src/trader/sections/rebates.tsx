@@ -15,7 +15,7 @@ export const Rebates: FC<{
 
     // const [displayDate, setDisplayDate] = useState<string | undefined>(undefined);
     // const [distributionData, { refresh, loadMore, isLoading }] = useDistribution({});
-    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 91), to: subDays(new Date(), 1) });
+    const [pickDate, setPickDate] = useState<DateRange | undefined>({ from: subDays(new Date(), 90), to: subDays(new Date(), 1) });
     const { data: distributionData, mutate, isLoading, } = useRefereeRebateSummary({
         startDate: pickDate?.from,
         endDate: pickDate?.to,
@@ -86,7 +86,7 @@ export const Rebates: FC<{
                 disabled={{
                     after: subDays(new Date(), 1)
                 }}
-                max={90}
+                max={89}
                 required
             />
             <RebateList dataSource={dataSource} loadMore={() => { }} isLoading={isLoading} />
