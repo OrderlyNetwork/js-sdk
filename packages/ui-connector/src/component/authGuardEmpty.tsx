@@ -7,11 +7,11 @@ import {
   Flex,
   Match,
   modal,
+  Text,
   type ButtonProps,
 } from "@orderly.network/ui";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { WalletConnectorModalId } from "./walletConnector";
-import { Text } from "@orderly.network/ui";
 
 type AuthGuardProps = {
   fallback?: (props: {

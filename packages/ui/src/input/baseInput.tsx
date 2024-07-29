@@ -74,7 +74,7 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
         if (value === null || value === undefined) return "";
         let index = 0;
         while (index < innerFormatters.length) {
-          value = innerFormatters[index].onRenderBefore(value, { dp: 2 });
+          value = innerFormatters[index].onRenderBefore(value, {});
 
           index++;
         }
