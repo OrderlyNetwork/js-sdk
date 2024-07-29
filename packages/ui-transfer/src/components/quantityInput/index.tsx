@@ -174,7 +174,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
             input: cn("oui-absolute oui-bottom-0", classNames?.input),
           }}
         />
-        {message}
+        {hintMessage && message}
       </>
     );
   }
