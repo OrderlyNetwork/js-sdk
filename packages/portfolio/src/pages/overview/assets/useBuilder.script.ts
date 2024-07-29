@@ -10,6 +10,7 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
 
 export const useAssetScript = () => {
   const { connect, chains } = useWalletConnector();
@@ -27,6 +28,14 @@ export const useAssetScript = () => {
     modal.show(LeverageWidgetId);
   };
 
+  const onDeposit = () => {
+    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "deposit" });
+  };
+
+  const onWithdraw = () => {
+    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "withdraw" });
+  };
+
   return {
     connected,
     connect,
@@ -38,6 +47,8 @@ export const useAssetScript = () => {
     onLeverageEdit,
     visible,
     toggleVisible: () => setVisible(!visible),
+    onDeposit,
+    onWithdraw,
   } as const;
 };
 

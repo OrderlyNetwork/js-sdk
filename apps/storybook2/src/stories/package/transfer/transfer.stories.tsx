@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import {DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId} from '@orderly.network/ui-transfer';
-import { Box, Flex,Button,modal } from "@orderly.network/ui";
+import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId } from '@orderly.network/ui-transfer';
+import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
-const networkId = "mainnet";
+// const networkId = "mainnet";
+const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: 'Orderly', brokerId: 'orderly' });
 
 
@@ -18,7 +19,7 @@ const meta = {
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId="mainnet" configStore={configStore} appIcons={{
+                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId={networkId} configStore={configStore} appIcons={{
                     main: {
                         img: "/orderly-logo.svg",
                     },
@@ -64,9 +65,22 @@ export const DepositDialog: Story = {
         (Story) => (
             <Flex justify='center' itemAlign='center' height="100vh">
                 <Button onClick={() => {
-                    modal.show(DepositAndWithdrawWithDialogId)
+                    modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'deposit' })
 
-                    }}>Show Deposit Dialog</Button>
+                }}>Show Deposit Dialog</Button>
+            </Flex>
+        ),
+    ],
+};
+
+export const WithdrawDialog: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'withdraw' })
+
+                }}>Show Withdraw Dialog</Button>
             </Flex>
         ),
     ],

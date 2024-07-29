@@ -1,5 +1,5 @@
 export type InputFormatterOptions = {
-  dp: number;
+  // dp: number;
 };
 
 type InputFormatterFn = () => InputFormatter;

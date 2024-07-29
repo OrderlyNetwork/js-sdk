@@ -1,14 +1,16 @@
 import React from "react";
 import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { NetworkId } from "@orderly.network/types";
 
 export type ActionButtonProps = {
   disabled?: boolean;
   loading?: boolean;
   actionType: ActionType;
   symbol?: string;
-  onDeposit?: () => void;
-  onApprove?: () => void;
+    onDeposit?: () => void;
+    onApprove?: () => void;
+  networkId?: NetworkId;
 };
 
 export enum ActionType {
@@ -25,6 +27,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     symbol = "USDC",
     onDeposit,
     onApprove,
+    networkId,
   } = props;
 
   const renderButton = () => {
@@ -55,7 +58,9 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
 
   return (
     <Box width={184}>
-      <AuthGuard>{renderButton()}</AuthGuard>
+      <AuthGuard networkId={networkId} buttonProps={{ fullWidth: true }}>
+        {renderButton()}
+      </AuthGuard>
     </Box>
   );
 };

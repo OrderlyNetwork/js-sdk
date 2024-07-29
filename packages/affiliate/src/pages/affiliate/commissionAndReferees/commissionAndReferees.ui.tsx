@@ -339,7 +339,7 @@ const DateFiler: FC<{
           onChange={(range) => {
             props.setValue(range);
           }}
-          max={90}
+          max={89}
           disabled={{
             after: new Date(),
           }}

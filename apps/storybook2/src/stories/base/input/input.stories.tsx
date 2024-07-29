@@ -80,36 +80,6 @@ export const Clearable: Story = {
   },
 };
 
-export const Formatter: Story = {
-  render: (args) => {
-    const [value, setValue] = useState("");
-    return (
-      <Input
-        {...args}
-        className="oui-w-60"
-        data-testid="Only input number"
-        value={value}
-        placeholder="Only input number"
-        onValueChange={(val) => {
-          console.log(val);
-          setValue(val);
-        }}
-      />
-    );
-  },
-  args: {
-    formatters: [
-      inputFormatter.numberFormatter,
-      inputFormatter.currencyFormatter,
-    ],
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    userEvent.type(canvas.getByTestId("Only input number"), "1234567890");
-  },
-};
-
 export const Prefix: Story = {
   render: (args) => {
     return (

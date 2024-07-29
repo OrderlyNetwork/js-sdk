@@ -39,6 +39,9 @@
       "@orderly.network/ui-scaffold": [
         "../ui-scaffold/src"
       ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ],
       "@orderly.network/hooks": [
         "../hooks/src"
       ],

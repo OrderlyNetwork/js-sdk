@@ -1,14 +1,9 @@
 import { FC } from "react";
-import {
-  Button,
-  cn,
-  Flex,
-  Text,
-  Tooltip,
-} from "@orderly.network/ui";
+import { Button, cn, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
   return (
@@ -103,12 +98,12 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
             </Text>
             <Flex direction={"row"} gap={1}>
               <USDCIcon />
-              <Text.numeral
-                rule="human"
-                className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl"
-              >
-                {totalReferrerRebate || "-"}
-              </Text.numeral>
+              <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl">
+                {commifyOptional(totalReferrerRebate, {
+                  fix: 2,
+                  fallback: "0",
+                })}
+              </Text>
             </Flex>
           </Flex>
 

@@ -5,8 +5,8 @@ import type { ChainItem } from "./types";
 //------------------ ChainSelector start ------------------
 export const ChainSelector = (props: {
   chains: {
-    mainnet: ChainItem[];
-    testnet: ChainItem[];
+    mainnet?: ChainItem[];
+    testnet?: ChainItem[];
   };
   onChainChange?: (chain: ChainItem) => Promise<any>;
   currentChainId?: number;
@@ -27,10 +27,18 @@ export const ChainSelector = (props: {
   return (
     <>
       <Box intensity={900} r="2xl" p={1}>
-        <Text as="div" className="oui-px-4 oui-pt-2" intensity={54} size="2xs">
-          mainnet
-        </Text>
-        {props.chains.mainnet.map((item, index) => {
+        {Array.isArray(props.chains.mainnet) && (
+          <Text
+            as="div"
+            className="oui-px-4 oui-pt-2"
+            intensity={54}
+            size="2xs"
+          >
+            mainnet
+          </Text>
+        )}
+
+        {props.chains.mainnet?.map((item, index) => {
           return (
             <ChainTile
               key={index}
@@ -40,10 +48,12 @@ export const ChainSelector = (props: {
             />
           );
         })}
-        <Text as="div" className="oui-px-4" intensity={54} size="2xs">
-          testnet
-        </Text>
-        {props.chains.testnet.map((item, index) => {
+        {Array.isArray(props.chains.testnet) && (
+          <Text as="div" className="oui-px-4" intensity={54} size="2xs">
+            testnet
+          </Text>
+        )}
+        {props.chains.testnet?.map((item, index) => {
           return (
             <ChainTile
               key={item.id}

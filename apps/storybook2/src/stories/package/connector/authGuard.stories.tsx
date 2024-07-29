@@ -34,3 +34,11 @@ export const Default: Story = {
     children: <Text>Enabled trading</Text>,
   },
 };
+
+export const OnlyMainnet: Story = {
+  args: {
+    status: AccountStatusEnum.EnableTrading,
+    children: <Text>Enabled trading</Text>,
+    networkId: "mainnet",
+  },
+};
