@@ -1,7 +1,6 @@
 import {
   Children,
   isValidElement,
-  memo,
   PropsWithChildren,
   ReactElement,
   ReactNode,
@@ -145,10 +144,6 @@ export const DataTable = <RecordType extends unknown>(
 
   const { width, height } = useTableSize({ scroll });
 
-  // console.log("data source", props.dataSource);
-
-  // const body
-
   let childElement = (
     <div
       id={props.id}
@@ -223,5 +218,3 @@ export const DataTable = <RecordType extends unknown>(
     </TableProvider>
   );
 };
-
-// const TableElement = memo(Component)

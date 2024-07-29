@@ -25,6 +25,7 @@ export const useAppState = (): {
   // useEffect(() => {
   //   console.log("current address:", keyStore.getAddress());
   // }, []);
+  //
 
   const networkStatus = useMemo(() => {
     if (!connectedChain) return NetworkStatusEnum.unknown;

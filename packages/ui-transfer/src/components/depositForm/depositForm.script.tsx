@@ -10,6 +10,7 @@ import { API, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { toast } from "@orderly.network/ui";
 import { ActionType } from "../actionButton";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -38,6 +39,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
+
+  const { wrongNetwork } = useAppContext();
 
   const {
     connectedChain,
@@ -264,6 +267,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     tokens,
     brokerId: config.get("brokerId"),
     brokerName: config.get("brokerName") || "",
+    networkId,
     chains,
     currentChain,
     amount,
@@ -285,7 +289,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     loading,
     actionType,
     fetchBalance,
-    balanceRevalidating
+    balanceRevalidating,
+    wrongNetwork,
+    settingChain,
   };
 };
 
