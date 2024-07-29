@@ -5,6 +5,7 @@ import { API, NetworkId } from "@orderly.network/types";
 import {InputStatus} from "../depositForm/depositForm.script";
 import {Decimal, int2hex, praseChainIdToNumber} from "@orderly.network/utils";
 import {toast} from "@orderly.network/ui";
+import {useAppContext} from "@orderly.network/react-app";
 
 export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>
 
@@ -16,6 +17,7 @@ export const useWithdrawForm = () => {
     const [token, setToken] = useState<API.TokenInfo>();
     const [inputStatus, setInputStatus] = useState<InputStatus>("default");
     const [hintMessage, setHintMessage] = useState<string>();
+    const { wrongNetwork } = useAppContext();
 
 
     const {
@@ -134,6 +136,8 @@ export const useWithdrawForm = () => {
         brokerName: config.get("brokerName") || "",
         fee: 0,
 
+        wrongNetwork,
+        settingChain,
         chains,
         currentChain,
         onChainChange,

@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Box, registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
 import { DepositFormWidget } from "../depositForm";
 import { DepositIcon, WithdrawIcon } from "../../icons";
+import {WithdrawFormWidget} from "../withdrawForm";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export type DepositAndWithdrawProps = {
@@ -26,7 +27,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         <DepositFormWidget />
       </TabPanel>
       <TabPanel title="Withdraw" icon={<WithdrawIcon />} value="withdraw">
-        <Box height={300}>Withdraw</Box>
+        <WithdrawFormWidget/>
       </TabPanel>
     </Tabs>
   );

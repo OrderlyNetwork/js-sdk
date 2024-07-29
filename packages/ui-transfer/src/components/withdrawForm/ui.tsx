@@ -30,6 +30,8 @@ export const WithdrawFormUI = (
         currentChain,
         onChainChange,
         fee,
+        settingChain,
+        wrongNetwork,
 
     }: UseWithdrawFormScriptReturn
 ) => {
@@ -70,6 +72,9 @@ export const WithdrawFormUI = (
                         chains={chains}
                         value={currentChain!}
                         onValueChange={onChainChange}
+                        wrongNetwork={wrongNetwork}
+                        loading={settingChain}
+
                     />
                     <QuantityInput
                         classNames={{
