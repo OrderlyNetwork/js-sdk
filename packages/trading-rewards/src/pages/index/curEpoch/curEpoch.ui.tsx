@@ -67,7 +67,10 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           </Button>
         )} */}
 
-        <AuthGuard status={AccountStatusEnum.SignedIn}>
+        <AuthGuard
+          status={AccountStatusEnum.SignedIn}
+          buttonProps={{ fullWidth: true }}
+        >
           <></>
         </AuthGuard>
       </Flex>
