@@ -86,6 +86,7 @@ export const Rebates: FC<{
                 disabled={{
                     after: subDays(new Date(), 1)
                 }}
+                max={90}
                 required
             />
             <RebateList dataSource={dataSource} loadMore={() => { }} isLoading={isLoading} />

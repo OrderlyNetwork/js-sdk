@@ -77,6 +77,7 @@ export const CommissionList: FC<{
                     after: subDays(new Date(), 1)
                 }}
                 required
+                max={90}
             />
     {isMD ?
         <_SmallCommission date={dateText} dataSource={dataSource} loadMore={loadMore} isLoading={isLoading} /> :
