@@ -1405,6 +1405,9 @@ importers:
       '@orderly.network/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
+      '@orderly.network/ui-transfer':
+        specifier: workspace:*
+        version: link:../ui-transfer
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
