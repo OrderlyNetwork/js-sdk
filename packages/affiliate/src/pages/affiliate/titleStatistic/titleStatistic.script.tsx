@@ -1,6 +1,7 @@
 import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
 import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
+import { fillData } from "../../../utils/chartUtils";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -66,14 +67,14 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   });
 
   const dataSource = useMemo(() => {
-    return (rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
+    return ((rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
       (e) => ({
         date: e.date,
         volume: volType === "Commission" ? e.referral_rebate : e.volume,
       })
-    ) || [];
+    ) || []).reverse();
   }, [rebateSummary, volType  ]);
-
+ 
   console.log("dataSource", dateRange, volType, rebateSummary?.[0], dataSource?.[0]);
   
 
@@ -84,6 +85,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     volType,
     volTypes,
     onVolTypeChange,
-    dataSource,
+    dataSource: fillData(Number(period), dataSource),
   };
 };

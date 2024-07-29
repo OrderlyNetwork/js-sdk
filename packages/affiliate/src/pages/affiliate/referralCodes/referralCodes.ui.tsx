@@ -27,7 +27,7 @@ export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-tabular-nums"
     >
       <Title {...props} />
 
@@ -265,13 +265,13 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
         title: "Referees",
         dataIndex: "referee_rebate_rate",
         width: 80,
-        render: (value, data) => getRate(data).split("/")[0],
+        render: (value, data) => getCount(data).split("/")[0],
       });
       cols.push({
         title: "Traders",
         dataIndex: "referrer_rebate_rate",
         width: 80,
-        render: (value, data) => getRate(data).split("/")[1],
+        render: (value, data) => getCount(data).split("/")[1],
       });
     } else {
       cols.push({

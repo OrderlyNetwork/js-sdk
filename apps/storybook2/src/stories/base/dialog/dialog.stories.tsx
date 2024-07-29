@@ -57,7 +57,7 @@ export const Default: Story = {
 export const Size: Story = {
   render: (args) => (
     <Dialog {...args}>
-      <DialogContent size="sm">
+      <DialogContent size={args.size}>
         <DialogHeader>
           <DialogTitle>Share link</DialogTitle>
         </DialogHeader>

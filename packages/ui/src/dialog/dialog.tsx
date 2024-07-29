@@ -53,7 +53,7 @@ const dialogVariants = tv({
       "oui-absolute",
       "oui-right-4",
       "oui-top-4",
-      "oui-opacity-70",
+      // "oui-opacity-70",
       "oui-ring-offset-background",
       "oui-transition-opacity",
       "hover:oui-opacity-100",
@@ -194,7 +194,7 @@ const DialogContent = React.forwardRef<
           {children}
           {closable && (
             <DialogPrimitive.Close className={close()}>
-              <CloseIcon size={16} color="white" />
+              <CloseIcon size={16} color="white" opacity={98} />
               <span className="oui-sr-only">Close</span>
             </DialogPrimitive.Close>
           )}

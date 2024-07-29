@@ -10,13 +10,15 @@ function createDialogComponent<P extends Partial<SimpleDialogProps>>(
   return modal.create((props: P) => {
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
     // @ts-ignore
-    const { title, size, ...rest } = props;
+    const { title, size, contentClassName,bodyClassName, ...rest } = props;
     return (
       <SimpleDialog
         open={visible}
         onOpenChange={onOpenChange}
         size={size}
         title={title}
+        contentClassName={contentClassName}
+        bodyClassName={bodyClassName}
       >
         <Comp {...rest} close={hide}/>
       </SimpleDialog>

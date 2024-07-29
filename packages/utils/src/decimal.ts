@@ -10,11 +10,33 @@ export const cutNumber = (num: number | string, lenght: number) => {};
 
 export const zero = new Decimal(0);
 
-/** if num is undefined, returns '-', otherwise it formats */
-export const commifyOptional = (num?: number | string, fix?: number): string => {
-  if (typeof num === 'undefined') return "-";
-  return commify(num, fix);
-}
+/** if num is undefined, returns options?.fallback || '-', otherwise it formats */
+export const commifyOptional = (
+  num?: number | string,
+  options?: {
+    fix?: number;
+    fallback?: string;
+    padEnd?: boolean;
+    /// default is '0'
+    fillString?: string;
+    prefix?: string;
+  }
+): string => {
+  const prefix = options?.prefix || '';
+  if (typeof num === "undefined") return prefix + options?.fallback || "-";
+  const value = commify(num, options?.fix);
+  
+  if (options && options.padEnd && options.fix) {
+    const fillString = options?.fillString || '0';
+    const hasDecimal = value.includes(".");
+    const list = value.split(".");
+    if (hasDecimal) {
+      return prefix +  list[0] + "." + list[1].padEnd(options.fix, fillString);
+    }
+    return prefix + list[0];
+  }
+  return prefix + value;
+};
 
 export const commify = (num: number | string, fix?: number): string => {
   const str = `${num}`;

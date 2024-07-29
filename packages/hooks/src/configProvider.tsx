@@ -1,5 +1,5 @@
-import type { FC, PropsWithChildren } from "react";
-import React, { useEffect, useLayoutEffect, useMemo } from "react";
+import type { PropsWithChildren } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
@@ -16,12 +16,7 @@ import {
 } from "@orderly.network/core";
 
 import useConstant from "use-constant";
-import {
-  Chain,
-  NetworkId,
-  defaultMainnetChains,
-  defaultTestnetChains,
-} from "@orderly.network/types";
+import { Chain, NetworkId } from "@orderly.network/types";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { StatusProvider } from "./statusProvider";

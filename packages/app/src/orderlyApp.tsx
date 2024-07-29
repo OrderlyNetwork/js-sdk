@@ -9,7 +9,7 @@ import {
 import { useBootstrap } from "./hooks/useBootstrap";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
-import { AppConfigProvider } from "./provider/themeContext";
+import { AppConfigProvider } from "./provider/configContext";
 
 const OrderlyApp = (
   props: PropsWithChildren<OrderlyAppConfig & AppStateProviderProps>

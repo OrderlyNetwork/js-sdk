@@ -95,7 +95,7 @@ const EstRewards: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text children={commifyOptional(props.estRewards, 2)} />
+        <Text children={commifyOptional(props.estRewards, { fix: 2 })} />
       </Flex>
     </Flex>
   );

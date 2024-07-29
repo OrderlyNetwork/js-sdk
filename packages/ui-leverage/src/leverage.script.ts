@@ -4,7 +4,7 @@ import {
   useLeverage,
   useMarginRatio,
 } from "@orderly.network/hooks";
-import { SliderMarks } from "@orderly.network/ui";
+import { SliderMarks, useModal } from "@orderly.network/ui";
 import { log } from "console";
 import { useMemo, useState } from "react";
 
@@ -14,16 +14,21 @@ export type LeverageScriptReturns = {
   marks?: SliderMarks;
   onLeverageChange: (leverage: number) => void;
   step: number;
+  onCancel?: () => void;
+  onSave?: () => void;
 };
 
 export const useLeverageScript = (): LeverageScriptReturns => {
   const { currentLeverage } = useMarginRatio();
 
+  const { hide } = useModal();
+  
+
   const [maxLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
   const onLeverageChange = (leverage: number) => {
     setLeverage(leverage);
-    updateLeverage(leverage);
+    // updateLeverage(leverage);
   };
 
   const updateLeverage = useDebouncedCallback((leverage: number) => {
@@ -47,8 +52,9 @@ export const useLeverageScript = (): LeverageScriptReturns => {
 
     return index * step;
   }, [leverageLevers, leverage, step]);
-  console.log("leverage", leverageValue);
   
+  const onCancel = () => hide();
+  const onSave = () => updateLeverage(leverage);
 
   return {
     currentLeverage,
@@ -56,6 +62,8 @@ export const useLeverageScript = (): LeverageScriptReturns => {
     marks,
     onLeverageChange,
     step,
+    onCancel,
+    onSave,
   };
 };
 

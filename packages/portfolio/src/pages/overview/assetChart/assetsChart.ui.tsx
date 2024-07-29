@@ -24,7 +24,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
         />
       }
       id="portfolio-overview-assets-chart"
-      classes={{
+      classNames={{
         content: "oui-h-[150px] oui-pb-0",
       }}
     >

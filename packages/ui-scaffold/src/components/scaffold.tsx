@@ -36,7 +36,7 @@ export type LayoutProps = {
   bodyPadding?: SizeType;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
-  topbar?: React.ReactNode;
+  topBar?: React.ReactNode;
   // topBarProps?:
   mainNavProps?: MainNavProps;
   footer?: React.ReactNode;
@@ -106,7 +106,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             classNames?.topNavbar
           )}
         >
-          {props.topbar ?? <MainNavWidget {...props.mainNavProps} />}
+          {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
         <MaintenanceTipsWidget />
         {/*--------- body start ------ */}

@@ -14,16 +14,25 @@ export type APIKeyItem = {
 };
 
 export enum ScopeType {
-    trade = 'trade',
-    trading = 'trading',
-    tradeAndTrading = 'trade,trading'
-};
+  trade = "trade",
+  trading = "trading",
+  tradeAndTrading = "trade,trading",
+}
 
-export const useApiKeyManager = () => {
+export const useApiKeyManager = (queryParams?: {
+  keyInfo?: {
+    page?: number;
+    size?: number;
+    keyStatus?: string;
+  };
+}) => {
   const { account } = useAccount();
+  const { keyInfo } = queryParams || {};
+
+  const keyInfoPrams = getQueryParamsFromObject(keyInfo);
 
   const { data, mutate, error, isLoading } = usePrivateQuery<APIKeyItem[]>(
-    "/v1/client/key_info?page=1&size=999&key_status=ACTIVE",
+    `/v1/client/key_info${keyInfoPrams.length > 0 ? `?${keyInfoPrams}` : ''}`,
     {
       formatter: (data) => data?.rows,
     }
@@ -56,22 +65,47 @@ export const useApiKeyManager = () => {
     });
   }, []);
 
-  const generateOrderlyKey = (scope?: ScopeType): Promise<any> => {
-    return account?.createOrderlyKey(365, {
-        tag: "manualCreated",
-        scope
+  const generateOrderlyKey = (
+    scope?: ScopeType
+  ): Promise<{
+    key: string;
+    secretKey: string;
+  }> => {
+    return account?.createApiKey(365, {
+      tag: "manualCreated",
+      scope,
     });
   };
 
   return [
     data,
     {
-        refresh: mutate,
-        error,
-        isLoading, 
+      refresh: mutate,
+      error,
+      isLoading,
       generateOrderlyKey,
       setIPRestriction,
       removeOrderkyKey,
     },
   ] as const;
 };
+
+
+function getQueryParamsFromObject(obj?: Record<string, any>): string {
+  if (typeof obj === 'undefined') return '';
+  const queryParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          queryParams.append(key, item.toString());
+        });
+      } else {
+        queryParams.set(key, value.toString());
+      }
+    }
+  }
+
+  return queryParams.toString();
+}

@@ -1,4 +1,11 @@
-import { FC, PropsWithoutRef, useCallback, useEffect } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  PropsWithoutRef,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import { MainNavItems, MainNavItemsProps } from "./mainNavItems";
 
 import { ProductsMenu, ProductsProps } from "./products";
@@ -19,8 +26,15 @@ export type MainNavProps = {
   // chainsProps: ChainSelectProps;
 };
 
-export const MainNav: FC<MainNavProps> = (props) => {
+export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const { className, logo, products } = props;
+
+  const children = useMemo(() => {
+    if (typeof props.children === "undefined") return null;
+
+    return <Flex grow>{props.children}</Flex>;
+  }, [props.children]);
+
   return (
     <Flex
       as="header"
@@ -35,6 +49,8 @@ export const MainNav: FC<MainNavProps> = (props) => {
         <ProductsMenu {...products} />
         <MainNavItems {...props.mainMenus} />
       </Flex>
+      {children}
+
       <Flex itemAlign={"center"} gap={4}>
         <AccountSummaryWidget />
         <ChainMenuWidget />

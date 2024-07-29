@@ -21,6 +21,7 @@ type SimpleDialogProps = {
   title?: ReactNode;
   description?: ReactNode;
   contentClassName?: string;
+  bodyClassName?: string;
   footerClassName?: string;
   // footer?: ReactNode;
 } & SimpleDialogFooterProps;
@@ -45,11 +46,16 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
             <Divider />
           </>
         )}
-        <DialogBody>{props.children}</DialogBody>
+        <DialogBody className={props.bodyClassName}>
+          {props.children}
+        </DialogBody>
         {typeof props.description !== "undefined" && (
           <DialogDescription>{props.description}</DialogDescription>
         )}
-        <SimpleDialogFooter actions={props.actions} className={props.footerClassName} />
+        <SimpleDialogFooter
+          actions={props.actions}
+          className={props.footerClassName}
+        />
       </DialogContent>
     </Dialog>
   );

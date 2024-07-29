@@ -16,19 +16,12 @@ const API_URLS: { [key: string]: URLS } = {
     privateWsUrl: "wss://ws-private-evm.orderly.org",
     operatorUrl: "https://operator-evm.orderly.org",
   },
-  testnetbak: {
+  testnet: {
     apiBaseUrl: "https://testnet-api-evm.orderly.org",
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: "https://testnet-operator-evm.orderly.org",
   },
-    testnet: {
-    apiBaseUrl: "https://dev-api-v2.orderly.org",
-    publicWsUrl: "wss://dev-ws-v2.orderly.org",
-    privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
-    operatorUrl: "https://dev-operator-v2.orderly.network",
-
-    },
 };
 
 export class DefaultConfigStore implements ConfigStore {
@@ -38,10 +31,12 @@ export class DefaultConfigStore implements ConfigStore {
     const env = init.env || "prod";
     const networkId = init.networkId || "mainnet";
     const urls = API_URLS[networkId];
+    const brokerId = init?.brokerId || "orderly";
+    const brokerName = init?.brokerName || "Orderly";
 
     this.map = new Map<ConfigKey, any>([
-      ["brokerId", init.brokerId],
-      ['brokerName', init.brokerName ?? 'Orderly network'],
+      ["brokerId", brokerId],
+      ["brokerName", brokerName],
       ["env", env],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],

@@ -12,6 +12,7 @@ import {
   EyeIcon,
   gradientTextVariants,
   EditIcon,
+  EyeCloseIcon,
 } from "@orderly.network/ui";
 import { AssetsHeader } from "./assetsHeader";
 import { AuthGuard } from "@orderly.network/ui-connector";
@@ -23,6 +24,8 @@ type Props = {
   onDeposit?: () => void;
   onLeverageEdit?: () => void;
   portfolioValue: number;
+  visible: boolean;
+  toggleVisible: () => void;
 } & StatisticProps;
 
 type StatisticProps = {
@@ -35,6 +38,9 @@ type StatisticProps = {
 export const AssetsUI = (props: Props) => {
   return (
     <Card
+      classNames={{
+        footer: "oui-h-[48px]",
+      }}
       // @ts-ignore
       title={
         <AssetsHeader
@@ -59,14 +65,23 @@ export const AssetsUI = (props: Props) => {
         label={
           <Flex gap={1}>
             <Text intensity={54}>Portfolio value</Text>
-            <button>
-              <EyeIcon size={16} color={"white"} />
+            <button
+              onClick={() => {
+                props.toggleVisible();
+              }}
+            >
+              {props.visible ? (
+                <EyeIcon size={16} color={"white"} />
+              ) : (
+                <EyeCloseIcon size={16} color={"white"} />
+              )}
             </button>
           </Flex>
         }
       >
         <Either value={props.connected ?? false} left={<NoValue />}>
           <Text.numeral
+            visible={props.visible}
             unit="USDC"
             // @ts-ignore
             style={{ "--oui-gradient-angle": "45deg" }}
@@ -96,24 +111,9 @@ const NoValue: FC = () => {
   );
 };
 
-const NotConnected: FC<{
-  onConnectWallet?: () => void;
-}> = (props) => {
-  return (
-    <Box>
-      <Button
-        onClick={() => props.onConnectWallet?.()}
-        variant={"gradient"}
-        fullWidth
-        angle={45}
-      >
-        Connect wallet
-      </Button>
-    </Box>
-  );
-};
-
-export const AssetStatistic = (props: StatisticProps & {onLeverageEdit?: () => void;}) => {
+export const AssetStatistic = (
+  props: StatisticProps & { onLeverageEdit?: () => void }
+) => {
   return (
     <Grid cols={3}>
       <Statistic label="Unreal. PnL">

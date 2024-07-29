@@ -1,6 +1,15 @@
 import { FC } from "react";
-import { Column, DataTable, DatePicker, Flex, Text } from "@orderly.network/ui";
+import {
+  Column,
+  DataTable,
+  DatePicker,
+  Flex,
+  Pagination,
+  Text,
+} from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
+import { commifyOptional } from "@orderly.network/utils";
+import { subDays } from "date-fns";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -11,7 +20,7 @@ export const Rebates: FC<RebatesReturns> = (props) => {
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-tabular-nums"
     >
       <Title {...props} />
       <Flex
@@ -27,6 +36,10 @@ export const Rebates: FC<RebatesReturns> = (props) => {
             value={props.dateRange}
             onChange={(range) => {
               props.setDateRange(range);
+            }}
+            max={90}
+            disabled={{
+              after: new Date(),
             }}
           />
         </div>
@@ -53,16 +66,27 @@ const List: FC<RebatesReturns> = (props) => {
       title: "Rebates (USDC)",
       dataIndex: "referee_rebate",
       render: (value) => (
-        <Text.numeral dp={6} prefix={"$"}>
-          {value || "-"}
-        </Text.numeral>
+        <Text>
+          {commifyOptional(value, {
+            fix: 6,
+            fallback: "0",
+            padEnd: true,
+            prefix: "$",
+          })}
+        </Text>
       ),
       width: 127,
     },
     {
       title: "Trading vol. (USDC)",
       dataIndex: "vol",
-      render: (value) => "232.22",
+      render: (value) =>
+        commifyOptional(value, {
+          fix: 6,
+          fallback: "0",
+          padEnd: true,
+          prefix: "$",
+        }),
       width: 127,
     },
     {
@@ -84,6 +108,12 @@ const List: FC<RebatesReturns> = (props) => {
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-xs oui-text-base-contrast-80",
       }}
-    ></DataTable>
+    >
+      <Pagination
+        {...props.meta}
+        onPageChange={props.onPageChange}
+        onPageSizeChange={props.onPageSizeChange}
+      />
+    </DataTable>
   );
 };

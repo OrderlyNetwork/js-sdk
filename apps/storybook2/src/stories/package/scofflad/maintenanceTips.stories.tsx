@@ -6,14 +6,11 @@ import {
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
+  Scaffold,
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
 import { useState } from "react";
-import {
-  TradingRewards,
-  TradingRewardsLayoutWidget,
-} from "@orderly.network/trading-rewards";
 
 const configStore = new CustomConfigStore({ brokerId: "testnet", env: "dev" });
 
@@ -56,24 +53,21 @@ export const Default: Story = {
       "Orderly will be temporarily unavailable for a scheduled upgrade from 11:30 PM (UTC) on June 28 to 12:30 AM (UTC) on June 29.",
     closeTips: () => {},
     showTips: true,
+    showDialog: false,
+    dialogContent: "test",
   },
 };
 
 export const SystemMaintenanceStatus: Story = {
   render: () => {
-    const [currentPath, setCurrentPath] = useState("trading");
-
-    return (
-      <TradingRewardsLayoutWidget
-        routerAdapter={{
-          onRouteChange: (options) => {
-            console.log("options", options);
-          },
-          currentPath: currentPath,
-        }}
-      >
-        <TradingRewards.HomePage />
-      </TradingRewardsLayoutWidget>
-    );
+    return <Scaffold></Scaffold>;
+  },
+  args: {
+    tipsContent:
+      "Orderly will be temporarily unavailable for a scheduled upgrade from 11:30 PM (UTC) on June 28 to 12:30 AM (UTC) on June 29.",
+    closeTips: () => {},
+    showTips: true,
+    showDialog: false,
+    dialogContent: "test",
   },
 };

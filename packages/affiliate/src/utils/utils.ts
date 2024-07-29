@@ -22,7 +22,7 @@ export function addQueryParam(
 export async function copyText(content: string) {
   try {
     await navigator.clipboard.writeText(content);
-    toast.success("Copy success");
+    toast.success("Copied");
   } catch (error) {
     toast.success("Copy failed");
   }
@@ -41,7 +41,7 @@ export function parseTime(time?: number | string): Date | null {
 
 //** will be return YYYY-MM-ddThh:mm:ssZ */
 export function formatDateTimeToUTC(input?: number | string): string {
-  if (input === undefined) return '';
+  if (input === undefined) return "";
   const date = toDate(input);
   const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd HH:mm:ss 'UTC'");

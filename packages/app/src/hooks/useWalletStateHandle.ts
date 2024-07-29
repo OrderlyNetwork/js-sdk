@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   OrderlyContext,
   useAccount,
@@ -6,8 +6,13 @@ import {
   useKeyStore,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { isTestnet, parseChainIdToNumber } from "@orderly.network/utils";
-import { API } from "@orderly.network/types";
+import {
+  isTestnet,
+  parseChainIdToNumber,
+  praseChainIdToNumber,
+} from "@orderly.network/utils";
+import { AccountStatusEnum, API } from "@orderly.network/types";
+import type { WalletState } from "@orderly.network/hooks";
 
 function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
   if (typeof chainId === "string") {
@@ -26,6 +31,10 @@ export const useWalletStateHandle = (options: {
     connect,
     connectedChain,
   } = useWalletConnector();
+
+  // console.log("🔗 wallet state handle", connectedWallet);
+
+  const isManualConnect = useRef<boolean>(false);
 
   const { account, state } = useAccount();
   const keyStore = useKeyStore();
@@ -49,13 +58,6 @@ export const useWalletStateHandle = (options: {
     if (typeof id === "undefined") return id;
     return parseChainIdToNumber(id);
   }, [connectedWallet]);
-
-  console.log(
-    "[useWalletStateHandle]:connectedChain",
-    connectedChain,
-    currentChainId,
-    unsupported
-  );
 
   useEffect(() => {
     if (!connectedChain) return;
@@ -93,8 +95,12 @@ export const useWalletStateHandle = (options: {
    * handle wallet connection
    */
   useEffect(() => {
+    // console.log("🔗 wallet state changed", connectedWallet);
     //
     if (unsupported) return;
+    if (isManualConnect.current) return;
+
+    // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
     /**
      * switch account
      */
@@ -128,4 +134,62 @@ export const useWalletStateHandle = (options: {
     account.chainId,
     unsupported,
   ]);
+
+  const connectWallet = async (): Promise<{
+    wallet: WalletState;
+    status: AccountStatusEnum;
+  } | null> => {
+    isManualConnect.current = true;
+    // const walletState = await connect();
+
+    return connect()
+      .then(async (walletState) => {
+        if (
+          Array.isArray(walletState) &&
+          walletState.length > 0 &&
+          walletState[0] &&
+          walletState[0].accounts.length > 0
+        ) {
+          const wallet = walletState[0];
+          const chainId = praseChainIdToNumber(wallet.chains[0].id);
+
+          if (
+            !checkChainSupport(
+              chainId,
+              networkId === "testnet" ? chains.testnet : chains.mainnet
+            )
+          ) {
+            return null;
+          }
+
+          //
+          if (!account) {
+            throw new Error("account is not initialized");
+          }
+          console.info("🤝 connect wallet", wallet);
+          // account.address = wallet.accounts[0].address;
+          const status = await account.setAddress(wallet.accounts[0].address, {
+            provider: wallet.provider,
+            chain: {
+              id: praseChainIdToNumber(wallet.chains[0].id),
+            },
+            wallet: {
+              name: wallet.label,
+            },
+            // label: ,
+          });
+
+          return { wallet, status };
+        }
+
+        return null;
+      })
+      .finally(() => {
+        isManualConnect.current = false;
+      });
+  };
+
+  return {
+    connectWallet,
+  };
 };

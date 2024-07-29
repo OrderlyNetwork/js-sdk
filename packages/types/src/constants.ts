@@ -20,6 +20,12 @@ export enum ExchangeStatusEnum {
 
 export type NetworkId = "testnet" | "mainnet";
 
+export enum NetworkStatusEnum {
+  unknown = 0,
+  unsupported = 1,
+  supported = 2,
+}
+
 // Testnet
 // Arbitrum Goerli
 // export const ARBITRUM_TESTNET_CHAINID = 421613;

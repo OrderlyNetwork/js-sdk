@@ -1,63 +1,111 @@
 import { useMemo, useState } from "react";
 import { DateRange } from "../../../utils/types";
-import { useRefereeRebateSummary, RefferalAPI } from "@orderly.network/hooks";
+import {
+  useRefereeRebateSummary,
+  RefferalAPI,
+  useDaily,
+} from "@orderly.network/hooks";
 import { useReferralContext } from "../../../hooks";
 import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
 import { subDays } from "date-fns";
+import { usePagination } from "@orderly.network/ui";
 
 export type RebatesReturns = {
   dateRange?: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   displayDate?: string;
-  dataSource: RebatesItem[] | undefined;
+  dataSource: RebatesItem[];
+  meta: {
+    count: number;
+    page: number;
+    pageSize: number;
+    pageTotal: number;
+  };
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
 };
 
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
-  vol?: number
+  vol?: number;
 };
 
 export const useRebatesScript = (): RebatesReturns => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(
-    { from: subDays(new Date(), 91), to: subDays(new Date(), 1) }
-  );
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 91),
+    to: subDays(new Date(), 1),
+  });
 
-  const { data: distributionData, mutate, isLoading, } = useRefereeRebateSummary({
+  const {
+    data: distributionData,
+    mutate,
+    isLoading,
+  } = useRefereeRebateSummary({
     startDate: dateRange?.from,
     endDate: dateRange?.to,
-});
-const { dailyVolume } = useReferralContext();
+  });
+  // const { dailyVolume } = useReferralContext();
 
-const dataSource = useMemo((): RebatesItem[] | undefined => {
-    if (typeof distributionData === 'undefined') return [];
+  const { data: dailyVolume, mutate: dailyVolumeMutate } = useDaily({
+    startDate: dateRange?.to,
+    endDate: dateRange?.from,
+  });
 
-    return distributionData
+  const dataSource = useMemo((): RebatesItem[] => {
+    if (typeof distributionData === "undefined") return [];
+
+    return (
+      distributionData
         // .filter((item: any) => item.status === "COMPLETED" && item.type === "REFEREE_REBATE")
         .map((item) => {
+          const createdTime = item.date;
 
-            const createdTime = item.date;
+          const volume = dailyVolume?.filter((item) => {
+            return compareDate(new Date(createdTime), new Date(item.date));
+          })?.[0];
+          if (volume) {
+            return { ...item, vol: volume.perp_volume };
+          }
 
-            const volume = dailyVolume?.filter((item) => {
-                return compareDate(new Date(createdTime), new Date(item.date));
-            })?.[0];
-            if (volume) {
-                return { ...item, vol: volume.perp_volume };
-            }
+          return item;
+        })
+    );
+  }, [distributionData, dailyVolume]);
 
-            return item;
-
-        });
-
-}, [distributionData, dailyVolume]);
-
-let displayDate = undefined;
-if ((dataSource?.length || 0) > 0) {
+  let displayDate = undefined;
+  if ((dataSource?.length || 0) > 0) {
     displayDate = formatDateTimeToUTC(dataSource?.[0].date);
-}
+  }
+
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+
+  const totalCount = useMemo(() => dataSource.length, [dataSource]);
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
+  };
+
+  const newData = useMemo(() => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return dataSource.slice(startIndex, endIndex);
+  }, [dataSource, page, pageSize]);
+
+  const meta = parseMeta({
+    total: totalCount,
+    current_page: page,
+    records_per_page: pageSize,
+  });
 
   return {
     dateRange,
     setDateRange,
     displayDate,
-    dataSource,
+    dataSource: newData,
+    meta,
+    onPageChange,
+    onPageSizeChange,
   };
 };

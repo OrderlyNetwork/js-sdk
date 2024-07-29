@@ -14,6 +14,7 @@ import { OrderlyContext } from "../orderlyContext";
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
+  isTestnet?: boolean;
 };
 
 export type Chains<
@@ -42,6 +43,10 @@ export type UseChainsOptions = {
 
 export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
+  checkChainSupport: (
+    chainId: number | string,
+    networkId: NetworkId
+  ) => boolean;
   error: any;
 };
 
@@ -49,7 +54,6 @@ export function useChains(
   networkId?: undefined,
   options?: undefined
 ): [Chains<undefined, undefined>, UseChainsReturnObject];
-
 export function useChains<
   T extends NetworkId | undefined,
   K extends UseChainsOptions | undefined
@@ -71,7 +75,7 @@ export function useChains<
 export function useChains(
   networkId?: NetworkId,
   options: UseChainsOptions = {}
-) {
+): [any, any] {
   const { pick: pickField, ...swrOptions } = options;
   const {
     filteredChains: allowedChains,
@@ -211,22 +215,25 @@ export function useChains(
     [chains, chainsMap]
   );
 
-  // const checkChainSupport = useCallback((chainId: number | string) => {
-  //   console.log(chainsMap.current);
-  //   return true;
-  // }, []);
+  const checkChainSupport = useCallback(
+    (chainId: number | string, networkId: NetworkId) => {
+      const _chains = Array.isArray(chains) ? chains : chains[networkId];
+      return _checkChainSupport(chainId, _chains);
+    },
+    []
+  );
 
   return [
     chains,
     {
       findByChainId,
-      // checkChainSupport,
+      checkChainSupport,
       error: tokenError,
     },
   ];
 }
 
-function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
+function _checkChainSupport(chainId: number | string, chains: API.Chain[]) {
   if (typeof chainId === "string") {
     chainId = parseInt(chainId);
   }

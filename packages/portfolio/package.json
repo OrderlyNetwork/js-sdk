@@ -21,6 +21,7 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-transfer": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

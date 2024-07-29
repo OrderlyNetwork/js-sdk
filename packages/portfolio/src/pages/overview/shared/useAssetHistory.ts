@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { useLocalStorage, useStatisticsDaily } from "@orderly.network/hooks";
-import { subDays } from "date-fns";
+import {
+  useCollateral,
+  useLocalStorage,
+  useStatisticsDaily,
+} from "@orderly.network/hooks";
+import { subDays, format } from "date-fns";
 
 export enum PeriodType {
   WEEK = "7D",
@@ -8,22 +12,31 @@ export enum PeriodType {
   QUARTER = "90D",
 }
 
-export const useAssetsHistoryData = (localKey: string) => {
+export const useAssetsHistoryData = (
+  localKey: string,
+  options?: {
+    isRealtime?: boolean;
+  }
+) => {
+  const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
   const [period, setPeriod] = useLocalStorage<PeriodType>(
     // "portfolio_performance_period",
     localKey,
     PeriodType.WEEK
   );
+
+  const { totalValue } = useCollateral();
+
   const getStartDate = (value: PeriodType) => {
     switch (value) {
       case PeriodType.MONTH:
-        return subDays(new Date(), 30);
+        return subDays(new Date(), isRealtime ? 29 : 30);
 
       case PeriodType.QUARTER:
-        return subDays(new Date(), 90);
+        return subDays(new Date(), isRealtime ? 89 : 90);
       default:
-        return subDays(new Date(), 7);
+        return subDays(new Date(), isRealtime ? 6 : 7);
     }
   };
 
@@ -39,11 +52,25 @@ export const useAssetsHistoryData = (localKey: string) => {
     setPeriod(value);
   };
 
+  // console.log("-------", totalValue, data);
+
   return {
     periodTypes,
     period,
     onPeriodChange,
-    data,
+    data: !isRealtime
+      ? data
+      : Array.isArray(data) && data.length > 0
+      ? data.concat([
+          //@ts-ignore
+          {
+            date: format(new Date(), "yyyy-MM-dd"),
+            account_value: !!totalValue
+              ? totalValue
+              : data[data.length - 1]?.account_value ?? 0,
+          },
+        ])
+      : data,
     aggregateValue,
   } as const;
 };

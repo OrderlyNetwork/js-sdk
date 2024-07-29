@@ -1,7 +1,7 @@
 import "./install";
 
 export { Button } from "./button";
-export { Box } from "./box";
+export { Box, boxVariants } from "./box";
 export { Grid } from "./grid";
 export { Flex } from "./flex";
 export * from "./typography";

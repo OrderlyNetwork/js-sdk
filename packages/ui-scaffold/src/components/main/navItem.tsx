@@ -1,37 +1,46 @@
-import { FC, useCallback } from "react";
-import { cn, Text, Box } from "@orderly.network/ui";
+import React, { FC, useCallback, useMemo } from "react";
+import { cn, Text, Box, DropdownMenuItem } from "@orderly.network/ui";
 
 export type MainNavItem = {
   name: string;
   href: string;
   icon?: React.ReactNode;
   disabled?: boolean;
+  children?: MainNavItem[];
 };
 
 export const NavItem: FC<{
   item: MainNavItem;
   onClick?: (item: MainNavItem) => void;
-  actived?: boolean;
+  active?: boolean;
 }> = (props) => {
   const onClickHandler = useCallback(() => {
     props.onClick?.(props.item);
   }, [props.item]);
 
-  return (
+  const menus = useMemo(() => {
+    if (!Array.isArray(props.item.children)) return null;
+
+    return props.item.children.map((item, index) => {
+      return <DropdownMenuItem key={index} />;
+    });
+  }, [props.item.children]);
+
+  const button = (
     <button
       disabled={props.item.disabled}
-      data-actived={props.actived}
+      data-actived={props.active}
       className={cn(
         "oui-text-base-contrast-36 oui-text-sm oui-relative oui-group oui-rounded oui-px-3 oui-py-1 oui-h-[32px]",
-        props.actived && "oui-bg-base-10"
+        props.active && "oui-bg-base-10"
       )}
       onClick={onClickHandler}
     >
-      <Text.gradient color={props.actived ? "brand" : "inherit"} angle={45}>
+      <Text.gradient color={props.active ? "brand" : "inherit"} angle={45}>
         {props.item.name}
       </Text.gradient>
       <Box
-        invisible={!props.actived}
+        invisible={!props.active}
         position="absolute"
         bottom={0}
         left={"50%"}
@@ -44,4 +53,6 @@ export const NavItem: FC<{
       />
     </button>
   );
+
+  if (!menus) return button;
 };

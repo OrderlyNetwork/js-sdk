@@ -1,4 +1,4 @@
-# @orderly.network/deposit
+# @orderly.network/ui-transfer
 
 ## 1.0.1-sdk-v2.3
 

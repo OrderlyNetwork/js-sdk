@@ -35,7 +35,19 @@ const meta = {
                         }}
                         // configStore={configStore}
                     >
-                        <Scaffold leftSidebar={null}>
+                        <Scaffold leftSidebar={null} mainNavProps={{
+                            mainMenus: [
+                                {name: "Trading", href: "/"},
+                                {name: "Reward", href: "/rewards"},
+                                {name: "Markets", href: "/markets"},
+                            ],
+                            products: [
+                                {name: "Swap", href: "/swap"},
+                                {name: "Trade", href: "/trade"},
+                            ],
+                            initialMenu: "/markets",
+                            initialProduct: "/trade",
+                        }}>
 
                             <Story/>
                         </Scaffold>

@@ -18,7 +18,9 @@
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*"
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/ui-chain-selector": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

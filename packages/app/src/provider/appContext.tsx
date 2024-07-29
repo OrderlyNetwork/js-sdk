@@ -1,14 +1,15 @@
-import {
-  FC,
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useContext,
-} from "react";
+import { FC, createContext, PropsWithChildren, useContext } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 
-type AppContextState = {};
+type AppContextState = {
+  connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
+  /**
+   * Whether the current network is not supported
+   */
+  wrongNetwork: boolean;
+  networkStatus: ReturnType<typeof useAppState>["networkStatus"];
+};
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
 
@@ -23,10 +24,14 @@ export type AppStateProviderProps = {
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
-  useWalletStateHandle({
+  const { connectWallet } = useWalletStateHandle({
     onChainChanged: props.onChainChanged,
   });
-  useAppState();
+  const { networkStatus, wrongNetwork } = useAppState();
 
-  return <AppContext.Provider value={{}}>{props.children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ connectWallet, wrongNetwork, networkStatus }}>
+      {props.children}
+    </AppContext.Provider>
+  );
 };
