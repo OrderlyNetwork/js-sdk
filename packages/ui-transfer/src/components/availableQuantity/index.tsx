@@ -26,7 +26,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
           Available:{" "}
-          <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
+          <Text.numeral rm={Decimal.ROUND_DOWN} dp={2} padding={false}>
             {maxQuantity!}
           </Text.numeral>{" "}
           {name}
