@@ -1,5 +1,5 @@
 import { useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import {
   Button,
   Either,
@@ -48,6 +48,8 @@ export type AuthGuardProps = {
     description?: string;
     // button?: string;
   };
+
+  networkId?: NetworkId;
 
   // validatingIndicator?: ReactElement;
 };
@@ -99,6 +101,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         status={state.status}
         buttonProps={buttonProps}
         wrongNetwork={wrongNetwork}
+        networkId={props.networkId}
       />
     );
   }, [state.status, state.validating, buttonProps, wrongNetwork]);
@@ -117,6 +120,7 @@ const DefaultFallback = (props: {
   status: AccountStatusEnum;
   wrongNetwork: boolean;
   buttonProps?: ButtonProps;
+  networkId?: NetworkId;
 }) => {
   const { buttonProps } = props;
   const { connectWallet } = useAppContext();
@@ -139,10 +143,14 @@ const DefaultFallback = (props: {
   };
 
   const switchChain = () => {
-    modal.show(ChainSelectorId).then(
-      (r) => console.log(r),
-      (error) => console.log(error)
-    );
+    modal
+      .show(ChainSelectorId, {
+        networkId: props.networkId,
+      })
+      .then(
+        (r) => console.log(r),
+        (error) => console.log(error)
+      );
   };
 
   if (props.wrongNetwork) {
