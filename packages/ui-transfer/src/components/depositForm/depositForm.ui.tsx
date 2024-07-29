@@ -40,6 +40,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fetchBalance,
     balanceRevalidating,
     wrongNetwork,
+    networkId,
     settingChain,
   } = props;
 
@@ -110,6 +111,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           loading={loading}
           onDeposit={onDeposit}
           onApprove={onApprove}
+          networkId={networkId}
         />
       </Flex>
     </Box>

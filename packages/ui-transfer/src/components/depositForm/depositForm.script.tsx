@@ -267,6 +267,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     tokens,
     brokerId: config.get("brokerId"),
     brokerName: config.get("brokerName") || "",
+    networkId,
     chains,
     currentChain,
     amount,
