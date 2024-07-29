@@ -1,13 +1,6 @@
 import { FC } from "react";
 import { UseDepositFormScriptReturn } from "./depositForm.script";
-import {
-  Box,
-  Flex,
-  textVariants,
-  WalletIcon,
-  Button,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { QuantityInput } from "../quantityInput";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
@@ -16,6 +9,7 @@ import { BrokerWallet } from "../brokerWallet";
 import { AvailableQuantity } from "../availableQuantity";
 import { CoinExchange } from "../coinExchange";
 import { Fee } from "../fee";
+import { ActionButton } from "../actionButton";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
@@ -26,16 +20,27 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     brokerName,
     chains,
     currentChain,
-    maxAmount,
+    maxQuantity,
+    amount,
     onChainChange,
     quantity,
-    setQuantity,
-    onValueChange,
+    onQuantityChange,
     inputStatus,
     hintMessage,
     disabled,
     onTokenChange,
+    onDeposit,
+    onApprove,
+    dst,
+    price,
+    fee,
+    nativeToken,
+    loading,
+    actionType,
+    fetchBalance,
+    balanceRevalidating,
   } = props;
+
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Web3Wallet name={walletName} address={address} />
@@ -51,18 +56,25 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
           }}
           value={quantity}
+          onValueChange={onQuantityChange}
           tokens={tokens}
-          onValueChange={onValueChange}
+          token={token}
+          onTokenChange={onTokenChange}
           status={inputStatus}
           hintMessage={hintMessage}
-          onTokenChange={onTokenChange}
+          precision={dst?.decimals}
+          fetchBalance={fetchBalance}
         />
       </Box>
 
       <AvailableQuantity
-        maxAmount={maxAmount}
+        token={token}
+        amount={amount}
+        maxQuantity={maxQuantity}
+        precision={dst.decimals!}
+        loading={balanceRevalidating}
         onClick={() => {
-          onValueChange(maxAmount);
+          onQuantityChange(maxQuantity);
         }}
       />
 
@@ -70,21 +82,31 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <BrokerWallet name={brokerName} />
 
-      <QuantityInput tokens={tokens} classNames={{ root: "oui-mt-3" }} />
+      <QuantityInput
+        token={token}
+        tokens={tokens}
+        value={quantity}
+        classNames={{
+          root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
+        }}
+        precision={dst?.decimals}
+        readOnly
+      />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <CoinExchange />
-        <Fee />
+        <CoinExchange token={token} dstSymbol={dst?.symbol} price={price} />
+        <Fee fee={fee} nativeToken={nativeToken} />
       </Flex>
 
       <Flex justify="center" mt={8}>
-        <Box width={184}>
-          <AuthGuard>
-            <Button fullWidth disabled={disabled}>
-              Deposit
-            </Button>
-          </AuthGuard>
-        </Box>
+        <ActionButton
+          actionType={actionType}
+          symbol={token?.symbol}
+          disabled={disabled}
+          loading={loading}
+          onDeposit={onDeposit}
+          onApprove={onApprove}
+        />
       </Flex>
     </Box>
   );

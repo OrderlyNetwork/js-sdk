@@ -77,6 +77,7 @@ const selectVariants = tv({
       "oui-text-sm",
       "oui-outline-none",
       "hover:oui-bg-base-6",
+      "hover:oui-rounded",
       "focus:oui-bg-accent",
       "focus:oui-text-accent-foreground",
       "data-[disabled]:oui-pointer-events-none",
@@ -269,7 +270,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         ref={ref}
-        className={content()}
+        className={content({ className })}
         position={position}
         {...props}
       >

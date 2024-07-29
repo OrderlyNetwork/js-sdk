@@ -1,14 +1,7 @@
-import { registerSimpleDialog } from "@orderly.network/ui";
 import { MainNav } from "./mainNav.ui";
 import { MainNavProps, useMainNavBuilder } from "./useWidgetBuilder.script";
-import { NotSupportedDialog } from "../chainMenu/chainMenu.ui";
-import { PropsWithChildren } from "react";
 
-registerSimpleDialog("SwitchChain", NotSupportedDialog, {
-  title: "Switch Chain",
-  size: "sm",
-  // message: "This feature is not supported on this chain.",
-});
+import { PropsWithChildren } from "react";
 
 export const MainNavWidget = (
   props: PropsWithChildren<Partial<MainNavProps>>

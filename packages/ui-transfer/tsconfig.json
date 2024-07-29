@@ -6,6 +6,7 @@
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/utils": ["../utils/src"],
       "@orderly.network/ui-connector": ["../ui-connector/src"],
+      "@orderly.network/react-app": ["../app/src"],
     }
   }
 }

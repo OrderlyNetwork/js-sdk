@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import {DepositFormWidget, WithdrawFormWidget} from '@orderly.network/ui-transfer';
-import { Box, Flex } from "@orderly.network/ui";
+import {DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId} from '@orderly.network/ui-transfer';
+import { Box, Flex,Button,modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "mainnet";
@@ -57,3 +57,17 @@ export const WithdrawForm: Story = {
         </Flex>
     }
 }
+
+
+export const DepositDialog: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithDialogId)
+
+                    }}>Show Deposit Dialog</Button>
+            </Flex>
+        ),
+    ],
+};

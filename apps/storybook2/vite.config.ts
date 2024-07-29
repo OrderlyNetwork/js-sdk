@@ -63,6 +63,10 @@ export default defineConfig({
         __dirname,
         "../../packages/trading/src"
       ),
+      "@orderly.network/ui-chain-selector": resolve(
+        __dirname,
+        "../../packages/ui-chain-selector/src"
+      ),
     },
   },
 });

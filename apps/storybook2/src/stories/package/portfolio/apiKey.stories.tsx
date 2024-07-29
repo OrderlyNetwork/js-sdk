@@ -24,7 +24,7 @@ const meta = {
             brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
-            configStore={configStore}
+            // configStore={configStore}
           >
             <Story />
           </OrderlyApp>

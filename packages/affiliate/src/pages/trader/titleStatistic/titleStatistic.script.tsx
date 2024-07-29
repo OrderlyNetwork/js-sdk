@@ -3,6 +3,8 @@ import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 import { BarDayFilter } from "../../../utils/types";
+import { VolChartDataItem } from "@orderly.network/chart";
+import { fillData } from "../../../utils/chartUtils";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -11,10 +13,7 @@ export type TitleStatisticReturns = {
   volType: string;
   volTypes: { label: string; value: string }[];
   onVolTypeChange: (item: string) => void;
-  dataSource: {
-    date: string;
-    volume: number;
-  }[];
+  dataSource: VolChartDataItem[];
 };
 
 export const useTitleStatisticScript = (): TitleStatisticReturns => {
@@ -105,6 +104,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     volType,
     volTypes,
     onVolTypeChange,
-    dataSource,
+    dataSource: fillData(Number(period),dataSource),
   };
 };

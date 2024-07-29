@@ -1,12 +1,10 @@
 import {
-  OrderlyContext,
   useAccount,
   useChains,
   useWalletConnector,
 } from "@orderly.network/hooks";
 
-import { useContext, useEffect, useMemo, useState } from "react";
-import { checkChainSupport } from "../../utils/chain";
+import { useMemo } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 
 export const useChainMenuBuilderScript = () => {
