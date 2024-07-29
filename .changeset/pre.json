@@ -35,7 +35,9 @@
     "@orderly.network/utils": "1.5.10-internal.0",
     "@orderly.network/web3-modal": "1.5.10-internal.0",
     "@orderly.network/deposit": "1.0.0",
-    "@orderly.network/withdraw": "1.0.0"
+    "@orderly.network/withdraw": "1.0.0",
+    "@orderly.network/ui-chain-selector": "1.0.0",
+    "@orderly.network/ui-transfer": "1.0.1-sdk-v2.31"
   },
   "changesets": [
     "beige-horses-judge",
@@ -53,6 +55,7 @@
     "lovely-lemons-think",
     "lucky-zoos-tell",
     "mean-dolphins-brake",
+    "neat-camels-rhyme",
     "nervous-cups-serve",
     "red-dryers-jam",
     "sharp-pillows-lie",
