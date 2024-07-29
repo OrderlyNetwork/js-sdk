@@ -7,6 +7,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Flex,
+  Spinner,
   Text,
   cn,
 } from "@orderly.network/ui";
@@ -18,10 +19,11 @@ type ChainSelectProps = {
   value: CurrentChain;
   onValueChange: (chain: API.NetworkInfos) => Promise<void>;
   wrongNetwork: boolean;
+  loading?: boolean;
 };
 
 export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
-  const { chains, value, wrongNetwork } = props;
+  const { chains, value, wrongNetwork, loading } = props;
   const [open, setOpen] = useState(false);
 
   const selectable = chains?.length > 1;
@@ -43,6 +45,15 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
     <ChainIcon className="oui-w-[18px] oui-h-[18px]" chainId={value?.id} />
   );
   const chainName = wrongNetwork ? "Unkonwn" : value?.info?.network_infos?.name;
+
+  const renderRightIcon = () => {
+    if (loading) {
+      return <Spinner size="sm" />;
+    }
+    if (selectable) {
+      return <ExchangeIcon className="oui-text-base-contrast-54" />;
+    }
+  };
 
   const trigger = (
     <Flex
@@ -69,7 +80,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
           </Text>
         </Flex>
       </div>
-      {selectable && <ExchangeIcon className="oui-text-base-contrast-54" />}
+      {renderRightIcon()}
     </Flex>
   );
 

@@ -40,6 +40,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fetchBalance,
     balanceRevalidating,
     wrongNetwork,
+    settingChain,
   } = props;
 
   return (
@@ -52,6 +53,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           value={currentChain!}
           onValueChange={onChainChange}
           wrongNetwork={wrongNetwork}
+          loading={settingChain}
         />
         <QuantityInput
           classNames={{

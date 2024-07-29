@@ -10,7 +10,7 @@ import { API, NetworkId } from "@orderly.network/types";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { toast } from "@orderly.network/ui";
 import { ActionType } from "../actionButton";
-import { useAppConfig, useAppContext } from "@orderly.network/react-app";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -290,6 +290,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     fetchBalance,
     balanceRevalidating,
     wrongNetwork,
+    settingChain,
   };
 };
 
