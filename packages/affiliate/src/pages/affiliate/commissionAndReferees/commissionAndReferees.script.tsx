@@ -102,7 +102,7 @@ const useRefereesDataScript = (): ListReturns<
 > => {
   const [commissionRange, setCommissionRange] = useState<DateRange | undefined>(
     {
-      from: subDays(new Date(), 91),
+      from: subDays(new Date(), 90),
       to: subDays(new Date(), 1),
     }
   );
