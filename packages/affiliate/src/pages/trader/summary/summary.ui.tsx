@@ -95,7 +95,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       gap={3}
     >
       <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
-        Commission (USDC)
+      Rebates (USDC)
       </Text>
       <Flex
         direction={"row"}

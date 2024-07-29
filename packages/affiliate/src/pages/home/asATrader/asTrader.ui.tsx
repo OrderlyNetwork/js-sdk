@@ -22,6 +22,7 @@ import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { useCheckReferralCode, useMutation } from "@orderly.network/hooks";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const AsTrader: FC<AsTraderReturns> = (props) => {
   return (
@@ -117,12 +118,12 @@ const Bottom: FC<AsTraderReturns> = (props) => {
             </Text>
             <Flex direction={"row"} gap={1}>
               <USDCIcon />
-              <Text.numeral
-                rule="human"
-                className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl"
-              >
-                {totalReferrerRebate || "-"}
-              </Text.numeral>
+              <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl xl:oui-text-2xl">
+                {commifyOptional(totalReferrerRebate, {
+                  fix: 2,
+                  fallback: "0",
+                })}
+              </Text>
             </Flex>
           </Flex>
 
@@ -228,11 +229,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Tooltip content={"Please connect your wallet to use this function"}>
-          <Button
-            variant="contained"
-            color="light"
-            disabled={!props.isSignIn}
-          >
+          <Button variant="contained" color="light" disabled={!props.isSignIn}>
             Enter code
           </Button>
         </Tooltip>
@@ -264,7 +261,11 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             classNames={{
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
-            helpText={!isExist && !isLoading ? "This referral code does not exist." : undefined}
+            helpText={
+              !isExist && !isLoading
+                ? "This referral code does not exist."
+                : undefined
+            }
             color={!isExist && !isLoading ? "danger" : undefined}
           />
 
