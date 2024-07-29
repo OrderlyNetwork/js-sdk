@@ -14,7 +14,7 @@ import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 
 const LABELS = {
   connectWallet: "Connect wallet",
-  switchChain: "Switch chain",
+  switchChain: "Wrong network",
   enableTrading: "Enable trading",
   signin: "Sigin",
 };
