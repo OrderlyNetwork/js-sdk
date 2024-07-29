@@ -17,16 +17,40 @@ type ChainSelectProps = {
   chains: API.NetworkInfos[];
   value: CurrentChain;
   onValueChange: (chain: API.NetworkInfos) => Promise<void>;
+  wrongNetwork: boolean;
 };
 
 export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
-  const { chains, value } = props;
+  const { chains, value, wrongNetwork } = props;
   const [open, setOpen] = useState(false);
+
+  const selectable = chains?.length > 1;
+
+  const chainIcon = wrongNetwork ? (
+    <Flex
+      width={18}
+      height={18}
+      intensity={100}
+      r="full"
+      justify="center"
+      itemAlign="center"
+    >
+      <Text size="2xs" intensity={80}>
+        U
+      </Text>
+    </Flex>
+  ) : (
+    <ChainIcon className="oui-w-[18px] oui-h-[18px]" chainId={value?.id} />
+  );
+  const chainName = wrongNetwork ? "Unkonwn" : value?.info?.network_infos?.name;
 
   const trigger = (
     <Flex
       intensity={500}
-      className="oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line oui-cursor-pointer"
+      className={cn(
+        "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
+        selectable ? "oui-cursor-pointer" : "oui-cursor-auto"
+      )}
       height={54}
       px={3}
       justify="between"
@@ -39,16 +63,13 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
           </Text>
         </Flex>
         <Flex gapX={1}>
-          <ChainIcon
-            className="oui-w-[18px] oui-h-[18px]"
-            chainId={value?.id}
-          />
+          {chainIcon}
           <Text size="sm" intensity={80}>
-            {value?.info?.network_infos?.name}
+            {chainName}
           </Text>
         </Flex>
       </div>
-      <ExchangeIcon className="oui-text-base-contrast-54" />
+      {selectable && <ExchangeIcon className="oui-text-base-contrast-54" />}
     </Flex>
   );
 
@@ -58,13 +79,13 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       <Flex
         key={chain.chain_id}
         px={2}
+        r="base"
+        justify="between"
         className={cn(
           "oui-deposit-network-select-item",
-          "hover:oui-bg-base-5 oui-h-[30px]",
+          "hover:oui-bg-base-5 oui-h-[30px] oui-cursor-pointer",
           isActive && "oui-bg-base-5"
         )}
-        r="md"
-        justify="between"
         onClick={async () => {
           setOpen(false);
           await props.onValueChange(chain);
@@ -83,7 +104,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
               className="oui-bg-success-light/15"
               height={18}
               px={2}
-              r="md"
+              r="base"
               justify="center"
               itemAlign="center"
             >
@@ -106,7 +127,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   });
 
   return (
-    <DropdownMenuRoot open={open} onOpenChange={setOpen}>
+    <DropdownMenuRoot open={selectable ? open : false} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
