@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.10-sdk-v2.33
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-sdk-v2.32
 
 ### Patch Changes
