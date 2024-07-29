@@ -1,10 +1,11 @@
 import { FC, ReactNode, useCallback, useMemo } from "react";
 
 //   import { useModal } from "@/modal";
-import { SimpleDialog } from "./simpleDialog";
+import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { DialogAction } from "./simpleDialogFooter";
 
-export interface AlertDialogProps {
+export interface AlertDialogProps
+  extends Pick<SimpleDialogProps, "contentClassName" | "size"> {
   title?: string;
   message?: ReactNode;
   open?: boolean;
