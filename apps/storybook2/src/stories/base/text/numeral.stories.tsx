@@ -82,7 +82,7 @@ export const Default: Story = {
     children: 2323.023,
     rule: "price",
     dp: 4,
-    copyable: false
+    copyable: false,
   },
 };
 
@@ -97,45 +97,48 @@ export const Percentages: Story = {
 export const RoundingMode: Story = {
   render: (args) => {
     return (
-      <Table className="oui-w-[400px] oui-border">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Mode</TableHead>
-            <TableHead>Value</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>truncate</TableCell>
-            <TableCell>truncate</TableCell>
-            <TableCell>
-              <Numeral {...args} dp={4} rm={"truncate"} />
-            </TableCell>
-          </TableRow>
-          {[
-            "ROUND_UP",
-            "ROUND_DOWN",
-            "ROUND_CEIL",
-            "ROUND_FLOOR",
-            "ROUND_HALF_UP",
-            "ROUND_HALF_DOWN",
-            "ROUND_HALF_EVEN",
-            "ROUND_HALF_CEIL",
-            "ROUND_HALF_FLOOR",
-          ].map((mode, index) => {
-            return (
-              <TableRow>
-                <TableCell>{mode}</TableCell>
-                <TableCell>{index}</TableCell>
-                <TableCell>
-                  <Numeral {...args} dp={4} rm={index} />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <div>
+        <Text>Origin value: 2343542.23347323</Text>
+        <Table className="oui-w-[400px] oui-border">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Mode</TableHead>
+              <TableHead>Value</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>truncate</TableCell>
+              <TableCell>truncate</TableCell>
+              <TableCell>
+                <Numeral {...args} dp={4} rm={"truncate"} />
+              </TableCell>
+            </TableRow>
+            {[
+              "ROUND_UP",
+              "ROUND_DOWN",
+              "ROUND_CEIL",
+              "ROUND_FLOOR",
+              "ROUND_HALF_UP",
+              "ROUND_HALF_DOWN",
+              "ROUND_HALF_EVEN",
+              "ROUND_HALF_CEIL",
+              "ROUND_HALF_FLOOR",
+            ].map((mode, index) => {
+              return (
+                <TableRow>
+                  <TableCell>{mode}</TableCell>
+                  <TableCell>{index}</TableCell>
+                  <TableCell>
+                    <Numeral {...args} dp={4} rm={index} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     );
   },
   args: {

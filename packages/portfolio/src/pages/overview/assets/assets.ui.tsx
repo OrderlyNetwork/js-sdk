@@ -50,7 +50,7 @@ export const AssetsUI = (props: Props) => {
         />
       }
       footer={
-        <AuthGuard buttonProps={{ size: "lg" }}>
+        <AuthGuard buttonProps={{ size: "lg", fullWidth: true }}>
           <AssetStatistic
             unrealROI={props.unrealROI}
             unrealPnL={props.unrealPnL}

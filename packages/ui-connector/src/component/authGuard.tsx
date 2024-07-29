@@ -1,5 +1,5 @@
 import { useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import {
   Button,
   Either,
@@ -12,7 +12,14 @@ import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { WalletConnectorModalId } from "./walletConnector";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 
-type AuthGuardProps = {
+const LABELS = {
+  connectWallet: "Connect wallet",
+  switchChain: "Wrong network",
+  enableTrading: "Enable trading",
+  signin: "Sigin",
+};
+
+export type AuthGuardProps = {
   fallback?: (props: {
     validating: boolean;
     status: AccountStatusEnum;
@@ -27,6 +34,23 @@ type AuthGuardProps = {
 
   buttonProps?: ButtonProps;
 
+  description?: string;
+
+  labels?: {
+    connectWallet?: string;
+    switchChain?: string;
+    enableTrading?: string;
+    signin?: string;
+  };
+
+  classNames?: {
+    root?: string;
+    description?: string;
+    // button?: string;
+  };
+
+  networkId?: NetworkId;
+
   // validatingIndicator?: ReactElement;
 };
 
@@ -38,6 +62,8 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
+
+  const labels = { ...LABELS, ...props.labels };
 
   // return Match(state.status)
   //   .with(AccountStatusEnum.EnableTrading, () => props.children)
@@ -65,7 +91,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
           loading
           {...buttonProps}
         >
-          Connect wallet
+          {labels.connectWallet}
         </Button>
       );
     }
@@ -75,12 +101,16 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         status={state.status}
         buttonProps={buttonProps}
         wrongNetwork={wrongNetwork}
+        networkId={props.networkId}
       />
     );
-  }, [state.status, state.validating]);
+  }, [state.status, state.validating, buttonProps, wrongNetwork]);
 
+  /**
+   * **Important: The chldren component will be rendered only if the status is equal to the required status and the network is correct.**
+   */
   return (
-    <Either value={state.status === status} left={Left}>
+    <Either value={state.status === status && !wrongNetwork} left={Left}>
       {props.children}
     </Either>
   );
@@ -90,6 +120,7 @@ const DefaultFallback = (props: {
   status: AccountStatusEnum;
   wrongNetwork: boolean;
   buttonProps?: ButtonProps;
+  networkId?: NetworkId;
 }) => {
   const { buttonProps } = props;
   const { connectWallet } = useAppContext();
@@ -112,10 +143,14 @@ const DefaultFallback = (props: {
   };
 
   const switchChain = () => {
-    modal.show(ChainSelectorId).then(
-      (r) => console.log(r),
-      (error) => console.log(error)
-    );
+    modal
+      .show(ChainSelectorId, {
+        networkId: props.networkId,
+      })
+      .then(
+        (r) => console.log(r),
+        (error) => console.log(error)
+      );
   };
 
   if (props.wrongNetwork) {
@@ -123,13 +158,13 @@ const DefaultFallback = (props: {
       <Button
         color="warning"
         // size="md"
-        fullWidth
+        // fullWidth
         onClick={() => {
           switchChain();
         }}
         {...buttonProps}
       >
-        Wrong network
+        {LABELS.switchChain}
       </Button>
     );
   }
@@ -144,12 +179,12 @@ const DefaultFallback = (props: {
               onClick={() => {
                 onConnectWallet();
               }}
-              fullWidth
+              // fullWidth
               variant={"gradient"}
               angle={45}
               {...buttonProps}
             >
-              Connect wallet
+              {LABELS.connectWallet}
             </Button>
           );
         }
@@ -160,11 +195,11 @@ const DefaultFallback = (props: {
               onClick={() => {
                 onConnectOrderly();
               }}
-              fullWidth
+              // fullWidth
               angle={45}
               {...buttonProps}
             >
-              Sigin
+              {LABELS.signin}
             </Button>
           );
         }
@@ -172,11 +207,11 @@ const DefaultFallback = (props: {
       default={
         <Button
           size="lg"
-          fullWidth
+          // fullWidth
           {...buttonProps}
           onClick={() => onConnectOrderly()}
         >
-          Enable trading
+          {LABELS.enableTrading}
         </Button>
       }
     />

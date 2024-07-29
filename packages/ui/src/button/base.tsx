@@ -74,6 +74,8 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
         case "xl":
           return "md";
         case "lg":
+          return "md";
+        case "md":
           return "sm";
         default:
           return size;
@@ -91,7 +93,7 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
               position={"absolute"}
               as="span"
             >
-              <Spinner size={spinnerSize} />
+              <Spinner size={spinnerSize} color="white" />
             </Flex>
           </>
         ) : (

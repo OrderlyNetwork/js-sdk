@@ -42,10 +42,32 @@ export const Default: Story = {
 };
 
 
+export const OnlyMainnet: Story = {
+  render: () => (
+    <Box width="380px" intensity={800} r='lg' p={4}>
+      <ChainSelectorWidget networkId="mainnet" />
+    </Box>
+  ),
+};
+
 export const CommandStyle: Story = {
   render: () => (
     <Button onClick={() => {
       modal.show('ChainSelector').then((result) => {
+        console.log('result', result);
+      }).catch((error) => {
+        console.log('error', error);
+      });
+    }}>Switch chain</Button>
+  ),
+};
+
+export const CommandStyleMainnet: Story = {
+  render: () => (
+    <Button onClick={() => {
+      modal.show('ChainSelector', {
+        networkId: 'mainnet'
+      }).then((result) => {
         console.log('result', result);
       }).catch((error) => {
         console.log('error', error);
