@@ -3,7 +3,7 @@ import { RebateList } from "./rebateList";
 import { FC, useContext, useMemo, useState } from "react";
 import { ReferralContext } from "../../hooks/referralContext";
 import { compareDate, formatTime } from "../../utils/utils";
-import { useMediaQuery, ReferralAPI as API, useRefereeRebateSummary  } from "@orderly.network/hooks";
+import { useMediaQuery, RefferalAPI as API, useRefereeRebateSummary, useDaily  } from "@orderly.network/hooks";
 
 export type RebatesItem = API.RefereeRebateSummary & {
     vol?: number
@@ -20,7 +20,12 @@ export const Rebates: FC<{
         startDate: pickDate?.from,
         endDate: pickDate?.to,
     });
-    const { dailyVolume } = useContext(ReferralContext);
+    // const { dailyVolume } = useContext(ReferralContext);
+
+    const {data: dailyVolume} = useDaily({
+        startDate: pickDate?.from,
+        endDate: pickDate?.to,
+    });
 
     const dataSource = useMemo((): RebatesItem[] | undefined => {
         if (typeof distributionData === 'undefined') return [];
