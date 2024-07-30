@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {
     useAccount,
     useChains,
@@ -73,13 +73,13 @@ export const useWithdrawForm = () => {
         return (
             new Decimal(quantity || 0)
                 .mul(markPrice)
-                // .todp(props.decimals)
-                .todp(Math.abs(2 - 5))
+                .todp(2)
                 .toString()
         );
     }, [quantity, markPrice]);
 
     const {dst, withdraw, isLoading, maxAmount, availableBalance, availableWithdraw, unsettledPnL} = useWithdraw();
+    const [disabled, setDisabled] = useState<boolean>(true);
 
     const networkId = config.get("networkId") as NetworkId;
 
@@ -148,7 +148,7 @@ export const useWithdrawForm = () => {
                         "Settlement is only allowed once every 10 minutes. Please try again later."
                     );
                 }
-                if (e.message.indexOf('user rejected') !== 0) {
+                if (e.message.indexOf('user rejected') !== -1) {
                     toast.error('REJECTED_TRANSACTION');
                 }
                 return Promise.reject(e);
@@ -158,6 +158,45 @@ export const useWithdrawForm = () => {
                 return Promise.resolve(res);
             });
     }
+
+    useEffect(() => {
+        if (!quantity) {
+            setInputStatus('default')
+            setHintMessage('');
+            setDisabled(true);
+            return;
+        }
+        const qty = new Decimal(quantity ?? 0);
+
+
+        if (unsettledPnL < 0) {
+            if (qty.gt(maxAmount)) {
+
+                setInputStatus('error');
+                setHintMessage('Insufficient balance');
+                setDisabled(true)
+            } else {
+                setInputStatus('default')
+                setHintMessage('');
+                setDisabled(false)
+            }
+        } else {
+            if (qty.gt(maxAmount)) {
+                setInputStatus('error');
+                setHintMessage('Insufficient balance');
+                setDisabled(true);
+            } else if (qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) && qty.lessThanOrEqualTo(maxAmount)) {
+                setInputStatus("warning");
+                setHintMessage("Please settle your balance");
+                setDisabled(true);
+            }else {
+                setInputStatus('default')
+                setHintMessage('');
+                setDisabled(false);
+            }
+        }
+
+    }, [quantity, maxAmount, unsettledPnL]);
 
 
     return {
@@ -173,7 +212,7 @@ export const useWithdrawForm = () => {
         amount,
         balanceRevalidating: false,
         maxQuantity: maxAmount,
-        disabled: false,
+        disabled,
         loading: false,
         brokerId: config.get("brokerId"),
         brokerName: config.get("brokerName") || "",
