@@ -1,6 +1,7 @@
 import { ENVType, useGetEnv, useWalletRewardsHistory } from "@orderly.network/hooks";
 import { useTradingRewardsContext } from "../provider";
 import { useMemo } from "react";
+import { useDataTap } from "@orderly.network/react-app";
 
 export type AvailableReturns = {
   order?: number;
@@ -34,9 +35,12 @@ export const useAvailableScript = (): AvailableReturns => {
 
   const order = availableOrder;
   const esorder = 0;
+
+  const orderValue = useDataTap<number | undefined>(order);
+  const esorderValue = useDataTap<number | undefined>(esorder);
   return {
-    order,
-    esorder,
+    order: orderValue || undefined,
+    esorder: esorderValue || undefined,
     goToClaim,
   };
 };

@@ -37,12 +37,16 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     }
   });
 
+  const emptyDataSouce = useMemo(() => {
+    return Array.isArray(props.dataSource) && props.dataSource.length <= 0;
+  }, [props.dataSource]);
+
   const listViewElement = useMemo(() => {
     if (!props.dataSource) {
       return null;
     }
 
-    if (Array.isArray(props.dataSource) && props.dataSource.length <= 0) {
+    if (emptyDataSouce) {
       return (
         props.emptyView || (
           <Flex
@@ -63,7 +67,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
         {props.renderItem(item, index, props.extraData)}
       </React.Fragment>
     ));
-  }, [props.dataSource, props.extraData, props.emptyView]);
+  }, [emptyDataSouce, props.dataSource, props.extraData, props.emptyView]);
 
   const loadingViewElement = useMemo(() => {
     if ((props.dataSource?.length || 0) === 0) return null;
@@ -99,7 +103,13 @@ const ListViewInner = <T extends unknown, D extends unknown>(
         props.className
       )}
     >
-      <div className={cn("oui-space-y-3 oui-h-full", props.contentClassName)}>
+      <div
+        className={cn(
+          "oui-space-y-3 oui-h-full oui-w-full",
+          emptyDataSouce && "oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0",
+          props.contentClassName
+        )}
+      >
         {listViewElement}
       </div>
       <div
