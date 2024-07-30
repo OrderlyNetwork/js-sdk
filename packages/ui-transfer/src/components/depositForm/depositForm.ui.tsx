@@ -7,7 +7,7 @@ import { ExchangeDivider } from "../exchangeDivider";
 import { Web3Wallet } from "../web3Wallet";
 import { BrokerWallet } from "../brokerWallet";
 import { AvailableQuantity } from "../availableQuantity";
-import { CoinExchange } from "../coinExchange";
+import { SwapCoin } from "../swapCoin";
 import { Fee } from "../fee";
 import { ActionButton } from "../actionButton";
 
@@ -95,7 +95,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <CoinExchange token={token} dstSymbol={dst?.symbol} price={price} />
+        <SwapCoin token={token} dst={dst} price={price} />
         <Fee fee={fee} nativeToken={nativeToken} />
       </Flex>
 
