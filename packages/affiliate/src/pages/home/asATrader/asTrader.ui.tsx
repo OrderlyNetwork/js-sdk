@@ -236,7 +236,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
       </DialogTrigger>
       <DialogContent className="oui-w-[320px] oui-font-semibold">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
+          <DialogTitle>Bind a referral code</DialogTitle>
         </DialogHeader>
         <Divider />
         <DialogBody>
@@ -266,7 +266,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                 ? "This referral code does not exist."
                 : undefined
             }
-            color={!isExist && !isLoading ? "danger" : undefined}
+            color={!isExist && !isLoading && code.length > 0? "danger" : undefined}
           />
 
           <Flex
