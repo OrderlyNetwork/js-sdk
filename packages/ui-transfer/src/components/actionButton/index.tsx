@@ -10,6 +10,8 @@ export type ActionButtonProps = {
   symbol?: string;
     onDeposit?: () => void;
     onApprove?: () => void;
+    onWithdraw?: () => void;
+    onSwitchToArbitrum?:() => void;
   networkId?: NetworkId;
 };
 
@@ -17,6 +19,8 @@ export enum ActionType {
   Deposit,
   Approve,
   Increase,
+  Withdraw,
+  SwitchToArbitrum,
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = (props) => {
@@ -27,6 +31,8 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     symbol = "USDC",
     onDeposit,
     onApprove,
+      onWithdraw,
+      onSwitchToArbitrum,
     networkId,
   } = props;
 
@@ -43,6 +49,14 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
       [ActionType.Deposit]: {
         children: "Deposit",
         onClick: onDeposit,
+      },
+      [ActionType.Withdraw]: {
+        children: "Withdraw",
+        onClick:onWithdraw,
+      },
+      [ActionType.SwitchToArbitrum]: {
+        children: "Withdraw",
+        onClick:onSwitchToArbitrum,
       },
     };
 
