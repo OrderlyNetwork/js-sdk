@@ -31,7 +31,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
         <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
           <Statics
             title="Epoch"
-            highLight={curEpochId ? `${curEpochId}` : "-"}
+            highLight={curEpochId ? `${curEpochId}` : "--"}
             text={
               startTime && endTime
                 ? `${getDate(startTime)} - ${getDate(endTime)}`
@@ -40,7 +40,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           />
           <Statics
             title="Epoch rewards"
-            highLight={max_reward_amount ? commify(max_reward_amount) : "-"}
+            highLight={max_reward_amount ? commify(max_reward_amount) : "--"}
             text={token}
           />
         </Flex>
@@ -91,7 +91,7 @@ const EstRewards: FC<{
       py={4}
       px={6}
       width={"100%"}
-      r="2xl"
+      r="xl"
       itemAlign={"center"}
       justify={props.justify}
       style={{
@@ -104,7 +104,7 @@ const EstRewards: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text children={commifyOptional(props.estRewards, { fix: 2 })} />
+        <Text children={commifyOptional(props.estRewards, { fix: 2 })}  className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"/>
       </Flex>
     </Flex>
   );
@@ -209,14 +209,15 @@ const Countdown: FC<{
       angle={180}
       width={"full"}
     >
-      <Flex
+      <Flex justify={"center"} gap={1}>
+        <span>Countdown:</span>
+        <Flex
         direction={"row"}
-        itemAlign={"center"}
-        justify={"center"}
+        itemAlign={"end"}
         gap={1}
         className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
       >
-        <span>Countdown:</span>
+        
         {num(`${timeLeft.days}`.padStart(2, "0"))}
         <span>D</span>
         {num(`${timeLeft.hours}`.padStart(2, "0"))}
@@ -226,6 +227,8 @@ const Countdown: FC<{
         {num(`${timeLeft.seconds}`.padStart(2, "0"))}
         <span>S</span>
       </Flex>
+      </Flex>
+      
     </Box>
   );
 };

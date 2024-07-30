@@ -14,7 +14,7 @@ export type ExpandableState = {
   routerAdapter?: routerAdapter;
   expanded?: boolean;
   setExpand: (expand: boolean) => void;
-  unsupported: boolean;
+  // unsupported: boolean;
   checkChainSupport: (chainId: number | string) => boolean;
   footerConfig?: FooterConfig;
 };

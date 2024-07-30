@@ -31,14 +31,14 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     status: AccountStatusEnum.EnableTrading,
-    children: <Text>Enabled trading</Text>,
+    children: <Text>Trading view</Text>,
   },
 };
 
 export const OnlyMainnet: Story = {
   args: {
     status: AccountStatusEnum.EnableTrading,
-    children: <Text>Enabled trading</Text>,
+    children: <Text>Trading view</Text>,
     networkId: "mainnet",
   },
 };

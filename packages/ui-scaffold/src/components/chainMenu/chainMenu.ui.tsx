@@ -1,15 +1,4 @@
-import { useState } from "react";
-import {
-  Box,
-  Button,
-  ChainIcon,
-  Flex,
-  modal,
-  Select,
-  Text,
-  Tooltip,
-  TriggerDialog,
-} from "@orderly.network/ui";
+import { Button, Flex, modal, Select, Tooltip } from "@orderly.network/ui";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 
 type ChainItem = {
@@ -25,10 +14,10 @@ export const ChainMenu = (props: {
   };
   onChange?: (chain: ChainItem) => Promise<any>;
   currentChain?: ChainItem;
-  isUnsupported: boolean;
+  wrongNetwork: boolean;
   isConnected: boolean;
 }) => {
-  if (props.isUnsupported && props.isConnected) {
+  if (props.wrongNetwork && props.isConnected) {
     return (
       <Tooltip
         open
