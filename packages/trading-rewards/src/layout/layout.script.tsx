@@ -13,7 +13,7 @@ export const useLayoutBuilder = (): SideBarProps & {
     return [
       {
         name: "Trading",
-        href: "/rewards",
+        href: "/rewards/trading",
         icon: (
           <svg
             width="18"
