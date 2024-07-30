@@ -55,7 +55,6 @@ export const WithdrawFormUI = (
                         }}
                         status={inputStatus}
                         hintMessage={hintMessage}
-                        precision={2}
                     />
                 </Box>
 
@@ -88,7 +87,6 @@ export const WithdrawFormUI = (
                         token={token}
                         tokens={[]}
                         value={quantity}
-                        precision={dst?.decimals}
                         readOnly
                     />
                 </Box>

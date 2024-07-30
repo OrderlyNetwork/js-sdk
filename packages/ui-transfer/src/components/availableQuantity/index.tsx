@@ -21,7 +21,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
     <Flex justify="between" px={2}>
       <Text size="2xs" intensity={36}>
         $
-        <Text.numeral dp={2} padding={false}>
+        <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_DOWN}>
           {amount}
         </Text.numeral>
       </Text>

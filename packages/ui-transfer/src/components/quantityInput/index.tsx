@@ -21,7 +21,6 @@ export type QuantityInputProps = {
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
-  precision?: number;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: API.TokenInfo) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
@@ -37,8 +36,9 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       status,
       hintMessage,
       onValueChange,
+      onTokenChange,
+      fetchBalance,
       value,
-      precision,
       ...rest
     } = props;
 
@@ -58,10 +58,10 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       setWidth(rect?.width || 0);
     }, [inputRef]);
 
-    const onTokenChange = (value: string) => {
+    const _onTokenChange = (value: string) => {
       const find = props.tokens.find((item) => item.symbol === value);
       if (find) {
-        props.onTokenChange?.(find);
+        onTokenChange?.(find);
       }
     };
 
@@ -70,9 +70,9 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       return (
         <TokenOption
           token={item}
-          fetchBalance={props.fetchBalance}
+          fetchBalance={fetchBalance}
           onTokenChange={(item) => {
-            props.onTokenChange?.(item);
+            onTokenChange?.(item);
             setOpen(false);
           }}
           isActive={isActive}
@@ -100,7 +100,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           tokens={tokenOptions}
           value={token?.display_name || token?.symbol}
           size={rest.size}
-          onValueChange={onTokenChange}
+          onValueChange={_onTokenChange}
           showIcon
           optionRenderer={optionRenderer}
           contentProps={{
@@ -158,7 +158,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(precision ?? 8, {
+            inputFormatter.dpFormatter(token?.precision ?? 2, {
               roundingMode: Decimal.ROUND_DOWN,
             }),
             inputFormatter.currencyFormatter,

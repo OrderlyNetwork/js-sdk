@@ -67,7 +67,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           onTokenChange={onTokenChange}
           status={inputStatus}
           hintMessage={hintMessage}
-          precision={dst?.decimals}
           fetchBalance={fetchBalance}
         />
       </Box>
@@ -93,7 +92,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         classNames={{
           root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
         }}
-        precision={dst?.decimals}
         readOnly
       />
 
