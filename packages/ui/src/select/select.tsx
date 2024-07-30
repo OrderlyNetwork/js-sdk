@@ -9,7 +9,7 @@ import {
   selectVariants,
 } from "./selectPrimitive";
 
-import { VariantProps } from "tailwind-variants";
+import { cnBase, VariantProps } from "tailwind-variants";
 
 export type SelectProps<T> = SelectPrimitive.SelectProps & {
   placeholder?: string;
@@ -43,7 +43,10 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
         error={error}
         variant={variant}
         showCaret={showCaret}
-        className="oui-font-semibold focus:oui-ring-transparent"
+        className={cnBase(
+          "oui-font-semibold focus:oui-ring-transparent",
+          !showCaret && "oui-cursor-auto"
+        )}
       >
         {typeof valueRenderer === "function" ? (
           valueRenderer((props.value || props.defaultValue) as T, {

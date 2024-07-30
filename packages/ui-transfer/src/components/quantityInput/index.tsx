@@ -88,12 +88,12 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       </Box>
     );
 
-    const hideOptions = tokens.length <= 1;
+    const selectable = tokens.length > 1;
 
     const suffix = (
       <div className="oui-absolute oui-right-0">
         <Select.tokens
-          open={hideOptions ? false : open}
+          open={selectable ? open : false}
           onOpenChange={setOpen}
           disabled={rest.disabled}
           variant="text"
