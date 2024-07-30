@@ -16,10 +16,12 @@ interface TokenOptionProps {
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
   const { token, isActive, onTokenChange, fetchBalance } = props;
-  const { symbol, decimals } = token;
+  const { symbol, precision, decimals } = token;
   const { balance, loading } = useBalance(token, fetchBalance);
 
   const showBalance = typeof fetchBalance === "function";
+
+  const dp = precision ?? 2;
 
   return (
     <Flex
@@ -57,7 +59,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           ) : (
             <Text.numeral
               rule="human"
-              dp={decimals}
+              dp={dp}
               rm={Decimal.ROUND_DOWN}
               className={cn(
                 "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",

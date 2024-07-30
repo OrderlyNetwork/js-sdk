@@ -61,7 +61,6 @@ export const WithdrawFormUI = (
                     token={token}
                     amount={amount}
                     maxQuantity={maxQuantity.toString()}
-                    precision={dst.decimals!}
                     loading={balanceRevalidating}
                     onClick={() => {
                         onQuantityChange(maxQuantity.toString());

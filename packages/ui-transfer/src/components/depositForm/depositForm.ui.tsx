@@ -76,7 +76,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         token={token}
         amount={amount}
         maxQuantity={maxQuantity}
-        precision={dst.decimals!}
         loading={balanceRevalidating}
         onClick={() => {
           onQuantityChange(maxQuantity);

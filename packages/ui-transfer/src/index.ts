@@ -9,5 +9,5 @@ export { Web3Wallet } from "./components/web3Wallet";
 export { BrokerWallet } from "./components/brokerWallet";
 export { ExchangeDivider } from "./components/exchangeDivider";
 export { CoinExchange } from "./components/coinExchange";
-export { ActionButton } from "./components/actionButton";
+export { ActionButton, ActionType } from "./components/actionButton";
 export { Fee } from "./components/fee";

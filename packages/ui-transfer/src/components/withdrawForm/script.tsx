@@ -73,9 +73,7 @@ export const useWithdrawForm = () => {
         return (
             new Decimal(quantity || 0)
                 .mul(markPrice)
-                // .todp(props.decimals)
-                .todp(Math.abs(2 - 5))
-                .toString()
+                .toNumber()
         );
     }, [quantity, markPrice]);
 

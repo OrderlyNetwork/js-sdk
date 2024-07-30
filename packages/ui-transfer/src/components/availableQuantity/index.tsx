@@ -5,28 +5,31 @@ import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
   token?: API.TokenInfo;
-  amount?: string;
+  amount: number;
   maxQuantity?: string;
-  precision?: number;
   onClick?: () => void;
   loading?: boolean;
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
-  const { amount, maxQuantity, token, precision, loading } = props;
+  const { amount, maxQuantity, token, loading } = props;
 
   const name = token?.display_name || token?.symbol || "";
+  const dp = token?.precision ?? 2;
 
   return (
     <Flex justify="between" px={2}>
       <Text size="2xs" intensity={36}>
-        ${amount}
+        $
+        <Text.numeral dp={3} padding={false}>
+          {amount}
+        </Text.numeral>
       </Text>
 
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
           Available:{" "}
-          <Text.numeral rm={Decimal.ROUND_DOWN} dp={2} padding={false}>
+          <Text.numeral rm={Decimal.ROUND_DOWN} dp={dp} padding={false}>
             {maxQuantity!}
           </Text.numeral>{" "}
           {name}
