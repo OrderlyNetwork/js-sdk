@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
 import {
-  toast, Toaster
+  toast, Toaster,
+  ToastTile
 } from "@orderly.network/ui";
 
 const meta = {
@@ -37,6 +38,21 @@ export const toaster:  Story = {
         }}>
           loading 
         </button>
+        <button onClick={(e) => {
+          toast.success(<ToastTile title="ADFD" subtitle="DFLKSDF" />);
+        }}>
+          success with subtitle 
+        </button>
+        <button onClick={(e) => {
+          toast.loading(<ToastTile title="ADFD" subtitle="DFLKSDF" />);
+        }}>
+          loging with subtitle 
+        </button>
+        <button onClick={(e) => {
+          toast.error(<ToastTile title="ADFD" subtitle="DFLKSDF" />);
+        }}>
+          error with subtitle 
+        </button>
       </div>
         <Toaster/>
       </>
@@ -46,4 +62,5 @@ export const toaster:  Story = {
 
 
 // box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.36);
+
 
