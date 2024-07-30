@@ -1,4 +1,4 @@
-import { Button } from "@orderly.network/ui";
+import { Button, cn } from "@orderly.network/ui";
 import { FC } from "react";
 
 export type ProductItem = {
@@ -18,7 +18,9 @@ export const ProductItem: FC<{
       color="secondary"
       size="md"
       angle={45}
-      className={active ? "oui-text-[rgba(0_,_0_,_0_,_0.88)]" : ""}
+      className={cn(
+        active ? "oui-text-[rgba(0_,_0_,_0_,_0.88)]" : "hover:oui-bg-base-7"
+      )}
       onClick={() => {
         onClick?.(item);
       }}

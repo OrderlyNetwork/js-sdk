@@ -110,7 +110,7 @@ export const CustomChainsMenu: Story = {
     return (
       <ChainMenu
         chains={formattedChains}
-        isUnsupported={false}
+        wrongNetwork={false}
         isConnected
         currentChain={formattedChains.mainnet[0]}
       />
@@ -174,6 +174,38 @@ export const CustomMainNav: Story = {
       { name: "Trading", href: "/" },
       { name: "Reward", href: "/rewards" },
       { name: "Markets", href: "/markets" },
+    ],
+    products: [
+      { name: "Swap", href: "/swap" },
+      { name: "Trade", href: "/trade" },
+    ],
+    initialMenu: "/markets",
+    initialProduct: "/trade",
+  },
+};
+export const SubMainNav: Story = {
+  args: {
+    mainMenus: [
+      { name: "Trading", href: "/" },
+      { name: "Markets", href: "/markets" },
+      {
+        name: "Reward",
+        href: "/rewards",
+        icon: "box-ani.gif",
+        children: [
+          {
+            name: "Trading rewards",
+            href: "/",
+            description: "Trade with WOOFi Pro to earn ORDER",
+          },
+          {
+            name: "Affiliate",
+            href: "/markets",
+            tag: "40% Rebate",
+            description: "Earn more as a WOOFi affiliate",
+          },
+        ],
+      },
     ],
     products: [
       { name: "Swap", href: "/swap" },

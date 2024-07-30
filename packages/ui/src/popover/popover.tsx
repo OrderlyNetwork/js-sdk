@@ -8,6 +8,8 @@ const popoverVariants = tv({
     "oui-z-50",
     "oui-w-72",
     "oui-rounded-md",
+    // "oui-border",
+    // "oui-border-base-6",
     // "oui-bg-popover",
     "oui-p-4",
     "oui-bg-base-8",
@@ -27,7 +29,7 @@ const popoverVariants = tv({
   ],
 });
 
-const PopoverBase = PopoverPrimitive.Root;
+const PopoverRoot = PopoverPrimitive.Root;
 
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
@@ -63,7 +65,7 @@ type PopoverProps = PopoverPrimitive.PopoverProps & {
 const Popover: React.FC<React.PropsWithChildren<PopoverProps>> = (props) => {
   const { arrow, content, contentProps, ...popoverProps } = props;
   return (
-    <PopoverBase {...popoverProps}>
+    <PopoverRoot {...popoverProps}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent {...contentProps}>
         {content}
@@ -76,8 +78,8 @@ const Popover: React.FC<React.PropsWithChildren<PopoverProps>> = (props) => {
           />
         )}
       </PopoverContent>
-    </PopoverBase>
+    </PopoverRoot>
   );
 };
 
-export { PopoverBase, PopoverTrigger, PopoverContent, PopoverAnchor, Popover };
+export { PopoverRoot, PopoverTrigger, PopoverContent, PopoverAnchor, Popover };

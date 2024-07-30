@@ -1,18 +1,12 @@
-import { Box, cn, Flex, Grid, type SizeType } from "@orderly.network/ui";
+import { Box, cn, Grid, type SizeType } from "@orderly.network/ui";
 import { MainNavWidget } from "./main/mainNav.widget";
-import React, {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { SideMenuItem, SideNavbarWidget } from "./sidebar";
+import React, { PropsWithChildren, useContext } from "react";
+import { SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar";
 import {
   OrderlyContext,
   useChains,
   useLocalStorage,
-  useWalletConnector,
 } from "@orderly.network/hooks";
 import { useMemo } from "react";
 import {
@@ -59,8 +53,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     "orderly_scaffold_expanded",
     true
   );
-  const { connectedChain } = useWalletConnector();
-  const [unsupported, setUnsupported] = useState(true);
+  // const [unsupported, setUnsupported] = useState(true);
   const [chains] = useChains();
 
   const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
@@ -73,14 +66,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     );
   };
 
-  useEffect(() => {
-    if (!connectedChain) return;
-
-    let isSupported = checkChainSupportHandle(connectedChain.id);
-
-    setUnsupported(!isSupported);
-  }, [connectedChain?.id, chains]);
-
   const onExpandChange = (expand: boolean) => {
     setExpand(expand);
   };
@@ -92,7 +77,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           routerAdapter,
           expanded: expand,
           setExpand: onExpandChange,
-          unsupported,
+          // unsupported,
           checkChainSupport: checkChainSupportHandle,
           footerConfig,
           // mainNavProps: props.mainNavProps,
