@@ -60,11 +60,11 @@ export const WithdrawFormUI = (
                 <AvailableQuantity
                     token={token}
                     amount={amount}
-                    maxQuantity={maxQuantity}
+                    maxQuantity={maxQuantity.toString()}
                     precision={dst.decimals!}
                     loading={balanceRevalidating}
                     onClick={() => {
-                        onQuantityChange(maxQuantity);
+                        onQuantityChange(maxQuantity.toString());
                     }}
                 />
                 <UnsettlePnlInfo unsettledPnl={unsettledPnL} hasPositions={hasPositions} onSettlle={onSettlePnl}/>
