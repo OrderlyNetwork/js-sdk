@@ -17,7 +17,7 @@ export type InputStatus = "error" | "warning" | "success" | "default";
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;
-  tokens: API.TokenInfo[];
+  tokens?: API.TokenInfo[];
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
@@ -30,7 +30,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
   (props, ref) => {
     const {
       token,
-      tokens,
+      tokens = [],
       classNames,
       label,
       status,
@@ -47,11 +47,11 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const [width, setWidth] = useState(0);
 
     const tokenOptions = useMemo(() => {
-      return props.tokens.map((token) => ({
+      return tokens!.map((token) => ({
         ...token,
         name: token.display_name || token.symbol,
       }));
-    }, [props.tokens]);
+    }, [tokens]);
 
     useEffect(() => {
       const rect = inputRef?.current?.getBoundingClientRect();
@@ -59,14 +59,14 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     }, [inputRef]);
 
     const _onTokenChange = (value: string) => {
-      const find = props.tokens.find((item) => item.symbol === value);
+      const find = tokens!.find((item) => item.symbol === value);
       if (find) {
         onTokenChange?.(find);
       }
     };
 
     const optionRenderer = (item: any) => {
-      const isActive = item.symbol === props.token?.symbol;
+      const isActive = item.symbol === token?.symbol;
       return (
         <TokenOption
           token={item}

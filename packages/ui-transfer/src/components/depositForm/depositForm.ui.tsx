@@ -86,13 +86,12 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <BrokerWallet name={brokerName} />
 
       <QuantityInput
-        token={token}
-        tokens={tokens}
+        readOnly
+        token={dst as any}
         value={quantity}
         classNames={{
           root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
         }}
-        readOnly
       />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">

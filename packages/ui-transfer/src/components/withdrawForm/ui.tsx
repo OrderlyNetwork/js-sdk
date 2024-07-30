@@ -49,7 +49,6 @@ export const WithdrawFormUI = (
                     <QuantityInput
                         value={quantity}
                         onValueChange={onQuantityChange}
-                        tokens={[]}
                         token={token}
                         onTokenChange={() => {
                         }}
@@ -85,7 +84,6 @@ export const WithdrawFormUI = (
                             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
                         }}
                         token={token}
-                        tokens={[]}
                         value={quantity}
                         readOnly
                     />
