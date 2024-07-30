@@ -3,19 +3,18 @@ import {UseWithdrawFormScriptReturn} from "./script";
 import {Web3Wallet} from "../web3Wallet";
 import {ExchangeDivider} from "../exchangeDivider";
 import {BrokerWallet} from "../brokerWallet";
-import {ActionButton} from "../actionButton";
 import {ChainSelect} from "../chainSelect";
 import {QuantityInput} from "../quantityInput";
 import {AvailableQuantity} from "../availableQuantity";
 import {WithdrawWarningMessage} from "../withdrawWarningMessage";
 import {UnsettlePnlInfo} from "../unsettlePnlInfo";
+import {WithdrawAction} from "../withdrawAction";
 
 export const WithdrawFormUI = (
     {
         walletName,
         address,
         brokerName,
-        actionType,
         loading,
         disabled,
         quantity,
@@ -35,7 +34,10 @@ export const WithdrawFormUI = (
         wrongNetwork,
         hasPositions,
         unsettledPnL,
-        onSettlePnl
+        onSettlePnl,
+        onWithdraw,
+        chainVaultBalance,
+        crossChainWithdraw
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -108,14 +110,18 @@ export const WithdrawFormUI = (
                 </Flex>
             </Box>
 
-            <WithdrawWarningMessage/>
+            <WithdrawWarningMessage chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity}/>
 
             <Flex justify="center" mt={3}>
-                <ActionButton
-                    actionType={actionType}
-                    symbol={'USDC'}
+                <WithdrawAction
                     disabled={disabled}
                     loading={loading}
+                    onWithdraw={onWithdraw}
+                    crossChainWithdraw={crossChainWithdraw}
+                    currentChain={currentChain}
+                    address={address}
+                    quantity={quantity}
+                    fee={fee}
                 />
             </Flex>
         </Box>
