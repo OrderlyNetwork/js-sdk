@@ -26,7 +26,7 @@ export const TradingRewardsLayout = (
       routerAdapter={props.routerAdapter}
       {...props}
     >
-      <Box className="oui-flex oui-justify-center oui-py-4">
+      <Box className="oui-flex oui-justify-center oui-py-3">
         {props.children}
       </Box>
     </Scaffold>

@@ -4,6 +4,7 @@ import {
   DataTable,
   Divider,
   Flex,
+  ListView,
   Pagination,
   ScrollArea,
   Text,
@@ -11,7 +12,7 @@ import {
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
 
@@ -39,11 +40,13 @@ const List: FC<RewardsHistoryReturns> = (props) => {
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   return isMobile ? (
-    <ScrollArea className="oui-h-[356px]" orientation="vertical">
-      {props.data?.map((item, index) => {
+    <ListView
+      dataSource={props.data}
+      renderItem={(item, index) => {
         return <MobileCell data={item} />;
-      })}
-    </ScrollArea>
+      }}
+      className="oui-mt-3 oui-max-h-[356px]"
+    />
   ) : (
     <DesktopList {...props} />
   );
@@ -53,13 +56,15 @@ const MobileCell: FC<{
   data: ListType;
 }> = (props) => {
   const { data } = props;
-
+  const isOrder =
+    `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
+  const r_warret = commifyOptional(data.info?.r_wallet);
   return (
     <Flex
       key={data.epoch_id}
       direction={"column"}
       px={4}
-      pt={3}
+      pt={0}
       gap={3}
       className="oui-text-base-contrast-80"
     >
@@ -80,9 +85,12 @@ const MobileCell: FC<{
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
             Epoch rewards{" "}
           </Text>
-          <Text className="oui-text-sm" >
-            {commifyOptional(data.max_reward_amount, { fix : 2 })}
-          </Text>
+          <Flex gap={1}>
+            {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
+            <Text className="oui-text-sm">
+              {commifyOptional(data.max_reward_amount, { fix: 2 })}
+            </Text>
+          </Flex>
         </Flex>
         <Flex
           direction={"column"}
@@ -92,9 +100,11 @@ const MobileCell: FC<{
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
             Rewards earned{" "}
           </Text>
-          <Text className="oui-text-sm">
-            {commifyOptional(data.info?.r_wallet)}
-          </Text>
+          <Flex gap={1}>
+            {r_warret !== "--" &&
+              (isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />)}
+            <Text className="oui-text-sm">{r_warret}</Text>
+          </Flex>
         </Flex>
       </Flex>
       <Flex direction={"row"} width={"100%"}>
@@ -131,7 +141,7 @@ const MobileCell: FC<{
           </Flex>
         </Flex>
       </Flex>
-      <Divider />
+      <Divider className="oui-w-full" />
     </Flex>
   );
 };
@@ -142,7 +152,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
     {
       title: "Epoch",
       dataIndex: "epoch_id",
-      className: "oui-w-1/4",
+      className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value) => {
         return <Text>{`Epoch ${value}`}</Text>;
       },
@@ -150,7 +160,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
     {
       title: "Start / End date",
       dataIndex: "time",
-      className: "oui-w-1/4",
+      className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {
         return (
           <Flex
@@ -178,7 +188,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
     {
       title: "Epoch rewards",
       dataIndex: "max_reward_amount",
-      className: "oui-w-1/4",
+      className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {
         const isOrder =
           `${record?.info?.epoch_token || record.epoch_token}`.toLowerCase() ===
@@ -194,7 +204,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
     {
       title: "Rewards earned",
       dataIndex: "earned",
-      className: "oui-w-1/4",
+      className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {
         const isOrder =
           `${record?.info?.epoch_token || record.epoch_token}`.toLowerCase() ===
@@ -211,6 +221,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
 
   return (
     <DataTable<ListType>
+      bordered
       columns={columns}
       dataSource={data}
       scroll={{ y: 448 }}

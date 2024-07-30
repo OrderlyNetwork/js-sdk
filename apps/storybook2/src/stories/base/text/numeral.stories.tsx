@@ -94,6 +94,14 @@ export const Percentages: Story = {
   },
 };
 
+export const RemovePadding: Story = {
+  args: {
+    children: 450.0,
+    dp: 0,
+    padding: false,
+  },
+};
+
 export const RoundingMode: Story = {
   render: (args) => {
     return (

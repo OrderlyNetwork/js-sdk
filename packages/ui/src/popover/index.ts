@@ -1,6 +1,6 @@
 export {
   Popover,
-  PopoverBase,
+  PopoverRoot,
   PopoverTrigger,
   PopoverContent,
   PopoverAnchor,

@@ -2,11 +2,8 @@ import { useMemo, useState } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
-
-export type MainNavItem = {
-  name: string;
-  href: string;
-};
+import { useAppContext } from "@orderly.network/react-app";
+import type { MainNavItem } from "./navItem";
 
 export type MainNavProps = {
   logo: {
@@ -18,17 +15,26 @@ export type MainNavProps = {
   products: MainNavItem[];
 
   initialProduct: string;
-  initialMenu: string;
+  /**
+   * initial menu path, if it has submenus, use array
+   * @type string | string[]
+   */
+  initialMenu: string | string[];
 };
 
 export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
-  const { unsupported, routerAdapter } = useScaffoldContext();
+  const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
-  const [current, setCurrent] = useState(
-    () => props?.initialMenu ?? props?.mainMenus?.[0].href ?? "/trading"
-  );
+  const { wrongNetwork } = useAppContext();
+  const [current, setCurrent] = useState(() => {
+    if (typeof props.initialMenu === "undefined") return [];
+
+    return !Array.isArray(props.initialMenu)
+      ? [props.initialMenu]
+      : props.initialMenu;
+  });
   const [currentProduct, setCurrentProduct] = useState(
-    () => props?.initialProduct ?? props?.products?.[0].href ?? "/swap"
+    () => props?.initialProduct ?? props?.products?.[0].href ?? ""
   );
 
   const mainNavConfig = useMemo(() => {
@@ -76,18 +82,20 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
        * The current item of the router
        */
       current,
-      onItemClick: (item: MainNavItem) => {
-        setCurrent(item.href);
+      onItemClick: (item: MainNavItem[]) => {
+        setCurrent(item.map((item) => item.href));
+
+        const current = item[item.length - 1];
         routerAdapter?.onRouteChange({
-          href: item.href,
-          name: item.name,
+          href: current.href,
+          name: current.name,
           scope: "mainMenu",
         });
       },
     },
 
-    isUnsupported: unsupported,
     isConnected: !!connectedChain,
+    wrongNetwork,
   };
 };
 

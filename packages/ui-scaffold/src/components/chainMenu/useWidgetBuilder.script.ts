@@ -5,13 +5,14 @@ import {
 } from "@orderly.network/hooks";
 
 import { useMemo } from "react";
-import { useScaffoldContext } from "../scaffoldContext";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const useChainMenuBuilderScript = () => {
   const [chains, { findByChainId }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
   const { state } = useAccount();
-  const { unsupported } = useScaffoldContext();
+
+  const { wrongNetwork } = useAppContext();
 
   const currentChain = useMemo(() => {
     const chainId = state.connectWallet?.chainId;
@@ -67,7 +68,7 @@ export const useChainMenuBuilderScript = () => {
     currentChain,
     onChange: onChainChange,
     isConnected: !!connectedChain,
-    isUnsupported: unsupported,
+    wrongNetwork,
   };
 };
 

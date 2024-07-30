@@ -23,9 +23,9 @@ export const AvailableToClaim: FC<AvailableReturns> = (props) => {
           direction={"row"}
           gap={1}
           onClick={props.goToClaim}
-          className="oui-cursor-pointer"
+          className="oui-cursor-pointer oui-text-primary-light"
         >
-          <Text color="primary" size="sm">
+          <Text size="sm">
             Claim
           </Text>
           <JumpIcon />
@@ -38,6 +38,8 @@ export const AvailableToClaim: FC<AvailableReturns> = (props) => {
     </Flex>
   );
 };
+// background: linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%);
+
 
 const Statics: FC<{
   title: string;
@@ -50,7 +52,11 @@ const Statics: FC<{
       className="oui-flex-1 oui-bg-base-8 oui-py-[11px]"
       direction={"column"}
       gap={2}
-      r="2xl"
+      r="xl"
+      gradient="neutral"
+      angle={180}
+      border
+      borderColor={6}
     >
       <Text className="oui-text-xs xl:oui-text-sm oui-text-base-contrast-54">
         {props.title}

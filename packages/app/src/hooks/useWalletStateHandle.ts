@@ -14,14 +14,14 @@ import {
 import { AccountStatusEnum, API } from "@orderly.network/types";
 import type { WalletState } from "@orderly.network/hooks";
 
-function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
-  if (typeof chainId === "string") {
-    chainId = parseInt(chainId);
-  }
-  return chains.some((chain) => {
-    return chain.network_infos.chain_id === chainId;
-  });
-}
+// function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
+//   if (typeof chainId === "string") {
+//     chainId = parseInt(chainId);
+//   }
+//   return chains.some((chain) => {
+//     return chain.network_infos.chain_id === chainId;
+//   });
+// }
 
 export const useWalletStateHandle = (options: {
   onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -36,11 +36,12 @@ export const useWalletStateHandle = (options: {
 
   const isManualConnect = useRef<boolean>(false);
 
-  const { account, state } = useAccount();
+  const { account } = useAccount();
   const keyStore = useKeyStore();
   const { networkId } = useContext<any>(OrderlyContext);
-  const [chains] = useChains();
-  const [unsupported, setUnsupported] = useState(true);
+  const [chains, { checkChainSupport }] = useChains();
+
+  const [unsupported, setUnsupported] = useState(false);
 
   const localAddress = useMemo<string | undefined | null>(
     () => keyStore.getAddress(),
@@ -64,14 +65,16 @@ export const useWalletStateHandle = (options: {
 
     let isSupported = checkChainSupport(
       connectedChain.id,
-      networkId === "testnet" ? chains.testnet : chains.mainnet
+      networkId
+      // networkId === "testnet" ? chains.testnet : chains.mainnet
     );
 
     setUnsupported(!isSupported);
   }, [connectedChain?.id, chains]);
 
   useEffect(() => {
-    if (unsupported) return;
+    // if (unsupported) return;
+    //
 
     /**
      * if locale address is exist, restore account state
@@ -89,7 +92,7 @@ export const useWalletStateHandle = (options: {
         (error) => console.log("connect error", error)
       );
     }
-  }, [localAddress, unsupported]);
+  }, [localAddress, connectedChain?.id, chains]);
 
   /**
    * handle wallet connection
@@ -97,7 +100,7 @@ export const useWalletStateHandle = (options: {
   useEffect(() => {
     // console.log("🔗 wallet state changed", connectedWallet);
     //
-    if (unsupported) return;
+    if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
 
     // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
@@ -135,6 +138,9 @@ export const useWalletStateHandle = (options: {
     unsupported,
   ]);
 
+  /**
+   * User manually connects to wallet
+   */
   const connectWallet = async (): Promise<{
     wallet: WalletState;
     status: AccountStatusEnum;
@@ -153,12 +159,7 @@ export const useWalletStateHandle = (options: {
           const wallet = walletState[0];
           const chainId = praseChainIdToNumber(wallet.chains[0].id);
 
-          if (
-            !checkChainSupport(
-              chainId,
-              networkId === "testnet" ? chains.testnet : chains.mainnet
-            )
-          ) {
+          if (!checkChainSupport(chainId, networkId)) {
             return null;
           }
 
@@ -191,5 +192,6 @@ export const useWalletStateHandle = (options: {
 
   return {
     connectWallet,
+    wrongNetwork: unsupported,
   };
 };

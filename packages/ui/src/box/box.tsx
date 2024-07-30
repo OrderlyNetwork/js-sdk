@@ -18,7 +18,6 @@ const boxVariants = tv({
     ...decorationVariants.variants,
     ...positionVariants.variants,
     ...visibleVariants.variants,
-    ...decorationVariants.variants,
     __position: {
       true: "oui-position",
     },

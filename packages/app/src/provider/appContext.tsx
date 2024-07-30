@@ -8,7 +8,7 @@ type AppContextState = {
    * Whether the current network is not supported
    */
   wrongNetwork: boolean;
-  networkStatus: ReturnType<typeof useAppState>["networkStatus"];
+  // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
 };
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
@@ -24,13 +24,13 @@ export type AppStateProviderProps = {
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
-  const { connectWallet } = useWalletStateHandle({
+  const { connectWallet, wrongNetwork } = useWalletStateHandle({
     onChainChanged: props.onChainChanged,
   });
-  const { networkStatus, wrongNetwork } = useAppState();
+  // const { networkStatus } = useAppState();
 
   return (
-    <AppContext.Provider value={{ connectWallet, wrongNetwork, networkStatus }}>
+    <AppContext.Provider value={{ connectWallet, wrongNetwork }}>
       {props.children}
     </AppContext.Provider>
   );
