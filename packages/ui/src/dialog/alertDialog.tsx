@@ -1,11 +1,8 @@
-import { FC, ReactNode, useCallback, useMemo } from "react";
-
-//   import { useModal } from "@/modal";
+import { FC, ReactNode, useMemo } from "react";
 import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { DialogAction } from "./simpleDialogFooter";
 
-export interface AlertDialogProps
-  extends Pick<SimpleDialogProps, "contentClassName" | "size"> {
+export type AlertDialogProps = {
   title?: string;
   message?: ReactNode;
   open?: boolean;
@@ -15,7 +12,12 @@ export interface AlertDialogProps
   okLabel?: string;
   cancelLabel?: string;
   closeable?: boolean;
-}
+} & {
+  actions?: {
+    primary?: Partial<DialogAction>;
+    secondary?: Partial<DialogAction>;
+  };
+};
 
 /**
  * Generic alert dialog, often used for confirmation/alert/information dialogs.
@@ -40,6 +42,7 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["secondary"] = {
         label: cancelLabel,
         onClick: onCancel,
+        ...props.actions?.secondary,
       } as DialogAction;
     }
 
@@ -49,11 +52,12 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
         size: "md",
         className: "oui-w-[154px]",
         onClick: onOk,
+        ...props.actions?.primary,
       } as DialogAction;
     }
 
     return actions;
-  }, [onOk, onCancel, okLabel, cancelLabel]);
+  }, [onOk, onCancel, okLabel, cancelLabel, props.actions]);
 
   return (
     <SimpleDialog
