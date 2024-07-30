@@ -46,20 +46,28 @@ export const NavItem: FC<{
     props.onClick?.([props.item]);
   }, [props.item]);
 
-  const iconElement = useMemo(() => {
-    if (!props.item.icon) return null;
-    if (typeof props.item.icon === "string") {
-      return (
-        <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
-          <img
-            src={props.item.icon}
-            className={"oui-max-w-full oui-max-h-full"}
-          />
-        </span>
-      );
-    }
-    return props.item.icon;
-  }, [props.item.icon]);
+  // const iconElement = useMemo(() => {
+  //   if (!props.item.icon) return null;
+  //   if (typeof props.item.icon === "string") {
+  //     return (
+  //       <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
+  //         {
+  //           <img
+  //             src={
+  //               isActive
+  //                 ? (props.item.activeIcon as string) || props.item.icon
+  //                 : props.item.icon
+  //             }
+  //             className={"oui-max-w-full oui-max-h-full"}
+  //           />
+  //         }
+  //       </span>
+  //     );
+  //   }
+  //   return isActive
+  //     ? props.item.activeIcon || props.item.icon
+  //     : props.item.icon;
+  // }, [props.item.icon, isActive]);
 
   const button = (
     <button
@@ -73,7 +81,7 @@ export const NavItem: FC<{
       onClick={onClickHandler}
     >
       <span className={"oui-flex oui-items-center"}>
-        {iconElement && iconElement}
+        <ItemIcon isActive={isActive} item={props.item} />
         <Text.gradient color={isActive ? "brand" : "inherit"} angle={45}>
           {props.item.name}
         </Text.gradient>
@@ -220,6 +228,7 @@ const SubMenu = (props: {
     <Flex
       px={2}
       py={3}
+      gapX={2}
       className={cn(
         "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80",
         props.active && "oui-bg-base-5"
@@ -229,6 +238,7 @@ const SubMenu = (props: {
         props.onClick(item);
       }}
     >
+      <ItemIcon isActive={props.active ?? false} item={props.item} />
       <Flex direction={"column"} itemAlign={"start"}>
         <SubMenuTitle item={item} isActive={props.active} />
         {typeof item.description !== "undefined" && (
@@ -274,4 +284,27 @@ const Tag = (props: { item: MainNavItem }) => {
       </Text.gradient>
     </div>
   );
+};
+
+const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
+  const { item, isActive } = props;
+
+  if (!props.item.icon) return null;
+  if (typeof props.item.icon === "string") {
+    return (
+      <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
+        {
+          <img
+            src={
+              isActive
+                ? (props.item.activeIcon as string) || props.item.icon
+                : props.item.icon
+            }
+            className={"oui-max-w-full oui-max-h-full"}
+          />
+        }
+      </span>
+    );
+  }
+  return isActive ? props.item.activeIcon || props.item.icon : props.item.icon;
 };
