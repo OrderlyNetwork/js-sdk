@@ -1,5 +1,12 @@
 import {useCallback, useMemo, useState} from "react";
-import {useChains, useConfig, useWalletConnector, useWithdraw} from "@orderly.network/hooks";
+import {
+    useAccount,
+    useChains,
+    useConfig,
+    usePositionStream,
+    useWalletConnector,
+    useWithdraw
+} from "@orderly.network/hooks";
 import {ActionType} from "../actionButton";
 import { API, NetworkId } from "@orderly.network/types";
 import {InputStatus} from "../depositForm/depositForm.script";
@@ -13,11 +20,20 @@ export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>
 const markPrice = 1;
 
 export const useWithdrawForm = () => {
+    const [positionData] = usePositionStream();
+
     const [quantity, setQuantity] = useState<string>("");
-    const [token, setToken] = useState<API.TokenInfo>();
+    const [token, setToken] = useState<API.TokenInfo>({
+        symbol: "USDC",
+        decimals: 6,
+        address:'',
+        display_name:'',
+        precision:6,
+    });
     const [inputStatus, setInputStatus] = useState<InputStatus>("default");
     const [hintMessage, setHintMessage] = useState<string>();
     const { wrongNetwork } = useAppContext();
+    const { account} = useAccount();
 
 
     const {
@@ -42,8 +58,11 @@ export const useWithdrawForm = () => {
         // if (allowanceNum < qty && qty <= maxQty) {
         //     return ActionType.Increase;
         // }
+        if (wrongNetwork) {
+            return ActionType.SwitchToArbitrum;
+        }
 
-        return ActionType.Deposit;
+        return ActionType.Withdraw;
     }, []);
 
     const onQuantityChange = (qty: string) => {
@@ -61,6 +80,7 @@ export const useWithdrawForm = () => {
     }, [quantity, markPrice]);
 
     const {dst, withdraw, isLoading, maxAmount, availableBalance, availableWithdraw, unsettledPnL} = useWithdraw();
+
     const networkId = config.get("networkId") as NetworkId;
 
     const [chains, { findByChainId }] = useChains(networkId, {
@@ -117,6 +137,29 @@ export const useWithdrawForm = () => {
         [currentChain, switchChain, findByChainId]
     );
 
+    const hasPositions = useMemo(() =>positionData?.rows?.length! > 0, [positionData]);
+
+    const onSettlePnl = async () => {
+        return account
+            .settle()
+            .catch((e) => {
+                if (e.code == -1104) {
+                    toast.error(
+                        "Settlement is only allowed once every 10 minutes. Please try again later."
+                    );
+                }
+                if (e.message.indexOf('user rejected') !== 0) {
+                    toast.error('REJECTED_TRANSACTION');
+                }
+                return Promise.reject(e);
+            })
+            .then((res) => {
+                toast.success("Settlement requested");
+                return Promise.resolve(res);
+            });
+    }
+
+
     return {
         walletName,
         actionType,
@@ -129,17 +172,19 @@ export const useWithdrawForm = () => {
         dst,
         amount,
         balanceRevalidating: false,
-        maxQuantity: '0',
+        maxQuantity: maxAmount,
         disabled: false,
         loading: false,
         brokerId: config.get("brokerId"),
         brokerName: config.get("brokerName") || "",
         fee: 0,
-
+        hasPositions,
+        unsettledPnL,
         wrongNetwork,
         settingChain,
         chains,
         currentChain,
         onChainChange,
+        onSettlePnl,
     }
 }

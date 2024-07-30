@@ -8,6 +8,7 @@ import {ChainSelect} from "../chainSelect";
 import {QuantityInput} from "../quantityInput";
 import {AvailableQuantity} from "../availableQuantity";
 import {WithdrawWarningMessage} from "../withdrawWarningMessage";
+import {UnsettlePnlInfo} from "../unsettlePnlInfo";
 
 export const WithdrawFormUI = (
     {
@@ -32,7 +33,9 @@ export const WithdrawFormUI = (
         fee,
         settingChain,
         wrongNetwork,
-
+        hasPositions,
+        unsettledPnL,
+        onSettlePnl
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -50,7 +53,7 @@ export const WithdrawFormUI = (
                         }}
                         status={inputStatus}
                         hintMessage={hintMessage}
-                        precision={dst?.decimals}
+                        precision={2}
                     />
                 </Box>
 
@@ -64,6 +67,7 @@ export const WithdrawFormUI = (
                         onQuantityChange(maxQuantity);
                     }}
                 />
+                <UnsettlePnlInfo unsettledPnl={unsettledPnL} hasPositions={hasPositions} onSettlle={onSettlePnl}/>
 
                 <ExchangeDivider/>
                 <Web3Wallet name={walletName} address={address}/>
