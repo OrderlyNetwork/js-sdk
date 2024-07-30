@@ -4,6 +4,8 @@ import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";
 import { commify, commifyOptional } from "@orderly.network/utils";
+import { AuthGuard } from "../../../../../ui-connector/dist";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const state = props;
@@ -52,7 +54,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
               : "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)"
           }
         />
-        {state.notConnected && (
+        {/* {state.notConnected && (
           <Button
             variant="gradient"
             fullWidth
@@ -63,7 +65,14 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           >
             Connect wallet
           </Button>
-        )}
+        )} */}
+
+        <AuthGuard
+          status={AccountStatusEnum.SignedIn}
+          buttonProps={{ fullWidth: true }}
+        >
+          <></>
+        </AuthGuard>
       </Flex>
     </Flex>
   );

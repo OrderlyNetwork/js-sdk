@@ -24,7 +24,8 @@ export const useAsTraderScript = (): AsTraderReturns => {
     referralInfo,
     setShowHome,
     bindReferralCodeState,
-    setTab
+    setTab,
+    mutate,
   } = useReferralContext();
 
   const { state } = useAccount();
@@ -33,6 +34,16 @@ export const useAsTraderScript = (): AsTraderReturns => {
     setTab(TabTypes.trader);
     setShowHome(false);
   };
+
+  const bindSuccess = (
+    success: boolean,
+    error: any,
+    hide: any,
+    queryParams: any
+  ) => {
+    mutate();
+    bindReferralCodeState?.(success, error, hide, queryParams);
+  }
   return {
     isSignIn,
     isTrader,
@@ -42,6 +53,6 @@ export const useAsTraderScript = (): AsTraderReturns => {
     // isLoading: false,
     // referralInfo: MockData.referralInfo,
     onEnterTraderPage,
-    bindReferralCodeState,
+    bindReferralCodeState: bindSuccess,
   };
 };

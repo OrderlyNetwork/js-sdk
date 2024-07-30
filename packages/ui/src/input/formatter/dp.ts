@@ -1,4 +1,4 @@
-import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
+import { InputFormatterOptions } from "./inputFormatter";
 import { Decimal } from "@orderly.network/utils";
 
 export const dpFormatter = (
@@ -11,24 +11,17 @@ export const dpFormatter = (
     roundingMode?: number;
   }
 ) => {
+  const onBefore = (value: string | number, options: InputFormatterOptions) => {
+    if (typeof value === "number") value = value.toString();
+    if (!value || value.endsWith(".")) return value;
+    const { roundingMode = Decimal.ROUND_DOWN } = config ?? {};
+    let d = new Decimal(value);
+    d = d.todp(dp, roundingMode);
+    return d.toString();
+  };
+
   return {
-    onRenderBefore: function (
-      value: string | number,
-      options: InputFormatterOptions
-    ): string {
-      if (typeof value === "number") value = value.toString();
-      if (!value || value.endsWith(".")) return value;
-      const { roundingMode = Decimal.ROUND_DOWN } = config ?? {};
-      let d = new Decimal(value);
-      d = d.todp(dp, roundingMode);
-      return d.toString();
-      // return "" + value;
-    },
-    onSendBefore: function (
-      value: string,
-      options: InputFormatterOptions
-    ): string {
-      return value;
-    },
+    onRenderBefore: onBefore,
+    onSendBefore: onBefore,
   };
 };

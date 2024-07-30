@@ -37,7 +37,7 @@ export const Rebates: FC<RebatesReturns> = (props) => {
             onChange={(range) => {
               props.setDateRange(range);
             }}
-            max={90}
+            max={89}
             disabled={{
               after: new Date(),
             }}
