@@ -33,7 +33,7 @@ export const Toaster: FC<ToastProps> = (props) => {
             secondary: "rgba(25, 14, 44, 1)",
           },
           style: {
-            color: "rgba(123, 220, 138, 1)",
+            // color: "rgba(123, 220, 138, 1)",
             background: 'rgba(40, 46, 58, 1)'
           },
         },
@@ -49,7 +49,7 @@ export const Toaster: FC<ToastProps> = (props) => {
             secondary: "rgba(25, 14, 44, 1)",
           },
           style: {
-            color: "rgba(217, 91, 129, 1)",
+            // color: "rgba(217, 91, 129, 1)",
             background: 'rgba(40, 46, 58, 1)'
           },
         },
@@ -91,7 +91,7 @@ export const Toaster: FC<ToastProps> = (props) => {
             return (
               <div className="oui-flex oui-items-center oui-padding-[12px] md:oui-padding-[16px]">
                 {customIcon}
-                <div className="oui-text-base">
+                <div className="oui-text-base oui-px-[2px]">
                   {message}
                 </div>
                 {true && (
@@ -99,7 +99,7 @@ export const Toaster: FC<ToastProps> = (props) => {
                     onClick={() => toast.dismiss(t.id)}
                     className="oui-hidden md:oui-block"
                   >
-                    <CloseIcon size={16} className=" oui-text-base-contrast-54 oui-ml-[16px]" />
+                    <CloseIcon size={16} className=" oui-text-base-contrast-54" />
                   </button>
                 )}
               </div>

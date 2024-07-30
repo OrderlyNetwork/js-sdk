@@ -109,8 +109,10 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   /**
    * **Important: The chldren component will be rendered only if the status is equal to the required status and the network is correct.**
    */
+  
+  
   return (
-    <Either value={state.status === status && !wrongNetwork} left={Left}>
+    <Either value={state.status >= status && !wrongNetwork} left={Left}>
       {props.children}
     </Either>
   );

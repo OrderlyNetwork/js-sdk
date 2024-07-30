@@ -31,7 +31,7 @@ export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
 
 export const useRebatesScript = (): RebatesReturns => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: subDays(new Date(), 91),
+    from: subDays(new Date(), 90),
     to: subDays(new Date(), 1),
   });
 

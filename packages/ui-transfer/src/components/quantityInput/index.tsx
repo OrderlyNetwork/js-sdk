@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
+import { Decimal } from "@orderly.network/utils";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -157,8 +158,10 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
+            inputFormatter.dpFormatter(precision ?? 8, {
+              roundingMode: Decimal.ROUND_DOWN,
+            }),
             inputFormatter.currencyFormatter,
-            // inputFormatter.dpFormatter({ dp: precision ?? 8 }),
           ]}
           {...rest}
           classNames={{
@@ -174,7 +177,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
             input: cn("oui-absolute oui-bottom-0", classNames?.input),
           }}
         />
-        {message}
+        {hintMessage && message}
       </>
     );
   }

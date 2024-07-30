@@ -1,17 +1,13 @@
 import { FC, useMemo } from "react";
-import {
-  cn,
-  
-  Divider,
-  Flex,
-  
-  Text,
-} from "@orderly.network/ui";
+import { cn, Divider, Flex, Text } from "@orderly.network/ui";
 
-import {CommuntiyDiscordIcon,
-    CommuntiyTelegramIcon,
-    CommuntiyXIcon,OrderlyNetworkTextIcon,
-    SignalIcon,} from "../icons/index";
+import {
+  CommuntiyDiscordIcon,
+  CommuntiyTelegramIcon,
+  CommuntiyXIcon,
+  OrderlyNetworkTextIcon,
+  SignalIcon,
+} from "../icons/index";
 
 import { FooterReturns } from "./footer.script";
 import { BaseIcon, BaseIconProps } from "@orderly.network/ui/src/icon/baseIcon";
@@ -59,9 +55,9 @@ export const FooterUI: FC<FooterReturns> = (props) => {
           direction="vertical"
           className="oui-h-[18px] oui-px-1 oui-ml-2 oui-border-line-12"
         />
-        <Flex>
+        <Flex gap={2}>
           <Text intensity={54} size="2xs">
-            Juon our community
+            Join our community
           </Text>
           <Flex direction={"row"} gap={1}>
             {typeof props.config?.telegramUrl !== "undefined" && (

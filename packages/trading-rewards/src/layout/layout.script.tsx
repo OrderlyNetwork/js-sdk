@@ -3,17 +3,20 @@ import type { SideBarProps } from "@orderly.network/ui-scaffold";
 import React from "react";
 import { useMemo, useState } from "react";
 
-export const useLayoutBuilder = (): SideBarProps & {
+export const useLayoutBuilder = (props: {
+  current?: string
+}): SideBarProps & {
   hideSideBar: boolean;
 } => {
-  const [current, setCurrent] = useState("/rewards");
+  const [current, setCurrent] = useState(props.current || "/rewards/trading");
   // const [sideOpen, setSideOpen] = useState(true);
+
 
   const items = useMemo(() => {
     return [
       {
         name: "Trading",
-        href: "/rewards",
+        href: "/rewards/trading",
         icon: (
           <svg
             width="18"
