@@ -1,5 +1,12 @@
 import { FC } from "react";
-import { CopyIcon, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
+import {
+  CopyIcon,
+  Divider,
+  Flex,
+  modal,
+  Text,
+  Tooltip,
+} from "@orderly.network/ui";
 import { ReferralLinkReturns } from "./referralLink.script";
 import { InfoIcon } from "../../../components/infoIcon";
 import { AutoHideText } from "../../../components/autoHideText";
@@ -55,7 +62,7 @@ const Subtitle: FC<ReferralLinkReturns> = (props) => {
     return (
       <Flex direction={"column"} itemAlign={"start"} className={className}>
         <Flex direction={"row"} gap={2}>
-          <Text>{title}</Text>
+          {/* <Text>{title}</Text> */}
           <Alert title={title} tooltip={tooltip} />
         </Flex>
         {gradient ? (
@@ -148,17 +155,17 @@ const Alert: FC<{
           modal.alert({
             title: props.title,
             message: (
-              <div className="oui-text-base-contrast/30 oui-space-y-3 oui-text-3xs desktop:oui-text-xs">
+              <div className="oui-text-base-contrast/30 oui-space-y-3 oui-text-xs desktop:oui-text-xs">
                 {props.tooltip}
               </div>
             ),
           });
         }}
       >
-        <InfoIcon
-          className=" oui-fill-white/[.36] hover:oui-fill-white/80 oui-cursor-pointer oui-mt-[1px]"
-          fillOpacity={1}
-        />
+        <Flex direction={"column"}>
+          <Text intensity={54}>{props.title}</Text>
+          <Divider className="oui-w-full" lineStyle="dotted" intensity={16}/>
+        </Flex>
       </div>
     </Tooltip>
   );

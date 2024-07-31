@@ -1,15 +1,19 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import {
   Column,
   DataTable,
   DatePicker,
+  Divider,
   Flex,
+  ListView,
   Pagination,
+  Statistic,
   Text,
 } from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
 import { subDays } from "date-fns";
+import { useMediaQuery } from "@orderly.network/hooks";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -61,6 +65,8 @@ const Title: FC<RebatesReturns> = (props) => {
 };
 
 const List: FC<RebatesReturns> = (props) => {
+  const layout767 = useMediaQuery("(max-width: 767px)");
+
   const columns: Column<RebatesItem>[] = [
     {
       title: "Rebates (USDC)",
@@ -82,7 +88,7 @@ const List: FC<RebatesReturns> = (props) => {
       dataIndex: "vol",
       render: (value) =>
         commifyOptional(value, {
-          fix: 6,
+          fix: 2,
           fallback: "0",
           padEnd: true,
           prefix: "$",
@@ -98,6 +104,18 @@ const List: FC<RebatesReturns> = (props) => {
       width: 127,
     },
   ];
+
+  if (layout767) {
+    return (
+      <ListView<RebatesItem, RebatesItem[]>
+        dataSource={props.dataSource}
+        className="oui-h-[197px] oui-w-full"
+        renderItem={(item, index) => {
+          return (<Cell item={item}/>)
+        }}
+      />
+    );
+  }
 
   return (
     <DataTable
@@ -116,5 +134,50 @@ const List: FC<RebatesReturns> = (props) => {
         onPageSizeChange={props.onPageSizeChange}
       />
     </DataTable>
+  );
+};
+
+const Cell = (props: { item: RebatesItem }) => {
+  return (
+    <Flex direction={"column"} width={"100%"}>
+      <Flex width={"100%"} gap={1}>
+        <Statistic
+          label="Rebates (USDC)"
+          className="oui-text-xs oui-text-base-contrast-54 oui-flex-1 oui-min-w-[105px]"
+        >
+          <Text size="sm" intensity={80}>
+            {commifyOptional(props.item.referee_rebate, {
+              fix: 6,
+              fallback: "0",
+              padEnd: true,
+              prefix: "$",
+            })}
+          </Text>
+        </Statistic>
+        <Statistic
+          label="Trading vol. (USDC)  "
+          className="oui-text-xs oui-text-base-contrast-54 oui-flex-shrink"
+        >
+          <Text size="sm" intensity={80}>
+            {commifyOptional(props.item.vol, {
+              fix: 2,
+              fallback: "0",
+              padEnd: true,
+              prefix: "$",
+            })}
+          </Text>
+        </Statistic>
+        <Statistic
+          label="Date"
+          className="oui-text-xs oui-text-base-contrast-54 oui-flex-1"
+          align="end"
+        >
+          <Text.formatted size="sm" intensity={80} formatString="yyyy-MM-dd">
+            {props.item.date}
+          </Text.formatted>
+        </Statistic>
+      </Flex>
+      <Divider className="oui-w-full oui-mt-3"/>
+    </Flex>
   );
 };
