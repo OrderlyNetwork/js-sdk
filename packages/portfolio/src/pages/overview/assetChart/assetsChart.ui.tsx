@@ -1,13 +1,7 @@
 import { Card } from "@orderly.network/ui";
 import { PeriodTitle } from "../shared/periodHeader";
 import { useAssetsLineChartScriptReturn } from "./assetsChart.script";
-import {
-  AssetLineChart,
-  Axis,
-  Chart,
-  Line,
-  PnlLineChart,
-} from "@orderly.network/chart";
+import { AssetLineChart } from "@orderly.network/chart";
 
 export type AssetsLineChartProps = {} & useAssetsLineChartScriptReturn;
 
@@ -28,7 +22,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
         content: "oui-h-[150px] oui-pb-0",
       }}
     >
-      <AssetLineChart data={props.data} />
+      <AssetLineChart data={props.data} invisible={props.wrongNetwork} />
       {/* <PnlLineChart data={data} /> */}
       {/* <LineChart data={data} /> */}
     </Card>

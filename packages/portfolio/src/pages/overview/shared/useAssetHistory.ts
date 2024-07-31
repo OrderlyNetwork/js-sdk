@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useCollateral,
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
 import { subDays, format } from "date-fns";
+import { API } from "@orderly.network/types";
+import { useDataTap } from "@orderly.network/react-app";
 
 export enum PeriodType {
   WEEK = "7D",
@@ -54,11 +56,8 @@ export const useAssetsHistoryData = (
 
   // console.log("-------", totalValue, data);
 
-  return {
-    periodTypes,
-    period,
-    onPeriodChange,
-    data: !isRealtime
+  const calculateData = (data: API.DailyRow[], isRealTime: boolean) => {
+    return !isRealtime
       ? data
       : Array.isArray(data) && data.length > 0
       ? data.concat([
@@ -70,7 +69,18 @@ export const useAssetsHistoryData = (
               : data[data.length - 1]?.account_value ?? 0,
           },
         ])
-      : data,
+      : data;
+  };
+
+  // const filteredData = useDataTap(calculateData(data, isRealtime), {
+  //   fallbackData: [data[0], data[data.length - 1]],
+  // });
+
+  return {
+    periodTypes,
+    period,
+    onPeriodChange,
+    data: calculateData(data, isRealtime),
     aggregateValue,
   } as const;
 };

@@ -17,6 +17,7 @@ export * from "./scrollarea";
 export * from "./dialog";
 export * from "./divider";
 export * from "./tabs";
+export { PaginationItems } from "./pagination";
 export { Select, SelectItem } from "./select";
 export * from "./popover";
 export * from "./card";
