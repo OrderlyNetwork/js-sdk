@@ -10,6 +10,7 @@ export type AsAnAffiliateReturns = {
   onEnterAffiliatePage?: (params?: any) => void;
   becomeAnAffiliate?: () => void;
   isSignIn: boolean;
+  wrongNetwork: boolean;
 };
 
 export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
@@ -20,6 +21,7 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     becomeAnAffiliateUrl,
     setShowHome,
     setTab,
+    wrongNetwork,
   } = useReferralContext();
 
   const { state } = useAccount();
@@ -44,5 +46,6 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     // referralInfo: MockData.referralInfo,
     onEnterAffiliatePage,
     becomeAnAffiliate,
+    wrongNetwork,
   };
 };

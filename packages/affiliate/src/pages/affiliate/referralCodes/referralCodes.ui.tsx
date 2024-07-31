@@ -6,6 +6,7 @@ import {
   DataTable,
   Divider,
   Flex,
+  ListView,
   ScrollArea,
   Statistic,
   Text,
@@ -55,10 +56,28 @@ const Title: FC<ReferralCodesReturns> = (props) => {
 
 const MobileLayout: FC<ReferralCodesReturns> = (props) => {
   return (
-    <ScrollArea>
-      <div className="oui-max-h-[240px]">
-        {props.codes?.map((e, index) => {
-          return (
+    // <ScrollArea>
+    //   <div className="oui-max-h-[240px]">
+    //     {props.codes?.map((e, index) => {
+    //       return (
+    //         <MobileCell
+    //           key={index}
+    //           data={e}
+    //           editRate={props.editRate}
+    //           copyLink={props.copyLink}
+    //           copyCode={props.copyCode}
+    //           setPinCode={props.setPinCode}
+    //         />
+    //       );
+    //     })}
+    //   </div>
+    // </ScrollArea>
+    <ListView
+      dataSource={props.codes}
+      className="oui-max-h-[240px] oui-w-full"
+      renderItem={(e, index) => {
+        return (
+          <Flex direction={"column"}>
             <MobileCell
               key={index}
               data={e}
@@ -67,10 +86,11 @@ const MobileLayout: FC<ReferralCodesReturns> = (props) => {
               copyCode={props.copyCode}
               setPinCode={props.setPinCode}
             />
-          );
-        })}
-      </div>
-    </ScrollArea>
+            <Divider className="oui-w-full oui-mt-3" />
+          </Flex>
+        );
+      }}
+    />
   );
 };
 
@@ -129,7 +149,6 @@ const MobileCell: FC<{
   return (
     <Flex
       key={data.code}
-      pt={3}
       gap={3}
       direction={"column"}
       className="oui-w-full"
@@ -306,6 +325,9 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
 
     return cols;
   }, [moreColumn]);
+
+  console.log("codes", props.codes);
+  
 
   return (
     <DataTable

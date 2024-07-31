@@ -34,7 +34,7 @@ const Title: FC<SummaryReturns> = (props) => {
         <Button
           color="secondary"
           size="sm"
-          className="oui-text-primary-light oui-text-2xs md:oui-text-xs 2xl:oui-text-sm"
+          className="oui-text-primary-light oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-bg-base-6"
         >
           {props.code}
         </Button>

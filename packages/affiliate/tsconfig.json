@@ -51,6 +51,9 @@
       "@orderly.network/utils": [
         "../utils/src"
       ],
+      "@orderly.network/react-app": [
+        "../app/src"
+      ],
       "@orderly.network/types": [
         "../types/src"
       ]

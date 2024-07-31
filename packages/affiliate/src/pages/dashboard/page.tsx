@@ -3,7 +3,7 @@ import { TabWidget } from "./tab";
 
 export const DashboardPage = () => {
   return (
-    <div id="oui-affiliate-dashboard-page">
+    <div id="oui-affiliate-dashboard-page" className="oui-w-full">
       <TabWidget />
     </div>
   );

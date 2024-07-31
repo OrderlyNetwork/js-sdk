@@ -98,7 +98,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         dataIndex: "volume",
         render: (value) => (
           <Text>
-            {commifyOptional(value, {fix: 6, fallback: "0", padEnd: true, prefix: '$'})}
+            {commifyOptional(value, {fix: 2, fallback: "0", padEnd: true, prefix: '$'})}
           </Text>
         ),
         width: 216,
@@ -136,7 +136,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                 />
                 <MobileCellItem
                   title="Referral vol."
-                  value={commifyOptional(e.volume, { fix: 6, fallback: "0", padEnd: true })}
+                  value={commifyOptional(e.volume, { fix: 2, fallback: "0", padEnd: true })}
                   prefix="$"
                 />
                 <MobileCellItem
@@ -260,12 +260,12 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
                   />
                   <MobileCellItem
                     title="Total commission"
-                    value={e.referral_rebate}
+                    value={commifyOptional(e.referral_rebate, { fix: 6, prefix: "$"})}
                     className="oui-min-w-[102px]"
                   />
                   <MobileCellItem
                     title="Total vol."
-                    value={e.volume}
+                    value={commifyOptional(e.volume, { fix: 2, prefix: "$"})}
                     align="end"
                   />
                 </Flex>

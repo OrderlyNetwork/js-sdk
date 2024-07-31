@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { OrderlyAppConfig } from "./types";
 import {
   ModalProvider,
@@ -22,6 +22,15 @@ const OrderlyApp = (
     ...configProps
   } = props;
   useBootstrap();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+        localStorage.setItem("referral_code", refCode);
+    }
+}, []);
+
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>
       <OrderlyThemeProvider
