@@ -19,7 +19,7 @@ export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>
 
 const markPrice = 1;
 
-export const useWithdrawForm = () => {
+export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) => {
     const [positionData] = usePositionStream();
     const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
@@ -201,6 +201,9 @@ export const useWithdrawForm = () => {
             allowCrossChainWithdraw: crossChainWithdraw,
         }).then(res => {
             toast.success('Withdraw requested');
+            if (onClose) {
+                onClose();
+            }
             setQuantity('');
         }).catch(e => {
             if (e.message.indexOf('user rejected') !== -1) {

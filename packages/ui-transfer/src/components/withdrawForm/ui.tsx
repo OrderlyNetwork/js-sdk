@@ -1,5 +1,5 @@
 import {Box, Flex, Text, textVariants} from "@orderly.network/ui"
-import {UseWithdrawFormScriptReturn} from "./script";
+import {useWithdrawForm, UseWithdrawFormScriptReturn} from "./script";
 import {Web3Wallet} from "../web3Wallet";
 import {ExchangeDivider} from "../exchangeDivider";
 import {BrokerWallet} from "../brokerWallet";
@@ -9,6 +9,11 @@ import {AvailableQuantity} from "../availableQuantity";
 import {WithdrawWarningMessage} from "../withdrawWarningMessage";
 import {UnsettlePnlInfo} from "../unsettlePnlInfo";
 import {WithdrawAction} from "../withdrawAction";
+
+export type WithdrawFormProps =  ReturnType<typeof useWithdrawForm> & {
+    onClose?: () => void;
+}
+
 
 export const WithdrawFormUI = (
     {

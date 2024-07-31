@@ -25,6 +25,12 @@ export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChai
     }, [currentChain])
 
     const showVaultWarning = useMemo(() => {
+        if (!chainVaultBalance) {
+           return false;
+        }
+        if (!maxAmount) {
+           return false;
+        }
         if (!quantity) {
             return false;
         }
