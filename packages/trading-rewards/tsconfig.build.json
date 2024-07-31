@@ -16,13 +16,13 @@
   "compilerOptions": {
     // "rootDir": "./src",
     "jsx": "react-jsx",
-    "sourceMap": true,
+    "sourceMap": false,
     "module": "esnext",
     "outDir": "dist",
     "declarationDir": "types",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    // "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
   }
 }

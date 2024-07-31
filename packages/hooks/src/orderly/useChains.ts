@@ -138,14 +138,13 @@ export function useChains(
 
     let mainnetArr: API.Chain[] = [];
 
-    const mainnetChains = needFetchFromAPI ? chainInfos : customChains?.mainnet;
-
     mainnetArr = filterAndUpdateChains(
       tokenChains,
-      // chainInfos,
-      mainnetChains,
+      chainInfos,
       filterFun.current
     );
+
+    mainnetArr = needFetchFromAPI ? mainnetArr : customChains?.mainnet;
 
     mainnetArr.forEach((item) => {
       const chainId = item.network_infos?.chain_id;
