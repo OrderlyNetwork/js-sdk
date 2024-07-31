@@ -128,8 +128,8 @@ export const PnLBarChart = (props: PnLChartProps) => {
             data={props.data}
             margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
           >
-            {/* @ts-ignore */}
             {!invisible && (
+              // @ts-ignore
               <Tooltip
                 // cursor={{ fillOpacity: 0.1 }}
                 cursor={<CustomizedCross />}
@@ -143,8 +143,9 @@ export const PnLBarChart = (props: PnLChartProps) => {
               strokeOpacity={0.04}
             />
             <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
-            {/* @ts-ignore */}
+
             {!invisible && (
+              // @ts-ignore
               <Bar dataKey="pnl" shape={<RoundedRectangle />}>
                 {props.data.map((entry, index) => {
                   return (
