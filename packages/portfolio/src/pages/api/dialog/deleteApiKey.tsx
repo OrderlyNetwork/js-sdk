@@ -12,13 +12,13 @@ import { APIKeyItem } from "@orderly.network/hooks";
 import { formatKey } from "../apiManager.ui";
 
 export const DeleteAPIKeyDialog: FC<{
-  item: APIKeyItem,
+  item: APIKeyItem;
   open: boolean;
-  setOpen?: any,
-  onDelete?: (item: APIKeyItem) => Promise<void>
+  setOpen?: any;
+  onDelete?: (item: APIKeyItem) => Promise<void>;
 }> = (props) => {
-  const { item, open, setOpen, onDelete} = props;
-  
+  const { item, open, setOpen, onDelete } = props;
+
   return (
     <SimpleDialog
       open={open}
@@ -34,18 +34,22 @@ export const DeleteAPIKeyDialog: FC<{
           },
         },
         secondary: {
-          label:"Cancel",
+          label: "Cancel",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
             setOpen(false);
-          }
-        }
+          },
+        },
       }}
-      footerClassName="oui-justify-center"
-      contentClassName="oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold"
+      classNames={{
+        footer: "oui-justify-center",
+        content:
+          "oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold",
+      }}
     >
-     
-        <Text  size="xs">{`Delete your API key ${formatKey(item?.orderly_key)}`}</Text>
+      <Text size="xs">{`Delete your API key ${formatKey(
+        item?.orderly_key
+      )}`}</Text>
     </SimpleDialog>
   );
 };

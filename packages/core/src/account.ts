@@ -441,7 +441,7 @@ export class Account {
     if (res.success) {
       const key = await keyPair.getPublicKey();
       return {
-        key,
+        key: key.replace("ed25519:", ""),
         secretKey: keyPair.secretKey?.replace("ed25519:", ""),
       };
     }
