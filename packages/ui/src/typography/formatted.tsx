@@ -126,7 +126,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
           </button>
         );
       }
-    }, [props.suffix, copyable]);
+    }, [props.suffix, copyable, children]);
 
     const content = useMemo(() => {
       if (typeof children === "undefined") return "--";

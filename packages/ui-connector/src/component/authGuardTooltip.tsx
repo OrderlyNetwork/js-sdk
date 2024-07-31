@@ -1,4 +1,5 @@
 import { useAccount } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Tooltip } from "@orderly.network/ui";
 import { PropsWithChildren, useMemo } from "react";
@@ -16,8 +17,13 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
   const { opactiy = 90 } = props;
   const { state } = useAccount();
   const isSupport = true;
+  const { wrongNetwork } = useAppContext();
+
 
   const hint = useMemo(() => {
+    if (wrongNetwork) {
+      return "Please switch to a supported network to set up";
+    }
     switch (state.status) {
       case AccountStatusEnum.NotConnected:
         return "Please Connect wallet before set up";

@@ -17,8 +17,10 @@ function createDialogComponent<P extends Partial<SimpleDialogProps>>(
         onOpenChange={onOpenChange}
         size={size}
         title={title}
-        contentClassName={contentClassName}
-        bodyClassName={bodyClassName}
+        classNames={{
+          content: contentClassName,
+          body: bodyClassName,
+        }}
       >
         <Comp {...rest} close={hide}/>
       </SimpleDialog>

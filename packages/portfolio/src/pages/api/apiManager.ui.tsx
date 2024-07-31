@@ -20,7 +20,11 @@ import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
 import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { AuthGuard, AuthGuardEmpty } from "@orderly.network/ui-connector";
+import {
+  AuthGuard,
+  AuthGuardEmpty,
+  AuthGuardTooltip,
+} from "@orderly.network/ui-connector";
 import { APIKeyItem } from "@orderly.network/hooks";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
@@ -30,7 +34,12 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >
-      <Flex direction={"column"} gap={4} width={"100%"} className="oui-font-semibold">
+      <Flex
+        direction={"column"}
+        gap={4}
+        width={"100%"}
+        className="oui-font-semibold"
+      >
         <AccountInfo {...props} />
         <Subtitle {...props} />
         <KeyList {...props} />
@@ -61,7 +70,13 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         <Text size="xs" intensity={36}>
           Account ID
         </Text>
-        <Text.formatted size="base" inlist={80} rule={"address"} copyable>
+        <Text.formatted
+          size="base"
+          inlist={80}
+          rule={"address"}
+          copyable
+          onCopy={props.onCopyAccountId}
+        >
           {props.address}
         </Text.formatted>
       </Flex>
@@ -93,18 +108,15 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
       direction={"row"}
       className="oui-text-sm oui-border-b-2 oui-border-line-6 oui-pb-4"
     >
-      <Flex
-        direction={"column"}
-        itemAlign={"start"}
-        width={"100%"}
-        gap={1}
-        onClick={props.onReadApiGuide}
-      >
+      <Flex direction={"column"} itemAlign={"start"} width={"100%"} gap={1}>
         <Text intensity={54}>
           Create API keys to suit your trading needs. For your security, don't
           share your API keys with anyone.{" "}
         </Text>
-        <Flex className="oui-text-primary oui-fill-white/[.54] hover:oui-text-primary-light hover:oui-fill-white/[.8] oui-cursor-pointer">
+        <Flex
+          className="oui-text-primary oui-fill-white/[.54] hover:oui-text-primary-light hover:oui-fill-white/[.8] oui-cursor-pointer"
+          onClick={props.onReadApiGuide}
+        >
           <Text>Read API guide</Text>
           <svg
             width="16"
@@ -118,16 +130,19 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           </svg>
         </Flex>
       </Flex>
-      <Button
-        size="md"
-        icon={<PlusIcon />}
-        variant="contained"
-        color="primary"
-        onClick={props.onCreateApiKey}
-        disabled={!props.canCreateApiKey}
-      >
-        Create API key
-      </Button>
+      <AuthGuardTooltip side="top">
+        <Button
+          size="md"
+          icon={<PlusIcon />}
+          variant="contained"
+          color="primary"
+          onClick={props.onCreateApiKey}
+          disabled={!props.canCreateApiKey || props.wrongNetwork}
+          // className="disabled:oui-cursor-default"
+        >
+          Create API key
+        </Button>
+      </AuthGuardTooltip>
     </Flex>
   );
 };
@@ -197,7 +212,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       emptyView={<AuthGuardEmpty />}
       classNames={{
         header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
-        body: "oui-text-xs oui-text-base-contrast-80"
+        body: "oui-text-xs oui-text-base-contrast-80",
       }}
     />
   );

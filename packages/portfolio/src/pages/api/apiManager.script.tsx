@@ -7,6 +7,7 @@ import {
   useApiKeyManager,
   useQuery,
 } from "@orderly.network/hooks";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useContext, useState } from "react";
@@ -35,9 +36,14 @@ export type ApiManagerScriptReturns = {
   doDelete: (item: APIKeyItem) => Promise<void>;
   doEdit: (item: APIKeyItem, ip?: string) => Promise<void>;
   canCreateApiKey: boolean;
+  wrongNetwork: boolean;
   status: AccountStatusEnum;
   keys: APIKeyItem[];
   generateKey?: GenerateKeyInfo;
+  onCopyAccountId: () => void;
+  onCopyApiKey: () => void;
+  onCopyApiSecretKey: () => void;
+  onCopyIP: () => void;
 };
 
 export const useApiManagerScript = (): ApiManagerScriptReturns => {
@@ -46,6 +52,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
   const { configStore } = useContext(OrderlyContext);
   const brokerId = configStore.get("brokerId");
+  const { wrongNetwork } = useAppContext();
 
   const { state, account } = useAccount();
   const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
@@ -53,6 +60,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     | undefined
     | {
         user_id: number;
+        account_id: string;
       }
   >(`/v1/get_account?address=${account.address}&broker_id=${brokerId}`);
 
@@ -113,6 +121,8 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
       const generateKeyRes = await generateOrderlyKey(scope);
 
       toast.success("API key created");
+      console.log("xxx generateKeyRes", generateKeyRes);
+      
       if ((ipRestriction?.length || 0) > 0) {
         const res = await setIPRestriction(generateKeyRes.key, ipRestriction!);
         if (res.success) {
@@ -177,9 +187,19 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     return Promise.reject();
   };
 
+  const onCopyAccountId = () => toast.success("Account id copied");
+  const onCopyApiKey = () => toast.success("API key copied");
+  const onCopyApiSecretKey = () => toast.success("Secret key copied");
+  const onCopyIP = () => toast.success("Restricted IP copied");
+
+  let keyList = (keys || []).filter(
+    (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
+  );
+  keyList = useDataTap(keyList) || [];
+
   return {
-    address: account.address,
-    uid: `${data?.user_id || "-"}`,
+    address: data?.account_id,
+    uid: `${data?.user_id || "--"}`,
     onCreateApiKey,
     onReadApiGuide,
     showCreateDialog,
@@ -193,10 +213,13 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: (keys || []).filter(
-      (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
-    ),
+    keys: keyList,
     generateKey,
+    onCopyAccountId,
+    wrongNetwork,
+    onCopyApiKey,
+    onCopyApiSecretKey,
+    onCopyIP,
   };
 };
 
