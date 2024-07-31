@@ -2,6 +2,7 @@ import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
 import { TabTypes, useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type AsTraderReturns = {
   isTrader: boolean;
@@ -15,6 +16,7 @@ export type AsTraderReturns = {
     queryParams: any
   ) => void;
   isSignIn: boolean;
+  wrongNetwork: boolean;
 };
 
 export const useAsTraderScript = (): AsTraderReturns => {
@@ -26,6 +28,7 @@ export const useAsTraderScript = (): AsTraderReturns => {
     bindReferralCodeState,
     setTab,
     mutate,
+    wrongNetwork,
   } = useReferralContext();
 
   const { state } = useAccount();
@@ -35,6 +38,8 @@ export const useAsTraderScript = (): AsTraderReturns => {
     setShowHome(false);
   };
 
+  
+
   const bindSuccess = (
     success: boolean,
     error: any,
@@ -43,7 +48,7 @@ export const useAsTraderScript = (): AsTraderReturns => {
   ) => {
     mutate();
     bindReferralCodeState?.(success, error, hide, queryParams);
-  }
+  };
   return {
     isSignIn,
     isTrader,
@@ -54,5 +59,6 @@ export const useAsTraderScript = (): AsTraderReturns => {
     // referralInfo: MockData.referralInfo,
     onEnterTraderPage,
     bindReferralCodeState: bindSuccess,
+    wrongNetwork,
   };
 };

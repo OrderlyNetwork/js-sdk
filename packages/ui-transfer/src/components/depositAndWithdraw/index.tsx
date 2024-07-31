@@ -7,6 +7,7 @@ import {WithdrawFormWidget} from "../withdrawForm";
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export type DepositAndWithdrawProps = {
   activeTab?: "deposit" | "withdraw";
+  close?: () => void;
 };
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
@@ -27,7 +28,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         <DepositFormWidget />
       </TabPanel>
       <TabPanel title="Withdraw" icon={<WithdrawIcon />} value="withdraw">
-        <WithdrawFormWidget/>
+        <WithdrawFormWidget {...props}/>
       </TabPanel>
     </Tabs>
   );

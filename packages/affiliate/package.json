@@ -18,6 +18,7 @@
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/chart": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "date-fns": "^3.6.0",
     "react-intl": "^6.4.4"
   },

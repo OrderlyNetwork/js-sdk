@@ -77,8 +77,11 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
           return "md";
         case "md":
           return "sm";
+        case "sm":
+        case "xs":
+          return "xs";
         default:
-          return size;
+          return "md";
       }
     }, [size]);
 
