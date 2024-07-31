@@ -16,6 +16,13 @@ export const useWalletConnectorBuilder = () => {
     "GET"
   );
 
+  useEffect(() => {
+    const refCode = localStorage.getItem("referral_code");
+    if (refCode != null) {
+      setRefCode(refCode);
+    }
+  }, []);
+
   const { referral_code, isLoading } = useGetReferralCode(account.accountId);
 
   const [bindRefCode, { error: updateOrderError, isMutating: updateMutating }] =
@@ -32,7 +39,9 @@ export const useWalletConnectorBuilder = () => {
   const enableTradingComplted = () => {
     // validate ref code and bind referral code
     if (refCode.length >= 4 && refCode.length <= 10)
-      bindRefCode({ referral_code: refCode });
+      bindRefCode({ referral_code: refCode }).finally(() => {
+        localStorage.removeItem("referral_code");
+      });
   };
 
   const checkRefCode = async (): Promise<string | undefined> => {
@@ -43,7 +52,7 @@ export const useWalletConnectorBuilder = () => {
         "The referral_code must be 4 to 10 characters long, only accept upper case roman characters and numbers"
       );
     }
-    
+
     const res = await verifyRefCode(null, { referral_code: refCode });
 
     if (res?.success) {

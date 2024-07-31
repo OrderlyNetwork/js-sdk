@@ -83,11 +83,7 @@ const Icon = () => {
 
 const Bottom: FC<AsAnAffiliateReturns> = (props) => {
   const content = () => {
-    if (props.isLoading) {
-      return <></>;
-    }
-
-    if (props.isAffiliate) {
+    if (props.isAffiliate && !props.wrongNetwork) {
       const totalReferrerRebate =
         props.referralInfo?.referrer_info?.total_referrer_rebate;
       return (
@@ -128,12 +124,12 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
 
     return (
       <>
-        <Tooltip content={"Please connect your wallet to use this function"}>
+        <Tooltip content={props.wrongNetwork ? 'Please switch to a supported network to continue.' : "Please connect your wallet to use this function"}>
           <Button
             variant="contained"
             color="light"
             onClick={props.becomeAnAffiliate}
-            disabled={!props.isSignIn}
+            disabled={!props.isSignIn || props.wrongNetwork}
           >
             Become an affiliate
           </Button>

@@ -102,11 +102,7 @@ const Icon = () => {
 
 const Bottom: FC<AsTraderReturns> = (props) => {
   const content = () => {
-    if (props.isLoading) {
-      return <></>;
-    }
-
-    if (props.isTrader) {
+    if (props.isTrader && !props.wrongNetwork) {
       const totalReferrerRebate =
         props.referralInfo?.referee_info?.total_referee_rebate;
 
@@ -228,8 +224,8 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Tooltip content={"Please connect your wallet to use this function"}>
-          <Button variant="contained" color="light" disabled={!props.isSignIn}>
+        <Tooltip content={props.wrongNetwork ? 'Please switch to a supported network to continue.' : "Please connect your wallet to use this function"}>
+          <Button variant="contained" color="light" disabled={!props.isSignIn || props.wrongNetwork}>
             Enter code
           </Button>
         </Tooltip>
