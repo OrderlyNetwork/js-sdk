@@ -1,11 +1,13 @@
-import { Box } from "@orderly.network/ui"
 import {WithdrawFormUI} from "./ui";
 import {useWithdrawForm} from "./script";
+import {DepositAndWithdrawProps} from "../depositAndWithdraw";
 
-export const WithdrawFormWidget = () => {
-    const props = useWithdrawForm();
+export const WithdrawFormWidget = (dialogProps: DepositAndWithdrawProps) => {
+    const props = useWithdrawForm({
+        onClose: dialogProps.close,
+    });
     return (
-        <WithdrawFormUI {...props}/>
+        <WithdrawFormUI {...props} />
     )
 
 }
