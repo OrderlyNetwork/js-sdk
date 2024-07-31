@@ -24,6 +24,7 @@ import { tv } from "../../utils/tv";
 import { TablePlaceholder } from "./tablePlaceholder";
 import { useTableSize } from "./useTableSize";
 import { Box } from "../../box";
+import { cn } from "../..";
 
 export interface DataTableProps<RecordType>
   extends TBodyProps<RecordType>,
@@ -172,13 +173,13 @@ export const DataTable = <RecordType extends unknown>(
           }}
         > */}
 
-      <div className="oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot oui-min-h-[280px]">
-        <Table
-          className={cnBase(
-            "oui-table-fixed oui-border-collapse",
-            classNames?.body
-          )}
-        >
+      <div
+        className={cn(
+          "oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot oui-min-h-[280px]",
+          classNames?.body
+        )}
+      >
+        <Table className={cnBase("oui-table-fixed oui-border-collapse")}>
           <ColGroup columns={props.columns} />
           <TBody {...rest} />
         </Table>

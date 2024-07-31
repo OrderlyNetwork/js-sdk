@@ -92,9 +92,10 @@ export const Tab: FC<TabReturns> = (props) => {
     >
       <TabsList
         className={cn(
-          "oui-px-6 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative",
+          "oui-px-6 oui-flex oui-flex-row oui-justify-start oui-h-[44px] oui-relative oui-items-end",
           "oui-text-base md:oui-text-lg",
           "oui-rounded-xl oui-bg-base-9",
+          "oui-border oui-border-line-6",
           props.isAffiliate && props.isTrader && "oui-justify-center"
         )}
       >

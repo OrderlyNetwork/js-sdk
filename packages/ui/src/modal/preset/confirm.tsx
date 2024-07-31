@@ -12,6 +12,7 @@ export interface ConfirmProps {
   onCancel?: () => Promise<any>;
   contentClassName?: string;
   size?: "sm" | "md" | "lg";
+  bodyClassName?: string;
   // closeableSize?: number;
   // okId?: string;
   // cancelId?: string;
@@ -30,6 +31,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
       }
       size={size}
       contentClassName={props.contentClassName}
+      bodyClassName={props.bodyClassName}
       // maxWidth={props.maxWidth}
       closable
       // closeableSize={props.closeableSize}

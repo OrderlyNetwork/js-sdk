@@ -7,7 +7,7 @@ import { ExchangeDivider } from "../exchangeDivider";
 import { Web3Wallet } from "../web3Wallet";
 import { BrokerWallet } from "../brokerWallet";
 import { AvailableQuantity } from "../availableQuantity";
-import { CoinExchange } from "../coinExchange";
+import { SwapCoin } from "../swapCoin";
 import { Fee } from "../fee";
 import { ActionButton } from "../actionButton";
 
@@ -67,7 +67,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           onTokenChange={onTokenChange}
           status={inputStatus}
           hintMessage={hintMessage}
-          precision={dst?.decimals}
           fetchBalance={fetchBalance}
         />
       </Box>
@@ -76,7 +75,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         token={token}
         amount={amount}
         maxQuantity={maxQuantity}
-        precision={dst.decimals!}
         loading={balanceRevalidating}
         onClick={() => {
           onQuantityChange(maxQuantity);
@@ -88,18 +86,16 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <BrokerWallet name={brokerName} />
 
       <QuantityInput
-        token={token}
-        tokens={tokens}
+        readOnly
+        token={dst as any}
         value={quantity}
         classNames={{
           root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
         }}
-        precision={dst?.decimals}
-        readOnly
       />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <CoinExchange token={token} dstSymbol={dst?.symbol} price={price} />
+        <SwapCoin token={token} dst={dst} price={price} />
         <Fee fee={fee} nativeToken={nativeToken} />
       </Flex>
 

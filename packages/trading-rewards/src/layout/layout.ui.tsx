@@ -26,20 +26,18 @@ export const TradingRewardsLayout = (
       routerAdapter={props.routerAdapter}
       {...props}
     >
-      <Box className="oui-flex oui-justify-center oui-py-4">
+      <Box className="oui-flex oui-justify-center oui-py-3">
         {props.children}
       </Box>
     </Scaffold>
   );
 };
 
-const LeftSidebar = (props: SideBarProps & {
-  onClickMenuItem?: (item: SideMenuItem) => void;
-
-} & LayoutProps) => {
+const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
-  console.log("sidebar", props.onItemSelect);
+  console.log("xxxx left sidebar", props.items, props.current);
+  
 
   return (
     <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-h-[calc(100%-29px)]">

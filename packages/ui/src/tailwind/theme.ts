@@ -29,7 +29,7 @@ export const themePlugin = () =>
         "--oui-color-success-darken": "0 119 105",
         "--oui-color-success-contrast": "255 255 255",
 
-        "--oui-color-warning": "255 125 0",
+        "--oui-color-warning": "210 95 0",
         "--oui-color-warning-light": "255 207 115",
         "--oui-color-warning-darken": "117 88 33",
         "--oui-color-warning-contrast": "255 255 255",

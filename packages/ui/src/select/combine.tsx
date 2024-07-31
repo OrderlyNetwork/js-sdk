@@ -4,7 +4,7 @@ import { SelectOption, SelectWithOptionsProps } from "./withOptions";
 import { Input } from "../input";
 import { CaretDownIcon } from "../icon";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { PopoverBase, PopoverAnchor, PopoverContent } from "../popover";
+import { PopoverRoot, PopoverAnchor, PopoverContent } from "../popover";
 import { selectVariants } from "./selectPrimitive";
 import { SizeType } from "../helpers/sizeType";
 import { ScrollArea } from "../scrollarea";
@@ -52,7 +52,7 @@ export const CombineSelect = (props: CombineSelectProps) => {
   // );
 
   return (
-    <PopoverBase open={focused}>
+    <PopoverRoot open={focused}>
       <PopoverAnchor>
         <Input
           ref={inputRef}
@@ -120,7 +120,7 @@ export const CombineSelect = (props: CombineSelectProps) => {
           })}
         </ScrollArea>
       </PopoverContent>
-    </PopoverBase>
+    </PopoverRoot>
   );
 };
 

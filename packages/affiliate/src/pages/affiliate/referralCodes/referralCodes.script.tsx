@@ -74,6 +74,6 @@ export const useReferralCodesScript = (): ReferralCodesReturns => {
     copyLink,
     editRate,
     setPinCode,
-    codes,
+    codes: [codes[0], codes[1]],
   };
 };

@@ -17,11 +17,10 @@ export type InputStatus = "error" | "warning" | "success" | "default";
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;
-  tokens: API.TokenInfo[];
+  tokens?: API.TokenInfo[];
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
-  precision?: number;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: API.TokenInfo) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
@@ -31,14 +30,15 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
   (props, ref) => {
     const {
       token,
-      tokens,
+      tokens = [],
       classNames,
       label,
       status,
       hintMessage,
       onValueChange,
+      onTokenChange,
+      fetchBalance,
       value,
-      precision,
       ...rest
     } = props;
 
@@ -47,32 +47,32 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const [width, setWidth] = useState(0);
 
     const tokenOptions = useMemo(() => {
-      return props.tokens.map((token) => ({
+      return tokens!.map((token) => ({
         ...token,
         name: token.display_name || token.symbol,
       }));
-    }, [props.tokens]);
+    }, [tokens]);
 
     useEffect(() => {
       const rect = inputRef?.current?.getBoundingClientRect();
       setWidth(rect?.width || 0);
     }, [inputRef]);
 
-    const onTokenChange = (value: string) => {
-      const find = props.tokens.find((item) => item.symbol === value);
+    const _onTokenChange = (value: string) => {
+      const find = tokens!.find((item) => item.symbol === value);
       if (find) {
-        props.onTokenChange?.(find);
+        onTokenChange?.(find);
       }
     };
 
     const optionRenderer = (item: any) => {
-      const isActive = item.symbol === props.token?.symbol;
+      const isActive = item.symbol === token?.symbol;
       return (
         <TokenOption
           token={item}
-          fetchBalance={props.fetchBalance}
+          fetchBalance={fetchBalance}
           onTokenChange={(item) => {
-            props.onTokenChange?.(item);
+            onTokenChange?.(item);
             setOpen(false);
           }}
           isActive={isActive}
@@ -88,19 +88,19 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       </Box>
     );
 
-    const hideOptions = tokens.length <= 1;
+    const selectable = tokens.length > 1;
 
     const suffix = (
       <div className="oui-absolute oui-right-0">
         <Select.tokens
-          open={hideOptions ? false : open}
+          open={selectable ? open : false}
           onOpenChange={setOpen}
           disabled={rest.disabled}
           variant="text"
           tokens={tokenOptions}
           value={token?.display_name || token?.symbol}
           size={rest.size}
-          onValueChange={onTokenChange}
+          onValueChange={_onTokenChange}
           showIcon
           optionRenderer={optionRenderer}
           contentProps={{
@@ -158,7 +158,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(precision ?? 8, {
+            inputFormatter.dpFormatter(token?.precision ?? 2, {
               roundingMode: Decimal.ROUND_DOWN,
             }),
             inputFormatter.currencyFormatter,

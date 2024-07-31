@@ -8,8 +8,8 @@ export type ActionButtonProps = {
   loading?: boolean;
   actionType: ActionType;
   symbol?: string;
-    onDeposit?: () => void;
-    onApprove?: () => void;
+  onDeposit?: () => void;
+  onApprove?: () => void;
   networkId?: NetworkId;
 };
 

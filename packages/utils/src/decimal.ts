@@ -23,7 +23,7 @@ export const commifyOptional = (
   }
 ): string => {
   const prefix = options?.prefix || '';
-  if (typeof num === "undefined") return prefix + options?.fallback || "-";
+  if (typeof num === "undefined") return prefix + (options?.fallback || "--");
   const value = commify(num, options?.fix);
   
   if (options && options.padEnd && options.fix) {

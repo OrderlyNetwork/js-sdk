@@ -231,13 +231,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const markPrice = 1;
 
   const amount = useMemo(() => {
-    return (
-      new Decimal(quantity || 0)
-        .mul(markPrice)
-        // .todp(props.decimals)
-        .todp(Math.abs(2 - 5))
-        .toString()
-    );
+    return new Decimal(quantity || 0).mul(markPrice).toNumber();
   }, [quantity, markPrice]);
 
   const actionType = useMemo(() => {

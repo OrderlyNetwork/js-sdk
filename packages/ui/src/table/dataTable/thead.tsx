@@ -30,13 +30,14 @@ export const TableHeader: FC<THeadProps> = (props) => {
           // className="oui-bg-base-9"
         >
           {props.columns.map((column, index) => {
+            const className = (typeof column.className === 'function') ? (column.className(undefined, index)) : column.className;
             return (
               <TheadCol
                 col={column}
                 record={undefined}
                 key={index}
                 index={index}
-                className={props.className}
+                className={className}
                 bordered={props.bordered}
               />
             );

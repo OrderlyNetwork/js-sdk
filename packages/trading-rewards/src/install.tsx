@@ -1,9 +1,9 @@
-import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
-import {
-  TradingRewardsLayout,
-  TradingRewardsLayoutProps,
-} from "./layout/layout.ui";
-import { layoutBuilder } from "./layout/layoutBuilder";
+// import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
+// import {
+//   TradingRewardsLayout,
+//   TradingRewardsLayoutProps,
+// } from "./layout/layout.ui";
+// import { layoutBuilder } from "./layout/layoutBuilder";
 
 // installExtension<TradingRewardsLayoutProps>({
 //   name: "Trading rewards page layout",

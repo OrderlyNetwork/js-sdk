@@ -16,6 +16,7 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
@@ -25,12 +26,11 @@
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.4",
     "tsconfig": "workspace:*",
-    "tsup": "^7.1.0"
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.2.0",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-scaffold": "workspace:*"
+    "react-dom": "^18.2.0"
   }
 }

@@ -3,18 +3,18 @@ import {UseWithdrawFormScriptReturn} from "./script";
 import {Web3Wallet} from "../web3Wallet";
 import {ExchangeDivider} from "../exchangeDivider";
 import {BrokerWallet} from "../brokerWallet";
-import {ActionButton} from "../actionButton";
 import {ChainSelect} from "../chainSelect";
 import {QuantityInput} from "../quantityInput";
 import {AvailableQuantity} from "../availableQuantity";
 import {WithdrawWarningMessage} from "../withdrawWarningMessage";
+import {UnsettlePnlInfo} from "../unsettlePnlInfo";
+import {WithdrawAction} from "../withdrawAction";
 
 export const WithdrawFormUI = (
     {
         walletName,
         address,
         brokerName,
-        actionType,
         loading,
         disabled,
         quantity,
@@ -32,7 +32,12 @@ export const WithdrawFormUI = (
         fee,
         settingChain,
         wrongNetwork,
-
+        hasPositions,
+        unsettledPnL,
+        onSettlePnl,
+        onWithdraw,
+        chainVaultBalance,
+        crossChainWithdraw
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -44,26 +49,24 @@ export const WithdrawFormUI = (
                     <QuantityInput
                         value={quantity}
                         onValueChange={onQuantityChange}
-                        tokens={[]}
                         token={token}
                         onTokenChange={() => {
                         }}
                         status={inputStatus}
                         hintMessage={hintMessage}
-                        precision={dst?.decimals}
                     />
                 </Box>
 
                 <AvailableQuantity
                     token={token}
                     amount={amount}
-                    maxQuantity={maxQuantity}
-                    precision={dst.decimals!}
+                    maxQuantity={maxQuantity.toString()}
                     loading={balanceRevalidating}
                     onClick={() => {
-                        onQuantityChange(maxQuantity);
+                        onQuantityChange(maxQuantity.toString());
                     }}
                 />
+                <UnsettlePnlInfo unsettledPnl={unsettledPnL} hasPositions={hasPositions} onSettlle={onSettlePnl}/>
 
                 <ExchangeDivider/>
                 <Web3Wallet name={walletName} address={address}/>
@@ -81,9 +84,7 @@ export const WithdrawFormUI = (
                             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
                         }}
                         token={token}
-                        tokens={[]}
                         value={quantity}
-                        precision={dst?.decimals}
                         readOnly
                     />
                 </Box>
@@ -104,14 +105,18 @@ export const WithdrawFormUI = (
                 </Flex>
             </Box>
 
-            <WithdrawWarningMessage/>
+            <WithdrawWarningMessage chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity}/>
 
             <Flex justify="center" mt={3}>
-                <ActionButton
-                    actionType={actionType}
-                    symbol={'USDC'}
+                <WithdrawAction
                     disabled={disabled}
                     loading={loading}
+                    onWithdraw={onWithdraw}
+                    crossChainWithdraw={crossChainWithdraw}
+                    currentChain={currentChain}
+                    address={address}
+                    quantity={quantity}
+                    fee={fee}
                 />
             </Flex>
         </Box>

@@ -1,4 +1,4 @@
-import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { Box } from "@orderly.network/ui";
 import {
   LayoutProps,
   Scaffold,

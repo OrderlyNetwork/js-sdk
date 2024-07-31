@@ -66,7 +66,9 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
       isLoading,
       error,
     },
-  ] = useApiKeyManager();
+  ] = useApiKeyManager({
+    keyInfo: { keyStatus: "ACTIVE" },
+  });
 
   const onCreateApiKey = () => {
     setShowCreateDialog(true);
@@ -191,7 +193,9 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: (keys || []).filter((e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"),
+    keys: (keys || []).filter(
+      (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
+    ),
     generateKey,
   };
 };

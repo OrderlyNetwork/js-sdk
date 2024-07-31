@@ -8,7 +8,9 @@ export const useLayoutBuilder = (): SideBarProps & {
   hideSideBar: boolean;
 } => {
   const { routerAdapter } = useScaffoldContext();
-  const [current, setCurrent] = useState(routerAdapter?.currentPath ?? "/portfolio");
+  const [current, setCurrent] = useState(
+    routerAdapter?.currentPath ?? "/portfolio"
+  );
 
   const items = useMemo(() => {
     return [
@@ -150,7 +152,6 @@ export const useCustomSidebarHook = () => {
   return {
     open: expanded,
     onOpenChange: (open: boolean) => {
-      console.log("open", open, setExpand);
       setExpand(open);
     },
   };

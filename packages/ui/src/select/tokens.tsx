@@ -11,6 +11,7 @@ import {
 import { TokenIcon } from "../icon";
 import { SizeType } from "../helpers/sizeType";
 import { Flex } from "../flex";
+import { cnBase } from "tailwind-variants";
 
 type TokenItem = {
   name: string;
@@ -37,11 +38,12 @@ export const TokenSelect = (props: TokenSelect) => {
     });
   }, [tokens]);
 
+  const selectable = options.length > 1;
+
   const valueRenderer = (value: string) => {
     if (typeof props.valueRenderer === "function") {
       return props.valueRenderer(value, {});
     }
-
     return (
       <Flex gapX={1}>
         <TokenIcon name={value} className={icon({ size: props.size })} />
@@ -62,7 +64,7 @@ export const TokenSelect = (props: TokenSelect) => {
   return (
     <SelectWithOptions
       {...rest}
-      showCaret={options.length > 1}
+      showCaret={selectable}
       options={options}
       valueRenderer={showIcon ? valueRenderer : undefined}
       optionRenderer={optionRenderer}

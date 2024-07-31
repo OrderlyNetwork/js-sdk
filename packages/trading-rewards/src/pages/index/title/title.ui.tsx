@@ -21,7 +21,7 @@ export const Title: FC<TitleConfig> = (props) => {
       width={"100%"}
     >
       {title || <Text size="lg">Trading Rewards</Text>}
-      <Divider />
+      <Divider intensity={8} className="oui-w-full"/>
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (
           <Text size="base">{`Trade with ${props.brokerName} to earn rewards.`}</Text>
