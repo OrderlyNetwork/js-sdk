@@ -101,6 +101,7 @@ const List: FC<RebatesReturns> = (props) => {
 
   return (
     <DataTable
+      bordered
       columns={columns}
       dataSource={props.dataSource}
       scroll={{ y: 240 }}

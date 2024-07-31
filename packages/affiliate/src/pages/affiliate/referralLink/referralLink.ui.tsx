@@ -1,11 +1,5 @@
 import { FC } from "react";
-import {
-  CopyIcon,
-  Flex,
-  modal,
-  Text,
-  Tooltip,
-} from "@orderly.network/ui";
+import { CopyIcon, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
 import { ReferralLinkReturns } from "./referralLink.script";
 import { InfoIcon } from "../../../components/infoIcon";
 import { AutoHideText } from "../../../components/autoHideText";
@@ -23,9 +17,19 @@ export const ReferralLink: FC<ReferralLinkReturns> = (props) => {
       className="oui-bg-base-9"
     >
       <Title {...props} />
-      <Subtitle {...props} />
-      <Input title="Referral code" value={props.refCode} {...props} />
-      <Input title="Referral link" value={props.refLink} {...props} />
+      <Flex
+        width={"100%"}
+        className="oui-flex oui-flex-col 3xl:oui-flex-row"
+        gap={4}
+      >
+        <div className="oui-w-full 3xl:oui-w-1/3">
+          <Subtitle {...props} />
+        </div>
+        <Flex direction={"column"} width={"100%"} className="3xl:oui-w-2/3">
+          <Input title="Referral code" value={props.refCode} {...props} />
+          <Input title="Referral link" value={props.refLink} {...props} />
+        </Flex>
+      </Flex>
     </Flex>
   );
 };

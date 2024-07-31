@@ -114,7 +114,7 @@ export const VolBarChart = (props: VolChartProps) => {
           <CartesianGrid
             vertical={false}
             stroke="#FFFFFF"
-            strokeOpacity={0.04}
+            strokeOpacity={0.08}
           />
           <ReferenceLine y={0} stroke="#000" />
           {/* @ts-ignore */}
@@ -151,8 +151,8 @@ export const VolBarChart = (props: VolChartProps) => {
             height={1}
             // scale="time"
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-            stroke="#FFFFFF"
-            strokeOpacity={0.04}
+            stroke="rgb(229, 231, 235)"
+            strokeOpacity={0.2}
           />
         </BarChart>
       </ResponsiveContainer>
