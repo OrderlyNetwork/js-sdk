@@ -8,6 +8,7 @@ import {
   Text,
   Flex,
   inputFormatter,
+  Spinner,
 } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
@@ -24,6 +25,7 @@ export type QuantityInputProps = {
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: API.TokenInfo) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
+  loading?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -35,10 +37,12 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       label,
       status,
       hintMessage,
+      value,
       onValueChange,
       onTokenChange,
       fetchBalance,
-      value,
+      loading,
+      placeholder,
       ...rest
     } = props;
 
@@ -81,10 +85,17 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     };
 
     const prefix = (
-      <Box className=" oui-absolute oui-top-0">
-        <Text size="2xs" intensity={36}>
-          {label || "Quantity"}
-        </Text>
+      <Box>
+        <Box className="oui-absolute oui-top-0">
+          <Text size="2xs" intensity={36}>
+            {label || "Quantity"}
+          </Text>
+        </Box>
+        {loading && (
+          <Box className="oui-absolute oui-bottom-1">
+            <Spinner size="sm" />
+          </Box>
+        )}
       </Box>
     );
 
@@ -144,12 +155,14 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       </Flex>
     );
 
+    const _placeholder = placeholder ?? (loading ? "" : "0");
+
     return (
       <>
         <Input
           ref={inputRef}
           autoComplete="off"
-          placeholder="0"
+          placeholder={_placeholder}
           prefix={prefix}
           suffix={suffix}
           value={value}
