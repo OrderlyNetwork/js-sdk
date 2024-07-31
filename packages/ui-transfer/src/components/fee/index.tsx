@@ -1,25 +1,27 @@
 import { FC } from "react";
 import { Box, Flex, modal, Text } from "@orderly.network/ui";
 import { UseFeeReturn } from "../depositForm/depositForm.script";
-import { API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 
-type FeeProps = {
-  fee: UseFeeReturn;
-  nativeToken?: API.TokenInfo;
-};
+type FeeProps = UseFeeReturn;
 
 export const Fee: FC<FeeProps> = (props) => {
-  const { dstGasFee, quantity, total } = props.fee;
-
-  const symbol = props.nativeToken?.symbol;
+  const { dstGasFee, feeQty, feeAmount, dp, nativeSymbol } = props;
 
   const onShowFee = () => {
-    const message = (
+    const content = (
       <div className="oui-text-2xs">
         <Flex gapX={1}>
           <Text intensity={54}>Destination gas fee:</Text>
-          <Text intensity={80}>{quantity}</Text>
-          <Text intensity={54}>{symbol}</Text>
+          <Text.numeral
+            intensity={80}
+            dp={dp}
+            rm={Decimal.ROUND_UP}
+            padding={false}
+          >
+            {feeQty}
+          </Text.numeral>
+          <Text intensity={54}>{nativeSymbol}</Text>
         </Flex>
         <Box mt={2}>
           <Text intensity={36}>
@@ -32,9 +34,11 @@ export const Fee: FC<FeeProps> = (props) => {
 
     modal.alert({
       title: "Fee",
-      message,
+      message: content,
     });
   };
+
+  const showFeeQty = !!dstGasFee && dstGasFee !== "0";
 
   return (
     <Text
@@ -44,14 +48,26 @@ export const Fee: FC<FeeProps> = (props) => {
       onClick={onShowFee}
     >
       {`Fee ≈ `}
+
       <Text size="xs" intensity={80}>
-        {`$${total} `}
+        $
+        <Text.numeral dp={3} padding={false} rm={Decimal.ROUND_UP}>
+          {feeAmount}
+        </Text.numeral>
+        {` `}
       </Text>
 
-      {!!dstGasFee && (
-        <Text intensity={54}>
-          ({quantity} {symbol})
-        </Text>
+      {showFeeQty && (
+        <span>
+          (
+          <Text intensity={54}>
+            <Text.numeral dp={dp} padding={false} rm={Decimal.ROUND_UP}>
+              {feeQty}
+            </Text.numeral>
+            {nativeSymbol}
+          </Text>
+          )
+        </span>
       )}
     </Text>
   );
