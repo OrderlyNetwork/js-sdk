@@ -117,7 +117,7 @@ type FeeTierTableProps = {
   page?: number;
   pageSize?: number;
   dataCount?: number;
-  tier?: number;
+  tier?: number | null;
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
@@ -128,7 +128,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
       if (index + 1 == props.tier) {
         return {
           className:
-            "oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-rounded-[6px] oui-text-[rgba(0,0,0,0.88)]",
+            "oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-rounded-[6px] oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
         };
       }
 
@@ -138,7 +138,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
   );
 
   return (
-    <div className="oui-border-b oui-border-line-4">
+    <div className="oui-border-b oui-border-line-4 ">
       <DataTable
         bordered
         className="oui-font-semibold"

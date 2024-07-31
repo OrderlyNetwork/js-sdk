@@ -3,6 +3,7 @@ import { useAccountInfo, usePrivateQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { dataSource } from "./dataSource";
 import { API } from "@orderly.network/types";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 
 export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 
@@ -56,10 +57,16 @@ export function useFeeTierScript() {
     return `${new Decimal(value).mul(0.01).toString()}%`;
   }, [data]);
 
+  const tierValue = useDataTap(tier);
+  const volValue = useDataTap(volumeStatistics?.perp_volume_last_30_days);
+  const futures_taker_fee_rateValue = useDataTap(futures_taker_fee_rate);
+  const futures_maker_fee_rateValue = useDataTap(futures_maker_fee_rate);
+  const {wrongNetwork} = useAppContext();
+  
   return {
-    tier,
-    vol: volumeStatistics?.perp_volume_last_30_days,
-    futures_taker_fee_rate,
-    futures_maker_fee_rate,
+    tier: tierValue,
+    vol: volValue,
+    futures_taker_fee_rate: futures_taker_fee_rateValue,
+    futures_maker_fee_rate: futures_maker_fee_rateValue,
   };
 }
