@@ -30,8 +30,10 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         </Text>
       }
       size={size}
-      contentClassName={props.contentClassName}
-      bodyClassName={props.bodyClassName}
+      classNames={{
+        content: props.contentClassName,
+        body: props.bodyClassName,
+      }}
       // maxWidth={props.maxWidth}
       closable
       // closeableSize={props.closeableSize}
