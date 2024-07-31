@@ -199,7 +199,7 @@ const SubMenus = (
           timer.current ? clearTimeout(timer.current) : void 0;
         }}
         className={cn(
-          "oui-p-1 oui-w-[250px] oui-border oui-border-line-6",
+          "oui-p-1 oui-w-[260px] oui-border oui-border-line-6",
           props.className
         )}
       >

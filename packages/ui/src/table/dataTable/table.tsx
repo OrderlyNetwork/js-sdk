@@ -201,7 +201,7 @@ export const DataTable = <RecordType extends unknown>(
     childElement = (
       <>
         {filterEle}
-        <Box px={3}>{childElement}</Box>
+        <Box>{childElement}</Box>
         {paginationEle}
       </>
     );

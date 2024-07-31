@@ -12,6 +12,14 @@ export const chartPlugin = () =>
             "text-anchor": "end",
           },
         },
+        ".chart-invisible": {
+          ".yAxis .recharts-cartesian-axis-tick": {
+            visibility: "hidden",
+          },
+          ".yAxis .recharts-cartesian-axis-tick:first-child": {
+            visibility: "visible",
+          },
+        },
       },
       {
         respectPrefix: false,

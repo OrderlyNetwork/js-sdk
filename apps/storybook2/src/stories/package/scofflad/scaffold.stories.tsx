@@ -29,7 +29,7 @@ const meta = {
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"mainnet"}>
           <Story />
         </OrderlyApp>
       </ConnectorProvider>

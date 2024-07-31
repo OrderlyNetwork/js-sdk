@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
@@ -16,7 +17,6 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

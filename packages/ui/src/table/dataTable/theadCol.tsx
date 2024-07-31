@@ -81,7 +81,7 @@ const TheadColItem = (
   return (
     <td
       className={cnBase(
-        "oui-px-1 oui-py-[3px] oui-h-10 oui-text-base-contrast-36",
+        "oui-px-3 oui-py-[3px] oui-h-10 oui-text-base-contrast-36",
         column.align === "right" && "oui-text-right",
         column.align === "center" && "oui-text-center",
         props.justified && "first:oui-pl-0 last:oui-pr-0",
