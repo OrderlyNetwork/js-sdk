@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui",
-  "version": "1.0.1-sdk-v2.36",
+  "version": "1.0.1-sdk-v2.37",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
