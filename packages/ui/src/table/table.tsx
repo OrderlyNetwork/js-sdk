@@ -9,22 +9,21 @@ import { VariantProps } from "tailwind-variants";
 const tableVariants = tv({
   slots: {
     // root: "oui-relative oui-w-full oui-overflow-auto oui-TableRoot",
-    table: "oui-w-full oui-caption-bottom oui-text-xs oui-TableRootTable",
-    thead: "[&_tr]:oui-border-b oui-TableHead",
-    tbody: "[&_tr:last-child]:oui-border-0 oui-TableBody",
+    table: "oui-w-full oui-caption-bottom oui-text-xs oui-table-root",
+    thead: "[&_tr]:oui-border-b oui-table-header",
+    tbody: "[&_tr:last-child]:oui-border-0 oui-table-body",
     tfoot:
-      "oui-border-t oui-font-medium [&>tr]:oui-last:border-b-0 oui-TableFooter",
+      "oui-border-t oui-font-medium [&>tr]:oui-last:border-b-0 oui-table-footer",
     tr: "oui-transition-colors oui-TableTr hover:oui-bg-base-8 oui-group",
-    th: "oui-h-10 oui-px-2 oui-text-left oui-align-middle oui-font-medium oui-text-muted-foreground [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTh",
-    td: "oui-h-10 oui-p-2 oui-align-middle [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-TableTd group-hover:!oui-bg-base-8",
-    caption: "oui-mt-4 oui-text-xs oui-text-muted-foreground oui-TableCaption",
+    th: "oui-h-10 oui-px-2 oui-text-left oui-align-middle oui-font-medium oui-text-muted-foreground [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-table-th",
+    td: "oui-h-10 oui-py-2 oui-px-3 oui-align-middle [&:has([role=checkbox])]:oui-pr-0 [&>[role=checkbox]]:oui-translate-y-[2px] oui-table-td group-hover:!oui-bg-base-8",
+    caption: "oui-mt-4 oui-text-xs oui-text-muted-foreground oui-table-caption",
   },
   variants: {
     bordered: {
       true: {
         tr: "oui-border-b oui-border-line-4",
-        // th: "",
-        // td: "",
+        // tr: 'oui-relative after:oui-inline-block after:oui-content-[""] after:oui-absolute after:oui-bottom-0 after:oui-left-2 after:oui-right-2 after:oui-border-b after:oui-border-line-4',
       },
       false: {
         tr: "",

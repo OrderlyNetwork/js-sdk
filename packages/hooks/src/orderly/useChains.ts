@@ -219,7 +219,7 @@ export function useChains(
       const _chains = Array.isArray(chains) ? chains : chains[networkId];
       return _checkChainSupport(chainId, _chains);
     },
-    []
+    [chains]
   );
 
   return [

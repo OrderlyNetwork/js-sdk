@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
-import { Box } from "@orderly.network/ui";
+import { Box, cn } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
 
 export type PnLChartDataItem = {
@@ -27,6 +27,7 @@ export type PnLChartProps = {
     loss: string;
   };
   data: PnLChartDataItem[];
+  invisible?: boolean;
 };
 
 const RoundedRectangle = (props: any) => {
@@ -78,6 +79,7 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
 };
 
 export const PnLBarChart = (props: PnLChartProps) => {
+  const { invisible } = props;
   const colors = useColors(props.colors);
 
   return (
@@ -115,7 +117,10 @@ export const PnLBarChart = (props: PnLChartProps) => {
           <span>Losses</span>
         </Flex>
       </Flex>
-      <div style={{ height: "calc(100% - 38px)" }}>
+      <div
+        style={{ height: "calc(100% - 38px)" }}
+        className={cn(invisible && "chart-invisible")}
+      >
         {/* @ts-ignore */}
         <ResponsiveContainer>
           {/* @ts-ignore */}
@@ -124,29 +129,34 @@ export const PnLBarChart = (props: PnLChartProps) => {
             margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
           >
             {/* @ts-ignore */}
-            <Tooltip
-              // cursor={{ fillOpacity: 0.1 }}
-              cursor={<CustomizedCross />}
-              content={<CustomTooltip />}
-            />
+            {!invisible && (
+              <Tooltip
+                // cursor={{ fillOpacity: 0.1 }}
+                cursor={<CustomizedCross />}
+                content={<CustomTooltip />}
+              />
+            )}
+
             <CartesianGrid
               vertical={false}
               stroke="#FFFFFF"
               strokeOpacity={0.04}
             />
-            <ReferenceLine y={0} stroke="#000" />
+            <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
             {/* @ts-ignore */}
-            <Bar dataKey="pnl" shape={<RoundedRectangle />}>
-              {props.data.map((entry, index) => {
-                return (
-                  // @ts-ignore
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.pnl > 0 ? colors.profit : colors.loss}
-                  />
-                );
-              })}
-            </Bar>
+            {!invisible && (
+              <Bar dataKey="pnl" shape={<RoundedRectangle />}>
+                {props.data.map((entry, index) => {
+                  return (
+                    // @ts-ignore
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.pnl > 0 ? colors.profit : colors.loss}
+                    />
+                  );
+                })}
+              </Bar>
+            )}
             {/* @ts-ignore */}
             <YAxis
               tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
