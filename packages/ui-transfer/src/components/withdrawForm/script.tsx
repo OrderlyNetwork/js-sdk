@@ -3,8 +3,8 @@ import {
     useAccount,
     useChains,
     useConfig,
-    usePositionStream, useQuery,
-    useWalletConnector,
+    usePositionStream, usePrivateQuery, useQuery,
+    useWalletConnector, useWalletSubscription,
     useWithdraw
 } from "@orderly.network/hooks";
 import {ActionType} from "../actionButton";
@@ -21,7 +21,11 @@ const markPrice = 1;
 
 export const useWithdrawForm = () => {
     const [positionData] = usePositionStream();
+    const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
+    const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
+        revalidateOnMount: true,
+    });
 
     const [quantity, setQuantity] = useState<string>("");
     const [token, setToken] = useState<API.TokenInfo>({
@@ -230,6 +234,9 @@ export const useWithdrawForm = () => {
     }, [currentChain, chains, crossChainWithdraw]);
 
     useEffect(() => {
+        if (crossChainTrans) {
+            setDisabled(true);
+        }
         if (!quantity) {
             setInputStatus('default')
             setHintMessage('');
@@ -266,8 +273,30 @@ export const useWithdrawForm = () => {
             }
         }
 
-    }, [quantity, maxAmount, unsettledPnL]);
+    }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
 
+    useEffect(() => {
+        // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
+        const item = assetHistory?.find(
+            (e: any) => e.trans_status === "pending_rebalance".toUpperCase()
+        );
+        if (item) {
+            setCrossChainTrans(true);
+        } else {
+            setCrossChainTrans(false);
+        }
+    }, [assetHistory]);
+
+    useWalletSubscription({
+        onMessage(data: any) {
+            if (!crossChainTrans) return;
+            console.log("subscribe wallet topic", data);
+            const { trxId, transStatus } = data;
+            if (trxId === crossChainTrans && transStatus === "COMPLETED") {
+                setCrossChainTrans(false);
+            }
+        },
+    });
 
     return {
         walletName,
@@ -297,5 +326,6 @@ export const useWithdrawForm = () => {
         chainVaultBalance,
         fee,
         crossChainWithdraw,
+        crossChainTrans,
     }
 }

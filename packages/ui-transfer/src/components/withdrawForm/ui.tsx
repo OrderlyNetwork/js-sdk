@@ -22,7 +22,6 @@ export const WithdrawFormUI = (
         token,
         inputStatus,
         hintMessage,
-        dst,
         amount,
         maxQuantity,
         balanceRevalidating,
@@ -37,7 +36,8 @@ export const WithdrawFormUI = (
         onSettlePnl,
         onWithdraw,
         chainVaultBalance,
-        crossChainWithdraw
+        crossChainWithdraw,
+        crossChainTrans,
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -105,7 +105,7 @@ export const WithdrawFormUI = (
                 </Flex>
             </Box>
 
-            <WithdrawWarningMessage chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity}/>
+            <WithdrawWarningMessage chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity} crossChainTrans={crossChainTrans}/>
 
             <Flex justify="center" mt={3}>
                 <WithdrawAction
