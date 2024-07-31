@@ -560,7 +560,7 @@ importers:
         version: 3.6.0
       react-intl:
         specifier: ^6.4.4
-        version: 6.4.4(react@18.3.1)(typescript@5.1.6)
+        version: 6.4.4(react@18.3.1)(typescript@5.2.2)
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -582,7 +582,10 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.1.6)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.2.2
 
   packages/app:
     dependencies:
@@ -1573,6 +1576,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types
@@ -1609,7 +1615,10 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.1.6)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.2.2
 
   packages/trading-view:
     dependencies:
@@ -7353,24 +7362,6 @@ packages:
     resolution: {integrity: sha512-bRTd+rKomvfdS4QDlVJ6TA/Jx1F2h/TBVO5LjvhQ7QPPHp19oPNMIum7W2CMEReq/zPxpmCeB31F9+5gl/qtvw==}
     dependencies:
       tslib: 2.6.0
-    dev: false
-
-  /@formatjs/intl@2.9.0(typescript@5.1.6):
-    resolution: {integrity: sha512-Ym0trUoC/VO6wQu4YHa0H1VR2tEixFRmwZgADkDLm7nD+vv1Ob+/88mUAoT0pwvirFqYKgUKEwp1tFepqyqvVA==}
-    peerDependencies:
-      typescript: ^4.7 || 5
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.17.0
-      '@formatjs/fast-memoize': 2.2.0
-      '@formatjs/icu-messageformat-parser': 2.6.0
-      '@formatjs/intl-displaynames': 6.5.0
-      '@formatjs/intl-listformat': 7.4.0
-      intl-messageformat: 10.5.0
-      tslib: 2.6.0
-      typescript: 5.1.6
     dev: false
 
   /@formatjs/intl@2.9.0(typescript@5.2.2):
@@ -27991,7 +27982,7 @@ packages:
       typescript: 5.2.2
     dev: false
 
-  /react-intl@6.4.4(react@18.3.1)(typescript@5.1.6):
+  /react-intl@6.4.4(react@18.3.1)(typescript@5.2.2):
     resolution: {integrity: sha512-/C9Sl/5//ohfkNG6AWlJuf4BhTXsbzyk93K62A4zRhSPANyOGpKZ+fWhN+TLfFd5YjDUHy+exU/09y0w1bO4Xw==}
     peerDependencies:
       react: ^16.6.0 || 17 || 18
@@ -28002,7 +27993,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/icu-messageformat-parser': 2.6.0
-      '@formatjs/intl': 2.9.0(typescript@5.1.6)
+      '@formatjs/intl': 2.9.0(typescript@5.2.2)
       '@formatjs/intl-displaynames': 6.5.0
       '@formatjs/intl-listformat': 7.4.0
       '@types/hoist-non-react-statics': 3.3.5
@@ -28011,7 +28002,7 @@ packages:
       intl-messageformat: 10.5.0
       react: 18.3.1
       tslib: 2.6.0
-      typescript: 5.1.6
+      typescript: 5.2.2
     dev: false
 
   /react-is@16.13.1:
