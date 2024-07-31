@@ -85,6 +85,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
         />
         {/* @ts-ignore */}
         {!props.invisible && (
+          // @ts-ignore
           <Tooltip
             cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
             content={<CustomTooltip />}
@@ -94,6 +95,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
         {/* <Legend />  */}
         {/* @ts-ignore */}
         {!props.invisible && (
+          // @ts-ignore
           <Line
             type="natural"
             dataKey="account_value"

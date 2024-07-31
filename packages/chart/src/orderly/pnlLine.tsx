@@ -87,6 +87,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
         />
         {/* @ts-ignore */}
         {!props.invisible && (
+          // @ts-ignore
           <Tooltip
             cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
             content={<CustomTooltip />}
@@ -96,6 +97,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
         {/* <ReferenceLine y={0} stroke="#000" /> */}
         {/* @ts-ignore */}
         {!props.invisible && (
+          // @ts-ignore
           <Line
             type="natural"
             dataKey="pnl"
