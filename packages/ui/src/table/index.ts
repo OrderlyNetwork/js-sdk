@@ -1,6 +1,6 @@
 export * from "./table";
 export { DataTable } from "./dataTable";
-export { type Column, type SortOrder } from "./dataTable";
+export type { Column, SortOrder, DataTableProps } from "./dataTable";
 
 export { DataGrid } from "./dataGrid/dataGrid";
 export { DataGridFilterBar } from "./dataGrid/dataGridFilterBar";

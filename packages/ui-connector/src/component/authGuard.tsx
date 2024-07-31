@@ -5,19 +5,16 @@ import {
   Either,
   Match,
   modal,
+  Text,
   type ButtonProps,
 } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { WalletConnectorModalId } from "./walletConnector";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
-
-const LABELS = {
-  connectWallet: "Connect wallet",
-  switchChain: "Wrong network",
-  enableTrading: "Enable trading",
-  signin: "Sigin",
-};
+import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
+import { Flex } from "@orderly.network/ui";
+import { Box } from "@orderly.network/ui";
 
 export type AuthGuardProps = {
   fallback?: (props: {
@@ -34,14 +31,9 @@ export type AuthGuardProps = {
 
   buttonProps?: ButtonProps;
 
-  description?: string;
+  descriptions?: alertMessages;
 
-  labels?: {
-    connectWallet?: string;
-    switchChain?: string;
-    enableTrading?: string;
-    signin?: string;
-  };
+  labels?: alertMessages;
 
   classNames?: {
     root?: string;
@@ -59,6 +51,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     status = AccountStatusEnum.EnableTrading,
     buttonProps,
     fallback,
+    descriptions,
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
@@ -83,16 +76,17 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
 
     if (state.validating) {
       return (
-        <Button
+        <StatusInfo
           // variant={"gradient"}
           angle={45}
           fullWidth
           disabled
           loading
+          description={descriptions?.connectWallet}
           {...buttonProps}
         >
           {labels.connectWallet}
-        </Button>
+        </StatusInfo>
       );
     }
 
@@ -102,6 +96,8 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         buttonProps={buttonProps}
         wrongNetwork={wrongNetwork}
         networkId={props.networkId}
+        labels={labels}
+        descriptions={descriptions}
       />
     );
   }, [state.status, state.validating, buttonProps, wrongNetwork]);
@@ -109,8 +105,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   /**
    * **Important: The chldren component will be rendered only if the status is equal to the required status and the network is correct.**
    */
-  
-  
+
   return (
     <Either value={state.status >= status && !wrongNetwork} left={Left}>
       {props.children}
@@ -123,8 +118,10 @@ const DefaultFallback = (props: {
   wrongNetwork: boolean;
   buttonProps?: ButtonProps;
   networkId?: NetworkId;
+  labels: alertMessages;
+  descriptions?: alertMessages;
 }) => {
-  const { buttonProps } = props;
+  const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
   // const { connect } = useWalletConnector();
   const onConnectOrderly = () => {
@@ -157,17 +154,18 @@ const DefaultFallback = (props: {
 
   if (props.wrongNetwork) {
     return (
-      <Button
+      <StatusInfo
         color="warning"
         // size="md"
         // fullWidth
         onClick={() => {
           switchChain();
         }}
+        description={descriptions?.switchChain}
         {...buttonProps}
       >
-        {LABELS.switchChain}
-      </Button>
+        {labels.switchChain}
+      </StatusInfo>
     );
   }
 
@@ -177,49 +175,73 @@ const DefaultFallback = (props: {
       case={(value: AccountStatusEnum) => {
         if (value <= AccountStatusEnum.NotConnected) {
           return (
-            <Button
+            <StatusInfo
+              size="lg"
               onClick={() => {
                 onConnectWallet();
               }}
               // fullWidth
               variant={"gradient"}
               angle={45}
+              description={descriptions?.connectWallet}
               {...buttonProps}
             >
-              {LABELS.connectWallet}
-            </Button>
+              {labels.connectWallet}
+            </StatusInfo>
           );
         }
         if (value <= AccountStatusEnum.NotSignedIn) {
           return (
-            <Button
+            <StatusInfo
               size="lg"
               onClick={() => {
                 onConnectOrderly();
               }}
               // fullWidth
               angle={45}
+              description={descriptions?.signin}
               {...buttonProps}
             >
-              {LABELS.signin}
-            </Button>
+              {labels.signin}
+            </StatusInfo>
           );
         }
       }}
       default={
-        <Button
+        <StatusInfo
           size="lg"
           // fullWidth
+          description={descriptions?.enableTrading}
           {...buttonProps}
           onClick={() => onConnectOrderly()}
         >
-          {LABELS.enableTrading}
-        </Button>
+          {labels.enableTrading}
+        </StatusInfo>
       }
     />
   );
 };
 
 AuthGuard.displayName = "AuthGuard";
+
+const StatusInfo = (
+  props: ButtonProps & {
+    description?: string;
+  }
+) => {
+  const { description, ...buttonProps } = props;
+  return (
+    <Flex direction={"column"}>
+      <Button {...buttonProps}></Button>
+      {!!description && (
+        <Box mt={4}>
+          <Text size="2xs" intensity={36}>
+            {description}
+          </Text>
+        </Box>
+      )}
+    </Flex>
+  );
+};
 
 export { AuthGuard };
