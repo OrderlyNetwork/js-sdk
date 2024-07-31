@@ -48,7 +48,7 @@ export const useFeeTierColumns = () => {
         align: "center",
       },
       {
-        title: "Staking (WOO + MP)",
+        title: "Staking (WOO + XP)",
         dataIndex: "staking",
         align: "center",
         width: 150,

@@ -6,15 +6,25 @@ import { FC } from "react";
 import { DataTable } from "@orderly.network/ui";
 import { useFeeTierColumns } from "./column";
 import { useFeeTierScriptReturn } from "./feeTier.script";
+import { Decimal } from "@orderly.network/utils";
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
   const { tier, vol } = props;
   return (
-    <Card title="Fee tier" className="w-full" id="oui-portfolio-fee-tier">
+    // @ts-ignore
+    <Card title={(
+      <Flex justify={"between"}>
+        <Text size="lg">Fee tier</Text>
+        <Flex gap={1}>
+          <Text size="xs" intensity={54}>Updated daily by</Text>
+          <Text size="xs" intensity={80}>2:00 UTC</Text>
+        </Flex>
+      </Flex>
+    )} className="w-full" id="oui-portfolio-fee-tier">
       <Divider />
-      <FeeTierHeader tier={tier} vol={vol}/>
+      <FeeTierHeader {...props} />
       <FeeTierTable dataSource={dataSource} tier={tier} />
     </Card>
   );
@@ -25,9 +35,7 @@ export type FeeTierHeaderProps = {
   vol?: number;
 };
 
-export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
-  console.log("fee tire header", props);
-  
+export const FeeTierHeader: React.FC<FeeTierProps> = (props) => {
   return (
     <Flex direction="row" gapX={4} my={4}>
       <FeeTierHeaderItem
@@ -40,9 +48,27 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       />
       <FeeTierHeaderItem
         label="30D Trading Volume (USDC)"
-        value={(<Text.numeral rule="price" dp={2}>
-          {typeof props.vol !== undefined ? `${props.vol}` : "-"}
-        </Text.numeral>)}
+        value={
+          <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
+            {typeof props.vol !== undefined ? `${props.vol}` : "-"}
+          </Text.numeral>
+        }
+      />
+      <FeeTierHeaderItem
+        label="Take fee rate"
+        value={
+          <Text.gradient color={"brand"} angle={270} size="base">
+            {props.futures_taker_fee_rate || "--"}
+          </Text.gradient>
+        }
+      />
+      <FeeTierHeaderItem
+        label="Marker fee rate"
+        value={
+          <Text.gradient color={"brand"} angle={270} size="base">
+          {props.futures_maker_fee_rate || "--"}
+        </Text.gradient>
+        }
       />
     </Flex>
   );
@@ -53,9 +79,18 @@ export type FeeTierHeaderItemProps = {
   value: ReactNode;
 };
 
-export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {  
+export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
   return (
-    <Box gradient="neutral" r="lg" px={4} py={2} angle={184} width="100%">
+    <Box
+      gradient="neutral"
+      r="lg"
+      px={4}
+      py={2}
+      angle={184}
+      width="100%"
+      border
+      borderColor={6}
+    >
       <Text
         as="div"
         intensity={36}
