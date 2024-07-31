@@ -29,7 +29,7 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
 const Title: FC<TitleStatisticReturns> = (props) => {
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">TitleStatistic</Text>
+      <Text className="oui-text-lg">TitleStatistics</Text>
       <Flex direction={"row"} gap={2} className={"oui-min-w-14"}>
         <Select.options
           size={"xs"}

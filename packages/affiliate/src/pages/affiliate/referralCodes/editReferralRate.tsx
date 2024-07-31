@@ -4,10 +4,12 @@ import { Decimal } from "@orderly.network/utils";
 import { ReferralCodeType } from "./referralCodes.script";
 import {
   Button,
+  cn,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
+  Flex,
   Input,
   modal,
   toast,
@@ -75,9 +77,9 @@ export const EditReferralRate = modal.create<{
         className="oui-px-6 oui-max-w-[320px] oui-bg-base-8 oui-shadow-[0px_12px_20px_0px_rgba(0,0,0,0.25)]"
         closable
       >
-        <DialogTitle >
+        <DialogTitle>
           <div className="oui-my-3">Settings</div>
-          <Divider  />
+          <Divider />
         </DialogTitle>
 
         <div className="oui-mt-3 oui-h-full oui-flex oui-flex-col oui-justify-end">
@@ -158,28 +160,32 @@ export const EditReferralRate = modal.create<{
           />
 
           {showError && (
-            <div className="oui-text-danger oui-text-3xs oui-mt-3 oui-items-start oui-relative">
-              <div className="oui-bg-danger oui-rounded-full oui-w-[4px] oui-h-[4px] oui-mr-1 oui-mt-2 oui-absolute oui-top-0"></div>
-              <div className="oui-ml-2">{`The total commission rate must equal to your maximum commission rate limit`}</div>
+            <div className="oui-text-danger oui-text-xs oui-mt-8 oui-text-center oui-px-4">
+              {`The total commission rate must equal to your maximum commission rate limit`}
             </div>
           )}
 
-          <Button
-            id="referral_bind_referral_code_btn"
-            disabled={
-              refereeRebateRate.length === 0 ||
-              referrerRebateRate.length === 0 ||
-              showError
-            }
-            loading={isMutating}
-            className="oui-mt-6 oui-mb-4"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClickConfirm();
-            }}
-          >
-            Confirm
-          </Button>
+          <Flex width={"100%"} justify={"center"}>
+            <Button
+              id="referral_bind_referral_code_btn"
+              disabled={
+                refereeRebateRate.length === 0 ||
+                referrerRebateRate.length === 0 ||
+                showError
+              }
+              loading={isMutating}
+              className={cn(
+                "oui-mt-8 oui-mb-4 oui-w-[154px]",
+                showError && "oui-mt-3"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickConfirm();
+              }}
+            >
+              Confirm
+            </Button>
+          </Flex>
         </div>
       </DialogContent>
     </Dialog>

@@ -40,7 +40,7 @@ function Calendar({
             : "[&:has([aria-selected])]:oui-rounded-md"
         ),
         day: cnBase(
-          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-text-base-contrast-80 oui-font-normal aria-selected:oui-opacity-100"
+          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-text-base-contrast-80 oui-font-normal aria-selected:oui-opacity-100 hover:oui-bg-base-5"
         ),
         day_range_start: "oui-day-range-start",
         day_range_end: "oui-day-range-end",

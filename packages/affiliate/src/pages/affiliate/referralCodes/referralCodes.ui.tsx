@@ -309,12 +309,13 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
 
   return (
     <DataTable
+      bordered
       columns={columns}
       dataSource={props.codes}
-      scroll={{ y: 264 }}
+      scroll={{ y: 280 }}
       classNames={{
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-        body: "oui-text-xs oui-text-base-contrast-80",
+        body: "oui-text-xs oui-text-base-contrast-80 oui-min-h-[100px]",
       }}
     ></DataTable>
   );

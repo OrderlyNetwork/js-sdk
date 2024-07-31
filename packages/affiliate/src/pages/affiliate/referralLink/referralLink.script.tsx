@@ -17,7 +17,7 @@ export type ReferralLinkReturns = {
 export const useReferralLinkScript = (): ReferralLinkReturns => {
 
     const onCopy = (value: string) => {
-        toast.success("Copied");
+        toast.success("Copy success");
     };
 
 
