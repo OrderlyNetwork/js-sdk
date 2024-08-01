@@ -1,10 +1,11 @@
 import { FC, useState } from "react";
-import { Box, registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
-import { DepositFormWidget } from "../depositForm";
+import { registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
 import { DepositIcon, WithdrawIcon } from "../../icons";
-import {WithdrawFormWidget} from "../withdrawForm";
+import { WithdrawFormWidget } from "../withdrawForm";
+import { DepositSlot } from "./initDeposit";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
+
 export type DepositAndWithdrawProps = {
   activeTab?: "deposit" | "withdraw";
   close?: () => void;
@@ -25,10 +26,10 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       }}
     >
       <TabPanel title="Deposit" icon={<DepositIcon />} value="deposit">
-        <DepositFormWidget />
+        <DepositSlot onClose={props.close} />
       </TabPanel>
       <TabPanel title="Withdraw" icon={<WithdrawIcon />} value="withdraw">
-        <WithdrawFormWidget {...props}/>
+        <WithdrawFormWidget {...props} />
       </TabPanel>
     </Tabs>
   );
