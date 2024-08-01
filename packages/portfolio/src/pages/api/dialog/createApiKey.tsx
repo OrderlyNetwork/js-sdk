@@ -45,8 +45,11 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           disabled: !trade && !read,
         },
       }}
-      footerClassName="oui-justify-center"
-      contentClassName="oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold"
+      classNames={{
+        footer: "oui-justify-center",
+        content:
+          "oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold",
+      }}
     >
       <Flex direction={"column"} gap={6}>
         {/* <TextField label={"IP restriction (optional)"} rows={5} className="oui-w-full oui-h-auto" classNames={{

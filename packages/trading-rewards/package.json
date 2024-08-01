@@ -17,7 +17,6 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

@@ -16,8 +16,8 @@ type FundingSearchParams = {
   pageSize?: number;
 };
 
-export const useFundingFeeHistory = (parmas: FundingSearchParams) => {
-  let { symbol, dataRange, page = 1, pageSize = 10 } = parmas;
+export const useFundingFeeHistory = (params: FundingSearchParams) => {
+  let { symbol, dataRange, page = 1, pageSize = 10 } = params;
 
   const infos = useSymbolsInfo();
 

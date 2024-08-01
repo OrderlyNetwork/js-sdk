@@ -96,7 +96,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
         <SwapCoin token={token} dst={dst} price={price} />
-        <Fee fee={fee} nativeToken={nativeToken} />
+        <Fee {...fee} />
       </Flex>
 
       <Flex justify="center" mt={8}>

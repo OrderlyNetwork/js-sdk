@@ -18,6 +18,7 @@ import {
   useDaily,
 } from "@orderly.network/hooks";
 import { subDays } from "date-fns";
+import { useAppContext } from "@orderly.network/react-app";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -117,6 +118,7 @@ export type ReferralContextReturns = {
   setShowHome: (value: boolean) => void;
   tab: TabTypes,
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
+  wrongNetwork: boolean;
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
@@ -237,6 +239,8 @@ export const ReferralProvider: FC<
 
   const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
 
+  const { wrongNetwork } = useAppContext();
+
   return (
     <IntlProvider
       messages={messages}
@@ -266,7 +270,8 @@ export const ReferralProvider: FC<
           overwrite,
           splashPage,
           isLoading,
-          tab,setTab
+          tab,setTab,
+          wrongNetwork,
         }}
       >
         {props.children}

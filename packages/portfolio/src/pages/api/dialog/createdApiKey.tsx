@@ -19,36 +19,60 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       title="API key created"
       actions={{
         primary: {
-          label: "Confirm",
-          className: "oui-w-[120px] lg:oui-w-[154px] oui-bg-base-2 hover:oui-bg-base-3",
+          label: "OK",
+          className:
+            "oui-w-[120px] lg:oui-w-[154px] oui-bg-base-2 hover:oui-bg-base-3",
           onClick: async () => {
             return props.doConfirm();
           },
         },
         secondary: {
           label: "Copy API info",
-          className: "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
+          className:
+            "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
           onClick: async () => {
             return props.onCopyApiKeyInfo();
           },
         },
       }}
-      footerClassName="oui-justify-center"
-      contentClassName="oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold"
+      classNames={{
+        footer: "oui-justify-center",
+        content:
+          "oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold",
+        body: "oui-py-0 oui-pt-5",
+      }}
     >
       <Flex direction={"column"} gap={4} itemAlign={"start"}>
         <Statistic label="API key">
-          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+          <Text.formatted
+            size="sm"
+            intensity={80}
+            copyable
+            className="oui-break-all"
+            onCopy={props.onCopyApiKey}
+          >
             {props.generateKey?.key}
           </Text.formatted>
         </Statistic>
         <Statistic label="Secret key">
-          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+          <Text.formatted
+            size="sm"
+            intensity={80}
+            copyable
+            className="oui-break-all"
+            onCopy={props.onCopyApiSecretKey}
+          >
             {props.generateKey?.screctKey}
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label="IP">
-          <Text.formatted size="sm" intensity={80} copyable className="oui-break-all">
+          <Text.formatted
+            size="sm"
+            intensity={80}
+            copyable
+            className="oui-break-all"
+            onCopy={props.onCopyIP}
+          >
             {props.generateKey?.ip || "-"}
           </Text.formatted>{" "}
         </Statistic>

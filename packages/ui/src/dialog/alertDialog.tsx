@@ -66,8 +66,10 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       size={"sm"}
       actions={actions}
       onOpenChange={onOpenChange}
-      contentClassName="oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6"
-      footerClassName="oui-justify-center"
+      classNames={{
+        content: "oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6",
+        footer: "oui-justify-center",
+      }}
     >
       {message}
     </SimpleDialog>

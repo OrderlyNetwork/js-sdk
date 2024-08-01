@@ -11,6 +11,7 @@ import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { toast } from "@orderly.network/ui";
 import { ActionType } from "../actionButton";
 import { useAppContext } from "@orderly.network/react-app";
+import { feeDecimalsOffset, getTokenByTokenList } from "../../utils";
 
 export type InputStatus = "error" | "warning" | "success" | "default";
 
@@ -32,6 +33,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
   const config = useConfig();
+  const brokerName = config.get("brokerName") || "";
+  const brokerId = config.get("brokerId");
   const networkId = config.get("networkId") as NetworkId;
 
   const [chains, { findByChainId }] = useChains(networkId, {
@@ -201,7 +204,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   useEffect(() => {
     onChainInited(currentChain?.info);
-  }, [currentChain]);
+    // if settingChain is true, the currentChain will change, so use currentChain.id
+  }, [currentChain?.id]);
 
   useEffect(() => {
     if (!quantity) {
@@ -259,8 +263,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     address,
     token,
     tokens,
-    brokerId: config.get("brokerId"),
-    brokerName: config.get("brokerName") || "",
+    brokerId,
+    brokerName,
     networkId,
     chains,
     currentChain,
@@ -297,38 +301,24 @@ export function useDepositFee(options: {
 }) {
   const { nativeToken, depositFee = 0 } = options;
 
-  const { data: symbolPrice } = useIndexPrice(
-    `SPOT_${nativeToken?.symbol}_USDC`
-  );
+  const nativeSymbol = nativeToken?.symbol;
 
-  const fee = useMemo(() => {
-    const dstGasFee = new Decimal(depositFee.toString()).div(
-      new Decimal(10).pow(18)
-    );
+  const { data: symbolPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
 
-    const quantity = dstGasFee.toFixed(feeDecimalsOffset(4), Decimal.ROUND_UP);
+  const feeProps = useMemo(() => {
+    const dstGasFee = new Decimal(depositFee.toString())
+      .div(new Decimal(10).pow(18))
+      .toString();
 
-    const total = dstGasFee.mul(symbolPrice || 0).toFixed(3, Decimal.ROUND_UP);
+    const feeAmount = new Decimal(dstGasFee).mul(symbolPrice || 0).toString();
 
     return {
-      dstGasFee: dstGasFee?.toNumber(),
-      quantity,
-      total,
+      dstGasFee,
+      feeQty: dstGasFee,
+      feeAmount,
+      dp: feeDecimalsOffset(4),
     };
   }, [depositFee, symbolPrice]);
 
-  return fee;
+  return { ...feeProps, nativeSymbol };
 }
-
-export const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
-  const tokenObj = tokens.reduce((acc, item) => {
-    acc[item.symbol] = item;
-    return acc;
-  }, {} as any);
-
-  return tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
-};
-
-export const feeDecimalsOffset = (origin?: number): number => {
-  return (origin ?? 2) + 3;
-};

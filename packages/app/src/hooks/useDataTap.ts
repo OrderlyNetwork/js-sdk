@@ -4,7 +4,7 @@ export const useDataTap = <T = any>(
   data: T,
   options?: {
     skip?: false;
-    // fallbackData?: Partial<T>;
+    fallbackData?: T;
   }
 ): T | null => {
   const { wrongNetwork } = useAppContext();
@@ -12,5 +12,9 @@ export const useDataTap = <T = any>(
    * ignore
    */
   if (options?.skip) return data;
-  return wrongNetwork ? null : data;
+  return wrongNetwork
+    ? typeof options?.fallbackData !== "undefined"
+      ? options.fallbackData
+      : null
+    : data;
 };

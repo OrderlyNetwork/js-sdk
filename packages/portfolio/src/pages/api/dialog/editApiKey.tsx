@@ -15,7 +15,6 @@ export const EditAPIKeyDialog: FC<{
   setOpen?: any;
   onUpdate?: (item: APIKeyItem, ip?: string) => Promise<void>;
 }> = (props) => {
-  
   const { item, open, setOpen, onUpdate } = props;
   console.log("edit dialog", item.ip_restriction_list.join(","));
   const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
@@ -23,11 +22,9 @@ export const EditAPIKeyDialog: FC<{
   const [trade, setTrade] = useState(true);
 
   useEffect(() => {
-
     setIpText(item.ip_restriction_list.join(","));
     setRead(item.scope?.toLocaleLowerCase().includes("read") || false);
     setTrade(item.scope?.toLocaleLowerCase().includes("trading") || false);
-
   }, [item]);
 
   // useEffect(() => {
@@ -52,8 +49,11 @@ export const EditAPIKeyDialog: FC<{
           disabled: item.ip_restriction_list.join(",") === ipText,
         },
       }}
-      footerClassName="oui-justify-center"
-      contentClassName="oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold"
+      classNames={{
+        footer: "oui-justify-center",
+        content:
+          "oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold",
+      }}
     >
       <Flex direction={"column"} gap={6}>
         {/* <TextField label={"IP restriction (optional)"} rows={5} className="oui-w-full oui-h-auto" classNames={{

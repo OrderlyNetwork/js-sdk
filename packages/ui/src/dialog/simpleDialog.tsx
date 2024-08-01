@@ -20,9 +20,11 @@ type SimpleDialogProps = {
   closable?: boolean;
   title?: ReactNode;
   description?: ReactNode;
-  contentClassName?: string;
-  bodyClassName?: string;
-  footerClassName?: string;
+  classNames?: {
+    content?: string;
+    body?: string;
+    footer?: string;
+  };
   // footer?: ReactNode;
 } & SimpleDialogFooterProps;
 
@@ -36,7 +38,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         size={props.size}
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
-        className={props.contentClassName}
+        className={props.classNames?.content}
       >
         {props.title && (
           <>
@@ -46,7 +48,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
             <Divider />
           </>
         )}
-        <DialogBody className={props.bodyClassName}>
+        <DialogBody className={props.classNames?.body}>
           {props.children}
         </DialogBody>
         {typeof props.description !== "undefined" && (
@@ -54,7 +56,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         )}
         <SimpleDialogFooter
           actions={props.actions}
-          className={props.footerClassName}
+          className={props.classNames?.footer}
         />
       </DialogContent>
     </Dialog>

@@ -9,9 +9,10 @@ interface IProps{
     chainVaultBalance: number;
     currentChain: any;
     maxAmount: number;
+    crossChainTrans: boolean;
 }
 
-export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChain, maxAmount}: IProps) => {
+export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChain, maxAmount, crossChainTrans}: IProps) => {
     const { wrongNetwork } = useAppContext();
 
     const networkName = useMemo(() => {
@@ -24,6 +25,12 @@ export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChai
     }, [currentChain])
 
     const showVaultWarning = useMemo(() => {
+        if (!chainVaultBalance) {
+           return false;
+        }
+        if (!maxAmount) {
+           return false;
+        }
         if (!quantity) {
             return false;
         }
@@ -45,6 +52,9 @@ export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChai
                     Withdrawals are not supported on {networkName ?? "this chain"}. Please switch to any of the bridgeless networks.
                 </Box>
             )
+        }
+        if (crossChainTrans) {
+            return `Your cross-chain withdrawal is being processed...`;
         }
         if (showVaultWarning) {
             return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`

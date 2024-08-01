@@ -21,6 +21,7 @@ export type PnlLineChartProps = {
     loss: string;
   };
   data: any;
+  invisible?: boolean;
 };
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
@@ -59,7 +60,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
 
   return (
     // @ts-ignore
-    <ResponsiveContainer>
+    <ResponsiveContainer className={props.invisible ? "chart-invisible" : ""}>
       {/* @ts-ignore */}
       <LineChart
         data={data}
@@ -85,20 +86,27 @@ const PnlLineChart = (props: PnlLineChartProps) => {
           axisLine={false}
         />
         {/* @ts-ignore */}
-        <Tooltip
-          cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
-          content={<CustomTooltip />}
-        />
+        {!props.invisible && (
+          // @ts-ignore
+          <Tooltip
+            cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
+            content={<CustomTooltip />}
+          />
+        )}
+
         {/* <ReferenceLine y={0} stroke="#000" /> */}
         {/* @ts-ignore */}
-        <Line
-          type="natural"
-          dataKey="pnl"
-          stroke={colors.primary}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
+        {!props.invisible && (
+          // @ts-ignore
+          <Line
+            type="natural"
+            dataKey="pnl"
+            stroke={colors.primary}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );

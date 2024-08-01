@@ -6,6 +6,7 @@ import {
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useState } from "react";
+import { useDataTap } from "@orderly.network/react-app";
 
 // type FundingSearchParams = {
 //   dataRange?: Date[];
@@ -35,6 +36,8 @@ export const useFundingHistoryHook = () => {
       setDateRange([filter.value.from, filter.value.to]);
     }
   };
+
+  // const filteredData = useDataTap(data);
 
   return {
     dataSource: data,

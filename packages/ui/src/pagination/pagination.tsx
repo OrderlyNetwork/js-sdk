@@ -1,12 +1,7 @@
 import * as React from "react";
 import { Text } from "../typography/text";
 
-import {
-  CaretLeftIcon,
-  CaretRightIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "../icon";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icon";
 
 import { ButtonProps, buttonVariants } from "../button";
 import { cnBase } from "tailwind-variants";
@@ -34,7 +29,7 @@ const PaginationContent = React.forwardRef<
   <ul
     ref={ref}
     className={cnBase(
-      "oui-flex oui-flex-row oui-items-center oui-gap-2",
+      "oui-flex oui-flex-row oui-items-center oui-gap-x-2",
       className
     )}
     {...props}
@@ -46,14 +41,14 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cnBase("", className)} {...props} />
+  <li ref={ref} className={cnBase("oui-leading-[0px]", className)} {...props} />
 ));
 PaginationItem.displayName = "PaginationItem";
 
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<ButtonProps, "size"> &
-  React.ComponentProps<"a">;
+  React.ComponentProps<"button">;
 
 const PaginationLink = ({
   className,
@@ -61,7 +56,7 @@ const PaginationLink = ({
   // size = "icon",
   ...props
 }: PaginationLinkProps) => (
-  <a
+  <button
     aria-current={isActive ? "page" : undefined}
     data-active={isActive}
     className={buttonVariants({
@@ -69,7 +64,7 @@ const PaginationLink = ({
       // color:'white',
       variant: isActive ? "contained" : "text",
       className:
-        "oui-min-w-6 oui-text-base-contrast-80 oui-font-semibold data-[active=false]:hover:oui-bg-base-6",
+        "oui-min-w-6 oui-text-base-contrast-80 oui-font-semibold data-[active=false]:hover:oui-bg-base-6 disabled:oui-bg-transparent disabled:hover:oui-bg-transparent",
       // size,
     })}
     {...props}
@@ -151,44 +146,6 @@ const Paginations = (props: PaginationProps) => {
     page: currentPage,
   } = props;
 
-  const pageNumbers = useMemo(() => {
-    const pageNumbers = [];
-    const ellipsis = "...";
-
-    if (totalPages <= 10) {
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      let startPage = Math.max(1, currentPage - 2);
-      let endPage = Math.min(totalPages, currentPage + 2);
-
-      if (currentPage <= 3) {
-        startPage = 1;
-        endPage = 5;
-      } else if (currentPage >= totalPages - 2) {
-        startPage = totalPages - 4;
-        endPage = totalPages;
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-      }
-
-      if (startPage > 1) {
-        pageNumbers.unshift(ellipsis);
-        pageNumbers.unshift(1);
-      }
-
-      if (endPage < totalPages) {
-        pageNumbers.push(ellipsis);
-        pageNumbers.push(totalPages);
-      }
-    }
-
-    return pageNumbers;
-  }, [currentPage, totalPages]);
-
   return (
     <Pagination className={cnBase(classNames?.pagination, className)}>
       <Flex mr={4}>
@@ -214,62 +171,114 @@ const Paginations = (props: PaginationProps) => {
           />
         </div>
       </Flex>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href="#"
-            // @ts-ignore
-            disabled={props.page === 1}
-            onClick={(event) => {
-              event.preventDefault();
-              props.onPageChange?.(props.page - 1);
-            }}
-          />
-        </PaginationItem>
-        {pageNumbers.map((page, index) => {
-          // if (page === "...") {
-          //   return (
-          //     <PaginationItem key={page}>
-          //       <PaginationEllipsis />
-          //     </PaginationItem>
-          //   );
-          // }
-          return (
-            <PaginationItem key={index}>
-              <PaginationLink
-                isActive={page === props.page}
-                href="#"
-                onClick={(event) => {
-                  event.preventDefault();
-                  if (page !== "...") {
-                    props.onPageChange?.(Number(page));
-                  } else {
-                    props.onPageChange?.(
-                      Number((pageNumbers[index + 1] as number) - 1)
-                    );
-                  }
-                }}
-              >
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        })}
+      <PaginationItems {...props} />
+    </Pagination>
+  );
+};
 
-        {/* <PaginationItem>
+function generatePagination(
+  currentPage: number,
+  totalPages: number
+): (number | string)[] {
+  const pagination: (number | string)[] = [];
+  const ellipsis = "...";
+  const maxPagesToShow = 5;
+
+  if (totalPages <= maxPagesToShow) {
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.push(i);
+    }
+  } else {
+    if (currentPage <= 3) {
+      pagination.push(1, 2, 3, 4, ellipsis, totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pagination.push(
+        1,
+        ellipsis,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages
+      );
+    } else {
+      pagination.push(
+        1,
+        ellipsis,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        ellipsis,
+        totalPages
+      );
+    }
+  }
+
+  return pagination;
+}
+
+const PaginationItems = (props: Omit<PaginationProps, "onPageSizeChange">) => {
+  const {
+    classNames,
+    className,
+    pageTotal: totalPages,
+    page: currentPage,
+  } = props;
+
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  const pageNumbers = useMemo(() => {
+    return generatePagination(currentPage, totalPages);
+  }, [currentPage, totalPages]);
+
+  return (
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious
+          // @ts-ignore
+          disabled={props.page === 1}
+          onClick={(event) => {
+            event.preventDefault();
+            props.onPageChange?.(props.page - 1);
+          }}
+        />
+      </PaginationItem>
+      {pageNumbers.map((page, index) => {
+        return (
+          <PaginationItem key={index}>
+            <PaginationLink
+              isActive={page === props.page}
+              onClick={(event) => {
+                event.preventDefault();
+                if (page !== "...") {
+                  props.onPageChange?.(Number(page));
+                } else {
+                  props.onPageChange?.(
+                    Number((pageNumbers[index + 1] as number) - 1)
+                  );
+                }
+              }}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      })}
+
+      {/* <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem> */}
-        <PaginationItem>
-          <PaginationNext
-            href="#"
-            onClick={(event) => {
-              event.preventDefault();
-              props.onPageChange?.(props.page + 1);
-            }}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+      <PaginationItem>
+        <PaginationNext
+          disabled={props.page === props.pageTotal}
+          onClick={(event) => {
+            event.preventDefault();
+            props.onPageChange?.(props.page + 1);
+          }}
+        />
+      </PaginationItem>
+    </PaginationContent>
   );
 };
 
@@ -281,5 +290,6 @@ export {
   PaginationItem,
   PaginationPrevious,
   PaginationNext,
+  PaginationItems,
   PaginationEllipsis,
 };

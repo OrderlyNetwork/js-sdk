@@ -308,6 +308,10 @@ export class Account {
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
+          this._ee.emit("change:status", {
+            ...this.stateValue,
+            validating: false,
+          });
           this.keyStore.cleanKey(address, "orderlyKey");
           return AccountStatusEnum.DisabledTrading;
         }
@@ -325,12 +329,22 @@ export class Account {
 
         return AccountStatusEnum.EnableTrading;
       }
+      this._ee.emit("change:status", {
+        ...this.stateValue,
+        validating: false,
+        // status: AccountStatusEnum.DisabledTrading,
+      });
 
       this.keyStore.cleanKey(address, "orderlyKey");
 
       return AccountStatusEnum.NotConnected;
     } catch (err) {
       // return this.stateValue.status;
+      this._ee.emit("change:status", {
+        ...this.stateValue,
+        validating: false,
+        // status: AccountStatusEnum.DisabledTrading,
+      });
     }
 
     return AccountStatusEnum.NotSignedIn;
@@ -427,7 +441,7 @@ export class Account {
     if (res.success) {
       const key = await keyPair.getPublicKey();
       return {
-        key,
+        key: key.replace("ed25519:", ""),
         secretKey: keyPair.secretKey?.replace("ed25519:", ""),
       };
     }
@@ -650,7 +664,8 @@ export class Account {
     if (res.success) {
       return res.data;
     } else {
-      throw new Error(res.message);
+      // throw new Error(res.message);
+      return null;
     }
   }
 
