@@ -50,7 +50,7 @@ type ChainItem = {
 };
 
 type ChainSelectProps = {
-  value?: ChainItem;
+  value?: number;
   onChange?: (chain: ChainItem) => void;
   chains: {
     mainnet: ChainItem[];
@@ -112,20 +112,20 @@ const ChainSelect = (props: ChainSelectProps) => {
       error,
     });
 
-  const [currentChain, setCurrentChain] = useState<ChainItem | undefined>(
+  const [currentChain, setCurrentChain] = useState<number | undefined>(
     props.value
   );
 
   useEffect(() => {
-    if (props.value?.id !== currentChain?.id) {
+    if (props.value !== currentChain) {
       setCurrentChain(props.value);
     }
-  }, [props.value?.id]);
+  }, [props.value]);
 
   const onChange = (value: any) => {
     if (!chains || !Array.isArray(chains.mainnet)) return;
     const current = chains.mainnet.find((chain) => chain.id === Number(value));
-    setCurrentChain(current);
+    setCurrentChain(current?.id);
     if (!current) return;
     props.onChange?.(current);
   };
@@ -133,13 +133,13 @@ const ChainSelect = (props: ChainSelectProps) => {
   return (
     <SelectPrimitive.Root
       {...rest}
-      value={`${currentChain?.id}`}
+      value={`${currentChain}`}
       onValueChange={onChange}
     >
       <SelectPrimitive.Trigger className={trigger()} asChild>
         <button className="oui-relative oui-px-3 oui-box-border oui-min-w-11">
           {!!currentChain && (
-            <ChainIcon chainId={currentChain.id} className={icon()} />
+            <ChainIcon chainId={currentChain} className={icon()} />
           )}
           <svg
             width="10"

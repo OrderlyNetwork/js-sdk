@@ -2,14 +2,15 @@ import { PropsWithChildren } from "react";
 import { DataTable, DataTableProps, ExtensionSlot } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { alertMessages, DESCRIPTIONS } from "../constants/message";
-import { useDataTap } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
 import { AuthGuard } from "./authGuard";
 
 export const AuthGuardDataTable = <RecordType extends unknown>(
   props: PropsWithChildren<
     DataTableProps<RecordType> &
-      GuardViewProps & {
+      Omit<GuardViewProps, "status"> & {
+        status?: AccountStatusEnum;
         classNames?: DataTableProps<RecordType>["classNames"] & {
           authGuardDescription?: string;
         };
@@ -25,6 +26,8 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     ...rest
   } = props;
   const data = useDataTap(dataSource);
+  // const { wrongNetwork } = useAppContext();
+
   return (
     <DataTable
       {...rest}
@@ -43,8 +46,8 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
 
 type GuardViewProps = {
   status: AccountStatusEnum;
-  description: alertMessages;
-  labels: alertMessages;
+  description?: alertMessages;
+  labels?: alertMessages;
   className?: string;
 };
 

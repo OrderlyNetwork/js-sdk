@@ -20,6 +20,7 @@ import {
   generateSettleMessage,
 } from "./helper";
 import { SDKError } from "@orderly.network/types";
+import { EVENT_NAMES } from "./constants";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -174,7 +175,13 @@ export class Account {
       } as WalletAdapterOptions);
     }
 
-    return await this._checkAccount(address);
+    this._ee.emit(EVENT_NAMES.validateStart);
+
+    const finallyState = await this._checkAccount(address);
+
+    this._ee.emit(EVENT_NAMES.validateEnd, finallyState);
+
+    return finallyState;
   }
   get stateValue(): AccountState {
     // return this._state$.getValue();

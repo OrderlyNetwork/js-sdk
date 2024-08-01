@@ -4,46 +4,34 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 
 export const useChainMenuBuilderScript = () => {
-  const [chains, { findByChainId }] = useChains();
-  const { setChain, connectedChain } = useWalletConnector();
+  const [chains] = useChains();
   const { state } = useAccount();
+  const { setChain, connectedChain } = useWalletConnector();
+
+  const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
   const { wrongNetwork } = useAppContext();
 
-  const currentChain = useMemo(() => {
-    const chainId = state.connectWallet?.chainId;
-    let chain;
-
-    if (chainId) {
-      chain = findByChainId(chainId);
+  useEffect(() => {
+    if (connectedChain) {
+      setCurrentChainId(
+        typeof connectedChain.id === "number"
+          ? connectedChain.id
+          : parseInt(connectedChain.id)
+      );
+    } else {
+      if (!!currentChainId) return;
+      const firstChain =
+        chains.mainnet?.[0]?.network_infos ||
+        chains.testnet?.[0]?.network_infos;
+      if (!firstChain) return;
+      setCurrentChainId(firstChain.chain_id);
     }
-
-    if (chain) {
-      return {
-        name: chain.network_infos.name,
-        id: chainId,
-        lowestFee: chain.network_infos.bridgeless,
-      };
-    }
-
-    // if (!chain) return null;
-    // if chain is null then return the first chain
-    const firstChain = chains.mainnet?.[0]?.network_infos;
-
-    if (!firstChain) return null;
-
-    return {
-      name: firstChain.name,
-      id: firstChain.chain_id,
-      lowestFee: firstChain.bridgeless,
-    };
-  }, [state, chains]);
-
-  //
+  }, [connectedChain, chains]);
 
   const onChainChange = (chain: { id: number }) => {
     if (!connectedChain) return;
@@ -65,10 +53,12 @@ export const useChainMenuBuilderScript = () => {
         lowestFee: chain.network_infos.bridgeless,
       })),
     },
-    currentChain,
+    // currentChain,
+    currentChainId,
     onChange: onChainChange,
     isConnected: !!connectedChain,
     wrongNetwork,
+    accountStatus: state.status,
   };
 };
 

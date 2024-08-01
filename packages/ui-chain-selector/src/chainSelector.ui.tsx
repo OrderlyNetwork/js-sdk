@@ -11,13 +11,16 @@ export const ChainSelector = (props: {
   onChainChange?: (chain: ChainItem) => Promise<any>;
   currentChainId?: number;
   close?: () => void;
+  resolve?: (isSuccess: boolean) => void;
 }) => {
   const [select, setSelect] = useState<number | undefined>();
   // props.currentChainId
   const onChange = async (chain: ChainItem) => {
     setSelect(chain.id);
     const complete = await props.onChainChange?.(chain);
+
     if (complete) {
+      props.resolve?.(complete);
       props.close?.();
     } else {
       setSelect(undefined);

@@ -6,6 +6,7 @@ import {
   Match,
   modal,
   Text,
+  toast,
   type ButtonProps,
 } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
@@ -123,6 +124,7 @@ const DefaultFallback = (props: {
 }) => {
   const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
+  const { account } = useAccount();
   // const { connect } = useWalletConnector();
   const onConnectOrderly = () => {
     modal.show(WalletConnectorModalId).then(
@@ -136,19 +138,46 @@ const DefaultFallback = (props: {
 
     if (!res) return;
 
-    if (res?.status < AccountStatusEnum.EnableTrading) {
-      onConnectOrderly();
+    if (res.wrongNetwork) {
+      switchChain();
+    } else {
+      if (
+        (res?.status ?? AccountStatusEnum.NotConnected) <
+        AccountStatusEnum.EnableTrading
+      ) {
+        onConnectOrderly();
+      }
     }
   };
 
   const switchChain = () => {
+    account.once("validate:end", (status) => {
+      if (status < AccountStatusEnum.EnableTrading) {
+        onConnectOrderly();
+      } else {
+        toast.success("Wallet connected");
+      }
+    });
+
     modal
-      .show(ChainSelectorId, {
+      .show<{
+        wrongNetwork: boolean;
+      }>(ChainSelectorId, {
         networkId: props.networkId,
       })
       .then(
-        (r) => console.log(r),
-        (error) => console.log(error)
+        (r) => {
+          if (!r.wrongNetwork) {
+            if (props.status >= AccountStatusEnum.Connected) {
+              if (props.status < AccountStatusEnum.EnableTrading) {
+                onConnectOrderly();
+              } else {
+                toast.success("Wallet connected");
+              }
+            }
+          }
+        },
+        (error) => console.log("[switchChain error]", error)
       );
   };
 

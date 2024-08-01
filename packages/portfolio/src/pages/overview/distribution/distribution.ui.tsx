@@ -2,6 +2,7 @@ import { DataTable, Filter, Pagination } from "@orderly.network/ui";
 import { TYPES, useColumns } from "./column";
 import { FC } from "react";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
@@ -19,7 +20,7 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
   const { type, dateRange } = queryParameter;
 
   return (
-    <DataTable
+    <AuthGuardDataTable
       bordered
       columns={columns}
       dataSource={dataSource}
@@ -52,6 +53,6 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
       />
-    </DataTable>
+    </AuthGuardDataTable>
   );
 };

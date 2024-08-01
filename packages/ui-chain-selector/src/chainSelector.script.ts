@@ -1,3 +1,4 @@
+import { useConfig } from "@orderly.network/hooks";
 import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { useMemo } from "react";
@@ -6,16 +7,28 @@ export const useChainSelectorBuilder = (options?: {
   networkId?: NetworkId;
 }) => {
   const { networkId } = options || {};
-  const [chains] = useChains();
+  const config = useConfig();
+  const [chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
 
-  const onChainChange = (chain: { id: number }) => {
+  const onChainChange = async (chain: { id: number }) => {
     if (!connectedChain) {
       return Promise.reject("No connected chain");
     }
-    return setChain({
+    const result = await setChain({
       chainId: chain.id,
     });
+
+    if (!result) return result;
+
+    return {
+      result,
+      wrongNetwork: !checkChainSupport(
+        chain.id,
+        config.get("networkId") as NetworkId
+      ),
+      chainId: chain.id,
+    };
   };
 
   const filteredChains = useMemo(() => {
