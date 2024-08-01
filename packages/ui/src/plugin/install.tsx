@@ -19,7 +19,7 @@ export type ExtensionOptions<Props> = {
    */
   engines?: string; //
   positions: ExtensionPosition[];
-  builder?: () => Props;
+  builder?: (props: any) => Props;
   __isInternal?: boolean;
   entry?: string[];
   // dependencies?: string[]; // define the extension require other extensions, optional
