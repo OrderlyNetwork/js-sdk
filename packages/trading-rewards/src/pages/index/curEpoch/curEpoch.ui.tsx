@@ -67,12 +67,14 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           </Button>
         )} */}
 
-        <AuthGuard
-          status={AccountStatusEnum.SignedIn}
-          buttonProps={{ fullWidth: true }}
-        >
-          <></>
-        </AuthGuard>
+        <div className="oui-w-full">
+          <AuthGuard
+            status={AccountStatusEnum.SignedIn}
+            buttonProps={{ fullWidth: true }}
+          >
+            <></>
+          </AuthGuard>
+        </div>
       </Flex>
     </Flex>
   );
@@ -104,7 +106,10 @@ const EstRewards: FC<{
       </Text>
       <Flex direction={"row"} gap={1}>
         <OrderlyIcon />
-        <Text children={commifyOptional(props.estRewards, { fix: 2 })}  className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"/>
+        <Text
+          children={commifyOptional(props.estRewards, { fix: 2 })}
+          className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"
+        />
       </Flex>
     </Flex>
   );
@@ -212,23 +217,21 @@ const Countdown: FC<{
       <Flex justify={"center"} gap={1}>
         <span>Countdown:</span>
         <Flex
-        direction={"row"}
-        itemAlign={"end"}
-        gap={1}
-        className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
-      >
-        
-        {num(`${timeLeft.days}`.padStart(2, "0"))}
-        <span>D</span>
-        {num(`${timeLeft.hours}`.padStart(2, "0"))}
-        <span>H</span>
-        {num(`${timeLeft.minutes}`.padStart(2, "0"))}
-        <span>M</span>
-        {num(`${timeLeft.seconds}`.padStart(2, "0"))}
-        <span>S</span>
+          direction={"row"}
+          itemAlign={"end"}
+          gap={1}
+          className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
+        >
+          {num(`${timeLeft.days}`.padStart(2, "0"))}
+          <span>D</span>
+          {num(`${timeLeft.hours}`.padStart(2, "0"))}
+          <span>H</span>
+          {num(`${timeLeft.minutes}`.padStart(2, "0"))}
+          <span>M</span>
+          {num(`${timeLeft.seconds}`.padStart(2, "0"))}
+          <span>S</span>
+        </Flex>
       </Flex>
-      </Flex>
-      
     </Box>
   );
 };
