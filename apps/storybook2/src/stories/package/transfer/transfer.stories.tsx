@@ -5,8 +5,8 @@ import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId }
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
-// const networkId = "mainnet";
-const networkId = "testnet";
+const networkId = "mainnet";
+// const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: 'Orderly', brokerId: 'orderly' });
 
 

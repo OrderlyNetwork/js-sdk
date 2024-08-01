@@ -39,6 +39,9 @@
       "@orderly.network/trading": ["../../packages/trading/src"],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
+      ],
+      "@orderly.network/ui-cross-deposit": [
+        "../../packages/ ui-cross-deposit/src"
       ]
     }
   },
