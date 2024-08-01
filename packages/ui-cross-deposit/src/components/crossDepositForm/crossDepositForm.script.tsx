@@ -297,7 +297,7 @@ export const useCrossDepositFormScript = (
       .then((res: any) => {
         setQuantity("");
         toast.success("Deposit requested");
-        options?.onOk?.(res);
+        options?.onClose?.();
       })
       .catch((error) => {
         toast.error(error?.errorCode || "Deposit failed");
