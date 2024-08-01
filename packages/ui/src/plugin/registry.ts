@@ -1,9 +1,9 @@
 import { getGlobalObject } from "@orderly.network/utils";
 import { Extension, ExtensionBuilder, ExtensionPosition } from "./types";
 
-const DEFAULT_BUILDER = () => {
+const DEFAULT_BUILDER = (data: any) => {
   console.warn("No builder provided for extension");
-  return {};
+  return data || {};
 };
 
 // The plugin manager
@@ -27,7 +27,9 @@ export class OrderlyExtensionRegistry {
   // private formatterMap: Map<string, Function> = new Map();
 
   register<Props>(
-    plugin: Omit<Extension<Props>, "builder"> & { builder?: () => Props }
+    plugin: Omit<Extension<Props>, "builder"> & {
+      builder?: (props: any) => Props;
+    }
   ) {
     // this.pluginMap.set(plugin.name, plugin);
 

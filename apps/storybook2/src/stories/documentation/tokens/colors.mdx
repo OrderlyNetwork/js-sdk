@@ -76,6 +76,70 @@ The theme exposes the following default colors:
     </tr>
     <tr>
         <td className="!oui-p-0 !oui-border-none">
+            <strong>Primary</strong>
+        </td>
+        <td className="!oui-px-0 !oui-border-none">
+            <Flex gap={2}>
+                <Box width="48px" height="48px" gradient="primary" r="full" angle={0}/>
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="primary"
+                    r="full"
+                    angle={45}
+                />
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="primary"
+                    r="full"
+                    angle={90}
+                />
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="primary"
+                    r="full"
+                    angle={135}
+                />
+                <Box width="48px" height="48px" gradient="primary" r="full"/>
+            </Flex>
+        </td>
+    </tr>
+    <tr>
+        <td className="!oui-p-0 !oui-border-none">
+            <strong>Secondary</strong>
+        </td>
+        <td className="!oui-px-0 !oui-border-none">
+            <Flex gap={2}>
+                <Box width="48px" height="48px" gradient="secondary" r="full" angle={0}/>
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="secondary"
+                    r="full"
+                    angle={45}
+                />
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="secondary"
+                    r="full"
+                    angle={90}
+                />
+                <Box
+                    width="48px"
+                    height="48px"
+                    gradient="secondary"
+                    r="full"
+                    angle={135}
+                />
+                <Box width="48px" height="48px" gradient="secondary" r="full"/>
+            </Flex>
+        </td>
+    </tr>
+    <tr>
+        <td className="!oui-p-0 !oui-border-none">
             <strong>Success</strong>
         </td>
         <td className="!oui-px-0 !oui-border-none">
@@ -398,6 +462,9 @@ The palette enables you to modify the color of the components to suit your brand
   /* gradients */
   --oui-gradient-primary-start: 96 140 255;
   --oui-gradient-primary-end: 24 40 195;
+
+  --oui-gradient-secondary-start": 189 107 237,
+  --oui-gradient-secondary-end": 45 0 97,
 
   --oui-gradient-success-start: 0 180 158;
   --oui-gradient-success-end: 0 90 79;
