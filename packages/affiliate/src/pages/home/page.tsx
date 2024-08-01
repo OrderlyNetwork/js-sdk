@@ -10,7 +10,7 @@ export const HomePage = () => {
       className={cn(
         "oui-h-lvw ",
         // padding
-        "oui-p-4 lg:oui-p-6 xl:oui-p-3",
+        // "oui-p-4 lg:oui-p-6 xl:oui-p-3",
         "oui-font-semibold"
       )}
       direction={"column"}

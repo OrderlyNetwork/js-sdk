@@ -77,6 +77,10 @@ export const themePlugin = () =>
 
         "--oui-gradient-brand-start": "38 254 255",
         "--oui-gradient-brand-end": "89 176 254",
+        
+        
+        "--oui-gradient-purpe-start": "45 0 97",
+        "--oui-gradient-purpe-end": "179 107 237",
       },
     });
   });
