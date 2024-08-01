@@ -4,8 +4,8 @@ import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";
 import { commify, commifyOptional } from "@orderly.network/utils";
-import { AuthGuard } from "../../../../../ui-connector/dist";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { AuthGuard } from "@orderly.network/ui-connector";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const state = props;

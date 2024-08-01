@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@orderly.network/hooks";
 import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 export const useLayoutBuilder = (props: {
@@ -9,7 +9,13 @@ export const useLayoutBuilder = (props: {
   hideSideBar: boolean;
 } => {
   const [current, setCurrent] = useState(props.current || "/rewards/trading");
-  // const [sideOpen, setSideOpen] = useState(true);
+  
+  useEffect(() => {
+    if (props.current)
+      setCurrent(props.current);
+  }, [
+    props.current
+  ]);
 
 
   const items = useMemo(() => {

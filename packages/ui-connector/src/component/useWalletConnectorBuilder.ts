@@ -2,8 +2,10 @@ import {
   useAccount,
   useCheckReferralCode,
   useGetReferralCode,
+  useLazyQuery,
   useMutation,
 } from "@orderly.network/hooks";
+import { toast } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
 
 export const useWalletConnectorBuilder = () => {
@@ -11,9 +13,8 @@ export const useWalletConnectorBuilder = () => {
   const [refCode, setRefCode] = useState("");
   const [helpText, setHelpText] = useState("");
 
-  const [verifyRefCode] = useMutation(
-    "/v1/public/referral/verify_ref_code",
-    "GET"
+  const { trigger: verifyRefCode } = useLazyQuery(
+    `/v1/public/referral/verify_ref_code?referral_code=${refCode}`
   );
 
   useEffect(() => {
@@ -26,9 +27,7 @@ export const useWalletConnectorBuilder = () => {
   const { referral_code, isLoading } = useGetReferralCode(account.accountId);
 
   const [bindRefCode, { error: updateOrderError, isMutating: updateMutating }] =
-    useMutation("/v1/referral/bind", "POST", {
-      // disableSignature: true,
-    });
+    useMutation("/v1/referral/bind", "POST");
 
   useEffect(() => {
     if (refCode.length === 0) {
@@ -37,6 +36,7 @@ export const useWalletConnectorBuilder = () => {
   }, [refCode]);
 
   const enableTradingComplted = () => {
+    toast.success("Wallet connected");
     // validate ref code and bind referral code
     if (refCode.length >= 4 && refCode.length <= 10)
       bindRefCode({ referral_code: refCode }).finally(() => {
@@ -53,31 +53,28 @@ export const useWalletConnectorBuilder = () => {
       );
     }
 
-    const res = await verifyRefCode(null, { referral_code: refCode });
+    const { exist = false } = await verifyRefCode();
 
-    if (res?.success) {
-      if (res.data?.exist === false) {
-        return Promise.resolve("This referral code does not exist.");
-      }
-      return Promise.resolve(undefined);
+    if (exist === false) {
+      return Promise.resolve("This referral code does not exist.");
     }
+
     return Promise.resolve("");
   };
 
   const signIn = async () => {
-    const info = await checkRefCode();
-    if (typeof info !== "undefined") {
-      setHelpText(info);
-      return;
-    }
     return createAccount();
   };
 
+  const showRefCodeInput = (referral_code?.length || 0) === 0 && !isLoading;
+
   const enableTrading = async (remember: boolean) => {
-    const info = await checkRefCode();
-    if (typeof info !== "undefined") {
-      setHelpText(info);
-      return Promise.reject();
+    if (showRefCodeInput) {
+      const info = await checkRefCode();
+      if (typeof info !== "undefined") {
+        setHelpText(info);
+        return Promise.reject(-1);
+      }
     }
     setHelpText("");
     return createOrderlyKey(remember);
@@ -91,6 +88,6 @@ export const useWalletConnectorBuilder = () => {
     refCode,
     setRefCode,
     helpText,
-    showRefCodeInput: (referral_code?.length || 0) === 0 && !isLoading,
+    showRefCodeInput,
   } as const;
 };

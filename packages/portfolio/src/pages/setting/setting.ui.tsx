@@ -21,7 +21,7 @@ import { APIKeyItem } from "@orderly.network/hooks";
 export const Setting: FC<SettingScriptReturns> = (props) => {
   return (
     <Card
-      title={"API keys"}
+      title={"System Upgrade"}
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >

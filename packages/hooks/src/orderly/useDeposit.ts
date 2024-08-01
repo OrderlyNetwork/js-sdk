@@ -289,7 +289,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const enquiryDepositFee = useCallback(() => {
-    if (isNaN(Number(quantity)) || !quantity) {
+    if (isNaN(Number(quantity)) || !quantity || Number(quantity) === 0) {
       setDepositFee(0n);
       setDepositFeeRevalidating(false);
       return;

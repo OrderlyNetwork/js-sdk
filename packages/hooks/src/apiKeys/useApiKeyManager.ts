@@ -48,6 +48,11 @@ export const useApiKeyManager = (queryParams?: {
     "POST"
   );
 
+  const [doResetIPRestriction] = useMutation(
+    '/v1/client/reset_orderly_key_ip_restriction',
+    "POST",
+  );
+
   /**  ip_restriction_list is ["192.168.1.1", "192.168.1.2"].join(",") */
   const setIPRestriction = useCallback(
     (orderly_key: string, ip_restriction_list: string): Promise<any> => {
@@ -77,6 +82,13 @@ export const useApiKeyManager = (queryParams?: {
     });
   };
 
+
+  const resetOrderlyKeyIPRestriction = (orderlyKey: string, mode: "ALLOW_ALL_IPS" | "DISALLOW_ALL_IPS") => {
+    return doResetIPRestriction({
+      orderly_key: orderlyKey,
+      reset_mode: mode,
+    });
+  };
   return [
     data,
     {
@@ -86,6 +98,7 @@ export const useApiKeyManager = (queryParams?: {
       generateOrderlyKey,
       setIPRestriction,
       removeOrderkyKey,
+      resetOrderlyKeyIPRestriction,
     },
   ] as const;
 };

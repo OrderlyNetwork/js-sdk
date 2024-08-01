@@ -15,7 +15,6 @@ export function fillData(
       };
     }
   ).reverse();
-  console.log("days", days, origin, result);
 
   const dataObject = origin?.reduce((acc, curr) => {
     acc[curr.date] = curr;
