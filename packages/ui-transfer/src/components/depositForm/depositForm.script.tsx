@@ -228,7 +228,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   }, [quantity, maxQuantity]);
 
   const disabled =
-    !quantity || inputStatus === "error" || depositFeeRevalidating!;
+    !quantity ||
+    Number(quantity) === 0 ||
+    inputStatus === "error" ||
+    depositFeeRevalidating!;
 
   const loading = submitting || depositFeeRevalidating!;
 
