@@ -83,6 +83,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
   const colors = useColors(props.colors);
 
   return (
+    // @ts-ignore
     <ResponsiveContainer className={cn(invisible && "chart-invisible")}>
       {/* @ts-ignore */}
       <BarChart
