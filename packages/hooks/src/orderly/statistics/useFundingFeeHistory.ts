@@ -47,12 +47,13 @@ export const useFundingFeeHistory = (params: FundingSearchParams) => {
   });
 
   const parsedData = useMemo<
-    (API.FundingFeeRow & {
-      annual_rate: number;
-    })[]
+    | (API.FundingFeeRow & {
+        annual_rate: number;
+      })[]
+    | null
   >(() => {
     if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
-      return [];
+      return null;
     }
 
     return data.rows.map((row: API.FundingFeeRow) => {

@@ -63,19 +63,18 @@ export const useWalletConnectorBuilder = () => {
   };
 
   const signIn = async () => {
-    const info = await checkRefCode();
-    if (typeof info !== "undefined") {
-      setHelpText(info);
-      return;
-    }
     return createAccount();
   };
 
+  const showRefCodeInput = (referral_code?.length || 0) === 0 && !isLoading;
+
   const enableTrading = async (remember: boolean) => {
-    const info = await checkRefCode();
-    if (typeof info !== "undefined") {
-      setHelpText(info);
-      return Promise.reject(-1);
+    if (showRefCodeInput) {
+      const info = await checkRefCode();
+      if (typeof info !== "undefined") {
+        setHelpText(info);
+        return Promise.reject(-1);
+      }
     }
     setHelpText("");
     return createOrderlyKey(remember);
@@ -89,6 +88,6 @@ export const useWalletConnectorBuilder = () => {
     refCode,
     setRefCode,
     helpText,
-    showRefCodeInput: (referral_code?.length || 0) === 0 && !isLoading,
+    showRefCodeInput,
   } as const;
 };

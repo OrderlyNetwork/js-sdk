@@ -84,103 +84,59 @@ export const PnLBarChart = (props: PnLChartProps) => {
 
   return (
     // @ts-ignore
-    <Box className="oui-h-full">
-      <Flex
-        className="oui-text-2xs oui-font-semibold"
-        gap={3}
-        px={3}
-        pt={3}
-        pb={2}
+    <ResponsiveContainer className={cn(invisible && "chart-invisible")}>
+      {/* @ts-ignore */}
+      <BarChart
+        data={props.data}
+        margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
       >
-        <Flex style={{ color: colors.profit }} gap={1}>
-          <svg
-            width="6"
-            height="6"
-            viewBox="0 0 6 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="3" cy="3" r="3" fill={colors.profit} />
-          </svg>
-          <span>Profits</span>
-        </Flex>{" "}
-        <Flex style={{ color: colors.loss }} gap={1}>
-          <svg
-            width="6"
-            height="6"
-            viewBox="0 0 6 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="3" cy="3" r="3" fill={colors.loss} />
-          </svg>
-          <span>Losses</span>
-        </Flex>
-      </Flex>
-      <div
-        style={{ height: "calc(100% - 38px)" }}
-        className={cn(invisible && "chart-invisible")}
-      >
+        {!invisible && (
+          // @ts-ignore
+          <Tooltip
+            // cursor={{ fillOpacity: 0.1 }}
+            cursor={<CustomizedCross />}
+            content={<CustomTooltip />}
+          />
+        )}
+
+        <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+        <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
+
+        {!invisible && (
+          // @ts-ignore
+          <Bar dataKey="pnl" shape={<RoundedRectangle />}>
+            {props.data.map((entry, index) => {
+              return (
+                // @ts-ignore
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.pnl > 0 ? colors.profit : colors.loss}
+                />
+              );
+            })}
+          </Bar>
+        )}
         {/* @ts-ignore */}
-        <ResponsiveContainer>
-          {/* @ts-ignore */}
-          <BarChart
-            data={props.data}
-            margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
-          >
-            {!invisible && (
-              // @ts-ignore
-              <Tooltip
-                // cursor={{ fillOpacity: 0.1 }}
-                cursor={<CustomizedCross />}
-                content={<CustomTooltip />}
-              />
-            )}
-
-            <CartesianGrid
-              vertical={false}
-              stroke="#FFFFFF"
-              strokeOpacity={0.04}
-            />
-            <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
-
-            {!invisible && (
-              // @ts-ignore
-              <Bar dataKey="pnl" shape={<RoundedRectangle />}>
-                {props.data.map((entry, index) => {
-                  return (
-                    // @ts-ignore
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.pnl > 0 ? colors.profit : colors.loss}
-                    />
-                  );
-                })}
-              </Bar>
-            )}
-            {/* @ts-ignore */}
-            <YAxis
-              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-              tickLine={false}
-              axisLine={false}
-              dataKey={"pnl"}
-            />
-            {/* @ts-ignore */}
-            <XAxis
-              dataKey="date"
-              // axisLine={false}
-              tickLine={false}
-              interval={props.data.length - 2}
-              // tick={renderQuarterTick}
-              height={1}
-              // scale="time"
-              tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-              stroke="#FFFFFF"
-              strokeOpacity={0.04}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </Box>
+        <YAxis
+          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          tickLine={false}
+          axisLine={false}
+          dataKey={"pnl"}
+        />
+        {/* @ts-ignore */}
+        <XAxis
+          dataKey="date"
+          // axisLine={false}
+          tickLine={false}
+          interval={props.data.length - 2}
+          // tick={renderQuarterTick}
+          height={1}
+          // scale="time"
+          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          stroke="#FFFFFF"
+          strokeOpacity={0.04}
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };

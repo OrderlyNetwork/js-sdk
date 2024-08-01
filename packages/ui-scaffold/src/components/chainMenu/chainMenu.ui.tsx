@@ -1,5 +1,7 @@
+import { AccountStatusEnum } from "@orderly.network/types";
 import { Button, Flex, modal, Select, Tooltip } from "@orderly.network/ui";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 
 type ChainItem = {
   name: string;
@@ -13,9 +15,11 @@ export const ChainMenu = (props: {
     testnet: ChainItem[];
   };
   onChange?: (chain: ChainItem) => Promise<any>;
-  currentChain?: ChainItem;
+  // currentChain?: ChainItem;
+  currentChainId?: number;
   wrongNetwork: boolean;
   isConnected: boolean;
+  accountStatus: AccountStatusEnum;
 }) => {
   if (props.wrongNetwork && props.isConnected) {
     return (
@@ -27,10 +31,24 @@ export const ChainMenu = (props: {
           color="warning"
           size="md"
           onClick={() => {
-            modal.show(ChainSelectorId).then(
-              (r) => console.log(r),
-              (error) => console.log(error)
-            );
+            modal
+              .show<{
+                wrongNetwork: boolean;
+              }>(ChainSelectorId)
+              .then(
+                (r) => {
+                  if (
+                    !r.wrongNetwork &&
+                    props.accountStatus < AccountStatusEnum.EnableTrading
+                  ) {
+                    modal.show(WalletConnectorModalId).then(
+                      (r) => console.log(r),
+                      (error) => console.log(error)
+                    );
+                  }
+                },
+                (error) => console.log(error)
+              );
           }}
         >
           Wrong network
@@ -45,7 +63,7 @@ export const ChainMenu = (props: {
       <Select.chains
         chains={props.chains}
         size="md"
-        value={props.currentChain}
+        value={props.currentChainId}
         variant="contained"
         onChange={props.onChange}
       />

@@ -15,7 +15,7 @@ const useAssetHistoryHook = () => {
   const [side, setSide] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, { meta }] = useAssetsHistory({
+  const [data, { meta, isLoading }] = useAssetsHistory({
     startTime: dateRange[0].getTime().toString(),
     endTime: dateRange[1].getTime().toString(),
     page,
@@ -45,6 +45,7 @@ const useAssetHistoryHook = () => {
     // page: meta?.currentPage,
     meta: parseMeta(meta),
     total: meta?.total,
+    isLoading,
     // onDateRangeChange,
     queryParameter: {
       side,

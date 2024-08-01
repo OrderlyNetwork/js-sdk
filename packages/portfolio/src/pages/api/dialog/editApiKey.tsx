@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import {
+  cn,
   Flex,
   SimpleDialog,
   Statistic,
@@ -14,12 +15,14 @@ export const EditAPIKeyDialog: FC<{
   open: boolean;
   setOpen?: any;
   onUpdate?: (item: APIKeyItem, ip?: string) => Promise<void>;
+  verifyIP: (ip: string) => string;
 }> = (props) => {
   const { item, open, setOpen, onUpdate } = props;
   console.log("edit dialog", item.ip_restriction_list.join(","));
   const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
+  const [hint, setHint] = useState("");
 
   useEffect(() => {
     setIpText(item.ip_restriction_list.join(","));
@@ -27,12 +30,10 @@ export const EditAPIKeyDialog: FC<{
     setTrade(item.scope?.toLocaleLowerCase().includes("trading") || false);
   }, [item]);
 
-  // useEffect(() => {
-  //   if (open) return;
-  //   setIpText("");
-  //   setRead(true);
-  //   setTrade(true);
-  // }, [open]);
+  useEffect(() => {
+    if (ipText.length === 0) setHint("");
+  }, [ipText]);
+
   return (
     <SimpleDialog
       open={open}
@@ -43,6 +44,13 @@ export const EditAPIKeyDialog: FC<{
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
+            if (ipText.length > 0) {
+              const hint = props.verifyIP(ipText);
+              setHint(hint);
+              if (hint.length > 0) {
+                return;
+              }
+            }
             await props.onUpdate?.(item, ipText);
             setOpen(false);
           },
@@ -66,12 +74,25 @@ export const EditAPIKeyDialog: FC<{
           </Text>
           <textarea
             placeholder="Add IP addresses, separated by commas."
-            className="oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full oui-border-none focus:oui-outline-none"
+            className={cn(
+              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
+              "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
+              hint.length > 0 &&
+                "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+            )}
             value={ipText}
             onChange={(e) => {
               setIpText(e.target.value);
             }}
-          ></textarea>
+          />
+          {hint.length > 0 && (
+            <Flex gap={1}>
+              <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
+              <Text color="danger" size="xs">
+                {hint}
+              </Text>
+            </Flex>
+          )}
         </Flex>
         <Statistic
           label={

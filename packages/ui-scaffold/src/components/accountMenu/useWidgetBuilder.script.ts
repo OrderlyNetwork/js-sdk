@@ -4,16 +4,17 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
-import { modal } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
 import { useCallback, useEffect, useMemo } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
+import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 
 export const useAccountMenu = (): any => {
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
-  const { unsupported, checkChainSupport } = useScaffoldContext();
+  const { checkChainSupport } = useScaffoldContext();
   const { connectWallet } = useAppContext();
 
   const [_, { findByChainId }] = useChains();
@@ -32,16 +33,48 @@ export const useAccountMenu = (): any => {
     );
   };
 
+  const switchChain = () => {
+    account.once("validate:end", (status) => {
+      if (status < AccountStatusEnum.EnableTrading) {
+        statusChangeHandler({
+          status,
+        });
+      } else {
+        toast.success("Wallet connected");
+      }
+    });
+
+    modal
+      .show<{
+        wrongNetwork: boolean;
+      }>(ChainSelectorId)
+      .then(
+        (r) => {
+          if (!r.wrongNetwork) {
+            if (state.status < AccountStatusEnum.EnableTrading) {
+              statusChangeHandler(state);
+            } else {
+              toast.success("Wallet connected");
+            }
+          }
+        },
+        (error) => console.log("[switchChain error]", error)
+      );
+  };
+
   const connect = async () => {
     const res = await connectWallet();
 
-    if (res) {
+    if (!res) return;
+
+    if (res.wrongNetwork) {
+      switchChain();
+    } else {
       statusChangeHandler(res);
     }
   };
 
   const statusChangeHandler = (nextState: any) => {
-    // console.log("statusChangeHandler", nextState);
     if (nextState.validating || nextState.status <= AccountStatusEnum.Connected)
       return;
 
@@ -52,14 +85,6 @@ export const useAccountMenu = (): any => {
       onCreateOrderlyKey();
     }
   };
-
-  // useEffect(() => {
-  //   account.on("change:status", statusChangeHandler);
-
-  //   return () => {
-  //     account.off("change:status", statusChangeHandler);
-  //   };
-  // }, []);
 
   const onOpenExplorer = useCallback(() => {
     if (!connectedChain) return;

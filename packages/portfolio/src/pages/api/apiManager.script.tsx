@@ -44,6 +44,7 @@ export type ApiManagerScriptReturns = {
   onCopyApiKey: (key?: string) => void;
   onCopyApiSecretKey: () => void;
   onCopyIP: () => void;
+  verifyIP: (ip: string) => string;
 };
 
 export const useApiManagerScript = (): ApiManagerScriptReturns => {
@@ -211,6 +212,11 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   );
   keyList = useDataTap(keyList) || [];
 
+  const verifyIP = (ip: string) => {
+    const ipRegex = /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(,((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9]))*$/;
+    return ipRegex.test(ip) ? '' : 'IP restriction format is incorrect.';
+  };
+
   return {
     address: data?.account_id,
     uid: `${data?.user_id || "--"}`,
@@ -234,6 +240,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     onCopyApiKey,
     onCopyApiSecretKey,
     onCopyIP,
+    verifyIP,
   };
 };
 

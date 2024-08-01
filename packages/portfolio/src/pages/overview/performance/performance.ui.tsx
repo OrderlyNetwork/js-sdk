@@ -12,7 +12,8 @@ export type PerformanceUIProps = {
 } & UsePerformanceScriptReturn;
 
 export const PerformanceUI = (props: PerformanceUIProps) => {
-  const { periodTypes, period, onPeriodChange, aggregateValue } = props;
+  const { periodTypes, period, onPeriodChange, aggregateValue, invisible } =
+    props;
 
   return (
     <Card
@@ -36,7 +37,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
               coloring: true,
             }}
           >
-            {aggregateValue.roi}
+            {invisible ? "--" : aggregateValue.roi}
           </Statistic>
         </Box>
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
@@ -48,12 +49,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
               showIdentifier: true,
             }}
           >
-            {aggregateValue.pnl}
+            {invisible ? "--" : aggregateValue.pnl}
           </Statistic>
         </Box>
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic label={`${period} Volume (USDC)`}>
-            {aggregateValue.vol}
+            {invisible ? "--" : aggregateValue.vol}
           </Statistic>
         </Box>
       </Grid>
