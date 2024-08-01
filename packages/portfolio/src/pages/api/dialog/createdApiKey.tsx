@@ -49,7 +49,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             intensity={80}
             copyable
             className="oui-break-all"
-            onCopy={props.onCopyApiKey}
+            onCopy={() => props.onCopyApiKey(props.generateKey?.key)}
           >
             {props.generateKey?.key}
           </Text.formatted>
@@ -69,11 +69,11 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           <Text.formatted
             size="sm"
             intensity={80}
-            copyable
-            className="oui-break-all"
+            copyable={(props.generateKey?.ip?.length || 0) > 0}
+            className="oui-max-h-[100px] oui-overflow-hidden oui-text-ellipsis oui-block oui-break-all"
             onCopy={props.onCopyIP}
           >
-            {props.generateKey?.ip || "-"}
+            {props.generateKey?.ip || "--"}
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label="Permissions">

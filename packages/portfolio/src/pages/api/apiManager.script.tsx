@@ -41,7 +41,7 @@ export type ApiManagerScriptReturns = {
   keys: APIKeyItem[];
   generateKey?: GenerateKeyInfo;
   onCopyAccountId: () => void;
-  onCopyApiKey: () => void;
+  onCopyApiKey: (key?: string) => void;
   onCopyApiSecretKey: () => void;
   onCopyIP: () => void;
 };
@@ -70,6 +70,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
       generateOrderlyKey,
       setIPRestriction,
       removeOrderkyKey,
+      resetOrderlyKeyIPRestriction,
       refresh,
       isLoading,
       error,
@@ -124,9 +125,11 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
       console.log("xxx generateKeyRes", generateKeyRes);
       
       if ((ipRestriction?.length || 0) > 0) {
-        const res = await setIPRestriction(generateKeyRes.key, ipRestriction!);
+        const key = generateKeyRes.key.startsWith("ed25519:") ? generateKeyRes.key : `ed25519:${generateKeyRes.key}`;
+        const res = await setIPRestriction(key, ipRestriction!);
+        console.log("set ip res", res);
         if (res.success) {
-          createdSuccess(generateKeyRes, ipRestriction);
+          createdSuccess(generateKeyRes, res.data.ip_restriction_list);
         }
       } else {
         createdSuccess(generateKeyRes, undefined);
@@ -174,9 +177,15 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   };
 
   const doEdit = async (item: APIKeyItem, ip?: string): Promise<void> => {
-    if ((ip?.length || 0) === 0) return Promise.reject();
+    let future;
+    if ((ip?.length || 0) === 0) {
+     future = resetOrderlyKeyIPRestriction(item.orderly_key, "ALLOW_ALL_IPS");
+    } else {
+      future = setIPRestriction(item.orderly_key, ip!);
+    }
 
-    const data = await setIPRestriction(item.orderly_key, ip!);
+    const data = await future;
+  
     if (data.success) {
       toast.success("API key updated");
       refresh();
@@ -188,7 +197,12 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   };
 
   const onCopyAccountId = () => toast.success("Account id copied");
-  const onCopyApiKey = () => toast.success("API key copied");
+  const onCopyApiKey = (key?: string) => {
+    if (typeof key !== 'undefined') {
+      navigator.clipboard.writeText(key.replace("ed25519:", ""));
+    }
+    toast.success("API key copied");
+  };
   const onCopyApiSecretKey = () => toast.success("Secret key copied");
   const onCopyIP = () => toast.success("Restricted IP copied");
 

@@ -23,7 +23,7 @@ export const DeleteAPIKeyDialog: FC<{
     <SimpleDialog
       open={open}
       onOpenChange={setOpen}
-      title="API key created"
+      title="Delete API key"
       actions={{
         primary: {
           label: "Confirm",
@@ -47,9 +47,10 @@ export const DeleteAPIKeyDialog: FC<{
           "oui-bg-base-8 oui-w-[300px] lg:oui-w-[360px] oui-font-semibold",
       }}
     >
-      <Text size="xs">{`Delete your API key ${formatKey(
-        item?.orderly_key
-      )}`}</Text>
+      <Flex className="oui-text-xs">
+        Delete your API key &nbsp;
+        <Text color="primaryLight">{formatKey(item?.orderly_key)}</Text>&nbsp;?
+      </Flex>
     </SimpleDialog>
   );
 };
