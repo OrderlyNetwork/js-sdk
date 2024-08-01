@@ -23,7 +23,7 @@ const meta = {
                 env: 'qa',
             });
             return <ConnectorProvider>
-                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"} configStore={config}>
+                <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
                     <Story/>
                 </OrderlyApp>
             </ConnectorProvider>

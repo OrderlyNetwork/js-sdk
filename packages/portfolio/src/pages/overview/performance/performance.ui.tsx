@@ -16,7 +16,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
 
   return (
     <Card
-    // @ts-ignore
+      // @ts-ignore
       title={
         <PeriodTitle
           onPeriodChange={onPeriodChange}
@@ -58,14 +58,17 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         </Box>
       </Grid>
       <Grid cols={2} gap={4}>
-        <PerformancePnL data={props.data} />
-        <CumulativePnlChart data={props.data} />
+        <PerformancePnL data={props.data ?? []} invisible={props.invisible} />
+        <CumulativePnlChart
+          data={props.data ?? []}
+          invisible={props.invisible}
+        />
       </Grid>
     </Card>
   );
 };
 
-export const PerformancePnL = (props: { data: any[] }) => {
+export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
   // console.log(props.data);
   const tickValues = useMemo(() => {
     if (!Array.isArray(props.data) || !props.data.length) return;
@@ -78,20 +81,23 @@ export const PerformancePnL = (props: { data: any[] }) => {
         Performance PnL
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
-        <PnLBarChart data={props.data} />
+        <PnLBarChart data={props.data} invisible={props.invisible} />
       </Box>
     </Box>
   );
 };
 
-export const CumulativePnlChart = (props: { data: any[] }) => {
+export const CumulativePnlChart = (props: {
+  data: any[];
+  invisible: boolean;
+}) => {
   return (
     <Box mt={4}>
       <Text as="div" size="sm" className="oui-mb-3">
         Cumulative PnL
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
-        <PnlLineChart data={props.data} />
+        <PnlLineChart data={props.data} invisible={props.invisible} />
         {/* <Chart data={props.data} x={"date"} y={"pnl"}>
           <Axis orientation="left" />
         </Chart> */}

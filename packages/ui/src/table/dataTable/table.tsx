@@ -184,7 +184,7 @@ export const DataTable = <RecordType extends unknown>(
           <TBody {...rest} />
         </Table>
         <TablePlaceholder
-          visible={dataSource?.length === 0 || loading}
+          visible={(dataSource?.length ?? 0) === 0 || loading}
           loading={loading}
           emptyView={emptyView}
         />

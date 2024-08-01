@@ -28,6 +28,7 @@ export type PnlLineChartProps = {
     loss: string;
   };
   data: AssetChartDataItem[];
+  invisible?: boolean;
 };
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
@@ -58,7 +59,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
 
   return (
     // @ts-ignore
-    <ResponsiveContainer>
+    <ResponsiveContainer className={props.invisible ? "chart-invisible" : ""}>
       {/* @ts-ignore */}
       <LineChart
         width={530}
@@ -83,20 +84,27 @@ const AssetLineChart = (props: PnlLineChartProps) => {
           axisLine={false}
         />
         {/* @ts-ignore */}
-        <Tooltip
-          cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
-          content={<CustomTooltip />}
-        />
+        {!props.invisible && (
+          // @ts-ignore
+          <Tooltip
+            cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
+            content={<CustomTooltip />}
+          />
+        )}
+
         {/* <Legend />  */}
         {/* @ts-ignore */}
-        <Line
-          type="natural"
-          dataKey="account_value"
-          stroke={colors.profit}
-          strokeWidth={2}
-          dot={false}
-          isAnimationActive={false}
-        />
+        {!props.invisible && (
+          // @ts-ignore
+          <Line
+            type="natural"
+            dataKey="account_value"
+            stroke={colors.profit}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );
