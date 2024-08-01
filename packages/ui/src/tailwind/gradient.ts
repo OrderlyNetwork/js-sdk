@@ -27,5 +27,9 @@ export const gradientPlugin = () =>
         backgroundImage:
           "linear-gradient(var(--oui-gradient-angle, 0deg), rgb(var(--oui-gradient-brand-start)) 0%, rgb(var(--oui-gradient-brand-end)) 100%)",
       },
+      ".gradient-brand-270": {
+        backgroundImage:
+          "linear-gradient(var(--oui-gradient-angle, 270deg), rgb(var(--oui-gradient-brand-start)) 0%, rgb(var(--oui-gradient-brand-end)) 100%)",
+      },
     });
   });
