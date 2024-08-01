@@ -142,8 +142,9 @@ export const useWalletStateHandle = (options: {
    * User manually connects to wallet
    */
   const connectWallet = async (): Promise<{
-    wallet: WalletState;
-    status: AccountStatusEnum;
+    wallet?: WalletState;
+    status?: AccountStatusEnum;
+    wrongNetwork?: boolean;
   } | null> => {
     isManualConnect.current = true;
     // const walletState = await connect();
@@ -160,14 +161,16 @@ export const useWalletStateHandle = (options: {
           const chainId = praseChainIdToNumber(wallet.chains[0].id);
 
           if (!checkChainSupport(chainId, networkId)) {
-            return null;
+            return {
+              wrongNetwork: true,
+            };
           }
 
           //
           if (!account) {
             throw new Error("account is not initialized");
           }
-          console.info("🤝 connect wallet", wallet);
+          // console.info("🤝 connect wallet", wallet);
           // account.address = wallet.accounts[0].address;
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
@@ -180,7 +183,7 @@ export const useWalletStateHandle = (options: {
             // label: ,
           });
 
-          return { wallet, status };
+          return { wallet, status, wrongNetwork: false };
         }
 
         return null;

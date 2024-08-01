@@ -3,6 +3,7 @@ import { useFundingHistoryColumns } from "./column";
 import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
@@ -22,7 +23,7 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
   const { symbol, dateRange } = queryParameter;
 
   return (
-    <DataTable
+    <AuthGuardDataTable
       bordered
       columns={columns}
       dataSource={dataSource}
@@ -72,6 +73,6 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
       />
-    </DataTable>
+    </AuthGuardDataTable>
   );
 };

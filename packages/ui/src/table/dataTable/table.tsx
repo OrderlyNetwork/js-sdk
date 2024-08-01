@@ -90,6 +90,7 @@ export const DataTable = <RecordType extends unknown>(
   props: PropsWithChildren<DataTableProps<RecordType>>
 ) => {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
   const {
     dataSource,
     loading,
@@ -104,6 +105,19 @@ export const DataTable = <RecordType extends unknown>(
   const { root } = dataTableVariants({
     loading,
   });
+
+  // const fetched = useRef(0);
+  //
+  const [initialised, setInitialised] = useState(false);
+  const minHeight = useRef(280);
+
+  useEffect(() => {
+    if (initialised) return;
+
+    if (loading || (Array.isArray(dataSource) && dataSource.length > 0)) {
+      setInitialised(true);
+    }
+  }, [loading, dataSource, initialised]);
 
   const [filterEle, setFilterEle] = useState<ReactElement | null>(null);
   const [paginationEle, setPaginationEle] = useState<ReactElement | null>(null);
@@ -143,6 +157,23 @@ export const DataTable = <RecordType extends unknown>(
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
   }, []);
 
+  useEffect(() => {
+    if (!tableRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width, height } = entry.contentRect;
+        minHeight.current = Math.max(height, 280);
+      }
+    });
+
+    resizeObserver.observe(tableRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [tableRef.current]);
+
   const { width, height } = useTableSize({ scroll });
 
   let childElement = (
@@ -175,16 +206,22 @@ export const DataTable = <RecordType extends unknown>(
 
       <div
         className={cn(
-          "oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot oui-min-h-[280px]",
+          "oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot",
           classNames?.body
         )}
+        style={{
+          minHeight: `${minHeight.current}px`,
+        }}
       >
-        <Table className={cnBase("oui-table-fixed oui-border-collapse")}>
+        <Table
+          className={cnBase("oui-table-fixed oui-border-collapse")}
+          ref={tableRef}
+        >
           <ColGroup columns={props.columns} />
           <TBody {...rest} />
         </Table>
         <TablePlaceholder
-          visible={(dataSource?.length ?? 0) === 0 || loading}
+          visible={((dataSource?.length ?? 0) === 0 || loading) && initialised}
           loading={loading}
           emptyView={emptyView}
         />

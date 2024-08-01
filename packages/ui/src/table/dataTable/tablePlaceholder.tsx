@@ -22,7 +22,11 @@ export const TablePlaceholder = (props: {
       bottom={0}
       className="oui-backdrop-blur-md oui-flex oui-justify-center oui-items-center"
     >
-      {loading ? <Spinner /> :  (emptyView || <ExtensionSlot position={"emptyDataState"} />)}
+      {loading ? (
+        <Spinner />
+      ) : (
+        emptyView || <ExtensionSlot position={"emptyDataState"} />
+      )}
     </Box>
   );
 };
