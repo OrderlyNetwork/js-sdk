@@ -65,7 +65,7 @@ export const EditAPIKeyDialog: FC<{
             IP restriction (optional)
           </Text>
           <textarea
-            placeholder="Add up to 20 IP addresses, separated by commas. "
+            placeholder="Add IP addresses, separated by commas."
             className="oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full oui-border-none focus:oui-outline-none"
             value={ipText}
             onChange={(e) => {

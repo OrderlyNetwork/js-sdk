@@ -154,7 +154,13 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       dataIndex: "orderly_key",
       render: (value) => {
         return (
-          <Text.formatted rule={""} copyable>
+          <Text.formatted
+            rule={""}
+            copyable
+            onCopy={() => {
+              props.onCopyApiKey?.(value);
+            }}
+          >
             {formatKey(value)}
           </Text.formatted>
         );
@@ -175,9 +181,13 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       render: (value) => {
         let ip = value.join(",");
         if (ip.length === 0) {
-          ip = "-";
+          ip = "--";
         }
-        return <Text className="oui-text-ellipsis">{ip}</Text>;
+        return (
+          <div className="oui-overflow-ellipsis oui-overflow-hidden">
+            <Text>{ip}</Text>
+          </div>
+        );
       },
     },
     {

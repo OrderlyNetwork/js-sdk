@@ -107,13 +107,8 @@ export const useMutation = <T, E>(
       data,
     };
 
-    let signature: any;
-    try {
-      const signer = account.signer;
-      signature = await signer.sign(payload, getTimestamp());
-    } catch (e) {
-      console.log("catch signer error", e);
-    }
+    const signer = account.signer;
+    const signature = await signer.sign(payload, getTimestamp());
 
     return trigger(
       {

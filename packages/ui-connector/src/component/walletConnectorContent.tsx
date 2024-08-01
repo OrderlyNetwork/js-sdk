@@ -11,6 +11,7 @@ import {
   Switch,
   Text,
   TextField,
+  toast,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
@@ -60,36 +61,53 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
 
   const onEnableTrading = () => {
     setLoading(true);
-    return props.enableTrading(remember).then(async (res) => {
-      console.log(res);
-      setLoading(false);
-      setActiveStep((step) => step + 1);
-      try {
-        await props.enableTradingComplted?.();
-      } catch (e) {}
-      if (typeof props.onCompleted === "function") {
-        props.onCompleted();
-      } else if (typeof props.close === "function") {
-        props.close();
-      }
-      // props.onCompleted?.();
-    }, (reject) => {
-      setLoading(false);
-    }).catch((e) => {
-      setLoading(false);
-    });
+    return props
+      .enableTrading(remember)
+      .then(
+        async (res) => {
+          console.log(res);
+          setLoading(false);
+          setActiveStep((step) => step + 1);
+          try {
+            await props.enableTradingComplted?.();
+          } catch (e) {}
+          if (typeof props.onCompleted === "function") {
+            props.onCompleted();
+          } else if (typeof props.close === "function") {
+            props.close();
+          }
+          // props.onCompleted?.();
+        },
+        (reject) => {
+          console.log("enable trading reject", reject?.message);
+          setLoading(false);
+          if (reject === -1) return;
+          toast.error("User rejected the request");
+        }
+      )
+      .catch((e) => {
+        console.log("enable trading catch error", e);
+        setLoading(false);
+      });
   };
 
   const onSignIn = () => {
     setLoading(true);
-    return props.signIn().then((res) => {
-      setActiveStep((step) => step + 1);
-      return onEnableTrading();
-    }, (reject) => {
-      setLoading(false);
-    }).catch((e) => {
-      setLoading(false);
-    });
+    return props
+      .signIn()
+      .then(
+        (res) => {
+          setActiveStep((step) => step + 1);
+          return onEnableTrading();
+        },
+        (reject) => {
+          toast.error("User rejected the request");
+          setLoading(false);
+        }
+      )
+      .catch((e) => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -214,11 +232,9 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
         props.setRefCode(e.target.value);
       }}
       classNames={{
-        label: "oui-text-base-contrast-54 oui-text-xs"
+        label: "oui-text-base-contrast-54 oui-text-xs",
       }}
-      formatters={[
-        inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
-      ]}
+      formatters={[inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g)]}
       onClear={() => {
         props.setRefCode("");
       }}
