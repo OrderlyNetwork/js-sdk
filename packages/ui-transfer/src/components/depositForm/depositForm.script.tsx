@@ -20,8 +20,7 @@ export type UseDepositFormScriptReturn = ReturnType<
 >;
 
 export type UseDepositFormScriptOptions = {
-  onCancel?: () => void;
-  onOk?: (data: any) => void;
+  onClose?: () => void;
 };
 
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
@@ -102,7 +101,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       .then((res: any) => {
         setQuantity("");
         toast.success("Deposit requested");
-        options?.onOk?.(res);
+        options.onClose?.();
       })
       .catch((error) => {
         toast.error(error?.errorCode || "Deposit failed");

@@ -41,6 +41,7 @@ type TabsProps<T = string> = {
 } & TabsPrimitive.TabsProps;
 
 const Tabs: FC<TabsProps> = (props) => {
+  const { classNames, ...rest } = props;
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -61,7 +62,7 @@ const Tabs: FC<TabsProps> = (props) => {
     >
       {props.children}
       <TabsBase
-        {...props}
+        {...rest}
         // value={value}
         // onValueChange={onChange}
         // defaultValue={defaultValue}

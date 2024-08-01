@@ -1,4 +1,4 @@
-import { ExtensionPosition, ExtensionPositionEnum } from "../../types";
+import { ExtensionPositionEnum } from "../../types";
 import { installExtension } from "../../install";
 import Comp from "./comp";
 
@@ -7,10 +7,10 @@ import Comp from "./comp";
 installExtension<{
   onOk: () => void;
 }>({
-  name: "swap-deposit",
+  name: "deposit-form",
   scope: ["*"],
   positions: [ExtensionPositionEnum.DepositForm],
-})((props) => {
-  console.log(props);
-  return <Comp />;
+})((props: any) => {
+  const { position, ...rest } = props;
+  return <Comp {...rest} />;
 });

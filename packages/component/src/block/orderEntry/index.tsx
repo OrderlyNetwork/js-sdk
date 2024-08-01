@@ -33,7 +33,8 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { modal } from "@/modal";
+// import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import {
   OrderConfirmFooter,
   OrderConfirmView,
@@ -235,7 +236,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         new Decimal(symbolConfig?.base_tick || "0").toNumber()
       );
       props.onFieldChange("order_quantity", quantity);
-    }
+    };
 
     const onFocus = (type: InputType) => (_: FocusEvent<HTMLInputElement>) => {
       currentFocusInput.current = type;
@@ -274,10 +275,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           formatQty();
           if (needConfirm) {
             return modal.confirm({
-              maxWidth: "sm",
+              // maxWidth: "sm",
               title: "Confirm Order",
-              okId: "orderly-confirm-order-dialog-confirm",
-              cancelId: "orderly-confirm-order-dialog-cancel",
+              // okId: "orderly-confirm-order-dialog-confirm",
+              // cancelId: "orderly-confirm-order-dialog-cancel",
               onCancel: () => {
                 return Promise.reject("cancel");
               },
@@ -412,9 +413,9 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 value: OrderSide.BUY,
                 disabled,
                 activeClassName:
-                "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit orderly-font-bold desktop:orderly-font-bold",
+                  "orderly-bg-trade-profit orderly-text-base-contrast after:orderly-bg-trade-profit orderly-font-bold desktop:orderly-font-bold",
                 disabledClassName:
-                "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
+                  "orderly-bg-base-400 orderly-text-base-contrast-20 after:orderly-bg-base-400 orderly-cursor-not-allowed orderly-font-bold desktop:orderly-font-bold",
               },
               {
                 id: "orderly-order-entry-sell-button",
@@ -466,10 +467,26 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             color={side === OrderSide.BUY ? "buy" : "sell"}
             fullWidth
             options={[
-              { label: "Limit order", value: "LIMIT", id: "orderly-order-entry-order-type-limit" },
-              { label: "Market order", value: "MARKET", id: "orderly-order-entry-order-type-market" },
-              { label: "Stop limit", value: "STOP_LIMIT", id: "orderly-order-entry-order-type-stop-limit" },
-              { label: "Stop market", value: "STOP_MARKET", id: "orderly-order-entry-order-type-stop-market" },
+              {
+                label: "Limit order",
+                value: "LIMIT",
+                id: "orderly-order-entry-order-type-limit",
+              },
+              {
+                label: "Market order",
+                value: "MARKET",
+                id: "orderly-order-entry-order-type-market",
+              },
+              {
+                label: "Stop limit",
+                value: "STOP_LIMIT",
+                id: "orderly-order-entry-order-type-stop-limit",
+              },
+              {
+                label: "Stop market",
+                value: "STOP_MARKET",
+                id: "orderly-order-entry-order-type-stop-market",
+              },
             ]}
             onChange={(value) => {
               // field.onChange(value);
@@ -601,7 +618,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 props.onFieldChange("order_quantity", maxQty);
               }}
             >
-              <span id="orderly-order-entry-max-buy-or-sell-text" className="orderly-text-base-contrast-54">
+              <span
+                id="orderly-order-entry-max-buy-or-sell-text"
+                className="orderly-text-base-contrast-54"
+              >
                 {formattedOrder.side === OrderSide.BUY ? "Max buy" : "Max sell"}
               </span>
               <Numeral precision={baseDP}>{maxQty}</Numeral>
