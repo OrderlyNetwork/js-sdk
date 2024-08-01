@@ -25,13 +25,12 @@ export type UseCrossDepositFormScriptReturn = ReturnType<
   typeof useCrossDepositFormScript
 >;
 
-export type UseDepositFormScriptOptions = {
-  onCancel?: () => void;
-  onOk?: (data: any) => void;
+export type UseCrossDepositFormScriptOptions = {
+  onClose?: () => void;
 };
 
 export const useCrossDepositFormScript = (
-  options?: UseDepositFormScriptOptions
+  options?: UseCrossDepositFormScriptOptions
 ) => {
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();

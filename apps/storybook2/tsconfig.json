@@ -41,7 +41,7 @@
         "../../packages/ui-chain-selector/src"
       ],
       "@orderly.network/ui-cross-deposit": [
-        "../../packages/ ui-cross-deposit/src"
+        "../../packages/ui-cross-deposit/src"
       ]
     }
   },

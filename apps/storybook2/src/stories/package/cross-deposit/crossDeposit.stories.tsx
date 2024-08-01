@@ -5,6 +5,9 @@ import { CrossDepositFormWidget,  } from '@orderly.network/ui-cross-deposit';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { customChains } from "./customChains";
+import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
+import { initDeposit } from "./initDeposit";
+initDeposit()
 
 const networkId = "mainnet";
 // const networkId = "testnet";
@@ -52,3 +55,19 @@ export const CrossDepositForm: Story = {
 };
 
 
+<<<<<<< Updated upstream
+=======
+
+export const CrossDepositDialog: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'deposit' })
+
+                }}>Show Deposit Dialog</Button>
+            </Flex>
+        ),
+    ],
+};
+>>>>>>> Stashed changes
