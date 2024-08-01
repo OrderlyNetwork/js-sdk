@@ -37,7 +37,8 @@
     "@orderly.network/deposit": "1.0.0",
     "@orderly.network/withdraw": "1.0.0",
     "@orderly.network/ui-chain-selector": "1.0.0",
-    "@orderly.network/ui-transfer": "1.0.1-sdk-v2.31"
+    "@orderly.network/ui-transfer": "1.0.1-sdk-v2.31",
+    "@orderly.network/ui-cross-deposit": "1.0.0"
   },
   "changesets": [
     "beige-horses-judge",
@@ -59,6 +60,7 @@
     "lovely-lemons-think",
     "lucky-zoos-tell",
     "mean-dolphins-brake",
+    "metal-colts-bathe",
     "neat-camels-rhyme",
     "nervous-cups-serve",
     "red-dryers-jam",
