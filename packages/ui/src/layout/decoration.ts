@@ -26,6 +26,7 @@ export const decorationVariants = {
       //   // brands:'',
       // primary: "oui-from-primary-400 to-primary-900",
       primary: "oui-gradient-primary",
+      secondary: "oui-gradient-secondary",
       brand: "oui-gradient-brand",
       success: "oui-gradient-success",
       warning: "oui-gradient-warning",

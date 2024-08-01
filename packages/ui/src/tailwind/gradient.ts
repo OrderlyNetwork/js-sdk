@@ -7,6 +7,10 @@ export const gradientPlugin = () =>
         backgroundImage:
           "linear-gradient(var(--oui-gradient-angle, 0deg), rgb(var(--oui-gradient-primary-start)) 0%, rgb(var(--oui-gradient-primary-end)) 100%)",
       },
+      ".gradient-secondary": {
+        backgroundImage:
+          "linear-gradient(var(--oui-gradient-angle, 0deg), rgb(var(--oui-gradient-secondary-start)) 0%, rgb(var(--oui-gradient-secondary-end)) 100%)",
+      },
       ".gradient-success": {
         backgroundImage:
           "linear-gradient(var(--oui-gradient-angle, 0deg), rgb(var(--oui-gradient-success-start)) 0%, rgba(var(--oui-gradient-success-end)) 100%)",

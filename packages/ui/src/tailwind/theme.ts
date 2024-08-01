@@ -60,6 +60,9 @@ export const themePlugin = () =>
         "--oui-gradient-primary-start": "96 140 255",
         "--oui-gradient-primary-end": "24 40 195",
 
+        "--oui-gradient-secondary-start": "189 107 237",
+        "--oui-gradient-secondary-end": "45 0 97",
+
         "--oui-gradient-success-start": "0 180 158",
         "--oui-gradient-success-end": "0 90 79",
 
