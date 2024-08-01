@@ -36,9 +36,6 @@ export const TradingRewardsLayout = (
 const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
-  console.log("xxxx left sidebar", props.items, props.current);
-  
-
   return (
     <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-h-[calc(100%-29px)]">
       <SideBar

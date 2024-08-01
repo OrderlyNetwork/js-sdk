@@ -95,8 +95,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     }
   }, [distributionData, dailyVolume, volType]);
 
-  console.log("datasouce", distributionData, dailyVolume, volType, dataSource);
-
   return {
     period,
     periodTypes,
