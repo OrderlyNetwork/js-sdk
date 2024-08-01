@@ -8,6 +8,7 @@ import {
   Flex,
   PlusIcon,
   Text,
+  Tooltip,
 } from "@orderly.network/ui";
 import {
   ApiManagerScriptReturns,
@@ -184,9 +185,16 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           ip = "--";
         }
         return (
-          <div className="oui-overflow-ellipsis oui-overflow-hidden">
-            <Text>{ip}</Text>
-          </div>
+          <Tooltip
+            content={value}
+            className="oui-max-w-[200px] oui-break-all"
+          >
+            <div className="oui-overflow-ellipsis oui-overflow-hidden">
+              <Text.formatted copyable={ip !== "--"} onCopy={props.onCopyIP}>
+                {ip}
+              </Text.formatted>
+            </div>
+          </Tooltip>
         );
       },
     },
@@ -206,7 +214,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       render: (_, item) => {
         return (
           <Flex direction={"row"} gap={2}>
-            <EditButton item={item} onUpdate={props.doEdit} />
+            <EditButton item={item} onUpdate={props.doEdit} verifyIP={props.verifyIP} />
             <DeleteButton item={item} onDelete={props.doDelete} />
           </Flex>
         );
@@ -231,8 +239,9 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
 const EditButton: FC<{
   item: APIKeyItem;
   onUpdate: (item: APIKeyItem, ip?: string) => Promise<void>;
+  verifyIP: (ip: string) => string;
 }> = (props) => {
-  const { item, onUpdate } = props;
+  const { item, onUpdate, verifyIP } = props;
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -253,6 +262,7 @@ const EditButton: FC<{
         open={open}
         setOpen={setOpen}
         onUpdate={onUpdate}
+        verifyIP={verifyIP}
       />
     </>
   );

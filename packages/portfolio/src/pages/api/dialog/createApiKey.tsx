@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import {
+  cn,
   // Checkbox,
   Flex,
   SimpleDialog,
@@ -14,13 +15,21 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const [ipText, setIpText] = useState("");
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
+  const [hint, setHint] = useState("");
   useEffect(() => {
     if (!props.showCreateDialog) {
       setIpText("");
       setRead(true);
       setTrade(true);
+      setHint("");
     }
   }, [props.showCreateDialog]);
+
+  useEffect(() =>{
+    if (ipText.length === 0)
+      setHint("");
+  }, [ipText]);
+
   return (
     <SimpleDialog
       open={props.showCreateDialog}
@@ -33,6 +42,15 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
+            if (ipText.length > 0) {
+              const hint = props.verifyIP(ipText);
+              setHint(hint);
+              if (hint.length > 0) {
+                return;
+              }
+            }
+            
+
             const scopes: string[] = [];
             if (read) {
               scopes.push("read");
@@ -62,12 +80,21 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Text>
           <textarea
             placeholder="Add up to 20 IP addresses, separated by commas. "
-            className="oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full oui-border-none focus:oui-outline-none"
+            className={cn("oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
+              "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
+              hint.length > 0 && "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+            )}
             value={ipText}
             onChange={(e) => {
               setIpText(e.target.value);
             }}
-          ></textarea>
+          />
+          {hint.length > 0 && (
+            <Flex gap={1}>
+              <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
+              <Text color="danger" size="xs">{hint}</Text>
+            </Flex>
+          )}
         </Flex>
         <Statistic
           label={
