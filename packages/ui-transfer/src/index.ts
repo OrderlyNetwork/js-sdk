@@ -1,7 +1,7 @@
 export * from "./components/depositForm";
 export * from "./components/withdrawForm";
 export * from "./components/depositAndWithdraw";
-export { installDeposit } from "./components/depositAndWithdraw/initDeposit";
+export { installDeposit } from "./components/depositAndWithdraw/plugin";
 
 export { ChainSelect } from "./components/chainSelect";
 export { QuantityInput } from "./components/quantityInput";

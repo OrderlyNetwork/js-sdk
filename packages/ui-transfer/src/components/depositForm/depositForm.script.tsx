@@ -32,8 +32,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
   const config = useConfig();
-  const brokerName = config.get("brokerName") || "";
-  const brokerId = config.get("brokerId");
   const networkId = config.get("networkId") as NetworkId;
 
   const [chains, { findByChainId }] = useChains(networkId, {
@@ -74,7 +72,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     dst,
-    balance: maxQuantity,
+    balance,
     allowance,
     depositFeeRevalidating,
     depositFee,
@@ -91,6 +89,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
   });
+
+  const maxQuantity = useMemo(
+    () =>
+      new Decimal(balance || 0)
+        .todp(token?.precision ?? 2, Decimal.ROUND_DOWN)
+        .toString(),
+    [balance, token]
+  );
 
   const cleanData = () => {
     setQuantity("");
@@ -265,8 +271,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     address,
     token,
     tokens,
-    brokerId,
-    brokerName,
     networkId,
     chains,
     currentChain,

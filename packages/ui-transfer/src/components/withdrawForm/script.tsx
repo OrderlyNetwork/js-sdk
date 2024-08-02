@@ -315,8 +315,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         maxQuantity: maxAmount,
         disabled,
         loading,
-        brokerId: config.get("brokerId"),
-        brokerName: config.get("brokerName") || "",
         hasPositions,
         unsettledPnL,
         wrongNetwork,

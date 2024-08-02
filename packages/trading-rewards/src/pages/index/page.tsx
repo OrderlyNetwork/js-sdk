@@ -10,15 +10,15 @@ import { TitleConfig } from "./title/title.script";
 
 export const HomePage: FC<{
   titleConfig?: TitleConfig;
-}> = (props) => {
+  className?: string;
+}> = (props) => { 
   return (
     <TradingRewardsProvider titleConfig={props.titleConfig}>
       <Flex
         id="oui-tradingRewards-home-page"
         className={cn(
           "oui-h-lvw oui-w-full",
-          // padding
-          // "oui-p-4 lg:oui-p-6 xl:oui-p-3 oui-my-4"
+          props.className,
         )}
         direction={"column"}
         gap={4}
