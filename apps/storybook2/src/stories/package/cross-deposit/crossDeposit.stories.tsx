@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { CrossDepositFormWidget, initCrossDeposit } from '@orderly.network/ui-cross-deposit';
+import { CrossDepositFormWidget, installCrossDeposit } from '@orderly.network/ui-cross-deposit';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { customChains } from "./customChains";
 import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
-initCrossDeposit()
+installCrossDeposit()
 
 const networkId = "mainnet";
 // const networkId = "testnet";
@@ -56,7 +56,10 @@ export const CrossDepositForm: Story = {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -72,6 +75,10 @@ export const CrossDepositDialog: Story = {
         ),
     ],
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+};
+>>>>>>> Stashed changes
+=======
 };
 >>>>>>> Stashed changes
 =======

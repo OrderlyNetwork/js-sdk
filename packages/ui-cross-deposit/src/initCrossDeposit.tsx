@@ -1,7 +1,7 @@
 import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
 import { CrossDepositFormWidget } from "./components/crossDepositForm";
 
-export function initCrossDeposit() {
+export function installCrossDeposit() {
   installExtension<any>({
     name: "deposit-form",
     scope: ["*"],
