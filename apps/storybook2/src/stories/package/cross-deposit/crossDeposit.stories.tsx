@@ -1,18 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId } from '@orderly.network/ui-transfer';
+import { CrossDepositFormWidget, installCrossDeposit } from '@orderly.network/ui-cross-deposit';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { customChains } from "./customChains";
+import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
+installCrossDeposit()
 
 const networkId = "mainnet";
 // const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: 'Orderly', brokerId: 'orderly' });
+const configStore = new CustomConfigStore({ networkId, env: "prod", brokerName: 'Woofi Pro', brokerId: 'woofi_pro' });
 
 
 const meta = {
-    title: "Package/ui-transfer",
-    component: DepositFormWidget,
+    title: "Package/ui-cross-deposit",
+    component: CrossDepositFormWidget,
     subcomponents: {
 
     },
@@ -26,18 +29,19 @@ const meta = {
                     secondary: {
                         img: "/orderly-logo-secondary.svg",
                     },
-                }}>
+                }}
+                customChains={customChains as any}>
                     <Story />
                 </OrderlyApp>
             </ConnectorProvider>
         ),
     ],
-} satisfies Meta<typeof DepositFormWidget>;
+} satisfies Meta<typeof CrossDepositFormWidget>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DepositForm: Story = {
+export const CrossDepositForm: Story = {
     decorators: [
         (Story) => (
             <Flex justify='center' mt={10}>
@@ -49,18 +53,20 @@ export const DepositForm: Story = {
     ],
 };
 
-export const WithdrawForm: Story = {
-    render: () => {
-        return <Flex justify='center' mt={10}>
-            <Box width={420} intensity={800} p={5} r="lg">
-                <WithdrawFormWidget/>
-            </Box>
-        </Flex>
-    }
-}
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
-export const DepositDialog: Story = {
+export const CrossDepositDialog: Story = {
     decorators: [
         (Story) => (
             <Flex justify='center' itemAlign='center' height="100vh">
@@ -71,17 +77,17 @@ export const DepositDialog: Story = {
             </Flex>
         ),
     ],
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 };
-
-export const WithdrawDialog: Story = {
-    decorators: [
-        (Story) => (
-            <Flex justify='center' itemAlign='center' height="100vh">
-                <Button onClick={() => {
-                    modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'withdraw' })
-
-                }}>Show Withdraw Dialog</Button>
-            </Flex>
-        ),
-    ],
+>>>>>>> Stashed changes
+=======
 };
+>>>>>>> Stashed changes
+=======
+};
+>>>>>>> Stashed changes
+=======
+};
+>>>>>>> Stashed changes
