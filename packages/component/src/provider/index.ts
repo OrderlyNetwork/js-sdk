@@ -1,3 +1,8 @@
 export { SymbolProvider, SymbolContext } from "./symbolProvider";
-export { OrderlyAppProvider, OrderlyAppContext } from "./appProvider";
+export {
+  type CommonOrderlyAppState,
+  OrderlyAppProvider,
+  type OrderlyAppProviderProps,
+  OrderlyAppContext,
+} from "./appProvider";
 export { AssetsProvider, AssetsContext } from "./assetsProvider";
