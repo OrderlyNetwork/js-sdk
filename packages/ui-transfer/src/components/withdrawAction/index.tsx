@@ -1,7 +1,6 @@
 import {Box, Button, ButtonProps, modal} from "@orderly.network/ui";
 import {AuthGuard} from "@orderly.network/ui-connector";
 import React, {useMemo} from "react";
-import {ActionType} from "../actionButton";
 import {NetworkId} from "@orderly.network/types";
 import {CrossWithdrawConfirm} from "../crossWithdrawConfirm";
 import {API} from "@orderly.network/types/src";

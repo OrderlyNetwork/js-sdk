@@ -17,7 +17,6 @@ export type WithdrawFormProps =  ReturnType<typeof useWithdrawForm> & {
 
 export const WithdrawFormUI = (
     {
-        walletName,
         address,
         loading,
         disabled,
@@ -73,7 +72,7 @@ export const WithdrawFormUI = (
                 <UnsettlePnlInfo unsettledPnl={unsettledPnL} hasPositions={hasPositions} onSettlle={onSettlePnl}/>
 
                 <ExchangeDivider/>
-                <Web3Wallet name={walletName} address={address}/>
+                <Web3Wallet />
                 <Box mt={3}>
                     <ChainSelect
                         chains={chains}
