@@ -20,7 +20,9 @@ export const SwapDialog = modal.create<SwapProps>((props) => {
       title="Review swap details"
       closable
       onOpenChange={onOpenChange}
-      contentClassName="oui-font-semibold"
+      classNames={{
+        content: "oui-font-semibold",
+      }}
       size="md"
     >
       <Swap {...props} onComplete={onComplete} onCancel={onCancel} />

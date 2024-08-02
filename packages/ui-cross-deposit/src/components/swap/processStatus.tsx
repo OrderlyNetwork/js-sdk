@@ -29,36 +29,6 @@ type TProcessItem = {
   state: SwapState;
 };
 
-const getBridgeStatus = (status: SwapProcessStatus): SwapState => {
-  if (status === SwapProcessStatus.Bridging) {
-    return "pending";
-  }
-  if (status === SwapProcessStatus.BridgeFialed) {
-    return "failed";
-  }
-
-  if (status === SwapProcessStatus.Done) {
-    return "success";
-  }
-
-  return "notStart";
-};
-
-const getDepositStatus = (status: SwapProcessStatus): SwapState => {
-  if (status === SwapProcessStatus.Depositing) {
-    return "pending";
-  }
-  if (status === SwapProcessStatus.DepositFailed) {
-    return "failed";
-  }
-
-  if (status === SwapProcessStatus.Done) {
-    return "success";
-  }
-
-  return "notStart";
-};
-
 export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
   const { status, mode, statusUrl, brokerName } = props;
 
@@ -204,3 +174,33 @@ const StatusIndicator: FC<{ state: SwapState }> = ({ state }) => {
 
   return <Box r="full" width={10} height={10} intensity={200}></Box>;
 };
+
+function getBridgeStatus(status: SwapProcessStatus): SwapState {
+  if (status === SwapProcessStatus.Bridging) {
+    return "pending";
+  }
+  if (status === SwapProcessStatus.BridgeFialed) {
+    return "failed";
+  }
+
+  if (status === SwapProcessStatus.Done) {
+    return "success";
+  }
+
+  return "notStart";
+}
+
+function getDepositStatus(status: SwapProcessStatus): SwapState {
+  if (status === SwapProcessStatus.Depositing) {
+    return "pending";
+  }
+  if (status === SwapProcessStatus.DepositFailed) {
+    return "failed";
+  }
+
+  if (status === SwapProcessStatus.Done) {
+    return "success";
+  }
+
+  return "notStart";
+}

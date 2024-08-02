@@ -11,59 +11,56 @@ import {
   QuantityInput,
   Web3Wallet,
 } from "@orderly.network/ui-transfer";
-import { Slippage } from "../slippage";
-import { CrossDepositProvider } from "../provider/crossDepositProvider";
-import { SwapFee } from "../swapFee";
+import { Slippage } from "../swap/slippage";
+import { SwapFee } from "../swap/swapFee";
+import { Notice } from "../swap/notice";
+import { CrossDepositProvider } from "../../provider";
 
 export const CrossDepositForm: FC<UseCrossDepositFormScriptReturn> = (
   props
 ) => {
   const {
-    walletName,
-    address,
     token,
     tokens,
-    brokerName,
+    onTokenChange,
+    amount,
+    quantity,
+    maxQuantity,
+    swapQuantity,
+    onQuantityChange,
+    hintMessage,
+    inputStatus,
     chains,
     currentChain,
-    maxQuantity,
-    amount,
+    settingChain,
     onChainChange,
-    quantity,
-    onQuantityChange,
-    inputStatus,
-    hintMessage,
-    disabled,
-    onTokenChange,
+    actionType,
     onDeposit,
     onApprove,
-    dst,
-    price,
-    fee,
-    nativeToken,
-    loading,
-    actionType,
     fetchBalance,
-    balanceRevalidating,
+    dst,
     wrongNetwork,
+    balanceRevalidating,
+    loading,
+    disabled,
     networkId,
-    settingChain,
     slippage,
     onSlippageChange,
     needSwap,
     needCrossSwap,
-    swapQuantity,
     swapPrice,
     swapRevalidating,
+    warningMessage,
+    fee,
   } = props;
 
   return (
-    <CrossDepositProvider needSwap={needSwap} needCrossSwap={needCrossSwap}>
+    <CrossDepositProvider>
       <Box
         id="oui-cross-deposit-form"
         className={textVariants({ weight: "semibold" })}
       >
-        <Web3Wallet name={walletName} address={address} />
+        <Web3Wallet />
 
         <Box mt={3} mb={1}>
           <ChainSelect
@@ -99,7 +96,7 @@ export const CrossDepositForm: FC<UseCrossDepositFormScriptReturn> = (
         />
         <ExchangeDivider />
 
-        <BrokerWallet name={brokerName} />
+        <BrokerWallet />
 
         <QuantityInput
           readOnly
@@ -111,16 +108,26 @@ export const CrossDepositForm: FC<UseCrossDepositFormScriptReturn> = (
           }}
         />
 
-        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
+        <Flex direction="column" itemAlign="start" mt={1} mb={8} gapY={1}>
           <Flex justify="between" width="100%">
             <SwapCoin token={token} dst={dst} price={swapPrice} />
-            <Slippage value={slippage} onValueChange={onSlippageChange} />
+            {(needSwap || needCrossSwap) && (
+              <Slippage value={slippage} onValueChange={onSlippageChange} />
+            )}
           </Flex>
 
           <SwapFee {...fee} />
         </Flex>
 
-        <Flex justify="center" mt={8}>
+        <Notice
+          message={warningMessage}
+          needSwap={needSwap}
+          needCrossSwap={needCrossSwap}
+          wrongNetwork={wrongNetwork}
+          networkId={networkId}
+        />
+
+        <Flex justify="center">
           <ActionButton
             actionType={actionType}
             symbol={token?.symbol}

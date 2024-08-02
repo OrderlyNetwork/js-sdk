@@ -1,2 +1,2 @@
 export * from "./components/crossDepositForm";
-export { installCrossDeposit } from "./initCrossDeposit";
+export { installCrossDeposit } from "./plugin";

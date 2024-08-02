@@ -1,8 +1,7 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Environment, createClient } from "@layerzerolabs/scan-client";
 import { utils } from "@orderly.network/core";
 import {
-  OrderlyContext,
   useAccountInstance,
   useBoolean,
   useConfig,
@@ -10,7 +9,10 @@ import {
 } from "@orderly.network/hooks";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { pick } from "ramda";
-import { isNativeTokenChecker, woofiDexCrossChainRouterAbi } from "./constants";
+import {
+  isNativeTokenChecker,
+  woofiDexCrossSwapChainRouterAbi,
+} from "./constants";
 
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
@@ -36,8 +38,10 @@ export const useCrossSwap = (): any => {
   const txHashFromBridge = useRef<string | undefined>();
 
   const account = useAccountInstance();
-  const { configStore } = useContext(OrderlyContext);
-  const networkId = useConfig("networkId");
+
+  const config = useConfig();
+  const brokerId = config.get("brokerId");
+  const networkId = config.get("networkId");
 
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
@@ -107,7 +111,7 @@ export const useCrossSwap = (): any => {
     check(txHash);
   }, []);
 
-  //swap 的時候拿 src tx hash, cross swap 拿 dst tx hash
+  // swap 的時候拿 src tx hash, cross swap 拿 dst tx hash
   // const checkDeposit
 
   useEffect(() => {
@@ -121,10 +125,10 @@ export const useCrossSwap = (): any => {
   const dstValutDeposit = useCallback(() => {
     return {
       accountId: account.accountIdHashStr,
-      brokerHash: utils.parseBrokerHash(configStore.get("brokerId")!),
+      brokerHash: utils.parseBrokerHash(brokerId),
       tokenHash: utils.parseTokenHash("USDC"),
     };
-  }, [account]);
+  }, [account, brokerId]);
 
   const swap = async (inputs: {
     address: string;
@@ -164,7 +168,7 @@ export const useCrossSwap = (): any => {
       "quoteLayerZeroFee",
       [account.address, dst, dstValutDeposit()],
       {
-        abi: woofiDexCrossChainRouterAbi,
+        abi: woofiDexCrossSwapChainRouterAbi,
       }
     );
 
@@ -198,7 +202,7 @@ export const useCrossSwap = (): any => {
             : quotoLZFee[0],
         },
         {
-          abi: woofiDexCrossChainRouterAbi,
+          abi: woofiDexCrossSwapChainRouterAbi,
         }
       );
 

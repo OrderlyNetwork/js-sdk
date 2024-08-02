@@ -1,30 +1,28 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { utils } from "@orderly.network/core";
 import {
-  OrderlyContext,
   useAccountInstance,
   useBoolean,
+  useConfig,
 } from "@orderly.network/hooks";
-import { swapSupportApiUrl, woofiDexCrossChainRouterAbi } from "./constants";
+import {
+  swapSupportApiUrl,
+  woofiDexCrossSwapChainRouterAbi,
+} from "./constants";
 
-/** @hidden */
-export type WooCrossSwapQueryOptions = {
-  from: string;
-};
-
-/** @hidden */
 export const useWooCrossSwapQuery = () => {
-  const { configStore } = useContext<any>(OrderlyContext);
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
+  const brokerId = useConfig("brokerId");
+
   const account = useAccountInstance();
 
   const dstValutDeposit = useCallback(() => {
     return {
       accountId: account.accountIdHashStr,
-      brokerHash: utils.parseBrokerHash(configStore.get("brokerId")!),
+      brokerHash: utils.parseBrokerHash(brokerId),
       tokenHash: utils.parseTokenHash("USDC"),
     };
-  }, [account]);
+  }, [account, brokerId]);
 
   const queryDestinationFee = useCallback(
     async (
@@ -45,7 +43,7 @@ export const useWooCrossSwapQuery = () => {
         "quoteLayerZeroFee",
         [account.address, dst, dstValutDeposit()],
         {
-          abi: woofiDexCrossChainRouterAbi,
+          abi: woofiDexCrossSwapChainRouterAbi,
         }
       );
 

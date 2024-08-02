@@ -48,7 +48,6 @@ export function useSwapFee(options: {
   const { data: symbolPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
 
   const feeInfo = useMemo(() => {
-    let dstGasFee = "0";
     let feeAmount = "";
     let feeQtys: FeeQty[] = [];
 
@@ -58,11 +57,13 @@ export function useSwapFee(options: {
 
     const srcDp = feeDecimalsOffset((src as any)?.woofi_dex_precision);
 
-    if (!needSwap && !needCrossSwap) {
-      dstGasFee = new Decimal(depositFee.toString())
-        .div(new Decimal(10).pow(18))
-        .toString();
+    const dstGasFee = needCrossSwap
+      ? destinationGasFee
+      : new Decimal(depositFee.toString())
+          .div(new Decimal(10).pow(18))
+          .toString();
 
+    if (!needSwap && !needCrossSwap) {
       feeQtys = [
         {
           value: dstGasFee,
@@ -71,11 +72,9 @@ export function useSwapFee(options: {
       ];
 
       feeAmount = new Decimal(dstGasFee).mul(symbolPrice || 0).toString();
-    } else {
-      if (needSwap && needCrossSwap) {
-        dstGasFee = destinationGasFee;
-      }
+    }
 
+    if (needSwap || needCrossSwap) {
       // if native token, Destination gas fee、fee (Swap fee + Bridge fee ) will use a same symbol unit
       if (isNativeToken) {
         const totalQuantity = new Decimal(dstGasFee).plus(fee);

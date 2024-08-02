@@ -1,9 +1,6 @@
 import { FC, PropsWithChildren, createContext, useContext } from "react";
 
-export interface DepositContextState {
-  needSwap: boolean;
-  needCrossSwap: boolean;
-}
+export interface DepositContextState {}
 
 export const CrossDepositContext = createContext<DepositContextState>(
   {} as DepositContextState
@@ -12,15 +9,8 @@ export const CrossDepositContext = createContext<DepositContextState>(
 export const CrossDepositProvider: FC<
   PropsWithChildren<DepositContextState>
 > = (props) => {
-  const { needSwap, needCrossSwap } = props;
-
   return (
-    <CrossDepositContext.Provider
-      value={{
-        needSwap,
-        needCrossSwap,
-      }}
-    >
+    <CrossDepositContext.Provider value={{}}>
       {props.children}
     </CrossDepositContext.Provider>
   );

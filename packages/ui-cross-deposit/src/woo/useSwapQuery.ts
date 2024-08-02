@@ -1,14 +1,8 @@
-import { useCallback, useContext } from "react";
-import {
-  OrderlyContext,
-  useAccountInstance,
-  useBoolean,
-} from "@orderly.network/hooks";
+import { useCallback } from "react";
+import { useAccountInstance, useBoolean } from "@orderly.network/hooks";
 import { swapSupportApiUrl } from "./constants";
 
-/** @hidden */
 export const useWooSwapQuery = () => {
-  const { configStore } = useContext<any>(OrderlyContext);
   const account = useAccountInstance();
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
 
@@ -54,6 +48,6 @@ export const useWooSwapQuery = () => {
 
   return {
     query,
-    loading: false,
+    loading,
   };
 };

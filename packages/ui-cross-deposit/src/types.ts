@@ -1,15 +1,4 @@
-export type DST = {
-  symbol: string;
-  address?: string;
-  decimals?: number;
-  chainId: number;
-  network: string;
-};
-
-export type MarkPrices = {
-  from_token: number;
-  native_token: number;
-};
+import { API } from "@orderly.network/types";
 
 export enum SwapMode {
   Single,
@@ -24,6 +13,19 @@ export enum SwapProcessStatus {
   Done = 4,
 }
 
+export type DST = {
+  symbol: string;
+  address?: string;
+  decimals?: number;
+  chainId: number;
+  network: string;
+};
+
+export type MarkPrices = {
+  from_token: number;
+  native_token: number;
+};
+
 export type SymbolInfo = {
   chain: number;
   token: string;
@@ -31,3 +33,15 @@ export type SymbolInfo = {
   amount: string;
   decimals: number;
 };
+
+export type NetworkInfos = API.NetworkInfos & {
+  woofi_dex_cross_chain_router: string;
+  woofi_dex_depositor: string;
+};
+
+export type TokenInfo = API.TokenInfo & {
+  swap_enable: Boolean;
+  woofi_dex_precision: string;
+};
+
+export type InputStatus = "error" | "warning" | "success" | "default";
