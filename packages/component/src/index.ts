@@ -1,13 +1,6 @@
 export { default as version } from "./version";
 
-export {
-  OrderlyAppProvider,
-  OrderlyAppContext,
-  SymbolProvider,
-  SymbolContext,
-  AssetsProvider,
-  AssetsContext,
-} from "./provider";
+export * from "./provider";
 
 // ==================== base component ====================
 export { default as Button } from "./button";
