@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/markets",
-  "version": "1.0.1-sdk-v2.40",
+  "version": "1.0.1-sdk-v2.42",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.10-sdk-v2.42
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@1.5.10-sdk-v2.42
+
+## 0.3.10-sdk-v2.41
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@1.5.10-sdk-v2.41
+
 ## 0.3.10-sdk-v2.40
 
 ### Patch Changes

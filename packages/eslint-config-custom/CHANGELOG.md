@@ -1,5 +1,17 @@
 # eslint-config-custom
 
+## 0.3.10-sdk-v2.42
+
+### Patch Changes
+
+- update
+
+## 0.3.10-sdk-v2.41
+
+### Patch Changes
+
+- update
+
 ## 0.3.10-sdk-v2.40
 
 ### Patch Changes

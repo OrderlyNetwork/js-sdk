@@ -1,5 +1,23 @@
 # @orderly.network/futures
 
+## 3.3.10-sdk-v2.42
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-sdk-v2.42
+  - @orderly.network/utils@1.5.10-sdk-v2.42
+
+## 3.3.10-sdk-v2.41
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-sdk-v2.41
+  - @orderly.network/utils@1.5.10-sdk-v2.41
+
 ## 3.3.10-sdk-v2.40
 
 ### Patch Changes
