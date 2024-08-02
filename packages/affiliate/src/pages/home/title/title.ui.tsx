@@ -11,7 +11,11 @@ export const Title: FC<TitleReturns> = (props) => {
       <span dangerouslySetInnerHTML={{ __html: "Earn more as a " }} />
       <span
         dangerouslySetInnerHTML={{ __html: ` ${props.gradientTitle}` }}
-        className="oui-gradient-brand-270 oui-text-transparent oui-bg-clip-text"
+        className="oui-gradient-brand oui-text-transparent oui-bg-clip-text"
+        style={{
+          // @ts-ignore
+          '--oui-gradient-angle': "270deg"
+        }}
       />
       <span dangerouslySetInnerHTML={{ __html: " affiliate" }} />
     </div>
