@@ -74,7 +74,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     dst,
-    balance: maxQuantity,
+    balance,
     allowance,
     depositFeeRevalidating,
     depositFee,
@@ -91,6 +91,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
   });
+
+  const maxQuantity = useMemo(
+    () =>
+      new Decimal(balance || 0)
+        .todp(token?.precision ?? 2, Decimal.ROUND_DOWN)
+        .toString(),
+    [balance, token]
+  );
 
   const cleanData = () => {
     setQuantity("");
