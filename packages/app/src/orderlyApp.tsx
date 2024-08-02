@@ -25,11 +25,11 @@ const OrderlyApp = (
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get('ref');
+    const refCode = searchParams.get("ref");
     if (refCode) {
-        localStorage.setItem("referral_code", refCode);
+      localStorage.setItem("referral_code", refCode);
     }
-}, []);
+  }, []);
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>
@@ -38,11 +38,11 @@ const OrderlyApp = (
         components={components}
       >
         <OrderlyConfigProvider {...configProps}>
-          <ModalProvider>
-            <AppStateProvider onChainChanged={onChainChanged}>
+          <AppStateProvider onChainChanged={onChainChanged}>
+            <ModalProvider>
               <TooltipProvider>{props.children}</TooltipProvider>
-            </AppStateProvider>
-          </ModalProvider>
+            </ModalProvider>
+          </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>
       </OrderlyThemeProvider>
