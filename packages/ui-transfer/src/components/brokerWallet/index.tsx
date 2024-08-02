@@ -1,13 +1,11 @@
 import { FC, useMemo } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { useAppConfig } from "@orderly.network/react-app";
+import { useConfig } from "@orderly.network/hooks";
 
-export type BrokerWalletProps = {
-  name?: string;
-};
-
-export const BrokerWallet: FC<BrokerWalletProps> = (props) => {
+export const BrokerWallet: FC = () => {
   const { appIcons } = useAppConfig();
+  const brokerName = useConfig("brokerName");
 
   const icon = useMemo(() => {
     const { secondary } = appIcons || {};
@@ -25,7 +23,7 @@ export const BrokerWallet: FC<BrokerWalletProps> = (props) => {
 
   return (
     <Flex justify="between">
-      <Text size="sm">{`Your ${props.name} account`}</Text>
+      <Text size="sm">{`Your ${brokerName} account`}</Text>
       {icon}
     </Flex>
   );

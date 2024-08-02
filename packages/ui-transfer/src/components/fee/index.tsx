@@ -51,7 +51,7 @@ export const Fee: FC<FeeProps> = (props) => {
 
       <Text size="xs" intensity={80}>
         $
-        <Text.numeral dp={3} padding={false} rm={Decimal.ROUND_UP}>
+        <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>
           {feeAmount}
         </Text.numeral>
         {` `}

@@ -17,7 +17,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     address,
     token,
     tokens,
-    brokerName,
     chains,
     currentChain,
     maxQuantity,
@@ -83,7 +82,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <ExchangeDivider />
 
-      <BrokerWallet name={brokerName} />
+      <BrokerWallet />
 
       <QuantityInput
         readOnly
