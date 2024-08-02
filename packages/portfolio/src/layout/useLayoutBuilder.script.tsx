@@ -1,16 +1,24 @@
 import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 import { useMediaQuery } from "@orderly.network/hooks";
 
-export const useLayoutBuilder = (): SideBarProps & {
+export const useLayoutBuilder = (props: {
+  current?: string;
+}): SideBarProps & {
   hideSideBar: boolean;
 } => {
   const { routerAdapter } = useScaffoldContext();
   const [current, setCurrent] = useState(
-    routerAdapter?.currentPath ?? "/portfolio"
+    props.current ?? routerAdapter?.currentPath ?? "/portfolio"
   );
+
+  useEffect(() => {
+    if (current || routerAdapter?.currentPath) {
+      setCurrent((current || routerAdapter?.currentPath) || '/portfolio');
+    }
+  }, [current, routerAdapter?.currentPath]);
 
   const items = useMemo(() => {
     return [

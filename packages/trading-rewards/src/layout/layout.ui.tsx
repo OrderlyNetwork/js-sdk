@@ -19,14 +19,20 @@ export const TradingRewardsLayout = (
   props: PropsWithChildren<TradingRewardsLayoutProps>
 ) => {
   const { children, ...rest } = props;
-
+ 
   return (
     <Scaffold
+      footerHeight={29}
+      classNames={
+        {
+          content: "lg:oui-mb-6"
+        }
+      }
       leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
       {...props}
     >
-      <Box className="oui-flex oui-justify-center oui-py-3">
+      <Box className="oui-flex oui-justify-center">
         {props.children}
       </Box>
     </Scaffold>
@@ -44,7 +50,6 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
         open={expanded}
         onOpenChange={(open) => setExpand(open)}
         onItemSelect={(a) => {
-          console.log("xxxxxxx a,",a);
           props.onItemSelect?.(a);
           props.routerAdapter?.onRouteChange?.({
             href: a.href || "" ,

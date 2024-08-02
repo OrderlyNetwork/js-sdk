@@ -2,22 +2,17 @@ import React from "react";
 import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { NetworkId } from "@orderly.network/types";
+import { DepositAction } from "../../types";
 
 export type ActionButtonProps = {
   disabled?: boolean;
   loading?: boolean;
-  actionType: ActionType;
+  actionType: DepositAction;
   symbol?: string;
   onDeposit?: () => void;
   onApprove?: () => void;
   networkId?: NetworkId;
 };
-
-export enum ActionType {
-  Deposit,
-  Approve,
-  Increase,
-}
 
 export const ActionButton: React.FC<ActionButtonProps> = (props) => {
   const {
@@ -31,16 +26,16 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
   } = props;
 
   const renderButton = () => {
-    const params: Record<ActionType, ButtonProps> = {
-      [ActionType.Approve]: {
+    const params: Record<DepositAction, ButtonProps> = {
+      [DepositAction.Approve]: {
         children: `Approve ${symbol}`,
         onClick: onApprove,
       },
-      [ActionType.Increase]: {
+      [DepositAction.Increase]: {
         children: `increase ${symbol} authorized amount`,
         onClick: onApprove,
       },
-      [ActionType.Deposit]: {
+      [DepositAction.Deposit]: {
         children: "Deposit",
         onClick: onDeposit,
       },

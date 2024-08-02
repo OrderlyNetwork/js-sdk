@@ -13,8 +13,7 @@ import {
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
 import { Decimal } from "@orderly.network/utils";
-
-export type InputStatus = "error" | "warning" | "success" | "default";
+import { InputStatus } from '../../types'
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;

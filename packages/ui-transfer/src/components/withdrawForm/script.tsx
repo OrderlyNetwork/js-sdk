@@ -7,12 +7,11 @@ import {
     useWalletConnector, useWalletSubscription,
     useWithdraw
 } from "@orderly.network/hooks";
-import {ActionType} from "../actionButton";
 import {API, NetworkId} from "@orderly.network/types";
-import {InputStatus} from "../depositForm/depositForm.script";
 import {Decimal, int2hex, praseChainIdToNumber} from "@orderly.network/utils";
 import {toast} from "@orderly.network/ui";
 import {useAppContext} from "@orderly.network/react-app";
+import { InputStatus } from "../../types";
 
 export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>
 
@@ -315,8 +314,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         maxQuantity: maxAmount,
         disabled,
         loading,
-        brokerId: config.get("brokerId"),
-        brokerName: config.get("brokerName") || "",
         hasPositions,
         unsettledPnL,
         wrongNetwork,

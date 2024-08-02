@@ -6,6 +6,8 @@ import type { LayoutProps } from "@orderly.network/ui-scaffold";
 export const PortfolioLayoutWidget = (
   props: PropsWithChildren<LayoutProps>
 ) => {
-  const state = useLayoutBuilder();
+  const state = useLayoutBuilder({
+    current: props.leftSideProps?.current
+  });
   return <PortfolioLayout {...state} {...props} children={props.children} />;
 };

@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
 import { DepositIcon, WithdrawIcon } from "../../icons";
 import { WithdrawFormWidget } from "../withdrawForm";
-import { DepositSlot } from "./initDeposit";
+import { DepositSlot } from "./plugin";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 

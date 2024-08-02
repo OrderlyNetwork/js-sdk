@@ -113,7 +113,7 @@ const meta = {
     },
     // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     args: {
-        p: 5,
+        // p: 5,
         // py: 2,
     },
 } satisfies Meta<typeof Dashboard.DashboardPage>;
@@ -127,7 +127,11 @@ export const Page: Story = {};
 export const LayoutPage: Story = {
     render: () => {
         return <TradingRewardsLayoutWidget>
-            <Dashboard.DashboardPage />
+            <Dashboard.DashboardPage classNames={{
+                root: "oui-flex oui-justify-center",
+                home: "oui-py-6 oui-px-4 lg:oui-px-6 lg:oui-py-12 xl:oui-pl-4 lx:oui-pr-6",
+                dashboard: "oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-3 lx:oui-pr-6",
+            }} />
         </TradingRewardsLayoutWidget>
     },
 }
