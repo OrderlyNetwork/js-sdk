@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-custom",
-  "version": "0.3.10-sdk-v2.42",
+  "version": "0.3.10-sdk-v2.43",
   "main": "index.js",
   "license": "MIT",
   "private": true,
