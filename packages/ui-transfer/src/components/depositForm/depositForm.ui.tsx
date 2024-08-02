@@ -13,40 +13,35 @@ import { ActionButton } from "../actionButton";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
-    walletName,
-    address,
     token,
     tokens,
-    brokerName,
+    onTokenChange,
+    amount,
+    quantity,
+    maxQuantity,
+    onQuantityChange,
+    hintMessage,
+    inputStatus,
     chains,
     currentChain,
-    maxQuantity,
-    amount,
+    settingChain,
     onChainChange,
-    quantity,
-    onQuantityChange,
-    inputStatus,
-    hintMessage,
-    disabled,
-    onTokenChange,
+    actionType,
     onDeposit,
     onApprove,
-    dst,
-    price,
-    fee,
-    nativeToken,
-    loading,
-    actionType,
     fetchBalance,
-    balanceRevalidating,
+    dst,
     wrongNetwork,
+    balanceRevalidating,
+    loading,
+    disabled,
     networkId,
-    settingChain,
+    fee,
   } = props;
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
-      <Web3Wallet name={walletName} address={address} />
+      <Web3Wallet />
 
       <Box mt={3} mb={1}>
         <ChainSelect
@@ -83,7 +78,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
       <ExchangeDivider />
 
-      <BrokerWallet name={brokerName} />
+      <BrokerWallet />
 
       <QuantityInput
         readOnly
@@ -95,7 +90,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       />
 
       <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <SwapCoin token={token} dst={dst} price={price} />
+        <SwapCoin token={token} dst={dst} price={1} />
         <Fee {...fee} />
       </Flex>
 

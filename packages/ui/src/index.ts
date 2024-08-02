@@ -67,3 +67,7 @@ export type { VariantProps } from "tailwind-variants";
 export * from "./utils";
 export { tv } from "./utils/tv";
 export { default as toast } from "react-hot-toast";
+
+
+//===== tailwind
+export * as OUITailwind from "./tailwind";

@@ -17,9 +17,7 @@ export type WithdrawFormProps =  ReturnType<typeof useWithdrawForm> & {
 
 export const WithdrawFormUI = (
     {
-        walletName,
         address,
-        brokerName,
         loading,
         disabled,
         quantity,
@@ -49,7 +47,7 @@ export const WithdrawFormUI = (
         <Box id="oui-withdraw-form" className={textVariants({weight: "semibold"})}>
             <Box mb={5}>
 
-                <BrokerWallet name={brokerName}/>
+                <BrokerWallet />
                 <Box mt={3} mb={1}>
                     <QuantityInput
                         value={quantity}
@@ -74,7 +72,7 @@ export const WithdrawFormUI = (
                 <UnsettlePnlInfo unsettledPnl={unsettledPnL} hasPositions={hasPositions} onSettlle={onSettlePnl}/>
 
                 <ExchangeDivider/>
-                <Web3Wallet name={walletName} address={address}/>
+                <Web3Wallet />
                 <Box mt={3}>
                     <ChainSelect
                         chains={chains}

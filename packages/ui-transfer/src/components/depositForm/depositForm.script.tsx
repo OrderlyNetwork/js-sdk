@@ -1,19 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  useChains,
-  useConfig,
-  useDeposit,
-  useIndexPrice,
-  useWalletConnector,
-} from "@orderly.network/hooks";
+import { useCallback, useEffect, useMemo } from "react";
+import { useConfig, useDeposit, useIndexPrice } from "@orderly.network/hooks";
 import { API, NetworkId } from "@orderly.network/types";
-import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-import { toast } from "@orderly.network/ui";
-import { ActionType } from "../actionButton";
+import { Decimal } from "@orderly.network/utils";
 import { useAppContext } from "@orderly.network/react-app";
-import { feeDecimalsOffset, getTokenByTokenList } from "../../utils";
-
-export type InputStatus = "error" | "warning" | "success" | "default";
+import { feeDecimalsOffset } from "../../utils";
+import {
+  useActionType,
+  useChainSelect,
+  useDepositAction,
+  useInputStatus,
+  useToken,
+} from "./hooks";
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -24,57 +21,18 @@ export type UseDepositFormScriptOptions = {
 };
 
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
-  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
-  const [hintMessage, setHintMessage] = useState<string>();
-  const [submitting, setSubmitting] = useState(false);
-
-  const [token, setToken] = useState<API.TokenInfo>();
-  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
-
-  const config = useConfig();
-  const brokerName = config.get("brokerName") || "";
-  const brokerId = config.get("brokerId");
-  const networkId = config.get("networkId") as NetworkId;
-
-  const [chains, { findByChainId }] = useChains(networkId, {
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-  });
-
   const { wrongNetwork } = useAppContext();
 
-  const {
-    connectedChain,
-    wallet,
-    setChain: switchChain,
-    settingChain,
-  } = useWalletConnector();
+  const networkId = useConfig("networkId") as NetworkId;
 
-  const currentChain = useMemo(() => {
-    if (!connectedChain) return null;
+  const { chains, currentChain, settingChain, onChainChange } =
+    useChainSelect();
 
-    const chainId = praseChainIdToNumber(connectedChain.id);
-    const chain = findByChainId(chainId);
-
-    return {
-      ...connectedChain,
-      id: chainId,
-      info: chain!,
-    };
-  }, [connectedChain, findByChainId]);
-
-  const { walletName, address } = useMemo(
-    () => ({
-      walletName: wallet?.label,
-      address: wallet?.accounts?.[0].address,
-    }),
-    [wallet]
-  );
+  const { token, tokens, onTokenChange } = useToken({ currentChain });
 
   const {
     dst,
-    balance: maxQuantity,
+    balance,
     allowance,
     depositFeeRevalidating,
     depositFee,
@@ -92,206 +50,91 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     srcToken: token?.symbol,
   });
 
+  const maxQuantity = useMemo(
+    () =>
+      new Decimal(balance || 0)
+        .todp(token?.precision ?? 2, Decimal.ROUND_DOWN)
+        .toString(),
+    [balance, token]
+  );
+
+  const { inputStatus, hintMessage } = useInputStatus({
+    quantity,
+    maxQuantity,
+  });
+
   const cleanData = () => {
     setQuantity("");
   };
 
-  const onDirectDeposit = useCallback(() => {
-    deposit()
-      .then((res: any) => {
-        setQuantity("");
-        toast.success("Deposit requested");
-        options.onClose?.();
-      })
-      .catch((error) => {
-        toast.error(error?.errorCode || "Deposit failed");
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-  }, [deposit]);
-
-  const onDeposit = useCallback(() => {
-    const num = Number(quantity);
-
-    if (!token) {
-      toast.error("Please select a token");
-      return;
-    }
-
-    if (isNaN(num) || num <= 0) {
-      toast.error("Please input a valid number");
-      return;
-    }
-
-    if (inputStatus !== "default") {
-      return;
-    }
-
-    if (submitting) return;
-
-    setSubmitting(true);
-    onDirectDeposit();
-  }, [quantity, submitting, token, onDirectDeposit]);
-
-  const onApprove = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
-
-    return approve()
-      .then((res: any) => {
-        toast.success("Approve success");
-      })
-      .catch((error) => {
-        console.log("approve error", error);
-        toast.error(error?.errorCode || "Approve failed");
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-    // whether approve is depends on quantity and allowance
-  }, [quantity, submitting, allowance, approve]);
-
-  const onTokenChange = (token: API.TokenInfo) => {
+  const onSuccess = useCallback(() => {
     cleanData();
-    setToken(token);
-  };
+    options.onClose?.();
+  }, [options.onClose]);
 
-  const onChainChange = useCallback(
-    async (chain: API.NetworkInfos) => {
-      const chainInfo = findByChainId(chain.chain_id);
+  const { submitting, onApprove, onDeposit } = useDepositAction({
+    quantity,
+    allowance,
+    approve,
+    deposit,
+    onSuccess,
+  });
 
-      if (
-        !chainInfo ||
-        chainInfo.network_infos?.chain_id === currentChain?.id
-      ) {
-        return Promise.resolve();
-      }
-
-      return switchChain?.({
-        chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
-      })
-        .then((switched) => {
-          if (switched) {
-            toast.success("Network switched");
-            // clean input value
-            cleanData();
-          } else {
-            toast.error("Switch chain failed");
-          }
-        })
-        .catch((error) => {
-          toast.error(`Switch chain failed: ${error.message}`);
-        });
-    },
-    [currentChain, switchChain, findByChainId]
-  );
-
-  // when chain changed and chain data ready then call this function
-  const onChainInited = useCallback((chainInfo?: API.Chain) => {
-    if (chainInfo && chainInfo?.token_infos?.length > 0) {
-      const tokens = chainInfo.token_infos;
-      setTokens(tokens);
-
-      const newToken = getTokenByTokenList(tokens);
-
-      if (!newToken) return;
-
-      setToken(newToken);
-    }
-  }, []);
-
-  useEffect(() => {
-    onChainInited(currentChain?.info);
-    // if settingChain is true, the currentChain will change, so use currentChain.id
-  }, [currentChain?.id]);
-
-  useEffect(() => {
-    if (!quantity) {
-      // reset input status when value is empty
-      setInputStatus("default");
-      setHintMessage("");
-      return;
-    }
-
-    const d = new Decimal(quantity);
-
-    if (d.gt(maxQuantity)) {
-      setInputStatus("error");
-      setHintMessage("Insufficient balance");
-    } else {
-      // reset input status
-      setInputStatus("default");
-      setHintMessage("");
-    }
-  }, [quantity, maxQuantity]);
+  const loading = submitting || depositFeeRevalidating!;
 
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
+    !token ||
     inputStatus === "error" ||
     depositFeeRevalidating!;
 
-  const loading = submitting || depositFeeRevalidating!;
-
-  const markPrice = 1;
-
   const amount = useMemo(() => {
+    const markPrice = 1;
     return new Decimal(quantity || 0).mul(markPrice).toNumber();
-  }, [quantity, markPrice]);
+  }, [quantity]);
 
-  const actionType = useMemo(() => {
-    const allowanceNum = isNativeToken ? Number.MAX_VALUE : Number(allowance);
+  const actionType = useActionType({
+    isNativeToken,
+    allowance,
+    quantity,
+    maxQuantity,
+  });
 
-    if (allowanceNum <= 0) {
-      return ActionType.Approve;
-    }
+  const fee = useDepositFee({
+    nativeToken: currentChain?.info?.nativeToken,
+    depositFee,
+  });
 
-    const qty = Number(quantity);
-    const maxQty = Number(maxQuantity);
-
-    if (allowanceNum < qty && qty <= maxQty) {
-      return ActionType.Increase;
-    }
-
-    return ActionType.Deposit;
-  }, [isNativeToken, allowance]);
-
-  const nativeToken = currentChain?.info?.nativeToken;
-  const fee = useDepositFee({ nativeToken, depositFee });
+  useEffect(() => {
+    cleanData();
+  }, [token, currentChain?.id]);
 
   return {
-    walletName,
-    address,
     token,
     tokens,
-    brokerId,
-    brokerName,
-    networkId,
-    chains,
-    currentChain,
+    onTokenChange,
     amount,
-    maxQuantity,
-    onChainChange,
     quantity,
+    maxQuantity,
     onQuantityChange: setQuantity,
     hintMessage,
     inputStatus,
-    disabled,
-    onTokenChange,
+    chains,
+    currentChain,
+    settingChain,
+    onChainChange,
+    actionType,
     onDeposit,
     onApprove,
-    dst,
-    depositFee,
-    price: 1,
-    fee,
-    nativeToken,
-    loading,
-    actionType,
     fetchBalance,
-    balanceRevalidating,
+    dst,
     wrongNetwork,
-    settingChain,
+    balanceRevalidating,
+    loading,
+    disabled,
+    networkId,
+    fee,
   };
 };
 
