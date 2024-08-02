@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/ui-cross-deposit",
   "version": "1.0.0",
-  "description": "",
+  "description": "cross deposit",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -11,10 +11,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "@layerzerolabs/scan-client": "^0.0.6",
-    "ramda": "^0.29.1"
-  },
-  "devDependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
@@ -23,6 +19,10 @@
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
+    "@layerzerolabs/scan-client": "^0.0.6",
+    "ramda": "^0.29.1"
+  },
+  "devDependencies": {
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "@types/ramda": "^0.29.1",
@@ -35,14 +35,6 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.2.0",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui-transfer": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/ui-chain-selector": "workspace:*"
+    "react-dom": "^18.2.0"
   }
 }

@@ -53,19 +53,6 @@ export const CrossDepositForm: Story = {
     ],
 };
 
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
 export const CrossDepositDialog: Story = {
     decorators: [
         (Story) => (
@@ -77,17 +64,4 @@ export const CrossDepositDialog: Story = {
             </Flex>
         ),
     ],
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 };
->>>>>>> Stashed changes
-=======
-};
->>>>>>> Stashed changes
-=======
-};
->>>>>>> Stashed changes
-=======
-};
->>>>>>> Stashed changes
