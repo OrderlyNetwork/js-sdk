@@ -15,6 +15,7 @@ export * from "./tooltip";
 export * from "./table";
 export * from "./scrollarea";
 export * from "./dialog";
+export * from "./sheet";
 export * from "./divider";
 export * from "./tabs";
 export { PaginationItems } from "./pagination";
