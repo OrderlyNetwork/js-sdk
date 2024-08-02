@@ -1,8 +1,7 @@
 import { TabPane, Tabs } from "@/tab";
 import { FC, useEffect, useState } from "react";
 import { Withdraw } from "../withdraw";
-import { modal } from "@orderly.network/ui";
-import { useModal } from "@orderly.network/ui";
+import { useModal, modal } from "@orderly.network/ui";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";

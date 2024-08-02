@@ -1,6 +1,6 @@
-import { create } from "@/modal/modalHelper";
+// import { create } from "";
 import { ChainListView, ChainListViewProps } from "./chainListView";
-import { useModal } from "@/modal";
+import { useModal, modal } from "@orderly.network/ui";
 import {
   Dialog,
   DialogBody,
@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/dialog/dialog";
 
-export const ChainDialog = create<ChainListViewProps>((props) => {
+export const ChainDialog = modal.create<ChainListViewProps>((props) => {
   const { visible, onOpenChange, hide, resolve } = useModal();
   const { onItemClick, ...rest } = props;
 

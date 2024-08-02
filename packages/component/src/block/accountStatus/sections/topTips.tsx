@@ -64,9 +64,9 @@ export default function TopTips() {
   if (wsStatus === WsNetworkStatus.Unstable) {
     return <WsStatus />;
   }
-  if (errors.ChainNetworkNotSupport) {
-    return <ChainIdSwtich onSetChain={onSetChain} />;
-  }
+  // if (errors.ChainNetworkNotSupport) {
+  //   return <ChainIdSwtich onSetChain={onSetChain} />;
+  // }
 
   return <></>;
 }
