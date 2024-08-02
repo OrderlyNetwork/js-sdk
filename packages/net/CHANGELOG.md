@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 1.5.10-sdk-v2.44
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-sdk-v2.43
 
 ### Patch Changes
