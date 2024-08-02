@@ -6,7 +6,7 @@ import {
 import { DepositFormWidget } from "../depositForm";
 import { DepositFormWidgetProps } from "../depositForm/widget";
 
-export function initDeposit() {
+export function installDeposit() {
   installExtension<DepositFormWidgetProps>({
     name: "deposit-form",
     scope: ["*"],
