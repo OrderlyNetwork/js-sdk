@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { toast } from "@/toast";
 
 export const useAccountStatus = () => {

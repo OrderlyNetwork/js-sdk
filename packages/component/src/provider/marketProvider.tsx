@@ -1,6 +1,6 @@
 import { createContext, useCallback } from "react";
 import { useAccount, useMutation, useConfig } from "@orderly.network/hooks";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { toast } from "@/toast";
 
 interface MarketContextState {

@@ -1,4 +1,4 @@
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { API, OrderEntity, OrderType } from "@orderly.network/types";
 import {
   FC,

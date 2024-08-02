@@ -6,7 +6,7 @@ import { API } from "@orderly.network/types";
 
 import { Text } from "@/text/text";
 import { AlgoOrderRootType } from "@orderly.network/types";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 import { Divider } from "@/divider";
 
 export const TPSLOrderEditorSheet: FC<{
@@ -20,7 +20,7 @@ export const TPSLOrderEditorSheet: FC<{
   const { data: markPrice } = useMarkPrice(position!.symbol);
   const { hide, setStates } = useModal();
   const priceDp = useSymbolsInfo()[position!.symbol]("quote_dp") || 2;
-  const [type, setType] = useState(order?.algo_type)
+  const [type, setType] = useState(order?.algo_type);
 
   const onTypeChange = (type: AlgoOrderRootType) => {
     // console.log(type);
@@ -64,7 +64,7 @@ export const TPSLOrderEditorSheet: FC<{
           precision={priceDp}
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-xs"
-          />
+        />
         <Statistic
           label={"Mark price"}
           value={markPrice}

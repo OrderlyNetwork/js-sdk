@@ -1,5 +1,5 @@
 import Button from "@/button";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { Numeral } from "@/text";
 import { RotateCw } from "lucide-react";
@@ -18,7 +18,7 @@ export const UnsettledInfo: FC<UnsettledInfoProps> = (props) => {
       .confirm({
         title: "Settle PnL",
         content: <SettlePnlContent />,
-        maxWidth: "xs",
+        // maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
         },

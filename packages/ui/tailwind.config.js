@@ -70,6 +70,7 @@ module.exports = withTV({
         sm: "22.5rem",
         md: "26.25rem",
         lg: "33.75rem",
+        xl:"var(--oui-spacing-xl)",
       },
       colors: {
         primary: {

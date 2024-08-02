@@ -1,0 +1,138 @@
+import * as React from "react";
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { cnBase, tv, type VariantProps } from "tailwind-variants";
+import { CloseIcon } from "../icon/close";
+
+const Sheet = SheetPrimitive.Root;
+
+const SheetTrigger = SheetPrimitive.Trigger;
+
+const SheetClose = SheetPrimitive.Close;
+
+const SheetPortal = SheetPrimitive.Portal;
+
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Overlay
+    className={cnBase(
+      "oui-fixed oui-inset-0 oui-z-50 oui-bg-black/80  data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0",
+      className
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
+
+const sheetVariants = tv({
+  base: "oui-fixed oui-z-50 oui-gap-4 oui-bg-background oui-p-6 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-300 data-[state=open]:oui-duration-500 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
+  variants: {
+    side: {
+      top: "oui-inset-x-0 oui-top-0 oui-border-b data-[state=closed]:oui-slide-out-to-top data-[state=open]:oui-slide-in-from-top",
+      bottom:
+        "oui-inset-x-0 oui-bottom-0 oui-border-t data-[state=closed]:oui-slide-out-to-bottom data-[state=open]:oui-slide-in-from-bottom",
+      left: "oui-inset-y-0 oui-left-0 oui-h-full oui-w-3/4 oui-border-r data-[state=closed]:oui-slide-out-to-left data-[state=open]:oui-slide-in-from-left sm:oui-max-w-sm",
+      right:
+        "oui-inset-y-0 oui-right-0 oui-h-full oui-w-3/4 oui-border-l data-[state=closed]:oui-slide-out-to-right data-[state=open]:oui-slide-in-from-right sm:oui-max-w-sm",
+    },
+  },
+  defaultVariants: {
+    side: "right",
+  },
+});
+
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {}
+
+const SheetContent = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Content>,
+  SheetContentProps
+>(({ side = "right", className, children, ...props }, ref) => (
+  <SheetPortal>
+    <SheetOverlay />
+    <SheetPrimitive.Content
+      ref={ref}
+      className={cnBase(sheetVariants({ side }), className)}
+      {...props}
+    >
+      <SheetPrimitive.Close className="oui-absolute oui-right-4 oui-top-4 oui-rounded-sm oui-opacity-70 oui-ring-offset-background oui-transition-opacity hover:oui-opacity-100 focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary">
+        {/* <Cross2Icon className="h-4 w-4" /> */}
+        <CloseIcon size={16} color="white" opacity={98} />
+        <span className="oui-sr-only">Close</span>
+      </SheetPrimitive.Close>
+      {children}
+    </SheetPrimitive.Content>
+  </SheetPortal>
+));
+SheetContent.displayName = SheetPrimitive.Content.displayName;
+
+const SheetHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cnBase(
+      "oui-flex oui-flex-col oui-space-y-2 oui-text-center sm:oui-text-left",
+      className
+    )}
+    {...props}
+  />
+);
+SheetHeader.displayName = "SheetHeader";
+
+const SheetFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cnBase(
+      "oui-flex oui-flex-col-reverse sm:oui-flex-row sm:oui-justify-end sm:oui-space-x-2",
+      className
+    )}
+    {...props}
+  />
+);
+SheetFooter.displayName = "SheetFooter";
+
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title
+    ref={ref}
+    className={cnBase(
+      "oui-text-lg oui-font-semibold oui-text-foreground",
+      className
+    )}
+    {...props}
+  />
+));
+SheetTitle.displayName = SheetPrimitive.Title.displayName;
+
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Description
+    ref={ref}
+    className={cnBase("oui-text-sm oui-text-muted-foreground", className)}
+    {...props}
+  />
+));
+SheetDescription.displayName = SheetPrimitive.Description.displayName;
+
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+};
