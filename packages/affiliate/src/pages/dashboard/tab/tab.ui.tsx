@@ -19,7 +19,15 @@ import { TraderPage } from "../../trader";
 import { HomePage } from "../../home";
 import { TabTypes } from "../../../hooks";
 
-export const Tab: FC<TabReturns> = (props) => {
+export const Tab: FC<
+  TabReturns & {
+    classNames?: {
+      loadding?: string;
+      home?: string;
+      dashboard?: string;
+    };
+  }
+> = (props) => {
   const extendNode = () => {
     if (props.isAffiliate && !props.isTrader) {
       return (
@@ -69,13 +77,17 @@ export const Tab: FC<TabReturns> = (props) => {
     return undefined;
   };
 
-  if (
-    (!props.isAffiliate && !props.isTrader) ||
-    props.isLoading ||
-    props.showHome
-  ) {
+  if (props.isLoading) {
     return (
-      <div className="oui-max-w-[960px] oui-py-0 lg:oui-py-4">
+      <div className={cn("oui-max-w-[960px]", props.classNames?.loadding)}>
+        {props.splashPage?.() || <HomePage />}
+      </div>
+    );
+  }
+
+  if ((!props.isAffiliate && !props.isTrader) || props.showHome) {
+    return (
+      <div className={cn("oui-max-w-[960px]", props?.classNames?.home)}>
         <HomePage />
       </div>
     );
@@ -88,7 +100,7 @@ export const Tab: FC<TabReturns> = (props) => {
       onValueChange={(e) => {
         props.setTab(e as TabTypes);
       }}
-      className="oui-w-full"
+      className={cn("oui-w-full", props.classNames?.dashboard)}
     >
       <TabsList
         className={cn(

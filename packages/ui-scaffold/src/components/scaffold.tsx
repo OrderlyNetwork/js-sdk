@@ -71,7 +71,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   };
 
   return (
-    <div className="oui-relative oui-h-screen">
+    <div id="oui-scaffol" className="oui-relative " style={{
+      height: `calc(100vh-${props.footerHeight || 29}px)`
+    }}>
       <ExpandableContext.Provider
         value={{
           routerAdapter,
