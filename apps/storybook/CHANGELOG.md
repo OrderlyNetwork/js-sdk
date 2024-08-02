@@ -1,16 +1,5 @@
 # storybook
 
-## 1.3.11
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.11
-  - @orderly.network/web3-onboard@1.5.11
-  - @orderly.network/hooks@1.5.11
-  - @orderly.network/core@1.5.11
-
 ## 1.3.10
 
 ### Patch Changes
