@@ -71,7 +71,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   };
 
   return (
-    <div id="oui-scaffol" className="oui-relative " style={{
+    <div className="oui-relative" style={{
       height: `calc(100vh-${props.footerHeight || 29}px)`
     }}>
       <ExpandableContext.Provider
@@ -106,7 +106,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           // ---------- left & body layout start ---------
           <Grid
             className={cn(
-              "oui-box-content oui-transition-all oui-h-[calc(100%-29px)] oui-flex xl:oui-grid",
+              "oui-box-content oui-transition-all oui-flex xl:oui-grid",
               classNames?.body
             )}
             style={{
