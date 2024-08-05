@@ -174,7 +174,8 @@ export const useDataListColumns = (
                 <Tooltip content="Move to top" align="center" delayDuration={0}>
                   <Box
                     className="oui-hidden group-hover:oui-block oui-cursor-pointer"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       favorite.pinToTop(record);
                     }}
                   >
