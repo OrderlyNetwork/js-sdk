@@ -6,16 +6,14 @@ import {
 import { DepositFormWidget } from "../depositForm";
 import { DepositFormWidgetProps } from "../depositForm/widget";
 
-export function installDeposit() {
-  installExtension<DepositFormWidgetProps>({
-    name: "deposit-form",
-    scope: ["*"],
-    positions: [ExtensionPositionEnum.DepositForm],
-    __isInternal: true,
-  })((props: DepositFormWidgetProps) => {
-    return <DepositFormWidget onClose={props.onClose} />;
-  });
-}
+installExtension<DepositFormWidgetProps>({
+  name: "deposit-form",
+  scope: ["*"],
+  positions: [ExtensionPositionEnum.DepositForm],
+  __isInternal: true,
+})((props: DepositFormWidgetProps) => {
+  return <DepositFormWidget onClose={props.onClose} />;
+});
 
 export const DepositSlot = (props: DepositFormWidgetProps) => {
   return (

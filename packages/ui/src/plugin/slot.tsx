@@ -8,7 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
   position: ExtensionPosition;
-  defaultWidget?: React.ReactNode;
+  defaultWidget?: React.ReactElement;
   scope?: string[];
   [key: string]: any;
 }
@@ -33,7 +33,7 @@ export const ExtensionSlot: FC<Props> = (props) => {
     //   return defaultValue;
     // }
 
-    // console.log("plugin", plugin, isValidElement(plugin?.render));
+    // console.log("plugin", plugin);
 
     return plugin?.render ?? defaultValue ?? NotFound;
   }, []);

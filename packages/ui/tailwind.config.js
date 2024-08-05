@@ -55,22 +55,24 @@ module.exports = withTV({
     lineHeight: {
       "3xs": "0.625rem",
     },
-    boxShadow: {
-      sm: "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
-      DEFAULT:
-        "var(--oui-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))",
-      md: "var(--oui-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))",
-      lg: "var(--oui-shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1))",
-      xl: "var(--oui-shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1))",
-      "2xl": "var(--oui-shadow-2xl, 0 25px 50px -12px rgb(0 0 0 / 0.25))",
-    },
+    // boxShadow: {
+    //   sm: "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
+    //   DEFAULT:
+    //     "var(--oui-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))",
+    //   md: "var(--oui-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))",
+    //   lg: "var(--oui-shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1))",
+    //   xl: "var(--oui-shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1))",
+    //   "2xl": "var(--oui-shadow-2xl, 0 25px 50px -12px rgb(0 0 0 / 0.25))",
+    // },
     extend: {
       spacing: {
         13: "3.25rem",
-        sm: "22.5rem",
-        md: "26.25rem",
-        lg: "33.75rem",
-        xl:"var(--oui-spacing-xl)",
+      },
+      maxWidth: {
+        sm: "var(--oui-spacing-sm, 22.5rem)",
+        md: "var(--oui-spacing-md, 26.25rem)",
+        lg: "var(--oui-spacing-lg, 30rem)",
+        xl: "var(--oui-spacing-xl, 33.75rem)",
       },
       colors: {
         primary: {

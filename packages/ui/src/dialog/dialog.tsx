@@ -103,17 +103,17 @@ const dialogVariants = tv({
   variants: {
     size: {
       sm: {
-        content: ["oui-max-w-sm"],//360
+        content: ["oui-max-w-sm"], //360
       },
       md: {
-        content: ["oui-max-w-md"],//420
+        content: ["oui-max-w-md"], //420
       },
       lg: {
-        // content: ["oui-max-w-2xl"],//480
+        content: ["oui-max-w-lg"], //480
       },
-      xl:{
-        // content:[] //540
-      }
+      xl: {
+        content: ["oui-max-w-xl"], //540
+      },
     },
     intensity: {
       100: {
