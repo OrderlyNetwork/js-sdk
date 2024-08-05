@@ -1,4 +1,9 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "../../sheet/sheet";
 import { modalActions } from "../modalContext";
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";

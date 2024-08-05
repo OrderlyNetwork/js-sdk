@@ -17,7 +17,7 @@ import {
 } from "@orderly.network/hooks";
 
 // import Slider from "rc-slider";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { toast } from "@/toast";
 import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
@@ -63,7 +63,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
       title: "Settle PnL",
-      maxWidth: "xs",
+      // maxWidth: "xs",
       content: (
         <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
           Are you sure you want to settle your PnL? Settlement will take up to 1

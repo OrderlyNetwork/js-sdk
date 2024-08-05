@@ -33,7 +33,7 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-// import { modal } from "@/modal";
+// import { modal } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   OrderConfirmFooter,

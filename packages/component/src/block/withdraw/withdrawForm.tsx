@@ -21,7 +21,7 @@ import { ActionButton } from "./sections/actionButton";
 import { InputStatus } from "../quantityInput/quantityInput";
 import { UnsettledInfo } from "./sections/settledInfo";
 import { ChainDialog } from "../pickers/chainPicker/chainDialog";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { OrderlyAppContext } from "@/provider";
 import { Logo } from "@/logo";
 import { useQuery } from "@orderly.network/hooks";
@@ -362,7 +362,11 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         chains={chains}
         chain={chain}
         onWithdraw={doWithdraw}
-        disabled={!quantity || Number(quantity) - fee <= 0 || Number(quantity) > maxAmount}
+        disabled={
+          !quantity ||
+          Number(quantity) - fee <= 0 ||
+          Number(quantity) > maxAmount
+        }
         switchChain={switchChain}
         quantity={quantity}
         loading={submitting}

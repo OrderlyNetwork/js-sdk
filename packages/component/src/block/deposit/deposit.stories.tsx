@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Deposit } from ".";
 import { usePreLoadData } from "@orderly.network/hooks";
 import { AssetsProvider } from "@/provider/assetsProvider";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { DepositWithDialog } from "./dialog";
 // import { Button } from "@/button";
 

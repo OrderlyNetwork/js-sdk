@@ -8,7 +8,7 @@ import {
 import { NetworkImage } from "@/icon";
 import { ArrowLeftRight } from "lucide-react";
 import type { CurrentChain } from "@orderly.network/types";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { ChainDialog } from "./chainDialog";
 import { API } from "@orderly.network/types";
 import { Spinner } from "@/spinner";

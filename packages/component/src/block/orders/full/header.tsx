@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import {
   AlgoOrderRootType,
   OrderSide,
@@ -29,8 +29,8 @@ export const Header: FC<Props> = (props) => {
     modal
       .confirm({
         title: "Cancel all orders",
-        okId: "orderly-desktop-cancel-all-orders-ok",
-        cancelId: "orderly-desktop-cancel-all-orders-cancel",
+        // okId: "orderly-desktop-cancel-all-orders-ok",
+        // cancelId: "orderly-desktop-cancel-all-orders-cancel",
         content: (
           <div className="orderly-text-base-contrast-54 orderly-text-2xs desktop:orderly-text-sm">
             {props.orderType === AlgoOrderRootType.TP_SL

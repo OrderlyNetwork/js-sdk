@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { WalletConnect, showAccountConnectorModal } from ".";
 import React from "react";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof WalletConnect> = {
   component: WalletConnect,

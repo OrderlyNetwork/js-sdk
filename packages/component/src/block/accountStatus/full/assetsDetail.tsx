@@ -2,7 +2,7 @@ import { memo, useCallback, useContext } from "react";
 import { Numeral } from "@/text";
 import { useCollateral, usePositionStream } from "@orderly.network/hooks";
 import { AssetsContext } from "@/provider";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { SettlePnlContent } from "@/block/withdraw";
 import { RefreshCcw } from "lucide-react";
 
@@ -20,7 +20,7 @@ const AssetsDetail = () => {
       .confirm({
         title: "Settle PnL",
         content: <SettlePnlContent />,
-        maxWidth: "xs",
+        // maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
         },

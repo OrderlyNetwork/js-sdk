@@ -3,7 +3,7 @@ import { Numeral } from "@/text";
 import { cn } from "@/utils/css";
 import { Flag, MoveUpIcon } from "lucide-react";
 import { FC, useContext, useEffect, useRef } from "react";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 
 interface MarkPriceProps {
   markPrice: number;

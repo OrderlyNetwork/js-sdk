@@ -1,5 +1,5 @@
 import { LeverageView } from "@/block/leverage";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import {
   useFundingRate,
   useAccountInfo,
@@ -31,7 +31,10 @@ export const MyLeverageView: FC<Props> = (props) => {
     modal.alert({
       title: "Max leverage",
       message: (
-        <span id="orderly-max-leverage-content" className="orderly-text-3xs orderly-text-base-contrast-54">
+        <span
+          id="orderly-max-leverage-content"
+          className="orderly-text-3xs orderly-text-base-contrast-54"
+        >
           This instrument supports up to {maxSymbolLeverage}x leverage. The
           actual amount cannot exceed the max account leverage.
         </span>

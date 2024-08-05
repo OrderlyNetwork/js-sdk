@@ -2,6 +2,7 @@ import {
   Layout,
   TradingPage,
   TradingPageProvider,
+  TooltipProvider,
 } from "@orderly.network/react";
 import type { TradingPageProps } from "@orderly.network/react";
 

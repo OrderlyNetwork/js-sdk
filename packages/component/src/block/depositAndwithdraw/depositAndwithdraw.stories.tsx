@@ -1,7 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { DepositAndWithdraw } from ".";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { DepositAndWithdrawWithSheet } from "./depositAndwithdraw";
 // import { modalActions } from "@/modal/modalContext";
 

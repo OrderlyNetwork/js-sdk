@@ -1,4 +1,4 @@
-import { ModalContext, ModalIdContext } from "@/modal/modalContext";
+import { ModalContext, ModalIdContext } from "@orderly.network/ui";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { useContext, useEffect, useState } from "react";
 

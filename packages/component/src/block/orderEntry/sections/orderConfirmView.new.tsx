@@ -7,7 +7,7 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import { Label } from "@/label";
 import Button from "@/button";
 import { cn } from "@/utils";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 import { commify } from "@orderly.network/utils";
 
 interface OrderConfirmViewProps {

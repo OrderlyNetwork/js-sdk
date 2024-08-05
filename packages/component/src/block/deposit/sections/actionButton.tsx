@@ -3,7 +3,7 @@ import { API, CurrentChain } from "@orderly.network/types";
 import { FC, useContext, useMemo } from "react";
 import { ApproveButton } from "./approveButton";
 import { Notice } from "./notice";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { useChains } from "@orderly.network/hooks";
 import { ChainDialog } from "@/block/pickers/chainPicker/chainDialog";
 import { DepositContext } from "../DepositProvider";

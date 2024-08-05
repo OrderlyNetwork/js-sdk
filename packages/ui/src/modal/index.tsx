@@ -3,7 +3,7 @@ import { register, unregister, create } from "./modalHelper";
 
 export { ModalProvider } from "./modalContext";
 
-// import { sheet } from "./preset/sheet";
+import { sheet } from "./preset/sheet";
 import { alert } from "./preset/alert";
 import { dialog } from "./preset/dialog";
 
@@ -12,6 +12,8 @@ import { confirm } from "./preset/confirm";
 export { ConfirmDialog } from "./preset/confirm";
 
 export type { ModalHocProps } from "./types";
+
+export { ModalContext, ModalIdContext } from "./modalContext";
 
 // @ebay/nice-modal-react
 export { useModal } from "./useModal";
@@ -25,7 +27,7 @@ export const modal = {
   // actionSheet,
   confirm,
   alert,
-  // sheet,
+  sheet,
   dialog,
   // alert
   //actionSheet

@@ -108,7 +108,7 @@ export {
 export {
   ChainDialog,
   showAccountConnectorModal,
-  DepositAndWithdrawWithDialog,
+  // DepositAndWithdrawWithDialog,
   DepositAndWithdrawWithSheet,
 } from "./block";
 

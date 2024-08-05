@@ -3,7 +3,7 @@ import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { parseNumber } from "@/utils/num";
 import { InfoIcon } from "@/icon";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { Divider } from "@/divider";
 import { feeDecimalsOffset } from "../utils";
 import { useIndexPrice } from "@orderly.network/hooks";
