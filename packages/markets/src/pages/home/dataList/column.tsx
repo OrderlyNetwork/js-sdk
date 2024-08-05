@@ -42,7 +42,7 @@ export const useDataListColumns = (
             <Flex
               width="100%"
               height="100%"
-              className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-auto"
+              className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
               mr={3}
               justify="center"
               itemAlign="center"
