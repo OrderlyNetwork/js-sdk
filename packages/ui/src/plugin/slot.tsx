@@ -1,4 +1,4 @@
-import { ElementType, FC, useMemo, isValidElement } from "react";
+import { ElementType, FC, useMemo } from "react";
 import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
 import { useExtensionBuilder } from "./useExtensionBuilder";
@@ -8,7 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
   position: ExtensionPosition;
-  defaultWidget?: React.ReactElement;
+  defaultWidget?: FC;
   scope?: string[];
   [key: string]: any;
 }
@@ -32,8 +32,6 @@ export const ExtensionSlot: FC<Props> = (props) => {
     // if (isValidElement(defaultValue)) {
     //   return defaultValue;
     // }
-
-    // console.log("plugin", plugin);
 
     return plugin?.render ?? defaultValue ?? NotFound;
   }, []);
