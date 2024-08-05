@@ -28,7 +28,6 @@ export const AccountStatusBarComponent = () => {
   return (
     <AccountStatusBar
       status={state.status}
-      chains={[]}
       accountInfo={data}
       totalValue={totalValue}
       onConnect={onConnect}
