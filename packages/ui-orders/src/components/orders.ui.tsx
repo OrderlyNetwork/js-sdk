@@ -1,17 +1,38 @@
-import { DataTable } from "@orderly.network/ui";
-import { useOrderColumn } from "./useColumn";
+import { DataTable, TabPanel, Tabs } from "@orderly.network/ui";
+import { useOrderColumn } from "./orderList/useColumn";
 import { OrderStatus, API } from "@orderly.network/types";
-import { OrdersBuilderState } from "./useBuilder.script";
+import { OrdersBuilderState } from "./orders.script";
+import { TabType } from "./orders.widget";
+import { OrderList, OrderListWidget } from "./orderList";
 
-export const Orders = (props: OrdersBuilderState) => {
-  const { ordersStatus, dataSource, isLoading } = props;
+export const Orders = (
+  props: OrdersBuilderState
+) => {
 
   return (
-    <OrderTable
-      status={ordersStatus}
-      dataSource={dataSource}
-      isLoading={isLoading}
-    />
+    <Tabs defaultValue={props.current || TabType.all}>
+      <TabPanel value={TabType.all} title="All">
+        <OrderListWidget ordersStatus={OrderStatus.INCOMPLETE} />
+      </TabPanel>
+      <TabPanel value={TabType.pending} title="Pending">
+        <div></div>
+      </TabPanel>
+      <TabPanel value={TabType.tp_sl} title="TP/SL">
+        <div></div>
+      </TabPanel>
+      <TabPanel value={TabType.filled} title="Filled">
+        <div></div>
+      </TabPanel>
+      <TabPanel value={TabType.cancelled} title="Cancelled">
+        <div></div>
+      </TabPanel>
+      <TabPanel value={TabType.rejected} title="Rejected">
+        <div></div>
+      </TabPanel>
+      <TabPanel value={TabType.orderHistory} title="Order history">
+        <div></div>
+      </TabPanel>
+    </Tabs>
   );
 };
 // ----------------- Orders ui component end -----------------
