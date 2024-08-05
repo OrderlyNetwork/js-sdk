@@ -11,12 +11,14 @@ import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyAppContext } from "@/provider";
 import { showAccountConnectorModal } from "@/block/walletConnect/walletModal";
+import { cn } from "@/utils";
 
 export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
   connected?: boolean;
   // onConnectWallet?: () => void;
   id?: string;
+  className?: string;
 }
 
 export const StatusGuardButton: FC<
@@ -73,7 +75,7 @@ export const StatusGuardButton: FC<
           type="button"
           fullWidth
           onClick={() => onClick()}
-          className="desktop:orderly-font-bold desktop:orderly-text-sm"
+          className={cn("desktop:orderly-font-bold desktop:orderly-text-sm", props.className)}
         >
           {buttonLabel}
         </Button>
