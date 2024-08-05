@@ -245,9 +245,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
-          onCloseAutoFocus={(e) => {
-            e.preventDefault();
-          }}
+          onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           align="start"
           sideOffset={20}
