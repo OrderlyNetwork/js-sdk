@@ -27,20 +27,19 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     return getPageData(filterList, pageSize, page);
   }, [data, pageSize, page, getSortedList, searchValue]);
 
-  const meta = useMemo(
-    () =>
-      parseMeta({
-        total: data?.length,
-        current_page: page,
-        records_per_page: pageSize,
-      }),
-    [data, page, pageSize]
-  );
+  const meta = useMemo(() => {
+    const _data = searchValue ? pageData : data;
+    return parseMeta({
+      total: _data?.length,
+      current_page: page,
+      records_per_page: pageSize,
+    });
+  }, [data, page, pageSize, searchValue, pageData]);
 
   useEffect(() => {
-    // reset page when size change
+    // reset page when size change and search data
     setPage(1);
-  }, [pageSize]);
+  }, [pageSize, searchValue]);
 
   useEffect(() => {
     // Only all markets store sort

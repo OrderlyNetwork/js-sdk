@@ -41,20 +41,19 @@ export const useFavoritesScript = () => {
     return getPageData(list, pageSize, page);
   }, [filterData, pageSize, page, getSortedList]);
 
-  const meta = useMemo(
-    () =>
-      parseMeta({
-        total: data?.length,
-        current_page: page,
-        records_per_page: pageSize,
-      }),
-    [data, page, pageSize]
-  );
+  const meta = useMemo(() => {
+    const _data = searchValue ? pageData : data;
+    return parseMeta({
+      total: _data?.length,
+      current_page: page,
+      records_per_page: pageSize,
+    });
+  }, [data, page, pageSize, searchValue, pageData]);
 
   useEffect(() => {
-    // 切换页面大小时，重置页码
+    // reset page when size change and search data
     setPage(1);
-  }, [pageSize]);
+  }, [pageSize, searchValue]);
 
   return {
     dataSource: pageData,
