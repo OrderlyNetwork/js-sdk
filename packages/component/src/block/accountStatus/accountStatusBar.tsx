@@ -60,7 +60,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
     }
   }, [status, props.address]);
 
-  const notSupport = errors.ChainNetworkNotSupport;
+  const notSupport = errors?.ChainNetworkNotSupport;
 
   const right = () => {
     if (notSupport) {
