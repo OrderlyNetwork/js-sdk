@@ -1,4 +1,4 @@
-import { useMediaQuery, useRefereeInfo, ReferralAPI as API } from "@orderly.network/hooks";
+import { useMediaQuery, useRefereeInfo, RefferalAPI as API } from "@orderly.network/hooks";
 import { Column, Divider, ListView, Numeral, Table, cn, Text } from "@orderly.network/react";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { formatYMDTime } from "../../utils/utils";
