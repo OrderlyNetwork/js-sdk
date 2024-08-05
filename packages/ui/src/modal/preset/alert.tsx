@@ -24,5 +24,7 @@ export const CreatedAlertDialog = create<AlertDialogProps>((props) => {
 });
 
 export const alert = (props: AlertDialogProps) => {
+  console.log("alert", props);
+
   return modalActions.show(CreatedAlertDialog, props);
 };

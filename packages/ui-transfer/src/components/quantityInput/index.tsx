@@ -13,7 +13,7 @@ import {
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
 import { Decimal } from "@orderly.network/utils";
-import { InputStatus } from '../../types'
+import { InputStatus } from "../../types";
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;
@@ -184,6 +184,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
               "oui-border oui-border-line",
               status === "error" && "focus-within:oui-outline-danger-light",
               status === "warning" && "focus-within:oui-outline-warning-light",
+              props.readOnly ? "oui-bg-base-6" : "oui-bg-base-5",
               classNames?.root
             ),
             input: cn("oui-absolute oui-bottom-0", classNames?.input),
