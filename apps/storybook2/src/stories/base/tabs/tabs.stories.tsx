@@ -22,12 +22,32 @@ const meta = {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
+  decorators: [
+    (Story) => (
+      <Box r={"md"} intensity={600} p={2}>
+        <Story />
+      </Box>
+    ),
+  ],
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   // tags: ['autodocs'],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
-  argTypes: {},
+  argTypes: {
+    variant: {
+      control: {
+        type: "inline-radio",
+      },
+      options: ["text", "contained"],
+    },
+    size: {
+      control: {
+        type: "inline-radio",
+      },
+      options: ["sm", "md", "lg", "xl"],
+    },
+  },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: {},
+  // args: {},
 };
 
 export default meta;
@@ -36,10 +56,14 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => {
     return (
-      <TabsBase defaultValue="account" className="oui-w-[400px]">
-        <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
+      <TabsBase defaultValue="account" className="oui-w-[400px]" {...args}>
+        <TabsList variant={args.variant} size={args.size}>
+          <TabsTrigger value="account" variant={args.variant} size={args.size}>
+            Account
+          </TabsTrigger>
+          <TabsTrigger value="password" variant={args.variant} size={args.size}>
+            Password
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="account">
           Make changes to your account here.
@@ -56,14 +80,21 @@ export const Default: Story = {
 export const Icon: Story = {
   render: (args) => {
     return (
-      <TabsBase defaultValue="account" className="oui-w-[400px]">
-        <TabsList>
-          <TabsTrigger value="account" icon={<ExclamationFillIcon />}>
+      <TabsBase defaultValue="account" className="oui-w-[400px]" {...args}>
+        <TabsList variant={args.variant} size={args.size}>
+          <TabsTrigger
+            value="account"
+            icon={<ExclamationFillIcon />}
+            variant={args.variant}
+            size={args.size}
+          >
             Account
           </TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
+          <TabsTrigger value="password" variant={args.variant} size={args.size}>
+            Password
+          </TabsTrigger>
         </TabsList>
-        <Divider />
+
         <Box p={2}>
           <TabsContent value="account">
             Make changes to your account here.
@@ -78,7 +109,12 @@ export const Icon: Story = {
 export const Simple: Story = {
   render: (args) => {
     return (
-      <Tabs defaultValue="account">
+      <Tabs
+        defaultValue="account"
+        {...args}
+        variant={args.variant}
+        size={args.size}
+      >
         <TabPanel
           value="account"
           title="Deposits & Withdrawals"
