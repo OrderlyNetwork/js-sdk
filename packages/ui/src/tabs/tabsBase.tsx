@@ -7,7 +7,7 @@ const tabsVariants = tv({
   slots: {
     list: [
       "oui-header-list",
-      "oui-inline-flex",
+      "oui-flex",
       "oui-items-center",
       // "oui-px-1",
     ],
