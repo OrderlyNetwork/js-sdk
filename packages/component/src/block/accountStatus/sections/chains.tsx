@@ -37,6 +37,7 @@ import { isTestnet } from "@orderly.network/utils";
 interface ChainsProps {
   disabled?: boolean;
   className?: string;
+  wrongNetwork?: boolean;
 }
 
 export const Chains: FC<ChainsProps> = (props) => {
@@ -107,10 +108,21 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
   };
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+  const trigger = () => {
+    if (props.wrongNetwork) {
+      return (
         <Button
+          id="orderly-account-status-bar-wrong-network-button"
+          size={"small"}
+          className="orderly-bg-[#DA6313] orderly-text-3xs orderly-h-[30px] hover:orderly-bg-[#DA6313] hover:orderly-opacity-70"
+        >
+          Wrong network
+        </Button>
+      );
+    }
+
+    return (
+      <Button
           id="orderly-botom-bar-switch-chain-button"
           variant={"outlined"}
           size={"small"}
@@ -125,6 +137,13 @@ export const Chains: FC<ChainsProps> = (props) => {
           {chainName}
           <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
         </Button>
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        {trigger()}
       </DialogTrigger>
       <DialogContent
         onOpenAutoFocus={(event) => event.preventDefault()}
