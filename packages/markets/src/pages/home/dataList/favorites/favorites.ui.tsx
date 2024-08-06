@@ -25,7 +25,8 @@ import { useMarketsContext } from "../../provider";
 type FavoritesProps = {} & UseFavoritesReturn;
 
 export const Favorites: FC<FavoritesProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
+  const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -56,6 +57,7 @@ export const Favorites: FC<FavoritesProps> = (props) => {
         columns={columns}
         dataSource={dataSource}
         emptyView={emptyView}
+        loading={loading}
         onRow={(record, index) => {
           return {
             className: cn(

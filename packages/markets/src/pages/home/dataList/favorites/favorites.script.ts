@@ -10,6 +10,7 @@ export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
+  const [loading, setLoading] = useState(true);
 
   const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
 
@@ -51,11 +52,16 @@ export const useFavoritesScript = () => {
   }, [data, page, pageSize, searchValue, pageData]);
 
   useEffect(() => {
+    setLoading(false);
+  }, [favorites]);
+
+  useEffect(() => {
     // reset page when size change and search data
     setPage(1);
   }, [pageSize, searchValue]);
 
   return {
+    loading,
     dataSource: pageData,
     meta,
     setPage,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
@@ -10,6 +10,7 @@ export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
 
 export const useMarketListScript = (options: UseMarketListScriptOptions) => {
+  const [loading, setLoading] = useState(true);
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [data, favorite] = useMarkets(MarketsType.ALL);
@@ -37,6 +38,10 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   }, [data, page, pageSize, searchValue, pageData]);
 
   useEffect(() => {
+    setLoading(false);
+  }, [data]);
+
+  useEffect(() => {
     // reset page when size change and search data
     setPage(1);
   }, [pageSize, searchValue]);
@@ -49,6 +54,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   }, [sortKey, sortOrder, favorite, options.type]);
 
   return {
+    loading,
     dataSource: pageData,
     meta,
     setPage,
