@@ -46,7 +46,7 @@ const useCommissionDataScript = (): ListReturns<
 > => {
   const [commissionRange, setCommissionRange] = useState<DateRange | undefined>(
     {
-      from: subDays(new Date(), 91),
+      from: subDays(new Date(), 90),
       to: subDays(new Date(), 1),
     }
   );
@@ -78,7 +78,23 @@ const useCommissionDataScript = (): ListReturns<
   };
 
   const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
+    console.log("page size change", pageSize);
+    
+    if (meta?.total) {
+      setPageSize(pageSize);
+      const state = parseMeta({
+        total: meta?.total,
+        current_page: page,
+        records_per_page: pageSize,
+      });
+      console.log("page size change 222", {
+        total: meta?.total,
+        current_page: page,
+        records_per_page: pageSize,
+      }, state);
+      
+      setPage(state.page);
+    }
   };
 
   // const loadMore = () => {
@@ -134,7 +150,19 @@ const useRefereesDataScript = (): ListReturns<
   };
 
   const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
+    console.log("page size change", pageSize);
+    
+    if (meta?.total) {
+      setPageSize(pageSize);
+      const { page: currentPage } = parseMeta({
+        total: meta?.total,
+        current_page: page,
+        records_per_page: pageSize,
+      });
+      console.log("page size change 222", currentPage);
+      
+      setPage(currentPage);
+    }
   };
 
   // const loadMore = () => {

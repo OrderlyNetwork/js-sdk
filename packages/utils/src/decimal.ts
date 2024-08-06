@@ -33,7 +33,7 @@ export const commifyOptional = (
     if (hasDecimal) {
       return prefix +  list[0] + "." + list[1].padEnd(options.fix, fillString);
     }
-    return prefix + list[0];
+    return prefix + list[0] + "." + "".padEnd(options.fix, fillString);
   }
   return prefix + value;
 };
