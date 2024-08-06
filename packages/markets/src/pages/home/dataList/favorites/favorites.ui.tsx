@@ -12,7 +12,12 @@ import {
 } from "@orderly.network/ui";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { useDataListColumns } from "../column";
-import { EditIcon, TrashIcon, AddIcon } from "../../../../icons";
+import {
+  EditIcon,
+  TrashIcon,
+  AddIcon,
+  UnFavoritesIcon,
+} from "../../../../icons";
 import { TFavorite } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 import { useMarketsContext } from "../../provider";
@@ -26,6 +31,18 @@ export const Favorites: FC<FavoritesProps> = (props) => {
 
   const columns = useDataListColumns(favorite, true);
 
+  const emptyView = (
+    <Flex>
+      <Text size="xs" intensity={36}>
+        Click on the
+      </Text>
+      <UnFavoritesIcon className="oui-text-base-contrast-36" />
+      <Text size="xs" intensity={36}>
+        icon next to a market to add it to your list.
+      </Text>
+    </Flex>
+  );
+
   return (
     <div>
       <FavoritesTab favorite={favorite} />
@@ -38,6 +55,7 @@ export const Favorites: FC<FavoritesProps> = (props) => {
         }}
         columns={columns}
         dataSource={dataSource}
+        emptyView={emptyView}
         onRow={(record, index) => {
           return {
             className: cn(

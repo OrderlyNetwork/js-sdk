@@ -18,6 +18,6 @@ export const ChainSelectorWidget = (props: {
 export const ChainSelectorId = "ChainSelector";
 
 registerSimpleDialog(ChainSelectorId, ChainSelectorWidget, {
-  size: "md",
+  size: "sm",
   title: "Switch Network",
 });

@@ -7,6 +7,7 @@ import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";
 import { DepositSlot } from "./slot";
 import { ArrowDownToLineIcon } from "@/icon";
+import { Deposit } from "../deposit";
 
 type activeName = "deposit" | "withdraw";
 
@@ -39,7 +40,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            <DepositSlot onOk={props.onOk!} />
+            {/* <DepositSlot onOk={props.onOk!} /> */}
+            <Deposit onOk={props.onOk} />
           </div>
         </TabPane>
         <TabPane

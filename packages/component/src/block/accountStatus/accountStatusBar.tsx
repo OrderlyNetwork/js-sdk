@@ -10,6 +10,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Logo } from "@/logo";
 import { Chains } from "./sections/chains";
 import { OrderlyAppContext } from "@/provider";
+import { StatusGuardButton } from "./statusGuardButton";
 
 export type AccountStatus =
   | "NotConnected"
@@ -59,65 +60,64 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
     }
   }, [status, props.address]);
 
+  const notSupport = errors?.ChainNetworkNotSupport;
+
+  const right = () => {
+    if (notSupport) {
+      return <></>;
+    }
+
+    return (
+      <StatusGuardButton className="orderly-h-[30px] orderly-text-3xs">
+        <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
+          <SheetTrigger asChild>
+            <Button
+              id="orderly-botom-bar-connect-button"
+              size={"small"}
+              // variant={"gradient"}
+              className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px] orderly-w-[75px]"
+              loading={props.loading}
+              disabled={props.loading || errors?.ChainNetworkNotSupport}
+            >
+              {buttonLabel}
+            </Button>
+          </SheetTrigger>
+          <SheetContent id="my-account" forceMount>
+            <SheetHeader
+              id="my-account-sheet-title"
+              leading={<Logo.secondary size={30} />}
+            >
+              My account
+            </SheetHeader>
+            <AccountInfo
+              onDisconnect={props.onDisconnect}
+              close={() => setInfoOpen(false)}
+              showGetTestUSDC={props.showGetTestUSDC}
+            />
+          </SheetContent>
+        </Sheet>
+      </StatusGuardButton>
+    );
+  };
+
   return (
     <div
       id="orderly-bottom-bar"
       className="orderly-flex orderly-items-center orderly-justify-between orderly-w-full"
     >
-      {status !== AccountStatusEnum.NotConnected &&
-      !errors?.ChainNetworkNotSupport ? (
-        <AccountTotal
-          status={status}
-          currency={props.currency}
-          totalValue={props.totalValue}
-          accountInfo={props.accountInfo}
-        />
-      ) : (
-        <div />
-      )}
+      <AccountTotal
+        status={status}
+        currency={props.currency}
+        totalValue={props.totalValue}
+        accountInfo={props.accountInfo}
+      />
 
       <div className="orderly-flex orderly-gap-2">
-        <Chains disabled={status < AccountStatusEnum.NotConnected} />
-        {status === AccountStatusEnum.NotConnected ? (
-          <Button
-            id="orderly-botom-bar-not-connect-button"
-            size={"small"}
-            loading={props.loading}
-            // variant={"gradient"}
-            className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
-            onClick={() => props.onConnect?.()}
-          >
-            {buttonLabel}
-          </Button>
-        ) : (
-          <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
-            <SheetTrigger asChild>
-              <Button
-                id="orderly-botom-bar-connect-button"
-                size={"small"}
-                // variant={"gradient"}
-                className="orderly-bg-primary orderly-text-base-contrast orderly-text-4xs hover:orderly-text-base-80 orderly-h-[30px]"
-                loading={props.loading}
-                disabled={props.loading || errors?.ChainNetworkNotSupport}
-              >
-                {buttonLabel}
-              </Button>
-            </SheetTrigger>
-            <SheetContent id="my-account" forceMount>
-              <SheetHeader
-                id="my-account-sheet-title"
-                leading={<Logo.secondary size={30} />}
-              >
-                My account
-              </SheetHeader>
-              <AccountInfo
-                onDisconnect={props.onDisconnect}
-                close={() => setInfoOpen(false)}
-                showGetTestUSDC={props.showGetTestUSDC}
-              />
-            </SheetContent>
-          </Sheet>
-        )}
+        <Chains
+          disabled={status < AccountStatusEnum.NotConnected}
+          wrongNetwork={notSupport}
+        />
+        {right()}
       </div>
     </div>
   );

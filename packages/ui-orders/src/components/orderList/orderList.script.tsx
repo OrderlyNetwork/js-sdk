@@ -5,10 +5,18 @@ import {
   OrderSide,
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
+import { TabType } from "../orders.widget";
 
-export const useOrdersBuilder = () => {
-  const [ordersStatus, setOrdersStatus] = useState(OrderStatus.INCOMPLETE);
+export const useOrderListScript = (props: {
+  type: TabType;
+  ordersStatus?: OrderStatus;
+  filterSides?: boolean;
+  filterStatus?: boolean;
+  filterDate?: boolean;
+}) => {
+  const { ordersStatus, type } = props;
   const [ordersSide, setOrdersSide] = useState<OrderSide>();
+  const [dateRange, setDateRange] = useState();
 
   const [
     data,
@@ -22,32 +30,28 @@ export const useOrdersBuilder = () => {
     },
   ] = useOrderStream({
     status: ordersStatus,
-    // symbol: tabExtraData.showAllSymbol ? "" : context.symbol,
-
     side: ordersSide,
-    excludes:
-      ordersStatus === OrderStatus.FILLED
-        ? []
-        : [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   });
-
-  const updateStatus = (status: OrderStatus) => {
-    setOrdersStatus(status);
-  };
 
   const updateOrdersSide = (side: OrderSide) => {
     setOrdersSide(side);
   };
 
   return {
+    type,
     ordersStatus,
-    updateStatus,
     ordersSide,
     updateOrdersSide,
-
+    dateRange,
+    setDateRange,
     dataSource: data,
     isLoading,
+    loadMore,
+    cancelOrder,
+    updateOrder,
+    cancelAlgoOrder,
+    updateAlgoOrder,
   };
 };
 
-export type OrdersBuilderState = ReturnType<typeof useOrdersBuilder>;
+export type OrdersBuilderState = ReturnType<typeof useOrderListScript>;

@@ -25,7 +25,8 @@ export const TradingRewardsLayout = (
       footerHeight={29}
       classNames={
         {
-          content: "lg:oui-mb-6"
+          content: "lg:oui-mb-6",
+          topNavbar: "oui-bg-base-9"
         }
       }
       leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
@@ -43,11 +44,12 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   return (
-    <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-h-[calc(100%-29px)]">
+    <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9 oui-h-full">
       <SideBar
         title={"Rewards"}
         {...props}
         open={expanded}
+        
         onOpenChange={(open) => setExpand(open)}
         onItemSelect={(a) => {
           props.onItemSelect?.(a);

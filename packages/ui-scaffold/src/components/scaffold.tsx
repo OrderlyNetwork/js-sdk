@@ -90,7 +90,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           className={cn(
             "oui-hidden xl:oui-block",
             "oui-border-b oui-border-line-12",
-            "oui-bg-base-9",
             classNames?.topNavbar
           )}
         >
