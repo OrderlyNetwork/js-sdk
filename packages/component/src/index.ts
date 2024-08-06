@@ -114,6 +114,9 @@ export type {
   OrdersViewProps,
   PositionsViewProps,
   AccountStatusProps,
+  FooterStatusBarProps,
+  ShareConfigProps,
+  DesktopDropMenuItem,
 } from "./block";
 
 export { cn, parseNumber } from "./utils";
