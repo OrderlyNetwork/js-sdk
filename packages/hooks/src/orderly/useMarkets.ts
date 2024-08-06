@@ -209,7 +209,7 @@ export const useMarkets = (type: MarketsType) => {
         }
       } else {
         if (remove) {
-          const tabs = favorite.tabs.filter((tab) => tab.id != tab.id);
+          const tabs = favorite.tabs.filter((item) => item.id != tab.id);
           if (tabs.length === 0) {
             // del favorite
             curData.splice(index, 1);
