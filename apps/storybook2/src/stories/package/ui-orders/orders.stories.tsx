@@ -19,7 +19,7 @@ const meta = {
   decorators: [
     (Story) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyApp brokerId={"orderly"} brokerName={"Orderly"} networkId={"testnet"}>
           <Story />
         </OrderlyApp>
       </ConnectorProvider>
@@ -61,7 +61,7 @@ export const Layout: Story = {
         >
           <Text size="lg">Orders</Text>
           <Divider  className="oui-w-full" />
-          <OrdersWidget current={TabType.pending} />
+          <OrdersWidget current={TabType.rejected} />
         </Flex>
       </PortfolioLayoutWidget>
     );

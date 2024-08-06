@@ -46,6 +46,11 @@ export const useOrderListScript = (props: {
     setDateRange,
     dataSource: data,
     isLoading,
+    loadMore,
+    cancelOrder,
+    updateOrder,
+    cancelAlgoOrder,
+    updateAlgoOrder,
   };
 };
 
