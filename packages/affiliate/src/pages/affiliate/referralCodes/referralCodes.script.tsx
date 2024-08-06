@@ -49,9 +49,9 @@ export const useReferralCodesScript = (): ReferralCodesReturns => {
     setPinCodes([...pinCodes]);
   };
 
-  const codes = useMemo((): ReferralCodeType[] => {
+  const codes = useMemo((): ReferralCodeType[] | undefined => {
     if (!referralInfo?.referrer_info.referral_codes)
-      return [] as ReferralCodeType[];
+      return undefined;
     const referralCodes = [...referralInfo?.referrer_info.referral_codes];
 
     const pinedItems: ReferralCodeType[] = [];

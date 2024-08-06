@@ -79,7 +79,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           // props.onCompleted?.();
         },
         (reject) => {
-          console.log("enable trading reject", reject?.message);
+          console.log("enable trading reject", reject);
           setLoading(false);
           if (reject === -1) return;
           toast.error("User rejected the request");
