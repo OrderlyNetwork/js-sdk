@@ -8,6 +8,8 @@ import { Badge } from "@orderly.network/ui";
 import { OrderQuantity } from "./quantity";
 import { Price } from "./price";
 import { TriggerPrice } from "./triggerPrice";
+import { CancelButton } from "./cancelBtn";
+import { Renew } from "./renew";
 
 export const useOrderColumn = (_type: TabType) => {
   const columns =
@@ -98,18 +100,19 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.orderHistory:
           return [
-            instrument(),
-            side(),
-            fillAndQuantity(),
-            price(),
-            avgOpen(),
-            triggerPrice(),
-            estTotal(),
-            fee(),
-            status(),
-            reduce(),
-            hidden(),
-            orderTime(),
+            instrument({ showType: true, width: 124 }),
+            side({ width: 124 }),
+            fillAndQuantity({ width: 124, disableEdit: true }),
+            price({ width: 124, disableEdit: true }),
+            avgOpen({ width: 124 }),
+            triggerPrice({ width: 124, disableEdit: true }),
+            estTotal({ width: 124 }),
+            fee({ width: 124 }),
+            status({ width: 124 }),
+            reduce({ width: 124 }),
+            hidden({ width: 124 }),
+            orderTime({ width: 124 }),
+            cancelBtn({ width: 124 }),
           ];
       }
     };
@@ -143,6 +146,8 @@ function instrument(option?: {
           ? record.type.replace("_ORDER", "").toLowerCase()
           : record.type;
       console.log("xxxxxx badge", badge, record, record.type);
+  
+      const showGray = grayCell(record);
 
       return (
         <Flex direction="column" itemAlign={"start"}>
@@ -164,7 +169,7 @@ function instrument(option?: {
                 <Badge
                   color={
                     e.toLocaleLowerCase() === "position"
-                      ? "primary"
+                      ? showGray ? "neutural": "primary"
                       : "neutural"
                   }
                   size="xs"
@@ -481,6 +486,20 @@ function cancelBtn(option?: {
     dataIndex: "",
     width: option?.width,
     className: option?.className,
-    render: (value: string) => <Button variant="outlined">Cancel</Button>,
+    align: "right",
+    render: (_: string, record: any) => {
+      if (record.status === OrderStatus.CANCELLED) {
+        return <Renew record={record} />;
+      }
+
+      if (
+        record.status === OrderStatus.NEW ||
+        record.algo_status === OrderStatus.NEW
+      ) {
+        return <CancelButton order={record} />;
+      }
+
+      return null;
+    },
   };
 }

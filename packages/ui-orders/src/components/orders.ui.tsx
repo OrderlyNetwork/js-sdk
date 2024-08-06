@@ -11,7 +11,6 @@ export const Orders = (props: OrdersBuilderState) => {
       <TabPanel value={TabType.all} title="All">
         <OrderListWidget
           type={TabType.all}
-          ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
@@ -35,19 +34,18 @@ export const Orders = (props: OrdersBuilderState) => {
       <TabPanel value={TabType.cancelled} title="Cancelled">
         <OrderListWidget
           type={TabType.cancelled}
-          ordersStatus={OrderStatus.INCOMPLETE}
+          ordersStatus={OrderStatus.CANCELLED}
         />
       </TabPanel>
       <TabPanel value={TabType.rejected} title="Rejected">
         <OrderListWidget
           type={TabType.rejected}
-          ordersStatus={OrderStatus.COMPLETED}
+          ordersStatus={OrderStatus.REJECTED}
         />
       </TabPanel>
       <TabPanel value={TabType.orderHistory} title="Order history">
         <OrderListWidget
           type={TabType.orderHistory}
-          ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
     </Tabs>
