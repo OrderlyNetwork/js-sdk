@@ -24,7 +24,7 @@ const meta = {
     // layout: 'centered',
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <ConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
           <Card>
@@ -61,7 +61,7 @@ const meta = {
         title: "Funding rate / Annual rate",
         dataIndex: "funding_rate",
         width: 80,
-        render: (value: any, record) => {
+        render: (value: any, record: any) => {
           return (
             <Flex gap={1}>
               <Text.numeral rule={"percentages"}>
