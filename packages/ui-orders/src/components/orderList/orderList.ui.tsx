@@ -5,7 +5,10 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useOrderColumn } from "./useColumn";
 
 export const OrderList: FC<OrdersBuilderState> = (props) => {
-  const columns = useOrderColumn(props.ordersStatus);
+  const columns = useOrderColumn(props.type);
+
+  console.log("order list", props.dataSource, columns);
+  
 
   return (
     <Flex direction={"column"} width={"100%"}>

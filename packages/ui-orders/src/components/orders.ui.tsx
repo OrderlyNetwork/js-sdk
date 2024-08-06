@@ -5,54 +5,52 @@ import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
 import { OrderList, OrderListWidget } from "./orderList";
 
-export const Orders = (
-  props: OrdersBuilderState
-) => {
-
+export const Orders = (props: OrdersBuilderState) => {
   return (
     <Tabs defaultValue={props.current || TabType.all}>
       <TabPanel value={TabType.all} title="All">
-        <OrderListWidget ordersStatus={OrderStatus.INCOMPLETE} />
+        <OrderListWidget
+          type={TabType.all}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
-        <div></div>
+        <OrderListWidget
+          type={TabType.pending}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.tp_sl} title="TP/SL">
-        <div></div>
+        <OrderListWidget
+          type={TabType.tp_sl}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.filled} title="Filled">
-        <div></div>
+        <OrderListWidget
+          type={TabType.filled}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.cancelled} title="Cancelled">
-        <div></div>
+        <OrderListWidget
+          type={TabType.cancelled}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.rejected} title="Rejected">
-        <div></div>
+        <OrderListWidget
+          type={TabType.rejected}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
       <TabPanel value={TabType.orderHistory} title="Order history">
-        <div></div>
+        <OrderListWidget
+          type={TabType.orderHistory}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
       </TabPanel>
     </Tabs>
   );
 };
 // ----------------- Orders ui component end -----------------
-
-type OrderTableProps = {
-  status: OrderStatus;
-  dataSource: API.OrderExt[] | null;
-  isLoading?: boolean;
-};
-
-// ----------------- OrderTable start -----------------
-const OrderTable = (props: OrderTableProps) => {
-  const colums = useOrderColumn(props.status);
-
-  return (
-    <DataTable
-      columns={colums}
-      dataSource={props.dataSource}
-      loading={props.isLoading}
-    />
-  );
-};
-// ----------------- OrderTable end -----------------
