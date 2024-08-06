@@ -26,7 +26,7 @@ export const useMarketsHeaderScript = () => {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    duration: 50,
+    // duration: 25,
     slidesToScroll: "auto",
   });
 
