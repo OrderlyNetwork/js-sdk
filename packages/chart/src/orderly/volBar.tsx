@@ -21,12 +21,17 @@ export type VolChartDataItem = {
   opacity?: string | number;
 };
 
+export type VolChartTooltip = {
+  rm?: number;
+  dp?: number;
+};
+
 export type VolChartProps = {
   colors?: {
     fill: string;
   };
   data: VolChartDataItem[];
-  tooltipPrefix?: string;
+  tooltip?: VolChartTooltip;
   className?: string;
 };
 
@@ -49,7 +54,9 @@ const RoundedRectangle = (props: any) => {
 };
 
 const CustomizedCross = (props: any) => {
-  const { width, height, stroke, fill } = props;
+  const { width, height, payload, stroke, fill } = props;
+
+  if (payload?.[0]?.value === 0) return null;
 
   return (
     // @ts-ignore
@@ -67,10 +74,11 @@ const CustomizedCross = (props: any) => {
 };
 
 const CustomTooltip = (
-  props: TooltipProps<any, any>,
-  tooltipPrefix?: string
+  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip }
 ) => {
-  const { active, payload, label } = props;
+  const { active, payload, label, tooltip } = props;
+
+  if (payload?.[0]?.value === 0) return null;
 
   if (active && payload && payload.length) {
     return (
@@ -79,6 +87,8 @@ const CustomTooltip = (
         value={payload[0].value}
         // prefix="Commission"
         titleClassName="oui-gap-4"
+        rm={tooltip?.rm}
+        dp={tooltip?.dp}
       />
     );
   }
@@ -109,7 +119,7 @@ export const VolBarChart = (props: VolChartProps) => {
           <Tooltip
             // cursor={{ fillOpacity: 0.1 }}
             cursor={<CustomizedCross />}
-            content={<CustomTooltip />}
+            content={<CustomTooltip tooltip={props.tooltip} />}
           />
           <CartesianGrid
             vertical={false}

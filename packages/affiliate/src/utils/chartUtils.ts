@@ -9,12 +9,15 @@ export function fillData(
   const result: VolChartDataItem[] = new Array(days).fill(0).map(
     (_, index): VolChartDataItem => {
       return {
-        date: format(subDays(now, index), "yyyy-MM-dd"),
+        date: format(subDays(now, index + 1), "yyyy-MM-dd"),
         volume: 0,
         opacity: 0,
       };
     }
   ).reverse();
+
+  console.log("fill data", result);
+  
 
   const dataObject = origin?.reduce((acc, curr) => {
     acc[curr.date] = curr;

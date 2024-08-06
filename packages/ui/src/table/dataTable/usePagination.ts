@@ -19,11 +19,14 @@ export const usePagination = (initial?: {
   }) => {
     const count = meta?.total ?? dataTotal.current;
     dataTotal.current = count;
+    const size = meta?.records_per_page ?? pageSize;
+    const pageTotal = count ? Math.ceil(count / size) : 0;
+    const curPage = Math.min(meta?.current_page ?? page, pageTotal);
     return {
       count,
-      page: meta?.current_page ?? page,
-      pageSize: meta?.records_per_page ?? pageSize,
-      pageTotal: count ? Math.ceil(count / pageSize) : 0,
+      page: curPage,
+      pageSize: size,
+      pageTotal: pageTotal,
     };
   };
 

@@ -44,17 +44,17 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   } => {
     if (period === "7") {
       return {
-        startDate: subDays(new Date(), 8),
+        startDate: subDays(new Date(), 7),
         endDate: subDays(new Date(), 1),
       };
     } else if (period === "30") {
       return {
-        startDate: subDays(new Date(), 31),
+        startDate: subDays(new Date(), 30),
         endDate: subDays(new Date(), 1),
       };
     } else if (period === "90") {
       return {
-        startDate: subDays(new Date(), 91),
+        startDate: subDays(new Date(), 90),
         endDate: subDays(new Date(), 1),
       };
     } else {
