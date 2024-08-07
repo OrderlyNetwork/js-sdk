@@ -1,4 +1,6 @@
-export const OrderlyIcon = () => {
+export const OrderlyIcon = (props: {
+  className?: string;
+}) => {
     return (
       <svg
         width="20"
@@ -6,6 +8,7 @@ export const OrderlyIcon = () => {
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className={props.className}
       >
         <g clipPath="url(#clip0_862_2443)">
           <path

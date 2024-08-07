@@ -53,13 +53,14 @@ export const useWalletConnectorBuilder = () => {
       );
     }
 
-    const { exist = false } = await verifyRefCode();
+    const { exist } = await verifyRefCode();
+    
 
     if (exist === false) {
       return Promise.resolve("This referral code does not exist.");
     }
 
-    return Promise.resolve("");
+    return Promise.resolve(undefined);
   };
 
   const signIn = async () => {

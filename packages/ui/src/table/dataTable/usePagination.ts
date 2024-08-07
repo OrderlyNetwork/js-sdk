@@ -6,7 +6,18 @@ export const usePagination = (initial?: {
 }) => {
   const dataTotal = useRef(0);
   const [page, setPage] = useState<number>(initial?.page ?? 1);
-  const [pageSize, setPageSize] = useState<number>(initial?.pageSize ?? 10);
+  const [pageSize, _setPageSize] = useState<number>(initial?.pageSize ?? 10);
+
+  const setPageSize = (size: number) => {
+    _setPageSize(size);
+    // check page > page total
+    if (dataTotal.current > 0) {
+      const totalPage = Math.ceil(dataTotal.current / size);
+      if (page > totalPage) {
+        setPage(totalPage);
+      }
+    }
+  }
 
   /**
    * helper function to parse meta data,
@@ -19,11 +30,14 @@ export const usePagination = (initial?: {
   }) => {
     const count = meta?.total ?? dataTotal.current;
     dataTotal.current = count;
+    const size = meta?.records_per_page ?? pageSize;
+    const pageTotal = count ? Math.ceil(count / size) : 0;
+    const curPage = Math.min(meta?.current_page ?? page, pageTotal);
     return {
       count,
-      page: meta?.current_page ?? page,
-      pageSize: meta?.records_per_page ?? pageSize,
-      pageTotal: count ? Math.ceil(count / pageSize) : 0,
+      page: curPage,
+      pageSize: size,
+      pageTotal: pageTotal,
     };
   };
 

@@ -48,7 +48,7 @@ const Title: FC<ReferralCodesReturns> = (props) => {
         <Text className="oui-text-base-contrast-54">
           Remaining referral codes:&nbsp;
         </Text>
-        <Text className="oui-text-primary-light">6</Text>
+        <Text className="oui-text-primary-light">{props.codes?.length || "--"}</Text>
       </div>
     </Flex>
   );

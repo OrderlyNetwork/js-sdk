@@ -258,7 +258,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
             helpText={
-              !isExist && !isLoading
+              !isExist && !isLoading && code.length > 0
                 ? "This referral code does not exist."
                 : undefined
             }

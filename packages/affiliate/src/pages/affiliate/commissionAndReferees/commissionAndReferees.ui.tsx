@@ -19,8 +19,9 @@ import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
 import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
-import { commifyOptional } from "@orderly.network/utils";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { addDays } from "date-fns";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
@@ -154,9 +155,11 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     }
 
     return (
-      <DataTable
+      <AuthGuardDataTable
         bordered
         columns={columns}
+        loading={props.commission.isLoading}
+        scroll={{y: 400}}
         dataSource={props.commission.data}
         classNames={{
           header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
@@ -168,7 +171,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
           onPageChange={props.commission.onPageChange}
           onPageSizeChange={props.commission.onPageSizeChange}
         />
-      </DataTable>
+      </AuthGuardDataTable>
     );
   }, [isLG, props.commission]);
 
@@ -190,7 +193,6 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
 
 const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
-  console.log("referees", props.referees);
 
   const columns = useMemo(() => {
     const cols: Column[] = [
@@ -211,13 +213,13 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       {
         title: "Total commission (USDC) ",
         dataIndex: "referral_rebate",
-        render: (value) => <Text.numeral dp={6}>{value || "-"}</Text.numeral>,
+        render: (value) => <Text>{commifyOptional(value, { fix: 6, prefix: "$", padEnd: true})}</Text>,
         className: "oui-w-1/5",
       },
       {
         title: "Total vol. (USDC) ",
         dataIndex: "volume",
-        render: (value) => <Text.numeral dp={2}>{value || "-"}</Text.numeral>,
+        render: (value) => <Text>{commifyOptional(value, { fix: 2, prefix: "$", padEnd: true})}</Text>,
         className: "oui-w-1/5",
       },
       {
@@ -260,12 +262,12 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
                   />
                   <MobileCellItem
                     title="Total commission"
-                    value={commifyOptional(e.referral_rebate, { fix: 6, prefix: "$"})}
+                    value={commifyOptional(e.referral_rebate, { fix: 6, prefix: "$", padEnd: true})}
                     className="oui-min-w-[102px]"
                   />
                   <MobileCellItem
                     title="Total vol."
-                    value={commifyOptional(e.volume, { fix: 2, prefix: "$"})}
+                    value={commifyOptional(e.volume, { fix: 2, prefix: "$", padEnd: true})}
                     align="end"
                   />
                 </Flex>

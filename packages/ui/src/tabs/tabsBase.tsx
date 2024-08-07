@@ -181,7 +181,7 @@ const TabsTrigger = React.forwardRef<
       icon?: React.ReactElement;
     }
 >(({ className, size, children, icon, variant, ...props }, ref) => {
-  console.log("variant", variant);
+  // console.log("variant", variant);
   const { trigger, icon: iconClassName } = tabsVariants({ size, variant });
   return (
     <TabsPrimitive.Trigger

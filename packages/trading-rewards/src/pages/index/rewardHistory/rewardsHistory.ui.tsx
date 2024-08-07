@@ -15,6 +15,7 @@ import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
 import { FC, ReactNode } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   return (
@@ -212,7 +213,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text>{commifyOptional(record.info?.r_wallet)}</Text>
+            <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
           </Flex>
         );
       },
@@ -220,7 +221,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   ];
 
   return (
-    <DataTable<ListType>
+    <AuthGuardDataTable<ListType>
       bordered
       columns={columns}
       dataSource={data}
@@ -235,7 +236,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         onPageChange={props.onPageChange}
         onPageSizeChange={props.onPageSizeChange}
       />
-    </DataTable>
+    </AuthGuardDataTable>
   );
 };
 

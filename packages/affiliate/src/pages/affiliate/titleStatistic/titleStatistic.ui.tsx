@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Flex, Select, Text } from "@orderly.network/ui";
 import { VolBarChart } from "@orderly.network/chart";
 import { TitleStatisticReturns } from "./titleStatistic.script";
+import { Decimal } from "@orderly.network/utils";
 
 export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
   return (
@@ -20,6 +21,10 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
           data={props.dataSource || []}
           colors={{ fill: "rgba(0, 180, 158, 1)" }}
           className="oui-w-full oui-flex-1"
+          tooltip={{
+            rm: Decimal.ROUND_DOWN,
+            dp: props.volType === 'Commission' ? 6 : 2
+          }}
         />
       </Flex>
     </Flex>
@@ -29,7 +34,7 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
 const Title: FC<TitleStatisticReturns> = (props) => {
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">TitleStatistics</Text>
+      <Text className="oui-text-lg">Statistics</Text>
       <Flex direction={"row"} gap={2} className={"oui-min-w-14"}>
         <Select.options
           size={"xs"}

@@ -40,7 +40,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           />
           <Statics
             title="Epoch rewards"
-            highLight={max_reward_amount ? commify(max_reward_amount) : "--"}
+            highLight={commifyOptional(max_reward_amount, { fix: 0, })}
             text={token}
           />
         </Flex>
@@ -105,7 +105,8 @@ const EstRewards: FC<{
         My est. rewards
       </Text>
       <Flex direction={"row"} gap={1}>
-        <OrderlyIcon />
+        <OrderlyIcon 
+        className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
         <Text
           children={commifyOptional(props.estRewards, { fix: 2 })}
           className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"

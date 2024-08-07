@@ -48,7 +48,11 @@ export const useDataListColumns = (
               itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}
             >
-              {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
+              {value ? (
+                <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
+              ) : (
+                <UnFavoritesIcon />
+              )}
             </Flex>
           );
 

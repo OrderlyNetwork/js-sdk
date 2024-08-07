@@ -29,7 +29,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Page: Story = {};
+export const Page: Story = {
+  args: {
+    className: 'oui-pb-10'
+  }
+};
 
 
 export const Header: Story = {
