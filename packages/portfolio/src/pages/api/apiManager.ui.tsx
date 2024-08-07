@@ -1,7 +1,9 @@
 import {
   ArrowLeftRightIcon,
+  Box,
   Button,
   Card,
+  CopyIcon,
   DataTable,
   Divider,
   EmptyDataState,
@@ -76,7 +78,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           size="base"
           inlist={80}
           rule={"address"}
-          copyable={props.address !== '--'}
+          copyable={props.address !== "--"}
           onCopy={props.onCopyAccountId}
         >
           {props.address}
@@ -198,11 +200,24 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
         }
         return (
           <Tooltip content={value} className="oui-max-w-[200px] oui-break-all">
-            <div className="oui-overflow-ellipsis oui-overflow-hidden">
-              <Text.formatted copyable={ip !== "--"} onCopy={props.onCopyIP}>
+            <Flex gap={1}>
+              <div className=" oui-overflow-ellipsis oui-overflow-hidden">
                 {ip}
-              </Text.formatted>
-            </div>
+              </div>
+              {ip !== "--" && (
+                <Box width={16} height={16} className="oui-cursor-pointer">
+                  <CopyIcon
+                    color="white"
+                    opacity={0.54}
+                    size={16}
+                    onClick={(e) => {
+                      navigator.clipboard.writeText(ip);
+                      props?.onCopyIP();
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
           </Tooltip>
         );
       },
